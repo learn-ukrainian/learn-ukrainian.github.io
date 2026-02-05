@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:10
+**Generated:** 2026-02-05 22:04:30
 
 ## Configuration
 **Type:** B2-history
@@ -34,12 +34,13 @@
 | 12 | true-false | Кібербезпека: правда чи міф? | 16 | 8 | ✅ |
 | 13 | fill-in | Заповніть факти про українські IT-компанії | 8 | 8 | ✅ |
 | 14 | essay-response | Майбутнє технологій в Україні | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Технології та ШІ | 3 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 3-9) ❌
-- Unique types: 11 (minimum: 2) ✅
-- Priority types used: 1/4 (essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Total activities: 15 (target: 3-9) ❌
+- Unique types: 12 (minimum: 2) ✅
+- Priority types used: 2/4 (essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -54,10 +55,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1787/2000 (raw: 2364)
-- **Activities:** ✅ 14/3
+- **Words:** ❌ 1787/2000 (raw: 2357)
+- **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/2 types
+- **Unique_types:** ✅ 12/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
@@ -65,7 +66,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 14 (target 3-9)
+- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 98.6% (target 90-100% (history))
 - **Richness:** ❌ 90% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -86,7 +87,7 @@
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 12 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
-| questions | 10 | 5 | 100% | 5% | 5.0% |
+| questions | 9 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **90.4%** |
 
@@ -94,11 +95,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
-| **Вступ: Українська IT-індустрія** | ✅ | 370 | Included in Core |
-| **Теорія: Штучний інтелект та машинне навчання** | ⚪️ | 252 | Skipped |
-| **Кіберзахист** | ⚪️ | 301 | Skipped |
-| **Хмарні технології** | ⚪️ | 237 | Skipped |
-| **Українська IT-термінологія vs сленг** | ⚪️ | 118 | Skipped |
-| **IT як сфера працевлаштування** | ⚪️ | 245 | Skipped |
-| **Підсумок** | ✅ | 100 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — IT-індустрія України** | ⚪️ | 370 | Skipped |
+| **Базова IT-термінологія** | ⚪️ | 252 | Skipped |
+| **Штучний інтелект та машинне навчання** | ⚪️ | 301 | Skipped |
+| **Кібербезпека** | ⚪️ | 237 | Skipped |
+| **Електронне врядування** | ⚪️ | 118 | Skipped |
+| **Підсумок та практика** | ✅ | 245 | Included in Core |
+| **Підсумок** | ✅ | 210 | Included in Core |

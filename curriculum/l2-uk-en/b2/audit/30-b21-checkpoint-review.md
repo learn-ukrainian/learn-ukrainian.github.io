@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M30 | **Phase:** B2.1 | **Pedagogy:** checkpoint | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:15
+**Generated:** 2026-02-05 22:03:46
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -39,12 +39,13 @@
 | 17 | translate | Переклад пасивних конструкцій | 10 | 6 | ✅ |
 | 18 | error-correction | Виправлення регістрових помилок | 10 | 6 | ✅ |
 | 19 | quiz | Комплексний тест B2.1 | 12 | 8 | ✅ |
+| 20 | reading | Текст для аналізу: Контрольна точка: B2.1 Завершення | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 19 (target: 15-19) ✅
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 20 (target: 15-19) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -57,10 +58,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2130/2000 (raw: 2351)
-- **Activities:** ✅ 19/15
+- **Words:** ✅ 2130/2000 (raw: 2325)
+- **Activities:** ✅ 20/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
@@ -81,28 +82,23 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 35 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 30 | 3 | 100% | 20% | 20.0% |
+| variety | 0.89 | - | 89% | 15% | 13.4% |
 | engagement | 7 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
 | visual | 16 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.5%** |
+| **TOTAL** | | | | | **88.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Огляд** | ⚪️ | 88 | Skipped |
-| **Навички** | ⚪️ | 16 | Skipped |
-| **Навичка 1: Пасивний стан (M01-06)** | ⚪️ | 215 | Skipped |
-| **Навичка 2: Активні дієприкметники (M07-08)** | ⚪️ | 196 | Skipped |
-| **Навичка 3: Пасивні дієприкметники та -но/-то (M02-03)** | ⚪️ | 207 | Skipped |
-| **Навичка 4: Дієприслівники (M10)** | ⚪️ | 197 | Skipped |
-| **Навичка 5: Складний синтаксис (M11-14)** | ⚪️ | 242 | Skipped |
-| **Навичка 6: Система регістрів (M15-24)** | ⚪️ | 233 | Skipped |
-| **Навичка 7: Доменна лексика (M26-29)** | ⚪️ | 205 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 237 | Skipped |
-| **Підсумок** | ✅ | 126 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Контрольна точка B2.1** | ⚪️ | 88 | Skipped |
+| **Навичка 1: Пасивний стан** | ⚪️ | 231 | Skipped |
+| **Навичка 2: Дієприкметники** | ⚪️ | 403 | Skipped |
+| **Навичка 3: Регістри** | ⚪️ | 439 | Skipped |
+| **Навичка 4: Доменна лексика** | ⚪️ | 438 | Skipped |
+| **Підсумок та результати** | ✅ | 237 | Included in Core |
+| **Підсумок** | ✅ | 236 | Included in Core |

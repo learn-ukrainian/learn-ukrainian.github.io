@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M26 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:08
+**Generated:** 2026-02-05 22:03:42
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,26 +34,36 @@
 | 12 | fill-in | Дипломатична лексика | 16 | 8 | ✅ |
 | 13 | quiz | Інтеграційний тест | 16 | 8 | ✅ |
 | 14 | essay-response | Політичний аналіз | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Політика та державне управління | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — читання політичних новин' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 1891/2000 (raw: 2251)
-- **Activities:** ✅ 14/10
+- **Words:** ❌ 1891/2000 (raw: 2249)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -75,7 +85,7 @@
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
+| questions | 29 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.5%** |
 
@@ -83,12 +93,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 75 | Included in Core |
-| **Вступ** | ✅ | 411 | Included in Core |
-| **Наратив: Парламентська сесія** | ⚪️ | 602 | Skipped |
-| **Пояснення** | ⚪️ | 176 | Skipped |
-| **Трансформації** | ⚪️ | 335 | Skipped |
+| **Розминка — Політична система України** | ⚪️ | 411 | Skipped |
+| **Органи влади** | ⚪️ | 778 | Skipped |
+| **Виборчий процес** | ⚪️ | 335 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 78 | Skipped |
-| **Самоперевірка** | ⚪️ | 55 | Skipped |
-| **Наступні кроки** | ⚪️ | 49 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Політичні поняття** | ⚪️ | 133 | Skipped |
+| **Практика — читання політичних новин** | ✅ | 159 | Included in Core |

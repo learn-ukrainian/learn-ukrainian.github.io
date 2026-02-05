@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 21:56:36
+**Generated:** 2026-02-05 22:04:46
 
 ## Configuration
 **Type:** B2-skills
@@ -34,12 +34,13 @@
 | 12 | mark-the-words | Знайдіть безособові форми | 6 | 6 | ✅ |
 | 13 | select | Виберіть об'єктивну форму | 16 | 6 | ✅ |
 | 14 | translate | Переклад термінів | 8 | 6 | ✅ |
+| 15 | reading | Текст для аналізу: Професійні звіти: Основи | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 14-18) ✅
-- Unique types: 10 (minimum: 5) ✅
+- Total activities: 15 (target: 14-18) ✅
+- Unique types: 11 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -54,10 +55,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4554/1750 (raw: 4957)
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 4552/1750 (raw: 4955)
+- **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/5 types
+- **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
@@ -65,7 +66,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -80,20 +81,20 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 45 | 15 | 100% | 26% | 25.5% |
 | engagement | 7 | 5 | 100% | 19% | 19.4% |
-| variety | 0.97 | - | 97% | 12% | 11.9% |
+| variety | 0.96 | - | 96% | 12% | 11.8% |
 | cultural | 3 | - | 100% | 12% | 12.2% |
 | realworld | 10 | 3 | 100% | 12% | 12.2% |
 | visual | 4 | 2 | 100% | 6% | 6.1% |
 | paragraph_var | 0.84 | - | 84% | 6% | 5.1% |
 | questions | 18 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **98.7%** |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 139 | Included in Core |
 | **Вступ** | ✅ | 440 | Included in Core |
-| **Імерсивна розповідь** | ⚪️ | 2153 | Skipped |
+| **Імерсивна розповідь** | ⚪️ | 2151 | Skipped |
 | **Аналіз** | ✅ | 1124 | Included in Core |
 | **Граматика в контексті** | ✅ | 486 | Included in Core |
 | **Підсумок** | ✅ | 34 | Included in Core |

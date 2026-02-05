@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M59 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:47
+**Generated:** 2026-02-05 22:04:17
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,17 +35,18 @@
 | 13 | quiz | Метафоричне слово | 8 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Сила слова | 1 | 1 | ✅ |
 | 15 | select | Професійна комунікація | 6 | 6 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Комунікація та Мовлення | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 59-synonyms-communication.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Професійна комунікація', 'instruction': 'Оберіть слова, які доречні в ділових переговорах.', 'items': [{'question': 'Яка лексика пасує для офіційних зустрічей?', 'options': [{'text': 'пропонувати', 'correct': True}, {'text': 'узгоджувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'підтверджувати', 'correct': True}, {'text': 'теревенити', 'correct': False}, {'text': 'резюмувати', 'correct': True}]}, {'question': 'Оберіть дієслова для підбиття підсумків:', 'options': [{'text': 'резюмувати', 'correct': True}, {'text': 'підсумовувати', 'correct': True}, {'text': 'базікати', 'correct': False}, {'text': 'висновувати', 'correct': True}]}, {'question': 'Які слова описують процес переконання?', 'options': [{'text': 'аргументувати', 'correct': True}, {'text': 'переконувати', 'correct': True}, {'text': 'обґрунтовувати', 'correct': True}, {'text': 'мовчати', 'correct': False}]}, {'question': 'Оберіть терміни для ділового спілкування:', 'options': [{'text': 'порядок денний', 'correct': True}, {'text': 'протокол', 'correct': True}, {'text': 'регламент', 'correct': True}, {'text': 'плітки', 'correct': False}]}, {'question': 'Які дієслова вказують на офіційне повідомлення?', 'options': [{'text': 'сповіщати', 'correct': True}, {'text': 'інформувати', 'correct': True}, {'text': 'повідомляти', 'correct': True}, {'text': 'шепотіти', 'correct': False}]}, {'question': 'Оберіть форми офіційного звернення:', 'options': [{'text': 'запит', 'correct': True}, {'text': 'заява', 'correct': True}, {'text': 'клопотання', 'correct': True}, {'text': 'балачка', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1756/2000 (raw: 1921)
-- **Activities:** ✅ 15/10
+- **Words:** ❌ 1756/2000 (raw: 1897)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
@@ -68,12 +69,12 @@
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ✅ 99% (phraseology)
+- **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 98% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -83,21 +84,18 @@
 | variety | 0.97 | - | 97% | 17% | 16.2% |
 | cultural | 4 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.94 | - | 94% | 8% | 7.8% |
+| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
 | examples | 55 | - | 100% | 8% | 8.3% |
 | realworld | 7 | - | 100% | 8% | 8.3% |
-| questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.0%** |
+| questions | 7 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Вступ** | ✅ | 143 | Included in Core |
-| **Фразеологізми та синоніми: Передача інформації** | ⚪️ | 516 | Skipped |
-| **Культурний код: Форми української комунікації** | ✅ | 200 | Included in Core |
-| **Вживання у контексті: Тон, Регістр та Цифровий світ** | ✅ | 233 | Included in Core |
-| **Психологія спілкування та Емоційний інтелект** | ⚪️ | 178 | Skipped |
-| **Комунікація в історії та літературі** | ⚪️ | 236 | Skipped |
-| **Підсумок** | ✅ | 53 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Як сказати "сказати"** | ⚪️ | 143 | Skipped |
+| **Say** | ⚪️ | 716 | Skipped |
+| **Ask** | ⚪️ | 411 | Skipped |
+| **Практика — дієслова мовлення** | ⚪️ | 236 | Skipped |
+| **Підсумок** | ✅ | 163 | Included in Core |

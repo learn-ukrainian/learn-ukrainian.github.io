@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:01
+**Generated:** 2026-02-05 22:03:51
 
 ## Configuration
 **Type:** B2-grammar
@@ -17,51 +17,43 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | quiz | Визначення суфіксів для назв місць | 16 | 8 | ✅ |
-| 2 | match-up | Слово та суфікс | 16 | 8 | ✅ |
-| 3 | cloze | Утворіть назву місця | 17 | 14 | ✅ |
-| 4 | true-false | Правила словотворення | 16 | 8 | ✅ |
-| 5 | group-sort | Класифікуйте слова за суфіксом | 18 | 14 | ✅ |
-| 6 | unjumble | Складіть речення про місця | 16 | 6 | ✅ |
-| 7 | error-correction | Виправте помилки у назвах місць | 16 | 6 | ✅ |
-| 8 | mark-the-words | Знайдіть усі назви місць із суфіксами -ня, -ище, -арня | 9 | 6 | ✅ |
-| 9 | select | Оберіть усі правильні форми назв місць | 8 | 6 | ✅ |
-| 10 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
-| 11 | fill-in | Оберіть правильну форму відмінка | 16 | 8 | ✅ |
-| 12 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
-| 13 | essay-response | Мій ідеальний район: Простір для життя | 1 | 1 | ✅ |
-
-**Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
-- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
-- Low density activities: 0
-
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — утворення назв місць' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Археологи знайшли тут сховище для зерна та залишки укріплень.". Shares significant keywords with sentence at index 14.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 35-word-formation-place-object-names.yaml: YAML parse error: while parsing a block mapping
+  in "<unicode string>", line 1233, column 3:
+    - type: reading
+      ^
+expected <block end>, but found '<scalar>'
+  in "<unicode string>", line 1235, column 63:
+     ... ловотворення: назви місць та об'єктів'
+                                         ^
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 40/100)
 
-- 1 violations (minor)
+- Revision recommended (severity 40/100)
+- 4 violations (moderate)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 2332/2000 (raw: 2742)
-- **Activities:** ✅ 13/10
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
-- **Priority:** ✅ Priority types used
+- **Words:** ✅ 2332/2000 (raw: 2743)
+- **Activities:** ❌ 0/10
+- **Density:** ❌ 0 < 14
+- **Unique_types:** ❌ 0/4 types
+- **Priority:** ❌ No priority types
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -83,7 +75,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
-| questions | 43 | 5 | 100% | 5% | 5.0% |
+| questions | 42 | 5 | 100% | 5% | 5.0% |
 | proverbs | 6 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.8%** |
 
@@ -91,12 +83,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ: Прочитайте текст** | ✅ | 244 | Included in Core |
-| **Пояснення** | ⚪️ | 982 | Skipped |
-| **Трансформації** | ⚪️ | 245 | Skipped |
-| **Практика** | ⚪️ | 229 | Skipped |
-| **Діалоги** | ✅ | 308 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 73 | Skipped |
-| **Самооцінка** | ⚪️ | 74 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Як утворюються назви місць** | ⚪️ | 244 | Skipped |
+| **Suffix -ня** | ⚪️ | 1227 | Skipped |
+| **Suffix -ище (place/area)** | ⚪️ | 229 | Skipped |
+| **Suffix -арня (workshop/establishment)** | ⚪️ | 308 | Skipped |
+| **Підсумок** | ✅ | 73 | Included in Core |
+| **Практика — утворення назв місць** | ⚪️ | 184 | Skipped |

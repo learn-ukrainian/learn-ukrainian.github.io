@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:56
+**Generated:** 2026-02-05 22:04:31
 
 ## Configuration
 **Type:** B2-history
@@ -34,12 +34,13 @@
 | 12 | true-false | Академічна доброчесність | 16 | 8 | ✅ |
 | 13 | fill-in | Заповніть грант-заявку | 8 | 8 | ✅ |
 | 14 | essay-response | Наука в Україні | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Наука і дослідження | 3 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 3-9) ❌
-- Unique types: 11 (minimum: 2) ✅
-- Priority types used: 1/4 (essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Total activities: 15 (target: 3-9) ❌
+- Unique types: 12 (minimum: 2) ✅
+- Priority types used: 2/4 (essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -54,10 +55,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1946/2000 (raw: 2227) (54 short)
-- **Activities:** ✅ 14/3
+- **Words:** ⚠️ 1946/2000 (raw: 2218) (54 short)
+- **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/2 types
+- **Unique_types:** ✅ 12/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
@@ -65,7 +66,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 14 (target 3-9)
+- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
 - **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
 - **Richness:** ❌ 84% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -85,10 +86,10 @@
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
-| questions | 8 | 5 | 100% | 5% | 5.0% |
+| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| questions | 7 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **84.6%** |
+| **TOTAL** | | | | | **84.5%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_DIALOGUE**
@@ -108,12 +109,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 46 | Included in Core |
-| **Вступ: Українська наука та її історія** | ✅ | 504 | Included in Core |
-| **Теорія: Науковий метод та дослідження** | ⚪️ | 94 | Skipped |
-| **Українські наукові досягнення** | ⚪️ | 280 | Skipped |
-| **Публікаційний процес** | ⚪️ | 255 | Skipped |
-| **Фінансування науки** | ⚪️ | 209 | Skipped |
-| **Академічна доброчесність** | ⚪️ | 262 | Skipped |
-| **Наукова комунікація** | ⚪️ | 90 | Skipped |
-| **Підсумок** | ✅ | 96 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Українська наука** | ⚪️ | 504 | Skipped |
+| **Структура наукового дослідження** | ⚪️ | 94 | Skipped |
+| **Наукова термінологія** | ⚪️ | 535 | Skipped |
+| **Читання наукових текстів** | ✅ | 209 | Included in Core |
+| **Обговорення наукових тем** | ⚪️ | 262 | Skipped |
+| **Підсумок та практика** | ✅ | 90 | Included in Core |
+| **Підсумок** | ✅ | 206 | Included in Core |

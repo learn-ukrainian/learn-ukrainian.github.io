@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M43 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:52
+**Generated:** 2026-02-05 22:04:00
 
 ## Configuration
 **Type:** B2-grammar
@@ -30,37 +30,40 @@
 | 8 | error-correction | Виправте помилки у співвідносних конструкціях | 12 | 6 | ✅ |
 | 9 | translate | Оберіть правильний переклад | 12 | 6 | ✅ |
 | 10 | essay-response | Трансформація та креативне письмо | 1 | 1 | ✅ |
+| 11 | reading | Текст для аналізу: Співвідносні конструкції | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 11 (target: 10-14) ✅
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — побудова складних речень' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'рід |...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1894/2000 (raw: 2636)
-- **Activities:** ✅ 10/10
+- **Words:** ❌ 1892/2000 (raw: 2630)
+- **Activities:** ✅ 11/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -80,7 +83,7 @@
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 14 | 5 | 100% | 5% | 5.0% |
+| questions | 13 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.9%** |
 
@@ -88,13 +91,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 56 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 210 | Included in Core |
-| **Пояснення** | ⚪️ | 751 | Skipped |
-| **Трансформації** | ⚪️ | 83 | Skipped |
-| **Практика** | ⚪️ | 275 | Skipped |
-| **Діалоги** | ✅ | 260 | Included in Core |
+| **Розминка — Парні слова у складних реченнях** | ⚪️ | 266 | Skipped |
+| **Common Pairs** | ⚪️ | 834 | Skipped |
+| **Examples** | ⚪️ | 533 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 75 | Skipped |
-| **Самооцінка** | ⚪️ | 74 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Практика — побудова складних речень** | ⚪️ | 259 | Skipped |

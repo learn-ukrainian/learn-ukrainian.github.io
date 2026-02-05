@@ -1,8 +1,8 @@
 # Audit Report: M16 — 16-register-formal-informal.md
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:46
+**Generated:** 2026-02-05 22:03:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,6 +43,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "**Формальний варіант (зразок відповіді):**
 
 Шановна пані Оксано!". Shares significant keywords with sentence at index 62.
@@ -53,10 +55,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2338/3800 (raw: 3025)
+- **Words:** ❌ 2338/3800 (raw: 3029)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,12 +68,12 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ❌ 74% < 95% min (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 74% (minimum: 95%)
@@ -104,12 +106,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ** | ✅ | 152 | Included in Core |
-| **Пояснення** | ⚪️ | 728 | Skipped |
-| **Практика** | ⚪️ | 357 | Skipped |
-| **Трансформації** | ⚪️ | 333 | Skipped |
-| **Діалоги** | ✅ | 417 | Included in Core |
+| **Вступ — Формальність у спілкуванні** | ✅ | 152 | Included in Core |
+| **Ти/Ви-розрізнення** | ⚪️ | 728 | Skipped |
+| **Форми звертання** | ⚪️ | 357 | Skipped |
+| **Формальні/неформальні лексичні пари** | ⚪️ | 333 | Skipped |
+| **Трансформація регістру** | ⚪️ | 417 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 94 | Skipped |
-| **Самооцінка** | ⚪️ | 80 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Соціальні ситуації** | ⚪️ | 94 | Skipped |
+| **Практика і підсумок** | ✅ | 190 | Included in Core |

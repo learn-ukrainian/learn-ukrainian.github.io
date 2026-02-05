@@ -1,8 +1,8 @@
 # Audit Report: M03 — 03-impersonal-passive.md
 **Level:** B2 | **Module:** M03 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:53
+**Generated:** 2026-02-05 22:03:16
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,6 +44,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✓ |...'.
   - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
@@ -52,10 +54,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1925/3800 (raw: 2579)
+- **Words:** ❌ 1925/3800 (raw: 2575)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -65,12 +67,12 @@
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -87,7 +89,7 @@
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.9%** |
 
@@ -95,15 +97,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Вступ** | ✅ | 162 | Included in Core |
-| **Пояснення** | ⚪️ | 458 | Skipped |
-| **Регістрова варіація** | ⚪️ | 466 | Skipped |
-| **Як обрати?** | ⚪️ | 85 | Skipped |
-| **Типові помилки** | ✅ | 144 | Included in Core |
-| **Діалоги** | ✅ | 194 | Included in Core |
-| **Трансформації** | ⚪️ | 182 | Skipped |
+| **Вступ — Безособовість в українській мові** | ✅ | 162 | Included in Core |
+| **Утворення форм на -но/-то** | ⚪️ | 924 | Skipped |
+| **Синтаксичні особливості** | ⚪️ | 85 | Skipped |
+| **Контексти вживання** | ✅ | 338 | Included in Core |
+| **Регістрова специфіка** | ⚪️ | 182 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ви вивчили** | ⚪️ | 34 | Skipped |
-| **Самоперевірка** | ⚪️ | 45 | Skipped |
-| **Зв'язок з попередніми модулями** | ⚪️ | 0 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Типові помилки** | ✅ | 79 | Included in Core |
+| **Практика і підсумок** | ✅ | 110 | Included in Core |

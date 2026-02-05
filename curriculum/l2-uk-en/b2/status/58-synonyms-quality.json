@@ -2,14 +2,14 @@
   "module": "58-synonyms-quality",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:55.104822Z",
+  "last_audit": "2026-02-05T22:04:16.169234Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351982Z",
-    "meta": "2026-01-29T07:39:04.717467Z",
-    "activities": "2026-01-11T23:58:38.195281Z",
-    "vocabulary": "2026-01-21T22:54:32.850873Z",
-    "plan": "2026-01-30T15:05:14.173754Z"
+    "md": "2026-02-05T21:56:21.876131Z",
+    "meta": "2026-02-05T21:52:08.910796Z",
+    "activities": "2026-02-05T22:02:48.049969Z",
+    "vocabulary": "2026-02-05T21:52:08.917796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1777/2000 (raw: 1981) | pedagogy: 2 violations"
+      "message": "1777/2000 (raw: 1928) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/10"
+      "message": "16/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,8 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: fill-in-the-blank, reading"
+      "2 Outline Compliance Errors",
+      "Missing required activity types: fill-in-the-blank"
     ],
     "pass_count": 3,
     "fail_count": 1

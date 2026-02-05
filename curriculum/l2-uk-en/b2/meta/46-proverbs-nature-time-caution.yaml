@@ -1,6 +1,7 @@
 module: b2-46
 level: B2
 slug: 46-proverbs-nature-time-caution
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9

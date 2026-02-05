@@ -1,6 +1,7 @@
 module: b2-61
 level: B2
 slug: 61-synonyms-time
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9

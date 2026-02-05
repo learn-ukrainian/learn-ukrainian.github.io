@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:47
+**Generated:** 2026-02-05 22:03:41
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -35,19 +35,20 @@
 | 13 | quiz | Інтеграційний тест | 16 | 8 | ✅ |
 | 14 | essay-response | Крос-регістрове перетворення | 1 | 1 | ✅ |
 | 15 | group-sort | Класифікація стильових маркерів | 20 | 14 | ✅ |
+| 16 | reading | Текст для аналізу: Регістрова практика: Перенесення тексту між стилями | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 15-19) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 16 (target: 15-19) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2783/2000 (raw: 3134)
-- **Activities:** ✅ 15/15
+- **Words:** ✅ 2783/2000 (raw: 3114)
+- **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
@@ -68,8 +69,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 37 | 3 | 100% | 20% | 20.0% |
+| activity_types | 13 | 8 | 100% | 25% | 25.0% |
+| review_sections | 29 | 3 | 100% | 20% | 20.0% |
 | variety | 0.97 | - | 97% | 15% | 14.5% |
 | engagement | 10 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
@@ -81,18 +82,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
-| **Огляд** | ⚪️ | 105 | Skipped |
-| **Навички** | ⚪️ | 17 | Skipped |
-| **Навичка 1: Стильова ідентифікація (M15-16)** | ⚪️ | 73 | Skipped |
-| **Навичка 2: Регістрове перемикання (M17-24)** | ⚪️ | 52 | Skipped |
-| **Навичка 3: Крос-регістрова трансформація (M11-14, M25)** | ⚪️ | 49 | Skipped |
-| **Тест: Прочитайте вихідний текст** | ✅ | 455 | Included in Core |
-| **Пояснення** | ⚪️ | 560 | Skipped |
-| **Практика** | ⚪️ | 464 | Skipped |
-| **Діалоги** | ✅ | 479 | Included in Core |
-| **Інтеграційне завдання** | ⚪️ | 185 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 79 | Skipped |
-| **Самоперевірка** | ⚪️ | 58 | Skipped |
-| **Наступні кроки** | ⚪️ | 40 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Один зміст, п'ять голосів** | ⚪️ | 122 | Skipped |
+| **Трансформація в науковий стиль** | ⚪️ | 125 | Skipped |
+| **Трансформація в офіційний стиль** | ⚪️ | 1064 | Skipped |
+| **Трансформація в публіцистичний стиль** | ⚪️ | 943 | Skipped |
+| **Трансформація в розмовний стиль** | ⚪️ | 185 | Skipped |
+| **Підсумок** | ✅ | 79 | Included in Core |
+| **Інтеграційне завдання** | ⚪️ | 208 | Skipped |

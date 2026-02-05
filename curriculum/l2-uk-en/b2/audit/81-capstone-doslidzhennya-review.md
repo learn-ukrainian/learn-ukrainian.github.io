@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:05
+**Generated:** 2026-02-05 22:04:40
 
 ## Configuration
 **Type:** B2-history
@@ -32,12 +32,13 @@
 | 10 | fill-in | Лексика дослідника в дії | 8 | 8 | ✅ |
 | 11 | cloze | Шлях молодого науковця | 15 | 1 | ✅ |
 | 12 | essay-response | Пропозиція проєкту (Project Proposal) | 1 | 1 | ✅ |
+| 13 | reading | Текст для аналізу: Capstone: Дослідження | 3 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 3-9) ❌
-- Unique types: 6 (minimum: 2) ✅
-- Priority types used: 1/4 (essay-response) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Total activities: 13 (target: 3-9) ❌
+- Unique types: 7 (minimum: 2) ✅
+- Priority types used: 2/4 (essay-response, reading) ✅
+- Required types used: 2/3 (essay-response, reading) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,10 +54,10 @@
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-- **Words:** ✅ 2147/2000 (raw: 2315)
-- **Activities:** ✅ 12/3
+- **Words:** ✅ 2147/2000 (raw: 2284)
+- **Activities:** ✅ 13/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
@@ -64,7 +65,7 @@
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 12 (target 3-9)
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
 - **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
 - **Richness:** ❌ 91% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -84,23 +85,19 @@
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 9 | 5 | 100% | 5% | 5.0% |
+| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| questions | 7 | 5 | 100% | 5% | 5.0% |
 | proverbs | 8 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **91.3%** |
+| **TOTAL** | | | | | **91.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 226 | Included in Core |
-| **Стратегії: Планування часу** | ⚪️ | 174 | Skipped |
-| **Пояснення: Методологія успіху** | ⚪️ | 231 | Skipped |
-| **Практика: Організація процесу** | ⚪️ | 216 | Skipped |
-| **Пошук джерел: Де ховається істина?** | ⚪️ | 269 | Skipped |
-| **Етика дослідника: Академічна доброчесність** | ⚪️ | 287 | Skipped |
-| **Методи аналізу даних: Від фактів до висновків** | ✅ | 184 | Included in Core |
-| **Мовний стиль дослідника: Точність та об'єктивність** | ⚪️ | 191 | Skipped |
-| **Аналіз та синтез: Від чернетки до фіналу** | ✅ | 173 | Included in Core |
-| **Підсумок** | ✅ | 86 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Етап написання** | ⚪️ | 226 | Skipped |
+| **Написання вступу** | ✅ | 405 | Included in Core |
+| **Основна частина** | ✅ | 485 | Included in Core |
+| **Висновки** | ✅ | 287 | Included in Core |
+| **Редагування та оформлення** | ⚪️ | 375 | Skipped |
+| **Підготовка до здачі** | ⚪️ | 173 | Skipped |
+| **Підсумок** | ✅ | 196 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M34 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:17
+**Generated:** 2026-02-05 22:03:50
 
 ## Configuration
 **Type:** B2-grammar
@@ -33,12 +33,13 @@
 | 11 | fill-in | Визначте словотвірну модель | 16 | 8 | ✅ |
 | 12 | quiz | Комплексна перевірка знань про абстрактні іменники | 16 | 8 | ✅ |
 | 13 | essay-response | Абстрактне мислення: Аналіз концепцій | 1 | 1 | ✅ |
+| 14 | reading | Текст для аналізу: Словотворення: абстрактні іменники | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -51,10 +52,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2153/2000 (raw: 2762)
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2151/2000 (raw: 2757)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
@@ -63,7 +64,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -83,7 +84,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
+| questions | 23 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
 
@@ -91,12 +92,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 206 | Included in Core |
-| **Пояснення** | ⚪️ | 519 | Skipped |
-| **Трансформації** | ⚪️ | 254 | Skipped |
-| **Практика** | ⚪️ | 152 | Skipped |
-| **Діалог: Обговорення словотворення** | ✅ | 180 | Included in Core |
-| **Культурний контекст: Словотворення в українській літературі** | ✅ | 445 | Included in Core |
-| **Додаткові приклади вживання** | ⚪️ | 123 | Skipped |
-| **Підсумок** | ✅ | 94 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Абстрактна лексика** | ⚪️ | 206 | Skipped |
+| **Суфікс -ння/-ення (дія, процес)** | ⚪️ | 773 | Skipped |
+| **Суфікс -ість (якість, властивість)** | ⚪️ | 150 | Skipped |
+| **Суфікси -ок, -ка, -ство (результат, сфера)** | ⚪️ | 625 | Skipped |
+| **Практика — номіналізація** | ⚪️ | 123 | Skipped |
+| **Підсумок** | ✅ | 204 | Included in Core |

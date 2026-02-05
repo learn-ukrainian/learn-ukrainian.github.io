@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M32 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:09
+**Generated:** 2026-02-05 22:03:48
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,28 +34,38 @@
 | 12 | fill-in | Порядкові числівники у контексті | 10 | 8 | ✅ |
 | 13 | cloze | Ціни та статистика | 16 | 14 | ✅ |
 | 14 | essay-response | Аналітичний звіт: Ваша компанія | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Відмінювання числівників ІІ: Складені числівники | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2113/2000 (raw: 3678)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 2111/2000 (raw: 3685)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 17/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -70,21 +80,22 @@
 | examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 17 | 5 | 100% | 15% | 15.0% |
 | dialogues | 17 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 22 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 53 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 260 | Included in Core |
-| **Пояснення** | ⚪️ | 1338 | Skipped |
-| **Трансформації** | ⚪️ | 251 | Skipped |
+| **Розминка — Складні числівники** | ⚪️ | 260 | Skipped |
+| **Складені кількісні числівники** | ⚪️ | 1338 | Skipped |
+| **Складені порядкові числівники** | ⚪️ | 249 | Skipped |
 | **Підсумок** | ✅ | 101 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Числівники в статистиці та новинах** | ⚪️ | 110 | Skipped |
+| **Практика** | ⚪️ | 0 | Skipped |

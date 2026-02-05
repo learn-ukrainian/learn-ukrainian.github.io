@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M91 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:14
+**Generated:** 2026-02-05 22:04:51
 
 ## Configuration
 **Type:** B2-skills
@@ -34,27 +34,37 @@
 | 12 | fill-in | Фрази для сигналізації | 10 | 8 | ✅ |
 | 13 | quiz | Типові помилки та їх виправлення | 10 | 8 | ✅ |
 | 14 | error-correction | Виправлення помилок у поданні | 8 | 6 | ✅ |
+| 15 | reading | Текст для аналізу: Презентації: Основи | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 14-18) ✅
-- Unique types: 11 (minimum: 5) ✅
+- Total activities: 15 (target: 14-18) ✅
+- Unique types: 12 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2282/2000 (raw: 2343)
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 2282/2000 (raw: 2360)
+- **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (skills))
 - **Richness:** ✅ 91% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -73,15 +83,18 @@
 | cultural | 1 | - | 100% | 12% | 12.2% |
 | realworld | 18 | 3 | 100% | 12% | 12.2% |
 | visual | 0 | 2 | 0% | 6% | 0.0% |
-| paragraph_var | 0.65 | - | 65% | 6% | 4.0% |
-| questions | 14 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **91.5%** |
+| paragraph_var | 0.66 | - | 66% | 6% | 4.0% |
+| questions | 13 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **91.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 62 | Included in Core |
-| **Вступ** | ✅ | 140 | Included in Core |
-| **Пояснення** | ⚪️ | 1863 | Skipped |
+| **Розминка — Що таке ефективна презентація** | ⚪️ | 140 | Skipped |
+| **Структура презентації** | ⚪️ | 1863 | Skipped |
 | **Підсумок** | ✅ | 164 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 53 | Skipped |
+| **Signposting — мовна навігація** | ⚪️ | 53 | Skipped |
+| **Візуальні матеріали** | ⚪️ | 0 | Skipped |
+| **Техніка виступу — основи** | ⚪️ | 0 | Skipped |
+| **Практика** | ⚪️ | 0 | Skipped |

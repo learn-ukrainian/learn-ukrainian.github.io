@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M75 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:55
+**Generated:** 2026-02-05 22:04:33
 
 ## Configuration
 **Type:** B2-culture
@@ -35,9 +35,10 @@
 | 13 | translate | Пасивні конструкції (B2 фокус) | 8 | 6 | ✅ |
 | 14 | quiz | Визначення регістру | 8 | 8 | ✅ |
 | 15 | match-up | Дієслівне керування та сталі сполуки | 12 | 8 | ✅ |
+| 16 | reading | Текст для аналізу: Сучасна діаспора | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
+- Total activities: 16 (target: 10-14) ❌
 - Unique types: 13 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
@@ -53,8 +54,8 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2867/2000 (raw: 2968)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2861/2000 (raw: 2942)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
@@ -64,8 +65,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (culture))
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (culture))
 - **Richness:** ❌ 89% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -84,19 +85,17 @@
 | paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
 | examples | 26 | - | 100% | 7% | 6.7% |
 | realworld | 3 | - | 100% | 7% | 6.7% |
-| questions | 8 | 4 | 100% | 7% | 6.7% |
+| questions | 7 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **89.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
-| **Вступ: Глобальне українство понад кордонами** | ✅ | 752 | Included in Core |
-| **Теорія: Культурна дипломатія та м’яка сила** | ✅ | 427 | Included in Core |
-| **Лобізм та гуманітарний фронт** | ⚪️ | 278 | Skipped |
-| **Аналіз та рефлексія: Ідентичність у вигнанні** | ✅ | 208 | Included in Core |
-| **Майбутнє діаспори: Від еміграції до повернення** | ⚪️ | 266 | Skipped |
-| **Reading Practice: Голос цифрової нації** | ⚪️ | 0 | Skipped (using YAML) |
-| **✍️ Написання есе** | ⚪️ | 276 | Skipped |
-| **Підсумок** | ✅ | 66 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Глобальне українство** | ⚪️ | 752 | Skipped |
+| **Історія української еміграції** | ⚪️ | 427 | Skipped |
+| **Організації та інституції діаспори** | ⚪️ | 484 | Skipped |
+| **Культурна дипломатія та лобізм** | ✅ | 266 | Included in Core |
+| **Мова діаспори** | ⚪️ | 417 | Skipped |
+| **Підсумок та практика** | ✅ | 274 | Included in Core |
+| **Підсумок** | ✅ | 176 | Included in Core |

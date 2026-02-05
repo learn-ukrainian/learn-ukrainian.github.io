@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:08
+**Generated:** 2026-02-05 22:04:54
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -38,12 +38,13 @@
 | 16 | quiz | Підсумкова перевірка комунікаційних навичок | 13 | 8 | ✅ |
 | 17 | essay-response | Написання професійного листа електронною поштою | 1 | 1 | ✅ |
 | 18 | comparative-study | Порівняльний аналіз медіатекстів на одну тему | 1 | 1 | ✅ |
+| 19 | reading | Текст для аналізу: B2 Підсумковий іспит | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 18 (target: 15-19) ✅
-- Unique types: 13 (minimum: 4) ✅
+- Total activities: 19 (target: 15-19) ✅
+- Unique types: 14 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -56,10 +57,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2566/2000 (raw: 2756)
-- **Activities:** ✅ 18/15
+- **Words:** ✅ 2566/2000 (raw: 2746)
+- **Activities:** ✅ 19/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 13/4 types
+- **Unique_types:** ✅ 14/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
@@ -67,7 +68,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (18 activities)
+- **Content_heavy:** ✅ Content-heavy OK (19 activities)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -80,8 +81,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 24 | 3 | 100% | 20% | 20.0% |
+| activity_types | 14 | 8 | 100% | 25% | 25.0% |
+| review_sections | 21 | 3 | 100% | 20% | 20.0% |
 | variety | 0.95 | - | 95% | 15% | 14.2% |
 | engagement | 3 | 3 | 100% | 10% | 10.0% |
 | cultural | 1 | - | 100% | 10% | 10.0% |
@@ -93,13 +94,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд** | ⚪️ | 84 | Skipped |
-| **Навички** | ⚪️ | 14 | Skipped |
-| **Навичка 1: Ділова пошта** | ⚪️ | 474 | Skipped |
-| **Навичка 2: Професійні звіти** | ⚪️ | 434 | Skipped |
-| **Навичка 3: Аналіз медіа** | ✅ | 317 | Included in Core |
-| **Навичка 4: Презентації** | ⚪️ | 544 | Skipped |
-| **Навичка 5: Дискусії та дебати** | ⚪️ | 452 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 117 | Skipped |
-| **Підсумок** | ✅ | 36 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 94 | Skipped |
+| **Огляд — Фінальний іспит B2** | ⚪️ | 84 | Skipped |
+| **Частина 1: Читання** | ✅ | 488 | Included in Core |
+| **Частина 2: Письмо** | ✅ | 434 | Included in Core |
+| **Частина 3: Слухання** | ✅ | 861 | Included in Core |
+| **Частина 4: Говоріння** | ✅ | 452 | Included in Core |
+| **Підсумок та результати** | ✅ | 117 | Included in Core |
+| **Підсумок** | ✅ | 130 | Included in Core |

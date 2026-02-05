@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M29 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:53
+**Generated:** 2026-02-05 22:03:45
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,19 +34,20 @@
 | 12 | quiz | Комплексний аналіз тексту | 16 | 8 | ✅ |
 | 13 | fill-in | Вставні конструкції та модалізація | 16 | 8 | ✅ |
 | 14 | essay-response | Інтеграційний аналіз суспільних процесів | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Інтеграційна практика B2.1 | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ❌ 1850/2000 (raw: 1957)
-- **Activities:** ✅ 14/10
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
@@ -67,7 +68,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 32 | 24 | 100% | 20% | 20.0% |
+| examples | 31 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
@@ -75,7 +76,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 7 | 5 | 100% | 5% | 5.0% |
+| questions | 6 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.9%** |
 
@@ -83,13 +84,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |
-| **Вступ** | ✅ | 156 | Included in Core |
-| **Наратив: Державний звіт про хід реформ** | ⚪️ | 498 | Skipped |
-| **Пояснення** | ⚪️ | 406 | Skipped |
-| **Трансформації** | ⚪️ | 122 | Skipped |
-| **Кейс-стаді: Проект «Державна реформа»** | ⚪️ | 286 | Skipped |
+| **Огляд — Що ми вивчили в B2.1** | ⚪️ | 156 | Skipped |
+| **Інтеграційний текст 1 — Офіційний документ** | ✅ | 904 | Included in Core |
+| **Інтеграційний текст 2 — Новина** | ✅ | 408 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 84 | Skipped |
-| **Самоперевірка** | ⚪️ | 70 | Skipped |
-| **Наступні кроки** | ⚪️ | 47 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Інтеграційний текст 3 — Науковий опис** | ✅ | 154 | Included in Core |
+| **Підсумкове завдання** | ⚪️ | 157 | Skipped |

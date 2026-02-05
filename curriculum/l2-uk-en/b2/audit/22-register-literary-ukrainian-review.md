@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M22 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:56
+**Generated:** 2026-02-05 22:03:37
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,26 +34,36 @@
 | 12 | quiz | Аналіз літературних текстів | 16 | 8 | ✅ |
 | 13 | fill-in | Трансформація в літературний стиль | 16 | 8 | ✅ |
 | 14 | essay-response | Творча майстерня | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Регістр — Літературна українська | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — аналіз літературного тексту' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2199/2000 (raw: 2751)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 2199/2000 (raw: 2742)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -75,7 +85,7 @@
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 36 | 5 | 100% | 5% | 5.0% |
+| questions | 34 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.3%** |
 
@@ -83,14 +93,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 56 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 220 | Included in Core |
-| **Пояснення** | ⚪️ | 954 | Skipped |
-| **Як визначити літературний стиль?** | ⚪️ | 58 | Skipped |
-| **Трансформації** | ⚪️ | 185 | Skipped |
-| **Діалоги** | ✅ | 422 | Included in Core |
+| **Розминка — Художній стиль** | ⚪️ | 276 | Skipped |
+| **Лексичні засоби** | ⚪️ | 1012 | Skipped |
+| **Тропи і фігури** | ⚪️ | 607 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 108 | Skipped |
-| **Самоперевірка** | ⚪️ | 57 | Skipped |
-| **Наступні кроки** | ⚪️ | 29 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Синтаксичні особливості** | ⚪️ | 165 | Skipped |
+| **Практика — аналіз літературного тексту** | ✅ | 139 | Included in Core |

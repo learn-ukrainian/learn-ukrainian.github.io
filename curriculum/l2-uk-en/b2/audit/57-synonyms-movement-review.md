@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M57 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:04
+**Generated:** 2026-02-05 22:04:15
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,17 +35,18 @@
 | 13 | quiz | Метафоричний рух | 8 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Світ у русі | 1 | 1 | ✅ |
 | 15 | select | Технічний та Офіційний рух | 6 | 6 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Рух і Пересування | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 57-synonyms-movement.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Технічний та Офіційний рух', 'instruction': 'Оберіть слова, які доречні в офіційному або технічному контексті (6+ елементів).', 'items': [{'question': 'Яка лексика пасує для новин або документів?', 'options': [{'text': 'пересуватися', 'correct': True}, {'text': 'транспортувати', 'correct': True}, {'text': 'здійснювати переліт', 'correct': True}, {'text': 'марш', 'correct': True}, {'text': 'міграція', 'correct': True}, {'text': 'експортувати', 'correct': True}]}, {'question': 'Оберіть терміни для опису швидкості:', 'options': [{'text': 'інтенсивність', 'correct': True}, {'text': 'траєкторія', 'correct': True}, {'text': 'прискорення', 'correct': True}, {'text': 'чимчикування', 'correct': False}]}, {'question': 'Які слова описують рух великих груп людей?', 'options': [{'text': 'евакуація', 'correct': True}, {'text': 'переміщення', 'correct': True}, {'text': 'мандрівка', 'correct': False}, {'text': 'похід', 'correct': True}]}, {'question': 'Оберіть слова для опису руху транспорту за розкладом:', 'options': [{'text': 'курсувати', 'correct': True}, {'text': 'прибувати', 'correct': True}, {'text': 'відправлятися', 'correct': True}, {'text': 'летіти', 'correct': False}]}, {'question': 'Які слова вказують на зміну напрямку?', 'options': [{'text': 'маневрувати', 'correct': True}, {'text': 'повертати', 'correct': True}, {'text': 'гальмувати', 'correct': True}, {'text': 'стояти', 'correct': False}]}, {'question': 'Оберіть слова для опису подолання кордонів:', 'options': [{'text': 'перетинати', 'correct': True}, {'text': "в'їжджати", 'correct': True}, {'text': 'виїжджати', 'correct': True}, {'text': 'брести', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1814/2000 (raw: 2025)
-- **Activities:** ✅ 15/10
+- **Words:** ❌ 1814/2000 (raw: 1992)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
@@ -83,22 +84,18 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 5 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| paragraph_var | 0.98 | - | 98% | 8% | 8.2% |
 | examples | 40 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
-| questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 7 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 92 | Included in Core |
-| **Вступ** | ✅ | 125 | Included in Core |
-| **Фразеологізми та синоніми: Мистецтво кроку** | ⚪️ | 540 | Skipped |
-| **Культурний код: Специфічні способи пересування** | ✅ | 297 | Included in Core |
-| **Вживання у контексті: Ритм, Манера та Регістр** | ✅ | 172 | Included in Core |
-| **Психологія руху в літературі та мистецтві** | ⚪️ | 137 | Skipped |
-| **Транспортна інфраструктура України: Новий масштаб руху** | ⚪️ | 71 | Skipped |
-| **Географія руху в Україні: Від степу до вершин** | ⚪️ | 198 | Skipped |
-| **Підсумок** | ✅ | 72 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Як ходити і бігати** | ⚪️ | 665 | Skipped |
+| **Walk** | ⚪️ | 469 | Skipped |
+| **Run** | ⚪️ | 208 | Skipped |
+| **Практика — динамічний опис** | ⚪️ | 198 | Skipped |
+| **Підсумок** | ✅ | 182 | Included in Core |

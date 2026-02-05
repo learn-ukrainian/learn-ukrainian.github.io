@@ -1,6 +1,7 @@
 module: b2-44
 level: B2
 slug: 44-complex-syntax-ellipsis-parcelling
+focus: grammar
 version: '1.0'
 naturalness:
   score: 9

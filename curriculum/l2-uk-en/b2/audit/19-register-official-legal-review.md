@@ -1,8 +1,8 @@
 # Audit Report: M19 — 19-register-official-legal.md
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:11
+**Generated:** 2026-02-05 22:03:34
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,40 +34,43 @@
 | 12 | fill-in | Утворіть кличний відмінок для офіційних звертань | 16 | 8 | ✅ |
 | 13 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
 | 14 | essay-response | Заява | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Офіційно-діловий стиль: документи, закони, заяви | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (error-correction, essay-response, fill-in, match-up, quiz) ❌
+- Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1931/3800 (raw: 2686)
-- **Activities:** ✅ 14/10
+- **Words:** ❌ 1931/3800 (raw: 2690)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -90,13 +93,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Вступ** | ✅ | 18 | Included in Core |
-| **Тест: Прочитайте документи** | ⚪️ | 188 | Skipped |
-| **Пояснення** | ⚪️ | 782 | Skipped |
-| **Трансформації** | ⚪️ | 201 | Skipped |
-| **Практика** | ⚪️ | 0 | Skipped |
-| **Діалоги** | ✅ | 405 | Included in Core |
+| **Вступ — Офіційно-діловий стиль** | ✅ | 18 | Included in Core |
+| **Мовні засоби офіційного стилю** | ⚪️ | 188 | Skipped |
+| **Типи документів** | ⚪️ | 782 | Skipped |
+| **Структура офіційних документів** | ⚪️ | 201 | Skipped |
+| **Законодавчі тексти** | ✅ | 405 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 86 | Skipped |
-| **Самооцінка** | ⚪️ | 81 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Типові помилки** | ✅ | 86 | Included in Core |
+| **Практика і підсумок** | ✅ | 191 | Included in Core |

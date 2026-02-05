@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:15
+**Generated:** 2026-02-05 22:03:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -31,35 +31,38 @@
 | 9 | quiz | Стилістичні функції односкладних речень | 14 | 8 | ✅ |
 | 10 | fill-in | Трансформуйте двоскладне речення в односкладне | 16 | 8 | ✅ |
 | 11 | essay-response | Мистецтво лаконічності: Сила односкладних речень | 1 | 1 | ✅ |
+| 12 | reading | Текст для аналізу: Односкладні речення | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/4 (error-correction, fill-in, unjumble) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Required types used: 2/3 (essay-response, reading) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — односкладні речення' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'знайдіть речення,...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1956/2000 (raw: 2526) (44 short)
-- **Activities:** ✅ 11/10
+- **Words:** ⚠️ 1956/2000 (raw: 2523) (44 short)
+- **Activities:** ✅ 12/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 12 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -81,7 +84,7 @@
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
+| questions | 23 | 5 | 100% | 5% | 5.0% |
 | proverbs | 7 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.4%** |
 
@@ -89,13 +92,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Вступ: Прочитайте текст** | ✅ | 133 | Included in Core |
-| **Пояснення** | ⚪️ | 694 | Skipped |
-| **Трансформації** | ⚪️ | 246 | Skipped |
-| **Практика** | ⚪️ | 224 | Skipped |
-| **Діалоги** | ✅ | 331 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 83 | Skipped |
-| **Стилістичні функції** | ⚪️ | 20 | Skipped |
-| **Самооцінка** | ⚪️ | 66 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Речення без підмета** | ⚪️ | 133 | Skipped |
+| **Означено-особові (Definite-personal)** | ⚪️ | 940 | Skipped |
+| **Неозначено-особові (Indefinite-personal)** | ⚪️ | 224 | Skipped |
+| **Безособові** | ⚪️ | 331 | Skipped |
+| **Підсумок** | ✅ | 83 | Included in Core |
+| **Номінативні** | ⚪️ | 20 | Skipped |
+| **Практика — односкладні речення** | ⚪️ | 176 | Skipped |

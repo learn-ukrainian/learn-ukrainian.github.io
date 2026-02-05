@@ -2,14 +2,14 @@
   "module": "92-presentation-skills-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:13.282228Z",
+  "last_audit": "2026-02-05T22:04:52.585956Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T10:46:24.786014Z",
-    "meta": "2026-01-29T07:39:04.745094Z",
-    "activities": "2026-01-21T10:46:24.788459Z",
-    "vocabulary": "2026-01-21T22:54:38.892074Z",
-    "plan": "2026-01-30T15:04:49.387853Z"
+    "md": "2026-02-05T21:56:22.111128Z",
+    "meta": "2026-02-05T21:52:08.911796Z",
+    "activities": "2026-02-05T22:02:48.228966Z",
+    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3939/2000 (raw: 4088)"
+      "message": "3939/2000 (raw: 4071)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/14"
+      "message": "15/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

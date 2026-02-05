@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:00
+**Generated:** 2026-02-05 22:04:41
 
 ## Configuration
 **Type:** B2-history
@@ -35,12 +35,13 @@
 | 13 | true-false | Міфи про публічні виступи | 8 | 8 | ✅ |
 | 14 | true-false | Фінальний чек-лист | 8 | 8 | ✅ |
 | 15 | essay-response | Рефлексія оратора | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Capstone: Презентація | 3 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 6 (minimum: 2) ✅
-- Priority types used: 1/4 (essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Total activities: 16 (target: 3-9) ❌
+- Unique types: 7 (minimum: 2) ✅
+- Priority types used: 2/4 (essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1868/2000 (raw: 1964)
-- **Activities:** ✅ 15/3
+- **Words:** ❌ 1868/2000 (raw: 1936)
+- **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/2 types
+- **Unique_types:** ✅ 7/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
@@ -66,7 +67,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
 - **Richness:** ❌ 70% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -83,11 +84,11 @@
 | engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 0 | 4 | 0% | 15% | 0.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
 | proverbs | 0 | 1 | 0% | 5% | 0.0% |
 | **TOTAL** | | | | | **70.7%** |
 
@@ -118,16 +119,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд модуля** | ⚪️ | 65 | Skipped |
-| **Стратегії: Теорія публічного виступу** | ⚪️ | 302 | Skipped |
-| **Сторітелінг: Сила історії** | ⚪️ | 254 | Skipped |
-| **Практика: Кейс-стаді** | ⚪️ | 104 | Skipped |
-| **Візуалізація: Слайди, які не вбивають** | ⚪️ | 187 | Skipped |
-| **Майстерність оратора: Голос і Тіло** | ⚪️ | 171 | Skipped |
-| **Виступи онлайн (Zoom, Teams)** | ⚪️ | 81 | Skipped |
-| **Питання та відповіді** | ⚪️ | 188 | Skipped |
-| **Подолання страху (Глософобія)** | ⚪️ | 186 | Skipped |
-| **Технічна підготовка** | ⚪️ | 63 | Skipped |
-| **Етика оратора** | ⚪️ | 43 | Skipped |
-| **Підсумок** | ✅ | 114 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Усна презентація** | ⚪️ | 367 | Skipped |
+| **Структура презентації** | ⚪️ | 358 | Skipped |
+| **Візуальні матеріали** | ⚪️ | 358 | Skipped |
+| **Техніка виступу** | ⚪️ | 269 | Skipped |
+| **Відповіді на запитання** | ⚪️ | 249 | Skipped |
+| **Репетиція та фінал** | ⚪️ | 43 | Skipped |
+| **Підсумок** | ✅ | 224 | Included in Core |

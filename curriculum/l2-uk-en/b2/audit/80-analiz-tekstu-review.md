@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M80 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:54
+**Generated:** 2026-02-05 22:04:39
 
 ## Configuration
 **Type:** B2-skills
@@ -35,32 +35,29 @@
 | 13 | quiz | Факт чи думка? | 8 | 8 | ✅ |
 | 14 | match-up | Логічні хиби | 12 | 8 | ✅ |
 | 15 | essay-response | Аналітичний розбір маніпуляції | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Аналіз тексту | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 14-18) ✅
-- Unique types: 5 (minimum: 5) ✅
+- Total activities: 16 (target: 14-18) ✅
+- Unique types: 6 (minimum: 5) ✅
 - Priority types used: 2/4 (fill-in, quiz) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Required types used: 2/3 (essay-response, reading) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 80-analiz-tekstu.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Факт чи думка?', 'items': [{'question': '«Київ офіційно є головною столицею сучасної незалежної європейської держави Україна згідно з Основним Законом нашої країни».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Гіпотеза', 'correct': False}, {'text': 'Міф', 'correct': False}]}, {'question': '«Київ — це, без жодного сумніву, найкраще місто для життя у світі».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': 'Статистика', 'correct': False}, {'text': 'Аксіома', 'correct': False}]}, {'question': '«Планета Земля постійно обертається навколо Сонця за певною еліптичною траєкторією, що зумовлює зміну пір року».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Помилка', 'correct': False}, {'text': 'Вигадка', 'correct': False}]}, {'question': '«Цей новий пригодницький фільм здався мені надзвичайно нудним, затягнутим та абсолютно нецікавим для сучасного глядача».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': 'Доказ', 'correct': False}, {'text': 'Закон', 'correct': False}]}, {'question': '«В Україні на даний момент офіційно проживає понад тридцять мільйонів людей».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Емоція', 'correct': False}, {'text': 'Смак', 'correct': False}]}, {'question': '«Податки у нашій країні є занадто високими для малого бізнесу».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': 'Число', 'correct': False}, {'text': 'Дата', 'correct': False}]}, {'question': '«День Незалежності України офіційно відзначається державою щороку саме двадцять четвертого серпня на честь проголошення Акту незалежності».', 'options': [{'text': 'Факт', 'correct': True}, {'text': 'Думка', 'correct': False}, {'text': 'Прогноз', 'correct': False}, {'text': 'План', 'correct': False}]}, {'question': '«Математика — це найбільш складна та нудна наука з усіх існуючих».', 'options': [{'text': 'Думка', 'correct': True}, {'text': 'Факт', 'correct': False}, {'text': "Об'єкт", 'correct': False}, {'text': 'Вимір', 'correct': False}]}], 'instruction': "Визначте, чи є наведене твердження об'єктивним фактом чи суб'єктивною думкою."} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення' per template 'b2-module-template.md'
-  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md.md
-
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2147/2000 (raw: 2324)
-- **Activities:** ✅ 15/14
+- **Words:** ✅ 2141/2000 (raw: 2292)
+- **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 5/5 types
+- **Unique_types:** ✅ 6/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
@@ -68,8 +65,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (15 activities)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (skills))
+- **Content_heavy:** ✅ Content-heavy OK (16 activities)
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
 - **Richness:** ✅ 99% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -88,20 +85,17 @@
 | realworld | 13 | 3 | 100% | 12% | 12.2% |
 | visual | 8 | 2 | 100% | 6% | 6.1% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 32 | 4 | 100% | 6% | 6.1% |
+| questions | 31 | 4 | 100% | 6% | 6.1% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 105 | Included in Core |
-| **Вступ: Тріада розуміння** | ✅ | 420 | Included in Core |
-| **Стратегії: Читання між рядків** | ✅ | 302 | Included in Core |
-| **Deep Dive: Структура аргументації** | ✅ | 189 | Included in Core |
-| **Практика: Виявлення маніпуляцій** | ⚪️ | 185 | Skipped |
-| **Методи деконструкції: Практичний посібник** | ⚪️ | 227 | Skipped |
-| **Риторичні засоби: Механіка впливу в політиці** | ⚪️ | 179 | Skipped |
-| **Академічна доброчесність: Чесність у науці** | ⚪️ | 101 | Skipped |
-| **Цифрові інструменти для аналізу: Майбутнє критичного мислення** | ✅ | 229 | Included in Core |
-| **Підсумок** | ✅ | 100 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Поглиблений аналіз** | ✅ | 420 | Included in Core |
+| **Аналіз авторської позиції** | ✅ | 491 | Included in Core |
+| **Контекстуальний аналіз** | ✅ | 183 | Included in Core |
+| **Аналіз аргументації** | ✅ | 406 | Included in Core |
+| **Стилістичний аналіз** | ✅ | 101 | Included in Core |
+| **Підсумок та практика** | ✅ | 225 | Included in Core |
+| **Підсумок** | ✅ | 210 | Included in Core |

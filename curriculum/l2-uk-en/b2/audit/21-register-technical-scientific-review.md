@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M21 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:07
+**Generated:** 2026-02-05 22:03:36
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,26 +34,36 @@
 | 12 | fill-in | Трансформуйте в технічний стиль | 16 | 8 | ✅ |
 | 13 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
 | 14 | essay-response | Трансформація тексту | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Регістр: науково-технічний стиль | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — аналіз і створення' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 1858/2000 (raw: 2220)
-- **Activities:** ✅ 14/10
+- **Words:** ❌ 1858/2000 (raw: 2222)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 23 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -75,7 +85,7 @@
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.4%** |
 
@@ -83,12 +93,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 46 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 195 | Included in Core |
-| **Пояснення** | ⚪️ | 673 | Skipped |
-| **Трансформації** | ⚪️ | 276 | Skipped |
-| **Діалоги** | ✅ | 428 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 62 | Skipped |
-| **Самооцінка** | ⚪️ | 68 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Що таке науково-технічний стиль** | ⚪️ | 46 | Skipped |
+| **Лексичні особливості** | ⚪️ | 868 | Skipped |
+| **Граматичні особливості** | ⚪️ | 276 | Skipped |
+| **Типи технічних текстів** | ✅ | 428 | Included in Core |
+| **Підсумок** | ✅ | 62 | Included in Core |
+| **Практика — аналіз і створення** | ✅ | 178 | Included in Core |

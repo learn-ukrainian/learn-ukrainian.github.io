@@ -2,14 +2,14 @@
   "module": "11-multi-clause-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:46.811421Z",
+  "last_audit": "2026-02-05T22:03:25.342388Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351720Z",
-    "meta": "2026-01-29T07:39:04.681484Z",
-    "activities": "2026-01-14T13:15:55.479913Z",
-    "vocabulary": "2026-01-21T22:54:26.022384Z",
-    "plan": "2026-01-29T07:45:40.581405Z"
+    "md": "2026-02-05T21:56:21.555134Z",
+    "meta": "2026-02-05T21:57:51.487195Z",
+    "activities": "2026-02-05T21:52:08.885796Z",
+    "vocabulary": "2026-02-05T21:52:08.915796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2123/3800 (raw: 2530) | pedagogy: 4 violations"
+      "message": "2123/3800 (raw: 2546) | pedagogy: 5 violations"
     },
     "activities": {
       "status": "pass",
@@ -33,17 +33,17 @@
       "message": "6 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "7 Outline Compliance Errors"
+      "6 Outline Compliance Errors"
     ],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

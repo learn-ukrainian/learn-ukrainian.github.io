@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M28 | **Phase:** B2.1c | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:12
+**Generated:** 2026-02-05 22:03:44
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,28 +34,38 @@
 | 12 | fill-in | Оберіть правильне дієслово | 16 | 8 | ✅ |
 | 13 | quiz | Комплексна перевірка економічної лексики | 16 | 8 | ✅ |
 | 14 | essay-response | Економічний аналіз розвитку | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Економічна лексика: говоримо про бізнес | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — економічні новини' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 1750/2000 (raw: 1936)
-- **Activities:** ✅ 14/10
+- **Words:** ❌ 1748/2000 (raw: 1923)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 14 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -75,7 +85,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 7 | 5 | 100% | 5% | 5.0% |
+| questions | 6 | 5 | 100% | 5% | 5.0% |
 | proverbs | 8 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
@@ -83,13 +93,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Вступ** | ✅ | 184 | Included in Core |
-| **Наратив: Економічний огляд** | ⚪️ | 519 | Skipped |
-| **Пояснення** | ⚪️ | 340 | Skipped |
-| **Трансформації** | ⚪️ | 91 | Skipped |
-| **Реальний приклад: IT-сектор в Україні** | ⚪️ | 267 | Skipped |
+| **Розминка — Економіка України** | ⚪️ | 184 | Skipped |
+| **Макроекономічні показники** | ⚪️ | 857 | Skipped |
+| **Бізнес-лексика** | ⚪️ | 358 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 64 | Skipped |
-| **Самоперевірка** | ⚪️ | 61 | Skipped |
-| **Наступні кроки** | ⚪️ | 53 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Фінансові операції** | ⚪️ | 125 | Skipped |
+| **Практика — економічні новини** | ⚪️ | 163 | Skipped |

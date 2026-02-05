@@ -1,6 +1,7 @@
 module: b2-72
 level: B2
 slug: 72-tekhnolohii-ta-shi
+focus: vocab
 version: '2.0'
 naturalness:
   score: 9

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M68 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:45
+**Generated:** 2026-02-05 22:04:26
 
 ## Configuration
 **Type:** B2-grammar
@@ -35,12 +35,13 @@
 | 13 | quiz | Сценарії майбутнього | 8 | 8 | ✅ |
 | 14 | select | Часові сполучники | 6 | 6 | ✅ |
 | 15 | essay-response | Сценарій майбутнього | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Складні Сполучники II: Час та Умова | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,10 +54,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2165/2000 (raw: 2361)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2165/2000 (raw: 2248)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
@@ -85,7 +86,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 16 | 5 | 100% | 5% | 5.0% |
+| questions | 15 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
 
@@ -93,21 +94,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |
-| **Вступ: Ритми часу в Полтаві та Сумах** | ✅ | 81 | Included in Core |
-| **Пояснення: Майстерність Часу та Умови** | ⚪️ | 144 | Skipped |
-| **Частина 2: Умовні Сполучники — Мистецтво Можливостей та Гіпотез** | ✅ | 125 | Included in Core |
-| **Частина 3: Діалог про подорож: Час та Умова в планах** | ✅ | 114 | Included in Core |
-| **Частина 7: Часові сценарії в Українській Літературі** | ✅ | 89 | Included in Core |
-| **Частина 8: Умовні конструкції в Бізнес-Плануванні** | ✅ | 101 | Included in Core |
-| **Частина 9: Побудова складних логічних ланцюжків у житті** | ✅ | 91 | Included in Core |
-| **Частина 10: Сполучники у Плануванні Подорожей та Логістиці** | ✅ | 102 | Included in Core |
-| **Частина 11: Час в Історичній Хроніці та Описах** | ✅ | 89 | Included in Core |
-| **Частина 12: Гіпотетичне Майбутнє та Умовні Сценарії** | ✅ | 124 | Included in Core |
-| **Частина 10: Побудова складних часових ланцюжків** | ✅ | 152 | Included in Core |
-| **Частина 11: Умовні Сценарії у Стратегічному Мисленні** | ✅ | 147 | Included in Core |
-| **Частина 12: Гіпотетичне Буття та Історична Уява** | ✅ | 180 | Included in Core |
-| **Частина 13: Діалог про майбутнє: Сценарії розвитку в Сумах** | ✅ | 154 | Included in Core |
-| **Частина 14: Мистецтво часової та умовної координації** | ✅ | 93 | Included in Core |
-| **Трансформації** | ⚪️ | 138 | Skipped |
-| **Підсумок** | ✅ | 55 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Коли і якщо** | ⚪️ | 464 | Skipped |
+| **Temporal Conjunctions** | ⚪️ | 383 | Skipped |
+| **Conditional Conjunctions** | ⚪️ | 512 | Skipped |
+| **Практика — часові та умовні зв'язки** | ⚪️ | 565 | Skipped |
+| **Підсумок** | ✅ | 165 | Included in Core |

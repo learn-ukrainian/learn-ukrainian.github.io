@@ -2,14 +2,14 @@
   "module": "41-aspect-nuances-secondary-imperfectivization",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:02.040474Z",
+  "last_audit": "2026-02-05T22:03:58.635181Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351897Z",
-    "meta": "2026-01-29T07:39:04.705240Z",
-    "activities": "2026-01-11T23:20:02.146232Z",
-    "vocabulary": "2026-01-21T22:54:30.549566Z",
-    "plan": "2026-01-30T15:04:49.282677Z"
+    "md": "2026-02-05T21:56:21.775132Z",
+    "meta": "2026-02-05T21:52:08.910796Z",
+    "activities": "2026-02-05T22:02:47.971970Z",
+    "vocabulary": "2026-02-05T21:52:08.916796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "1926/2000 (raw: 2718) (74 short)"
+      "message": "1926/2000 (raw: 2708) (74 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/10"
+      "message": "17/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: reading"
+      "2 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 0

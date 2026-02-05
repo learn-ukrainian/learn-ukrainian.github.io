@@ -1,8 +1,8 @@
 # Audit Report: M06 — 06-passive-in-context.md
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:48
+**Generated:** 2026-02-05 22:03:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -53,7 +53,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2114/3800 (raw: 2518)
+- **Words:** ❌ 2114/3800 (raw: 2545)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -68,7 +68,7 @@
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -80,22 +80,24 @@
 | examples | 70 | 24 | 100% | 20% | 20.0% |
 | engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
 | visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
+| questions | 47 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.1%** |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
-| **Тест: Прочитайте тексти** | ✅ | 337 | Included in Core |
-| **Пояснення** | ⚪️ | 836 | Skipped |
-| **Трансформації** | ⚪️ | 349 | Skipped |
-| **Діалоги** | ✅ | 308 | Included in Core |
+| **Вступ — Регістр і пасив** | ✅ | 337 | Included in Core |
+| **Таблиця регістрів і форм пасиву** | ⚪️ | 836 | Skipped |
+| **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
+| **Практичні сценарії — Науковий контекст** | ✅ | 308 | Included in Core |
 | **Підсумок** | ✅ | 120 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 110 | Included in Core |
+| **Практичні сценарії — Розмовний контекст** | ✅ | 0 | Included in Core |
+| **Інтегрована практика** | ⚪️ | 0 | Skipped |

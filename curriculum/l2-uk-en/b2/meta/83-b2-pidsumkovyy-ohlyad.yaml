@@ -1,6 +1,7 @@
 module: b2-83
 level: B2
 slug: 83-b2-pidsumkovyy-ohlyad
+focus: checkpoint
 version: '2.0'
 naturalness:
   score: 9

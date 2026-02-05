@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M53 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:58
+**Generated:** 2026-02-05 22:04:11
 
 ## Configuration
 **Type:** B2-vocab
@@ -34,17 +34,18 @@
 | 12 | match-up | Антоніми за змістом | 12 | 8 | ✅ |
 | 13 | quiz | Походження та Традиції | 8 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Світ навколо нас | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Фразеологізми: Тварини II (Птахи, Риби, Комахи) | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 53-idioms-animals-ii.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Походження та Традиції', 'instruction': 'Перевірте свої знання культурного контексту ідіом.', 'items': [{'question': "В якій п'єсі головний герой намагався 'вбити двох зайців' (одружитися з двома дівчатами)?", 'options': [{'text': 'За двома зайцями', 'correct': True}, {'text': 'Лісова пісня', 'correct': False}, {'text': 'Intermezzo', 'correct': False}, {'text': 'Тіні забутих предків', 'correct': False}], 'explanation': 'Це класична українська комедія.'}, {'question': "Яке конкретне значення символізує маленька 'муха' в популярній ідіомі 'муха не сідала'?", 'options': [{'text': 'Будь-яке, навіть найменше, втручання чи слід', 'correct': True}, {'text': 'Бруд або небезпечну хворобу', 'correct': False}, {'text': 'Швидкість пересування у просторі', 'correct': False}, {'text': 'Специфічний звук польоту комахи', 'correct': False}], 'explanation': 'Якщо навіть муха не сідала, значить річ незаймана.'}, {'question': "Чому саме 'ґави' та 'ворони' історично стали в українській мові головними символами неуважності?", 'options': [{'text': 'Через постійне спостереження за ними в небі замість роботи', 'correct': True}, {'text': 'Бо самі ці птахи вважаються дуже неуважними у природі', 'correct': False}, {'text': 'Бо вони часто крадуть блискучі речі у людей', 'correct': False}, {'text': 'Це був абсолютно випадковий вибір народної мови без причини', 'correct': False}], 'explanation': 'Людина відволікалася на птахів у небі.'}, {'question': 'Яка велична українська річка, згадана в тексті, є джерелом багатьох популярних рибних метафор?', 'options': [{'text': 'Дніпро', 'correct': True}, {'text': 'Дунай', 'correct': False}, {'text': 'Тиса', 'correct': False}, {'text': 'Прут', 'correct': False}], 'explanation': 'Дніпро — головна водна артерія України.'}, {'question': "В якому регіоні України знаходяться відомі Шацькі озера, згадані у зв'язку з творчістю Лесі Українки?", 'options': [{'text': 'Волинь', 'correct': True}, {'text': 'Галичина', 'correct': False}, {'text': 'Поділля', 'correct': False}, {'text': 'Слобожанщина', 'correct': False}], 'explanation': 'Леся Українка родом з Волині.'}, {'question': 'Який фразеологічний вираз найкраще описує дуже впевненого у собі та досвідченого продавця на ринку в Одесі?', 'options': [{'text': 'Як риба у воді', 'correct': True}, {'text': 'Як муха на склі', 'correct': False}, {'text': 'Рахує ворон', 'correct': False}, {'text': "Ні риба ні м'ясо", 'correct': False}], 'explanation': 'Одеса — морське місто, там рибні метафори дуже популярні.'}, {'question': "Що саме означає вираз 'ловити рибу в мутній воді' у сучасному політичному або діловому контексті?", 'options': [{'text': 'Свідома маніпуляція кризою або хаосом заради власної наживи', 'correct': True}, {'text': 'Процес фізичного очищення природних водойм від бруду', 'correct': False}, {'text': 'Створення нових справедливих законів для всіх громадян', 'correct': False}, {'text': 'Захист екології та навколишнього середовища регіону', 'correct': False}], 'explanation': 'Це опис корисливої поведінки під час хаосу.'}, {'question': 'Який з перерахованих нижче виразів вважається найбільш образливим для характеристики людини в українській мові?', 'options': [{'text': "Ні риба ні м'ясо", 'correct': True}, {'text': 'Як риба у воді', 'correct': False}, {'text': 'Вбити двох зайців', 'correct': False}, {'text': 'Муха не сідала', 'correct': False}], 'explanation': 'Це вказує на безхарактерність і нікчемність.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -54,10 +55,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1982/2000 (raw: 2138) (18 short)
-- **Activities:** ✅ 14/10
+- **Words:** ⚠️ 1982/2000 (raw: 2098) (18 short)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
@@ -85,20 +86,15 @@
 | paragraph_var | 0.97 | - | 97% | 8% | 8.1% |
 | examples | 40 | - | 100% | 8% | 8.3% |
 | realworld | 8 | - | 100% | 8% | 8.3% |
-| questions | 14 | - | 100% | 8% | 8.3% |
+| questions | 13 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
-| **Вступ** | ✅ | 209 | Included in Core |
-| **Частина 1: Птахи та Ссавці — Неуважність та Стратегія** | ✅ | 247 | Included in Core |
-| **Частина 2: Риби — Майстерність та Хаос у водній стихії** | ✅ | 244 | Included in Core |
-| **Частина 3: Комахи — Від ідеальної чистоти до перебільшення** | ✅ | 149 | Included in Core |
-| **Культурний код: Тварини, Стихії та Українська ментальність** | ✅ | 446 | Included in Core |
-| **Природа в українській класичній поезії** | ⚪️ | 117 | Skipped |
-| **Практичний додаток: Нюанси використання та Регістри** | ⚪️ | 141 | Skipped |
-| **Вживання у контексті** | ✅ | 152 | Included in Core |
-| **Підсумок** | ✅ | 90 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Птахи, риби та комахи** | ⚪️ | 456 | Skipped |
+| **Фразеологізми з птахами** | ⚪️ | 393 | Skipped |
+| **Фразеологізми з рибами та комахами** | ⚪️ | 563 | Skipped |
+| **Практика — різні тварини** | ⚪️ | 293 | Skipped |
+| **Підсумок** | ✅ | 200 | Included in Core |

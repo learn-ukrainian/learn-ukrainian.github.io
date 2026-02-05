@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M51 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:18
+**Generated:** 2026-02-05 22:04:09
 
 ## Configuration
 **Type:** B2-vocab
@@ -34,12 +34,13 @@
 | 12 | match-up | Антоніми | 12 | 8 | ✅ |
 | 13 | quiz | Деталі значення | 8 | 8 | ✅ |
 | 14 | essay-response | Емоційний інтелект: Мова почуттів | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Фразеологізми: Душа і Серце | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -52,10 +53,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1977/2000 (raw: 2107) (23 short)
-- **Activities:** ✅ 14/10
+- **Words:** ⚠️ 1977/2000 (raw: 2088) (23 short)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
@@ -83,19 +84,15 @@
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
 | examples | 17 | - | 100% | 8% | 8.3% |
 | realworld | 7 | - | 100% | 8% | 8.3% |
-| questions | 16 | - | 100% | 8% | 8.3% |
+| questions | 15 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
-| **Вступ: Емоційний ландшафт** | ✅ | 238 | Included in Core |
-| **Частина 1: Душа — Дзеркало внутрішнього світу** | ✅ | 411 | Included in Core |
-| **Частина 2: Серце — Центр болю та співчуття** | ✅ | 179 | Included in Core |
-| **Культурний код: Кордоцентризм** | ✅ | 160 | Included in Core |
-| **Фольклор і Пісні** | ⚪️ | 113 | Skipped |
-| **Вживання у контексті** | ✅ | 317 | Included in Core |
-| **Стилістичні поради** | ⚪️ | 326 | Skipped |
-| **Підсумок** | ✅ | 59 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Душа та серце в мові** | ⚪️ | 649 | Skipped |
+| **Фразеологізми з "душа"** | ⚪️ | 339 | Skipped |
+| **Фразеологізми з "серце"** | ⚪️ | 430 | Skipped |
+| **Практика — емоційні вирази** | ⚪️ | 326 | Skipped |
+| **Підсумок** | ✅ | 169 | Included in Core |

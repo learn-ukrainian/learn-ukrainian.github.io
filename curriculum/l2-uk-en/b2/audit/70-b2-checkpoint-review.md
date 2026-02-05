@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M70 | **Phase:** B2.2 | **Pedagogy:** Assessment | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:07
+**Generated:** 2026-02-05 22:04:28
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -35,12 +35,13 @@
 | 13 | quiz | Фінальний вердикт | 8 | 8 | ✅ |
 | 14 | select | Самодіагностика | 6 | 6 | ✅ |
 | 15 | quiz | Фінальний синтаксис | 8 | 8 | ✅ |
+| 16 | reading | Текст для аналізу: Контрольна точка B2.2 | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 15-19) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 16 (target: 15-19) ✅
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,10 +54,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1835/2000 (raw: 2021)
-- **Activities:** ✅ 15/15
+- **Words:** ❌ 1835/2000 (raw: 1978)
+- **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
@@ -77,8 +78,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 32 | 3 | 100% | 20% | 20.0% |
+| activity_types | 11 | 8 | 100% | 25% | 25.0% |
+| review_sections | 27 | 3 | 100% | 20% | 20.0% |
 | variety | 0.92 | - | 92% | 15% | 13.8% |
 | engagement | 5 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
@@ -90,14 +91,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 79 | Included in Core |
-| **Огляд** | ⚪️ | 8 | Skipped |
-| **Навички** | ⚪️ | 60 | Skipped |
-| **Навичка 1: Граматичний фундамент — Числівники та Дати** | ⚪️ | 245 | Skipped |
-| **Навичка 2: Словотвір та Морфологічна компетентність** | ⚪️ | 234 | Skipped |
-| **Навичка 3: Синтаксичні конструкції та Стилістичні Регістри** | ⚪️ | 192 | Skipped |
-| **Навичка 4: Фразеологічний арсенал — Прислів'я та Ідіоми** | ⚪️ | 214 | Skipped |
-| **Навичка 5: Архітектура думки — Складні Сполучники та Логіка** | ⚪️ | 218 | Skipped |
-| **Навичка 6: Синонімічна палітра та Глибокий Аналіз у контексті** | ✅ | 182 | Included in Core |
-| **Інтеграційне завдання** | ⚪️ | 214 | Skipped |
-| **Підсумок** | ✅ | 105 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 84 | Skipped |
+| **Огляд — Контрольна точка B2.2** | ⚪️ | 68 | Skipped |
+| **Pedagogical Structure** | ⚪️ | 479 | Skipped |
+| **Domain Vocabulary (M71-74)** | ➖ | 406 | Excluded Type |
+| **Professional Communication (M85-88)** | ⚪️ | 400 | Skipped |
+| **Підсумок та результати** | ✅ | 214 | Included in Core |
+| **Підсумок** | ✅ | 189 | Included in Core |

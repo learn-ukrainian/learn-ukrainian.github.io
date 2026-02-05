@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M41 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:02
+**Generated:** 2026-02-05 22:03:58
 
 ## Configuration
 **Type:** B2-grammar
@@ -36,21 +36,22 @@
 | 14 | mark-the-words | Знайдіть усі вторинні імперфективи | 13 | 6 | ✅ |
 | 15 | fill-in | Трансформуйте речення | 16 | 8 | ✅ |
 | 16 | essay-response | Опис робочого дня | 1 | 1 | ✅ |
+| 17 | reading | Текст для аналізу: Видові нюанси I: Вторинна імперфективація | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 10-14) ❌
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 17 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1926/2000 (raw: 2718) (74 short)
-- **Activities:** ✅ 16/10
+- **Words:** ⚠️ 1926/2000 (raw: 2708) (74 short)
+- **Activities:** ✅ 17/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/6
+- **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -72,28 +73,21 @@
 | examples | 80 | 24 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 10 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 20 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.6%** |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Вступ** | ✅ | 150 | Included in Core |
-| **Пояснення** | ⚪️ | 311 | Skipped |
-| **Значення вторинних імперфективів** | ⚪️ | 202 | Skipped |
-| **Трансформації** | ⚪️ | 70 | Skipped |
-| **Практика** | ⚪️ | 194 | Skipped |
-| **Приклади вживання** | ⚪️ | 30 | Skipped |
-| **Фразеологізми** | ⚪️ | 231 | Skipped |
-| **Типові помилки** | ✅ | 61 | Included in Core |
-| **Міні-діалоги** | ✅ | 149 | Included in Core |
-| **Культурний аспект** | ✅ | 274 | Included in Core |
-| **Підсумок** | ✅ | 81 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Навіщо два недоконані види?** | ⚪️ | 461 | Skipped |
+| **Key Mechanics** | ⚪️ | 466 | Skipped |
+| **Usage Contexts** | ✅ | 322 | Included in Core |
+| **Практика — утворення вторинних НДВ** | ⚪️ | 423 | Skipped |
+| **Підсумок** | ✅ | 191 | Included in Core |

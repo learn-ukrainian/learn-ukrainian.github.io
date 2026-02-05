@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M71 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:54
+**Generated:** 2026-02-05 22:06:24
 
 ## Configuration
 **Type:** B2-history
@@ -35,12 +35,13 @@
 | 13 | essay-response | Візит до лікаря | 1 | 1 | ✅ |
 | 14 | fill-in | Заповніть рецепт | 12 | 8 | ✅ |
 | 15 | quiz | Тест: екстрені ситуації | 12 | 8 | ✅ |
+| 16 | reading | Текст для аналізу: Медицина (поглиблено) | 3 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 11 (minimum: 2) ✅
-- Priority types used: 1/4 (essay-response) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Total activities: 16 (target: 3-9) ❌
+- Unique types: 12 (minimum: 2) ✅
+- Priority types used: 2/4 (essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2314/2000 (raw: 2649)
-- **Activities:** ✅ 15/3
+- **Words:** ✅ 2309/2000 (raw: 2636)
+- **Activities:** ✅ 16/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 11/2 types
+- **Unique_types:** ✅ 12/2 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
@@ -66,8 +67,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (history))
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 3-9)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -87,7 +88,7 @@
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 4 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
+| questions | 27 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
 
@@ -95,12 +96,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |
-| **Вступ: Медична система України** | ✅ | 393 | Included in Core |
-| **Діалог лікар-пацієнт** | ✅ | 372 | Included in Core |
-| **Теорія: Спеціалізації та спеціалісти** | ⚪️ | 163 | Skipped |
-| **Медичні обстеження та аналізи** | ✅ | 298 | Included in Core |
-| **Ліки та рецепти** | ⚪️ | 285 | Skipped |
-| **Профілактика та щеплення** | ⚪️ | 205 | Skipped |
-| **Екстрені ситуації** | ⚪️ | 298 | Skipped |
-| **Підсумок** | ✅ | 122 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Медична система України** | ⚪️ | 393 | Skipped |
+| **Опис симптомів та скарг** | ⚪️ | 372 | Skipped |
+| **Діалог лікар-пацієнт** | ✅ | 461 | Included in Core |
+| **Спеціалізації та процедури** | ⚪️ | 285 | Skipped |
+| **Фармакологічна лексика** | ⚪️ | 204 | Skipped |
+| **Підсумок та практика** | ✅ | 294 | Included in Core |
+| **Підсумок** | ✅ | 232 | Included in Core |

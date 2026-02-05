@@ -2,14 +2,14 @@
   "module": "45-proverbs-work-wisdom-character",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:58.494250Z",
+  "last_audit": "2026-02-05T22:04:02.879620Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351882Z",
-    "meta": "2026-01-29T07:39:04.707897Z",
-    "activities": "2026-01-12T00:05:27.482035Z",
-    "vocabulary": "2026-01-21T22:54:31.099644Z",
-    "plan": "2026-01-30T15:04:49.291977Z"
+    "md": "2026-02-05T21:58:04.164062Z",
+    "meta": "2026-02-05T21:52:08.910796Z",
+    "activities": "2026-02-05T22:02:47.990969Z",
+    "vocabulary": "2026-02-05T21:52:08.916796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2089/2000 (raw: 2309) | pedagogy: 1 violations"
+      "message": "2087/2000 (raw: 2309) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "15/10"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/10 | density: 0 < 14 | unique_types: 0/4 types | priority: No priority types"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,10 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
+      "2 Outline Compliance Errors",
+      "Missing required activity types: essay-response, reading, true-false"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

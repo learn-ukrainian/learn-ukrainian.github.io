@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M49 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:06
+**Generated:** 2026-02-05 22:04:07
 
 ## Configuration
 **Type:** B2-vocab
@@ -32,19 +32,20 @@
 | 10 | essay-response | Антропоцентризм фразеології | 1 | 1 | ✅ |
 | 11 | match-up | Англійські еквіваленти фразеологізмів | 12 | 8 | ✅ |
 | 12 | fill-in | Вставте фразеологізм у контекст | 16 | 8 | ✅ |
+| 13 | reading | Текст для аналізу: Соматичні фразеологізми: Голова та обличчя | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 10-14) ✅
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Required types used: 2/3 (essay-response, reading) ❌
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2147/2000 (raw: 2510)
-- **Activities:** ✅ 12/10
+- **Words:** ✅ 2147/2000 (raw: 2504)
+- **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
@@ -72,19 +73,15 @@
 | paragraph_var | 0.79 | - | 79% | 8% | 6.6% |
 | examples | 49 | - | 100% | 8% | 8.3% |
 | realworld | 6 | - | 100% | 8% | 8.3% |
-| questions | 15 | - | 100% | 8% | 8.3% |
+| questions | 14 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **96.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |
-| **Вступ** | ✅ | 177 | Included in Core |
-| **Фразеологізми** | ⚪️ | 1193 | Skipped |
-| **Вживання у контексті** | ✅ | 263 | Included in Core |
-| **Тематична класифікація** | ⚪️ | 0 | Skipped |
-| **Порівняння з англійськими еквівалентами** | ⚪️ | 41 | Skipped |
-| **Помилки у вживанні** | ✅ | 78 | Included in Core |
-| **Міні-діалоги для практики** | ✅ | 111 | Included in Core |
-| **Підсумок** | ✅ | 102 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Голова як центр мислення** | ⚪️ | 1370 | Skipped |
+| **Фразеологізми з "голова"** | ⚪️ | 263 | Skipped |
+| **Фразеологізми з частинами обличчя** | ✅ | 119 | Included in Core |
+| **Практика — ідіоми в діалозі** | ⚪️ | 111 | Skipped |
+| **Підсумок** | ✅ | 212 | Included in Core |

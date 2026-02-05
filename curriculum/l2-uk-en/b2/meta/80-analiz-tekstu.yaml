@@ -1,6 +1,7 @@
 module: b2-80
 level: B2
 slug: 80-analiz-tekstu
+focus: skills
 version: '2.0'
 naturalness:
   score: 9

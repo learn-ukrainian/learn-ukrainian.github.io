@@ -2,14 +2,14 @@
   "module": "84-checkpoint-register-synthesis",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:57.359654Z",
+  "last_audit": "2026-02-05T22:04:43.336411Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352153Z",
-    "meta": "2026-01-29T07:39:04.739869Z",
-    "activities": "2026-01-13T11:07:01.633087Z",
-    "vocabulary": "2026-01-21T22:54:36.827637Z",
-    "plan": "2026-01-30T15:04:49.356984Z"
+    "md": "2026-02-05T21:56:22.038129Z",
+    "meta": "2026-02-05T21:52:08.911796Z",
+    "activities": "2026-02-05T22:02:48.174967Z",
+    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1798/2000 (raw: 1982) | pedagogy: 1 violations"
+      "message": "1798/2000 (raw: 1971) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "21/15"
+      "message": "22/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,7 +41,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "7 Outline Compliance Errors",
+      "4 Outline Compliance Errors",
+      "Checkpoint Format Errors",
       "Missing required activity types: true-false"
     ],
     "pass_count": 3,

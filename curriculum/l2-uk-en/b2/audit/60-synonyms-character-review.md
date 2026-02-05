@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M60 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:56
+**Generated:** 2026-02-05 22:04:18
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,17 +35,18 @@
 | 13 | quiz | Характер у літературі | 8 | 8 | ✅ |
 | 14 | select | Чесноти та Вади | 6 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Мій характер | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Характер та Особистість | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 60-synonyms-character.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Чесноти та Вади', 'instruction': 'Оберіть усі слова, що позначають позитивні якості (6 елементів).', 'items': [{'question': 'Які слова описують шляхетну людину? (Оберіть 6)', 'options': [{'text': 'милосердний', 'correct': True}, {'text': 'чуйний', 'correct': True}, {'text': 'щедрий', 'correct': True}, {'text': 'принциповий', 'correct': True}, {'text': 'незламний', 'correct': True}, {'text': 'сумлінний', 'correct': True}]}, {'question': 'Оберіть вади характеру:', 'options': [{'text': 'байдужість', 'correct': True}, {'text': 'егоїзм', 'correct': True}, {'text': 'жорстокість', 'correct': True}, {'text': 'мудрість', 'correct': False}]}, {'question': 'Які слова описують активну доброту?', 'options': [{'text': 'жертовний', 'correct': True}, {'text': 'невтомний', 'correct': True}, {'text': 'дбайливий', 'correct': True}, {'text': 'пасивний', 'correct': False}]}, {'question': 'Оберіть ознаки емоційного інтелекту:', 'options': [{'text': 'емпатія', 'correct': True}, {'text': 'співпереживання', 'correct': True}, {'text': 'чуйність', 'correct': True}, {'text': 'агресія', 'correct': False}]}, {'question': 'Які слова вказують на професійний характер?', 'options': [{'text': 'пунктуальний', 'correct': True}, {'text': 'відповідальний', 'correct': True}, {'text': 'сумлінний', 'correct': True}, {'text': 'лінивий', 'correct': False}]}, {'question': 'Оберіть риси сучасного лідера:', 'options': [{'text': 'харизматичний', 'correct': True}, {'text': 'далекоглядний', 'correct': True}, {'text': 'гнучкий', 'correct': True}, {'text': 'жорсткий', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2671/2000 (raw: 2879)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2671/2000 (raw: 2757)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
@@ -80,35 +81,21 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 16 | 4 | 100% | 25% | 25.0% |
-| variety | 0.94 | - | 94% | 17% | 15.7% |
+| variety | 0.93 | - | 93% | 17% | 15.5% |
 | cultural | 4 | - | 100% | 17% | 16.7% |
 | visual | 10 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.72 | - | 72% | 8% | 6.0% |
-| examples | 75 | - | 100% | 8% | 8.3% |
+| paragraph_var | 0.67 | - | 67% | 8% | 5.6% |
+| examples | 72 | - | 100% | 8% | 8.3% |
 | realworld | 9 | - | 100% | 8% | 8.3% |
-| questions | 14 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.7%** |
+| questions | 13 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **96.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |
-| **Вступ: Мозаїка людської душі** | ✅ | 101 | Included in Core |
-| **Частина 1: Сяйво розуму — Від «кмітливості» до «мудрості»** | ✅ | 218 | Included in Core |
-| **Частина 2: Тепло серця — Від «доброти» до «самопожертви»** | ✅ | 230 | Included in Core |
-| **Частина 3: Тіні характеру — Від «байдужості» до «жорстокості»** | ✅ | 159 | Included in Core |
-| **Частина 4: Характер в українській літературі та філософії** | ✅ | 91 | Included in Core |
-| **Частина 5: Фразеологізми про характер** | ✅ | 210 | Included in Core |
-| **Вживання у контексті** | ✅ | 135 | Included in Core |
-| **Частина 6: Формування особистості в сучасному світі** | ✅ | 70 | Included in Core |
-| **Частина 6: Характер та професійний успіх** | ✅ | 110 | Included in Core |
-| **Частина 7: Українська незламність — Нова риса епохи** | ✅ | 126 | Included in Core |
-| **Частина 8: Саморозвиток та робота над собою** | ✅ | 83 | Included in Core |
-| **Частина 9: Лідерство та моральний авторитет** | ✅ | 164 | Included in Core |
-| **Частина 10: Формування характеру через мову** | ✅ | 328 | Included in Core |
-| **Частина 11: Еволюція характеру в цифрову добу** | ✅ | 146 | Included in Core |
-| **Частина 12: Роль оточення у формуванні натури** | ✅ | 95 | Included in Core |
-| **Частина 13: Характер в українському фольклорі та міфології** | ✅ | 89 | Included in Core |
-| **Частина 14: Характер і сучасні виклики** | ✅ | 85 | Included in Core |
-| **Підсумок** | ✅ | 49 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Описуємо людину** | ⚪️ | 708 | Skipped |
+| **Smart** | ⚪️ | 616 | Skipped |
+| **Kind** | ⚪️ | 701 | Skipped |
+| **Практика — психологічний портрет** | ⚪️ | 415 | Skipped |
+| **Підсумок** | ✅ | 159 | Included in Core |

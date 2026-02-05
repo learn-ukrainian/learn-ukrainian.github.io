@@ -1,7 +1,7 @@
 # Audit Report: M86 — 86-professional-email-advanced.md
 **Level:** B2 | **Module:** M86 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:59
+**Generated:** 2026-02-05 22:04:45
 
 ## Configuration
 **Type:** B2-history
@@ -32,15 +32,18 @@
 | 11 | mark-the-words | Знайдіть ключові слова професійної координації | 6 | 6 | ✅ |
 | 12 | quiz | Культурні особливості української професійної комунікації | 11 | 8 | ✅ |
 | 13 | select | Виберіть правильну граматичну форму | 8 | 6 | ✅ |
+| 14 | reading | Текст для аналізу: Ділова пошта: Поглиблено | 3 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 3-9) ❌
-- Unique types: 9 (minimum: 2) ✅
-- Priority types used: 0/4 (none) ❌
-- Required types used: 1/3 (true-false) ❌
+- Total activities: 14 (target: 3-9) ❌
+- Unique types: 10 (minimum: 2) ✅
+- Priority types used: 1/4 (reading) ✅
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
+  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
@@ -49,44 +52,67 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4154/1750 (raw: 4236)
-- **Activities:** ✅ 13/3
+- **Activities:** ✅ 14/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 9/2 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 4/5
+- **Unique_types:** ✅ 10/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ⚠️ Too many activities: 14 (target 3-9)
 - **Immersion:** 🇺🇦 97.8% (target 90-100% (history))
-- **Richness:** ❌ 75% < 95% min (content)
+- **Richness:** ❌ 60% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
 
 ## Richness Details
-**Score:** 75% (minimum: 95%)
-**Module Type:** content
+**Score:** 60% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 15 | 100% | 25% | 25.0% |
-| engagement | 4 | 5 | 80% | 19% | 15.0% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 0 | 4 | 0% | 12% | 0.0% |
-| realworld | 20 | 3 | 100% | 12% | 12.5% |
-| visual | 0 | 4 | 0% | 6% | 0.0% |
-| paragraph_var | 0.74 | - | 74% | 6% | 4.6% |
-| questions | 15 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **75.6%** |
+| examples | 47 | 24 | 100% | 20% | 20.0% |
+| engagement | 4 | 5 | 80% | 15% | 12.0% |
+| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 0 | 3 | 0% | 10% | 0.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
+| visual | 0 | 3 | 0% | 5% | 0.0% |
+| paragraph_var | 0.80 | - | 80% | 5% | 4.0% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
+| proverbs | 0 | 1 | 0% | 5% | 0.0% |
+| **TOTAL** | | | | | **60.8%** |
 
 ### Dryness Flags & Fixes
+- ❌ **NO_DIALOGUE**
+  - FIX:
+    Add 4+ mini-dialogues. Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
+    
+    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
+- ❌ **NO_PROVERBS**
+  - FIX:
+    Add 1+ Ukrainian proverb. Use this format:
+    
+    Українці кажу|ть: «[Proverb in Ukrainian]»
+    
+    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
+    
+    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
 - ❌ **NO_CULTURAL_ANCHOR**
   - FIX:
     Add 3+ cultural references. Use this exact format:
@@ -100,11 +126,9 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 99 | Included in Core |
-| **Ділова пошта: Поглиблено** | ⚪️ | 42 | Skipped |
+| **Intro/Narrative** | ✅ | 141 | Included in Core |
 | **Вступ** | ✅ | 419 | Included in Core |
 | **Імерсивна розповідь** | ⚪️ | 1790 | Skipped |
 | **Аналіз** | ✅ | 1166 | Included in Core |
-| **Граматика** | ⚪️ | 511 | Skipped |
-| **Підсумок** | ✅ | 101 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 26 | Skipped |
+| **Граматика в контексті** | ✅ | 511 | Included in Core |
+| **Підсумок** | ✅ | 26 | Included in Core |

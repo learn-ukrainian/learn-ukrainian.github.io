@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M58 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:55
+**Generated:** 2026-02-05 22:04:16
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,17 +35,18 @@
 | 13 | quiz | Метафорична якість | 8 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Мистецтво оцінки | 1 | 1 | ✅ |
 | 15 | select | Соціальна оцінка | 6 | 6 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Якість та Оцінка | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Соціальна оцінка', 'instruction': 'Оберіть слова, які описують соціальну значущість явища або людини.', 'items': [{'question': 'Яка лексика вказує на вагу в суспільстві?', 'options': [{'text': 'впливовий', 'correct': True}, {'text': 'авторитетний', 'correct': True}, {'text': 'незначний', 'correct': True}, {'text': 'пересічний', 'correct': True}, {'text': 'видатний', 'correct': True}, {'text': "дріб'язковий", 'correct': True}]}, {'question': "Оберіть синоніми до слова 'відомий':", 'options': [{'text': 'знаменитий', 'correct': True}, {'text': 'публічний', 'correct': True}, {'text': 'популярний', 'correct': True}, {'text': 'таємний', 'correct': False}]}, {'question': 'Які слова описують професійне визнання?', 'options': [{'text': 'кваліфікований', 'correct': True}, {'text': 'досвідчений', 'correct': True}, {'text': 'дилетантський', 'correct': False}, {'text': 'майстерний', 'correct': True}]}, {'question': "Оберіть антоніми до слова 'видатний':", 'options': [{'text': 'пересічний', 'correct': True}, {'text': 'непомітний', 'correct': True}, {'text': 'геніальний', 'correct': False}, {'text': 'звичайний', 'correct': True}]}, {'question': 'Слова для опису етичної якості лідера:', 'options': [{'text': 'справедливий', 'correct': True}, {'text': 'чесний', 'correct': True}, {'text': 'корумпований', 'correct': False}, {'text': 'відповідальний', 'correct': True}]}, {'question': 'Які терміни вказують на високий стандарт якості?', 'options': [{'text': 'еталонний', 'correct': True}, {'text': 'взірцевий', 'correct': True}, {'text': 'посередній', 'correct': False}, {'text': 'зразковий', 'correct': True}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1777/2000 (raw: 1981)
-- **Activities:** ✅ 15/10
+- **Words:** ❌ 1777/2000 (raw: 1928)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
@@ -83,25 +84,18 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 9 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.89 | - | 89% | 8% | 7.4% |
+| paragraph_var | 0.85 | - | 85% | 8% | 7.1% |
 | examples | 53 | - | 100% | 8% | 8.3% |
 | realworld | 10 | - | 100% | 8% | 8.3% |
 | questions | 5 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.9%** |
+| **TOTAL** | | | | | **98.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |
-| **Вступ** | ✅ | 126 | Included in Core |
-| **Фразеологізми та синоніми: Світло позитиву** | ⚪️ | 254 | Skipped |
-| **Частина 2: Тіні негативу — Від «поганого» до «жахливого»** | ✅ | 219 | Included in Core |
-| **Частина 3: Критерії та Стандарти оцінки** | ✅ | 98 | Included in Core |
-| **Частина 4: Якість у дзеркалі української літератури** | ✅ | 102 | Included in Core |
-| **Вживання у контексті** | ✅ | 109 | Included in Core |
-| **Психологія та емоційний інтелект** | ⚪️ | 333 | Skipped |
-| **Частина 7: Динаміка змінної якості у глобальному світі** | ✅ | 129 | Included in Core |
-| **Частина 8: Репутація та соціальна оцінка** | ✅ | 96 | Included in Core |
-| **Частина 9: Самооцінка та внутрішній стандарт** | ✅ | 78 | Included in Core |
-| **Підсумок** | ✅ | 52 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Добре чи погано?** | ⚪️ | 380 | Skipped |
+| **Good** | ⚪️ | 419 | Skipped |
+| **Bad** | ⚪️ | 571 | Skipped |
+| **Практика — оцінювання в тексті** | ✅ | 174 | Included in Core |
+| **Підсумок** | ✅ | 162 | Included in Core |

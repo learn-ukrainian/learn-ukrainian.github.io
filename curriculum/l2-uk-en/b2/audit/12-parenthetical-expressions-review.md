@@ -1,8 +1,8 @@
 # Audit Report: M12 — 12-parenthetical-expressions.md
 **Level:** B2 | **Module:** M12 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:50
+**Generated:** 2026-02-05 22:03:26
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,8 +42,17 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 2236/3800 (raw: 3020)
+- **Words:** ❌ 2236/3800 (raw: 3044)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -53,12 +62,12 @@
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)
@@ -70,25 +79,24 @@
 | examples | 51 | 24 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 23 | 5 | 100% | 5% | 5.0% |
+| questions | 22 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| **TOTAL** | | | | | **96.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
-| **Вступ** | ✅ | 172 | Included in Core |
-| **Пояснення** | ⚪️ | 1167 | Skipped |
-| **Трансформації** | ⚪️ | 201 | Skipped |
-| **Практика** | ⚪️ | 92 | Skipped |
-| **Діалоги** | ✅ | 288 | Included in Core |
+| **Вступ — Вставні слова та вирази** | ✅ | 172 | Included in Core |
+| **Вставні слова для вираження впевненості та невпевненості** | ⚪️ | 1167 | Skipped |
+| **Вставні слова для вираження ставлення** | ⚪️ | 201 | Skipped |
+| **Вставні слова для позначення джерела інформації** | ✅ | 92 | Included in Core |
+| **Вставні слова для організації висловлювання** | ⚪️ | 288 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 72 | Skipped |
-| **Самооцінка** | ⚪️ | 69 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Пунктуація при вставних словах** | ⚪️ | 72 | Skipped |
+| **Практика і підсумок** | ✅ | 179 | Included in Core |

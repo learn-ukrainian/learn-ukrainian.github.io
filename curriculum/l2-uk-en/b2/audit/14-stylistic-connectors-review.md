@@ -1,8 +1,8 @@
 # Audit Report: M14 — 14-stylistic-connectors.md
 **Level:** B2 | **Module:** M14 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:04
+**Generated:** 2026-02-05 22:03:28
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,6 +43,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
@@ -58,10 +60,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 5 violations (moderate)
+- 6 violations (moderate)
 
 ## Gates
-- **Words:** ❌ 2451/3800 (raw: 3435)
+- **Words:** ❌ 2451/3800 (raw: 3446)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -71,12 +73,12 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 6 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -93,7 +95,7 @@
 | realworld | 12 | 3 | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 14 | 5 | 100% | 5% | 5.0% |
+| questions | 13 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.2%** |
 
@@ -101,10 +103,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 66 | Included in Core |
-| **Вступ** | ✅ | 188 | Included in Core |
-| **Пояснення** | ⚪️ | 1016 | Skipped |
-| **Практика** | ⚪️ | 387 | Skipped |
-| **Трансформації** | ⚪️ | 403 | Skipped |
-| **Діалоги** | ✅ | 142 | Included in Core |
+| **Вступ — Сполучники як засіб зв'язку** | ✅ | 188 | Included in Core |
+| **Сполучники протиставлення** | ⚪️ | 1016 | Skipped |
+| **Сполучники приєднання** | ⚪️ | 387 | Skipped |
+| **Сполучники наслідку** | ⚪️ | 403 | Skipped |
+| **Допустові сполучники** | ⚪️ | 142 | Skipped |
 | **Підсумок** | ✅ | 139 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вибір за регістром** | ⚪️ | 110 | Skipped |
+| **Практика і підсумок** | ✅ | 0 | Included in Core |

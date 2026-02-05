@@ -1,8 +1,8 @@
 # Audit Report: M04 — 04-reflexive-passive.md
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:19
+**Generated:** 2026-02-05 22:03:17
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,8 +42,17 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 1962/3800 (raw: 2467)
+- **Words:** ❌ 1962/3800 (raw: 2482)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -53,12 +62,12 @@
 - **Vocab:** ⚠️ 10 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -75,7 +84,7 @@
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 40 | 5 | 100% | 5% | 5.0% |
+| questions | 39 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.9%** |
 
@@ -83,9 +92,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
-| **Вступ** | ✅ | 260 | Included in Core |
-| **Пояснення** | ⚪️ | 780 | Skipped |
-| **Трансформації** | ⚪️ | 237 | Skipped |
-| **Діалоги** | ✅ | 284 | Included in Core |
+| **Вступ — Зворотний пасив** | ✅ | 260 | Included in Core |
+| **Утворення зворотного пасиву** | ⚪️ | 780 | Skipped |
+| **Акцент на процесі** | ⚪️ | 237 | Skipped |
+| **Вираження агента** | ⚪️ | 284 | Skipped |
 | **Підсумок** | ✅ | 236 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Контексти вживання** | ✅ | 110 | Included in Core |
+| **Порівняння форм пасиву** | ⚪️ | 0 | Skipped |
+| **Практика і підсумок** | ✅ | 0 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M69 | **Phase:** B2.2 | **Pedagogy:** Practice | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:50
+**Generated:** 2026-02-05 22:04:27
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,12 +35,13 @@
 | 13 | quiz | Кейс: Робота в Харкові | 8 | 8 | ✅ |
 | 14 | select | Майстерність виступу | 6 | 6 | ✅ |
 | 15 | essay-response | Творчий роздум про мовний шлях | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Практика інтеграції B2.2 | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,10 +54,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2011/2000 (raw: 2200)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2011/2000 (raw: 2096)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
@@ -80,32 +81,21 @@
 | examples | 35 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 4 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 11 | 5 | 100% | 5% | 5.0% |
+| questions | 10 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 48 | Included in Core |
-| **Вступ: Мозаїка вільних знань та професійного зростання** | ✅ | 65 | Included in Core |
-| **Стратегії: Мистецтво поєднання** | ⚪️ | 50 | Skipped |
-| **Практика: Застосування знань** | ⚪️ | 29 | Skipped |
-| **Частина 1: Аргументація з народним корінням та логічною структурою** | ✅ | 195 | Included in Core |
-| **Частина 2: Діалог про майбутнє: Координація зусиль у Дніпрі** | ✅ | 217 | Included in Core |
-| **Частина 3: Ідіоми в наративі: Оживляємо розповідь про Одесу** | ✅ | 90 | Included in Core |
-| **Частина 4: Синонімічна гнучкість: Тонка робота з регістрами** | ✅ | 96 | Included in Core |
-| **Частина 5: Складні сполучники як архітектура зрілої думки** | ✅ | 64 | Included in Core |
-| **Частина 6: Культурний код та Сучасність у мовленні** | ✅ | 136 | Included in Core |
-| **Частина 7: Аналіз тексту на фразеологічне багатство** | ✅ | 200 | Included in Core |
-| **Частина 8: Публічний виступ: Як підкорити аудиторію словом** | ✅ | 187 | Included in Core |
-| **Частина 9: Лист до майбутнього себе: Творче вільне письмо** | ✅ | 110 | Included in Core |
-| **Частина 10: Етика професійної дискусії: Коли мовчання — золото** | ✅ | 154 | Included in Core |
-| **Частина 11: Написання тексту: Складання переконливого мотиваційного есею** | ✅ | 212 | Included in Core |
-| **Підсумок** | ✅ | 48 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Чого ми навчилися в B2.2** | ⚪️ | 144 | Skipped |
+| **Інтеграція фразеології** | ⚪️ | 598 | Skipped |
+| **Комплексні завдання** | ⚪️ | 587 | Skipped |
+| **Підготовка до контрольної точки** | ⚪️ | 476 | Skipped |
+| **Підсумок** | ✅ | 158 | Included in Core |

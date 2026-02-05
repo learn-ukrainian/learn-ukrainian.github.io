@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M23 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:03
+**Generated:** 2026-02-05 22:03:38
 
 ## Configuration
 **Type:** B2-grammar
@@ -35,28 +35,38 @@
 | 13 | fill-in | Структура новинного тексту | 16 | 8 | ✅ |
 | 14 | match-up | Журналістська термінологія | 16 | 8 | ✅ |
 | 15 | essay-response | Аналіз медійного тексту | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Медійний та журналістський регістр | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2086/2000 (raw: 2578)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2084/2000 (raw: 2567)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -76,7 +86,7 @@
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| questions | 47 | 5 | 100% | 5% | 5.0% |
+| questions | 46 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.5%** |
 
@@ -84,13 +94,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 63 | Included in Core |
-| **Тест: Прочитайте новинні тексти** | ✅ | 240 | Included in Core |
-| **Пояснення** | ⚪️ | 831 | Skipped |
-| **Трансформації** | ⚪️ | 273 | Skipped |
-| **Діалоги** | ✅ | 422 | Included in Core |
+| **Розминка — Публіцистичний стиль** | ⚪️ | 63 | Skipped |
+| **Структура новинного тексту** | ✅ | 1069 | Included in Core |
+| **Мова заголовків** | ⚪️ | 695 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 78 | Skipped |
-| **Самоперевірка** | ⚪️ | 51 | Skipped |
-| **Наступні кроки** | ⚪️ | 18 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Маркери упередженості** | ⚪️ | 129 | Skipped |
+| **Практика** | ⚪️ | 128 | Skipped |

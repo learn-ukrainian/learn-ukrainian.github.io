@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M79 | **Phase:** B2.4 | **Pedagogy:** integration | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:03
+**Generated:** 2026-02-05 22:04:38
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -35,12 +35,13 @@
 | 13 | quiz | Об'єкт та предмет дослідження | 8 | 8 | ✅ |
 | 14 | match-up | Дослідницькі колокації | 12 | 8 | ✅ |
 | 15 | translate | Ключові фрази дослідження | 6 | 6 | ✅ |
+| 16 | reading | Текст для аналізу: Підсумковий проєкт: Дослідження | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 15-19) ✅
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 15-19) ✅
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,10 +54,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1791/2000 (raw: 1968)
-- **Activities:** ✅ 15/15
+- **Words:** ❌ 1791/2000 (raw: 1941)
+- **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
@@ -64,7 +65,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (15 activities)
+- **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.0% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -77,8 +78,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 25 | 3 | 100% | 20% | 20.0% |
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 21 | 3 | 100% | 20% | 20.0% |
 | variety | 0.96 | - | 96% | 15% | 14.4% |
 | engagement | 7 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
@@ -90,14 +91,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд** | ⚪️ | 167 | Skipped |
-| **Навички** | ⚪️ | 33 | Skipped |
-| **Навичка 1: Вибір теми та обґрунтування** | ⚪️ | 279 | Skipped |
-| **Навичка 2: Пошук та опрацювання джерел** | ⚪️ | 107 | Skipped |
-| **Deep Dive: Академічна спадщина та сучасні виклики** | ✅ | 258 | Included in Core |
-| **Навичка 3: Складання анотованої бібліографії** | ⚪️ | 135 | Skipped |
-| **Навичка 4: План-проспект та тези дослідження** | ⚪️ | 205 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 332 | Skipped |
-| **Методологія: Як ми досліджуємо** | ⚪️ | 165 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Capstone проєкт** | ⚪️ | 167 | Skipped |
+| **Вибір теми дослідження** | ⚪️ | 312 | Skipped |
+| **Пошук та оцінка джерел** | ⚪️ | 365 | Skipped |
+| **Складання плану-проспекту** | ⚪️ | 135 | Skipped |
+| **Написання чернетки** | ⚪️ | 537 | Skipped |
+| **Підсумок та завдання** | ✅ | 165 | Included in Core |
+| **Підсумок** | ✅ | 110 | Included in Core |

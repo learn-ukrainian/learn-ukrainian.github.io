@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 21:56:34
+**Generated:** 2026-02-05 22:03:30
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,12 +34,13 @@
 | 12 | quiz | Аналіз текстів за стилями | 16 | 8 | ✅ |
 | 13 | fill-in | Стильові маркери в контексті | 16 | 8 | ✅ |
 | 14 | essay-response | Мовні стилі | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Функціональні стилі мови | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,9 +54,9 @@
 
 ## Gates
 - **Words:** ❌ 3120/3800 (raw: 3928)
-- **Activities:** ✅ 14/10
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio

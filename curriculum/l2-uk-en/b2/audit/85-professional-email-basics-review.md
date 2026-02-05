@@ -1,7 +1,7 @@
 # Audit Report: M85 — 85-professional-email-basics.md
 **Level:** B2 | **Module:** M85 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:02
+**Generated:** 2026-02-05 22:04:44
 
 ## Configuration
 **Type:** B2-skills
@@ -34,27 +34,33 @@
 | 13 | error-correction | Офіційний стиль замість розмовного | 8 | 6 | ✅ |
 | 14 | quiz | Етикет електронного листування | 16 | 8 | ✅ |
 | 15 | mark-the-words | Позначте офіційні терміни | 14 | 6 | ✅ |
+| 16 | reading | Текст для аналізу: Ділова пошта: Основи | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 14-18) ✅
-- Unique types: 11 (minimum: 5) ✅
+- Total activities: 16 (target: 14-18) ✅
+- Unique types: 12 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Summary'
+
 ## Gates
-- **Words:** ❌ 1727/2000 (raw: 1840)
-- **Activities:** ✅ 15/14
+- **Words:** ❌ 1727/2000 (raw: 1847)
+- **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 3 < 20 (soft target)
-- **Structure:** ✅ Valid Structure
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (15 activities)
+- **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (skills))
 - **Richness:** ✅ 96% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -69,21 +75,21 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 65 | 15 | 100% | 26% | 25.5% |
 | engagement | 7 | 5 | 100% | 19% | 19.4% |
-| variety | 0.93 | - | 93% | 12% | 11.4% |
+| variety | 0.92 | - | 92% | 12% | 11.3% |
 | cultural | 1 | - | 100% | 12% | 12.2% |
 | realworld | 4 | 3 | 100% | 12% | 12.2% |
 | visual | 18 | 2 | 100% | 6% | 6.1% |
 | paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
-| questions | 9 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **96.6%** |
+| questions | 8 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **96.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 34 | Included in Core |
-| **Вступ** | ✅ | 105 | Included in Core |
-| **Імерсивна розповідь** | ⚪️ | 571 | Skipped |
-| **Аналіз** | ✅ | 377 | Included in Core |
-| **Пояснення** | ⚪️ | 405 | Skipped |
-| **Підсумок** | ✅ | 149 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 86 | Skipped |
+| **Розминка — Ділова комунікація** | ⚪️ | 105 | Skipped |
+| **Структура ділового листа** | ⚪️ | 571 | Skipped |
+| **Типи ділових листів** | ⚪️ | 377 | Skipped |
+| **Тон та формальність** | ⚪️ | 405 | Skipped |
+| **Типові помилки** | ✅ | 149 | Included in Core |
+| **Практика** | ⚪️ | 86 | Skipped |

@@ -2,30 +2,30 @@
   "module": "85-professional-email-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:02.442238Z",
+  "last_audit": "2026-02-05T22:04:44.493620Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-20T09:51:25.659663Z",
-    "meta": "2026-01-29T07:39:04.740821Z",
-    "activities": "2026-01-20T14:39:40.432272Z",
-    "vocabulary": "2026-01-21T22:54:36.899354Z",
-    "plan": "2026-01-30T15:04:49.359746Z"
+    "md": "2026-02-05T21:56:22.044129Z",
+    "meta": "2026-02-05T21:52:08.911796Z",
+    "activities": "2026-02-05T22:02:48.179967Z",
+    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1727/2000 (raw: 1840)"
+      "message": "1727/2000 (raw: 1847)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/14"
+      "message": "16/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,10 +41,11 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
+      "3 Outline Compliance Errors",
+      "Structure: Missing '## Summary'",
+      "Missing required activity types: essay-response"
     ],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 1,
+    "fail_count": 3
   }
 }

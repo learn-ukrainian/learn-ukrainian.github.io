@@ -2,14 +2,14 @@
   "module": "28-economics-business-vocabulary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:12.880465Z",
+  "last_audit": "2026-02-05T22:03:44.343439Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T22:19:34.434916Z",
-    "meta": "2026-01-29T07:39:04.696150Z",
-    "activities": "2026-01-11T23:20:02.170797Z",
-    "vocabulary": "2026-01-21T22:54:29.059492Z",
-    "plan": "2026-01-30T15:04:49.247607Z"
+    "md": "2026-02-05T21:56:21.691133Z",
+    "meta": "2026-02-05T21:52:08.909796Z",
+    "activities": "2026-02-05T22:02:47.906970Z",
+    "vocabulary": "2026-02-05T21:52:08.916796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "1750/2000 (raw: 1936)"
+      "violations": 2,
+      "message": "1748/2000 (raw: 1923) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
+      "4 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

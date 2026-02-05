@@ -1,8 +1,8 @@
 # Audit Report: M20 — 20-register-medical-ukrainian.md
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:20
+**Generated:** 2026-02-05 22:03:35
 
 ## Configuration
 **Type:** B2-grammar
@@ -17,59 +17,50 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | quiz | Медична лексика та комунікація | 16 | 8 | ✅ |
-| 2 | match-up | Симптоми та їх описи | 16 | 8 | ✅ |
-| 3 | cloze | Діалог лікар-пацієнт | 16 | 14 | ✅ |
-| 4 | true-false | Медичний регістр | 16 | 8 | ✅ |
-| 5 | group-sort | Типи болю за характером | 17 | 14 | ✅ |
-| 6 | unjumble | Складіть медичні інструкції | 16 | 6 | ✅ |
-| 7 | error-correction | Виправте помилки у медичному мовленні | 16 | 6 | ✅ |
-| 8 | cloze | Заповніть діалог на прийомі у лікаря | 18 | 14 | ✅ |
-| 9 | mark-the-words | Знайдіть медичні терміни | 19 | 6 | ✅ |
-| 10 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
-| 11 | translate | Оберіть правильний переклад | 16 | 6 | ✅ |
-| 12 | fill-in | Частини тіла та симптоми | 16 | 8 | ✅ |
-| 13 | quiz | Комплексна перевірка медичної лексики | 16 | 8 | ✅ |
-| 14 | essay-response | Візит до лікаря | 1 | 1 | ✅ |
-
-**Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
-- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (error-correction, essay-response, fill-in, match-up, quiz) ❌
-- Low density activities: 0
-
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Якщо температура підніметься вище 38,5° — давайте жарознижувальне.". Shares significant keywords with sentence at index 12.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
   - FIX: Vary sentence structure.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 20-register-medical-ukrainian.yaml: YAML parse error: while parsing a block mapping
+  in "<unicode string>", line 1274, column 3:
+    - type: reading
+      ^
+expected <block end>, but found '<scalar>'
+  in "<unicode string>", line 1276, column 85:
+     ... лкування у сфері охорони здоров'я'
+                                         ^
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 40/100)
 
-- 2 violations (minor)
+- Revision recommended (severity 40/100)
+- 5 violations (moderate)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
-- **Words:** ❌ 2785/3800 (raw: 3491)
-- **Activities:** ✅ 14/10
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
-- **Priority:** ✅ Priority types used
+- **Words:** ❌ 2783/3800 (raw: 3488)
+- **Activities:** ❌ 0/10
+- **Density:** ❌ 0 < 14
+- **Unique_types:** ❌ 0/4 types
+- **Priority:** ❌ No priority types
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -92,13 +83,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ** | ✅ | 18 | Included in Core |
-| **Тест: Прочитайте діалог** | ✅ | 226 | Included in Core |
-| **Пояснення** | ⚪️ | 823 | Skipped |
-| **Практика** | ⚪️ | 317 | Skipped |
-| **Трансформації** | ⚪️ | 472 | Skipped |
-| **Діалоги** | ✅ | 599 | Included in Core |
+| **Вступ — Медичний регістр** | ✅ | 18 | Included in Core |
+| **Опис симптомів** | ⚪️ | 226 | Skipped |
+| **Діалог лікар-пацієнт** | ✅ | 821 | Included in Core |
+| **Медичні інструкції** | ⚪️ | 789 | Skipped |
+| **Медична документація** | ⚪️ | 599 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 77 | Skipped |
-| **Самооцінка** | ⚪️ | 76 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Типові помилки та русизми** | ✅ | 77 | Included in Core |
+| **Практика і підсумок** | ✅ | 186 | Included in Core |

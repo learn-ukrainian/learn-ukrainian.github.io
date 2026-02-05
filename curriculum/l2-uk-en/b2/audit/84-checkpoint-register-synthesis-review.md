@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M84 | **Phase:** B2.4 | **Pedagogy:** Test | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:57
+**Generated:** 2026-02-05 22:04:43
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -41,9 +41,10 @@
 | 19 | select | Вибір правильного дієслова руху | 8 | 6 | ✅ |
 | 20 | match-up | Антоніми та відтінки значень | 12 | 8 | ✅ |
 | 21 | essay-response | Фінальний звіт: Моє бачення майбутнього України | 1 | 1 | ✅ |
+| 22 | reading | Текст для аналізу: Checkpoint: Register Synthesis (Синтез регістрів) | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 21 (target: 15-19) ❌
+- Total activities: 22 (target: 15-19) ❌
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
 - Required types used: 2/3 (essay-response, reading) ❌
@@ -59,8 +60,8 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1798/2000 (raw: 1982)
-- **Activities:** ✅ 21/15
+- **Words:** ❌ 1798/2000 (raw: 1971)
+- **Activities:** ✅ 22/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
@@ -70,7 +71,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 21 (target 15-19)
+- **Content_heavy:** ⚠️ Too many activities: 22 (target 15-19)
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -84,24 +85,23 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 23 | 3 | 100% | 20% | 20.0% |
-| variety | 0.91 | - | 91% | 15% | 13.7% |
+| review_sections | 22 | 3 | 100% | 20% | 20.0% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
 | engagement | 6 | 3 | 100% | 10% | 10.0% |
 | cultural | 2 | - | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **98.7%** |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 52 | Included in Core |
-| **Огляд** | ⚪️ | 84 | Skipped |
-| **Навички** | ⚪️ | 45 | Skipped |
-| **Skill 1: Читання та аналіз (Analytical Reading)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Skill 2: Аудіювання в реальному часі (Active Listening)** | ⚪️ | 269 | Skipped |
-| **Skill 3: Граматична точність та лексична гнучкість (Language Use)** | ⚪️ | 320 | Skipped |
-| **Skill 4: Академічне та професійне письмо (Writing Skills)** | ⚪️ | 253 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 250 | Skipped |
-| **Підсумок** | ✅ | 115 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 125 | Skipped |
+| **Огляд — Контрольна точка** | ⚪️ | 84 | Skipped |
+| **Навичка 1: Офіційно-діловий регістр** | ⚪️ | 45 | Skipped |
+| **Навичка 2: Публіцистичний регістр** | ⚪️ | 285 | Skipped |
+| **Навичка 3: Науковий регістр** | ⚪️ | 269 | Skipped |
+| **Навичка 4: Перемикання регістрів** | ⚪️ | 320 | Skipped |
+| **Навичка 5: Інтеграція регістрів у письмі** | ⚪️ | 253 | Skipped |
+| **Підсумок та результати** | ✅ | 250 | Included in Core |
+| **Підсумок** | ✅ | 240 | Included in Core |

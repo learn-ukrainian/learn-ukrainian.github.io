@@ -1,6 +1,7 @@
 module: b2-57
 level: B2
 slug: 57-synonyms-movement
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9

@@ -1,8 +1,8 @@
 # Audit Report: M47 — 47-set-expressions-i-body-animals.md
 **Level:** B2 | **Module:** M47 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:04:04
 
 ## Configuration
 **Type:** B2-vocab
@@ -33,19 +33,20 @@
 | 11 | essay-response | Роль фразеологізмів у мовленні | 1 | 1 | ✅ |
 | 12 | match-up | Частини тіла та їхня символіка | 16 | 8 | ✅ |
 | 13 | fill-in | Завершіть діалог фразеологізмами | 16 | 8 | ✅ |
+| 14 | reading | Текст для аналізу: Сталі вирази I: Частини тіла та тварини | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2121/2000 (raw: 2521)
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2121/2000 (raw: 2514)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
@@ -70,22 +71,18 @@
 | variety | 0.87 | - | 87% | 17% | 14.5% |
 | cultural | 6 | - | 100% | 17% | 16.7% |
 | visual | 3 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.82 | - | 82% | 8% | 6.8% |
+| paragraph_var | 0.81 | - | 81% | 8% | 6.8% |
 | examples | 56 | - | 100% | 8% | 8.3% |
 | realworld | 7 | - | 100% | 8% | 8.3% |
-| questions | 12 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.3%** |
+| questions | 11 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **96.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Вступ** | ✅ | 147 | Included in Core |
-| **Фразеологізми** | ⚪️ | 1215 | Skipped |
-| **Вживання у контексті** | ✅ | 203 | Included in Core |
-| **Тематична класифікація виразів** | ⚪️ | 0 | Skipped |
-| **Міні-діалоги для практики** | ✅ | 66 | Included in Core |
-| **Символіка частин тіла в українській культурі** | ✅ | 138 | Included in Core |
-| **Порівняння з англійськими еквівалентами** | ⚪️ | 35 | Skipped |
-| **Підсумок** | ✅ | 149 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Тіло та тварини у фразеології** | ⚪️ | 1362 | Skipped |
+| **Сталі вирази з частинами тіла** | ✅ | 203 | Included in Core |
+| **Сталі вирази з тваринами** | ⚪️ | 204 | Skipped |
+| **Практика — вирази в контексті** | ✅ | 35 | Included in Core |
+| **Підсумок** | ✅ | 259 | Included in Core |

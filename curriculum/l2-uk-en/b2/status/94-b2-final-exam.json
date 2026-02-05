@@ -2,14 +2,14 @@
   "module": "94-b2-final-exam",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:08.510846Z",
+  "last_audit": "2026-02-05T22:04:54.791739Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T12:42:37.540627Z",
-    "meta": "2026-01-29T07:39:04.746535Z",
-    "activities": "2026-01-21T12:41:29.585128Z",
-    "vocabulary": "2026-01-21T22:54:39.301696Z",
-    "plan": "2026-01-30T15:04:49.393763Z"
+    "md": "2026-02-05T21:56:22.127128Z",
+    "meta": "2026-02-05T21:52:08.911796Z",
+    "activities": "2026-02-05T22:02:48.239966Z",
+    "vocabulary": "2026-02-05T21:52:08.918796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2566/2000 (raw: 2756) | pedagogy: 1 violations"
+      "message": "2566/2000 (raw: 2746) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "18/15"
+      "message": "19/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
+      "Checkpoint Format Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

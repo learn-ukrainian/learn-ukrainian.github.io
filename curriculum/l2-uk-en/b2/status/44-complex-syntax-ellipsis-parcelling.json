@@ -2,14 +2,14 @@
   "module": "44-complex-syntax-ellipsis-parcelling",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:14.071274Z",
+  "last_audit": "2026-02-05T22:04:01.878407Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351924Z",
-    "meta": "2026-01-29T07:39:04.707223Z",
-    "activities": "2026-01-12T00:00:22.196953Z",
-    "vocabulary": "2026-01-21T22:54:30.844717Z",
-    "plan": "2026-01-30T15:04:49.289424Z"
+    "md": "2026-02-05T21:56:21.793131Z",
+    "meta": "2026-02-05T21:52:08.910796Z",
+    "activities": "2026-02-05T22:02:47.984969Z",
+    "vocabulary": "2026-02-05T21:52:08.916796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2154/2000 (raw: 2398) | pedagogy: 1 violations"
+      "message": "2154/2000 (raw: 2398) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/10"
+      "message": "16/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -40,10 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

@@ -2,14 +2,14 @@
   "module": "81-capstone-doslidzhennya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:05.846970Z",
+  "last_audit": "2026-02-05T22:04:40.172408Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352107Z",
-    "meta": "2026-01-29T07:39:04.732283Z",
-    "activities": "2026-01-13T10:33:35.306758Z",
+    "md": "2026-02-05T21:56:22.020129Z",
+    "meta": "2026-02-05T21:52:08.911796Z",
+    "activities": "2026-02-05T22:02:48.158967Z",
     "vocabulary": null,
-    "plan": "2026-01-30T15:04:49.348964Z"
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2147/2000 (raw: 2315) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
+      "message": "2147/2000 (raw: 2284) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/3"
+      "message": "13/3"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "11 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading, true-false"
+      "Missing required activity types: true-false"
     ],
     "pass_count": 2,
     "fail_count": 2

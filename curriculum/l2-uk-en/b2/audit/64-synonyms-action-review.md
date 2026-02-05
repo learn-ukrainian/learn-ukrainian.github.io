@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M64 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:18
+**Generated:** 2026-02-05 22:04:22
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,17 +35,18 @@
 | 13 | quiz | Філософія чину | 8 | 8 | ✅ |
 | 14 | select | Творча та Технічна Дія | 6 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Людина дії | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Дія та Перетворення | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
+  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 64-synonyms-action.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Творча та Технічна Дія', 'instruction': 'Оберіть усі слова, що описують складні та інноваційні процеси (6 елементів).', 'items': [{'question': 'Які терміни вказують на модернізацію та розвиток? (Оберіть 6)', 'options': [{'text': 'модернізувати', 'correct': True}, {'text': 'оптимізувати', 'correct': True}, {'text': 'інтегрувати', 'correct': True}, {'text': 'впроваджувати', 'correct': True}, {'text': 'трансформувати', 'correct': True}, {'text': 'удосконалювати', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'створювати':", 'options': [{'text': 'творити', 'correct': True}, {'text': 'засновувати', 'correct': True}, {'text': 'фундадувати', 'correct': True}, {'text': 'руйнувати', 'correct': False}]}, {'question': "Які слова описують 'швидку реакцію':", 'options': [{'text': 'оперативно', 'correct': True}, {'text': 'негайно', 'correct': True}, {'text': 'миттєво', 'correct': True}, {'text': 'повільно', 'correct': False}]}, {'question': 'Оберіть слова для опису професійної дії:', 'options': [{'text': 'кваліфіковано', 'correct': True}, {'text': 'фахово', 'correct': True}, {'text': 'майстерно', 'correct': True}, {'text': 'абияк', 'correct': False}]}, {'question': "Які слова вказують на 'результативність':", 'options': [{'text': 'ефективно', 'correct': True}, {'text': 'продуктивно', 'correct': True}, {'text': 'успішно', 'correct': True}, {'text': 'марно', 'correct': False}]}, {'question': "Оберіть назви 'творчих процесів':", 'options': [{'text': 'натхнення', 'correct': True}, {'text': 'візуалізація', 'correct': True}, {'text': 'репетиція', 'correct': True}, {'text': 'рутина', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
@@ -55,10 +56,10 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2180/2000 (raw: 2387)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2180/2000 (raw: 2268)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
@@ -83,30 +84,18 @@
 | variety | 0.96 | - | 96% | 17% | 16.0% |
 | cultural | 3 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.82 | - | 82% | 8% | 6.8% |
+| paragraph_var | 0.80 | - | 80% | 8% | 6.7% |
 | examples | 67 | - | 100% | 8% | 8.3% |
 | realworld | 8 | - | 100% | 8% | 8.3% |
 | questions | 9 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **97.8%** |
+| **TOTAL** | | | | | **97.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Вступ: Енергія українського чину та перетворення** | ✅ | 109 | Included in Core |
-| **Частина 1: Робити — Як ми змінюємо світ навколо себе** | ✅ | 286 | Included in Core |
-| **Частина 2: Брати — Як ми взаємодіємо з ресурсами та об'єктами** | ✅ | 156 | Included in Core |
-| **Частина 3: Категорії дії — Від вчинку до результату в аналізі** | ✅ | 144 | Included in Core |
-| **Частина 4: Дія в українській культурі та філософії «чину»** | ✅ | 79 | Included in Core |
-| **Частина 5: Фразеологізми про дію** | ✅ | 222 | Included in Core |
-| **Вживання у контексті** | ✅ | 141 | Included in Core |
-| **Частина 6: Дія в епоху глобальних перетворень** | ✅ | 101 | Included in Core |
-| **Частина 7: Відповідальність за кожен крок та результат** | ✅ | 65 | Included in Core |
-| **Частина 8: Мистецтво вчинку та Моральна Дія** | ✅ | 93 | Included in Core |
-| **Частина 9: Технологічна дія: Від алгоритму до результату** | ✅ | 79 | Included in Core |
-| **Частина 10: Дія як головний інструмент соціальних змін** | ✅ | 171 | Included in Core |
-| **Частина 11: Дія в контексті відновлення міст** | ✅ | 90 | Included in Core |
-| **Частина 12: Дія як самореалізація в Дніпро** | ✅ | 76 | Included in Core |
-| **Частина 13: Дія у сучасному мистецтві та медіа** | ✅ | 121 | Included in Core |
-| **Підсумок** | ✅ | 50 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Що значить "робити"?** | ⚪️ | 695 | Skipped |
+| **Do/Make** | ⚪️ | 543 | Skipped |
+| **Take** | ⚪️ | 408 | Skipped |
+| **Практика — дієслова дії** | ⚪️ | 287 | Skipped |
+| **Підсумок** | ✅ | 160 | Included in Core |

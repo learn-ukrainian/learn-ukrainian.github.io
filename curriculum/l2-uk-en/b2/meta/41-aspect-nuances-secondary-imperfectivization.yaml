@@ -1,6 +1,7 @@
 module: b2-41
 level: B2
 slug: 41-aspect-nuances-secondary-imperfectivization
+focus: grammar
 version: '1.0'
 naturalness:
   score: 9

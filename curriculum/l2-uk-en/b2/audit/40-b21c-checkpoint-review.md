@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M40 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:14
+**Generated:** 2026-02-05 22:03:57
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -36,19 +36,20 @@
 | 14 | unjumble | Складіть речення: Числівники та час | 10 | 6 | ✅ |
 | 15 | unjumble | Складіть речення: Словотвір та регістри | 10 | 6 | ✅ |
 | 16 | essay-response | Підсумок фази: Мої досягнення в українській мові | 1 | 1 | ✅ |
+| 17 | reading | Текст для аналізу: Контрольна точка B2.1c: Числівники, словотвір та синтаксис | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 15-19) ✅
-- Unique types: 8 (minimum: 4) ✅
+- Total activities: 17 (target: 15-19) ✅
+- Unique types: 9 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Required types used: 2/3 (essay-response, reading) ❌
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2355/2000 (raw: 2606)
-- **Activities:** ✅ 16/15
+- **Words:** ✅ 2355/2000 (raw: 2580)
+- **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 8/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
@@ -69,8 +70,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 8 | 8 | 100% | 25% | 25.0% |
-| review_sections | 35 | 3 | 100% | 20% | 20.0% |
+| activity_types | 9 | 8 | 100% | 25% | 25.0% |
+| review_sections | 31 | 3 | 100% | 20% | 20.0% |
 | variety | 0.93 | - | 93% | 15% | 14.0% |
 | engagement | 8 | 3 | 100% | 10% | 10.0% |
 | cultural | 1 | - | 100% | 10% | 10.0% |
@@ -82,14 +83,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 51 | Included in Core |
-| **Огляд** | ⚪️ | 212 | Skipped |
-| **Навички** | ⚪️ | 29 | Skipped |
-| **Навичка 1: Відмінювання числівників (М31-32)** | ⚪️ | 257 | Skipped |
-| **Навичка 2: Словотвір — назви осіб (М33)** | ⚪️ | 296 | Skipped |
-| **Навичка 3: Словотвір — абстрактні поняття та місця (М34-35)** | ⚪️ | 214 | Skipped |
-| **Навичка 4: Словотвір — прикметники та прислівники (М36-37)** | ⚪️ | 270 | Skipped |
-| **Навичка 5: Односкладні речення (М38)** | ⚪️ | 202 | Skipped |
-| **Навичка 6: Релігійний та епістолярний стилі (М39)** | ⚪️ | 382 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 207 | Skipped |
-| **Підсумок** | ✅ | 125 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Огляд — Контрольна точка B2.1c** | ⚪️ | 212 | Skipped |
+| **Indefinite Pronouns (State Standard 4240-4244)** | ⚪️ | 286 | Skipped |
+| **Negative Pronouns (State Standard 4245-4249)** | ⚪️ | 510 | Skipped |
+| **Defining Pronouns (State Standard 4250-4256)** | ⚪️ | 270 | Skipped |
+| **Основні моделі вживання** | ⚪️ | 584 | Skipped |
+| **Підсумок та результати** | ✅ | 207 | Included in Core |
+| **Підсумок** | ✅ | 235 | Included in Core |

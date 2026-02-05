@@ -2,12 +2,12 @@
   "module": "87-professional-reports-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T21:56:36.655284Z",
+  "last_audit": "2026-02-05T22:04:46.831015Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:22.064129Z",
+    "md": "2026-02-05T21:58:04.253061Z",
     "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T21:52:08.899796Z",
+    "activities": "2026-02-05T22:02:48.194967Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "4554/1750 (raw: 4957) | pedagogy: 2 violations"
+      "message": "4552/1750 (raw: 4955) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/14"
+      "message": "15/14"
     },
     "vocabulary": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Missing required activity types: essay-response, reading"
+      "Missing required activity types: essay-response"
     ],
     "pass_count": 4,
     "fail_count": 1

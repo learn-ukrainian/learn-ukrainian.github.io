@@ -1,6 +1,7 @@
 module: b2-81
 level: B2
 slug: 81-capstone-doslidzhennya
+focus: skills
 version: '2.0'
 naturalness:
   score: 9

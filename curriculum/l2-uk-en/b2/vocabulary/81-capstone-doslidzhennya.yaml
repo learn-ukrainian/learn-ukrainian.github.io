@@ -1,0 +1,28 @@
+module: 81-capstone-doslidzhennya
+level: B2
+version: '2.0'
+items:
+- lemma: дослідження
+  ipa: /dɔslʲidʒɛnʲːa/
+  translation: research
+  pos: noun
+  gender: n
+- lemma: гіпотеза
+  ipa: /ɦʲipɔtɛza/
+  translation: hypothesis
+  pos: noun
+  gender: f
+- lemma: висновок
+  ipa: /wɪsnɔwɔk/
+  translation: conclusion
+  pos: noun
+  gender: m
+- lemma: аналізувати
+  ipa: /analʲizuwatɪ/
+  translation: to analyze
+  pos: verb
+- lemma: методологія
+  ipa: /mɛtɔdɔlɔɦʲija/
+  translation: methodology
+  pos: noun
+  gender: f

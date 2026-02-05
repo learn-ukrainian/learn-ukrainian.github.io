@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:06
+**Generated:** 2026-02-05 22:03:53
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,26 +34,36 @@
 | 12 | fill-in | Утворіть складні прикметники | 16 | 8 | ✅ |
 | 13 | quiz | Комплексна перевірка знань зі словотворення | 16 | 8 | ✅ |
 | 14 | essay-response | Феномен української культури: Ознаки та властивості | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Словотворення: прикметники | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика — утворення прикметників' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2101/2000 (raw: 2953)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 2101/2000 (raw: 2951)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -75,7 +85,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 18 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
-| questions | 31 | 5 | 100% | 5% | 5.0% |
+| questions | 30 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.8%** |
 
@@ -83,12 +93,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
-| **Вступ: Прочитайте текст** | ✅ | 249 | Included in Core |
-| **Пояснення** | ⚪️ | 57 | Skipped |
-| **Трансформації** | ⚪️ | 1089 | Skipped |
-| **Практика** | ⚪️ | 180 | Skipped |
-| **Діалоги** | ✅ | 222 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 59 | Skipped |
-| **Самооцінка** | ⚪️ | 71 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Словотвір прикметників** | ⚪️ | 249 | Skipped |
+| **Suffix -ський/-цький (belonging/origin)** | ⚪️ | 1146 | Skipped |
+| **Suffix -ний/-альний (quality/relation)** | ⚪️ | 180 | Skipped |
+| **Compound Adjectives** | ⚪️ | 222 | Skipped |
+| **Підсумок** | ✅ | 59 | Included in Core |
+| **Практика — утворення прикметників** | ⚪️ | 181 | Skipped |

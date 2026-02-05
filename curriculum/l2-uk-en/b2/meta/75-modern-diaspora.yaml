@@ -1,6 +1,7 @@
 module: b2-75
 level: B2
 slug: 75-modern-diaspora
+focus: culture
 version: '2.0'
 id: b2-75
 naturalness:

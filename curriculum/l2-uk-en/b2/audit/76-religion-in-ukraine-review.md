@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M76 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:16
+**Generated:** 2026-02-05 22:04:35
 
 ## Configuration
 **Type:** B2-culture
@@ -35,9 +35,10 @@
 | 13 | quiz | Аналіз стилів у релігійному контексті | 8 | 8 | ✅ |
 | 14 | match-up | Сталі вирази та дієслівні сполуки | 12 | 8 | ✅ |
 | 15 | essay-response | Релігійна толерантність | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Релігія в Україні | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
+- Total activities: 16 (target: 10-14) ❌
 - Unique types: 13 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
@@ -53,8 +54,8 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3032/2000 (raw: 3125)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 3030/2000 (raw: 3111)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
@@ -64,7 +65,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (culture))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -84,18 +85,17 @@
 | paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
 | examples | 21 | - | 100% | 7% | 6.7% |
 | realworld | 2 | - | 100% | 7% | 6.7% |
-| questions | 10 | 4 | 100% | 7% | 6.7% |
+| questions | 9 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Вступ: Багатоконфесійна мозаїка України** | ✅ | 700 | Included in Core |
-| **Теорія: Релігія та боротьба за суб’єктність** | ⚪️ | 322 | Skipped |
-| **Духовні центри та архітектурна спадщина** | ⚪️ | 779 | Skipped |
-| **Міжконфесійний мир та Рада церков** | ⚪️ | 336 | Skipped |
-| **Reading Practice: Духовний фундамент нації** | ⚪️ | 0 | Skipped (using YAML) |
-| **✍️ Аналіз тексту** | ✅ | 195 | Included in Core |
-| **Підсумок** | ✅ | 58 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Релігійний ландшафт України** | ⚪️ | 700 | Skipped |
+| **Православні церкви в Україні** | ⚪️ | 322 | Skipped |
+| **Інші конфесії** | ⚪️ | 779 | Skipped |
+| **Релігійні свята та традиції** | ⚪️ | 336 | Skipped |
+| **Міжконфесійний діалог** | ✅ | 472 | Included in Core |
+| **Підсумок та практика** | ✅ | 193 | Included in Core |
+| **Підсумок** | ✅ | 168 | Included in Core |

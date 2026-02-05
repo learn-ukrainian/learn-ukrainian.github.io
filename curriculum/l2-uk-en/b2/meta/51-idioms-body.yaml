@@ -1,6 +1,7 @@
 module: b2-51
 level: B2
 slug: 51-idioms-body
+focus: phraseology
 version: '2.0'
 naturalness:
   score: 9

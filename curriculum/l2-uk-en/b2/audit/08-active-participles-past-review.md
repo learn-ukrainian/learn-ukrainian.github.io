@@ -1,8 +1,8 @@
 # Audit Report: M08 — 08-active-participles-past.md
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:57
+**Generated:** 2026-02-05 22:03:21
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,6 +43,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "- **Правильно:** Студент, який прочитав книгу, написав есе.". Shares significant keywords with sentence at index 41.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "- **Правильно:** Документ, який підписав директор, набув чинності.". Shares significant keywords with sentence at index 74.
@@ -51,12 +53,12 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
-- **Words:** ❌ 2145/3800 (raw: 2780)
+- **Words:** ❌ 2145/3800 (raw: 2784)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,12 +68,12 @@
 - **Vocab:** ⚠️ 15 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -88,7 +90,7 @@
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.80 | - | 80% | 5% | 4.0% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
+| questions | 27 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.4%** |
 
@@ -96,14 +98,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Вступ** | ✅ | 236 | Included in Core |
-| **Пояснення** | ⚪️ | 397 | Skipped |
-| **Синтетичний майбутній час** | ⚪️ | 272 | Skipped |
-| **Культурний аспект** | ✅ | 172 | Included in Core |
-| **Практика** | ⚪️ | 165 | Skipped |
-| **Трансформації** | ⚪️ | 297 | Skipped |
-| **Діалоги** | ✅ | 292 | Included in Core |
+| **Вступ — Минулі активні дієприкметники** | ✅ | 236 | Included in Core |
+| **Утворення форм на -лий** | ⚪️ | 397 | Skipped |
+| **Легітимні лексикалізовані форми** | ⚪️ | 444 | Skipped |
+| **Русизми та їх уникання** | ⚪️ | 165 | Skipped |
+| **Синтетичний майбутній час** | ⚪️ | 589 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ви вивчили** | ⚪️ | 65 | Skipped |
-| **Самоперевірка** | ⚪️ | 52 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розпізнавання в старих текстах** | ✅ | 65 | Included in Core |
+| **Практика і підсумок** | ✅ | 162 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 21:56:35
+**Generated:** 2026-02-05 22:04:08
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,19 +35,20 @@
 | 13 | match-up | Синоніми та антоніми | 16 | 8 | ✅ |
 | 14 | fill-in | Заповніть діалог фразеологізмами | 10 | 8 | ✅ |
 | 15 | essay-response | Мій шлях до майстерності | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Соматичні фразеологізми: Руки та ноги | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ❌ 1867/2000 (raw: 2258)
-- **Activities:** ✅ 15/10
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio

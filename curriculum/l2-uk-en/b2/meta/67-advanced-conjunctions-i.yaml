@@ -1,6 +1,7 @@
 module: b2-67
 level: B2
 slug: 67-advanced-conjunctions-i
+focus: grammar
 version: '1.0'
 naturalness:
   score: 9

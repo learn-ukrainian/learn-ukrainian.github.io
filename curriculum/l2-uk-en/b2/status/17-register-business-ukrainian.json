@@ -2,14 +2,14 @@
   "module": "17-register-business-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:16.287775Z",
+  "last_audit": "2026-02-05T22:03:32.247533Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351737Z",
-    "meta": "2026-01-29T07:39:04.684319Z",
-    "activities": "2026-01-14T13:27:12.540753Z",
-    "vocabulary": "2026-01-21T22:54:26.730886Z",
-    "plan": "2026-01-29T07:45:40.608158Z"
+    "md": "2026-02-05T21:56:21.613133Z",
+    "meta": "2026-02-05T21:57:51.488195Z",
+    "activities": "2026-02-05T22:02:47.844971Z",
+    "vocabulary": "2026-02-05T21:52:08.915796Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2164/3800 (raw: 2968) | pedagogy: 2 violations"
+      "message": "2164/3800 (raw: 2974) | pedagogy: 3 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -33,18 +33,17 @@
       "message": "9 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "7 Outline Compliance Errors",
-      "Missing required activity types: reading"
+      "6 Outline Compliance Errors"
     ],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

@@ -1,8 +1,8 @@
 # Audit Report: M13 — 13-emphasis-and-inversion.md
 **Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
+**Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:48
+**Generated:** 2026-02-05 22:03:27
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,15 +34,18 @@
 | 12 | fill-in | Трансформуйте речення для емфази | 16 | 8 | ✅ |
 | 13 | quiz | Аналіз порядку слів у тексті | 16 | 8 | ✅ |
 | 14 | essay-response | Емоційна історія | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Емфаза та інверсія | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "*Відповідь:* **Книгу** (тема) *читає Марія* (рема).". Shares significant keywords with sentence at index 18.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Понад мільйон** користувачів завантажили його за перший місяць!". Shares significant keywords with sentence at index 110.
@@ -51,25 +54,25 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2596/3800 (raw: 3121)
-- **Activities:** ✅ 14/10
+- **Words:** ❌ 2596/3800 (raw: 3136)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -86,7 +89,7 @@
 | realworld | 14 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 33 | 5 | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
 
@@ -94,10 +97,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
-| **Вступ** | ✅ | 139 | Included in Core |
-| **Пояснення** | ⚪️ | 1065 | Skipped |
-| **Практика** | ⚪️ | 299 | Skipped |
-| **Трансформації** | ⚪️ | 633 | Skipped |
-| **Діалоги** | ✅ | 183 | Included in Core |
+| **Вступ — Порядок слів в українській мові** | ✅ | 139 | Included in Core |
+| **Тема-рема структура** | ⚪️ | 1065 | Skipped |
+| **Емфатичний порядок слів** | ⚪️ | 299 | Skipped |
+| **Інверсія для стилістичного ефекту** | ⚪️ | 633 | Skipped |
+| **Виділення елементів речення** | ⚪️ | 183 | Skipped |
 | **Підсумок** | ✅ | 108 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Контекстуальний вибір** | ✅ | 110 | Included in Core |
+| **Практика і підсумок** | ✅ | 0 | Included in Core |

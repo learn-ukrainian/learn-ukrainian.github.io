@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M67 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:06
+**Generated:** 2026-02-05 22:04:25
 
 ## Configuration
 **Type:** B2-grammar
@@ -35,12 +35,13 @@
 | 13 | quiz | Пунктуаційний квест | 8 | 8 | ✅ |
 | 14 | select | Допустові конструкції | 6 | 6 | ✅ |
 | 15 | essay-response | Аналітичний роздум | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Складні Сполучники I: Причина та Допуск | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -53,10 +54,10 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2262/2000 (raw: 2450)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2262/2000 (raw: 2335)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
@@ -80,34 +81,21 @@
 | examples | 52 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 6 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
+| questions | 13 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.5%** |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
-| **Вступ: Логіка зв'язків у Миколаєві та Херсоні** | ✅ | 80 | Included in Core |
-| **Частина 1: Причинні Сполучники — Майстерність пояснення «Чому?»** | ✅ | 181 | Included in Core |
-| **Частина 2: Допустові Сполучники — Мистецтво всупереч обставинам** | ✅ | 127 | Included in Core |
-| **Частина 3: Діалог про стратегію: Причина та Допуск у дії** | ✅ | 133 | Included in Core |
-| **Частина 7: Логіка Аргументації та Сполучники у Праві** | ✅ | 94 | Included in Core |
-| **Частина 8: Причинно-наслідкові зв'язки в Екології** | ✅ | 124 | Included in Core |
-| **Частина 9: Побудова професійної дискусії та культури допусту** | ✅ | 84 | Included in Core |
-| **Частина 10: Сполучники у Сучасних Медіа та Публіцистиці** | ✅ | 101 | Included in Core |
-| **Частина 11: Побудова Аналітичного Звіту: Логіка Причини** | ✅ | 121 | Included in Core |
-| **Частина 12: Культура Допуску та Стійкості** | ✅ | 83 | Included in Core |
-| **Частина 10: Логічна архітектура речень у новинах** | ✅ | 146 | Included in Core |
-| **Частина 11: Побудова аргументів у діловому середовищі** | ✅ | 145 | Included in Core |
-| **Частина 12: Мова незламності та стратегічного вибору** | ✅ | 179 | Included in Core |
-| **Частина 13: Діалог про результати кварталу: Логіка успіху** | ✅ | 164 | Included in Core |
-| **Частина 14: Висновки про логічну структуру мови** | ✅ | 93 | Included in Core |
-| **Трансформації** | ⚪️ | 165 | Skipped |
-| **Підсумок** | ✅ | 55 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Чому і незважаючи на** | ⚪️ | 521 | Skipped |
+| **Causal Conjunctions** | ⚪️ | 403 | Skipped |
+| **Concessive Conjunctions** | ⚪️ | 495 | Skipped |
+| **Практика — складні речення** | ⚪️ | 601 | Skipped |
+| **Підсумок** | ✅ | 165 | Included in Core |
