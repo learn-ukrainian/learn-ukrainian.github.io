@@ -1,8 +1,8 @@
 # Audit Report: M01 — 01-passive-voice-system.md
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 21:34:31
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 21:41:49
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,71 +43,51 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3316/3800 (raw: 3926)
+- **Words:** ✅ 3811/3800 (raw: 4418)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
-- **Richness:** ❌ 77% < 95% min (grammar) - REWRITE needed
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 77% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 1 | 3 | 33% | 10% | 3.3% |
-| realworld | 16 | 3 | 100% | 10% | 10.0% |
-| visual | 11 | 3 | 100% | 5% | 5.0% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 18 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 15 | 5 | 100% | 5% | 5.0% |
+| questions | 25 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **77.9%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **LOW_CULTURAL_ANCHOR**
-  - FIX:
-    Add more cultural references (need 3+ total). Include:
-    - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
-    - Ukrainian traditions or customs
-    - Contemporary Ukrainian life examples
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
-| **Вступ — Що таке пасивний стан?** | ✅ | 415 | Included in Core |
+| **Вступ — Що таке пасивний стан?** | ✅ | 469 | Included in Core |
 | **Практикум: Трансформаційна таблиця** | ⚪️ | 125 | Skipped |
-| **Форма 1 — Дієприкметники на -ний/-тий** | ⚪️ | 582 | Skipped |
-| **Форма 2 — Безособові конструкції на -но/-то** | ⚪️ | 585 | Skipped |
-| **Форма 3 — Зворотний пасив із -ся** | ⚪️ | 471 | Skipped |
-| **Форма 4 — Третя особа множини** | ⚪️ | 496 | Skipped |
-| **Вибір форми пасиву за контекстом** | ✅ | 370 | Included in Core |
-| **Підсумок і практика** | ✅ | 190 | Included in Core |
+| **Форма 1 — Дієприкметники на -ний/-тий** | ⚪️ | 638 | Skipped |
+| **Форма 2 — Безособові конструкції на -но/-то** | ⚪️ | 672 | Skipped |
+| **Форма 3 — Зворотний пасив із -ся** | ⚪️ | 587 | Skipped |
+| **Форма 4 — Третя особа множини** | ⚪️ | 596 | Skipped |
+| **Вибір форми пасиву за контекстом** | ✅ | 425 | Included in Core |
+| **Підсумок і практика** | ✅ | 217 | Included in Core |
