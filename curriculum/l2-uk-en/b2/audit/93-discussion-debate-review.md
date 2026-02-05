@@ -1,8 +1,8 @@
 # Audit Report: M93 — 93-discussion-debate.md
 **Level:** B2 | **Module:** M93 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:40
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:32:22
 
 ## Configuration
 **Type:** B2-skills
@@ -44,17 +44,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-discussion-debate.yaml: Schema validation error at key '15': {'type': 'essay-response', 'title': 'Письмова відповідь: Дискусії та дебати', 'prompt': 'Напишіть розгорнуту відповідь на тему "Дискусії та дебати".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4222/2000 (raw: 4345)
+- **Words:** ✅ 4234/2000 (raw: 4357)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -64,7 +55,7 @@
 - **Vocab:** ⚠️ 15 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 97.4% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)
@@ -97,5 +88,5 @@
 | **Згода та незгода** | ⚪️ | 316 | Skipped |
 | **Аргументація** | ⚪️ | 1240 | Skipped |
 | **Формальні дебати** | ⚪️ | 777 | Skipped |
-| **Практика** | ⚪️ | 295 | Skipped |
-| **Підсумок** | ✅ | 470 | Included in Core |
+| **Практика** | ⚪️ | 765 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

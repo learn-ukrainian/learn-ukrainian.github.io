@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M80 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:11:40
+**Generated:** 2026-02-05 22:32:08
 
 ## Configuration
 **Type:** B2-skills
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-analiz-tekstu.yaml: Schema validation error at key '16': {'type': 'true-false', 'title': 'Правда чи хибність: Аналіз тексту', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'answer': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'answer': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'answer': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'answer': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'answer': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'answer': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'answer': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'answer': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 80-analiz-tekstu.yaml: Schema validation error at key '16': {'type': 'true-false', 'title': 'Правда чи хибність: Аналіз тексту', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'correct': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'correct': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'correct': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'correct': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'correct': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'correct': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'correct': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'correct': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -55,7 +55,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2141/2000 (raw: 2292)
+- **Words:** ✅ 2141/2000 (raw: 2290)
 - **Activities:** ✅ 17/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 7/5 types
@@ -81,13 +81,13 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 21 | 15 | 100% | 26% | 25.5% |
 | engagement | 11 | 5 | 100% | 19% | 19.4% |
-| variety | 1.00 | - | 100% | 12% | 12.2% |
+| variety | 0.99 | - | 99% | 12% | 12.1% |
 | cultural | 4 | - | 100% | 12% | 12.2% |
 | realworld | 13 | 3 | 100% | 12% | 12.2% |
 | visual | 8 | 2 | 100% | 6% | 6.1% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
 | questions | 31 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **100.0%** |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -98,5 +98,4 @@
 | **Контекстуальний аналіз** | ✅ | 183 | Included in Core |
 | **Аналіз аргументації** | ✅ | 406 | Included in Core |
 | **Стилістичний аналіз** | ✅ | 101 | Included in Core |
-| **Підсумок та практика** | ✅ | 225 | Included in Core |
-| **Підсумок** | ✅ | 210 | Included in Core |
+| **Підсумок та практика** | ✅ | 435 | Included in Core |

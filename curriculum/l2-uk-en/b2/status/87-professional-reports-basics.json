@@ -2,12 +2,12 @@
   "module": "87-professional-reports-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:33.319421Z",
+  "last_audit": "2026-02-05T22:32:15.968885Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:58:04.253061Z",
+    "md": "2026-02-05T22:18:57.568650Z",
     "meta": "2026-02-05T22:07:11.356165Z",
-    "activities": "2026-02-05T22:08:02.184620Z",
+    "activities": "2026-02-05T22:12:32.310776Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "4552/1750 (raw: 4955) | pedagogy: 3 violations"
+      "message": "4552/1750 (raw: 4953) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

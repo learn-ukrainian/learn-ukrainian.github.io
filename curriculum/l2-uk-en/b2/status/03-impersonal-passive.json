@@ -2,10 +2,10 @@
   "module": "03-impersonal-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:02.335599Z",
+  "last_audit": "2026-02-05T22:30:45.023032Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.481135Z",
+    "md": "2026-02-05T22:18:57.543650Z",
     "meta": "2026-02-05T21:57:51.487195Z",
     "activities": "2026-02-05T21:52:08.883796Z",
     "vocabulary": "2026-02-05T21:52:08.915796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1925/3800 (raw: 2575) | pedagogy: 3 violations"
+      "message": "1937/3800 (raw: 2587) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",

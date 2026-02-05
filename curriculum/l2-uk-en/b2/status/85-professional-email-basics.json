@@ -2,25 +2,25 @@
   "module": "85-professional-email-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:30.972638Z",
+  "last_audit": "2026-02-05T22:32:13.609114Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:22.044129Z",
+    "md": "2026-02-05T22:18:57.566649Z",
     "meta": "2026-02-05T22:07:11.343165Z",
-    "activities": "2026-02-05T22:08:02.171621Z",
+    "activities": "2026-02-05T22:12:32.310776Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Summary'"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1727/2000 (raw: 1847) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "1739/2000 (raw: 1861)"
     },
     "activities": {
       "status": "pass",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Structure: Missing '## Summary'"
+      "3 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

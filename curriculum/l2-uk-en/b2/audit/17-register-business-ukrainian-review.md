@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:18
+**Generated:** 2026-02-05 22:31:00
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,8 +44,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Просимо надати нам можливість провести безкоштовну презентацію для Вашої команди.". Shares significant keywords with sentence at index 9.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
@@ -54,10 +52,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2164/3800 (raw: 2974)
+- **Words:** ❌ 2176/3800 (raw: 2986)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -67,7 +65,7 @@
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
@@ -88,8 +86,8 @@
 | visual | 24 | 4 | 100% | 10% | 10.0% |
 | variety | 0.92 | - | 92% | 5% | 4.6% |
 | cultural | 4 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.98 | - | 98% | 5% | 4.9% |
-| **TOTAL** | | | | | **99.5%** |
+| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -100,6 +98,6 @@
 | **Електронне листування** | ⚪️ | 123 | Skipped |
 | **Переговори та зустрічі** | ⚪️ | 176 | Skipped |
 | **Корпоративна комунікація** | ⚪️ | 465 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Типові помилки та русизми** | ✅ | 89 | Included in Core |
 | **Практика і підсумок** | ✅ | 183 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:17
+**Generated:** 2026-02-05 22:30:59
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "**Формальний варіант (зразок відповіді):**
 
 Шановна пані Оксано!". Shares significant keywords with sentence at index 62.
@@ -55,10 +53,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2338/3800 (raw: 3029)
+- **Words:** ❌ 2350/3800 (raw: 3041)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -68,7 +66,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ❌ 74% < 95% min (style)
@@ -111,6 +109,6 @@
 | **Форми звертання** | ⚪️ | 357 | Skipped |
 | **Формальні/неформальні лексичні пари** | ⚪️ | 333 | Skipped |
 | **Трансформація регістру** | ⚪️ | 417 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Соціальні ситуації** | ⚪️ | 94 | Skipped |
 | **Практика і підсумок** | ✅ | 190 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

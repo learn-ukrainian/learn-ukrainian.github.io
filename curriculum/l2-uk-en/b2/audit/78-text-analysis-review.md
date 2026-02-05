@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M78 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:23
+**Generated:** 2026-02-05 22:32:06
 
 ## Configuration
 **Type:** B2-skills
@@ -58,7 +58,7 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2439/2000 (raw: 2511)
+- **Words:** ✅ 2439/2000 (raw: 2509)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -101,5 +101,4 @@
 | **Виявлення упередженості** | ⚪️ | 541 | Skipped |
 | **Риторичні прийоми** | ⚪️ | 482 | Skipped |
 | **Аналіз структури тексту** | ✅ | 289 | Included in Core |
-| **Підсумок та практика** | ✅ | 216 | Included in Core |
-| **Підсумок** | ✅ | 175 | Included in Core |
+| **Підсумок та практика** | ✅ | 391 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M26 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:28
+**Generated:** 2026-02-05 22:32:37
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика — читання політичних новин' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1891/2000 (raw: 2249)
+- **Words:** ⚠️ 1903/2000 (raw: 2261) (97 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -96,6 +87,6 @@
 | **Розминка — Політична система України** | ⚪️ | 411 | Skipped |
 | **Органи влади** | ⚪️ | 778 | Skipped |
 | **Виборчий процес** | ⚪️ | 335 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Політичні поняття** | ⚪️ | 133 | Skipped |
 | **Практика — читання політичних новин** | ✅ | 159 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

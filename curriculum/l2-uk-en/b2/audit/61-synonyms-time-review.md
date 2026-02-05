@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M61 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:05
+**Generated:** 2026-02-05 22:31:48
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -41,22 +41,20 @@
 - Total activities: 16 (target: 10-14) ❌
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 2/3 (reading, true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 61-synonyms-time.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Масштаби часу', 'instruction': 'Оберіть усі слова, що описують великі часові проміжки (6 елементів).', 'items': [{'question': 'Які терміни позначають історію та вічність? (Оберіть 6)', 'options': [{'text': 'епоха', 'correct': True}, {'text': 'ера', 'correct': True}, {'text': 'століття', 'correct': True}, {'text': 'тисячоліття', 'correct': True}, {'text': 'вічність', 'correct': True}, {'text': 'період', 'correct': True}]}, {'question': 'Оберіть одиниці виміру часу:', 'options': [{'text': 'година', 'correct': True}, {'text': 'хвилина', 'correct': True}, {'text': 'секунда', 'correct': True}, {'text': 'метр', 'correct': False}]}, {'question': 'Які слова описують минуле?', 'options': [{'text': 'колись', 'correct': True}, {'text': 'раніше', 'correct': True}, {'text': 'вчора', 'correct': True}, {'text': 'завтра', 'correct': False}]}, {'question': 'Оберіть характеристики майбутнього:', 'options': [{'text': 'прийдешній', 'correct': True}, {'text': 'наступний', 'correct': True}, {'text': 'майбутній', 'correct': True}, {'text': 'минулий', 'correct': False}]}, {'question': 'Які слова вказують на швидкість?', 'options': [{'text': 'миттєво', 'correct': True}, {'text': 'швидко', 'correct': True}, {'text': 'стрімко', 'correct': True}, {'text': 'повільно', 'correct': False}]}, {'question': 'Оберіть слова, що позначають тривалість:', 'options': [{'text': 'протягом', 'correct': True}, {'text': 'упродовж', 'correct': True}, {'text': 'за', 'correct': True}, {'text': 'через', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2176/2000 (raw: 2276)
+- **Words:** ✅ 2188/2000 (raw: 2288)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,7 +64,7 @@
 - **Vocab:** ⚠️ 9 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (phraseology)
@@ -84,11 +82,11 @@
 | variety | 0.95 | - | 95% | 17% | 15.8% |
 | cultural | 4 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.72 | - | 72% | 8% | 6.0% |
+| paragraph_var | 0.73 | - | 73% | 8% | 6.1% |
 | examples | 51 | - | 100% | 8% | 8.3% |
 | realworld | 8 | - | 100% | 8% | 8.3% |
 | questions | 6 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.8%** |
+| **TOTAL** | | | | | **96.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -97,5 +95,5 @@
 | **Розминка — Нюанси часу** | ⚪️ | 487 | Skipped |
 | **Now** | ⚪️ | 483 | Skipped |
 | **Before** | ⚪️ | 362 | Skipped |
-| **Практика — часові вирази в контексті** | ✅ | 608 | Included in Core |
-| **Підсумок** | ✅ | 157 | Included in Core |
+| **Практика — часові вирази в контексті** | ✅ | 765 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

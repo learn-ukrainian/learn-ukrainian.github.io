@@ -2,11 +2,11 @@
   "module": "57-synonyms-movement",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:10:01.821393Z",
+  "last_audit": "2026-02-05T22:31:44.261748Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.870131Z",
-    "meta": "2026-02-05T22:07:11.222166Z",
+    "md": "2026-02-05T22:18:57.561650Z",
+    "meta": "2026-02-05T22:13:39.067083Z",
     "activities": "2026-02-05T22:02:48.044969Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1814/2000 (raw: 1992) | pedagogy: 2 violations"
+      "message": "1826/2000 (raw: 2004) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Missing required activity types: fill-in-the-blank"
+      "1 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

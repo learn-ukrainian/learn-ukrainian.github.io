@@ -2,10 +2,10 @@
   "module": "44-complex-syntax-ellipsis-parcelling",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:48.546236Z",
+  "last_audit": "2026-02-05T22:31:30.908392Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.793131Z",
+    "md": "2026-02-05T22:18:57.557650Z",
     "meta": "2026-02-05T22:07:11.168167Z",
     "activities": "2026-02-05T22:02:47.984969Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2154/2000 (raw: 2398) | pedagogy: 2 violations"
+      "message": "2166/2000 (raw: 2410) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

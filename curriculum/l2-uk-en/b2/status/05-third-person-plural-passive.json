@@ -2,10 +2,10 @@
   "module": "05-third-person-plural-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:04.631338Z",
+  "last_audit": "2026-02-05T22:30:47.264345Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.499135Z",
+    "md": "2026-02-05T22:18:57.544650Z",
     "meta": "2026-02-05T21:57:51.487195Z",
     "activities": "2026-02-05T21:52:08.884796Z",
     "vocabulary": "2026-02-05T21:52:08.915796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1904/3800 (raw: 2173) | pedagogy: 2 violations"
+      "message": "1916/3800 (raw: 2185) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M47 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 22:09:51
+**Generated:** 2026-02-05 22:31:34
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2121/2000 (raw: 2514)
+- **Words:** ✅ 2133/2000 (raw: 2526)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -84,5 +84,5 @@
 | **Розминка — Тіло та тварини у фразеології** | ⚪️ | 1362 | Skipped |
 | **Сталі вирази з частинами тіла** | ✅ | 203 | Included in Core |
 | **Сталі вирази з тваринами** | ⚪️ | 204 | Skipped |
-| **Практика — вирази в контексті** | ✅ | 35 | Included in Core |
-| **Підсумок** | ✅ | 259 | Included in Core |
+| **Практика — вирази в контексті** | ✅ | 294 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

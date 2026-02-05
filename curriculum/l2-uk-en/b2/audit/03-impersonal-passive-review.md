@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M03 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:02
+**Generated:** 2026-02-05 22:30:45
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,8 +44,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✓ |...'.
   - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
@@ -54,10 +52,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1925/3800 (raw: 2575)
+- **Words:** ❌ 1937/3800 (raw: 2587)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -67,7 +65,7 @@
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -102,6 +100,6 @@
 | **Синтаксичні особливості** | ⚪️ | 85 | Skipped |
 | **Контексти вживання** | ✅ | 338 | Included in Core |
 | **Регістрова специфіка** | ⚪️ | 182 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Типові помилки** | ✅ | 79 | Included in Core |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

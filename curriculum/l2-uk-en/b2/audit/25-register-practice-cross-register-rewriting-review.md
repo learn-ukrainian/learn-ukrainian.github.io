@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:27
+**Generated:** 2026-02-05 22:31:09
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2783/2000 (raw: 3114)
+- **Words:** ✅ 2795/2000 (raw: 3126)
 - **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -86,6 +86,6 @@
 | **Трансформація в науковий стиль** | ⚪️ | 125 | Skipped |
 | **Трансформація в офіційний стиль** | ⚪️ | 1064 | Skipped |
 | **Трансформація в публіцистичний стиль** | ⚪️ | 943 | Skipped |
-| **Трансформація в розмовний стиль** | ⚪️ | 185 | Skipped |
-| **Підсумок** | ✅ | 79 | Included in Core |
+| **Трансформація в розмовний стиль** | ⚪️ | 264 | Skipped |
 | **Інтеграційне завдання** | ⚪️ | 208 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

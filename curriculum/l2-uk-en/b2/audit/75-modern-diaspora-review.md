@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M75 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:20
+**Generated:** 2026-02-05 22:32:03
 
 ## Configuration
 **Type:** B2-culture
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2861/2000 (raw: 2942)
+- **Words:** ✅ 2861/2000 (raw: 2940)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -97,5 +97,4 @@
 | **Організації та інституції діаспори** | ⚪️ | 484 | Skipped |
 | **Культурна дипломатія та лобізм** | ✅ | 266 | Included in Core |
 | **Мова діаспори** | ⚪️ | 417 | Skipped |
-| **Підсумок та практика** | ✅ | 274 | Included in Core |
-| **Підсумок** | ✅ | 176 | Included in Core |
+| **Підсумок та практика** | ✅ | 450 | Included in Core |

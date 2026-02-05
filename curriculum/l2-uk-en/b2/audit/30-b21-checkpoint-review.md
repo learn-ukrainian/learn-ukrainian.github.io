@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M30 | **Phase:** B2.1 | **Pedagogy:** checkpoint | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:11:37
+**Generated:** 2026-02-05 22:31:15
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -52,16 +52,14 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Компанія, **що існує** вже двадцять років, розширює діяльність.". Shares significant keywords with sentence at index 15.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 30-b21-checkpoint.yaml: Schema validation error at key '20': {'type': 'essay-response', 'title': 'Письмова відповідь: Контрольна точка: B2.1 Завершення', 'prompt': 'Напишіть розгорнуту відповідь на тему "Контрольна точка: B2.1 Завершення".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2130/2000 (raw: 2325)
+- **Words:** ✅ 2130/2000 (raw: 2323)
 - **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -71,7 +69,7 @@
 - **Vocab:** ⚠️ 8 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
@@ -103,5 +101,4 @@
 | **Навичка 2: Дієприкметники** | ⚪️ | 403 | Skipped |
 | **Навичка 3: Регістри** | ⚪️ | 439 | Skipped |
 | **Навичка 4: Доменна лексика** | ⚪️ | 438 | Skipped |
-| **Підсумок та результати** | ✅ | 237 | Included in Core |
-| **Підсумок** | ✅ | 236 | Included in Core |
+| **Підсумок та результати** | ✅ | 473 | Included in Core |

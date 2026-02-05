@@ -2,12 +2,12 @@
   "module": "38-one-member-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:41.924671Z",
+  "last_audit": "2026-02-05T22:31:24.281125Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.755132Z",
+    "md": "2026-02-05T22:18:57.555650Z",
     "meta": "2026-02-05T21:52:08.910796Z",
-    "activities": "2026-02-05T22:08:02.215620Z",
+    "activities": "2026-02-05T22:12:32.300776Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1956/2000 (raw: 2523) (44 short) | pedagogy: 3 violations"
+      "message": "1968/2000 (raw: 2535) (32 short) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",

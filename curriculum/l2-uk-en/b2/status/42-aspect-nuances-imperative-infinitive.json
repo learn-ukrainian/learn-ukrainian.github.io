@@ -2,10 +2,10 @@
   "module": "42-aspect-nuances-imperative-infinitive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:46.405614Z",
+  "last_audit": "2026-02-05T22:31:28.724419Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.781132Z",
+    "md": "2026-02-05T22:18:57.556650Z",
     "meta": "2026-02-05T22:07:11.159167Z",
     "activities": "2026-02-05T22:02:47.975970Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2303/2000 (raw: 2703) | pedagogy: 2 violations"
+      "message": "2315/2000 (raw: 2715) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

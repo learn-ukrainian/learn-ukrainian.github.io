@@ -2,10 +2,10 @@
   "module": "43-correlative-constructions",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:47.423334Z",
+  "last_audit": "2026-02-05T22:31:29.817298Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.787132Z",
+    "md": "2026-02-05T22:18:57.556650Z",
     "meta": "2026-02-05T22:07:11.163167Z",
     "activities": "2026-02-05T22:02:47.980969Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1892/2000 (raw: 2630) | pedagogy: 2 violations"
+      "violations": 1,
+      "message": "1904/2000 (raw: 2642) (96 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

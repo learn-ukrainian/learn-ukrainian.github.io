@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M34 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:37
+**Generated:** 2026-02-05 22:31:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -52,7 +52,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2151/2000 (raw: 2757)
+- **Words:** ✅ 2163/2000 (raw: 2769)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -96,5 +96,5 @@
 | **Суфікс -ння/-ення (дія, процес)** | ⚪️ | 773 | Skipped |
 | **Суфікс -ість (якість, властивість)** | ⚪️ | 150 | Skipped |
 | **Суфікси -ок, -ка, -ство (результат, сфера)** | ⚪️ | 625 | Skipped |
-| **Практика — номіналізація** | ⚪️ | 123 | Skipped |
-| **Підсумок** | ✅ | 204 | Included in Core |
+| **Практика — номіналізація** | ⚪️ | 327 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

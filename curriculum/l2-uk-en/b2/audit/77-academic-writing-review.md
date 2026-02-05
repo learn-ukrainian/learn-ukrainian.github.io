@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M77 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:22
+**Generated:** 2026-02-05 22:32:05
 
 ## Configuration
 **Type:** B2-skills
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2841/2000 (raw: 2916)
+- **Words:** ✅ 2841/2000 (raw: 2914)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -97,5 +97,4 @@
 | **Аргументація та докази** | ⚪️ | 678 | Skipped |
 | **Цитування та посилання** | ⚪️ | 471 | Skipped |
 | **Стилістика академічного тексту** | ✅ | 348 | Included in Core |
-| **Підсумок та практика** | ✅ | 318 | Included in Core |
-| **Підсумок** | ✅ | 187 | Included in Core |
+| **Підсумок та практика** | ✅ | 505 | Included in Core |

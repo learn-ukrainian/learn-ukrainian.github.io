@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M68 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:13
+**Generated:** 2026-02-05 22:31:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2165/2000 (raw: 2248)
+- **Words:** ✅ 2177/2000 (raw: 2260)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -97,5 +97,5 @@
 | **Розминка — Коли і якщо** | ⚪️ | 464 | Skipped |
 | **Temporal Conjunctions** | ⚪️ | 383 | Skipped |
 | **Conditional Conjunctions** | ⚪️ | 512 | Skipped |
-| **Практика — часові та умовні зв'язки** | ⚪️ | 565 | Skipped |
-| **Підсумок** | ✅ | 165 | Included in Core |
+| **Практика — часові та умовні зв'язки** | ⚪️ | 730 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

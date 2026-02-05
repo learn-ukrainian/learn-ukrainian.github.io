@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M12 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:12
+**Generated:** 2026-02-05 22:30:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,17 +42,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2236/3800 (raw: 3044)
+- **Words:** ❌ 2248/3800 (raw: 3056)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,7 +53,7 @@
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -97,6 +88,6 @@
 | **Вставні слова для вираження ставлення** | ⚪️ | 201 | Skipped |
 | **Вставні слова для позначення джерела інформації** | ✅ | 92 | Included in Core |
 | **Вставні слова для організації висловлювання** | ⚪️ | 288 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Пунктуація при вставних словах** | ⚪️ | 72 | Skipped |
 | **Практика і підсумок** | ✅ | 179 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

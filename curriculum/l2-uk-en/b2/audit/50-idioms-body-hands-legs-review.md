@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:54
+**Generated:** 2026-02-05 22:31:37
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1867/2000 (raw: 2258)
+- **Words:** ❌ 1879/2000 (raw: 2270)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -73,11 +73,11 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 2 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.84 | - | 84% | 8% | 7.0% |
+| paragraph_var | 0.83 | - | 83% | 8% | 6.9% |
 | examples | 57 | - | 100% | 8% | 8.3% |
 | realworld | 1 | - | 100% | 8% | 8.3% |
 | questions | 17 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.5%** |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,5 +86,5 @@
 | **Розминка — Руки та ноги в мовленні** | ⚪️ | 367 | Skipped |
 | **Фразеологізми з "рука"** | ⚪️ | 841 | Skipped |
 | **Фразеологізми з "нога"** | ⚪️ | 167 | Skipped |
-| **Практика — вирази в розповіді** | ⚪️ | 225 | Skipped |
-| **Підсумок** | ✅ | 211 | Included in Core |
+| **Практика — вирази в розповіді** | ⚪️ | 436 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

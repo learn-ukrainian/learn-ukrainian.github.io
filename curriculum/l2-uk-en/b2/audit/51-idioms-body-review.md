@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M51 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:55
+**Generated:** 2026-02-05 22:31:38
 
 ## Configuration
 **Type:** B2-vocab
@@ -53,7 +53,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1977/2000 (raw: 2088) (23 short)
+- **Words:** ⚠️ 1989/2000 (raw: 2100) (11 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -94,5 +94,5 @@
 | **Розминка — Душа та серце в мові** | ⚪️ | 649 | Skipped |
 | **Фразеологізми з "душа"** | ⚪️ | 339 | Skipped |
 | **Фразеологізми з "серце"** | ⚪️ | 430 | Skipped |
-| **Практика — емоційні вирази** | ⚪️ | 326 | Skipped |
-| **Підсумок** | ✅ | 169 | Included in Core |
+| **Практика — емоційні вирази** | ⚪️ | 495 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

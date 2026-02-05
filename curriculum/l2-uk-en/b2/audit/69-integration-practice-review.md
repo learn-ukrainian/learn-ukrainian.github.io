@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M69 | **Phase:** B2.2 | **Pedagogy:** Practice | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:14
+**Generated:** 2026-02-05 22:31:56
 
 ## Configuration
 **Type:** B2-vocab
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2011/2000 (raw: 2096)
+- **Words:** ✅ 2023/2000 (raw: 2108)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -97,5 +97,5 @@
 | **Огляд — Чого ми навчилися в B2.2** | ⚪️ | 144 | Skipped |
 | **Інтеграція фразеології** | ⚪️ | 598 | Skipped |
 | **Комплексні завдання** | ⚪️ | 587 | Skipped |
-| **Підготовка до контрольної точки** | ⚪️ | 476 | Skipped |
-| **Підсумок** | ✅ | 158 | Included in Core |
+| **Підготовка до контрольної точки** | ⚪️ | 634 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

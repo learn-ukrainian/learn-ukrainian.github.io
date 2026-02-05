@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:33
+**Generated:** 2026-02-05 22:32:15
 
 ## Configuration
 **Type:** B2-skills
@@ -45,20 +45,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'звіт для...'.
   - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-professional-reports-basics.yaml: Schema validation error at key '15': {'type': 'essay-response', 'title': 'Письмова відповідь: Професійні звіти: Основи', 'prompt': 'Напишіть розгорнуту відповідь на тему "Професійні звіти: Основи".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4552/1750 (raw: 4955)
+- **Words:** ✅ 4552/1750 (raw: 4953)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -68,7 +64,7 @@
 - **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)
@@ -99,5 +95,5 @@
 | **Вступ** | ✅ | 440 | Included in Core |
 | **Імерсивна розповідь** | ⚪️ | 2151 | Skipped |
 | **Аналіз** | ✅ | 1124 | Included in Core |
-| **Граматика в контексті** | ✅ | 486 | Included in Core |
+| **Граматика в контексті** | ✅ | 664 | Included in Core |
 | **Підсумок** | ✅ | 34 | Included in Core |

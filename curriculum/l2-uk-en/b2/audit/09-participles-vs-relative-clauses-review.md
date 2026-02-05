@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M09 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:09
+**Generated:** 2026-02-05 22:30:51
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,18 +43,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2481/3800 (raw: 3041)
+- **Words:** ❌ 2493/3800 (raw: 3053)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +62,7 @@
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -99,6 +97,6 @@
 | **Стилістичний вплив** | ⚪️ | 251 | Skipped |
 | **Коли обирати дієприкметники** | ⚪️ | 383 | Skipped |
 | **Коли обирати підрядні речення** | ⚪️ | 352 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Трансформаційні вправи** | ⚪️ | 110 | Skipped |
 | **Практика і підсумок** | ✅ | 170 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

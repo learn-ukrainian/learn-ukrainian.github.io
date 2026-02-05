@@ -2,12 +2,12 @@
   "module": "81-capstone-doslidzhennya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:26.629702Z",
+  "last_audit": "2026-02-05T22:32:09.260222Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:22.020129Z",
+    "md": "2026-02-05T22:18:57.566649Z",
     "meta": "2026-02-05T22:07:11.325165Z",
-    "activities": "2026-02-05T22:08:02.233620Z",
+    "activities": "2026-02-05T22:12:32.308776Z",
     "vocabulary": "2026-02-05T22:08:28.367340Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2147/2000 (raw: 2284) | pedagogy: 1 violations"
+      "message": "2159/2000 (raw: 2296) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

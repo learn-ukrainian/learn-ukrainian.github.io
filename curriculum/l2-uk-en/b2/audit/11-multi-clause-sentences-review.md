@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:11
+**Generated:** 2026-02-05 22:30:54
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Складнопідрядне з послідовним підпорядкуванням (2 підрядних: умовне, з'ясувальне)
 5.". Shares significant keywords with sentence at index 76.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
@@ -58,10 +56,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 5 violations (moderate)
+- 4 violations (moderate)
 
 ## Gates
-- **Words:** ❌ 2123/3800 (raw: 2546)
+- **Words:** ❌ 2135/3800 (raw: 2558)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -71,7 +69,7 @@
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -105,7 +103,7 @@
 | **Складносурядні речення** | ⚪️ | 1038 | Skipped |
 | **Складнопідрядні речення з одним підрядним** | ⚪️ | 308 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Вкладені підрядні речення** | ⚪️ | 61 | Skipped |
 | **Пунктуація у багатоскладних реченнях** | ⚪️ | 65 | Skipped |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

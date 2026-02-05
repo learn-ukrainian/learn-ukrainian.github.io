@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M21 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:22
+**Generated:** 2026-02-05 22:31:05
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика — аналіз і створення' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1858/2000 (raw: 2222)
+- **Words:** ❌ 1870/2000 (raw: 2234)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 23 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -96,6 +87,6 @@
 | **Розминка — Що таке науково-технічний стиль** | ⚪️ | 46 | Skipped |
 | **Лексичні особливості** | ⚪️ | 868 | Skipped |
 | **Граматичні особливості** | ⚪️ | 276 | Skipped |
-| **Типи технічних текстів** | ✅ | 428 | Included in Core |
-| **Підсумок** | ✅ | 62 | Included in Core |
+| **Типи технічних текстів** | ✅ | 490 | Included in Core |
 | **Практика — аналіз і створення** | ✅ | 178 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

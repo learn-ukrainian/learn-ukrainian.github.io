@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:14:51
+**Generated:** 2026-02-05 22:30:43
 
 ## Configuration
 **Type:** B2-grammar
@@ -53,13 +53,12 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 5/100)
 
 - 2 violations (minor)
-- Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ❌ 2124/3800 (raw: 3029)
+- **Words:** ❌ 2136/3800 (raw: 3043)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -67,7 +66,7 @@
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 7 < 25 (soft target)
-- **Structure:** ❌ Missing '## Summary'
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -106,3 +105,4 @@
 | **Пасив із допоміжним дієсловом бути** | ⚪️ | 52 | Skipped |
 | **Регістрова специфіка** | ⚪️ | 28 | Skipped |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

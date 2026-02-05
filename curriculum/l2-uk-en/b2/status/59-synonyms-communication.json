@@ -2,11 +2,11 @@
   "module": "59-synonyms-communication",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:10:03.851947Z",
+  "last_audit": "2026-02-05T22:31:46.319591Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.881130Z",
-    "meta": "2026-02-05T22:07:11.230166Z",
+    "md": "2026-02-05T22:18:57.561650Z",
+    "meta": "2026-02-05T22:13:39.079083Z",
     "activities": "2026-02-05T22:02:48.053969Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1756/2000 (raw: 1897) | pedagogy: 2 violations"
+      "message": "1768/2000 (raw: 1909) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: fill-in-the-blank"
+      "2 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

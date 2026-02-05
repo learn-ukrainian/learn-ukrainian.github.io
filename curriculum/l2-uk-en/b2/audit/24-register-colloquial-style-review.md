@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:26
+**Generated:** 2026-02-05 22:31:08
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,18 +44,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1869/2000 (raw: 2736)
+- **Words:** ❌ 1881/2000 (raw: 2748)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,7 +63,7 @@
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -98,6 +96,6 @@
 | **Розминка — Розмовний стиль** | ⚪️ | 68 | Skipped |
 | **Скорочення та сленг** | ⚪️ | 788 | Skipped |
 | **Частки та наповнювачі** | ⚪️ | 308 | Skipped |
-| **Синтаксичні особливості** | ⚪️ | 430 | Skipped |
-| **Підсумок** | ✅ | 84 | Included in Core |
+| **Синтаксичні особливості** | ⚪️ | 514 | Skipped |
 | **Практика** | ⚪️ | 191 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

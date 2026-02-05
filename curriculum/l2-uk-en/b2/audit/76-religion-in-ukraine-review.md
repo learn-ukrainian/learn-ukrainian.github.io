@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M76 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:21
+**Generated:** 2026-02-05 22:32:04
 
 ## Configuration
 **Type:** B2-culture
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3030/2000 (raw: 3111)
+- **Words:** ✅ 3030/2000 (raw: 3109)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -97,5 +97,4 @@
 | **Інші конфесії** | ⚪️ | 779 | Skipped |
 | **Релігійні свята та традиції** | ⚪️ | 336 | Skipped |
 | **Міжконфесійний діалог** | ✅ | 472 | Included in Core |
-| **Підсумок та практика** | ✅ | 193 | Included in Core |
-| **Підсумок** | ✅ | 168 | Included in Core |
+| **Підсумок та практика** | ✅ | 361 | Included in Core |

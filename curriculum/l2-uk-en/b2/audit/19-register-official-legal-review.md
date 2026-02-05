@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:20
+**Generated:** 2026-02-05 22:31:03
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,18 +44,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1931/3800 (raw: 2690)
+- **Words:** ❌ 1943/3800 (raw: 2702)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,7 +63,7 @@
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
@@ -86,8 +84,8 @@
 | visual | 13 | 4 | 100% | 10% | 10.0% |
 | variety | 0.95 | - | 95% | 5% | 4.8% |
 | cultural | 5 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.8%** |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -98,6 +96,6 @@
 | **Типи документів** | ⚪️ | 782 | Skipped |
 | **Структура офіційних документів** | ⚪️ | 201 | Skipped |
 | **Законодавчі тексти** | ✅ | 405 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Типові помилки** | ✅ | 86 | Included in Core |
 | **Практика і підсумок** | ✅ | 191 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

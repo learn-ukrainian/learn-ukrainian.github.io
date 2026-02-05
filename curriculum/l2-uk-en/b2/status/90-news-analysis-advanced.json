@@ -2,10 +2,10 @@
   "module": "90-news-analysis-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:36.947006Z",
+  "last_audit": "2026-02-05T22:32:19.587973Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:22.096128Z",
+    "md": "2026-02-05T22:14:40.461441Z",
     "meta": "2026-02-05T22:07:21.902051Z",
     "activities": "2026-02-05T22:05:18.554376Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "4057/2000 (raw: 4182) | pedagogy: 2 violations | richness: 73% < 95% min (grammar) - REWRITE needed"
+      "message": "4057/2000 (raw: 4180) | pedagogy: 2 violations | richness: 73% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "pass",

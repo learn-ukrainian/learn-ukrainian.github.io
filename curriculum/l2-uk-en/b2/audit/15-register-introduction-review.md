@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:11:24
+**Generated:** 2026-02-05 22:30:58
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 3120/3800 (raw: 3928)
+- **Words:** ❌ 3132/3800 (raw: 3940)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 14 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ❌ 74% < 95% min (style)
@@ -84,8 +75,8 @@
 | visual | 14 | 4 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
 | cultural | 3 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
-| **TOTAL** | | | | | **74.6%** |
+| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| **TOTAL** | | | | | **74.5%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_EXEMPLAR_TEXTS**
@@ -106,6 +97,6 @@
 | **Художній стиль** | ⚪️ | 126 | Skipped |
 | **Науковий стиль** | ⚪️ | 739 | Skipped |
 | **Офіційно-діловий стиль** | ⚪️ | 719 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Публіцистичний стиль** | ⚪️ | 128 | Skipped |
 | **Практика і підсумок** | ✅ | 138 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

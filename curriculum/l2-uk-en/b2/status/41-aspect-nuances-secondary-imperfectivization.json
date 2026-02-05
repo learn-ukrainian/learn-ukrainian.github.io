@@ -2,10 +2,10 @@
   "module": "41-aspect-nuances-secondary-imperfectivization",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:45.248787Z",
+  "last_audit": "2026-02-05T22:32:40.792166Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.775132Z",
+    "md": "2026-02-05T22:18:57.556650Z",
     "meta": "2026-02-05T22:07:11.155167Z",
     "activities": "2026-02-05T22:02:47.971970Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "1926/2000 (raw: 2708) (74 short)"
+      "message": "1938/2000 (raw: 2720) (62 short)"
     },
     "activities": {
       "status": "pass",

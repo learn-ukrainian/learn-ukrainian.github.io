@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:41
+**Generated:** 2026-02-05 22:32:23
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -57,7 +57,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2566/2000 (raw: 2746)
+- **Words:** ✅ 2566/2000 (raw: 2744)
 - **Activities:** ✅ 19/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 14/4 types
@@ -99,5 +99,4 @@
 | **Частина 2: Письмо** | ✅ | 434 | Included in Core |
 | **Частина 3: Слухання** | ✅ | 861 | Included in Core |
 | **Частина 4: Говоріння** | ✅ | 452 | Included in Core |
-| **Підсумок та результати** | ✅ | 117 | Included in Core |
-| **Підсумок** | ✅ | 130 | Included in Core |
+| **Підсумок та результати** | ✅ | 247 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M79 | **Phase:** B2.4 | **Pedagogy:** integration | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:24
+**Generated:** 2026-02-05 22:32:07
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 79-capstone-research.yaml: Schema validation error at key '16': {'type': 'essay-response', 'title': 'Письмова відповідь: Підсумковий проєкт: Дослідження', 'prompt': 'Напишіть розгорнуту відповідь на тему "Підсумковий проєкт: Дослідження".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 79-capstone-research.yaml: Schema validation error at key '14': {'type': 'translate', 'title': 'Ключові фрази дослідження', 'items': [{'options': [{'text': 'Актуальність теми обґрунтована...', 'correct': True}, {'text': 'Тема є гарною через...', 'correct': False}, {'text': 'Ми вибрали цю тему, бо...', 'correct': False}], 'source': 'The relevance of the topic is grounded in...'}, {'options': [{'text': 'На основі опрацьованих джерел...', 'correct': True}, {'text': 'Згідно з книжками, які я читав...', 'correct': False}, {'text': 'Виходячи з тексту...', 'correct': False}], 'source': 'Based on the analyzed sources...'}, {'options': [{'text': 'Об’єктом дослідження є...', 'correct': True}, {'text': 'Предмет праці — це...', 'correct': False}, {'text': 'Ми дивимося на...', 'correct': False}], 'source': 'The object of the study is...'}, {'options': [{'text': 'Результати вказують на те, що...', 'correct': True}, {'text': 'Ми бачимо, що...', 'correct': False}, {'text': 'Зрештою сталося так, що...', 'correct': False}], 'source': 'The results indicate that...'}, {'options': [{'text': 'Згідно з обраною методологією...', 'correct': True}, {'text': 'Дивлячись на правила...', 'correct': False}, {'text': 'Через наш метод...', 'correct': False}], 'source': 'According to the methodology...'}, {'options': [{'text': 'На завершення варто зауважити...', 'correct': True}, {'text': 'Короче, ми хочемо сказати...', 'correct': False}, {'text': 'В самому кінці ми пишемо...', 'correct': False}], 'source': 'In conclusion, it should be noted...'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -55,7 +55,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1791/2000 (raw: 1941)
+- **Words:** ❌ 1791/2000 (raw: 1939)
 - **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -97,5 +97,4 @@
 | **Пошук та оцінка джерел** | ⚪️ | 365 | Skipped |
 | **Складання плану-проспекту** | ⚪️ | 135 | Skipped |
 | **Написання чернетки** | ⚪️ | 537 | Skipped |
-| **Підсумок та завдання** | ✅ | 165 | Included in Core |
-| **Підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок та завдання** | ✅ | 275 | Included in Core |

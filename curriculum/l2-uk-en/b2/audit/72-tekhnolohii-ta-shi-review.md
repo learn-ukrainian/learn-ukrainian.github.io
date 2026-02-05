@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:17
+**Generated:** 2026-02-05 22:31:59
 
 ## Configuration
 **Type:** B2-vocab
@@ -53,7 +53,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1787/2000 (raw: 2357)
+- **Words:** ❌ 1787/2000 (raw: 2355)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -101,5 +101,4 @@
 | **Штучний інтелект та машинне навчання** | ⚪️ | 301 | Skipped |
 | **Кібербезпека** | ⚪️ | 237 | Skipped |
 | **Електронне врядування** | ⚪️ | 118 | Skipped |
-| **Підсумок та практика** | ✅ | 245 | Included in Core |
-| **Підсумок** | ✅ | 210 | Included in Core |
+| **Підсумок та практика** | ✅ | 455 | Included in Core |

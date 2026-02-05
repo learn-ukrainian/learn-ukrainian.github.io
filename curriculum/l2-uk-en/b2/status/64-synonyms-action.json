@@ -2,11 +2,11 @@
   "module": "64-synonyms-action",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:10:08.973192Z",
+  "last_audit": "2026-02-05T22:31:51.529104Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.911130Z",
-    "meta": "2026-02-05T22:07:11.251166Z",
+    "md": "2026-02-05T22:18:57.562649Z",
+    "meta": "2026-02-05T22:13:39.109083Z",
     "activities": "2026-02-05T22:02:48.075968Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2180/2000 (raw: 2268) | pedagogy: 2 violations"
+      "message": "2192/2000 (raw: 2280) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Missing required activity types: fill-in-the-blank"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:13
+**Generated:** 2026-02-05 22:30:56
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,8 +44,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "*Відповідь:* **Книгу** (тема) *читає Марія* (рема).". Shares significant keywords with sentence at index 18.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "**Понад мільйон** користувачів завантажили його за перший місяць!". Shares significant keywords with sentence at index 110.
@@ -54,10 +52,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2596/3800 (raw: 3136)
+- **Words:** ❌ 2608/3800 (raw: 3148)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -67,7 +65,7 @@
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -101,7 +99,7 @@
 | **Тема-рема структура** | ⚪️ | 1065 | Skipped |
 | **Емфатичний порядок слів** | ⚪️ | 299 | Skipped |
 | **Інверсія для стилістичного ефекту** | ⚪️ | 633 | Skipped |
-| **Виділення елементів речення** | ⚪️ | 183 | Skipped |
-| **Підсумок** | ✅ | 108 | Included in Core |
+| **Виділення елементів речення** | ⚪️ | 291 | Skipped |
 | **Контекстуальний вибір** | ✅ | 110 | Included in Core |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

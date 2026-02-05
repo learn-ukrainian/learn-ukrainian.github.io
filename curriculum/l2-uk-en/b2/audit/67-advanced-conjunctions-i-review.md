@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M67 | **Phase:** B2.2 | **Pedagogy:** Grammar | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:12
+**Generated:** 2026-02-05 22:31:54
 
 ## Configuration
 **Type:** B2-grammar
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2262/2000 (raw: 2335)
+- **Words:** ✅ 2274/2000 (raw: 2347)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -97,5 +97,5 @@
 | **Розминка — Чому і незважаючи на** | ⚪️ | 521 | Skipped |
 | **Causal Conjunctions** | ⚪️ | 403 | Skipped |
 | **Concessive Conjunctions** | ⚪️ | 495 | Skipped |
-| **Практика — складні речення** | ⚪️ | 601 | Skipped |
-| **Підсумок** | ✅ | 165 | Included in Core |
+| **Практика — складні речення** | ⚪️ | 766 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

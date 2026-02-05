@@ -1,8 +1,8 @@
 # Audit Report: M89 — 89-news-analysis-basics.md
 **Level:** B2 | **Module:** M89 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:32:18
 
 ## Configuration
 **Type:** B2-skills
@@ -44,19 +44,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 89-news-analysis-basics.yaml: Schema validation error at key '15': {'type': 'essay-response', 'title': 'Письмова відповідь: Аналіз новин: Основи', 'prompt': 'Напишіть розгорнуту відповідь на тему "Аналіз новин: Основи".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4258/1750 (raw: 4677)
+- **Words:** ✅ 4258/1750 (raw: 4675)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -66,7 +55,7 @@
 - **Vocab:** ⚠️ 14 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 97.7% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)
@@ -97,5 +86,5 @@
 | **Вступ** | ✅ | 422 | Included in Core |
 | **Імерсивна розповідь** | ⚪️ | 1745 | Skipped |
 | **Аналіз** | ✅ | 1155 | Included in Core |
-| **Граматика в контексті** | ✅ | 523 | Included in Core |
+| **Граматика в контексті** | ✅ | 745 | Included in Core |
 | **Підсумок** | ✅ | 26 | Included in Core |

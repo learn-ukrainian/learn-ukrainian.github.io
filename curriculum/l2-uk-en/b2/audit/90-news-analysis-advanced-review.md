@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M90 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:36
+**Generated:** 2026-02-05 22:32:19
 
 ## Configuration
 **Type:** B2-history
@@ -55,7 +55,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 4057/2000 (raw: 4182)
+- **Words:** ✅ 4057/2000 (raw: 4180)
 - **Activities:** ✅ 15/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 14/2 types
@@ -121,7 +121,6 @@
 | **Розминка — Від базового до критичного аналізу** | ✅ | 353 | Included in Core |
 | **Упередженість та редакційна політика** | ⚪️ | 1886 | Skipped |
 | **Пропаганда та маніпуляції** | ⚪️ | 986 | Skipped |
-| **Верифікація інформації** | ⚪️ | 283 | Skipped |
-| **Підсумок** | ✅ | 238 | Included in Core |
+| **Верифікація інформації** | ⚪️ | 521 | Skipped |
 | **Фреймінг та мова** | ⚪️ | 136 | Skipped |
 | **Підсумок та практика** | ✅ | 0 | Included in Core |

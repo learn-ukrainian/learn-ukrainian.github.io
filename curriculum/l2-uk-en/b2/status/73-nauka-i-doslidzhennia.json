@@ -2,10 +2,10 @@
   "module": "73-nauka-i-doslidzhennia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:18.373544Z",
+  "last_audit": "2026-02-05T22:32:00.980983Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.967130Z",
+    "md": "2026-02-05T22:14:40.454441Z",
     "meta": "2026-02-05T22:07:11.289165Z",
     "activities": "2026-02-05T22:05:17.295389Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1946/2000 (raw: 2218) (54 short) | pedagogy: 1 violations | richness: 71% < 95% min (vocabulary)"
+      "message": "1946/2000 (raw: 2216) (54 short) | pedagogy: 1 violations | richness: 71% < 95% min (vocabulary)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "3 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

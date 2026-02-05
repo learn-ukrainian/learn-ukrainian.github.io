@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M23 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:25
+**Generated:** 2026-02-05 22:32:36
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,17 +44,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2084/2000 (raw: 2567)
+- **Words:** ✅ 2096/2000 (raw: 2579)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -64,7 +55,7 @@
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -97,6 +88,6 @@
 | **Розминка — Публіцистичний стиль** | ⚪️ | 63 | Skipped |
 | **Структура новинного тексту** | ✅ | 1069 | Included in Core |
 | **Мова заголовків** | ⚪️ | 695 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Маркери упередженості** | ⚪️ | 129 | Skipped |
 | **Практика** | ⚪️ | 128 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

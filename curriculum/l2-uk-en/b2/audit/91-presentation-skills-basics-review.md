@@ -1,8 +1,8 @@
 # Audit Report: M91 — 91-presentation-skills-basics.md
 **Level:** B2 | **Module:** M91 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:38
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:32:20
 
 ## Configuration
 **Type:** B2-skills
@@ -44,19 +44,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 91-presentation-skills-basics.yaml: Schema validation error at key '15': {'type': 'essay-response', 'title': 'Письмова відповідь: Презентації: Основи', 'prompt': 'Напишіть розгорнуту відповідь на тему "Презентації: Основи".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2282/2000 (raw: 2360)
+- **Words:** ✅ 2294/2000 (raw: 2372)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -66,9 +55,9 @@
 - **Vocab:** ⚠️ 5 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (skills))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (skills))
 - **Richness:** ✅ 91% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -86,7 +75,7 @@
 | cultural | 1 | - | 100% | 12% | 12.2% |
 | realworld | 18 | 3 | 100% | 12% | 12.2% |
 | visual | 0 | 2 | 0% | 6% | 0.0% |
-| paragraph_var | 0.66 | - | 66% | 6% | 4.0% |
+| paragraph_var | 0.67 | - | 67% | 6% | 4.1% |
 | questions | 13 | 4 | 100% | 6% | 6.1% |
 | **TOTAL** | | | | | **91.6%** |
 
@@ -95,9 +84,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 62 | Included in Core |
 | **Розминка — Що таке ефективна презентація** | ⚪️ | 140 | Skipped |
-| **Структура презентації** | ⚪️ | 1863 | Skipped |
-| **Підсумок** | ✅ | 164 | Included in Core |
+| **Структура презентації** | ⚪️ | 2027 | Skipped |
 | **Signposting — мовна навігація** | ⚪️ | 53 | Skipped |
 | **Візуальні матеріали** | ⚪️ | 0 | Skipped |
 | **Техніка виступу — основи** | ⚪️ | 0 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M41 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:45
+**Generated:** 2026-02-05 22:32:40
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1926/2000 (raw: 2708) (74 short)
+- **Words:** ⚠️ 1938/2000 (raw: 2720) (62 short)
 - **Activities:** ✅ 17/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -89,5 +89,5 @@
 | **Розминка — Навіщо два недоконані види?** | ⚪️ | 461 | Skipped |
 | **Key Mechanics** | ⚪️ | 466 | Skipped |
 | **Usage Contexts** | ✅ | 322 | Included in Core |
-| **Практика — утворення вторинних НДВ** | ⚪️ | 423 | Skipped |
-| **Підсумок** | ✅ | 191 | Included in Core |
+| **Практика — утворення вторинних НДВ** | ⚪️ | 614 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

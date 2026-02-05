@@ -2,10 +2,10 @@
   "module": "28-economics-business-vocabulary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:30.836417Z",
+  "last_audit": "2026-02-05T22:31:13.259506Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.691133Z",
+    "md": "2026-02-05T22:18:57.552650Z",
     "meta": "2026-02-05T21:52:08.909796Z",
     "activities": "2026-02-05T22:02:47.906970Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1748/2000 (raw: 1923) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "1760/2000 (raw: 1935)"
     },
     "activities": {
       "status": "pass",

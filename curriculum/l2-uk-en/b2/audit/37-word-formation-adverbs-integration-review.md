@@ -1,8 +1,8 @@
 # Audit Report: M37 — 37-word-formation-adverbs-integration.md
 **Level:** B2 | **Module:** M37 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:40
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:31:23
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,17 +42,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика — інтеграція словотвору' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2042/2000 (raw: 2839)
+- **Words:** ✅ 2054/2000 (raw: 2851)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -62,7 +53,7 @@
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
@@ -94,6 +85,6 @@
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
 | **Розминка — Від прикметника до прислівника** | ⚪️ | 1159 | Skipped |
 | **Adverbs from Adjectives** | ⚪️ | 367 | Skipped |
-| **Diminutives and Augmentatives** | ⚪️ | 152 | Skipped |
-| **Підсумок** | ✅ | 99 | Included in Core |
+| **Diminutives and Augmentatives** | ⚪️ | 251 | Skipped |
 | **Практика — інтеграція словотвору** | ⚪️ | 198 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

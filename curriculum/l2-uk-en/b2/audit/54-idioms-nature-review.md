@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M54 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:58
+**Generated:** 2026-02-05 22:31:41
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -40,22 +40,20 @@
 - Total activities: 15 (target: 10-14) ❌
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 2/3 (reading, true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 54-idioms-nature.yaml: Schema validation error at key '12': {'type': 'quiz', 'title': 'Традиції та мова', 'instruction': 'Дайте відповідь на питання про культурний фон природних ідіом.', 'items': [{'question': 'Яка стихія в українській мові найчастіше асоціюється з поняттям істини?', 'options': [{'text': 'Вода', 'correct': True}, {'text': 'Вогонь', 'correct': False}, {'text': 'Вітер', 'correct': False}, {'text': 'Земля', 'correct': False}], 'explanation': "Вираз 'чиста вода' символізує правду."}, {'question': 'Яке конкретне українське озеро, згадане в тексті, відоме своєю неймовірною чистотою?', 'options': [{'text': 'Світязь', 'correct': True}, {'text': 'Синевир', 'correct': False}, {'text': 'Ялпуг', 'correct': False}, {'text': 'Кунігунда', 'correct': False}], 'explanation': 'Світязь — найглибше і найчистіше озеро України.'}, {'question': "Що буквально означає вираз 'мідні труби' у повному варіанті ідіоми про вогонь і воду?", 'options': [{'text': 'Випробування славою', 'correct': True}, {'text': 'Музичний інструмент', 'correct': False}, {'text': 'Сантехнічні роботи', 'correct': False}, {'text': 'Військовий похід', 'correct': False}], 'explanation': 'Пройти мідні труби — значить не зіпсуватися від слави.'}, {'question': 'Чому саме легковажність у народній мові так часто асоціюється саме з вітром?', 'options': [{'text': 'Через мінливість та відсутність ваги', 'correct': True}, {'text': 'Бо вітер — це завжди дуже весело', 'correct': False}, {'text': 'Бо вітер часто приносить дощ', 'correct': False}, {'text': 'Це цілком випадкова асоціація', 'correct': False}], 'explanation': 'Вітер символізує порожнечу та швидку зміну напрямку.'}, {'question': "Яка велична річка України вважається головним джерелом образів 'водного шляху'?", 'options': [{'text': 'Дніпро', 'correct': True}, {'text': 'Дністер', 'correct': False}, {'text': 'Десна', 'correct': False}, {'text': 'Прут', 'correct': False}], 'explanation': 'Дніпро — центральна артерія та символ України.'}, {'question': 'В якому саме регіоні України Михайло Коцюбинський змальовував магічну силу вогню?', 'options': [{'text': 'Карпати', 'correct': True}, {'text': 'Крим', 'correct': False}, {'text': 'Поділля', 'correct': False}, {'text': 'Донбас', 'correct': False}], 'explanation': "Повість 'Тіні забутих предків' присвячена Гуцульщині."}, {'question': "Що саме символізує 'земля' для традиційного українського хлібороба, згідно з народним світоглядом?", 'options': [{'text': 'Опору та матір-годувальницю', 'correct': True}, {'text': 'Тільки місце для важкої роботи', 'correct': False}, {'text': 'Бруд та постійну втому', 'correct': False}, {'text': 'Загрозу для майбутнього врожаю', 'correct': False}], 'explanation': 'Для українця земля — найвища цінність та опора.'}, {'question': 'Який фразеологічний вираз найкраще описує діяльність професійного та чесного журналіста-розслідувача?', 'options': [{'text': 'Він виводить на чисту воду.', 'correct': True}, {'text': 'Він ллє забагато води.', 'correct': False}, {'text': 'У нього вітер у голові.', 'correct': False}, {'text': 'Він як у воду дивиться.', 'correct': False}], 'explanation': 'Мета журналістики — розкриття правди.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1915/2000 (raw: 2022) (85 short)
+- **Words:** ⚠️ 1927/2000 (raw: 2034) (73 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -65,7 +63,7 @@
 - **Vocab:** ⚠️ 4 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
@@ -96,5 +94,5 @@
 | **Розминка — Чотири стихії** | ⚪️ | 509 | Skipped |
 | **Фразеологізми з водою та вогнем** | ⚪️ | 407 | Skipped |
 | **Фразеологізми з землею та вітром** | ⚪️ | 476 | Skipped |
-| **Практика — природні образи** | ⚪️ | 262 | Skipped |
-| **Підсумок** | ✅ | 179 | Included in Core |
+| **Практика — природні образи** | ⚪️ | 441 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

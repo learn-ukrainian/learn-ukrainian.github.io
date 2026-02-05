@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:10
+**Generated:** 2026-02-05 22:30:52
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -58,7 +58,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1717/3500 (raw: 1895)
+- **Words:** ❌ 1729/3500 (raw: 1907)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -101,5 +101,5 @@
 | **Огляд — Активні дієприкметники** | ⚪️ | 302 | Skipped |
 | **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 163 | Skipped |
 | **Діагностичні завдання** | ⚪️ | 368 | Skipped |
-| **Самооцінка і план** | ⚪️ | 202 | Skipped |
-| **Підсумок** | ✅ | 183 | Included in Core |
+| **Самооцінка і план** | ⚪️ | 385 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

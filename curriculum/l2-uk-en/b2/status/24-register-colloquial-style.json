@@ -2,10 +2,10 @@
   "module": "24-register-colloquial-style",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:26.392917Z",
+  "last_audit": "2026-02-05T22:31:08.824814Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.666133Z",
+    "md": "2026-02-05T22:18:57.551650Z",
     "meta": "2026-02-05T21:52:08.909796Z",
     "activities": "2026-02-05T22:02:47.886971Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1869/2000 (raw: 2736) | pedagogy: 2 violations"
+      "message": "1881/2000 (raw: 2748) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

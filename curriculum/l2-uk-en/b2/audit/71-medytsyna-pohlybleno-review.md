@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M71 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:16
+**Generated:** 2026-02-05 22:31:58
 
 ## Configuration
 **Type:** B2-vocab
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2309/2000 (raw: 2636)
+- **Words:** ✅ 2309/2000 (raw: 2634)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -102,5 +102,4 @@
 | **Діалог лікар-пацієнт** | ✅ | 461 | Included in Core |
 | **Спеціалізації та процедури** | ⚪️ | 285 | Skipped |
 | **Фармакологічна лексика** | ⚪️ | 204 | Skipped |
-| **Підсумок та практика** | ✅ | 294 | Included in Core |
-| **Підсумок** | ✅ | 232 | Included in Core |
+| **Підсумок та практика** | ✅ | 526 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M70 | **Phase:** B2.2 | **Pedagogy:** Assessment | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:15
+**Generated:** 2026-02-05 22:31:57
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: Schema validation error at key '16': {'type': 'essay-response', 'title': 'Письмова відповідь: Контрольна точка B2.2', 'prompt': 'Напишіть розгорнуту відповідь на тему "Контрольна точка B2.2".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 70-b2-checkpoint.yaml: Schema validation error at key '14': {'type': 'quiz', 'title': 'Фінальний синтаксис', 'instruction': 'Оберіть правильну структуру речення.', 'items': [{'question': 'Яке з наведених речень містить стилістичну парцеляцію для підсилення змісту висловлювання?', 'options': [{'text': 'Він переміг. Всупереч усьому. Назавжди.', 'correct': True}, {'text': 'Він переміг всупереч усьому назавжди.', 'correct': False}, {'text': 'Він, переміг, всупереч усьому.', 'correct': False}, {'text': 'Він переміг. Всупереч. Усьому назавжди.', 'correct': False}], 'explanation': 'Парцеляція — розчленування для акценту.'}, {'question': 'Який сполучник найкраще та найдоречніше підходить для офіційного обґрунтування вашої думки у звіті?', 'options': [{'text': 'оскільки', 'correct': True}, {'text': 'бо', 'correct': False}, {'text': 'тому що', 'correct': False}, {'text': 'хай', 'correct': False}], 'explanation': 'Оскільки — стандарт ділового стилю.'}, {'question': 'Оберіть граматично правильне безособове речення, яке підходить для офіційного звіту:', 'options': [{'text': 'Проєкт реалізовано вчасно.', 'correct': True}, {'text': 'Ми реалізували проєкт.', 'correct': False}, {'text': 'Він реалізував проєкт.', 'correct': False}, {'text': 'Команда реалізувала проєкт.', 'correct': False}], 'explanation': 'Безособові речення фокусуються на дії/результаті.'}, {'question': 'Як правильно сформулювати думку про гіпотетичне минуле, використовуючи умовний спосіб?', 'options': [{'text': 'Якби я знав, я б допоміг.', 'correct': True}, {'text': 'Якщо я знав, я допоміг.', 'correct': False}, {'text': 'Якби я вчу, я допоміг би.', 'correct': False}, {'text': 'Якщо я буду знати, я допоможу.', 'correct': False}], 'explanation': 'Якби + минулий час + б.'}, {'question': 'Яка синтаксична конструкція найкраще вказує на точну часову межу тривалості дії?', 'options': [{'text': 'доки не закінчимо', 'correct': True}, {'text': 'поки ми вчимося', 'correct': False}, {'text': 'щойно почали', 'correct': False}, {'text': 'відколи прийшли', 'correct': False}], 'explanation': 'Доки вказує на часовий кордон.'}, {'question': "Оберіть варіант із правильним відмінюванням складного числівника 'дев'ятсот' у родовому відмінку:", 'options': [{'text': "дев'ятисот", 'correct': True}, {'text': "дев'ятсот", 'correct': False}, {'text': "дев'ятиста", 'correct': False}, {'text': "дев'ятсотами", 'correct': False}], 'explanation': "Відмінюються обидві частини: дев'яти + сот."}, {'question': 'Яка ідіома найкраще пасує для опису завершальної стадії важливої та тривалої роботи?', 'options': [{'text': 'вийти на фінішну пряму', 'correct': True}, {'text': 'заварити кашу', 'correct': False}, {'text': 'бити байдики', 'correct': False}, {'text': 'тягнути кота за хвоста', 'correct': False}], 'explanation': 'Вихід на фінішну пряму — це фінал.'}, {'question': "Що в українській філософській думці, зокрема у Сковороди, означає поняття 'сродна праця'?", 'options': [{'text': 'робота за покликанням душі', 'correct': True}, {'text': 'дуже важка робота', 'correct': False}, {'text': 'робота лише за гроші', 'correct': False}, {'text': 'відсутність роботи', 'correct': False}], 'explanation': 'Концепція Сковороди про щастя у праці.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -55,7 +55,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1835/2000 (raw: 1978)
+- **Words:** ❌ 1835/2000 (raw: 1976)
 - **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -81,12 +81,12 @@
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
 | review_sections | 27 | 3 | 100% | 20% | 20.0% |
-| variety | 0.92 | - | 92% | 15% | 13.8% |
+| variety | 0.91 | - | 91% | 15% | 13.7% |
 | engagement | 5 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
 | visual | 6 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.8%** |
+| **TOTAL** | | | | | **88.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -96,5 +96,4 @@
 | **Pedagogical Structure** | ⚪️ | 479 | Skipped |
 | **Domain Vocabulary (M71-74)** | ➖ | 406 | Excluded Type |
 | **Professional Communication (M85-88)** | ⚪️ | 400 | Skipped |
-| **Підсумок та результати** | ✅ | 214 | Included in Core |
-| **Підсумок** | ✅ | 189 | Included in Core |
+| **Підсумок та результати** | ✅ | 403 | Included in Core |

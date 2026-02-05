@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M33 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:36
+**Generated:** 2026-02-05 22:32:38
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1973/2000 (raw: 2596) (27 short)
+- **Words:** ⚠️ 1985/2000 (raw: 2608) (15 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -88,5 +88,5 @@
 | **Суфікс -ар/-яр (професія, заняття)** | ⚪️ | 904 | Skipped |
 | **Суфікс -ач (виконавець дії)** | ⚪️ | 147 | Skipped |
 | **Суфікс -ник (рід занять, роль)** | ⚪️ | 303 | Skipped |
-| **Практика — визначення словотвору** | ⚪️ | 97 | Skipped |
-| **Підсумок** | ✅ | 224 | Included in Core |
+| **Практика — визначення словотвору** | ⚪️ | 321 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

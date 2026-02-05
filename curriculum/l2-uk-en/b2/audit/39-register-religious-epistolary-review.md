@@ -1,8 +1,8 @@
 # Audit Report: M39 — 39-register-religious-epistolary.md
 **Level:** B2 | **Module:** M39 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:43
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:31:25
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,17 +42,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика — написання листів' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2137/2000 (raw: 2600)
+- **Words:** ✅ 2149/2000 (raw: 2612)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -62,7 +53,7 @@
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
@@ -94,6 +85,6 @@
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Розминка — Два спеціальні регістри** | ⚪️ | 507 | Skipped |
 | **Religious Style (Релігійний стиль)** | ⚪️ | 982 | Skipped |
-| **Сучасні правила листування** | ⚪️ | 298 | Skipped |
-| **Підсумок** | ✅ | 97 | Included in Core |
+| **Сучасні правила листування** | ⚪️ | 395 | Skipped |
 | **Практика — написання листів** | ⚪️ | 193 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

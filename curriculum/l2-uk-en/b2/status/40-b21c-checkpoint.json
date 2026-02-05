@@ -2,12 +2,12 @@
   "module": "40-b21c-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:44.093741Z",
+  "last_audit": "2026-02-05T22:31:26.437329Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.769132Z",
+    "md": "2026-02-05T22:14:40.442441Z",
     "meta": "2026-02-05T21:52:08.910796Z",
-    "activities": "2026-02-05T22:08:02.220620Z",
+    "activities": "2026-02-05T22:12:32.301776Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2355/2000 (raw: 2580) | pedagogy: 1 violations"
+      "message": "2355/2000 (raw: 2578) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

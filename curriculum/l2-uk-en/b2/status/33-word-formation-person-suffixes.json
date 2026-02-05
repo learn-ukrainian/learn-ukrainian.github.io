@@ -2,10 +2,10 @@
   "module": "33-word-formation-person-suffixes",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:36.359103Z",
+  "last_audit": "2026-02-05T22:32:38.505770Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.722132Z",
+    "md": "2026-02-05T22:18:57.553650Z",
     "meta": "2026-02-05T21:52:08.909796Z",
     "activities": "2026-02-05T22:02:47.931970Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "1973/2000 (raw: 2596) (27 short)"
+      "message": "1985/2000 (raw: 2608) (15 short)"
     },
     "activities": {
       "status": "pass",

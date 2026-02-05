@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:26
+**Generated:** 2026-02-05 22:32:09
 
 ## Configuration
 **Type:** B2-skills
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-capstone-doslidzhennya.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Правда чи хибність: Capstone: Дослідження', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'answer': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'answer': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'answer': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'answer': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'answer': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'answer': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'answer': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'answer': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-capstone-doslidzhennya.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Правда чи хибність: Capstone: Дослідження', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'correct': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'correct': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'correct': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'correct': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'correct': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'correct': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'correct': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'correct': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -52,7 +52,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2147/2000 (raw: 2284)
+- **Words:** ✅ 2159/2000 (raw: 2296)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 8/5 types
@@ -78,11 +78,11 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 14 | 15 | 93% | 26% | 23.7% |
 | engagement | 8 | 5 | 100% | 19% | 19.4% |
-| variety | 0.97 | - | 97% | 12% | 11.9% |
+| variety | 0.96 | - | 96% | 12% | 11.8% |
 | cultural | 7 | - | 100% | 12% | 12.2% |
 | realworld | 20 | 3 | 100% | 12% | 12.2% |
 | visual | 9 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 0.94 | - | 94% | 6% | 5.8% |
+| paragraph_var | 0.96 | - | 96% | 6% | 5.9% |
 | questions | 7 | 4 | 100% | 6% | 6.1% |
 | **TOTAL** | | | | | **97.5%** |
 
@@ -95,5 +95,5 @@
 | **Основна частина** | ✅ | 485 | Included in Core |
 | **Висновки** | ✅ | 287 | Included in Core |
 | **Редагування та оформлення** | ⚪️ | 375 | Skipped |
-| **Підготовка до здачі** | ⚪️ | 173 | Skipped |
-| **Підсумок** | ✅ | 196 | Included in Core |
+| **Підготовка до здачі** | ⚪️ | 369 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

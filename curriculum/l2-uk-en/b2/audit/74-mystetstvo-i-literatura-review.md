@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:19
+**Generated:** 2026-02-05 22:32:01
 
 ## Configuration
 **Type:** B2-vocab
@@ -52,7 +52,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2002/2000 (raw: 2259)
+- **Words:** ✅ 2002/2000 (raw: 2257)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 9/4 types
@@ -100,5 +100,4 @@
 | **Образотворче мистецтво** | ⚪️ | 548 | Skipped |
 | **Музика та театр** | ⚪️ | 192 | Skipped |
 | **Лексика мистецької критики** | ⚪️ | 75 | Skipped |
-| **Підсумок та практика** | ✅ | 176 | Included in Core |
-| **Підсумок** | ✅ | 200 | Included in Core |
+| **Підсумок та практика** | ✅ | 376 | Included in Core |

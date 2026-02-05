@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:28
+**Generated:** 2026-02-05 22:32:11
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -62,7 +62,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1802/2000 (raw: 1971)
+- **Words:** ❌ 1802/2000 (raw: 1969)
 - **Activities:** ✅ 22/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -104,5 +104,4 @@
 | **Лексика B2: Синтез** | ⚪️ | 491 | Skipped |
 | **Навички B2: Синтез** | ⚪️ | 223 | Skipped |
 | **Самооцінка та пробіли** | ⚪️ | 225 | Skipped |
-| **Підсумок та мотивація** | ✅ | 411 | Included in Core |
-| **Підсумок** | ✅ | 288 | Included in Core |
+| **Підсумок та мотивація** | ✅ | 699 | Included in Core |

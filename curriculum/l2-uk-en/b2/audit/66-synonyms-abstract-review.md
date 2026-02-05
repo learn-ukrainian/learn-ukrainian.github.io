@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M66 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:11
+**Generated:** 2026-02-05 22:31:53
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -41,22 +41,20 @@
 - Total activities: 16 (target: 10-14) ❌
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 2/3 (reading, true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Стратегічні Поняття', 'instruction': 'Оберіть усі слова про високі ідеали (6 елементів).', 'items': [{'question': 'Які терміни описують цінності (Оберіть 6):', 'options': [{'text': 'свобода', 'correct': True}, {'text': 'справедливість', 'correct': True}, {'text': 'гідність', 'correct': True}, {'text': 'істина', 'correct': True}, {'text': 'честь', 'correct': True}, {'text': 'гуманізм', 'correct': True}]}, {'question': 'Які слова описують духовний розвиток?', 'options': [{'text': 'просвітлення', 'correct': True}, {'text': 'самовдосконалення', 'correct': True}, {'text': 'пізнання', 'correct': True}, {'text': 'застій', 'correct': False}]}, {'question': "Оберіть характеристики 'наукового' підходу:", 'options': [{'text': "об'єктивність", 'correct': True}, {'text': 'доказовість', 'correct': True}, {'text': 'системність', 'correct': True}, {'text': 'чутки', 'correct': False}]}, {'question': "Які слова вказують на 'візію' майбутнього?", 'options': [{'text': 'перспектива', 'correct': True}, {'text': 'прогноз', 'correct': True}, {'text': 'проєкт', 'correct': True}, {'text': 'минуле', 'correct': False}]}, {'question': "Оберіть терміни для опису 'істини':", 'options': [{'text': "об'єктивна", 'correct': True}, {'text': 'незаперечна', 'correct': True}, {'text': 'абсолютна', 'correct': True}, {'text': 'хибна', 'correct': False}]}, {'question': "Які слова описують 'національний' вимір?", 'options': [{'text': 'ідентичність', 'correct': True}, {'text': 'свідомість', 'correct': True}, {'text': 'патріотизм', 'correct': True}, {'text': 'байдужість', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2930/2000 (raw: 3021)
+- **Words:** ✅ 2942/2000 (raw: 3033)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,7 +64,7 @@
 - **Vocab:** ⚠️ 8 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)
@@ -97,5 +95,5 @@
 | **Розминка — Думка чи ідея?** | ⚪️ | 794 | Skipped |
 | **Thought/Idea** | ⚪️ | 675 | Skipped |
 | **Concept/Notion** | ✅ | 557 | Included in Core |
-| **Практика — абстрактна лексика** | ⚪️ | 667 | Skipped |
-| **Підсумок** | ✅ | 163 | Included in Core |
+| **Практика — абстрактна лексика** | ⚪️ | 830 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

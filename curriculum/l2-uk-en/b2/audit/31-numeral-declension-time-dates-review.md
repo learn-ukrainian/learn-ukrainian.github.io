@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M31 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:34
+**Generated:** 2026-02-05 22:31:16
 
 ## Configuration
 **Type:** B2-grammar
@@ -52,7 +52,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1837/2000 (raw: 2039)
+- **Words:** ❌ 1849/2000 (raw: 2051)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -96,5 +96,5 @@
 | **Час — години та хвилини** | ⚪️ | 686 | Skipped |
 | **Дати — дні та місяці** | ⚪️ | 85 | Skipped |
 | **Числівники в офіційних документах** | ⚪️ | 370 | Skipped |
-| **Практика** | ⚪️ | 310 | Skipped |
-| **Підсумок** | ✅ | 150 | Included in Core |
+| **Практика** | ⚪️ | 460 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

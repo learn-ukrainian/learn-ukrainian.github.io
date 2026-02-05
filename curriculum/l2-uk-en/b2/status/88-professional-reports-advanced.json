@@ -2,12 +2,12 @@
   "module": "88-professional-reports-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:34.510901Z",
+  "last_audit": "2026-02-05T22:32:17.199132Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:58:04.260061Z",
+    "md": "2026-02-05T22:18:57.568650Z",
     "meta": "2026-02-05T22:07:11.364165Z",
-    "activities": "2026-02-05T22:08:02.192620Z",
+    "activities": "2026-02-05T22:12:32.311776Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3793/1750 (raw: 4303) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3793/1750 (raw: 4301)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

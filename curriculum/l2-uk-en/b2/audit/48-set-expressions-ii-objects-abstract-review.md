@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M48 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:52
+**Generated:** 2026-02-05 22:31:35
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1975/2000 (raw: 2395) (25 short)
+- **Words:** ⚠️ 1987/2000 (raw: 2407) (13 short)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -84,5 +84,5 @@
 | **Розминка — Предмети як символи** | ⚪️ | 1264 | Skipped |
 | **Сталі вирази з предметами** | ⚪️ | 173 | Skipped |
 | **Сталі вирази з абстракціями** | ⚪️ | 189 | Skipped |
-| **Практика — вирази в мовленні** | ⚪️ | 37 | Skipped |
-| **Підсумок** | ✅ | 261 | Included in Core |
+| **Практика — вирази в мовленні** | ⚪️ | 298 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

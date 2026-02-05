@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:18
+**Generated:** 2026-02-05 22:32:00
 
 ## Configuration
 **Type:** B2-vocab
@@ -53,7 +53,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1946/2000 (raw: 2218) (54 short)
+- **Words:** ⚠️ 1946/2000 (raw: 2216) (54 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -101,5 +101,4 @@
 | **Наукова термінологія** | ⚪️ | 535 | Skipped |
 | **Читання наукових текстів** | ✅ | 209 | Included in Core |
 | **Обговорення наукових тем** | ⚪️ | 262 | Skipped |
-| **Підсумок та практика** | ✅ | 90 | Included in Core |
-| **Підсумок** | ✅ | 206 | Included in Core |
+| **Підсумок та практика** | ✅ | 296 | Included in Core |

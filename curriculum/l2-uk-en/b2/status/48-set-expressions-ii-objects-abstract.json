@@ -2,10 +2,10 @@
   "module": "48-set-expressions-ii-objects-abstract",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:52.698210Z",
+  "last_audit": "2026-02-05T22:31:35.122159Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.819131Z",
+    "md": "2026-02-05T22:18:57.558650Z",
     "meta": "2026-02-05T22:07:11.185167Z",
     "activities": "2026-02-05T22:02:48.004969Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1975/2000 (raw: 2395) (25 short) | richness: 94% < 95% min (phraseology)"
+      "message": "1987/2000 (raw: 2407) (13 short) | richness: 94% < 95% min (phraseology)"
     },
     "activities": {
       "status": "pass",

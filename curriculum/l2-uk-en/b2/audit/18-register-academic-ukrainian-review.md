@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:19
+**Generated:** 2026-02-05 22:31:02
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,8 +44,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "Результати дослідження вказують на потенційний негативний вплив соціальних мереж на комунікативну по...". Shares significant keywords with sentence at index 62.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
@@ -54,10 +52,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2069/3800 (raw: 2912)
+- **Words:** ❌ 2081/3800 (raw: 2924)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -67,7 +65,7 @@
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
@@ -99,7 +97,7 @@
 | **Лексичні особливості** | ⚪️ | 711 | Skipped |
 | **Граматичні особливості** | ⚪️ | 332 | Skipped |
 | **Мовне хеджування** | ⚪️ | 495 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Цитування та посилання** | ⚪️ | 74 | Skipped |
 | **Структура наукового тексту** | ✅ | 76 | Included in Core |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,10 +2,10 @@
   "module": "15-register-introduction",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:11:24.532896Z",
+  "last_audit": "2026-02-05T22:30:58.716432Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.594134Z",
+    "md": "2026-02-05T22:18:57.547650Z",
     "meta": "2026-02-05T21:57:51.488195Z",
     "activities": "2026-02-05T22:02:47.830971Z",
     "vocabulary": "2026-02-05T21:52:08.915796Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "3120/3800 (raw: 3928) | pedagogy: 1 violations | richness: 74% < 95% min (style)"
+      "violations": 2,
+      "message": "3132/3800 (raw: 3940) | richness: 74% < 95% min (style)"
     },
     "activities": {
       "status": "pass",

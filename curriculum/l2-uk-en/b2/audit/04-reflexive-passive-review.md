@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:03
+**Generated:** 2026-02-05 22:30:46
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,17 +42,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1962/3800 (raw: 2482)
+- **Words:** ❌ 1974/3800 (raw: 2494)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,7 +53,7 @@
 - **Vocab:** ⚠️ 10 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -95,8 +86,8 @@
 | **Вступ — Зворотний пасив** | ✅ | 260 | Included in Core |
 | **Утворення зворотного пасиву** | ⚪️ | 780 | Skipped |
 | **Акцент на процесі** | ⚪️ | 237 | Skipped |
-| **Вираження агента** | ⚪️ | 284 | Skipped |
-| **Підсумок** | ✅ | 236 | Included in Core |
+| **Вираження агента** | ⚪️ | 520 | Skipped |
 | **Контексти вживання** | ✅ | 110 | Included in Core |
 | **Порівняння форм пасиву** | ⚪️ | 0 | Skipped |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M56 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:00
+**Generated:** 2026-02-05 22:31:43
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -41,22 +41,20 @@
 - Total activities: 16 (target: 10-14) ❌
 - Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 2/3 (reading, true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'creative-writing', 'etymology-trace', 'transcription', 'grammar-identify', 'paleography-analysis', 'dialect-comparison', 'translation-critique', 'phonology-lab', 'grammar-lab', 'parallel-text', 'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent, creative-writing, etymology-trace, transcription, grammar-identify, paleography-analysis, dialect-comparison, translation-critique, phonology-lab, grammar-lab, parallel-text, historical-writing, register-identify, loanword-trace, comparative-style
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 56-synonyms-size.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Переносне значення', 'instruction': 'Оберіть випадки, де слова розміру вжиті в переносному значенні (6+ елементів).', 'items': [{'question': 'Де розмір став якістю людини або явища?', 'options': [{'text': 'велика людина', 'correct': True}, {'text': 'широка душа', 'correct': True}, {'text': 'дрібний характер', 'correct': True}, {'text': 'високий будинок', 'correct': False}]}, {'question': 'Які вирази описують інтелектуальний рівень?', 'options': [{'text': 'глибокі знання', 'correct': True}, {'text': 'мілке мислення', 'correct': True}, {'text': 'товста стіна', 'correct': False}, {'text': 'широка дорога', 'correct': False}]}, {'question': 'Оберіть метафори делікатності:', 'options': [{'text': 'тонкий натяк', 'correct': True}, {'text': 'тонкий гумор', 'correct': True}, {'text': 'груба сила', 'correct': False}, {'text': 'товста книга', 'correct': False}]}, {'question': 'Які слова описують соціальну значущість?', 'options': [{'text': 'велика подія', 'correct': True}, {'text': 'незначна особа', 'correct': True}, {'text': 'дрібна справа', 'correct': True}, {'text': 'високий паркан', 'correct': False}]}, {'question': 'Оберіть вирази про обмеженість:', 'options': [{'text': 'вузьке коло', 'correct': True}, {'text': "тісні зв'язки", 'correct': False}, {'text': 'обмежені ресурси', 'correct': True}, {'text': 'широкий простір', 'correct': False}]}, {'question': 'Які слова передають інтенсивність зусиль?', 'options': [{'text': 'колосальна праця', 'correct': True}, {'text': 'величезна відповідальність', 'correct': True}, {'text': 'малий крок', 'correct': False}, {'text': 'дрібний дощ', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1835/2000 (raw: 1986)
+- **Words:** ❌ 1847/2000 (raw: 1998)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,7 +64,7 @@
 - **Vocab:** ⚠️ 6 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
@@ -81,14 +79,14 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 7 | 4 | 100% | 25% | 25.0% |
-| variety | 0.99 | - | 99% | 17% | 16.5% |
+| variety | 0.98 | - | 98% | 17% | 16.3% |
 | cultural | 5 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
 | examples | 33 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 6 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.8%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -97,5 +95,5 @@
 | **Розминка — Від малого до величезного** | ⚪️ | 161 | Skipped |
 | **Big** | ⚪️ | 914 | Skipped |
 | **Small** | ⚪️ | 284 | Skipped |
-| **Практика — опис масштабу** | ⚪️ | 211 | Skipped |
-| **Підсумок** | ✅ | 182 | Included in Core |
+| **Практика — опис масштабу** | ⚪️ | 393 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

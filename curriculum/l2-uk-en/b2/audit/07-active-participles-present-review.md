@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:11:35
+**Generated:** 2026-02-05 22:30:49
 
 ## Configuration
 **Type:** B2-grammar
@@ -59,7 +59,7 @@
 - 4 violations (moderate)
 
 ## Gates
-- **Words:** ❌ 2270/3800 (raw: 3008)
+- **Words:** ❌ 2282/3800 (raw: 3020)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -105,5 +105,5 @@
 | **Еквівалентні підрядні речення** | ⚪️ | 349 | Skipped |
 | **Контексти вживання** | ✅ | 115 | Included in Core |
 | **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
-| **Практика і підсумок** | ✅ | 419 | Included in Core |
-| **Підсумок** | ✅ | 189 | Included in Core |
+| **Практика і підсумок** | ✅ | 608 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

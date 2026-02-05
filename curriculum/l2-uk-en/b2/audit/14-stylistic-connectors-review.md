@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M14 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:15
+**Generated:** 2026-02-05 22:30:57
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 125.
@@ -60,10 +58,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 6 violations (moderate)
+- 5 violations (moderate)
 
 ## Gates
-- **Words:** ❌ 2451/3800 (raw: 3446)
+- **Words:** ❌ 2463/3800 (raw: 3458)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,7 +71,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -107,7 +105,7 @@
 | **Сполучники протиставлення** | ⚪️ | 1016 | Skipped |
 | **Сполучники приєднання** | ⚪️ | 387 | Skipped |
 | **Сполучники наслідку** | ⚪️ | 403 | Skipped |
-| **Допустові сполучники** | ⚪️ | 142 | Skipped |
-| **Підсумок** | ✅ | 139 | Included in Core |
+| **Допустові сполучники** | ⚪️ | 281 | Skipped |
 | **Вибір за регістром** | ⚪️ | 110 | Skipped |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

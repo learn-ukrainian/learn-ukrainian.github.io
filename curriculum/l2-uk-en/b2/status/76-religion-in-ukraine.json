@@ -2,10 +2,10 @@
   "module": "76-religion-in-ukraine",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:21.518169Z",
+  "last_audit": "2026-02-05T22:32:04.137314Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.988129Z",
+    "md": "2026-02-05T22:14:40.455441Z",
     "meta": "2026-02-05T22:07:11.303165Z",
     "activities": "2026-02-05T22:02:48.134968Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3030/2000 (raw: 3111) | pedagogy: 1 violations"
+      "message": "3030/2000 (raw: 3109) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

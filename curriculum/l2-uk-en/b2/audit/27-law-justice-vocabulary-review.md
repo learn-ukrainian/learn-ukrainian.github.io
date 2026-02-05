@@ -1,8 +1,8 @@
 # Audit Report: M27 — 27-law-justice-vocabulary.md
 **Level:** B2 | **Module:** M27 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:29
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:31:12
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,17 +44,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика — юридичний текст' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2436/2000 (raw: 2695)
+- **Words:** ✅ 2448/2000 (raw: 2707)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -64,7 +55,7 @@
 - **Vocab:** ✅ 47/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -97,6 +88,6 @@
 | **Розминка — Судова система України** | ⚪️ | 669 | Skipped |
 | **Учасники судового процесу** | ⚪️ | 960 | Skipped |
 | **Види правопорушень** | ⚪️ | 325 | Skipped |
-| **Судовий процес** | ⚪️ | 166 | Skipped |
-| **Підсумок** | ✅ | 64 | Included in Core |
+| **Судовий процес** | ⚪️ | 230 | Skipped |
 | **Практика — юридичний текст** | ✅ | 199 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

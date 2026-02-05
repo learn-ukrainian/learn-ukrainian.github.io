@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M92 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 22:10:39
+**Generated:** 2026-02-05 22:32:21
 
 ## Configuration
 **Type:** B2-skills
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3939/2000 (raw: 4071)
+- **Words:** ✅ 3951/2000 (raw: 4083)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -87,5 +87,5 @@
 | **Storytelling та переконання** | ✅ | 1007 | Included in Core |
 | **Робота з Q&A** | ⚪️ | 511 | Skipped |
 | **Віртуальні презентації** | ⚪️ | 591 | Skipped |
-| **Практика** | ⚪️ | 962 | Skipped |
-| **Підсумок** | ✅ | 220 | Included in Core |
+| **Практика** | ⚪️ | 1182 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

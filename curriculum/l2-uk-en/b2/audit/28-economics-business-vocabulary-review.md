@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M28 | **Phase:** B2.1c | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:09:30
+**Generated:** 2026-02-05 22:31:13
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** Content section '## Практика — економічні новини' appears after end section '# Підсумок'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1748/2000 (raw: 1923)
+- **Words:** ❌ 1760/2000 (raw: 1935)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 14 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -96,6 +87,6 @@
 | **Розминка — Економіка України** | ⚪️ | 184 | Skipped |
 | **Макроекономічні показники** | ⚪️ | 857 | Skipped |
 | **Бізнес-лексика** | ⚪️ | 358 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Фінансові операції** | ⚪️ | 125 | Skipped |
 | **Практика — економічні новини** | ⚪️ | 163 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

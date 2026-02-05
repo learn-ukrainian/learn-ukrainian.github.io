@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:10:27
+**Generated:** 2026-02-05 22:32:10
 
 ## Configuration
 **Type:** B2-skills
@@ -54,7 +54,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1868/2000 (raw: 1936)
+- **Words:** ❌ 1880/2000 (raw: 1948)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 7/5 types
@@ -97,5 +97,5 @@
 | **Візуальні матеріали** | ⚪️ | 358 | Skipped |
 | **Техніка виступу** | ⚪️ | 269 | Skipped |
 | **Відповіді на запитання** | ⚪️ | 249 | Skipped |
-| **Репетиція та фінал** | ⚪️ | 43 | Skipped |
-| **Підсумок** | ✅ | 224 | Included in Core |
+| **Репетиція та фінал** | ⚪️ | 267 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

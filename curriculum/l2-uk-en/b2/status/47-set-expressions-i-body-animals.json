@@ -2,10 +2,10 @@
   "module": "47-set-expressions-i-body-animals",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:09:51.625240Z",
+  "last_audit": "2026-02-05T22:31:34.073523Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:21.813131Z",
+    "md": "2026-02-05T22:18:57.558650Z",
     "meta": "2026-02-05T22:07:11.181167Z",
     "activities": "2026-02-05T22:02:48.000969Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2121/2000 (raw: 2514)"
+      "message": "2133/2000 (raw: 2526)"
     },
     "activities": {
       "status": "pass",

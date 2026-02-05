@@ -2,12 +2,12 @@
   "module": "86-professional-email-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:10:32.123906Z",
+  "last_audit": "2026-02-05T22:32:14.758160Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T21:56:22.053129Z",
+    "md": "2026-02-05T22:18:57.567650Z",
     "meta": "2026-02-05T22:07:21.902051Z",
-    "activities": "2026-02-05T22:08:02.176620Z",
+    "activities": "2026-02-05T22:12:32.310776Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "4154/1750 (raw: 4236) | pedagogy: 3 violations | richness: 60% < 95% min (grammar) - REWRITE needed"
+      "message": "4154/1750 (raw: 4234) | pedagogy: 1 violations | richness: 60% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "pass",
