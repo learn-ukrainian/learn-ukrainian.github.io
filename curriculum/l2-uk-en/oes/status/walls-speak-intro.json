@@ -2,14 +2,14 @@
   "module": "walls-speak-intro",
   "level": "OES",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:37:41.653790Z",
+  "last_audit": "2026-02-05T12:51:58.060108Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T11:36:52.947330Z",
-    "meta": "2026-02-04T11:11:38.601055Z",
+    "md": "2026-02-05T12:51:40.800940Z",
+    "meta": "2026-02-05T12:51:53.426387Z",
     "activities": "2026-02-04T11:36:48.026930Z",
     "vocabulary": "2026-02-04T07:50:10.913452Z",
-    "plan": "2026-02-04T06:41:55.459665Z"
+    "plan": "2026-02-05T11:33:25.234858Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3502/3500 (raw: 4480)"
+      "message": "4172/4000 (raw: 5184)"
     },
     "activities": {
       "status": "pass",

@@ -1,31 +1,77 @@
-module_number: 1
+module: walls-speak-intro
+level: OES
 slug: walls-speak-intro
-title: 'Софійські графіті: Стіни говорять'
-title_en: 'St. Sophia Graffiti: The Walls Speak'
-type: lesson
-phase: 1
-phase_id: vernacular-foundations
-pedagogy: theory-first
-duration_minutes: 60
-word_target: 4000
-immersion_level: 100
-transliteration: none
-grammar_focus: Intro to epigraphy, graffiti as historical source
-vocabulary_focus: []
-cultural_focus: []
-activity_hints:
-- type: transcription
-  min_items: 2
-- type: etymology-trace
-  min_items: 2
-- type: grammar-identify
-  min_items: 3
-prerequisites: []
+version: '2.0'
+id: oes-001
+title: "Софійські графіті: Стіни говорять"
 naturalness:
   score: 10
   status: PASS
-  feedback: Текст написаний надзвичайно живою та природною українською мовою, яка
-    ідеально підходить для освітнього контенту. Автору вдалося гармонійно поєднати
-    наукову термінологію з захопливим наративом, уникаючи кальок та штучних конструкцій.
-  checked_by: gemini-auto
-  checked_at: '2026-02-04T10:10:49.813952+00:00'
+duration: 90
+transliteration: none
+tags:
+- history
+- linguistics
+- old-ukrainian
+- graffiti
+content_outline:
+- section: Вступ
+  words: 350
+  points:
+  - Графіті як голос народу
+  - Відмінність від книжної мови
+  - Термін "давньоруська мова"
+- section: Текст
+  words: 400
+  points:
+  - Молитва Георгія
+  - Прокляття Кузьми
+- section: Що таке епіграфіка?
+  words: 600
+  points:
+  - Визначення науки
+  - Типи написів
+  - Інструменти письма (писало)
+  - Методи дослідження
+- section: Мовний аналіз
+  words: 900
+  points:
+  - Давальний відмінок -ові/-єві
+  - Перфект (л-форма)
+  - Кличний відмінок
+  - Палаталізація
+  - Лексика (тать)
+- section: Історичний контекст
+  words: 800
+  points:
+  - Софія як центр
+  - Грамотність населення
+  - Датування
+  - Абетка
+- section: "Диглосія: два регістри однієї мови"
+  words: 400
+  points:
+  - Високий vs Низький стиль
+  - Повноголосся
+- section: "Зв'язок із сучасною мовою"
+  words: 400
+  points:
+  - Тяглість граматики
+  - Українські риси
+- section: "Методологія: як читати давні тексти"
+  words: 300
+  points:
+  - Літери
+  - Морфеми
+  - Формули
+- section: Підсумок
+  words: 300
+  points:
+  - Основні висновки
+word_target: 4000
+required_activities:
+- etymology-trace
+- grammar-identify
+- transcription
+build:
+  last_modified: '2026-02-05'

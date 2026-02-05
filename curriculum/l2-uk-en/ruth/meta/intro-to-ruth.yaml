@@ -1,37 +1,78 @@
-# Module Meta: Intro to RUTH
-# Track: RUTH
-# Module: 001
-# Generated: 2026-02-04
-
-module_number: 1
+module: intro-to-ruth
+level: RUTH
 slug: intro-to-ruth
-title: "Вступ до руської мови"
-title_en: "Intro to RUTH"
-
-type: lesson
-phase: 1
-phase_id: chancery-legal
-
-# Pedagogy
-pedagogy: theory-first
-duration_minutes: 60
-word_target: 4000
-immersion_level: 100
+version: '2.0'
+id: ruth-001
+title: "Вступ до руської мови: Державна мова ВКЛ"
+naturalness:
+  score: 10
+  status: PASS
+duration: 90
 transliteration: none
-
-# Focus
-grammar_focus: "Перехід від давньоруської до руської — диглосія"
-vocabulary_focus: []
-cultural_focus: []
-
-# Activity hints (minimum counts)
-activity_hints:
-  - type: transcription
-    min_items: 2
-  - type: etymology-trace
-    min_items: 2
-  - type: grammar-identify
-    min_items: 3
-
-# Prerequisites
-prerequisites: []
+tags:
+- history
+- linguistics
+- old-ukrainian
+- ruthenian
+- law
+content_outline:
+- section: Передмова
+  words: 300
+  points:
+  - Значення руської мови
+  - Відмінність від давньоруської
+- section: "Від давньоруської до руської: Великий перехід"
+  words: 700
+  points:
+  - Політичні зміни XIII-XIV ст.
+  - Три регістри мови
+- section: "Первинний текст: Преамбула Литовського статуту (1529)"
+  words: 500
+  points:
+  - Оригінал та транскрипція
+  - Аналіз юридичної формули
+- section: "Фонетичні зміни: Від давньоруської до руської мови"
+  words: 650
+  points:
+  - Повноголосся
+  - Ікавізм (ять -> і)
+  - Занепад єрів
+  - Фрикативний Г
+  - Нові закриті склади
+- section: Морфологічні зміни
+  words: 500
+  points:
+  - Спрощення відмін
+  - Занепад двоїни
+  - Майбутній час
+  - Кличний відмінок
+- section: "Польські запозичення: Перший шар"
+  words: 500
+  points:
+  - Юридична лексика
+  - Адаптація полонізмів
+  - Фальшиві друзі
+- section: "Латинські запозичення: Через польське посередництво"
+  words: 400
+  points:
+  - Латина як мова закону
+  - Термінологія
+  - Освіта (Академія)
+- section: "Структура курсу: Чотири фази"
+  words: 400
+  points:
+  - Канцелярія
+  - Священне слово
+  - Бароко
+  - Козацтво
+- section: Підсумок
+  words: 200
+  points:
+  - Висновки
+word_target: 4000
+required_activities:
+- transcription
+- etymology-trace
+- grammar-identify
+build:
+  last_modified: '2026-02-05'

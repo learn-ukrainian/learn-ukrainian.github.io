@@ -2,14 +2,14 @@
   "module": "intro-to-ruth",
   "level": "RUTH",
   "plan_version": "2.0",
-  "last_audit": "2026-02-04T11:42:20.910666Z",
+  "last_audit": "2026-02-05T13:08:35.887806Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T11:28:33.223203Z",
-    "meta": "2026-02-04T11:28:08.610925Z",
+    "md": "2026-02-05T13:08:06.042300Z",
+    "meta": "2026-02-05T13:08:25.028092Z",
     "activities": "2026-02-04T11:19:04.106855Z",
-    "vocabulary": "2026-02-04T11:17:23.157036Z",
-    "plan": "2026-02-04T11:26:26.062075Z"
+    "vocabulary": "2026-02-05T13:05:04.556607Z",
+    "plan": "2026-02-05T11:33:26.607454Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "3501/3500 (raw: 4543)"
+      "message": "3952/4000 (raw: 4982) (48 short)"
     },
     "activities": {
       "status": "pass",
@@ -28,14 +28,14 @@
       "message": "7/6"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "12 < 30 (soft target)"
+      "message": "31/30"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10 (Gemini: gemini-3-flash-preview, 2026-02-04)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {

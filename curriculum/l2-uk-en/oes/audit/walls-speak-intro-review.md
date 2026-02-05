@@ -1,12 +1,12 @@
 # Audit Report: M01 — walls-speak-intro.md
-**Level:** OES | **Module:** M01 | **Phase:** 1 | **Pedagogy:** theory-first | **Target:** 3500
+**Level:** OES | **Module:** M01 | **Phase:** 1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-04 11:37:41
+**Generated:** 2026-02-05 12:51:58
 
 ## Configuration
 **Type:** OES
-**Word Target:** 3500 words
+**Word Target:** 4000 words
 **Activities:** 6-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3502/3500 (raw: 4480)
+- **Words:** ✅ 4172/4000 (raw: 5184)
 - **Activities:** ✅ 7/6
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 3/3 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.5% (target 97-100%)
+- **Immersion:** 🇺🇦 99.6% (target 97-100%)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -59,9 +59,9 @@
 | **Софійські графіті: Стіни говорять** | ⚪️ | 0 | Skipped |
 | **Вступ** | ✅ | 357 | Included in Core |
 | **Текст** | ✅ | 437 | Included in Core |
-| **Що таке епіграфіка?** | ⚪️ | 332 | Skipped |
-| **Мовний аналіз** | ✅ | 584 | Included in Core |
-| **Історичний контекст** | ✅ | 682 | Included in Core |
+| **Що таке епіграфіка?** | ⚪️ | 482 | Skipped |
+| **Мовний аналіз** | ✅ | 895 | Included in Core |
+| **Історичний контекст** | ✅ | 891 | Included in Core |
 | **Диглосія: два регістри однієї мови** | ⚪️ | 300 | Skipped |
 | **Зв'язок із сучасною мовою** | ⚪️ | 257 | Skipped |
 | **Методологія: як читати давні тексти** | ✅ | 240 | Included in Core |
