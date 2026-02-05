@@ -67,7 +67,7 @@ from .checks.external_resource_validation import (
     check_external_resources,
     fix_external_resource_url,
 )
-from .checks.meta_validator import check_seminar_meta_requirements, check_activity_hints_valid
+from .checks.meta_validator import check_seminar_meta_requirements, check_activity_hints_valid, check_research_file
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
 )
@@ -592,7 +592,9 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
-    except Exception:
+    except Exception as e:
+        print(f"  ❌ YAML parse error in meta sidecar: {yaml_path}")
+        print(f"     {e}")
         return None
 
 def load_yaml_plan(md_file_path: str) -> dict | None:
@@ -634,7 +636,9 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
     try:
         with open(plan_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
-    except Exception:
+    except Exception as e:
+        print(f"  ❌ YAML parse error in plan sidecar: {plan_path}")
+        print(f"     {e}")
         return None
 
 def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
@@ -651,7 +655,9 @@ def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
             if isinstance(data, list):
                  return data
             return data.get('vocabulary', data.get('items', []))
-    except Exception:
+    except Exception as e:
+        print(f"  ❌ YAML parse error in vocabulary sidecar: {yaml_path}")
+        print(f"     {e}")
         return None
 
 def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | None:
@@ -1495,6 +1501,10 @@ def audit_module(file_path: str) -> bool:
 
     # Run Meta YAML requirements check (Seminar modules)
     meta_violations = check_seminar_meta_requirements(meta_data, level_code, pedagogy)
+
+    # Check for research file (seminar tracks only)
+    research_violations = check_research_file(file_path)
+    meta_violations.extend(research_violations)
 
     # Run activity type validation for ALL modules with meta.yaml
     activity_type_violations = check_activity_hints_valid(meta_data)
