@@ -200,12 +200,15 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 
 ### How to Send Messages to Claude
 
+**⚠️ CRITICAL: When responding to a message, use the SAME task-id from the original message!**
+
 ```bash
 # Send a query (ask Claude a question)
 .venv/bin/python scripts/gemini_bridge.py send "Your question here" --type query --task-id your-task
 
 # Send a response (answer Claude's question)
-.venv/bin/python scripts/gemini_bridge.py send "Your answer" --type response --task-id task-id
+# ⚠️ Use the SAME task-id from Claude's message you're replying to!
+.venv/bin/python scripts/gemini_bridge.py send "Your answer" --type response --task-id original-task-id
 
 # Send a handoff (transfer task with context)
 .venv/bin/python scripts/gemini_bridge.py send "Task context here" --type handoff --task-id task-id
@@ -283,6 +286,7 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 - **Always use task_id** - enables session tracking for multi-turn conversations
 - **Check inbox at start of session** - Claude may have left messages
 - **Sessions are per-task** - same task_id = same conversation context
+- **PRESERVE task_id when responding** - When you reply to a message, use the SAME task_id from the incoming message. Don't create your own task_id. Example: if Claude's message has `task_id: tooling-feedback`, your response MUST use `--task-id tooling-feedback`
 
 ## GitHub Issues Task Workflow (NEW)
 
