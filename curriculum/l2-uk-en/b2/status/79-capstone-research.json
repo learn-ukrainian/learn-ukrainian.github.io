@@ -2,10 +2,10 @@
   "module": "79-capstone-research",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:32:07.247638Z",
+  "last_audit": "2026-02-05T22:37:27.369902Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.456441Z",
+    "md": "2026-02-05T22:37:07.142915Z",
     "meta": "2026-02-05T22:07:11.316165Z",
     "activities": "2026-02-05T22:12:32.307776Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1791/2000 (raw: 1939) | pedagogy: 1 violations"
+      "message": "1829/2000 (raw: 1989) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Checkpoint Format Errors"
+      "2 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

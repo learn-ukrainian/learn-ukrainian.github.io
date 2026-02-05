@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:32:23
+**Generated:** 2026-02-05 22:37:30
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -48,7 +48,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- ☐ Чи використовуєте конкретні цифри та факти замість загальних фраз?". Shares significant keywords with sentence at index 42.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- ☐ Чи використовуєте конкретні цифри та факти замість загальних фраз?". Shares significant keywords with sentence at index 44.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
@@ -57,7 +57,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2566/2000 (raw: 2744)
+- **Words:** ✅ 2604/2000 (raw: 2794)
 - **Activities:** ✅ 19/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 14/4 types
@@ -82,7 +82,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 14 | 8 | 100% | 25% | 25.0% |
-| review_sections | 21 | 3 | 100% | 20% | 20.0% |
+| review_sections | 25 | 3 | 100% | 20% | 20.0% |
 | variety | 0.95 | - | 95% | 15% | 14.2% |
 | engagement | 3 | 3 | 100% | 10% | 10.0% |
 | cultural | 1 | - | 100% | 10% | 10.0% |
@@ -95,6 +95,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Огляд — Фінальний іспит B2** | ⚪️ | 84 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Частина 1: Читання** | ✅ | 488 | Included in Core |
 | **Частина 2: Письмо** | ✅ | 434 | Included in Core |
 | **Частина 3: Слухання** | ✅ | 861 | Included in Core |

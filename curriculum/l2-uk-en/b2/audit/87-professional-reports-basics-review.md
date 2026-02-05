@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:32:15
+**Generated:** 2026-02-05 22:36:02
 
 ## Configuration
 **Type:** B2-skills
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'звіт для...'.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'грн) |...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation

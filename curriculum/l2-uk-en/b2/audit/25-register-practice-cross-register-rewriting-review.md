@@ -1,8 +1,8 @@
 # Audit Report: M25 — 25-register-practice-cross-register-rewriting.md
 **Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:31:09
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 22:37:15
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2795/2000 (raw: 3126)
+- **Words:** ✅ 2833/2000 (raw: 3176)
 - **Activities:** ✅ 16/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -70,7 +70,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 29 | 3 | 100% | 20% | 20.0% |
+| review_sections | 33 | 3 | 100% | 20% | 20.0% |
 | variety | 0.97 | - | 97% | 15% | 14.5% |
 | engagement | 10 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
@@ -83,6 +83,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Огляд — Один зміст, п'ять голосів** | ⚪️ | 122 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Трансформація в науковий стиль** | ⚪️ | 125 | Skipped |
 | **Трансформація в офіційний стиль** | ⚪️ | 1064 | Skipped |
 | **Трансформація в публіцистичний стиль** | ⚪️ | 943 | Skipped |

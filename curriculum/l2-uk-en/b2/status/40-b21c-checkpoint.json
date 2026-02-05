@@ -2,10 +2,10 @@
   "module": "40-b21c-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:31:26.437329Z",
+  "last_audit": "2026-02-05T22:37:25.320097Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.442441Z",
+    "md": "2026-02-05T22:37:07.132915Z",
     "meta": "2026-02-05T21:52:08.910796Z",
     "activities": "2026-02-05T22:12:32.301776Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2355/2000 (raw: 2578) | pedagogy: 1 violations"
+      "message": "2393/2000 (raw: 2628) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Checkpoint Format Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

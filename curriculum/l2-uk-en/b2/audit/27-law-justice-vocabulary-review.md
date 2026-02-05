@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M27 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 22:31:12
+**Generated:** 2026-02-05 22:34:58
 
 ## Configuration
 **Type:** B2-grammar

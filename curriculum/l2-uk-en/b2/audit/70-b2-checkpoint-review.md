@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M70 | **Phase:** B2.2 | **Pedagogy:** Assessment | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:31:57
+**Generated:** 2026-02-05 22:37:26
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -55,7 +55,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1835/2000 (raw: 1976)
+- **Words:** ❌ 1873/2000 (raw: 2026)
 - **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -80,7 +80,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 27 | 3 | 100% | 20% | 20.0% |
+| review_sections | 31 | 3 | 100% | 20% | 20.0% |
 | variety | 0.91 | - | 91% | 15% | 13.7% |
 | engagement | 5 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
@@ -93,6 +93,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 79 | Included in Core |
 | **Огляд — Контрольна точка B2.2** | ⚪️ | 68 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Pedagogical Structure** | ⚪️ | 479 | Skipped |
 | **Domain Vocabulary (M71-74)** | ➖ | 406 | Excluded Type |
 | **Professional Communication (M85-88)** | ⚪️ | 400 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:30:52
+**Generated:** 2026-02-05 22:37:24
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -58,7 +58,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1729/3500 (raw: 1907)
+- **Words:** ❌ 1767/3500 (raw: 1957)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -83,7 +83,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 28 | 3 | 100% | 20% | 20.0% |
+| review_sections | 32 | 3 | 100% | 20% | 20.0% |
 | variety | 0.92 | - | 92% | 15% | 13.8% |
 | engagement | 5 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
@@ -96,6 +96,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Вступ — Що ми вивчили** | ✅ | 87 | Included in Core |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Огляд — Чотири форми пасиву** | ⚪️ | 201 | Skipped |
 | **Огляд — Вибір форми за регістром** | ⚪️ | 147 | Skipped |
 | **Огляд — Активні дієприкметники** | ⚪️ | 302 | Skipped |

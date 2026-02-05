@@ -2,10 +2,10 @@
   "module": "94-b2-final-exam",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:32:23.937396Z",
+  "last_audit": "2026-02-05T22:37:30.678112Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:14:40.463441Z",
+    "md": "2026-02-05T22:37:07.153915Z",
     "meta": "2026-02-05T22:07:11.396164Z",
     "activities": "2026-02-05T22:02:48.239966Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2566/2000 (raw: 2744) | pedagogy: 1 violations"
+      "message": "2604/2000 (raw: 2794) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Checkpoint Format Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

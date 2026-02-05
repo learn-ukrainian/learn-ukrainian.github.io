@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M79 | **Phase:** B2.4 | **Pedagogy:** integration | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:32:07
+**Generated:** 2026-02-05 22:37:27
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -55,7 +55,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1791/2000 (raw: 1939)
+- **Words:** ❌ 1829/2000 (raw: 1989)
 - **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -80,7 +80,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 21 | 3 | 100% | 20% | 20.0% |
+| review_sections | 25 | 3 | 100% | 20% | 20.0% |
 | variety | 0.96 | - | 96% | 15% | 14.4% |
 | engagement | 7 | 3 | 100% | 10% | 10.0% |
 | cultural | 3 | - | 100% | 10% | 10.0% |
@@ -93,6 +93,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Огляд — Capstone проєкт** | ⚪️ | 167 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Вибір теми дослідження** | ⚪️ | 312 | Skipped |
 | **Пошук та оцінка джерел** | ⚪️ | 365 | Skipped |
 | **Складання плану-проспекту** | ⚪️ | 135 | Skipped |

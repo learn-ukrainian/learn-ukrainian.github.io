@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M40 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:31:26
+**Generated:** 2026-02-05 22:37:25
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -56,7 +56,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2355/2000 (raw: 2578)
+- **Words:** ✅ 2393/2000 (raw: 2628)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
@@ -81,7 +81,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 10 | 8 | 100% | 25% | 25.0% |
-| review_sections | 31 | 3 | 100% | 20% | 20.0% |
+| review_sections | 35 | 3 | 100% | 20% | 20.0% |
 | variety | 0.93 | - | 93% | 15% | 14.0% |
 | engagement | 8 | 3 | 100% | 10% | 10.0% |
 | cultural | 1 | - | 100% | 10% | 10.0% |
@@ -94,6 +94,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 51 | Included in Core |
 | **Огляд — Контрольна точка B2.1c** | ⚪️ | 212 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Indefinite Pronouns (State Standard 4240-4244)** | ⚪️ | 286 | Skipped |
 | **Negative Pronouns (State Standard 4245-4249)** | ⚪️ | 510 | Skipped |
 | **Defining Pronouns (State Standard 4250-4256)** | ⚪️ | 270 | Skipped |

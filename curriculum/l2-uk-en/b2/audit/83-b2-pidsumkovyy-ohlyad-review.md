@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:32:11
+**Generated:** 2026-02-05 22:37:28
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -62,7 +62,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1802/2000 (raw: 1969)
+- **Words:** ❌ 1840/2000 (raw: 2019)
 - **Activities:** ✅ 22/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -87,7 +87,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 21 | 3 | 100% | 20% | 20.0% |
+| review_sections | 25 | 3 | 100% | 20% | 20.0% |
 | variety | 0.92 | - | 92% | 15% | 13.8% |
 | engagement | 6 | 3 | 100% | 10% | 10.0% |
 | cultural | 9 | - | 100% | 10% | 10.0% |
@@ -100,6 +100,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |
 | **Огляд — Що ви опанували на B2** | ⚪️ | 72 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Граматика B2: Синтез** | ⚪️ | 21 | Skipped |
 | **Лексика B2: Синтез** | ⚪️ | 491 | Skipped |
 | **Навички B2: Синтез** | ⚪️ | 223 | Skipped |
