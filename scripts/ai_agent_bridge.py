@@ -304,10 +304,11 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         async_mode = True
         print("ℹ️  Async mode auto-enabled for handoff (complex task)")
 
-    # Validation: Warn if message is too long (handoff anti-pattern)
+    # Validation: Warn if handoff message is too long (handoff anti-pattern)
+    # Only warn for handoff type - help/query messages can be long
     HANDOFF_WARNING_THRESHOLD = 500  # chars
-    if len(content) > HANDOFF_WARNING_THRESHOLD and task_id and task_id.startswith("gh-"):
-        print(f"⚠️  WARNING: Message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
+    if msg_type == "handoff" and len(content) > HANDOFF_WARNING_THRESHOLD and task_id and task_id.startswith("gh-"):
+        print(f"⚠️  WARNING: Handoff message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
         print(f"   For task handoffs, the GitHub issue should contain details.")
         print(f"   Consider sending a SHORT message with issue reference only:")
         print(f"   'Issue #{task_id.replace('gh-', '')} is assigned to you. Read it for details.'")
