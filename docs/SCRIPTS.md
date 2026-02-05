@@ -220,7 +220,7 @@ Validate that plan files match the config.py constraints.
 | `docs/ARCHITECTURE-PLANS.md`                      | **Three-layer architecture** - Plans, content, status separation |
 | `docs/STATUS-SYSTEM.md`                           | **Status caching system** - Per-module JSON cache                |
 | `docs/RFC-410-MANIFEST-DRIVEN-ARCHITECTURE.md`    | **Manifest architecture** - curriculum.yaml as single source     |
-| `claude_extensions/stages/module-*.md`            | 9-Phase workflow - Module creation process (RFC-001)             |
+| `claude_extensions/phases/module-*.md`            | 9-Phase workflow - Module creation process (RFC-001)             |
 | `claude_extensions/commands/module*.md`           | Module commands (`/module`, `/module-sync`, etc.)                |
 | `docs/ARCHITECTURE.md`                            | System architecture and quality validation overview              |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`  | Quality standards by level (consolidated)                        |
@@ -437,10 +437,10 @@ Comprehensive check-and-fix loop for a complete module. Orchestrates all QA chec
 | >10 or structural | Consider full rebuild |
 
 **Related QA stages:**
-- `claude_extensions/stages/module-meta-qa.md` - Meta validation
-- `claude_extensions/stages/module-lesson-qa.md` - Lesson validation
-- `claude_extensions/stages/module-act-qa.md` - Activities validation
-- `claude_extensions/stages/module-vocab-qa.md` - Vocabulary validation
+- `claude_extensions/phases/module-meta-qa.md` - Meta validation
+- `claude_extensions/phases/module-lesson-qa.md` - Lesson validation
+- `claude_extensions/phases/module-act-qa.md` - Activities validation
+- `claude_extensions/phases/module-vocab-qa.md` - Vocabulary validation
 
 ### /meta-fix Command
 
@@ -503,7 +503,7 @@ This command:
 
 **When to use:** After Phase 7 (module-vocab) creates skeleton entries, use this for batch enrichment. For single modules, Phase 7-8 handles vocabulary creation and validation.
 
-**Phase files:** `claude_extensions/stages/module-*.md`
+**Phase files:** `claude_extensions/phases/module-*.md`
 **Command files:** `claude_extensions/commands/module-*.md`
 
 ---

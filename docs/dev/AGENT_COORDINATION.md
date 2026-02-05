@@ -299,7 +299,7 @@ Tested on `a1-09-food-and-drinks`:
 - Updated `docs/SCRIPTS.md` - Removed resource generation references
 - Updated `docs/MARKDOWN-FORMAT.md` - Resources no longer in source format
 - Updated `CLAUDE.md` - Workflow changes
-- Updated `claude_extensions/stages/stage-2-content.md` - No resources in markdown
+- Updated `claude_extensions/phases/stage-2-content.md` - No resources in markdown
 
 ### Statistics
 

@@ -2,13 +2,13 @@
   "module": "olena-pchilka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T16:48:57.877850Z",
+  "last_audit": "2026-02-05T17:00:47.501884Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T16:48:50.161025Z",
+    "md": "2026-02-05T17:00:17.078721Z",
     "meta": "2026-02-05T16:47:39.197246Z",
     "activities": "2026-02-04T21:44:37.980299Z",
-    "vocabulary": "2026-02-04T21:35:19.889304Z",
+    "vocabulary": "2026-02-05T16:50:23.979757Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4623/4300 (raw: 4677) | richness: 85% < 95% min (biography)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4858/4300 (raw: 4912)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "20 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

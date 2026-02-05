@@ -779,7 +779,7 @@ activities:
 3. Schema expected root array but got root object
 
 **Fix Applied:**
-1. Updated `claude_extensions/stages/stage-3-activities.md` with correct examples
+1. Updated `claude_extensions/phases/stage-3-activities.md` with correct examples
 2. Batch-fixed all 711 files to remove wrapper
 3. Added auto-fix function in `scripts/yaml_schema_validation.py`
 

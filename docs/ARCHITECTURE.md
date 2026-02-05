@@ -711,7 +711,7 @@ See `vibe/docs/CO-VIBE-INTEGRATION.md` for the full spec.
 ### Claude Code Extensions
 
 - **`claude_extensions/quick-ref/`** - Level-specific quick references (a1.md, b1.md, b2.md, c1.md, c2.md)
-- **`claude_extensions/stages/`** - Stage instruction documents
+- **`claude_extensions/phases/`** - Stage instruction documents
 - **`claude_extensions/commands/`** - Slash commands (/module, /module-stage-*, /review-content)
 - **`claude_extensions/skills/`** - Skills (grammar-check, vocab-enrichment, module architects)
 

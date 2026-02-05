@@ -82,7 +82,7 @@ Before finalizing the module, verify prose activities (cloze, fill-in, unjumble 
 - Excessive intensifiers or double superlatives
 - Robotic, mechanical transitions
 
-**See:** `claude_extensions/stages/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
+**See:** `claude_extensions/phases/stage-4-review-fix.md` Section 9 for detailed naturalness criteria.
 
 **For batch scanning:** Use `/scan-naturalness {level} {start} {end}` to scan completed modules.
 

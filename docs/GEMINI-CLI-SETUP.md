@@ -49,7 +49,7 @@ Integrate with existing pre-commit hooks to ensure quality *before* finalizing c
 Leverage the "Shared Core" architecture by loading workflows dynamically from `claude_extensions/`.
 
 - **Source of Truth**: `claude_extensions/` contains the prompts and stage definitions.
-- **Loading**: Use the `read_file` tool to ingest specific workflow instructions (e.g., `claude_extensions/stages/stage-2-content.md`) when executing complex tasks.
+- **Loading**: Use the `read_file` tool to ingest specific workflow instructions (e.g., `claude_extensions/phases/stage-2-content.md`) when executing complex tasks.
 - **Do not fork**: Do not create separate `.gemini/workflows/` unless absolutely necessary.
 
 ## 7. CLI Arguments & Execution

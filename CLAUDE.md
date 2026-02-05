@@ -24,9 +24,9 @@
 ### 1. Work in `claude_extensions/` First
 
 **NEVER** edit `.claude/`, `.agent/`, `.gemini/` directly.
-- Edit in `claude_extensions/` (commands, skills, stages, quick-ref)
+- Edit in `claude_extensions/` (commands, skills, phases, quick-ref)
 - Run `npm run claude:deploy` to sync
-- Structure: `commands/` (skills), `skills/` (architect prompts), `stages/` (workflow docs)
+- Structure: `commands/` (skills), `skills/` (architect prompts), `phases/` (workflow docs)
 
 ### 2. Use Python venv
 
@@ -694,7 +694,7 @@ Database: `.mcp/servers/message-broker/messages.db`
 | **Architecture (legacy)** | `docs/ARCHITECTURE.md` |
 | **Grammar validation** | `scripts/audit/ukrainian_grammar_validator_prompt.md` |
 | **Level quick-refs** | `claude_extensions/quick-ref/{level}.md` |
-| **Stage workflows** | `claude_extensions/stages/stage-{1-4}-*.md` |
+| **Phase workflows** | `claude_extensions/phases/module-*.md` |
 | **Track scoring system** | `scripts/scoring/README.md` ⭐ NEW |
 | **Task workflow (GH Issues)** | `docs/TASK-WORKFLOW.md` ⭐ NEW |
 

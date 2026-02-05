@@ -274,10 +274,10 @@ Validate ALL Ukrainian text against these sources:
 
 Only read stage docs for complex cases:
 
-- `claude_extensions/stages/stage-1-skeleton.md`
-- `claude_extensions/stages/stage-2-content.md`
-- `claude_extensions/stages/stage-3-activities.md`
-- `claude_extensions/stages/stage-4-review-fix.md`
+- `claude_extensions/phases/stage-1-skeleton.md`
+- `claude_extensions/phases/stage-2-content.md`
+- `claude_extensions/phases/stage-3-activities.md`
+- `claude_extensions/phases/stage-4-review-fix.md`
 
 ### Output
 

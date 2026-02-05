@@ -1,8 +1,8 @@
 # Audit Report: M49 — olena-pchilka.md
 **Level:** C1-BIO | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 16:48:57
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 17:00:47
 
 ## Configuration
 **Type:** C1-biography
@@ -35,41 +35,41 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4623/4300 (raw: 4677)
+- **Words:** ✅ 4858/4300 (raw: 4912)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 20 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
-- **Richness:** ❌ 85% < 95% min (biography)
+- **Richness:** ⚠️ 99% (biography) - 1 flags
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 85% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 2 | 4 | 50% | 19% | 9.5% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
+| engagement | 13 | 6 | 100% | 14% | 14.3% |
+| quotes | 3 | 3 | 100% | 14% | 14.3% |
 | cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 14 | 4 | 100% | 10% | 9.5% |
+| visual | 19 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **85.7%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ### Dryness Flags & Fixes
 - ❌ **WALL_OF_TEXT**
@@ -81,8 +81,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вступ — Мати українського відродження** | ✅ | 365 | Included in Core |
-| **Ранні роки та родина Косачів (1849-1868)** | ⚪️ | 946 | Skipped |
-| **Шлюб та літературні початки (1868-1880)** | ⚪️ | 1008 | Skipped |
-| **Видавнича та просвітницька діяльність (1880-1905)** | ⚪️ | 783 | Skipped |
-| **Революційні роки та трагедії (1905-1920)** | ⚪️ | 726 | Skipped |
-| **Останні роки та спадщина (1920-1930)** | ⚪️ | 795 | Skipped |
+| **Ранні роки та родина Косачів (1849-1868)** | ⚪️ | 995 | Skipped |
+| **Шлюб та літературні початки (1868-1880)** | ⚪️ | 1057 | Skipped |
+| **Видавнича та просвітницька діяльність (1880-1905)** | ⚪️ | 828 | Skipped |
+| **Революційні роки та трагедії (1905-1920)** | ⚪️ | 775 | Skipped |
+| **Останні роки та спадщина (1920-1930)** | ⚪️ | 722 | Skipped |
+| **Підсумок** | ✅ | 116 | Included in Core |
