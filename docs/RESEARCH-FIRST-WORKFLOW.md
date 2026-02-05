@@ -183,6 +183,34 @@ Mariya Pavlova biography
 - 4000+ unique words per module
 - Rigorous self-audit without rushing
 
+### Sequential Batching Strategy (For Larger Lists)
+
+**When given 6-10 modules to process:**
+
+1. **Acknowledge**: Confirm full list and set up plan
+2. **Process 2**: Complete Phase 0-4 (Research → Build → Audit → Review) for first 2 modules only
+3. **Report & Checkpoint**: Provide completion report + 10/10 reviews, then STOP and ask "Proceed?"
+4. **Iterate**: After user confirmation, process next 2 modules
+
+**Why this works:**
+- **Output limits**: 2 modules × 4000 words + research + audit = ~9,000 words output (safe)
+- **Context freshness**: Prevents module #6 contamination with facts from module #1
+- **Error containment**: If module #2 fails audit, fix before starting module #3 (no error propagation)
+- **User visibility**: Clear checkpoints show progress and allow intervention
+
+**Example:**
+```
+User: "Process modules 25-30 (6 total)"
+
+Gemini: "Acknowledged. Processing M25-26 first...
+[completes M25-26]
+...Checkpoint: M25-26 complete (both 10/10). Proceed to M27-28?"
+
+User: "Proceed"
+
+Gemini: "Processing M27-28..."
+```
+
 ---
 
 ## CRITICAL: Ukrainian-Only Research Policy
