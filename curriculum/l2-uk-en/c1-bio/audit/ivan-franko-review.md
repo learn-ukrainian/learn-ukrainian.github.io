@@ -1,12 +1,12 @@
 # Audit Report: M53 — ivan-franko.md
-**Level:** C1-BIO | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
+**Level:** C1-BIO | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 20:27:38
+**Generated:** 2026-02-05 20:41:01
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2895/3000 (raw: 2935)
+- **Words:** ⚠️ 3973/4000 (raw: 4013) (27 short)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
@@ -62,23 +62,23 @@
 | primary_sources | 3 | 4 | 75% | 19% | 14.3% |
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
 | quotes | 2 | 3 | 67% | 14% | 9.6% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
 | visual | 14 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 3 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **90.5%** |
+| **TOTAL** | | | | | **90.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Каменяр нації** | ✅ | 322 | Included in Core |
-| **Ранні роки та освіта (1856-1875)** | ⚪️ | 612 | Skipped |
-| **Політична боротьба та арешти (1875-1890)** | ⚪️ | 640 | Skipped |
-| **Наукова та літературна зрілість (1890-1905)** | ⚪️ | 606 | Skipped |
-| **Останні роки та хвороба (1905-1916)** | ⚪️ | 309 | Skipped |
-| **Спадщина та деколонізація** | ⚪️ | 279 | Skipped |
-| **Підсумок** | ✅ | 127 | Included in Core |
+| **Вступ — Каменяр нації** | ✅ | 446 | Included in Core |
+| **Ранні роки та освіта (1856-1875)** | ⚪️ | 743 | Skipped |
+| **Політична боротьба та арешти (1875-1890)** | ⚪️ | 839 | Skipped |
+| **Наукова та літературна зрілість (1890-1905)** | ⚪️ | 815 | Skipped |
+| **Останні роки та хвороба (1905-1916)** | ⚪️ | 569 | Skipped |
+| **Спадщина та деколонізація** | ⚪️ | 356 | Skipped |
+| **Підсумок** | ✅ | 205 | Included in Core |

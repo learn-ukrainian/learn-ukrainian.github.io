@@ -1,12 +1,12 @@
 # Audit Report: M54 — yevhen-chykalenko.md
-**Level:** C1-BIO | **Module:** M54 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 2800
+**Level:** C1-BIO | **Module:** M54 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 20:31:38
+**Generated:** 2026-02-05 20:41:07
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 2800 words
+**Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -35,12 +35,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1846/2800 (raw: 1886)
+- **Words:** ❌ 2971/4000 (raw: 3027)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -48,28 +48,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ❌ 73% < 95% min (biography)
+- **Richness:** ❌ 71% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 73% (minimum: 95%)
+**Score:** 71% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
-| engagement | 3 | 6 | 50% | 14% | 7.1% |
+| primary_sources | 2 | 4 | 50% | 19% | 9.5% |
+| engagement | 4 | 6 | 67% | 14% | 9.6% |
 | quotes | 1 | 3 | 33% | 14% | 4.7% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 5 | 2 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 0 | 3 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **73.8%** |
+| **TOTAL** | | | | | **71.3%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_QUOTES**
@@ -83,11 +83,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Меценат нації** | ✅ | 245 | Included in Core |
-| **Шлях до українства (1861-1900)** | ⚪️ | 361 | Skipped |
-| **Газета "Рада" та видавнича справа** | ⚪️ | 355 | Skipped |
-| **Політична діяльність (1900-1917)** | ⚪️ | 249 | Skipped |
-| **Агроном і господар** | ⚪️ | 185 | Skipped |
-| **Визвольні змагання та еміграція** | ⚪️ | 213 | Skipped |
-| **Спадщина** | ⚪️ | 105 | Skipped |
-| **Підсумок** | ✅ | 133 | Included in Core |
+| **Вступ — Меценат нації** | ✅ | 416 | Included in Core |
+| **Шлях до українства (1861-1900)** | ⚪️ | 524 | Skipped |
+| **Газета "Рада" та видавнича справа (1906-1914)** | ⚪️ | 449 | Skipped |
+| **Політична діяльність та Центральна Рада (1900-1917)** | ⚪️ | 429 | Skipped |
+| **Агроном-новатор: Хліб як зброя відродження** | ⚪️ | 316 | Skipped |
+| **Трагедія вигнання та етичний заповіт в еміграції** | ⚪️ | 395 | Skipped |
+| **Спадщина та деколонізація пам'яті в новій Україні** | ⚪️ | 229 | Skipped |
+| **Підсумок** | ✅ | 213 | Included in Core |

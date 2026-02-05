@@ -76,3 +76,9 @@ enrichment_*.json
 recovery_*.json
 issue_*.json
 *_report.json
+
+# Temporary markdown files (root folder)
+temp*.md
+*_BRIEF.md
+*_PROMPT.md
+issue_*_body.md
