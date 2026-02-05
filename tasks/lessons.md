@@ -319,6 +319,41 @@
 
 ---
 
+## 2026-02-05 - Callouts in Phase 0 (Gemini Insight)
+
+**Observation**: Gemini identified richness/audit tension - callouts added as "patches" fail.
+
+**Problem**:
+- Adding callouts ([!quote], [!myth-buster], [!history-bite]) during audit fixes is inefficient
+- Technical issues with replace operations
+- Callouts feel "tacked on" rather than integrated
+- Results in failed audits or shallow content
+
+**Solution**: Plan callouts in Phase 0 (research), not Phase 3 (audit fixes).
+
+**Implementation**:
+- Research note must include 12-15 specific callout ideas BEFORE writing
+- Target callouts:
+  - 12+ [!quote] from primary sources
+  - 3-5 [!myth-buster] for decolonization
+  - 5-7 [!history-bite] for context
+  - 2-3 [!tradition] for cultural notes
+
+**Why this works**:
+- First draft hits 95%+ richness immediately
+- Callouts are architecturally integrated into narrative
+- No post-hoc patching needed
+- Replace operations not needed (avoids technical failures)
+
+**Rule**:
+- Research notes must include callout planning checklist
+- Never start writing without callout targets identified
+- Callouts are part of Phase 0, not Phase 4 fixes
+
+**Applied**: 2026-02-05 (Update to RESEARCH-FIRST-WORKFLOW.md)
+
+---
+
 ## Template for New Entries
 
 ```markdown

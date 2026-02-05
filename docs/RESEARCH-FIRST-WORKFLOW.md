@@ -48,6 +48,71 @@
 
 ---
 
+## 📝 Phase 0: Research Note Structure
+
+**CRITICAL: Plan callouts during research, not during audit fixes.**
+
+### Why Plan Callouts Upfront?
+
+**Problem**: Adding callouts ([!quote], [!myth-buster], [!history-bite]) as a "patch" to fix audit failures is:
+- Inefficient (requires rewriting)
+- Often fails technically (replace operations can break formatting)
+- Results in shallow integration (callouts feel tacked on)
+
+**Solution**: Include 12-15 specific callout ideas in the Research Note BEFORE writing.
+
+### Research Note Template
+
+```markdown
+# Research Notes: [Topic]
+
+**Track**: [c1-bio/b2-hist/etc]
+**Module**: [slug]
+**Researched**: [date]
+**Sources consulted**: [count]
+
+## Основні факти
+- Key facts, dates, events
+- Specific details (e.g., "24,000 ruble offer to Zankovetska")
+
+## Хронологія
+1. Timeline of major events
+2. Precise dates and locations
+
+## Деколонізаційні нотатки
+- **Міф**: Imperial narrative to debunk
+- **Реальність**: Ukrainian scholarly truth
+- Target for [!myth-buster] callouts
+
+## Цитати (Давньоруська/Первісні джерела)
+> "Exact quote in Ukrainian..."
+> Source: [where found]
+
+Target for [!quote] callouts (need 12+ for richness)
+
+## Культурний контекст
+- Era-specific details
+- Contemporary events
+- Target for [!history-bite] and [!tradition] callouts
+
+## Використані джерела
+1. [Source 1 with URL]
+2. [Source 2 with URL]
+```
+
+### Callout Planning Checklist
+
+Before writing content, research note must include:
+- [ ] 12-15 primary source quotes identified (for [!quote])
+- [ ] 3-5 myths to debunk (for [!myth-buster])
+- [ ] 5-7 historical context notes (for [!history-bite])
+- [ ] 2-3 cultural traditions (for [!tradition])
+- [ ] Specific facts with citations (prevents hallucination)
+
+**This ensures first draft hits 95%+ richness immediately.**
+
+---
+
 ## 🎯 Domain Sniping Strategy (Search Quality)
 
 **Problem**: Generic web searches return SEO-heavy sites, Wikipedia summaries, or Russian sources instead of scholarly Ukrainian content.
