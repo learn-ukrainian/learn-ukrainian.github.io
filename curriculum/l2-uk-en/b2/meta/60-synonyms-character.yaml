@@ -17,3 +17,13 @@ vocab_count: 115
 build:
   last_modified: '2026-01-26'
 id: b2-60
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

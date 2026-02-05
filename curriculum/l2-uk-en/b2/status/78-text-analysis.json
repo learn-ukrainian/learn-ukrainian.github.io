@@ -2,11 +2,11 @@
   "module": "78-text-analysis",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:37.141297Z",
+  "last_audit": "2026-02-05T22:10:23.602205Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.002129Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
+    "meta": "2026-02-05T22:07:11.312165Z",
     "activities": "2026-02-05T22:02:48.144968Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null

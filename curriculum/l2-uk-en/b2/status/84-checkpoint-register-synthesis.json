@@ -2,12 +2,12 @@
   "module": "84-checkpoint-register-synthesis",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:43.336411Z",
+  "last_audit": "2026-02-05T22:10:29.812846Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.038129Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T22:02:48.174967Z",
+    "meta": "2026-02-05T22:07:11.339165Z",
+    "activities": "2026-02-05T22:08:02.237620Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "22/15"
+      "message": "23/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "4 Outline Compliance Errors",
-      "Checkpoint Format Errors",
-      "Missing required activity types: true-false"
+      "Checkpoint Format Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

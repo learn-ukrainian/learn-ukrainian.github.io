@@ -2,11 +2,11 @@
   "module": "48-set-expressions-ii-objects-abstract",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:04:05.986002Z",
+  "last_audit": "2026-02-05T22:09:52.698210Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:21.819131Z",
-    "meta": "2026-02-05T21:52:08.910796Z",
+    "meta": "2026-02-05T22:07:11.185167Z",
     "activities": "2026-02-05T22:02:48.004969Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
     "plan": null

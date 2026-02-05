@@ -2,19 +2,19 @@
 **Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:04:31
+**Generated:** 2026-02-05 22:10:18
 
 ## Configuration
-**Type:** B2-history
+**Type:** B2-vocab
 **Word Target:** 2000 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥2 types required
-**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
 **Required Types:** essay-response, reading, true-false
-**Engagement:** ≥5 callouts
+**Engagement:** ≥6 callouts
 **Immersion:** 90-100%
-**Vocab Target:** ≥20 words
+**Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
@@ -24,86 +24,73 @@
 | 2 | fill-in | Заповніть пропуски: наукова дискусія | 12 | 8 | ✅ |
 | 3 | quiz | Тест: українські вчені | 12 | 8 | ✅ |
 | 4 | true-false | Правда чи ні: факти про науку | 12 | 8 | ✅ |
-| 5 | group-sort | Розподіліть за категоріями | 16 | 1 | ✅ |
+| 5 | group-sort | Розподіліть за категоріями | 16 | 14 | ✅ |
 | 6 | unjumble | Складіть речення правильно | 12 | 6 | ✅ |
-| 7 | cloze | Заповніть пропуски | 17 | 1 | ✅ |
+| 7 | cloze | Заповніть пропуски | 17 | 14 | ✅ |
 | 8 | error-correction | Виправте помилки в наукових реченнях | 12 | 6 | ✅ |
 | 9 | translate | Перекладіть наукові терміни | 12 | 6 | ✅ |
 | 10 | mark-the-words | Позначте наукові терміни | 12 | 6 | ✅ |
-| 11 | cloze | Поставте репліки у правильному порядку | 18 | 1 | ✅ |
+| 11 | cloze | Поставте репліки у правильному порядку | 18 | 14 | ✅ |
 | 12 | true-false | Академічна доброчесність | 16 | 8 | ✅ |
 | 13 | fill-in | Заповніть грант-заявку | 8 | 8 | ✅ |
 | 14 | essay-response | Наука в Україні | 1 | 1 | ✅ |
-| 15 | reading | Текст для аналізу: Наука і дослідження | 3 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Наука і дослідження | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 12 (minimum: 2) ✅
-- Priority types used: 2/4 (essay-response, reading) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 73-nauka-i-doslidzhennia.yaml: Schema validation error at key '12': {'type': 'fill-in', 'title': 'Заповніть грант-заявку', 'instruction': 'Оберіть правильні слова для заявки на грант.', 'items': [{'answer': 'проекту', 'options': ['проекту', 'гранту', 'статті', 'дисертації'], 'sentence': 'Назва ___: «Вплив зміни клімату на екосистеми»'}, {'answer': 'Мета', 'options': ['Мета', 'Результат', 'Висновок', 'Гіпотеза'], 'sentence': '___: Дослідити вплив глобального потепління на біорізноманіття'}, {'answer': 'Актуальність', 'options': ['Актуальність', 'Результат', 'Методика', 'Бюджет'], 'sentence': '___: проект є актуальним через кліматичні зміни'}, {'answer': 'Методологія', 'options': ['Методологія', 'Гіпотеза', 'Результат', 'Мета'], 'sentence': '___: польові дослідження, лабораторний аналіз'}, {'answer': 'результати', 'options': ['результати', 'методи', 'гіпотези', 'гранти'], 'sentence': 'Очікувані ___: наукові публікації, рекомендації для політики'}, {'answer': 'Тривалість', 'options': ['Тривалість', 'Результат', 'Бюджет', 'Мета'], 'sentence': '___: 12 місяців'}, {'answer': 'Бюджет', 'options': ['Бюджет', 'Грант', 'Результат', 'Зарплата'], 'sentence': '___: 500 000 грн'}, {'answer': 'проекту', 'options': ['проекту', 'гранту', 'лабораторії', 'університету'], 'sentence': 'Керівник ___: д-р Іваненко, професор'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1946/2000 (raw: 2218) (54 short)
-- **Activities:** ✅ 15/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 12/2 types
+- **Activities:** ✅ 15/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/20
+- **Vocab:** ⚠️ 21 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
-- **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
-- **Richness:** ❌ 84% < 95% min (grammar)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (vocab))
+- **Richness:** ❌ 71% < 95% min (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 84% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 71% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 33 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| collocations | 2 | 20 | 10% | 25% | 2.5% |
+| usage_examples | 33 | 15 | 100% | 20% | 20.0% |
+| engagement | 12 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
+| visual | 5 | 3 | 100% | 10% | 10.0% |
+| register_notes | 2 | 5 | 40% | 10% | 4.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
 | paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
-| questions | 7 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **84.5%** |
+| **TOTAL** | | | | | **71.0%** |
 
 ### Dryness Flags & Fixes
-- ❌ **NO_DIALOGUE**
+- ❌ **NO_COLLOCATIONS**
   - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
+    Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)
 
 ## Section Audit
 | Section | Status | Count | Notes |

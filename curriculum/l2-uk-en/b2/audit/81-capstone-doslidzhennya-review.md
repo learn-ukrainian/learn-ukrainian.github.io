@@ -2,17 +2,17 @@
 **Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:04:40
+**Generated:** 2026-02-05 22:10:26
 
 ## Configuration
-**Type:** B2-history
+**Type:** B2-skills
 **Word Target:** 2000 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥2 types required
-**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Activities:** 14-18 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** cloze, fill-in, quiz, translate
 **Required Types:** essay-response, reading, true-false
-**Engagement:** ≥5 callouts
+**Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
@@ -21,7 +21,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Термінологія дослідження | 14 | 8 | ✅ |
-| 2 | group-sort | Етапи дослідження | 18 | 1 | ✅ |
+| 2 | group-sort | Етапи дослідження | 18 | 14 | ✅ |
 | 3 | quiz | Вибір теми: Добра чи Погана? | 8 | 8 | ✅ |
 | 4 | match-up | Типи джерел | 12 | 8 | ✅ |
 | 5 | match-up | Метод і мета | 12 | 8 | ✅ |
@@ -30,65 +30,61 @@
 | 8 | quiz | Плагіат: Повторення | 8 | 8 | ✅ |
 | 9 | match-up | Методи пошуку ідей | 12 | 8 | ✅ |
 | 10 | fill-in | Лексика дослідника в дії | 8 | 8 | ✅ |
-| 11 | cloze | Шлях молодого науковця | 15 | 1 | ✅ |
+| 11 | cloze | Шлях молодого науковця | 15 | 14 | ✅ |
 | 12 | essay-response | Пропозиція проєкту (Project Proposal) | 1 | 1 | ✅ |
-| 13 | reading | Текст для аналізу: Capstone: Дослідження | 3 | 1 | ✅ |
+| 13 | reading | Текст для аналізу: Capstone: Дослідження | 3 | 3 | ✅ |
+| 14 | true-false | Правда чи хибність: Capstone: Дослідження | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 3-9) ❌
-- Unique types: 7 (minimum: 2) ✅
-- Priority types used: 2/4 (essay-response, reading) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Total activities: 14 (target: 14-18) ✅
+- Unique types: 8 (minimum: 5) ✅
+- Priority types used: 3/4 (cloze, fill-in, quiz) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-capstone-doslidzhennya.yaml: Schema validation error at key '9': {'type': 'fill-in', 'title': 'Лексика дослідника в дії', 'items': [{'sentence': 'Перед початком роботи ми повинні чітко сформулювати робочу ___.', 'answer': 'гіпотезу', 'options': ['гіпотезу', 'анотацію', 'цитату', 'бібліографію']}, {'sentence': 'Для глибокого розуміння проблеми необхідно опрацювати українські ___.', 'answer': 'першоджерела', 'options': ['першоджерела', 'чутки', 'реклами', 'міфи']}, {'sentence': 'Правильне ___ авторів захищає вас від звинувачень у плагіаті.', 'answer': 'цитування', 'options': ['цитування', 'читання', 'малювання', 'ігнорування']}, {'sentence': 'Ваш ___ має містити вступ, основну частину та ґрунтовні висновки.', 'answer': 'звіт', 'options': ['звіт', 'заголовок', 'папір', 'шрифт']}, {'sentence': 'Ми використовуємо ___ аналізу для структурування отриманих даних.', 'answer': 'метод', 'options': ['метод', 'колір', 'звук', 'смак']}, {'sentence': 'Кожна ___ має бути підкріплена перевіреними фактами.', 'answer': 'теза', 'options': ['теза', 'кома', 'цифра', 'книга']}, {'sentence': 'Ретельний ___ джерел дозволяє уникнути помилок у логіці.', 'answer': 'аналіз', 'options': ['аналіз', 'пошук', 'друк', 'вибір']}, {'sentence': "Об'єктивність — це головна ___ будь-якого чесного науковця.", 'answer': 'риса', 'options': ['риса', 'вада', 'помилка', 'проблема']}], 'instruction': 'Вставте правильне дослідницьке поняття у речення.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 81-capstone-doslidzhennya.yaml: Schema validation error at key '13': {'type': 'true-false', 'title': 'Правда чи хибність: Capstone: Дослідження', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'answer': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'answer': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'answer': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'answer': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'answer': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'answer': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'answer': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'answer': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2147/2000 (raw: 2284)
-- **Activities:** ✅ 13/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/2 types
+- **Activities:** ✅ 14/14
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 8/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 20 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ⚠️ 5 < 20 (soft target)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 3-9)
-- **Immersion:** 🇺🇦 98.1% (target 90-100% (history))
-- **Richness:** ❌ 91% < 95% min (grammar)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Immersion:** 🇺🇦 98.1% (target 90-100% (skills))
+- **Richness:** ✅ 97% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 91% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 24 | 58% | 20% | 11.6% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 4 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| questions | 7 | 5 | 100% | 5% | 5.0% |
-| proverbs | 8 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **91.0%** |
+| examples | 14 | 15 | 93% | 26% | 23.7% |
+| engagement | 8 | 5 | 100% | 19% | 19.4% |
+| variety | 0.97 | - | 97% | 12% | 11.9% |
+| cultural | 7 | - | 100% | 12% | 12.2% |
+| realworld | 20 | 3 | 100% | 12% | 12.2% |
+| visual | 9 | 2 | 100% | 6% | 6.1% |
+| paragraph_var | 0.94 | - | 94% | 6% | 5.8% |
+| questions | 7 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

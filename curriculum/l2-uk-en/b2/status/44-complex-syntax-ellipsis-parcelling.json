@@ -2,11 +2,11 @@
   "module": "44-complex-syntax-ellipsis-parcelling",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T22:04:01.878407Z",
+  "last_audit": "2026-02-05T22:09:48.546236Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:21.793131Z",
-    "meta": "2026-02-05T21:52:08.910796Z",
+    "meta": "2026-02-05T22:07:11.168167Z",
     "activities": "2026-02-05T22:02:47.984969Z",
     "vocabulary": "2026-02-05T21:52:08.916796Z",
     "plan": null

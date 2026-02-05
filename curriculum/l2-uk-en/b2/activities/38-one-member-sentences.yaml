@@ -1150,26 +1150,26 @@
   title: 'Правда чи хибність: Односкладні речення'
   items:
     - statement: 'Ця тема є важливою для рівня B2.'
-      answer: true
+      correct: true
       explanation: 'Так, це є частиною програми B2.'
     - statement: 'Цей матеріал не потрібен для професійного спілкування.'
-      answer: false
+      correct: false
       explanation: 'Навпаки, цей матеріал є необхідним для професійного рівня.'
     - statement: 'Вивчення цієї теми допомагає розуміти складні тексти.'
-      answer: true
+      correct: true
       explanation: 'Правильно, це розширює комунікативну компетенцію.'
     - statement: 'Ці конструкції використовуються тільки в розмовній мові.'
-      answer: false
+      correct: false
       explanation: 'Вони використовуються в різних стилях мовлення.'
     - statement: 'Для рівня B2 важливо розуміти різні регістри мови.'
-      answer: true
+      correct: true
       explanation: 'Так, це є однією з ключових компетенцій B2.'
     - statement: 'Цю тему можна вивчити без практики.'
-      answer: false
+      correct: false
       explanation: 'Практика є необхідною для закріплення матеріалу.'
     - statement: 'Знання цього матеріалу допомагає на іспиті B2.'
-      answer: true
+      correct: true
       explanation: 'Так, це є частиною іспитових завдань.'
     - statement: 'Ці конструкції існують тільки в українській мові.'
-      answer: false
+      correct: false
       explanation: 'Подібні конструкції є в багатьох мовах, але з особливостями.'

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:03:55
+**Generated:** 2026-02-05 22:09:41
 
 ## Configuration
 **Type:** B2-grammar
@@ -32,12 +32,13 @@
 | 10 | fill-in | Трансформуйте двоскладне речення в односкладне | 16 | 8 | ✅ |
 | 11 | essay-response | Мистецтво лаконічності: Сила односкладних речень | 1 | 1 | ✅ |
 | 12 | reading | Текст для аналізу: Односкладні речення | 3 | 3 | ✅ |
+| 13 | true-false | Правда чи хибність: Односкладні речення | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 10-14) ✅
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -45,24 +46,26 @@
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'знайдіть речення,...'.
   - FIX: Vary sentence structure.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-one-member-sentences.yaml: Schema validation error at key '12': {'type': 'true-false', 'title': 'Правда чи хибність: Односкладні речення', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'answer': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'answer': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'answer': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'answer': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'answer': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'answer': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'answer': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'answer': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1956/2000 (raw: 2523) (44 short)
-- **Activities:** ✅ 12/10
+- **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 12 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)

@@ -2,12 +2,12 @@
   "module": "85-professional-email-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:44.493620Z",
+  "last_audit": "2026-02-05T22:10:30.972638Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.044129Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T22:02:48.179967Z",
+    "meta": "2026-02-05T22:07:11.343165Z",
+    "activities": "2026-02-05T22:08:02.171621Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -19,13 +19,13 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "1727/2000 (raw: 1847)"
+      "violations": 2,
+      "message": "1727/2000 (raw: 1847) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/14"
+      "message": "17/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "3 Outline Compliance Errors",
-      "Structure: Missing '## Summary'",
-      "Missing required activity types: essay-response"
+      "Structure: Missing '## Summary'"
     ],
     "pass_count": 1,
     "fail_count": 3

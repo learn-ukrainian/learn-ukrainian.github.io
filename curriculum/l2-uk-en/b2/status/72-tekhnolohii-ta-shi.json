@@ -2,12 +2,12 @@
   "module": "72-tekhnolohii-ta-shi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:30.776623Z",
+  "last_audit": "2026-02-05T22:10:17.341194Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:21.960130Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T22:02:48.113968Z",
+    "meta": "2026-02-05T22:07:11.285166Z",
+    "activities": "2026-02-05T22:05:17.043392Z",
     "vocabulary": "2026-02-05T21:52:08.917796Z",
     "plan": null
   },
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "1787/2000 (raw: 2357) | pedagogy: 2 violations | richness: 90% < 95% min (grammar)"
+      "message": "1787/2000 (raw: 2357) | pedagogy: 1 violations | richness: 74% < 95% min (vocabulary)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "15/10"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "20/20"
+      "message": "20 < 35 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "11 forbidden activity types (use --fix to remove)"
+      "4 Outline Compliance Errors"
     ],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 1
   }
 }

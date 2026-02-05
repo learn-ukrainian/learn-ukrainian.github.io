@@ -1,7 +1,7 @@
 # Audit Report: M85 — 85-professional-email-basics.md
 **Level:** B2 | **Module:** M85 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:04:44
+**Generated:** 2026-02-05 22:10:30
 
 ## Configuration
 **Type:** B2-skills
@@ -35,32 +35,38 @@
 | 14 | quiz | Етикет електронного листування | 16 | 8 | ✅ |
 | 15 | mark-the-words | Позначте офіційні терміни | 14 | 6 | ✅ |
 | 16 | reading | Текст для аналізу: Ділова пошта: Основи | 3 | 3 | ✅ |
+| 17 | essay-response | Письмова відповідь: Ділова пошта: Основи | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 16 (target: 14-18) ✅
-- Unique types: 12 (minimum: 5) ✅
+- Total activities: 17 (target: 14-18) ✅
+- Unique types: 13 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
-- Required types used: 2/3 (reading, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-professional-email-basics.yaml: Schema validation error at key '16': {'type': 'essay-response', 'title': 'Письмова відповідь: Ділова пошта: Основи', 'prompt': 'Напишіть розгорнуту відповідь на тему "Ділова пошта: Основи".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 violations (minor)
 - Structure issue: Missing '## Summary'
 
 ## Gates
 - **Words:** ❌ 1727/2000 (raw: 1847)
-- **Activities:** ✅ 16/14
+- **Activities:** ✅ 17/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/5 types
+- **Unique_types:** ✅ 13/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 3 < 20 (soft target)
 - **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (16 activities)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (17 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (skills))
 - **Richness:** ✅ 96% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

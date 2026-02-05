@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:04:46
+**Generated:** 2026-02-05 22:10:33
 
 ## Configuration
 **Type:** B2-skills
@@ -35,12 +35,13 @@
 | 13 | select | Виберіть об'єктивну форму | 16 | 6 | ✅ |
 | 14 | translate | Переклад термінів | 8 | 6 | ✅ |
 | 15 | reading | Текст для аналізу: Професійні звіти: Основи | 3 | 3 | ✅ |
+| 16 | essay-response | Письмова відповідь: Професійні звіти: Основи | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 14-18) ✅
-- Unique types: 11 (minimum: 5) ✅
+- Total activities: 16 (target: 14-18) ✅
+- Unique types: 12 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
-- Required types used: 2/3 (reading, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
@@ -48,25 +49,27 @@
   - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'звіт для...'.
   - FIX: Vary sentence structure.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-professional-reports-basics.yaml: Schema validation error at key '15': {'type': 'essay-response', 'title': 'Письмова відповідь: Професійні звіти: Основи', 'prompt': 'Напишіть розгорнуту відповідь на тему "Професійні звіти: Основи".\nВикористайте вивчені конструкції та лексику з цього модуля.\nОбсяг: 150-200 слів.\n', 'word_target': 150, 'model_answer': 'Ця тема є надзвичайно актуальною для сучасного мовного середовища.\nВивчені конструкції дозволяють глибше зрозуміти особливості\nукраїнської мови та використовувати їх у професійному контексті.\nВажливо відзначити практичне значення цих знань для щоденного\nспілкування та професійної діяльності.\n'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4552/1750 (raw: 4955)
-- **Activities:** ✅ 15/14
+- **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ✅ Content-heavy OK (15 activities)
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

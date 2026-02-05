@@ -2,35 +2,35 @@
   "module": "81-capstone-doslidzhennya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:40.172408Z",
+  "last_audit": "2026-02-05T22:10:26.629702Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.020129Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T22:02:48.158967Z",
-    "vocabulary": null,
+    "meta": "2026-02-05T22:07:11.325165Z",
+    "activities": "2026-02-05T22:08:02.233620Z",
+    "vocabulary": "2026-02-05T22:08:28.367340Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2147/2000 (raw: 2284) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
+      "violations": 1,
+      "message": "2147/2000 (raw: 2284) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "13/3"
+      "message": "14/14"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "5 < 20 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -40,12 +40,8 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "11 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: true-false"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

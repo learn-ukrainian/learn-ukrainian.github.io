@@ -2,12 +2,12 @@
   "module": "79-capstone-research",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:38.151064Z",
+  "last_audit": "2026-02-05T22:10:24.616360Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.008129Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T22:02:48.149967Z",
+    "meta": "2026-02-05T22:07:11.316165Z",
+    "activities": "2026-02-05T22:08:02.166621Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "16/15"
+      "message": "17/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "3 Outline Compliance Errors",
-      "Checkpoint Format Errors",
-      "Missing required activity types: essay-response"
+      "Checkpoint Format Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

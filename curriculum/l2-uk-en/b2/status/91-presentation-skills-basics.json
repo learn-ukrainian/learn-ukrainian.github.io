@@ -2,12 +2,12 @@
   "module": "91-presentation-skills-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:51.481175Z",
+  "last_audit": "2026-02-05T22:10:38.009266Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.103128Z",
-    "meta": "2026-02-05T21:52:08.911796Z",
-    "activities": "2026-02-05T22:02:48.223967Z",
+    "meta": "2026-02-05T22:07:11.382164Z",
+    "activities": "2026-02-05T22:08:02.205620Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2282/2000 (raw: 2360) | pedagogy: 1 violations"
+      "message": "2282/2000 (raw: 2360) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/14"
+      "message": "16/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Missing required activity types: essay-response"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

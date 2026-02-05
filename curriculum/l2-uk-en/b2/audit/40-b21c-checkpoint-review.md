@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M40 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:03:57
+**Generated:** 2026-02-05 22:09:44
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -37,26 +37,36 @@
 | 15 | unjumble | Складіть речення: Словотвір та регістри | 10 | 6 | ✅ |
 | 16 | essay-response | Підсумок фази: Мої досягнення в українській мові | 1 | 1 | ✅ |
 | 17 | reading | Текст для аналізу: Контрольна точка B2.1c: Числівники, словотвір та синтаксис | 3 | 3 | ✅ |
+| 18 | true-false | Правда чи хибність: Контрольна точка B2.1c: Числівники, словотвір та синтаксис | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 17 (target: 15-19) ✅
-- Unique types: 9 (minimum: 4) ✅
+- Total activities: 18 (target: 15-19) ✅
+- Unique types: 10 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 40-b21c-checkpoint.yaml: Schema validation error at key '17': {'type': 'true-false', 'title': 'Правда чи хибність: Контрольна точка B2.1c: Числівники, словотвір та синтаксис', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'answer': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'answer': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'answer': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'answer': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'answer': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'answer': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'answer': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'answer': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2355/2000 (raw: 2580)
-- **Activities:** ✅ 17/15
+- **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 9/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 4 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
@@ -70,7 +80,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 9 | 8 | 100% | 25% | 25.0% |
+| activity_types | 10 | 8 | 100% | 25% | 25.0% |
 | review_sections | 31 | 3 | 100% | 20% | 20.0% |
 | variety | 0.93 | - | 93% | 15% | 14.0% |
 | engagement | 8 | 3 | 100% | 10% | 10.0% |

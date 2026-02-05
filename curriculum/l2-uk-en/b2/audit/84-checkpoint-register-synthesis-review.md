@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M84 | **Phase:** B2.4 | **Pedagogy:** Test | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:04:43
+**Generated:** 2026-02-05 22:10:29
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -42,16 +42,17 @@
 | 20 | match-up | Антоніми та відтінки значень | 12 | 8 | ✅ |
 | 21 | essay-response | Фінальний звіт: Моє бачення майбутнього України | 1 | 1 | ✅ |
 | 22 | reading | Текст для аналізу: Checkpoint: Register Synthesis (Синтез регістрів) | 3 | 3 | ✅ |
+| 23 | true-false | Правда чи хибність: Checkpoint: Register Synthesis (Синтез регістрів) | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 22 (target: 15-19) ❌
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 23 (target: 15-19) ❌
+- Unique types: 11 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 2/3 (essay-response, reading) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 84-checkpoint-register-synthesis.yaml: Schema validation error at key '17': {'type': 'translate', 'title': 'Фрази для дискусій та дебатів', 'items': [{'source': 'I totally agree with your point of view.', 'options': [{'text': 'Я повністю згоден з вашою точкою зору.', 'correct': True}, {'text': 'Я думаю так само як і ви зараз.', 'correct': False}, {'text': 'Ваша думка мені дуже подобається.', 'correct': False}, {'text': 'Ви кажете правду, я вірю вам.', 'correct': False}]}, {'source': 'On the other hand, we should consider risks.', 'options': [{'text': 'З іншого боку, нам варто зважити на ризики.', 'correct': True}, {'text': 'З іншої руки, ми маємо думати про проблеми.', 'correct': False}, {'text': 'Але також є дуже великі небезпеки.', 'correct': False}, {'text': 'Навпаки, ми забули про всі ризики.', 'correct': False}]}, {'source': 'Summarizing the above, I would like to emphasize...', 'options': [{'text': 'Підсумовуючи вищесказане, я хотів би підкреслити...', 'correct': True}, {'text': 'Коротко кажучи про все, я скажу...', 'correct': False}, {'text': 'Наприкінці своєї промови я наголошу на...', 'correct': False}, {'text': 'Отже, я думаю, що це важливо знати...', 'correct': False}]}, {'source': 'Could you please clarify this point?', 'options': [{'text': 'Чи не могли б ви уточнити цей момент?', 'correct': True}, {'text': 'Що ви мали на увазі під цим словом?', 'correct': False}, {'text': 'Поясніть мені ще раз, я не зрозумів.', 'correct': False}, {'text': 'Кажіть простіше, будь ласка, я чекаю.', 'correct': False}]}, {'source': 'I am afraid I cannot support this idea.', 'options': [{'text': 'Боюсь, що я не можу підтримати цю ідею.', 'correct': True}, {'text': 'Я не хочу допомагати вам у цій справі.', 'correct': False}, {'text': 'Ця ідея мені зовсім не подобається.', 'correct': False}, {'text': 'Я маю великий страх перед вашою ідеєю.', 'correct': False}]}, {'source': 'According to the latest research data...', 'options': [{'text': 'Згідно з останніми даними досліджень...', 'correct': True}, {'text': 'Як кажуть нові наукові книжки...', 'correct': False}, {'text': 'Через останні результати нашої роботи...', 'correct': False}, {'text': 'По даним, які ми отримали вчора...', 'correct': False}]}], 'instruction': 'Оберіть найбільш влучний академічний переклад фрази для ведення професійної дискусії.'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 84-checkpoint-register-synthesis.yaml: Schema validation error at key '22': {'type': 'true-false', 'title': 'Правда чи хибність: Checkpoint: Register Synthesis (Синтез регістрів)', 'items': [{'statement': 'Ця тема є важливою для рівня B2.', 'answer': True, 'explanation': 'Так, це є частиною програми B2.'}, {'statement': 'Цей матеріал не потрібен для професійного спілкування.', 'answer': False, 'explanation': 'Навпаки, цей матеріал є необхідним для професійного рівня.'}, {'statement': 'Вивчення цієї теми допомагає розуміти складні тексти.', 'answer': True, 'explanation': 'Правильно, це розширює комунікативну компетенцію.'}, {'statement': 'Ці конструкції використовуються тільки в розмовній мові.', 'answer': False, 'explanation': 'Вони використовуються в різних стилях мовлення.'}, {'statement': 'Для рівня B2 важливо розуміти різні регістри мови.', 'answer': True, 'explanation': 'Так, це є однією з ключових компетенцій B2.'}, {'statement': 'Цю тему можна вивчити без практики.', 'answer': False, 'explanation': 'Практика є необхідною для закріплення матеріалу.'}, {'statement': 'Знання цього матеріалу допомагає на іспиті B2.', 'answer': True, 'explanation': 'Так, це є частиною іспитових завдань.'}, {'statement': 'Ці конструкції існують тільки в українській мові.', 'answer': False, 'explanation': 'Подібні конструкції є в багатьох мовах, але з особливостями.'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -61,9 +62,9 @@
 
 ## Gates
 - **Words:** ❌ 1798/2000 (raw: 1971)
-- **Activities:** ✅ 22/15
+- **Activities:** ✅ 23/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -71,7 +72,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 22 (target 15-19)
+- **Content_heavy:** ⚠️ Too many activities: 23 (target 15-19)
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -84,7 +85,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 10 | 8 | 100% | 25% | 25.0% |
+| activity_types | 11 | 8 | 100% | 25% | 25.0% |
 | review_sections | 22 | 3 | 100% | 20% | 20.0% |
 | variety | 0.90 | - | 90% | 15% | 13.5% |
 | engagement | 6 | 3 | 100% | 10% | 10.0% |

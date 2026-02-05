@@ -2,12 +2,12 @@
   "module": "86-professional-email-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T22:04:45.633685Z",
+  "last_audit": "2026-02-05T22:10:32.123906Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T21:56:22.053129Z",
-    "meta": "2026-02-05T21:57:51.489195Z",
-    "activities": "2026-02-05T22:02:48.186967Z",
+    "meta": "2026-02-05T22:07:21.902051Z",
+    "activities": "2026-02-05T22:08:02.176620Z",
     "vocabulary": "2026-02-05T21:52:08.918796Z",
     "plan": null
   },
@@ -25,7 +25,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "15/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -41,8 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "12 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: essay-response"
+      "12 forbidden activity types (use --fix to remove)"
     ],
     "pass_count": 3,
     "fail_count": 2

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 22:03:53
+**Generated:** 2026-02-05 22:09:39
 
 ## Configuration
 **Type:** B2-grammar
