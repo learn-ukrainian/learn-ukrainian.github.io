@@ -2,10 +2,10 @@
   "module": "sylvestr-kosiv",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T00:47:12.558047Z",
+  "last_audit": "2026-02-05T10:56:59.137133Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:37:50.588421Z",
+    "md": "2026-02-05T10:56:54.855778Z",
     "meta": "2026-02-05T00:39:08.280587Z",
     "activities": "2026-01-19T20:29:29.827229Z",
     "vocabulary": "2026-02-04T13:32:44.819543Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3870/4300 (raw: 3933)"
+      "message": "3407/4300 (raw: 3449)"
     },
     "activities": {
       "status": "pass",

@@ -183,23 +183,21 @@ gh issue edit N --remove-label "working:claude" --add-label "working:gemini"
 gh issue comment N --body "🔄 Handed off to Gemini"
 ```
 
-```python
-# Send SHORT message (issue reference only)
-mcp__message-broker__send_message(
-    to="gemini",
-    from_llm="claude",
-    content="""Issue #N is assigned to you.
+```bash
+# Send SHORT message (issue reference only) - uses --type handoff which auto-enables async
+.venv/bin/python scripts/gemini_bridge.py ask-gemini \
+  "Issue #N is assigned to you. Read it at: https://github.com/{repo}/issues/N" \
+  --task-id gh-N --type handoff
 
-Read it at: https://github.com/{repo}/issues/N
+# --type handoff auto-enables async mode (no CLI invocation, just queues)
+# Gemini sees it in his inbox when he starts a session
+```
 
-Then either:
-a) Start working autonomously - update issue with progress as you go
-b) Request UI trigger if you want collaborative session with user
-
-Do NOT wait for detailed instructions - the issue has everything.""",
-    message_type="handoff",
-    task_id="gh-N"
-)
+**Async behavior (automatic for handoff):**
+- Message queued ✅
+- NO immediate CLI invocation (avoids 10min timeout on complex tasks)
+- Gemini picks it up from his inbox when he starts a session
+- User can trigger manually: `.venv/bin/python scripts/gemini_bridge.py process {msg_id}`
 ```
 
 **Example (correct):**

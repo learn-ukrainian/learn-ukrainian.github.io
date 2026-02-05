@@ -281,13 +281,20 @@ def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", d
     return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None):
-    """Send message to Gemini AND invoke Gemini to process it. One-step communication.
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False):
+    """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
         model: Gemini model to use (default: gemini-3-flash-preview)
         from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
+        async_mode: If True, just queue message without invoking Gemini CLI.
+                   Auto-enabled for 'handoff' type messages (complex tasks).
     """
+    # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
+    if msg_type == "handoff":
+        async_mode = True
+        print("ℹ️  Async mode auto-enabled for handoff (complex task)")
+
     # Validation: Warn if message is too long (handoff anti-pattern)
     HANDOFF_WARNING_THRESHOLD = 500  # chars
     if len(content) > HANDOFF_WARNING_THRESHOLD and task_id and task_id.startswith("gh-"):
@@ -300,9 +307,14 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     # Step 1: Send the message (model param becomes to_model)
     msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
 
-    # Step 2: Invoke Gemini to process it
-    print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-    process_and_respond(msg_id, model)
+    # Step 2: Invoke Gemini to process it (unless async mode)
+    if async_mode:
+        print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
+        print(f"   Gemini will see this in his inbox when he starts a session.")
+        print(f"   To trigger manually: .venv/bin/python scripts/gemini_bridge.py process {msg_id}")
+    else:
+        print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
+        process_and_respond(msg_id, model)
 
     return msg_id
 
@@ -781,6 +793,8 @@ def main():
     ask_gemini_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model to use (also used as to_model)")
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID (e.g., claude-opus-4-5-20251101)")
+    ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
+                                   help="Queue only, don't invoke Gemini CLI (for complex tasks). Auto-enabled for --type handoff")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -824,7 +838,7 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

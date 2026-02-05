@@ -1,8 +1,8 @@
 # Audit Report: M23 — petro-mohyla.md
 **Level:** C1-BIO | **Module:** M23 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 10:26:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 10:51:58
 
 ## Configuration
 **Type:** C1-biography
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3759/4300 (raw: 3918)
+- **Words:** ✅ 4514/4300 (raw: 4685)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 8/3 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 98.3% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 98.6% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -68,20 +68,20 @@
 | visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 109 | Included in Core |
-| **Вступ — Архітектор українського бароко** | ✅ | 545 | Included in Core |
-| **Життєпис** | ⚪️ | 1048 | Skipped |
-| **Історичний контекст** | ✅ | 467 | Included in Core |
-| **Внесок** | ⚪️ | 377 | Skipped |
-| **Останні роки** | ⚪️ | 363 | Skipped |
-| **Спадщина** | ⚪️ | 324 | Skipped |
-| **Підсумок** | ✅ | 253 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 273 | Skipped |
+| **Intro/Narrative** | ✅ | 122 | Included in Core |
+| **Вступ — Архітектор українського бароко** | ✅ | 691 | Included in Core |
+| **Життєпис** | ⚪️ | 1370 | Skipped |
+| **Історичний контекст** | ✅ | 551 | Included in Core |
+| **Внесок** | ⚪️ | 407 | Skipped |
+| **Останні роки** | ⚪️ | 424 | Skipped |
+| **Спадщина** | ⚪️ | 368 | Skipped |
+| **Підсумок** | ✅ | 300 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 281 | Skipped |
