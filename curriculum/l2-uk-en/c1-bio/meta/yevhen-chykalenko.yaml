@@ -1,10 +1,58 @@
-module: c1-bio-054
+module: yevhen-chykalenko
 level: C1-BIO
 slug: yevhen-chykalenko
 version: '2.0'
-id: c1-bio-054
+id: c1-bio-052
+title: "Євген Чикаленко: Любити до глибини кишені"
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- business
+- politics
+- philanthropy
+content_outline:
+- section: "Вступ — Меценат нації"
+  words: 300
+  points:
+  - Любов до глибини кишені
+  - Некоронований король
+- section: "Шлях до українства (1861-1900)"
+  words: 400
+  points:
+  - Перешори
+  - Російська освіта vs Українське село
+  - Вплив Лисенка та Антоновича
+- section: "Газета 'Рада' та видавнича справа"
+  words: 500
+  points:
+  - Перша щоденна газета
+  - Фінансовий тягар
+  - Словник Грінченка
+- section: "Політична діяльність (1900-1917)"
+  words: 400
+  points:
+  - Товариство українських поступовців
+  - Центральна Рада
+- section: "Визвольні змагання та еміграція"
+  words: 300
+  points:
+  - Відмова від гетьманства
+  - Еміграція до Чехії
+- section: "Агроном і господар"
+  words: 200
+  points:
+  - Чорний пар
+  - Бестселер для селян
+- section: "Спадщина"
+  words: 100
+  points:
+  - Приклад для сучасного бізнесу
+word_target: 2200
+vital_status: deceased
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-05'

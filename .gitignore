@@ -63,3 +63,16 @@ docs/references/dobra-forma/opentext.ku.edu/
 
 # Private references (copyrighted materials for personal verification only)
 docs/references/private/
+
+# Temporary audit and pipeline files (root folder)
+*_audit_results*.txt
+audit_report*.txt
+pipeline_*.txt
+*_mapping.txt
+missing_*.txt
+missing_*.json
+test_*.txt
+enrichment_*.json
+recovery_*.json
+issue_*.json
+*_report.json
