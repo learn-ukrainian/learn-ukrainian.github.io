@@ -560,17 +560,17 @@ Specifically:
 > **BATCH PROCESSING (catch up on missed messages):**
 > ```bash
 > # Process ALL unread messages for Gemini
-> .venv/bin/python scripts/gemini_bridge.py process-all
+> .venv/bin/python scripts/ai_agent_bridge.py process-all
 >
 > # Process ALL unread messages for Claude (headless)
-> .venv/bin/python scripts/gemini_bridge.py process-claude-all
+> .venv/bin/python scripts/ai_agent_bridge.py process-claude-all
 > ```
 
 ### How to Contact Gemini (PREFERRED: One-Step)
 
 ```bash
 # ONE COMMAND: Send message + invoke Gemini automatically
-Bash('.venv/bin/python scripts/gemini_bridge.py ask-gemini "Your message" --task-id your-task')
+Bash('.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id your-task')
 
 # Then check inbox for response
 mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
@@ -591,7 +591,7 @@ mcp__message-broker__send_message(
 )
 
 # 2. Trigger processing via Bash
-Bash(".venv/bin/python scripts/gemini_bridge.py process <msg_id>")
+Bash(".venv/bin/python scripts/ai_agent_bridge.py process <msg_id>")
 
 # 3. Read response
 mcp__message-broker__receive_messages(for_llm="claude")
@@ -637,13 +637,13 @@ Gemini has rate limits. When you get a cooldown/quota error:
 1. **Check the error message** for retry time (usually 60 seconds)
 2. **Queue the message** - send via MCP but don't invoke bridge immediately
 3. **Continue other work** while waiting
-4. **Retry after cooldown** - use `scripts/gemini_bridge.py process-all` to catch up
+4. **Retry after cooldown** - use `scripts/ai_agent_bridge.py process-all` to catch up
 
 ```bash
 # If Gemini is on cooldown, queue message and continue:
 mcp__message-broker__send_message(to="gemini", content="...", task_id="...")
 # Don't call bridge immediately - let it queue
-# Later: .venv/bin/python scripts/gemini_bridge.py process-all
+# Later: .venv/bin/python scripts/ai_agent_bridge.py process-all
 ```
 
 ### MCP Tool Retry Logic

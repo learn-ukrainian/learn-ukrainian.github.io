@@ -70,7 +70,7 @@
 3. **Vital Status (Biographies)**: **CRITICAL**: Check if the subject is ALIVE.
    - **Living**: Do NOT use "Legacy" or "Last Years". Use "Modern Period" or "Impact".
    - **Deceased**: Standard biography headers apply.
-4. **Communication with Claude**: Use `scripts/gemini_bridge.py` (See "Inter-Agent Communication" section).
+4. **Communication with Claude**: Use `scripts/ai_agent_bridge.py` (See "Inter-Agent Communication" section).
 5. **Batch Operations**: For large refactors, prefer creating disposable `fix_batch_*.py` scripts over manual editing.
 6. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
 7. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
@@ -204,17 +204,17 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 
 ```bash
 # Send a query (ask Claude a question)
-.venv/bin/python scripts/gemini_bridge.py send "Your question here" --type query --task-id your-task
+.venv/bin/python scripts/ai_agent_bridge.py send "Your question here" --type query --task-id your-task
 
 # Send a response (answer Claude's question)
 # ⚠️ Use the SAME task-id from Claude's message you're replying to!
-.venv/bin/python scripts/gemini_bridge.py send "Your answer" --type response --task-id original-task-id
+.venv/bin/python scripts/ai_agent_bridge.py send "Your answer" --type response --task-id original-task-id
 
 # Send a handoff (transfer task with context)
-.venv/bin/python scripts/gemini_bridge.py send "Task context here" --type handoff --task-id task-id
+.venv/bin/python scripts/ai_agent_bridge.py send "Task context here" --type handoff --task-id task-id
 
 # Send with attached data file
-.venv/bin/python scripts/gemini_bridge.py send "Message" --type handoff --data path/to/file.yaml --task-id task-id
+.venv/bin/python scripts/ai_agent_bridge.py send "Message" --type handoff --data path/to/file.yaml --task-id task-id
 ```
 
 ### How to INVOKE Claude (Headless) - PREFERRED METHOD
@@ -223,44 +223,44 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 
 ```bash
 # ONE COMMAND: Send message + invoke Claude (auto-resumes session if exists)
-.venv/bin/python scripts/gemini_bridge.py ask-claude "Your question or request" --task-id my-task
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Your question or request" --task-id my-task
 
 # With message type
-.venv/bin/python scripts/gemini_bridge.py ask-claude "Review this code" --task-id code-review --type request
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Review this code" --task-id code-review --type request
 
 # Force new session (ignore existing session for task)
-.venv/bin/python scripts/gemini_bridge.py ask-claude "Start fresh analysis" --task-id my-task --new-session
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Start fresh analysis" --task-id my-task --new-session
 ```
 
 **Batch Operations (NEW):**
 ```bash
 # Process ALL unread messages for Gemini
-.venv/bin/python scripts/gemini_bridge.py process-all
+.venv/bin/python scripts/ai_agent_bridge.py process-all
 
 # Process ALL unread messages for Claude (headless)
-.venv/bin/python scripts/gemini_bridge.py process-claude-all
+.venv/bin/python scripts/ai_agent_bridge.py process-claude-all
 
 # Acknowledge multiple messages
-.venv/bin/python scripts/gemini_bridge.py ack 49 50 51 52
+.venv/bin/python scripts/ai_agent_bridge.py ack 49 50 51 52
 
 # Acknowledge ALL unread for an agent
-.venv/bin/python scripts/gemini_bridge.py ack-all gemini
+.venv/bin/python scripts/ai_agent_bridge.py ack-all gemini
 ```
 
 ### How to Check for Messages from Claude
 
 ```bash
 # Check inbox (DO THIS AT START OF EVERY SESSION)
-.venv/bin/python scripts/gemini_bridge.py inbox
+.venv/bin/python scripts/ai_agent_bridge.py inbox
 
 # Read specific message
-.venv/bin/python scripts/gemini_bridge.py read <message_id>
+.venv/bin/python scripts/ai_agent_bridge.py read <message_id>
 
 # Get full conversation
-.venv/bin/python scripts/gemini_bridge.py conversation <task_id>
+.venv/bin/python scripts/ai_agent_bridge.py conversation <task_id>
 
 # Acknowledge a message
-.venv/bin/python scripts/gemini_bridge.py ack <message_id>
+.venv/bin/python scripts/ai_agent_bridge.py ack <message_id>
 ```
 
 ### Message Types
@@ -327,8 +327,8 @@ gh issue view 506
 
 ### Your Handoff Response Flow
 
-1. **Check inbox**: `.venv/bin/python scripts/gemini_bridge.py inbox`
-2. **Read SHORT message** (issue reference only): `.venv/bin/python scripts/gemini_bridge.py read <id>`
+1. **Check inbox**: `.venv/bin/python scripts/ai_agent_bridge.py inbox`
+2. **Read SHORT message** (issue reference only): `.venv/bin/python scripts/ai_agent_bridge.py read <id>`
 3. **Read the ISSUE for full details**: `gh issue view <issue_number>`
 4. **Check configs yourself** (don't trust message for numbers):
    ```bash
@@ -340,7 +340,7 @@ gh issue view 506
 6. **Update issue with progress**: `gh issue comment <N> --body "✅ module-1 complete"`
 7. **When done**, send response to Claude:
    ```bash
-   .venv/bin/python scripts/gemini_bridge.py send "Work complete. See issue #N for details." --type response --task-id gh-N
+   .venv/bin/python scripts/ai_agent_bridge.py send "Work complete. See issue #N for details." --type response --task-id gh-N
    ```
 
 ### Progress Update Format

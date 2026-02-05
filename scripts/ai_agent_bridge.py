@@ -1,32 +1,29 @@
 #!/usr/bin/env python3
 """
-Gemini Bridge - Bridge between Gemini CLI and MCP Message Broker
+AI Agent Bridge - Multi-agent communication bridge via MCP Message Broker
 
-This script allows Gemini to participate in the bidirectional
-communication system by reading from and writing to the same
-SQLite database that the MCP Message Broker uses.
+This script allows AI agents (Gemini, Claude, etc.) to participate in a 
+bidirectional communication system by reading from and writing to the 
+same SQLite database that the MCP Message Broker uses.
 
 Usage:
-    # Check for messages from Claude
-    python scripts/gemini_bridge.py inbox
+    # Check for messages
+    python scripts/ai_agent_bridge.py inbox
 
     # Get a specific message
-    python scripts/gemini_bridge.py read <message_id>
+    python scripts/ai_agent_bridge.py read <message_id>
 
     # Send a message to Claude
-    python scripts/gemini_bridge.py send "Your message content"
+    python scripts/ai_agent_bridge.py send "Your message content" --to claude
 
     # Send with structured data
-    python scripts/gemini_bridge.py send "Message" --data data.yaml --task-id my-task
+    python scripts/ai_agent_bridge.py send "Message" --data data.yaml --task-id my-task
 
     # Get full conversation
-    python scripts/gemini_bridge.py conversation <task_id>
+    python scripts/ai_agent_bridge.py conversation <task_id>
 
-    # Interactive mode (for gemini-cli piping)
-    python scripts/gemini_bridge.py interactive
-
-    # Process and respond (read message, pipe to gemini, send response)
-    python scripts/gemini_bridge.py process <message_id>
+    # Process and respond (read message, pipe to LLM CLI, send response)
+    python scripts/ai_agent_bridge.py process <message_id>
 """
 
 import argparse
@@ -44,6 +41,7 @@ def init_db():
     """Initialize database if needed."""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
+    # Ensure messages table exists with all columns
     conn.execute("""
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +52,8 @@ def init_db():
             content TEXT NOT NULL,
             data TEXT,
             timestamp TEXT NOT NULL,
-            acknowledged INTEGER DEFAULT 0
+            acknowledged INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'pending'
         )
     """)
     # Sessions table - track CLI session IDs for resuming conversations
@@ -75,7 +74,18 @@ def get_db():
     if not DB_PATH.exists():
         return init_db()
     conn = sqlite3.connect(DB_PATH)
-    # Ensure sessions table exists (for existing DBs)
+    
+    # Check for missing columns (migration for existing DBs)
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(messages)")
+    columns = [row[1] for row in cursor.fetchall()]
+    
+    if "status" not in columns:
+        print("🔧 Migrating database: adding 'status' column to 'messages' table")
+        conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+        conn.commit()
+        
+    # Ensure sessions table exists
     conn.execute("""
         CREATE TABLE IF NOT EXISTS sessions (
             task_id TEXT PRIMARY KEY,
@@ -85,6 +95,7 @@ def get_db():
             updated_at TEXT NOT NULL
         )
     """)
+    conn.commit()
     return conn
 
 
@@ -134,26 +145,26 @@ def set_session(task_id: str, agent: str, session_id: str):
     conn.close()
     print(f"📌 Stored {agent} session: {session_id[:8]}... for task {task_id}")
 
-def check_inbox():
-    """Check inbox for messages addressed to Gemini."""
+def check_inbox(for_llm: str = "gemini"):
+    """Check inbox for messages addressed to an agent."""
     conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT id, from_llm, message_type, substr(content, 1, 100), timestamp
         FROM messages
-        WHERE to_llm = 'gemini' AND acknowledged = 0
+        WHERE to_llm = ? AND acknowledged = 0
         ORDER BY id ASC
-    """)
+    """, (for_llm,))
 
     rows = cursor.fetchall()
     conn.close()
 
     if not rows:
-        print("📭 No unread messages for Gemini")
+        print(f"📭 No unread messages for {for_llm}")
         return
 
-    print(f"📬 {len(rows)} unread message(s) for Gemini:\n")
+    print(f"📬 {len(rows)} unread message(s) for {for_llm}:\n")
     for row in rows:
         msg_id, from_llm, msg_type, preview, timestamp = row
         preview = preview.replace('\n', ' ')
@@ -221,7 +232,6 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     timestamp = datetime.now(timezone.utc).isoformat()
 
     # Store model info in data as JSON if provided
-    import json
     metadata = {}
     if data:
         try:
@@ -251,7 +261,6 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
         preview = content[:80].replace('"', '\\"').replace('\n', ' ')
         notification = f'display notification "{preview}..." with title "{from_llm.title()} → {to_llm.title()}" subtitle "Check inbox"'
         subprocess.run(["osascript", "-e", notification], check=False, capture_output=True)
-        print("🔔 Notification sent (tell Claude to check inbox)")
     except Exception:
         pass  # Notification is nice-to-have, don't fail if it doesn't work
 
@@ -311,7 +320,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     if async_mode:
         print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
         print(f"   Gemini will see this in his inbox when he starts a session.")
-        print(f"   To trigger manually: .venv/bin/python scripts/gemini_bridge.py process {msg_id}")
+        print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
         print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
         process_and_respond(msg_id, model)
@@ -583,7 +592,7 @@ Be concise and direct in your response.
             cmd,
             capture_output=True,
             text=True,
-            timeout=300,  # 5 min timeout
+            timeout=600,  # 10 min timeout
             cwd=str(Path(__file__).parent.parent)  # Run from project root
         )
 
@@ -597,6 +606,9 @@ Be concise and direct in your response.
         print(response[:500])
         if len(response) > 500:
             print(f"\n... [{len(response) - 500} more characters]")
+            
+        # IMPORTANT: Acknowledge the message so it's not processed again
+        acknowledge(message_id)
 
     except subprocess.TimeoutExpired:
         print("❌ Claude CLI timed out")
@@ -606,38 +618,41 @@ Be concise and direct in your response.
 
 def interactive_mode():
     """Interactive mode for testing."""
-    print("🔄 Gemini Bridge Interactive Mode")
-    print("Commands: inbox, read <id>, send <text>, ack <id>, conv <task_id>, process <id>, quit")
+    print("🔄 AI Agent Bridge Interactive Mode")
+    print("Commands: inbox [agent], read <id>, send <text> --to <agent>, ack <id>, conv <task_id>, process <id>, quit")
     print()
 
     while True:
         try:
-            cmd = input("gemini> ").strip()
+            cmd = input("bridge> ").strip()
             if not cmd:
                 continue
 
-            parts = cmd.split(maxsplit=1)
-            action = parts[0].lower()
-            arg = parts[1] if len(parts) > 1 else None
-
-            if action == "quit" or action == "q":
+            if cmd.lower() in ["quit", "q", "exit"]:
                 break
-            elif action == "inbox":
-                check_inbox()
-            elif action == "read" and arg:
-                read_message(int(arg))
-            elif action == "send" and arg:
-                send_message(arg)
-            elif action == "ack" and arg:
-                # Support multiple IDs: "ack 1 2 3" or single: "ack 1"
-                ids = [int(x) for x in arg.split()]
+                
+            # Simple parser for interactive mode
+            parts = cmd.split()
+            action = parts[0].lower()
+            
+            if action == "inbox":
+                agent = parts[1] if len(parts) > 1 else "gemini"
+                check_inbox(agent)
+            elif action == "read" and len(parts) > 1:
+                read_message(int(parts[1]))
+            elif action == "send" and len(parts) > 1:
+                # Very basic send for interactive mode
+                content = " ".join(parts[1:])
+                send_message(content)
+            elif action == "ack" and len(parts) > 1:
+                ids = [int(x) for x in parts[1:]]
                 acknowledge(ids)
-            elif action == "conv" and arg:
-                get_conversation(arg)
-            elif action == "process" and arg:
-                process_and_respond(int(arg))
+            elif action == "conv" and len(parts) > 1:
+                get_conversation(parts[1])
+            elif action == "process" and len(parts) > 1:
+                process_and_respond(int(parts[1]))
             else:
-                print("Unknown command. Try: inbox, read <id>, send <text>, ack <id>, conv <task>, process <id>")
+                print("Unknown command or missing arguments.")
 
         except KeyboardInterrupt:
             print("\nBye!")
@@ -729,22 +744,30 @@ def process_all_claude(new_session: bool = False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Gemini Bridge - Claude/Gemini Communication")
+    parser = argparse.ArgumentParser(description="AI Agent Bridge - Claude/Gemini/LLM Communication")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # inbox
-    subparsers.add_parser("inbox", help="Check inbox for messages from Claude")
+    inbox_parser = subparsers.add_parser("inbox", help="Check inbox for messages")
+    inbox_parser.add_argument("--for", dest="for_llm", default="gemini", choices=['gemini', 'claude'], 
+                             help="Check inbox for which agent (default: gemini)")
 
     # read
     read_parser = subparsers.add_parser("read", help="Read a specific message")
     read_parser.add_argument("message_id", type=int, help="Message ID to read")
 
     # send
-    send_parser = subparsers.add_parser("send", help="Send message to Claude")
+    send_parser = subparsers.add_parser("send", help="Send message to another agent")
     send_parser.add_argument("content", help="Message content")
+    send_parser.add_argument("--to", dest="to_llm", default="claude", choices=['claude', 'gemini'],
+                            help="Target agent (default: claude)")
+    send_parser.add_argument("--from", dest="from_llm", default="gemini",
+                            help="Sender agent name (default: gemini)")
     send_parser.add_argument("--task-id", help="Task ID for grouping")
     send_parser.add_argument("--type", default="response", help="Message type")
     send_parser.add_argument("--data", help="Path to data file to attach")
+    send_parser.add_argument("--from-model", dest="from_model", help="Specific model ID of sender")
+    send_parser.add_argument("--to-model", dest="to_model", help="Specific model ID of receiver")
 
     # ack (supports multiple IDs)
     ack_parser = subparsers.add_parser("ack", help="Acknowledge message(s)")
@@ -811,14 +834,14 @@ def main():
     args = parser.parse_args()
 
     if args.command == "inbox":
-        check_inbox()
+        check_inbox(args.for_llm)
     elif args.command == "read":
         read_message(args.message_id)
     elif args.command == "send":
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        send_message(args.content, args.task_id, args.type, data)
+        send_message(args.content, args.task_id, args.type, data, args.from_llm, args.to_llm, args.from_model, args.to_model)
     elif args.command == "ack":
         acknowledge(args.message_ids)
     elif args.command == "ack-all":
