@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M54 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 20:41:07
+**Generated:** 2026-02-05 20:45:46
 
 ## Configuration
 **Type:** C1-biography
@@ -34,60 +34,63 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ы (lines: [36])
+  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
+- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ы (lines: [36])
+  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ❌ 2971/4000 (raw: 3027)
+- **Words:** ❌ 3372/4000 (raw: 3416)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ❌ 71% < 95% min (biography)
+- **Richness:** ❌ 83% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 71% (minimum: 95%)
+**Score:** 83% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 2 | 4 | 50% | 19% | 9.5% |
-| engagement | 4 | 6 | 67% | 14% | 9.6% |
-| quotes | 1 | 3 | 33% | 14% | 4.7% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 3 | 4 | 75% | 19% | 14.3% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 2 | 3 | 67% | 14% | 9.6% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| legacy | 14 | 2 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 0 | 3 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **71.3%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_QUOTES**
-  - FIX:
-    Add 2+ direct quotes from the subject. Use this format:
-    
-    > «[Exact quote from the person]»
-    > — *[Person name], [context/year]*
+| **TOTAL** | | | | | **83.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Меценат нації** | ✅ | 416 | Included in Core |
-| **Шлях до українства (1861-1900)** | ⚪️ | 524 | Skipped |
-| **Газета "Рада" та видавнича справа (1906-1914)** | ⚪️ | 449 | Skipped |
-| **Політична діяльність та Центральна Рада (1900-1917)** | ⚪️ | 429 | Skipped |
-| **Агроном-новатор: Хліб як зброя відродження** | ⚪️ | 316 | Skipped |
-| **Трагедія вигнання та етичний заповіт в еміграції** | ⚪️ | 395 | Skipped |
-| **Спадщина та деколонізація пам'яті в новій Україні** | ⚪️ | 229 | Skipped |
-| **Підсумок** | ✅ | 213 | Included in Core |
+| **Вступ — Меценат нації** | ✅ | 476 | Included in Core |
+| **Шлях до українства (1861-1900)** | ⚪️ | 585 | Skipped |
+| **Газета 'Рада' та видавнича справа** | ⚪️ | 589 | Skipped |
+| **Політична діяльність (1900-1917)** | ⚪️ | 434 | Skipped |
+| **Визвольні змагання та еміграція** | ⚪️ | 409 | Skipped |
+| **Агроном і господар: Технологія національного успіху** | ⚪️ | 361 | Skipped |
+| **Спадщина** | ⚪️ | 274 | Skipped |
+| **Підсумок** | ✅ | 244 | Included in Core |

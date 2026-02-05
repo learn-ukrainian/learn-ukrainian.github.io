@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M53 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 20:41:01
+**Generated:** 2026-02-05 20:46:36
 
 ## Configuration
 **Type:** C1-biography
@@ -35,12 +35,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 3973/4000 (raw: 4013) (27 short)
+- **Words:** ✅ 4147/4000 (raw: 4188)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -60,10 +60,10 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 3 | 4 | 75% | 19% | 14.3% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| engagement | 12 | 6 | 100% | 14% | 14.3% |
 | quotes | 2 | 3 | 67% | 14% | 9.6% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 14 | 4 | 100% | 10% | 9.5% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 18 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
@@ -75,10 +75,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Каменяр нації** | ✅ | 446 | Included in Core |
-| **Ранні роки та освіта (1856-1875)** | ⚪️ | 743 | Skipped |
-| **Політична боротьба та арешти (1875-1890)** | ⚪️ | 839 | Skipped |
-| **Наукова та літературна зрілість (1890-1905)** | ⚪️ | 815 | Skipped |
-| **Останні роки та хвороба (1905-1916)** | ⚪️ | 569 | Skipped |
-| **Спадщина та деколонізація** | ⚪️ | 356 | Skipped |
-| **Підсумок** | ✅ | 205 | Included in Core |
+| **Вступ — Каменяр нації** | ✅ | 466 | Included in Core |
+| **Ранні роки та освіта (1856-1875)** | ⚪️ | 861 | Skipped |
+| **Політична боротьба та арешти (1875-1890)** | ⚪️ | 920 | Skipped |
+| **Наукова та літературна зрілість (1890-1905)** | ⚪️ | 882 | Skipped |
+| **Останні роки та хвороба (1905-1916)** | ⚪️ | 640 | Skipped |
+| **Спадщина та деколонізація** | ⚪️ | 145 | Skipped |
+| **Підсумок** | ✅ | 233 | Included in Core |

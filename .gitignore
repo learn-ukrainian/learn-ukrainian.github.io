@@ -82,3 +82,19 @@ temp*.md
 *_BRIEF.md
 *_PROMPT.md
 issue_*_body.md
+
+# Root-level scripts and data (all scripts go in scripts/)
+/*.py
+/*.js
+!start-claude.sh
+/*.yaml
+/*.csv
+/*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!.mcp.json
+!.markdownlint.json
+!.prettierrc
+!jest.config.js
+!eslint.config.mjs
