@@ -1024,7 +1024,7 @@ LEVEL_CONFIG = {
     'OES': {
         # OES Track: Historical Linguistics (post-B2)
         # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501
-        'target_words': 3500,
+        'target_words': 4000,
         'min_activities': 6,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1048,7 +1048,7 @@ LEVEL_CONFIG = {
     'RUTH': {
         # RUTH Track: Ruthenian/Middle Ukrainian (post-B2)
         # Source: Gemini Research ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496
-        'target_words': 3500,
+        'target_words': 4000,
         'min_activities': 6,
         'max_activities': 9,
         'min_items_per_activity': 1,

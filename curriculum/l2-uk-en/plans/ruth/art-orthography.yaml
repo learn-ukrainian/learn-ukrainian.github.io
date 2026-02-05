@@ -15,7 +15,7 @@ phase_name: "Sacred Word"
 
 focus: "Visual style of the manuscript"
 
-word_target: 3500
+word_target: 4000
 
 # Content outline to be expanded during content generation
 content_outline:
