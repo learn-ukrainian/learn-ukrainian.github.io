@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M54 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:08:54
+**Generated:** 2026-02-05 23:18:28
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,21 +43,6 @@
 - Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Стихії в житті' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Стихії в житті' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Традиції та мова' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Традиції та мова' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
 - **Words:** ⚠️ 1927/2000 (raw: 2034) (73 short)
 - **Activities:** ✅ 15/10
@@ -69,7 +54,7 @@
 - **Vocab:** ⚠️ 4 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M62 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:11:08
+**Generated:** 2026-02-05 23:16:28
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,21 +45,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Орієнтування у просторі' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Орієнтування у просторі' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Простір пам'яті' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Простір пам'яті' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'ми бачимо,...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 5 violations (moderate)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2127/2000 (raw: 2212)
@@ -72,7 +64,7 @@
 - **Vocab:** ⚠️ 15 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)

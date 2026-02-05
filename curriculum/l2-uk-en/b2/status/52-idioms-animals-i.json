@@ -2,12 +2,12 @@
   "module": "52-idioms-animals-i",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:11:03.955661Z",
+  "last_audit": "2026-02-05T23:15:25.094700Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.688646Z",
     "meta": "2026-02-05T22:46:26.733646Z",
-    "activities": "2026-02-05T22:53:37.823810Z",
+    "activities": "2026-02-05T23:11:38.619319Z",
     "vocabulary": "2026-02-05T22:46:26.740646Z",
     "plan": null
   },
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1962/2000 (raw: 2071) (38 short) | pedagogy: 4 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "1962/2000 (raw: 2071) (38 short)"
     },
     "activities": {
       "status": "pass",
@@ -44,6 +44,6 @@
       "Missing required activity types: fill-in"
     ],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

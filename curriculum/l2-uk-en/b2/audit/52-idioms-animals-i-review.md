@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M52 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:11:03
+**Generated:** 2026-02-05 23:15:25
 
 ## Configuration
 **Type:** B2-vocab
@@ -44,21 +44,6 @@
 - Required types used: 2/3 (reading, true-false) ❌
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір фразеологізму' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір фразеологізму' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний контекст' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний контекст' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
 - **Words:** ⚠️ 1962/2000 (raw: 2071) (38 short)
 - **Activities:** ✅ 16/10
@@ -70,7 +55,7 @@
 - **Vocab:** ⚠️ 13 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)

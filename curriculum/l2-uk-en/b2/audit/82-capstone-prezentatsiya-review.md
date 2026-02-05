@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:09:22
+**Generated:** 2026-02-05 23:15:55
 
 ## Configuration
 **Type:** B2-skills
@@ -44,25 +44,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дизайн слайдів: Так чи Ні?' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Дизайн слайдів: Так чи Ні?' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Складні запитання' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Складні запитання' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Голос оратора' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Голос оратора' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 6 violations (moderate)
-
 ## Gates
 - **Words:** ❌ 1880/2000 (raw: 1948)
 - **Activities:** ✅ 16/14
@@ -74,7 +55,7 @@
 - **Vocab:** ⚠️ 8 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
 - **Richness:** ✅ 96% (skills)

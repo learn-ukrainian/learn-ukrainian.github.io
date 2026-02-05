@@ -1,8 +1,8 @@
 # Audit Report: M81 — 81-capstone-doslidzhennya.md
 **Level:** B2 | **Module:** M81 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:11:17
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:15:54
 
 ## Configuration
 **Type:** B2-skills
@@ -42,25 +42,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір теми: Добра чи Погана?' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір теми: Добра чи Погана?' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Структура роботи' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Структура роботи' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат: Повторення' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат: Повторення' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 6 violations (moderate)
-
 ## Gates
 - **Words:** ✅ 2159/2000 (raw: 2296)
 - **Activities:** ✅ 14/14
@@ -72,7 +53,7 @@
 - **Vocab:** ⚠️ 5 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 98.1% (target 90-100% (skills))
 - **Richness:** ✅ 97% (skills)

@@ -2,10 +2,10 @@
   "module": "78-text-analysis",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:13:20.837485Z",
+  "last_audit": "2026-02-05T23:15:51.549660Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T23:07:16.038429Z",
+    "md": "2026-02-05T23:14:04.087713Z",
     "meta": "2026-02-05T22:46:26.734646Z",
     "activities": "2026-02-05T23:11:40.871310Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2447/2000 (raw: 2517) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2437/2000 (raw: 2507)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

@@ -2,10 +2,10 @@
   "module": "46-proverbs-nature-time-caution",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:13:19.815828Z",
+  "last_audit": "2026-02-05T23:16:27.474306Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T23:07:15.907429Z",
+    "md": "2026-02-05T23:14:04.086714Z",
     "meta": "2026-02-05T22:46:26.733646Z",
     "activities": "2026-02-05T23:11:38.209321Z",
     "vocabulary": "2026-02-05T22:46:26.739646Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2895/2000 (raw: 3295) | pedagogy: 3 violations"
+      "message": "2888/2000 (raw: 3288) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

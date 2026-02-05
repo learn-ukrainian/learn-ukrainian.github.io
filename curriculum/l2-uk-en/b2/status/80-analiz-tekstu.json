@@ -2,12 +2,12 @@
   "module": "80-analiz-tekstu",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:09:21.037065Z",
+  "last_audit": "2026-02-05T23:18:32.139037Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T22:46:26.693646Z",
     "meta": "2026-02-05T22:46:26.734646Z",
-    "activities": "2026-02-05T22:53:41.481794Z",
+    "activities": "2026-02-05T23:11:41.060309Z",
     "vocabulary": "2026-02-05T22:46:26.741646Z",
     "plan": null
   },
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2141/2000 (raw: 2290) | pedagogy: 8 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2141/2000 (raw: 2290)"
     },
     "activities": {
       "status": "pass",
@@ -43,7 +43,7 @@
     "blocking_issues": [
       "2 Outline Compliance Errors"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M80 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:09:21
+**Generated:** 2026-02-05 23:18:32
 
 ## Configuration
 **Type:** B2-skills
@@ -45,29 +45,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення стилю тексту' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення стилю тексту' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Виявлення упередженості' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Виявлення упередженості' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат чи ні?' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Плагіат чи ні?' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Факт чи думка?' Q9 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Факт чи думка?' Q10 prompt length 3 (target: 5-20)
-  - FIX: Adjust prompt length to 5-20 words.
-
-## Recommendation
-**📝 UPDATE** (severity 30/100)
-
-- 8 violations (significant)
-
 ## Gates
 - **Words:** ✅ 2141/2000 (raw: 2290)
 - **Activities:** ✅ 17/14
@@ -79,7 +56,7 @@
 - **Vocab:** ⚠️ 1 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 8 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (17 activities)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
 - **Richness:** ✅ 99% (skills)

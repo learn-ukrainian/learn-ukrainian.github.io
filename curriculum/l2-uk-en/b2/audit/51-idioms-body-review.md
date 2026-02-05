@@ -1,8 +1,8 @@
 # Audit Report: M51 — 51-idioms-body.md
 **Level:** B2 | **Module:** M51 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:11:02
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-05 23:15:24
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,17 +43,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Деталі значення' Q9 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Деталі значення' Q10 prompt length 3 (target: 5-25)
-  - FIX: Adjust prompt length to 5-25 words.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
 - **Words:** ⚠️ 1989/2000 (raw: 2100) (11 short)
 - **Activities:** ✅ 15/10
@@ -65,7 +54,7 @@
 - **Vocab:** ⚠️ 5 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
