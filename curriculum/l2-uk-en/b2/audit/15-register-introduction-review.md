@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-register-introduction.md
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 10:30:51
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 16:56:30
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,19 +44,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3167/3800 (raw: 3978)
+- **Words:** ✅ 4025/3800 (raw: 4838)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/6
+- **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 14 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -68,25 +68,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 2 | 2 | 100% | 25% | 25.0% |
-| model_answers | 84 | 3 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| engagement | 15 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 14 | 4 | 100% | 10% | 10.0% |
+| visual | 16 | 4 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
 | cultural | 4 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| **TOTAL** | | | | | **99.5%** |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |
-| **Вступ — Що таке функціональний стиль?** | ✅ | 303 | Included in Core |
+| **Вступ — Що таке функціональний стиль?** | ✅ | 388 | Included in Core |
 | **Розмовний стиль** | ⚪️ | 907 | Skipped |
-| **Художній стиль** | ⚪️ | 126 | Skipped |
+| **Художній стиль** | ⚪️ | 431 | Skipped |
 | **Науковий стиль** | ⚪️ | 739 | Skipped |
 | **Офіційно-діловий стиль** | ⚪️ | 719 | Skipped |
-| **Публіцистичний стиль** | ⚪️ | 128 | Skipped |
-| **Практика і підсумок** | ✅ | 165 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Публіцистичний стиль** | ⚪️ | 396 | Skipped |
+| **Практика і підсумок** | ✅ | 347 | Included in Core |
+| **Підсумок** | ✅ | 30 | Included in Core |
