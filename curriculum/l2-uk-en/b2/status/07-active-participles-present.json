@@ -2,13 +2,13 @@
   "module": "07-active-participles-present",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:10.850360Z",
+  "last_audit": "2026-02-06T08:55:13.235703Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:40:53.917184Z",
-    "meta": "2026-02-06T00:44:08.583617Z",
-    "activities": "2026-02-06T00:41:15.655117Z",
-    "vocabulary": "2026-02-06T00:08:34.350097Z",
+    "md": "2026-02-06T08:55:05.950305Z",
+    "meta": "2026-02-06T08:26:51.727654Z",
+    "activities": "2026-02-06T08:26:51.706654Z",
+    "vocabulary": "2026-02-06T08:26:51.731654Z",
     "plan": null
   },
   "gates": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2284/3800 (raw: 3022) | pedagogy: 2 violations"
+      "violations": 1,
+      "message": "2277/3800 (raw: 3015)"
     },
     "activities": {
       "status": "pass",

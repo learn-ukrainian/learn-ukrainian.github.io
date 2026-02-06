@@ -2,13 +2,13 @@
   "module": "14-stylistic-connectors",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:17.838453Z",
+  "last_audit": "2026-02-06T08:52:03.772361Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:39:55.524374Z",
-    "meta": "2026-02-06T00:20:57.694883Z",
-    "activities": "2026-02-06T00:08:34.328097Z",
-    "vocabulary": "2026-02-06T00:08:34.350097Z",
+    "md": "2026-02-06T08:48:26.155138Z",
+    "meta": "2026-02-06T08:26:51.727654Z",
+    "activities": "2026-02-06T08:26:51.707654Z",
+    "vocabulary": "2026-02-06T08:26:51.731654Z",
     "plan": null
   },
   "gates": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2474/3800 (raw: 3469) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2476/3800 (raw: 3471)"
     },
     "activities": {
       "status": "pass",

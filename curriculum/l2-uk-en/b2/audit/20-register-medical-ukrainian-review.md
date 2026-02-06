@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:50:23
+**Generated:** 2026-02-06 08:52:04
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'у мене...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2807/3800 (raw: 3512)
+- **Words:** ❌ 2805/3800 (raw: 3510)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ✅ 35/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
@@ -94,7 +85,7 @@
 | **Вступ — Медичний регістр** | ✅ | 18 | Included in Core |
 | **Опис симптомів** | ⚪️ | 226 | Skipped |
 | **Діалог лікар-пацієнт** | ✅ | 829 | Included in Core |
-| **Медичні інструкції** | ⚪️ | 793 | Skipped |
+| **Медичні інструкції** | ⚪️ | 791 | Skipped |
 | **Медична документація** | ⚪️ | 599 | Skipped |
 | **Типові помилки та русизми** | ✅ | 77 | Included in Core |
 | **Практика і підсумок** | ✅ | 186 | Included in Core |

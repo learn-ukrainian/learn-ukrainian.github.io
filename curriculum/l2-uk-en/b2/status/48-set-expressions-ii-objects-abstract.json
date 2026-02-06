@@ -2,13 +2,13 @@
   "module": "48-set-expressions-ii-objects-abstract",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:50.596437Z",
+  "last_audit": "2026-02-06T08:49:58.410391Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:08:34.318097Z",
-    "meta": "2026-02-06T00:08:34.348097Z",
-    "activities": "2026-02-06T00:08:34.334097Z",
-    "vocabulary": "2026-02-06T00:08:34.351097Z",
+    "md": "2026-02-06T08:49:45.269146Z",
+    "meta": "2026-02-06T08:26:51.728654Z",
+    "activities": "2026-02-06T08:26:51.714654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1987/2000 (raw: 2407) (13 short) | richness: 94% < 95% min (phraseology)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2071/2000 (raw: 2491)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

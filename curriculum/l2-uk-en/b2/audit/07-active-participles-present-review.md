@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:50:10
+**Generated:** 2026-02-06 08:55:13
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,8 @@
 - Required types used: 6/6 (error-correction, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** '## Лексикалізовані форми' should come after 'summary' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (78% overlap): "Варто зазначити: → Студент, який вивчає українську мову, живе у Києві.". Shares significant keywords with sentence at index 106.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2284/3800 (raw: 3022)
+- **Words:** ❌ 2277/3800 (raw: 3015)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,7 +54,7 @@
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -82,14 +71,14 @@
 | examples | 100 | 24 | 100% | 20% | 20.0% |
 | engagement | 6 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.2%** |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -100,6 +89,6 @@
 | **Стилістична специфіка** | ⚪️ | 178 | Skipped |
 | **Еквівалентні підрядні речення** | ⚪️ | 349 | Skipped |
 | **Контексти вживання** | ✅ | 115 | Included in Core |
-| **Практика і підсумок** | ✅ | 610 | Included in Core |
+| **Підсумок і практика** | ✅ | 603 | Included in Core |
 | **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

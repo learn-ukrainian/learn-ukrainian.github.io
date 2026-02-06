@@ -1,8 +1,8 @@
 # Audit Report: M48 — 48-set-expressions-ii-objects-abstract.md
 **Level:** B2 | **Module:** M48 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:50:50
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:49:58
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1987/2000 (raw: 2407) (13 short)
+- **Words:** ✅ 2071/2000 (raw: 2491)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,12 +56,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
-- **Richness:** ❌ 94% < 95% min (phraseology)
+- **Richness:** ✅ 95% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 94% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -71,11 +71,11 @@
 | variety | 0.85 | - | 85% | 17% | 14.2% |
 | cultural | 8 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.70 | - | 70% | 8% | 5.8% |
+| paragraph_var | 0.76 | - | 76% | 8% | 6.3% |
 | examples | 42 | - | 100% | 8% | 8.3% |
 | realworld | 4 | - | 100% | 8% | 8.3% |
 | questions | 7 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **95.0%** |
+| **TOTAL** | | | | | **95.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -83,6 +83,6 @@
 | **Intro/Narrative** | ✅ | 51 | Included in Core |
 | **Розминка — Предмети як символи** | ⚪️ | 1264 | Skipped |
 | **Сталі вирази з предметами** | ⚪️ | 173 | Skipped |
-| **Сталі вирази з абстракціями** | ⚪️ | 189 | Skipped |
+| **Сталі вирази з абстракціями** | ⚪️ | 273 | Skipped |
 | **Практика — вирази в мовленні** | ⚪️ | 298 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,13 +2,13 @@
   "module": "20-register-medical-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:23.648174Z",
+  "last_audit": "2026-02-06T08:52:04.740168Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:40:30.830265Z",
-    "meta": "2026-02-06T00:20:57.715883Z",
-    "activities": "2026-02-06T00:32:03.914786Z",
-    "vocabulary": "2026-02-06T00:08:34.350097Z",
+    "md": "2026-02-06T08:49:01.821683Z",
+    "meta": "2026-02-06T08:26:51.727654Z",
+    "activities": "2026-02-06T08:26:51.708654Z",
+    "vocabulary": "2026-02-06T08:26:51.731654Z",
     "plan": null
   },
   "gates": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2807/3800 (raw: 3512) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "2805/3800 (raw: 3510)"
     },
     "activities": {
       "status": "pass",
