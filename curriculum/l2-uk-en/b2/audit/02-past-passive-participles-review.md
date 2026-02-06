@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:21:26
+**Generated:** 2026-02-06 00:22:27
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,17 +46,8 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'рід) -...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2144/3800 (raw: 3051)
+- **Words:** ❌ 2147/3800 (raw: 3054)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -66,7 +57,7 @@
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.5% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -97,7 +88,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 38 | Included in Core |
 | **Вступ — Що таке дієприкметник?** | ✅ | 186 | Included in Core |
-| **Утворення дієприкметників на -ний** | ⚪️ | 1287 | Skipped |
+| **Утворення дієприкметників на -ний** | ⚪️ | 1290 | Skipped |
 | **Утворення дієприкметників на -тий** | ⚪️ | 133 | Skipped |
 | **Узгодження дієприкметників** | ⚪️ | 298 | Skipped |
 | **Пасив із допоміжним дієсловом бути** | ⚪️ | 52 | Skipped |

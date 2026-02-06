@@ -2,13 +2,13 @@
   "module": "30-b21-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:20:49.921771Z",
+  "last_audit": "2026-02-06T00:26:21.631495Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:56:29.816076Z",
-    "meta": "2026-02-05T22:46:26.732646Z",
-    "activities": "2026-02-05T22:46:26.707646Z",
-    "vocabulary": "2026-02-05T22:46:26.739646Z",
+    "md": "2026-02-06T00:08:34.316097Z",
+    "meta": "2026-02-06T00:20:57.737883Z",
+    "activities": "2026-02-06T00:08:34.331097Z",
+    "vocabulary": "2026-02-06T00:08:34.351097Z",
     "plan": null
   },
   "gates": {
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

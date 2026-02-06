@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:21:35
+**Generated:** 2026-02-06 00:25:12
 
 ## Configuration
 **Type:** B2-vocab

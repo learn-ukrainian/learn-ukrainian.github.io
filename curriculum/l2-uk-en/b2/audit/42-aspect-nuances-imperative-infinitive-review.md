@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M42 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:12:09
+**Generated:** 2026-02-06 00:23:06
 
 ## Configuration
 **Type:** B2-grammar
@@ -87,7 +87,7 @@
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.93 | - | 93% | 10% | 9.3% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
 | questions | 26 | 5 | 100% | 5% | 5.0% |

@@ -2,13 +2,13 @@
   "module": "62-synonyms-place",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:21:23.190462Z",
+  "last_audit": "2026-02-06T00:23:23.839410Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T23:17:00.839987Z",
-    "meta": "2026-02-05T22:46:26.734646Z",
-    "activities": "2026-02-05T23:11:39.536315Z",
-    "vocabulary": "2026-02-05T22:46:26.740646Z",
+    "md": "2026-02-06T00:14:05.918207Z",
+    "meta": "2026-02-06T00:08:34.348097Z",
+    "activities": "2026-02-06T00:08:34.336097Z",
+    "vocabulary": "2026-02-06T00:08:34.351097Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2127/2000 (raw: 2212) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2119/2000 (raw: 2204)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

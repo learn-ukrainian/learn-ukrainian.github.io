@@ -2,13 +2,13 @@
   "module": "46-proverbs-nature-time-caution",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:21:06.976951Z",
+  "last_audit": "2026-02-06T00:25:06.390882Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T23:17:00.839987Z",
-    "meta": "2026-02-05T22:46:26.733646Z",
-    "activities": "2026-02-05T23:11:38.209321Z",
-    "vocabulary": "2026-02-05T22:46:26.739646Z",
+    "md": "2026-02-06T00:08:34.318097Z",
+    "meta": "2026-02-06T00:08:34.348097Z",
+    "activities": "2026-02-06T00:18:07.729455Z",
+    "vocabulary": "2026-02-06T00:08:34.351097Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2888/2000 (raw: 3288) | pedagogy: 1 violations"
+      "message": "2888/2000 (raw: 3288) | pedagogy: 3 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "14/10"
+      "status": "fail",
+      "violations": 1,
+      "message": "15/10 | density: 1 < 14"
     },
     "vocabulary": {
       "status": "warn",
@@ -40,10 +40,8 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

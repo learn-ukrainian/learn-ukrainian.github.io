@@ -2,13 +2,13 @@
   "module": "14-stylistic-connectors",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:20:32.288915Z",
+  "last_audit": "2026-02-06T00:26:17.777962Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:57:16.754892Z",
-    "meta": "2026-02-05T22:46:26.732646Z",
-    "activities": "2026-02-05T22:46:26.702646Z",
-    "vocabulary": "2026-02-05T22:46:26.738646Z",
+    "md": "2026-02-06T00:08:34.314097Z",
+    "meta": "2026-02-06T00:20:57.694883Z",
+    "activities": "2026-02-06T00:08:34.328097Z",
+    "vocabulary": "2026-02-06T00:08:34.350097Z",
     "plan": null
   },
   "gates": {
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

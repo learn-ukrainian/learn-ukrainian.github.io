@@ -2,13 +2,13 @@
   "module": "79-capstone-research",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T23:21:40.612119Z",
+  "last_audit": "2026-02-06T00:23:39.156334Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:46:26.693646Z",
-    "meta": "2026-02-05T22:46:26.734646Z",
-    "activities": "2026-02-05T23:11:40.970309Z",
-    "vocabulary": "2026-02-05T22:46:26.741646Z",
+    "md": "2026-02-06T00:08:34.322097Z",
+    "meta": "2026-02-06T00:20:57.797883Z",
+    "activities": "2026-02-06T00:08:34.338097Z",
+    "vocabulary": "2026-02-06T00:08:34.352097Z",
     "plan": null
   },
   "gates": {
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1
   }

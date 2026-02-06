@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M48 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:18:30
+**Generated:** 2026-02-06 00:32:13
 
 ## Configuration
 **Type:** B2-vocab

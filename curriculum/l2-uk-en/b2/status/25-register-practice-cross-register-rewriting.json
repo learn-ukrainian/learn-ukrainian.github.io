@@ -2,13 +2,13 @@
   "module": "25-register-practice-cross-register-rewriting",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:20:44.417651Z",
+  "last_audit": "2026-02-06T00:22:49.789017Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:57:16.764892Z",
-    "meta": "2026-02-05T22:46:26.732646Z",
-    "activities": "2026-02-05T22:46:26.705646Z",
-    "vocabulary": "2026-02-05T22:46:26.739646Z",
+    "md": "2026-02-06T00:08:34.315097Z",
+    "meta": "2026-02-06T00:08:34.347097Z",
+    "activities": "2026-02-06T00:08:34.330097Z",
+    "vocabulary": "2026-02-06T00:08:34.351097Z",
     "plan": null
   },
   "gates": {

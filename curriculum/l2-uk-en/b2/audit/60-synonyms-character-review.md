@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M60 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 23:21:21
+**Generated:** 2026-02-06 00:23:22
 
 ## Configuration
 **Type:** B2-vocab

@@ -303,7 +303,34 @@
 
 ---
 
-## Підсумок та практика
+#
+### Типові колокації
+
+Наукова мова має свої усталені сполучення:
+
+- **наукове** дослідження — scientific research
+- **фундаментальна** наука — fundamental science
+- **прикладна** наука — applied science
+- **експериментальні** дані — experimental data
+- **контрольна** група — control group
+- **статистичний** аналіз — statistical analysis
+- **наукова** стаття — scientific article
+- **peer-рецензований** журнал — peer-reviewed journal
+- **дослідницький** проєкт — research project
+- **гіпотезу** висувати — to formulate a hypothesis
+- **результати** отримати — to obtain results
+- **висновки** робити — to draw conclusions
+- **методологічний** підхід — methodological approach
+- **емпіричні** дані — empirical data
+- **теоретична** модель — theoretical model
+- **кількісний** метод — quantitative method
+- **якісний** аналіз — qualitative analysis
+- **наукова** спільнота — scientific community
+- **інноваційна** розробка — innovative development
+- **міждисциплінарний** підхід — interdisciplinary approach
+- **лабораторний** експеримент — laboratory experiment
+
+# Підсумок та практика
 
 ### Популяризація науки
 

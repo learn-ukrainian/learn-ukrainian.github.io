@@ -1,8 +1,8 @@
 # Audit Report: M44 — 44-complex-syntax-ellipsis-parcelling.md
 **Level:** B2 | **Module:** M44 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:21:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 00:23:07
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,17 +44,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'еліпсис у...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2172/2000 (raw: 2416)
+- **Words:** ✅ 2169/2000 (raw: 2413)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -64,7 +55,7 @@
 - **Vocab:** ⚠️ 12 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 97% (grammar)
@@ -95,7 +86,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
 | **Розминка — Пропуски та фрагменти** | ⚪️ | 277 | Skipped |
-| **Еліпсис — пропуск у реченні** | ⚪️ | 1245 | Skipped |
+| **Еліпсис — пропуск у реченні** | ⚪️ | 1242 | Skipped |
 | **Парцеляція — стилістична фрагментація** | ⚪️ | 278 | Skipped |
 | **Практика — еліпсис та парцеляція** | ⚪️ | 295 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

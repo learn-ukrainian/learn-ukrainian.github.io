@@ -2,13 +2,13 @@
   "module": "33-word-formation-person-suffixes",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-05T23:20:53.160732Z",
+  "last_audit": "2026-02-06T00:22:57.415550Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T22:57:16.770892Z",
-    "meta": "2026-02-05T22:46:26.733646Z",
-    "activities": "2026-02-05T22:46:26.707646Z",
-    "vocabulary": "2026-02-05T22:46:26.739646Z",
+    "md": "2026-02-06T00:08:34.316097Z",
+    "meta": "2026-02-06T00:20:57.744883Z",
+    "activities": "2026-02-06T00:08:34.331097Z",
+    "vocabulary": "2026-02-06T00:08:34.351097Z",
     "plan": null
   },
   "gates": {
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 0
   }
