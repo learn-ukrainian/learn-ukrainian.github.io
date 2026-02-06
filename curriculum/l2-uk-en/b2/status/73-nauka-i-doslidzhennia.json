@@ -2,13 +2,13 @@
   "module": "73-nauka-i-doslidzhennia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:13.099448Z",
+  "last_audit": "2026-02-06T08:40:58.432614Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:49:28.953540Z",
-    "meta": "2026-02-06T00:44:08.595617Z",
-    "activities": "2026-02-06T00:08:34.338097Z",
-    "vocabulary": "2026-02-06T00:08:34.352097Z",
+    "md": "2026-02-06T08:35:37.228832Z",
+    "meta": "2026-02-06T08:26:51.729654Z",
+    "activities": "2026-02-06T08:26:51.717654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2082/2000 (raw: 2355) | richness: 72% < 95% min (vocabulary)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2260/2000 (raw: 2537)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

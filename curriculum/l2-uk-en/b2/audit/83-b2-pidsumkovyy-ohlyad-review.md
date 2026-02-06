@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:51:22
+**Generated:** 2026-02-06 08:41:10
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -50,15 +50,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** '## Лексика B2: Синтез' should come after 'self_assessment' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ❌ 1840/2000 (raw: 2019)
 - **Activities:** ✅ 22/15
@@ -70,7 +61,7 @@
 - **Vocab:** ⚠️ 2 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 22 (target 15-19)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
@@ -101,6 +92,6 @@
 | **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Граматика B2: Синтез** | ⚪️ | 21 | Skipped |
 | **Навички B2: Синтез** | ⚪️ | 223 | Skipped |
-| **Лексика B2: Синтез** | ⚪️ | 491 | Skipped |
 | **Підсумок та мотивація** | ✅ | 699 | Included in Core |
 | **Самооцінка та пробіли** | ⚪️ | 225 | Skipped |
+| **Лексика B2: Синтез** | ⚪️ | 491 | Skipped |

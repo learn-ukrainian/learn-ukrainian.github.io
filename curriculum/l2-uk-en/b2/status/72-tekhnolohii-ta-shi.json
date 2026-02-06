@@ -2,13 +2,13 @@
   "module": "72-tekhnolohii-ta-shi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:12.207182Z",
+  "last_audit": "2026-02-06T08:40:59.331038Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:49:33.525525Z",
-    "meta": "2026-02-06T00:44:08.591617Z",
-    "activities": "2026-02-06T00:08:34.337097Z",
-    "vocabulary": "2026-02-06T00:08:34.351097Z",
+    "md": "2026-02-06T08:36:24.890265Z",
+    "meta": "2026-02-06T08:26:51.728654Z",
+    "activities": "2026-02-06T08:26:51.717654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1914/2000 (raw: 2485) (86 short) | richness: 79% < 95% min (vocabulary)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2041/2000 (raw: 2616)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

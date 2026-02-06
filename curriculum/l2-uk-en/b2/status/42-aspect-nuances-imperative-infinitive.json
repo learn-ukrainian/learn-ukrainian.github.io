@@ -2,13 +2,13 @@
   "module": "42-aspect-nuances-imperative-infinitive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:44.984651Z",
+  "last_audit": "2026-02-06T08:41:01.286958Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:38:38.727604Z",
-    "meta": "2026-02-06T00:08:34.348097Z",
-    "activities": "2026-02-06T00:08:34.333097Z",
-    "vocabulary": "2026-02-06T00:08:34.351097Z",
+    "md": "2026-02-06T08:32:01.585451Z",
+    "meta": "2026-02-06T08:26:51.728654Z",
+    "activities": "2026-02-06T08:26:51.713654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2321/2000 (raw: 2721) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2321/2000 (raw: 2721)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

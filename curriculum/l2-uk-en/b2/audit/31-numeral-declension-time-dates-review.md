@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M31 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:50:34
+**Generated:** 2026-02-06 08:46:06
 
 ## Configuration
 **Type:** B2-grammar
@@ -36,31 +36,19 @@
 | 14 | reading | Текст для аналізу: Відмінювання числівників І: Час і дати | 3 | 3 | ✅ |
 | 15 | reading | Числівники в календарних текстах | 4 | 3 | ✅ |
 | 16 | essay-response | Розкажіть про важливу дату | 1 | 1 | ✅ |
-| 17 | true-false | Правда чи неправда про числівники | 6 | 8 | ❌ |
+| 17 | true-false | Правда чи неправда про числівники | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 17 (target: 10-14) ❌
 - Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
-- Low density activities: 1
-
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** true-false 'Правда чи неправда про числівники' has 6 items (minimum: 8)
-  - FIX: Add more items. B2 true-false requires at least 8 items.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-numeral-declension-time-dates.yaml: Schema validation error at key '15': {'type': 'essay-response', 'title': 'Розкажіть про важливу дату', 'instruction': 'Напишіть короткий текст (80-120 слів) про важливу дату у вашому житті, використовуючи числівники у різних відмінках.', 'prompts': ['Опишіть цю дату та подію', 'Використайте порядкові та кількісні числівники', 'Вкажіть час, рік та кількість учасників']} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 2 violations (minor)
-- Activity density below minimum
+- Low density activities: 0
 
 ## Gates
 - **Words:** ❌ 1859/2000 (raw: 2061)
 - **Activities:** ✅ 17/10
-- **Density:** ❌ 1 < 14
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
@@ -68,7 +56,7 @@
 - **Vocab:** ⚠️ 2 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
@@ -93,12 +81,6 @@
 | questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.2%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Правда чи неправда про числівники | true-false | 6 | 8 | Add 2 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

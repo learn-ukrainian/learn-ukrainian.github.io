@@ -1,8 +1,8 @@
 # Audit Report: M75 — 75-modern-diaspora.md
 **Level:** B2 | **Module:** M75 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:51:14
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:44:00
 
 ## Configuration
 **Type:** B2-culture
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2898/2000 (raw: 3055)
+- **Words:** ✅ 2915/2000 (raw: 3072)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -58,18 +58,18 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (culture))
-- **Richness:** ❌ 93% < 95% min (cultural)
+- **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 93% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| cultural | 4 | 5 | 80% | 33% | 26.7% |
+| cultural | 5 | 5 | 100% | 33% | 33.3% |
 | engagement | 8 | 6 | 100% | 20% | 20.0% |
 | visual | 5 | 4 | 100% | 13% | 13.3% |
 | variety | 0.99 | - | 99% | 7% | 6.6% |
@@ -77,7 +77,7 @@
 | examples | 26 | - | 100% | 7% | 6.7% |
 | realworld | 3 | - | 100% | 7% | 6.7% |
 | questions | 7 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **93.3%** |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -85,7 +85,7 @@
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
 | **Розминка — Глобальне українство** | ⚪️ | 752 | Skipped |
 | **Історія української еміграції** | ⚪️ | 427 | Skipped |
-| **Організації та інституції діаспори** | ⚪️ | 484 | Skipped |
+| **Організації та інституції діаспори** | ⚪️ | 501 | Skipped |
 | **Культурна дипломатія та лобізм** | ✅ | 266 | Included in Core |
 | **Мова діаспори** | ⚪️ | 454 | Skipped |
 | **Підсумок та практика** | ✅ | 450 | Included in Core |

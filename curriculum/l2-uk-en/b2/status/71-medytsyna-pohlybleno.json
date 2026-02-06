@@ -2,13 +2,13 @@
   "module": "71-medytsyna-pohlybleno",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:11.309033Z",
+  "last_audit": "2026-02-06T08:40:57.530282Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:28:14.417473Z",
-    "meta": "2026-02-06T00:08:34.348097Z",
-    "activities": "2026-02-06T00:08:34.337097Z",
-    "vocabulary": "2026-02-06T00:08:34.351097Z",
+    "md": "2026-02-06T08:35:11.180121Z",
+    "meta": "2026-02-06T08:26:51.728654Z",
+    "activities": "2026-02-06T08:26:51.717654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2309/2000 (raw: 2634) | richness: 74% < 95% min (vocabulary)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2486/2000 (raw: 2815)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

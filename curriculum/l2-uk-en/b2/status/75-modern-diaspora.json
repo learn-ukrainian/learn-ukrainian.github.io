@@ -2,13 +2,13 @@
   "module": "75-modern-diaspora",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:14.894615Z",
+  "last_audit": "2026-02-06T08:44:00.227504Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:33:05.908586Z",
-    "meta": "2026-02-06T00:44:08.602617Z",
-    "activities": "2026-02-06T00:08:34.338097Z",
-    "vocabulary": "2026-02-06T00:08:34.352097Z",
+    "md": "2026-02-06T08:43:36.473156Z",
+    "meta": "2026-02-06T08:26:51.729654Z",
+    "activities": "2026-02-06T08:26:51.718654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2898/2000 (raw: 3055) | richness: 93% < 95% min (cultural)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2915/2000 (raw: 3072)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

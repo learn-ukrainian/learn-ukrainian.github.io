@@ -1,8 +1,8 @@
 # Audit Report: M74 — 74-mystetstvo-i-literatura.md
 **Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:51:13
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:43:59
 
 ## Configuration
 **Type:** B2-vocab
@@ -41,7 +41,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2008/2000 (raw: 2263)
+- **Words:** ✅ 2175/2000 (raw: 2434)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 9/4 types
@@ -53,32 +53,27 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
-- **Richness:** ❌ 73% < 95% min (vocabulary)
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
+- **Richness:** ✅ 98% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 73% (minimum: 95%)
+**Score:** 98% (minimum: 95%)
 **Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 0 | 20 | 0% | 25% | 0.0% |
+| collocations | 22 | 20 | 100% | 25% | 25.0% |
 | usage_examples | 56 | 15 | 100% | 20% | 20.0% |
 | engagement | 12 | 4 | 100% | 15% | 15.0% |
 | cultural | 18 | 3 | 100% | 10% | 10.0% |
 | visual | 4 | 3 | 100% | 10% | 10.0% |
-| register_notes | 8 | 5 | 100% | 10% | 10.0% |
+| register_notes | 13 | 5 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
 | paragraph_var | 0.75 | - | 75% | 5% | 3.8% |
-| **TOTAL** | | | | | **73.6%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_COLLOCATIONS**
-  - FIX:
-    Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)
+| **TOTAL** | | | | | **98.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -89,4 +84,4 @@
 | **Образотворче мистецтво** | ⚪️ | 551 | Skipped |
 | **Музика та театр** | ⚪️ | 192 | Skipped |
 | **Підсумок та практика** | ✅ | 376 | Included in Core |
-| **Лексика мистецької критики** | ⚪️ | 75 | Skipped |
+| **Лексика мистецької критики** | ⚪️ | 242 | Skipped |

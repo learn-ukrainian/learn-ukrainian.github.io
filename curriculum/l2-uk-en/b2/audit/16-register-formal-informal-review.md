@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:50:19
+**Generated:** 2026-02-06 08:41:11
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,12 +43,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2365/3800 (raw: 3056)
+- **Words:** ❌ 2446/3800 (raw: 3144)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -56,36 +56,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
-- **Richness:** ❌ 74% < 95% min (style)
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 0 | 2 | 0% | 25% | 0.0% |
+| exemplar_texts | 4 | 2 | 100% | 25% | 25.0% |
 | model_answers | 100 | 3 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 9 | 4 | 100% | 10% | 10.0% |
+| visual | 11 | 4 | 100% | 10% | 10.0% |
 | variety | 0.89 | - | 89% | 5% | 4.5% |
 | cultural | 2 | - | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **74.5%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_EXEMPLAR_TEXTS**
-  - FIX:
-    Add 2+ exemplar text excerpts. Use this format:
-    
-    **Зразок [style type]:**
-    
-    > «[Extended quote showing the style, 50+ words]»
-    > — *[Source]*
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -96,6 +86,6 @@
 | **Форми звертання** | ⚪️ | 359 | Skipped |
 | **Формальні/неформальні лексичні пари** | ⚪️ | 335 | Skipped |
 | **Трансформація регістру** | ⚪️ | 417 | Skipped |
-| **Соціальні ситуації** | ⚪️ | 94 | Skipped |
+| **Соціальні ситуації** | ⚪️ | 175 | Skipped |
 | **Практика і підсумок** | ✅ | 190 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,13 +2,13 @@
   "module": "16-register-formal-informal",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:19.789545Z",
+  "last_audit": "2026-02-06T08:41:11.883095Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:27:16.796733Z",
-    "meta": "2026-02-06T00:20:57.698883Z",
-    "activities": "2026-02-06T00:08:34.328097Z",
-    "vocabulary": "2026-02-06T00:08:34.350097Z",
+    "md": "2026-02-06T08:39:29.007077Z",
+    "meta": "2026-02-06T08:26:51.727654Z",
+    "activities": "2026-02-06T08:26:51.708654Z",
+    "vocabulary": "2026-02-06T08:26:51.731654Z",
     "plan": null
   },
   "gates": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2365/3800 (raw: 3056) | richness: 74% < 95% min (style)"
+      "violations": 1,
+      "message": "2446/3800 (raw: 3144)"
     },
     "activities": {
       "status": "pass",

@@ -1,8 +1,8 @@
 # Audit Report: M43 — 43-correlative-constructions.md
 **Level:** B2 | **Module:** M43 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:50:45
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:40:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -39,17 +39,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'рід |...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ⚠️ 1914/2000 (raw: 2652) (86 short)
+- **Words:** ⚠️ 1914/2000 (raw: 2649) (86 short)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -59,7 +50,7 @@
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)

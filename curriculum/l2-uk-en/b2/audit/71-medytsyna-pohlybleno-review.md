@@ -1,8 +1,8 @@
 # Audit Report: M71 — 71-medytsyna-pohlybleno.md
 **Level:** B2 | **Module:** M71 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:51:11
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:40:57
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2309/2000 (raw: 2634)
+- **Words:** ✅ 2486/2000 (raw: 2815)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -57,19 +57,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
-- **Richness:** ❌ 74% < 95% min (vocabulary)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 0 | 20 | 0% | 25% | 0.0% |
+| collocations | 23 | 20 | 100% | 25% | 25.0% |
 | usage_examples | 61 | 15 | 100% | 20% | 20.0% |
 | engagement | 12 | 4 | 100% | 15% | 15.0% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
@@ -77,12 +77,7 @@
 | register_notes | 10 | 5 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **74.8%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_COLLOCATIONS**
-  - FIX:
-    Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -92,5 +87,5 @@
 | **Опис симптомів та скарг** | ⚪️ | 372 | Skipped |
 | **Діалог лікар-пацієнт** | ✅ | 461 | Included in Core |
 | **Спеціалізації та процедури** | ⚪️ | 285 | Skipped |
-| **Фармакологічна лексика** | ⚪️ | 204 | Skipped |
+| **Фармакологічна лексика** | ⚪️ | 381 | Skipped |
 | **Підсумок та практика** | ✅ | 526 | Included in Core |

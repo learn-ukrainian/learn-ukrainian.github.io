@@ -1,8 +1,8 @@
 # Audit Report: M72 — 72-tekhnolohii-ta-shi.md
 **Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:51:12
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:40:59
 
 ## Configuration
 **Type:** B2-vocab
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1914/2000 (raw: 2485) (86 short)
+- **Words:** ✅ 2041/2000 (raw: 2616)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -56,19 +56,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
-- **Immersion:** 🇺🇦 96.2% (target 90-100% (vocab))
-- **Richness:** ❌ 79% < 95% min (vocabulary)
+- **Immersion:** 🇺🇦 96.4% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 79% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 4 | 20 | 20% | 25% | 5.0% |
+| collocations | 21 | 20 | 100% | 25% | 25.0% |
 | usage_examples | 22 | 15 | 100% | 20% | 20.0% |
 | engagement | 16 | 4 | 100% | 15% | 15.0% |
 | cultural | 6 | 3 | 100% | 10% | 10.0% |
@@ -76,12 +76,7 @@
 | register_notes | 15 | 5 | 100% | 10% | 10.0% |
 | variety | 0.99 | - | 99% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **80.0%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_COLLOCATIONS**
-  - FIX:
-    Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -91,5 +86,5 @@
 | **Базова IT-термінологія** | ⚪️ | 252 | Skipped |
 | **Штучний інтелект та машинне навчання** | ⚪️ | 301 | Skipped |
 | **Кібербезпека** | ⚪️ | 237 | Skipped |
-| **Електронне врядування** | ⚪️ | 245 | Skipped |
+| **Електронне врядування** | ⚪️ | 372 | Skipped |
 | **Підсумок та практика** | ✅ | 455 | Included in Core |

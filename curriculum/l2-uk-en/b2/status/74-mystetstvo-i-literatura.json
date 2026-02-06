@@ -2,13 +2,13 @@
   "module": "74-mystetstvo-i-literatura",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:13.960251Z",
+  "last_audit": "2026-02-06T08:43:59.275842Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:40:53.917184Z",
-    "meta": "2026-02-06T00:44:08.599617Z",
-    "activities": "2026-02-06T00:08:34.338097Z",
-    "vocabulary": "2026-02-06T00:08:34.352097Z",
+    "md": "2026-02-06T08:42:00.764312Z",
+    "meta": "2026-02-06T08:26:51.729654Z",
+    "activities": "2026-02-06T08:26:51.717654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2008/2000 (raw: 2263) | richness: 73% < 95% min (vocabulary)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2175/2000 (raw: 2434)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

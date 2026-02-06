@@ -2,13 +2,13 @@
   "module": "83-b2-pidsumkovyy-ohlyad",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:22.106258Z",
+  "last_audit": "2026-02-06T08:41:10.911070Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:40:53.918184Z",
-    "meta": "2026-02-06T00:44:08.606617Z",
-    "activities": "2026-02-06T00:08:34.339097Z",
-    "vocabulary": "2026-02-06T00:08:34.352097Z",
+    "md": "2026-02-06T08:33:50.194110Z",
+    "meta": "2026-02-06T08:26:51.729654Z",
+    "activities": "2026-02-06T08:26:51.719654Z",
+    "vocabulary": "2026-02-06T08:26:51.733654Z",
     "plan": null
   },
   "gates": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1840/2000 (raw: 2019) | pedagogy: 1 violations"
+      "violations": 1,
+      "message": "1840/2000 (raw: 2019)"
     },
     "activities": {
       "status": "pass",

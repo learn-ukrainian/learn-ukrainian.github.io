@@ -2,13 +2,13 @@
   "module": "43-correlative-constructions",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:45.880658Z",
+  "last_audit": "2026-02-06T08:40:55.667394Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:38:52.427586Z",
-    "meta": "2026-02-06T00:08:34.348097Z",
-    "activities": "2026-02-06T00:08:34.333097Z",
-    "vocabulary": "2026-02-06T00:08:34.351097Z",
+    "md": "2026-02-06T08:33:02.257701Z",
+    "meta": "2026-02-06T08:26:51.728654Z",
+    "activities": "2026-02-06T08:26:51.713654Z",
+    "vocabulary": "2026-02-06T08:26:51.732654Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1914/2000 (raw: 2652) (86 short) | pedagogy: 1 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "1914/2000 (raw: 2649) (86 short)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

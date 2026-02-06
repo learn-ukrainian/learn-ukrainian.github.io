@@ -1,8 +1,8 @@
 # Audit Report: M73 — 73-nauka-i-doslidzhennia.md
 **Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:51:13
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 08:40:58
 
 ## Configuration
 **Type:** B2-vocab
@@ -44,44 +44,39 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2082/2000 (raw: 2355)
+- **Words:** ✅ 2260/2000 (raw: 2537)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/6
+- **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 21 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
-- **Immersion:** 🇺🇦 95.2% (target 90-100% (vocab))
-- **Richness:** ❌ 72% < 95% min (vocabulary)
+- **Immersion:** 🇺🇦 95.6% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 72% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 3 | 20 | 15% | 25% | 3.8% |
-| usage_examples | 33 | 15 | 100% | 20% | 20.0% |
-| engagement | 12 | 4 | 100% | 15% | 15.0% |
+| collocations | 20 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 38 | 15 | 100% | 20% | 20.0% |
+| engagement | 13 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 10% | 10.0% |
-| register_notes | 2 | 5 | 40% | 10% | 4.0% |
+| visual | 6 | 3 | 100% | 10% | 10.0% |
+| register_notes | 10 | 5 | 100% | 10% | 10.0% |
 | variety | 0.99 | - | 99% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **72.7%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_COLLOCATIONS**
-  - FIX:
-    Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -91,5 +86,5 @@
 | **Структура наукового дослідження** | ⚪️ | 94 | Skipped |
 | **Наукова термінологія** | ⚪️ | 535 | Skipped |
 | **Читання наукових текстів** | ✅ | 209 | Included in Core |
-| **Обговорення наукових тем** | ⚪️ | 398 | Skipped |
+| **Обговорення наукових тем** | ⚪️ | 576 | Skipped |
 | **Підсумок та практика** | ✅ | 296 | Included in Core |
