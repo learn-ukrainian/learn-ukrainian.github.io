@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+#
+# agent-watcher - Manage the Agent Watcher as a macOS launchd service
+#
+# Usage:
+#   bin/agent-watcher install    Install and start the launchd service
+#   bin/agent-watcher uninstall  Stop and remove the launchd service
+#   bin/agent-watcher start      Start the service
+#   bin/agent-watcher stop       Stop the service
+#   bin/agent-watcher status     Show service status
+#   bin/agent-watcher logs       Tail the watcher logs
+#
+
+set -euo pipefail
+
+# Resolve project root (parent of bin/)
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PLIST_NAME="com.learn-ukrainian.agent-watcher"
+PLIST_TEMPLATE="${PROJECT_ROOT}/scripts/launchd/${PLIST_NAME}.plist"
+PLIST_INSTALLED="${HOME}/Library/LaunchAgents/${PLIST_NAME}.plist"
+PYTHON="${PROJECT_ROOT}/.venv/bin/python"
+WATCHER_SCRIPT="${PROJECT_ROOT}/scripts/agent_watcher.py"
+LOG_DIR="${PROJECT_ROOT}/.mcp/servers/message-broker"
+STDOUT_LOG="${LOG_DIR}/watcher-stdout.log"
+STDERR_LOG="${LOG_DIR}/watcher-stderr.log"
+
+usage() {
+    echo "Usage: $(basename "$0") <command>"
+    echo ""
+    echo "Commands:"
+    echo "  install    Install and start the launchd service"
+    echo "  uninstall  Stop and remove the launchd service"
+    echo "  start      Start the service"
+    echo "  stop       Stop the service"
+    echo "  status     Show service status"
+    echo "  logs       Tail the watcher logs (Ctrl+C to stop)"
+    exit 1
+}
+
+check_prerequisites() {
+    if [[ ! -x "$PYTHON" ]]; then
+        echo "Error: Python venv not found at ${PYTHON}"
+        echo "Run: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt"
+        exit 1
+    fi
+
+    if [[ ! -f "$WATCHER_SCRIPT" ]]; then
+        echo "Error: Watcher script not found at ${WATCHER_SCRIPT}"
+        exit 1
+    fi
+
+    if [[ ! -f "$PLIST_TEMPLATE" ]]; then
+        echo "Error: Plist template not found at ${PLIST_TEMPLATE}"
+        exit 1
+    fi
+}
+
+generate_plist() {
+    # Generate plist from template by substituting __PROJECT_ROOT__
+    sed "s|__PROJECT_ROOT__|${PROJECT_ROOT}|g" "$PLIST_TEMPLATE"
+}
+
+cmd_install() {
+    check_prerequisites
+
+    # Ensure log directory exists
+    mkdir -p "$LOG_DIR"
+
+    # Stop existing service if running
+    if launchctl list "$PLIST_NAME" &>/dev/null; then
+        echo "Stopping existing service..."
+        launchctl bootout "gui/$(id -u)/${PLIST_NAME}" 2>/dev/null || true
+    fi
+
+    # Generate and install plist
+    generate_plist > "$PLIST_INSTALLED"
+    echo "Installed plist to ${PLIST_INSTALLED}"
+
+    # Load and start
+    launchctl bootstrap "gui/$(id -u)" "$PLIST_INSTALLED"
+    echo "Service installed and started."
+    echo ""
+    cmd_status
+}
+
+cmd_uninstall() {
+    if [[ ! -f "$PLIST_INSTALLED" ]]; then
+        echo "Service is not installed."
+        return
+    fi
+
+    # Stop and unload
+    if launchctl list "$PLIST_NAME" &>/dev/null; then
+        launchctl bootout "gui/$(id -u)/${PLIST_NAME}" 2>/dev/null || true
+        echo "Service stopped."
+    fi
+
+    # Remove plist
+    rm -f "$PLIST_INSTALLED"
+    echo "Service uninstalled (plist removed from ~/Library/LaunchAgents/)."
+}
+
+cmd_start() {
+    if [[ ! -f "$PLIST_INSTALLED" ]]; then
+        echo "Service not installed. Run 'bin/agent-watcher install' first."
+        exit 1
+    fi
+
+    if launchctl list "$PLIST_NAME" &>/dev/null; then
+        # Service is loaded, just kickstart it
+        launchctl kickstart "gui/$(id -u)/${PLIST_NAME}"
+        echo "Service started."
+    else
+        launchctl bootstrap "gui/$(id -u)" "$PLIST_INSTALLED"
+        echo "Service loaded and started."
+    fi
+}
+
+cmd_stop() {
+    if launchctl list "$PLIST_NAME" &>/dev/null; then
+        launchctl kill SIGTERM "gui/$(id -u)/${PLIST_NAME}" 2>/dev/null || true
+        echo "Service stopped."
+    else
+        echo "Service is not running."
+    fi
+}
+
+cmd_status() {
+    echo "Agent Watcher Service"
+    echo "====================="
+    echo "Project:  ${PROJECT_ROOT}"
+    echo "Plist:    ${PLIST_INSTALLED}"
+    echo ""
+
+    if [[ ! -f "$PLIST_INSTALLED" ]]; then
+        echo "Status:   NOT INSTALLED"
+        echo ""
+        echo "Run 'bin/agent-watcher install' to set up the service."
+        return
+    fi
+
+    if launchctl list "$PLIST_NAME" &>/dev/null; then
+        # Parse PID and exit status from launchctl's dictionary output
+        local info
+        info=$(launchctl list "$PLIST_NAME" 2>/dev/null)
+        local pid
+        pid=$(echo "$info" | grep '"PID"' | sed 's/[^0-9]//g')
+        local exit_code
+        exit_code=$(echo "$info" | grep '"LastExitStatus"' | sed 's/[^0-9]//g')
+
+        if [[ -n "$pid" ]]; then
+            echo "Status:   RUNNING (PID ${pid})"
+        elif [[ "$exit_code" == "0" || -z "$exit_code" ]]; then
+            echo "Status:   LOADED (waiting to start)"
+        else
+            echo "Status:   STOPPED (exit code: ${exit_code})"
+        fi
+    else
+        echo "Status:   INSTALLED (not loaded)"
+    fi
+
+    echo ""
+
+    # Show pending messages via Python
+    "$PYTHON" "$WATCHER_SCRIPT" --status 2>/dev/null | grep -A20 "Pending messages\|No pending messages" || true
+
+    echo ""
+    echo "Logs:     ${STDOUT_LOG}"
+    echo "          ${STDERR_LOG}"
+
+    # Show last few log lines
+    if [[ -f "$STDOUT_LOG" ]]; then
+        echo ""
+        echo "Recent output (last 5 lines):"
+        tail -5 "$STDOUT_LOG" 2>/dev/null | sed 's/^/  /'
+    fi
+}
+
+cmd_logs() {
+    local watcher_log="${LOG_DIR}/watcher.log"
+
+    if [[ ! -f "$watcher_log" && ! -f "$STDOUT_LOG" ]]; then
+        echo "No log files found yet. The service may not have started."
+        exit 1
+    fi
+
+    echo "Tailing watcher logs (Ctrl+C to stop)..."
+    echo ""
+
+    # Tail both the Python watcher.log and the launchd stdout log
+    tail -f "$watcher_log" "$STDOUT_LOG" 2>/dev/null
+}
+
+# Main
+if [[ $# -lt 1 ]]; then
+    usage
+fi
+
+case "$1" in
+    install)    cmd_install ;;
+    uninstall)  cmd_uninstall ;;
+    start)      cmd_start ;;
+    stop)       cmd_stop ;;
+    status)     cmd_status ;;
+    logs)       cmd_logs ;;
+    *)          usage ;;
+esac

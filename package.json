@@ -56,7 +56,13 @@
     "score:c1-hist": ".venv/bin/python scripts/score_track.py c1-hist",
     "score:lit": ".venv/bin/python scripts/score_track.py lit",
     "score:all": ".venv/bin/python scripts/score_track.py --all --summary",
-    "metrics:extract": ".venv/bin/python scripts/extract_track_metrics.py"
+    "metrics:extract": ".venv/bin/python scripts/extract_track_metrics.py",
+    "watcher:install": "bin/agent-watcher install",
+    "watcher:uninstall": "bin/agent-watcher uninstall",
+    "watcher:start": "bin/agent-watcher start",
+    "watcher:stop": "bin/agent-watcher stop",
+    "watcher:status": "bin/agent-watcher status",
+    "watcher:logs": "bin/agent-watcher logs"
   },
   "repository": {
     "type": "git",

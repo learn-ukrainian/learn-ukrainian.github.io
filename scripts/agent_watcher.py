@@ -370,6 +370,7 @@ def show_status():
 def main():
     parser = argparse.ArgumentParser(description="Agent Watcher Daemon")
     parser.add_argument("--daemon", "-d", action="store_true", help="Run in daemon mode (background)")
+    parser.add_argument("--foreground", "-f", action="store_true", help="Run in foreground (for launchd)")
     parser.add_argument("--status", "-s", action="store_true", help="Show status")
     parser.add_argument("--stop", action="store_true", help="Stop running daemon")
     parser.add_argument("--once", action="store_true", help="Process one message and exit")
@@ -384,7 +385,7 @@ def main():
         stop_daemon()
         return
 
-    if is_running():
+    if not args.foreground and is_running():
         print("Watcher is already running. Use --stop to stop it first.")
         return
 
