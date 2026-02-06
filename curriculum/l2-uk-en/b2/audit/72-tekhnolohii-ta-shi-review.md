@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:45:47
+**Generated:** 2026-02-06 00:51:12
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,14 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 234: Empty Header detected (Lonely '#'). Remove or add title.
-
-## Recommendation
-**📝 UPDATE** (severity 2/100)
-
 ## Gates
-- **Words:** ⚠️ 1914/2000 (raw: 2486) (86 short)
+- **Words:** ⚠️ 1914/2000 (raw: 2485) (86 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -59,7 +53,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 20 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
 - **Immersion:** 🇺🇦 96.2% (target 90-100% (vocab))
@@ -97,6 +91,5 @@
 | **Базова IT-термінологія** | ⚪️ | 252 | Skipped |
 | **Штучний інтелект та машинне навчання** | ⚪️ | 301 | Skipped |
 | **Кібербезпека** | ⚪️ | 237 | Skipped |
-| **Електронне врядування** | ⚪️ | 118 | Skipped |
-| **### Типові колокації** | ⚪️ | 127 | Skipped |
+| **Електронне врядування** | ⚪️ | 245 | Skipped |
 | **Підсумок та практика** | ✅ | 455 | Included in Core |

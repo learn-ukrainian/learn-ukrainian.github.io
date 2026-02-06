@@ -1,8 +1,8 @@
 # Audit Report: M87 — 87-professional-reports-basics.md
 **Level:** B2 | **Module:** M87 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 00:46:01
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-06 00:51:26
 
 ## Configuration
 **Type:** B2-skills
@@ -44,6 +44,15 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'грн) |...'.
+  - FIX: Vary sentence structure.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4554/1750 (raw: 4955)
 - **Activities:** ✅ 16/14
@@ -55,7 +64,7 @@
 - **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 98.3% (target 90-100% (skills))
 - **Richness:** ✅ 98% (skills)

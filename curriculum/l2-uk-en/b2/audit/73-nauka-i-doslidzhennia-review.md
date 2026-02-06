@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:45:48
+**Generated:** 2026-02-06 00:51:13
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,14 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 306: Empty Header detected (Lonely '#'). Remove or add title.
-
-## Recommendation
-**📝 UPDATE** (severity 2/100)
-
 ## Gates
-- **Words:** ✅ 2082/2000 (raw: 2356)
+- **Words:** ✅ 2082/2000 (raw: 2355)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -59,7 +53,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 21 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
 - **Immersion:** 🇺🇦 95.2% (target 90-100% (vocab))
@@ -97,6 +91,5 @@
 | **Структура наукового дослідження** | ⚪️ | 94 | Skipped |
 | **Наукова термінологія** | ⚪️ | 535 | Skipped |
 | **Читання наукових текстів** | ✅ | 209 | Included in Core |
-| **Обговорення наукових тем** | ⚪️ | 262 | Skipped |
-| **### Типові колокації** | ⚪️ | 136 | Skipped |
+| **Обговорення наукових тем** | ⚪️ | 398 | Skipped |
 | **Підсумок та практика** | ✅ | 296 | Included in Core |
