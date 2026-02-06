@@ -1,8 +1,8 @@
 # Audit Report: M09 — 09-participles-vs-relative-clauses.md
 **Level:** B2 | **Module:** M09 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 17:21:54
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 17:33:39
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2503/3800 (raw: 3063)
+- **Words:** ⚠️ 3724/3800 (raw: 4617) (76 short)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/6
+- **Engagement:** ✅ 17/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -67,15 +67,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 89 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 16 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 14 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
+| questions | 31 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
 
@@ -83,11 +83,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 5 | Included in Core |
-| **Вступ — Два способи вираження ознаки за дією** | ✅ | 239 | Included in Core |
+| **Вступ — Два способи вираження ознаки за дією** | ✅ | 346 | Included in Core |
 | **Порівняльна таблиця форм** | ⚪️ | 981 | Skipped |
-| **Стилістичний вплив** | ⚪️ | 251 | Skipped |
-| **Коли обирати дієприкметники** | ⚪️ | 383 | Skipped |
-| **Коли обирати підрядні речення** | ⚪️ | 352 | Skipped |
-| **Трансформаційні вправи** | ⚪️ | 110 | Skipped |
-| **Практика і підсумок** | ✅ | 170 | Included in Core |
+| **Стилістичний вплив** | ⚪️ | 473 | Skipped |
+| **Коли обирати дієприкметники** | ⚪️ | 477 | Skipped |
+| **Коли обирати підрядні речення** | ⚪️ | 515 | Skipped |
+| **Трансформаційні вправи** | ⚪️ | 679 | Skipped |
+| **Практика і підсумок** | ✅ | 236 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

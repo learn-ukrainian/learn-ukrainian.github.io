@@ -2,10 +2,10 @@
   "module": "09-participles-vs-relative-clauses",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T17:21:54.008204Z",
+  "last_audit": "2026-02-06T17:33:39.711560Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T17:15:33.456307Z",
+    "md": "2026-02-06T17:33:27.340991Z",
     "meta": "2026-02-06T17:15:33.496307Z",
     "activities": "2026-02-06T17:15:33.472307Z",
     "vocabulary": "2026-02-06T17:15:33.502307Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2503/3800 (raw: 3063)"
+      "status": "warn",
+      "violations": 0,
+      "message": "3724/3800 (raw: 4617) (76 short)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }
