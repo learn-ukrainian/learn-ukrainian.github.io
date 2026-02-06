@@ -1,8 +1,8 @@
 # Audit Report: M20 — 20-register-medical-ukrainian.md
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 16:58:49
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 17:04:47
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3378/3800 (raw: 4070)
+- **Words:** ✅ 4117/3800 (raw: 4809)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -82,11 +82,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ — Медичний регістр** | ✅ | 184 | Included in Core |
-| **Опис симптомів** | ⚪️ | 388 | Skipped |
+| **Вступ — Медичний регістр** | ✅ | 344 | Included in Core |
+| **Опис симптомів** | ⚪️ | 676 | Skipped |
 | **Діалог лікар-пацієнт** | ✅ | 829 | Included in Core |
 | **Медичні інструкції** | ⚪️ | 791 | Skipped |
 | **Медична документація** | ⚪️ | 599 | Skipped |
-| **Типові помилки та русизми** | ✅ | 325 | Included in Core |
-| **Практика і підсумок** | ✅ | 147 | Included in Core |
-| **Підсумок** | ✅ | 48 | Included in Core |
+| **Типові помилки та русизми** | ✅ | 515 | Included in Core |
+| **Практика і підсумок** | ✅ | 237 | Included in Core |
+| **Підсумок** | ✅ | 59 | Included in Core |
