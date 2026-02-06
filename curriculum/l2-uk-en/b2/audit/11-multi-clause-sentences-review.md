@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:22:36
+**Generated:** 2026-02-06 00:39:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -47,13 +47,11 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Хоча було пізно, ми продовжували працювати і досягли мети.". Shares significant keywords with sentence at index 84.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'складнопідрядне з...'.
-  - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2175/3800 (raw: 2598)
@@ -66,7 +64,7 @@
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -83,14 +81,14 @@
 | examples | 63 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 16 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 31 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.4%** |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

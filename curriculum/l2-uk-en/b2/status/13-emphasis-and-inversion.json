@@ -2,10 +2,10 @@
   "module": "13-emphasis-and-inversion",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:26:16.723758Z",
+  "last_audit": "2026-02-06T00:39:32.225578Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:08:34.314097Z",
+    "md": "2026-02-06T00:27:29.927676Z",
     "meta": "2026-02-06T00:20:57.690883Z",
     "activities": "2026-02-06T00:08:34.328097Z",
     "vocabulary": "2026-02-06T00:08:34.350097Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2638/3800 (raw: 3178) | pedagogy: 1 violations"
+      "message": "2641/3800 (raw: 3181) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

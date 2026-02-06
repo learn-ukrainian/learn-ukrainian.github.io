@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M90 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:25:10
+**Generated:** 2026-02-06 00:43:00
 
 ## Configuration
 **Type:** B2-skills
@@ -43,17 +43,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[HISTORICAL_CHARS_IN_MODERN]** Found historical Cyrillic characters outside quote context: ъ (lines: [47])
-  - FIX: Remove historical characters from modern Ukrainian prose, or use [!quote] callout for authentic historical quotes.
-- **[HISTORICAL_CHARS_IN_MODERN]** Found historical Cyrillic characters outside quote context: ъ (lines: [47])
-  - FIX: Remove historical characters from modern Ukrainian prose, or use [!quote] callout for authentic historical quotes.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
 - **Words:** ✅ 4057/2000 (raw: 4180)
 - **Activities:** ✅ 15/14
@@ -65,7 +54,7 @@
 - **Vocab:** ✅ 34/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 96.8% (target 90-100% (skills))
 - **Richness:** ✅ 96% (skills)

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M71 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:23:31
+**Generated:** 2026-02-06 00:34:48
 
 ## Configuration
 **Type:** B2-vocab
@@ -44,15 +44,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'чи можна...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 2309/2000 (raw: 2634)
 - **Activities:** ✅ 16/10
@@ -64,7 +55,7 @@
 - **Vocab:** ⚠️ 17 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
 - **Richness:** ❌ 74% < 95% min (vocabulary)

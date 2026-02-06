@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:26:19
+**Generated:** 2026-02-06 00:33:58
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Просимо надати нам можливість провести безкоштовну презентацію для Вашої команди.". Shares significant keywords with sentence at index 9.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2184/3800 (raw: 2994)
+- **Words:** ❌ 2183/3800 (raw: 2993)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
@@ -94,7 +85,7 @@
 | **Вступ — Ділове спілкування** | ✅ | 227 | Included in Core |
 | **Ділове листування** | ⚪️ | 848 | Skipped |
 | **Електронне листування** | ⚪️ | 123 | Skipped |
-| **Переговори та зустрічі** | ⚪️ | 176 | Skipped |
+| **Переговори та зустрічі** | ⚪️ | 175 | Skipped |
 | **Корпоративна комунікація** | ⚪️ | 465 | Skipped |
 | **Типові помилки та русизми** | ✅ | 89 | Included in Core |
 | **Практика і підсумок** | ✅ | 183 | Included in Core |

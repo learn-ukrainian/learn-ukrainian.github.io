@@ -2,10 +2,10 @@
   "module": "75-modern-diaspora",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:32:16.286163Z",
+  "last_audit": "2026-02-06T00:34:51.693785Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:08:34.322097Z",
+    "md": "2026-02-06T00:33:05.908586Z",
     "meta": "2026-02-06T00:08:34.348097Z",
     "activities": "2026-02-06T00:08:34.338097Z",
     "vocabulary": "2026-02-06T00:08:34.352097Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2861/2000 (raw: 2940) | richness: 89% < 95% min (cultural)"
+      "message": "2898/2000 (raw: 3055) | richness: 93% < 95% min (cultural)"
     },
     "activities": {
       "status": "pass",

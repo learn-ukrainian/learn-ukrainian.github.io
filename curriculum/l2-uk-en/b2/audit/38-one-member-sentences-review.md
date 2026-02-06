@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:23:02
+**Generated:** 2026-02-06 00:37:45
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,7 +42,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'знайдіть речення,...'.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'двоскладне →...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
@@ -51,7 +51,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1968/2000 (raw: 2535) (32 short)
+- **Words:** ⚠️ 1967/2000 (raw: 2534) (33 short)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -91,7 +91,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Розминка — Речення без підмета** | ⚪️ | 133 | Skipped |
+| **Розминка — Речення без підмета** | ⚪️ | 132 | Skipped |
 | **Означено-особові (Definite-personal)** | ⚪️ | 940 | Skipped |
 | **Неозначено-особові (Indefinite-personal)** | ⚪️ | 224 | Skipped |
 | **Безособові** | ⚪️ | 414 | Skipped |

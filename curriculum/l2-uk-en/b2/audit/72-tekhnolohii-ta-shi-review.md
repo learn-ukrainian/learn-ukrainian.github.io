@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M72 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:32:14
+**Generated:** 2026-02-06 00:34:49
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,8 +43,14 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## LINT ERRORS
+- ❌ Line 234: Empty Header detected (Lonely '#'). Remove or add title.
+
+## Recommendation
+**📝 UPDATE** (severity 2/100)
+
 ## Gates
-- **Words:** ❌ 1787/2000 (raw: 2355)
+- **Words:** ⚠️ 1914/2000 (raw: 2486) (86 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -53,30 +59,30 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 20 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
-- **Immersion:** 🇺🇦 98.6% (target 90-100% (vocab))
-- **Richness:** ❌ 74% < 95% min (vocabulary)
+- **Immersion:** 🇺🇦 96.2% (target 90-100% (vocab))
+- **Richness:** ❌ 79% < 95% min (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
+**Score:** 79% (minimum: 95%)
 **Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 0 | 20 | 0% | 25% | 0.0% |
+| collocations | 4 | 20 | 20% | 25% | 5.0% |
 | usage_examples | 22 | 15 | 100% | 20% | 20.0% |
 | engagement | 16 | 4 | 100% | 15% | 15.0% |
 | cultural | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 12 | 3 | 100% | 10% | 10.0% |
 | register_notes | 15 | 5 | 100% | 10% | 10.0% |
 | variety | 0.99 | - | 99% | 5% | 5.0% |
-| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
-| **TOTAL** | | | | | **74.5%** |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **80.0%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_COLLOCATIONS**
@@ -92,4 +98,5 @@
 | **Штучний інтелект та машинне навчання** | ⚪️ | 301 | Skipped |
 | **Кібербезпека** | ⚪️ | 237 | Skipped |
 | **Електронне врядування** | ⚪️ | 118 | Skipped |
+| **### Типові колокації** | ⚪️ | 127 | Skipped |
 | **Підсумок та практика** | ✅ | 455 | Included in Core |

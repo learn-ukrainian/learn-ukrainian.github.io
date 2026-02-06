@@ -1,8 +1,8 @@
 # Audit Report: M30 — 30-b21-checkpoint.md
 **Level:** B2 | **Module:** M30 | **Phase:** B2.1 | **Pedagogy:** checkpoint | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:26:21
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 00:34:10
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -49,17 +49,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Компанія, **що існує** вже двадцять років, розширює діяльність.". Shares significant keywords with sentence at index 15.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2131/2000 (raw: 2324)
+- **Words:** ✅ 2132/2000 (raw: 2325)
 - **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -69,7 +60,7 @@
 - **Vocab:** ⚠️ 8 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
@@ -98,7 +89,7 @@
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Огляд — Контрольна точка B2.1** | ⚪️ | 88 | Skipped |
 | **Навичка 1: Пасивний стан** | ⚪️ | 231 | Skipped |
-| **Навичка 2: Дієприкметники** | ⚪️ | 404 | Skipped |
+| **Навичка 2: Дієприкметники** | ⚪️ | 405 | Skipped |
 | **Навичка 3: Регістри** | ⚪️ | 439 | Skipped |
 | **Навичка 4: Доменна лексика** | ⚪️ | 438 | Skipped |
 | **Підсумок та результати** | ✅ | 473 | Included in Core |

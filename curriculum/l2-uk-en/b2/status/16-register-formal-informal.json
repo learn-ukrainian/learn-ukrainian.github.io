@@ -2,10 +2,10 @@
   "module": "16-register-formal-informal",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:26:18.726183Z",
+  "last_audit": "2026-02-06T00:33:57.061812Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:08:34.314097Z",
+    "md": "2026-02-06T00:27:16.796733Z",
     "meta": "2026-02-06T00:20:57.698883Z",
     "activities": "2026-02-06T00:08:34.328097Z",
     "vocabulary": "2026-02-06T00:08:34.350097Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 3,
-      "message": "2364/3800 (raw: 3055) | pedagogy: 1 violations | richness: 74% < 95% min (style)"
+      "violations": 2,
+      "message": "2365/3800 (raw: 3056) | richness: 74% < 95% min (style)"
     },
     "activities": {
       "status": "pass",

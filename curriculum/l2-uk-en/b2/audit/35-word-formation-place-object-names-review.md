@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:30:51
+**Generated:** 2026-02-06 00:39:35
 
 ## Configuration
 **Type:** B2-grammar
@@ -33,33 +33,28 @@
 | 11 | fill-in | Оберіть правильну форму відмінка | 16 | 8 | ✅ |
 | 12 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
 | 13 | essay-response | Мій ідеальний район: Простір для життя | 1 | 1 | ✅ |
-| 14 | reading | Словотвір у тексті: аналіз | 0 | 3 | ❌ |
+| 14 | reading | Словотвір у тексті: аналіз | 6 | 3 | ✅ |
 
 **Summary:**
 - Total activities: 14 (target: 10-14) ✅
 - Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
-- Low density activities: 1
+- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** reading 'Словотвір у тексті: аналіз' has 0 items (minimum: 3)
-  - FIX: Add more items. B2 reading requires at least 3 items.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Археологи знайшли тут сховище для зерна та залишки укріплень.". Shares significant keywords with sentence at index 14.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 35-word-formation-place-object-names.yaml: Schema validation error at key '13': {'id': 'reading-35-word-formation-place-object-names', 'type': 'reading', 'title': 'Словотвір у тексті: аналіз', 'instruction': 'Прочитайте текст та дайте відповіді на запитання.', 'passage': 'Київщина — один з найбільших регіонів України, де розташовані численні промислові підприємства. Бориспільщина славиться аеропортом міжнародного значення. Білоцерківщина відома своїм машинобудуванням та харчовою промисловістю. У Вишгородському районі працює гідроелектростанція, яка забезпечує електроенергією столичний регіон. Броварщина розвивається як промисловий та логістичний центр Київської області.', 'items': [{'question': 'Які суфікси використані для утворення назв регіонів?', 'answer': '-щина, -ський'}, {'question': 'Визначте словотвірну модель слова «машинобудування».', 'answer': 'Складання основ: машина + будувати + -ння'}, {'question': 'Яке значення суфікса -щина у назвах регіонів?', 'answer': "Територія, пов'язана з певним містом"}, {'question': 'Утворіть назву регіону від міста Полтава.', 'answer': 'Полтавщина'}, {'question': 'Визначте корінь слова «електроенергія».', 'answer': 'Два корені: електро- та -енерг-'}, {'question': 'Яку роль відіграє суфікс -ський у тексті?', 'answer': 'Утворення прикметників від назв місць'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
-- Activity density below minimum
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2353/2000 (raw: 2764)
 - **Activities:** ✅ 14/10
-- **Density:** ❌ 1 < 14
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
@@ -67,7 +62,7 @@
 - **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
@@ -92,12 +87,6 @@
 | questions | 42 | 5 | 100% | 5% | 5.0% |
 | proverbs | 6 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.8%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Словотвір у тексті: аналіз | reading | 0 | 3 | Add 3 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

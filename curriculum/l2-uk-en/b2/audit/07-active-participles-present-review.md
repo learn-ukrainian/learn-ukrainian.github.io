@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:24:56
+**Generated:** 2026-02-06 00:41:03
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,17 +46,15 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[SECTION_ORDER]** '## Лексикалізовані форми' should come after 'summary' section
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[SECTION_ORDER]** Content section '## Практика і підсумок' appears after end section '## Лексикалізовані форми'
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (78% overlap): "Варто зазначити: → Студент, який вивчає українську мову, живе у Києві.". Shares significant keywords with sentence at index 110.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (78% overlap): "Варто зазначити: → Студент, який вивчає українську мову, живе у Києві.". Shares significant keywords with sentence at index 106.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 07-active-participles-present.yaml: Duplicate key 'instruction' at line 759 (first defined at line 758)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2284/3800 (raw: 3022)
@@ -69,7 +67,7 @@
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -104,6 +102,6 @@
 | **Стилістична специфіка** | ⚪️ | 178 | Skipped |
 | **Еквівалентні підрядні речення** | ⚪️ | 349 | Skipped |
 | **Контексти вживання** | ✅ | 115 | Included in Core |
-| **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
 | **Практика і підсумок** | ✅ | 610 | Included in Core |
+| **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

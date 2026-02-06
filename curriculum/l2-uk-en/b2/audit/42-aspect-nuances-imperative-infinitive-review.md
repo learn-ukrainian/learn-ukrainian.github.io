@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M42 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:23:06
+**Generated:** 2026-02-06 00:37:46
 
 ## Configuration
 **Type:** B2-grammar
@@ -49,7 +49,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'не можна...'.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'і **не...'.
   - FIX: Vary sentence structure.
 
 ## Recommendation
@@ -58,7 +58,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2322/2000 (raw: 2722)
+- **Words:** ✅ 2321/2000 (raw: 2721)
 - **Activities:** ✅ 20/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -99,6 +99,6 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
 | **Розминка — Вид у командах та заборонах** | ⚪️ | 1243 | Skipped |
-| **Infinitive Nuances** | ⚪️ | 745 | Skipped |
+| **Infinitive Nuances** | ⚪️ | 744 | Skipped |
 | **Практика — вибір виду в командах** | ⚪️ | 261 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

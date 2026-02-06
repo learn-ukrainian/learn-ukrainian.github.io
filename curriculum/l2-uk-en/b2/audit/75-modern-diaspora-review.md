@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M75 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:32:16
+**Generated:** 2026-02-06 00:34:51
 
 ## Configuration
 **Type:** B2-culture
@@ -45,12 +45,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2861/2000 (raw: 2940)
+- **Words:** ✅ 2898/2000 (raw: 3055)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/25
 - **Structure:** ✅ Valid Structure
@@ -58,26 +58,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (culture))
-- **Richness:** ❌ 89% < 95% min (cultural)
+- **Richness:** ❌ 93% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 89% (minimum: 95%)
+**Score:** 93% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 4 | 5 | 80% | 33% | 26.7% |
-| engagement | 7 | 6 | 100% | 20% | 20.0% |
-| visual | 3 | 4 | 75% | 13% | 10.0% |
+| engagement | 8 | 6 | 100% | 20% | 20.0% |
+| visual | 5 | 4 | 100% | 13% | 13.3% |
 | variety | 0.99 | - | 99% | 7% | 6.6% |
 | paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
 | examples | 26 | - | 100% | 7% | 6.7% |
 | realworld | 3 | - | 100% | 7% | 6.7% |
 | questions | 7 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **89.9%** |
+| **TOTAL** | | | | | **93.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -87,5 +87,5 @@
 | **Історія української еміграції** | ⚪️ | 427 | Skipped |
 | **Організації та інституції діаспори** | ⚪️ | 484 | Skipped |
 | **Культурна дипломатія та лобізм** | ✅ | 266 | Included in Core |
-| **Мова діаспори** | ⚪️ | 417 | Skipped |
+| **Мова діаспори** | ⚪️ | 454 | Skipped |
 | **Підсумок та практика** | ✅ | 450 | Included in Core |

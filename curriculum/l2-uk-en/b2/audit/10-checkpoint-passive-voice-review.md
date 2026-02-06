@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:25:54
+**Generated:** 2026-02-06 00:41:05
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -47,15 +47,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** '## Самооцінка і план' should come after 'summary' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 10-checkpoint-passive-voice.yaml: Duplicate key 'instruction' at line 873 (first defined at line 872)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 1767/3500 (raw: 1957)
@@ -68,7 +66,7 @@
 - **Vocab:** ⚠️ 2 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
@@ -102,5 +100,5 @@
 | **Огляд — Активні дієприкметники** | ⚪️ | 302 | Skipped |
 | **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 163 | Skipped |
 | **Діагностичні завдання** | ⚪️ | 368 | Skipped |
-| **Самооцінка і план** | ⚪️ | 385 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |
+| **Самооцінка і план** | ⚪️ | 385 | Skipped |

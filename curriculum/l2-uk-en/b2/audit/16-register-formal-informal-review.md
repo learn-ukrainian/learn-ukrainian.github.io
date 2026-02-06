@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:26:18
+**Generated:** 2026-02-06 00:33:57
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,19 +42,8 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "**Формальний варіант (зразок відповіді):**
-
-Шановна пані Оксано!". Shares significant keywords with sentence at index 62.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2364/3800 (raw: 3055)
+- **Words:** ❌ 2365/3800 (raw: 3056)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +53,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ❌ 74% < 95% min (style)
@@ -104,7 +93,7 @@
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
 | **Вступ — Формальність у спілкуванні** | ✅ | 152 | Included in Core |
 | **Ти/Ви-розрізнення** | ⚪️ | 739 | Skipped |
-| **Форми звертання** | ⚪️ | 358 | Skipped |
+| **Форми звертання** | ⚪️ | 359 | Skipped |
 | **Формальні/неформальні лексичні пари** | ⚪️ | 335 | Skipped |
 | **Трансформація регістру** | ⚪️ | 417 | Skipped |
 | **Соціальні ситуації** | ⚪️ | 94 | Skipped |

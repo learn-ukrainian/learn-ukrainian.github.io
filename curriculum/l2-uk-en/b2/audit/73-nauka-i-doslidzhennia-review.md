@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M73 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:32:15
+**Generated:** 2026-02-06 00:34:49
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,8 +43,14 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## LINT ERRORS
+- ❌ Line 306: Empty Header detected (Lonely '#'). Remove or add title.
+
+## Recommendation
+**📝 UPDATE** (severity 2/100)
+
 ## Gates
-- **Words:** ⚠️ 1946/2000 (raw: 2216) (54 short)
+- **Words:** ✅ 2082/2000 (raw: 2356)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -53,30 +59,30 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 21 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
-- **Immersion:** 🇺🇦 98.1% (target 90-100% (vocab))
-- **Richness:** ❌ 71% < 95% min (vocabulary)
+- **Immersion:** 🇺🇦 95.2% (target 90-100% (vocab))
+- **Richness:** ❌ 72% < 95% min (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 71% (minimum: 95%)
+**Score:** 72% (minimum: 95%)
 **Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| collocations | 2 | 20 | 10% | 25% | 2.5% |
+| collocations | 3 | 20 | 15% | 25% | 3.8% |
 | usage_examples | 33 | 15 | 100% | 20% | 20.0% |
 | engagement | 12 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 5 | 3 | 100% | 10% | 10.0% |
 | register_notes | 2 | 5 | 40% | 10% | 4.0% |
 | variety | 0.99 | - | 99% | 5% | 5.0% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
-| **TOTAL** | | | | | **71.0%** |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **72.7%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_COLLOCATIONS**
@@ -92,4 +98,5 @@
 | **Наукова термінологія** | ⚪️ | 535 | Skipped |
 | **Читання наукових текстів** | ✅ | 209 | Included in Core |
 | **Обговорення наукових тем** | ⚪️ | 262 | Skipped |
+| **### Типові колокації** | ⚪️ | 136 | Skipped |
 | **Підсумок та практика** | ✅ | 296 | Included in Core |

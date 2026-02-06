@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M52 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:29:56
+**Generated:** 2026-02-06 00:37:47
 
 ## Configuration
 **Type:** B2-vocab
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: Schema validation error at key '16': {'id': 'fill-in-52-idioms-animals-i', 'type': 'fill-in', 'title': 'Доповніть ідіоми з тваринами', 'instruction': 'Вставте пропущене слово, щоб утворити ідіому.', 'items': [{'sentence': 'Хитрий як ___', 'answer': 'лис', 'options': ['лис', 'вовк', 'ведмідь', 'заєць']}, {'sentence': 'Вірний як ___', 'answer': 'пес', 'options': ['пес', 'кіт', 'кінь', 'бик']}, {'sentence': 'Працьовитий як ___', 'answer': 'бджола', 'options': ['бджола', 'мураха', 'оса', 'метелик']}, {'sentence': 'Впертий як ___', 'answer': 'осел', 'options': ['осел', 'бик', 'козел', 'баран']}, {'sentence': 'Боязкий як ___', 'answer': 'заєць', 'options': ['заєць', 'миша', 'курка', 'горобець']}, {'sentence': 'Мовчазний як ___', 'answer': 'риба', 'options': ['риба', 'сова', 'равлик', 'черепаха']}, {'sentence': 'Голодний як ___', 'answer': 'вовк', 'options': ['вовк', 'лев', 'тигр', 'ведмідь']}, {'sentence': 'Повільний як ___', 'answer': 'черепаха', 'options': ['черепаха', 'равлик', 'слимак', 'жаба']}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: Schema validation error at key '16': {'id': 'fill-in-52-idioms-animals-i', 'type': 'fill-in', 'title': 'Доповніть ідіоми з тваринами', 'instruction': 'Вставте пропущене слово, щоб утворити ідіому.', 'items': [{'sentence': 'Хитрий як {лис}', 'answer': 'лис'}, {'sentence': 'Вірний як {пес}', 'answer': 'пес'}, {'sentence': 'Працьовитий як {бджола}', 'answer': 'бджола'}, {'sentence': 'Впертий як {осел}', 'answer': 'осел'}, {'sentence': 'Боязкий як {заєць}', 'answer': 'заєць'}, {'sentence': 'Мовчазний як {риба}', 'answer': 'риба'}, {'sentence': 'Голодний як {вовк}', 'answer': 'вовк'}, {'sentence': 'Повільний як {черепаха}', 'answer': 'черепаха'}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation

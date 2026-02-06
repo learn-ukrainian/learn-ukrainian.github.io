@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:26:15
+**Generated:** 2026-02-06 00:41:04
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,15 +43,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- На додачу, зокрема, **Правильно:** Студент, який прочитав книгу, написав есе.". Shares significant keywords with sentence at index 41.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 08-active-participles-past.yaml: Duplicate key 'instruction' at line 663 (first defined at line 662)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2174/3800 (raw: 2813)
@@ -64,7 +62,7 @@
 - **Vocab:** ⚠️ 15 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)

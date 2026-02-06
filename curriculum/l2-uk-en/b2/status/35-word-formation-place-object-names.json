@@ -2,12 +2,12 @@
   "module": "35-word-formation-place-object-names",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:30:51.354385Z",
+  "last_audit": "2026-02-06T00:39:35.220993Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-06T00:08:34.317097Z",
     "meta": "2026-02-06T00:20:57.751883Z",
-    "activities": "2026-02-06T00:18:07.556455Z",
+    "activities": "2026-02-06T00:32:04.023786Z",
     "vocabulary": "2026-02-06T00:08:34.351097Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2353/2000 (raw: 2764) | pedagogy: 3 violations"
+      "message": "2353/2000 (raw: 2764) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "14/10 | density: 1 < 14"
+      "status": "pass",
+      "violations": 0,
+      "message": "14/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

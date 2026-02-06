@@ -2,10 +2,10 @@
   "module": "71-medytsyna-pohlybleno",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:23:31.957073Z",
+  "last_audit": "2026-02-06T00:34:48.107094Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:08:34.321097Z",
+    "md": "2026-02-06T00:28:14.417473Z",
     "meta": "2026-02-06T00:08:34.348097Z",
     "activities": "2026-02-06T00:08:34.337097Z",
     "vocabulary": "2026-02-06T00:08:34.351097Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2309/2000 (raw: 2634) | pedagogy: 1 violations | richness: 74% < 95% min (vocabulary)"
+      "violations": 1,
+      "message": "2309/2000 (raw: 2634) | richness: 74% < 95% min (vocabulary)"
     },
     "activities": {
       "status": "pass",
