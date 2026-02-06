@@ -5,7 +5,7 @@
 **Modules:** 61 (M01-61)
 **Prerequisite:** B2 Core (M01-70)
 **Pedagogy:** CBI (Content-Based Instruction) with narrative arcs
-**Immersion:** 100% Ukrainian
+**Immersion:** 90-100% Ukrainian
 
 > This track was relocated from B2 M71-131. History content is now optional, separate from core grammar path.
 
@@ -17,10 +17,16 @@
 | ---------------- | ------- | ------------------- |
 | Word count       | 4000    | target_words        |
 | Min activities   | 3       | min_activities      |
-| Max activities   | 10      | max_activities      |
+| Max activities   | 9       | max_activities      |
 | Items/activity   | 1+      | min_items_per_activity |
+| Unique types     | 2+      | min_types_unique    |
 | Required types   | reading, essay-response | required_types |
+| Priority types   | reading, essay-response, critical-analysis, comparative-study | priority_types |
+| Forbidden types  | quiz, fill-in, cloze, match-up, error-correction, unjumble, mark-the-words, group-sort, select, translate, anagram | forbidden_types |
 | Essay word range | 150-250 | essay_min/max_words |
+| Immersion        | 90-100% | min/max_immersion   |
+| Engagement       | 5+      | min_engagement      |
+| Vocab            | 20+     | min_vocab           |
 
 **Note:** B2-HIST uses seminar-style activities (reading + essay-response + critical-analysis), not traditional drill activities. Quality over quantity.
 
@@ -81,9 +87,9 @@ Before writing, confirm:
 - [ ] **Read the appropriate template** (history or synthesis)
 - [ ] Identify if this is a synthesis module (M13, M27, M37, M49, M55, M61)
 - [ ] All metadata YAML fields ready
-- [ ] Activity plan: 3-10 seminar-style activities (must include reading + essay-response)
+- [ ] Activity plan: 3-9 seminar-style activities (must include reading + essay-response)
 - [ ] Essay in YAML only (150-250 words) — NO essay section in markdown
-- [ ] Immersion target: **100%** Ukrainian
+- [ ] Immersion target: **90-100%** Ukrainian
 
 ## Metadata YAML Template (`meta/{slug}.yaml`)
 
@@ -111,7 +117,7 @@ prerequisites:
 | Metric            | History Modules | Synthesis Modules |
 | ----------------- | --------------- | ----------------- |
 | Core Word Count   | 4000+           | 3000+             |
-| Immersion         | **100%**        | **100%**          |
+| Immersion         | **90-100%**     | **90-100%**       |
 | Vocabulary (YAML) | 20-25           | 30-40             |
 | Example Sentences | 24+             | 16+               |
 | Engagement Boxes  | 5+              | 3+                |
@@ -122,7 +128,7 @@ prerequisites:
 
 | Requirement        | History | Synthesis |
 | ------------------ | ------- | --------- |
-| Total Activities   | 3-10    | 3-10      |
+| Total Activities   | 3-9     | 3-9       |
 | Items per Activity | 1+      | 1+        |
 | Unique Types       | 2+      | 2+        |
 
@@ -137,9 +143,9 @@ prerequisites:
 - `comparative-study` - Cross-period or cross-figure comparisons
 - `true-false` - Only for factual checks (allowed in B2-HIST)
 
-**Forbidden activity types (NEVER use):**
-- `dialog` - Dialogs are inappropriate for seminar/academic content
-- `role-play` - No conversational practice in history modules
+**Forbidden activity types (NEVER use — per config.py):**
+- `quiz`, `fill-in`, `cloze`, `match-up`, `error-correction`
+- `unjumble`, `mark-the-words`, `group-sort`, `select`, `translate`, `anagram`
 
 ### Essay Activities
 

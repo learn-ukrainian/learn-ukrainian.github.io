@@ -5,7 +5,7 @@
 **Modules:** 101 (M01-101)
 **Prerequisite:** B2-HIST Track (recommended) or B2 Core minimum
 **Pedagogy:** CBI (Content-Based Instruction) with biographical narrative
-**Immersion:** 100% Ukrainian
+**Immersion:** 95-100% Ukrainian
 
 > This track was relocated from C1 M36-131. Biography content is now optional, separate from core academic path.
 
@@ -38,11 +38,17 @@
 | Metric           | Value   | Source              |
 | ---------------- | ------- | ------------------- |
 | Word count       | 4000    | target_words        |
-| Min activities   | 4       | min_activities      |
+| Min activities   | 3       | min_activities      |
 | Max activities   | 9       | max_activities      |
 | Items/activity   | 1+      | min_items_per_activity |
+| Unique types     | 3+      | min_types_unique    |
 | Required types   | reading, essay-response, critical-analysis | required_types |
+| Priority types   | reading, essay-response, critical-analysis, comparative-study, authorial-intent, quiz | priority_types |
+| Forbidden types  | match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words | forbidden_types |
 | Essay word range | 250-400 | essay_min/max_words |
+| Immersion        | 95-100% | min/max_immersion   |
+| Engagement       | 5+      | min_engagement      |
+| Vocab            | 24+     | min_vocab           |
 
 **Note:** C1-BIO uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
 
@@ -85,10 +91,10 @@ Before writing, confirm:
 - [ ] **Read the biography template** (`c1-biography-module-template.md`)
 - [ ] Research the historical figure thoroughly (use reliable Ukrainian sources)
 - [ ] All metadata YAML fields ready
-- [ ] Activity plan: 4-9 seminar-style activities (must include reading + essay-response + critical-analysis)
+- [ ] Activity plan: 3-9 seminar-style activities (must include reading + essay-response + critical-analysis)
 - [ ] Essay in YAML only (250-400 words) — NO essay section in markdown
 - [ ] NO traditional drill activities (fill-in, match-up, unjumble, etc. are FORBIDDEN)
-- [ ] Immersion target: **100%** Ukrainian
+- [ ] Immersion target: **95-100%** Ukrainian
 
 ## Metadata YAML Template (`meta/{slug}.yaml`)
 
@@ -120,7 +126,7 @@ naturalness:
 | Metric            | Biography Modules | Checkpoint |
 | ----------------- | ----------------- | ---------- |
 | Core Word Count   | 4000+             | 2500+      |
-| Immersion         | **100%**          | **100%**   |
+| Immersion         | **95-100%**       | **95-100%** |
 | Vocabulary (YAML) | 20-25             | 50-55      |
 | Engagement Boxes  | 6+                | 4+         |
 | Primary Sources   | 1+ quote          | Multiple   |
@@ -131,7 +137,7 @@ naturalness:
 
 | Requirement        | Biography | Checkpoint |
 | ------------------ | --------- | ---------- |
-| Total Activities   | 4-9       | 14+        |
+| Total Activities   | 3-9       | 14+        |
 | Items per Activity | 1+        | 14+        |
 | Unique Types       | 3+        | 6+         |
 

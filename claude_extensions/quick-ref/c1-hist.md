@@ -21,10 +21,12 @@
 | Items/activity   | 1+      | min_items_per_activity |
 | Required types   | reading, essay-response, critical-analysis | required_types |
 | Priority types   | reading, essay-response, critical-analysis, comparative-study | priority_types |
-| Forbidden types  | quiz, match-up, fill-in, unjumble, anagram, cloze, mark-the-words | forbidden_types |
+| Forbidden types  | match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words | forbidden_types |
 | Essay word range | 300-500 | essay_min/max_words |
 | Immersion        | 95-100% | min/max_immersion   |
 | Engagement       | 6+      | min_engagement      |
+| Unique types     | 3+      | min_types_unique    |
+| Vocab            | 25+     | min_vocab           |
 
 **Note:** C1-HIST uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
 
@@ -39,7 +41,7 @@
 | `comparative-study` | Comparing historiographical schools, interpretations |
 | `essay-response` | Analytical essays (300-500 words) |
 
-**Forbidden:** `quiz`, `match-up`, `fill-in`, `cloze`, `group-sort`, `unjumble`, `anagram`, `mark-the-words`
+**Forbidden:** `match-up`, `fill-in`, `cloze`, `group-sort`, `unjumble`, `anagram`, `mark-the-words`
 
 ---
 
