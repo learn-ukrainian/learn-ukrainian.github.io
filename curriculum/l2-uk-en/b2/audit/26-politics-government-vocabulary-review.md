@@ -1,8 +1,8 @@
 # Audit Report: M26 — 26-politics-government-vocabulary.md
 **Level:** B2 | **Module:** M26 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 10:31:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:17:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1903/2000 (raw: 2261) (97 short)
+- **Words:** ✅ 2192/2000 (raw: 2604)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -68,15 +68,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 63 | 24 | 100% | 20% | 20.0% |
+| examples | 67 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.5%** |
 
@@ -86,7 +86,7 @@
 | **Intro/Narrative** | ✅ | 75 | Included in Core |
 | **Розминка — Політична система України** | ⚪️ | 411 | Skipped |
 | **Органи влади** | ⚪️ | 778 | Skipped |
-| **Виборчий процес** | ⚪️ | 335 | Skipped |
-| **Політичні поняття** | ⚪️ | 133 | Skipped |
-| **Практика — читання політичних новин** | ✅ | 159 | Included in Core |
+| **Виборчий процес** | ⚪️ | 437 | Skipped |
+| **Політичні поняття** | ⚪️ | 232 | Skipped |
+| **Практика — читання політичних новин** | ✅ | 247 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-register-media-journalistic.md
 **Level:** B2 | **Module:** M23 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:08:50
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:14:48
 
 ## Configuration
 **Type:** B2-grammar
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2096/2000 (raw: 2579)
+- **Words:** ✅ 2175/2000 (raw: 2658)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -76,7 +76,7 @@
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | questions | 46 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.5%** |
@@ -85,7 +85,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Розминка — Публіцистичний стиль** | ⚪️ | 63 | Skipped |
+| **Розминка — Публіцистичний стиль** | ⚪️ | 142 | Skipped |
 | **Структура новинного тексту** | ✅ | 1069 | Included in Core |
 | **Мова заголовків** | ⚪️ | 695 | Skipped |
 | **Маркери упередженості** | ⚪️ | 129 | Skipped |

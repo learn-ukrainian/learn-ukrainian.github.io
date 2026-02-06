@@ -2,10 +2,10 @@
   "module": "23-register-media-journalistic",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:08:50.479891Z",
+  "last_audit": "2026-02-06T12:14:48.421981Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:04:24.673813Z",
+    "md": "2026-02-06T12:13:23.192210Z",
     "meta": "2026-02-06T12:04:24.711813Z",
     "activities": "2026-02-06T12:04:24.689813Z",
     "vocabulary": "2026-02-06T12:04:24.717813Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2096/2000 (raw: 2579)"
+      "message": "2175/2000 (raw: 2658)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

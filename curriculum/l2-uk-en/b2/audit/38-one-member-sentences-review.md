@@ -1,8 +1,8 @@
 # Audit Report: M38 — 38-one-member-sentences.md
 **Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 10:31:16
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:15:21
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,19 +42,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1967/2000 (raw: 2534) (33 short)
+- **Words:** ✅ 2320/2000 (raw: 2916)
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/6
+- **Engagement:** ✅ 16/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 12 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,25 +67,25 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 15 | 5 | 100% | 15% | 15.0% |
-| dialogues | 24 | 4 | 100% | 15% | 15.0% |
-| variety | 0.90 | - | 90% | 10% | 9.0% |
+| engagement | 17 | 5 | 100% | 15% | 15.0% |
+| dialogues | 25 | 4 | 100% | 15% | 15.0% |
+| variety | 0.89 | - | 89% | 10% | 8.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
 | questions | 23 | 5 | 100% | 5% | 5.0% |
-| proverbs | 7 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.4%** |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Розминка — Речення без підмета** | ⚪️ | 132 | Skipped |
-| **Означено-особові (Definite-personal)** | ⚪️ | 940 | Skipped |
-| **Неозначено-особові (Indefinite-personal)** | ⚪️ | 224 | Skipped |
+| **Розминка — Речення без підмета** | ⚪️ | 204 | Skipped |
+| **Означено-особові** | ⚪️ | 940 | Skipped |
+| **Неозначено-особові** | ⚪️ | 344 | Skipped |
 | **Безособові** | ⚪️ | 414 | Skipped |
-| **Номінативні** | ⚪️ | 20 | Skipped |
-| **Практика — односкладні речення** | ⚪️ | 176 | Skipped |
+| **Номінативні** | ⚪️ | 154 | Skipped |
+| **Практика — односкладні речення** | ⚪️ | 203 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

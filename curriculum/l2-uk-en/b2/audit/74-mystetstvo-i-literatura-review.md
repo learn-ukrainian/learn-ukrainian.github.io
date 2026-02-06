@@ -1,8 +1,8 @@
 # Audit Report: M74 — 74-mystetstvo-i-literatura.md
 **Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 10:31:53
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:12:32
 
 ## Configuration
 **Type:** B2-vocab
@@ -41,19 +41,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2175/2000 (raw: 2434)
+- **Words:** ✅ 2432/2000 (raw: 2694)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/6
+- **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 16 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -66,14 +66,14 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | collocations | 22 | 20 | 100% | 25% | 25.0% |
-| usage_examples | 56 | 15 | 100% | 20% | 20.0% |
-| engagement | 12 | 4 | 100% | 15% | 15.0% |
+| usage_examples | 65 | 15 | 100% | 20% | 20.0% |
+| engagement | 13 | 4 | 100% | 15% | 15.0% |
 | cultural | 18 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 5 | 3 | 100% | 10% | 10.0% |
 | register_notes | 13 | 5 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
-| paragraph_var | 0.75 | - | 75% | 5% | 3.8% |
-| **TOTAL** | | | | | **98.6%** |
+| paragraph_var | 0.74 | - | 74% | 5% | 3.7% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -82,6 +82,6 @@
 | **Розминка — Культурний ландшафт України** | ✅ | 364 | Included in Core |
 | **Літературні жанри та епохи** | ⚪️ | 400 | Skipped |
 | **Образотворче мистецтво** | ⚪️ | 551 | Skipped |
-| **Музика та театр** | ⚪️ | 192 | Skipped |
+| **Музика та театр** | ⚪️ | 330 | Skipped |
+| **Мова мистецької критики** | ⚪️ | 361 | Skipped |
 | **Підсумок та практика** | ✅ | 376 | Included in Core |
-| **Лексика мистецької критики** | ⚪️ | 242 | Skipped |
