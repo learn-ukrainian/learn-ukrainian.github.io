@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:49
+**Generated:** 2026-02-06 20:36:39
 
 ## Configuration
 **Type:** B2-grammar
@@ -47,7 +47,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3249/3800 (raw: 4476)
+- **Words:** ❌ 3534/3800 (raw: 4761)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -76,7 +76,7 @@
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 12 | 3 | 100% | 10% | 10.0% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
 | visual | 21 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 50 | 5 | 100% | 5% | 5.0% |
@@ -89,8 +89,8 @@
 | **Intro/Narrative** | ✅ | 38 | Included in Core |
 | **Вступ — Що таке дієприкметник?** | ✅ | 513 | Included in Core |
 | **Утворення дієприкметників на -ний** | ⚪️ | 1290 | Skipped |
-| **Утворення дієприкметників на -тий** | ⚪️ | 188 | Skipped |
-| **Узгодження дієприкметників** | ⚪️ | 424 | Skipped |
+| **Утворення дієприкметників на -тий** | ⚪️ | 322 | Skipped |
+| **Узгодження дієприкметників** | ⚪️ | 575 | Skipped |
 | **Пасив із допоміжним дієсловом бути** | ⚪️ | 173 | Skipped |
 | **Регістрова специфіка** | ⚪️ | 453 | Skipped |
 | **Практика і підсумок** | ✅ | 170 | Included in Core |

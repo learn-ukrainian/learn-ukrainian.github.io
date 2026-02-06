@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:16
+**Generated:** 2026-02-06 20:36:50
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2694/3800 (raw: 3039)
+- **Words:** ❌ 2793/3800 (raw: 3138)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -73,7 +73,7 @@
 | engagement | 4 | 5 | 80% | 15% | 12.0% |
 | register_analysis | 11 | 5 | 100% | 15% | 15.0% |
 | visual | 6 | 4 | 100% | 10% | 10.0% |
-| variety | 0.94 | - | 94% | 5% | 4.7% |
+| variety | 0.93 | - | 93% | 5% | 4.7% |
 | cultural | 0 | - | 0% | 5% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **91.7%** |
@@ -83,7 +83,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Вступ — Науковий стиль** | ✅ | 523 | Included in Core |
-| **Лексичні особливості** | ⚪️ | 445 | Skipped |
+| **Лексичні особливості** | ⚪️ | 544 | Skipped |
 | **Граматичні особливості** | ⚪️ | 614 | Skipped |
 | **Мовне хеджування** | ⚪️ | 495 | Skipped |
 | **Цитування та посилання** | ⚪️ | 74 | Skipped |

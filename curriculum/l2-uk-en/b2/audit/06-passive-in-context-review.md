@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:03
+**Generated:** 2026-02-06 20:36:43
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,13 +44,19 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 562: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 571: Empty Header detected (Lonely '#'). Remove or add title.
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Кожна форма пасиву має свою «зону комфорту» — контексти, де вона звучить найприродніше, та зони, де ...". Shares significant keywords with sentence at index 33.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 2/100)
+**📝 UPDATE** (severity 7/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 3228/3800 (raw: 3778)
+- **Words:** ❌ 3338/3800 (raw: 3888)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -60,9 +66,9 @@
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -74,12 +80,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 24 | 100% | 20% | 20.0% |
+| examples | 92 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.93 | - | 93% | 10% | 9.3% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 15 | 3 | 100% | 10% | 10.0% |
+| realworld | 16 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
 | questions | 56 | 5 | 100% | 5% | 5.0% |
@@ -91,7 +97,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
 | **Вступ — Регістр і пасив** | ✅ | 606 | Included in Core |
-| **Таблиця регістрів і форм пасиву** | ⚪️ | 846 | Skipped |
+| **Таблиця регістрів і форм пасиву** | ⚪️ | 956 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
 | **Практичні сценарії — Науковий контекст** | ✅ | 431 | Included in Core |
 | **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 165 | Included in Core |

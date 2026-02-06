@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:00
+**Generated:** 2026-02-06 20:36:42
 
 ## Configuration
 **Type:** B2-grammar
@@ -45,13 +45,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 509: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 518: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 3113/3800 (raw: 3546)
+- **Words:** ❌ 3240/3800 (raw: 3673)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -75,7 +75,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 24 | 100% | 20% | 20.0% |
+| examples | 93 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 23 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
@@ -92,7 +92,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
 | **Вступ — Найрозмовніший пасив** | ✅ | 494 | Included in Core |
-| **Утворення конструкції** | ⚪️ | 617 | Skipped |
+| **Утворення конструкції** | ⚪️ | 744 | Skipped |
 | **Семантика невизначеного агента** | ⚪️ | 311 | Skipped |
 | **Контексти вживання** | ✅ | 817 | Included in Core |
 | **Порівняння з іншими формами пасиву** | ⚪️ | 144 | Skipped |

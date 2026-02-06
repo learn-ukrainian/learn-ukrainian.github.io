@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M03 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:31:56
+**Generated:** 2026-02-06 20:36:40
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2974/3800 (raw: 4019)
+- **Words:** ❌ 3081/3800 (raw: 4126)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -68,7 +68,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 75 | 24 | 100% | 20% | 20.0% |
+| examples | 81 | 24 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 17 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
@@ -87,7 +87,7 @@
 | **Вступ — Безособовість в українській мові** | ✅ | 640 | Included in Core |
 | **Утворення форм на -но/-то** | ⚪️ | 924 | Skipped |
 | **Синтаксичні особливості** | ⚪️ | 150 | Skipped |
-| **Контексти вживання** | ✅ | 344 | Included in Core |
+| **Контексти вживання** | ✅ | 451 | Included in Core |
 | **Регістрова специфіка** | ⚪️ | 330 | Skipped |
 | **Типові помилки** | ✅ | 335 | Included in Core |
 | **Практика і підсумок** | ✅ | 194 | Included in Core |

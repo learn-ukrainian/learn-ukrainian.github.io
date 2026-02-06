@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:09
+**Generated:** 2026-02-06 20:36:47
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -52,7 +52,7 @@
 - Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ❌ 2532/3500 (raw: 3742)
+- **Words:** ❌ 2695/3500 (raw: 3905)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +64,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.9% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 98.0% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -78,12 +78,12 @@
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
 | review_sections | 54 | 3 | 100% | 20% | 20.0% |
-| variety | 0.91 | - | 91% | 15% | 13.7% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
 | engagement | 9 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
 | visual | 27 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.7%** |
+| **TOTAL** | | | | | **88.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -91,7 +91,7 @@
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Вступ — Що ми вивчили** | ✅ | 223 | Included in Core |
 | **Навичка 1: Ключові знання модуля** | ⚪️ | 248 | Skipped |
-| **Огляд — Чотири форми пасиву** | ⚪️ | 201 | Skipped |
+| **Огляд — Чотири форми пасиву** | ⚪️ | 364 | Skipped |
 | **Огляд — Вибір форми за регістром** | ⚪️ | 235 | Skipped |
 | **Огляд — Активні дієприкметники** | ⚪️ | 400 | Skipped |
 | **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 413 | Skipped |

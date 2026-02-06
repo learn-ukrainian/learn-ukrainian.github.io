@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:05
+**Generated:** 2026-02-06 20:36:44
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2900/3800 (raw: 3736)
+- **Words:** ❌ 3035/3800 (raw: 3871)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -75,7 +75,7 @@
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
 | visual | 12 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
 | questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
@@ -86,7 +86,7 @@
 | **Intro/Narrative** | ✅ | 129 | Included in Core |
 | **Вступ — Активні дієприкметники** | ✅ | 420 | Included in Core |
 | **Утворення дієприкметників на -учий/-ючий** | ⚪️ | 626 | Skipped |
-| **Стилістична специфіка** | ⚪️ | 178 | Skipped |
+| **Стилістична специфіка** | ⚪️ | 313 | Skipped |
 | **Еквівалентні підрядні речення** | ⚪️ | 349 | Skipped |
 | **Контексти вживання** | ✅ | 469 | Included in Core |
 | **Підсумок і практика** | ✅ | 603 | Included in Core |

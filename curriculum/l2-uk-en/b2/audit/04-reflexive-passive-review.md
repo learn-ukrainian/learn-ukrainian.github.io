@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:31:58
+**Generated:** 2026-02-06 20:36:41
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,13 +43,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 558: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 567: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 2962/3800 (raw: 3688)
+- **Words:** ❌ 3096/3800 (raw: 3822)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,15 +73,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 82 | 24 | 100% | 20% | 20.0% |
+| examples | 91 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
 | visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 40 | 5 | 100% | 5% | 5.0% |
+| questions | 41 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
@@ -90,7 +90,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
 | **Вступ — Зворотний пасив** | ✅ | 522 | Included in Core |
-| **Утворення зворотного пасиву** | ⚪️ | 790 | Skipped |
+| **Утворення зворотного пасиву** | ⚪️ | 924 | Skipped |
 | **Акцент на процесі** | ⚪️ | 237 | Skipped |
 | **Вираження агента** | ⚪️ | 520 | Skipped |
 | **Контексти вживання** | ✅ | 187 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:18
+**Generated:** 2026-02-06 20:36:51
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,20 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (79% overlap): "---
+
+
+Мовні засоби офіційного стилю формують особливу систему, яка забезпечує точність, однозначніст...". Shares significant keywords with sentence at index 31.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 2433/3800 (raw: 3433)
+- **Words:** ❌ 2547/3800 (raw: 3547)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -54,9 +66,9 @@
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -83,7 +95,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Вступ — Офіційно-діловий стиль** | ✅ | 384 | Included in Core |
-| **Мовні засоби офіційного стилю** | ⚪️ | 425 | Skipped |
+| **Мовні засоби офіційного стилю** | ⚪️ | 539 | Skipped |
 | **Типи документів** | ⚪️ | 669 | Skipped |
 | **Структура офіційних документів** | ⚪️ | 201 | Skipped |
 | **Законодавчі тексти** | ✅ | 405 | Included in Core |

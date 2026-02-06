@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:32:12
+**Generated:** 2026-02-06 20:36:48
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,13 +43,19 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 83: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 92: Empty Header detected (Lonely '#'). Remove or add title.
+
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Перед протиставними сполучниками кома ставиться завжди, без винятків.". Shares significant keywords with sentence at index 34.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 2/100)
+**📝 UPDATE** (severity 7/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 3089/3800 (raw: 3465)
+- **Words:** ❌ 3195/3800 (raw: 3571)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -59,7 +65,7 @@
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
@@ -80,7 +86,7 @@
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 12 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | questions | 20 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.8%** |
@@ -90,7 +96,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Вступ — Багатоскладні речення** | ✅ | 410 | Included in Core |
-| **Складносурядні речення** | ⚪️ | 147 | Skipped |
+| **Складносурядні речення** | ⚪️ | 253 | Skipped |
 | **Складнопідрядні речення з кількома підрядними — це конструкції, в яких до головного речення приєднуються два або більше підрядних. Ці конструкції типові для офіційного, наукового та публіцистичного стилів, де необхідно виразити складні логічні зв'язки між ідеями.** | ⚪️ | 518 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
 | **Складнопідрядні речення з одним підрядним** | ⚪️ | 333 | Skipped |
