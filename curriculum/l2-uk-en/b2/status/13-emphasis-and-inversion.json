@@ -2,10 +2,10 @@
   "module": "13-emphasis-and-inversion",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T17:07:59.127057Z",
+  "last_audit": "2026-02-06T17:11:19.703386Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T17:07:48.255779Z",
+    "md": "2026-02-06T17:11:11.721896Z",
     "meta": "2026-02-06T16:41:25.728901Z",
     "activities": "2026-02-06T16:41:25.705900Z",
     "vocabulary": "2026-02-06T16:41:25.734901Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3467/3800 (raw: 3995)"
+      "status": "pass",
+      "violations": 0,
+      "message": "3969/3800 (raw: 4497)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

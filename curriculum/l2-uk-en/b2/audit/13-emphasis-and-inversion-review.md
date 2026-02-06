@@ -1,8 +1,8 @@
 # Audit Report: M13 — 13-emphasis-and-inversion.md
 **Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 17:07:59
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 17:11:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3467/3800 (raw: 3995)
+- **Words:** ✅ 3969/3800 (raw: 4497)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -73,7 +73,7 @@
 | dialogues | 16 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 15 | 3 | 100% | 10% | 10.0% |
+| realworld | 19 | 3 | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 33 | 5 | 100% | 5% | 5.0% |
@@ -84,11 +84,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
-| **Вступ — Порядок слів в українській мові** | ✅ | 252 | Included in Core |
+| **Вступ — Порядок слів в українській мові** | ✅ | 351 | Included in Core |
 | **Тема-рема структура** | ⚪️ | 1073 | Skipped |
-| **Емфатичний порядок слів** | ⚪️ | 484 | Skipped |
+| **Емфатичний порядок слів** | ⚪️ | 625 | Skipped |
 | **Інверсія для стилістичного ефекту** | ⚪️ | 659 | Skipped |
-| **Виділення елементів речення** | ⚪️ | 424 | Skipped |
-| **Контекстуальний вибір** | ✅ | 338 | Included in Core |
-| **Практика і підсумок** | ✅ | 132 | Included in Core |
+| **Виділення елементів речення** | ⚪️ | 513 | Skipped |
+| **Контекстуальний вибір** | ✅ | 402 | Included in Core |
+| **Практика і підсумок** | ✅ | 241 | Included in Core |
 | **Підсумок** | ✅ | 46 | Included in Core |
