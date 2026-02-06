@@ -60,14 +60,23 @@ Read: `claude_extensions/phases/module-lesson.md`
 
 ### Step 3: Generate Content
 
+> **OVERSHOOT RULE: Write to 1.5× the word_target on first draft.**
+> For a 4000-word target, write 5500–6000 words. For 3000, write 4500.
+> Trimming excess is trivial. Expanding later burns 30%+ of context in audit-fix cycles.
+> This single rule eliminates the #1 workflow friction: iterative word count expansion.
+
+> **PRE-PLAN CALLOUTS**: Before writing any prose, list the 6+ engagement callouts
+> (myth-buster, decolonization, quote, etc.) with their target sections.
+
 Follow the generation process from phase instructions:
 
 1. Load meta.yaml and appropriate template
 2. Generate SCOPE comment (NO frontmatter - metadata is in meta.yaml)
-3. Generate title and introduction
-4. **Generate content sections (section-by-section with word count verification)**
-5. Generate summary
-6. Verify total word count
+3. Pre-plan callout placement (section + type for each of 6+ callouts)
+4. Generate title and introduction
+5. **Generate content sections (section-by-section, targeting 1.5× word allocation per section)**
+6. Generate summary
+7. Verify total word count (should be ~150% of target)
 
 ### Step 4: Output
 

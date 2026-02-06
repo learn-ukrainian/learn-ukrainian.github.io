@@ -384,6 +384,13 @@ Run phases sequentially from start phase:
 
 **⚠️ CRITICAL FOR PHASE 3 (Lesson) - Seminar Tracks:**
 
+> **OVERSHOOT RULE: Write to 1.5× the word_target on first draft.**
+> For a 4000-word target, write 5500–6000 words. For 3000, write 4500.
+> Trimming excess is trivial. Expanding later burns 30%+ of context in audit-fix cycles.
+
+> **PRE-PLAN CALLOUTS**: Before writing prose, list the 6+ engagement callouts
+> (myth-buster, decolonization, quote, etc.) with target sections. Write prose around them.
+
 Before generating content, LOAD the research notes:
 
 ```bash
@@ -401,6 +408,16 @@ fi
 - Decolonization talking points
 - Cross-references to other modules
 - Chronological structure
+
+**⚠️ CRITICAL FOR PHASE 5 (Activities) - ALL Tracks:**
+
+> **SCHEMA-FIRST: Read the activity schema BEFORE writing activities.**
+> ```bash
+> Read: schemas/activities-{level}.schema.json
+> ```
+> Note which fields each activity type supports. `additionalProperties: false` means
+> unlisted fields cause audit failure. Only `reading` type has `id` field in seminar tracks.
+> `essay-response` rubric: `criteria`/`description`/`points` (NOT `criterion`/`weight`).
 2. Execute phase
 3. If QA phase FAILS → stop and report
 4. If QA phase PASSES → continue to next phase

@@ -119,9 +119,19 @@ WebSearch(
 - Any `*.ru` domains - Russian sources
 - Sources using "Малороссия", "воссоединение"
 
+### Step 2.5: Load Content Outline from Meta
+
+**BEFORE compiling notes**, read the module's meta file to get the `content_outline`:
+
+```bash
+yq '.content_outline' curriculum/l2-uk-en/{track}/meta/{slug}.yaml
+```
+
+This gives you the exact section names and word targets. **Structure your research notes to match these sections.** This eliminates the mapping step during writing — research flows directly into content.
+
 ### Step 3: Compile Research Notes
 
-Create structured notes using this template:
+Create structured notes using this template. **The "Зміст за секціями" section MUST match content_outline from meta.**
 
 ```markdown
 # Research Notes: {Topic}
@@ -156,6 +166,25 @@ Create structured notes using this template:
 - Політична ситуація:
 - Пов'язані події:
 - Пов'язані постаті:
+
+## Зміст за секціями (mapped to content_outline)
+
+> For each section in meta's content_outline, gather relevant facts here.
+> This makes Phase 2 writing mechanical: read section research → write section.
+
+### {Section 1 name from content_outline} ({word_target} words)
+- Key facts:
+- Dates:
+- Quotes:
+- Engagement hook idea:
+
+### {Section 2 name from content_outline} ({word_target} words)
+- Key facts:
+- Dates:
+- Quotes:
+- Engagement hook idea:
+
+(Repeat for all sections in content_outline)
 
 ## Деколонізаційні нотатки
 - Російські/радянські міфи для спростування:
@@ -196,15 +225,15 @@ Before saving, verify research meets minimum standards:
 
 ### Step 5: Save Research
 
-Save notes to the module's audit directory:
+Save notes to the module's **research** directory:
 
 ```bash
-curriculum/l2-uk-en/{track}/audit/{slug}-research.md
+curriculum/l2-uk-en/{track}/research/{slug}-research.md
 ```
 
 **Example paths:**
-- `curriculum/l2-uk-en/c1-bio/audit/danylo-apostol-research.md`
-- `curriculum/l2-uk-en/b2-hist/audit/kozatstvo-vytoky-research.md`
+- `curriculum/l2-uk-en/c1-bio/research/danylo-apostol-research.md`
+- `curriculum/l2-uk-en/b2-hist/research/kozatstvo-vytoky-research.md`
 
 ### Step 6: Update Active Task (if exists)
 
@@ -217,7 +246,7 @@ gh issue comment $ACTIVE_TASK_ID --body "📚 Research completed for {topic}
 **Sources**: {count} Ukrainian sources consulted
 **Primary quotes**: {quote_count} found
 **Decolonization**: {myth_count} myths identified to debunk
-**Saved to**: audit/{slug}-research.md
+**Saved to**: research/{slug}-research.md
 
 Ready for content generation."
 ```
@@ -230,7 +259,7 @@ Output research summary for the user:
 📚 Research Complete: {topic}
 
 Track: {track}
-Saved: curriculum/l2-uk-en/{track}/audit/{slug}-research.md
+Saved: curriculum/l2-uk-en/{track}/research/{slug}-research.md
 
 Key findings:
 - {name} ({dates})
@@ -306,7 +335,7 @@ The `/module` skill enforces research for seminar tracks:
 
 ```
 /module c1-bio 28
-  → Check: Does audit/danylo-apostol-research.md exist?
+  → Check: Does research/danylo-apostol-research.md exist?
   → If NO: "Research required. Run /research 'Данило Апостол' first."
   → If YES: Proceed with content generation
 ```
@@ -324,7 +353,7 @@ For complex research, leverage both agents:
 # Claude structures, Gemini researches (parallel)
 # Send research request to Gemini:
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
-  "Research Данило Апостол for C1-BIO module. Save notes to audit/danylo-apostol-research.md" \
+  "Research Данило Апостол for C1-BIO module. Save notes to research/danylo-apostol-research.md" \
   --task-id gh-500
 
 # Continue with other work while Gemini researches

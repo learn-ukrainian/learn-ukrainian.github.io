@@ -46,8 +46,10 @@ This command replaces the generic `/module-create` for advanced modules.
 3.  **Structure**:
     - **H1**: `# Title` (From Meta)
     - **H2**: `## Section Title` (From Outline)
-    - **Content**: Write required word count per section. **Total MUST meet target (4000+ for Bio, 2500+ for Checkpoint).**
+    - **Content**: Write **1.5× the word target** per section. For 4000-word target, write 5500–6000 words. Trimming is cheap; expanding burns context in iterative audit cycles.
     - **Footer**: Add `> [!resources]` block at the very end.
+4.  **Pre-plan callouts**: Before writing prose, list where each of the 6+ engagement callouts will go (section + type). Write prose around pre-planned callouts.
+5.  **Schema-first activities**: Read `schemas/activities-{level}.schema.json` BEFORE writing activities. Note which fields each type supports (`additionalProperties: false` means unlisted fields cause audit failure).
 
 **Prompting Strategy**:
 "You are a specialized textbook author. Write the content for module '{TITLE}' based strictly on the provided outline. Do not deviate from the section structure. Use the provided sources to ensure historical accuracy. Tone: {REGISTER}."

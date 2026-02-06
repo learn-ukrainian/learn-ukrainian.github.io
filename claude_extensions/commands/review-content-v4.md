@@ -37,7 +37,16 @@ Read these files in full (not skimming):
 curriculum/l2-uk-en/{level}/{slug}.md           # Full lesson content
 curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # All activities
 curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml   # Vocabulary (if exists)
+schemas/activities-{level}.schema.json               # Activity schema (REQUIRED)
 ```
+
+> **SCHEMA AWARENESS IS MANDATORY.**
+> Before suggesting ANY fix to activity YAML, verify the fix is valid against the schema.
+> Key constraints:
+> - Most activity types use `additionalProperties: false` — unlisted fields cause audit failure
+> - Only `reading` type has an `id` field (pattern: `^reading-[a-z0-9-]+$`) in seminar tracks
+> - `essay-response` rubric uses `criteria` (not `criterion`), `description`, `points` (not `weight`)
+> - **NEVER suggest adding fields that don't exist in the schema**
 
 **Do not proceed until you have read every line.**
 
@@ -109,6 +118,7 @@ As you read, note every issue you find. Be specific:
 
 | ❌ Wrong | ✅ Correct |
 |----------|-----------|
+| під → под | під (NOT под!) |
 | кушать | їсти |
 | приймати участь | брати участь |
 | самий кращий | найкращий |
@@ -116,6 +126,9 @@ As you read, note every issue you find. Be specific:
 | на протязі | протягом |
 | любий (any) | будь-який |
 | отвічати | відповідати |
+| вообще | взагалі |
+| получати | отримувати |
+| відноситися | ставитися |
 
 ### Calques (Auto-fail)
 
@@ -125,6 +138,34 @@ As you read, note every issue you find. Be specific:
 | брати місце | відбуватися |
 | це є | це (usually) |
 | мати місце | відбуватися |
+
+### IPA Stress Errors (Auto-fail for vocabulary)
+
+Ukrainian stress is unpredictable. Verify EVERY IPA transcription:
+- Check stress placement matches actual Ukrainian pronunciation
+- Common errors: stress on wrong syllable in multi-syllable academic terms
+- Examples of frequent mistakes: те**о**рія (not **те**орія), спадко**є**мність (not спад**ко**ємність)
+- When uncertain about stress, flag for verification rather than guessing
+
+### Propaganda Filter (Auto-fail for HIST/BIO tracks)
+
+Check if any phrasing echoes Russian dezinformatsiia framing:
+- "воссоединение" or "возз'єднання" for Переяславська рада (correct: військовий союз)
+- "братские народы" / "братські народи" framing (imperial myth)
+- "малороссы" / "малороси" as identity label (colonial erasure)
+- "гражданская война" / "громадянська війна" for Russia's war against Ukraine
+- One-sided victimhood narratives that erase Ukrainian agency
+- Any framing that mirrors the "Enemy framing" column from Phase 0.5 Contested Terms table
+
+**If found:** Flag immediately, replace with decolonized Ukrainian framing.
+
+### Semantic Nuance Gate (C1+ modules only)
+
+C1 and above MUST demonstrate modal hedging and intellectual nuance:
+- Check for presence of: можливо, ймовірно, з одного боку...з іншого, водночас, утім, проте
+- Count hedging markers: minimum 5 per 1000 words for C1-HIST/C1-BIO
+- Verify balanced framing: "Деякі дослідники вважають..." vs "Інші стверджують..."
+- Absence of nuance markers in academic content → Language score capped at 7
 
 ### Activity Errors (Auto-fail)
 
@@ -174,6 +215,8 @@ As you read, note every issue you find. Be specific:
 | 10 | **Humanity** | Teacher voice, warmth, encouragement | <6 |
 | 11 | **LLM Fingerprint** | Authentic writing vs AI patterns/clichés | <7 |
 | 12 | **Linguistic Accuracy** | Factual correctness of grammar rules, examples | <9 |
+| 13 | **Propaganda Filter** | Absence of Russian dezinfo framing (Volhynia, etc.) | <10 |
+| 14 | **Semantic Nuance** | Use of modal hedging («можливо», «водночас») for complexity | <8 |
 
 ### Scoring Rules
 
@@ -196,7 +239,8 @@ As you read, note every issue you find. Be specific:
 ```
 Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 +
           Language × 1.1 + Pedagogy × 1.2 + Immersion × 0.8 + Activities × 1.3 +
-          Richness × 0.9 + Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5) / 13.4
+          Richness × 0.9 + Humanity × 0.8 + LLM × 1.1 + Linguistic_Accuracy × 1.5 +
+          Propaganda_Filter × 1.5 + Semantic_Nuance × 1.2) / 16.1
 ```
 
 **Pass threshold: 8.5+ overall, no dimension below its auto-fail threshold**
@@ -260,6 +304,23 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 
 {✅ PASS / ❌ FAIL} — {brief explanation linking to specific findings}
 ```
+
+---
+
+## STEP 7.5: SET NATURALNESS SCORE IN META
+
+**The review is responsible for setting the naturalness score.** After completing your deep review:
+
+1. Determine the naturalness score (1-10) based on your Language dimension assessment
+2. Update the meta file:
+
+```yaml
+naturalness:
+  score: {your_score}    # 1-10 based on Language dimension
+  status: PASS           # PASS if score >= 8, FAIL if < 8
+```
+
+This unblocks the audit's naturalness gate (which shows INFO/PENDING until review sets the score).
 
 ---
 
