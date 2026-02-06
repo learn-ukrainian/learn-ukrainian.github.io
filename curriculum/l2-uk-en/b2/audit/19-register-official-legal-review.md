@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 21:56:31
+**Generated:** 2026-02-06 22:00:53
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,9 +43,6 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 331: Empty Header detected (Lonely '#'). Remove or add title.
-
 ## PEDAGOGICAL VIOLATIONS
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (79% overlap): "---
 
@@ -54,12 +51,12 @@
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 7/100)
+**📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3976/3800 (raw: 4977)
+- **Words:** ✅ 3976/3800 (raw: 4976)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -68,7 +65,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
@@ -99,8 +96,7 @@
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Вступ — Офіційно-діловий стиль** | ✅ | 393 | Included in Core |
 | **Мовні засоби офіційного стилю** | ⚪️ | 670 | Skipped |
-| **Типи документів** | ⚪️ | 568 | Skipped |
-| **Типи документів в офіційно-діловому стилі класифікуються за кількома критеріями. Розпорядчі документи містять рішення та вимоги, обов'язкові для виконання. До них належать накази, розпорядження, постанови та ухвали. Їхня мова характеризується імперативністю та категоричністю.** | ⚪️ | 242 | Skipped |
+| **Типи документів** | ⚪️ | 842 | Skipped |
 | **Типові помилки** | ✅ | 218 | Included in Core |
 | **Структура офіційних документів** | ⚪️ | 465 | Skipped |
 | **Законодавчі тексти** | ✅ | 624 | Included in Core |

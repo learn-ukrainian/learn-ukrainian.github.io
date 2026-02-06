@@ -2,10 +2,10 @@
   "module": "11-multi-clause-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T21:56:30.485453Z",
+  "last_audit": "2026-02-06T22:00:50.456092Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:53:55.851124Z",
+    "md": "2026-02-06T21:59:35.865815Z",
     "meta": "2026-02-06T21:26:00.672533Z",
     "activities": "2026-02-06T21:26:00.648533Z",
     "vocabulary": "2026-02-06T21:26:00.677533Z",
@@ -13,14 +13,14 @@
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Valid Structure | Lint: 1 Format Errors"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5314/3800 (raw: 5690) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5315/3800 (raw: 5690)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

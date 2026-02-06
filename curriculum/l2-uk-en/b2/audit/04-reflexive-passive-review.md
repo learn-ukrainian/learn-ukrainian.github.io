@@ -1,8 +1,8 @@
 # Audit Report: M04 — 04-reflexive-passive.md
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 21:56:26
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 21:57:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,14 +42,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 610: Empty Header detected (Lonely '#'). Remove or add title.
-
-## Recommendation
-**📝 UPDATE** (severity 2/100)
-
 ## Gates
-- **Words:** ✅ 3824/3800 (raw: 4550)
+- **Words:** ✅ 3824/3800 (raw: 4549)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -58,7 +52,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 10 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
@@ -95,6 +89,5 @@
 | **Вираження агента** | ⚪️ | 604 | Skipped |
 | **Контексти вживання** | ✅ | 347 | Included in Core |
 | **Порівняння форм пасиву** | ⚪️ | 471 | Skipped |
-| **Практика і підсумок** | ✅ | 114 | Included in Core |
-| **### Самоперевірка** | ⚪️ | 132 | Skipped |
+| **Практика і підсумок** | ✅ | 246 | Included in Core |
 | **Підсумок** | ✅ | 139 | Included in Core |

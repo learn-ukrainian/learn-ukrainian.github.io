@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 21:56:29
+**Generated:** 2026-02-06 22:00:48
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,22 +43,8 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 680: Empty Header detected (Lonely '#'). Remove or add title.
-
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Кожна форма пасиву має свою «зону комфорту» — контексти, де вона звучить найприродніше, та зони, де ...". Shares significant keywords with sentence at index 48.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'якщо важливий...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 7/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 5620/3800 (raw: 6170)
+- **Words:** ✅ 5608/3800 (raw: 6157)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -67,8 +53,8 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 2 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -99,11 +85,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
 | **Вступ — Регістр і пасив** | ✅ | 1068 | Included in Core |
-| **Таблиця регістрів і форм пасиву** | ⚪️ | 1269 | Skipped |
+| **Таблиця регістрів і форм пасиву** | ⚪️ | 1251 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 610 | Included in Core |
 | **Практичні сценарії — Науковий контекст** | ✅ | 712 | Included in Core |
 | **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 316 | Included in Core |
 | **Практичні сценарії — Розмовний контекст** | ✅ | 772 | Included in Core |
-| **Інтегрована практика** | ⚪️ | 116 | Skipped |
-| **### Завдання 4: Аналіз тексту** | ✅ | 120 | Included in Core |
-| **Підсумок модуля** | ✅ | 583 | Included in Core |
+| **Інтегрована практика** | ⚪️ | 236 | Skipped |
+| **Підсумок модуля** | ✅ | 589 | Included in Core |

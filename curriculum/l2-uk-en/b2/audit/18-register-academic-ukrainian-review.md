@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 21:55:51
+**Generated:** 2026-02-06 22:00:52
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,35 +43,26 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (85% overlap): "Його головна функція — об'єктивний виклад наукових знань, аргументація теорій та представлення резул...". Shares significant keywords with sentence at index 6.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 3890/3800 (raw: 4235)
+- **Words:** ✅ 3969/3800 (raw: 4314)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 3/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
-- **Richness:** ❌ 91% < 95% min (style)
+- **Richness:** ❌ 94% < 95% min (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 91% (minimum: 95%)
+**Score:** 94% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
@@ -79,23 +70,23 @@
 |--------|-------|--------|-------|--------|--------------|
 | exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
 | model_answers | 100 | 3 | 100% | 20% | 20.0% |
-| engagement | 4 | 5 | 80% | 15% | 12.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 13 | 5 | 100% | 15% | 15.0% |
-| visual | 6 | 4 | 100% | 10% | 10.0% |
-| variety | 0.92 | - | 92% | 5% | 4.6% |
+| visual | 10 | 4 | 100% | 10% | 10.0% |
+| variety | 0.93 | - | 93% | 5% | 4.7% |
 | cultural | 0 | - | 0% | 5% | 0.0% |
 | paragraph_var | 0.98 | - | 98% | 5% | 4.9% |
-| **TOTAL** | | | | | **91.5%** |
+| **TOTAL** | | | | | **94.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
-| **Вступ — Науковий стиль** | ✅ | 655 | Included in Core |
-| **Лексичні особливості** | ⚪️ | 695 | Skipped |
-| **Граматичні особливості** | ⚪️ | 907 | Skipped |
-| **Мовне хеджування** | ⚪️ | 592 | Skipped |
-| **Цитування та посилання** | ⚪️ | 250 | Skipped |
+| **Вступ — Науковий стиль** | ✅ | 636 | Included in Core |
+| **Лексичні особливості** | ⚪️ | 718 | Skipped |
+| **Граматичні особливості** | ⚪️ | 935 | Skipped |
+| **Мовне хеджування** | ⚪️ | 615 | Skipped |
+| **Цитування та посилання** | ⚪️ | 274 | Skipped |
 | **Структура наукового тексту** | ✅ | 510 | Included in Core |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
 | **Підсумок** | ✅ | 114 | Included in Core |

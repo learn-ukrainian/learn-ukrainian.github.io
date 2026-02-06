@@ -1,8 +1,8 @@
 # Audit Report: M05 — 05-third-person-plural-passive.md
 **Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 21:56:27
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 21:57:57
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,14 +44,8 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## LINT ERRORS
-- ❌ Line 563: Empty Header detected (Lonely '#'). Remove or add title.
-
-## Recommendation
-**📝 UPDATE** (severity 2/100)
-
 ## Gates
-- **Words:** ✅ 3976/3800 (raw: 4409)
+- **Words:** ✅ 3976/3800 (raw: 4408)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -60,7 +54,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 1 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
@@ -97,6 +91,5 @@
 | **Контексти вживання** | ✅ | 817 | Included in Core |
 | **Порівняння з іншими формами пасиву** | ⚪️ | 360 | Skipped |
 | **Типові помилки** | ✅ | 447 | Included in Core |
-| **Практика і підсумок** | ✅ | 147 | Included in Core |
-| **### Порівняння з іншими мовами** | ⚪️ | 128 | Skipped |
+| **Практика і підсумок** | ✅ | 275 | Included in Core |
 | **Підсумок** | ✅ | 99 | Included in Core |

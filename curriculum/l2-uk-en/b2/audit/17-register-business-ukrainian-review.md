@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 21:55:49
+**Generated:** 2026-02-06 22:00:51
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,8 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (90% overlap): "В українській діловій культурі особливо цінуються пунктуальність, підготовленість до зустрічі та пов...". Shares significant keywords with sentence at index 189.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Дотримання цих принципів виражається не лише в поведінці, а й у мові: вживання ввічливих формул, уни...". Shares significant keywords with sentence at index 190.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 3509/3800 (raw: 4604)
+- **Words:** ❌ 3465/3800 (raw: 4560)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,9 +54,9 @@
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -98,6 +87,6 @@
 | **Електронне листування** | ⚪️ | 264 | Skipped |
 | **Переговори та зустрічі** | ⚪️ | 341 | Skipped |
 | **Корпоративна комунікація** | ⚪️ | 715 | Skipped |
-| **Типові помилки та русизми** | ✅ | 317 | Included in Core |
+| **Типові помилки та русизми** | ✅ | 273 | Included in Core |
 | **Практика і підсумок** | ✅ | 183 | Included in Core |
 | **Підсумок** | ✅ | 94 | Included in Core |

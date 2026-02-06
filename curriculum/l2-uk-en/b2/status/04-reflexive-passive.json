@@ -2,10 +2,10 @@
   "module": "04-reflexive-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T21:56:26.714283Z",
+  "last_audit": "2026-02-06T21:57:55.983919Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:48:19.280457Z",
+    "md": "2026-02-06T21:57:00.914046Z",
     "meta": "2026-02-06T21:26:00.671533Z",
     "activities": "2026-02-06T21:26:00.646533Z",
     "vocabulary": "2026-02-06T21:26:00.677533Z",
@@ -13,14 +13,14 @@
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Valid Structure | Lint: 1 Format Errors"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3824/3800 (raw: 4550)"
+      "message": "3824/3800 (raw: 4549)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }
