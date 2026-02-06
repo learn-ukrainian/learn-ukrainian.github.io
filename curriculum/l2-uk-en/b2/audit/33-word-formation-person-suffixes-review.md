@@ -1,8 +1,8 @@
 # Audit Report: M33 — 33-word-formation-person-suffixes.md
 **Level:** B2 | **Module:** M33 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:19
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 13:01:01
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,19 +44,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2221/2000 (raw: 2856)
+- **Words:** ✅ 2505/2000 (raw: 3504)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 12/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -68,25 +68,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 40 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 43 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 8 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 19 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 7 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| questions | 25 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
 | **Розминка — Як утворюються назви осіб** | ⚪️ | 257 | Skipped |
-| **Суфікс -ар/-яр (професія, заняття)** | ⚪️ | 945 | Skipped |
+| **Суфікс -ар/-яр (професія, заняття)** | ⚪️ | 1088 | Skipped |
 | **Суфікс -ач (виконавець дії)** | ⚪️ | 147 | Skipped |
-| **Суфікс -ник (рід занять, роль)** | ⚪️ | 303 | Skipped |
+| **Суфікс -ник (рід занять, роль)** | ⚪️ | 444 | Skipped |
 | **Практика — визначення словотвору** | ⚪️ | 480 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

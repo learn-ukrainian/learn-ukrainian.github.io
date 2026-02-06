@@ -1,8 +1,8 @@
 # Audit Report: M30 — 30-b21-checkpoint.md
 **Level:** B2 | **Module:** M30 | **Phase:** B2.1 | **Pedagogy:** checkpoint | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:17:34
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 13:01:00
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -50,7 +50,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2232/2000 (raw: 2425)
+- **Words:** ✅ 2454/2000 (raw: 2647)
 - **Activities:** ✅ 21/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -62,7 +62,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -79,7 +79,7 @@
 | variety | 0.89 | - | 89% | 15% | 13.4% |
 | engagement | 7 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 16 | 3 | 100% | 10% | 10.0% |
+| visual | 18 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
 | **TOTAL** | | | | | **88.3%** |
 
@@ -88,7 +88,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Огляд — Контрольна точка B2.1** | ⚪️ | 142 | Skipped |
-| **Навичка 1: Пасивний стан** | ⚪️ | 277 | Skipped |
+| **Навичка 1: Пасивний стан** | ⚪️ | 499 | Skipped |
 | **Навичка 2: Дієприкметники** | ⚪️ | 405 | Skipped |
 | **Навичка 3: Регістри** | ⚪️ | 439 | Skipped |
 | **Навичка 4: Доменна лексика** | ⚪️ | 438 | Skipped |

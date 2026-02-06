@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M36 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:12:52
+**Generated:** 2026-02-06 13:01:04
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,49 +44,49 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2129/2000 (raw: 2979)
+- **Words:** ✅ 2849/2000 (raw: 4169)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/6
+- **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 46 | 24 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
+| examples | 78 | 24 | 100% | 20% | 20.0% |
+| engagement | 16 | 5 | 100% | 15% | 15.0% |
 | dialogues | 13 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 18 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.78 | - | 78% | 5% | 3.9% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
-| proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.7%** |
+| cultural | 10 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
+| visual | 28 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| questions | 34 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Розминка — Словотвір прикметників** | ⚪️ | 249 | Skipped |
-| **Suffix -ський/-цький (belonging/origin)** | ⚪️ | 1162 | Skipped |
-| **Suffix -ний/-альний (quality/relation)** | ⚪️ | 180 | Skipped |
-| **Compound Adjectives** | ⚪️ | 281 | Skipped |
-| **Практика — утворення прикметників** | ⚪️ | 181 | Skipped |
+| **Suffix -ський/-цький (belonging/origin)** | ⚪️ | 1320 | Skipped |
+| **Suffix -ний/-альний (quality/relation)** | ⚪️ | 512 | Skipped |
+| **Compound Adjectives** | ⚪️ | 464 | Skipped |
+| **Практика — утворення прикметників** | ⚪️ | 228 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

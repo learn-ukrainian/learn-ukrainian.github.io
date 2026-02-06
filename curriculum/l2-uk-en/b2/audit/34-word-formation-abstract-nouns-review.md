@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M34 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:12:50
+**Generated:** 2026-02-06 13:01:02
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2167/2000 (raw: 2773)
+- **Words:** ✅ 2619/2000 (raw: 3401)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,25 +67,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 38 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| examples | 59 | 24 | 100% | 20% | 20.0% |
+| engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
+| visual | 16 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 23 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
 | **Розминка — Абстрактна лексика** | ⚪️ | 206 | Skipped |
-| **Суфікс -ння/-ення (дія, процес)** | ⚪️ | 773 | Skipped |
-| **Суфікс -ість (якість, властивість)** | ⚪️ | 150 | Skipped |
+| **Суфікс -ння/-ення (дія, процес)** | ⚪️ | 943 | Skipped |
+| **Суфікс -ість (якість, властивість)** | ⚪️ | 344 | Skipped |
 | **Суфікси -ок, -ка, -ство (результат, сфера)** | ⚪️ | 625 | Skipped |
-| **Практика — номіналізація** | ⚪️ | 331 | Skipped |
+| **Практика — номіналізація** | ⚪️ | 419 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,10 +2,10 @@
   "module": "30-b21-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:17:34.780355Z",
+  "last_audit": "2026-02-06T13:01:00.145098Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:17:10.745376Z",
+    "md": "2026-02-06T12:51:26.818188Z",
     "meta": "2026-02-06T12:04:24.712813Z",
     "activities": "2026-02-06T12:04:24.691813Z",
     "vocabulary": "2026-02-06T12:04:24.718813Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2232/2000 (raw: 2425)"
+      "message": "2454/2000 (raw: 2647)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

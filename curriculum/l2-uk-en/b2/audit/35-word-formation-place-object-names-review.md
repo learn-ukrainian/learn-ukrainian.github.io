@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:12:51
+**Generated:** 2026-02-06 13:01:03
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2353/2000 (raw: 2764)
+- **Words:** ✅ 2655/2000 (raw: 3319)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -55,37 +55,37 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 61 | 24 | 100% | 20% | 20.0% |
+| examples | 68 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 21 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
-| questions | 42 | 5 | 100% | 5% | 5.0% |
-| proverbs | 6 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.8%** |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| questions | 48 | 5 | 100% | 5% | 5.0% |
+| proverbs | 7 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
 | **Розминка — Як утворюються назви місць** | ⚪️ | 244 | Skipped |
-| **Suffix -ня** | ⚪️ | 1236 | Skipped |
+| **Suffix -ня** | ⚪️ | 1245 | Skipped |
 | **Suffix -ище (place/area)** | ⚪️ | 229 | Skipped |
-| **Suffix -арня (workshop/establishment)** | ⚪️ | 381 | Skipped |
-| **Практика — утворення назв місць** | ⚪️ | 184 | Skipped |
+| **Suffix -арня (workshop/establishment)** | ⚪️ | 536 | Skipped |
+| **Практика — утворення назв місць** | ⚪️ | 322 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |
