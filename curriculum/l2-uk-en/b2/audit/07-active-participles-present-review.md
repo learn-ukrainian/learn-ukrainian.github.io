@@ -1,8 +1,8 @@
 # Audit Report: M07 — 07-active-participles-present.md
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:39:27
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 21:55:29
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3161/3800 (raw: 3997)
+- **Words:** ✅ 3873/3800 (raw: 4709)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -73,9 +73,9 @@
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
 | visual | 12 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
 | questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
@@ -83,12 +83,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 129 | Included in Core |
+| **Intro/Narrative** | ✅ | 227 | Included in Core |
 | **Вступ — Активні дієприкметники** | ✅ | 420 | Included in Core |
 | **Утворення дієприкметників на -учий/-ючий** | ⚪️ | 626 | Skipped |
-| **Стилістична специфіка** | ⚪️ | 313 | Skipped |
-| **Еквівалентні підрядні речення** | ⚪️ | 475 | Skipped |
-| **Контексти вживання** | ✅ | 469 | Included in Core |
+| **Стилістична специфіка** | ⚪️ | 469 | Skipped |
+| **Еквівалентні підрядні речення** | ⚪️ | 598 | Skipped |
+| **Контексти вживання** | ✅ | 645 | Included in Core |
 | **Підсумок і практика** | ✅ | 603 | Included in Core |
 | **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Підсумок** | ✅ | 171 | Included in Core |

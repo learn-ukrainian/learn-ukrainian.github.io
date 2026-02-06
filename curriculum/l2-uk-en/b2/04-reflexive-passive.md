@@ -607,7 +607,6 @@
 2. This problem is being investigated → ___________
 3. The magazine is published monthly → ___________
 
-##
 
 ### Самоперевірка
 

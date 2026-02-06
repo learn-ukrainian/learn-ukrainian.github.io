@@ -2,13 +2,13 @@
   "module": "03-impersonal-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:39:23.003743Z",
+  "last_audit": "2026-02-06T21:55:24.461201Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:38:52.208227Z",
-    "meta": "2026-02-06T19:54:09.929920Z",
-    "activities": "2026-02-06T19:54:09.904921Z",
-    "vocabulary": "2026-02-06T19:54:09.935920Z",
+    "md": "2026-02-06T21:31:54.886348Z",
+    "meta": "2026-02-06T21:26:00.671533Z",
+    "activities": "2026-02-06T21:26:00.646533Z",
+    "vocabulary": "2026-02-06T21:26:00.677533Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3198/3800 (raw: 4243)"
+      "status": "warn",
+      "violations": 0,
+      "message": "3733/3800 (raw: 4778) (67 short)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

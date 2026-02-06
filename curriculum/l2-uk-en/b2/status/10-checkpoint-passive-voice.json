@@ -2,13 +2,13 @@
   "module": "10-checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:39:29.936643Z",
+  "last_audit": "2026-02-06T21:55:31.813503Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:38:52.198227Z",
-    "meta": "2026-02-06T19:54:09.929920Z",
-    "activities": "2026-02-06T19:54:09.905921Z",
-    "vocabulary": "2026-02-06T19:54:09.935920Z",
+    "md": "2026-02-06T21:54:38.034333Z",
+    "meta": "2026-02-06T21:26:00.671533Z",
+    "activities": "2026-02-06T21:26:00.648533Z",
+    "vocabulary": "2026-02-06T21:26:00.677533Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Missing '## Summary'"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2879/3500 (raw: 4089)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5555/3500 (raw: 6765)"
     },
     "activities": {
       "status": "pass",
@@ -41,11 +41,10 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors",
       "Structure: Missing '## Summary'",
       "Checkpoint Format Errors"
     ],
-    "pass_count": 2,
-    "fail_count": 2
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:39:34
+**Generated:** 2026-02-06 21:56:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,20 +43,23 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
+## LINT ERRORS
+- ❌ Line 331: Empty Header detected (Lonely '#'). Remove or add title.
+
 ## PEDAGOGICAL VIOLATIONS
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (79% overlap): "---
 
 
-Мовні засоби офіційного стилю формують особливу систему, яка забезпечує точність, однозначніст...". Shares significant keywords with sentence at index 31.
+Мовні засоби офіційного стилю формують особливу систему, яка забезпечує точність, однозначніст...". Shares significant keywords with sentence at index 32.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 7/100)
 
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2644/3800 (raw: 3644)
+- **Words:** ✅ 3976/3800 (raw: 4977)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -65,10 +68,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -85,20 +88,21 @@
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
 | visual | 18 | 4 | 100% | 10% | 10.0% |
-| variety | 0.96 | - | 96% | 5% | 4.8% |
-| cultural | 6 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.8%** |
+| variety | 0.94 | - | 94% | 5% | 4.7% |
+| cultural | 7 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Вступ — Офіційно-діловий стиль** | ✅ | 384 | Included in Core |
-| **Мовні засоби офіційного стилю** | ⚪️ | 539 | Skipped |
-| **Типи документів** | ⚪️ | 669 | Skipped |
-| **Структура офіційних документів** | ⚪️ | 298 | Skipped |
-| **Законодавчі тексти** | ✅ | 405 | Included in Core |
-| **Типові помилки** | ✅ | 86 | Included in Core |
+| **Вступ — Офіційно-діловий стиль** | ✅ | 393 | Included in Core |
+| **Мовні засоби офіційного стилю** | ⚪️ | 670 | Skipped |
+| **Типи документів** | ⚪️ | 568 | Skipped |
+| **Типи документів в офіційно-діловому стилі класифікуються за кількома критеріями. Розпорядчі документи містять рішення та вимоги, обов'язкові для виконання. До них належать накази, розпорядження, постанови та ухвали. Їхня мова характеризується імперативністю та категоричністю.** | ⚪️ | 242 | Skipped |
+| **Типові помилки** | ✅ | 218 | Included in Core |
+| **Структура офіційних документів** | ⚪️ | 465 | Skipped |
+| **Законодавчі тексти** | ✅ | 624 | Included in Core |
 | **Практика і підсумок** | ✅ | 191 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Підсумок** | ✅ | 199 | Included in Core |

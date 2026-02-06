@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:39:32
+**Generated:** 2026-02-06 21:55:49
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,19 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (90% overlap): "В українській діловій культурі особливо цінуються пунктуальність, підготовленість до зустрічі та пов...". Shares significant keywords with sentence at index 189.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Дотримання цих принципів виражається не лише в поведінці, а й у мові: вживання ввічливих формул, уни...". Shares significant keywords with sentence at index 190.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ❌ 2754/3800 (raw: 3849)
+- **Words:** ❌ 3509/3800 (raw: 4604)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -54,9 +65,9 @@
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -75,18 +86,18 @@
 | visual | 31 | 4 | 100% | 10% | 10.0% |
 | variety | 0.93 | - | 93% | 5% | 4.7% |
 | cultural | 5 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.5%** |
+| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Вступ — Ділове спілкування** | ✅ | 639 | Included in Core |
-| **Ділове листування** | ⚪️ | 824 | Skipped |
-| **Електронне листування** | ⚪️ | 123 | Skipped |
-| **Переговори та зустрічі** | ⚪️ | 175 | Skipped |
-| **Корпоративна комунікація** | ⚪️ | 465 | Skipped |
-| **Типові помилки та русизми** | ✅ | 272 | Included in Core |
+| **Вступ — Ділове спілкування** | ✅ | 659 | Included in Core |
+| **Ділове листування** | ⚪️ | 875 | Skipped |
+| **Електронне листування** | ⚪️ | 264 | Skipped |
+| **Переговори та зустрічі** | ⚪️ | 341 | Skipped |
+| **Корпоративна комунікація** | ⚪️ | 715 | Skipped |
+| **Типові помилки та русизми** | ✅ | 317 | Included in Core |
 | **Практика і підсумок** | ✅ | 183 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Підсумок** | ✅ | 94 | Included in Core |

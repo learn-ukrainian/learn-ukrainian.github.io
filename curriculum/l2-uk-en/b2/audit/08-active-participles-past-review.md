@@ -1,8 +1,8 @@
 # Audit Report: M08 — 08-active-participles-past.md
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:39:28
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 21:55:30
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3098/3800 (raw: 3845)
+- **Words:** ✅ 3809/3800 (raw: 4556)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -67,26 +67,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 64 | 24 | 100% | 20% | 20.0% |
+| examples | 74 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
-| variety | 0.95 | - | 95% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.84 | - | 84% | 5% | 4.2% |
+| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
 | questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.7%** |
+| **TOTAL** | | | | | **98.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
 | **Вступ — Минулі активні дієприкметники** | ✅ | 482 | Included in Core |
-| **Утворення форм на -лий** | ⚪️ | 397 | Skipped |
-| **Легітимні лексикалізовані форми** | ⚪️ | 578 | Skipped |
-| **Русизми та їх уникання** | ⚪️ | 325 | Skipped |
-| **Синтетичний майбутній час** | ⚪️ | 606 | Skipped |
-| **Розпізнавання в старих текстах** | ✅ | 403 | Included in Core |
-| **Практика і підсумок** | ✅ | 220 | Included in Core |
+| **Утворення форм на -лий** | ⚪️ | 523 | Skipped |
+| **Легітимні лексикалізовані форми** | ⚪️ | 640 | Skipped |
+| **Русизми та їх уникання** | ⚪️ | 488 | Skipped |
+| **Синтетичний майбутній час** | ⚪️ | 710 | Skipped |
+| **Розпізнавання в старих текстах** | ✅ | 554 | Included in Core |
+| **Практика і підсумок** | ✅ | 325 | Included in Core |
