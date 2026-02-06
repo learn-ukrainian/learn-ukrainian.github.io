@@ -2,10 +2,10 @@
   "module": "29-b21-integration-practice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:20:34.538794Z",
+  "last_audit": "2026-02-06T12:46:52.985807Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:04:24.674813Z",
+    "md": "2026-02-06T12:45:08.414933Z",
     "meta": "2026-02-06T12:04:24.711813Z",
     "activities": "2026-02-06T12:04:24.691813Z",
     "vocabulary": "2026-02-06T12:04:24.718813Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1865/2000 (raw: 1972)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2194/2000 (raw: 2301)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

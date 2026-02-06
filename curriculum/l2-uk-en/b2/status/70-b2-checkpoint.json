@@ -2,10 +2,10 @@
   "module": "70-b2-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:20:33.448059Z",
+  "last_audit": "2026-02-06T12:46:51.892494Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:04:24.680813Z",
+    "md": "2026-02-06T12:38:28.815497Z",
     "meta": "2026-02-06T12:04:24.713813Z",
     "activities": "2026-02-06T12:04:24.698813Z",
     "vocabulary": "2026-02-06T12:04:24.719813Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1873/2000 (raw: 2026)"
+      "status": "warn",
+      "violations": 0,
+      "message": "1965/2000 (raw: 2118) (35 short)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

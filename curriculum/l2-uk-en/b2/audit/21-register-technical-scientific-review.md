@@ -1,8 +1,8 @@
 # Audit Report: M21 — 21-register-technical-scientific.md
 **Level:** B2 | **Module:** M21 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:26:13
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:46:49
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1880/2000 (raw: 2244)
+- **Words:** ✅ 2073/2000 (raw: 2437)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 98.6% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -68,25 +68,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 93 | 24 | 100% | 20% | 20.0% |
+| examples | 96 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 28 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.4%** |
+| proverbs | 5 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Розминка — Що таке науково-технічний стиль** | ⚪️ | 46 | Skipped |
+| **Розминка — Що таке науково-технічний стиль** | ⚪️ | 143 | Skipped |
 | **Лексичні особливості** | ⚪️ | 878 | Skipped |
 | **Граматичні особливості** | ⚪️ | 276 | Skipped |
 | **Типи технічних текстів** | ✅ | 490 | Included in Core |
-| **Практика — аналіз і створення** | ✅ | 178 | Included in Core |
+| **Практика — аналіз і створення** | ✅ | 274 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

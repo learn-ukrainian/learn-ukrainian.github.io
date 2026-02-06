@@ -1,8 +1,8 @@
 # Audit Report: M83 — 83-b2-pidsumkovyy-ohlyad.md
 **Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:26:16
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:46:55
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -51,7 +51,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1840/2000 (raw: 2019)
+- **Words:** ✅ 2211/2000 (raw: 2390)
 - **Activities:** ✅ 22/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -63,7 +63,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⚠️ Too many activities: 22 (target 15-19)
-- **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 99.3% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -88,10 +88,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |
-| **Огляд — Що ви опанували на B2** | ⚪️ | 72 | Skipped |
+| **Огляд — Що ви опанували на B2** | ⚪️ | 146 | Skipped |
 | **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
-| **Граматика B2: Синтез** | ⚪️ | 21 | Skipped |
-| **Навички B2: Синтез** | ⚪️ | 223 | Skipped |
+| **Граматика B2: Синтез** | ⚪️ | 175 | Skipped |
+| **Навички B2: Синтез** | ⚪️ | 322 | Skipped |
 | **Підсумок та мотивація** | ✅ | 699 | Included in Core |
-| **Самооцінка та пробіли** | ⚪️ | 225 | Skipped |
+| **Самооцінка та пробіли** | ⚪️ | 269 | Skipped |
 | **Лексика B2: Синтез** | ⚪️ | 491 | Skipped |

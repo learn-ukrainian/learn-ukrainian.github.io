@@ -1,8 +1,8 @@
 # Audit Report: M70 — 70-b2-checkpoint.md
 **Level:** B2 | **Module:** M70 | **Phase:** B2.2 | **Pedagogy:** Assessment | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:33
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:46:51
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1873/2000 (raw: 2026)
+- **Words:** ⚠️ 1965/2000 (raw: 2118) (35 short)
 - **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -84,7 +84,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 79 | Included in Core |
 | **Огляд — Контрольна точка B2.2** | ⚪️ | 68 | Skipped |
-| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 130 | Skipped |
 | **Pedagogical Structure** | ⚪️ | 479 | Skipped |
 | **Domain Vocabulary (M71-74)** | ➖ | 406 | Excluded Type |
 | **Professional Communication (M85-88)** | ⚪️ | 400 | Skipped |

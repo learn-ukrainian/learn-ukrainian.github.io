@@ -1,8 +1,8 @@
 # Audit Report: M82 — 82-capstone-prezentatsiya.md
 **Level:** B2 | **Module:** M82 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:26:14
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:46:50
 
 ## Configuration
 **Type:** B2-skills
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1880/2000 (raw: 1948)
+- **Words:** ✅ 2147/2000 (raw: 2215)
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 7/5 types
@@ -57,19 +57,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (skills))
-- **Richness:** ✅ 96% (skills)
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (skills))
+- **Richness:** ✅ 98% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 80%)
+**Score:** 98% (minimum: 80%)
 **Module Type:** skills
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 13 | 15 | 87% | 26% | 22.2% |
+| examples | 14 | 15 | 93% | 26% | 23.7% |
 | engagement | 7 | 5 | 100% | 19% | 19.4% |
 | variety | 0.99 | - | 99% | 12% | 12.1% |
 | cultural | 5 | - | 100% | 12% | 12.2% |
@@ -77,7 +77,7 @@
 | visual | 8 | 2 | 100% | 6% | 6.1% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
 | questions | 14 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **96.6%** |
+| **TOTAL** | | | | | **98.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,7 +86,7 @@
 | **Огляд — Усна презентація** | ⚪️ | 367 | Skipped |
 | **Структура презентації** | ⚪️ | 358 | Skipped |
 | **Візуальні матеріали** | ⚪️ | 358 | Skipped |
-| **Техніка виступу** | ⚪️ | 269 | Skipped |
-| **Відповіді на запитання** | ⚪️ | 249 | Skipped |
-| **Репетиція та фінал** | ⚪️ | 267 | Skipped |
+| **Техніка виступу** | ⚪️ | 350 | Skipped |
+| **Відповіді на запитання** | ⚪️ | 321 | Skipped |
+| **Репетиція та фінал** | ⚪️ | 381 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

@@ -1,8 +1,8 @@
 # Audit Report: M79 — 79-capstone-research.md
 **Level:** B2 | **Module:** M79 | **Phase:** B2.4 | **Pedagogy:** integration | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:26:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:46:54
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1829/2000 (raw: 1989)
+- **Words:** ✅ 2175/2000 (raw: 2335)
 - **Activities:** ✅ 17/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (17 activities)
-- **Immersion:** 🇺🇦 99.0% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 99.2% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -83,10 +83,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд — Capstone проєкт** | ⚪️ | 167 | Skipped |
-| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
-| **Вибір теми дослідження** | ⚪️ | 312 | Skipped |
+| **Огляд — Capstone проєкт** | ⚪️ | 196 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 105 | Skipped |
+| **Вибір теми дослідження** | ⚪️ | 392 | Skipped |
 | **Пошук та оцінка джерел** | ⚪️ | 365 | Skipped |
-| **Складання плану-проспекту** | ⚪️ | 135 | Skipped |
+| **Складання плану-проспекту** | ⚪️ | 305 | Skipped |
 | **Написання чернетки** | ⚪️ | 537 | Skipped |
 | **Підсумок та завдання** | ✅ | 275 | Included in Core |
