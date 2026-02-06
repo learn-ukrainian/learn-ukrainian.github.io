@@ -9,3 +9,18 @@ naturalness:
 transliteration: none
 build:
   last_modified: '2026-01-26'
+content_outline:
+- section: Вступ
+  words: 15
+- section: Опис симптомів
+  words: 199
+- section: Діалог лікар
+  words: 986
+- section: Медичні інструкції
+  words: 715
+- section: Медична документація
+  words: 521
+- section: Типові помилки та русизми
+  words: 67
+- section: Практика і підсумок
+  words: 166

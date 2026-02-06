@@ -18,3 +18,14 @@ vocab_count: 101
 build:
   last_modified: '2026-01-26'
 id: b2-26
+content_outline:
+- section: Розминка
+  words: 386
+- section: Органи влади
+  words: 845
+- section: Виборчий процес
+  words: 285
+- section: Політичні поняття
+  words: 112
+- section: Практика
+  words: 158

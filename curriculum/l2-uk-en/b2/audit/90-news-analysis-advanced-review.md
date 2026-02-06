@@ -2,17 +2,17 @@
 **Level:** B2 | **Module:** M90 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 23:21:52
+**Generated:** 2026-02-06 00:17:01
 
 ## Configuration
-**Type:** B2-history
+**Type:** B2-skills
 **Word Target:** 2000 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥2 types required
-**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Activities:** 14-18 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** cloze, fill-in, quiz, translate
 **Required Types:** essay-response, reading, true-false
-**Engagement:** ≥5 callouts
+**Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
@@ -26,20 +26,20 @@
 | 4 | true-false | Твердження про медіаграмотність | 15 | 8 | ✅ |
 | 5 | unjumble | Відновіть правильний порядок речень | 12 | 6 | ✅ |
 | 6 | error-correction | Виправте помилки в аналізі медіатекстів | 10 | 6 | ✅ |
-| 7 | cloze | Текст з пропусками про медіаманіпуляції | 15 | 1 | ✅ |
-| 8 | group-sort | Класифікація медіатехнік | 24 | 1 | ✅ |
+| 7 | cloze | Текст з пропусками про медіаманіпуляції | 15 | 14 | ✅ |
+| 8 | group-sort | Класифікація медіатехнік | 24 | 14 | ✅ |
 | 9 | mark-the-words | Знайдіть маркери упередженості | 6 | 6 | ✅ |
 | 10 | select | Множинний вибір ознак маніпуляції | 8 | 6 | ✅ |
 | 11 | translate | Переклад термінів медіааналізу | 8 | 6 | ✅ |
 | 12 | quiz | Глибокий аналіз медіатекстів | 10 | 8 | ✅ |
 | 13 | essay-response | Критичний аналіз новинного матеріалу | 1 | 1 | ✅ |
 | 14 | comparative-study | Порівняльний аналіз висвітлення події | 1 | 1 | ✅ |
-| 15 | reading | Текст для аналізу: Аналіз новин: Поглиблено | 3 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Аналіз новин: Поглиблено | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 3-9) ❌
-- Unique types: 14 (minimum: 2) ✅
-- Priority types used: 3/4 (comparative-study, essay-response, reading) ✅
+- Total activities: 15 (target: 14-18) ✅
+- Unique types: 14 (minimum: 5) ✅
+- Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
@@ -56,63 +56,38 @@
 
 ## Gates
 - **Words:** ✅ 4057/2000 (raw: 4180)
-- **Activities:** ✅ 15/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 14/2 types
+- **Activities:** ✅ 15/14
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 14/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ❌ 5/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 3-9)
-- **Immersion:** 🇺🇦 96.8% (target 90-100% (history))
-- **Richness:** ❌ 73% < 95% min (grammar) - REWRITE needed
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
+- **Immersion:** 🇺🇦 96.8% (target 90-100% (skills))
+- **Richness:** ✅ 96% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 73% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 96% (minimum: 80%)
+**Module Type:** skills
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 20 | 24 | 83% | 20% | 16.6% |
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 1 | 3 | 33% | 5% | 1.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 25 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **73.2%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
-    
-    Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
+| examples | 20 | 15 | 100% | 26% | 25.5% |
+| engagement | 5 | 5 | 100% | 19% | 19.4% |
+| variety | 0.99 | - | 99% | 12% | 12.1% |
+| cultural | 6 | - | 100% | 12% | 12.2% |
+| realworld | 5 | 3 | 100% | 12% | 12.2% |
+| visual | 1 | 2 | 50% | 6% | 3.1% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
+| questions | 25 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **96.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

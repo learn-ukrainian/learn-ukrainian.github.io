@@ -27,3 +27,12 @@ activity_hints:
 - type: true-false
   focus: Розуміння значень
   items: 8
+content_outline:
+- section: Розминка
+  words: 156
+- section: Big
+  words: 870
+- section: Small
+  words: 308
+- section: Практика
+  words: 384

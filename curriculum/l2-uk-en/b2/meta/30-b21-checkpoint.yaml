@@ -19,3 +19,16 @@ vocab_count: 34
 build:
   last_modified: '2026-01-26'
 id: b2-30
+content_outline:
+- section: Огляд
+  words: 69
+- section: Навичка 1
+  words: 176
+- section: Навичка 2
+  words: 291
+- section: Навичка 3
+  words: 347
+- section: Навичка 4
+  words: 307
+- section: Підсумок та результати
+  words: 457

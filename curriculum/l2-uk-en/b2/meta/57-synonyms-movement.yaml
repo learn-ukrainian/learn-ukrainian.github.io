@@ -27,3 +27,12 @@ activity_hints:
 - type: true-false
   focus: Розуміння значень
   items: 8
+content_outline:
+- section: Розминка
+  words: 630
+- section: Walk
+  words: 479
+- section: Run
+  words: 199
+- section: Практика
+  words: 370

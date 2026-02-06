@@ -4,6 +4,7 @@ slug: professional-email-basics
 version: '2.0'
 id: b2-85
 duration: 90
+focus: skills
 transliteration: none
 tags:
 - skills
@@ -15,3 +16,16 @@ naturalness:
   score: 8
   status: PASS
   checked: '2025-12-01'
+content_outline:
+- section: Розминка
+  words: 99
+- section: Структура ділового листа
+  words: 534
+- section: Типи ділових листів
+  words: 345
+- section: Тон та формальність
+  words: 391
+- section: Типові помилки
+  words: 134
+- section: Практика
+  words: 80

@@ -17,3 +17,10 @@ vocab_count: 145
 build:
   last_modified: '2026-01-26'
 id: b2-35
+content_outline:
+- section: Розминка
+  words: 234
+- section: Suffix
+  words: 331
+- section: Практика
+  words: 166

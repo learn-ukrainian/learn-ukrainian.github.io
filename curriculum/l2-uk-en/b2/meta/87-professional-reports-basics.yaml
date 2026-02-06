@@ -6,6 +6,7 @@ id: b2-87
 naturalness:
   score: 8
   status: PASS
+focus: skills
 transliteration: none
 build:
   last_modified: '2026-01-26'
