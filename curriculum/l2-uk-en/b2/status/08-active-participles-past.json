@@ -2,13 +2,13 @@
   "module": "08-active-participles-past",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:11.852674Z",
+  "last_audit": "2026-02-06T10:30:43.464819Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:27:16.795733Z",
-    "meta": "2026-02-06T00:20:57.670883Z",
-    "activities": "2026-02-06T00:41:15.656117Z",
-    "vocabulary": "2026-02-06T00:08:34.350097Z",
+    "md": "2026-02-06T10:26:06.956070Z",
+    "meta": "2026-02-06T10:29:03.544452Z",
+    "activities": "2026-02-06T10:26:06.972070Z",
+    "vocabulary": "2026-02-06T10:26:07.002070Z",
     "plan": null
   },
   "gates": {
@@ -40,7 +40,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "6 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 1
   }

@@ -2,13 +2,13 @@
   "module": "16-register-formal-informal",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T08:41:11.883095Z",
+  "last_audit": "2026-02-06T10:30:52.430281Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T08:39:29.007077Z",
-    "meta": "2026-02-06T08:26:51.727654Z",
-    "activities": "2026-02-06T08:26:51.708654Z",
-    "vocabulary": "2026-02-06T08:26:51.731654Z",
+    "md": "2026-02-06T10:26:06.957070Z",
+    "meta": "2026-02-06T10:29:03.544452Z",
+    "activities": "2026-02-06T10:26:06.973070Z",
+    "vocabulary": "2026-02-06T10:26:07.003070Z",
     "plan": null
   },
   "gates": {
@@ -40,7 +40,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "6 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 1
   }

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M71 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 08:40:57
+**Generated:** 2026-02-06 10:31:50
 
 ## Configuration
 **Type:** B2-vocab

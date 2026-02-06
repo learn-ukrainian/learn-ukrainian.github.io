@@ -1,8 +1,8 @@
 # Audit Report: M74 — 74-mystetstvo-i-literatura.md
 **Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 08:43:59
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-06 10:31:53
 
 ## Configuration
 **Type:** B2-vocab

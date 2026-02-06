@@ -27,12 +27,3 @@ activity_hints:
 - type: true-false
   focus: Розуміння значень
   items: 8
-content_outline:
-- section: Розминка
-  words: 140
-- section: Say
-  words: 666
-- section: Ask
-  words: 430
-- section: Практика
-  words: 378

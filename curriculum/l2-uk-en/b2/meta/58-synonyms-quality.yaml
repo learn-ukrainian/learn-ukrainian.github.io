@@ -27,12 +27,3 @@ activity_hints:
 - type: true-false
   focus: Розуміння значень
   items: 8
-content_outline:
-- section: Розминка
-  words: 359
-- section: Good
-  words: 385
-- section: Bad
-  words: 585
-- section: Практика
-  words: 334

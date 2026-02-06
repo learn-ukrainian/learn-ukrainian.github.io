@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-word-formation-place-object-names.md
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 00:50:38
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-06 10:31:13
 
 ## Configuration
 **Type:** B2-grammar

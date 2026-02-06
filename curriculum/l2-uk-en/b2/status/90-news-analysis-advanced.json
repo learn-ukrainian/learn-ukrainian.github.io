@@ -2,13 +2,13 @@
   "module": "90-news-analysis-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T00:51:29.321157Z",
+  "last_audit": "2026-02-06T10:32:10.359351Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:43:51.509669Z",
-    "meta": "2026-02-06T00:48:02.338819Z",
-    "activities": "2026-02-06T00:08:34.341097Z",
-    "vocabulary": "2026-02-06T00:08:34.352097Z",
+    "md": "2026-02-06T10:26:06.969070Z",
+    "meta": "2026-02-06T10:29:44.880996Z",
+    "activities": "2026-02-06T10:26:06.988070Z",
+    "vocabulary": "2026-02-06T10:26:07.005070Z",
     "plan": null
   },
   "gates": {

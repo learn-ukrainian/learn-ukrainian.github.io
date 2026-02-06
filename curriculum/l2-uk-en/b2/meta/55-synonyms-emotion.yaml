@@ -28,12 +28,3 @@ activity_hints:
 - type: true-false
   focus: Розуміння значень
   items: 8
-content_outline:
-- section: Розминка
-  words: 212
-- section: Joy
-  words: 941
-- section: Sadness
-  words: 124
-- section: Практика
-  words: 403

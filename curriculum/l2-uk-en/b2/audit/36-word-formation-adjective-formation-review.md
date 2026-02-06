@@ -1,8 +1,8 @@
 # Audit Report: M36 — 36-word-formation-adjective-formation.md
 **Level:** B2 | **Module:** M36 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 00:50:39
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-06 10:31:14
 
 ## Configuration
 **Type:** B2-grammar

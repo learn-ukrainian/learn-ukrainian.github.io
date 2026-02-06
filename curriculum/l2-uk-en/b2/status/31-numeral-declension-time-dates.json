@@ -2,13 +2,13 @@
   "module": "31-numeral-declension-time-dates",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T08:46:06.956983Z",
+  "last_audit": "2026-02-06T10:31:08.739118Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T08:26:51.696654Z",
-    "meta": "2026-02-06T08:26:51.728654Z",
-    "activities": "2026-02-06T08:45:59.428017Z",
-    "vocabulary": "2026-02-06T08:26:51.731654Z",
+    "md": "2026-02-06T10:26:06.960070Z",
+    "meta": "2026-02-06T10:29:03.545452Z",
+    "activities": "2026-02-06T10:26:06.976070Z",
+    "vocabulary": "2026-02-06T10:26:07.003070Z",
     "plan": null
   },
   "gates": {
@@ -40,7 +40,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 1
   }

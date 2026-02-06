@@ -1,8 +1,8 @@
 # Audit Report: M34 — 34-word-formation-abstract-nouns.md
 **Level:** B2 | **Module:** M34 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 00:50:37
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-06 10:31:12
 
 ## Configuration
 **Type:** B2-grammar

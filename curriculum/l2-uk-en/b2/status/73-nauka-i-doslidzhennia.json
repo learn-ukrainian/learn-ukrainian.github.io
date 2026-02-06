@@ -2,13 +2,13 @@
   "module": "73-nauka-i-doslidzhennia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T08:40:58.432614Z",
+  "last_audit": "2026-02-06T10:31:52.148076Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T08:35:37.228832Z",
-    "meta": "2026-02-06T08:26:51.729654Z",
-    "activities": "2026-02-06T08:26:51.717654Z",
-    "vocabulary": "2026-02-06T08:26:51.732654Z",
+    "md": "2026-02-06T10:26:06.966070Z",
+    "meta": "2026-02-06T10:29:03.547452Z",
+    "activities": "2026-02-06T10:26:06.984070Z",
+    "vocabulary": "2026-02-06T10:26:07.004070Z",
     "plan": null
   },
   "gates": {

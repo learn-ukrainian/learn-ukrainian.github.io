@@ -17,16 +17,3 @@ vocabulary_count: 25
 build:
   last_modified: '2026-01-26'
 id: b2-72
-content_outline:
-- section: Розминка
-  words: 384
-- section: Базова IT
-  words: 316
-- section: Штучний інтелект та машинне навчання
-  words: 313
-- section: Кібербезпека
-  words: 260
-- section: Електронне врядування
-  words: 224
-- section: Підсумок та практика
-  words: 441

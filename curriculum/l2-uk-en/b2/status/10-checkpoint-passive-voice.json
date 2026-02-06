@@ -2,13 +2,13 @@
   "module": "10-checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:13.795925Z",
+  "last_audit": "2026-02-06T10:30:45.684927Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:26:04.393968Z",
-    "meta": "2026-02-06T00:44:08.586617Z",
-    "activities": "2026-02-06T00:41:15.657117Z",
-    "vocabulary": "2026-02-06T00:08:34.350097Z",
+    "md": "2026-02-06T10:26:06.956070Z",
+    "meta": "2026-02-06T10:29:03.544452Z",
+    "activities": "2026-02-06T10:26:06.972070Z",
+    "vocabulary": "2026-02-06T10:26:07.002070Z",
     "plan": null
   },
   "gates": {
@@ -40,7 +40,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "6 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 1
   }

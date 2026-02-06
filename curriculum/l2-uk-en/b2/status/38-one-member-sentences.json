@@ -2,13 +2,13 @@
   "module": "38-one-member-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:50:41.098642Z",
+  "last_audit": "2026-02-06T10:31:16.412813Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:38:10.439666Z",
-    "meta": "2026-02-06T00:20:57.759883Z",
-    "activities": "2026-02-06T00:08:34.332097Z",
-    "vocabulary": "2026-02-06T00:08:34.351097Z",
+    "md": "2026-02-06T10:26:06.961070Z",
+    "meta": "2026-02-06T10:29:03.546452Z",
+    "activities": "2026-02-06T10:26:06.978070Z",
+    "vocabulary": "2026-02-06T10:26:07.003070Z",
     "plan": null
   },
   "gates": {
@@ -39,8 +39,10 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 0
   }
