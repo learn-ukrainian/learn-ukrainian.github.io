@@ -2,10 +2,10 @@
   "module": "04-reflexive-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:24:06.790991Z",
+  "last_audit": "2026-02-06T20:31:58.399994Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:22:16.062050Z",
+    "md": "2026-02-06T20:27:59.491618Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.904921Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2731/3800 (raw: 3457)"
+      "message": "2962/3800 (raw: 3688)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "4 Outline Compliance Errors"
+      "3 Outline Compliance Errors"
     ],
     "pass_count": 2,
     "fail_count": 2

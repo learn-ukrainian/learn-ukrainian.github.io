@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:11
+**Generated:** 2026-02-06 20:32:07
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2608/3800 (raw: 3355)
+- **Words:** ❌ 2804/3800 (raw: 3551)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -67,17 +67,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 51 | 24 | 100% | 20% | 20.0% |
+| examples | 52 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.81 | - | 81% | 5% | 4.1% |
+| paragraph_var | 0.83 | - | 83% | 5% | 4.2% |
 | questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.5%** |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -88,5 +88,5 @@
 | **Легітимні лексикалізовані форми** | ⚪️ | 444 | Skipped |
 | **Русизми та їх уникання** | ⚪️ | 165 | Skipped |
 | **Синтетичний майбутній час** | ⚪️ | 606 | Skipped |
-| **Розпізнавання в старих текстах** | ✅ | 207 | Included in Core |
+| **Розпізнавання в старих текстах** | ✅ | 403 | Included in Core |
 | **Практика і підсумок** | ✅ | 220 | Included in Core |

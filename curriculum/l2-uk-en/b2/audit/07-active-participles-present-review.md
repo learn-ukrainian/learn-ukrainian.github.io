@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:10
+**Generated:** 2026-02-06 20:32:05
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2697/3800 (raw: 3533)
+- **Words:** ❌ 2900/3800 (raw: 3736)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -73,9 +73,9 @@
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
 | visual | 12 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
@@ -88,7 +88,7 @@
 | **Утворення дієприкметників на -учий/-ючий** | ⚪️ | 626 | Skipped |
 | **Стилістична специфіка** | ⚪️ | 178 | Skipped |
 | **Еквівалентні підрядні речення** | ⚪️ | 349 | Skipped |
-| **Контексти вживання** | ✅ | 266 | Included in Core |
+| **Контексти вживання** | ✅ | 469 | Included in Core |
 | **Підсумок і практика** | ✅ | 603 | Included in Core |
 | **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

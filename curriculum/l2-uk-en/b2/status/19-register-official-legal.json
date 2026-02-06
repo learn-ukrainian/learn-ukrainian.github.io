@@ -2,10 +2,10 @@
   "module": "19-register-official-legal",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:24:16.807218Z",
+  "last_audit": "2026-02-06T20:32:18.586474Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:23:38.809435Z",
+    "md": "2026-02-06T20:29:25.581073Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.907920Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2196/3800 (raw: 3196)"
+      "message": "2433/3800 (raw: 3433)"
     },
     "activities": {
       "status": "pass",

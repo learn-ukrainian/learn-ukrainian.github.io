@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:04
+**Generated:** 2026-02-06 20:32:49
 
 ## Configuration
 **Type:** B2-grammar
@@ -47,7 +47,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2961/3800 (raw: 4188)
+- **Words:** ❌ 3249/3800 (raw: 4476)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -59,7 +59,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -76,7 +76,7 @@
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 12 | 3 | 100% | 10% | 10.0% |
 | visual | 21 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 50 | 5 | 100% | 5% | 5.0% |
@@ -92,5 +92,5 @@
 | **Утворення дієприкметників на -тий** | ⚪️ | 188 | Skipped |
 | **Узгодження дієприкметників** | ⚪️ | 424 | Skipped |
 | **Пасив із допоміжним дієсловом бути** | ⚪️ | 173 | Skipped |
-| **Регістрова специфіка** | ⚪️ | 165 | Skipped |
+| **Регістрова специфіка** | ⚪️ | 453 | Skipped |
 | **Практика і підсумок** | ✅ | 170 | Included in Core |

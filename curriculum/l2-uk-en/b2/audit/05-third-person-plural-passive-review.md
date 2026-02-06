@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:07
+**Generated:** 2026-02-06 20:32:00
 
 ## Configuration
 **Type:** B2-grammar
@@ -45,13 +45,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 483: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 509: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 2595/3800 (raw: 3028)
+- **Words:** ❌ 3113/3800 (raw: 3546)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -63,29 +63,29 @@
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 70 | 24 | 100% | 20% | 20.0% |
+| examples | 88 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 23 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| realworld | 15 | 3 | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.81 | - | 81% | 5% | 4.1% |
+| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
 | questions | 46 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.8%** |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -94,9 +94,9 @@
 | **Вступ — Найрозмовніший пасив** | ✅ | 494 | Included in Core |
 | **Утворення конструкції** | ⚪️ | 617 | Skipped |
 | **Семантика невизначеного агента** | ⚪️ | 311 | Skipped |
-| **Контексти вживання** | ✅ | 524 | Included in Core |
+| **Контексти вживання** | ✅ | 817 | Included in Core |
 | **Порівняння з іншими формами пасиву** | ⚪️ | 144 | Skipped |
-| **Типові помилки** | ✅ | 110 | Included in Core |
+| **Типові помилки** | ✅ | 335 | Included in Core |
 | **Практика і підсумок** | ✅ | 147 | Included in Core |
 | **### Порівняння з іншими мовами** | ⚪️ | 128 | Skipped |
 | **Підсумок** | ✅ | 75 | Included in Core |

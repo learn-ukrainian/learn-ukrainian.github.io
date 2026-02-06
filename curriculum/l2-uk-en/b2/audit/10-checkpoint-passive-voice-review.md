@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:12
+**Generated:** 2026-02-06 20:32:09
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -52,7 +52,7 @@
 - Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ❌ 2383/3500 (raw: 3593)
+- **Words:** ❌ 2532/3500 (raw: 3742)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +64,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 97.7% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 97.9% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -94,6 +94,6 @@
 | **Огляд — Чотири форми пасиву** | ⚪️ | 201 | Skipped |
 | **Огляд — Вибір форми за регістром** | ⚪️ | 235 | Skipped |
 | **Огляд — Активні дієприкметники** | ⚪️ | 400 | Skipped |
-| **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 264 | Skipped |
+| **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 413 | Skipped |
 | **Діагностичні завдання** | ⚪️ | 607 | Skipped |
 | **Самооцінка і план** | ⚪️ | 141 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:15
+**Generated:** 2026-02-06 20:32:16
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1872/3800 (raw: 2217)
+- **Words:** ❌ 2694/3800 (raw: 3039)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
 - **Richness:** ❌ 91% < 95% min (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -68,25 +68,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 8 | 2 | 100% | 25% | 25.0% |
-| model_answers | 88 | 3 | 100% | 20% | 20.0% |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 100 | 3 | 100% | 20% | 20.0% |
 | engagement | 4 | 5 | 80% | 15% | 12.0% |
 | register_analysis | 11 | 5 | 100% | 15% | 15.0% |
 | visual | 6 | 4 | 100% | 10% | 10.0% |
-| variety | 0.96 | - | 96% | 5% | 4.8% |
+| variety | 0.94 | - | 94% | 5% | 4.7% |
 | cultural | 0 | - | 0% | 5% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **91.8%** |
+| **TOTAL** | | | | | **91.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Вступ — Науковий стиль** | ✅ | 523 | Included in Core |
-| **Лексичні особливості** | ⚪️ | 191 | Skipped |
-| **Граматичні особливості** | ⚪️ | 334 | Skipped |
+| **Лексичні особливості** | ⚪️ | 445 | Skipped |
+| **Граматичні особливості** | ⚪️ | 614 | Skipped |
 | **Мовне хеджування** | ⚪️ | 495 | Skipped |
 | **Цитування та посилання** | ⚪️ | 74 | Skipped |
-| **Структура наукового тексту** | ✅ | 76 | Included in Core |
+| **Структура наукового тексту** | ✅ | 364 | Included in Core |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
 | **Підсумок** | ✅ | 12 | Included in Core |

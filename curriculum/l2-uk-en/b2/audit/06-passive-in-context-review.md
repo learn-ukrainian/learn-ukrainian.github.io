@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:09
+**Generated:** 2026-02-06 20:32:03
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,13 +44,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 548: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 562: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 2917/3800 (raw: 3467)
+- **Words:** ❌ 3228/3800 (raw: 3778)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,13 +62,13 @@
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.8% (target 90-100% (grammar))
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
@@ -79,9 +79,9 @@
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.93 | - | 93% | 10% | 9.3% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 13 | 3 | 100% | 10% | 10.0% |
+| realworld | 15 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
 | questions | 56 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.0%** |
@@ -95,7 +95,7 @@
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
 | **Практичні сценарії — Науковий контекст** | ✅ | 431 | Included in Core |
 | **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 165 | Included in Core |
-| **Практичні сценарії — Розмовний контекст** | ✅ | 169 | Included in Core |
+| **Практичні сценарії — Розмовний контекст** | ✅ | 480 | Included in Core |
 | **Інтегрована практика** | ⚪️ | 116 | Skipped |
 | **### Завдання 4: Аналіз тексту** | ✅ | 120 | Included in Core |
 | **Підсумок модуля** | ✅ | 61 | Included in Core |

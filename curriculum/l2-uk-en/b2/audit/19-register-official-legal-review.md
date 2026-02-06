@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:16
+**Generated:** 2026-02-06 20:32:18
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2196/3800 (raw: 3196)
+- **Words:** ❌ 2433/3800 (raw: 3433)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -68,7 +68,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 13 | 2 | 100% | 25% | 25.0% |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
 | model_answers | 100 | 3 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
@@ -83,7 +83,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Вступ — Офіційно-діловий стиль** | ✅ | 384 | Included in Core |
-| **Мовні засоби офіційного стилю** | ⚪️ | 188 | Skipped |
+| **Мовні засоби офіційного стилю** | ⚪️ | 425 | Skipped |
 | **Типи документів** | ⚪️ | 669 | Skipped |
 | **Структура офіційних документів** | ⚪️ | 201 | Skipped |
 | **Законодавчі тексти** | ✅ | 405 | Included in Core |

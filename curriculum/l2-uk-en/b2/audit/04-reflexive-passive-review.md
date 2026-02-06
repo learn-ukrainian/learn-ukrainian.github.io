@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:24:06
+**Generated:** 2026-02-06 20:31:58
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,13 +43,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 546: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 558: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 2731/3800 (raw: 3457)
+- **Words:** ❌ 2962/3800 (raw: 3688)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,17 +73,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 73 | 24 | 100% | 20% | 20.0% |
+| examples | 82 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -94,7 +94,7 @@
 | **Акцент на процесі** | ⚪️ | 237 | Skipped |
 | **Вираження агента** | ⚪️ | 520 | Skipped |
 | **Контексти вживання** | ✅ | 187 | Included in Core |
-| **Порівняння форм пасиву** | ⚪️ | 128 | Skipped |
+| **Порівняння форм пасиву** | ⚪️ | 359 | Skipped |
 | **Практика і підсумок** | ✅ | 114 | Included in Core |
 | **### Самоперевірка** | ⚪️ | 132 | Skipped |
 | **Підсумок** | ✅ | 46 | Included in Core |
