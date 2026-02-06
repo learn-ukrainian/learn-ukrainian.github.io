@@ -1,8 +1,8 @@
 # Audit Report: M58 — 58-synonyms-quality.md
 **Level:** B2 | **Module:** M58 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:27:34
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:34:37
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1937/2000 (raw: 2096) (63 short)
+- **Words:** ✅ 2055/2000 (raw: 2324)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -58,12 +58,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -72,19 +72,19 @@
 | engagement | 10 | 4 | 100% | 25% | 25.0% |
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 9 | - | 100% | 17% | 16.7% |
-| visual | 5 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
-| examples | 59 | - | 100% | 8% | 8.3% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.96 | - | 96% | 8% | 8.0% |
+| examples | 62 | - | 100% | 8% | 8.3% |
 | realworld | 10 | - | 100% | 8% | 8.3% |
-| questions | 5 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.8%** |
+| questions | 6 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |
 | **Розминка — Добре чи погано?** | ⚪️ | 380 | Skipped |
-| **Good** | ⚪️ | 419 | Skipped |
+| **Good** | ⚪️ | 537 | Skipped |
 | **Bad** | ⚪️ | 571 | Skipped |
 | **Практика — оцінювання в тексті** | ✅ | 482 | Included in Core |
 | **Підсумок** | ✅ | 14 | Included in Core |

@@ -1,8 +1,8 @@
 # Audit Report: M56 — 56-synonyms-size.md
 **Level:** B2 | **Module:** M56 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:27:32
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:34:33
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1973/2000 (raw: 2132) (27 short)
+- **Words:** ✅ 2343/2000 (raw: 2634)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -70,21 +70,21 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 8 | 4 | 100% | 25% | 25.0% |
-| variety | 0.99 | - | 99% | 17% | 16.5% |
+| variety | 0.98 | - | 98% | 17% | 16.3% |
 | cultural | 5 | - | 100% | 17% | 16.7% |
-| visual | 5 | 3 | 100% | 8% | 8.3% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
-| examples | 36 | - | 100% | 8% | 8.3% |
-| realworld | 5 | - | 100% | 8% | 8.3% |
-| questions | 6 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.8%** |
+| examples | 39 | - | 100% | 8% | 8.3% |
+| realworld | 6 | - | 100% | 8% | 8.3% |
+| questions | 7 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 83 | Included in Core |
-| **Розминка — Від малого до величезного** | ⚪️ | 161 | Skipped |
+| **Розминка — Від малого до величезного** | ⚪️ | 276 | Skipped |
 | **Big** | ⚪️ | 914 | Skipped |
-| **Small** | ⚪️ | 284 | Skipped |
+| **Small** | ⚪️ | 539 | Skipped |
 | **Практика — опис масштабу** | ⚪️ | 517 | Skipped |
 | **Підсумок** | ✅ | 14 | Included in Core |

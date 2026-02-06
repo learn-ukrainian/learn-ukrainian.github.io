@@ -1,8 +1,8 @@
 # Audit Report: M59 — 59-synonyms-communication.md
 **Level:** B2 | **Module:** M59 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:27:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 12:34:39
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,7 +45,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1901/2000 (raw: 2084) (99 short)
+- **Words:** ✅ 2124/2000 (raw: 2313)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -57,13 +57,13 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -73,18 +73,18 @@
 | variety | 0.97 | - | 97% | 17% | 16.2% |
 | cultural | 4 | - | 100% | 17% | 16.7% |
 | visual | 8 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
-| examples | 55 | - | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
+| examples | 62 | - | 100% | 8% | 8.3% |
 | realworld | 7 | - | 100% | 8% | 8.3% |
-| questions | 7 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.5%** |
+| questions | 8 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Розминка — Як сказати "сказати"** | ⚪️ | 143 | Skipped |
+| **Розминка — Як сказати "сказати"** | ⚪️ | 250 | Skipped |
 | **Say** | ⚪️ | 716 | Skipped |
-| **Ask** | ⚪️ | 411 | Skipped |
+| **Ask** | ⚪️ | 527 | Skipped |
 | **Практика — дієслова мовлення** | ⚪️ | 532 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |
