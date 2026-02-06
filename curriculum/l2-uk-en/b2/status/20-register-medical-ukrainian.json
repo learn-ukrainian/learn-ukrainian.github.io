@@ -2,10 +2,10 @@
   "module": "20-register-medical-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:39:34.246540Z",
+  "last_audit": "2026-02-06T00:44:59.549897Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:28:14.416473Z",
+    "md": "2026-02-06T00:40:30.830265Z",
     "meta": "2026-02-06T00:20:57.715883Z",
     "activities": "2026-02-06T00:32:03.914786Z",
     "vocabulary": "2026-02-06T00:08:34.350097Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2807/3800 (raw: 3512) | pedagogy: 2 violations"
+      "message": "2807/3800 (raw: 3512) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:39:32
+**Generated:** 2026-02-06 00:44:52
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,17 +43,8 @@
 - Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "**Понад мільйон** користувачів завантажили його за перший місяць!". Shares significant keywords with sentence at index 112.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2641/3800 (raw: 3181)
+- **Words:** ❌ 2642/3800 (raw: 3182)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -96,7 +87,7 @@
 | **Вступ — Порядок слів в українській мові** | ✅ | 139 | Included in Core |
 | **Тема-рема структура** | ⚪️ | 1073 | Skipped |
 | **Емфатичний порядок слів** | ⚪️ | 299 | Skipped |
-| **Інверсія для стилістичного ефекту** | ⚪️ | 658 | Skipped |
+| **Інверсія для стилістичного ефекту** | ⚪️ | 659 | Skipped |
 | **Виділення елементів речення** | ⚪️ | 291 | Skipped |
 | **Контекстуальний вибір** | ✅ | 110 | Included in Core |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |

@@ -1,8 +1,8 @@
 # Audit Report: M46 — 46-proverbs-nature-time-caution.md
 **Level:** B2 | **Module:** M46 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:39:36
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 00:45:24
 
 ## Configuration
 **Type:** B2-vocab
@@ -43,17 +43,8 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "**Батько:** **Сім разів відміряй, один раз відріж**.". Shares significant keywords with sentence at index 82.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2888/2000 (raw: 3288)
+- **Words:** ✅ 2887/2000 (raw: 3287)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -63,7 +54,7 @@
 - **Vocab:** ⚠️ 17 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
 - **Richness:** ✅ 96% (phraseology)
@@ -78,21 +69,21 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 12 | 4 | 100% | 25% | 25.0% |
-| variety | 0.78 | - | 78% | 17% | 13.0% |
+| variety | 0.79 | - | 79% | 17% | 13.2% |
 | cultural | 12 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
 | examples | 55 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 11 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.3%** |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Розминка — Природа як вчитель** | ⚪️ | 171 | Skipped |
-| **Прислів'я про природу** | ⚪️ | 1544 | Skipped |
+| **Прислів'я про природу** | ⚪️ | 1543 | Skipped |
 | **Прислів'я про час** | ⚪️ | 319 | Skipped |
 | **Прислів'я про обережність** | ⚪️ | 150 | Skipped |
 | **Практика — прислів'я у контексті** | ✅ | 636 | Included in Core |

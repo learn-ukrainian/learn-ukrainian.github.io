@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M14 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:39:33
+**Generated:** 2026-02-06 00:44:53
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Незважаючи на те що умови змінилися, контракт залишається чинним.". Shares significant keywords with sentence at index 127.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "(офіційніше)
    **Варіант 2:** Завдання складне, хоч виконати можна.". Shares significant keywords with sentence at index 172.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
@@ -52,10 +50,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2476/3800 (raw: 3471)
+- **Words:** ❌ 2474/3800 (raw: 3469)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -65,7 +63,7 @@
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -98,7 +96,7 @@
 | **Вступ — Сполучники як засіб зв'язку** | ✅ | 188 | Included in Core |
 | **Сполучники протиставлення** | ⚪️ | 1020 | Skipped |
 | **Сполучники приєднання** | ⚪️ | 389 | Skipped |
-| **Сполучники наслідку** | ⚪️ | 410 | Skipped |
+| **Сполучники наслідку** | ⚪️ | 408 | Skipped |
 | **Допустові сполучники** | ⚪️ | 281 | Skipped |
 | **Вибір за регістром** | ⚪️ | 110 | Skipped |
 | **Практика і підсумок** | ✅ | 0 | Included in Core |

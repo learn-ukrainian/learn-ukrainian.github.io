@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-word-formation-place-object-names.md
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:39:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 00:45:14
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,15 +42,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Археологи знайшли тут сховище для зерна та залишки укріплень.". Shares significant keywords with sentence at index 14.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 2353/2000 (raw: 2764)
 - **Activities:** ✅ 14/10
@@ -62,7 +53,7 @@
 - **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)

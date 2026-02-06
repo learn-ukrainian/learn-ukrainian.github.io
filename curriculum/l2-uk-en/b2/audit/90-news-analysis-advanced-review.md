@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M90 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:43:00
+**Generated:** 2026-02-06 00:47:51
 
 ## Configuration
 **Type:** B2-skills
@@ -44,12 +44,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4057/2000 (raw: 4180)
+- **Words:** ✅ 4088/2000 (raw: 4211)
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 14/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 5/6
+- **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/20
 - **Structure:** ✅ Valid Structure
@@ -86,5 +86,5 @@
 | **Упередженість та редакційна політика** | ⚪️ | 1886 | Skipped |
 | **Пропаганда та маніпуляції** | ⚪️ | 986 | Skipped |
 | **Верифікація інформації** | ⚪️ | 521 | Skipped |
-| **Фреймінг та мова** | ⚪️ | 136 | Skipped |
+| **Фреймінг та мова** | ⚪️ | 167 | Skipped |
 | **Підсумок та практика** | ✅ | 0 | Included in Core |

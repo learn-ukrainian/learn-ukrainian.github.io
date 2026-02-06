@@ -2,10 +2,10 @@
   "module": "11-multi-clause-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:39:31.197028Z",
+  "last_audit": "2026-02-06T00:44:50.655378Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:28:14.416473Z",
+    "md": "2026-02-06T00:40:30.829265Z",
     "meta": "2026-02-06T00:20:57.681883Z",
     "activities": "2026-02-06T00:08:34.327097Z",
     "vocabulary": "2026-02-06T00:08:34.350097Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2175/3800 (raw: 2598) | pedagogy: 2 violations"
+      "violations": 1,
+      "message": "2176/3800 (raw: 2599)"
     },
     "activities": {
       "status": "pass",

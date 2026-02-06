@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:39:31
+**Generated:** 2026-02-06 00:44:50
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,19 +42,8 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Книга, яку я читаю, написана автором, якого я поважаю.". Shares significant keywords with sentence at index 83.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Хоча було пізно, ми продовжували працювати і досягли мети.". Shares significant keywords with sentence at index 84.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2175/3800 (raw: 2598)
+- **Words:** ❌ 2176/3800 (raw: 2599)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +53,7 @@
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
@@ -96,7 +85,7 @@
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Вступ — Багатоскладні речення** | ✅ | 158 | Included in Core |
 | **Складносурядні речення** | ⚪️ | 1054 | Skipped |
-| **Складнопідрядні речення з одним підрядним** | ⚪️ | 332 | Skipped |
+| **Складнопідрядні речення з одним підрядним** | ⚪️ | 333 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
 | **Вкладені підрядні речення** | ⚪️ | 61 | Skipped |
 | **Пунктуація у багатоскладних реченнях** | ⚪️ | 65 | Skipped |

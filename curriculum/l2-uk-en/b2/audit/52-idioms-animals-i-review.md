@@ -1,8 +1,8 @@
 # Audit Report: M52 — 52-idioms-animals-i.md
 **Level:** B2 | **Module:** M52 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:37:47
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 00:45:29
 
 ## Configuration
 **Type:** B2-vocab
@@ -36,7 +36,7 @@
 | 14 | essay-response | Тваринні метафори в нашому житті | 1 | 1 | ✅ |
 | 15 | essay-response | Творче завдання: Тваринні метафори | 1 | 1 | ✅ |
 | 16 | reading | Текст для аналізу: Фразеологізми: Тварини I (Вовк, Собака, Кінь) | 3 | 3 | ✅ |
-| 17 | fill-in | Доповніть ідіоми з тваринами | 8 | 8 | ✅ |
+| 17 | fill-in | Доповніть ідіоми з тваринами | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 17 (target: 10-14) ❌
@@ -44,15 +44,6 @@
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
 - Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 52-idioms-animals-i.yaml: Schema validation error at key '16': {'id': 'fill-in-52-idioms-animals-i', 'type': 'fill-in', 'title': 'Доповніть ідіоми з тваринами', 'instruction': 'Вставте пропущене слово, щоб утворити ідіому.', 'items': [{'sentence': 'Хитрий як {лис}', 'answer': 'лис'}, {'sentence': 'Вірний як {пес}', 'answer': 'пес'}, {'sentence': 'Працьовитий як {бджола}', 'answer': 'бджола'}, {'sentence': 'Впертий як {осел}', 'answer': 'осел'}, {'sentence': 'Боязкий як {заєць}', 'answer': 'заєць'}, {'sentence': 'Мовчазний як {риба}', 'answer': 'риба'}, {'sentence': 'Голодний як {вовк}', 'answer': 'вовк'}, {'sentence': 'Повільний як {черепаха}', 'answer': 'черепаха'}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1962/2000 (raw: 2071) (38 short)
@@ -65,7 +56,7 @@
 - **Vocab:** ⚠️ 13 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)

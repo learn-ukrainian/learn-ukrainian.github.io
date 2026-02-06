@@ -2,10 +2,10 @@
   "module": "35-word-formation-place-object-names",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:39:35.220993Z",
+  "last_audit": "2026-02-06T00:45:14.189879Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:08:34.317097Z",
+    "md": "2026-02-06T00:40:30.830265Z",
     "meta": "2026-02-06T00:20:57.751883Z",
     "activities": "2026-02-06T00:32:04.023786Z",
     "vocabulary": "2026-02-06T00:08:34.351097Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2353/2000 (raw: 2764) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2353/2000 (raw: 2764)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

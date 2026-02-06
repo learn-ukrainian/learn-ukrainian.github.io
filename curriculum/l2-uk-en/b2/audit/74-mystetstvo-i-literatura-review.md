@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M74 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:40:42
+**Generated:** 2026-02-06 00:45:49
 
 ## Configuration
 **Type:** B2-vocab
@@ -40,15 +40,6 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** '## Лексика мистецької критики' should come after 'summary' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 2008/2000 (raw: 2263)
 - **Activities:** ✅ 12/10
@@ -60,7 +51,7 @@
 - **Vocab:** ⚠️ 16 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 98.7% (target 90-100% (vocab))
 - **Richness:** ❌ 73% < 95% min (vocabulary)
@@ -97,5 +88,5 @@
 | **Літературні жанри та епохи** | ⚪️ | 400 | Skipped |
 | **Образотворче мистецтво** | ⚪️ | 551 | Skipped |
 | **Музика та театр** | ⚪️ | 192 | Skipped |
-| **Лексика мистецької критики** | ⚪️ | 75 | Skipped |
 | **Підсумок та практика** | ✅ | 376 | Included in Core |
+| **Лексика мистецької критики** | ⚪️ | 75 | Skipped |

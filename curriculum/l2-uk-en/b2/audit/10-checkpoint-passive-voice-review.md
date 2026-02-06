@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:41:05
+**Generated:** 2026-02-06 00:44:49
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,15 +46,6 @@
 - Required types used: 4/4 (error-correction, essay-response, fill-in, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 10-checkpoint-passive-voice.yaml: Duplicate key 'instruction' at line 873 (first defined at line 872)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ❌ 1767/3500 (raw: 1957)
 - **Activities:** ✅ 18/15
@@ -66,7 +57,7 @@
 - **Vocab:** ⚠️ 2 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)

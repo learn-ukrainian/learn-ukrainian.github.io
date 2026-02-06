@@ -2,10 +2,10 @@
   "module": "14-stylistic-connectors",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T00:39:33.271789Z",
+  "last_audit": "2026-02-06T00:44:53.729527Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T00:27:16.796733Z",
+    "md": "2026-02-06T00:39:55.524374Z",
     "meta": "2026-02-06T00:20:57.694883Z",
     "activities": "2026-02-06T00:08:34.328097Z",
     "vocabulary": "2026-02-06T00:08:34.350097Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2476/3800 (raw: 3471) | pedagogy: 2 violations"
+      "message": "2474/3800 (raw: 3469) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

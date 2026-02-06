@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M83 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 00:40:43
+**Generated:** 2026-02-06 00:45:57
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -51,7 +51,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_ORDER]** '## Самооцінка та пробіли' should come after 'summary' section
+- **[SECTION_ORDER]** '## Лексика B2: Синтез' should come after 'self_assessment' section
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 
 ## Recommendation
@@ -101,6 +101,6 @@
 | **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
 | **Граматика B2: Синтез** | ⚪️ | 21 | Skipped |
 | **Навички B2: Синтез** | ⚪️ | 223 | Skipped |
-| **Самооцінка та пробіли** | ⚪️ | 225 | Skipped |
 | **Лексика B2: Синтез** | ⚪️ | 491 | Skipped |
 | **Підсумок та мотивація** | ✅ | 699 | Included in Core |
+| **Самооцінка та пробіли** | ⚪️ | 225 | Skipped |
