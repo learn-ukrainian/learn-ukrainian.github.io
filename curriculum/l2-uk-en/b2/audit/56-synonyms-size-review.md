@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M56 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:53
+**Generated:** 2026-02-06 12:27:32
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,19 +45,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1850/2000 (raw: 2001)
+- **Words:** ⚠️ 1973/2000 (raw: 2132) (27 short)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (vocab))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,12 +69,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 7 | 4 | 100% | 25% | 25.0% |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 5 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
+| visual | 5 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
-| examples | 33 | - | 100% | 8% | 8.3% |
+| examples | 36 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 6 | - | 100% | 8% | 8.3% |
 | **TOTAL** | | | | | **99.8%** |
@@ -86,5 +86,5 @@
 | **Розминка — Від малого до величезного** | ⚪️ | 161 | Skipped |
 | **Big** | ⚪️ | 914 | Skipped |
 | **Small** | ⚪️ | 284 | Skipped |
-| **Практика — опис масштабу** | ⚪️ | 394 | Skipped |
+| **Практика — опис масштабу** | ⚪️ | 517 | Skipped |
 | **Підсумок** | ✅ | 14 | Included in Core |

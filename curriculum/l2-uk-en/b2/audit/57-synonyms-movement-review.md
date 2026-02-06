@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M57 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:54
+**Generated:** 2026-02-06 12:27:33
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,19 +45,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1826/2000 (raw: 2004)
+- **Words:** ⚠️ 1962/2000 (raw: 2148) (38 short)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Immersion:** 🇺🇦 98.9% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,15 +69,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 7 | 4 | 100% | 25% | 25.0% |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
 | variety | 0.99 | - | 99% | 17% | 16.5% |
-| cultural | 5 | - | 100% | 17% | 16.7% |
-| visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.98 | - | 98% | 8% | 8.2% |
+| cultural | 7 | - | 100% | 17% | 16.7% |
+| visual | 7 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 1.00 | - | 100% | 8% | 8.3% |
 | examples | 40 | - | 100% | 8% | 8.3% |
 | realworld | 5 | - | 100% | 8% | 8.3% |
 | questions | 7 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,5 +86,5 @@
 | **Розминка — Як ходити і бігати** | ⚪️ | 665 | Skipped |
 | **Walk** | ⚪️ | 469 | Skipped |
 | **Run** | ⚪️ | 208 | Skipped |
-| **Практика — динамічний опис** | ⚪️ | 380 | Skipped |
+| **Практика — динамічний опис** | ⚪️ | 516 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

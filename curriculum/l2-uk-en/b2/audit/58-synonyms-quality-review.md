@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M58 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:55
+**Generated:** 2026-02-06 12:27:34
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,19 +45,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1792/2000 (raw: 1943)
+- **Words:** ⚠️ 1937/2000 (raw: 2096) (63 short)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 3 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,15 +69,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| engagement | 10 | 4 | 100% | 25% | 25.0% |
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 9 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.85 | - | 85% | 8% | 7.1% |
-| examples | 53 | - | 100% | 8% | 8.3% |
+| visual | 5 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.88 | - | 88% | 8% | 7.3% |
+| examples | 59 | - | 100% | 8% | 8.3% |
 | realworld | 10 | - | 100% | 8% | 8.3% |
 | questions | 5 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.6%** |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,5 +86,5 @@
 | **Розминка — Добре чи погано?** | ⚪️ | 380 | Skipped |
 | **Good** | ⚪️ | 419 | Skipped |
 | **Bad** | ⚪️ | 571 | Skipped |
-| **Практика — оцінювання в тексті** | ✅ | 337 | Included in Core |
+| **Практика — оцінювання в тексті** | ✅ | 482 | Included in Core |
 | **Підсумок** | ✅ | 14 | Included in Core |

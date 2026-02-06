@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M63 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:57
+**Generated:** 2026-02-06 12:27:36
 
 ## Configuration
 **Type:** B2-vocab
@@ -45,19 +45,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1794/2000 (raw: 1885)
+- **Words:** ⚠️ 1930/2000 (raw: 2075) (70 short)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 9 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
 - **Richness:** ✅ 98% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -69,15 +69,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 7 | 4 | 100% | 25% | 25.0% |
+| engagement | 8 | 4 | 100% | 25% | 25.0% |
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 2 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.87 | - | 87% | 8% | 7.3% |
-| examples | 56 | - | 100% | 8% | 8.3% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.90 | - | 90% | 8% | 7.5% |
+| examples | 61 | - | 100% | 8% | 8.3% |
 | realworld | 6 | - | 100% | 8% | 8.3% |
 | questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.7%** |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,5 +86,5 @@
 | **Розминка — Багато чи мало?** | ⚪️ | 378 | Skipped |
 | **Much/Many** | ⚪️ | 554 | Skipped |
 | **Few/Little** | ⚪️ | 339 | Skipped |
-| **Практика — опис кількості** | ⚪️ | 442 | Skipped |
+| **Практика — опис кількості** | ⚪️ | 578 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |
