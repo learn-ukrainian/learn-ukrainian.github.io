@@ -1,8 +1,8 @@
 # Audit Report: M34 — 34-word-formation-abstract-nouns.md
 **Level:** B2 | **Module:** M34 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 13:01:02
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 17:21:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2619/2000 (raw: 3401)
+- **Words:** ✅ 2702/2000 (raw: 3484)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/6
+- **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,23 +67,23 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 59 | 24 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
+| examples | 63 | 24 | 100% | 20% | 20.0% |
+| engagement | 14 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 16 | 3 | 100% | 5% | 5.0% |
+| visual | 17 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 23 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 70 | Included in Core |
-| **Розминка — Абстрактна лексика** | ⚪️ | 206 | Skipped |
+| **Розминка — Абстрактна лексика** | ⚪️ | 289 | Skipped |
 | **Суфікс -ння/-ення (дія, процес)** | ⚪️ | 943 | Skipped |
 | **Суфікс -ість (якість, властивість)** | ⚪️ | 344 | Skipped |
 | **Суфікси -ок, -ка, -ство (результат, сфера)** | ⚪️ | 625 | Skipped |

@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-word-formation-place-object-names.md
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 13:01:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 17:21:20
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2655/2000 (raw: 3319)
+- **Words:** ✅ 2890/2000 (raw: 3560)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,15 +67,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 68 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 71 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 21 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 11 | 3 | 100% | 5% | 5.0% |
+| cultural | 8 | 3 | 100% | 10% | 10.0% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
+| questions | 57 | 5 | 100% | 5% | 5.0% |
 | proverbs | 7 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.2%** |
 
@@ -83,9 +83,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Розминка — Як утворюються назви місць** | ⚪️ | 244 | Skipped |
+| **Розминка — Як утворюються назви місць** | ⚪️ | 305 | Skipped |
 | **Suffix -ня** | ⚪️ | 1245 | Skipped |
 | **Suffix -ище (place/area)** | ⚪️ | 229 | Skipped |
 | **Suffix -арня (workshop/establishment)** | ⚪️ | 536 | Skipped |
-| **Практика — утворення назв місць** | ⚪️ | 322 | Skipped |
+| **Практика — утворення назв місць** | ⚪️ | 496 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

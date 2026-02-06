@@ -1,8 +1,8 @@
 # Audit Report: M36 — 36-word-formation-adjective-formation.md
 **Level:** B2 | **Module:** M36 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 13:01:04
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 17:21:21
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,12 +44,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2849/2000 (raw: 4169)
+- **Words:** ✅ 3049/2000 (raw: 4383)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 15/6
+- **Engagement:** ✅ 17/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -69,24 +69,24 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 78 | 24 | 100% | 20% | 20.0% |
-| engagement | 16 | 5 | 100% | 15% | 15.0% |
-| dialogues | 13 | 4 | 100% | 15% | 15.0% |
+| engagement | 18 | 5 | 100% | 15% | 15.0% |
+| dialogues | 14 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 10 | 3 | 100% | 10% | 10.0% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 28 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| visual | 30 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | questions | 34 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.4%** |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
-| **Розминка — Словотвір прикметників** | ⚪️ | 249 | Skipped |
+| **Розминка — Словотвір прикметників** | ⚪️ | 303 | Skipped |
 | **Suffix -ський/-цький (belonging/origin)** | ⚪️ | 1320 | Skipped |
 | **Suffix -ний/-альний (quality/relation)** | ⚪️ | 512 | Skipped |
 | **Compound Adjectives** | ⚪️ | 464 | Skipped |
-| **Практика — утворення прикметників** | ⚪️ | 228 | Skipped |
+| **Практика — утворення прикметників** | ⚪️ | 374 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

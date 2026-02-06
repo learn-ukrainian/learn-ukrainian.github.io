@@ -2,13 +2,13 @@
   "module": "35-word-formation-place-object-names",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T13:01:03.502289Z",
+  "last_audit": "2026-02-06T17:21:20.785649Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:59:54.600614Z",
-    "meta": "2026-02-06T12:04:24.712813Z",
-    "activities": "2026-02-06T12:04:24.692813Z",
-    "vocabulary": "2026-02-06T12:04:24.718813Z",
+    "md": "2026-02-06T17:20:13.809269Z",
+    "meta": "2026-02-06T17:15:33.497307Z",
+    "activities": "2026-02-06T17:15:33.478307Z",
+    "vocabulary": "2026-02-06T17:15:33.503307Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2655/2000 (raw: 3319)"
+      "message": "2890/2000 (raw: 3560)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }
