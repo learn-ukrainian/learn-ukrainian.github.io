@@ -686,6 +686,9 @@ Database: `.mcp/servers/message-broker/messages.db`
 | **Architecture v2** | `docs/ARCHITECTURE-PLANS.md` ⭐ |
 | **Status caching system** | `docs/STATUS-SYSTEM.md` ⭐ |
 | **Planning guide** | `docs/PLANNING-GUIDE.md` ⭐ |
+| **Core A workflow** | `docs/CORE-A-WORKFLOW.md` (A1/A2/B1.0 mixed-language) |
+| **Core B workflow** | `docs/CORE-B-WORKFLOW.md` (B1.1+/B2/C1/C2/PRO immersion) |
+| **Research workflow** | `docs/RESEARCH-FIRST-WORKFLOW.md` (seminar tracks) |
 | **YAML activities** | `docs/ACTIVITY-YAML-REFERENCE.md` |
 | **Quality standards** | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` |
 | **Subsection flexibility** | `docs/SUBSECTION-FLEXIBILITY-GUIDE.md` |

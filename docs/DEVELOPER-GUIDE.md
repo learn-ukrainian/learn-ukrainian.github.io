@@ -17,7 +17,8 @@ This guide helps you understand the tools, workflows, and best practices for cur
 | **Check module quality** | `scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md` |
 | **Understand a design decision** | `/explain-decision [topic]` |
 | **Quick review before commit** | `/review-content-quick {level} {num}` |
-| **Final quality check** | `/review-content-v4 {level} {num}` |
+| **Final review (A1/A2/B1.0)** | `/review-content-core-a {level} {num}` |
+| **Final review (B1.1+/B2+)** | `/review-content-v4 {level} {num}` |
 | **Understand module status** | `/module-status {level} {num}` or `docs/{LEVEL}-STATUS.md` |
 
 ---
@@ -93,19 +94,35 @@ scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
 
 **When**: Before committing modules, during content generation
 
-**Deep Review** (20-25 min, before publication):
+**Deep Review — Core A** (20-25 min, A1/A2/B1 M01-05):
+```bash
+/review-content-core-a a1 5
+```
+
+**What it validates (12 dimensions)**:
+- L1/L2 balance (graduated immersion targets)
+- Beginner safety ("Would I Continue?" test)
+- IPA transcription accuracy
+- State Standard grammar compliance
+- Emotional beats (welcome, encouragement, progress)
+
+**Deep Review — Core B / Seminar** (20-25 min, B1 M06+/B2+):
 ```bash
 /review-content-v4 b1 9
 ```
 
-**What it validates**:
-- All 12 quality dimensions
-- Every Ukrainian sentence verified
-- All activity items tested
-- Linguistic claims verified
-- Comprehensive naturalness scoring
+**What it validates (14 dimensions)**:
+- All Core A checks PLUS:
+- Propaganda filter (B2+ cultural content)
+- Semantic nuance (C1+ modal hedging)
 
 **When**: Before final publication, when level complete
+
+**Which review to use**:
+| Modules | Command |
+|---------|---------|
+| A1, A2, B1 M01-05 | `/review-content-core-a` |
+| B1 M06+, B2, C1, C2, PRO | `/review-content-v4` |
 
 **Strategy**: Quick review during dev, deep review before release
 
@@ -366,6 +383,9 @@ npm run status:b1
 
 | Doc | Purpose |
 |-----|---------|
+| **CORE-A-WORKFLOW.md** | Mixed-language rebuild workflow (A1/A2/B1.0 — 119 modules) |
+| **CORE-B-WORKFLOW.md** | Full-immersion rebuild workflow (B1.1+/B2/C1/C2/PRO — 477 modules) |
+| **RESEARCH-FIRST-WORKFLOW.md** | Deep research workflow (seminar tracks — B2-HIST, C1-BIO, LIT) |
 | **MODULE-RICHNESS-GUIDELINES-v2.md** | Activity counts, complexity requirements |
 | **PLANNING-GUIDE.md** | How to create module plans |
 | **STATUS-SYSTEM.md** | Status caching system |
@@ -386,7 +406,8 @@ npm run status:b1
 | Interview | `claude_extensions/commands/interview.md` |
 | Explain Decision | `claude_extensions/commands/explain-decision.md` |
 | Quick Review | `claude_extensions/commands/review-content-quick.md` |
-| Deep Review | `claude_extensions/commands/review-content-v4.md` |
+| Core A Review (A1/A2/B1.0) | `claude_extensions/commands/review-content-core-a.md` |
+| Deep Review (B1.1+/B2+) | `claude_extensions/commands/review-content-v4.md` |
 | Deep Review Optimization | `claude_extensions/commands/review-content-deep-optimized.md` |
 
 ---
@@ -623,7 +644,8 @@ ls -la .agent/workflows/interview.md
 # QUALITY CHECKS
 scripts/audit_module.sh {path}                 # Audit with log save
 /review-content-quick {level} {num}            # Fast pre-check (3-5 min)
-/review-content-v4 {level} {num}               # Deep review (20-25 min)
+/review-content-core-a {level} {num}           # Deep review: A1/A2/B1.0
+/review-content-v4 {level} {num}               # Deep review: B1.1+/B2+
 
 # LEARNING & PLANNING
 /explain-decision [topic]                      # Understand design rationale

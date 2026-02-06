@@ -83,6 +83,8 @@ Check EVERY item:
 
 Verify all linguistic claims as a native speaker would. If a grammar rule is stated, check that the examples actually demonstrate it. If aspectual pairs are listed, verify both verbs share the same core meaning. If case rules are explained, confirm the examples follow them.
 
+**State Standard Compliance:** For grammar modules, cross-reference claims against `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt`. If the module's research note (`audit/{slug}-research.md`) cites a §section, verify the content matches. Grammar rules that contradict the State Standard are auto-fail under Linguistic Accuracy.
+
 Trust your knowledge of Ukrainian. If something looks wrong, it probably is.
 
 ---

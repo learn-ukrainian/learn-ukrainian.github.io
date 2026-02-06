@@ -1,7 +1,13 @@
 # Research-First Workflow for Historical & Literary Tracks
 
-> **Applies to:** `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`
+> **Applies to:** `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth` (seminar tracks)
 > **Purpose**: This workflow ensures high-quality content by requiring deep research BEFORE writing.
+
+> **Note:** Core (non-seminar) tracks have their own lighter research phases:
+> - **Core A** (A1, A2, B1 M01-05): See [CORE-A-WORKFLOW.md](CORE-A-WORKFLOW.md) — 15-20 min focused lookups
+> - **Core B** (B1 M06+, B2, C1, C2, PRO): See [CORE-B-WORKFLOW.md](CORE-B-WORKFLOW.md) — 20-30 min State Standard verification
+>
+> Both require State Standard grammar verification but skip the deep academic research, callout planning, and primary source gathering described below.
 
 ---
 
@@ -84,6 +90,11 @@
 - **Реальність**: Ukrainian scholarly truth
 - Target for [!myth-buster] callouts
 
+## Термінологічне мапування (Contested Terms)
+| Поняття | Термін (Польща/Інші) | Термін (Україна) | Російська дезінформація |
+|---------|-----------------------|------------------|-------------------------|
+|         |                       |                  |                         |
+
 ## Цитати (Давньоруська/Первісні джерела)
 > "Exact quote in Ukrainian..."
 > Source: [where found]
@@ -108,6 +119,9 @@ Before writing content, research note must include:
 - [ ] 5-7 historical context notes (for [!history-bite])
 - [ ] 2-3 cultural traditions (for [!tradition])
 - [ ] Specific facts with citations (prevents hallucination)
+- [ ] **Contested Terms table** completed (for high-tension modules)
+- [ ] **Propaganda Filter**: Identified specific Russian framing to avoid
+- [ ] **Semantic Nuance**: Planned modal hedging for complex interpretations
 
 **This ensures first draft hits 95%+ richness immediately.**
 

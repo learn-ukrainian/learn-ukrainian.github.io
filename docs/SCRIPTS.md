@@ -226,8 +226,12 @@ Validate that plan files match the config.py constraints.
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`  | Quality standards by level (consolidated)                        |
 | `docs/MARKDOWN-FORMAT.md`                         | Markdown syntax specification                                    |
 | `docs/CONTENT-QUALITY-AUDIT.md`                   | Content quality review system (LLM-based)                        |
-| `claude_extensions/commands/review-content-v4.md` | Content quality review command (modular tier system)             |
+| `claude_extensions/commands/review-content-core-a.md` | Core A review command (A1/A2/B1.0 mixed-language)          |
+| `claude_extensions/commands/review-content-v4.md` | Core B / Seminar review command (modular tier system)            |
 | `claude_extensions/commands/review-tiers/*.md`    | Tier-specific review criteria (beginner, core, seminar, advanced)|
+| `docs/CORE-A-WORKFLOW.md`                         | Core A rebuild workflow (A1/A2/B1.0)                             |
+| `docs/CORE-B-WORKFLOW.md`                         | Core B rebuild workflow (B1.1+/B2/C1/C2/PRO)                    |
+| `docs/RESEARCH-FIRST-WORKFLOW.md`                 | Research-first workflow (seminar tracks)                          |
 
 ---
 
@@ -235,14 +239,44 @@ Validate that plan files match the config.py constraints.
 
 > **When to use:** After `audit_module.py` passes structural gates. Review-content focuses on **pedagogical quality** (coherence, engagement, naturalness).
 
-### Primary Command: `/review-content-v4`
+### Two Review Commands by Track Type
+
+| Command | Scope | Dimensions |
+|---------|-------|------------|
+| `/review-content-core-a` | A1, A2, B1 M01-05 (Core A) | 12 (L1/L2 Balance, Beginner Safety) |
+| `/review-content-v4` | B1 M06+, B2, C1, C2, PRO, Seminar tracks (Core B) | 14 (+ Propaganda Filter, Semantic Nuance) |
+
+**Core A** drops Propaganda Filter and Semantic Nuance (not relevant at beginner level) and adds L1/L2 Balance (graduated immersion check) and Beginner Safety ("Would I Continue?" test, emotional beats).
+
+**Core B / Seminar** uses the full v4 prompt with all 14 dimensions including State Standard compliance for grammar modules.
+
+### `/review-content-core-a` (Beginner Modules)
+
+Adapted for mixed-language modules with English scaffolding.
+
+```bash
+/review-content-core-a a1 5       # Review A1 module 5
+/review-content-core-a a2 1-10    # Review A2 range
+/review-content-core-a b1 3       # Review B1 metalanguage bridge
+```
+
+**Key checks beyond standard review:**
+- **L1/L2 Balance** — verifies English/Ukrainian ratio matches graduated targets per phase
+- **Beginner Safety** — "Would I Continue?" test (5-point rubric from tier-1-beginner.md)
+- **IPA Verification** — every phonetic transcription checked for correct stress
+- **State Standard Compliance** — grammar taught matches §reference
+- **Emotional beats** — welcome, curiosity, quick wins, encouragement, progress marker
+
+**File:** `claude_extensions/commands/review-content-core-a.md`
+
+### `/review-content-v4` (Core B / Seminar)
 
 **v4.0 introduces a modular tier architecture** — short dispatcher (~260 lines) with tier-specific files (~250 lines each). This ensures AI reads and executes the full prompt without skipping sections.
 
 ```bash
 /review-content-v4 b2-hist 5      # Review single module
 /review-content-v4 b1 1-10        # Review range (uses subagents)
-/review-content-v4 a1             # Review entire level
+/review-content-v4 c1 50          # Review C1 module
 ```
 
 ### Tier System
@@ -267,7 +301,13 @@ Validate that plan files match the config.py constraints.
 5. **Apply Fixes** — Safe fixes applied immediately
 6. **Generate Report** — Saves to `curriculum/l2-uk-en/{level}/review/{slug}-review.md`
 
-### 12 Scoring Dimensions (All Tiers)
+### Scoring Dimensions
+
+**Core A** (`/review-content-core-a`): 12 dimensions — replaces Propaganda Filter and Semantic Nuance with L1/L2 Balance and Beginner Safety.
+
+**Core B / Seminar** (`/review-content-v4`): 14 dimensions — full set including Propaganda Filter and Semantic Nuance.
+
+#### v4 Dimensions (14 — Core B / Seminar)
 
 | # | Dimension | Weight | Notes |
 |---|-----------|--------|-------|
@@ -314,6 +354,7 @@ Validate that plan files match the config.py constraints.
 
 | Command | Purpose |
 |---------|---------|
+| `/review-content-core-a` | Beginner review (A1/A2/B1.0) with L1/L2 balance + beginner safety |
 | `/review-content-enhancements` | AI slop detection & humanity checks (optional addon) |
 
 ### Archived (Obsolete)
@@ -1845,6 +1886,67 @@ cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validatio
 npm run pipeline l2-uk-en a1 5
 npm run generate:json l2-uk-en a1 5
 ```
+
+### Core A Rebuild (A1/A2/B1 M01-05)
+
+For beginner mixed-language modules (119 total), use the Core A workflow:
+
+```bash
+# 1. Lightweight research (15-20 min)
+#    - Check State Standard 2024 for grammar point
+#    - Verify vocabulary frequency
+#    - Find 1-2 cultural hooks
+
+# 2. Write content following plan
+/module a1 5
+
+# 3. Audit
+scripts/audit_module.sh curriculum/l2-uk-en/a1/05-my-world-objects.md
+
+# 4. Review with Core A prompt
+/review-content-core-a a1 5
+```
+
+**Full workflow:** `docs/CORE-A-WORKFLOW.md`
+
+### Core B Rebuild (B1 M06+/B2/C1/C2/PRO)
+
+For full-immersion modules (477 total), use the Core B workflow:
+
+```bash
+# 1. Research (20-30 min)
+#    - State Standard §section for grammar
+#    - Vocabulary frequency + collocations
+#    - Cross-reference with prior modules
+
+# 2. Write content following plan
+/module b1 15
+
+# 3. Audit
+scripts/audit_module.sh curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md
+
+# 4. Review with standard v4 prompt
+/review-content-v4 b1 15
+```
+
+**Full workflow:** `docs/CORE-B-WORKFLOW.md`
+
+### Seminar Track Full Rebuild
+
+For seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
+
+```bash
+/full-rebuild {track} {slug}
+
+# Examples:
+/full-rebuild c1-bio lesya-ukrainka
+/full-rebuild b2-hist bohdan-khmelnytskyi
+/full-rebuild lit marusya
+```
+
+**Phases:** Research (Phase 0) -> Meta alignment (Phase 1) -> Content hydration (Phase 2) -> YAML generation (Phase 3) -> Technical audit (Phase 4) -> Review-Content-v4 (Phase 5) -> Build pipeline (Phase 6)
+
+See `claude_extensions/commands/full-rebuild.md` for full workflow details.
 
 ### Review Module Range
 
