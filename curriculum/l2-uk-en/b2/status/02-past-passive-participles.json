@@ -2,10 +2,10 @@
   "module": "02-past-passive-participles",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T19:59:33.092511Z",
+  "last_audit": "2026-02-06T20:18:10.649308Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T19:54:09.887920Z",
+    "md": "2026-02-06T20:05:33.917825Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.903920Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2147/3800 (raw: 3054)"
+      "message": "2634/3800 (raw: 3861)"
     },
     "activities": {
       "status": "pass",

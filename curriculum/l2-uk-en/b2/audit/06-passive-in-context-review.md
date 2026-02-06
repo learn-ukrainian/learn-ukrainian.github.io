@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:37
+**Generated:** 2026-02-06 20:18:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,20 +43,26 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## LINT ERRORS
+- ❌ Line 535: Empty Header detected (Lonely '#'). Remove or add title.
+
+## Recommendation
+**📝 UPDATE** (severity 2/100)
+
 ## Gates
-- **Words:** ❌ 2139/3800 (raw: 2570)
+- **Words:** ❌ 2648/3800 (raw: 3198)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -68,17 +74,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 70 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| examples | 77 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 7 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
-| questions | 47 | 5 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
+| questions | 56 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.0%** |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -88,7 +94,8 @@
 | **Таблиця регістрів і форм пасиву** | ⚪️ | 846 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
 | **Практичні сценарії — Науковий контекст** | ✅ | 431 | Included in Core |
-| **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 110 | Included in Core |
-| **Практичні сценарії — Розмовний контекст** | ✅ | 0 | Included in Core |
-| **Інтегрована практика** | ⚪️ | 0 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 165 | Included in Core |
+| **Практичні сценарії — Розмовний контекст** | ✅ | 169 | Included in Core |
+| **Інтегрована практика** | ⚪️ | 116 | Skipped |
+| **### Завдання 4: Аналіз тексту** | ✅ | 120 | Included in Core |
+| **Підсумок модуля** | ✅ | 61 | Included in Core |

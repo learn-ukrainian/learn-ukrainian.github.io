@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:36
+**Generated:** 2026-02-06 20:18:17
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,20 +44,26 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## LINT ERRORS
+- ❌ Line 468: Empty Header detected (Lonely '#'). Remove or add title.
+
+## Recommendation
+**📝 UPDATE** (severity 2/100)
+
 ## Gates
-- **Words:** ❌ 1916/3800 (raw: 2185)
+- **Words:** ❌ 2259/3800 (raw: 2692)
 - **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 1 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -69,27 +75,28 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| examples | 52 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 23 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.76 | - | 76% | 5% | 3.8% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
-| proverbs | 3 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.5%** |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.77 | - | 77% | 5% | 3.9% |
+| questions | 46 | 5 | 100% | 5% | 5.0% |
+| proverbs | 7 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
 | **Вступ — Найрозмовніший пасив** | ✅ | 158 | Included in Core |
-| **Утворення конструкції** | ⚪️ | 612 | Skipped |
+| **Утворення конструкції** | ⚪️ | 617 | Skipped |
 | **Семантика невизначеного агента** | ⚪️ | 311 | Skipped |
 | **Контексти вживання** | ✅ | 524 | Included in Core |
 | **Порівняння з іншими формами пасиву** | ⚪️ | 144 | Skipped |
 | **Типові помилки** | ✅ | 110 | Included in Core |
-| **Практика і підсумок** | ✅ | 0 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Практика і підсумок** | ✅ | 147 | Included in Core |
+| **### Порівняння з іншими мовами** | ⚪️ | 128 | Skipped |
+| **Підсумок** | ✅ | 75 | Included in Core |

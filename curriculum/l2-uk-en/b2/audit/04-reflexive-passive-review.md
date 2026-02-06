@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:35
+**Generated:** 2026-02-06 20:18:15
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,20 +42,26 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## LINT ERRORS
+- ❌ Line 533: Empty Header detected (Lonely '#'). Remove or add title.
+
+## Recommendation
+**📝 UPDATE** (severity 2/100)
+
 ## Gates
-- **Words:** ❌ 1984/3800 (raw: 2504)
+- **Words:** ❌ 2469/3800 (raw: 3195)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 10 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
+- **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -67,15 +73,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 59 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
+| examples | 61 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 39 | 5 | 100% | 5% | 5.0% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.9%** |
 
@@ -87,7 +93,8 @@
 | **Утворення зворотного пасиву** | ⚪️ | 790 | Skipped |
 | **Акцент на процесі** | ⚪️ | 237 | Skipped |
 | **Вираження агента** | ⚪️ | 520 | Skipped |
-| **Контексти вживання** | ✅ | 110 | Included in Core |
-| **Порівняння форм пасиву** | ⚪️ | 0 | Skipped |
-| **Практика і підсумок** | ✅ | 0 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Контексти вживання** | ✅ | 187 | Included in Core |
+| **Порівняння форм пасиву** | ⚪️ | 128 | Skipped |
+| **Практика і підсумок** | ✅ | 114 | Included in Core |
+| **### Самоперевірка** | ⚪️ | 132 | Skipped |
+| **Підсумок** | ✅ | 46 | Included in Core |

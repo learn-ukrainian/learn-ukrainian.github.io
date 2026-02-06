@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:38
+**Generated:** 2026-02-06 20:18:22
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,12 +44,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2277/3800 (raw: 3015)
+- **Words:** ❌ 2428/3800 (raw: 3264)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -57,28 +57,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ❌ 92% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 92% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| examples | 99 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.98 | - | 98% | 5% | 4.9% |
 | questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.5%** |
+| **TOTAL** | | | | | **92.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -88,7 +88,7 @@
 | **Утворення дієприкметників на -учий/-ючий** | ⚪️ | 626 | Skipped |
 | **Стилістична специфіка** | ⚪️ | 178 | Skipped |
 | **Еквівалентні підрядні речення** | ⚪️ | 349 | Skipped |
-| **Контексти вживання** | ✅ | 115 | Included in Core |
+| **Контексти вживання** | ✅ | 266 | Included in Core |
 | **Підсумок і практика** | ✅ | 603 | Included in Core |
 | **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |

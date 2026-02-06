@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:41
+**Generated:** 2026-02-06 20:18:28
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,51 +43,50 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2176/3800 (raw: 2599)
+- **Words:** ❌ 2047/3800 (raw: 2422)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (grammar)
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
+- **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 63 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
+| examples | 52 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 31 | 5 | 100% | 5% | 5.0% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 14 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.5%** |
+| **TOTAL** | | | | | **95.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Вступ — Багатоскладні речення** | ✅ | 158 | Included in Core |
-| **Складносурядні речення** | ⚪️ | 1054 | Skipped |
+| **Складносурядні речення** | ⚪️ | 624 | Skipped |
 | **Складнопідрядні речення з одним підрядним** | ⚪️ | 333 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
 | **Вкладені підрядні речення** | ⚪️ | 61 | Skipped |
-| **Пунктуація у багатоскладних реченнях** | ⚪️ | 65 | Skipped |
-| **Практика і підсумок** | ✅ | 110 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Пунктуація у багатоскладних реченнях** | ⚪️ | 252 | Skipped |
+| **Практика і підсумок** | ✅ | 236 | Included in Core |

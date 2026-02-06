@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:39
+**Generated:** 2026-02-06 20:18:24
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,19 +43,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2174/3800 (raw: 2813)
+- **Words:** ❌ 2362/3800 (raw: 3109)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 13/6
+- **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 15 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 100.0% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -67,16 +67,16 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 46 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
-| questions | 27 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| visual | 14 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.78 | - | 78% | 5% | 3.9% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
@@ -88,6 +88,5 @@
 | **Легітимні лексикалізовані форми** | ⚪️ | 444 | Skipped |
 | **Русизми та їх уникання** | ⚪️ | 165 | Skipped |
 | **Синтетичний майбутній час** | ⚪️ | 606 | Skipped |
-| **Розпізнавання в старих текстах** | ✅ | 65 | Included in Core |
-| **Практика і підсумок** | ✅ | 162 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Розпізнавання в старих текстах** | ✅ | 207 | Included in Core |
+| **Практика і підсумок** | ✅ | 220 | Included in Core |

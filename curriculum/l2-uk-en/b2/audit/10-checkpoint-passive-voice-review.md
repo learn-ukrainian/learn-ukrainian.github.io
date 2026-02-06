@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:40
+**Generated:** 2026-02-06 20:18:26
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,20 +46,25 @@
 - Required types used: 4/4 (error-correction, essay-response, fill-in, quiz) ✅
 - Low density activities: 0
 
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Summary'
+
 ## Gates
-- **Words:** ❌ 1767/3500 (raw: 1957)
+- **Words:** ❌ 2249/3500 (raw: 3459)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 2 < 10 (soft target)
-- **Structure:** ✅ Valid Structure
+- **Structure:** ❌ Missing '## Summary'
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.6% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 97.5% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -72,24 +77,23 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 32 | 3 | 100% | 20% | 20.0% |
-| variety | 0.92 | - | 92% | 15% | 13.8% |
-| engagement | 5 | 3 | 100% | 10% | 10.0% |
+| review_sections | 54 | 3 | 100% | 20% | 20.0% |
+| variety | 0.91 | - | 91% | 15% | 13.7% |
+| engagement | 9 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 27 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.8%** |
+| **TOTAL** | | | | | **88.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
-| **Вступ — Що ми вивчили** | ✅ | 87 | Included in Core |
-| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
+| **Вступ — Що ми вивчили** | ✅ | 223 | Included in Core |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 114 | Skipped |
 | **Огляд — Чотири форми пасиву** | ⚪️ | 201 | Skipped |
-| **Огляд — Вибір форми за регістром** | ⚪️ | 147 | Skipped |
-| **Огляд — Активні дієприкметники** | ⚪️ | 302 | Skipped |
-| **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 163 | Skipped |
-| **Діагностичні завдання** | ⚪️ | 368 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
-| **Самооцінка і план** | ⚪️ | 385 | Skipped |
+| **Огляд — Вибір форми за регістром** | ⚪️ | 235 | Skipped |
+| **Огляд — Активні дієприкметники** | ⚪️ | 400 | Skipped |
+| **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 264 | Skipped |
+| **Діагностичні завдання** | ⚪️ | 607 | Skipped |
+| **Самооцінка і план** | ⚪️ | 141 | Skipped |

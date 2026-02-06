@@ -2,10 +2,10 @@
   "module": "03-impersonal-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T19:59:34.241710Z",
+  "last_audit": "2026-02-06T20:18:13.076299Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T19:54:09.887920Z",
+    "md": "2026-02-06T20:06:40.151128Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.904921Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1943/3800 (raw: 2593)"
+      "message": "2436/3800 (raw: 3481)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "4 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

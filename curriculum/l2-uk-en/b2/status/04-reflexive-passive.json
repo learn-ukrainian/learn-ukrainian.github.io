@@ -2,10 +2,10 @@
   "module": "04-reflexive-passive",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T19:59:35.333776Z",
+  "last_audit": "2026-02-06T20:18:15.347245Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T19:54:09.888921Z",
+    "md": "2026-02-06T20:06:40.157128Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.904921Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -13,14 +13,14 @@
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Valid Structure | Lint: 1 Format Errors"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1984/3800 (raw: 2504)"
+      "message": "2469/3800 (raw: 3195)"
     },
     "activities": {
       "status": "pass",
@@ -43,7 +43,7 @@
     "blocking_issues": [
       "5 Outline Compliance Errors"
     ],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

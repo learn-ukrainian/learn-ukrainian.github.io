@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 19:59:33
+**Generated:** 2026-02-06 20:18:10
 
 ## Configuration
 **Type:** B2-grammar
@@ -47,19 +47,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2147/3800 (raw: 3054)
+- **Words:** ❌ 2634/3800 (raw: 3861)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/6
+- **Engagement:** ✅ 19/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.5% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -71,15 +71,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 85 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| examples | 95 | 24 | 100% | 20% | 20.0% |
+| engagement | 17 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 21 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
+| questions | 46 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
 
@@ -89,9 +89,8 @@
 | **Intro/Narrative** | ✅ | 38 | Included in Core |
 | **Вступ — Що таке дієприкметник?** | ✅ | 186 | Included in Core |
 | **Утворення дієприкметників на -ний** | ⚪️ | 1290 | Skipped |
-| **Утворення дієприкметників на -тий** | ⚪️ | 133 | Skipped |
-| **Узгодження дієприкметників** | ⚪️ | 298 | Skipped |
-| **Пасив із допоміжним дієсловом бути** | ⚪️ | 52 | Skipped |
-| **Регістрова специфіка** | ⚪️ | 28 | Skipped |
-| **Практика і підсумок** | ✅ | 110 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Утворення дієприкметників на -тий** | ⚪️ | 188 | Skipped |
+| **Узгодження дієприкметників** | ⚪️ | 424 | Skipped |
+| **Пасив із допоміжним дієсловом бути** | ⚪️ | 173 | Skipped |
+| **Регістрова специфіка** | ⚪️ | 165 | Skipped |
+| **Практика і підсумок** | ✅ | 170 | Included in Core |
