@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:18:15
+**Generated:** 2026-02-06 20:24:06
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,13 +43,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 533: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 546: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 2469/3800 (raw: 3195)
+- **Words:** ❌ 2731/3800 (raw: 3457)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -61,7 +61,7 @@
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -73,12 +73,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 61 | 24 | 100% | 20% | 20.0% |
+| examples | 73 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 40 | 5 | 100% | 5% | 5.0% |
@@ -89,7 +89,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
-| **Вступ — Зворотний пасив** | ✅ | 260 | Included in Core |
+| **Вступ — Зворотний пасив** | ✅ | 522 | Included in Core |
 | **Утворення зворотного пасиву** | ⚪️ | 790 | Skipped |
 | **Акцент на процесі** | ⚪️ | 237 | Skipped |
 | **Вираження агента** | ⚪️ | 520 | Skipped |

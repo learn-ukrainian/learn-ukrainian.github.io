@@ -2,10 +2,10 @@
   "module": "07-active-participles-present",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:18:22.118299Z",
+  "last_audit": "2026-02-06T20:24:10.230726Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:09:06.405796Z",
+    "md": "2026-02-06T20:22:16.067050Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.905921Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2428/3800 (raw: 3264) | richness: 92% < 95% min (grammar)"
+      "violations": 1,
+      "message": "2697/3800 (raw: 3533)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "5 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

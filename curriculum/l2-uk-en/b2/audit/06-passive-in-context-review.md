@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:18:19
+**Generated:** 2026-02-06 20:24:09
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,13 +44,13 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 535: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 548: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## Recommendation
 **📝 UPDATE** (severity 2/100)
 
 ## Gates
-- **Words:** ❌ 2648/3800 (raw: 3198)
+- **Words:** ❌ 2917/3800 (raw: 3467)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -74,23 +74,23 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 77 | 24 | 100% | 20% | 20.0% |
+| examples | 88 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.93 | - | 93% | 10% | 9.3% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | questions | 56 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.8%** |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
-| **Вступ — Регістр і пасив** | ✅ | 337 | Included in Core |
+| **Вступ — Регістр і пасив** | ✅ | 606 | Included in Core |
 | **Таблиця регістрів і форм пасиву** | ⚪️ | 846 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
 | **Практичні сценарії — Науковий контекст** | ✅ | 431 | Included in Core |

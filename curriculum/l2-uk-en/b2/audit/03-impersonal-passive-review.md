@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M03 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:18:13
+**Generated:** 2026-02-06 20:24:05
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2436/3800 (raw: 3481)
+- **Words:** ❌ 2757/3800 (raw: 3802)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -68,23 +68,23 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 56 | 24 | 100% | 20% | 20.0% |
+| examples | 66 | 24 | 100% | 20% | 20.0% |
 | engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 17 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 7 | 3 | 100% | 10% | 10.0% |
 | visual | 21 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.83 | - | 83% | 5% | 4.2% |
+| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
 | questions | 26 | 5 | 100% | 5% | 5.0% |
-| proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.7%** |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Вступ — Безособовість в українській мові** | ✅ | 319 | Included in Core |
+| **Вступ — Безособовість в українській мові** | ✅ | 640 | Included in Core |
 | **Утворення форм на -но/-то** | ⚪️ | 924 | Skipped |
 | **Синтаксичні особливості** | ⚪️ | 150 | Skipped |
 | **Контексти вживання** | ✅ | 344 | Included in Core |

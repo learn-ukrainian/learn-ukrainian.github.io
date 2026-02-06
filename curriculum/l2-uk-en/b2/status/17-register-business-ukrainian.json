@@ -2,10 +2,10 @@
   "module": "17-register-business-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:18:30.819907Z",
+  "last_audit": "2026-02-06T20:24:14.617315Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:12:13.001714Z",
+    "md": "2026-02-06T20:20:22.181510Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.907920Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2042/3800 (raw: 3137)"
+      "message": "2328/3800 (raw: 3423)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "5 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:18:24
+**Generated:** 2026-02-06 20:24:11
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2362/3800 (raw: 3109)
+- **Words:** ❌ 2608/3800 (raw: 3355)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -55,7 +55,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -67,23 +67,23 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 46 | 24 | 100% | 20% | 20.0% |
+| examples | 51 | 24 | 100% | 20% | 20.0% |
 | engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.78 | - | 78% | 5% | 3.9% |
+| paragraph_var | 0.81 | - | 81% | 5% | 4.1% |
 | questions | 28 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.4%** |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Вступ — Минулі активні дієприкметники** | ✅ | 236 | Included in Core |
+| **Вступ — Минулі активні дієприкметники** | ✅ | 482 | Included in Core |
 | **Утворення форм на -лий** | ⚪️ | 397 | Skipped |
 | **Легітимні лексикалізовані форми** | ⚪️ | 444 | Skipped |
 | **Русизми та їх уникання** | ⚪️ | 165 | Skipped |

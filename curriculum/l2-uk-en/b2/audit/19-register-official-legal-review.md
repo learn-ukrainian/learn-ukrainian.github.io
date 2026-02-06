@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:18:35
+**Generated:** 2026-02-06 20:24:16
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1935/3800 (raw: 2935)
+- **Words:** ❌ 2196/3800 (raw: 3196)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -68,8 +68,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 11 | 2 | 100% | 25% | 25.0% |
-| model_answers | 98 | 3 | 100% | 20% | 20.0% |
+| exemplar_texts | 13 | 2 | 100% | 25% | 25.0% |
+| model_answers | 100 | 3 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
 | visual | 18 | 4 | 100% | 10% | 10.0% |
@@ -82,7 +82,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Вступ — Офіційно-діловий стиль** | ✅ | 123 | Included in Core |
+| **Вступ — Офіційно-діловий стиль** | ✅ | 384 | Included in Core |
 | **Мовні засоби офіційного стилю** | ⚪️ | 188 | Skipped |
 | **Типи документів** | ⚪️ | 669 | Skipped |
 | **Структура офіційних документів** | ⚪️ | 201 | Skipped |

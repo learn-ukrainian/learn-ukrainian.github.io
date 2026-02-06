@@ -2,10 +2,10 @@
   "module": "10-checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:18:26.512928Z",
+  "last_audit": "2026-02-06T20:24:12.442976Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:17:52.271741Z",
+    "md": "2026-02-06T20:23:38.796435Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.905921Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2249/3500 (raw: 3459)"
+      "message": "2383/3500 (raw: 3593)"
     },
     "activities": {
       "status": "pass",

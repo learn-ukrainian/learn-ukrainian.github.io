@@ -2,10 +2,10 @@
   "module": "11-multi-clause-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T20:18:28.672743Z",
+  "last_audit": "2026-02-06T20:24:13.533554Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T20:12:12.993714Z",
+    "md": "2026-02-06T20:23:38.805435Z",
     "meta": "2026-02-06T19:54:09.929920Z",
     "activities": "2026-02-06T19:54:09.905921Z",
     "vocabulary": "2026-02-06T19:54:09.935920Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2047/3800 (raw: 2422)"
+      "message": "2299/3800 (raw: 2674)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors"
+      "5 Outline Compliance Errors"
     ],
     "pass_count": 3,
     "fail_count": 1
