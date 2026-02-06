@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:48
+**Generated:** 2026-02-06 20:39:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,10 +43,10 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 92: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 101: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Перед протиставними сполучниками кома ставиться завжди, без винятків.". Shares significant keywords with sentence at index 34.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (86% overlap): "Перед протиставними сполучниками кома ставиться завжди, без винятків.". Shares significant keywords with sentence at index 43.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
@@ -55,7 +55,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 3195/3800 (raw: 3571)
+- **Words:** ❌ 3326/3800 (raw: 3702)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -79,12 +79,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 68 | 24 | 100% | 20% | 20.0% |
+| examples | 70 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 12 | 3 | 100% | 10% | 10.0% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | questions | 20 | 5 | 100% | 5% | 5.0% |
@@ -95,7 +95,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
-| **Вступ — Багатоскладні речення** | ✅ | 410 | Included in Core |
+| **Вступ — Багатоскладні речення** | ✅ | 541 | Included in Core |
 | **Складносурядні речення** | ⚪️ | 253 | Skipped |
 | **Складнопідрядні речення з кількома підрядними — це конструкції, в яких до головного речення приєднуються два або більше підрядних. Ці конструкції типові для офіційного, наукового та публіцистичного стилів, де необхідно виразити складні логічні зв'язки між ідеями.** | ⚪️ | 518 | Skipped |
 | **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:50
+**Generated:** 2026-02-06 20:39:33
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,8 +43,17 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (85% overlap): "Його головна функція — об'єктивний виклад наукових знань, аргументація теорій та представлення резул...". Shares significant keywords with sentence at index 6.
+  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ❌ 2793/3800 (raw: 3138)
+- **Words:** ❌ 2925/3800 (raw: 3270)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -54,7 +63,7 @@
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
 - **Richness:** ❌ 91% < 95% min (style)
@@ -82,7 +91,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
-| **Вступ — Науковий стиль** | ✅ | 523 | Included in Core |
+| **Вступ — Науковий стиль** | ✅ | 655 | Included in Core |
 | **Лексичні особливості** | ⚪️ | 544 | Skipped |
 | **Граматичні особливості** | ⚪️ | 614 | Skipped |
 | **Мовне хеджування** | ⚪️ | 495 | Skipped |

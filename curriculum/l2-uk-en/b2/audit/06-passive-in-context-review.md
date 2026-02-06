@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:43
+**Generated:** 2026-02-06 20:39:26
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,10 +44,10 @@
 - Low density activities: 0
 
 ## LINT ERRORS
-- ❌ Line 571: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 580: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Кожна форма пасиву має свою «зону комфорту» — контексти, де вона звучить найприродніше, та зони, де ...". Shares significant keywords with sentence at index 33.
+- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Кожна форма пасиву має свою «зону комфорту» — контексти, де вона звучить найприродніше, та зони, де ...". Shares significant keywords with sentence at index 48.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ## Recommendation
@@ -56,7 +56,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 3338/3800 (raw: 3888)
+- **Words:** ❌ 3497/3800 (raw: 4047)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -83,11 +83,11 @@
 | examples | 92 | 24 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
 | realworld | 16 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
 | questions | 56 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.0%** |
@@ -96,7 +96,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
-| **Вступ — Регістр і пасив** | ✅ | 606 | Included in Core |
+| **Вступ — Регістр і пасив** | ✅ | 765 | Included in Core |
 | **Таблиця регістрів і форм пасиву** | ⚪️ | 956 | Skipped |
 | **Практичні сценарії — Юридичний контекст** | ✅ | 349 | Included in Core |
 | **Практичні сценарії — Науковий контекст** | ✅ | 431 | Included in Core |

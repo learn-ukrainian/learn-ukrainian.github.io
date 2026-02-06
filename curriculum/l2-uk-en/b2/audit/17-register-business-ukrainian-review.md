@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:49
+**Generated:** 2026-02-06 20:39:32
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2628/3800 (raw: 3723)
+- **Words:** ❌ 2754/3800 (raw: 3849)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -75,14 +75,14 @@
 | visual | 31 | 4 | 100% | 10% | 10.0% |
 | variety | 0.93 | - | 93% | 5% | 4.7% |
 | cultural | 5 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Вступ — Ділове спілкування** | ✅ | 513 | Included in Core |
+| **Вступ — Ділове спілкування** | ✅ | 639 | Included in Core |
 | **Ділове листування** | ⚪️ | 824 | Skipped |
 | **Електронне листування** | ⚪️ | 123 | Skipped |
 | **Переговори та зустрічі** | ⚪️ | 175 | Skipped |

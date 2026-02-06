@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:39
+**Generated:** 2026-02-06 20:39:21
 
 ## Configuration
 **Type:** B2-grammar
@@ -47,7 +47,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3534/3800 (raw: 4761)
+- **Words:** ❌ 3638/3800 (raw: 4865)
 - **Activities:** ✅ 18/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -87,7 +87,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 38 | Included in Core |
-| **Вступ — Що таке дієприкметник?** | ✅ | 513 | Included in Core |
+| **Вступ — Що таке дієприкметник?** | ✅ | 617 | Included in Core |
 | **Утворення дієприкметників на -ний** | ⚪️ | 1290 | Skipped |
 | **Утворення дієприкметників на -тий** | ⚪️ | 322 | Skipped |
 | **Узгодження дієприкметників** | ⚪️ | 575 | Skipped |

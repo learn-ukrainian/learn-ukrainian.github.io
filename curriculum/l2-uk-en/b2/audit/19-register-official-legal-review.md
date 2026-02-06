@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M19 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:51
+**Generated:** 2026-02-06 20:39:34
 
 ## Configuration
 **Type:** B2-grammar
@@ -56,7 +56,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2547/3800 (raw: 3547)
+- **Words:** ❌ 2644/3800 (raw: 3644)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -87,7 +87,7 @@
 | visual | 18 | 4 | 100% | 10% | 10.0% |
 | variety | 0.96 | - | 96% | 5% | 4.8% |
 | cultural | 6 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
@@ -97,7 +97,7 @@
 | **Вступ — Офіційно-діловий стиль** | ✅ | 384 | Included in Core |
 | **Мовні засоби офіційного стилю** | ⚪️ | 539 | Skipped |
 | **Типи документів** | ⚪️ | 669 | Skipped |
-| **Структура офіційних документів** | ⚪️ | 201 | Skipped |
+| **Структура офіційних документів** | ⚪️ | 298 | Skipped |
 | **Законодавчі тексти** | ✅ | 405 | Included in Core |
 | **Типові помилки** | ✅ | 86 | Included in Core |
 | **Практика і підсумок** | ✅ | 191 | Included in Core |

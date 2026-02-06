@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 20:36:47
+**Generated:** 2026-02-06 20:39:29
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -52,7 +52,7 @@
 - Structure issue: Missing '## Summary'
 
 ## Gates
-- **Words:** ❌ 2695/3500 (raw: 3905)
+- **Words:** ❌ 2879/3500 (raw: 4089)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -64,7 +64,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.0% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 98.1% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -89,7 +89,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
-| **Вступ — Що ми вивчили** | ✅ | 223 | Included in Core |
+| **Вступ — Що ми вивчили** | ✅ | 407 | Included in Core |
 | **Навичка 1: Ключові знання модуля** | ⚪️ | 248 | Skipped |
 | **Огляд — Чотири форми пасиву** | ⚪️ | 364 | Skipped |
 | **Огляд — Вибір форми за регістром** | ⚪️ | 235 | Skipped |
