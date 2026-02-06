@@ -1,8 +1,8 @@
 # Audit Report: M31 — 31-numeral-declension-time-dates.md
 **Level:** B2 | **Module:** M31 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:20:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 16:50:15
 
 ## Configuration
 **Type:** B2-grammar
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1859/2000 (raw: 2061)
+- **Words:** ✅ 2271/2000 (raw: 2464)
 - **Activities:** ✅ 17/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -58,37 +58,37 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
-- **Richness:** ✅ 95% (grammar)
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 19 | 24 | 79% | 20% | 15.8% |
+| examples | 27 | 24 | 100% | 20% | 20.0% |
 | engagement | 6 | 5 | 100% | 15% | 15.0% |
 | dialogues | 5 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.2%** |
+| questions | 30 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 90 | Included in Core |
-| **Розминка — Числівники в повсякденному житті** | ⚪️ | 146 | Skipped |
+| **Розминка — Числівники в повсякденному житті** | ⚪️ | 201 | Skipped |
 | **Час — години та хвилини** | ⚪️ | 691 | Skipped |
-| **Дати — дні та місяці** | ⚪️ | 89 | Skipped |
+| **Дати — дні та місяці** | ⚪️ | 356 | Skipped |
 | **Числівники в офіційних документах** | ⚪️ | 371 | Skipped |
-| **Практика** | ⚪️ | 460 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Практика** | ⚪️ | 519 | Skipped |
+| **Підсумок** | ✅ | 43 | Included in Core |

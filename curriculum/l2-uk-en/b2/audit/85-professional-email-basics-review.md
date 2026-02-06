@@ -1,8 +1,8 @@
 # Audit Report: M85 — 85-professional-email-basics.md
 **Level:** B2 | **Module:** M85 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:26:18
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 16:52:00
 
 ## Configuration
 **Type:** B2-skills
@@ -46,7 +46,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1739/2000 (raw: 1861)
+- **Words:** ✅ 2174/2000 (raw: 2296)
 - **Activities:** ✅ 17/14
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/5 types
@@ -59,35 +59,35 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (17 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (skills))
-- **Richness:** ✅ 96% (skills)
+- **Richness:** ✅ 97% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 96% (minimum: 80%)
+**Score:** 97% (minimum: 80%)
 **Module Type:** skills
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 65 | 15 | 100% | 26% | 25.5% |
+| examples | 84 | 15 | 100% | 26% | 25.5% |
 | engagement | 7 | 5 | 100% | 19% | 19.4% |
-| variety | 0.92 | - | 92% | 12% | 11.3% |
+| variety | 0.93 | - | 93% | 12% | 11.4% |
 | cultural | 1 | - | 100% | 12% | 12.2% |
 | realworld | 4 | 3 | 100% | 12% | 12.2% |
 | visual | 18 | 2 | 100% | 6% | 6.1% |
-| paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
-| questions | 8 | 4 | 100% | 6% | 6.1% |
-| **TOTAL** | | | | | **96.4%** |
+| paragraph_var | 0.71 | - | 71% | 6% | 4.3% |
+| questions | 9 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 34 | Included in Core |
-| **Розминка — Ділова комунікація** | ⚪️ | 105 | Skipped |
+| **Розминка — Ділова комунікація** | ⚪️ | 179 | Skipped |
 | **Структура ділового листа** | ⚪️ | 571 | Skipped |
 | **Типи ділових листів** | ⚪️ | 377 | Skipped |
 | **Тон та формальність** | ⚪️ | 405 | Skipped |
-| **Типові помилки** | ✅ | 149 | Included in Core |
-| **Практика** | ⚪️ | 86 | Skipped |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Типові помилки** | ✅ | 267 | Included in Core |
+| **Практика** | ⚪️ | 304 | Skipped |
+| **Підсумок** | ✅ | 37 | Included in Core |
