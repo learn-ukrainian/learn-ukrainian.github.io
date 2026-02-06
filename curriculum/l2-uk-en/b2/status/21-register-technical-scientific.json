@@ -2,13 +2,13 @@
   "module": "21-register-technical-scientific",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:48:08.538794Z",
+  "last_audit": "2026-02-06T19:58:01.821023Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:41:58.955757Z",
-    "meta": "2026-02-06T12:04:24.711813Z",
-    "activities": "2026-02-06T12:04:24.689813Z",
-    "vocabulary": "2026-02-06T12:04:24.717813Z",
+    "md": "2026-02-06T19:54:09.891921Z",
+    "meta": "2026-02-06T19:54:09.929920Z",
+    "activities": "2026-02-06T19:54:09.908921Z",
+    "vocabulary": "2026-02-06T19:54:09.935920Z",
     "plan": null
   },
   "gates": {

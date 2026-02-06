@@ -2,13 +2,13 @@
   "module": "38-one-member-sentences",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:15:21.761860Z",
+  "last_audit": "2026-02-06T19:58:20.433901Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:15:01.328269Z",
-    "meta": "2026-02-06T12:04:24.712813Z",
-    "activities": "2026-02-06T12:04:24.693813Z",
-    "vocabulary": "2026-02-06T12:04:24.718813Z",
+    "md": "2026-02-06T19:54:09.894921Z",
+    "meta": "2026-02-06T19:54:09.930920Z",
+    "activities": "2026-02-06T19:54:09.911921Z",
+    "vocabulary": "2026-02-06T19:54:09.936920Z",
     "plan": null
   },
   "gates": {

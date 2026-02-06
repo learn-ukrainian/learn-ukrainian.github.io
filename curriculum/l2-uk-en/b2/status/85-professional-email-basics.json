@@ -2,13 +2,13 @@
   "module": "85-professional-email-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T16:52:00.249228Z",
+  "last_audit": "2026-02-06T19:59:08.268358Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T16:51:48.775377Z",
-    "meta": "2026-02-06T16:41:25.730901Z",
-    "activities": "2026-02-06T16:41:25.719901Z",
-    "vocabulary": "2026-02-06T16:41:25.737901Z",
+    "md": "2026-02-06T19:54:09.901921Z",
+    "meta": "2026-02-06T19:54:09.931921Z",
+    "activities": "2026-02-06T19:54:09.920920Z",
+    "vocabulary": "2026-02-06T19:54:09.938920Z",
     "plan": null
   },
   "gates": {

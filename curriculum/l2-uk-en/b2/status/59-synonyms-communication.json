@@ -2,13 +2,13 @@
   "module": "59-synonyms-communication",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T12:34:39.432465Z",
+  "last_audit": "2026-02-06T19:58:41.831035Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:32:45.828176Z",
-    "meta": "2026-02-06T12:04:24.712813Z",
-    "activities": "2026-02-06T12:04:24.696813Z",
-    "vocabulary": "2026-02-06T12:04:24.719813Z",
+    "md": "2026-02-06T19:54:09.897920Z",
+    "meta": "2026-02-06T19:54:09.931921Z",
+    "activities": "2026-02-06T19:54:09.915920Z",
+    "vocabulary": "2026-02-06T19:54:09.937921Z",
     "plan": null
   },
   "gates": {

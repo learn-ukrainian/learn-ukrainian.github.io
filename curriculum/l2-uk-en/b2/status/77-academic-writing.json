@@ -2,13 +2,13 @@
   "module": "77-academic-writing",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T10:31:56.374676Z",
+  "last_audit": "2026-02-06T19:59:00.097225Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T10:26:06.966070Z",
-    "meta": "2026-02-06T10:26:06.998070Z",
-    "activities": "2026-02-06T10:26:06.985070Z",
-    "vocabulary": "2026-02-06T10:26:07.005070Z",
+    "md": "2026-02-06T19:54:09.900920Z",
+    "meta": "2026-02-06T19:54:09.931921Z",
+    "activities": "2026-02-06T19:54:09.918921Z",
+    "vocabulary": "2026-02-06T19:54:09.938920Z",
     "plan": null
   },
   "gates": {

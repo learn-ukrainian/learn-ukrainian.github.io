@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 17:04:47
+**Generated:** 2026-02-06 19:58:00
 
 ## Configuration
 **Type:** B2-grammar

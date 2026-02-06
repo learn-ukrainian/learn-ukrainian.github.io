@@ -2,13 +2,13 @@
   "module": "15-register-introduction",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T16:56:30.616908Z",
+  "last_audit": "2026-02-06T19:57:55.276596Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T16:56:21.613928Z",
-    "meta": "2026-02-06T16:41:25.728901Z",
-    "activities": "2026-02-06T16:41:25.705900Z",
-    "vocabulary": "2026-02-06T16:41:25.734901Z",
+    "md": "2026-02-06T19:54:09.890920Z",
+    "meta": "2026-02-06T19:54:09.929920Z",
+    "activities": "2026-02-06T19:54:09.906920Z",
+    "vocabulary": "2026-02-06T19:54:09.935920Z",
     "plan": null
   },
   "gates": {

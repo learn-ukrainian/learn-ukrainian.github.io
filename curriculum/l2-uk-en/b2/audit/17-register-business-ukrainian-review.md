@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 17:22:00
+**Generated:** 2026-02-06 19:59:42
 
 ## Configuration
 **Type:** B2-grammar
