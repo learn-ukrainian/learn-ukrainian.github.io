@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M13 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 10:30:49
+**Generated:** 2026-02-06 17:07:59
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,19 +44,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 2642/3800 (raw: 3182)
+- **Words:** ❌ 3467/3800 (raw: 3995)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -69,14 +69,14 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 16 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 14 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
+| realworld | 15 | 3 | 100% | 10% | 10.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 32 | 5 | 100% | 5% | 5.0% |
+| questions | 33 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
 
@@ -84,11 +84,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
-| **Вступ — Порядок слів в українській мові** | ✅ | 139 | Included in Core |
+| **Вступ — Порядок слів в українській мові** | ✅ | 252 | Included in Core |
 | **Тема-рема структура** | ⚪️ | 1073 | Skipped |
-| **Емфатичний порядок слів** | ⚪️ | 299 | Skipped |
+| **Емфатичний порядок слів** | ⚪️ | 484 | Skipped |
 | **Інверсія для стилістичного ефекту** | ⚪️ | 659 | Skipped |
-| **Виділення елементів речення** | ⚪️ | 291 | Skipped |
-| **Контекстуальний вибір** | ✅ | 110 | Included in Core |
-| **Практика і підсумок** | ✅ | 0 | Included in Core |
-| **Підсумок** | ✅ | 12 | Included in Core |
+| **Виділення елементів речення** | ⚪️ | 424 | Skipped |
+| **Контекстуальний вибір** | ✅ | 338 | Included in Core |
+| **Практика і підсумок** | ✅ | 132 | Included in Core |
+| **Підсумок** | ✅ | 46 | Included in Core |
