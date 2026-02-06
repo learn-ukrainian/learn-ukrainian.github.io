@@ -2,50 +2,48 @@
   "module": "mykola-vasylenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:04.577880Z",
+  "last_audit": "2026-02-07T00:22:05.396703Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.346113Z",
-    "meta": "2026-02-02T23:23:00.098647Z",
-    "activities": "2026-01-27T15:34:56.332091Z",
-    "vocabulary": null,
+    "md": "2026-02-06T22:56:22.309180Z",
+    "meta": "2026-02-06T22:56:22.297050Z",
+    "activities": "2026-02-06T22:56:22.242139Z",
+    "vocabulary": "2026-02-05T23:13:07.944094Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "1965/4000 (raw: 2226)"
+      "violations": 3,
+      "message": "3810/4000 (raw: 4263) | pedagogy: 1 violations | richness: 94% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "26/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "2 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

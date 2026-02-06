@@ -26,7 +26,7 @@ LEVEL_STATUS_FILE = PROJECT_ROOT / "docs" / "l2-uk-en" / "level-status.yaml"
 
 # Core levels and specialized tracks
 CORE_LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]
-SPECIALIZED_TRACKS = ["b2-hist", "c1-bio", "b2-pro", "c1-pro", "lit"]
+SPECIALIZED_TRACKS = ["b2-hist", "c1-bio", "c1-hist", "b2-pro", "c1-pro", "lit"]
 
 # Ukrainian level names
 LEVEL_NAMES_UK = {
@@ -38,6 +38,7 @@ LEVEL_NAMES_UK = {
     "c2": "C2 - Досконалий",
     "b2-hist": "B2-HIST - Історія України",
     "c1-bio": "C1-BIO - Біографії українців",
+    "c1-hist": "C1-HIST - Історіографія",
     "b2-pro": "B2-PRO - Професійна українська",
     "c1-pro": "C1-PRO - Фахова українська",
     "lit": "LIT - Українська література",
@@ -53,6 +54,7 @@ LEVEL_NAMES_EN = {
     "c2": "Mastery",
     "b2-hist": "History Track",
     "c1-bio": "Biography Track",
+    "c1-hist": "Historiography Track",
     "b2-pro": "Professional Track",
     "c1-pro": "Professional Mastery",
     "lit": "Literature Track",

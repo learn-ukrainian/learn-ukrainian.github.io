@@ -1,8 +1,8 @@
-# Audit Report: M103 — berta-rapoport.md
-**Level:** C1-BIO | **Module:** M103 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M106 — berta-rapoport.md
+**Level:** C1-BIO | **Module:** M106 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:25
+**Generated:** 2026-02-07 00:22:26
 
 ## Configuration
 **Type:** C1-biography
@@ -35,6 +35,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/berta-rapoport-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Вона назавжди залишиться нашою першою Капітанкою, яка веде Україну крізь тумани історії до берегів с...". Shares significant keywords with sentence at index 57.
   - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in berta-rapoport.yaml: Schema validation error at key '5': {'type': 'reading', 'title': 'Морський статут та етика', 'resource': {'type': 'primary_source', 'url': 'https://zakon.rada.gov.ua/', 'title': 'Кодекс торговельного мореплавства України'}, 'tasks': ['Знайдіть у тексті обов’язки капітана судна.', 'Які терміни використовуються для опису аварійних ситуацій?', 'Поясніть значення слова «фрахтування».']} is not valid under any of the given schemas
@@ -43,7 +45,7 @@
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -57,12 +59,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

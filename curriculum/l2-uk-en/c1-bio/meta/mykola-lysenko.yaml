@@ -3,9 +3,89 @@ level: C1-BIO
 slug: mykola-lysenko
 version: '2.0'
 id: c1-bio-047
-transliteration: none
+title: "Микола Лисенко: Батько української класичної музики"
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4300
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- music
+- folklore
+- arts
+content_outline:
+- section: "Вступ: Батько української класичної музики"
+  words: 400
+  points:
+  - Роль Лисенка як засновника національної школи
+  - Культурний опір через мистецтво
+- section: "Походження та роки навчання (1842-1869)"
+  words: 700
+  points:
+  - Козацьке коріння та дитинство на Полтавщині
+  - Навчання в Лейпцизькій консерваторії
+- section: "Київ та Громада: Центр національного життя"
+  words: 700
+  points:
+  - Участь у Старій Громаді та співпраця з Драгомановим
+  - Хорові подорожі як місія просвітництва
+- section: "Оперна творчість: Від «Різдвяної ночі» до «Тараса Бульби»"
+  words: 800
+  points:
+  - Становлення української опери
+  - «Тарас Бульба» як magnum opus та політичний маніфест
+- section: "Лисенко як вчений-етнограф та педагог"
+  words: 700
+  points:
+  - Збирання та класифікація народних пісень
+  - Музично-драматична школа (1904)
+- section: "Гімн «Молитва за Україну» та спадщина"
+  words: 600
+  points:
+  - Історія створення духовного гімну
+  - Похорон як національна маніфестація
+- section: "Підсумок: Музичний фундамент нації"
+  words: 400
+  points:
+  - Підсумок внеску та візія майбутнього
+sources:
+- name: Микола Лисенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Лисенко_Микола_Віталійович
+  type: primary
+  notes: Життєпис та творчість
+- name: Енциклопедія історії України
+  url: http://resource.history.org.ua/
+vocabulary_hints:
+  required:
+  - національна школа
+  - культурний опір
+  - етнограф
+  - фольклористика
+  - маніфест
+  - духовний гімн
+  - русифікація
+  - самобутність
+  - асиміляція
+  - суверенітет
+  recommended:
+  - деколонізація
+  - малоросійщина
+  - партитура
+  - лібрето
+  - авангард
+activity_hints:
+- type: reading
+  focus: Громадянська позиція Лисенка
+- type: essay-response
+  focus: Формування ідентичності через музику
+- type: critical-analysis
+  focus: Аналіз культурного суверенітету
+vital_status: deceased
 build:
-  last_modified: '2026-02-05'
+  last_modified: '2026-02-06'

@@ -6,36 +6,34 @@ version: '2.0'
 title: Класична музика II — Національна школа
 subtitle: Classical Music II — National School
 content_outline:
-- section: Розминка — Народження національної музики
-  words: 700
-  points:
-  - Микола Лисенко — батько української класичної музики
-  - Зв'язок народної та професійної музики
-  - "Щедрик" — найвідоміша українська мелодія у світі
-- section: Content Areas
-  words: 1250
-  points:
-  - '**Микола Лисенко** (1842-1912): "Тарас Бульба", "Наталка Полтавка", "Різдвяна
-    ніч" — founded Ukrainian national school'
-  - '**Микола Леонтович** (1877-1921): **"Щедрик"** (1916) — world''s most famous
-    Ukrainian music (Carol of the Bells)'
-  - 'Кирило Стеценко: "Іфігенія в Тавриді", choral works — choral tradition master'
-  - 'Яків Степовий: Романси — Ukrainian art song pioneer'
-- section: Практика — національна школа
-  words: 1050
-  points:
-  - Проаналізувати "Щедрик" — структура, гармонія, оркестровка
-  - Порівняти опери Лисенка та Гулака-Артемовського
-  - Написати есе про роль Леонтовича в популяризації української музики
-  - Обговорити вбивство Леонтовича та його наслідки
+  - section: Розминка — Народження національної музики
+    words: 700
+    points:
+      - Микола Лисенко — батько української класичної музики
+      - Зв'язок народної та професійної музики
+      - "Щедрик" — найвідоміша українська мелодія у світі
+  - section: Content Areas
+    words: 1250
+    points:
+      - '**Микола Лисенко** (1842-1912): "Тарас Бульба", "Наталка Полтавка", "Різдвяна ніч" — founded Ukrainian national school'
+      - '**Микола Леонтович** (1877-1921): **"Щедрик"** (1916) — world''s most famous Ukrainian music (Carol of the Bells)'
+      - 'Кирило Стеценко: "Іфігенія в Тавриді", choral works — choral tradition master'
+      - 'Яків Степовий: Романси — Ukrainian art song pioneer'
+  - section: Практика — національна школа
+    words: 1050
+    points:
+      - Проаналізувати "Щедрик" — структура, гармонія, оркестровка
+      - Порівняти опери Лисенка та Гулака-Артемовського
+      - Написати есе про роль Леонтовича в популяризації української музики
+      - Обговорити вбивство Леонтовича та його наслідки
 word_target: 3000
 focus: fine-arts
 pedagogy: CBI
 objectives:
-- Learner understands the role of Mykola Lysenko in founding the national music school.
-- Learner can analyze the structure and global impact of "Shchedryk" by Leontovych.
-- Learner masters professional terminology related to composition and vocal art.
+  - Learner understands the role of Mykola Lysenko in founding the national music school.
+  - Learner can analyze the structure and global impact of "Shchedryk" by Leontovych.
+  - Learner masters professional terminology related to composition and vocal art.
 grammar:
-- Musicological academic register
-- Analysis of cultural impact
+  - Musicological academic register
+  - Analysis of cultural impact
 phase: C1.5 Folk Culture & Fine Arts

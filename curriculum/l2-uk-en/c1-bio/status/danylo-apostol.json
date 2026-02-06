@@ -2,11 +2,11 @@
   "module": "danylo-apostol",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:45.129334Z",
+  "last_audit": "2026-02-07T00:21:42.906948Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T23:37:00.528090Z",
-    "meta": "2026-02-05T00:39:42.669520Z",
+    "meta": "2026-02-05T20:58:10.252964Z",
     "activities": "2026-02-05T00:22:38.892414Z",
     "vocabulary": "2026-02-04T23:30:53.977741Z",
     "plan": null

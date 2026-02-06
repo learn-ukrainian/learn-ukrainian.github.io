@@ -28,7 +28,7 @@ items:
   translation: learned, studied
   pos: adj
 - lemma: вивчення
-  ipa: /ʋˈɪʋt͡ʃɛnnja/
+  ipa: /ʋɪʋt͡ʃˈɛnnja/
   translation: study, learning
   pos: noun
   gender: n
@@ -50,7 +50,7 @@ items:
   pos: noun
   gender: m
 - lemma: використання
-  ipa: /ʋɪkɔrɪstannja/
+  ipa: /ʋɪkɔrɪstˈannja/
   translation: use, utilization
   pos: noun
   gender: n
@@ -78,10 +78,10 @@ items:
   pos: noun
   gender: n
 - lemma: граматика
-  ipa: /ɦramˈatɪk/
+  ipa: /ɦramˈatɪka/
   translation: grammar
   pos: noun
-  gender: m
+  gender: f
 - lemma: давати
   ipa: /daʋˈatɪ/
   translation: to give
@@ -123,7 +123,7 @@ items:
 - lemma: завжди
   ipa: /zˈaʋʒdɪ/
   translation: always
-  pos: pron
+  pos: adv
 - lemma: загубити
   ipa: /zaɦubˈɪtɪ/
   translation: to lose
@@ -138,7 +138,7 @@ items:
   translation: to remember
   pos: verb
 - lemma: застосовувати
-  ipa: /zastɔsˈɔʋujut͡ʃɪ/
+  ipa: /zastɔsˈɔʋuʋatɪ/
   translation: to apply
   pos: verb
 - lemma: застосування
@@ -147,7 +147,7 @@ items:
   pos: noun
   gender: n
 - lemma: зв'язок
-  ipa: /zʋjazɔk/
+  ipa: /zʋjˈazɔk/
   translation: connection, link
   pos: noun
 - lemma: звернути
@@ -206,8 +206,7 @@ items:
 - lemma: кілька
   ipa: /kˈilʲka/
   translation: several, a few
-  pos: noun
-  gender: f
+  pos: num
 - lemma: львів
   ipa: /lʲʋiʋ/
   translation: Lviv
@@ -251,7 +250,7 @@ items:
   ipa: /mɔlɔdˈɛt͡sʲ/
   translation: well done!, good fellow
   pos: noun
-  gender: f
+  gender: m
 - lemma: місце
   ipa: /mˈist͡sɛ/
   translation: place, seat
@@ -298,10 +297,6 @@ items:
   ipa: /nɔsˈij/
   translation: carrier, speaker (native)
   pos: noun
-- lemma: о-рудний
-  ipa: /ɔ-rˈudnɪj/
-  translation: instrumental (case)
-  pos: adj
 - lemma: обмін
   ipa: /ˈɔbmin/
   translation: exchange
@@ -337,9 +332,10 @@ items:
   translation: to manage, to wield, to operate
   pos: verb
 - lemma: орішки
-  ipa: /ɔriʃkɪ/
-  translation: nuts
-  pos: adv
+  ipa: /ɔrˈiʃkɪ/
+  translation: nuts (diminutive)
+  pos: noun
+  gender: m
 - lemma: особа
   ipa: /ɔsˈɔba/
   translation: person
@@ -437,10 +433,9 @@ items:
   pos: noun
   gender: m
 - lemma: реальний
-  ipa: /rɛˈalʲnɛ/
+  ipa: /rɛˈalʲnɪj/
   translation: real
-  pos: noun
-  gender: n
+  pos: adj
 - lemma: регулярно
   ipa: /rɛɦulˈjarnɔ/
   translation: regularly
@@ -535,7 +530,7 @@ items:
 - lemma: тепер
   ipa: /tɛpˈɛr/
   translation: now
-  pos: pron
+  pos: adv
 - lemma: тетяна
   ipa: /tɛtˈjana/
   translation: Tetiana (name)

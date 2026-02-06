@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        687 modules aligned with CEFR and Ukrainian State Standards.
+        1,167 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -182,8 +182,8 @@ export default function Home(): ReactNode {
               <LevelCard
                 level="C2"
                 name="Mastery"
-                description="Native-level proficiency (coming soon)"
-                modules={0}
+                description="Native-level proficiency"
+                modules={100}
                 color="#C62828"
               />
             </div>
@@ -201,10 +201,18 @@ export default function Home(): ReactNode {
                 isTrack
               />
               <LevelCard
+                level="C1-HIST"
+                name="Historiography"
+                description="Primary sources, imperial mechanisms, interethnic relations"
+                modules={135}
+                color="#6D4C41"
+                isTrack
+              />
+              <LevelCard
                 level="C1-BIO"
                 name="Biographies"
                 description="Notable Ukrainians through history"
-                modules={111}
+                modules={156}
                 color="#607D8B"
                 isTrack
               />
@@ -245,7 +253,7 @@ export default function Home(): ReactNode {
                 level="OES"
                 name="Old East Slavic"
                 description="Language of Kyivan Rus' (X-XIII century)"
-                modules={1}
+                modules={100}
                 color="#8D6E63"
                 isTrack
               />
@@ -253,7 +261,7 @@ export default function Home(): ReactNode {
                 level="RUTH"
                 name="Ruthenian"
                 description="Middle Ukrainian (XIV-XVIII century)"
-                modules={0}
+                modules={100}
                 color="#A1887F"
                 isTrack
               />

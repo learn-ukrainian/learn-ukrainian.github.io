@@ -2,11 +2,11 @@
   "module": "volodymyr-ivasyuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:39.575852Z",
+  "last_audit": "2026-02-07T00:22:42.135030Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349876Z",
-    "meta": "2026-02-02T23:23:00.343642Z",
+    "meta": "2026-02-06T22:56:22.305504Z",
     "activities": "2026-01-27T15:34:57.011500Z",
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2010/4000 (raw: 2277) | pedagogy: 1 violations"
+      "message": "2010/4000 (raw: 2277) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -45,6 +45,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

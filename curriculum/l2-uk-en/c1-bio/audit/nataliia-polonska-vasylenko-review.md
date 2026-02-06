@@ -1,8 +1,8 @@
-# Audit Report: M82 — nataliia-polonska-vasylenko.md
-**Level:** C1-BIO | **Module:** M82 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M85 — nataliia-polonska-vasylenko.md
+**Level:** C1-BIO | **Module:** M85 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:15
+**Generated:** 2026-02-07 00:22:16
 
 ## Configuration
 **Type:** C1-biography
@@ -34,13 +34,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/nataliia-polonska-vasylenko-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in nataliia-polonska-vasylenko.yaml: Schema validation error at key 'id': 'c1-89-reading-2' does not match '^reading-[a-z0-9-]+$'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -54,12 +56,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

@@ -4,6 +4,10 @@ slug: petro-kalnyshevskyy
 version: '2.0'
 id: c1-bio-032
 title: "Петро Калнишевський: Останній кошовий"
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
@@ -18,20 +22,83 @@ tags:
 content_outline:
 - section: Вступ — Мученик Соловків
   words: 600
+  points:
+    - Калнишевський як символ кінця козацької епохи
+    - Трагедія ліквідації Січі
+    - Його мученицька доля
 - section: Життєпис
   words: 1600
+  points:
+    - Походження та молодість
+    - Козацька кар'єра
+    - Обрання кошовим 1762 року
+    - Характер та лідерські якості
 - section: Історичний контекст
   words: 600
+  points:
+    - Республіка проти Деспотії
+    - Проект «Новоросія» як засіб колоніального стирання
 - section: Внесок
   words: 400
+  points:
+    - Економічний розвиток Нової Січі
+    - Церковне будівництво та меценатство
 - section: Останні роки
   words: 400
+  points:
+    - Соловецький монастир
+    - 25 років в одиночній камері
+    - Смерть у 112 років
 - section: Спадщина
   words: 400
+  points:
+    - Канонізація та вшанування
+    - Символ незламності духу
 - section: Підсумок
   words: 300
-word_target: 4300
+  points:
+    - Калнишевський як символ опору імперії
+    - Місце в українській пам'яті
+sources:
+  - name: Петро Калнишевський (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
+    type: primary
+    notes: Biography, last koshovyi, imprisonment
+  - name: Знищення Запорозької Січі
+    url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
+    type: primary
+    notes: Events of 1775
+  - name: Соловецький монастир
+    url: https://uk.wikipedia.org/wiki/Соловецький_монастир
+    type: reference
+    notes: Place of imprisonment
+vocabulary_hints:
+  required:
+    - кошовий
+    - ліквідація
+    - ув'язнення
+    - мученик
+    - клейноди
+    - зречення
+    - монастир
+    - каземат
+    - канонізація
+    - автономія
+  recommended:
+    - одиночна камера
+    - амністія
+    - преподобний
+    - старшина
+    - архів
+activity_hints:
+  - type: reading
+    focus: Documents about the liquidation of the Sich
+    source: Imperial decrees and reports (adapted)
+  - type: essay-response
+    focus: "Why did the Empire destroy the Sich?"
+    model_answer: "The Russian Empire destroyed the Zaporozhian Sich because its democratic traditions and free economy posed a direct threat to the autocratic and serf-based imperial system."
+  - type: critical-analysis
+    focus: Evaluate the claim that he lived to 112
 vital_status: deceased
-vocabulary_hints: true
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-06'

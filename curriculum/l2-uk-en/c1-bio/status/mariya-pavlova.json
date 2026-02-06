@@ -2,11 +2,11 @@
   "module": "mariya-pavlova",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T17:32:29.604675Z",
+  "last_audit": "2026-02-07T00:21:57.319750Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T17:31:37.047929Z",
-    "meta": "2026-02-05T17:24:49.233700Z",
+    "meta": "2026-02-06T22:56:22.294579Z",
     "activities": "2026-02-04T21:10:05.368468Z",
     "vocabulary": "2026-02-04T21:08:26.735114Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4666/4300 (raw: 4709)"
+      "message": "4666/4000 (raw: 4709)"
     },
     "activities": {
       "status": "pass",

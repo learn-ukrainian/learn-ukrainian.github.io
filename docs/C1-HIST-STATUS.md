@@ -1,25 +1,25 @@
 # C1-HIST Module Status
 
-**Generated:** 2026-01-30 21:19:46
+**Generated:** 2026-02-06 14:08:50
 **Total Modules:** 135
-**Status:** 1 passing, 0 failing, 0 stubs, 134 errors
+**Status:** 5 passing, 0 failing, 0 stubs, 130 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 1/135 (0%)
+- ✅ **Passing:** 5/135 (3%)
 - ❌ **Failing:** 0/135
 - 📝 **Stubs:** 0/135
-- ⚠️ **Errors:** 134/135
+- ⚠️ **Errors:** 130/135
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | shcho-take-istoriohrafiia | ✅ PASS | 4898/4000 | - |
-| 002 | ukrainska-istoriohrafichna-tradytsiia | ⚠️ MISSING | 0/0 | no_file |
-| 003 | rosiiska-imperialna-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
-| 004 | radyanska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
-| 005 | polskyi-pohliad | ⚠️ MISSING | 0/0 | no_file |
+| 001 | shcho-take-istoriohrafiia | ✅ PASS | 5198/4000 | - |
+| 002 | ukrainska-istoriohrafichna-tradytsiia | ✅ PASS | 5493/4000 | - |
+| 003 | rosiiska-imperialna-istoriohrafiia | ✅ PASS | 5639/4000 | - |
+| 004 | radyanska-istoriohrafiia | ✅ PASS | 4778/4000 | - |
+| 005 | polskyi-pohliad | ✅ PASS | 9359/4000 | - |
 | 006 | diaspora-ta-zakhidni-istoriky | ⚠️ MISSING | 0/0 | no_file |
 | 007 | nova-ukrainska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
 | 008 | metodolohiia-dekolonizatsii | ⚠️ MISSING | 0/0 | no_file |

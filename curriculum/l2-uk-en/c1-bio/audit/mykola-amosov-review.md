@@ -1,8 +1,8 @@
-# Audit Report: M117 — mykola-amosov.md
-**Level:** C1-BIO | **Module:** M117 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M121 — mykola-amosov.md
+**Level:** C1-BIO | **Module:** M121 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:32
+**Generated:** 2026-02-07 00:22:34
 
 ## Configuration
 **Type:** C1-biography
@@ -18,19 +18,23 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/mykola-amosov-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-amosov.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-amosov.yaml: Insufficient activities: 0 found, minimum 3 required for C1-BIO
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 117 has 4.3% immersion (target: 90.0%+)
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 121 has 4.3% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## Recommendation
 **🔄 REWRITE** (severity 80/100)
 
-- 4 violations (moderate)
+- 6 violations (moderate)
 - Immersion 91% off target (major rebalancing needed)
 - Activity count below minimum
 - Activity density below minimum
@@ -46,12 +50,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
 - **Immersion:** ❌ 4.3% LOW (target 95-100% (biography))
 - **Richness:** ❌ 11% < 95% min (biography) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 11% (minimum: 95%)

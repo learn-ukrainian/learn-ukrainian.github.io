@@ -2,11 +2,11 @@
   "module": "kateryna-bilokur",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:28.274453Z",
+  "last_audit": "2026-02-07T00:22:29.651086Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.365868Z",
-    "meta": "2026-02-02T23:23:00.267859Z",
+    "meta": "2026-02-06T22:56:22.290798Z",
     "activities": "2026-01-27T15:34:55.685510Z",
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2401/4000 (raw: 2718) | pedagogy: 1 violations"
+      "message": "2401/4000 (raw: 2718) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -45,6 +45,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

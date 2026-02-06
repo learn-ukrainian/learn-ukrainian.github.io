@@ -1638,19 +1638,35 @@ def main():
 
     if args:
         if args[0].endswith('.md'):
-            # Specific file logic (keeping for backward compatibility)
+            # Specific file logic: extract level and slug from path
             file_path = Path(args[0])
-            # ... existing detection logic could be here, but let's simplify for now
-            # and rely on slug lookup if we have a filename
+            # Path format: curriculum/l2-uk-en/{level}/{slug}.md
+            level_from_path = file_path.parent.name
             slug = file_path.stem
-            # Remove leading numbers if present
+            # Remove leading numbers if present (migration period)
             slug = re.sub(r'^\d+-', '', slug)
-            mod_obj = get_module_by_slug(slug)
-            if mod_obj:
-                process_modules = [mod_obj]
-            else:
-                print(f"  ⚠️  Could not find module in manifest for: {args[0]}")
+            
+            # Find all modules with this slug from manifest
+            all_available_modules = get_modules_from_manifest()
+            matching_modules = [m for m in all_available_modules if m.slug == slug]
+            
+            if not matching_modules:
+                print(f"  ⚠️  Could not find module with slug '{slug}' in manifest for: {args[0]}")
                 sys.exit(1)
+            
+            # Filter by level from path
+            mod_obj = None
+            for m in matching_modules:
+                if m.level.lower() == level_from_path.lower():
+                    mod_obj = m
+                    break
+            
+            # If no level match, take the first one (fallback)
+            if not mod_obj:
+                mod_obj = matching_modules[0]
+                print(f"  ℹ️  Using fallback module mapping: {mod_obj.level}/{mod_obj.slug}")
+            
+            process_modules = [mod_obj]
         else:
             lang_pair = args[0]
             target_level = args[1].lower() if len(args) > 1 else None

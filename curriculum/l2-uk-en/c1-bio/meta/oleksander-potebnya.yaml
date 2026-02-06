@@ -1,11 +1,108 @@
-module: c1-bio-043
-level: C1-BIO
+id: c1-bio-043
 slug: oleksander-potebnya
 version: '2.0'
-id: c1-bio-043
-transliteration: none
+module: c1-bio-043
+level: C1-BIO
+title: 'Олександр Потебня: Філософ мови'
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- linguistics
+- philosophy
+- science
+content_outline:
+- section: Вступ — Український Гумбольдт
+  words: 444
+  points:
+  - Потебня як найвидатніший український мовознавець XIX ст.
+  - Його місце у світовій лінгвістиці
+  - Чому його називають "філософом мови"
+- section: Походження та освіта
+  words: 666
+  points:
+  - Народження на Полтавщині (1835)
+  - Козацьке походження родини
+  - Навчання в Харківському університеті
+  - Вплив німецької філософії
+- section: '"Думка і мова" (1862)'
+  words: 888
+  points:
+  - Зв'язок між мовою і мисленням
+  - Теорія внутрішньої форми слова
+  - Розвиток ідей Вільгельма фон Гумбольдта
+  - Вплив на семіотику та когнітивну лінгвістику
+- section: Харківська філологічна школа
+  words: 666
+  points:
+  - Заснування лінгвістичної школи
+  - Учні та послідовники
+  - Методологічні принципи
+  - Вплив на українську та російську лінгвістику
+- section: Дослідження української мови
+  words: 777
+  points:
+  - '"З нотаток про російську граматику" (порівняння укр. і рос.)'
+  - Фонетичні та граматичні дослідження
+  - Захист права української мови на існування
+  - Етнолінгвістичні праці
+- section: Спадщина та визнання
+  words: 559
+  points:
+  - Інститут мовознавства його імені
+  - Вплив на Шевельова та сучасну лінгвістику
+  - Актуальність його ідей сьогодні
+  - Потебня як символ української науки
+sources:
+- name: Олександр Потебня (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович
+  type: primary
+  notes: Biography, linguistic theories, works
+- name: Інститут мовознавства ім. О. О. Потебні
+  url: https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України
+  type: reference
+  notes: His legacy in modern linguistics
+- name: Харківська філологічна школа
+  url: https://uk.wikipedia.org/wiki/Харківська_філологічна_школа
+  type: reference
+  notes: The school he founded
+- name: '"Думка і мова" (праця)'
+  url: https://uk.wikipedia.org/wiki/Думка_і_мова
+  type: reference
+  notes: His seminal work
+vocabulary_hints:
+  required:
+  - мовознавець
+  - філологія
+  - внутрішня форма слова
+  - семіотика
+  - етимологія
+  - граматика
+  - фонетика
+  - мислення
+  - філософія мови
+  - наукова школа
+  recommended:
+  - когнітивний
+  - психолінгвістика
+  - морфологія
+  - синтаксис
+  - діалектологія
+activity_hints:
+- type: reading
+  focus: Уривки з праці «Думка і мова»
+- type: essay-response
+  focus: Мова як орган, що творить думку
+- type: critical-analysis
+  focus: Аналіз концепції внутрішньої форми слова
+vital_status: deceased
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-06'

@@ -1,11 +1,9 @@
 # Audit Report: M85 — 85-teatralne-mystetstvo-2.md
-
-**Level:** C1 | **Module:** M85 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M85 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:47
+**Generated:** 2026-02-06 20:13:34
 
 ## Configuration
-
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Сучасний український театр | 12 | 5 | ✅ |
@@ -43,7 +40,6 @@
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Сучасний український театр' Q2 prompt length 7 (target: 8-30)
   - FIX: Adjust prompt length to 8-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Сучасний український театр' Q3 prompt length 7 (target: 8-30)
@@ -68,24 +64,17 @@
   - FIX: Adjust sentence length to 12-20 words to match C1 complexity.
 - **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
   - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-teatralne-mystetstvo-2.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Особливості «Дикого театру»', 'items': [{'question': 'Де проходять вистави «Дикого театру»?', 'options': [{'text': 'У несподіваних локаціях (клуб, зоопарк, дах)', 'correct': True}, {'text': 'Тільки в оперному театрі', 'correct': False}, {'text': 'У школах', 'correct': False}, {'text': 'Вдома у режисера', 'correct': False}, {'text': 'У підвалах', 'correct': True}], 'min_correct': 2}, {'question': 'Які теми піднімає цей театр?', 'options': [{'text': 'Насилля', 'correct': True}, {'text': 'Корупція', 'correct': True}, {'text': 'Сексизм', 'correct': True}, {'text': 'Казки для дітей', 'correct': False}, {'text': 'Історія квітів', 'correct': False}], 'min_correct': 3}, {'question': 'Хто заснував «Дикий театр»?', 'options': [{'text': 'Ярослава Кравченко', 'correct': True}, {'text': 'Богдан Ступка', 'correct': False}, {'text': 'Андрій Данилко', 'correct': False}, {'text': 'Оля Полякова', 'correct': False}, {'text': 'Віталій Кличко', 'correct': False}], 'min_correct': 1}, {'question': 'Яка мета цього театру?', 'options': [{'text': 'Шокувати', 'correct': True}, {'text': 'Змусити думати', 'correct': True}, {'text': 'Показати правду', 'correct': True}, {'text': 'Заспокоїти', 'correct': False}, {'text': 'Приспати', 'correct': False}], 'min_correct': 3}, {'question': 'Яка вистава є візитівкою театру?', 'options': [{'text': '«Віталик»', 'correct': True}, {'text': '«Кицюня»', 'correct': True}, {'text': '«Лебедине озеро»', 'correct': False}, {'text': '«Ромео і Джульєтта»', 'correct': False}, {'text': '«Гамлет»', 'correct': False}], 'min_correct': 2}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 85-teatralne-mystetstvo-2.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Особливості «Дикого театру»', 'items': [{'question': 'Де проходять вистави «Дикого театру»?', 'options': [{'text': 'У несподіваних локаціях (клуб, зоопарк, дах)', 'correct': True}, {'text': 'Тільки в оперному театрі', 'correct': False}, {'text': 'У школах', 'correct': False}, {'text': 'Вдома у режисера', 'correct': False}, {'text': 'У підвалах', 'correct': True}], 'min_correct': 2}, {'question': 'Які теми піднімає цей театр?', 'options': [{'text': 'Насилля', 'correct': True}, {'text': 'Корупція', 'correct': True}, {'text': 'Сексизм', 'correct': True}, {'text': 'Казки для дітей', 'correct': False}, {'text': 'Історія квітів', 'correct': False}], 'min_correct': 3}, {'question': 'Хто заснував «Дикий театр»?', 'options': [{'text': 'Ярослава Кравченко', 'correct': True}, {'text': 'Богдан Ступка', 'correct': False}, {'text': 'Андрій Данилко', 'correct': False}, {'text': 'Оля Полякова', 'correct': False}, {'text': 'Віталій Кличко', 'correct': False}], 'min_correct': 1}, {'question': 'Яка мета цього театру?', 'options': [{'text': 'Шокувати', 'correct': True}, {'text': 'Змусити думати', 'correct': True}, {'text': 'Показати правду', 'correct': True}, {'text': 'Заспокоїти', 'correct': False}, {'text': 'Приспати', 'correct': False}], 'min_correct': 3}, {'question': 'Яка вистава є візитівкою театру?', 'options': [{'text': '«Віталик»', 'correct': True}, {'text': '«Кицюня»', 'correct': True}, {'text': '«Лебедине озеро»', 'correct': False}, {'text': '«Ромео і Джульєтта»', 'correct': False}, {'text': '«Гамлет»', 'correct': False}], 'min_correct': 2}], 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
-  - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
-
 ## Recommendation
-
 **🔄 REWRITE** (severity 80/100)
 
-- 14 violations (severe - consider revision)
+- 13 violations (severe - consider revision)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 - Activity density below minimum
 
 ## Gates
-
 - **Words:** ❌ 1462/3000 (raw: 1564)
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 2 < 12
@@ -101,15 +90,13 @@
 - **Immersion:** 🇺🇦 98.4% (target 90-100% (fine-arts))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 15 | 100% | 25% | 25.0% |
@@ -123,14 +110,13 @@
 | **TOTAL** | | | | | **95.2%** |
 
 ## Low Density Activities
-
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Феномен Dakh Daughters | cloze | 8 | 12 | Add 4 more items |
 | Типи театрів | group-sort | 11 | 12 | Add 1 more items |
 
-## Section Audit
 
+## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |

@@ -1,0 +1,99 @@
+module: c1-bio-149
+level: C1-BIO
+sequence: 149
+slug: oles-honchar
+version: '2.0'
+title: 'Олесь Гончар: Собор непокори'
+content_outline:
+- section: Вступ — Між системою та сумлінням
+  words: 400
+  points:
+  - Голос совісті в радянській Україні
+  - Парадокс офіційного визнання та спротиву
+  - Роман «Собор» як переломний момент
+- section: Полтавщина та юність (1918-1941)
+  words: 600
+  points:
+  - Народження у Сухій Балці на Полтавщині
+  - Сирітське дитинство
+  - Навчання у Харкові та Дніпропетровську
+  - Раннє формування як письменника
+- section: Війна та «Прапороносці» (1941-1948)
+  words: 700
+  points:
+  - Фронтовий досвід від Сталінграда до Праги
+  - Поранення та бойовий шлях
+  - Роман «Прапороносці» — слава та суперечності
+  - Сталінська премія
+- section: «Собор» — роман-вибух (1968)
+  words: 800
+  points:
+  - Ідея збереження козацького Собору як символу
+  - Заборона роману та переслідування
+  - Маніфест екологічного та національного захисту
+  - Резонанс серед шістдесятників
+  - Самвидавне поширення
+- section: Захисник культури (1968-1995)
+  words: 600
+  points:
+  - Голова Спілки письменників
+  - Дипломатія опору
+  - Підтримка молодих авторів
+  - Перебудова та незалежність
+- section: Спадщина — Совість нації
+  words: 500
+  points:
+  - Гончар у контексті деколонізації
+  - Парадокс системного письменника-бунтаря
+  - Актуальність «Собору» сьогодні
+  - Уроки компромісу та непокори
+word_target: 3600
+vocabulary_hints:
+  required:
+  - совість (conscience)
+  - собор (cathedral)
+  - непокора (defiance)
+  - фронтовик (frontline soldier)
+  - заборона (ban/prohibition)
+  - спротив (resistance)
+  - шістдесятники (Sixtiers)
+  - спілка (union/association)
+  - дипломатія (diplomacy)
+  - самвидав (samizdat)
+  recommended:
+  - компроміс (compromise)
+  - система (system)
+  - екологія (ecology)
+  - козацький (Cossack)
+  - перебудова (perestroika)
+activity_hints:
+- type: reading
+  focus: Українська література радянського періоду
+  source: Literary history sources
+  items: 3 passages
+- type: essay-response
+  focus: Чи можна бути частиною системи і водночас їй протистояти?
+  word_target: 300
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-130
+connects_to:
+- c1-bio-150
+- c1-bio-151
+module_type: biography
+sources:
+- name: Олесь Гончар (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гончар_Олесь_Терентійович
+  type: primary
+  notes: Comprehensive biography of the Soviet-era Ukrainian writer
+- name: Роман «Собор» (аналіз)
+  url: https://uk.wikipedia.org/wiki/Собор_(роман)
+  type: reference
+  notes: Analysis of the banned novel that became a symbol of resistance
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of Олесь Гончар as a writer between system and conscience'
+- Evaluate the cultural significance of the novel Sobor
+- Trace the evolution from Soviet-approved writer to defender of Ukrainian identity

@@ -1,51 +1,51 @@
 # Review: Ганна Барвінок: Письменниця і етнографка
 
 **Level:** C1-BIO | **Module:** 41
-**Overall Score:** 9.8/10
+**Overall Score:** 9.9/10
 **Status:** ✅ PASS
-**Reviewed:** 2026-02-04
+**Reviewed:** 2026-02-06
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Experience Quality | 10/10 | Engaging lecture-style narrative with deep historical immersion. |
-| Coherence | 10/10 | Logical transition from childhood to late years, clear thematic focus. |
-| Relevance | 10/10 | Fully aligned with the curriculum plan and C1 biography standards. |
-| Educational | 10/10 | Provides deep insights into the 19th-century context and literary movements. |
-| Language | 10/10 | Pure literary Ukrainian, appropriate for C1 level. |
-| Pedagogy | 10/10 | Correct use of CBI (Content-Based Instruction) and seminar-style activities. |
-| Immersion | 10/10 | 100% Ukrainian immersion, no English metalanguage in content. |
-| Activities | 10/10 | Varied and challenging activities (reading, essay, critical analysis). |
-| Richness | 10/10 | Abundant cultural references, quotes, and historical context. |
-| Humanity | 10/10 | Warm teacher voice, empathetic portrayal of the subject's hardships. |
-| LLM Fingerprint | 9/10 | Authentic historical narrative, minimal AI cliches. |
-| Linguistic Accuracy | 10/10 | Precise terminology, correct use of IPA in vocabulary. |
+| Experience Quality | 10/10 | Captivating narrative on the "quiet strength" of the first woman prozaist. |
+| Coherence | 10/10 | Seamless flow from the Motronivka roots to the preservation of the Bible legacy. |
+| Relevance | 10/10 | Fundamental for the C1-BIO track's focus on women's agency and ethnographic realism. |
+| Educational | 10/10 | Deeply explains the concept of "sentimental realism" and psychological ethnography. |
+| Language | 10/10 | Rich, authentic, and naturally sophisticated Ukrainian. |
+| Pedagogy | 10/10 | Strong activities, especially the comparative analysis with Marko Vovchok. |
+| Immersion | 10/10 | 100% immersion. |
+| Activities | 10/10 | High-quality tasks that challenge C1-level learners. |
+| Richness | 10/10 | High density of cultural and historical context (Motronivka, Bible translation). |
+| Humanity | 10/10 | Portrays Barvinok as a stoic, wise, and deeply committed intellectual. |
+| LLM Fingerprint | 9/10 | Authentic literary and historical narrative style. |
+| Linguistic Accuracy | 10/10 | All historical dates and linguistic terms verified. |
+| Propaganda Filter | 10/10 | Successfully dismantles the "wife of Kulish" myth by centering her independent agency. |
+| Semantic Nuance | 10/10 | Masterful handling of the "internal strength" vs "external silence" concept. |
 
 ## Issues Found and Fixed
 
-### Issue 1: Heading Level
-**Location:** End of file
-**Original:** # Підсумок
-**Problem:** Non-standard H1 heading for a seminar track.
-**Fix:** Changed to ## Підсумок.
+### Issue 1: Vocabulary schema and location
+**Location:** hanna-barvinok.md and vocabulary/hanna-barvinok.yaml
+**Original:** Vocabulary table was inside the MD file and used a non-standard YAML schema.
+**Fix:** Removed table from MD, converted YAML to standard 'lemma/ipa/translation' format, and added gender/POS.
 **Status:** ✅ Fixed
 
-### Issue 2: Word Count
-**Location:** Throughout
-**Original:** ~3700 words
-**Problem:** Slightly under the 4000-word target.
-**Fix:** Expanded sections on legacy and relationship with Shevchenko.
+### Issue 2: Metadata enrichment
+**Location:** meta/hanna-barvinok.yaml
+**Original:** Missing phase, focus, and activity hints.
+**Fix:** Synchronized with the plan and added all required fields.
 **Status:** ✅ Fixed
 
 ## Verification Summary
 
-- Lines read: 450
-- Activity items checked: 15
-- Ukrainian sentences verified: 300+
+- Lines read: ~1500
+- Activity items checked: 5
+- Ukrainian sentences verified: All
 - Issues found: 2
 - Issues fixed: 2
 
 ## Recommendation
 
-✅ PASS — The module provides an excellent deep dive into Hanna Barvinok's life and work, hitting all word count and pedagogical targets with high-quality Ukrainian prose.
+✅ PASS — This is a vital and beautifully written module that restores a key voice to the Ukrainian canon.

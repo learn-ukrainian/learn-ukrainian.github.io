@@ -2,13 +2,13 @@
   "module": "ivan-nechuy-levytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:54.850080Z",
+  "last_audit": "2026-02-07T00:35:55.486578Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:57:50.371535Z",
-    "meta": "2026-02-04T22:51:43.100115Z",
+    "md": "2026-02-07T00:35:49.275871Z",
+    "meta": "2026-02-07T00:35:34.588076Z",
     "activities": "2026-02-04T22:58:09.912676Z",
-    "vocabulary": "2026-02-02T11:02:04.002124Z",
+    "vocabulary": "2026-02-07T00:35:43.965790Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4220/4000 (raw: 4262)"
+      "message": "4220/4000 (raw: 4260)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

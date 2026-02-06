@@ -1,8 +1,8 @@
-# Audit Report: M69 — lesya-ukrainka.md
-**Level:** C1-BIO | **Module:** M69 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M72 — lesya-ukrainka.md
+**Level:** C1-BIO | **Module:** M72 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:08
+**Generated:** 2026-02-07 00:22:09
 
 ## Configuration
 **Type:** C1-biography
@@ -37,6 +37,15 @@
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/lesya-ukrainka-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ❌ 2154/4000 (raw: 2377)
 - **Activities:** ✅ 9/3
@@ -48,7 +57,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (9 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

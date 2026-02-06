@@ -1,75 +1,150 @@
 - lemma: король
   ipa: /koˈrɔlʲ/
   translation: king
+  pos: noun
+  gender: m
+  note: титул монарха у королівстві
 - lemma: коронація
   ipa: /koronˈɑt͡sʲijɐ/
   translation: coronation
+  pos: noun
+  gender: f
+  note: урочистий обряд покладання корони
 - lemma: регалії
   ipa: /reˈɦɑlʲiji/
   translation: regalia
+  pos: noun
+  gender: pl
+  note: предмети, що символізують владу
 - lemma: ярлик
   ipa: /jɐrˈɫɪk/
   translation: yarlyk
+  pos: noun
+  gender: m
+  note: грамота монгольських ханів на право управління
 - lemma: баскак
   ipa: /bɐsˈkɑk/
   translation: baskak
+  pos: noun
+  gender: m
+  note: монгольський урядовець, збирач данини
 - lemma: данина
   ipa: /dɐˈnɪnɐ/
   translation: tribute
+  pos: noun
+  gender: f
+  note: податок, що сплачували підкорені народи
 - lemma: орда
   ipa: /orˈdɑ/
   translation: horde
+  pos: noun
+  gender: f
+  note: військове та державне об'єднання кочівників
 - lemma: хан
   ipa: /xɑn/
   translation: khan
+  pos: noun
+  gender: m
+  note: титул правителя в Орді
 - lemma: темник
   ipa: /ˈtɛmnɪk/
   translation: temnik
+  pos: noun
+  gender: m
+  note: воєначальник, що командував 10 тисячами воїнів
 - lemma: навала
   ipa: /nɐˈʋɑɫɐ/
   translation: invasion
+  pos: noun
+  gender: f
+  note: масовий і нищівний напад ворогів
 - lemma: ярмо
   ipa: /jɐrˈmɔ/
   translation: yoke
+  pos: noun
+  gender: n
+  note: символ неволі та гніту
 - lemma: фортеця
   ipa: /forˈtɛt͡sʲɐ/
   translation: fortress
+  pos: noun
+  gender: f
+  note: укріплена споруда для оборони
 - lemma: дитинець
   ipa: /dɪˈtɪnɛt͡sʲ/
   translation: citadel
+  pos: noun
+  gender: m
+  note: внутрішня, найбільш укріплена частина міста
 - lemma: острог
   ipa: /osˈtrɔɦ/
   translation: burg
+  pos: noun
+  gender: m
+  note: укріплене поселення, оточене частоколом
 - lemma: віче
   ipa: /ˈʋʲit͡ʃe/
   translation: veche
+  pos: noun
+  gender: n
+  note: народні збори на Русі
 - lemma: союз
   ipa: /soˈjuz/
   translation: alliance
+  pos: noun
+  gender: m
+  note: об'єднання для спільної діяльності
 - lemma: коаліція
   ipa: /koɐˈlʲit͡sʲijɐ/
   translation: coalition
+  pos: noun
+  gender: f
+  note: угода між державами для досягнення мети
 - lemma: хрестовий похід
   ipa: /xrɛsˈtɔʋɪi̯ poˈxʲid/
   translation: crusade
+  pos: phrase
+  gender: m
+  note: воєнна експедиція під егідою церкви
 - lemma: унія
   ipa: /ˈunʲijɐ/
   translation: union
+  pos: noun
+  gender: f
+  note: об'єднання церков або держав
 - lemma: єпископ
   ipa: /jeˈpɪskop/
   translation: bishop
+  pos: noun
+  gender: m
+  note: вищий священнослужитель у церкві
 - lemma: митрополит
   ipa: /mɪtropoˈɫɪt/
   translation: metropolitan
+  pos: noun
+  gender: m
+  note: титул голови великої церковної області
 - lemma: архієпископ
   ipa: /ɐrxʲijeˈpɪskop/
   translation: archbishop
+  pos: noun
+  gender: m
+  note: вищий титул єпископа
 - lemma: дипломатія
   ipa: /dɪpɫoˈmɑtʲijɐ/
   translation: diplomacy
+  pos: noun
+  gender: f
+  note: засіб реалізації зовнішньої політики
 - lemma: суверенітет
   ipa: /suʋerenʲiˈtɛt/
   translation: sovereignty
+  pos: noun
+  gender: m
+  note: повна незалежність держави
 - lemma: незалежність
   ipa: /nezɐˈɫɛʒnʲistʲ/
   translation: independence
+  pos: noun
+  gender: f
+  note: самостійність у внутрішніх та зовнішніх справах

@@ -2,11 +2,11 @@
   "module": "hryhoriy-kvitka-osnovianenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:50.624849Z",
+  "last_audit": "2026-02-07T00:21:48.735693Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349818Z",
-    "meta": "2026-02-04T22:05:00.133184Z",
+    "meta": "2026-02-05T20:58:10.093605Z",
     "activities": "2026-02-04T22:04:54.030100Z",
     "vocabulary": "2026-02-04T20:35:28.957639Z",
     "plan": null

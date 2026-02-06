@@ -2,13 +2,13 @@
   "module": "marko-kropyvnytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:55.434725Z",
+  "last_audit": "2026-02-07T00:36:57.791424Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T23:03:18.958004Z",
-    "meta": "2026-02-04T22:58:46.329217Z",
+    "md": "2026-02-07T00:36:52.059047Z",
+    "meta": "2026-02-07T00:36:20.865702Z",
     "activities": "2026-02-04T23:03:40.070043Z",
-    "vocabulary": null,
+    "vocabulary": "2026-02-07T00:36:29.451091Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "3959/4000 (raw: 4036) (41 short)"
+      "message": "3959/4000 (raw: 4034) (41 short)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

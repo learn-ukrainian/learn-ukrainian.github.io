@@ -1,150 +1,149 @@
-items:
-  - lemma: засновник
-    ipa: /zɐsˈnɔu̯nɪk/
-    translation: founder
-    pos: noun
-    gender: m
-    note: той, хто заснував щось
-  - lemma: розбудова
-    ipa: /rozbuˈdɔʋɐ/
-    translation: development / expansion
-    pos: noun
-    gender: f
-    note: активне будівництво та розвиток
-  - lemma: експансія
-    ipa: /ɛksˈpɐnsʲijɐ/
-    translation: expansion
-    pos: noun
-    gender: f
-    note: територіальне розширення
-  - lemma: союзник
-    ipa: /soˈjuznɪk/
-    translation: ally
-    pos: noun
-    gender: m
-    note: той, хто діє спільно з іншим
-  - lemma: васал
-    ipa: /ʋɐˈsɑl/
-    translation: vassal
-    pos: noun
-    gender: m
-    note: залежний правитель
-  - lemma: Орда
-    ipa: /orˈdɑ/
-    translation: Horde
-    pos: noun
-    gender: f
-    note: Золота Орда
-  - lemma: столиця
-    ipa: /stoˈlɪt͡sʲɐ/
-    translation: capital
-    pos: noun
-    gender: f
-    note: головне місто держави
-  - lemma: дипломатія
-    ipa: /dɪploˈmɑtʲijɐ/
-    translation: diplomacy
-    pos: noun
-    gender: f
-    note: ведення переговорів
-  - lemma: бастіон
-    ipa: /bɐstʲiˈon/
-    translation: bastion
-    pos: noun
-    gender: m
-    note: опора, захист
-  - lemma: спадщина
-    ipa: /ˈspɑdʃt͡ʃɪnɐ/
-    translation: legacy
-    pos: noun
-    gender: f
-    note: культурна та політична спадщина
-  - lemma: наступник
-    ipa: /nɐˈstupnɪk/
-    translation: successor
-    pos: noun
-    gender: m
-    note: той, хто приходить на зміну
-  - lemma: титул
-    ipa: /ˈtɪtul/
-    translation: title
-    pos: noun
-    gender: m
-    note: звання правителя
-  - lemma: карбування
-    ipa: /kɐrˈbuʋɐnnʲɐ/
-    translation: minting
-    pos: noun
-    gender: n
-    note: виготовлення монет
-  - lemma: унітарний
-    ipa: /unʲiˈtɑrnɪj/
-    translation: unitary
-    pos: adj
-    note: єдиний, нероздільний
-  - lemma: домен
-    ipa: /doˈmɛn/
-    translation: domain
-    pos: noun
-    gender: m
-    note: володіння правителя
-  - lemma: коаліція
-    ipa: /koɐˈlʲit͡sʲijɐ/
-    translation: coalition
-    pos: noun
-    gender: f
-    note: об'єднання сил
-  - lemma: урбанізація
-    ipa: /urbɐnʲizˈɑt͡sʲijɐ/
-    translation: urbanization
-    pos: noun
-    gender: f
-    note: розвиток міст
-  - lemma: фортифікація
-    ipa: /fortɪfʲikˈɑt͡sʲijɐ/
-    translation: fortification
-    pos: noun
-    gender: f
-    note: система оборонних споруд
-  - lemma: іконопис
-    ipa: /ikonoˈpɪs/
-    translation: iconography / icon painting
-    pos: noun
-    gender: m
-    note: мистецтво написання ікон
-  - lemma: книжність
-    ipa: /ˈknɪʒnʲisʲtʲ/
-    translation: literacy / book culture
-    pos: noun
-    gender: f
-    note: розвиток культури книги
-  - lemma: протекторат
-    ipa: /protɛktoˈrɑt/
-    translation: protectorate
-    pos: noun
-    gender: m
-    note: форма залежності
-  - lemma: канонізація
-    ipa: /kɐnonʲizˈɑt͡sʲijɐ/
-    translation: canonization
-    pos: noun
-    gender: f
-    note: причислення до лику святих
-  - lemma: аристократія
-    ipa: /ɐrɪstokˈrɑtʲijɐ/
-    translation: aristocracy
-    pos: noun
-    gender: f
-    note: вищий стан суспільства
-  - lemma: легітимність
-    ipa: /leɦʲiˈtɪmnʲisʲtʲ/
-    translation: legitimacy
-    pos: noun
-    gender: f
-    note: законність влади
-  - lemma: суверенітет
-    ipa: /suʋɛrenʲiˈtɛt/
-    translation: sovereignty
-    pos: noun
-    gender: m
-    note: повна незалежність
+- lemma: засновник
+  ipa: /zɐsˈnɔu̯nɪk/
+  translation: founder
+  pos: noun
+  gender: m
+  note: той, хто заснував щось
+- lemma: розбудова
+  ipa: /rozbuˈdɔʋɐ/
+  translation: development / expansion
+  pos: noun
+  gender: f
+  note: активне будівництво та розвиток
+- lemma: експансія
+  ipa: /ɛksˈpɐnsʲijɐ/
+  translation: expansion
+  pos: noun
+  gender: f
+  note: територіальне розширення
+- lemma: союзник
+  ipa: /soˈjuznɪk/
+  translation: ally
+  pos: noun
+  gender: m
+  note: той, хто діє спільно з іншим
+- lemma: васал
+  ipa: /ʋɐˈsɑl/
+  translation: vassal
+  pos: noun
+  gender: m
+  note: залежний правитель
+- lemma: Орда
+  ipa: /orˈdɑ/
+  translation: Horde
+  pos: noun
+  gender: f
+  note: Золота Орда
+- lemma: столиця
+  ipa: /stoˈlɪt͡sʲɐ/
+  translation: capital
+  pos: noun
+  gender: f
+  note: головне місто держави
+- lemma: дипломатія
+  ipa: /dɪploˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+  note: ведення переговорів
+- lemma: бастіон
+  ipa: /bɐstʲiˈon/
+  translation: bastion
+  pos: noun
+  gender: m
+  note: опора, захист
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɐ/
+  translation: legacy
+  pos: noun
+  gender: f
+  note: культурна та політична спадщина
+- lemma: наступник
+  ipa: /nɐˈstupnɪk/
+  translation: successor
+  pos: noun
+  gender: m
+  note: той, хто приходить на зміну
+- lemma: титул
+  ipa: /ˈtɪtul/
+  translation: title
+  pos: noun
+  gender: m
+  note: звання правителя
+- lemma: карбування
+  ipa: /kɐrˈbuʋɐnnʲɐ/
+  translation: minting
+  pos: noun
+  gender: n
+  note: виготовлення монет
+- lemma: унітарний
+  ipa: /unʲiˈtɑrnɪj/
+  translation: unitary
+  pos: adj
+  note: єдиний, нероздільний
+- lemma: домен
+  ipa: /doˈmɛn/
+  translation: domain
+  pos: noun
+  gender: m
+  note: володіння правителя
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  gender: f
+  note: об'єднання сил
+- lemma: урбанізація
+  ipa: /urbɐnʲizˈɑt͡sʲijɐ/
+  translation: urbanization
+  pos: noun
+  gender: f
+  note: розвиток міст
+- lemma: фортифікація
+  ipa: /fortɪfʲikˈɑt͡sʲijɐ/
+  translation: fortification
+  pos: noun
+  gender: f
+  note: система оборонних споруд
+- lemma: іконопис
+  ipa: /ikonoˈpɪs/
+  translation: iconography / icon painting
+  pos: noun
+  gender: m
+  note: мистецтво написання ікон
+- lemma: книжність
+  ipa: /ˈknɪʒnʲisʲtʲ/
+  translation: literacy / book culture
+  pos: noun
+  gender: f
+  note: розвиток культури книги
+- lemma: протекторат
+  ipa: /protɛktoˈrɑt/
+  translation: protectorate
+  pos: noun
+  gender: m
+  note: форма залежності
+- lemma: канонізація
+  ipa: /kɐnonʲizˈɑt͡sʲijɐ/
+  translation: canonization
+  pos: noun
+  gender: f
+  note: причислення до лику святих
+- lemma: аристократія
+  ipa: /ɐrɪstokˈrɑtʲijɐ/
+  translation: aristocracy
+  pos: noun
+  gender: f
+  note: вищий стан суспільства
+- lemma: легітимність
+  ipa: /leɦʲiˈtɪmnʲisʲtʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+  note: законність влади
+- lemma: суверенітет
+  ipa: /suʋɛrenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+  note: повна незалежність

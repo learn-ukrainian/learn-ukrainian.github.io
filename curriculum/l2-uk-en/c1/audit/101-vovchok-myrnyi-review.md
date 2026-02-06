@@ -1,7 +1,7 @@
 # Audit Report: M101 — 101-vovchok-myrnyi.md
 **Level:** C1 | **Module:** M101 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:53
+**Generated:** 2026-02-06 20:12:48
 
 ## Configuration
 **Type:** C1
@@ -39,8 +39,8 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Текст 2: Панас Мирний, «Хіба ревуть воли, як ясла повні?» (аналіз ідеї), Первинний аналіз, Порівняльний аналіз: Устина vs. Чіпка, Літературний аналіз
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Аналіз': Порівняльний аналіз: Устина vs. Чіпка, Первинний аналіз, Текст 2: Панас Мирний, «Хіба ревуть воли, як ясла повні?» (аналіз ідеї), Літературний аналіз
+  - FIX: RENAME one header to NOT contain 'Аналіз'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
@@ -64,7 +64,7 @@
 - **Immersion:** 🇺🇦 99.8% (target 90-100%)
 - **Richness:** ❌ 84% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 84% (minimum: 95%)

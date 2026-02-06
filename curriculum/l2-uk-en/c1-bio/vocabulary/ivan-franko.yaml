@@ -1,101 +1,76 @@
 vocabulary:
-- term: "каменяр"
-  translation: "stonecutter / mason"
-  ipa: "kɐmɛˈnʲɑr"
-  context: "Франка називають Каменярем за його поезію та працю."
-- term: "поступ"
-  translation: "progress"
-  ipa: "ˈpɔstup"
-  context: "Стаття 'Що таке поступ?' критикує марксизм."
-- term: "радикал"
-  translation: "radical"
-  ipa: "rɐdɪˈkɑl"
-  context: "Він заснував Радикальну партію."
-- term: "соціалізм"
-  translation: "socialism"
-  ipa: "sɔt͡sʲiɐˈlʲizm"
-  context: "У молодості Франко захоплювався соціалізмом."
-- term: "громада"
-  translation: "community"
-  ipa: "hrɔˈmɑdɐ"
-  context: "Він вірив у силу сільської громади."
-- term: "москвофільство"
-  translation: "Russophilia"
-  ipa: "mɔskvɔˈfʲilʲstwɔ"
-  context: "Франко боровся проти галицького москвофільства."
-- term: "народовці"
-  translation: "Populists (Narodovtsi)"
-  ipa: "nɐˈrɔdɔu̯t͡sʲi"
-  context: "Конфлікт Франка з консервативними народовцями."
-- term: "віче"
-  translation: "public assembly"
-  ipa: "ˈvit͡ʃɛ"
-  context: "Він виступав на народних вічах."
-- term: "маніфест"
-  translation: "manifesto"
-  ipa: "mɐnʲiˈfɛst"
-  context: "'Каменярі' стали маніфестом покоління."
-- term: "пророк"
-  translation: "prophet"
-  ipa: "prɔˈrɔk"
-  context: "Поема 'Мойсей' розповідає про долю пророка."
-- term: "революціонер"
-  translation: "revolutionary"
-  ipa: "rɛvɔlʲut͡sʲiɔˈnɛr"
-  context: "Гімн 'Вічний революціонер'."
-- term: "доктрина"
-  translation: "doctrine"
-  ipa: "dɔkˈtrɪnɐ"
-  context: "Політична доктрина."
-- term: "енциклопедист"
-  translation: "encyclopedist"
-  ipa: "ɛnt͡sɪklɔpɛˈdɪst"
-  context: "Франко був ученим-енциклопедистом."
-- term: "диктатура"
-  translation: "dictatorship"
-  ipa: "dɪktɐˈturɐ"
-  context: "Він попереджав про небезпеку диктатури."
-- term: "пролетаріат"
-  translation: "proletariat"
-  ipa: "prɔlɛtɐrʲiˈɑt"
-  context: "Він писав про життя пролетаріату Борислава."
-- term: "соборність"
-  translation: "unity / sobornist"
-  ipa: "sɔˈbɔrnʲisʲtʲ"
-  context: "Ідея соборності всіх українських земель."
-- term: "модернізм"
-  translation: "modernism"
-  ipa: "mɔdɛrˈnʲizm"
-  context: "Франко стояв біля витоків українського модернізму."
-- term: "декадент"
-  translation: "decadent"
-  ipa: "dɛkɐˈdɛnt"
-  context: "Вірш 'Декадент' як відповідь критикам."
-- term: "новела"
-  translation: "novella / short story"
-  ipa: "nɔˈvɛlɐ"
-  context: "Психологічна новела 'Сойчине крило'."
-- term: "поема"
-  translation: "poem (long)"
-  ipa: "pɔˈɛmɐ"
-  context: "Філософська поема."
-- term: "філософія"
-  translation: "philosophy"
-  ipa: "fʲilɔˈsɔfʲijɐ"
-  context: "Доктор філософії."
-- term: "етика"
-  translation: "ethics"
-  ipa: "ˈɛtɪkɐ"
-  context: "Питання етики лідера."
-- term: "нація"
-  translation: "nation"
-  ipa: "ˈnɑt͡sʲijɐ"
-  context: "Будівничий нації."
-- term: "державність"
-  translation: "statehood"
-  ipa: "dɛrˈʒɑunʲisʲtʲ"
-  context: "Вимога державної самостійності."
-- term: "самостійність"
-  translation: "independence"
-  ipa: "sɐmɔsˈtʲijnʲisʲtʲ"
-  context: "Політична самостійність."
+- word: каменяр
+  ipa: "[kɑmɛˈnʲɑr]"
+  translation: stone-breaker (metaphor for pioneer)
+- word: титан праці
+  ipa: "[tɪˈtɑn ˈprɑt͡s⁽ʲ⁾i]"
+  translation: titan of work
+- word: суб'єктність
+  ipa: "[subˈjɛktn⁽ʲ⁾istʲ]"
+  translation: subjectivity / agency
+- word: деколонізація
+  ipa: "[dɛkɔlɔniˈzɑt͡s⁽ʲ⁾ijɑ]"
+  translation: decolonization
+- word: інтелектуальний спадок
+  ipa: "[intɛlɛktuˈɑlʲnɪi̯ ˈspɑdɔk]"
+  translation: intellectual heritage
+- word: гімназія
+  ipa: "[ɦimˈnɑz⁽ʲ⁾ijɑ]"
+  translation: gymnasium (elite school)
+- word: радикальний
+  ipa: "[rɑdɪˈkɑlʲnɪi̯]"
+  translation: radical
+- word: арешт
+  ipa: "[ɑˈrɛʃt]"
+  translation: arrest
+- word: маніфест
+  ipa: "[mɑniˈfɛst]"
+  translation: manifesto
+- word: державотворення
+  ipa: "[dɛrʒɑˈwɔtwɔrɛnʲnʲɑ]"
+  translation: state-building
+- word: натуралізм
+  ipa: "[nɑturɑˈl⁽ʲ⁾izm]"
+  translation: naturalism
+- word: пророцтво
+  ipa: "[prɔˈrɔt͡stʷɔ]"
+  translation: prophecy
+- word: славістика
+  ipa: "[slɑˈw⁽ʲ⁾istɪkɑ]"
+  translation: Slavic studies
+- word: світогляд
+  ipa: "[s⁽ʲ⁾w⁽ʲ⁾itˈɔɦlʲɑd]"
+  translation: worldview
+- word: еволюція поглядів
+  ipa: "[ɛwɔˈlʲut͡s⁽ʲ⁾ijɑ ˈpɔɦlʲɑd⁽ʲ⁾iu̯]"
+  translation: evolution of views
+- word: тюремні університети
+  ipa: "[tʲuˈrɛm⁽ʲ⁾n⁽ʲ⁾i uniwɛrsɪˈtɛtɪ]"
+  translation: prison universities (metaphor)
+- word: національний ідеал
+  ipa: "[nɑt͡s⁽ʲ⁾ioˈnɑlʲnɪi̯ idɛˈɑl]"
+  translation: national ideal
+- word: камертон
+  ipa: "[kɑmɛrˈtɔn]"
+  translation: tuning fork (metaphor for standard)
+- word: неокласика
+  ipa: "[nɛɔˈklɑsɪkɑ]"
+  translation: neoclassicism
+- word: кооперація
+  ipa: "[kɔɔpɛˈrɑt͡s⁽ʲ⁾ijɑ]"
+  translation: cooperation / cooperatives
+- word: авангард
+  ipa: "[ɑwɑnˈɦɑrd]"
+  translation: avant-garde
+- word: естетичний
+  ipa: "[ɛstɛˈtɪt͡ʃnɪi̯]"
+  translation: aesthetic
+- word: автономія
+  ipa: "[ɑu̯tɔˈnɔm⁽ʲ⁾ijɑ]"
+  translation: autonomy
+- word: пролог
+  ipa: "[prɔˈlɔɦ]"
+  translation: prologue
+- word: заповіт
+  ipa: "[zɑpɔˈw⁽ʲ⁾it]"
+  translation: testament / legacy

@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M08 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:01
+**Generated:** 2026-02-06 20:12:46
 
 ## Configuration
 **Type:** C1-grammar
@@ -71,7 +71,7 @@
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

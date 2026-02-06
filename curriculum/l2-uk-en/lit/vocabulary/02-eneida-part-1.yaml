@@ -1,0 +1,79 @@
+items:
+  # Required vocabulary (10 terms from plan)
+  - lemma: бурлеск
+    translation: burlesque
+    note: комічний жанр, що знижує високий матеріал «низькою» мовою; метод Котляревського в «Енеїді»
+
+  - lemma: травестія
+    translation: travesty
+    note: різновид бурлеску, де серйозний сюжет переказується в комічному ключі; від фр. travestir — «переодягати»
+
+  - lemma: синонімічний ряд
+    translation: synonymic series
+    note: ланцюг синонімів одного поняття; Котляревський знайшов 50+ синонімів до «бити»
+
+  - lemma: макаронічна мова
+    translation: macaronic language
+    note: жартівливе змішування мов; «Енеус ностер магнус панус» — латина + українська
+
+  - lemma: сатира
+    translation: satire
+    note: викриття через висміювання; Олімп «Енеїди» — сатира на петербурзьку бюрократію
+
+  - lemma: десакралізація
+    translation: desacralization
+    note: зняття «священного» статусу; Юнона = «суча дочка», Зевс = п'яний самодур
+
+  - lemma: архетип
+    translation: archetype
+    note: первісний образ-модель; Еней як «козак-мандрівник» — архетип українського шукача долі
+
+  - lemma: канцелярія
+    translation: chancellery
+    note: бюрократична установа; Олімп як петербурзька канцелярія — центральна алегорія поеми
+
+  - lemma: пародія
+    translation: parody
+    note: комічне наслідування; «Енеїда» виходить за рамки пародії — це національний маніфест
+
+  - lemma: регістр
+    translation: register (linguistic)
+    note: мовний рівень (високий, низький); у першій частині зіштовхуються 4 регістри
+
+  # Recommended vocabulary (5 terms from plan)
+  - lemma: камертон
+    translation: tuning fork / standard
+    note: те, що задає тон; перша частина «Енеїди» як камертон усього твору
+
+  - lemma: мандрівник
+    translation: wanderer
+    note: Еней — козак-мандрівник, архетип «шукача долі» після зруйнування Січі
+
+  - lemma: банкет
+    translation: banquet
+    note: бенкетна сцена у Дідони — етнографічний каталог української кухні (шпундра, путря, варенуха)
+
+  - lemma: відступ
+    translation: digression
+    note: авторський відступ — прийом «корчемного оповідача», який ламає «четверту стіну»
+
+  - lemma: лайка
+    translation: swearing / profanity
+    note: вербальна зброя десакралізації; «суча дочка» стягує богиню з небес на землю
+
+  # Additional terms from module content
+  - lemma: бурлака
+    translation: vagrant, wanderer
+    note: людина без дому й землі; точний соціальний портрет запорожців після 1775 року
+
+  - lemma: ватага
+    translation: band, gang
+    note: неформальний загін; Еней збирає «ватагу з остатків» — партизанську групу
+
+  - lemma: берегиня
+    translation: guardian spirit (female)
+    note: жіночий архетип захисниці; Венера як берегиня, яка захищає Енея на Олімпі
+
+  - lemma: звукопис
+    translation: sound writing / onomatopoeia
+    note: стилістичний прийом; «вітри-суки загули, немов бики» — звуки передають бурю

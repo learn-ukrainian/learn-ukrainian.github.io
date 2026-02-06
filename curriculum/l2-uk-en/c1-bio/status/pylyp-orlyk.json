@@ -2,11 +2,11 @@
   "module": "pylyp-orlyk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:46.943844Z",
+  "last_audit": "2026-02-07T00:21:44.822622Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.347448Z",
-    "meta": "2026-02-04T15:56:02.801840Z",
+    "meta": "2026-02-07T00:06:51.578669Z",
     "activities": "2026-02-04T17:18:03.267252Z",
     "vocabulary": "2026-02-04T17:18:13.608222Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4805/4300 (raw: 4885)"
+      "message": "4805/4000 (raw: 4885)"
     },
     "activities": {
       "status": "pass",

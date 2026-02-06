@@ -2,11 +2,11 @@
   "module": "maksym-berezovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:48.753540Z",
+  "last_audit": "2026-02-07T00:21:46.855847Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T00:18:59.201949Z",
-    "meta": "2026-02-04T16:40:55.385966Z",
+    "meta": "2026-02-06T22:56:22.293969Z",
     "activities": "2026-02-04T17:39:59.620509Z",
     "vocabulary": "2026-02-04T17:38:15.625347Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4748/4300 (raw: 4782)"
+      "message": "4748/4000 (raw: 4782)"
     },
     "activities": {
       "status": "pass",

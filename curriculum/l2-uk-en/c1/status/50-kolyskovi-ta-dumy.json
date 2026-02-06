@@ -2,12 +2,12 @@
   "module": "50-kolyskovi-ta-dumy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:27.562934Z",
+  "last_audit": "2026-02-06T20:13:14.748457Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.366951Z",
-    "meta": "2026-01-29T07:39:04.769883Z",
-    "activities": "2026-01-11T00:20:29.278141Z",
+    "meta": "2026-02-05T20:58:09.383008Z",
+    "activities": "2026-02-06T19:35:30.273481Z",
     "vocabulary": null,
     "plan": "2026-01-30T11:45:52.481662Z"
   },
@@ -33,9 +33,9 @@
       "message": "0 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
@@ -47,6 +47,6 @@
       "Missing required activity types: reading"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

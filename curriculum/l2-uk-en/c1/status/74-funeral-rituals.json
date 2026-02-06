@@ -2,11 +2,11 @@
   "module": "74-funeral-rituals",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:14:41.240209Z",
+  "last_audit": "2026-02-06T20:13:28.123918Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.367112Z",
-    "meta": "2026-01-29T07:39:04.783799Z",
+    "meta": "2026-02-05T20:58:09.404105Z",
     "activities": "2026-01-11T21:11:41.591051Z",
     "vocabulary": null,
     "plan": "2026-01-30T11:50:49.670398Z"
@@ -33,9 +33,9 @@
       "message": "0 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
@@ -45,6 +45,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

@@ -1,75 +1,150 @@
 - lemma: самодержець
   ipa: /sɐmoˈdɛrʒɛt͡sʲ/
   translation: autocrat
+  pos: noun
+  gender: m
+  note: правитель з необмеженою владою
 - lemma: боярство
   ipa: /boˈjɑrstʋo/
   translation: boyars
+  pos: noun
+  gender: n
+  note: вищий шар феодального суспільства
 - lemma: олігархія
   ipa: /olʲiˈɦɑrxʲijɐ/
   translation: oligarchy
+  pos: noun
+  gender: f
+  note: влада небагатьох багатіїв
 - lemma: магнат
   ipa: /mɐɦˈnɑt/
   translation: magnate
+  pos: noun
+  gender: m
+  note: великий землевласник
 - lemma: вотчина
   ipa: /ˈʋɔt͡ʃɪnɐ/
   translation: patrimony
+  pos: noun
+  gender: f
+  note: родова спадкова власність
 - lemma: уділ
   ipa: /uˈdʲil/
   translation: appanage
+  pos: noun
+  gender: m
+  note: частина князівства під владою князя
 - lemma: роздробленість
   ipa: /rozˈdrɔbɫenʲistʲ/
   translation: fragmentation
+  pos: noun
+  gender: f
+  note: поділ держави на окремі частини
 - lemma: централізація
   ipa: /t͡sɛntrɐlʲizˈɑt͡sʲijɐ/
   translation: centralization
+  pos: noun
+  gender: f
+  note: зосередження влади в одному центрі
 - lemma: вертикаль влади
   ipa: /ʋɛrtɪˈkɑlʲ ˈʋɫɑdɪ/
   translation: power vertical
+  pos: phrase
+  gender: f
+  note: система підпорядкування органів влади
 - lemma: легіон
   ipa: /leɦʲiˈɔn/
   translation: legion
+  pos: noun
+  gender: m
+  note: велике військове з'єднання
 - lemma: лицарство
   ipa: /ˈlɪt͡sɐrstʋo/
   translation: knighthood
+  pos: noun
+  gender: n
+  note: військовий стан у середньовіччі
 - lemma: лати
   ipa: /ˈɫɑtɪ/
   translation: armor
+  pos: noun
+  gender: f
+  note: металевий обладунок
 - lemma: обладунок
   ipa: /obɫɐˈdunɔk/
   translation: armor
+  pos: noun
+  gender: m
+  note: захисне спорядження воїна
 - lemma: шолом
   ipa: /ʃoˈɫɔm/
   translation: helmet
+  pos: noun
+  gender: m
+  note: захисний головний убір
 - lemma: спис
   ipa: /spɪs/
   translation: spear
+  pos: noun
+  gender: m
+  note: колюча зброя на довгому держаку
 - lemma: тара
   ipa: /ˈtɑrɐ/
   translation: battering ram
+  pos: noun
+  gender: f
+  note: стінобитна машина
 - lemma: галич
   ipa: /ˈɦɑlɪt͡ʃ/
   translation: Halych
+  pos: proper_noun
+  gender: m
+  note: столиця Галицько-Волинської держави
 - lemma: волинь
   ipa: /ʋoˈɫɪnʲ/
   translation: Volhynia
+  pos: proper_noun
+  gender: f
+  note: історична область на північному заході
 - lemma: унія
   ipa: /ˈunʲijɐ/
   translation: union
+  pos: noun
+  gender: f
+  note: об'єднання держав або церков
 - lemma: коронація
   ipa: /koronˈɑt͡sʲijɐ/
   translation: coronation
+  pos: noun
+  gender: f
+  note: урочистий обряд коронування
 - lemma: легат
   ipa: /leˈɦɑt/
   translation: legate
+  pos: noun
+  gender: m
+  note: представник Папи Римського
 - lemma: папа
   ipa: /ˈpɑpɐ/
   translation: Pope
+  pos: noun
+  gender: m
+  note: глава католицької церкви
 - lemma: інтердикт
   ipa: /interˈdɪkt/
   translation: interdict
+  pos: noun
+  gender: m
+  note: церковна заборона
 - lemma: скіпетр
   ipa: /ˈskʲipɛtr/
   translation: scepter
+  pos: noun
+  gender: m
+  note: символ влади монарха
 - lemma: держава
   ipa: /derˈʒɑʋɐ/
   translation: state
+  pos: noun
+  gender: f
+  note: політична організація суспільства

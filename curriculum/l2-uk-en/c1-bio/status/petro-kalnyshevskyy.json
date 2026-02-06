@@ -2,11 +2,11 @@
   "module": "petro-kalnyshevskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:47.553651Z",
+  "last_audit": "2026-02-07T00:21:45.483809Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.343934Z",
-    "meta": "2026-02-04T15:56:13.284743Z",
+    "meta": "2026-02-07T00:07:22.050063Z",
     "activities": "2026-02-04T17:22:11.508020Z",
     "vocabulary": "2026-02-04T17:22:22.282305Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4585/4300 (raw: 4615)"
+      "message": "4585/4000 (raw: 4615)"
     },
     "activities": {
       "status": "pass",

@@ -1,7 +1,7 @@
 # Audit Report: M83 — 83-balet-i-tanets.md
 **Level:** C1 | **Module:** M83 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:45
+**Generated:** 2026-02-06 20:13:33
 
 ## Configuration
 **Type:** C1-fine-arts
@@ -69,7 +69,7 @@
   - FIX: Add more items. C1 select requires at least 5 items.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'модерн —...'.
   - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 83-balet-i-tanets.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Балетні професії', 'items': [{'question': 'Хто створює танець?', 'options': [{'text': 'Хореограф', 'correct': True}, {'text': 'Балетмейстер', 'correct': True}, {'text': 'Постановник', 'correct': True}, {'text': 'Диригент', 'correct': False}, {'text': 'Костюмер', 'correct': False}], 'min_correct': 3}, {'question': 'Що входить до екіпірування балерини?', 'options': [{'text': 'Пуанти', 'correct': True}, {'text': 'Пачка', 'correct': True}, {'text': 'Тріко', 'correct': True}, {'text': 'Чоботи', 'correct': False}, {'text': 'Шолом', 'correct': False}], 'min_correct': 3}, {'question': 'Які якості необхідні танцівнику?', 'options': [{'text': 'Витривалість', 'correct': True}, {'text': 'Музикальність', 'correct': True}, {'text': 'Гнучкість', 'correct': True}, {'text': 'Артистизм', 'correct': True}, {'text': 'Вміння співати', 'correct': False}], 'min_correct': 3}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 83-balet-i-tanets.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Балетні професії', 'items': [{'question': 'Хто створює танець?', 'options': [{'text': 'Хореограф', 'correct': True}, {'text': 'Балетмейстер', 'correct': True}, {'text': 'Постановник', 'correct': True}, {'text': 'Диригент', 'correct': False}, {'text': 'Костюмер', 'correct': False}], 'min_correct': 3}, {'question': 'Що входить до екіпірування балерини?', 'options': [{'text': 'Пуанти', 'correct': True}, {'text': 'Пачка', 'correct': True}, {'text': 'Тріко', 'correct': True}, {'text': 'Чоботи', 'correct': False}, {'text': 'Шолом', 'correct': False}], 'min_correct': 3}, {'question': 'Які якості необхідні танцівнику?', 'options': [{'text': 'Витривалість', 'correct': True}, {'text': 'Музикальність', 'correct': True}, {'text': 'Гнучкість', 'correct': True}, {'text': 'Артистизм', 'correct': True}, {'text': 'Вміння співати', 'correct': False}], 'min_correct': 3}], 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -95,7 +95,7 @@
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (fine-arts))
 - **Richness:** ❌ 86% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 86% (minimum: 95%)

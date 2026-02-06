@@ -1,7 +1,7 @@
 # Audit Report: M52 — 52-rehionalni-tantsi.md
 **Level:** C1 | **Module:** M52 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:28
+**Generated:** 2026-02-06 20:13:15
 
 ## Configuration
 **Type:** C1-history
@@ -60,7 +60,7 @@
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

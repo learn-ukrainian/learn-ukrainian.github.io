@@ -6,6 +6,7 @@ id: c1-bio-137
 naturalness:
   score: 9
   status: PASS
+word_target: 4000
 vital_status: living
 build:
   last_modified: '2026-01-26'

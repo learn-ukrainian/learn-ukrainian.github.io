@@ -1,7 +1,7 @@
 # Audit Report: M76 — 76-klasychna-muzyka-1-vytoky.md
 **Level:** C1 | **Module:** M76 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:42
+**Generated:** 2026-02-06 20:13:29
 
 ## Configuration
 **Type:** C1-fine-arts
@@ -60,7 +60,7 @@
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (fine-arts))
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

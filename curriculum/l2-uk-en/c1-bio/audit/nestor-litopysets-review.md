@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M07 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:32
+**Generated:** 2026-02-07 00:21:29
 
 ## Configuration
 **Type:** C1-biography
@@ -35,50 +35,50 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4078/4000 (raw: 4186)
+- **Words:** ✅ 4367/4000 (raw: 4577)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
+- **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
+| primary_sources | 12 | 4 | 100% | 19% | 19.0% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
 | quotes | 13 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 25 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.89 | - | 89% | 5% | 4.2% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 2 | 3 | 67% | 5% | 3.2% |
+| **TOTAL** | | | | | **95.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Архітектор історичної пам'яті** | ✅ | 418 | Included in Core |
-| **Життєпис: Від послушника до диякона-вченого** | ⚪️ | 874 | Skipped |
-| **Внесок: «Повість минулих літ» та фундамент історії** | ⚪️ | 1241 | Skipped |
-| **Останні роки: Редакції та політичні виклики** | ⚪️ | 536 | Skipped |
-| **Спадщина: Канон української культури** | ✅ | 599 | Included in Core |
-| **Підсумок** | ✅ | 260 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 150 | Skipped |
+| **Intro/Narrative** | ✅ | 86 | Included in Core |
+| **Вступ — Архітектор історичної пам'яті** | ✅ | 532 | Included in Core |
+| **Життєпис: Від послушника до диякона-вченого** | ⚪️ | 911 | Skipped |
+| **Внесок: Батько української історіографії** | ⚪️ | 1221 | Skipped |
+| **Останні роки: Політичні виклики та тиха пристань молитви** | ⚪️ | 459 | Skipped |
+| **Спадщина: Генетичний код нації та ідеологічний щит** | ⚪️ | 663 | Skipped |
+| **Порівняльний аналіз: Нестор та західноєвропейські хроністи XI–XII ст.** | ✅ | 135 | Included in Core |
+| **Підсумок** | ✅ | 360 | Included in Core |

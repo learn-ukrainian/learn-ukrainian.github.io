@@ -2,11 +2,11 @@
   "module": "petro-sahaidachny",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:40.330515Z",
+  "last_audit": "2026-02-07T00:21:37.630402Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.345591Z",
-    "meta": "2026-02-04T12:19:28.763278Z",
+    "meta": "2026-02-06T22:56:22.300761Z",
     "activities": "2026-01-19T22:57:29.397617Z",
     "vocabulary": "2026-02-04T12:19:59.914739Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4802/4300 (raw: 4955)"
+      "message": "4802/4000 (raw: 4955)"
     },
     "activities": {
       "status": "pass",

@@ -1,7 +1,0 @@
-module: polskyi-pohliad
-level: C1-HIST
-slug: polskyi-pohliad
-version: '1.0'
-id: c1-hist-05
-build:
-  last_modified: '2026-01-26'

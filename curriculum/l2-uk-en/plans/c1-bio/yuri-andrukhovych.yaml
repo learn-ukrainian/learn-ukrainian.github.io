@@ -1,0 +1,100 @@
+module: c1-bio-152
+level: C1-BIO
+sequence: 152
+slug: yuri-andrukhovych
+version: '2.0'
+title: 'Юрій Андрухович: Карнавал на руїнах імперії'
+content_outline:
+- section: Вступ — Enfant terrible української літератури
+  words: 400
+  points:
+  - Засновник українського постмодернізму
+  - Руйнівник радянського канону
+  - Публічний інтелектуал з європейським визнанням
+- section: Станіславів та юність (1960-1982)
+  words: 600
+  points:
+  - Народження в Івано-Франківську (Станіславі)
+  - Галицька ідентичність та підліткове бунтарство
+  - Навчання у Львівському поліграфічному інституті
+  - Армійська служба та перші вірші
+- section: Бу-Ба-Бу (1985-1991)
+  words: 800
+  points:
+  - Заснування групи Бу-Ба-Бу з Неборак та Ірванець
+  - Перформанси та епатаж
+  - Карнавальна естетика як стратегія деколонізації
+  - Збірки поезій
+  - Крах СРСР та літературна свобода
+- section: Романи (1992-1999)
+  words: 800
+  points:
+  - «Рекреації» — карнавал і смерть поета
+  - «Московіада» — прощання з імперським простором
+  - «Перверзія» — Європа та ідентичність
+  - Визнання в Європі та переклади
+  - «Дванадцять обручів» та подальша проза
+- section: Громадянська позиція (2000-)
+  words: 500
+  points:
+  - Есеїстика про Центральну Європу
+  - Позиція щодо Революції Гідності та війни
+  - Андрухович як публічний інтелектуал
+  - Сучасна діяльність
+- section: Спадщина — Постмодерніст як деколонізатор
+  words: 500
+  points:
+  - Роль у деколонізації літературного простору
+  - Вплив на нову генерацію письменників
+  - Андрухович і європейська ідентичність
+  - Станіслав як ключ до розуміння
+word_target: 3600
+vocabulary_hints:
+  required:
+  - постмодернізм (postmodernism)
+  - карнавал (carnival)
+  - перформанс (performance)
+  - деколонізація (decolonization)
+  - інтелектуал (intellectual)
+  - есеїстика (essay writing)
+  - ідентичність (identity)
+  - роман (novel)
+  - епатаж (provocation)
+  - Центральна Європа (Central Europe)
+  recommended:
+  - Бу-Ба-Бу (Bu-Ba-Bu)
+  - Станіслав (Stanislav)
+  - Галичина (Galicia)
+  - бунтарство (rebelliousness)
+  - московіада (Moscoviad)
+activity_hints:
+- type: reading
+  focus: Український постмодернізм
+  source: Contemporary literary sources
+  items: 3 passages
+- type: essay-response
+  focus: Чи може карнавал бути формою спротиву імперії?
+  word_target: 300
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-145
+connects_to:
+- c1-bio-145
+- c1-bio-143
+module_type: biography
+sources:
+- name: Юрій Андрухович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович
+  type: primary
+  notes: Comprehensive biography of the postmodernist writer
+- name: Літературний фестиваль «Meridian Czernowitz»
+  url: https://meridiancz.com/
+  type: reference
+  notes: Literary festival co-founded by Andrukhovych
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of Юрій Андрухович as founder of Ukrainian postmodernism'
+- Evaluate the role of carnival aesthetics in cultural decolonization
+- Trace the evolution from Bu-Ba-Bu provocateur to European public intellectual

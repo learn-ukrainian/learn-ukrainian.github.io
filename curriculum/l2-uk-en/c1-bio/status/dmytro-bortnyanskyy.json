@@ -2,11 +2,11 @@
   "module": "dmytro-bortnyanskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:49.353616Z",
+  "last_audit": "2026-02-07T00:21:47.469625Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.351268Z",
-    "meta": "2026-02-04T20:08:04.458801Z",
+    "meta": "2026-02-05T20:58:10.260898Z",
     "activities": "2026-02-04T21:07:57.070938Z",
     "vocabulary": "2026-02-04T21:59:17.574116Z",
     "plan": null

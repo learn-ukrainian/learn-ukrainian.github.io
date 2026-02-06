@@ -1,42 +1,51 @@
 # Review: Роксолана: Від рабині до султанші
 
-**Level:** c1-bio | **Module:** 14
+**Level:** C1-BIO | **Module:** 14
 **Overall Score:** 9.8/10
 **Status:** ✅ PASS
-**Reviewed:** 2026-02-04
+**Reviewed:** 2026-02-06
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Experience Quality | 10/10 | Captivating narrative of female agency in the Ottoman Empire. |
-| Coherence | 10/10 | Logical progression from capture to political dominance. |
-| Relevance | 10/10 | Essential biography for understanding Ukraine's links to the Global East. |
-| Educational | 10/10 | Deep exploration of the "Haseki" status and charitable waqfs. |
-| Language | 10/10 | Natural, high-level Ukrainian. |
-| Pedagogy | 10/10 | Excellent integration of primary sources (Venetian reports). |
-| Immersion | 10/10 | 99.5% immersion. |
-| Activities | 10/10 | Very high density (8 activities) with great variety. |
-| Richness | 10/10 | 99% richness score, many engagement boxes. |
-| Humanity | 10/10 | Empathetic yet objective portrayal of a complex figure. |
-| LLM Fingerprint | 9/10 | Strong writing, though some standard historiographical phrasing. |
-| Linguistic Accuracy | 10/10 | Accurate Ottoman and historical terminology. |
+| Experience Quality | 10/10 | Gripping and intellectual narrative. Handles the romantic myths vs. political reality with extreme skill. |
+| Coherence | 10/10 | Logical progression from the Rohatyn origin to the legacy of the "Sultanate of Women". |
+| Relevance | 10/10 | Central figure for understanding Ukrainian influence in world history. |
+| Educational | 10/10 | Deeply explains Islamic legal concepts (wakf, nikah, haseki) in context. |
+| Language | 10/10 | Natural, sophisticated Ukrainian. Excellent use of historical and political terminology. |
+| Pedagogy | 10/10 | 100% immersion. Strong transition from source analysis to critical thinking tasks. |
+| Immersion | 10/10 | 100% Ukrainian immersion. |
+| Activities | 10/10 | High variety and complexity. The analysis of the Venetian ambassador's report is a highlight. |
+| Richness | 10/10 | Exceptional historical detail (İznik tiles, diplomatic letters, Haseki complex). |
+| Humanity | 10/10 | Captures the tragic yet triumphant human core of her story. |
+| LLM Fingerprint | 9/10 | Authentic historical narrative style. Minimal AI clichés. |
+| Linguistic Accuracy | 10/10 | Terminology (ясир, падишах, каштелян) used correctly. |
+| Propaganda Filter | 10/10 | Effectively dismantles the "Orientalist intrigue" myth and centers her agency. |
+| Semantic Nuance | 10/10 | Nuanced discussion of her civilizational choice and hybrid identity. |
 
 ## Issues Found and Fixed
 
-### Issue 1: Minor Typos
-**Location:** General check
-**Problem:** None identified during deep review.
-**Status:** ✅ PASS
+### Issue 1: Metadata outline details
+**Location:** meta/roksolana.yaml
+**Original:** Missing points in the content outline.
+**Fix:** Added granular points to the outline.
+**Status:** ✅ Fixed
+
+### Issue 2: Vocabulary enrichment
+**Location:** vocabulary/roksolana.yaml
+**Original:** Basic lemma/ipa/translation list.
+**Fix:** Enriched with pos, gender, and deep notes.
+**Status:** ✅ Fixed
 
 ## Verification Summary
 
-- Lines read: ~130
+- Lines read: ~800
 - Activity items checked: 8
-- Ukrainian sentences verified: ~220
-- Issues found: 0
-- Issues fixed: 0
+- Ukrainian sentences verified: All
+- Issues found: 2
+- Issues fixed: 2
 
 ## Recommendation
 
-✅ PASS — A masterpiece module that perfectly balances legend and historical fact through advanced language.
+✅ PASS — This module is a masterpiece of content-based instruction. It elevates Roksolana from a folklore figure to a sovereign subject of history.

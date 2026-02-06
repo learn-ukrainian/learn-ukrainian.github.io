@@ -1,7 +1,7 @@
 # Audit Report: M84 — 84-teatralne-mystetstvo-1.md
 **Level:** C1 | **Module:** M84 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:45
+**Generated:** 2026-02-06 20:13:33
 
 ## Configuration
 **Type:** C1-fine-arts
@@ -65,7 +65,7 @@
   - FIX: Adjust sentence length to 12-20 words to match C1 complexity.
 - **[COMPLEXITY]** select 'Театральні жанри' has 3 items (minimum: 5)
   - FIX: Add more items. C1 select requires at least 5 items.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 84-teatralne-mystetstvo-1.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Театральні жанри', 'items': [{'question': 'Який жанр є веселим і легким?', 'options': [{'text': 'Комедія', 'correct': True}, {'text': 'Трагедія', 'correct': False}, {'text': 'Драма', 'correct': False}, {'text': 'Водевіль', 'correct': True}, {'text': 'Фарс', 'correct': True}], 'min_correct': 3}, {'question': 'Що характерно для драми?', 'options': [{'text': 'Серйозний сюжет', 'correct': True}, {'text': 'Конфлікт героїв', 'correct': True}, {'text': 'Психологізм', 'correct': True}, {'text': 'Тільки сміх', 'correct': False}, {'text': "Обов'язкова смерть героя", 'correct': False}], 'min_correct': 3}, {'question': "Які п'єси писав Карпенко-Карий?", 'options': [{'text': 'Сатиричні комедії', 'correct': True}, {'text': 'Історичні драми', 'correct': True}, {'text': 'Соціально-побутові драми', 'correct': True}, {'text': 'Опери', 'correct': False}, {'text': 'Балети', 'correct': False}], 'min_correct': 3}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 84-teatralne-mystetstvo-1.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Театральні жанри', 'items': [{'question': 'Який жанр є веселим і легким?', 'options': [{'text': 'Комедія', 'correct': True}, {'text': 'Трагедія', 'correct': False}, {'text': 'Драма', 'correct': False}, {'text': 'Водевіль', 'correct': True}, {'text': 'Фарс', 'correct': True}], 'min_correct': 3}, {'question': 'Що характерно для драми?', 'options': [{'text': 'Серйозний сюжет', 'correct': True}, {'text': 'Конфлікт героїв', 'correct': True}, {'text': 'Психологізм', 'correct': True}, {'text': 'Тільки сміх', 'correct': False}, {'text': "Обов'язкова смерть героя", 'correct': False}], 'min_correct': 3}, {'question': "Які п'єси писав Карпенко-Карий?", 'options': [{'text': 'Сатиричні комедії', 'correct': True}, {'text': 'Історичні драми', 'correct': True}, {'text': 'Соціально-побутові драми', 'correct': True}, {'text': 'Опери', 'correct': False}, {'text': 'Балети', 'correct': False}], 'min_correct': 3}], 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
@@ -91,7 +91,7 @@
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (fine-arts))
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

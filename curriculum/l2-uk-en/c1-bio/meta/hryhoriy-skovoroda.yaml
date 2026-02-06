@@ -4,6 +4,10 @@ slug: hryhoriy-skovoroda
 version: '2.0'
 id: c1-bio-033
 title: "Григорій Сковорода: Мандрівний філософ"
+phase: C1-BIO
+focus: biography
+pedagogy: seminar
+word_target: 4300
 naturalness:
   score: 10
   status: PASS
@@ -53,13 +57,35 @@ content_outline:
   words: 300
   points:
   - Пророк внутрішньої незалежності
-word_target: 4300
-vital_status: deceased
+sources:
+- name: Григорій Сковорода (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич
+  type: primary
+  notes: Життєпис та вчення
+- name: Повне зібрання творів Сковороди
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Тексти творів
+vocabulary_hints:
+  required:
+  - сродна праця
+  - кордоцентризм
+  - аскеза
+  - макрокосм
+  - мікрокосм
+  recommended:
+  - афоризм
+  - епітафія
+  - схоластика
+  - антропоцентризм
 activity_hints:
 - type: reading
   focus: Аналіз філософського діалогу
   source: Наркіс
 - type: essay-response
   focus: Концепція "сродної праці"
+- type: essay-response
+  focus: Тлумачення афоризмів
+vital_status: deceased
 build:
-  last_modified: '2026-02-05'
+  last_modified: '2026-02-06'

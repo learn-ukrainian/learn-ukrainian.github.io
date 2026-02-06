@@ -8,6 +8,7 @@ naturalness:
   score: 10
   status: PASS
 track: history
+word_target: 4000
 build:
   last_modified: '2026-01-30'
 phase: HIST.11 [Post-War Soviet Ukraine]

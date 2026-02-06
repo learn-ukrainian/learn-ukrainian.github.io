@@ -1,8 +1,8 @@
 # Audit Report: M43 — oleksander-potebnya.md
-**Level:** C1-BIO | **Module:** M43 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** C1-BIO | **Module:** M43 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:54
+**Generated:** 2026-02-07 00:40:06
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -31,18 +31,18 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 6 (minimum: 3) ✅
 - Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4642/4000 (raw: 4686)
+- **Words:** ✅ 4642/4000 (raw: 4684)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -82,4 +82,3 @@
 | **Дослідження української мови** | ⚪️ | 877 | Skipped |
 | **Спадщина та визнання** | ⚪️ | 742 | Skipped |
 | **Підсумок** | ✅ | 192 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M27 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:13
+**Generated:** 2026-02-06 20:13:01
 
 ## Configuration
 **Type:** C1
@@ -56,7 +56,7 @@
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/7
+- **Engagement:** ✅ 12/7
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
@@ -66,7 +66,7 @@
 - **Immersion:** 🇺🇦 98.1% (target 90-100%)
 - **Richness:** ✅ 99% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 80%)

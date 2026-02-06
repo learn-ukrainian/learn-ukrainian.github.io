@@ -6,7 +6,7 @@ id: c1-bio-010
 naturalness:
   score: 10
   status: PASS
-word_target: 4000
+word_target: 4300
 duration: 120
 transliteration: none
 tags:
@@ -15,6 +15,7 @@ tags:
 - middle-ages
 - royalty
 - diplomacy
+vital_status: deceased
 content_outline:
 - section: Вступ — Єдиний коронований король Русі
   words: 400
@@ -34,33 +35,35 @@ content_outline:
   - Розбудова міст (Львів)
   - Економічна політика
 - section: 'Останні роки: Боротьба до кінця'
-  words: 500
+  words: 600
   points:
   - Спроби антимонгольської коаліції
   - Розрив з Римом
   - Смерть і поховання
 - section: 'Спадщина: Королівська традиція'
-  words: 500
+  words: 600
   points:
   - Значення титулу Rex Russiae
   - Вплив на українську ідентичність
   - Пам'ять
 - section: 'Підсумок — Король без королівства?'
-  words: 300
+  words: 400
   points:
   - Оцінка правління
   - Уроки для сучасності
 vocabulary_hints:
-  required: []
-  recommended: []
+  required:
+  - король (king)
+  - коронація (coronation)
+  - ярлик (yarlyk)
+  - орда (horde)
+  - суверенітет (sovereignty)
 activity_hints:
 - type: reading
-  focus: Chronicle descriptions of Roman's reign
-  source: Галицько-Волинський літопис (adapted)
-  items: 3 passages
+  focus: Analysis of the visit to the Golden Horde
+  source: Галицько-Волинський літопис
 - type: essay-response
-  focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
-  word_target: 250
-  output: Analytical argument with evidence
+  focus: Evaluating Danylo's civilizational choice (West vs East)
+  word_target: 300
 build:
-  last_modified: '2026-02-01'
+  last_modified: '2026-02-06'

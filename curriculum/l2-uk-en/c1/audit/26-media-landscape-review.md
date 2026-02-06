@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M26 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:12
+**Generated:** 2026-02-06 20:13:00
 
 ## Configuration
 **Type:** C1
@@ -66,7 +66,7 @@
 - **Immersion:** 🇺🇦 98.6% (target 90-100%)
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

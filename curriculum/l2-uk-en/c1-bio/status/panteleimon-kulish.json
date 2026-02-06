@@ -2,11 +2,11 @@
   "module": "panteleimon-kulish",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:52.484946Z",
+  "last_audit": "2026-02-07T00:21:50.638811Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.345438Z",
-    "meta": "2026-02-04T22:16:13.800711Z",
+    "meta": "2026-02-05T20:58:10.326126Z",
     "activities": "2026-02-04T22:17:27.397046Z",
     "vocabulary": "2026-02-04T22:17:47.932993Z",
     "plan": null

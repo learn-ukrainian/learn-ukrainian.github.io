@@ -14,7 +14,7 @@ tags:
 - medieval
 - galicia-volhynia
 - city-building
-vocabulary_count: 24
+vocabulary_count: 25
 content_outline:
   - section: "Вступ — Князь, що дав місту своє ім'я"
     words: 480
@@ -50,5 +50,20 @@ content_outline:
     points:
       - "Лев як модерний політик"
       - "Уроки прагматизму"
+word_target: 4000
+vocabulary_hints:
+  required:
+    - "засновник (founder)"
+    - "експансія (expansion)"
+    - "столиця (capital)"
+    - "суверенітет (sovereignty)"
+    - "легітимність (legitimacy)"
+activity_hints:
+  - type: reading
+    focus: "Chronicle account of Lviv's building"
+    source: "Галицько-Волинський літопис"
+  - type: essay-response
+    focus: "Lviv as a geopolitical project"
+    word_target: 300
 build:
-  last_modified: '2026-02-03'
+  last_modified: '2026-02-06'

@@ -2,25 +2,25 @@
   "module": "02-eneida-part-1",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:15:57.528911Z",
+  "last_audit": "2026-02-06T23:42:46.808130Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349586Z",
-    "meta": "2026-01-29T07:39:04.957545Z",
-    "activities": "2026-01-18T20:25:58.739027Z",
-    "vocabulary": null,
+    "md": "2026-02-06T23:42:42.001970Z",
+    "meta": "2026-02-06T23:26:42.410491Z",
+    "activities": "2026-02-06T23:40:59.936021Z",
+    "vocabulary": "2026-02-06T23:39:35.167691Z",
     "plan": "2026-01-27T15:19:02.513486Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3858/4500 (raw: 4260)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4607/4500 (raw: 4719)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "19/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

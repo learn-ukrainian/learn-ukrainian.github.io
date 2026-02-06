@@ -1,0 +1,150 @@
+items:
+  # Required vocabulary (10 terms from plan)
+  - lemma: бурлеск
+    translation: burlesque
+    note: комічний літературний жанр, що знижує високе або піднімає низьке; Котляревський використав як зброю проти імперії
+
+  - lemma: травестія
+    translation: travesty
+    note: підвид бурлеску, де серйозний твір переказується комічним стилем; від фр. travestir — «переодягати»
+
+  - lemma: національне відродження
+    translation: national revival
+    note: процес відновлення мови, культури та самосвідомості нації після періоду асиміляції
+
+  - lemma: асиміляція
+    translation: assimilation
+    note: поглинання однієї культури іншою; масова русифікація козацької еліти у XVIII ст.
+
+  - lemma: просвітництво
+    translation: Enlightenment
+    note: інтелектуальний рух XVIII ст. (Вольтер, Руссо, Монтеск'є); вплинув на Котляревського
+
+  - lemma: масонство
+    translation: freemasonry
+    note: таємний рух; ложа «Любов до істини» (1818), де обговорювали права нації
+
+  - lemma: кріпацтво
+    translation: serfdom
+    note: запроваджене на Лівобережжі у 1783 р.; перетворило вільних козаків на рабів
+
+  - lemma: класицизм
+    translation: classicism
+    note: літературний напрям, заснований на античних зразках; Котляревський — класицист з бароковим впливом
+
+  - lemma: сатира
+    translation: satire
+    note: критика через висміювання; Пекло в «Енеїді» — сатира на імперську бюрократію
+
+  - lemma: архаїзм
+    translation: archaism
+    note: застаріле слово або зворот; «книжна мова» XVIII ст. була сповнена архаїзмів
+
+  # Recommended vocabulary (5 terms from plan)
+  - lemma: меценат
+    translation: patron
+    note: Максим Парпура — меценат, який на власний кошт видав «Енеїду» у 1798 р.
+
+  - lemma: канон
+    translation: canon
+    note: сукупність визнаних класичних творів; Котляревський заклав основу українського канону
+
+  - lemma: пародія
+    translation: parody
+    note: комічне наслідування серйозного твору; «Енеїда» виходить за рамки пародії
+
+  - lemma: імперія
+    translation: empire
+    note: Російська імперія — головний антагоніст у контексті модуля
+
+  - lemma: губернія
+    translation: province (guberniya)
+    note: адміністративна одиниця Російської імперії; Україну розрізали на безликі губернії
+
+  # Literary and cultural terms from module content
+  - lemma: епос
+    translation: epic
+    note: великий віршований твір про героїчні події; «Енеїда» — перший епос новою українською
+
+  - lemma: мок-епос
+    translation: mock-epic
+    note: пародія на героїчний епос; різновид бурлеску, що піднімає низьке до комічно-високого
+
+  - lemma: макаронічна мова
+    translation: macaronic language
+    note: жартівливе змішування двох мов; «Енеус ностер магнус панус» — латина + українська
+
+  - lemma: версифікація
+    translation: versification
+    note: система віршування; Котляревський замінив силабічну систему на акцентно-силабічну
+
+  - lemma: панегірик
+    translation: panegyric
+    note: хвалебний текст; жанр барокової літератури, що помирав разом із Гетьманщиною
+
+  - lemma: суб'єктність
+    translation: subjectivity, agency
+    note: здатність нації бути суб'єктом власної історії, а не об'єктом чужої
+
+  - lemma: автономія
+    translation: autonomy
+    note: самоврядування; Гетьманщина мала автономію, яку Катерина II ліквідувала
+
+  - lemma: русифікація
+    translation: Russification
+    note: політика нав'язування російської мови та культури; головна загроза XVIII–XIX ст.
+
+  # Historical terms
+  - lemma: Гетьманщина
+    translation: Hetmanate
+    note: козацька держава на Лівобережній Україні (1649–1764); ліквідована Катериною II
+
+  - lemma: Запорозька Січ
+    translation: Zaporizhian Sich
+    note: козацька фортеця-республіка; знищена 1775 р. генералом Текелі
+
+  - lemma: старшина
+    translation: Cossack officer class (starshyna)
+    note: козацька еліта, що масово русифікувалася у XVIII ст.
+
+  - lemma: декабристи
+    translation: Decembrists
+    note: учасники повстання 1825 р.; пов'язані з масонською ложею Котляревського
+
+  - lemma: цензура
+    translation: censorship
+    note: контроль влади над друкованим словом; бурлеск обходив цензуру маскою «жарту»
+
+  # Literary analysis terms
+  - lemma: точка біфуркації
+    translation: bifurcation point
+    note: момент, після якого процес стає незворотним; 1798 рік для українського відродження
+
+  - lemma: культурна диверсія
+    translation: cultural subversion
+    note: підривна дія засобами культури; «Енеїда» як прихована атака на імперію
+
+  - lemma: деконструкція
+    translation: deconstruction
+    note: аналітичний метод виявлення прихованих значень тексту; бурлеск деконструює пафос
+
+  - lemma: damnatio memoriae
+    translation: condemnation of memory
+    note: стратегія знищення пам'яті про народ; Катерина II застосувала до козацтва
+
+  - lemma: genius loci
+    translation: spirit of place
+    note: особливий зв'язок особи з місцем; Котляревський народився, жив і помер на Івановій горі
+
+  # Biographical context terms
+  - lemma: гувернер
+    translation: private tutor
+    note: домашній учитель у панському маєтку; Котляревський 1793–1796
+
+  - lemma: штабс-капітан
+    translation: staff captain
+    note: офіцерський чин; найвищий чин Котляревського в армії
+
+  - lemma: водевіль
+    translation: vaudeville
+    note: легка комічна п'єса з піснями; «Москаль-чарівник» — класика жанру

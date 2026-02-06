@@ -1,8 +1,8 @@
-# Audit Report: M60 — ivan-lypa.md
-**Level:** C1-BIO | **Module:** M60 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+# Audit Report: M62 — ivan-lypa.md
+**Level:** C1-BIO | **Module:** M62 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:03
+**Generated:** 2026-02-07 00:22:03
 
 ## Configuration
 **Type:** C1-biography
@@ -20,68 +20,78 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | «Державна діяльність та ідеологічна спадщина» | 5 | 5 | ✅ |
-| 2 | essay-response | «Постать Івана Липи як міст між епохами» | 1 | 1 | ✅ |
-| 3 | critical-analysis | «Аналіз метафоричної мови лідера» | 1 | 1 | ✅ |
-| 4 | comparative-study | «Липа та Винниченко — Два бачення України» | 1 | 1 | ✅ |
+| 1 | reading | Іван Липа: Маніфест самостійності | 2 | 1 | ✅ |
+| 2 | essay-response | Есе: Пророк самостійності | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз політичної агентності | 1 | 1 | ✅ |
+| 4 | comparative-study | Лідери самостійництва: Липа та Міхновський | 1 | 1 | ✅ |
+| 5 | true-false | Факти про Івана Липу | 10 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-lypa.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1977/4000 (raw: 2244)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 4607/4000 (raw: 5034)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 25/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 100% (biography)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
+- **Richness:** ❌ 92% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 100% (minimum: 95%)
+**Score:** 92% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 12 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 4 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
+| engagement | 3 | 6 | 50% | 14% | 7.1% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **92.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 91 | Included in Core |
-| **Вступ** | ✅ | 302 | Included in Core |
-| **Біографія** | ⚪️ | 1030 | Skipped |
-| **Історичний контекст** | ✅ | 210 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 89 | Included in Core |
-| **Критичне мислення** | ⚪️ | 170 | Skipped |
-| **Summary** | ✅ | 85 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 102 | Included in Core |
+| **Вступ: Кримський буревісник незалежності** | ✅ | 317 | Included in Core |
+| **Витоки: Кримський грунт та Харківський гарт (1865-1891)** | ⚪️ | 649 | Skipped |
+| **Братство тарасівців: Маніфест нації (1891-1893)** | ⚪️ | 815 | Skipped |
+| **Одеса: Культурний десант на Півдні (1902-1917)** | ✅ | 888 | Included in Core |
+| **Державотворення та еміграція (1917-1923)** | ⚪️ | 844 | Skipped |
+| **Порівняльний аналіз: Ідеологія самостійності** | ✅ | 139 | Included in Core |
+| **Критичне мислення** | ⚪️ | 199 | Skipped |
+| **Есе** | ⚪️ | 86 | Skipped |
+| **Зразок відповіді** | ⚪️ | 426 | Skipped |
+| **Підсумок: Лікар, що зцілив національну волю** | ✅ | 142 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **Vocabulary** | ➖ | 0 | Excluded Type |

@@ -24,7 +24,7 @@ Every Ukrainian schoolchild learns these terms in school. When a Ukrainian teach
 
 > 💡 **Did You Know?**
 >
-> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions, brought to Kyiv by scholars at the the Kyiv-Mohyla Academy in the 17th century. The word **відмінок** literally means "change" or "variation" — because the word *changes* form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word). This calque (loan translation) pattern is common: **займенник** (pronoun) means "instead of a name" (за-іменник), mirroring the Latin *pro-nomen*.
+> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions, brought to Kyiv by scholars at the Kyiv-Mohyla Academy in the 17th century. The word **відмінок** literally means "change" or "variation" — because the word *changes* form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word). This calque (loan translation) pattern is common: **займенник** (pronoun) means "instead of a name" (за-іменник), mirroring the Latin *pro-nomen*.
 
 ### The Psychological Shift
 
@@ -178,7 +178,7 @@ Let's trace one noun through all seven cases. Take **сестра** — sister:
 **Дав сестрі подарунок.** (давальний — gave to whom?)
 **Бачу сестру.** (знахідний — I see whom?)
 **Розмовляю з сестрою.** (орудний — talking with whom?)
-**Думаю про сестру.** (місцевий after "про" — thinking about whom?)
+**На сестрі гарна сукня.** (місцевий — on whom is the dress?)
 **Сестро, допоможи!** (кличний — calling out to her)
 
 > 💡 **Did You Know?**

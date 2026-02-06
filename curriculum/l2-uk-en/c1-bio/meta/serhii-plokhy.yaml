@@ -6,5 +6,6 @@ id: c1-bio-135
 naturalness:
   score: 1
   status: PENDING
+word_target: 4000
 build:
   last_modified: '2026-01-26'

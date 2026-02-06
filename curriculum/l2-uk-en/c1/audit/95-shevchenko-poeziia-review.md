@@ -1,7 +1,7 @@
 # Audit Report: M95 — 95-shevchenko-poeziia.md
 **Level:** C1 | **Module:** M95 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:49
+**Generated:** 2026-02-06 20:13:39
 
 ## Configuration
 **Type:** C1
@@ -40,8 +40,8 @@
 - Low density activities: 0
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Літературний аналіз, Первинний аналіз, Порівняльний аналіз: «Заповіт» vs. «Мені однаково»
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Аналіз': Порівняльний аналіз: «Заповіт» vs. «Мені однаково», Первинний аналіз, Літературний аналіз
+  - FIX: RENAME one header to NOT contain 'Аналіз'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
@@ -65,7 +65,7 @@
 - **Immersion:** 🇺🇦 99.8% (target 90-100%)
 - **Richness:** ❌ 87% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 87% (minimum: 95%)

@@ -1,0 +1,200 @@
+- term: імперський наратив
+  ipa: /imˈpersʲkɪj nɑrɑˈtɪw/
+  translation: imperial narrative
+  pos: noun phrase
+  notes: Цілеспрямована система історіописання, що обслуговує геополітичні інтереси імперії
+
+- term: Малоросія
+  ipa: /mɑloˈrosijɑ/
+  translation: Little Russia
+  pos: noun
+  gender: f
+  notes: Від грецького Μικρὰ Ῥωσσία (1303), спочатку означало ядрову територію Русі
+
+- term: малорос
+  ipa: /mɑloˈros/
+  translation: Little Russian
+  pos: noun
+  gender: m
+  notes: Людина, яка інтерналізувала колоніальний погляд і сприймає себе як «підлеглого росіянина»
+
+- term: малоросійство
+  ipa: /mɑloroˈsijstwo/
+  translation: Little Russianism
+  pos: noun
+  gender: n
+  notes: Комплекс зниженого патріотизму та провінційності; Маланюк класифікував 5 типів
+
+- term: "возз'єднання"
+  ipa: /wozːjedˈnɑnːɑ/
+  translation: reunification
+  pos: noun
+  gender: n
+  notes: Пропагандистський термін щодо Переяславської ради 1654; передбачає попередню єдність, якої не було
+
+- term: привласнення
+  ipa: /prɪwˈlɑsnenːɑ/
+  translation: appropriation
+  pos: noun
+  gender: n
+  notes: Привласнення Київської Русі як «початку Росії» — основа імперського наративу
+
+- term: легітимація
+  ipa: /leɦitɪmɑˈt͡sijɑ/
+  translation: legitimation
+  pos: noun
+  gender: f
+  notes: Використання історії для обґрунтування права імперії на панування
+
+- term: асиміляція
+  ipa: /ɑsimilʲɑˈt͡sijɑ/
+  translation: assimilation
+  pos: noun
+  gender: f
+  notes: Культурна асиміляція як стратегічна мета імперії щодо українців
+
+- term: теорія Погодіна
+  ipa: /teoˈrijɑ poˈɦodinɑ/
+  translation: Pogodin theory
+  pos: noun phrase
+  notes: Теза 1856 р., що населення Києва переселилося на північ і стало москвичами
+
+- term: братні народи
+  ipa: /ˈbrɑtni nɑˈrodɪ/
+  translation: fraternal peoples
+  pos: noun phrase
+  notes: Радянська формула, яка маскувала ієрархію «старший брат» (росіяни) — «молодший» (українці)
+
+- term: один народ
+  ipa: /oˈdɪn nɑˈrod/
+  translation: one people
+  pos: noun phrase
+  notes: Путінська теза 2021 року — синтез 200-річного імперського наративу
+
+- term: колиска
+  ipa: /koˈlɪskɑ/
+  translation: cradle
+  pos: noun
+  gender: f
+  notes: Метафора «колиски російської державності» щодо Києва — ключовий елемент привласнення
+
+- term: спадкоємність
+  ipa: /spɑdkoˈjɛmnisʲtʲ/
+  translation: succession; continuity
+  pos: noun
+  gender: f
+  notes: Ідея безперервного переходу від Києва через Москву до Петербурга
+
+- term: фальсифікація
+  ipa: /fɑlʲsɪfikɑˈt͡sijɑ/
+  translation: falsification
+  pos: noun
+  gender: f
+  notes: Свідоме спотворення історичних фактів для ідеологічних цілей
+
+- term: деконструкція
+  ipa: /dekonstrukˈt͡sijɑ/
+  translation: deconstruction
+  pos: noun
+  gender: f
+  notes: Метод критичного аналізу, що розкриває приховані ідеологічні структури наративу
+
+- term: ідеологія
+  ipa: /ideoloˈɦijɑ/
+  translation: ideology
+  pos: noun
+  gender: f
+  notes: Система ідей, що обслуговує інтереси влади; імперська історіографія — форма ідеології
+
+- term: історична пам'ять
+  ipa: /istoˈrɪt͡ʃnɑ ˈpɑmjɑtʲ/
+  translation: historical memory
+  pos: noun phrase
+  notes: Колективне сприйняття минулого; об'єкт маніпуляції з боку імперій
+
+- term: автохтонний
+  ipa: /ɑwtoˈxtonːɪj/
+  translation: autochthonous; indigenous
+  pos: adjective
+  notes: Грушевський довів, що українці — автохтонне населення Наддніпрянщини
+
+- term: телеологія
+  ipa: /teleoloˈɦijɑ/
+  translation: teleology
+  pos: noun
+  gender: f
+  notes: Подання історії як наперед визначеного процесу з «природним» завершенням
+
+- term: замовчування
+  ipa: /zɑmowˈt͡ʃuwɑnːɑ/
+  translation: silencing; omission
+  pos: noun
+  gender: n
+  notes: Прийом, коли текст не згадує незручних фактів (Голодомор, репресії, спротив)
+
+- term: агентність
+  ipa: /ɑˈɦentnisʲtʲ/
+  translation: agency
+  pos: noun
+  gender: f
+  notes: Здатність суб'єкта діяти самостійно; в імперському наративі українці позбавлені агентності
+
+- term: триєдиний народ
+  ipa: /trɪjeˈdɪnɪj nɑˈrod/
+  translation: triune nation
+  pos: noun phrase
+  notes: Концепція Устрялова (1837) — великороси, малороси, білоруси як «один народ»
+
+- term: циркуляр
+  ipa: /t͡sɪrkuˈlʲɑr/
+  translation: circular; decree
+  pos: noun
+  gender: m
+  notes: Валуєвський циркуляр 1863 — таємне розпорядження про заборону українських публікацій
+
+- term: інтерналізація
+  ipa: /internɑlizɑˈt͡sijɑ/
+  translation: internalization
+  pos: noun
+  gender: f
+  notes: Засвоєння колоніального погляду самим колонізованим народом
+
+- term: підміна
+  ipa: /pidˈminɑ/
+  translation: substitution; sleight of hand
+  pos: noun
+  gender: f
+  notes: "Підміна «руський» на «російський» — основний прийом імперської історіографії"
+
+- term: маніфест
+  ipa: /mɑniˈfest/
+  translation: manifesto
+  pos: noun
+  gender: m
+  notes: Есе Путіна 2021 року — ідеологічний маніфест, а не академічна праця
+
+- term: табу
+  ipa: /tɑˈbu/
+  translation: taboo
+  pos: noun
+  gender: n
+  notes: Радянська система табу — заборонені теми в історіографії (Голодомор, ОУН)
+
+- term: десталінізація
+  ipa: /destɑlinizɑˈt͡sijɑ/
+  translation: de-Stalinization
+  pos: noun
+  gender: f
+  notes: Процес 1956 р., який не зняв табу на Голодомор та українські «національні» теми
+
+- term: Розстріляне відродження
+  ipa: /rozstriˈlʲɑne widˈrod͡ʒenːɑ/
+  translation: Executed Renaissance
+  pos: noun phrase
+  notes: Масове знищення українських інтелектуалів 1920–1930-х; тема, замовчувана в СРСР
+
+- term: звичайна схема
+  ipa: /zwɪˈt͡ʃɑjnɑ ˈsxemɑ/
+  translation: traditional scheme
+  pos: noun phrase
+  notes: "Термін Грушевського для позначення імперської схеми: Київ → Москва → Петербург"

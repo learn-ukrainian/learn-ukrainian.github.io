@@ -15,7 +15,8 @@ tags:
 - lithuania
 - military
 - orthodoxy
-vocabulary_count: 24
+vital_status: deceased
+vocabulary_count: 30
 content_outline:
 - section: Вступ — Гетьман двох народів
   words: 600
@@ -46,5 +47,23 @@ content_outline:
   words: 300
   points:
   - Значення
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - булава (mace)
+  - магнат (magnate)
+  - православ'я (orthodoxy)
+  - статут (statute)
+activity_hints:
+- type: reading
+  focus: Chronicle account of the Battle of Orsha
+  source: Хроніка Биховця
+- type: critical-analysis
+  focus: Military tactics and metaphors in the chronicle
+- type: essay-response
+  focus: Ostrozky as a defender of faith and state
+  word_target: 300
+- type: comparative-study
+  focus: Ostrozky vs Vyshnevetzky leadership models
 build:
-  last_modified: '2026-02-03'
+  last_modified: '2026-02-06'

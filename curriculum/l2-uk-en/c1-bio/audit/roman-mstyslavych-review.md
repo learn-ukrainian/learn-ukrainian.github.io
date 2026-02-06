@@ -1,17 +1,17 @@
 # Audit Report: M08 — roman-mstyslavych.md
-**Level:** C1-BIO | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** C1-BIO | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4400
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:33
+**Generated:** 2026-02-07 00:21:30
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4400 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -33,16 +33,16 @@
 - Total activities: 8 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4123/4000 (raw: 4408)
+- **Words:** ✅ 5685/4400 (raw: 5946)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -61,29 +61,28 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
-| quotes | 10 | 3 | 100% | 14% | 14.3% |
+| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| quotes | 12 | 3 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 3 | 100% | 5% | 4.8% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 106 | Included in Core |
-| **Вступ — Самодержець усієї Русі** | ✅ | 249 | Included in Core |
-| **Життєпис: Від Волині до Галича** | ⚪️ | 1136 | Skipped |
-| **Останні роки: Загибель під Завихостом** | ⚪️ | 165 | Skipped |
-| **Спадщина: Від Романа до Данила** | ⚪️ | 109 | Skipped |
-| **Історичний контекст** | ✅ | 673 | Included in Core |
-| **Внесок: Створення Галицько-Волинської держави** | ⚪️ | 933 | Skipped |
-| **Порівняльний аналіз** | ✅ | 342 | Included in Core |
-| **Критичне мислення: Питання для глибокого аналізу** | ✅ | 159 | Included in Core |
-| **Підсумок — Будівничий держави** | ✅ | 109 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 142 | Skipped |
+| **Intro/Narrative** | ✅ | 149 | Included in Core |
+| **Вступ — Самодержець усієї Русі** | ✅ | 714 | Included in Core |
+| **Життєпис: Від Волині до Галича** | ⚪️ | 1031 | Skipped |
+| **Внесок: Створення Галицько-Волинської держави** | ⚪️ | 1295 | Skipped |
+| **Зовнішня політика та дипломатія глобального масштабу** | ⚪️ | 414 | Skipped |
+| **Останні роки: Загибель під Завихостом** | ⚪️ | 732 | Skipped |
+| **Спадщина: Від Романа до Данила** | ⚪️ | 434 | Skipped |
+| **Порівняльний аналіз: Роман Мстиславич vs. Філіп II Август** | ✅ | 396 | Included in Core |
+| **Підсумок — Будівничий держави** | ✅ | 328 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 192 | Skipped |

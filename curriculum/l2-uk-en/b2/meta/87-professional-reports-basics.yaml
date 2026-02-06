@@ -7,5 +7,6 @@ naturalness:
   score: 8
   status: PASS
 transliteration: none
+word_target: 1750
 build:
   last_modified: '2026-01-26'

@@ -1,13 +1,11 @@
 # Audit Report: M93 — 93-kotliarevskyi-eneida.md
-
-**Level:** C1 | **Module:** M93 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3500
+**Level:** C1 | **Module:** M93 | **Phase:** C1.6 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:52
+**Generated:** 2026-02-06 20:13:38
 
 ## Configuration
-
 **Type:** C1-literature
-**Word Target:** 3500 words
+**Word Target:** 3000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Герої Енеїди та їхні Ролі | 12 | 6 | ✅ |
@@ -44,20 +41,17 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 93-kotliarevskyi-eneida.yaml: Schema validation error at key 'words': ['Де', 'общеє', 'добро', 'в', 'порядку', 'де', 'єсть', 'до', 'нього', 'куш', 'душі', 'там', 'і', 'розправиться', 'все', 'гладко', 'і', 'зло', 'не', 'буде', 'мати', 'сил'] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-
 **📝 UPDATE** (severity 25/100)
 
 - 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
-- **Words:** ❌ 2067/3500 (raw: 2402)
+- **Words:** ❌ 2067/3000 (raw: 2402)
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -70,31 +64,30 @@
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (literature))
-- **Richness:** ✅ 95% (content)
+- **Richness:** ✅ 92% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
-**Score:** 95% (minimum: 95%)
-**Module Type:** content
+**Score:** 92% (minimum: 90%)
+**Module Type:** literature
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 26 | 15 | 100% | 25% | 25.0% |
-| engagement | 5 | 5 | 100% | 19% | 18.7% |
-| variety | 0.98 | - | 98% | 12% | 12.2% |
-| cultural | 5 | 4 | 100% | 12% | 12.5% |
-| realworld | 2 | 3 | 67% | 12% | 8.4% |
-| visual | 8 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 21 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.6%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 3 | 5 | 60% | 17% | 10.4% |
+| engagement | 5 | 4 | 100% | 13% | 13.0% |
+| historical_context | 30 | 3 | 100% | 13% | 13.0% |
+| essays | 5 | 2 | 100% | 13% | 13.0% |
+| resources | 8 | 3 | 100% | 9% | 8.7% |
+| variety | 0.98 | - | 98% | 4% | 4.3% |
+| cultural | 5 | - | 100% | 4% | 4.3% |
+| visual | 8 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **93.0%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |

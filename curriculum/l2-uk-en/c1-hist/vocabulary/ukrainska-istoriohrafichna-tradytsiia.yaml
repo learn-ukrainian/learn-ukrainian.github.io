@@ -1,0 +1,202 @@
+- term: історіографія
+  ipa: /istorijoɦrɑˈfijɑ/
+  translation: historiography
+  pos: noun
+  gender: f
+  notes: Наука про методи, школи та розвиток історичного знання
+
+- term: історіографічна школа
+  ipa: /istorijoɦrɑˈfit͡ʃnɑ ˈʃkolɑ/
+  translation: historiographical school
+  pos: noun phrase
+  notes: Група істориків з спільними методами та підходами
+
+- term: діаспора
+  ipa: /diˈɑsporɑ/
+  translation: diaspora
+  pos: noun
+  gender: f
+  notes: Українська наукова діаспора зберігала традицію 50 років
+
+- term: еміграція
+  ipa: /emiɦrɑˈt͡sijɑ/
+  translation: emigration
+  pos: noun
+  gender: f
+  notes: Вимушений від'їзд учених за кордон
+
+- term: архів
+  ipa: /ɑrˈxiw/
+  translation: archive
+  pos: noun
+  gender: m
+  notes: Після 1991 відкрито архіви КДБ та КПУ
+
+- term: джерелознавство
+  ipa: /d͡ʒereloˈznɑwstwo/
+  translation: source studies
+  pos: noun
+  gender: n
+  notes: Допоміжна історична дисципліна — критика та аналіз джерел
+
+- term: періодизація
+  ipa: /periodɪzɑˈt͡sijɑ/
+  translation: periodization
+  pos: noun
+  gender: f
+  notes: Поділ історії на періоди; Грушевський запропонував альтернативну періодизацію
+
+- term: схема
+  ipa: /ˈsxemɑ/
+  translation: scheme; framework
+  pos: noun
+  gender: f
+  notes: «Схема Грушевського» vs. російська імперська схема
+
+- term: наукове товариство
+  ipa: /nɑuˈkowe towɑˈrɪstwo/
+  translation: scholarly society
+  pos: noun phrase
+  notes: НТШ — Наукове товариство ім. Шевченка (засн. 1873)
+
+- term: традиція
+  ipa: /trɑˈdɪt͡sijɑ/
+  translation: tradition
+  pos: noun
+  gender: f
+  notes: Безперервність наукової традиції попри переслідування
+
+- term: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: legacy; heritage
+  pos: noun
+  gender: f
+  notes: Наукова спадщина Грушевського — 10 томів «Історії України-Руси»
+
+- term: магістральний наратив
+  ipa: /mɑɦistrɑlʲnɪj nɑrɑˈtɪw/
+  translation: master narrative
+  pos: noun phrase
+  notes: Домінуючий спосіб розповіді про минуле
+
+- term: деколонізація
+  ipa: /dekolonizɑˈt͡sijɑ/
+  translation: decolonization
+  pos: noun
+  gender: f
+  notes: Процес звільнення від колоніальних наративів в історіографії
+
+- term: переосмислення
+  ipa: /pereoˈsmɪslenːɑ/
+  translation: re-evaluation; rethinking
+  pos: noun
+  gender: n
+  notes: Переосмислення радянського періоду після 1991
+
+- term: заборона
+  ipa: /zɑˈboronɑ/
+  translation: prohibition; ban
+  pos: noun
+  gender: f
+  notes: Валуєвський циркуляр (1863), Емський указ (1876)
+
+- term: відродження
+  ipa: /widˈrod͡ʒenːɑ/
+  translation: revival; renaissance
+  pos: noun
+  gender: n
+  notes: Відродження історіографії після 1991 року
+
+- term: бездержавний народ
+  ipa: /bezderˈʒɑwnɪj nɑˈrod/
+  translation: stateless nation
+  pos: noun phrase
+  notes: Ключова характеристика українського історичного досвіду
+
+- term: державницька школа
+  ipa: /derʒɑwˈnɪt͡sʲkɑ ˈʃkolɑ/
+  translation: statist school (of historiography)
+  pos: noun phrase
+  notes: Школа Липинського — акцент на розвитку державності
+
+- term: квазіакадемія
+  ipa: /kwɑziɑkɑˈdemijɑ/
+  translation: quasi-academy
+  pos: noun
+  gender: f
+  notes: НТШ функціонувало як академія наук без держави
+
+- term: циркуляр
+  ipa: /t͡sɪrkuˈlʲɑr/
+  translation: circular; decree
+  pos: noun
+  gender: m
+  notes: Валуєвський циркуляр 1863 — таємне розпорядження
+
+- term: указ
+  ipa: /uˈkɑz/
+  translation: decree; edict
+  pos: noun
+  gender: m
+  notes: Емський указ 1876 — заборона українськомовних публікацій
+
+- term: декомунізація
+  ipa: /dekomunizɑˈt͡sijɑ/
+  translation: decommunization
+  pos: noun
+  gender: f
+  notes: Закони 9 квітня 2015 — пакет з чотирьох законів
+
+- term: перелюстрація
+  ipa: /perlʲustrɑˈt͡sijɑ/
+  translation: perlustration (secret reading of correspondence)
+  pos: noun
+  gender: f
+  notes: Чекісти перелюстровували листування Грушевського
+
+- term: сепсис
+  ipa: /ˈsepsɪs/
+  translation: sepsis
+  pos: noun
+  gender: m
+  notes: Грушевський помер від сепсису (1934)
+
+- term: конфіскація
+  ipa: /konfiskɑˈt͡sijɑ/
+  translation: confiscation
+  pos: noun
+  gender: f
+  notes: Конфіскація майна НТШ після радянської окупації 1939
+
+- term: топоніміка
+  ipa: /topoˈnimikɑ/
+  translation: toponymy
+  pos: noun
+  gender: f
+  notes: 50 000+ перейменувань за декомунізацією
+
+- term: Археографічна комісія
+  ipa: /ɑrxeoɦrɑˈfit͡ʃnɑ koˈmisijɑ/
+  translation: Archaeographic Commission
+  pos: noun phrase
+  notes: Створена Грушевським при НТШ у 1895 році
+
+- term: синтетичний виклад
+  ipa: /sɪnteˈtɪt͡ʃnɪj ˈwɪklɑd/
+  translation: synthetic exposition
+  pos: noun phrase
+  notes: Цілісний огляд історії, як у працях Дорошенка чи Субтельного
+
+- term: вакуум
+  ipa: /ˈvɑkuum/
+  translation: vacuum
+  pos: noun
+  gender: m
+  notes: Вакуум в історіографії після падіння СРСР
+
+- term: репресії
+  ipa: /reˈpresiji/
+  translation: repressions
+  pos: noun
+  gender: f (pl)
+  notes: Сталінські репресії, процес СВУ (1930), Великий терор

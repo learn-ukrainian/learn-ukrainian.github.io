@@ -6,6 +6,7 @@ id: c1-bio-078
 naturalness:
   score: 1
   status: PENDING
+word_target: 4000
 vital_status: deceased
 build:
   last_modified: '2026-01-26'

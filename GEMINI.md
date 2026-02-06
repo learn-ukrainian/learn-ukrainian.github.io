@@ -33,14 +33,14 @@
 
 ### Vocabulary Targets (Verified Dec 2025)
 
-| Level  | Modules | Module Target | Cumulative Target | Note                           |
-| ------ | ------- | ------------- | ----------------- | ------------------------------ |
-| **A1** | 34      | ~25 words     | ~850              | Deduplicated (Introduced Once) |
-| **A2** | 57      | ~25 words     | ~1,800            | Deduplicated (Cumulative)      |
-| **B1** | 86      | ~30-40 words  | ~3,300            | Narrative-driven expansion     |
-| **B2** | 145     | ~24 words     | ~6,780            | Specialized domains            |
-| **C1** | 182     | ~24 words     | ~10,300           | Academic/Literary              |
-| **C2** | 100     | ~25 words     | ~12,280           | Native mastery                 |
+| Level | Modules | Module Target | Cumulative Target | Note |
+|---|---|---|---|---|
+| **A1** | 34 | ~25 words | ~850 | Deduplicated (Introduced Once) |
+| **A2** | 57 | ~25 words | ~1,800 | Deduplicated (Cumulative) |
+| **B1** | 86 | ~30-40 words | ~3,300 | Narrative-driven expansion |
+| **B2** | 145 | ~24 words | ~6,780 | Specialized domains |
+| **C1** | 182 | ~24 words | ~10,300 | Academic/Literary |
+| **C2** | 100 | ~25 words | ~12,280 | Native mastery |
 
 ### User Preferences
 
@@ -84,6 +84,42 @@
 15. **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
 16. **Seminar Batch Limit (CRITICAL)**: For Seminar Tracks (`c1-bio`, `b2-hist`, `lit`), the optimal processing batch is 2 modules. This ensures high linguistic quality and prevents context exhaustion or output truncation.
 17. **Sniper Search Strategy (MANDATORY)**: Always include `site:esu.com.ua OR site:history.org.ua OR site:elib.nlu.org.ua` in research queries to ensure C1-level academic accuracy and decolonized narratives.
+18. **Historiographical Mapping (Phase 0.5)**: For high-tension modules, include a "Contested Terms" table in research notes comparing Polish/Ukrainian/Russian terminology.
+19. **Propaganda Filter**: Reviewers must explicitly check if phrasing echoes Russian dezinformatsiia framing (especially for Volhynia, Holodomor, OUN/UPA).
+20. **Semantic Nuance Gate (C1+)**: Ensure sufficient usage of modal hedging markers («можливо», «ймовірно», «з одного боку», «водночас») to reflect complexity.
+
+## macOS Environment & Tool Usage
+
+This development environment is a **macOS (Darwin)** system optimized for Linux compatibility and modern CLI workflows.
+
+### Linux Compatibility (GNU Tools)
+The system has GNU utilities prioritized in the `PATH`. You can safely use standard Linux syntax for core commands:
+- **`sed`**: GNU version is active. Use standard `sed -i 's/pattern/replacement/' file` (no need for empty quotes `''` as in BSD `sed`).
+- **`grep`**: GNU version is active.
+- **`find`**: GNU version (`findutils`) is active.
+- **`awk`**: GNU `gawk` is active.
+- **`coreutils`**: Standard GNU core utilities are active.
+
+### Modern CLI Tools (Preferred)
+The following modern tools are installed and should be used for better performance and output:
+- **Search**: Always use **`ripgrep` (`rg`)** via `run_shell_command("rg ...")`. It is significantly faster and respects `.gitignore`.
+- **File Finding**: Use **`fd`** instead of `find` for quick file location.
+- **File Viewing**: Use **`bat`** for syntax-highlighted file reading (though `read_file` is preferred for agent logic).
+- **Directory Listing**: Use **`eza`** instead of `ls`.
+- **JSON/YAML**: Use **`jq`** and **`yq`** for command-line processing of structured data.
+
+### Python & Node Environments
+- **Python**: Managed via `pyenv`. Global default is `3.12.8`.
+- **Venv**: Always use `.venv/bin/python` for project-specific scripts.
+- **Aliases**: The shell has many helpful aliases (e.g., `gs`=`git status`, `ga`=`git add`, `nr`=`npm run`). While you should prefer explicit commands in scripts, these aliases are available for quick shell operations.
+
+### Claude Code Optimizations
+The environment is tuned for AI agents:
+- **Max File Descriptors**: Set to `10,240`.
+- **Parallelism**: `MAKEFLAGS=-j10` for faster builds.
+- **Theme**: `BAT_THEME=Monokai Extended`.
+
+---
 
 ## Common Audit Errors & Fixes (Avoid Loops!)
 
@@ -411,6 +447,11 @@ Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
 - Російські/радянські міфи для спростування:
 - Українська агентність для висвітлення:
 
+## Термінологічне мапування (Contested Terms)
+| Поняття | Польський термін | Український термін | Російська дезінформація |
+|---------|------------------|--------------------|-------------------------|
+|         |                  |                    |                         |
+
 ## Використані джерела
 1. [Назва](URL)
 ...
@@ -421,6 +462,7 @@ Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
 - **1+ primary source quote** in Ukrainian
 - **Decolonization notes** - myths to debunk
 - **5+ chronology events** with years
+- **Contested Terms table** (high-tension modules)
 
 ## Track Scoring & Playgrounds
 

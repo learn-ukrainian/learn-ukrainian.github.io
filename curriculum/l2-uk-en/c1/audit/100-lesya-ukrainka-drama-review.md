@@ -1,7 +1,7 @@
 # Audit Report: M100 — 100-lesya-ukrainka-drama.md
 **Level:** C1 | **Module:** M100 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:52
+**Generated:** 2026-02-06 20:12:48
 
 ## Configuration
 **Type:** C1
@@ -43,8 +43,8 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Порівняльний аналіз: «Лісова пісня» vs. «Тіні забутих предків», Первинний аналіз, Літературний аналіз
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Аналіз': Порівняльний аналіз: «Лісова пісня» vs. «Тіні забутих предків», Первинний аналіз, Літературний аналіз
+  - FIX: RENAME one header to NOT contain 'Аналіз'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
@@ -68,7 +68,7 @@
 - **Immersion:** 🇺🇦 100.0% (target 90-100%)
 - **Richness:** ❌ 91% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 91% (minimum: 95%)

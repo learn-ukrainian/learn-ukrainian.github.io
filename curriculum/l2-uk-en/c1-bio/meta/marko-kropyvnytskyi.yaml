@@ -3,9 +3,87 @@ level: C1-BIO
 slug: marko-kropyvnytskyi
 version: '2.0'
 id: c1-bio-045
-transliteration: none
+title: "Марко Кропивницький: Корифей театру"
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- theater
+- arts
+- coryphaei
+content_outline:
+- section: Вступ — Батько українського театру
+  words: 400
+  points:
+  - Марко Кропивницький — засновник професійного українського театру
+  - Творець національної театральної школи
+- section: Ранні роки та освіта (1840-1865)
+  words: 600
+  points:
+  - Народження на Херсонщині
+  - Навчання в Єлисаветградській гімназії
+  - Формування національної свідомості
+- section: Початок театральної кар'єри (1865-1882)
+  words: 700
+  points:
+  - Організація аматорських труп
+  - Боротьба з цензурою Емського указу
+- section: Створення професійного театру (1882-1900)
+  words: 800
+  points:
+  - Заснування першої професійної української трупи (1882)
+  - Виховання акторів — Заньковецька, Садовський, Саксаганський
+- section: Драматургія та музика
+  words: 700
+  points:
+  - П'єси «Дай серцю волю...», «Глитай, або ж Павук»
+  - Етнографічний реалізм як метод
+- section: Останні роки та спадщина (1900-1910)
+  words: 800
+  points:
+  - Продовження театральної діяльності до останніх днів
+  - Вплив на розвиток українського театру XX століття
+sources:
+- name: Марко Кропивницький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марко_Кропивницький
+  type: primary
+  notes: Біографія, театральна та літературна діяльність
+- name: Театр корифеїв
+  url: https://uk.wikipedia.org/wiki/Театр_корифеїв
+  type: reference
+vocabulary_hints:
+  required:
+  - корифей
+  - трупа
+  - драматург
+  - режисер
+  - актор
+  - вистава
+  - репертуар
+  - цензура
+  - етнографізм
+  - антреприза
+  recommended:
+  - оперета
+  - декорація
+  - гастролі
+  - бенефіс
+  - амплуа
+activity_hints:
+- type: reading
+  focus: Уривки з п'єс та спогади
+- type: essay-response
+  focus: Чому Кропивницького називають батьком українського театру?
+- type: critical-analysis
+  focus: Аналіз етнографічного реалізму як стратегії опору
+vital_status: deceased
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-06'

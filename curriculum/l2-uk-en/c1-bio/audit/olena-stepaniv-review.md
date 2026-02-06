@@ -1,8 +1,8 @@
-# Audit Report: M94 — olena-stepaniv.md
-**Level:** C1-BIO | **Module:** M94 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M97 — olena-stepaniv.md
+**Level:** C1-BIO | **Module:** M97 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:21
+**Generated:** 2026-02-07 00:22:22
 
 ## Configuration
 **Type:** C1-biography
@@ -35,13 +35,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/olena-stepaniv-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in olena-stepaniv.yaml: Schema validation error at key '5': {'type': 'reading', 'title': 'Спогади Олени Степанів', 'resource': {'type': 'primary_source', 'url': 'https://elib.nlu.org.ua/', 'title': 'Олена Степанів: Напередодні великих подій'}, 'tasks': ['Знайдіть у тексті опис мотивації вступу до УСС.', 'Які емоції описує авторка перед першим боєм?', 'Випишіть 5 військових термінів, вжитих у тексті.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -55,12 +57,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ❌ 92% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 92% (minimum: 95%)

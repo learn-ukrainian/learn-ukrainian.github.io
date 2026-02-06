@@ -51,6 +51,53 @@ def check_activity_hints_valid(meta_data: dict | None) -> list[dict]:
     return violations
 
 
+def check_research_file(file_path: str) -> list[dict]:
+    """
+    Check that seminar track modules have a research file.
+
+    Research files are expected at:
+        curriculum/l2-uk-en/{track}/research/{slug}-research.md
+
+    Determines track from the file path directory (e.g., c1-bio from .../c1-bio/slug.md).
+
+    Args:
+        file_path: Path to the module .md file.
+
+    Returns:
+        List of violation dictionaries (warning level).
+    """
+    seminar_tracks = {'b2-hist', 'c1-hist', 'c1-bio', 'lit', 'oes', 'ruth'}
+
+    md_path = Path(file_path)
+    # Track is the parent directory name (e.g., c1-bio, b2-hist)
+    track = md_path.parent.name
+    if track.lower() not in seminar_tracks:
+        return []
+
+    stem = md_path.stem  # e.g., "04-radyanska-istoriohrafiia" or "radyanska-istoriohrafiia"
+    research_dir = md_path.parent / "research"
+
+    # Try exact stem match first (e.g., research/04-slug-research.md)
+    research_file = research_dir / f"{stem}-research.md"
+    if research_file.exists():
+        return []
+
+    # Fallback: strip number prefix (e.g., "04-slug" → "slug") and try again
+    import re
+    base_slug = re.sub(r'^\d+-', '', stem)
+    if base_slug != stem:
+        fallback_file = research_dir / f"{base_slug}-research.md"
+        if fallback_file.exists():
+            return []
+
+    return [{
+        'type': 'MISSING_RESEARCH',
+        'severity': 'warning',
+        'message': f'No research file found for seminar module. Expected: research/{stem}-research.md',
+        'fix': f'Run /full-rebuild {track} or /research to create research notes before content generation.'
+    }]
+
+
 def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, pedagogy: str) -> list[dict]:
     """
     Validate that seminar-style modules (B2-HIST, C1, LIT) have proper Meta YAML
@@ -65,11 +112,11 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
         List of violation dictionaries.
     """
     violations = []
-    
+
     # Determine if this is a seminar module
     is_seminar = pedagogy and pedagogy.lower() == 'seminar'
     is_seminar_track = level_code.lower() in ['b2-hist', 'c1-hist', 'c1-bio', 'lit']
-    
+
     # If not a seminar module, we skip strict validation
     if not (is_seminar or is_seminar_track):
         return violations

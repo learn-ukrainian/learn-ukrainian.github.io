@@ -2,11 +2,11 @@
   "module": "klavdiya-latysheva",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:19.209732Z",
+  "last_audit": "2026-02-07T00:22:20.293601Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349390Z",
-    "meta": "2026-02-02T23:23:00.197697Z",
+    "meta": "2026-02-06T22:56:22.291448Z",
     "activities": "2026-01-27T15:34:55.753669Z",
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2041/4000 (raw: 2322) | pedagogy: 1 violations"
+      "message": "2041/4000 (raw: 2322) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -45,6 +45,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

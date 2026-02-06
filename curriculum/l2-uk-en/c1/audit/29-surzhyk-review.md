@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M29 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:14
+**Generated:** 2026-02-06 20:13:02
 
 ## Configuration
 **Type:** C1-grammar
@@ -56,7 +56,7 @@
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/7
+- **Engagement:** ✅ 15/7
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
@@ -66,7 +66,7 @@
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ❌ 79% < 95% min (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 79% (minimum: 95%)

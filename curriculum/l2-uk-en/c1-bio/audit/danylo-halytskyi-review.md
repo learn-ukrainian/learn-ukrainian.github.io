@@ -1,12 +1,12 @@
 # Audit Report: M10 — danylo-halytskyi.md
-**Level:** C1-BIO | **Module:** M10 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+**Level:** C1-BIO | **Module:** M10 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:34
+**Generated:** 2026-02-07 00:21:31
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4286/4000 (raw: 4372)
+- **Words:** ✅ 4524/4300 (raw: 4610)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -63,22 +63,22 @@
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
 | quotes | 15 | 3 | 100% | 14% | 14.3% |
 | cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 13 | 2 | 100% | 10% | 9.5% |
+| legacy | 14 | 2 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 124 | Included in Core |
-| **Вступ — Єдиний коронований король Русі** | ✅ | 397 | Included in Core |
+| **Вступ — Єдиний коронований король Русі** | ✅ | 407 | Included in Core |
 | **Життєпис: Шлях до влади** | ⚪️ | 1546 | Skipped |
 | **Внесок: Коронація та держава** | ⚪️ | 841 | Skipped |
-| **Останні роки: Боротьба до кінця** | ⚪️ | 500 | Skipped |
-| **Спадщина: Королівська традиція** | ⚪️ | 470 | Skipped |
-| **Підсумок — Король без королівства?** | ✅ | 238 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 170 | Skipped |
+| **Останні роки: Боротьба до кінця** | ⚪️ | 578 | Skipped |
+| **Спадщина: Королівська традиція** | ⚪️ | 518 | Skipped |
+| **Підсумок — Король без королівства?** | ✅ | 293 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 217 | Skipped |

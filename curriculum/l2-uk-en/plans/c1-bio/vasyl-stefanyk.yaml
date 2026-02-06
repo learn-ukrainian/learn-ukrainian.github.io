@@ -1,0 +1,98 @@
+module: c1-bio-051
+level: C1-BIO
+sequence: 51
+slug: vasyl-stefanyk
+version: '2.0'
+title: 'Василь Стефаник: Слово як крик душі'
+content_outline:
+- section: Вступ — Найсильніший новеліст
+  words: 400
+  points:
+  - Стефаник як майстер експресіоністичної новели
+  - Визнання Франком як «найбільшої сили» в малій прозі
+  - Покутський геній світового масштабу
+- section: Покутське дитинство (1871-1890)
+  words: 600
+  points:
+  - Народження в Русові на Покутті
+  - Заможна селянська родина
+  - Покутська культура та трагізм селянського буття
+  - Навчання у Коломиї
+- section: Краківський студент (1890-1900)
+  words: 800
+  points:
+  - Медичний факультет та відмова від лікарства
+  - Знайомство з Франком та польськими письменниками
+  - «Синя книжечка» та «Камінний хрест»
+  - Миттєва літературна слава
+- section: Мовчання та громадська діяльність (1900-1939)
+  words: 700
+  points:
+  - Повернення на Покуття
+  - Депутатство у Віденському парламенті
+  - Тридцять років «мовчання» — причини
+  - Посол до Сейму та захист селян
+- section: Поетика болю
+  words: 700
+  points:
+  - Лаконізм та мінімалізм як метод
+  - Покутський діалект як літературна мова
+  - Порівняння з Мопассаном та Чеховим
+  - Трагізм еміграції у новелах
+- section: Спадщина — Голос знедолених
+  words: 500
+  points:
+  - Стефаник у контексті європейського експресіонізму
+  - Музей у Русові та сучасне значення
+  - Вплив на Стельмаха, Тютюнника
+  - Деколонізація селянського наративу
+word_target: 3700
+vocabulary_hints:
+  required:
+  - новеліст (short story writer)
+  - експресіонізм (expressionism)
+  - лаконізм (laconism)
+  - покутський (Pokuttian)
+  - селянство (peasantry)
+  - еміграція (emigration)
+  - парламент (parliament)
+  - діалект (dialect)
+  - трагізм (tragedy)
+  - психологізм (psychologism)
+  recommended:
+  - Покуття (Pokuttia)
+  - мінімалізм (minimalism)
+  - посол (deputy/ambassador)
+  - натуралізм (naturalism)
+  - сільська громада (village community)
+activity_hints:
+- type: reading
+  focus: Українська мала проза кінця XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: essay-response
+  focus: Чому Стефаника називають «найсильнішим» українським новелістом?
+  word_target: 300
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-050
+connects_to:
+- c1-bio-053
+- c1-bio-047
+module_type: biography
+sources:
+- name: Василь Стефаник (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович
+  type: primary
+  notes: Comprehensive biography of the expressionist master
+- name: Музей Василя Стефаника
+  url: https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника
+  type: reference
+  notes: Literary-memorial museum in Rusiv
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of Василь Стефаник as an expressionist writer'
+- Evaluate the artistic significance of laconism and dialect in literature
+- Trace the connection between Pokuttian peasant life and literary innovation

@@ -1,0 +1,47 @@
+{
+  "module": "shcho-take-istoriohrafiia",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-06T13:15:45.418738Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-06T12:50:08.357865Z",
+    "meta": "2026-02-06T12:50:18.953447Z",
+    "activities": "2026-02-06T12:50:40.903730Z",
+    "vocabulary": "2026-01-27T12:15:54.746743Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5198/4000 (raw: 5384)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "35/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

@@ -2,13 +2,13 @@
   "module": "hanna-barvinok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:53.077990Z",
+  "last_audit": "2026-02-07T00:26:07.377610Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.347021Z",
-    "meta": "2026-02-02T23:23:00.017168Z",
+    "md": "2026-02-07T00:26:02.765283Z",
+    "meta": "2026-02-07T00:25:31.115561Z",
     "activities": "2026-01-29T23:10:44.920786Z",
-    "vocabulary": "2026-01-29T22:56:23.420196Z",
+    "vocabulary": "2026-02-07T00:25:54.229173Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4626/4000 (raw: 4725)"
+      "message": "4626/4000 (raw: 4723)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "15 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

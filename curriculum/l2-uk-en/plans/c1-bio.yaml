@@ -6,7 +6,7 @@ track: biography
 version: "1.0"
 
 overview:
-  total_modules: 132
+  total_modules: 156
   description: "Comprehensive biographies of significant Ukrainians across all fields and eras"
   prerequisites: [c1]
   target_audience: "Advanced learners seeking deep knowledge of Ukrainian historical figures"
@@ -34,11 +34,11 @@ vocabulary:
 thematic_areas:
   - name: "Політики та державні діячі"
     focus: "Leaders who shaped Ukrainian statehood"
-    examples: ["Bohdan Khmelnytsky", "Symon Petliura", "Viacheslav Chornovil"]
+    examples: ["Bohdan Khmelnytsky", "Symon Petliura", "Viacheslav Chornovil", "Yurii Lypa"]
 
   - name: "Письменники та поети"
     focus: "Literary figures beyond LIT track"
-    examples: ["Lina Kostenko", "Serhiy Zhadan", "Oksana Zabuzhko"]
+    examples: ["Lina Kostenko", "Serhiy Zhadan", "Oksana Zabuzhko", "Mykhailo Kotsiubynsky", "Vasyl Stefanyk", "Bohdan-Ihor Antonych", "Oles Honchar", "Yuri Andrukhovych"]
 
   - name: "Вчені та винахідники"
     focus: "Scientific achievements of Ukrainians"
@@ -58,7 +58,7 @@ thematic_areas:
 
   - name: "Дисиденти та правозахисники"
     focus: "Resistance to Soviet oppression"
-    examples: ["Vasyl Stus", "Levko Lukyanenko", "Alla Horska"]
+    examples: ["Vasyl Stus", "Levko Lukyanenko", "Alla Horska", "Ivan Dziuba", "Yevhen Sverstiuk"]
 
   - name: "Сучасні герої"
     focus: "Contemporary figures and war heroes"

@@ -1,8 +1,8 @@
 # Audit Report: M06 — volodymyr-monomakh.md
-**Level:** C1-BIO | **Module:** M06 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Level:** C1-BIO | **Module:** M06 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:32
+**Generated:** 2026-02-07 00:21:29
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** critical-analysis, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -31,16 +31,16 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (critical-analysis, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5114/4300 (raw: 5259)
+- **Words:** ✅ 4878/4300 (raw: 5106)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
@@ -48,38 +48,38 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 15 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 13 | 3 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
 | visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.4%** |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Останній великий самодержець Києва** | ✅ | 546 | Included in Core |
-| **Життєпис** | ⚪️ | 1122 | Skipped |
-| **Історичний контекст** | ✅ | 527 | Included in Core |
-| **Внесок** | ⚪️ | 1190 | Skipped |
-| **Останні роки** | ⚪️ | 512 | Skipped |
-| **Спадщина** | ⚪️ | 772 | Skipped |
-| **Підсумок** | ✅ | 288 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 157 | Skipped |
+| **Intro/Narrative** | ✅ | 99 | Included in Core |
+| **Вступ — Останній великий самодержець Києва** | ✅ | 541 | Included in Core |
+| **Життєпис** | ⚪️ | 1677 | Skipped |
+| **Історичний контекст** | ✅ | 604 | Included in Core |
+| **Внесок** | ⚪️ | 525 | Skipped |
+| **Останні роки: Захід сонця над єдиною Руссю** | ⚪️ | 443 | Skipped |
+| **Спадщина** | ⚪️ | 438 | Skipped |
+| **Порівняльний аналіз: Мономах та європейські монархи XI–XII ст.** | ✅ | 127 | Included in Core |
+| **Підсумок** | ✅ | 424 | Included in Core |

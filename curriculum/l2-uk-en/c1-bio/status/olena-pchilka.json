@@ -2,11 +2,11 @@
   "module": "olena-pchilka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T17:00:47.501884Z",
+  "last_audit": "2026-02-07T00:21:56.128156Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T17:00:17.078721Z",
-    "meta": "2026-02-05T16:47:39.197246Z",
+    "meta": "2026-02-06T22:56:22.299562Z",
     "activities": "2026-02-04T21:44:37.980299Z",
     "vocabulary": "2026-02-05T16:50:23.979757Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4858/4300 (raw: 4912)"
+      "message": "4858/4000 (raw: 4912)"
     },
     "activities": {
       "status": "pass",

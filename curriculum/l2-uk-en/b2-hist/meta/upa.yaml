@@ -20,6 +20,7 @@ activity_hints:
   - type: essay-response
     focus: Чому історія УПА залишається контроверсійною?
     word_target: 200
+word_target: 4000
 build:
   last_modified: '2026-01-28'
 phase: HIST.10 [WWII & Soviet Terror]

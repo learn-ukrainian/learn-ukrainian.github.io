@@ -2,7 +2,7 @@
 **Level:** B2-HIST | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 6133
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-03 22:54:00
+**Generated:** 2026-02-06 22:17:28
 
 ## Configuration
 **Type:** B2-history
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 6365/6133 (raw: 6413)
+- **Words:** ✅ 6369/6133 (raw: 6417)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 324/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -59,11 +59,11 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| engagement | 15 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
+| visual | 17 | 4 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 8 | 3 | 100% | 5% | 4.8% |
@@ -77,11 +77,11 @@
 | **Вступ** | ✅ | 491 | Included in Core |
 | **Читання** | ✅ | 493 | Included in Core |
 | **Історія відкриття** | ⚪️ | 509 | Skipped |
-| **Первинні джерела** | ✅ | 347 | Included in Core |
-| **Протоміста** | ⚪️ | 1165 | Skipped |
-| **Господарство та економіка** | ⚪️ | 666 | Skipped |
+| **Первинні джерела** | ✅ | 349 | Included in Core |
+| **Протоміста** | ⚪️ | 1167 | Skipped |
+| **Господарство та економіка** | ⚪️ | 667 | Skipped |
 | **Ремесла та технології** | ⚪️ | 821 | Skipped |
 | **Духовний світ та суспільний устрій** | ⚪️ | 595 | Skipped |
 | **Деколонізаційний погляд** | ✅ | 401 | Included in Core |
 | **Підсумок** | ✅ | 20 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 801 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 800 | Skipped |

@@ -2,25 +2,25 @@
   "module": "01-introduction-to-kotliarevsky",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:15:55.712363Z",
+  "last_audit": "2026-02-06T22:54:44.780179Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349562Z",
-    "meta": "2026-01-29T07:39:04.956776Z",
-    "activities": "2026-01-18T20:23:03.231554Z",
-    "vocabulary": null,
+    "md": "2026-02-06T22:45:42.656685Z",
+    "meta": "2026-02-06T22:22:42.481296Z",
+    "activities": "2026-02-06T22:45:26.944373Z",
+    "vocabulary": "2026-02-06T22:36:36.856708Z",
     "plan": "2026-01-27T15:19:02.509498Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3671/4500 (raw: 3843)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4618/4500 (raw: 4760)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "36/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

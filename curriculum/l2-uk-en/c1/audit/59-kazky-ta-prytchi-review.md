@@ -1,11 +1,9 @@
 # Audit Report: M59 — 59-kazky-ta-prytchi.md
-
-**Level:** C1 | **Module:** M59 | **Phase:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
+**Level:** C1 | **Module:** M59 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:31
+**Generated:** 2026-02-06 20:13:19
 
 ## Configuration
-
 **Type:** C1-vocab
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Типологія українських казок | 5 | 5 | ✅ |
@@ -41,13 +38,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2202/3000 (raw: 2536)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
@@ -61,31 +56,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (vocab))
-- **Richness:** ❌ 92% < 95% min (content)
+- **Richness:** ✅ 96% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
-**Score:** 92% (minimum: 95%)
-**Module Type:** content
+**Score:** 96% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 40 | 15 | 100% | 25% | 25.0% |
-| engagement | 6 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 2 | 4 | 50% | 12% | 6.2% |
-| realworld | 5 | 3 | 100% | 12% | 12.5% |
-| visual | 3 | 4 | 75% | 6% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 11 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **92.1%** |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 40 | 15 | 100% | 20% | 20.0% |
+| engagement | 6 | 4 | 100% | 15% | 15.0% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 3 | 3 | 100% | 10% | 10.0% |
+| register_notes | 7 | 5 | 100% | 10% | 10.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.7%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 85 | Included in Core |

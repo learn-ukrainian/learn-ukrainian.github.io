@@ -1,96 +1,73 @@
-- term: 'фемінізм'
-  translation: 'feminism'
-  ipa: "fɛmiˈnʲizm"
-  audio: "audio/c1-bio/feminizm.mp3"
-- term: 'емансипація'
-  translation: 'emancipation'
-  ipa: "ɛmɑnsɪˈpɑt͡sijɑ"
-  audio: "audio/c1-bio/emantsypatsiia.mp3"
-- term: 'альманах'
-  translation: 'almanac'
-  ipa: "ɑlʲmɑˈnɑx"
-  audio: "audio/c1-bio/almanakh.mp3"
-- term: 'товариство'
-  translation: 'society/association'
-  ipa: "tɔvɑˈrɪstwɔ"
-  audio: "audio/c1-bio/tovarystvo.mp3"
-- term: 'патріархат'
-  translation: 'patriarchy'
-  ipa: "pɑtriɑrˈxɑt"
-  audio: "audio/c1-bio/patriarkhat.mp3"
-- term: 'рівноправність'
-  translation: 'equality (of rights)'
-  ipa: "riwnɔˈprɑwnistʲ"
-  audio: "audio/c1-bio/rivnopravnist.mp3"
-- term: 'священик'
-  translation: 'priest'
-  ipa: "sʲʋjɑˈʃt͡ʃɛnɪk"
-  audio: "audio/c1-bio/sviashchenyk.mp3"
-- term: 'просвітництво'
-  translation: 'enlightenment (activity)'
-  ipa: "prɔsˈvitnɪt͡stwɔ"
-  audio: "audio/c1-bio/prosvitnytstvo.mp3"
-- term: 'міщанка'
-  translation: 'townswoman (petty bourgeois)'
-  ipa: "miˈʃt͡ʃɑnkɑ"
-  audio: "audio/c1-bio/mishchanka.mp3"
-- term: 'придане'
-  translation: 'dowry'
-  ipa: "prɪˈdɑnɛ"
-  audio: "audio/c1-bio/prydane.mp3"
-- term: 'утримання'
-  translation: 'maintenance/support'
-  ipa: "utˈrɪmɑnʲːɑ"
-  audio: "audio/c1-bio/utrymannia.mp3"
-- term: 'першопроходець'
-  translation: 'pioneer'
-  ipa: "pɛrʃɔprɔˈxɔdɛt͡sʲ"
-  audio: "audio/c1-bio/pershoprokhodets.mp3"
-- term: 'самоосвіта'
-  translation: 'self-education'
-  ipa: "sɑmɔɔsˈvitɑ"
-  audio: "audio/c1-bio/samoosvita.mp3"
-- term: 'світогляд'
-  translation: 'worldview'
-  ipa: "sʲʋiˈtɔɦlʲɑd"
-  audio: "audio/c1-bio/svitohliad.mp3"
-- term: 'віче'
-  translation: 'assembly/gathering'
-  ipa: "ˈvit͡ʃɛ"
-  audio: "audio/c1-bio/viche.mp3"
-- term: 'сирота'
-  translation: 'orphan'
-  ipa: "sɪrɔˈtɑ"
-  audio: "audio/c1-bio/syrota.mp3"
-- term: 'оберіг'
-  translation: 'talisman/charm/protector'
-  ipa: "ɔbɛˈrih"
-  audio: "audio/c1-bio/oberih.mp3"
-- term: 'доля'
-  translation: 'fate/destiny'
-  ipa: "ˈdɔlʲɑ"
-  audio: "audio/c1-bio/dolia.mp3"
-- term: 'боротьба'
-  translation: 'struggle/fight'
-  ipa: "bɔrɔtʲˈbɑ"
-  audio: "audio/c1-bio/borotba.mp3"
-- term: 'спадщина'
-  translation: 'legacy/heritage'
-  ipa: "ˈspɑdʃt͡ʃɪnɑ"
-  audio: "audio/c1-bio/spadshchyna.mp3"
-- term: 'виборець'
-  translation: 'voter'
-  ipa: "ˈvɪbɔrɛt͡sʲ"
-  audio: "audio/c1-bio/vyborets.mp3"
-- term: 'виборче право'
-  translation: 'suffrage/voting right'
-  ipa: "ˈvɪbɔrt͡ʃɛ ˈprɑvɔ"
-  audio: "audio/c1-bio/vyborche-pravo.mp3"
-- term: 'оповідання'
-  translation: 'short story'
-  ipa: "ɔpɔviˈdɑnʲːɑ"
-  audio: "audio/c1-bio/opovidannia.mp3"
-- term: 'публіцистика'
-  translation: 'journalism/publicistic writing'
-  ipa: "publiˈt͡sɪstɪkɑ"
-  audio: "audio/c1-bio/publitsystyka.mp3"
+vocabulary:
+- word: емансипація
+  ipa: "[ɛmɑnt͡sɪˈpɑt͡s⁽ʲ⁾ijɑ]"
+  translation: emancipation
+- word: піонерка
+  ipa: "[p⁽ʲ⁾iɔˈnɛrkɑ]"
+  translation: pioneer (female)
+- word: просвітництво
+  ipa: "[prɔˈs⁽ʲ⁾witnɪt͡stʷɔ]"
+  translation: enlightenment
+- word: патріархат
+  ipa: "[pɑtr⁽ʲ⁾iɑrˈxɑt]"
+  translation: patriarchy
+- word: асиміляція
+  ipa: "[ɑsɪm⁽ʲ⁾ilʲˈɑt͡s⁽ʲ⁾ijɑ]"
+  translation: assimilation
+- word: агентність
+  ipa: "[ɑˈɦɛntn⁽ʲ⁾istʲ]"
+  translation: agency
+- word: солідарність
+  ipa: "[sɔl⁽ʲ⁾iˈdɑrn⁽ʲ⁾istʲ]"
+  translation: solidarity
+- word: деколонізація
+  ipa: "[dɛkɔlɔniˈzɑt͡s⁽ʲ⁾ijɑ]"
+  translation: decolonization
+- word: альманах
+  ipa: "[ɑlʲmɑˈnɑx]"
+  translation: almanac
+- word: суб'єктність
+  ipa: "[subˈjɛktn⁽ʲ⁾istʲ]"
+  translation: subjectivity / subjecthood
+- word: вдівство
+  ipa: "[ˈu̯diu̯stʷɔ]"
+  translation: widowhood
+- word: поступ
+  ipa: "[ˈpɔstup]"
+  translation: progress
+- word: духовний уклад
+  ipa: "[duˈxɔu̯nɪi̯ ˈuklɑd]"
+  translation: spiritual order / way of life
+- word: громадська діячка
+  ipa: "[ɦrɔˈmɑd͡sʲkɑ d⁽ʲ⁾iˈjɑt͡ʃkɑ]"
+  translation: public activist (female)
+- word: право на освіту
+  ipa: "[ˈprɑwɔ nɑ ɔˈs⁽ʲ⁾witu]"
+  translation: right to education
+- word: сестринство
+  ipa: "[ˈsɛstrɪnstʷɔ]"
+  translation: sisterhood
+- word: рівноправність
+  ipa: "[r⁽ʲ⁾iu̯nɔˈprɑu̯n⁽ʲ⁾istʲ]"
+  translation: equality of rights
+- word: публіцистика
+  ipa: "[publ⁽ʲ⁾it͡sɪˈstɪkɑ]"
+  translation: publicism / opinion journalism
+- word: цензура
+  ipa: "[t͡sɛnˈzurɑ]"
+  translation: censorship
+- word: національне відродження
+  ipa: "[nɑt͡s⁽ʲ⁾ioˈnɑlʲnɛ w⁽ʲ⁾idˈrɔd͡ʒːɛnʲnʲɑ]"
+  translation: national revival
+- word: економічна незалежність
+  ipa: "[ɛkɔnɔˈmit͡ʃnɑ nɛzɑˈlɛʒn⁽ʲ⁾istʲ]"
+  translation: economic independence
+- word: видавнича справа
+  ipa: "[wɪdɑu̯ˈnɪt͡ʃɑ ˈsprɑwɑ]"
+  translation: publishing business
+- word: дискурс
+  ipa: "[dɪˈskurs]"
+  translation: discourse
+- word: лейтмотив
+  ipa: "[lɛi̯tˈmɔtɪu̯]"
+  translation: leitmotif

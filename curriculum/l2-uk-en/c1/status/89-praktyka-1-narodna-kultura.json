@@ -2,20 +2,20 @@
   "module": "89-praktyka-1-narodna-kultura",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:46.512592Z",
+  "last_audit": "2026-02-06T20:13:36.563090Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.367258Z",
-    "meta": "2026-01-29T07:39:04.791873Z",
-    "activities": "2026-01-13T21:42:40.447888Z",
+    "meta": "2026-02-05T20:58:09.271565Z",
+    "activities": "2026-02-06T19:35:36.797276Z",
     "vocabulary": "2026-01-21T21:57:41.861826Z",
     "plan": "2026-01-30T11:54:34.119627Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
@@ -28,23 +28,22 @@
       "message": "7/12 | priority: No priority types"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 25 (soft target)"
+      "message": "959/25"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+      "3 Outline Compliance Errors"
     ],
-    "pass_count": 0,
-    "fail_count": 4
+    "pass_count": 2,
+    "fail_count": 2
   }
 }

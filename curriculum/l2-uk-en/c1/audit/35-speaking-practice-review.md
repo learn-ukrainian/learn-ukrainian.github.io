@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M35 | **Phase:** C1.2 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:18
+**Generated:** 2026-02-06 20:13:06
 
 ## Configuration
 **Type:** C1-checkpoint
@@ -68,7 +68,7 @@
 - **Immersion:** 🇺🇦 98.8% (checkpoint - no gate)
 - **Richness:** ✅ 96% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 85%)

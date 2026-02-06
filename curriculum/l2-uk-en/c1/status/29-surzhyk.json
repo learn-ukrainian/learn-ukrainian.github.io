@@ -2,12 +2,12 @@
   "module": "29-surzhyk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:14.624775Z",
+  "last_audit": "2026-02-06T20:13:02.220234Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.366756Z",
-    "meta": "2026-01-29T07:39:04.760787Z",
-    "activities": "2026-01-13T18:04:01.732048Z",
+    "meta": "2026-02-05T20:58:09.254323Z",
+    "activities": "2026-02-06T19:35:26.777366Z",
     "vocabulary": null,
     "plan": "2026-01-29T07:45:40.868760Z"
   },
@@ -33,9 +33,9 @@
       "message": "0 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "None/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
@@ -46,6 +46,6 @@
       "Missing required activity types: cloze, error-correction"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

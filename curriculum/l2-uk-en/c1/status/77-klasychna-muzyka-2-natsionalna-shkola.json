@@ -2,20 +2,20 @@
   "module": "77-klasychna-muzyka-2-natsionalna-shkola",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:43.296099Z",
+  "last_audit": "2026-02-06T20:13:29.985217Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.367176Z",
-    "meta": "2026-01-29T07:39:04.785391Z",
-    "activities": "2026-01-13T18:02:47.719004Z",
+    "meta": "2026-02-05T20:58:09.389036Z",
+    "activities": "2026-02-06T19:35:34.742467Z",
     "vocabulary": "2026-01-21T21:57:51.080231Z",
     "plan": "2026-01-30T11:51:35.778208Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
@@ -28,22 +28,20 @@
       "message": "16/12"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 25 (soft target)"
+      "message": "1031/25"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

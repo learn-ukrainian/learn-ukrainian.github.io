@@ -1,150 +1,150 @@
-- lemma: січ
-  ipa: /sʲit͡ʃ/
-  translation: Sich (fortified Cossack center)
-  pos: noun
-  gender: f
-  note: козацька столиця
-- lemma: байда
-  ipa: /ˈbɑjdɐ/
-  translation: carefree person / hero
-  pos: noun
-  gender: m
-  note: прізвисько Вишневецького
-- lemma: гак
-  ipa: /ɦɑk/
-  translation: hook
-  pos: noun
-  gender: m
-  note: знаряддя страти
-- lemma: фронтир
-  ipa: /fronˈtɪr/
-  translation: frontier
-  pos: noun
-  gender: m
-  note: межа між цивілізаціями
-- lemma: фортеця
-  ipa: /forˈtɛt͡sʲɐ/
-  translation: fortress
-  pos: noun
-  gender: f
-  note: укріплена споруда
-- lemma: ватажок
-  ipa: /ʋɐtɐˈʒɔk/
-  translation: leader
-  pos: noun
-  gender: m
-  note: керівник загону
-- lemma: дума
-  ipa: /ˈdumɐ/
-  translation: duma (epic folk song)
-  pos: noun
-  gender: f
-  note: козацька епічна пісня
-- lemma: зрада
-  ipa: /ˈzrɑdɐ/
-  translation: betrayal
-  pos: noun
-  gender: f
-  note: порушення вірності
-- lemma: страта
-  ipa: /ˈstrɑtɐ/
-  translation: execution
-  pos: noun
-  gender: f
-  note: позбавлення життя за вироком
 - lemma: гетьман
   ipa: /ˈɦɛtʲmɐn/
   translation: hetman
   pos: noun
   gender: m
-  note: козацький ватажок
-- lemma: отаман
-  ipa: /otɐˈmɑn/
-  translation: otaman
+  note: вищий воєначальник козацького війська
+- lemma: Січ
+  ipa: /sʲit͡ʃ/
+  translation: Sich
   pos: noun
-  gender: m
-  note: керівник козаків
-- lemma: козацтво
-  ipa: /koˈzɑt͡stʋo/
-  translation: Cossacks
+  gender: f
+  note: укріплений центр козацтва, військово-політична організація
+- lemma: пороги
+  ipa: /poˈrɔɦɪ/
+  translation: rapids
   pos: noun
-  gender: n
-  note: військовий стан
+  gender: pl
+  note: скелясті ділянки в руслі Дніпра
+- lemma: плавні
+  ipa: /ˈpɫɑu̯nʲi/
+  translation: wetlands / marshes
+  pos: noun
+  gender: pl
+  note: заболочені ділянки річок, порослі очеретом
+- lemma: чайка
+  ipa: /ˈt͡ʃɑi̯kɐ/
+  translation: chaika / Cossack boat
+  pos: noun
+  gender: f
+  note: легкий і маневрений козацький човен
 - lemma: ясир
   ipa: /jɐˈsɪr/
-  translation: captives / booty
+  translation: yasyr / captives
   pos: noun
   gender: m
-  note: полонені
-- lemma: набіг
-  ipa: /nɐˈbʲiɦ/
-  translation: raid
+  note: полонені, захоплені татарами для рабства
+- lemma: орда
+  ipa: /orˈdɑ/
+  translation: horde
+  pos: noun
+  gender: f
+  note: військо кочовиків
+- lemma: бастіон
+  ipa: /bɐstʲiˈon/
+  translation: bastion
   pos: noun
   gender: m
-  note: раптовий напад
-- lemma: лицар
-  ipa: /ˈlɪt͡sɐr/
-  translation: knight
+  note: міцне укріплення, опора
+- lemma: фронтир
+  ipa: /fronˈtɪr/
+  translation: frontier
   pos: noun
   gender: m
-  note: воїн-аристократ
-- lemma: авантюризм
-  ipa: /ɐʋɐntʲuˈrɪzm/
-  translation: adventurism
+  note: рухома межа між цивілізаціями
+- lemma: авантюрист
+  ipa: /ɐʋɐntʲuˈrɪst/
+  translation: adventurer
   pos: noun
   gender: m
-  note: схильність до ризику
-- lemma: харизма
-  ipa: /xɐˈrɪzmɐ/
-  translation: charisma
-  pos: noun
-  gender: f
-  note: особлива привабливість лідера
-- lemma: незламність
-  ipa: /neˈzlɑmnʲisʲtʲ/
-  translation: indomitability
-  pos: noun
-  gender: f
-  note: твердість духу
-- lemma: архетип
-  ipa: /ɐrxeˈtɪp/
-  translation: archetype
+  note: людина, схильна до ризикованих вчинків
+- lemma: магнат
+  ipa: /mɐɦˈnɑt/
+  translation: magnate
   pos: noun
   gender: m
-  note: першообраз
-- lemma: легенда
-  ipa: /leˈɦɛndɐ/
-  translation: legend
+  note: великий землевласник
+- lemma: шляхтич
+  ipa: /ˈʃlʲɐxtɪt͡ʃ/
+  translation: nobleman
   pos: noun
-  gender: f
-  note: переказ про минуле
-- lemma: аристократія
-  ipa: /ɐrɪstokˈrɑtʲijɐ/
-  translation: aristocracy
+  gender: m
+  note: представник привілейованого стану
+- lemma: гак
+  ipa: /ɦɐk/
+  translation: hook
   pos: noun
-  gender: f
-  note: вищий стан суспільства
-- lemma: вольниця
-  ipa: /ˈʋɔlʲnɪt͡sʲɐ/
-  translation: free company / liberty
-  pos: noun
-  gender: f
-  note: вільна спільнота
+  gender: m
+  note: залізне знаряддя, використане для страти Вишневецького
 - lemma: мучеництво
-  ipa: /muˈt͡ʃenɪt͡stʋo/
+  ipa: /mut͡ʃɛˈnɪt͡stʋo/
   translation: martyrdom
   pos: noun
   gender: n
-  note: страждання за віру
-- lemma: султан
-  ipa: /sulˈtɑn/
-  translation: sultan
+  note: добровільне страждання за віру чи ідею
+- lemma: пасіонарій
+  ipa: /pɐsʲionˈɑrʲij/
+  translation: passionary
   pos: noun
   gender: m
-  note: правитель Османської імперії
+  note: людина з великою внутрішньою енергією до дій
+- lemma: архетип
+  ipa: /ɐrxɛˈtɪp/
+  translation: archetype
+  pos: noun
+  gender: m
+  note: первинна модель образу або характеру
+- lemma: козакування
+  ipa: /kozɐˈkuʋɐnnʲɐ/
+  translation: cossacking / free life
+  pos: noun
+  gender: n
+  note: вільний спосіб життя в степу
+- lemma: залога
+  ipa: /zɐˈɫɔɦɐ/
+  translation: garrison
+  pos: noun
+  gender: f
+  note: військова частина, що охороняє фортецю
+- lemma: гаківниця
+  ipa: /ɦɐkʲiu̯ˈnɪt͡sʲɐ/
+  translation: hakebut / wall gun
+  pos: noun
+  gender: f
+  note: важка ручна вогнепальна зброя XVI-XVII ст.
+- lemma: фігура
+  ipa: /fʲiˈɦurɐ/
+  translation: signal fire / beacon
+  pos: noun
+  gender: f
+  note: сигнальна споруда в степу для оповіщення
+- lemma: Степ
+  ipa: /stɛp/
+  translation: Steppe
+  pos: noun
+  gender: m
+  note: величезний простір трав'янистої рівнини
+- lemma: устрій
+  ipa: /uˈstrii̯/
+  translation: order / system
+  pos: noun
+  gender: m
+  note: організація суспільства або війська
 - lemma: дипломатія
-  ipa: /dɪploˈmɑtʲijɐ/
+  ipa: /dɪpɫoˈmɑtʲijɐ/
   translation: diplomacy
   pos: noun
   gender: f
-  note: мистецтво переговорів
+  note: ведення переговорів
+- lemma: соборність
+  ipa: /soˈbɔrnʲisʲtʲ/
+  translation: unity / sobornost
+  pos: noun
+  gender: f
+  note: ідея єдності всіх земель народу
+- lemma: незламність
+  ipa: /nezˈɫɐmnʲisʲtʲ/
+  translation: resilience / indomitability
+  pos: noun
+  gender: f
+  note: здатність не здаватися за будь-яких обставин

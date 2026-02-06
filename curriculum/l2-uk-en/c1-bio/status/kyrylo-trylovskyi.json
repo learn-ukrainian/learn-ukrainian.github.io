@@ -2,50 +2,46 @@
   "module": "kyrylo-trylovskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:02.526099Z",
+  "last_audit": "2026-02-07T00:22:02.539481Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.355253Z",
-    "meta": "2026-02-02T23:23:00.085335Z",
-    "activities": "2026-01-27T15:34:55.853307Z",
-    "vocabulary": null,
+    "md": "2026-02-06T22:56:22.284747Z",
+    "meta": "2026-02-06T22:56:22.292770Z",
+    "activities": "2026-02-06T22:56:22.241156Z",
+    "vocabulary": "2026-02-05T22:38:52.389625Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2090/4000 (raw: 2327)"
+      "violations": 2,
+      "message": "5068/4000 (raw: 5496) | pedagogy: 1 violations | richness: 92% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

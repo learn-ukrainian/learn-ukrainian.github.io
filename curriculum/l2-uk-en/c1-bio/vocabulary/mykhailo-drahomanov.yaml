@@ -1,75 +1,119 @@
-- term: федералізм
-  ipa: federaˈlɪzm
+items:
+- lemma: федералізм
+  ipa: /federɐˈlʲizm/
   translation: federalism
-- term: політичний мислитель
-  ipa: polɪˈtɪtʃnɪi mɪsˈlɪtelʲ
+  pos: noun
+  gender: m
+- lemma: політичний мислитель
+  ipa: /polʲit͡ʃnɪi̯ mɪsˈlɪtɛlʲ/
   translation: political thinker
-- term: еміграція
-  ipa: emiˈɦrattsʲija
+  pos: noun
+  gender: m
+- lemma: еміграція
+  ipa: /emʲiˈɦrat͡sʲijɐ/
   translation: emigration
-- term: громадівець
-  ipa: hroˈmadʲivetsʲ
-  translation: member of the Hromada movement
-- term: космополітизм
-  ipa: kosmopolʲiˈtɪzm
+  pos: noun
+  gender: f
+- lemma: громадівець
+  ipa: /ɦromɐˈdʲiʋet͡sʲ/
+  translation: member of Hromada
+  pos: noun
+  gender: m
+- lemma: космополітизм
+  ipa: /kosmopolʲiˈtɪzm/
   translation: cosmopolitanism
-- term: прогрес
-  ipa: proˈɦrɛs
+  pos: noun
+  gender: m
+- lemma: прогрес
+  ipa: /proˈɦrɛs/
   translation: progress
-- term: деспотизм
-  ipa: despoˈtɪzm
+  pos: noun
+  gender: m
+- lemma: деспотизм
+  ipa: /despoˈtɪzm/
   translation: despotism
-- term: соціалізм
-  ipa: sotsʲiaˈlʲizm
+  pos: noun
+  gender: m
+- lemma: соціалізм
+  ipa: /sot͡sʲiɐˈlʲizm/
   translation: socialism
-- term: публіцист
-  ipa: publʲitˈsɪst
+  pos: noun
+  gender: m
+- lemma: публіцист
+  ipa: /publʲit͡sˈɪst/
   translation: publicist
-- term: інтелігенція
-  ipa: intelʲiˈɦɛntsʲija
+  pos: noun
+  gender: m
+- lemma: інтелігенція
+  ipa: /intelʲiˈɦɛnt͡sʲijɐ/
   translation: intelligentsia
-- term: автономія
-  ipa: avtoˈnɔmʲija
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /ɐu̯toˈnɔmʲijɐ/
   translation: autonomy
-- term: децентралізація
-  ipa: detsentralʲizaˈtsʲija
+  pos: noun
+  gender: f
+- lemma: децентралізація
+  ipa: /det͡sentrɐlʲizˈat͡sʲijɐ/
   translation: decentralization
-- term: конституціоналізм
-  ipa: konstitutsʲionalʲiˈzm
+  pos: noun
+  gender: f
+- lemma: конституціоналізм
+  ipa: /konstɪtut͡sʲionɐˈlʲizm/
   translation: constitutionalism
-- term: етнографія
-  ipa: etnoˈɦrafʲija
+  pos: noun
+  gender: m
+- lemma: етнографія
+  ipa: /etnoˈɦrafʲijɐ/
   translation: ethnography
-- term: вигнанець
-  ipa: ˈvɪɦnanetsʲ
+  pos: noun
+  gender: f
+- lemma: вигнанець
+  ipa: /ˈʋɪɦnɐnet͡sʲ/
   translation: exile
-- term: громада
-  ipa: hroˈmada
-  translation: community / Hromada movement
-- term: європеїзація
-  ipa: jevropejiˈzatsʲija
+  pos: noun
+  gender: m
+- lemma: громада
+  ipa: /ɦroˈmɑdɐ/
+  translation: community
+  pos: noun
+  gender: f
+- lemma: європеїзація
+  ipa: /jeu̯ropejizˈat͡sʲijɐ/
   translation: Europeanization
-- term: субсидіарність
-  ipa: subsɪdiˈarnʲistʲ
+  pos: noun
+  gender: f
+- lemma: субсидіарність
+  ipa: /subsɪdʲiˈarnʲistʲ/
   translation: subsidiarity
-- term: провінціалізм
-  ipa: provintsʲiaˈlʲizm
+  pos: noun
+  gender: f
+- lemma: провінціалізм
+  ipa: /proʋʲint͡sʲiɐˈlʲizm/
   translation: provincialism
-- term: інтелектуальний велетень
-  ipa: intelektuˈalʲnɪi ˈvɛletenʲ
-  translation: intellectual giant
-- term: безкомпромісний
-  ipa: bezkomproˈmʲisnɪi
+  pos: noun
+  gender: m
+- lemma: безкомпромісний
+  ipa: /bezkoproˈmʲisnɪi̯/
   translation: uncompromising
-- term: меншовартість
-  ipa: menʃoˈvartʲistʲ
-  translation: inferiority (complex)
-- term: суб'єктність
-  ipa: subˈjɛktnʲistʲ
-  translation: subjectivity / agency
-- term: націєтворення
-  ipa: natsijeˈtvorɛnʲnʲa
+  pos: adj
+- lemma: меншовартість
+  ipa: /menʃoˈʋɑrtʲistʲ/
+  translation: inferiority
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲistʲ/
+  translation: agency
+  pos: noun
+  gender: f
+- lemma: націєтворення
+  ipa: /nat͡sʲijeˈtʋɔrɛnnʲɐ/
   translation: nation-building
-- term: еволюційний
-  ipa: evolʲutˈsʲijnɪi
+  pos: noun
+  gender: n
+- lemma: еволюційний
+  ipa: /eʋolʲut͡sʲijˈnɪi̯/
   translation: evolutionary
+  pos: adj

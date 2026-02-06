@@ -36,6 +36,7 @@ activity_hints:
   focus: "Нестор та хроністи"
 - type: critical-analysis
   focus: "Редакції літопису"
+word_target: 4000
 build:
   last_modified: '2026-02-03'
 content_outline:

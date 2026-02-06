@@ -1,7 +1,7 @@
 # Audit Report: M40 — 40-rhetorical-questions.md
 **Level:** C1 | **Module:** M40 | **Phase:** C1.4 | **Pedagogy:** Immersion | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:21
+**Generated:** 2026-02-06 20:13:09
 
 ## Configuration
 **Type:** C1
@@ -41,14 +41,10 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 40-rhetorical-questions.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 200
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ' per template 'c1-module-template.md'
-  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
-
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -67,7 +63,7 @@
 - **Immersion:** 🇺🇦 99.1% (target 90-100%)
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

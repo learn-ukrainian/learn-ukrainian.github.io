@@ -1,12 +1,12 @@
 # Audit Report: M01 — knyahynia-olha.md
-**Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
+**Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:28
+**Generated:** 2026-02-07 00:21:26
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4300 words
+**Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -20,36 +20,33 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | reading | Первинне джерело: «Повість минулих літ» про помсту Ольги | 1 | 1 | ✅ |
-| 2 | critical-analysis | Критичний аналіз: Легенда vs Історія | 1 | 1 | ✅ |
-| 3 | essay-response | Аналіз державних реформ | 1 | 1 | ✅ |
-| 4 | comparative-study | Ольга vs Єлизавета I: Жінки у владі | 1 | 1 | ✅ |
-| 5 | authorial-intent | Намір літописця: Сакралізація влади | 1 | 1 | ✅ |
-| 6 | quiz | Вікторина: Державотворча діяльність княгині Ольги | 5 | 5 | ✅ |
-| 7 | true-false | Правда чи міф: Реформи та дипломатія Ольги | 5 | 5 | ✅ |
-| 8 | critical-analysis | Критичний аналіз: Дипломатична стратегія Ольги у Константинополі | 1 | 1 | ✅ |
+| 1 | reading | Княгиня Ольга: Помста як державна стратегія | 2 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз адміністративної агентності | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Дипломатичний геній Ольги | 1 | 1 | ✅ |
+| 4 | true-false | Факти про правління Ольги | 10 | 5 | ✅ |
+| 5 | comparative-study | Порівняння моделей управління: Ігор та Ольга | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 7 (minimum: 3) ✅
-- Priority types used: 6/6 (authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (critical-analysis, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4873/4300 (raw: 5163)
-- **Activities:** ✅ 8/3
+- **Words:** ✅ 6579/5000 (raw: 7233)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -61,27 +58,32 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 12 | 3 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| variety | 0.92 | - | 92% | 5% | 4.4% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 15 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Легендарна постать у світлі історії та міфу** | ✅ | 445 | Included in Core |
-| **Життєпис: Від таємниці народження до вершини влади** | ⚪️ | 1186 | Skipped |
-| **Історичний контекст** | ✅ | 243 | Included in Core |
-| **Внесок** | ⚪️ | 1022 | Skipped |
-| **Останні роки: Оборона Києва та духовний вибір** | ⚪️ | 830 | Skipped |
-| **Спадщина** | ⚪️ | 732 | Skipped |
-| **Підсумок** | ✅ | 130 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 285 | Skipped |
+| **Intro/Narrative** | ✅ | 126 | Included in Core |
+| **Вступ: Мудра володарка Києва** | ✅ | 666 | Included in Core |
+| **Життєпис: Від таємниць походження до регентства** | ⚪️ | 1578 | Skipped |
+| **Історичний контекст: Русь на роздоріжжі X століття** | ✅ | 715 | Included in Core |
+| **Внесок: Перша реформаторка Східної Європи** | ⚪️ | 746 | Skipped |
+| **Дипломатія та віра: Місія до Константинополя** | ⚪️ | 641 | Skipped |
+| **Спадщина: Світло після темряви** | ⚪️ | 761 | Skipped |
+| **Порівняльний аналіз: Моделі управління (Ігор та Ольга)** | ✅ | 196 | Included in Core |
+| **Критичне мислення** | ⚪️ | 220 | Skipped |
+| **Есе** | ⚪️ | 199 | Skipped |
+| **Зразок відповіді** | ⚪️ | 445 | Skipped |
+| **Підсумок: Засновниця регулярної держави** | ✅ | 286 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **Vocabulary** | ➖ | 0 | Excluded Type |

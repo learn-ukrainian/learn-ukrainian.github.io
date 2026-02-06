@@ -3,5 +3,6 @@ level: B2
 slug: professional-email-advanced
 version: '2.0'
 id: b2-86
+word_target: 1750
 build:
   last_modified: '2026-01-26'

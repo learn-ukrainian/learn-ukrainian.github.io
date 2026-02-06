@@ -13,6 +13,8 @@ This guide helps you understand the tools, workflows, and best practices for cur
 | Goal | Command/Tool |
 |------|--------------|
 | **Create a new module** | `/module {level} {num}` |
+| **Full rebuild (core tracks)** | `/full-rebuild-core {level} {num}` (research + build + review + verify) |
+| **Full rebuild (seminar tracks)** | `/full-rebuild {track} {num}` (6-phase research-first) |
 | **Fix a failing module** | Paste audit log + `/interview` for complex issues |
 | **Check module quality** | `scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md` |
 | **Understand a design decision** | `/explain-decision [topic]` |

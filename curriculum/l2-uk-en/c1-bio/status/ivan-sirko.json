@@ -2,11 +2,11 @@
   "module": "ivan-sirko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:43.369572Z",
+  "last_audit": "2026-02-07T00:21:40.946696Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T23:24:49.390083Z",
-    "meta": "2026-02-05T00:43:41.691034Z",
+    "meta": "2026-02-05T20:58:10.167274Z",
     "activities": "2026-02-05T00:24:41.315854Z",
     "vocabulary": "2026-02-04T23:20:34.519257Z",
     "plan": null

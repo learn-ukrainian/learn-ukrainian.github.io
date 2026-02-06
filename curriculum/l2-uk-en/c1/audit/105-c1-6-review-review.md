@@ -1,11 +1,9 @@
 # Audit Report: M105 — 105-c1-6-review.md
-
-**Level:** C1 | **Module:** M105 | **Phase:** C1 | **Pedagogy:** Integration | **Target:** 3000
+**Level:** C1 | **Module:** M105 | **Phase:** C1.6 | **Pedagogy:** Integration | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:28:59
+**Generated:** 2026-02-06 20:12:50
 
 ## Configuration
-
 **Type:** C1
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Автори та їхні літературні амплуа | 12 | 6 | ✅ |
@@ -42,13 +39,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 1935/3000 (raw: 2147)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -62,31 +57,27 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 90-100%)
-- **Richness:** ❌ 91% < 95% min (content)
+- **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
-**Score:** 91% (minimum: 95%)
-**Module Type:** content
+**Score:** 99% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 18 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
-| variety | 0.99 | - | 99% | 12% | 12.4% |
-| cultural | 5 | 4 | 100% | 12% | 12.5% |
-| realworld | 1 | 3 | 33% | 12% | 4.1% |
-| visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
-| questions | 11 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **91.5%** |
+| activity_types | 13 | 8 | 100% | 25% | 25.0% |
+| review_sections | 10 | 3 | 100% | 20% | 20.0% |
+| variety | 0.99 | - | 99% | 15% | 14.8% |
+| engagement | 7 | 3 | 100% | 10% | 10.0% |
+| cultural | 5 | - | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 97 | Included in Core |

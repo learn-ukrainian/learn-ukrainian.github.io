@@ -1,7 +1,7 @@
 # Audit Report: M57 — 57-narodna-medytsyna.md
 **Level:** C1 | **Module:** M57 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:31
+**Generated:** 2026-02-06 20:13:18
 
 ## Configuration
 **Type:** C1-vocab
@@ -58,7 +58,7 @@
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

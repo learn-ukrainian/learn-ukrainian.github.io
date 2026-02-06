@@ -206,11 +206,11 @@ items:
   translation: Vikentiy (Khvoyka)
   pos: noun
   gender: m
-- lemma: віча
-  ipa: /ʋˈit͡ʃa/
+- lemma: віче
+  ipa: /ʋˈit͡ʃɛ/
   translation: veche (popular assembly)
   pos: noun
-  gender: f
+  gender: n
 - lemma: га
   ipa: /ɦa/
   translation: hectare (ha)
@@ -1445,7 +1445,7 @@ items:
   ipa: /ʃt͡ʃˈuka/
   translation: pike (fish)
   pos: noun
-  gender: m
+  gender: f
 - lemma: єгипетський
   ipa: /jɛɦˈɪpɛtsʲkɪj/
   translation: Egyptian

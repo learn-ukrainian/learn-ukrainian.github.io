@@ -3,177 +3,177 @@
   translation: hetman
   pos: noun
   gender: m
-  note: головнокомандувач військ
-- lemma: битва
-  ipa: /ˈbɪtʋɐ/
-  translation: battle
+  note: вищий воєначальник у ВКЛ та козацькій державі
+- lemma: булава
+  ipa: /buˈɫɑʋɐ/
+  translation: mace
   pos: noun
   gender: f
-  note: бій
-- lemma: перемога
-  ipa: /pereˈmɔɦɐ/
-  translation: victory
-  pos: noun
-  gender: f
-  note: успіх у боротьбі
+  note: символ влади гетьмана
 - lemma: магнат
   ipa: /mɐɦˈnɑt/
   translation: magnate
   pos: noun
   gender: m
-  note: великий землевласник
+  note: великий землевласник, представник вищої аристократії
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility
+  pos: noun
+  gender: f
+  note: привілейований стан у ВКЛ та Польщі
+- lemma: привілей
+  ipa: /prɪˈʋʲilɛi̯/
+  translation: privilege
+  pos: noun
+  gender: m
+  note: особливе право або пільга, надана королем
+- lemma: сейм
+  ipa: /ˈsɛi̯m/
+  translation: diet / parliament
+  pos: noun
+  gender: m
+  note: станово-представницький орган влади
+- lemma: статут
+  ipa: /stɐˈtut/
+  translation: statute / code
+  pos: noun
+  gender: m
+  note: звід законів (напр. Литовський Статут)
+- lemma: вотчина
+  ipa: /ˈʋɔt͡ʃɪnɐ/
+  translation: patrimony
+  pos: noun
+  gender: f
+  note: спадкова земельна власність
+- lemma: меценат
+  ipa: /met͡sɛˈnɑt/
+  translation: patron of the arts
+  pos: noun
+  gender: m
+  note: покровитель мистецтв та наук
 - lemma: православ'я
-  ipa: /prɐʋoˈslɑu̯jɐ/
+  ipa: /prɐʋoˈsɫɑu̯jɐ/
   translation: Orthodoxy
   pos: noun
   gender: n
-  note: християнська конфесія
-- lemma: патрон
-  ipa: /pɐˈtrɔn/
-  translation: patron
+  note: одна з основних гілок християнства
+- lemma: схизматик
+  ipa: /sxɪzˈmɑtɪk/
+  translation: schismatic
   pos: noun
   gender: m
-  note: покровитель
-- lemma: меценат
-  ipa: /met͡sɛˈnɑt/
-  translation: philanthropist / patron of arts
+  note: застаріла назва православних у католицькій термінології
+- lemma: легат
+  ipa: /leˈɦɑt/
+  translation: legate
   pos: noun
   gender: m
-  note: благодійник
-- lemma: військо
-  ipa: /ˈʋʲijai̯sko/
-  translation: army
+  note: дипломатичний представник Папи Римського
+- lemma: деспотія
+  ipa: /desˈpɔtʲijɐ/
+  translation: despotism
+  pos: noun
+  gender: f
+  note: форма влади з необмеженою волею правителя
+- lemma: експансія
+  ipa: /ɛksˈpɐnsʲijɐ/
+  translation: expansion
+  pos: noun
+  gender: f
+  note: територіальне розширення держави
+- lemma: ополчення
+  ipa: /opoɫˈt͡ʃɛnnʲɐ/
+  translation: militia
   pos: noun
   gender: n
-  note: армія
+  note: військо, що збирається з мирного населення під час війни
 - lemma: тактика
-  ipa: /ˈtɑktɪkɐ/
+  ipa: /ˈtɐktɪkɐ/
   translation: tactics
   pos: noun
   gender: f
   note: мистецтво ведення бою
-- lemma: оборона
-  ipa: /oboˈrɔnɐ/
-  translation: defense
+- lemma: маневр
+  ipa: /mɐˈnɛʋr/
+  translation: maneuver
   pos: noun
-  gender: f
-  note: захист
+  gender: m
+  note: організоване пересування військ
 - lemma: артилерія
-  ipa: /ɐrtɪˈlɛrʲijɐ/
+  ipa: /ɐrtɪˈɫɛrʲijɐ/
   translation: artillery
   pos: noun
   gender: f
-  note: вогнепальна зброя
-- lemma: хоругва
-  ipa: /xoˈruɦʋɐ/
-  translation: banner / unit
-  pos: noun
-  gender: f
-  note: прапор або військовий підрозділ
-- lemma: булава
-  ipa: /bulɐˈʋɑ/
-  translation: mace
-  pos: noun
-  gender: f
-  note: символ влади гетьмана
-- lemma: шляхта
-  ipa: /ˈʃlʲɑxtɐ/
-  translation: nobility
-  pos: noun
-  gender: f
-  note: привілейований стан
-- lemma: привілей
-  ipa: /prɪʋiˈlɛj/
-  translation: privilege
+  note: вогнепальна зброя (гармати)
+- lemma: понтонний міст
+  ipa: /ponˈtɔnnɪi̯ ˈmʲist/
+  translation: pontoon bridge
+  pos: phrase
+  gender: m
+  note: тимчасовий міст на плавучих опорах
+- lemma: ренесанс
+  ipa: /renɛˈsɑns/
+  translation: Renaissance
   pos: noun
   gender: m
-  note: виключне право
-- lemma: унія
-  ipa: /ˈunʲijɐ/
-  translation: union
-  pos: noun
-  gender: f
-  note: об'єднання
-- lemma: толерантність
-  ipa: /toleˈrɑntnʲisʲtʲ/
-  translation: tolerance
-  pos: noun
-  gender: f
-  note: терпимість
-- lemma: кавалерія
-  ipa: /kɐʋɐˈlɛrʲijɐ/
-  translation: cavalry
-  pos: noun
-  gender: f
-  note: кіннота
-- lemma: облога
-  ipa: /obˈlɔɦɐ/
-  translation: siege
-  pos: noun
-  gender: f
-  note: оточення міста військом
-- lemma: полон
-  ipa: /poˈlɔn/
-  translation: captivity
+  note: епоха Відродження в культурі
+- lemma: гуманізм
+  ipa: /ɦumɐˈnʲizm/
+  translation: humanism
   pos: noun
   gender: m
-  note: неволя
-- lemma: тріумф
-  ipa: /triˈumf/
-  translation: triumph
+  note: світогляд, орієнтований на цінність людини
+- lemma: канцелярія
+  ipa: /kɐnt͡sɛˈlʲɑrʲijɐ/
+  translation: chancellery
+  pos: noun
+  gender: f
+  note: державна установа, що веде документацію
+- lemma: суверенітет
+  ipa: /suʋɛrenʲiˈtɛt/
+  translation: sovereignty
   pos: noun
   gender: m
-  note: велика перемога
-- lemma: саркофаг
-  ipa: /sɐrkoˈfɑɦ/
-  translation: sarcophagus
+  note: повна незалежність держави
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
+  translation: identity
   pos: noun
-  gender: m
-  note: труна
+  gender: f
+  note: усвідомлення власної належності до групи
+- lemma: лавра
+  ipa: /ˈɫɑu̯rɐ/
+  translation: lavra
+  pos: noun
+  gender: f
+  note: великий і значущий православний чоловічий монастир
 - lemma: епітафія
-  ipa: /epiˈtɑfʲijɐ/
+  ipa: /epʲiˈtɑfʲijɐ/
   translation: epitaph
   pos: noun
   gender: f
-  note: напис на надгробку
+  note: надгробний напис
+- lemma: фундувати
+  ipa: /funˈduʋɐtɪ/
+  translation: to found / to fund
+  pos: verb
+  note: засновувати або фінансувати будівництво
+- lemma: шляхетність
+  ipa: /ʃlʲɐˈxɛtnʲisʲtʲ/
+  translation: nobility / nobility of character
+  pos: noun
+  gender: f
+  note: висока моральність та гідність
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  gender: f
+  note: об'єднання сил для спільної мети
 - lemma: стратегія
   ipa: /strɐˈtɛɦʲijɐ/
   translation: strategy
   pos: noun
   gender: f
-  note: загальний план війни
-- lemma: вірність
-  ipa: /ˈʋʲirnʲisʲtʲ/
-  translation: loyalty / fidelity
-  pos: noun
-  gender: f
-  note: відданість
-- lemma: пасіонарій
-  ipa: /pɐsʲionˈɑrʲij/
-  translation: passionary
-  pos: noun
-  gender: m
-  note: людина великої енергії
-- lemma: конфесійний
-  ipa: /konfesʲˈijɪj/
-  translation: confessional
-  pos: adj
-  note: пов'язаний з віросповіданням
-- lemma: суб'єктність
-  ipa: /subjekˈtnʲisʲtʲ/
-  translation: agency / subjectivity
-  pos: noun
-  gender: f
-  note: здатність діяти самостійно
-- lemma: конфігурація
-  ipa: /konfʲiɦurˈɑt͡sʲijɐ/
-  translation: configuration
-  pos: noun
-  gender: f
-  note: взаєморозташування елементів
-- lemma: легітимність
-  ipa: /leɦʲitˈɪmnʲisʲtʲ/
-  translation: legitimacy
-  pos: noun
-  gender: f
-  note: законність влади
+  note: мистецтво планування воєнних дій або політики

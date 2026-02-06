@@ -2,11 +2,11 @@
   "module": "borys-hrinchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:01.398823Z",
+  "last_audit": "2026-02-07T00:22:01.323060Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T23:05:05.227423Z",
-    "meta": "2026-02-04T23:07:27.551197Z",
+    "meta": "2026-02-06T22:56:22.287945Z",
     "activities": "2026-02-04T22:57:31.329500Z",
     "vocabulary": "2026-02-05T00:20:06.087101Z",
     "plan": null
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4235/4000 (raw: 4274)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4235/4000 (raw: 4274) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

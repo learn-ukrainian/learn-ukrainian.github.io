@@ -3,9 +3,101 @@ level: C1-BIO
 slug: ivan-nechuy-levytskyi
 version: '2.0'
 id: c1-bio-044
-transliteration: none
+title: "Іван Нечуй-Левицький: Майстер українського реалізму"
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- realism
+- ethnography
+content_outline:
+- section: Вступ — Великий оповідач
+  words: 400
+  points:
+  - Нечуй-Левицький як вершина українського реалізму
+  - Його унікальний "візуальний" стиль
+  - Значення для становлення літературної мови
+- section: Походження та освіта
+  words: 600
+  points:
+  - Народження в родині священика (1838)
+  - Навчання в Київській духовній академії
+  - Вплив Шевченка та народницьких ідей
+- section: Учительська кар'єра
+  words: 500
+  points:
+  - Викладання в різних містах України
+  - Спостереження за життям різних верств
+  - Конфлікти з цензурою
+- section: '"Кайдашева сім''я" — шедевр реалізму'
+  words: 800
+  points:
+  - Історія створення (1878)
+  - Родинний конфлікт як дзеркало суспільства
+  - '"Війна за грушу" — символ дрібних чвар'
+- section: '"Микола Джеря" та соціальна критика'
+  words: 600
+  points:
+  - Тема кріпацтва та втечі
+  - Індустріалізація в українській літературі
+  - Образ "нового українського героя"
+- section: Мовна революція
+  words: 600
+  points:
+  - Автентична народна мова в літературі
+  - Діалектизми Київщини
+  - Полеміка про мовні норми
+- section: Останні роки та спадщина
+  words: 500
+  points:
+  - Смерть від голоду в 1918 році
+  - Трагічна іронія долі письменника
+  - Вплив на українську літературу XX століття
+sources:
+- name: Іван Нечуй-Левицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький
+  type: primary
+  notes: Biography, works, literary significance
+- name: Кайдашева сім'я
+  url: https://uk.wikipedia.org/wiki/Кайдашева_сім%27я
+  type: reference
+- name: Микола Джеря
+  url: https://uk.wikipedia.org/wiki/Микола_Джеря
+  type: reference
+vocabulary_hints:
+  required:
+  - реалізм
+  - оповідач
+  - кріпацтво
+  - селянство
+  - родинний конфлікт
+  - діалектизм
+  - просторіччя
+  - візуальний стиль
+  - народницький
+  - етнографічний
+  recommended:
+  - дрібні чвари
+  - сільський побут
+  - соціальна критика
+  - натуралізм
+  - мовна полеміка
+activity_hints:
+- type: reading
+  focus: Уривки з «Кайдашевої сім'ї»
+- type: essay-response
+  focus: Актуальність «Кайдашевої сім'ї» сьогодні
+- type: critical-analysis
+  focus: Порівняння з європейським реалізмом
+vital_status: deceased
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-06'

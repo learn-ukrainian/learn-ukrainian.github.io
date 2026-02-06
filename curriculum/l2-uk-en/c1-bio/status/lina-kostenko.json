@@ -2,11 +2,11 @@
   "module": "lina-kostenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:36.898265Z",
+  "last_audit": "2026-02-07T00:22:38.091913Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.361435Z",
-    "meta": "2026-02-02T23:23:00.327681Z",
+    "meta": "2026-02-06T22:56:22.293590Z",
     "activities": "2026-01-27T15:34:55.948097Z",
     "vocabulary": null,
     "plan": null
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2647/4000 (raw: 2958) | richness: 92% < 95% min (biography)"
+      "violations": 3,
+      "message": "2647/4000 (raw: 2958) | pedagogy: 1 violations | richness: 92% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",

@@ -1,7 +1,7 @@
 # Audit Report: M47 — 47-checkpoint-c1-4.md
 **Level:** C1 | **Module:** M47 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:25
+**Generated:** 2026-02-06 20:13:13
 
 ## Configuration
 **Type:** C1
@@ -69,7 +69,7 @@
 - **Immersion:** 🇺🇦 99.4% (target 90-100%)
 - **Richness:** ✅ 85% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 85% (minimum: 85%)

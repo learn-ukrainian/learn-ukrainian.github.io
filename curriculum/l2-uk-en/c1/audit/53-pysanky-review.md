@@ -1,7 +1,7 @@
 # Audit Report: M53 — 53-pysanky.md
 **Level:** C1 | **Module:** M53 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:29
+**Generated:** 2026-02-06 20:13:16
 
 ## Configuration
 **Type:** C1-history
@@ -39,14 +39,9 @@
 - Required types used: 2/3 (critical-analysis, essay-response) ❌
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
-  - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
-
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -65,7 +60,7 @@
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (history))
 - **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

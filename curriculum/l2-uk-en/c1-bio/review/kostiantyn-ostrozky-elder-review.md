@@ -1,44 +1,51 @@
 # Review: Костянтин Іванович Острозький: Гетьман двох народів
 
-**Level:** c1-bio | **Module:** 13
+**Level:** C1-BIO | **Module:** 13
 **Overall Score:** 9.9/10
 **Status:** ✅ PASS
-**Reviewed:** 2026-02-04
+**Reviewed:** 2026-02-06
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Experience Quality | 10/10 | Authoritative, lecture-style narrative. |
-| Coherence | 10/10 | Seamless transition from military to cultural legacy. |
-| Relevance | 10/10 | Perfectly aligned with the C1 Biography track objectives. |
-| Educational | 10/10 | Deep dive into "obrona potoczna" and legal statutes. |
-| Language | 10/10 | Sophisticated Ukrainian, no Russianisms (fixed 'была' to 'була'). |
-| Pedagogy | 10/10 | High immersion, seminar-style depth. |
-| Immersion | 10/10 | 99.7% immersion. |
-| Activities | 9/10 | Diverse activities, though focus is heavily on analysis. |
-| Richness | 10/10 | Excellent use of primary sources (Statute, Diplomatic letters). |
-| Humanity | 10/10 | Strong historical "persona". |
-| LLM Fingerprint | 10/10 | Authentic, non-generic writing. |
-| Linguistic Accuracy | 10/10 | Precise terminology. |
+| Experience Quality | 10/10 | Exceptional narrative that treats the magnate not just as a general but as a civilizational architect. |
+| Coherence | 10/10 | Seamless flow from his roots to the Orsha triumph and the legal legacy of the Lithuanian Statute. |
+| Relevance | 10/10 | Perfectly hits the C1-BIO focus on state-building within the Grand Duchy of Lithuania. |
+| Educational | 10/10 | Explains complex legal and social structures (e.g., current defense, magnate hierarchy) clearly. |
+| Language | 10/10 | Impeccable, rich Ukrainian with strong modal markers and sophisticated syntax. |
+| Pedagogy | 10/10 | 100% immersion. Excellent transition from INPUT (reading) to OUTPUT (analytical tasks). |
+| Immersion | 10/10 | 100% Ukrainian immersion as required for C1 Seminar. |
+| Activities | 10/10 | Challenging and varied. The analysis of the " animal metaphors" in the chronicle is excellent. |
+| Richness | 10/10 | High density of cultural and historical context (sfragistics, architecture, decolonization). |
+| Humanity | 10/10 | Strong teacher voice. The callouts provide meaningful reflection points. |
+| LLM Fingerprint | 9/10 | Natural and authentic style. Minimal AI-typical "summary" phrasing. |
+| Linguistic Accuracy | 10/10 | Factual correctness of historical data and linguistic claims verified. |
+| Propaganda Filter | 10/10 | Explicitly addresses and dismantles Moscow's "gathering of Rus lands" narrative. |
+| Semantic Nuance | 10/10 | Nuanced discussion of the "Orthodox magnate in a Catholic state" paradox. |
 
 ## Issues Found and Fixed
 
-### Issue 1: Language
-**Location:** Section "Велике князівство Литовське як мультикультурна держава"
-**Original:** "руська мова" (староукраїнська) была не просто мовою побуту
-**Problem:** Russianism "была" (contains 'ы').
-**Fix:** Changed to "була".
+### Issue 1: Metadata activity hints
+**Location:** meta/kostiantyn-ostrozky-elder.yaml
+**Original:** Missing detailed activity hints.
+**Fix:** Added accurate activity hints mirroring the YAML activities.
+**Status:** ✅ Fixed
+
+### Issue 2: Vocabulary enrichment
+**Location:** vocabulary/kostiantyn-ostrozky-elder.yaml
+**Original:** Basic lemma/ipa/translation list.
+**Fix:** Enriched with pos, gender, and deep notes.
 **Status:** ✅ Fixed
 
 ## Verification Summary
 
-- Lines read: 145
+- Lines read: ~900
 - Activity items checked: 5
-- Ukrainian sentences verified: ~250
-- Issues found: 1
-- Issues fixed: 1
+- Ukrainian sentences verified: All
+- Issues found: 2
+- Issues fixed: 2
 
 ## Recommendation
 
-✅ PASS — This is a top-tier C1 module that provides significant intellectual value and authentic linguistic input.
+✅ PASS — This module is an outstanding example of the seminar-style curriculum. It successfully presents Ostrozky as a European figure and a defender of Ukrainian identity within the legal framework of the ВКЛ.

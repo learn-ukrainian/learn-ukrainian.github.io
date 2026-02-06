@@ -3,9 +3,91 @@ level: C1-BIO
 slug: mykhailo-drahomanov
 version: '2.0'
 id: c1-bio-046
-transliteration: none
+title: "Михайло Драгоманов: Політичний мислитель"
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4000
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- politics
+- philosophy
+- hromada
+content_outline:
+- section: Вступ — Архітектор європейської України
+  words: 400
+  points:
+  - Драгоманов як теоретик політичної суб'єктності
+  - Концепція "європеїзації" України
+- section: Ранні роки та освіта (1841-1864)
+  words: 600
+  points:
+  - Походження з роду "драгоманів"
+  - Вплив батька та декабристських ідей
+  - Навчання в Київській університеті
+- section: Київський період (1864-1876)
+  words: 700
+  points:
+  - Лідерство в "Старій Громаді"
+  - Дослідження фольклору з Антоновичем
+  - Звільнення та Емський указ
+- section: Еміграція та політична діяльність (1876-1895)
+  words: 800
+  points:
+  - Вільна українська друкарня в Женеві
+  - Часопис "Громада"
+  - Виступ на Паризькому конгресі 1878 р.
+- section: Політична філософія
+  words: 700
+  points:
+  - Федералізм та всевладдя громад
+  - "Держава для людини"
+  - Концепція "пропащого часу"
+- section: Останні роки та спадщина (1889-1895)
+  words: 800
+  points:
+  - Професор Софійського університету
+  - Вплив на Лесю Українку та Франка
+  - Актуальність ідей децентралізації
+sources:
+- name: Михайло Драгоманов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Драгоманов_Михайло_Петрович
+  type: primary
+  notes: Життєпис та політичні погляди
+- name: Енциклопедія історії України
+  url: http://resource.history.org.ua/
+  type: reference
+vocabulary_hints:
+  required:
+  - федералізм
+  - еміграція
+  - громадівець
+  - космополітизм
+  - прогрес
+  - деспотизм
+  - соціалізм
+  - публіцист
+  - інтелігенція
+  - автономія
+  recommended:
+  - децентралізація
+  - конституціоналізм
+  - етнографія
+  - субсидіарність
+  - суб'єктність
+activity_hints:
+- type: reading
+  focus: Програмні засади Драгоманова
+- type: essay-response
+  focus: Архітектор Європейської України
+- type: comparative-study
+  focus: Порівняння візій Драгоманова та Донцова
+vital_status: deceased
 build:
-  last_modified: '2026-02-05'
+  last_modified: '2026-02-06'

@@ -1,8 +1,8 @@
-# Audit Report: M71 — mykola-mikhnovskyi.md
-**Level:** C1-BIO | **Module:** M71 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M74 — mykola-mikhnovskyi.md
+**Level:** C1-BIO | **Module:** M74 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:09
+**Generated:** 2026-02-07 00:22:10
 
 ## Configuration
 **Type:** C1-biography
@@ -36,13 +36,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/mykola-mikhnovskyi-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-mikhnovskyi.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Постать Міхновського в сучасній історіографії»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/mikola-mikhnovskii-pershii-samostiinik/', 'title': '«Микола Міхновський: перший самостійник Наддніпрянщини»'}, 'tasks': ['«Як історики оцінюють конфлікт Міхновського з Винниченком сьогодні?»', '«Які нові факти про смерть діяча наводяться у сучасних дослідженнях?»', '«Знайдіть опис «Десяти заповідей» та проаналізуйте їхній вплив на молодь.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2160/4000 (raw: 2389)
@@ -55,12 +57,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

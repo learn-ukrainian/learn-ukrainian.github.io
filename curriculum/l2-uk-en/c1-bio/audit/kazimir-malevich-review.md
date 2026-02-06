@@ -1,8 +1,8 @@
-# Audit Report: M75 — kazimir-malevich.md
-**Level:** C1-BIO | **Module:** M75 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M78 — kazimir-malevich.md
+**Level:** C1-BIO | **Module:** M78 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:11
+**Generated:** 2026-02-07 00:22:12
 
 ## Configuration
 **Type:** C1-biography
@@ -35,13 +35,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/kazimir-malevich-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in kazimir-malevich.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Українське коріння Малевича: Дослідження»', 'resource': {'type': 'article', 'url': 'https://localhistory.org.ua/texts/statti/malevich-ukrayinskii-khudozhnik/', 'title': '«Казимір Малевич: Як українське село породило світовий авангард»'}, 'tasks': ['«Які саме дитячі спогади Малевича про українські села наводяться у статті?»', '«Як історики пояснюють вибір художником саме «української» ідентичності в анкетах?»', '«Знайдіть опис київського періоду роботи Малевича. Які проекти він не встиг реалізувати?»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ❌ 2006/4000 (raw: 2235)
@@ -54,12 +56,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

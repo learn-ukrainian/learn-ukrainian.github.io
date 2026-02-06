@@ -2,12 +2,12 @@
   "module": "36-metaphor-simile",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:14:19.083979Z",
+  "last_audit": "2026-02-06T20:13:07.063288Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.366797Z",
-    "meta": "2026-01-29T07:39:04.765024Z",
-    "activities": "2026-01-10T15:56:04.880898Z",
+    "meta": "2026-02-05T20:58:09.422448Z",
+    "activities": "2026-02-06T19:35:27.983365Z",
     "vocabulary": null,
     "plan": "2026-01-30T11:44:37.159900Z"
   },
@@ -33,19 +33,18 @@
       "message": "0 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Critical Template Violations",
       "3 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

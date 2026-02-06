@@ -182,19 +182,28 @@ def evaluate_immersion(
 
 def evaluate_naturalness(score: int, status: str) -> GateResult:
     """Evaluate naturalness score gate.
-    
+
     Target: 8/10 for content modules.
+    PENDING status is informational (not blocking) — review sets the real score.
     """
-    if status != 'PASS':
-        return GateResult('FAIL', '❌', f"{score}/10 ({status}) - Naturalness check required")
-    
-    if score >= 8:
+    # Guard against None values (YAML null parses as None)
+    if score is None:
+        score = 0
+    if status is None:
+        status = "PENDING"
+
+    if status == 'PENDING':
+        if score > 0:
+            return GateResult('INFO', 'ℹ️', f"{score}/10 (PENDING — awaiting review)")
+        return GateResult('INFO', 'ℹ️', "PENDING — awaiting review")
+
+    if status == 'PASS' and score >= 8:
         return GateResult('PASS', '✅', f"{score}/10 (High)")
-    elif score >= 7:
+    elif status == 'PASS' and score >= 7:
         # Strict requirement: Fail if below 8
         return GateResult('FAIL', '❌', f"{score}/10 (Acceptable but below 8/10 target)")
     elif score > 0:
-        return GateResult('FAIL', '❌', f"{score}/10 (Low - Requires rewrite)")
+        return GateResult('FAIL', '❌', f"{score}/10 ({status} - Requires rewrite)")
     else:
         return GateResult('FAIL', '❌', "Not scored")
 

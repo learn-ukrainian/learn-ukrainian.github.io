@@ -354,6 +354,57 @@
 
 ---
 
+## 2026-02-06 - Seminar Content: Encyclopedic vs. Analytical
+
+**Observation**: Gemini's feedback on C1-HIST modules identified five systematic gaps in Claude's seminar track drafts.
+
+**The Five Gaps (Claude → Gemini quality shift)**:
+
+1. **Depth**: ~1,700 words of facts → 5,600 words of analysis. "Karamzin wrote history" → "Karamzin constructed a teleological myth to justify aggression."
+2. **Decolonization lens**: Neutral/diplomatic → explicitly names appropriation, deconstructs myths. Added Newspeak tables, [!myth-buster] sections, deconstruction exercises.
+3. **Register**: Descriptive B2 prose → C1 academic vocabulary (телеологія, суб'єктність, наратив, легітимація, асиміляція). Removed English transliteration crutches.
+4. **Emotional stance**: Writing for a student learning facts → writing for a citizen defending identity. History as "national self-defense," Diaspora as "intellectual ark."
+5. **Activities**: Generic "read and discuss" → source evaluation, bias analysis, critical deconstruction with evidence fields.
+
+**Rule (when Claude writes seminar content)**:
+- Before submitting: apply the 5-point checklist as self-review gate
+- Ask: "Am I describing facts or analyzing implications?"
+- Ask: "Would this pass the Propaganda Filter (Rule 19)?"
+- Ask: "Is the register C1-academic or B2-descriptive?"
+- Ask: "Am I writing for a student or a citizen?"
+- Ask: "Are activities generic or require critical analysis?"
+- Gemini's metaphor: Claude builds walls and roof; content needs furniture, library, and fire
+
+**Division of Labor**:
+- Seminar tracks (c1-hist, c1-bio, b2-hist, lit): Gemini writes/polishes content
+- Core tracks (A1-C1): Claude can build these (more structural, less decolonization-dependent)
+- Infrastructure always: Claude (meta, plans, YAML, scripts, audit)
+
+**Applied**: 2026-02-06 (logged for self-improvement)
+
+---
+
+## 2026-02-06 - Missing .md Files Break Audit Discovery
+
+**Mistake**: Created 8 new C1-BIO figures with meta + plan YAML files but no `.md` content files. `npm run audit -- c1-bio` only showed 148 modules instead of 156.
+
+**Correction**: User reported "still only shows 148." Root cause: `audit_level.py` discovers modules by scanning `*.md` files in the level directory, not meta/plan YAMLs.
+
+**Rule**:
+- When adding new modules, always create ALL three file types: meta YAML + plan YAML + skeleton .md
+- The `.md` file is what the audit discovers — without it, the module is invisible
+- Also must add slug to `curriculum/l2-uk-en/curriculum.yaml` under the level's modules list
+- **Checklist for new modules**:
+  - [ ] `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (meta)
+  - [ ] `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (plan)
+  - [ ] `curriculum/l2-uk-en/{level}/{slug}.md` (content skeleton)
+  - [ ] `curriculum/l2-uk-en/curriculum.yaml` → modules list updated
+  - [ ] `curriculum/l2-uk-en/plans/{level}.yaml` → total_modules updated
+
+**Applied**: 2026-02-06 (created 8 skeleton .md files + updated curriculum.yaml)
+
+---
+
 ## Template for New Entries
 
 ```markdown

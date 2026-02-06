@@ -28,7 +28,7 @@ content_outline:
 - section: Внесок
   words: 400
   points:
-  - "Повчання дітям" як етичний кодекс
+  - '"Повчання дітям" як етичний кодекс'
   - Реформування законодавства ("Статут")
 - section: Останні роки
   words: 400
@@ -66,7 +66,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Володимир_Мономах
   type: primary
   notes: Детальний життєпис
-- name: "Повчання" Володимира Мономаха
+- name: '"Повчання" Володимира Мономаха'
   url: http://izbornyk.org.ua/
   type: primary
   notes: Оригінальний текст та коментарі
@@ -79,7 +79,7 @@ vocabulary_hints:
   - статут (statute)
 activity_hints:
 - type: reading
-  focus: Аналіз "Повчання дітям"
+  focus: 'Аналіз "Повчання дітям"'
   source: Primary sources (adapted)
 - type: critical-analysis
   focus: Причини київського повстання 1113 р.

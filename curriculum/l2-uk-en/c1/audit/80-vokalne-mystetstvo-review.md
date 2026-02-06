@@ -1,11 +1,9 @@
 # Audit Report: M80 — 80-vokalne-mystetstvo.md
-
-**Level:** C1 | **Module:** M80 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M80 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:44
+**Generated:** 2026-02-06 20:13:31
 
 ## Configuration
-
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія та сучасність українського вокалу | 12 | 5 | ✅ |
@@ -42,13 +39,11 @@
 - Low density activities: 0
 
 ## Recommendation
-
 **📝 UPDATE** (severity 20/100)
 
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
-
 - **Words:** ❌ 2134/3000 (raw: 2212)
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
@@ -64,15 +59,13 @@
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (fine-arts))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
 **Score:** 95% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 27 | 15 | 100% | 25% | 25.0% |
@@ -86,7 +79,6 @@
 | **TOTAL** | | | | | **95.3%** |
 
 ## Section Audit
-
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 96 | Included in Core |

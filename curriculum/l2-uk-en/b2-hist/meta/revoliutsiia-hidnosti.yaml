@@ -25,6 +25,7 @@ activity_hints:
   focus: Майдан 2004 та 2013
 - type: true-false
   focus: Хронологія та факти
+word_target: 4000
 build:
   last_modified: '2026-01-31'
 phase: HIST.13 [Russian Aggression]

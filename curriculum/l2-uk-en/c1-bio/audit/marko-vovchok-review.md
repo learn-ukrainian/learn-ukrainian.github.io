@@ -1,8 +1,8 @@
 # Audit Report: M42 — marko-vovchok.md
-**Level:** C1-BIO | **Module:** M42 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** C1-BIO | **Module:** M42 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:53
+**Generated:** 2026-02-07 00:27:27
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
+**Required Types:** critical-analysis, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -31,23 +31,23 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4539/4000 (raw: 4636)
+- **Words:** ✅ 4514/4000 (raw: 4607)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -74,8 +74,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 25 | Included in Core |
-| **Марко Вовчок: Голос пригноблених** | ⚪️ | 101 | Skipped |
+| **Intro/Narrative** | ✅ | 101 | Included in Core |
 | **Вступ — Росіянка, що стала українською письменницею** | ✅ | 577 | Included in Core |
 | **Ранні роки та шлюб (1833-1851)** | ⚪️ | 826 | Skipped |
 | **«Народні оповідання» (1851-1860)** | ⚪️ | 661 | Skipped |
@@ -83,4 +82,3 @@
 | **Повернення та пізня творчість (1878-1907)** | ⚪️ | 662 | Skipped |
 | **Спадщина та значення** | ⚪️ | 796 | Skipped |
 | **Підсумок** | ✅ | 180 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

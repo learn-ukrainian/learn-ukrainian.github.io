@@ -1,7 +1,7 @@
 # Audit Report: M68 — 68-ukrainian-house.md
 **Level:** C1 | **Module:** M68 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:37
+**Generated:** 2026-02-06 20:13:24
 
 ## Configuration
 **Type:** C1-culture
@@ -58,7 +58,7 @@
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (culture))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

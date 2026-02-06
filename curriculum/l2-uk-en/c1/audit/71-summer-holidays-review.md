@@ -1,7 +1,7 @@
 # Audit Report: M71 — 71-summer-holidays.md
 **Level:** C1 | **Module:** M71 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:39
+**Generated:** 2026-02-06 20:13:26
 
 ## Configuration
 **Type:** C1-culture
@@ -59,7 +59,7 @@
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (culture))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

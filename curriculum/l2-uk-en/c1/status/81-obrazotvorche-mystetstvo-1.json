@@ -2,14 +2,14 @@
   "module": "81-obrazotvorche-mystetstvo-1",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:45.116646Z",
+  "last_audit": "2026-02-06T20:13:32.233322Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-13T20:01:19.048469Z",
-    "meta": "2026-01-26T17:21:19.545692Z",
-    "activities": "2026-01-13T19:39:39.821123Z",
+    "meta": "2026-02-05T20:58:09.390695Z",
+    "activities": "2026-02-06T19:35:35.471777Z",
     "vocabulary": null,
-    "plan": "2026-01-26T17:21:19.545475Z"
+    "plan": "2026-01-30T11:52:01.064846Z"
   },
   "gates": {
     "meta": {
@@ -33,18 +33,18 @@
       "message": "0 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "1 Outline Compliance Errors",
+      "3 Outline Compliance Errors",
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

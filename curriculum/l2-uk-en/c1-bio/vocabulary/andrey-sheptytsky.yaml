@@ -1,1 +1,76 @@
-vocabulary: []
+vocabulary:
+- word: митрополит
+  ipa: "[mɪtrɔpɔˈlɪt]"
+  translation: metropolitan
+- word: аристократія
+  ipa: "[ɑrɪstɔˈkrɑt⁽ʲ⁾ijɑ]"
+  translation: aristocracy
+- word: чернецтво
+  ipa: "[t͡ʃɛrˈnɛt͡stʷɔ]"
+  translation: monasticism
+- word: інтронізація
+  ipa: "[intrɔn⁽ʲ⁾izɑˈt͡s⁽ʲ⁾ijɑ]"
+  translation: enthronement / installation
+- word: пастирське послання
+  ipa: "[ˈpɑstɪrsʲkɛ pɔˈslɑnʲnʲɑ]"
+  translation: pastoral letter
+- word: меценат
+  ipa: "[mɛt͡sɛˈnɑt]"
+  translation: patron of arts / philanthropist
+- word: праведник
+  ipa: "[ˈprɑwɛdnɪk]"
+  translation: righteous person
+- word: беатифікація
+  ipa: "[bɛɑtɪf⁽ʲ⁾ikɑˈt͡s⁽ʲ⁾ijɑ]"
+  translation: beatification
+- word: екуменізм
+  ipa: "[ɛkumɛˈn⁽ʲ⁾izm]"
+  translation: ecumenism
+- word: агентність
+  ipa: "[ɑˈɦɛntn⁽ʲ⁾istʲ]"
+  translation: agency
+- word: суб'єктність
+  ipa: "[subˈjɛktn⁽ʲ⁾istʲ]"
+  translation: subjectivity
+- word: деколонізація
+  ipa: "[dɛkɔlɔniˈzɑt͡s⁽ʲ⁾ijɑ]"
+  translation: decolonization
+- word: інституція
+  ipa: "[instɪˈtut͡s⁽ʲ⁾ijɑ]"
+  translation: institution
+- word: Голокост
+  ipa: "[ɦɔlɔˈkɔst]"
+  translation: Holocaust
+- word: пацифікація
+  ipa: "[pɑt͡sɪf⁽ʲ⁾ikɑˈt͡s⁽ʲ⁾ijɑ]"
+  translation: pacification
+- word: етичний імператив
+  ipa: "[ɛˈtɪt͡ʃnɪi̯ impɛrɑˈtɪu̯]"
+  translation: ethical imperative
+- word: ієрарх
+  ipa: "[ijɛˈrɑrx]"
+  translation: hierarch
+- word: монастир
+  ipa: "[mɔnɑˈstɪr]"
+  translation: monastery
+- word: богословська академія
+  ipa: "[bɔɦɔˈslɔu̯sʲkɑ ɑkɑˈdɛm⁽ʲ⁾ijɑ]"
+  translation: theological academy
+- word: преподобний
+  ipa: "[prɛpɔˈdɔbnɪi̯]"
+  translation: venerable
+- word: камертон
+  ipa: "[kɑmɛrˈtɔn]"
+  translation: tuning fork (metaphor)
+- word: прозелітизм
+  ipa: "[prɔzɛl⁽ʲ⁾iˈtɪzm]"
+  translation: proselytism
+- word: духовний провідник
+  ipa: "[duˈxɔu̯nɪi̯ prɔw⁽ʲ⁾idˈnɪk]"
+  translation: spiritual guide
+- word: національне відродження
+  ipa: "[nɑt͡s⁽ʲ⁾ioˈnɑlʲnɛ w⁽ʲ⁾idˈrɔd͡ʒːɛnʲnʲɑ]"
+  translation: national revival
+- word: заповіт
+  ipa: "[zɑpɔˈw⁽ʲ⁾it]"
+  translation: testament / legacy

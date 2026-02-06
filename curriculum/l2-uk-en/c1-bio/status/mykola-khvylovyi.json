@@ -2,11 +2,11 @@
   "module": "mykola-khvylovyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:22.171553Z",
+  "last_audit": "2026-02-07T00:22:23.215272Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.360073Z",
-    "meta": "2026-02-02T23:23:00.225112Z",
+    "meta": "2026-02-06T22:56:22.296054Z",
     "activities": "2026-01-27T15:34:56.202549Z",
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 3,
-      "message": "2236/4000 (raw: 2496) | pedagogy: 1 violations | richness: 92% < 95% min (biography)"
+      "message": "2236/4000 (raw: 2496) | pedagogy: 2 violations | richness: 92% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -45,6 +45,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

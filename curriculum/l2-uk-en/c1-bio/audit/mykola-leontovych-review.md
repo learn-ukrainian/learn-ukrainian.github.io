@@ -1,8 +1,8 @@
-# Audit Report: M73 — mykola-leontovych.md
-**Level:** C1-BIO | **Module:** M73 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M76 — mykola-leontovych.md
+**Level:** C1-BIO | **Module:** M76 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:10
+**Generated:** 2026-02-07 00:22:11
 
 ## Configuration
 **Type:** C1-biography
@@ -35,13 +35,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/mykola-leontovych-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-leontovych.yaml: Schema validation error at key '2': {'type': 'reading', 'title': '«Розслідування вбивства генія»', 'resource': {'type': 'article', 'url': 'https://www.istpravda.com.ua/articles/2011/01/21/17345/', 'title': '«Убивство Леонтовича: Справа чекіста Грищенка»'}, 'tasks': ['«Які докази причетності ДПУ до вбивства Леонтовича наводяться в статті?»', '«Як родина композитора намагалася зберегти правду про ту страшну ніч?»', '«Порівняйте радянську версію подій із даними відкритих архівів.»']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ❌ 1937/4000 (raw: 2159)
@@ -54,12 +56,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (biography))
 - **Richness:** ✅ 100% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

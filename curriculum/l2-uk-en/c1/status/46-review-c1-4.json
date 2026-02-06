@@ -2,7 +2,7 @@
   "module": "46-review-c1-4",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:14:25.142222Z",
+  "last_audit": "2026-02-06T20:13:12.666140Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.366879Z",
@@ -33,9 +33,9 @@
       "message": "0 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
@@ -44,6 +44,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

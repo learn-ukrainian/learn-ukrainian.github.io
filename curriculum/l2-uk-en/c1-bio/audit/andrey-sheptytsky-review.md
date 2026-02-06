@@ -1,12 +1,12 @@
-# Audit Report: M59 — andrey-sheptytsky.md
-**Level:** C1-BIO | **Module:** M59 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+# Audit Report: M61 — andrey-sheptytsky.md
+**Level:** C1-BIO | **Module:** M61 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:02
+**Generated:** 2026-02-07 00:22:03
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4300 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -17,96 +17,82 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Андрей Шептицький: Моральний опір | 2 | 1 | ✅ |
+| 2 | essay-response | Есе: Український Мойсей | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз етичного імперативу | 1 | 1 | ✅ |
+| 4 | comparative-study | Шептицький та Вишинський: Духовний опір | 1 | 1 | ✅ |
+| 5 | true-false | Факти про Андрея Шептицького | 10 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
+
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in andrey-sheptytsky.yaml: Insufficient activities: 0 found, minimum 3 required for C1-BIO
+- **[YAML_SCHEMA_VIOLATION]** Schema error in andrey-sheptytsky.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 59 has 4.3% immersion (target: 90.0%+)
-  - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## Recommendation
-**🔄 REWRITE** (severity 80/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
-- Immersion 91% off target (major rebalancing needed)
-- Activity count below minimum
-- Activity density below minimum
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 9/4000 (raw: 161)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/3 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 1/5
+- **Words:** ✅ 4940/4300 (raw: 5368)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** ❌ 4.3% LOW (target 95-100% (biography))
-- **Richness:** ❌ 11% < 95% min (biography) - REWRITE needed
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
+- **Richness:** ❌ 92% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 11% (minimum: 95%)
+**Score:** 92% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 0 | 4 | 0% | 19% | 0.0% |
-| engagement | 1 | 6 | 17% | 14% | 2.4% |
-| quotes | 0 | 3 | 0% | 14% | 0.0% |
-| cultural | 0 | 4 | 0% | 10% | 0.0% |
-| visual | 0 | 4 | 0% | 10% | 0.0% |
-| timeline_markers | 1 | 8 | 12% | 10% | 1.1% |
-| legacy | 0 | 2 | 0% | 10% | 0.0% |
-| variety | 0.93 | - | 93% | 5% | 4.4% |
-| paragraph_var | 0.43 | - | 43% | 5% | 2.0% |
-| questions | 1 | 3 | 33% | 5% | 1.6% |
-| **TOTAL** | | | | | **11.6%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
-- ❌ **NO_QUOTES**
-  - FIX:
-    Add 2+ direct quotes from the subject. Use this format:
-    
-    > «[Exact quote from the person]»
-    > — *[Person name], [context/year]*
-- ❌ **NO_LEGACY_DISCUSSION**
-  - FIX:
-    Address this issue to improve richness score
-- ❌ **NO_TIMELINE**
-  - FIX:
-    Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).
+| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
+| engagement | 3 | 6 | 50% | 14% | 7.1% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **92.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Тест** | ⚪️ | 0 | Skipped |
-| **Пояснення** | ⚪️ | 7 | Skipped |
-| **Практика** | ⚪️ | 0 | Skipped |
-| **Діалоги** | ✅ | 2 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 107 | Included in Core |
+| **Вступ: Духовний архітектор нації** | ✅ | 320 | Included in Core |
+| **Повернення до коріння: Від графа до монаха (1865-1901)** | ⚪️ | 603 | Skipped |
+| **Будівничий інституцій: Церква, наука, музей** | ⚪️ | 724 | Skipped |
+| **Між вогнями: Перша світова та визвольні змагання** | ⚪️ | 652 | Skipped |
+| **Моральний імператив: Голокост та «Не убий» (1941-1944)** | ⚪️ | 816 | Skipped |
+| **Смерть і спадщина: Камертон української совісті** | ⚪️ | 693 | Skipped |
+| **Порівняльний аналіз: Шептицький та європейські духовні лідери** | ✅ | 139 | Included in Core |
+| **Критичне мислення** | ⚪️ | 182 | Skipped |
+| **Есе** | ⚪️ | 99 | Skipped |
+| **Зразок відповіді** | ⚪️ | 444 | Skipped |
+| **Підсумок: Камертон української совісті** | ✅ | 161 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **Vocabulary** | ➖ | 0 | Excluded Type |

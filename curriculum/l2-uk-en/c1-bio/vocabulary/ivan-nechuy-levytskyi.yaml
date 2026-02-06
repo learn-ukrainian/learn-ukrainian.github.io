@@ -1,1 +1,118 @@
-vocabulary: []
+items:
+- lemma: реалізм
+  ipa: /reɐˈlʲizm/
+  translation: realism
+  pos: noun
+  gender: m
+- lemma: оповідач
+  ipa: /opoʋʲiˈdɑt͡ʃ/
+  translation: narrator
+  pos: noun
+  gender: m
+- lemma: кріпацтво
+  ipa: /krʲiˈpat͡stʋo/
+  translation: serfdom
+  pos: noun
+  gender: n
+- lemma: селянство
+  ipa: /sɛˈlʲanstʋo/
+  translation: peasantry
+  pos: noun
+  gender: n
+- lemma: родинний конфлікт
+  ipa: /roˈdɪnnɪi̯ konˈflʲikt/
+  translation: family conflict
+  pos: noun
+  gender: m
+- lemma: діалектизм
+  ipa: /dʲiɐlɛkˈtɪzm/
+  translation: dialectism
+  pos: noun
+  gender: m
+- lemma: просторіччя
+  ipa: /prostoˈrʲit͡ʃt͡ʃɐ/
+  translation: colloquial speech
+  pos: noun
+  gender: n
+- lemma: візуальний стиль
+  ipa: /ʋʲizuˈɑlʲnɪi̯ stɪlʲ/
+  translation: visual style
+  pos: noun
+  gender: m
+- lemma: народницький
+  ipa: /nɐˈrɔdnɪt͡sʲkɪi̯/
+  translation: populist
+  pos: adj
+- lemma: етнографічний
+  ipa: /etnoɦrɐˈfʲit͡ʃnɪi̯/
+  translation: ethnographic
+  pos: adj
+- lemma: дрібні чвари
+  ipa: /ˈdrʲibnʲi ˈt͡ʃʋarɪ/
+  translation: petty quarrels
+  pos: noun
+  gender: f
+- lemma: сільський побут
+  ipa: /sʲilʲˈsʲkɪi̯ ˈpɔbʊt/
+  translation: village life
+  pos: noun
+  gender: m
+- lemma: соціальна критика
+  ipa: /sot͡sʲiˈɑlʲnɐ ˈkrɪtɪkɐ/
+  translation: social criticism
+  pos: noun
+  gender: f
+- lemma: натуралізм
+  ipa: /nɐturɐˈlʲizm/
+  translation: naturalism
+  pos: noun
+  gender: m
+- lemma: мовна полеміка
+  ipa: /ˈmɔwnɐ poˈlɛmʲikɐ/
+  translation: language polemic
+  pos: noun
+  gender: f
+- lemma: патріархальний
+  ipa: /pɐtrʲiɐrˈxɑlʲnɪi̯/
+  translation: patriarchal
+  pos: adj
+- lemma: іронія
+  ipa: /iˈrɔnʲijɐ/
+  translation: irony
+  pos: noun
+  gender: f
+- lemma: сатира
+  ipa: /sɐˈtɪrɐ/
+  translation: satire
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: /ɐsɪmʲilʲˈɑt͡sʲijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subjekˈtnʲistʲ/
+  translation: agency
+  pos: noun
+  gender: f
+- lemma: ментальність
+  ipa: /mentˈɑlʲnʲistʲ/
+  translation: mentality
+  pos: noun
+  gender: f
+- lemma: деконструкція
+  ipa: /dekonˈstrukt͡sʲijɐ/
+  translation: deconstruction
+  pos: noun
+  gender: f
+- lemma: канон
+  ipa: /kɐˈnɔn/
+  translation: canon
+  pos: noun
+  gender: m
+- lemma: модернізація
+  ipa: /modernʲizˈat͡sʲijɐ/
+  translation: modernization
+  pos: noun
+  gender: f

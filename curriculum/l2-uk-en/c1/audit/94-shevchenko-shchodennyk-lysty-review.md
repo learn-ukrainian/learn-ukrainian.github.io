@@ -1,7 +1,7 @@
 # Audit Report: M94 — 94-shevchenko-shchodennyk-lysty.md
 **Level:** C1 | **Module:** M94 | **Phase:** C1.6 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:49
+**Generated:** 2026-02-06 20:13:39
 
 ## Configuration
 **Type:** C1-literature
@@ -67,7 +67,7 @@
 - **Immersion:** 🇺🇦 99.8% (target 90-100% (literature))
 - **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 90%)

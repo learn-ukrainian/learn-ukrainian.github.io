@@ -2,13 +2,13 @@
   "module": "ivan-franko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T20:46:36.630351Z",
+  "last_audit": "2026-02-07T00:21:59.512098Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T20:44:57.793365Z",
-    "meta": "2026-02-05T20:36:11.903851Z",
-    "activities": "2026-02-05T20:21:12.746491Z",
-    "vocabulary": "2026-02-05T20:18:41.795910Z",
+    "md": "2026-02-06T22:56:22.282319Z",
+    "meta": "2026-02-06T22:56:22.290048Z",
+    "activities": "2026-02-06T22:56:22.239870Z",
+    "vocabulary": "2026-02-06T22:56:22.352208Z",
     "plan": null
   },
   "gates": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "4147/4000 (raw: 4188) | richness: 90% < 95% min (biography)"
+      "message": "5333/4300 (raw: 5755) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 1
   }

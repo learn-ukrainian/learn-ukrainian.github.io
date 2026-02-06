@@ -338,7 +338,7 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     # Includes track levels: lit, b2-hist, c1-bio, b2-pro, c1-pro
     level_match = None
     for parent in yaml_path.parents:
-        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'b2-pro', 'c1-pro']:
+        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'c1-hist', 'oes', 'ruth', 'b2-pro', 'c1-pro']:
             level_match = parent.name
             break
 
@@ -378,9 +378,16 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
         return len(errors) == 0, errors
 
     # Handle both formats: list of activities or dict with 'activities' key
-    activities = data if isinstance(data, list) else data.get('activities', [])
-
-    if not isinstance(activities, list):
+    if isinstance(data, dict) and 'activities' in data:
+        activities = data.get('activities', [])
+        errors.append(
+            "⚠️ YAML uses dictionary wrapper (`activities:` key). "
+            "Activities MUST be a bare list at root level. "
+            "Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>"
+        )
+    elif isinstance(data, list):
+        activities = data
+    else:
         return False, ["Invalid YAML structure: expected list of activities"]
 
     # FIRST: Validate entire array against level schema (checks minItems, etc.)
@@ -838,13 +845,11 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
     if not data:
         return 0, []
 
-    # Handle both formats
+    # Handle both formats — extract activities list
     if isinstance(data, dict) and 'activities' in data:
         activities = data['activities']
-        root_is_dict = True
     elif isinstance(data, list):
         activities = data
-        root_is_dict = False
     else:
         return 0, ["Invalid YAML structure"]
 
@@ -864,17 +869,13 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
         else:
             activities_to_keep.append(activity)
 
-    # Save if modifications were made and not dry run
+    # Save — ALWAYS as bare list
     if removed_count > 0:
         if not dry_run:
             try:
                 with open(yaml_path, 'w', encoding='utf-8') as f:
-                    if root_is_dict:
-                        yaml.dump({'activities': activities_to_keep}, f, allow_unicode=True,
-                                 default_flow_style=False, sort_keys=False)
-                    else:
-                        yaml.dump(activities_to_keep, f, allow_unicode=True,
-                                 default_flow_style=False, sort_keys=False)
+                    yaml.dump(activities_to_keep, f, allow_unicode=True,
+                             default_flow_style=False, sort_keys=False)
                 all_messages.insert(0, f"✅ Removed {removed_count} forbidden activities from {yaml_path.name}")
             except Exception as e:
                 all_messages.insert(0, f"❌ Error saving: {e}")
@@ -932,13 +933,17 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     if not data:
         return 0, []
 
-    # Handle both formats
+    # Handle both formats — auto-unwrap dictionary wrapper to bare list
     if isinstance(data, dict) and 'activities' in data:
         activities = data['activities']
-        root_is_dict = True
+        # Strip metadata keys (module, level, etc.) and unwrap to bare list
+        stripped_keys = [k for k in data.keys() if k != 'activities']
+        if stripped_keys:
+            all_fixes.append(f"✓ Stripped metadata keys from YAML: {', '.join(stripped_keys)}")
+        all_fixes.append("✓ Unwrapped `activities:` dictionary to bare list (required format)")
+        total_fixes += 1
     elif isinstance(data, list):
         activities = data
-        root_is_dict = False
     else:
         return 0, ["Invalid YAML structure"]
 
@@ -955,16 +960,12 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
             for fix in fixes:
                 all_fixes.append(f"    ✓ {fix}")
 
-    # Save if modifications were made and not dry run
+    # Save — ALWAYS as bare list (never re-wrap in dictionary)
     if total_fixes > 0 and not dry_run:
         try:
             with open(yaml_path, 'w', encoding='utf-8') as f:
-                if root_is_dict:
-                    yaml.dump({'activities': activities}, f, allow_unicode=True,
-                             default_flow_style=False, sort_keys=False)
-                else:
-                    yaml.dump(activities, f, allow_unicode=True,
-                             default_flow_style=False, sort_keys=False)
+                yaml.dump(activities, f, allow_unicode=True,
+                         default_flow_style=False, sort_keys=False)
             all_fixes.insert(0, f"✅ Saved {total_fixes} fixes to {yaml_path.name}")
         except Exception as e:
             all_fixes.insert(0, f"❌ Error saving fixes: {e}")

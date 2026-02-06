@@ -1931,6 +1931,23 @@ scripts/audit_module.sh curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md
 
 **Full workflow:** `docs/CORE-B-WORKFLOW.md`
 
+### Core Track Full Rebuild (A1/A2/B1/B2/C1/C2/PRO)
+
+For core tracks, use the 4-phase full-rebuild workflow that chains research, build, review, and verification:
+
+```bash
+/full-rebuild-core {level} {num}
+
+# Examples:
+/full-rebuild-core a1 5               # Core A (beginner)
+/full-rebuild-core b1 15              # Core B (immersion)
+/full-rebuild-core b2 10 --from=review  # Resume from review
+```
+
+**Phases:** Research (Phase 0) -> Build via /module (Phase 1) -> Review (Phase 2) -> Verify (Phase 3)
+
+Auto-detects Core A vs Core B workflow. See `claude_extensions/commands/full-rebuild-core.md` for full details.
+
 ### Seminar Track Full Rebuild
 
 For seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:

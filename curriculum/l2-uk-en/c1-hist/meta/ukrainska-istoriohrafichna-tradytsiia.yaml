@@ -1,0 +1,85 @@
+id: c1-hist-02
+slug: ukrainska-istoriohrafichna-tradytsiia
+title: "Українська історіографічна традиція"
+subtitle: "Від Грушевського до Плохія: боротьба за власний наратив"
+version: '2.0'
+phase: C1-HIST
+focus: history
+pedagogy: seminar
+duration: 120
+transliteration: none
+tags:
+- historiography
+- hrushevsky
+- diaspora-studies
+- decolonization
+grammar: []
+objectives:
+- "Простежити еволюцію української історичної думки від Грушевського до сьогодення"
+- "Оцінити внесок Михайла Грушевського в деколонізацію історичного наративу"
+- "Порівняти внутрішню, діаспорну та західну історіографічні традиції"
+naturalness:
+  score: 10
+  status: PASS
+  last_check: '2026-02-06'
+word_target: 4000
+content_outline:
+- section: "Вступ — Чому українська історіографія особлива?"
+  words: 600
+  points:
+  - "Історія бездержавної нації"
+  - "Писати історію під забороною"
+- section: "Михайло Грушевський — батько української історії"
+  words: 1200
+  points:
+  - "Біографія та роль у НТШ"
+  - "Революційна схема історії України-Руси"
+- section: "Львівська школа до 1939"
+  words: 800
+  points:
+  - "НТШ як неофіційна академія"
+  - "Крип'якевич, Томашівський, Кордуба"
+- section: "Діаспорна історіографія (1945–1991)"
+  words: 800
+  points:
+  - "Дорошенко, Полонська-Василенко, Оглоблин"
+  - "Гарвардський та Канадський інститути"
+- section: "Західні історики України"
+  words: 600
+  points:
+  - "Субтельний, Маґочі, Снайдер"
+  - "Сергій Плохій та сучасна перспектива"
+- section: "Нова українська історіографія після 1991"
+  words: 800
+  points:
+  - "Звільнення архівів КДБ"
+  - "Переосмислення Голодомору та ОУН-УПА"
+- section: "Підсумок"
+  words: 200
+  points:
+  - "Безперервність традиції"
+sources:
+- name: "Михайло Грушевський. Звичайна схема руської історії"
+  url: "https://litopys.org.ua/hrushukr/ihu01.htm"
+  type: primary
+- name: "Наталія Полонська-Василенко. Українська історіографія"
+  url: "https://diasporiana.org.ua/ukrainika/polonska-vasilenko-n-ukrayinska-istoriografiya/"
+  type: secondary
+vocabulary_hints:
+  required:
+  - "історіографія"
+  - "тяглість"
+  - "суб'єктність"
+  - "діаспора"
+  recommended:
+  - "деколонізація"
+  - "академічна традиція"
+activity_hints:
+- type: reading
+  focus: "Аналіз «Звичайної схеми» Грушевського"
+- type: comparative-study
+  focus: "Порівняння радянської та діаспорної шкіл"
+- type: essay-response
+  focus: "Роль діаспори у збереженні пам'яті"
+build:
+  last_modified: '2026-02-06'

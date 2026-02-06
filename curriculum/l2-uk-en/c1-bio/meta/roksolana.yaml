@@ -4,7 +4,7 @@ slug: roksolana
 version: '2.0'
 id: c1-bio-014
 naturalness:
-  score: 9
+  score: 10
   status: PASS
 description: Biography of Roksolana (Hürrem Sultan), the Ukrainian slave girl who
   became the legal wife of Suleiman the Magnificent. Explores her political influence,
@@ -17,19 +17,56 @@ tags:
 - ottoman-empire
 - women-in-history
 - diplomacy
-build:
-  last_modified: '2026-02-02'
+vital_status: deceased
 content_outline:
 - section: Вступ — Велична жінка Османської імперії
   words: 400
+  points:
+  - Шлях від невільниці до Хасекі
+  - Злам традицій османського двору
 - section: Життєпис
   words: 800
+  points:
+  - Походження з Рогатина
+  - Життя в гаремі та освіта
+  - Офіційний шлюб із Сулейманом
 - section: Внесок
   words: 800
+  points:
+  - Дипломатична діяльність (Польща, Персія)
+  - Благодійний комплекс Хасекі в Стамбулі
 - section: Останні роки
   words: 500
+  points:
+  - Боротьба за престолонаслідування
+  - Смерть та мавзолей
 - section: Спадщина
   words: 1100
+  points:
+  - Феномен Жіночого султанату
+  - Образ в українській культурі та фольклорі
+  - Світовий резонанс
 - section: Підсумок — Жінка, що змінила імперію
   words: 400
+  points:
+  - Тріумф волі над обставинами
+  - Урок лідерства
 word_target: 4000
+vocabulary_hints:
+  required:
+  - Хасекі (Haseki)
+  - гарем (harem)
+  - вакф (wakf)
+  - падишах (padishah)
+  - дипломатія (diplomacy)
+activity_hints:
+- type: reading
+  focus: Venetian ambassador report on Hurrem Sultan
+  source: П’єтро Брагадін (1526)
+- type: critical-analysis
+  focus: Analyzing diplomatic language in her letters
+- type: essay-response
+  focus: Roksolana as an architect of her own fate
+  word_target: 300
+build:
+  last_modified: '2026-02-06'

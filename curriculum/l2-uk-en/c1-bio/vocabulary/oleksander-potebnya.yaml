@@ -1,75 +1,120 @@
-- word: мовознавець
+items:
+- lemma: мовознавець
+  ipa: /mɔwɔˈznawɛt͡sʲ/
   translation: linguist
-  ipa: [mɔwɔzˈnawɛt͡sʲ]
-  definition: Фахівець з мовознавства.
-  usage_example: Олександр Потебня — видатний український мовознавець.
-- word: філологія
+  pos: noun
+  gender: m
+- lemma: філологія
+  ipa: /fʲiloloˈɦʲijɐ/
   translation: philology
-  ipa: [fʲiɫɔˈɫɔɦijɐ]
-  definition: Сукупність наук, що вивчають культуру народу через його мову та літературу.
-  usage_example: Він присвятив своє життя філології.
-- word: внутрішня форма слова
+  pos: noun
+  gender: f
+- lemma: внутрішня форма слова
+  ipa: /wnuˈtrʲiʃnʲɐ ˈfɔrmɐ ˈslɔwɐ/
   translation: inner form of word
-  ipa: [wnuˈtrʲiʃnʲɐ ˈfɔrmɐ ˈsɫɔwɐ]
-  definition: Спосіб, яким мова представляє значення слова; етимологічний образ.
-  usage_example: Внутрішня форма слова є ключовим поняттям теорії Потебні.
-- word: семіотика
+  pos: noun
+  gender: f
+- lemma: семіотика
+  ipa: /sɛmʲiˈɔtɪkɐ/
   translation: semiotics
-  ipa: [sɛmʲiˈɔtɪkɐ]
-  definition: Наука про знаки та знакові системи.
-  usage_example: Ідеї Потебні випередили розвиток семіотики.
-- word: етимологія
+  pos: noun
+  gender: f
+- lemma: етимологія
+  ipa: /etɪmoˈlɔɦʲijɐ/
   translation: etymology
-  ipa: [ɛtɪmɔˈɫɔɦijɐ]
-  definition: Наука про походження слів.
-  usage_example: Етимологія допомагає зрозуміти історію мови.
-- word: граматика
+  pos: noun
+  gender: f
+- lemma: граматика
+  ipa: /ɦrɐˈmɑtɪkɐ/
   translation: grammar
-  ipa: [ɦrɑˈmɑtɪkɐ]
-  definition: Будова мови та наука про неї.
-  usage_example: Він написав ґрунтовну працю з граматики.
-- word: фонетика
+  pos: noun
+  gender: f
+- lemma: фонетика
+  ipa: /foˈnɛtɪkɐ/
   translation: phonetics
-  ipa: [fɔˈnɛtɪkɐ]
-  definition: Розділ мовознавства, що вивчає звуковий лад мови.
-  usage_example: Фонетика української мови має свої особливості.
-- word: мислення
+  pos: noun
+  gender: f
+- lemma: мислення
+  ipa: /ˈmɪslɛnʲːɐ/
   translation: thinking
-  ipa: [ˈmɪsɫɛnʲːɐ]
-  definition: Процес пізнавальної діяльності людини.
-  usage_example: Мова нерозривно пов'язана з мисленням.
-- word: філософія мови
+  pos: noun
+  gender: n
+- lemma: філософія мови
+  ipa: /fʲiloˈsɔfʲijɐ ˈmɔwɪ/
   translation: philosophy of language
-  ipa: [fʲiɫɔˈsɔfʲijɐ ˈmɔwɪ]
-  definition: Розділ філософії, що вивчає природу та функції мови.
-  usage_example: Потебня вважається основоположником української філософії мови.
-- word: наукова школа
+  pos: noun
+  gender: f
+- lemma: наукова школа
+  ipa: /nɐu̯ˈkɔwɐ ˈʃkɔlɐ/
   translation: scientific school
-  ipa: [nɐuˈkɔwɐ ˈʃkɔɫɐ]
-  definition: Група вчених, об'єднаних спільними поглядами та методами.
-  usage_example: Харківська філологічна школа виховала багато талантів.
-- word: когнітивний
+  pos: noun
+  gender: f
+- lemma: когнітивний
+  ipa: /koɦnʲiˈtɪwnɪi̯/
   translation: cognitive
-  ipa: [kɔɦnʲiˈtɪwnɪj]
-  definition: Пов'язаний з пізнанням, мисленням.
-  usage_example: Когнітивний підхід у лінгвістиці стає дедалі популярнішим.
-- word: психолінгвістика
+  pos: adj
+- lemma: психолінгвістика
+  ipa: /psɪxolʲinˈɦʋistɪkɐ/
   translation: psycholinguistics
-  ipa: [psɪxɔlʲinˈɦwistɪkɐ]
-  definition: Наука про психологічні та нейробіологічні фактори, що дозволяють людям набувати, використовувати та розуміти мову.
-  usage_example: Психолінгвістика досліджує зв'язок між мозком і мовою.
-- word: морфологія
+  pos: noun
+  gender: f
+- lemma: морфологія
+  ipa: /morfoˈlɔɦʲijɐ/
   translation: morphology
-  ipa: [mɔrfɔˈɫɔɦijɐ]
-  definition: Розділ граматики, що вивчає форму слова.
-  usage_example: Морфологія вивчає частини мови.
-- word: синтаксис
+  pos: noun
+  gender: f
+- lemma: синтаксис
+  ipa: /ˈsɪntɐksɪs/
   translation: syntax
-  ipa: [ˈsɪntɐksɪs]
-  definition: Розділ граматики, що вивчає будову речень.
-  usage_example: Синтаксис регулює порядок слів у реченні.
-- word: діалектологія
+  pos: noun
+  gender: m
+- lemma: діалектологія
+  ipa: /dʲiɐlɛktoˈlɔɦʲijɐ/
   translation: dialectology
-  ipa: [dʲiɐlɛktɔˈɫɔɦijɐ]
-  definition: Наука про місцеві різновиди мови (діалекти).
-  usage_example: Він зібрав багато матеріалу з діалектології.
+  pos: noun
+  gender: f
+- lemma: асиміляція
+  ipa: /ɐsɪmʲilʲˈat͡sʲijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+- lemma: денаціоналізація
+  ipa: /denɐt͡sʲionɐlʲizˈat͡sʲijɐ/
+  translation: denationalization
+  pos: noun
+  gender: f
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: антропологія
+  ipa: /ɐntropoloˈɦʲijɐ/
+  translation: anthropology
+  pos: noun
+  gender: f
+- lemma: фольклорист
+  ipa: /folʲkloˈrɪst/
+  translation: folklorist
+  pos: noun
+  gender: m
+- lemma: міфологія
+  ipa: /mʲifoloˈɦʲijɐ/
+  translation: mythology
+  pos: noun
+  gender: f
+- lemma: етимологія
+  ipa: /etɪmoˈlɔɦʲijɐ/
+  translation: etymology
+  pos: noun
+  gender: f
+- lemma: семантика
+  ipa: /sɛmˈɑntɪkɐ/
+  translation: semantics
+  pos: noun
+  gender: f
+- lemma: парадигма
+  ipa: /pɐrɐˈdɪɦmɐ/
+  translation: paradigm
+  pos: noun
+  gender: f

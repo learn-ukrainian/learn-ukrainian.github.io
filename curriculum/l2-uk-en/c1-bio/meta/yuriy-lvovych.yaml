@@ -15,21 +15,21 @@ tags:
 - galicia-volhynia
 - royalty
 - church
-vocabulary_count: 24
+vocabulary_count: 25
 content_outline:
 - section: Вступ — Король Русі
-  words: 420
+  words: 500
   points:
   - Титул Rex Russiae
   - Спадщина
 - section: Життєпис
-  words: 1150
+  words: 950
   points:
   - Молодість у Белзі
   - Об'єднання земель
   - Династичні шлюби
 - section: Внесок
-  words: 2100
+  words: 1800
   points:
   - Королівський титул
   - Галицька митрополія
@@ -46,9 +46,28 @@ content_outline:
   - Ідея королівства
   - Європейська ідентичність
 - section: Підсумок — Завершення королівської епохи
-  words: 320
+  words: 250
   points:
   - Кінець династії
   - Історичне значення
+word_target: 4000
+vocabulary_hints:
+  required:
+  - король (king)
+  - митрополія (metropolitanate)
+  - печатка (seal)
+  - суверенітет (sovereignty)
+  - легітимація (legitimation)
+activity_hints:
+- type: reading
+  focus: Analysis of the royal seal
+  source: Печатка Юрія I Львовича
+- type: critical-analysis
+  focus: Symbolism and terminology of the seal
+- type: essay-response
+  focus: Political significance of the Galician Metropolia
+  word_target: 250
+- type: comparative-study
+  focus: Galicia-Volhynia vs Moscow political models
 build:
-  last_modified: '2026-02-03'
+  last_modified: '2026-02-06'

@@ -1,7 +1,7 @@
 # Audit Report: M42 — 42-politeness-strategies.md
 **Level:** C1 | **Module:** M42 | **Phase:** C1.4 | **Pedagogy:** Sociolinguistics | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:22
+**Generated:** 2026-02-06 20:13:10
 
 ## Configuration
 **Type:** C1
@@ -60,7 +60,7 @@
 - **Immersion:** 🇺🇦 99.5% (target 90-100%)
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

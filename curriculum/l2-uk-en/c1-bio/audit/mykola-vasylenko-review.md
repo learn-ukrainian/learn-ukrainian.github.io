@@ -1,8 +1,8 @@
-# Audit Report: M62 — mykola-vasylenko.md
-**Level:** C1-BIO | **Module:** M62 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 1/10 (PENDING)
+# Audit Report: M65 — mykola-vasylenko.md
+**Level:** C1-BIO | **Module:** M65 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:04
+**Generated:** 2026-02-07 00:22:05
 
 ## Configuration
 **Type:** C1-biography
@@ -20,68 +20,78 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | true-false | «Факти та міфи» | 5 | 5 | ✅ |
-| 2 | essay-response | «Василенко і Гетьманат» | 1 | 1 | ✅ |
-| 3 | critical-analysis | «Репресії проти інтелігенції» | 1 | 1 | ✅ |
-| 4 | comparative-study | «Василенко та Грушевський» | 1 | 1 | ✅ |
+| 1 | reading | Микола Василенко: Інституційна розбудова | 2 | 1 | ✅ |
+| 2 | essay-response | Есе: Держава як право і знання | 1 | 1 | ✅ |
+| 3 | critical-analysis | Аналіз інституційної агентності | 1 | 1 | ✅ |
+| 4 | comparative-study | Фундатори Академії: Василенко та Вернадський | 1 | 1 | ✅ |
+| 5 | true-false | Факти про Миколу Василенка | 10 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, critical-analysis, essay-response) ✅
-- Required types used: 1/2 (essay-response) ❌
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in mykola-vasylenko.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1965/4000 (raw: 2226)
-- **Activities:** ✅ 4/3
+- **Words:** ❌ 3810/4000 (raw: 4263)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 26/24
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
+- **Richness:** ❌ 94% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 94% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 11 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
+| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 13 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| legacy | 15 | 2 | 100% | 10% | 9.5% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| **TOTAL** | | | | | **94.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 114 | Included in Core |
-| **Вступ** | ✅ | 198 | Included in Core |
-| **Біографія** | ⚪️ | 1014 | Skipped |
-| **Історичний контекст** | ✅ | 202 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 152 | Included in Core |
-| **Критичне мислення** | ⚪️ | 136 | Skipped |
-| **Summary** | ✅ | 149 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 92 | Included in Core |
+| **Вступ: Архітектор інституційного суверенітету** | ✅ | 366 | Included in Core |
+| **Шлях вченого: Від Дерпта до «Киевской старины» (1866-1917)** | ⚪️ | 687 | Skipped |
+| **Гетьманат: Ренесанс української державності (1918)** | ⚪️ | 653 | Skipped |
+| **Академія як фортеця: Президентство та опір (1919-1923)** | ⚪️ | 630 | Skipped |
+| **Жертва терору та особиста драма (1923-1935)** | ⚪️ | 641 | Skipped |
+| **Порівняльний аналіз: Василенко та Вернадський** | ✅ | 99 | Included in Core |
+| **Критичне мислення** | ⚪️ | 137 | Skipped |
+| **Есе** | ⚪️ | 64 | Skipped |
+| **Зразок відповіді** | ⚪️ | 331 | Skipped |
+| **Підсумок: Держава як правовий акт** | ✅ | 110 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **Vocabulary** | ➖ | 0 | Excluded Type |

@@ -112,7 +112,7 @@ items:
     gender: f
     note: слов'янське письмо
   - lemma: релікварій
-    ipa: /re-li-ˈkwa-rij/
+    ipa: /relʲiˈkʋarʲij/
     translation: reliquary
     pos: noun
     gender: m
@@ -124,13 +124,13 @@ items:
     gender: m
     note: засновник або меценат храму
   - lemma: легітимація
-    ipa: /le-ɦi-tɪ-ma-ˈt͡sʲijɐ/
+    ipa: /leɦitɪmɐˈt͡sʲijɐ/
     translation: legitimation
     pos: noun
     gender: f
     note: визнання законності
   - lemma: суб'єктність
-    ipa: /sub-jɛk-ˈtɪw-nʲistʲ/
+    ipa: /subjɛkˈtɪʋnʲistʲ/
     translation: subjectivity / agency
     pos: noun
     gender: f

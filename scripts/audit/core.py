@@ -876,16 +876,19 @@ def audit_module(file_path: str) -> bool:
             meta_for_template = meta_data if meta_data else {}
             template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
             template_structure = template_parser.parse_template(template_path)
-            
-            print(f"  📋 Template: {template_path} (pedagogy: {template_structure.pedagogy})")
-            
-            # Run compliance checks
-            template_violations = tc_module.check_template_compliance(
-                content=content,
-                meta=meta_for_template,
-                template=template_structure
-            )
-            
+
+            if template_structure is None:
+                print(f"  ℹ️  No template mapping for {module_id_for_mapping} (skipping template compliance)")
+            else:
+                print(f"  📋 Template: {template_path} (pedagogy: {template_structure.pedagogy})")
+
+                # Run compliance checks
+                template_violations = tc_module.check_template_compliance(
+                    content=content,
+                    meta=meta_for_template,
+                    template=template_structure
+                )
+
             if template_violations:
                 critical_count = sum(1 for v in template_violations if v['severity'] == 'CRITICAL')
                 warning_count = sum(1 for v in template_violations if v['severity'] == 'WARNING')
@@ -1900,8 +1903,8 @@ def audit_module(file_path: str) -> bool:
 
     # Check if naturalness already evaluated in meta.yaml
     if meta_data and 'naturalness' in meta_data:
-        nat_score = meta_data['naturalness'].get('score', 0)
-        nat_status = meta_data['naturalness'].get('status', 'PENDING')
+        nat_score = meta_data['naturalness'].get('score', 0) or 0
+        nat_status = meta_data['naturalness'].get('status', 'PENDING') or 'PENDING'
 
     # Auto-check naturalness via Gemini if PENDING and --naturalness flag provided
     # Or if environment variable AUDIT_AUTO_NATURALNESS=1
@@ -1973,7 +1976,19 @@ def audit_module(file_path: str) -> bool:
 
     # Transliteration policy
     if not transliteration_allowed:
-        if not re.search(r'transliteration:\s*["\']?none["\']?', frontmatter_str):
+        translit_ok = False
+        if meta_data:
+            # Meta sidecar: YAML `none` parses as Python None, which means "no transliteration"
+            # If the field is absent, treat as "none" (default for levels that forbid it)
+            if 'transliteration' not in meta_data:
+                translit_ok = True  # Absent = default = no transliteration
+            else:
+                val = meta_data['transliteration']
+                translit_ok = (val is None or str(val).lower() == 'none')
+        if not translit_ok:
+            # Fallback: check frontmatter string (for legacy embedded frontmatter)
+            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', frontmatter_str))
+        if not translit_ok:
             print(f"❌ AUDIT FAILED: Level {level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
             has_critical_failure = True
 

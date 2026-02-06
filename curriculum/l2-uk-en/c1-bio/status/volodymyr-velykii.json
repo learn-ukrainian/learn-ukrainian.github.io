@@ -2,12 +2,12 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T17:24:47.381872Z",
+  "last_audit": "2026-02-07T00:21:27.382379Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.356076Z",
-    "meta": "2026-02-02T23:22:59.857629Z",
-    "activities": "2026-02-03T10:44:30.971879Z",
+    "md": "2026-02-06T22:56:22.355158Z",
+    "meta": "2026-02-06T22:56:22.305732Z",
+    "activities": "2026-02-06T22:56:22.242669Z",
     "vocabulary": "2026-01-29T20:57:20.584161Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5219/4000 (raw: 5267)"
+      "message": "6256/4300 (raw: 6880)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",

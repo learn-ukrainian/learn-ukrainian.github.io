@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M03 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:13:58
+**Generated:** 2026-02-06 20:12:43
 
 ## Configuration
 **Type:** C1-vocab
@@ -61,7 +61,7 @@
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/7
+- **Engagement:** ✅ 9/7
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
@@ -71,7 +71,7 @@
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
 - **Richness:** ❌ 74% < 95% min (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 74% (minimum: 95%)

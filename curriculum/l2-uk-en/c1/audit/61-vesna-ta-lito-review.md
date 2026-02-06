@@ -1,7 +1,7 @@
 # Audit Report: M61 — 61-vesna-ta-lito.md
 **Level:** C1 | **Module:** M61 | **Phase:** C1.5 | **Pedagogy:** Immersion & Analysis | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:33
+**Generated:** 2026-02-06 20:13:21
 
 ## Configuration
 **Type:** C1-culture
@@ -58,7 +58,7 @@
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (culture))
 - **Richness:** ✅ 96% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

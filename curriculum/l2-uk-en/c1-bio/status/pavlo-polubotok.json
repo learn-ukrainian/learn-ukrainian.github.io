@@ -2,11 +2,11 @@
   "module": "pavlo-polubotok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:45.712052Z",
+  "last_audit": "2026-02-07T00:21:43.566779Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T23:43:58.208936Z",
-    "meta": "2026-02-05T00:40:38.878187Z",
+    "meta": "2026-02-05T20:58:10.301340Z",
     "activities": "2026-02-05T11:54:25.332481Z",
     "vocabulary": "2026-02-04T23:38:13.253395Z",
     "plan": null

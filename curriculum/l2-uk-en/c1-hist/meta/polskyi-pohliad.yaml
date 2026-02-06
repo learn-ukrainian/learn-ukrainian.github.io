@@ -1,0 +1,94 @@
+id: c1-hist-05
+slug: polskyi-pohliad
+title: "Польський погляд на українську історію"
+subtitle: "Від колоніальних «Кресів» до стратегічного партнерства"
+version: '2.0'
+phase: C1-HIST
+focus: history
+pedagogy: seminar
+duration: 120
+transliteration: none
+tags:
+- polish-ukrainian-relations
+- historiography
+- giedroyc-doctrine
+- decolonization
+grammar: []
+objectives:
+- "Проаналізувати еволюцію польського наративу від колоніального до партнерського"
+- "Оцінити роль доктрини Ґедройця у формуванні сучасних відносин"
+- "Визначити ключові конфліктні точки пам'яті та шляхи їх подолання"
+naturalness:
+  score: 10
+  status: PASS
+  last_check: '2026-02-06'
+word_target: 4000
+content_outline:
+- section: "Вступ — Два сусіди, дві пам'яті"
+  words: 700
+  points:
+  - "600 років спільної історії"
+  - "Чому польський погляд важливий для України"
+- section: "Традиційний польський наратив — «Креси»"
+  words: 1200
+  points:
+  - "Міф про Креси як «втрачений рай»"
+  - "Образ українця в польському романтизмі"
+- section: "Міжвоєнна польська історіографія"
+  words: 1000
+  points:
+  - "Пілсудський vs Дмовський"
+  - "Пацифікація 1930 та її наслідки"
+- section: "Волинь 1943 у польській пам'яті"
+  words: 1250
+  points:
+  - "Термінологічна пастка: «геноцид» vs «трагедія»"
+  - "Контекст Другої світової війни"
+- section: "Революція Ґедройця"
+  words: 1300
+  points:
+  - "Часопис «Культура» та доктрина ULB"
+  - "Визнання кордонів як умова безпеки"
+- section: "Сучасна польська історіографія"
+  words: 1350
+  points:
+  - "Даніель Бовуа та деконструкція міфів"
+  - "Нове покоління істориків"
+- section: "2022 — Історичний перелом"
+  words: 1300
+  points:
+  - "Солідарність під час війни як нова основа"
+  - "Чи змінився наратив назавжди?"
+- section: "Спадщина та майбутнє"
+  words: 900
+  points:
+  - "Спільні уроки історії"
+  - "Вісь Варшава-Київ у Європі"
+sources:
+- name: "Даніель Бовуа. Трикутник український"
+  url: "https://uk.wikipedia.org/wiki/Даніель_Бовуа"
+  type: reference
+- name: "Єжи Ґедройць"
+  url: "https://uk.wikipedia.org/wiki/Ґедройць_Єжи"
+  type: reference
+- name: "Доктрина Ґедройця"
+  url: "https://uk.wikipedia.org/wiki/Доктрина_Ґедройця"
+  type: reference
+vocabulary_hints:
+  required:
+  - "Креси"
+  - "суб'єктність"
+  - "доктрина"
+  - "примирення"
+  recommended:
+  - "деколонізація"
+  - "асиміляція"
+activity_hints:
+- type: reading
+  focus: "Тексти Ґедройця та Бовуа"
+- type: essay-response
+  focus: "Вплив доктрини ULB"
+- type: critical-analysis
+  focus: "Деконструкція міфу про Креси"
+build:
+  last_modified: '2026-02-06'

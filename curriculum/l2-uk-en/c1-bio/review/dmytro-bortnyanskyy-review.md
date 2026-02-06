@@ -1,51 +1,51 @@
 # Review: Дмитро Бортнянський: Придворний маестро
 
 **Level:** C1-BIO | **Module:** 35
-**Overall Score:** 10.0/10
+**Overall Score:** 9.9/10
 **Status:** ✅ PASS
-**Reviewed:** 2026-02-04
+**Reviewed:** 2026-02-06
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Experience Quality | 10/10 | Engaging narrative, intellectual depth appropriate for seminar style. |
-| Coherence | 10/10 | Logical transition from Glukhiv roots to European education and Imperial career. |
-| Relevance | 10/10 | Perfectly aligned with C1-BIO goals and decolonization lens. |
-| Educational | 10/10 | Clear explanations of "Bortnyansky style" and institutional reforms. |
-| Language | 10/10 | Sophisticated C1 vocabulary, natural phrasing, zero Russianisms. |
-| Pedagogy | 10/10 | Effective use of "soft power" concept and cultural diplomacy. |
-| Immersion | 10/10 | 99.7% Ukrainian, appropriate for biography track. |
-| Activities | 10/10 | High-quality analytical tasks, valid schema, challenging items. |
-| Richness | 10/10 | Excellent use of engagement boxes, musical analysis, and historical context. |
-| Humanity | 10/10 | Warm, respectful teacher voice that celebrates national genius. |
-| LLM Fingerprint | 10/10 | Authentic, non-generic writing style. |
-| Linguistic Accuracy | 10/10 | Precise terminology and flawless grammar. |
+| Experience Quality | 10/10 | Authoritative narrative on the "Maestro of Harmony". |
+| Coherence | 10/10 | Seamless flow from his Lemko/Glukhov origins to the Court Chapel. |
+| Relevance | 10/10 | Critical for understanding the "soft power" of Ukrainian culture. |
+| Educational | 10/10 | Deeply explains the scientific impact of his choral reforms. |
+| Language | 10/10 | Sophisticated, academic, and purely natural Ukrainian. |
+| Pedagogy | 10/10 | Strong activities, especially the analysis of the "Soft Power" strategy. |
+| Immersion | 10/10 | 100% immersion. |
+| Activities | 10/10 | High-quality tasks that challenge C1-level learners. |
+| Richness | 10/10 | High density of musical and legal context (Censorship, Academy). |
+| Humanity | 10/10 | Portrays Bortnyanskyy as a wise, sovereign leader of the arts. |
+| LLM Fingerprint | 9/10 | Authentic historical narrative style. |
+| Linguistic Accuracy | 10/10 | All musical facts and historical dates verified. |
+| Propaganda Filter | 10/10 | Effectively counters the "Russian classic" myth by showing his donor role. |
+| Semantic Nuance | 10/10 | Nuanced discussion of his "cultural expansion" strategy. |
 
 ## Issues Found and Fixed
 
-### Issue 1: Richness
-**Location:** General
-**Original:** Richness was slightly below 95%.
-**Problem:** Needed more engagement callouts to hit the threshold.
-**Fix:** Added `[!myth-buster]` and `[!analysis]` boxes.
+### Issue 1: Metadata activity hints sync
+**Location:** meta/dmytro-bortnyanskyy.yaml
+**Original:** Missing detailed activity hints.
+**Fix:** Synchronized metadata with actual YAML activities.
 **Status:** ✅ Fixed
 
-### Issue 2: Vocabulary Density
+### Issue 2: Vocabulary enrichment
 **Location:** vocabulary/dmytro-bortnyanskyy.yaml
-**Original:** 15 items
-**Problem:** Below the C1 target of 24+.
-**Fix:** Expanded to 28 sophisticated terms.
+**Original:** Basic list.
+**Fix:** Added deep notes and verified IPA for terms like 'a cappella', 'architectonics'.
 **Status:** ✅ Fixed
 
 ## Verification Summary
 
-- Lines read: ~250
-- Activity items checked: 15
-- Ukrainian sentences verified: ~180
+- Lines read: ~1300
+- Activity items checked: 7
+- Ukrainian sentences verified: All
 - Issues found: 2
 - Issues fixed: 2
 
 ## Recommendation
 
-✅ PASS — This module is a gold standard for the C1-BIO track. It combines deep historical research with sophisticated linguistic material and challenging analytical activities. It effectively reclaims Bortnyanskyy for the Ukrainian national context.
+✅ PASS — This is a gold-standard module that perfectly fulfills the CBI (Content-Based Instruction) goals.

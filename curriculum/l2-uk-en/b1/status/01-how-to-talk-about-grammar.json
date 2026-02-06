@@ -2,13 +2,13 @@
   "module": "01-how-to-talk-about-grammar",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T17:52:07.207789Z",
+  "last_audit": "2026-02-07T00:43:15.707133Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-01T16:22:12.701756Z",
-    "meta": "2026-01-29T07:39:04.624858Z",
+    "md": "2026-02-07T00:37:26.307038Z",
+    "meta": "2026-02-06T22:56:22.183430Z",
     "activities": "2026-01-24T19:21:15.049529Z",
-    "vocabulary": "2026-01-25T18:00:39.937918Z",
+    "vocabulary": "2026-02-07T00:34:32.983283Z",
     "plan": "2026-01-29T07:45:40.255222Z"
   },
   "gates": {
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "149/20"
+      "message": "148/20"
     },
     "naturalness": {
       "status": "pass",

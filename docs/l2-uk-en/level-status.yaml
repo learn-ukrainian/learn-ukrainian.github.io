@@ -12,7 +12,7 @@
 #   <10% -> "Planned"
 
 a1:
-  planned: 44 # 34 existing + 10 new practical scenarios (RFC #409)
+  planned: 44
   status: auto
   description: "Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
   introduction: |
@@ -29,7 +29,7 @@ a1:
 
     **Learning Philosophy:** We believe in understanding patterns, not just memorizing phrases. Every grammar concept is explained with clear rules and many examples before you practice.
 a2:
-  planned: 70 # 58 existing + 12 new practical scenarios (RFC #409)
+  planned: 70
   status: auto
   description: "Elementary — All 7 cases, aspect intro, practical scenarios"
   introduction: |
@@ -45,7 +45,7 @@ a2:
 
     **Learning Philosophy:** Ukrainian cases aren't random — they follow logical patterns. We teach you to recognize and apply these patterns, making what seems complex surprisingly systematic.
 b1:
-  planned: 99 # 91 existing + 8 new skills modules (RFC #409)
+  planned: 92
   status: auto
   description: "Intermediate — Aspect mastery, motion verbs, communication skills"
   introduction: |
@@ -61,7 +61,7 @@ b1:
 
     **Занурення:** 75-90% українською — ви вже готові!
 b2:
-  planned: 94 # 84 existing + 10 new professional basics (RFC #409)
+  planned: 94
   status: auto
   description: "Upper-Intermediate — Passive voice, registers, professional basics"
   introduction: |

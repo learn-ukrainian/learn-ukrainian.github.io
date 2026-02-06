@@ -1,12 +1,12 @@
 # Audit Report: M51 — mariya-pavlova.md
-**Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 17:32:29
+**Generated:** 2026-02-07 00:21:57
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4300 words
+**Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4666/4300 (raw: 4709)
+- **Words:** ✅ 4666/4000 (raw: 4709)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types

@@ -2,7 +2,7 @@
 **Level:** C1 | **Module:** M20 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Naturalness:** None/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:09
+**Generated:** 2026-02-06 20:12:57
 
 ## Configuration
 **Type:** C1
@@ -85,7 +85,7 @@
 - **Immersion:** 🇺🇦 97.9% (target 90-100%)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ None/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 99% (minimum: 85%)

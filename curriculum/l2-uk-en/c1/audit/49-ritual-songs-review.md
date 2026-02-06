@@ -1,7 +1,7 @@
 # Audit Report: M49 — 49-ritual-songs.md
 **Level:** C1 | **Module:** M49 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:26
+**Generated:** 2026-02-06 20:13:14
 
 ## Configuration
 **Type:** C1
@@ -66,7 +66,7 @@
 - **Immersion:** 🇺🇦 99.4% (target 90-100%)
 - **Richness:** ✅ 100% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

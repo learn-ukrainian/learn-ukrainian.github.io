@@ -1,8 +1,8 @@
 # Audit Report: M46 — mykhailo-drahomanov.md
-**Level:** C1-BIO | **Module:** M46 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
+**Level:** C1-BIO | **Module:** M46 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 20:21:19
+**Generated:** 2026-02-07 00:38:23
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
+**Required Types:** comparative-study, essay-response, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -31,7 +31,7 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 4 (minimum: 3) ✅
 - Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
+- Required types used: 3/3 (comparative-study, essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
@@ -42,7 +42,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -50,7 +50,7 @@
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

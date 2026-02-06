@@ -1,8 +1,8 @@
-# Audit Report: M102 — vasyl-vyshyvanyi.md
-**Level:** C1-BIO | **Module:** M102 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M105 — vasyl-vyshyvanyi.md
+**Level:** C1-BIO | **Module:** M105 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:25
+**Generated:** 2026-02-07 00:22:26
 
 ## Configuration
 **Type:** C1-biography
@@ -35,13 +35,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/vasyl-vyshyvanyi-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in vasyl-vyshyvanyi.yaml: Schema validation error at key '5': {'type': 'reading', 'title': 'Поезія Василя Вишиваного', 'resource': {'type': 'primary_source', 'url': 'https://elib.nlu.org.ua/', 'title': 'Василь Вишиваний: Минають дні'}, 'tasks': ['Знайдіть у віршах епітети, що описують Україну.', 'Як поет використовує звертання до свого народу?', 'Проаналізуйте вживання дієслів минулого часу в контексті ностальгії.']} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -55,12 +57,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 100% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)

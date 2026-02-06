@@ -6,5 +6,6 @@ id: c1-006
 naturalness:
   score: null
   status: PENDING
+word_target: 4000
 build:
   last_modified: '2026-01-26'

@@ -2,11 +2,11 @@
   "module": "solomiya-krushelnytska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:08.772410Z",
+  "last_audit": "2026-02-07T00:22:09.957502Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.352220Z",
-    "meta": "2026-02-02T23:23:00.127059Z",
+    "meta": "2026-02-06T22:56:22.303037Z",
     "activities": "2026-01-27T15:34:56.799973Z",
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2081/4000 (raw: 2323) | pedagogy: 1 violations"
+      "message": "2081/4000 (raw: 2323) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -44,6 +44,6 @@
       "6 Outline Compliance Errors"
     ],
     "pass_count": 2,
-    "fail_count": 2
+    "fail_count": 1
   }
 }

@@ -2,25 +2,25 @@
   "module": "22-job-interview",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-26T22:29:08.280700Z",
+  "last_audit": "2026-02-06T20:12:58.382372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-13T17:18:01.359549Z",
-    "meta": "2026-01-26T17:21:19.401299Z",
+    "meta": "2026-02-05T20:58:09.397831Z",
     "activities": "2026-01-13T17:24:07.342564Z",
     "vocabulary": "2026-01-21T21:57:24.906143Z",
-    "plan": "2026-01-26T17:21:19.401124Z"
+    "plan": "2026-01-29T07:45:40.841743Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2026/3000 (raw: 2189)"
+      "message": "2026/4000 (raw: 2189)"
     },
     "activities": {
       "status": "pass",
@@ -28,24 +28,23 @@
       "message": "16/12"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 25 (soft target)"
+      "message": "751/25"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "None/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
       "7 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
       "Missing required activity types: error-correction"
     ],
-    "pass_count": 1,
-    "fail_count": 3
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

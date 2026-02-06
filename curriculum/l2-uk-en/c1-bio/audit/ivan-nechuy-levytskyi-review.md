@@ -1,8 +1,8 @@
 # Audit Report: M44 — ivan-nechuy-levytskyi.md
-**Level:** C1-BIO | **Module:** M44 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Level:** C1-BIO | **Module:** M44 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:54
+**Generated:** 2026-02-07 00:35:55
 
 ## Configuration
 **Type:** C1-biography
@@ -36,14 +36,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4220/4000 (raw: 4262)
+- **Words:** ✅ 4220/4000 (raw: 4260)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -84,4 +84,3 @@
 | **Мовна революція** | ⚪️ | 494 | Skipped |
 | **Останні роки та спадщина** | ⚪️ | 651 | Skipped |
 | **Підсумок** | ✅ | 195 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

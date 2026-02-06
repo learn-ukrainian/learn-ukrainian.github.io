@@ -2,13 +2,13 @@
   "module": "trypillian-civilization",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:00.065768Z",
+  "last_audit": "2026-02-06T22:17:28.936862Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T11:00:03.640140Z",
-    "meta": "2026-01-29T07:38:18.600334Z",
-    "activities": "2026-01-27T15:07:09.161387Z",
-    "vocabulary": "2026-01-27T15:50:10.699043Z",
+    "md": "2026-02-06T22:15:48.490619Z",
+    "meta": "2026-02-06T22:14:33.626791Z",
+    "activities": "2026-02-06T22:16:00.263784Z",
+    "vocabulary": "2026-02-06T22:16:09.577076Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "6365/6133 (raw: 6413)"
+      "message": "6369/6133 (raw: 6417)"
     },
     "activities": {
       "status": "pass",

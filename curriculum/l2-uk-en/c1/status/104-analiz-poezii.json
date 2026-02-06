@@ -2,12 +2,12 @@
   "module": "104-analiz-poezii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:14:55.441902Z",
+  "last_audit": "2026-02-06T20:12:50.303041Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.366654Z",
-    "meta": "2026-01-26T17:21:19.347273Z",
-    "activities": "2026-01-13T23:36:30.877355Z",
+    "meta": "2026-02-05T20:58:09.398961Z",
+    "activities": "2026-02-06T19:35:23.106839Z",
     "vocabulary": null,
     "plan": "2026-01-30T11:56:43.635540Z"
   },
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
     }
   },
   "overall": {
@@ -45,6 +45,6 @@
       "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

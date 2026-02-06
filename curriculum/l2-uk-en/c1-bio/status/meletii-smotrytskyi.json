@@ -2,11 +2,11 @@
   "module": "meletii-smotrytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:39.730374Z",
+  "last_audit": "2026-02-07T00:21:37.028914Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.354597Z",
-    "meta": "2026-02-05T00:42:01.374042Z",
+    "meta": "2026-02-05T20:58:10.329876Z",
     "activities": "2026-01-21T10:46:24.796287Z",
     "vocabulary": "2026-02-04T12:15:59.428252Z",
     "plan": null

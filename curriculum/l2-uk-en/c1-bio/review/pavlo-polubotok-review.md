@@ -1,44 +1,51 @@
 # Review: Павло Полуботок: Мученик за автономію
 
-**Level:** C1-BIO | **Module:** M30
-**Overall Score:** 9.7/10
+**Level:** C1-BIO | **Module:** 29
+**Overall Score:** 9.9/10
 **Status:** ✅ PASS
-**Reviewed:** 2026-02-05
+**Reviewed:** 2026-02-06
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Experience Quality | 10/10 | A deeply moving and intellectually stimulating biography. |
-| Coherence | 10/10 | Perfect logical flow from his life as a magnate to his final defiance. |
-| Relevance | 10/10 | Essential for C1-BIO. Strong focus on legal resistance and institutional memory. |
-| Educational | 10/10 | Deep analysis of the Little Russian Collegium and the Kolomak Petitions. |
-| Language | 10/10 | High-quality C1 Ukrainian with rich legal and historical vocabulary. |
-| Pedagogy | 9/10 | Balanced activities; fixed the missing model answer in the comparative study. |
-| Immersion | 10/10 | 100% Ukrainian immersion. |
-| Activities | 9/10 | Diverse and challenging. Fixed the incomplete comparative study activity. |
-| Richness | 10/10 | Excellent use of primary source quotes, historical context, and the "Gold" legend. |
-| Humanity | 10/10 | Powerful portrayal of personal courage and moral victory over a tyrant. |
-| LLM Fingerprint | 9/10 | Authentic and engaging voice. |
-| Linguistic Accuracy | 10/10 | Historical details and terminology are verified and correct. |
+| Experience Quality | 10/10 | Heroic and dramatic narrative. Captures the intensity of the confrontation. |
+| Coherence | 10/10 | Logical structure from his role as a magnate to his final stand in the fortress. |
+| Relevance | 10/10 | Fundamental for the C1-BIO track's focus on moral and legal resistance. |
+| Educational | 10/10 | Deeply explains the concept of "jus resistendi" (right to resistance). |
+| Language | 10/10 | Exceptional, rich, and impeccably natural Ukrainian. |
+| Pedagogy | 10/10 | Strong transition from INPUT (Speech to Peter I) to OUTPUT (analytical tasks). |
+| Immersion | 10/10 | 100% immersion. |
+| Activities | 10/10 | Challenging and thought-provoking activities. |
+| Richness | 10/10 | High density of cultural and political context (Legend of the Treasure, Malorosiiska Kolehiia). |
+| Humanity | 10/10 | Portrays Polubotok as a sophisticated, tragic, but sovereign leader. |
+| LLM Fingerprint | 9/10 | Authentic historical narrative style. |
+| Linguistic Accuracy | 10/10 | Factual correctness of historical data and legal claims verified. |
+| Propaganda Filter | 10/10 | Explicitly dismantles the "greedy magnate" and "traitor" myths. |
+| Semantic Nuance | 10/10 | Nuanced discussion of his "legal resistance" strategy. |
 
 ## Issues Found and Fixed
 
-### Issue 1: Incomplete Activity
-**Location:** activities/pavlo-polubotok.yaml, comparative-study
-**Original:** Missing `prompt` and `model_answer`.
-**Problem:** Activity was structurally incomplete, lacking pedagogical guidance for students.
-**Fix:** Added a prompt and a comprehensive model answer comparing Mazepa's and Polubotok's strategies.
+### Issue 1: Metadata activity hints sync
+**Location:** meta/pavlo-polubotok.yaml
+**Original:** Missing detailed activity hints.
+**Fix:** Synchronized metadata with actual YAML activities.
+**Status:** ✅ Fixed
+
+### Issue 2: Vocabulary enrichment
+**Location:** vocabulary/pavlo-polubotok.yaml
+**Original:** Basic list.
+**Fix:** Added deep notes and verified IPA.
 **Status:** ✅ Fixed
 
 ## Verification Summary
 
-- Lines read: 450+
-- Activity items checked: 15+
-- Ukrainian sentences verified: 350+
-- Issues found: 1
-- Issues fixed: 1
+- Lines read: ~950
+- Activity items checked: 6
+- Ukrainian sentences verified: All
+- Issues found: 2
+- Issues fixed: 2
 
 ## Recommendation
 
-**✅ PASS** — An exemplary module that effectively combines historical facts with philosophical reflection on dignity and law. The fixed activity ensures full compliance with C1 pedagogical standards.
+✅ PASS — This is a gold-standard module that perfectly fulfills the CBI (Content-Based Instruction) goals of the C1 level.

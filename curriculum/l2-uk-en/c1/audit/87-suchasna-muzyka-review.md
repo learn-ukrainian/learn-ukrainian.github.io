@@ -1,11 +1,9 @@
 # Audit Report: M87 — 87-suchasna-muzyka.md
-
-**Level:** C1 | **Module:** M87 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M87 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:48
+**Generated:** 2026-02-06 20:13:35
 
 ## Configuration
-
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія українського шоу-бізнесу | 12 | 5 | ✅ |
@@ -43,7 +40,6 @@
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського шоу-бізнесу' Q5 prompt length 5 (target: 8-30)
   - FIX: Adjust prompt length to 8-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського шоу-бізнесу' Q7 prompt length 6 (target: 8-30)
@@ -68,24 +64,17 @@
   - FIX: Add more items. C1 select requires at least 5 items.
 - **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
   - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-suchasna-muzyka.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Жанри сучасної музики', 'items': [{'question': 'Що співає alyona alyona?', 'options': [{'text': 'Реп', 'correct': True}, {'text': 'Хіп-хоп', 'correct': True}, {'text': 'Оперу', 'correct': False}, {'text': 'Джаз', 'correct': False}, {'text': 'Рок', 'correct': False}], 'min_correct': 2}, {'question': 'Яку музику грає ONUKA?', 'options': [{'text': 'Електро-фолк', 'correct': True}, {'text': 'Експериментальну', 'correct': True}, {'text': 'Інструментальну', 'correct': True}, {'text': 'Шансон', 'correct': False}, {'text': 'Панк-рок', 'correct': False}], 'min_correct': 3}, {'question': 'Хто співає рок?', 'options': [{'text': 'The Hardkiss', 'correct': True}, {'text': 'Океан Ельзи', 'correct': True}, {'text': 'Без Обмежень', 'correct': True}, {'text': 'Тіна Кароль', 'correct': False}, {'text': 'Ірина Федишин', 'correct': False}], 'min_correct': 3}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 87-suchasna-muzyka.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Жанри сучасної музики', 'items': [{'question': 'Що співає alyona alyona?', 'options': [{'text': 'Реп', 'correct': True}, {'text': 'Хіп-хоп', 'correct': True}, {'text': 'Оперу', 'correct': False}, {'text': 'Джаз', 'correct': False}, {'text': 'Рок', 'correct': False}], 'min_correct': 2}, {'question': 'Яку музику грає ONUKA?', 'options': [{'text': 'Електро-фолк', 'correct': True}, {'text': 'Експериментальну', 'correct': True}, {'text': 'Інструментальну', 'correct': True}, {'text': 'Шансон', 'correct': False}, {'text': 'Панк-рок', 'correct': False}], 'min_correct': 3}, {'question': 'Хто співає рок?', 'options': [{'text': 'The Hardkiss', 'correct': True}, {'text': 'Океан Ельзи', 'correct': True}, {'text': 'Без Обмежень', 'correct': True}, {'text': 'Тіна Кароль', 'correct': False}, {'text': 'Ірина Федишин', 'correct': False}], 'min_correct': 3}], 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
-  - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
-
 ## Recommendation
-
 **🔄 REWRITE** (severity 80/100)
 
-- 14 violations (severe - consider revision)
+- 13 violations (severe - consider revision)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 - Activity density below minimum
 
 ## Gates
-
 - **Words:** ❌ 1138/3000 (raw: 1212)
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 2 < 12
@@ -101,15 +90,13 @@
 - **Immersion:** 🇺🇦 95.8% (target 90-100% (fine-arts))
 - **Richness:** ❌ 78% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
 **Score:** 78% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 24 | 15 | 100% | 25% | 25.0% |
@@ -123,14 +110,13 @@
 | **TOTAL** | | | | | **78.4%** |
 
 ## Low Density Activities
-
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Феномен Євробачення | cloze | 9 | 12 | Add 3 more items |
 | Жанри сучасної музики | select | 3 | 5 | Add 2 more items |
 
-## Section Audit
 
+## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |

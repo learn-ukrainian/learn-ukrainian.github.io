@@ -1,12 +1,12 @@
 # Audit Report: M31 — pylyp-orlyk.md
-**Level:** C1-BIO | **Module:** M31 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+**Level:** C1-BIO | **Module:** M31 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:39:46
+**Generated:** 2026-02-07 00:21:44
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4300 words
+**Word Target:** 4000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4805/4300 (raw: 4885)
+- **Words:** ✅ 4805/4000 (raw: 4885)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types

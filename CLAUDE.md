@@ -177,6 +177,9 @@ npm run metrics:extract {track}  # Extract raw metrics
 # Extract plans from meta (migration tool)
 .venv/bin/python scripts/extract_plans.py {level}
 
+# Full rebuild for core tracks (research → build → review → verify)
+/full-rebuild-core {level} {num}   # a1, a2, b1, b2, c1, c2, b2-pro, c1-pro
+
 # Full pipeline (lint → generate → validate)
 npm run pipeline l2-uk-en {level} {module_num}
 

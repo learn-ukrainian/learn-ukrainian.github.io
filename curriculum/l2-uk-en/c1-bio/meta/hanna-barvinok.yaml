@@ -4,11 +4,97 @@ version: '2.0'
 module: c1-bio-041
 level: C1-BIO
 title: 'Ганна Барвінок: Письменниця і етнографка'
-transliteration: none
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
-  feedback: "High quality literary Ukrainian style, historically accurate terminology."
-  checked_at: "2026-01-29"
+duration: 120
+transliteration: none
+tags:
+- history
+- biography
+- literature
+- ethnography
+- women
+content_outline:
+- section: Вступ — Перша з жінок української літератури
+  words: 400
+  points:
+  - Одна з перших українських письменниць
+  - Дружина Пантелеймона Куліша
+  - Етнографічна та просвітницька діяльність
+- section: Юність та виховання (1828-1847)
+  words: 600
+  points:
+  - Народження Олександри Білозерської
+  - Родина та освіта
+  - Вплив українського фольклору
+  - Знайомство з Кулішем
+- section: Подружжя з Кулішем (1847-1860-ті)
+  words: 800
+  points:
+  - Шлюб і спільна діяльність
+  - Участь у Кирило-Мефодіївському братстві
+  - Арешт Куліша та заслання
+  - Чекання та листування
+- section: Літературна діяльність (1860-ті–1890-ті)
+  words: 800
+  points:
+  - Псевдонім «Ганна Барвінок»
+  - Оповідання про селянське життя
+  - Етнографічні записи
+  - Збірка «Оповідання з народних уст»
+- section: Пізній період (1890-1911)
+  words: 700
+  points:
+  - Вдівство та продовження праці
+  - Спогади про Куліша
+  - Останні твори
+  - Смерть у Мотронівці
+- section: Спадщина — Голос селянської України
+  words: 700
+  points:
+  - Внесок в українську етнографію
+  - Жіночий голос в літературі
+  - Сучасне дослідження творчості
+  - Барвінок як символ жіночої творчості
+sources:
+- name: Ганна Барвінок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
+  type: primary
+  notes: Biography of the pioneering woman writer
+- name: Інститут літератури ім. Т.Г. Шевченка
+  url: https://ilnan.gov.ua/
+  type: reference
+  notes: Literary archive materials
+vocabulary_hints:
+  required:
+  - письменниця
+  - етнограф
+  - просвітниця
+  - псевдонім
+  - оповідання
+  - фольклор
+  - селянство
+  - побут
+  - обряд
+  - традиція
+  recommended:
+  - усна творчість
+  - народна пісня
+  - звичай
+  - етнографічний запис
+  - жіноча література
+activity_hints:
+- type: reading
+  focus: Українська жіноча література XIX ст.
+- type: essay-response
+  focus: Роль Барвінок у збереженні фольклору
+- type: critical-analysis
+  focus: Аналіз психологічного етнографізму
+vital_status: deceased
 build:
-  last_modified: '2026-01-29'
+  last_modified: '2026-02-06'

@@ -2,11 +2,11 @@
   "module": "mykola-pohribnyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:34.744656Z",
+  "last_audit": "2026-02-07T00:22:35.975000Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.345098Z",
-    "meta": "2026-02-02T23:23:00.311555Z",
+    "meta": "2026-02-06T22:56:22.296855Z",
     "activities": "2026-01-27T15:34:56.317347Z",
     "vocabulary": null,
     "plan": null
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2473/4000 (raw: 2663)"
+      "violations": 2,
+      "message": "2473/4000 (raw: 2663) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",

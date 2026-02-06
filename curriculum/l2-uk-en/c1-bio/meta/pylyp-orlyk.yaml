@@ -4,6 +4,10 @@ slug: pylyp-orlyk
 version: '2.0'
 id: c1-bio-031
 title: "Пилип Орлик: Автор першої конституції"
+phase: C1-BIO
+focus: biography
+pedagogy: seminar
+word_target: 4000
 naturalness:
   score: 10
   status: PASS
@@ -18,20 +22,78 @@ tags:
 content_outline:
 - section: Вступ — Гетьман у вигнанні
   words: 600
+  points:
+    - Значення Конституції 1710 року
+    - Орлик як політичний мислитель
+    - Перша українська політична еміграція
 - section: Життєпис
   words: 1600
+  points:
+    - Походження та освіта
+    - Кар'єра в гетьманській канцелярії
+    - Обрання гетьманом 1710 року
+    - Похід 1711 року
 - section: Історичний контекст
   words: 600
+  points:
+    - Геополітика після Полтави
+    - Козацький конституціоналізм у європейському дискурсі
 - section: Внесок
   words: 400
+  points:
+    - Правове оформлення української державної ідеї
+    - Концепція розподілу влади
 - section: Останні роки
   words: 400
+  points:
+    - Життя в еміграції
+    - Смерть у Молдові
 - section: Спадщина
   words: 400
+  points:
+    - Конституція як символ демократичного коду
+    - Патрон української дипломатії
 - section: Підсумок
   words: 300
-word_target: 4300
+  points:
+    - Орлик як провісник демократії
+    - Місце в українській політичній думці
+sources:
+  - name: Пилип Орлик (Wikipedia UA)
+    url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+    type: primary
+    notes: Biography, Constitution of 1710, exile
+  - name: Конституція Пилипа Орлика
+    url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+    type: primary
+    notes: Text and analysis of Constitution
+vocabulary_hints:
+  required:
+    - конституція
+    - гетьман
+    - еміграція
+    - писар
+    - рада
+    - обмеження влади
+    - присяга
+    - пакти
+    - привілеї
+    - канцелярія
+  recommended:
+    - генеральний
+    - статті
+    - ратифікація
+    - клейноди
+    - протекторат
+activity_hints:
+  - type: reading
+    focus: Excerpts from the Constitution of 1710
+    source: Original text (adapted)
+  - type: essay-response
+    focus: "Was Orlyk's Constitution democratic for its time?"
+    model_answer: "The Constitution of Pylyp Orlyk was revolutionary for its time, introducing the division of powers into legislative, executive, and judicial branches."
+  - type: critical-analysis
+    focus: Evaluate claims of "first European constitution"
 vital_status: deceased
-vocabulary_hints: true
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-06'

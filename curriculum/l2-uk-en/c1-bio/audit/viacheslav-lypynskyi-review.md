@@ -1,8 +1,8 @@
-# Audit Report: M77 — viacheslav-lypynskyi.md
-**Level:** C1-BIO | **Module:** M77 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M80 — viacheslav-lypynskyi.md
+**Level:** C1-BIO | **Module:** M80 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-05 12:40:12
+**Generated:** 2026-02-07 00:22:13
 
 ## Configuration
 **Type:** C1-biography
@@ -36,15 +36,17 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ы (lines: [114])
   - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/viacheslav-lypynskyi-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[RUSSIAN_CHARACTERS]** Found Russian-only characters: ы (lines: [114])
   - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in viacheslav-lypynskyi.yaml: Schema validation error at key 'id': 'c1-86-reading-2' does not match '^reading-[a-z0-9-]+$'
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 35/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -58,12 +60,12 @@
 - **Vocab:** ⚠️ 0 < 24 (soft target)
 - **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ 1/10 (PENDING — awaiting review)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

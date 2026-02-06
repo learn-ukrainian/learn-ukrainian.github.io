@@ -1,7 +1,7 @@
 # Audit Report: M89 — 89-praktyka-1-narodna-kultura.md
 **Level:** C1 | **Module:** M89 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:46
+**Generated:** 2026-02-06 20:13:36
 
 ## Configuration
 **Type:** C1-fine-arts
@@ -37,11 +37,9 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 20/100)
 
-- Revision recommended (severity 40/100)
 - 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 - Activity count below minimum
 
 ## Gates
@@ -52,15 +50,15 @@
 - **Priority:** ❌ No priority types
 - **Engagement:** ❌ 2/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 959/25
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⚠️ Too few activities: 7 (target 12-16)
 - **Immersion:** 🇺🇦 99.9% (target 90-100% (fine-arts))
 - **Richness:** ❌ 69% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 69% (minimum: 95%)

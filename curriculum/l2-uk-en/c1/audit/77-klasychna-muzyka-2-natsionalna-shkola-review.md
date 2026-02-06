@@ -1,7 +1,7 @@
 # Audit Report: M77 — 77-klasychna-muzyka-2-natsionalna-shkola.md
 **Level:** C1 | **Module:** M77 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:43
+**Generated:** 2026-02-06 20:13:29
 
 ## Configuration
 **Type:** C1
@@ -46,10 +46,9 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
 - **Words:** ❌ 2656/3000 (raw: 2805)
@@ -59,15 +58,15 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 1031/25
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (16 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100%)
 - **Richness:** ✅ 96% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 96% (minimum: 95%)

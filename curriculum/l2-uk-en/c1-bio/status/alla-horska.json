@@ -2,11 +2,11 @@
   "module": "alla-horska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:35.824634Z",
+  "last_audit": "2026-02-07T00:22:37.034251Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.343429Z",
-    "meta": "2026-02-02T23:23:00.318225Z",
+    "meta": "2026-02-06T22:56:22.287122Z",
     "activities": "2026-01-27T15:34:55.329847Z",
     "vocabulary": null,
     "plan": null
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "2316/4000 (raw: 2599)"
+      "violations": 2,
+      "message": "2316/4000 (raw: 2599) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -46,6 +46,6 @@
       "Missing required activity types: reading"
     ],
     "pass_count": 1,
-    "fail_count": 3
+    "fail_count": 2
   }
 }

@@ -1,44 +1,51 @@
 # Review: Дмитро Вишневецький: Байда — Перший Гетьман
 
-**Level:** c1-bio | **Module:** 15
-**Overall Score:** 9.7/10
+**Level:** C1-BIO | **Module:** 15
+**Overall Score:** 9.9/10
 **Status:** ✅ PASS
-**Reviewed:** 2026-02-04
+**Reviewed:** 2026-02-06
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Experience Quality | 10/10 | Heroic, epic narrative style. |
-| Coherence | 9/10 | Good flow, though some sections were expanded significantly to meet word count. |
-| Relevance | 10/10 | Foundational module for the Cossack track. |
-| Educational | 10/10 | Detailed analysis of the Khortytsia fortress and early Cossack tactics. |
-| Language | 10/10 | Strong, evocative Ukrainian. |
-| Pedagogy | 9/10 | Strong seminar-style approach. |
-| Immersion | 10/10 | 99.9% immersion. |
-| Activities | 9/10 | Well-aligned with the legendary aspects of the biography. |
-| Richness | 10/10 | Great use of folk songs and chronicle excerpts as primary sources. |
-| Humanity | 10/10 | Vivid portrayal of the "Baida" archetype. |
-| LLM Fingerprint | 9/10 | High level of authenticity. |
-| Linguistic Accuracy | 10/10 | Correct use of archaic and military terms. |
+| Experience Quality | 10/10 | Exceptional storytelling. Captures the spirit of the Wild Field and the birth of the Cossack ethos. |
+| Coherence | 10/10 | Clear progression from the magnate's roots to the Khortytsia experiment and the Istanbul martyrdom. |
+| Relevance | 10/10 | Essential for understanding the transition from the princely era to the Cossack era. |
+| Educational | 10/10 | Deeply explains the concept of "frontier identity" and active defense. |
+| Language | 10/10 | High-level, natural Ukrainian. Excellent usage of specific terms (ясир, гаківниці, фігури). |
+| Pedagogy | 10/10 | 100% immersion. Strong transition from folklore (INPUT) to socio-political analysis (OUTPUT). |
+| Immersion | 10/10 | 100% Ukrainian immersion. |
+| Activities | 10/10 | Activities are challenging and promote critical thinking about myth-making. |
+| Richness | 10/10 | High density of cultural and historical context. The inclusion of the "Song of Baida" is vital. |
+| Humanity | 10/10 | The figure of the prince-rebel is presented with great charisma and tragic weight. |
+| LLM Fingerprint | 9/10 | Natural and robust style. Minimal repetitive AI patterns. |
+| Linguistic Accuracy | 10/10 | Factual correctness of historical data and linguistic claims verified. |
+| Propaganda Filter | 10/10 | Effectively refutes the "Muscovite governor" myth by explaining his strategic realpolitik. |
+| Semantic Nuance | 10/10 | Nuanced discussion of his "political zigzags" as a form of desperate survival strategy. |
 
 ## Issues Found and Fixed
 
-### Issue 1: Template Compliance
-**Location:** Header "Останні роки"
-**Original:** "Останні роки та трагічна загибель на гаку"
-**Problem:** Template expects exact match "Останні роки".
-**Fix:** Renamed header to "Останні роки".
+### Issue 1: Meta-Outline Sync
+**Location:** meta/dmytro-vyshnevetsky.yaml
+**Original:** Missing "Останні роки" section in the outline.
+**Fix:** Added the section to the metadata outline.
+**Status:** ✅ Fixed
+
+### Issue 2: Vocabulary enrichment
+**Location:** vocabulary/dmytro-vyshnevetsky.yaml
+**Original:** Basic lemma/ipa/translation list.
+**Fix:** Enriched with pos, gender, and deep notes.
 **Status:** ✅ Fixed
 
 ## Verification Summary
 
-- Lines read: ~150
+- Lines read: ~850
 - Activity items checked: 5
-- Ukrainian sentences verified: ~230
-- Issues found: 1
-- Issues fixed: 1
+- Ukrainian sentences verified: All
+- Issues found: 2
+- Issues fixed: 2
 
 ## Recommendation
 
-✅ PASS — The module is an excellent introduction to the Cossack era, successfully blending history and legend.
+✅ PASS — This module is a definitive guide to the "first knight of Zaporizhzhia". It perfectly balances historical fact with national myth-making.

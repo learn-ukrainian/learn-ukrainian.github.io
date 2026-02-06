@@ -1,11 +1,9 @@
 # Audit Report: M88 — 88-ukrainske-kino.md
-
-**Level:** C1 | **Module:** M88 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 3000
+**Level:** C1 | **Module:** M88 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-26 22:29:49
+**Generated:** 2026-02-06 20:13:35
 
 ## Configuration
-
 **Type:** C1-fine-arts
 **Word Target:** 3000 words
 **Activities:** 12-16 required
@@ -18,7 +16,6 @@
 **Transliteration:** Not allowed
 
 ## Activity Breakdown
-
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Історія українського кіно | 12 | 5 | ✅ |
@@ -43,7 +40,6 @@
 - Low density activities: 2
 
 ## PEDAGOGICAL VIOLATIONS
-
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського кіно' Q2 prompt length 7 (target: 8-30)
   - FIX: Adjust prompt length to 8-30 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Історія українського кіно' Q4 prompt length 4 (target: 8-30)
@@ -70,24 +66,17 @@
   - FIX: Add more items. C1 select requires at least 5 items.
 - **[HEADING_LEVEL]** Main section 'Підсумок' uses H2 (##) but spec requires H1 (#)
   - FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-ukrainske-kino.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Сучасні українські фільми', 'items': [{'question': 'Який фільм зняв Антоніо Лукіч?', 'options': [{'text': '«Люксембург, Люксембург»', 'correct': True}, {'text': '«Додому»', 'correct': False}, {'text': "«Плем'я»", 'correct': False}, {'text': '«Кіборги»', 'correct': False}, {'text': '«Мої думки тихі»', 'correct': True}], 'min_correct': 2}, {'question': 'Які фільми про війну варто подивитися?', 'options': [{'text': '«Кіборги»', 'correct': True}, {'text': '«Атлантида»', 'correct': True}, {'text': '«Погані дороги»', 'correct': True}, {'text': '«Скажене весілля»', 'correct': False}, {'text': '«Dzidzio Контрабас»', 'correct': False}], 'min_correct': 3}, {'question': 'Які актори відомі в Україні?', 'options': [{'text': 'Станіслав Боклан', 'correct': True}, {'text': 'Ірма Вітовська', 'correct': True}, {'text': 'Ахтем Сеітаблаєв', 'correct': True}, {'text': 'Бред Пітт', 'correct': False}, {'text': 'Леонардо Ді Капріо', 'correct': False}], 'min_correct': 3}]} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-ukrainske-kino.yaml: Schema validation error at key '10': {'type': 'select', 'title': 'Сучасні українські фільми', 'items': [{'question': 'Який фільм зняв Антоніо Лукіч?', 'options': [{'text': '«Люксембург, Люксембург»', 'correct': True}, {'text': '«Додому»', 'correct': False}, {'text': "«Плем'я»", 'correct': False}, {'text': '«Кіборги»', 'correct': False}, {'text': '«Мої думки тихі»', 'correct': True}], 'min_correct': 2}, {'question': 'Які фільми про війну варто подивитися?', 'options': [{'text': '«Кіборги»', 'correct': True}, {'text': '«Атлантида»', 'correct': True}, {'text': '«Погані дороги»', 'correct': True}, {'text': '«Скажене весілля»', 'correct': False}, {'text': '«Dzidzio Контрабас»', 'correct': False}], 'min_correct': 3}, {'question': 'Які актори відомі в Україні?', 'options': [{'text': 'Станіслав Боклан', 'correct': True}, {'text': 'Ірма Вітовська', 'correct': True}, {'text': 'Ахтем Сеітаблаєв', 'correct': True}, {'text': 'Бред Пітт', 'correct': False}, {'text': 'Леонардо Ді Капріо', 'correct': False}], 'min_correct': 3}], 'instruction': 'Оберіть усі правильні відповіді.'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template.md'
-  - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md.md
-
 ## Recommendation
-
 **🔄 REWRITE** (severity 80/100)
 
-- 15 violations (severe - consider revision)
+- 14 violations (severe - consider revision)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 - Activity density below minimum
 
 ## Gates
-
 - **Words:** ❌ 1148/3000 (raw: 1233)
 - **Activities:** ✅ 14/12
 - **Density:** ❌ 2 < 12
@@ -103,15 +92,13 @@
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (fine-arts))
 - **Richness:** ❌ 75% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-
 **Score:** 75% (minimum: 95%)
 **Module Type:** content
 
 ### Score Breakdown
-
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 30 | 15 | 100% | 25% | 25.0% |
@@ -125,25 +112,23 @@
 | **TOTAL** | | | | | **75.3%** |
 
 ### Dryness Flags & Fixes
-
 - ❌ **ABSTRACT_ONLY**
   - FIX:
     Add 3+ real-world boxes. Use this exact format:
-
+    
     > 🌍 **У реальному житті**
     >
     > [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
     > [Example sentence showing grammar in that context]
 
 ## Low Density Activities
-
 | Activity | Type | Items | Required | Fix |
 |----------|------|-------|----------|-----|
 | Поетичне кіно | cloze | 9 | 12 | Add 3 more items |
 | Сучасні українські фільми | select | 3 | 5 | Add 2 more items |
 
-## Section Audit
 
+## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |

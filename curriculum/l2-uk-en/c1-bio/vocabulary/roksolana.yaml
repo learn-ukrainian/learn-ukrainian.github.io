@@ -1,120 +1,144 @@
-- word: султанша
-  translation: sultana
-  ipa: sʊlˈtanʃa
-  definition: Дружина султана або жінка-правителька в ісламських країнах.
-  usage: "Роксолана стала найвпливовішою султаншею в історії Османської імперії."
-- word: хасекі
-  translation: haseki (favorite consort)
-  ipa: xaˈsɛki
-  definition: Титул улюбленої дружини або наложниці османського султана.
-  usage: "Гюрем отримала унікальний титул Хасекі Султан."
-- word: гарем
+- lemma: султанша
+  ipa: /sulʲˈtɐnʃɐ/
+  translation: sultana / sultan's wife
+  pos: noun
+  gender: f
+  note: дружина або донька султана
+- lemma: гарем
+  ipa: /ɦɐˈrɛm/
   translation: harem
-  ipa: ɦaˈrɛm
-  definition: Жіноча частина мусульманського будинку, куди заборонено входити стороннім чоловікам.
-  usage: "Життя в гаремі підпорядковувалося суворим правилам ієрархії."
-- word: рабиня
-  translation: slave woman
-  ipa: raˈbɪnʲa
-  definition: Жінка, що перебуває в рабстві.
-  usage: "Вона пройшла шлях від простої рабині до володарки імперії."
-- word: полон
-  translation: captivity
-  ipa: poˈlɔn
-  definition: Стан позбавлення волі, захоплення ворогом.
-  usage: "Тисячі українців потрапляли в татарський полон у XVI столітті."
-- word: набіг
-  translation: raid
-  ipa: naˈbiɦ
-  definition: Раптовий напад ворожого війська з метою грабунку.
-  usage: "Татарський набіг змінив долю молодої Насті назавжди."
-- word: спадкоємець
-  translation: heir
-  ipa: spadkoˈjɛmet͡sʲ
-  definition: Той, хто має право на отримання спадщини або престолу.
-  usage: "Боротьба за те, хто стане спадкоємцем престолу, була жорстокою."
-- word: інтрига
-  translation: intrigue
-  ipa: inˈtrɪɦa
-  definition: Приховані зловмисні дії, спрямовані на досягнення якоїсь мети.
-  usage: "Палацові інтриги були звичною справою при дворі султана."
-- word: благодійність
-  translation: charity
-  ipa: blaɦoˈdijinistʲ
-  definition: Безкорислива діяльність, спрямована на допомогу нужденним.
-  usage: "Її благодійність залишила слід у вигляді лікарень та шкіл."
-- word: меценатство
-  translation: patronage
-  ipa: met͡seˈnatstvo
-  definition: Добровільна матеріальна підтримка розвитку культури та мистецтва.
-  usage: "Меценатство Роксолани сприяло розвитку османської архітектури."
-- word: візир
+  pos: noun
+  gender: m
+  note: закрита частина палацу для жінок
+- lemma: наложниця
+  ipa: /nɐˈɫɔʒnɪt͡sʲɐ/
+  translation: concubine
+  pos: noun
+  gender: f
+  note: невільниця, що жила в гаремі
+- lemma: Хасекі
+  ipa: /xɐsɛˈkʲi/
+  translation: Haseki
+  pos: noun
+  gender: f
+  note: титул улюбленої фаворитки або законної дружини султана
+- lemma: Валіде
+  ipa: /ʋɐlʲiˈdɛ/
+  translation: Valide
+  pos: noun
+  gender: f
+  note: титул матері султана
+- lemma: візир
+  ipa: /ʋʲiˈzɪr/
   translation: vizier
-  ipa: viˈzir
-  definition: Вищий урядовець, міністр у деяких країнах Сходу.
-  usage: "Великий візир був другою людиною в імперії після султана."
-- word: євнух
-  translation: eunuch
-  ipa: ˈjɛvnux
-  definition: Кастрований служитель при гаремі.
-  usage: "Євнухи охороняли спокій та порядок у гаремі."
-- word: фаворитка
-  translation: favorite
-  ipa: fawoˈrɪtka
-  definition: Улюблена жінка монарха, яка користується його особливою прихильністю.
-  usage: "Стати фавориткою султана мріяла кожна мешканка гарему."
-- word: мечеть
-  translation: mosque
-  ipa: meˈt͡ʃɛtʲ
-  definition: Мусульманський храм.
-  usage: "Вона збудувала величну мечеть у центрі Стамбула."
-- word: вакф
-  translation: waqf (charitable endowment)
-  ipa: vakf
-  definition: В ісламському праві — майно, передане на релігійні або благодійні цілі.
-  usage: "Прибутки з її вакфу йшли на утримання бідних прочан."
-- word: султан
-  translation: sultan
-  ipa: sʊlˈtan
-  definition: Титул монарха в деяких ісламських країнах.
-  usage: "Султан Сулейман дуже поважав думку своєї дружини."
-- word: імперія
-  translation: empire
-  ipa: imˈpɛrɪja
-  definition: Велика монархічна держава, що складається з метрополії та колоній.
-  usage: "Османська імперія в той час була на піку своєї могутності."
-- word: династія
-  translation: dynasty
-  ipa: dɪˈnastija
-  definition: Ряд монархів з одного роду, які змінюють один одного на троні.
-  usage: "Вона забезпечила продовження династії Османів через своїх синів."
-- word: політика
-  translation: politics
-  ipa: poˈlityka
-  definition: Діяльність органів державної влади та їхніх представників.
-  usage: "Жіноча політика в гаремі мала свої тонкощі та правила."
-- word: дипломатія
+  pos: noun
+  gender: m
+  note: вищий урядовець в Османській імперії
+- lemma: ясир
+  ipa: /jɐˈsɪr/
+  translation: yasyr / captives
+  pos: noun
+  gender: m
+  note: полонені, захоплені татарами для продажу в рабство
+- lemma: невільниця
+  ipa: /neˈʋʲilʲnɪt͡sʲɐ/
+  translation: slave girl
+  pos: noun
+  gender: f
+  note: жінка, позбавлена волі
+- lemma: каторжник
+  ipa: /kɐˈtɔrʒnɪk/
+  translation: galley slave / convict
+  pos: noun
+  gender: m
+  note: людина, засуджена до важкої примусової праці
+- lemma: дипломатія
+  ipa: /dɪpɫoˈmɑtʲijɐ/
   translation: diplomacy
-  ipa: dɪploˈmatija
-  definition: Офіційна діяльність держав у зовнішніх зносинах.
-  usage: "Її листування є зразком високої дипломатії XVI століття."
-- word: вплив
-  translation: influence
-  ipa: wpɫɪw
-  definition: Дія, яку хтось або щось чинить на когось, щось; авторитет.
-  usage: "Політичний вплив Роксолани дратував багатьох візирів."
-- word: традиція
-  translation: tradition
-  ipa: traˈdɪt͡sija
-  definition: Досвід, звичаї, погляди, що передаються з покоління в покоління.
-  usage: "Вона сміливо порушувала вікові традиції османського двору."
-- word: освіта
-  translation: education
-  ipa: osˈvita
-  definition: Процес і результат засвоєння знань, умінь та навичок.
-  usage: "Роксолана приділяла велику увагу освіті та підтримці вчених."
-- word: культура
-  translation: culture
-  ipa: kʊlʲˈtura
-  definition: Сукупність матеріальних і духовних цінностей, створених людством.
-  usage: "Вона стала невід'ємною частиною як української, так і турецької культури."
+  pos: noun
+  gender: f
+  note: ведення переговорів між державами
+- lemma: меценатство
+  ipa: /met͡sɛˈnɑt͡stʋo/
+  translation: patronage
+  pos: noun
+  gender: n
+  note: добровільна безкорислива підтримка культури
+- lemma: вакф
+  ipa: /ʋɐkf/
+  translation: waqf / charitable endowment
+  pos: noun
+  gender: m
+  note: в ісламі — майно, передане на благодійні цілі
+- lemma: мечеть
+  ipa: /meˈt͡ʃɛtʲ/
+  translation: mosque
+  pos: noun
+  gender: f
+  note: мусульманська молитовна споруда
+- lemma: медресе
+  ipa: /mɛdrɛˈsɛ/
+  translation: madrasa
+  pos: noun
+  gender: n
+  note: релігійна школа в ісламі
+- lemma: шпиталь
+  ipa: /ˈʃpɪtɐlʲ/
+  translation: hospital
+  pos: noun
+  gender: m
+  note: лікарня для військових або бідних
+- lemma: мавзолей
+  ipa: /mɐu̯zoˈɫɛi̯/
+  translation: mausoleum
+  pos: noun
+  gender: m
+  note: велична надгробна споруда
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: усвідомлення власної належності до групи
+- lemma: ніках
+  ipa: /nʲiˈkɑx/
+  translation: nikah / marriage contract
+  pos: noun
+  gender: m
+  note: мусульманський шлюбний обряд
+- lemma: шехзаде
+  ipa: /ʃɛxzɐˈdɛ/
+  translation: shehzade / prince
+  pos: noun
+  gender: m
+  note: титул сина султана
+- lemma: Порта
+  ipa: /ˈpɔrtɐ/
+  translation: Porte / Ottoman government
+  pos: proper_noun
+  gender: f
+  note: уряд Османської імперії
+- lemma: інтрига
+  ipa: /inˈtrɪɦɐ/
+  translation: intrigue
+  pos: noun
+  gender: f
+  note: прихована дія для досягнення мети
+- lemma: фаворитка
+  ipa: /fɐʋoˈrɪtkɐ/
+  translation: favorite
+  pos: noun
+  gender: f
+  note: жінка, якій султан віддає перевагу
+- lemma: санджак
+  ipa: /sɐnˈd͡ʒɑk/
+  translation: sanjak
+  pos: noun
+  gender: m
+  note: адміністративна одиниця в Османській імперії
+- lemma: падишах
+  ipa: /pɐdɪˈʃɑx/
+  translation: padishah
+  pos: noun
+  gender: m
+  note: найвищий титул мусульманського монарха

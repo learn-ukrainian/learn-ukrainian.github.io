@@ -2,11 +2,11 @@
   "module": "taras-shevchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:51.870272Z",
+  "last_audit": "2026-02-07T00:21:50.012946Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.360058Z",
-    "meta": "2026-02-04T20:08:59.238507Z",
+    "meta": "2026-02-05T20:58:10.293608Z",
     "activities": "2026-02-04T22:15:00.852557Z",
     "vocabulary": "2026-02-04T22:14:33.365405Z",
     "plan": null

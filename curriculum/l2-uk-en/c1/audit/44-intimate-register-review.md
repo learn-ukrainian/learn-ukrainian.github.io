@@ -1,7 +1,7 @@
 # Audit Report: M44 — 44-intimate-register.md
 **Level:** C1 | **Module:** M44 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:23
+**Generated:** 2026-02-06 20:13:11
 
 ## Configuration
 **Type:** C1
@@ -63,7 +63,7 @@
 - **Immersion:** 🇺🇦 99.4% (target 90-100%)
 - **Richness:** ✅ 97% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

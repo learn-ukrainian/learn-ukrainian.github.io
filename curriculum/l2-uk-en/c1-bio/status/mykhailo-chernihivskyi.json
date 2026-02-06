@@ -2,11 +2,11 @@
   "module": "mykhailo-chernihivskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:33.806756Z",
+  "last_audit": "2026-02-07T00:21:31.056218Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T12:09:19.651453Z",
-    "meta": "2026-02-05T12:09:33.894685Z",
+    "md": "2026-02-06T22:56:22.307839Z",
+    "meta": "2026-02-06T22:56:22.295420Z",
     "activities": "2026-01-19T17:51:25.271733Z",
     "vocabulary": "2026-02-05T00:27:34.059284Z",
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4924/4300 (raw: 4992)"
+      "message": "5475/4800 (raw: 5548)"
     },
     "activities": {
       "status": "pass",

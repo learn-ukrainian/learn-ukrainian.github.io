@@ -4,7 +4,18 @@
 **Created**: February 1, 2026
 **Task**: #18
 **GitHub Issue**: [#487](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/487)
-**Last Updated**: February 5, 2026 (added `/task` skill for issue management)
+**Last Updated**: February 6, 2026
+
+> **Agent Expansion Under Review**
+>
+> Currently evaluating adding a third local agent slot via OpenCode CLI (model-agnostic — can run Opus 4.6, Sonnet 4.5, GPT-5.2-codex, etc.) on a separate billing pool (GitHub Copilot subscription). Would require adding a `local-b` identity to the message broker. The remote GitHub Copilot agent (feature branches, Sonnet 4.5) is already operational. Four-agent topology under consideration:
+>
+> | Slot | Tool | Billing | Branch |
+> |------|------|---------|--------|
+> | `claude` | Claude Code CLI | Anthropic | main |
+> | `gemini` | gemini-cli | Google AI Pro | main |
+> | `local-b` | OpenCode CLI | GitHub Copilot | main |
+> | `remote` | GitHub Copilot | GitHub Copilot | feature branch |
 
 ---
 

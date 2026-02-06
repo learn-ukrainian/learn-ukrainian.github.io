@@ -1,7 +1,7 @@
 # Audit Report: M79 — 79-operne-mystetstvo.md
 **Level:** C1 | **Module:** M79 | **Phase:** C1.5 | **Pedagogy:** CBI | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:43
+**Generated:** 2026-02-06 20:13:31
 
 ## Configuration
 **Type:** C1-fine-arts
@@ -38,14 +38,9 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Опера як дзеркало національних амбіцій, Сучасні тенденції: Оксана Линів та глобальний контекст опери
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 violations (minor)
 - Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 ## Gates
@@ -64,7 +59,7 @@
 - **Immersion:** 🇺🇦 99.3% (target 90-100% (fine-arts))
 - **Richness:** ✅ 98% (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)

@@ -1,0 +1,47 @@
+{
+  "module": "radyanska-istoriohrafiia",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-06T14:08:44.667507Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-06T14:08:39.476429Z",
+    "meta": "2026-02-06T12:53:08.318429Z",
+    "activities": "2026-02-06T14:03:02.977504Z",
+    "vocabulary": "2026-02-06T01:09:50.784533Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4778/4000 (raw: 5021)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "15 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

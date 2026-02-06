@@ -1,60 +1,121 @@
-- id: pysmennytsia
-  uk: письменниця
-  en: woman writer
-  ipa: [pɪsˈmɛnːɪt͡sʲɐ]
-- id: etnohraf
-  uk: етнограф
-  en: ethnographer
-  ipa: [etˈnɔɦrɑf]
-- id: prosvitnytsia
-  uk: просвітниця
-  en: enlightener (female)
-  ipa: [prɔˈsʲvʲitnɪt͡sʲɐ]
-- id: psevdonim
-  uk: псевдонім
-  en: pseudonym
-  ipa: [psɛu̯dɔˈnʲim]
-- id: opovidannia
-  uk: оповідання
-  en: short story
-  ipa: [ɔpɔʋiˈdanʲːɐ]
-- id: folklor
-  uk: фольклор
-  en: folklore
-  ipa: [fɔlʲˈklʲɔr]
-- id: selianstvo
-  uk: селянство
-  en: peasantry
-  ipa: [sɛˈlʲanstwɔ]
-- id: pobut
-  uk: побут
-  en: everyday life
-  ipa: [ˈpɔbʊt]
-- id: obriad
-  uk: обряд
-  en: ritual
-  ipa: [ɔˈbrʲad]
-- id: tradytsiia
-  uk: традиція
-  en: tradition
-  ipa: [trɑˈdɪt͡sʲijɐ]
-- id: usna-tvorchist
-  uk: усна творчість
-  en: oral tradition
-  ipa: [ˈusnɑ ˈtʋɔrt͡ʃʲisʲtʲ]
-- id: narodna-pisnia
-  uk: народна пісня
-  en: folk song
-  ipa: [nɑˈrɔdnɑ ˈpʲisʲnʲɐ]
-- id: zvychai
-  uk: звичай
-  en: custom
-  ipa: [ˈzʋɪt͡ʃɑi̯]
-- id: etnohrafichnyi-zapys
-  uk: етнографічний запис
-  en: ethnographic record
-  ipa: [etnɔɦrɑˈfɪt͡ʃnɪi̯ ˈzɑpɪs]
-- id: zhinocha-literatura
-  uk: жіноча література
-  en: women's literature
-  ipa: [ʒiˈnɔt͡ʃɑ lʲiterɑˈturɑ]
+items:
+- lemma: письменниця
+  ipa: /pɪsˈmɛnːɪt͡sʲɐ/
+  translation: woman writer
+  pos: noun
+  gender: f
+- lemma: етнограф
+  ipa: /etˈnɔɦrɑf/
+  translation: ethnographer
+  pos: noun
+  gender: m
+- lemma: просвітниця
+  ipa: /prɔˈsʲvʲitnɪt͡sʲɐ/
+  translation: enlightener
+  pos: noun
+  gender: f
+- lemma: псевдонім
+  ipa: /psɛu̯dɔˈnʲim/
+  translation: pseudonym
+  pos: noun
+  gender: m
+- lemma: оповідання
+  ipa: /ɔpɔʋiˈdanʲːɐ/
+  translation: short story
+  pos: noun
+  gender: n
+- lemma: фольклор
+  ipa: /fɔlʲˈklʲɔr/
+  translation: folklore
+  pos: noun
+  gender: m
+- lemma: селянство
+  ipa: /sɛˈlʲanstwɔ/
+  translation: peasantry
+  pos: noun
+  gender: n
+- lemma: побут
+  ipa: /ˈpɔbʊt/
+  translation: everyday life
+  pos: noun
+  gender: m
+- lemma: обряд
+  ipa: /ɔˈbrʲad/
+  translation: ritual
+  pos: noun
+  gender: m
+- lemma: традиція
+  ipa: /trɑˈdɪt͡sʲijɐ/
+  translation: tradition
+  pos: noun
+  gender: f
+- lemma: усна творчість
+  ipa: /ˈusnɑ ˈtʋɔrt͡ʃʲisʲtʲ/
+  translation: oral tradition
+  pos: noun
+  gender: f
+- lemma: народна пісня
+  ipa: /nɑˈrɔdnɑ ˈpʲisʲnʲɐ/
+  translation: folk song
+  pos: noun
+  gender: f
+- lemma: звичай
+  ipa: /ˈzʋɪt͡ʃɑi̯/
+  translation: custom
+  pos: noun
+  gender: m
+- lemma: етнографічний запис
+  ipa: /etnɔɦrɑˈfɪt͡ʃnɪi̯ ˈzɑpɪs/
+  translation: ethnographic record
+  pos: noun
+  gender: m
+- lemma: жіноча література
+  ipa: /ʒiˈnɔt͡ʃɑ lʲiterɑˈturɑ/
+  translation: women's literature
+  pos: noun
+  gender: f
+- lemma: жертовність
+  ipa: /ʒertˈɔwnʲisʲtʲ/
+  translation: self-sacrifice
+  pos: noun
+  gender: f
+- lemma: автентичність
+  ipa: /ɐu̯tɛnˈtɪt͡ʃnʲistʲ/
+  translation: authenticity
+  pos: noun
+  gender: f
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: ренесанс
+  ipa: /reneˈsɑns/
+  translation: renaissance
+  pos: noun
+  gender: m
+- lemma: асиміляція
+  ipa: /sɪmʲilʲˈɑt͡sʲijɐ/
+  translation: assimilation
+  pos: noun
+  gender: f
+- lemma: суверенітет
+  ipa: /suʋerenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+- lemma: меценат
+  ipa: /mɛt͡sɛˈnɑt/
+  translation: patron
+  pos: noun
+  gender: m
+- lemma: архів
+  ipa: /ɐrˈxiu̯/
+  translation: archive
+  pos: noun
+  gender: m
+- lemma: емансипація
+  ipa: /emɐnt͡sɪpˈɑt͡sʲijɐ/
+  translation: emancipation
+  pos: noun
+  gender: f

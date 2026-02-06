@@ -2,11 +2,11 @@
   "module": "bohdan-khmelnytskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:39:41.523757Z",
+  "last_audit": "2026-02-07T00:21:38.844718Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T10:20:41.865719Z",
-    "meta": "2026-02-05T00:38:34.268735Z",
+    "meta": "2026-02-05T20:58:10.181989Z",
     "activities": "2026-01-27T15:34:55.351375Z",
     "vocabulary": "2026-02-04T13:34:29.673742Z",
     "plan": null

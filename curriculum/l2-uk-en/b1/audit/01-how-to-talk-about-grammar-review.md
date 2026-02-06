@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 17:52:07
+**Generated:** 2026-02-07 00:43:15
 
 ## Configuration
 **Type:** B1-bridge
@@ -52,7 +52,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 149/20
+- **Vocab:** ✅ 148/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -81,13 +81,16 @@
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
 
+## MDX VALIDATION
+✅ No issues found
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Introduction - Why Learn Grammar in Ukrainian?** | ✅ | 335 | Included in Core |
+| **Introduction - Why Learn Grammar in Ukrainian?** | ✅ | 334 | Included in Core |
 | **Parts of Speech (Частини мови)** | ⚪️ | 940 | Skipped |
-| **Case Names (Відмінки)** | ⚪️ | 764 | Skipped |
+| **Case Names (Відмінки)** | ⚪️ | 765 | Skipped |
 | **Basic Sentence Terms** | ⚪️ | 649 | Skipped |
 | **Practice Reading Grammar Explanations** | ⚪️ | 0 | Skipped (using YAML) |
 | **Mini-Dialogues** | ✅ | 298 | Included in Core |

@@ -15,20 +15,57 @@ tags:
 - military
 - cossacks
 - rebellion
+vital_status: deceased
 content_outline:
 - section: Вступ — Перший бунтар
   words: 600
+  points:
+  - Козацький ватажок
+  - Символ соціальної правди
 - section: Життєпис
   words: 1600
+  points:
+  - Служба у князя Острозького
+  - Молдовські походи
+  - Повстання та Солоницька трагедія
 - section: Історичний контекст
   words: 600
+  points:
+  - Дике Поле
+  - Берестейська унія
 - section: Внесок
   words: 400
+  points:
+  - Територіалізація козацтва
+  - Військова організація
 - section: Останні роки
   words: 400
+  points:
+  - Полон у Варшаві
+  - Публічна страта
 - section: Спадщина
   words: 400
+  points:
+  - Образ у фольклорі та літературі
+  - Культурний код незламності
 word_target: 4000
-vital_status: deceased
+vocabulary_hints:
+  required:
+  - повстання (uprising)
+  - ватажок (leader)
+  - облога (siege)
+  - страта (execution)
+  - фронтир (frontier)
+activity_hints:
+- type: reading
+  focus: Analysis of the Solonytsia tragedy
+  source: Хроніка Йоахима Бельського
+- type: critical-analysis
+  focus: Social conflict within the Cossack army
+- type: essay-response
+  focus: Nalyvaiko as a hero vs rebel in national memory
+  word_target: 300
+- type: comparative-study
+  focus: Nalyvaiko vs Khmelnytskyi uprisings
 build:
-  last_modified: '2026-02-04'
+  last_modified: '2026-02-06'

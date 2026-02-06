@@ -2,11 +2,11 @@
   "module": "tamara-horikha-zernya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:45.959594Z",
+  "last_audit": "2026-02-07T00:22:48.323406Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.358294Z",
-    "meta": "2026-02-02T23:23:00.382287Z",
+    "meta": "2026-02-06T22:56:22.303399Z",
     "activities": "2026-01-27T15:34:56.844115Z",
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "1996/4000 (raw: 2185) | pedagogy: 1 violations"
+      "message": "1996/4000 (raw: 2185) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "fail",
@@ -33,9 +33,9 @@
       "message": "0 < 24 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "info",
+      "violations": 0,
+      "message": "1/10 (PENDING \u2014 awaiting review)"
     }
   },
   "overall": {
@@ -46,6 +46,6 @@
       "Missing required activity types: reading"
     ],
     "pass_count": 0,
-    "fail_count": 4
+    "fail_count": 3
   }
 }

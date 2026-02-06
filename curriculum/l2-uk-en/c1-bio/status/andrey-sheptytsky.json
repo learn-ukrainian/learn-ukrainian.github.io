@@ -2,13 +2,13 @@
   "module": "andrey-sheptytsky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-05T12:40:02.999914Z",
+  "last_audit": "2026-02-07T00:22:03.148766Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.345599Z",
-    "meta": "2026-02-02T23:23:00.088661Z",
-    "activities": "2026-02-02T11:02:03.936981Z",
-    "vocabulary": "2026-02-02T11:02:03.936807Z",
+    "md": "2026-02-06T22:56:22.243408Z",
+    "meta": "2026-02-06T22:56:22.287409Z",
+    "activities": "2026-02-06T22:56:22.239652Z",
+    "vocabulary": "2026-02-06T22:56:22.351144Z",
     "plan": null
   },
   "gates": {
@@ -19,32 +19,29 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 5,
-      "message": "9/4000 (raw: 161) | engagement: 1/5 | pedagogy: 3 violations | immersion: 4.3% LOW (target 95-100% (biography)) | richness: 11% < 95% min (biography) - REWRITE needed"
+      "violations": 3,
+      "message": "4940/4300 (raw: 5368) | engagement: 4/5 | pedagogy: 1 violations | richness: 92% < 95% min (biography)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
-    "pass_count": 1,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

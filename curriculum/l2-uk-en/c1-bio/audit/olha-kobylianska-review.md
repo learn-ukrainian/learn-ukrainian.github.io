@@ -1,8 +1,8 @@
-# Audit Report: M57 — olha-kobylianska.md
-**Level:** C1-BIO | **Module:** M57 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M59 — olha-kobylianska.md
+**Level:** C1-BIO | **Module:** M59 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-05 12:40:02
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-07 00:22:01
 
 ## Configuration
 **Type:** C1-biography
@@ -33,6 +33,15 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/olha-kobylianska-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4718/4000 (raw: 4773)
 - **Activities:** ✅ 5/3
@@ -44,7 +53,7 @@
 - **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)

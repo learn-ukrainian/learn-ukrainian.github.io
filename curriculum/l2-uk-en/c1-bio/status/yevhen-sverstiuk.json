@@ -1,0 +1,51 @@
+{
+  "module": "yevhen-sverstiuk",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-07T00:22:41.073713Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-06T15:58:42.073387Z",
+    "meta": "2026-02-06T15:48:33.374130Z",
+    "activities": null,
+    "vocabulary": null,
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Activities' header OR activities sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 5,
+      "message": "0/3600 (raw: 75) | engagement: 0/5 | pedagogy: 3 violations | immersion: 0.0% LOW (target 95-100% (biography)) | richness: 13% < 95% min (biography) - REWRITE needed"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Activities' header OR activities sidecar",
+      "Missing required activity types: essay-response, reading"
+    ],
+    "pass_count": 0,
+    "fail_count": 3
+  }
+}

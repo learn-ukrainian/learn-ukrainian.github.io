@@ -67,7 +67,8 @@
       correct: false
     - text: Тільки якщо автор — ваш знайомий
       correct: false
-  - question: "Що саме в академічному письмі означає важливий методологічний термін 'контекстуалізація' власного дослідження в межах огляду літератури?"
+  - question: Що саме в академічному письмі означає важливий методологічний термін
+      'контекстуалізація' власного дослідження в межах огляду літератури?
     options:
     - text: Визначення місця вашої праці серед робіт попередників
       correct: true
@@ -310,7 +311,8 @@
       correct: false
     - text: тікає
       correct: false
-  - question: "Нова фундаментальна праця Коваля суттєво, значно та докорінно [___] та розширює попереднє класичне дослідження Петренка."
+  - question: Нова фундаментальна праця Коваля суттєво, значно та докорінно [___]
+      та розширює попереднє класичне дослідження Петренка.
     options:
     - text: доповнює
       correct: true
@@ -320,7 +322,8 @@
       correct: false
     - text: бачить
       correct: false
-  - question: "Ця оглядова стаття детально та всебічно [___] надзвичайно широкий спектр актуальних питань сучасної економіки."
+  - question: Ця оглядова стаття детально та всебічно [___] надзвичайно широкий спектр
+      актуальних питань сучасної економіки.
     options:
     - text: висвітлює
       correct: true
@@ -330,7 +333,8 @@
       correct: false
     - text: каже
       correct: false
-  - question: "Молоді вчені у своєму новому дослідженні сміливо та аргументовано [___] нову альтернативну гіпотезу щодо походження цього явища."
+  - question: Молоді вчені у своєму новому дослідженні сміливо та аргументовано [___]
+      нову альтернативну гіпотезу щодо походження цього явища.
     options:
     - text: висувають
       correct: true
@@ -340,7 +344,8 @@
       correct: false
     - text: ставлять
       correct: false
-  - question: "Всі отримані під час цього етапу експериментальні дані повністю та беззаперечно [___] з попередніми теоретичними висновками колег."
+  - question: Всі отримані під час цього етапу експериментальні дані повністю та беззаперечно
+      [___] з попередніми теоретичними висновками колег.
     options:
     - text: узгоджуються
       correct: true
@@ -361,7 +366,8 @@
       correct: false
     - text: вірить
       correct: false
-  - question: "Отримані статистичні результати переконливо та однозначно [___] про високу наукову та практичну ефективність запропонованого автором методу."
+  - question: Отримані статистичні результати переконливо та однозначно [___] про
+      високу наукову та практичну ефективність запропонованого автором методу.
     options:
     - text: свідчать
       correct: true
@@ -701,7 +707,8 @@
 - title: Переклад фраз
   type: quiz
   items:
-  - question: "A growing body of modern and comprehensive research suggests that this phenomenon is widespread."
+  - question: A growing body of modern and comprehensive research suggests that this
+      phenomenon is widespread.
     options:
     - text: Дедалі більше досліджень свідчать, що це явище є поширеним.
       correct: true
@@ -722,7 +729,8 @@
       correct: false
     - text: Увага була велика...
       correct: false
-  - question: "Consistent with the previous findings of other researchers, our results show a positive correlation."
+  - question: Consistent with the previous findings of other researchers, our results
+      show a positive correlation.
     options:
     - text: Узгоджується з попередніми знахідками, наші результати показують позитивну
         кореляцію.
@@ -733,7 +741,8 @@
       correct: false
     - text: Відповідно до того що було...
       correct: false
-  - question: "Contrary to all initial and optimistic expectations, the experiment failed to produce significant results."
+  - question: Contrary to all initial and optimistic expectations, the experiment
+      failed to produce significant results.
     options:
     - text: Всупереч очікуванням, експеримент не дав значущих результатів.
       correct: true
@@ -764,7 +773,8 @@
       correct: false
     - text: Продовжуючи ідеї...
       correct: false
-  - question: "The findings directly and unambiguously contradict established theories in the field of modern physics."
+  - question: The findings directly and unambiguously contradict established theories
+      in the field of modern physics.
     options:
     - text: Результати суперечать усталеним теоріям у галузі фізики.
       correct: true
@@ -785,6 +795,7 @@
       correct: false
     - text: Далі буде дослідження...
       correct: false
+  instruction: Оберіть правильну відповідь.
 - title: 'Письмове завдання: Синтез думок'
   type: essay-response
   prompt: '**Джерела:**

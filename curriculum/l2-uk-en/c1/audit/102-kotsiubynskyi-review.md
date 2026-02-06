@@ -1,7 +1,7 @@
 # Audit Report: M102 — 102-kotsiubynskyi.md
 **Level:** C1 | **Module:** M102 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:14:54
+**Generated:** 2026-02-06 20:12:49
 
 ## Configuration
 **Type:** C1
@@ -51,8 +51,8 @@
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Літературний аналіз, Аналіз «Intermezzo»: Конфлікт і Образна система, Первинний аналіз, Аналіз «Тіней забутих предків»: Тематика і Стиль, Порівняльний аналіз: Коцюбинський vs. Стефаник
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple headers contain 'Аналіз': Порівняльний аналіз: Коцюбинський vs. Стефаник, Первинний аналіз, Аналіз «Intermezzo»: Конфлікт і Образна система, Літературний аналіз, Аналіз «Тіней забутих предків»: Тематика і Стиль
+  - FIX: RENAME one header to NOT contain 'Аналіз'. Example: 'Агіографічна спадщина' → 'Житійна творчість' (removes the duplicate word).
 
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
@@ -76,7 +76,7 @@
 - **Immersion:** 🇺🇦 99.0% (target 90-100%)
 - **Richness:** ❌ 84% < 95% min (content)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 0/10 (PENDING) - Naturalness check required
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
 **Score:** 84% (minimum: 95%)
