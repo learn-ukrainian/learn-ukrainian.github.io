@@ -2,10 +2,10 @@
   "module": "18-register-academic-ukrainian",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:00:52.732638Z",
+  "last_audit": "2026-02-06T22:11:12.008956Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:00:12.874999Z",
+    "md": "2026-02-06T22:10:47.349162Z",
     "meta": "2026-02-06T21:26:00.672533Z",
     "activities": "2026-02-06T21:26:00.649533Z",
     "vocabulary": "2026-02-06T21:26:00.678533Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3969/3800 (raw: 4314) | richness: 94% < 95% min (style)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4074/3800 (raw: 4419)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

@@ -2,10 +2,10 @@
   "module": "10-checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:00:49.201199Z",
+  "last_audit": "2026-02-06T22:11:10.869219Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:58:43.903557Z",
+    "md": "2026-02-06T22:08:51.647588Z",
     "meta": "2026-02-06T21:26:00.671533Z",
     "activities": "2026-02-06T21:26:00.648533Z",
     "vocabulary": "2026-02-06T21:26:00.677533Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5620/3500 (raw: 6832) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5656/3500 (raw: 6874)"
     },
     "activities": {
       "status": "pass",
@@ -39,11 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Checkpoint Format Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

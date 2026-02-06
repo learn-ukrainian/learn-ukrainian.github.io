@@ -2,10 +2,10 @@
   "module": "19-register-official-legal",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:00:53.870052Z",
+  "last_audit": "2026-02-06T22:12:04.079441Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:56:46.992975Z",
+    "md": "2026-02-06T22:11:57.858519Z",
     "meta": "2026-02-06T21:26:00.672533Z",
     "activities": "2026-02-06T21:26:00.650533Z",
     "vocabulary": "2026-02-06T21:26:00.678533Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3976/3800 (raw: 4976) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4336/3800 (raw: 5328)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

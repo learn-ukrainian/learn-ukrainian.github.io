@@ -1,8 +1,8 @@
 # Audit Report: M17 — 17-register-business-ukrainian.md
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 22:00:51
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:03:56
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3465/3800 (raw: 4560)
+- **Words:** ⚠️ 3738/3800 (raw: 4833) (62 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -73,9 +73,9 @@
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
 | visual | 31 | 4 | 100% | 10% | 10.0% |
-| variety | 0.93 | - | 93% | 5% | 4.7% |
+| variety | 0.94 | - | 94% | 5% | 4.7% |
 | cultural | 5 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
@@ -84,9 +84,9 @@
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
 | **Вступ — Ділове спілкування** | ✅ | 659 | Included in Core |
 | **Ділове листування** | ⚪️ | 875 | Skipped |
-| **Електронне листування** | ⚪️ | 264 | Skipped |
-| **Переговори та зустрічі** | ⚪️ | 341 | Skipped |
+| **Електронне листування** | ⚪️ | 361 | Skipped |
+| **Переговори та зустрічі** | ⚪️ | 422 | Skipped |
 | **Корпоративна комунікація** | ⚪️ | 715 | Skipped |
-| **Типові помилки та русизми** | ✅ | 273 | Included in Core |
+| **Типові помилки та русизми** | ✅ | 324 | Included in Core |
 | **Практика і підсумок** | ✅ | 183 | Included in Core |
-| **Підсумок** | ✅ | 94 | Included in Core |
+| **Підсумок** | ✅ | 138 | Included in Core |

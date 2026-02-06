@@ -1,8 +1,8 @@
 # Audit Report: M06 — 06-passive-in-context.md
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 22:00:48
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:03:54
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,7 +44,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5608/3800 (raw: 6157)
+- **Words:** ✅ 5781/3800 (raw: 6330)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -73,7 +73,7 @@
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 9 | 3 | 100% | 10% | 10.0% |
-| realworld | 18 | 3 | 100% | 10% | 10.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 56 | 5 | 100% | 5% | 5.0% |
@@ -91,4 +91,4 @@
 | **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 316 | Included in Core |
 | **Практичні сценарії — Розмовний контекст** | ✅ | 772 | Included in Core |
 | **Інтегрована практика** | ⚪️ | 236 | Skipped |
-| **Підсумок модуля** | ✅ | 589 | Included in Core |
+| **Підсумок модуля** | ✅ | 762 | Included in Core |

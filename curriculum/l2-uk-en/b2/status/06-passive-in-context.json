@@ -2,10 +2,10 @@
   "module": "06-passive-in-context",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:00:48.022414Z",
+  "last_audit": "2026-02-06T22:03:54.261194Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:59:22.680750Z",
+    "md": "2026-02-06T22:02:50.994786Z",
     "meta": "2026-02-06T21:26:00.671533Z",
     "activities": "2026-02-06T21:26:00.647533Z",
     "vocabulary": "2026-02-06T21:26:00.677533Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5608/3800 (raw: 6157)"
+      "message": "5781/3800 (raw: 6330)"
     },
     "activities": {
       "status": "pass",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

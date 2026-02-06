@@ -1,8 +1,8 @@
 # Audit Report: M10 — 10-checkpoint-passive-voice.md
 **Level:** B2 | **Module:** M10 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3500
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 22:00:49
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:11:10
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -46,19 +46,8 @@
 - Required types used: 4/4 (error-correction, essay-response, fill-in, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
-- **[SECTION_ORDER]** '## Самооцінка і план' should come after 'summary' section
-  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 5620/3500 (raw: 6832)
+- **Words:** ✅ 5656/3500 (raw: 6874)
 - **Activities:** ✅ 18/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -68,7 +57,7 @@
 - **Vocab:** ⚠️ 2 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
@@ -83,7 +72,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 55 | 3 | 100% | 20% | 20.0% |
+| review_sections | 57 | 3 | 100% | 20% | 20.0% |
 | variety | 0.91 | - | 91% | 15% | 13.7% |
 | engagement | 9 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
@@ -96,11 +85,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Вступ — Що ми вивчили** | ✅ | 660 | Included in Core |
-| **Навичка 1: Ключові знання модуля** | ⚪️ | 248 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 284 | Skipped |
 | **Огляд — Чотири форми пасиву** | ⚪️ | 767 | Skipped |
 | **Огляд — Вибір форми за регістром** | ⚪️ | 604 | Skipped |
 | **Огляд — Активні дієприкметники** | ⚪️ | 695 | Skipped |
 | **Огляд — Дієприкметники vs підрядні речення** | ⚪️ | 610 | Skipped |
 | **Діагностичні завдання** | ⚪️ | 1301 | Skipped |
-| **Самооцінка і план** | ⚪️ | 606 | Skipped |
 | **Summary** | ✅ | 65 | Included in Core |
+| **Самооцінка і план** | ⚪️ | 606 | Skipped |

@@ -1,8 +1,8 @@
 # Audit Report: M18 — 18-register-academic-ukrainian.md
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 22:00:52
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:11:12
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,12 +44,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3969/3800 (raw: 4314)
+- **Words:** ✅ 4074/3800 (raw: 4419)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -57,12 +57,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
-- **Richness:** ❌ 94% < 95% min (style)
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 94% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
@@ -70,23 +70,23 @@
 |--------|-------|--------|-------|--------|--------------|
 | exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
 | model_answers | 100 | 3 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 13 | 5 | 100% | 15% | 15.0% |
-| visual | 10 | 4 | 100% | 10% | 10.0% |
+| visual | 12 | 4 | 100% | 10% | 10.0% |
 | variety | 0.93 | - | 93% | 5% | 4.7% |
-| cultural | 0 | - | 0% | 5% | 0.0% |
-| paragraph_var | 0.98 | - | 98% | 5% | 4.9% |
-| **TOTAL** | | | | | **94.6%** |
+| cultural | 3 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
-| **Вступ — Науковий стиль** | ✅ | 636 | Included in Core |
-| **Лексичні особливості** | ⚪️ | 718 | Skipped |
+| **Вступ — Науковий стиль** | ✅ | 694 | Included in Core |
+| **Лексичні особливості** | ⚪️ | 746 | Skipped |
 | **Граматичні особливості** | ⚪️ | 935 | Skipped |
 | **Мовне хеджування** | ⚪️ | 615 | Skipped |
-| **Цитування та посилання** | ⚪️ | 274 | Skipped |
+| **Цитування та посилання** | ⚪️ | 293 | Skipped |
 | **Структура наукового тексту** | ✅ | 510 | Included in Core |
 | **Практика і підсумок** | ✅ | 110 | Included in Core |
 | **Підсумок** | ✅ | 114 | Included in Core |
