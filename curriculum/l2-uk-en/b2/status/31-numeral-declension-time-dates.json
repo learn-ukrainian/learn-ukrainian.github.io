@@ -2,13 +2,13 @@
   "module": "31-numeral-declension-time-dates",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T10:31:08.739118Z",
+  "last_audit": "2026-02-06T12:20:35.553529Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T10:26:06.960070Z",
-    "meta": "2026-02-06T10:29:03.545452Z",
-    "activities": "2026-02-06T10:26:06.976070Z",
-    "vocabulary": "2026-02-06T10:26:07.003070Z",
+    "md": "2026-02-06T12:04:24.674813Z",
+    "meta": "2026-02-06T12:04:24.712813Z",
+    "activities": "2026-02-06T12:04:24.691813Z",
+    "vocabulary": "2026-02-06T12:04:24.718813Z",
     "plan": null
   },
   "gates": {

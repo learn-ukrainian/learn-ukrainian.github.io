@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M55 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 10:31:33
+**Generated:** 2026-02-06 12:21:21
 
 ## Configuration
 **Type:** B2-vocab

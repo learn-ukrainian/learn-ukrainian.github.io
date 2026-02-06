@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M33 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-06 12:12:49
+**Generated:** 2026-02-06 12:20:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -44,12 +44,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1991/2000 (raw: 2614) (9 short)
+- **Words:** ✅ 2221/2000 (raw: 2856)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
@@ -68,13 +68,13 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 37 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 9 | 4 | 100% | 15% | 15.0% |
+| examples | 40 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 24 | 5 | 100% | 5% | 5.0% |
 | proverbs | 7 | 1 | 100% | 5% | 5.0% |
@@ -84,9 +84,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 77 | Included in Core |
-| **Розминка — Як утворюються назви осіб** | ⚪️ | 221 | Skipped |
-| **Суфікс -ар/-яр (професія, заняття)** | ⚪️ | 907 | Skipped |
+| **Розминка — Як утворюються назви осіб** | ⚪️ | 257 | Skipped |
+| **Суфікс -ар/-яр (професія, заняття)** | ⚪️ | 945 | Skipped |
 | **Суфікс -ач (виконавець дії)** | ⚪️ | 147 | Skipped |
 | **Суфікс -ник (рід занять, роль)** | ⚪️ | 303 | Skipped |
-| **Практика — визначення словотвору** | ⚪️ | 324 | Skipped |
+| **Практика — визначення словотвору** | ⚪️ | 480 | Skipped |
 | **Підсумок** | ✅ | 12 | Included in Core |
