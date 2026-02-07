@@ -1,8 +1,3 @@
----
-module: 09-reflexive-verbs
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Reflexive Verbs Meanings
   pairs:
@@ -206,7 +201,7 @@ activities:
     - text: вони
       correct: false
     explanation: 'Mistake: Вони (they) needs -ються.'
-  - question: "Identify the error in: \"Вона сміються.\""
+  - question: 'Identify the error in: "Вона сміються."'
     options:
     - text: should be сміється
       correct: true
@@ -217,7 +212,7 @@ activities:
     - text: no error
       correct: false
     explanation: She (вона) uses -ється.
-  - question: "Identify the error in: \"Ми називаєшся.\""
+  - question: 'Identify the error in: "Ми називаєшся."'
     options:
     - text: should be називаємось
       correct: true
@@ -228,7 +223,7 @@ activities:
     - text: no error
       correct: false
     explanation: We (ми) uses -ємось.
-  - question: "Identify the error in: \"Ви дивиться.\""
+  - question: 'Identify the error in: "Ви дивиться."'
     options:
     - text: should be дивитесь
       correct: true
@@ -239,7 +234,7 @@ activities:
     - text: no error
       correct: false
     explanation: You plural (ви) uses -итесь.
-  - question: "Identify the error in: \"Ти миється.\""
+  - question: 'Identify the error in: "Ти миється."'
     options:
     - text: should be миєшся
       correct: true
@@ -254,21 +249,21 @@ activities:
 - type: fill-in
   title: 'Dialogue: Morning Routine'
   items:
-  - sentence: Вранці я ___. 
+  - sentence: Вранці я ___.
     answer: прокидаюсь
     options:
     - прокидаюсь
     - прокидається
     - ми
     - вони
-  - sentence: Потім я ___. 
+  - sentence: Потім я ___.
     answer: вмиваюсь
     options:
     - вмиваюсь
     - вмивається
     - ми
     - вони
-  - sentence: Я ___. 
+  - sentence: Я ___.
     answer: одягаюсь
     options:
     - одягаюсь
@@ -296,7 +291,7 @@ activities:
     - усміхається
     - ми
     - вони
-  - sentence: Ми з братом ___. 
+  - sentence: Ми з братом ___.
     answer: вітаємось
     options:
     - вітаємось
@@ -317,7 +312,7 @@ activities:
     - починаються
     - ми
     - вони
-  - sentence: Ми добре ___. 
+  - sentence: Ми добре ___.
     answer: готуємось
     options:
     - готуємось
@@ -369,15 +364,15 @@ activities:
   - statement: The ending -ться sounds like [ts'a].
     correct: true
     explanation: Yes, it is a long, soft buzzing sound.
-  - statement: "Подобатися means 'to like'."
+  - statement: Подобатися means 'to like'.
     correct: true
     explanation: Yes, this verb always uses -ся.
-  - statement: "Готуватися means 'to prepare oneself'."
+  - statement: Готуватися means 'to prepare oneself'.
     correct: true
     explanation: Yes, it is a reflexive action.
-  - statement: "You use -сь after the ending -мо."
+  - statement: You use -сь after the ending -мо.
     correct: true
-    explanation: "Correct! -мо ends in a vowel, so add -сь (зустрічаємось)."
+    explanation: Correct! -мо ends in a vowel, so add -сь (зустрічаємось).
   instruction: Determine if the statement is true.
 - type: match-up
   title: Match Person to Verb
@@ -619,7 +614,7 @@ activities:
     - дивляться
     - ми
     - вони
-  - sentence: Діти ___. 
+  - sentence: Діти ___.
     answer: сміються
     options:
     - сміються

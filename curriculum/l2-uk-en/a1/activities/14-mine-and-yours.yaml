@@ -1,8 +1,3 @@
----
-module: 14-mine-and-yours
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Possessive Forms
   pairs:
@@ -753,7 +748,8 @@ activities:
     - text: твою
       correct: false
     explanation: свою = his own (subject = possessor)
-  instruction: "Оберіть правильну відповідь. Зверніть увагу: свій = «one's own», його/її = someone else's."
+  instruction: 'Оберіть правильну відповідь. Зверніть увагу: свій = «one''s own»,
+    його/її = someone else''s.'
 - type: true-false
   title: Свій — Key Concepts
   items:
@@ -780,7 +776,8 @@ activities:
     explanation: Correct! In 1st/2nd person, both are acceptable and mean the same.
   - statement: «Він любить свою маму» and «Він любить його маму» mean the same thing.
     correct: false
-    explanation: Incorrect! In 3rd person, the difference matters! свою = his own, його = another man's.
+    explanation: Incorrect! In 3rd person, the difference matters! свою = his own,
+      його = another man's.
   instruction: Визначте, чи твердження правильне.
 - type: fill-in
   title: Свій in Context
@@ -841,4 +838,4 @@ activities:
     - його
     - її
     - їхні
-  instruction: "Оберіть правильне слово. Пам'ятайте: свій = subject's own."
+  instruction: 'Оберіть правильне слово. Пам''ятайте: свій = subject''s own.'

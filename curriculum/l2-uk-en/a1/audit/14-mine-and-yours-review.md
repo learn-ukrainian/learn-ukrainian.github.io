@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1307
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 15:30:30
+**Generated:** 2026-02-07 11:19:25
 
 ## Configuration
 **Type:** A1-grammar

@@ -1,12 +1,12 @@
 # Audit Report: M06 — 06-the-living-verb-i.md
-**Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
+**Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1210
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:42
+**Generated:** 2026-02-07 11:19:21
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 500 words
+**Word Target:** 1210 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1407/500 (raw: 1721)
+- **Words:** ✅ 1407/1210 (raw: 1721)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types

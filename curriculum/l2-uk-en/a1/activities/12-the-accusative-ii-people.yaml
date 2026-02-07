@@ -1,8 +1,3 @@
----
-module: 12-the-accusative-ii-people
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: People in Your Life
   pairs:

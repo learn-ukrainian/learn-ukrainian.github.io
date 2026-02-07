@@ -2,14 +2,14 @@
   "module": "06-the-living-verb-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:42.883041Z",
+  "last_audit": "2026-02-07T11:19:21.964431Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351160Z",
-    "meta": "2026-01-26T21:56:47.903035Z",
-    "activities": "2026-01-15T23:54:43.129688Z",
-    "vocabulary": "2026-01-25T18:00:39.378152Z",
-    "plan": "2026-01-30T12:14:25.572488Z"
+    "md": "2026-02-07T11:00:20.727850Z",
+    "meta": "2026-02-07T11:00:20.741850Z",
+    "activities": "2026-02-07T11:19:21.785567Z",
+    "vocabulary": "2026-02-07T11:00:20.746850Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1407/500 (raw: 1721)"
+      "message": "1407/1210 (raw: 1721)"
     },
     "activities": {
       "status": "pass",

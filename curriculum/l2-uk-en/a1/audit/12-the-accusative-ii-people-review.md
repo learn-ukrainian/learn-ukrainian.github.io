@@ -1,12 +1,12 @@
 # Audit Report: M12 — 12-the-accusative-ii-people.md
-**Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1374
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:46
+**Generated:** 2026-02-07 11:19:24
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1374 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1342/750 (raw: 1662)
+- **Words:** ⚠️ 1342/1374 (raw: 1662) (32 short)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
