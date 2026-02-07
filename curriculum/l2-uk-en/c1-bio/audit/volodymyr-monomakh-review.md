@@ -1,8 +1,8 @@
 # Audit Report: M06 — volodymyr-monomakh.md
 **Level:** C1-BIO | **Module:** M06 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:21:29
+**Naturalness:** 0/10 (PASS)
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-07 10:34:02
 
 ## Configuration
 **Type:** C1-biography
@@ -17,69 +17,73 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Аналіз 'Повчання дітям' | 1 | 1 | ✅ |
-| 2 | critical-analysis | Оцінка соціальних реформ | 1 | 1 | ✅ |
-| 3 | essay-response | Актуальність етики Мономаха | 1 | 1 | ✅ |
-| 4 | comparative-study | Мономах vs Карл Великий | 1 | 1 | ✅ |
-| 5 | authorial-intent | Аналіз 'Повчання': Педагогіка князя | 1 | 1 | ✅ |
-| 6 | critical-analysis | Аналіз військової стратегії | 1 | 1 | ✅ |
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in volodymyr-monomakh.yaml: Schema validation error at key 'id': 'essay-monomakh' does not match '^reading-[a-z0-9-]+$'
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
 
-**Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (critical-analysis, reading) ✅
-- Low density activities: 0
+## Recommendation
+**📝 UPDATE** (severity 40/100)
+
+- Revision recommended (severity 40/100)
+- 4 violations (moderate)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 4878/4300 (raw: 5106)
-- **Activities:** ✅ 6/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Words:** ⚠️ 4261/4300 (raw: 4356) (39 short)
+- **Activities:** ❌ 0/3
+- **Density:** ❌ 0 < 1
+- **Unique_types:** ❌ 0/3 types
+- **Priority:** ❌ No priority types
+- **Engagement:** ❌ 3/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Pedagogy:** ❌ 4 violations
+- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
+- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
+- **Richness:** ❌ 88% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ❌ Not scored
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 88% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 13 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 9 | 4 | 100% | 19% | 19.0% |
+| engagement | 3 | 6 | 50% | 14% | 7.1% |
+| quotes | 14 | 3 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 3 | 4 | 75% | 10% | 7.1% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+| questions | 2 | 3 | 67% | 5% | 3.2% |
+| **TOTAL** | | | | | **88.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 99 | Included in Core |
-| **Вступ — Останній великий самодержець Києва** | ✅ | 541 | Included in Core |
-| **Життєпис** | ⚪️ | 1677 | Skipped |
-| **Історичний контекст** | ✅ | 604 | Included in Core |
-| **Внесок** | ⚪️ | 525 | Skipped |
-| **Останні роки: Захід сонця над єдиною Руссю** | ⚪️ | 443 | Skipped |
-| **Спадщина** | ⚪️ | 438 | Skipped |
-| **Порівняльний аналіз: Мономах та європейські монархи XI–XII ст.** | ✅ | 127 | Included in Core |
-| **Підсумок** | ✅ | 424 | Included in Core |
+| **Intro/Narrative** | ✅ | 144 | Included in Core |
+| **Вступ: Моральний лідер Русі** | ✅ | 448 | Included in Core |
+| **Шлях до влади: Любеч та солідарність** | ⚪️ | 451 | Skipped |
+| **Меч проти степу: Половецькі кампанії** | ⚪️ | 544 | Skipped |
+| **Дипломатія та європейські зв'язки: Русь у колі народів** | ⚪️ | 384 | Skipped |
+| **Повчання дітям: Політична філософія** | ⚪️ | 589 | Skipped |
+| **Статут Мономаха: Соціальна реформа** | ⚪️ | 532 | Skipped |
+| **Деколонізація: Князь Києва, а не Москви** | ⚪️ | 519 | Skipped |
+| **Спадщина та культурний вплив крізь віки** | ✅ | 412 | Included in Core |
+| **Підсумок: Заповіт єдності для майбутнього України** | ✅ | 238 | Included in Core |
+| **Activities / Вправи** | ➖ | 11 | Excluded Type |
+| **Vocabulary / Словник** | ➖ | 11 | Excluded Type |

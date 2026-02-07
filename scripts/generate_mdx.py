@@ -1728,7 +1728,8 @@ def main():
                 with open(meta_file, 'r', encoding='utf-8') as f:
                     meta_data = yaml.safe_load(f)
             except Exception as e:
-                print(f'    ⚠️ Error parsing YAML metadata for {mod.slug}: {e}')
+                print(f'\n❌ CRITICAL: Error parsing YAML metadata for {mod.slug}: {e}')
+                sys.exit(1)
 
         # Load PLAN file for title/subtitle (Architecture v2.0: title lives in plan, not meta)
         # Try both slug-only and numbered formats
@@ -1742,12 +1743,15 @@ def main():
                     # Merge title/subtitle from plan into meta_data
                     if meta_data is None:
                         meta_data = {}
-                    if 'title' not in meta_data and plan_data and 'title' in plan_data:
-                        meta_data['title'] = plan_data['title']
-                    if 'subtitle' not in meta_data and plan_data and 'subtitle' in plan_data:
-                        meta_data['subtitle'] = plan_data['subtitle']
+                    if plan_data and 'title' in plan_data:
+                        if 'title' not in meta_data:
+                            meta_data['title'] = plan_data['title']
+                    if plan_data and 'subtitle' in plan_data:
+                        if 'subtitle' not in meta_data:
+                            meta_data['subtitle'] = plan_data['subtitle']
             except Exception as e:
-                print(f'    ⚠️ Error parsing plan file for {mod.slug}: {e}')
+                print(f'\n❌ CRITICAL: Error parsing plan file for {mod.slug}: {e}')
+                sys.exit(1)
                 
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
@@ -1762,7 +1766,8 @@ def main():
                     if v_data and 'items' in v_data:
                         vocab_items = v_data['items']
             except Exception as e:
-                print(f'    ⚠️ Error parsing YAML vocabulary for {mod.slug}: {e}')
+                print(f'\n❌ CRITICAL: Error parsing YAML vocabulary for {mod.slug}: {e}')
+                sys.exit(1)
 
         # Load ACTIVITIES
         yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"
@@ -1777,7 +1782,8 @@ def main():
             try:
                 yaml_activities = parser.parse(yaml_file)
             except Exception as e:
-                print(f'    ⚠️ Error parsing YAML activities for {mod.slug}: {e}')
+                print(f'\n❌ CRITICAL: Error parsing YAML activities for {mod.slug}: {e}')
+                sys.exit(1)
 
         # EXTERNAL RESOURCES
         module_id = f"{mod.level}-{mod.slug}"

@@ -2,13 +2,13 @@
   "module": "volodymyr-monomakh",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:29.220125Z",
+  "last_audit": "2026-02-07T10:34:02.378424Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.354850Z",
-    "meta": "2026-02-05T20:58:10.381215Z",
-    "activities": "2026-02-03T22:18:47.922679Z",
-    "vocabulary": "2026-02-02T21:27:20.502319Z",
+    "md": "2026-02-07T10:33:41.516920Z",
+    "meta": "2026-02-07T10:33:13.576774Z",
+    "activities": "2026-02-07T10:28:23.568145Z",
+    "vocabulary": "2026-02-07T10:28:00.143919Z",
     "plan": null
   },
   "gates": {
@@ -18,30 +18,33 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4878/4300 (raw: 5106)"
+      "status": "fail",
+      "violations": 3,
+      "message": "4261/4300 (raw: 4356) (39 short) | engagement: 3/5 | pedagogy: 4 violations | richness: 88% < 95% min (biography)"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6/3"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/24"
+      "message": "24/24"
     },
     "naturalness": {
-      "status": "pass",
-      "violations": 0,
-      "message": "10/10 (High)"
+      "status": "fail",
+      "violations": 1,
+      "message": "Not scored"
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors",
+      "Missing required activity types: critical-analysis, reading"
+    ],
+    "pass_count": 2,
+    "fail_count": 3
   }
 }

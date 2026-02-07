@@ -38,6 +38,8 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import yaml
+
 # Configuration
 DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_FILE = Path(__file__).parent.parent / ".mcp/servers/message-broker/watcher.pid"
@@ -64,6 +66,44 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+# Agent config (lazy-loaded singleton)
+_AGENTS_CONFIG = None
+
+
+def load_agent_config() -> dict:
+    """Load agent registry from scripts/config/agents.yaml (cached)."""
+    global _AGENTS_CONFIG
+    if _AGENTS_CONFIG is None:
+        config_path = Path(__file__).parent / "config" / "agents.yaml"
+        if config_path.exists():
+            with open(config_path) as f:
+                _AGENTS_CONFIG = yaml.safe_load(f).get("agents", {})
+        else:
+            # Fallback hardcoded defaults
+            _AGENTS_CONFIG = {
+                "claude": {"bridge_command": "process-claude", "process_pattern": "claude"},
+                "gemini": {"bridge_command": "process", "process_pattern": "gemini-cli"},
+            }
+        logger.info(f"Loaded agent config: {list(_AGENTS_CONFIG.keys())}")
+    return _AGENTS_CONFIG
+
+
+def notify_human(from_agent: str, to_agent: str, message_id: int, task_id: str):
+    """Send macOS notification to alert human about inter-agent message."""
+    try:
+        title = f"{from_agent.title()} → {to_agent.title()}"
+        subtitle = f"Task: {task_id}" if task_id else "New message"
+        body = f"Message #{message_id} — processing headlessly"
+        notification = (
+            f'display notification "{body}" '
+            f'with title "{title}" '
+            f'subtitle "{subtitle}" '
+            f'sound name "Submarine"'
+        )
+        subprocess.run(["osascript", "-e", notification], check=False, capture_output=True)
+    except Exception:
+        pass  # Notification is best-effort
 
 
 def get_db():
@@ -131,48 +171,47 @@ def count_task_turns(task_id: str) -> int:
     return count
 
 
-def is_user_active() -> bool:
-    """Check if there's been recent user activity (Claude session with human input)."""
-    # Check for active Claude processes
-    try:
-        result = subprocess.run(
-            ["pgrep", "-f", "claude.*--interactive"],
-            capture_output=True,
-            text=True
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            return True
-    except Exception:
-        pass
-
+def is_any_agent_active() -> bool:
+    """Check if any agent has an active interactive session."""
+    agents = load_agent_config()
+    for name, config in agents.items():
+        pattern = config.get("process_pattern")
+        if pattern:
+            try:
+                result = subprocess.run(
+                    ["pgrep", "-f", pattern],
+                    capture_output=True, text=True
+                )
+                if result.returncode == 0 and result.stdout.strip():
+                    return True
+            except Exception:
+                pass
     return False
 
 
-def trigger_agent(agent: str, message_id: int, task_id: str = None) -> bool:
+def trigger_agent(agent: str, message_id: int, task_id: str = None, from_agent: str = None) -> bool:
     """Trigger an agent to process a message.
 
     Returns True if successful, False otherwise.
     """
+    agents = load_agent_config()
+    if agent not in agents:
+        logger.error(f"Unknown agent: {agent}. Registered: {list(agents.keys())}")
+        return False
+
     logger.info(f"Triggering {agent} to process message #{message_id} (task: {task_id or 'N/A'})")
 
+    # Notify human before processing (so they know even if it takes minutes)
+    notify_human(from_agent or "unknown", agent, message_id, task_id)
+
     try:
-        if agent == "gemini":
-            cmd = [
-                sys.executable,
-                str(BRIDGE_SCRIPT),
-                "process",
-                str(message_id)
-            ]
-        elif agent == "claude":
-            cmd = [
-                sys.executable,
-                str(BRIDGE_SCRIPT),
-                "process-claude",
-                str(message_id)
-            ]
-        else:
-            logger.error(f"Unknown agent: {agent}")
-            return False
+        bridge_cmd = agents[agent]["bridge_command"]
+        cmd = [
+            sys.executable,
+            str(BRIDGE_SCRIPT),
+            bridge_cmd,
+            str(message_id)
+        ]
 
         # Run in project directory with timeout
         result = subprocess.run(
@@ -227,7 +266,7 @@ def run_watcher():
                 continue
 
             # Check if user is active
-            if is_user_active():
+            if is_any_agent_active():
                 logger.debug("User session detected - backing off")
                 time.sleep(POLL_INTERVAL_SECONDS * 2)
                 continue
@@ -254,7 +293,7 @@ def run_watcher():
                     continue
 
                 # Trigger appropriate agent
-                success = trigger_agent(msg['to'], msg['id'], msg['task_id'])
+                success = trigger_agent(msg['to'], msg['id'], msg['task_id'], from_agent=msg['from'])
 
                 if success:
                     consecutive_errors = 0
@@ -336,6 +375,9 @@ def show_status():
     print(f"Database: {DB_PATH}")
     print(f"PID file: {PID_FILE}")
     print(f"Log file: {LOG_FILE}")
+
+    agents = load_agent_config()
+    print(f"Registered agents: {', '.join(agents.keys())}")
     print()
 
     if is_running():
@@ -416,7 +458,7 @@ def main():
         messages = get_unread_messages()
         if messages:
             msg = messages[0]
-            trigger_agent(msg['to'], msg['id'], msg['task_id'])
+            trigger_agent(msg['to'], msg['id'], msg['task_id'], from_agent=msg['from'])
         else:
             print("No pending messages")
         cleanup(None, None)

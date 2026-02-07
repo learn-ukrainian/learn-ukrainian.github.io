@@ -1,0 +1,13 @@
+# Agent registry for the watcher daemon.
+# Adding a new agent = add a YAML block + implement its bridge command in ai_agent_bridge.py.
+
+agents:
+  claude:
+    bridge_command: process-claude
+    # Must be specific enough to NOT match the watcher itself or stale bridge processes.
+    # Matches interactive Claude Code sessions only.
+    process_pattern: "claude.*--interactive"
+
+  gemini:
+    bridge_command: process
+    process_pattern: "gemini-cli"
