@@ -32,28 +32,28 @@ tags:
   - philosophy
   - middle-ages
 vocabulary_hints:
-  - міжусобиці
-  - коаліція
-  - повчання
-  - отчина
-  - лихварство
-  - закуп
-  - смерд
-  - статут
-  - каяття
-  - християнська етика
+  vocab-1: міжусобиці
+  vocab-2: коаліція
+  vocab-3: повчання
+  vocab-4: отчина
+  vocab-5: лихварство
+  vocab-6: закуп
+  vocab-7: смерд
+  vocab-8: статут
+  vocab-9: каяття
+  vocab-10: християнська етика
 activity_hints:
-  - type: reading-comprehension
-    focus: "Любецький з'їзд"
-  - type: critical-analysis
-    focus: "Осліплення Василька"
-  - type: comparative-study
-    focus: "Мономах vs Макіавеллі"
-  - type: linguistic-analysis
-    focus: "Староукраїнська мова Повчання"
-  - type: essay-response
-    focus: "Етика правління"
-  - type: decolonization-debate
-    focus: "Шапка Мономаха"
-  - type: source-analysis
-    focus: "Лист до Олега Святославича"
+- type: reading
+  focus: "Любецький з'їзд"
+- type: critical-analysis
+  focus: "Осліплення Василька"
+- type: comparative-study
+  focus: "Мономах vs Макіавеллі"
+- type: authorial-intent
+  focus: "Староукраїнська мова Повчання"
+- type: essay-response
+  focus: "Етика правління"
+- type: true-false
+  focus: "Шапка Мономаха"
+- type: reading
+  focus: "Лист до Олега Святославича"
