@@ -2,7 +2,7 @@
 **Level:** LIT | **Module:** M03 | **Phase:** LIT.1 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:32:23
+**Generated:** 2026-02-07 01:17:11
 
 ## Configuration
 **Type:** LIT-literature
@@ -74,8 +74,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 32 | Included in Core |
 | **Вступ — «Енеїда» як енциклопедія тілесного** | ✅ | 621 | Included in Core |
-| **Лексикон Шлунку — гастрономічна лексика** | ⚪️ | 1351 | Skipped |
+| **Словник Шлунку — гастрономічна лексика** | ⚪️ | 1351 | Skipped |
 | **Бенкет у Дідони — аналіз сцени** | ✅ | 831 | Included in Core |
 | **Пекло і Поминки** | ⚪️ | 832 | Skipped |
-| **Лексикон Гріха та Покарання** | ⚪️ | 577 | Skipped |
+| **Словник Гріха та Покарання** | ⚪️ | 577 | Skipped |
 | **Підсумок — Смак життя у прямому сенсі** | ✅ | 455 | Included in Core |

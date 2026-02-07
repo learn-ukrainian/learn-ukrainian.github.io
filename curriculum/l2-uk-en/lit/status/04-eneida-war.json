@@ -2,35 +2,35 @@
   "module": "04-eneida-war",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:15:59.970919Z",
+  "last_audit": "2026-02-07T09:53:45.010284Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349604Z",
-    "meta": "2026-01-29T07:39:04.959282Z",
-    "activities": "2026-01-27T15:34:57.151748Z",
-    "vocabulary": null,
+    "md": "2026-02-07T09:50:56.570723Z",
+    "meta": "2026-02-07T01:04:17.440802Z",
+    "activities": "2026-02-07T09:53:35.475304Z",
+    "vocabulary": "2026-02-07T09:52:00.092813Z",
     "plan": "2026-01-27T15:19:02.521281Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3516/4500 (raw: 3856)"
+      "message": "2702/4500 (raw: 2852)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "36/0"
     },
     "naturalness": {
       "status": "pass",
@@ -41,10 +41,9 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
+      "5 Outline Compliance Errors"
     ],
-    "pass_count": 3,
-    "fail_count": 2
+    "pass_count": 4,
+    "fail_count": 1
   }
 }
