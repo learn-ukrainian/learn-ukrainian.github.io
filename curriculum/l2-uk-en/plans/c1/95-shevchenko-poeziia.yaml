@@ -1,3 +1,4 @@
+---
 module: c1-95
 level: C1
 sequence: 95
@@ -6,7 +7,7 @@ version: '2.0'
 title: "Шевченко: Поезія та її форми"
 word_target: 3000
 content_outline:
-  - section: Розминка — Поетичний світ Кобзаря
+  - section: "Розминка — Поетичний світ Кобзаря"
     words: 700
     points:
       - Жанрова різноманітність (балади, думи, лірика)
@@ -19,7 +20,7 @@ content_outline:
       - '**"Заповіт", "Кавказ", "І мертвим, і живим..."**: Political and prophetic poetry'
       - '**"Садок вишневий коло хати"**: The idyll and the ideal of Ukraine'
       - '**"Гайдамаки"**: Historical epic and collective memory'
-  - section: Практика — Аналіз тексту
+  - section: "Практика — Аналіз тексту"
     words: 1050
     points:
       - Порівняти образи Катерини та Наймички

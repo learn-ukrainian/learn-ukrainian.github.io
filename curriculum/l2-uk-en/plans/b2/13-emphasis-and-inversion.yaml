@@ -1,3 +1,4 @@
+---
 module: 13-emphasis-and-inversion
 level: B2
 sequence: 13
@@ -5,7 +6,7 @@ slug: 13-emphasis-and-inversion
 version: '2.0'
 title: Емфаза та інверсія
 content_outline:
-- section: Вступ — Порядок слів в українській мові
+- section: "Вступ — Порядок слів в українській мові"
   words: 400
   points:
   - Вільний порядок слів — міф чи реальність
@@ -117,7 +118,7 @@ sources:
   type: reference
   notes: B2 style and register awareness
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Identify and correctly use емфаза та інверсія
 - Form and apply порядок слів в українській мові

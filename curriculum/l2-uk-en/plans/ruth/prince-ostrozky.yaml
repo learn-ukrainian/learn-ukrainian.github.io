@@ -1,38 +1,24 @@
-# Module Plan: Prince Ostrozky
-# Track: RUTH
-# Module: 030
-# Source: Gemini Research (ISSUE-494)
-# Generated: 2026-02-04
-
+---
 module_number: 30
 slug: prince-ostrozky
-title_uk: "Князь Острозький"
-title_en: "Prince Ostrozky"
-
+title_uk: Князь Острозький
+title_en: Prince Ostrozky
 phase: 2
 phase_id: sacred-word
-phase_name: "Sacred Word"
-
-focus: "Cultural project of Ostrih Academy"
-
+phase_name: Sacred Word
+focus: Cultural project of Ostrih Academy
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Prince Ostrozky"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Prince Ostrozky
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

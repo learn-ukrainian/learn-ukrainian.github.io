@@ -1,3 +1,4 @@
+---
 module: syntez-zakhid-2022
 level: c1-hist
 sequence: 102
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: 2022 — зміна парадигми?'
 - Evaluate the historical significance of щось змінилося?
 content_outline:
-- section: Вступ — Щось змінилося?
+- section: "Вступ — Щось змінилося?"
   words: 457
   subsections:
   - Огляд модулів 95-101

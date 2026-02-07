@@ -1,3 +1,4 @@
+---
 module: 96-shevchenko-spadshchyna
 level: C1
 sequence: 96
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Шевченко: Спадщина'
 subtitle: Shevchenko's Legacy
 content_outline:
-- section: Розминка — Тарас після смерті
+- section: "Розминка — Тарас після смерті"
   words: 700
   points:
   - Шевченкіана — мистецтво, музика, пам'ятники
@@ -20,7 +21,7 @@ content_outline:
   - 'Тарас у діаспорі: global Ukrainian identity'
   - Радянська інтерпретація vs. national reading
   - 'Сучасне значення: war, resistance, identity'
-- section: Практика — аналіз спадщини
+- section: "Практика — аналіз спадщини"
   words: 1050
   points:
   - Порівняти радянське та сучасне прочитання Шевченка

@@ -12,33 +12,33 @@ content_outline:
   - Питання Як? (добре, швидко, тихо)
   - Різниця між прикметником і прислівником
 - section: Presentation
-  words: 111
+  words: 100
   points:
   - Від прикметників на -ий → -о (швидкий → швидко)
   - Неправильні прислівники (добрий → добре)
   - Позиція в реченні (після дієслова)
-- section: Presentation
-  words: 110
+- section: Presentation 2
+  words: 100
   points:
   - Шкала частоти (завжди → зазвичай → часто → іноді → рідко → ніколи)
   - Позиція перед дієсловом
-- section: Presentation
+- section: Presentation 3
   words: 100
   points:
   - Дуже, трохи, зовсім, майже
   - Сполучення з прикметниками та дієсловами
-- section: Presentation
-  words: 141
+- section: Presentation 4
+  words: 115
   points:
   - Опис своїх звичок (Я зазвичай снідаю швидко)
   - Опис того, як людина щось робить
 - section: Practice
-  words: 273
+  words: 223
   points:
   - Діалог про спосіб життя
   - Діалог про звички
-- section: Practice
-  words: 85
+- section: Practice 2
+  words: 12
   points:
   - Опис своїх звичок та того, як ви робите речі
 word_target: 750

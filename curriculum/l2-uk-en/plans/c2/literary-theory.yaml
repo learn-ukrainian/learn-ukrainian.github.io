@@ -1,3 +1,4 @@
+---
 module: literary-theory
 level: c2
 sequence: 26
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Теорія літератури — Вікіпедія
+- name: "Теорія літератури — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Теорія_літератури"
   type: reference
   notes: Overview of literary theory approaches
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Contemporary critical approaches
 content_outline:
-- section: Вступ — Що таке теорія літератури?
+- section: "Вступ — Що таке теорія літератури?"
   words: 500
   points:
   - Предмет і завдання літературознавства
@@ -62,7 +63,7 @@ content_outline:
   - Франко як теоретик
   - Радянський період і його обмеження
   - Сучасне українське літературознавство
-- section: Підсумок — застосування теорії
+- section: "Підсумок — застосування теорії"
   words: 400
   points:
   - Вибір підходу для аналізу
@@ -87,7 +88,7 @@ vocabulary:
   - означуване/означник (signified/signifier)
   - бінарна опозиція (binary opposition)
   - канон (canon)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

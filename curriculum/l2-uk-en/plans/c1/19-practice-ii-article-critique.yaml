@@ -1,3 +1,4 @@
+---
 module: 19-practice-ii-article-critique
 level: C1
 sequence: 19
@@ -5,7 +6,7 @@ slug: 19-practice-ii-article-critique
 version: '2.0'
 title: "Практика II — Критика статті"
 content_outline:
-- section: Вступ — Критичне читання
+- section: "Вступ — Критичне читання"
   words: 400
   points:
   - Різниця між читанням і критичним аналізом

@@ -6,7 +6,7 @@ version: '2.0'
 title: 'Володимир Великий: Хреститель Русі'
 content_outline:
 - section: Вступ — Від язичника до святого
-  words: 400
+  words: 340
   points:
   - Трансформація Володимира
   - Його місце в українській та світовій історії
@@ -16,28 +16,28 @@ content_outline:
   points:
   - Основні етапи життя князя
 - section: Боротьба за владу
-  words: 600
+  words: 511
   points:
   - Син Святослава від ключниці Малуші
   - Княжіння в Новгороді
   - Усобиця з братами
   - Вбивство Ярополка та захоплення Києва
 - section: Язичницьке правління
-  words: 600
+  words: 511
   points:
   - Реформа язичництва
   - Пантеон богів на київському пагорбі
   - Військові походи
   - Гарем та діти
 - section: Вибір віри
-  words: 700
+  words: 596
   points:
   - Легенда про випробування вір
   - Посольства від різних релігій
   - Прагматичні та духовні мотиви вибору
   - Історична достовірність легенди
 - section: Хрещення Русі
-  words: 800
+  words: 681
   points:
   - Похід на Корсунь
   - Шлюб з Анною Порфірородною
@@ -45,26 +45,26 @@ content_outline:
   - Руйнування язичницьких святинь
   - Опір та примусова християнізація
 - section: 'Останні роки: Християнський правитель'
-  words: 600
+  words: 511
   points:
   - Будівництво церков та монастирів
   - Десятинна церква
   - Освітня діяльність
   - Зміна особистості — від жорстокості до милосердя
 - section: Внесок у розбудову держави
-  words: 400
+  words: 340
   points:
   - Зміцнення кордонів (Змієві вали)
   - Карбування власної монети
   - Тристоронній герб (Тризуб)
 - section: Спадщина та канонізація
-  words: 400
+  words: 340
   points:
   - Смерть та поділ спадщини
   - Канонізація як рівноапостольного
   - Сучасне значення Володимира
 - section: Підсумок
-  words: 100
+  words: 70
   points:
   - Квінтесенція правління Володимира Великого
 vocabulary_hints:
@@ -116,15 +116,15 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Святославич (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Володимир_Святославич"
+  url: https://uk.wikipedia.org/wiki/Володимир_Святославич
   type: primary
   notes: Biography, Christianization, reign
 - name: Хрещення Русі (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
   type: primary
   notes: Process and significance of Christianization
 - name: Вибір віри
-  url: "https://uk.wikipedia.org/wiki/Вибір_віри"
+  url: https://uk.wikipedia.org/wiki/Вибір_віри
   type: reference
   notes: Legend of choosing religion
 immersion: 100% Ukrainian

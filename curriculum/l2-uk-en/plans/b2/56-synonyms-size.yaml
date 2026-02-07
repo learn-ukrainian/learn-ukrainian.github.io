@@ -1,3 +1,4 @@
+---
 module: b2-56
 level: B2
 sequence: 56
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Синоніми: Розмір і Масштаб'
 subtitle: Synonyms - Size and Scale
 content_outline:
-- section: Розминка — Від малого до величезного
+- section: "Розминка — Від малого до величезного"
   words: 350
   points:
   - Нейтральні слова vs експресивні (малий vs крихітний)
@@ -28,7 +29,7 @@ content_outline:
   - крихітний (tiny - very small)
   - мізерний (minuscule - negligible)
   - мініатюрний (miniature - cute small)
-- section: Практика — опис масштабу
+- section: "Практика — опис масштабу"
   words: 400
   points:
   - Обрати прикметник відповідно до регістру (новина vs казка)
@@ -46,7 +47,7 @@ grammar:
 - Intensifiers and scale
 immersion: 100
 register: публіцистичний
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - синонім (synonym)

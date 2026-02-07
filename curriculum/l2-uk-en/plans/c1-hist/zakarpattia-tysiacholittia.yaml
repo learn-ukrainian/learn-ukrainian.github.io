@@ -1,3 +1,4 @@
+---
 module: zakarpattia-tysiacholittia
 level: c1-hist
 sequence: 73
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of закарпаття: тисячоліття на перехресті'
 - Evaluate the historical significance of найзахідніший схід
 content_outline:
-- section: Вступ — Найзахідніший схід
+- section: "Вступ — Найзахідніший схід"
   words: 457
   subsections:
   - Закарпаття — географія

@@ -1,3 +1,4 @@
+---
 module: c1-bio-100
 level: C1-BIO
 sequence: 100
@@ -5,7 +6,7 @@ slug: anatol-petrytskyi
 version: '2.0'
 title: 'Анатоль Петрицький: <!-- Title -->'
 content_outline:
-- section: Вступ — Painter/designer
+- section: "Вступ — Painter/designer"
   words: 400
   points:
   - <!-- point -->

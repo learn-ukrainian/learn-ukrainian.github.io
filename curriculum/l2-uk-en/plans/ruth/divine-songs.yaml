@@ -1,3 +1,4 @@
+---
 # Module Plan: Divine Songs
 # Track: RUTH
 # Module: 095
@@ -13,7 +14,7 @@ phase: 4
 phase_id: cossack-word
 phase_name: "Cossack Word"
 
-focus: ""De Libertate" — Rhythm, meter, Baroque choral"
+focus: '"De Libertate" — Rhythm, meter, Baroque choral'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

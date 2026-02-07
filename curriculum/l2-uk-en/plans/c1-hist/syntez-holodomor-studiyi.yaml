@@ -1,3 +1,4 @@
+---
 module: syntez-holodomor-studiyi
 level: c1-hist
 sequence: 51
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of синтез: голодомор як об''єкт дослідження'
 - Evaluate the historical significance of що ми дізналися
 content_outline:
-- section: Вступ — Що ми дізналися
+- section: "Вступ — Що ми дізналися"
   words: 457
   subsections:
   - Огляд модулів 45-50
   - Голодомор як комплексний об'єкт
   - Мета синтезу
   - Від знання до розуміння
-- section: Інтеграція — історіографія + джерела + механізми
+- section: "Інтеграція — історіографія + джерела + механізми"
   words: 686
   subsections:
   - Як різні підходи доповнюють
@@ -90,7 +91,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Голодомор"
   type: reference
   notes: Comprehensive overview
-- name: Harvard Ukrainian Research Institute — Holodomor
+- name: "Harvard Ukrainian Research Institute — Holodomor"
   url: "https://huri.harvard.edu/"
   type: reference
   notes: Research center

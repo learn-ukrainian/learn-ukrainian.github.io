@@ -1,3 +1,4 @@
+---
 module: c1-bio-109
 level: C1-BIO
 sequence: 109
@@ -5,7 +6,7 @@ slug: valerian-pidmohylnyi
 version: '2.0'
 title: 'Валер''ян Підмогильний: <!-- Title -->'
 content_outline:
-- section: Вступ — Writer, author of "Місто"
+- section: 'Вступ — Writer, author of \"Місто\"'
   words: 400
   points:
   - <!-- point -->

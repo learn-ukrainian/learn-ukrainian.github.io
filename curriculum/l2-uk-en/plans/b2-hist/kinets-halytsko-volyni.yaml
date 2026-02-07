@@ -1,3 +1,4 @@
+---
 module: kinets-halytsko-volyni
 level: B2-HIST
 sequence: 26
@@ -28,7 +29,7 @@ content_outline:
   points:
   - Чому занепад держави не означав кінець народу
   - Галицьке боярство під польською владою
-- section: Підсумок — Уроки державності
+- section: "Підсумок — Уроки державності"
   words: 256
   points:
   - Причини краху
@@ -47,7 +48,7 @@ objectives:
 grammar:
 - Expressing cause and effect
 - Tragic narrative style
-phase: B2.3a [Українська історія]
+phase: "B2.3a [Українська історія]"
 vocabulary_hints:
   required:
   - історія (history)

@@ -1,38 +1,24 @@
-# Module Plan: Alphabet: Glagolitic to Cyrillic
-# Track: OES
-# Module: 002
-# Source: Gemini Research (ISSUE-501)
-# Generated: 2026-02-04
-
+---
 module_number: 2
 slug: alphabet-glagolitic-cyrillic
-title_uk: "Алфавіт: Від глаголиці до кирилиці"
-title_en: "Alphabet: Glagolitic to Cyrillic"
-
+title_uk: 'Алфавіт: Від глаголиці до кирилиці'
+title_en: 'Alphabet: Glagolitic to Cyrillic'
 phase: 1
 phase_id: vernacular-foundations
-phase_name: "Vernacular Foundations"
-
-focus: "Early scripts in St. Sophia"
-
+phase_name: Vernacular Foundations
+focus: Early scripts in St. Sophia
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Alphabet: Glagolitic to Cyrillic"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to Alphabet: Glagolitic to Cyrillic'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

@@ -1,3 +1,4 @@
+---
 module: 35-speaking-practice
 level: C1
 sequence: 35
@@ -5,7 +6,7 @@ slug: 35-speaking-practice
 version: '2.0'
 title: Мовний практикум
 content_outline:
-- section: Огляд C1.2 — Контрольна точка
+- section: "Огляд C1.2 — Контрольна точка"
   words: 500
   points:
   - Підсумок модулів M21-M34

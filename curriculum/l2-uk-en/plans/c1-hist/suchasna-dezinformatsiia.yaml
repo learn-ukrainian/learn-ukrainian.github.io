@@ -1,3 +1,4 @@
+---
 module: suchasna-dezinformatsiia
 level: c1-hist
 sequence: 110
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of сучасна російська дезінформація
 - Evaluate the historical significance of війна без зброї
 content_outline:
-- section: Вступ — Війна без зброї
+- section: "Вступ — Війна без зброї"
   words: 457
   subsections:
   - Інформаційна війна — реальна війна

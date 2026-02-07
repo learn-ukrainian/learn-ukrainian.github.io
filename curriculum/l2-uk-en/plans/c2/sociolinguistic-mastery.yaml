@@ -1,3 +1,4 @@
+---
 module: sociolinguistic-mastery
 level: c2
 sequence: 79
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Соціолінгвістика — НАНУ
+- name: "Соціолінгвістика — НАНУ"
   url: "https://inmo.org.ua/"
   type: primary
   notes: Соціолінгвістичні дослідження
@@ -16,12 +17,12 @@ sources:
   url: "https://mon.gov.ua/"
   type: reference
   notes: Законодавство про мову
-- name: Rating Sociological Group — мовне питання
+- name: "Rating Sociological Group — мовне питання"
   url: "https://ratinggroup.ua/"
   type: reference
   notes: Соціологічні дослідження мовної ситуації
 content_outline:
-- section: Вступ — Мова і суспільство
+- section: "Вступ — Мова і суспільство"
   words: 500
   points:
   - Соціолінгвістика як наука
@@ -63,7 +64,7 @@ content_outline:
   - Престиж мови
   - Мовна лояльність
   - Зміни мовної поведінки
-- section: Практикум — Соціолінгвістичний аналіз
+- section: "Практикум — Соціолінгвістичний аналіз"
   words: 500
   points:
   - Аналіз мовних практик у різних контекстах
@@ -88,7 +89,7 @@ vocabulary:
   - мовні установки (language attitudes)
   - мовні права (language rights)
   - гендерлект (genderlect)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

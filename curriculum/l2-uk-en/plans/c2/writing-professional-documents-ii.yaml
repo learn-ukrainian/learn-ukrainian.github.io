@@ -1,3 +1,4 @@
+---
 module: writing-professional-documents-ii
 level: c2
 sequence: 53
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Фонд державного майна України — тендерна документація
+- name: "Фонд державного майна України — тендерна документація"
   url: "https://www.spfu.gov.ua/"
   type: reference
   notes: Examples of professional proposals and tender documentation
@@ -16,18 +17,18 @@ sources:
   url: "https://nads.gov.ua/"
   type: reference
   notes: Standards for official presentations and proposals
-- name: Prozorro — публічні закупівлі
+- name: "Prozorro — публічні закупівлі"
   url: "https://prozorro.gov.ua/"
   type: reference
   notes: Real examples of professional proposals in procurement
 content_outline:
-- section: Вступ — Переконливе професійне письмо
+- section: "Вступ — Переконливе професійне письмо"
   words: 432
   points:
   - Від інформування до переконання
   - Аналіз авдиторії та мети
   - Етика переконання в професійному контексті
-- section: Пропозиція — Структура та зміст
+- section: "Пропозиція — Структура та зміст"
   words: 865
   points:
   - Типи пропозицій (проєктні, комерційні, наукові)
@@ -76,7 +77,7 @@ vocabulary:
   - конкурентоспроможність (competitiveness)
   - етапність (phasing)
   - індикатор успіху (success indicator)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

@@ -1,3 +1,4 @@
+---
 module: professional-document-types
 level: c2
 sequence: 51
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: ДСТУ 4163:2020 — Оформлення документів
+- name: "ДСТУ 4163:2020 — Оформлення документів"
   url: "https://dnaop.com/"
   type: reference
   notes: Ukrainian state standard for document formatting
-- name: Діловодство — практичний посібник
+- name: "Діловодство — практичний посібник"
   url: "https://zakon.rada.gov.ua/"
   type: reference
   notes: Guidelines for official document management
-- name: Зразки документів — урядовий портал
+- name: "Зразки документів — урядовий портал"
   url: "https://www.kmu.gov.ua/"
   type: reference
   notes: Examples of official Ukrainian government documents
 content_outline:
-- section: Вступ — Класифікація професійних документів
+- section: "Вступ — Класифікація професійних документів"
   words: 541
   points:
   - Основні категорії документів
@@ -77,7 +78,7 @@ vocabulary:
   - підпис (signature)
   - печатка (seal)
   - реєстрація (registration)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - group-sort

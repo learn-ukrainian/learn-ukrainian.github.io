@@ -1,3 +1,4 @@
+---
 module: c1-pro-13
 level: C1-PRO
 sequence: 13
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Контрольна точка: Виконавчий рівень'
 subtitle: Executive Checkpoint
 content_outline:
-- section: Огляд фази — Виконавча комунікація
+- section: "Огляд фази — Виконавча комунікація"
   words: 350
   points:
   - 'Ключові компетенції C1-PRO.1: листування, презентації, переговори, кризи'

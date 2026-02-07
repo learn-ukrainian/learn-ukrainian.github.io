@@ -1,3 +1,4 @@
+---
 module: news-analysis-advanced
 level: B2
 sequence: 90
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Аналіз новин: Поглиблено'
 subtitle: Advanced media literacy and critical news analysis
 content_outline:
-- section: Розминка — Від базового до критичного аналізу
+- section: "Розминка — Від базового до критичного аналізу"
   words: 200
   points:
   - Перехід від структури (М89) до глибокого аналізу

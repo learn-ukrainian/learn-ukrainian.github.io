@@ -1,3 +1,4 @@
+---
 module: 75-modern-diaspora
 level: B2
 sequence: 75
@@ -6,7 +7,7 @@ version: '2.0'
 title: Сучасна діаспора
 subtitle: Modern Diaspora
 content_outline:
-- section: Розминка — Глобальне українство
+- section: "Розминка — Глобальне українство"
   words: 200
   points:
   - Визначення діаспори — хвилі еміграції

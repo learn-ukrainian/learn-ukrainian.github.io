@@ -1,3 +1,4 @@
+---
 module: boiare-i-shliakhta
 level: B2-HIST
 sequence: 25
@@ -30,7 +31,7 @@ content_outline:
   points:
   - Спростування міфу про "відсутність власної еліти"
   - Шляхта як носій української політичної культури
-- section: Підсумок — Еліта вільної України
+- section: "Підсумок — Еліта вільної України"
   words: 263
   points:
   - Еволюція еліти
@@ -50,7 +51,7 @@ objectives:
 grammar:
 - Social terminology
 - Formal address forms
-phase: B2.3a [Українська історія]
+phase: "B2.3a [Українська історія]"
 vocabulary_hints:
   required:
   - історія (history)

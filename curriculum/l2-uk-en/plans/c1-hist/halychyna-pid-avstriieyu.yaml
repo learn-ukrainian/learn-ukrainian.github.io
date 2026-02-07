@@ -1,3 +1,4 @@
+---
 module: halychyna-pid-avstriieyu
 level: c1-hist
 sequence: 70
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of галичина під австрією: особлива доля'
 - Evaluate the historical significance of інший шлях
 content_outline:
-- section: Вступ — Інший шлях
+- section: "Вступ — Інший шлях"
   words: 457
   subsections:
   - Галичина — не під Росією

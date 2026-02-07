@@ -1,3 +1,4 @@
+---
 module: 07-citation-reference
 level: C1
 sequence: 7
@@ -5,7 +6,7 @@ slug: 07-citation-reference
 version: '2.0'
 title: Цитація та посилання
 content_outline:
-- section: Вступ — Наукова чесність
+- section: "Вступ — Наукова чесність"
   words: 400
   points:
   - Етика цитування в академічному світі
@@ -95,7 +96,7 @@ connects_to:
 - c1-14 (Literature Review)
 module_type: grammar
 sources:
-- name: ДСТУ 8302:2015 Бібліографічне посилання
+- name: "ДСТУ 8302:2015 Бібліографічне посилання"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Ukrainian citation standards

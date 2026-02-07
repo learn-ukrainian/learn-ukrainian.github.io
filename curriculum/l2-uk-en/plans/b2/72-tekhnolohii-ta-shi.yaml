@@ -1,3 +1,4 @@
+---
 module: b2-72
 level: B2
 sequence: 72
@@ -6,7 +7,7 @@ version: '2.0'
 title: Технології та ШІ
 subtitle: Technology & AI
 content_outline:
-- section: Розминка — IT-індустрія України
+- section: "Розминка — IT-індустрія України"
   words: 200
   points:
   - Україна як IT-хаб — глобальні компанії та стартапи

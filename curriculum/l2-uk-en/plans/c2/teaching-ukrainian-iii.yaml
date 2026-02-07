@@ -1,3 +1,4 @@
+---
 module: teaching-ukrainian-iii
 level: c2
 sequence: 84
@@ -16,12 +17,12 @@ sources:
   url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: secondary
   notes: Use of authentic texts and media
-- name: Tomlinson — Materials Development in Language Teaching
+- name: "Tomlinson — Materials Development in Language Teaching"
   url: "https://www.cambridge.org/"
   type: reference
   notes: Academic framework for materials development
 content_outline:
-- section: Вступ — Роль матеріалів у навчанні мови
+- section: "Вступ — Роль матеріалів у навчанні мови"
   words: 541
   points:
   - Підручник як основа і як доповнення
@@ -55,7 +56,7 @@ content_outline:
   - Збір зворотного зв'язку від учнів
   - Критерії оцінки ефективності
   - Ітеративне вдосконалення
-- section: Практика — Розробка навчального модуля
+- section: "Практика — Розробка навчального модуля"
   words: 647
   points:
   - Створення комплекту матеріалів для уроку
@@ -80,7 +81,7 @@ vocabulary:
   - диференціація завдань (task differentiation)
   - культурна релевантність (cultural relevance)
   - залучення учнів (student engagement)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

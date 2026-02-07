@@ -1,3 +1,4 @@
+---
 module: translation-theory-ii
 level: c2
 sequence: 85
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Коптілов — Теорія і практика перекладу
+- name: "Коптілов — Теорія і практика перекладу"
   url: "https://uk.wikipedia.org/wiki/Коптілов_Віктор_Вікторович"
   type: primary
   notes: Classic Ukrainian translation studies textbook
-- name: Venuti — The Translator's Invisibility
+- name: "Venuti — The Translator's Invisibility"
   url: "https://www.routledge.com/"
   type: secondary
   notes: Key concepts of domestication and foreignization
-- name: Nida — Toward a Science of Translating
+- name: "Nida — Toward a Science of Translating"
   url: "https://www.brill.com/"
   type: reference
   notes: Dynamic vs. formal equivalence theory
 content_outline:
-- section: Вступ — Перекладознавство як наука
+- section: "Вступ — Перекладознавство як наука"
   words: 541
   points:
   - Місце перекладознавства серед гуманітарних наук
@@ -55,7 +56,7 @@ content_outline:
   - Перекладач як посередник культур
   - Невидимість vs. видимість перекладача
   - Деколоніальний підхід у перекладі
-- section: Практика — Аналіз перекладів
+- section: "Практика — Аналіз перекладів"
   words: 755
   points:
   - Порівняльний аналіз двох перекладів одного тексту
@@ -81,7 +82,7 @@ vocabulary:
   - калька (calque)
   - транслітерація (transliteration)
   - інтерпретант (interpretant)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

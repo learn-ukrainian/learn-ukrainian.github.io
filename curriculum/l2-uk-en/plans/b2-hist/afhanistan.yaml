@@ -1,3 +1,4 @@
+---
 module: afhanistan
 level: B2-HIST
 sequence: 116
@@ -5,7 +6,7 @@ slug: afhanistan
 version: '2.0'
 title: Українці в Афганістані
 content_outline:
-- section: Вступ — Чужа війна
+- section: "Вступ — Чужа війна"
   words: 615
   points:
   - Context of the Cold War and the Brezhnev era stagnation
@@ -37,13 +38,13 @@ content_outline:
 word_target: 4000
 focus: history
 pedagogy: CBI
-prerequisites: []
+prerequisites: "[]"
 objectives:
 - Analyze the causes and consequences of українці в афганістані
 - Evaluate the historical significance of чужа війна
 - Trace the development of деколонізаційний погляд
-phase: HIST.11 [Post-War Soviet Ukraine]
-learning_outcomes: []
+phase: "HIST.11 [Post-War Soviet Ukraine]"
+learning_outcomes: "[]"
 vocabulary_hints:
   required:
   - історія (history)

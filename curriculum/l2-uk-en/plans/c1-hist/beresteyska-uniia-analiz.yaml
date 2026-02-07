@@ -1,3 +1,4 @@
+---
 module: beresteyska-uniia-analiz
 level: c1-hist
 sequence: 59
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of берестейська унія: глибокий аналіз'
 - Evaluate the historical significance of розкол, що визначив історію
 content_outline:
-- section: Вступ — Розкол, що визначив історію
+- section: "Вступ — Розкол, що визначив історію"
   words: 457
   subsections:
   - 1596 рік — що відбулося
   - Чому це важливо
   - Наслідки на століття
   - Структура модуля
-- section: Контекст — чому унія стала можливою
+- section: "Контекст — чому унія стала можливою"
   words: 686
   subsections:
   - Криза православної церкви

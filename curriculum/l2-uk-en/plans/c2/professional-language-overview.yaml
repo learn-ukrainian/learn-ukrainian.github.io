@@ -1,3 +1,4 @@
+---
 module: professional-language-overview
 level: c2
 sequence: 46
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — Professional Communication
+- name: "Ukrainian State Standard 2024 — Professional Communication"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for professional language competence across domains
-- name: Національна бібліотека України — фахова література
+- name: "Національна бібліотека України — фахова література"
   url: "https://nbuv.gov.ua/"
   type: reference
   notes: Examples of professional texts across multiple domains
-- name: Українська термінологія — термінологічний портал
+- name: "Українська термінологія — термінологічний портал"
   url: "https://term.namu.wiki/"
   type: reference
   notes: Overview of Ukrainian terminology systems across fields
 content_outline:
-- section: Вступ — Що таке професійна мова?
+- section: "Вступ — Що таке професійна мова?"
   words: 541
   points:
   - Визначення професійної комунікації
@@ -76,7 +77,7 @@ vocabulary:
   - міжгалузевий (cross-domain)
   - універсальний (universal)
   - трансферний (transferable)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - group-sort

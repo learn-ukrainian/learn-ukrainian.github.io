@@ -1,3 +1,4 @@
+---
 module: c1-92
 level: C1
 sequence: 92
@@ -6,7 +7,7 @@ version: '2.0'
 title: Історія української літератури
 subtitle: History of Ukrainian Literature
 content_outline:
-- section: Розминка — Від літопису до роману
+- section: "Розминка — Від літопису до роману"
   words: 700
   points:
   - Київська Русь — літописи, житія, повісті
@@ -20,7 +21,7 @@ content_outline:
   - 'Романтизм: national awakening'
   - 'Реалізм: social consciousness'
   - 'Модернізм: early 20th century experimentation'
-- section: Практика — літературна історія
+- section: "Практика — літературна історія"
   words: 1050
   points:
   - Проаналізувати фрагмент Повісті минулих літ

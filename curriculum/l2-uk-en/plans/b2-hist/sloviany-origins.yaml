@@ -1,3 +1,4 @@
+---
 module: sloviany-origins
 level: B2-HIST
 sequence: 4
@@ -108,6 +109,6 @@ sources:
   type: primary
   notes: Primary Chronicle on Slavic origins
 register: публіцистичний
-phase: B2-HIST.1 [Витоки]
+phase: "B2-HIST.1 [Витоки]"
 module_type: history
 immersion: 100% Ukrainian

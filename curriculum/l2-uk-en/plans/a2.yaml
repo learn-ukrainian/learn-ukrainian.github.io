@@ -1,3 +1,4 @@
+---
 # A2 Level Plan - Ukrainian for English Speakers
 # Source of truth: docs/l2-uk-en/A2-CURRICULUM-PLAN.md
 
@@ -12,34 +13,34 @@ immersion: "30-55%"
 phases:
   - id: A2.1
     name: "Completing the Cases"
-    modules: [1, 10]
+    modules: "[1, 10]"
     focus: "Dative, Instrumental, Locative cases"
 
   - id: A2.2
     name: "Aspect & Comparison"
-    modules: [12, 25]
+    modules: "[12, 25]"
     focus: "Verbal aspect introduction, comparatives"
     checkpoint: 11
 
   - id: A2.3
     name: "Complex Sentences"
-    modules: [26, 35]
+    modules: "[26, 35]"
     focus: "Subordinate clauses, conjunctions"
 
   - id: A2.4
     name: "Word Formation"
-    modules: [36, 44]
+    modules: "[36, 44]"
     focus: "Prefixes, suffixes, compound words"
 
   - id: A2.5
     name: "Vocabulary Expansion"
-    modules: [45, 55]
+    modules: "[45, 55]"
     focus: "Thematic vocabulary, collocations"
     checkpoint: 56
 
   - id: A2.6
     name: "Practical Scenarios"
-    modules: [57, 70]
+    modules: "[57, 70]"
     focus: "Real-world communication, consolidation"
     final_exam: 70
 

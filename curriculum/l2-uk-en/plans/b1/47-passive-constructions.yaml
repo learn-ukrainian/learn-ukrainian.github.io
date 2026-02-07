@@ -1,3 +1,4 @@
+---
 module: b1-47
 level: B1
 sequence: 47
@@ -78,4 +79,4 @@ grammar:
 - Пасив з короткою формою (short form passive)
 - Зворотний пасив (-ся reflexive passive)
 register: розмовний
-phase: B1.4a [Participles]
+phase: "B1.4a [Participles]"

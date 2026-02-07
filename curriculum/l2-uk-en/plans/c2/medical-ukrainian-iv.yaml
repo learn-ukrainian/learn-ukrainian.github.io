@@ -1,3 +1,4 @@
+---
 module: medical-ukrainian-iv
 level: c2
 sequence: 69
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Протоколи первинної та вторинної допомоги
 content_outline:
-- section: Вступ — Клінічне мислення та комунікація
+- section: "Вступ — Клінічне мислення та комунікація"
   words: 500
   points:
   - Алгоритми клінічного мислення
@@ -63,7 +64,7 @@ content_outline:
   - Обговорення кінця життя
   - Підтримка родини
   - Етичні аспекти
-- section: Практикум — Комплексні клінічні сценарії
+- section: "Практикум — Комплексні клінічні сценарії"
   words: 400
   points:
   - Симуляція повної консультації
@@ -88,7 +89,7 @@ vocabulary:
   - ускладнення (complication)
   - ремісія (remission)
   - термінальний стан (terminal condition)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

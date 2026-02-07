@@ -1,3 +1,4 @@
+---
 module: c1-pro-50
 level: C1-PRO
 sequence: 50
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Підсумок: C1-PRO'
 subtitle: C1-PRO Capstone
 content_outline:
-- section: Огляд C1-PRO — Підсумкове оцінювання
+- section: "Огляд C1-PRO — Підсумкове оцінювання"
   words: 400
   points:
   - Структура підсумкового оцінювання

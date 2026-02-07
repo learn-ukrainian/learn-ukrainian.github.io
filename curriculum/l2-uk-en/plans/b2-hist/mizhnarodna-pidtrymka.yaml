@@ -1,3 +1,4 @@
+---
 module: mizhnarodna-pidtrymka
 level: B2-HIST
 sequence: 138
@@ -88,4 +89,4 @@ grammar:
 - Дипломатична та економічна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

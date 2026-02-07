@@ -1,3 +1,4 @@
+---
 module: 22-motion-full-prefix-integration
 level: B1
 sequence: 22
@@ -8,7 +9,7 @@ subtitle: 'Motion: Full Prefix Integration'
 content_outline:
 - section: Тест
   words: 254
-  points: []
+  points: "[]"
 - section: Пояснення
   words: 1303
   points:
@@ -29,7 +30,7 @@ content_outline:
   - 'Діалог 3: Загублений гаманець'
 - section: Підсумок
   words: 244
-  points: []
+  points: "[]"
 - section: Потрібно більше практики?
   words: 212
   points:

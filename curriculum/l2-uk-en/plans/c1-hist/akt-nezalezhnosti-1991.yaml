@@ -1,3 +1,4 @@
+---
 module: akt-nezalezhnosti-1991
 level: c1-hist
 sequence: 43
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of акт проголошення незалежності: текст і контекст'
 - Evaluate the historical significance of найважливіший документ
 content_outline:
-- section: Вступ — Найважливіший документ
+- section: "Вступ — Найважливіший документ"
   words: 457
   subsections:
   - 24 серпня 1991
@@ -23,7 +24,7 @@ content_outline:
   - Верховна Рада УРСР
   - Хто голосував — комуністи!
   - Чому раптом підтримали
-- section: Текст Акту — детальний аналіз
+- section: "Текст Акту — детальний аналіз"
   words: 800
   subsections:
   - Повний текст (з коментарями)

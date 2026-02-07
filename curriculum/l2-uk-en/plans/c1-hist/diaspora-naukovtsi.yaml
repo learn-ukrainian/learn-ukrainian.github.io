@@ -1,3 +1,4 @@
+---
 module: diaspora-naukovtsi
 level: c1-hist
 sequence: 68
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
 - Evaluate the historical significance of наука в еміграції
 content_outline:
-- section: Вступ — Наука в еміграції
+- section: "Вступ — Наука в еміграції"
   words: 457
   subsections:
   - Чому потрібні наукові інституції
@@ -24,7 +25,7 @@ content_outline:
   - Кафедра українознавства
   - Видання — Harvard Ukrainian Studies
   - Вплив на західну науку
-- section: УВАН — Українська вільна академія наук
+- section: "УВАН — Українська вільна академія наук"
   words: 686
   subsections:
   - Заснування — 1945, Аугсбург

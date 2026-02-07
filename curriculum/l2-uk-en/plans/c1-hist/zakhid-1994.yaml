@@ -1,3 +1,4 @@
+---
 module: zakhid-1994
 level: c1-hist
 sequence: 98
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of будапештський меморандум: гарантії без гарантій'
 - Evaluate the historical significance of угода без зубів
 content_outline:
-- section: Вступ — Угода без зубів
+- section: "Вступ — Угода без зубів"
   words: 457
   subsections:
   - 1994 — Україна віддає ядерну зброю
   - Що отримала натомість
   - 2014 — цінність «гарантій»
   - Структура модуля
-- section: Контекст — Третій ядерний арсенал
+- section: "Контекст — Третій ядерний арсенал"
   words: 686
   subsections:
   - Україна після СРСР — 1700+ боєголовок
@@ -37,7 +38,7 @@ content_outline:
   - Зобов'язання сторін
   - Юридична сила — жодної
   - Що насправді підписали
-- section: 2014 — Провал
+- section: "2014 — Провал"
   words: 571
   subsections:
   - Росія порушує

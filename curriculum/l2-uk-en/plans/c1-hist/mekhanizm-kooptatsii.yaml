@@ -1,3 +1,4 @@
+---
 module: mekhanizm-kooptatsii
 level: c1-hist
 sequence: 81
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of механізм кооптації: теоретична рамка'
 - Evaluate the historical significance of цикл, що повторюється
 content_outline:
-- section: Вступ — Цикл, що повторюється
+- section: "Вступ — Цикл, що повторюється"
   words: 457
   subsections:
   - Що таке кооптація

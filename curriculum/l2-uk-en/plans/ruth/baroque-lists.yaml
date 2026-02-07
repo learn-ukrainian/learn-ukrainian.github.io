@@ -1,38 +1,24 @@
-# Module Plan: Baroque Lists
-# Track: RUTH
-# Module: 051
-# Source: Gemini Research (ISSUE-495)
-# Generated: 2026-02-04
-
+---
 module_number: 51
 slug: baroque-lists
-title_uk: "Барокові списки"
-title_en: "Baroque Lists"
-
+title_uk: Барокові списки
+title_en: Baroque Lists
 phase: 3
 phase_id: baroque-fight
-phase_name: "Baroque Fight"
-
-focus: "The heaping technique — Нагромадження"
-
+phase_name: Baroque Fight
+focus: The heaping technique — Нагромадження
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Baroque Lists"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Baroque Lists
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

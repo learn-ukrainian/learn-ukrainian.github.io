@@ -1,3 +1,4 @@
+---
 module: c1-pro-34
 level: C1-PRO
 sequence: 34
@@ -6,7 +7,7 @@ version: '2.0'
 title: Інвестиційний аналіз
 subtitle: Investment Analysis
 content_outline:
-- section: Розминка — Інвестиційна діяльність в Україні
+- section: "Розминка — Інвестиційна діяльність в Україні"
   words: 400
   points:
   - Інвестиційний клімат та можливості
@@ -39,7 +40,7 @@ content_outline:
   - Зразок executive summary для investment memo
   - Структура pitch deck
   - Типові формулювання для інвестиційних переговорів
-- section: Практика — Інвестиційний аналіз
+- section: "Практика — Інвестиційний аналіз"
   words: 400
   points:
   - 'Завдання: Підготувати investment memorandum для компанії'

@@ -1,3 +1,4 @@
+---
 module: a1-01
 level: A1
 sequence: 1
@@ -64,7 +65,7 @@ activity_hints:
   items: 10
 focus: grammar
 pedagogy: PPP
-prerequisites: []
+prerequisites: "[]"
 connects_to:
 - a1-02 (The Cyrillic Code II)
 objectives:
@@ -77,4 +78,4 @@ grammar:
 - Sound-letter correspondence
 - Basic pronunciation rules
 register: розмовний
-phase: A1.1 [First Contact]
+phase: "A1.1 [First Contact]"

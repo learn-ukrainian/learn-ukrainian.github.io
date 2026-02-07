@@ -1,3 +1,4 @@
+---
 module: zborivska-bila-tserkva
 level: B2-HIST
 sequence: 54
@@ -92,4 +93,4 @@ sources:
   type: reference
   notes: International context
 register: публіцистичний
-phase: HIST.6 [Khmelnytsky & Cossack State]
+phase: "HIST.6 [Khmelnytsky & Cossack State]"

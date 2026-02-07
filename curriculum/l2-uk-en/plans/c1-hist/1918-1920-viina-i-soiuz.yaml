@@ -1,3 +1,4 @@
+---
 module: 1918-1920-viina-i-soiuz
 level: c1-hist
 sequence: 115
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of 1918-1920: війна і союз одночасно'
 - Evaluate the historical significance of парадокс 1918-1920
 content_outline:
-- section: Вступ — Парадокс 1918-1920
+- section: "Вступ — Парадокс 1918-1920"
   words: 515
   subsections:
   - Війна в Галичині

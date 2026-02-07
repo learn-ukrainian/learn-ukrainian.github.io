@@ -1,3 +1,4 @@
+---
 module: capstone-topic-selection
 level: c2
 sequence: 89
@@ -16,12 +17,12 @@ sources:
   url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: C2 level assessment through portfolio
-- name: Academic Writing in Ukrainian — Best Practices
+- name: "Academic Writing in Ukrainian — Best Practices"
   url: "https://naqa.gov.ua/"
   type: secondary
   notes: Quality standards for academic writing
 content_outline:
-- section: Вступ — Дипломний проєкт як вершина навчання
+- section: "Вступ — Дипломний проєкт як вершина навчання"
   words: 541
   points:
   - Мета і значення дипломного проєкту
@@ -57,7 +58,7 @@ content_outline:
   - Календарний план
   - Ресурси та підтримка
   - Потенційні труднощі та їх подолання
-- section: Практика — Обґрунтування теми
+- section: "Практика — Обґрунтування теми"
   words: 647
   points:
   - Написання proposal (заявки на тему)
@@ -83,7 +84,7 @@ vocabulary:
   - теоретична рамка (theoretical framework)
   - практична значущість (practical significance)
   - джерельна база (source base)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

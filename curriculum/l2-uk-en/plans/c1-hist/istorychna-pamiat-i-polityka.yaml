@@ -1,3 +1,4 @@
+---
 module: istorychna-pamiat-i-polityka
 level: c1-hist
 sequence: 10
@@ -10,7 +11,7 @@ objectives:
 - Evaluate the historical significance of пам'ять як поле битви
 - Trace the development of виклики і перспективи
 content_outline:
-- section: Вступ — Пам'ять як поле битви
+- section: "Вступ — Пам'ять як поле битви"
   words: 457
   subsections:
   - Що таке історична пам'ять?
@@ -34,7 +35,7 @@ content_outline:
   - Музеї та виставки
   - Підручники і освіта
   - Топоніміка — назви вулиць як пам'ять
-- section: Війни пам'яті — Україна vs. Росія
+- section: "Війни пам'яті — Україна vs. Росія"
   words: 686
   subsections:
   - Переяслав 1654 — два наративи
@@ -86,7 +87,7 @@ activities:
 - type: reading
   focus: "Article 1 of the Holodomor Law (2006) — what does it declare?"
 - type: reading
-  focus: "Find a \"lieu de mémoire\" in your area — describe its significance"
+  focus: 'Find a \"lieu de mémoire\" in your area — describe its significance'
 - type: comparative-study
   focus: "Compare Ukraine and Poland memory laws — what's similar/different?"
 - type: critical-analysis
@@ -102,7 +103,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Політика_пам'яті"
   type: reference
   notes: Memory politics
-- name: П'єр Нора — Місця пам'яті
+- name: "П'єр Нора — Місця пам'яті"
   url: "https://uk.wikipedia.org/wiki/Нора_П'єр"
   type: reference
   notes: Key theorist of memory

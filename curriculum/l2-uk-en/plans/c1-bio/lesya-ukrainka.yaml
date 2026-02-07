@@ -1,3 +1,4 @@
+---
 module: c1-bio-069
 level: C1-BIO
 sequence: 69
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Леся Українка: Прометей української літератури'
 subtitle: 'Lesya Ukrainka: Prometheus of Ukrainian Literature'
 content_outline:
-- section: Вступ — Прометей у жіночій подобі
+- section: "Вступ — Прометей у жіночій подобі"
   words: 526
   points:
   - Леся Українка як символ незламності духу
@@ -76,7 +77,7 @@ activity_hints:
   word_target: 300
   output: Reflective essay
 - type: critical-analysis
-  focus: Discuss the anti-colonial motifs in "Cassandra"
+  focus: "Discuss the anti-colonial motifs in \"Cassandra\""
   output: Literary analysis
 focus: biography
 pedagogy: seminar

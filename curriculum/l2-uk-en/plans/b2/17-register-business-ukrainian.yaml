@@ -1,3 +1,4 @@
+---
 module: 17-register-business-ukrainian
 level: B2
 sequence: 17
@@ -5,7 +6,7 @@ slug: 17-register-business-ukrainian
 version: '2.0'
 title: Ділова українська мова
 content_outline:
-- section: Вступ — Ділове спілкування
+- section: "Вступ — Ділове спілкування"
   words: 400
   points:
   - Що таке діловий стиль
@@ -119,7 +120,7 @@ sources:
   type: reference
   notes: B2 workplace language requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Understand and apply ділова українська мова
 - Analyze and evaluate ділове спілкування

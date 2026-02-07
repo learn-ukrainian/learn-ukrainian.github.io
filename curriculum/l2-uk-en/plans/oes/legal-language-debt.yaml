@@ -1,4 +1,5 @@
-# Module Plan: Legal Language: Debt & Duty
+---
+# Module Plan: "Legal Language: Debt & Duty"
 # Track: OES
 # Module: 014
 # Source: Gemini Research (ISSUE-501)
@@ -13,7 +14,7 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: "Vernacular Foundations"
 
-focus: "Conditional "Оли..." in Zvenyhorod letters"
+focus: 'Conditional "Оли..." in Zvenyhorod letters'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

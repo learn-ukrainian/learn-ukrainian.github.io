@@ -1,3 +1,4 @@
+---
 module: b2-55
 level: B2
 sequence: 55
@@ -5,7 +6,7 @@ slug: 55-synonyms-emotion
 version: '2.0'
 title: 'Синоніми: Емоції та почуття'
 content_outline:
-- section: Розминка — Нюанси емоційної лексики
+- section: "Розминка — Нюанси емоційної лексики"
   words: 350
   points:
   - Чому "сум" і "журба" — не одне й те саме
@@ -27,7 +28,7 @@ content_outline:
   - смуток (sorrow - deeper)
   - горе (grief - intense)
   - туга (longing - nostalgic)
-- section: Практика — вибір точного слова
+- section: "Практика — вибір точного слова"
   words: 400
   points:
   - Обрати синонім відповідно до контексту (офіційний лист vs художній текст)
@@ -46,7 +47,7 @@ grammar:
 - Nuance in synonymy
 - Register and intensity
 register: varies
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - синонім (synonym)

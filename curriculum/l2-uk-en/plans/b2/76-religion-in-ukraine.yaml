@@ -1,3 +1,4 @@
+---
 module: 76-religion-in-ukraine
 level: B2
 sequence: 76
@@ -6,7 +7,7 @@ version: '2.0'
 title: Релігія в Україні
 subtitle: Religion in Ukraine
 content_outline:
-- section: Розминка — Релігійний ландшафт України
+- section: "Розминка — Релігійний ландшафт України"
   words: 200
   points:
   - Конфесійне різноманіття — православ'я, греко-католицизм, протестантизм

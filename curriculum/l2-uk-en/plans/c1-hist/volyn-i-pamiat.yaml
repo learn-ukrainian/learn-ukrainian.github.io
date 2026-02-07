@@ -1,3 +1,4 @@
+---
 module: volyn-i-pamiat
 level: c1-hist
 sequence: 116
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of волинь 1943: трагедія і контекст'
 - Evaluate the historical significance of найболючіша тема
 content_outline:
-- section: Вступ — Найболючіша тема
+- section: "Вступ — Найболючіша тема"
   words: 515
   subsections:
   - Волинь 1943 — незагоєна рана
   - Не виправдання, а розуміння
   - Контекст ≠ виправдання
   - Структура модуля
-- section: Контекст — що передувало
+- section: "Контекст — що передувало"
   words: 903
   subsections:
   - Міжвоєнний період — дискримінація

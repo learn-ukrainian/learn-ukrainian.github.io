@@ -57,7 +57,7 @@ def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
     else:
         frontmatter_str = content.split('---')[1] if '---' in content else ''
 
-    level_code, module_num = detect_level(file_path, frontmatter_str)
+    level_code, module_num, _ = detect_level(file_path, frontmatter_str)
     module_focus = detect_focus(frontmatter_str, level_code, module_num, meta_data.get('title') if meta_data else "", file_path)
 
     # Remove forbidden activities (for seminar tracks)

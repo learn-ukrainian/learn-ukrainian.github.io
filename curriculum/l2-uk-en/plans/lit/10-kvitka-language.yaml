@@ -1,3 +1,4 @@
+---
 module: kvitka-language
 level: LIT
 slug: kvitka-language
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Мова як Маніфест: Голос Слобожанщини'
 subtitle: 'LIT-010: Як Квітка створив Літературну Норму'
 content_outline:
-- section: Вступ — Як дворянин став "голосом народу"
+- section: 'Вступ — Як дворянин став \"голосом народу\"'
   words: 625
   points:
   - Мовна ситуація Квітки (українська vs російська)
@@ -17,7 +18,7 @@ content_outline:
   - Оповідач-селянин як наративна стратегія
   - Імітація усного мовлення
   - Довіра читача до "свого"
-- section: Два стилі — бурлеск vs сентименталізм
+- section: "Два стилі — бурлеск vs сентименталізм"
   words: 1000
   points:
   - '"Конотопська відьма" — лайка, канцеляризми, гротеск'
@@ -35,7 +36,7 @@ content_outline:
   - '"Макаронічна" мова Пістряка'
   - Солдатський жаргон москаля
   - Мова панства vs мова народу
-- section: Підсумок — Слово як зброя
+- section: "Підсумок — Слово як зброя"
   words: 500
   points:
   - Мова і національна гідність
@@ -88,11 +89,11 @@ grammar:
 - Emotive syntax and vocabulary
 module_type: style
 sources:
-- name: Маруся — мовні особливості
+- name: "Маруся — мовні особливості"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=252"
   type: primary
   notes: Сентиментальний стиль
-- name: Конотопська відьма — мовні особливості
+- name: "Конотопська відьма — мовні особливості"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=254"
   type: primary
   notes: Бурлескний стиль

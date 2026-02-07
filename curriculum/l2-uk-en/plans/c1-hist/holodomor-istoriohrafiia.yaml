@@ -1,3 +1,4 @@
+---
 module: holodomor-istoriohrafiia
 level: c1-hist
 sequence: 45
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of голодомор: історіографія теми'
 - Evaluate the historical significance of як вивчають голодомор
 content_outline:
-- section: Вступ — Як вивчають Голодомор
+- section: "Вступ — Як вивчають Голодомор"
   words: 457
   subsections:
   - Від замовчування до визнання

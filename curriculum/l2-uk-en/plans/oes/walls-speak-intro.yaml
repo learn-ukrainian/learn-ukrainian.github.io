@@ -1,66 +1,51 @@
-# Module Plan: St. Sophia Graffiti: The Walls Speak
-# Track: OES
-# Module: 001
-# Source: Gemini Research (ISSUE-501)
-# Generated: 2026-02-04
-
 module_number: 1
 slug: walls-speak-intro
-title_uk: "Софійські графіті: Стіни говорять"
-title_en: "St. Sophia Graffiti: The Walls Speak"
-
+title_uk: 'Софійські графіті: Стіни говорять'
+title_en: 'St. Sophia Graffiti: The Walls Speak'
 phase: 1
 phase_id: vernacular-foundations
-phase_name: "Vernacular Foundations"
-
-focus: "Intro to epigraphy, graffiti as historical source"
-
+phase_name: Vernacular Foundations
+focus: Intro to epigraphy, graffiti as historical source
 word_target: 4000
-
-# Content outline with word allocations (adjusted for OES linguistic content)
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to graffiti as linguistic archaeology"
-    words: 250
-  - section: "Текст"
-    description: "Primary source excerpts with glosses"
-    words: 250
-  - section: "Що таке епіграфіка?"
-    description: "Definition and types of epigraphic inscriptions"
-    words: 250
-  - section: "Мовний аналіз"
-    description: "Grammatical analysis: dative, perfect, vocative"
-    words: 600
-  - section: "Історичний контекст"
-    description: "St. Sophia Cathedral, who wrote graffiti, dating methods"
-    words: 450
-  - section: "Диглосія: два регістри однієї мови"
-    description: "Diglossia model: literary vs vernacular"
-    words: 300
-  - section: "Зв'язок із сучасною мовою"
-    description: "What survived in modern Ukrainian"
-    words: 300
-  - section: "Методологія: як читати давні тексти"
-    description: "Step-by-step reading methodology"
-    words: 250
-  - section: "Підсумок"
-    description: "Summary and vocabulary table"
-    words: 200
-
-# Vocabulary hints
+- section: Вступ
+  description: Introduction to graffiti as linguistic archaeology
+  words: 351
+- section: Текст
+  description: Primary source excerpts with glosses
+  words: 351
+- section: Що таке епіграфіка?
+  description: Definition and types of epigraphic inscriptions
+  words: 351
+- section: Мовний аналіз
+  description: 'Grammatical analysis: dative, perfect, vocative'
+  words: 842
+- section: Історичний контекст
+  description: St. Sophia Cathedral, who wrote graffiti, dating methods
+  words: 632
+- section: 'Диглосія: два регістри однієї мови'
+  description: 'Diglossia model: literary vs vernacular'
+  words: 421
+- section: Зв'язок із сучасною мовою
+  description: What survived in modern Ukrainian
+  words: 421
+- section: 'Методологія: як читати давні тексти'
+  description: Step-by-step reading methodology
+  words: 351
+- section: Підсумок
+  description: Summary and vocabulary table
+  words: 280
 vocabulary_hints:
-  - графіті
-  - тать
-  - рабъ
-  - перфект
-  - кличний відмінок
-  - диглосія
-  - повноголосся
-  - ять
-  - єр/єрь
-
-# Activity types appropriate for this module
+- графіті
+- тать
+- рабъ
+- перфект
+- кличний відмінок
+- диглосія
+- повноголосся
+- ять
+- єр/єрь
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

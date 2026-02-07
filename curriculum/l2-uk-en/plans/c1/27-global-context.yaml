@@ -1,3 +1,4 @@
+---
 module: 27-global-context
 level: C1
 sequence: 27
@@ -5,7 +6,7 @@ slug: 27-global-context
 version: '2.0'
 title: 'Глобальний контекст: Україна, ЄС та НАТО'
 content_outline:
-- section: Вступ — Україна у світовому контексті
+- section: "Вступ — Україна у світовому контексті"
   words: 400
   points:
   - Геополітичне положення

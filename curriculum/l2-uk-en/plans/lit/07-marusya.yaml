@@ -1,3 +1,4 @@
+---
 module: marusya
 level: LIT
 slug: marusya
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Маруся: Ідеал Української Душі'
 subtitle: 'LIT-007: Сентименталізм у дії'
 content_outline:
-- section: Вступ — Твір, що змусив плакати Європу
+- section: "Вступ — Твір, що змусив плакати Європу"
   words: 625
   points:
   - Історія публікації та рецепції
@@ -17,7 +18,7 @@ content_outline:
   - Історія кохання Марусі та Василя
   - Трагічний фінал
   - Роль долі (фатуму) у сюжеті
-- section: Маруся vs Наталка — два полюси
+- section: "Маруся vs Наталка — два полюси"
   words: 875
   points:
   - Активна Наталка vs пасивна Маруся
@@ -35,7 +36,7 @@ content_outline:
   - Сентиментальна лексика (емотиви)
   - Пестливі форми (димінутиви)
   - Риторичні оклики та звертання
-- section: Підсумок — Квітка vs Гоголь
+- section: "Підсумок — Квітка vs Гоголь"
   words: 500
   points:
   - Шлях сльози vs шлях сміху
@@ -62,7 +63,7 @@ vocabulary_hints:
   - рецепція (reception)
 activity_hints:
 - type: reading
-  focus: Ключові епізоди "Марусі"
+  focus: "Ключові епізоди \"Марусі\""
   source: UkrLib tid=252
   items: 5+
 - type: essay-response
@@ -87,11 +88,11 @@ grammar:
 - Narrative syntax (rhetorical questions, exclamations)
 module_type: literature
 sources:
-- name: Маруся — повний текст
+- name: "Маруся — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=252"
   type: primary
   notes: Повість для детального аналізу
-- name: Аналіз "Марусі"
+- name: "Аналіз \"Марусі\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=252"
   type: secondary
   notes: Літературознавчий аналіз

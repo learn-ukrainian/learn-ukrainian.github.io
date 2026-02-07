@@ -1,3 +1,4 @@
+---
 module: karpatska-ukraina
 level: B2-HIST
 sequence: 104
@@ -88,4 +89,4 @@ grammar:
 - Географічна та політична лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.9 [WWI & Revolution]
+phase: "HIST.9 [WWI & Revolution]"

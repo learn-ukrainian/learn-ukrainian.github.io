@@ -1,3 +1,4 @@
+---
 module: 98-franko-proza
 level: C1
 sequence: 98
@@ -6,13 +7,13 @@ version: '2.0'
 title: 'Франко: Проза'
 subtitle: Franko's Prose
 content_outline:
-- section: Розминка — Франко-прозаїк
+- section: "Розминка — Франко-прозаїк"
   words: 700
   points:
-  - "Захар Беркут" — історичний роман, Карпати
-  - "Борислав сміється" — соціальний реалізм
-  - Оповідання — сільська Галичина
-- section: Content Areas
+  - '"Захар Беркут" — історичний роман, Карпати'
+  - '"Борислав сміється" — соціальний реалізм'
+  - 'Оповідання — сільська Галичина'
+- section: "Content Areas"
   words: 1250
   points:
   - 'Захар Беркут: historical novel, Carpathian setting'
@@ -20,10 +21,10 @@ content_outline:
   - 'Оповідання: short stories, rural Galician life'
   - 'Prose techniques: realism, psychological depth'
   - Franko as literary critic and scholar
-- section: Практика — проза Франка
+- section: "Практика — проза Франка"
   words: 1050
   points:
-  - Проаналізувати фрагмент "Захара Беркута" — історичний контекст
+  - 'Проаналізувати фрагмент "Захара Беркута" — історичний контекст'
   - Порівняти соціальну критику Франка з європейським реалізмом
   - Написати есе про психологічну глибину оповідань
   - Обговорити діалектні елементи в прозі Франка

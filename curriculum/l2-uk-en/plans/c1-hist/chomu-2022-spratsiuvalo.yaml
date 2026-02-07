@@ -1,3 +1,4 @@
+---
 module: chomu-2022-spratsiuvalo
 level: c1-hist
 sequence: 131
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of чому 2022 спрацювало? анатомія мобілізації
 - Evaluate the historical significance of «три дні» не сталось
 content_outline:
-- section: Вступ — «Три дні» не сталось
+- section: "Вступ — «Три дні» не сталось"
   words: 515
   subsections:
   - Російський план — швидка перемога

@@ -1,3 +1,4 @@
+---
 module: c1-bio-129
 level: C1-BIO
 sequence: 129
@@ -5,7 +6,7 @@ slug: myroslav-marynovych
 version: '2.0'
 title: 'Мирослав Маринович: Совість нації'
 content_outline:
-- section: Вступ — Голос совісті в часи мовчання
+- section: "Вступ — Голос совісті в часи мовчання"
   words: 400
   points:
   - Маринович як моральний авторитет сучасної України

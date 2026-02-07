@@ -1,3 +1,4 @@
+---
 module: c1-pro-25
 level: C1-PRO
 sequence: 25
@@ -6,7 +7,7 @@ version: '2.0'
 title: Наукове листування
 subtitle: Academic Correspondence
 content_outline:
-- section: Розминка — Комунікація в академічному світі
+- section: "Розминка — Комунікація в академічному світі"
   words: 400
   points:
   - Роль листування в науковій співпраці
@@ -39,7 +40,7 @@ content_outline:
   - Зразок cover letter до журналу
   - Зразок листа-запрошення до співпраці
   - Типові помилки в академічних листах
-- section: Практика — Написання листів
+- section: "Практика — Написання листів"
   words: 400
   points:
   - 'Завдання 1: Написати cover letter до наукового журналу'

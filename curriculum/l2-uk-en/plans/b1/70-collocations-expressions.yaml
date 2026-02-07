@@ -1,3 +1,4 @@
+---
 module: b1-70
 level: B1
 sequence: 70
@@ -67,4 +68,4 @@ grammar:
 - Adjective-noun collocations
 - Fixed and semi-fixed expressions
 register: розмовний
-phase: B1.6 [Vocabulary Expansion II]
+phase: "B1.6 [Vocabulary Expansion II]"

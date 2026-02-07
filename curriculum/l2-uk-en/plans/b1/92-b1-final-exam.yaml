@@ -7,51 +7,51 @@ title: Фінальний іспит B1
 subtitle: B1 Level Final Assessment
 content_outline:
 - section: Огляд
-  words: 55
+  words: 103
   points:
   - Список навичок
 - section: Про іспит
-  words: 130
+  words: 245
   points:
   - Структура іспиту
   - Оцінювання
-- section: "Навичка 1: Читання"
-  words: 455
+- section: 'Навичка 1: Читання'
+  words: 856
   points:
   - Читання текстів
-- section: "Навичка 2: Аудіювання"
-  words: 300
+- section: 'Навичка 2: Аудіювання'
+  words: 564
   points:
   - Аудіювання
-- section: "Навичка 3: Граматика — Вид дієслова"
-  words: 80
+- section: 'Навичка 3: Граматика — Вид дієслова'
+  words: 150
   points:
   - Вид дієслова
-- section: "Навичка 4: Дієслова руху"
-  words: 75
+- section: 'Навичка 4: Дієслова руху'
+  words: 141
   points:
   - Дієслова руху
-- section: "Навичка 5: Складні речення"
-  words: 65
+- section: 'Навичка 5: Складні речення'
+  words: 122
   points:
   - Складні речення
-- section: "Навичка 6: Лексика B1"
-  words: 70
+- section: 'Навичка 6: Лексика B1'
+  words: 132
   points:
   - Лексика B1
 - section: Частина 4 — Письмо
-  words: 165
+  words: 310
   points:
   - Письмові завдання
 - section: Частина 5 — Говоріння
-  words: 125
+  words: 235
   points:
   - Усні завдання
 - section: Результати та рекомендації
-  words: 75
+  words: 142
   points:
   - Таблиця результатів
-word_target: 1600
+word_target: 3000
 vocabulary_hints:
   required:
   - іспит (exam)

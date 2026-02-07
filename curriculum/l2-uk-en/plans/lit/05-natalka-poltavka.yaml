@@ -1,3 +1,4 @@
+---
 module: natalka-poltavka
 level: LIT
 slug: natalka-poltavka
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Наталка Полтавка: Анатомія Почуттів'
 subtitle: 'LIT-005: Від Сміху до Сліз'
 content_outline:
-- section: Вступ — Від реготу до сльози
+- section: "Вступ — Від реготу до сльози"
   words: 625
   points:
   - Котляревський після "Енеїди"
@@ -17,7 +18,7 @@ content_outline:
   - Що таке сентименталізм
   - Європейський контекст (Руссо, Річардсон)
   - Українська специфіка жанру
-- section: Наталка — архетип української нареченої
+- section: "Наталка — архетип української нареченої"
   words: 875
   points:
   - Характеристика героїні
@@ -35,7 +36,7 @@ content_outline:
   - Возний Тетерваковський — комічний антагоніст
   - Петро — ідеальний наречений
   - Терпилиха — образ матері
-- section: Підсумок — Український театр народжується
+- section: "Підсумок — Український театр народжується"
   words: 625
   points:
   - Значення п'єси для українського театру
@@ -62,11 +63,11 @@ vocabulary_hints:
   - репліка (line/cue)
 activity_hints:
 - type: reading
-  focus: Ключові сцени "Наталки Полтавки"
+  focus: "Ключові сцени \"Наталки Полтавки\""
   source: UkrLib tid=50
   items: 5+
 - type: essay-response
-  focus: Конфлікт "багатство vs гідність"
+  focus: "Конфлікт \"багатство vs гідність\""
   word_target: 300
   output: Аргументативне есе
 focus: literature
@@ -87,15 +88,15 @@ grammar:
 - Folk song integration
 module_type: literature
 sources:
-- name: Наталка Полтавка — повний текст
+- name: "Наталка Полтавка — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=50"
   type: primary
   notes: П'єса для детального аналізу
-- name: Аналіз "Наталки Полтавки"
+- name: "Аналіз \"Наталки Полтавки\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=50"
   type: secondary
   notes: Літературознавчий аналіз
-- name: Віють вітри — пісня
+- name: "Віють вітри — пісня"
   url: "https://uk.wikipedia.org/wiki/Віють_вітри"
   type: reference
   notes: Контекст народної пісні

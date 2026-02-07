@@ -1,3 +1,4 @@
+---
 module: medical-ukrainian-i
 level: c2
 sequence: 66
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Українська медична термінологія
 content_outline:
-- section: Вступ — Медична термінологія в Україні
+- section: "Вступ — Медична термінологія в Україні"
   words: 500
   points:
   - Історія української медичної термінології
@@ -62,7 +63,7 @@ content_outline:
   - Складні терміни з кількох коренів
   - Інтернаціональні елементи
   - Нові терміни та неологізми
-- section: Практикум — Робота з медичними термінами
+- section: "Практикум — Робота з медичними термінами"
   words: 400
   points:
   - Читання медичного тексту
@@ -87,7 +88,7 @@ vocabulary:
   - аналіз (test/analysis)
   - направлення (referral)
   - виписка (discharge summary)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

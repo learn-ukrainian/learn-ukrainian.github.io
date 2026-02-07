@@ -3,44 +3,44 @@ level: A2
 sequence: 56
 slug: checkpoint-full-grammar
 version: '2.0'
-title: "Checkpoint — Full Grammar"
+title: Checkpoint — Full Grammar
 subtitle: A2 Mastery Review
 content_outline:
 - section: Огляд
-  words: 75
+  words: 100
   points:
   - Overview of checkpoint
   - Self-assessment focus
 - section: 'Skill 1: Daily Life'
-  words: 195
+  words: 241
   points:
   - Daily life vocabulary review
   - Practical situations
 - section: 'Skill 2: Work & Education'
-  words: 130
+  words: 160
   points:
   - Work and education vocabulary
   - Professional situations
 - section: 'Skill 3: Health & Body'
-  words: 135
+  words: 167
   points:
   - Health vocabulary review
   - Body and wellness
 - section: 'Skill 4: Shopping & Travel'
-  words: 120
+  words: 148
   points:
   - Shopping and travel vocabulary
   - Practical transactions
 - section: Integration Challenge
-  words: 90
+  words: 111
   points:
   - Comprehensive assessment
   - Mixed skills practice
 - section: Підсумок
-  words: 65
+  words: 73
   points:
   - Summary and next steps
-word_target: 810
+word_target: 1000
 vocabulary_hints:
   required:
   - повторення (review)

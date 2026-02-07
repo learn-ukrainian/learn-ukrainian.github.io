@@ -1,4 +1,5 @@
-# Module Plan: Slovo: The Bard's Intro
+---
+# Module Plan: "Slovo: The Bard's Intro"
 # Track: OES
 # Module: 062
 # Source: Gemini Research (ISSUE-491)
@@ -13,7 +14,7 @@ phase: 3
 phase_id: legal-tradition
 phase_name: "Legal Tradition"
 
-focus: ""Ne lěpo li ny..." — Poetic vs Historical truth"
+focus: '"Ne lěpo li ny..." — Poetic vs Historical truth'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

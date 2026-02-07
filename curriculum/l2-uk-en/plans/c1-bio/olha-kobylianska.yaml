@@ -1,3 +1,4 @@
+---
 module: c1-bio-057
 level: C1-BIO
 sequence: 57
@@ -5,7 +6,7 @@ slug: olha-kobylianska
 version: '2.0'
 title: 'Ольга Кобилянська: Модерністка і феміністка'
 content_outline:
-- section: Вступ — Орлиця Буковини
+- section: "Вступ — Орлиця Буковини"
   words: 400
   points:
   - Кобилянська як першовідкривачка українського модернізму

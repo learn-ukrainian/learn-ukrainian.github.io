@@ -1,3 +1,4 @@
+---
 module: eneida-part-1
 level: LIT
 slug: eneida-part-1
@@ -5,13 +6,13 @@ version: '2.0'
 title: 'Енеїда: Сміх над Безоднею (Частина I)'
 subtitle: Eneida Part I
 content_outline:
-- section: Вступ — Чому перша частина є фундаментом?
+- section: "Вступ — Чому перша частина є фундаментом?"
   words: 625
   points:
   - Структура поеми (6 частин)
   - Перша частина як "камертон" усього твору
   - Знайомство з героями та стилем
-- section: Еней — козак-мандрівник
+- section: "Еней — козак-мандрівник"
   words: 875
   points:
   - Трансформація римського героя в козака
@@ -23,7 +24,7 @@ content_outline:
   - Боги як чиновники (Юнона, Венера, Зевс)
   - Сатира на імперську бюрократію
   - Гумор як засіб десакралізації влади
-- section: Синонімічні ряди та "макаронічна мова"
+- section: "Синонімічні ряди та \"макаронічна мова\""
   words: 875
   points:
   - Лексичне багатство Котляревського
@@ -35,7 +36,7 @@ content_outline:
   - Сюжетна канва (від Трої до Карфагену)
   - 'Епізоди: буря, Дідона, банкет'
   - Авторські відступи та коментарі
-- section: Підсумок — Гумор як захисний механізм
+- section: "Підсумок — Гумор як захисний механізм"
   words: 500
   points:
   - Природа українського сміху
@@ -62,7 +63,7 @@ vocabulary_hints:
   - лайка (swearing)
 activity_hints:
 - type: reading
-  focus: Перша частина "Енеїди" (уривки)
+  focus: "Перша частина \"Енеїди\" (уривки)"
   source: UkrLib tid=51
   items: 5+
 - type: essay-response
@@ -87,15 +88,15 @@ grammar:
 - Synonymic series construction
 module_type: literature
 sources:
-- name: Енеїда — повний текст
+- name: "Енеїда — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
   type: primary
   notes: Частина I для детального аналізу
-- name: Аналіз "Енеїди"
+- name: "Аналіз \"Енеїди\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
   type: secondary
   notes: Літературознавчий аналіз твору
-- name: Вергілій — Енеїда (оригінал)
+- name: "Вергілій — Енеїда (оригінал)"
   url: "https://uk.wikipedia.org/wiki/Енеїда_(Вергілій)"
   type: reference
   notes: Для порівняння з оригіналом

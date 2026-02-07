@@ -1,3 +1,4 @@
+---
 module: b2-35
 level: B2
 sequence: 35
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Словотворення: назви місць та об''єктів'
 subtitle: 'Word Formation: Place and Object Names'
 content_outline:
-- section: Розминка — Як утворюються назви місць
+- section: "Розминка — Як утворюються назви місць"
   words: 300
   points:
   - Чому місце дії має спеціальну назву (їсти → їдальня)
@@ -33,7 +34,7 @@ content_outline:
   - друкар → друкарня (printing house)
   - пекар → пекарня (bakery)
   - перукар → перукарня (hair salon)
-- section: Практика — утворення назв місць
+- section: "Практика — утворення назв місць"
   words: 500
   points:
   - Утворити назви місць від заданих дієслів (зберігати → ?)
@@ -55,7 +56,7 @@ grammar:
 - Derivational morphology for place names
 immersion: 100
 register: науковий
-phase: B2.1c [Grammar Completion]
+phase: "B2.1c [Grammar Completion]"
 vocabulary_hints:
   required:
   - термін (term)

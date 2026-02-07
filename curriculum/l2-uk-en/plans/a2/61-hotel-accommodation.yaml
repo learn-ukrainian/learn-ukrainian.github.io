@@ -1,3 +1,4 @@
+---
 module: a2-61
 level: A2
 sequence: 61
@@ -83,4 +84,4 @@ grammar:
 - Check-in phrases (заселення, виселення)
 - Requests and complaints
 register: розмовний
-phase: A2.6 [Practical]
+phase: "A2.6 [Practical]"

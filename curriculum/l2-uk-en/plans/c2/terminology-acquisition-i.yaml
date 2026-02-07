@@ -1,3 +1,4 @@
+---
 module: terminology-acquisition-i
 level: c2
 sequence: 47
@@ -12,16 +13,16 @@ sources:
   url: "https://ium.org.ua/"
   type: reference
   notes: Standards for Ukrainian terminology development and systematization
-- name: ДСТУ ISO 704:2018 — Термінологічна робота
+- name: "ДСТУ ISO 704:2018 — Термінологічна робота"
   url: "https://dnaop.com/"
   type: reference
   notes: Ukrainian standard for terminology work methodology
-- name: Термінологічний вісник — наукове видання
+- name: "Термінологічний вісник — наукове видання"
   url: "https://ium.org.ua/terminolohichnyy-visnyk/"
   type: reference
   notes: Academic journal on Ukrainian terminology
 content_outline:
-- section: Вступ — Принципи опанування термінології
+- section: "Вступ — Принципи опанування термінології"
   words: 541
   points:
   - Чому системний підхід ефективніший за механічне заучування
@@ -77,7 +78,7 @@ vocabulary:
   - семантичне поле (semantic field)
   - абревіатура (abbreviation)
   - акронім (acronym)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

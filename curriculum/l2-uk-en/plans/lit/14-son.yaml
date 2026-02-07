@@ -1,3 +1,4 @@
+---
 module: son
 level: LIT
 slug: son
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Політична Сатира: Сон'
 subtitle: 'LIT-014: Сміхове руйнування влади'
 content_outline:
-- section: Вступ — Найсміливіший маніфест XIX століття
+- section: "Вступ — Найсміливіший маніфест XIX століття"
   words: 625
   points:
   - Історія написання (1844)
@@ -35,7 +36,7 @@ content_outline:
   - Арешт і заслання
   - '"Сон" у справі Кирило-Мефодіївського братства'
   - Ціна правди
-- section: Підсумок — Сатира як зброя
+- section: "Підсумок — Сатира як зброя"
   words: 500
   points:
   - Роль сатири в десакралізації влади
@@ -62,7 +63,7 @@ vocabulary_hints:
   - критика (criticism)
 activity_hints:
 - type: reading
-  focus: Повний текст поеми "Сон"
+  focus: "Повний текст поеми \"Сон\""
   source: UkrLib tid=18
   items: '1'
 - type: essay-response
@@ -87,15 +88,15 @@ grammar:
 - Political rhetoric
 module_type: literature
 sources:
-- name: Сон — повний текст
+- name: "Сон — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=18"
   type: primary
   notes: Поема для детального аналізу
-- name: Аналіз "Сну"
+- name: "Аналіз \"Сну\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=18"
   type: secondary
   notes: Літературознавчий аналіз
-- name: Російська імперія — контекст
+- name: "Російська імперія — контекст"
   url: "https://uk.wikipedia.org/wiki/Російська_імперія"
   type: reference
   notes: Політичний контекст 1844 року

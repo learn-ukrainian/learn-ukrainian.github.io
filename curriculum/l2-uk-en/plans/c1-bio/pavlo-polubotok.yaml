@@ -1,3 +1,4 @@
+---
 module: c1-bio-029
 level: C1-BIO
 sequence: 29
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Павло Полуботок: Мученик за автономію'
 word_target: 4300
 content_outline:
-- section: Вступ — Символ нескореності
+- section: "Вступ — Символ нескореності"
   words: 600
   points:
   - Полуботок як символ морального та правового опору

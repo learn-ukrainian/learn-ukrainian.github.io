@@ -1,3 +1,4 @@
+---
 module: presentation-skills-advanced
 level: B2
 sequence: 92
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Презентації: Поглиблено'
 subtitle: Advanced Presentation Skills
 content_outline:
-- section: Розминка — Від базових до професійних навичок
+- section: "Розминка — Від базових до професійних навичок"
   words: 200
   points:
   - Перехід від структури (М91) до майстерності

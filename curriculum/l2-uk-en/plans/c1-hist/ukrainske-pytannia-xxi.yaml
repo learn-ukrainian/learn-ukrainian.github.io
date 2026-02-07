@@ -1,3 +1,4 @@
+---
 module: ukrainske-pytannia-xxi
 level: c1-hist
 sequence: 134
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of українське питання xxi століття
 - Evaluate the historical significance of українське питання
 content_outline:
-- section: Вступ — Українське питання
+- section: "Вступ — Українське питання"
   words: 515
   subsections:
   - «Українське питання» — історичний термін

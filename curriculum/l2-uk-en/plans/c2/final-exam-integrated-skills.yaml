@@ -1,3 +1,4 @@
+---
 module: final-exam-integrated-skills
 level: c2
 sequence: 98
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — C2 Assessment Criteria
+- name: "Ukrainian State Standard 2024 — C2 Assessment Criteria"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 assessment standards and rubrics
@@ -16,47 +17,47 @@ sources:
   url: "https://www.coe.int/"
   type: reference
   notes: European framework for C2 assessment
-- name: Іспит з української мови як іноземної — Зразки
+- name: "Іспит з української мови як іноземної — Зразки"
   url: "https://naqa.gov.ua/"
   type: secondary
   notes: Sample exam formats and tasks
 content_outline:
-- section: Вступ — Структура фінального екзамену
+- section: "Вступ — Структура фінального екзамену"
   words: 444
   points:
   - Огляд компонентів екзамену
   - Критерії оцінювання
   - Часові рамки та організація
   - Стратегії підготовки
-- section: Компонент I — Аудіювання
+- section: "Компонент I — Аудіювання"
   words: 667
   points:
   - Формат завдань (вибір, заповнення, відкриті відповіді)
   - Типи аудіо (лекції, інтерв'ю, дискусії, новини)
   - Критерії оцінювання
   - Зразки завдань
-- section: Компонент II — Читання
+- section: "Компонент II — Читання"
   words: 667
   points:
   - Формат завдань (розуміння, аналіз, критика)
   - Типи текстів (наукові, публіцистичні, літературні)
   - Критерії оцінювання
   - Зразки завдань
-- section: Компонент III — Письмо
+- section: "Компонент III — Письмо"
   words: 778
   points:
   - Формат завдань (есе, трансформація, аналіз)
   - Вимоги до обсягу та змісту
   - Критерії оцінювання (зміст, мова, стиль)
   - Зразки завдань із рубриками
-- section: Компонент IV — Говоріння
+- section: "Компонент IV — Говоріння"
   words: 667
   points:
   - Формат завдань (монолог, дискусія, рольова гра)
   - Критерії оцінювання (флуентність, точність, взаємодія)
   - Процедура усної частини
   - Зразки тем і завдань
-- section: Пробний екзамен — Повна симуляція
+- section: "Пробний екзамен — Повна симуляція"
   words: 777
   points:
   - Проходження повного екзамену (3-4 години)
@@ -82,7 +83,7 @@ vocabulary:
   - валідність (validity)
   - надійність (reliability)
   - зворотний вплив (washback effect)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

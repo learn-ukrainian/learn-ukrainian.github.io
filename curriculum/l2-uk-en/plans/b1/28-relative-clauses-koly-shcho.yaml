@@ -1,3 +1,4 @@
+---
 module: b1-28
 level: B1
 sequence: 28
@@ -8,7 +9,7 @@ subtitle: Time and Fact Relative Clauses
 content_outline:
 - section: Тест
   words: 293
-  points: []
+  points: "[]"
 - section: Теорія (Аналіз)
   words: 435
   points:
@@ -86,4 +87,4 @@ grammar:
 - Fact relatives with що as relative pronoun
 - 'Distinction: relative що vs conjunction що'
 register: розмовний
-phase: B1.3a [Complex Sentences]
+phase: "B1.3a [Complex Sentences]"

@@ -1,3 +1,4 @@
+---
 module: zakhidni-media
 level: c1-hist
 sequence: 111
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of західні медіа: сліпі плями'
 - Evaluate the historical significance of ненавмисна допомога
 content_outline:
-- section: Вступ — Ненавмисна допомога
+- section: "Вступ — Ненавмисна допомога"
   words: 457
   subsections:
   - Західні медіа — не вороги
@@ -80,7 +81,7 @@ activities:
 - type: critical-analysis
   focus: How Kremlin talking points appear in Western media
 - type: critical-analysis
-  focus: Who are "Ukraine experts" in Western media?
+  focus: "Who are \"Ukraine experts\" in Western media?"
 - type: critical-analysis
   focus: How same event covered in different outlets
 - type: essay-response

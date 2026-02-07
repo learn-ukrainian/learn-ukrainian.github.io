@@ -1,3 +1,4 @@
+---
 module: c1-bio-144
 level: C1-BIO
 sequence: 144
@@ -5,7 +6,7 @@ slug: oleg-sentsov
 version: '2.0'
 title: 'Олег Сенцов: Режисер-в''язень'
 content_outline:
-- section: Вступ — Символ опору
+- section: "Вступ — Символ опору"
   words: 400
   points:
   - Сенцов як символ української боротьби проти російської агресії

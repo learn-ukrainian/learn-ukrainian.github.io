@@ -1,3 +1,4 @@
+---
 module: pereyaslavski-statti
 level: c1-hist
 sequence: 24
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of переяславські статті: текст і контекст'
 - Evaluate the historical significance of найконтроверсійніший документ
 content_outline:
-- section: Вступ — Найконтроверсійніший документ
+- section: "Вступ — Найконтроверсійніший документ"
   words: 457
   subsections:
   - Переяслав 1654 — що відбулося?
@@ -23,7 +24,7 @@ content_outline:
   - Присяга — хто кому?
   - Інцидент з присягою царя
   - Що вирішили, чого не вирішили
-- section: Березневі статті — справжній договір
+- section: "Березневі статті — справжній договір"
   words: 800
   subsections:
   - Переговори в Москві
@@ -31,7 +32,7 @@ content_outline:
   - Козацька автономія
   - Московські застереження
   - Що підписано, що відхилено
-- section: Фрагмент — Ключові статті
+- section: "Фрагмент — Ключові статті"
   words: 800
   subsections:
   - Текст (з глосами)

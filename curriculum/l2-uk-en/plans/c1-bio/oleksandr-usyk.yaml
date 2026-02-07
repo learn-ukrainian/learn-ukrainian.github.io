@@ -1,3 +1,4 @@
+---
 module: c1-bio-148
 level: C1-BIO
 sequence: 148
@@ -5,7 +6,7 @@ slug: oleksandr-usyk
 version: '2.0'
 title: 'Олександр Усик: Чемпіон із серцем воїна'
 content_outline:
-- section: Вступ — Абсолютний чемпіон світу
+- section: "Вступ — Абсолютний чемпіон світу"
   words: 457
   points:
   - Усик як перший в історії undisputed у двох вагах

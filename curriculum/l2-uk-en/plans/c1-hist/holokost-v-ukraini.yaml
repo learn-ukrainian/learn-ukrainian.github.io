@@ -1,3 +1,4 @@
+---
 module: holokost-v-ukraini
 level: c1-hist
 sequence: 119
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
 - Evaluate the historical significance of найтемніша сторінка
 content_outline:
-- section: Вступ — Найтемніша сторінка
+- section: "Вступ — Найтемніша сторінка"
   words: 515
   subsections:
   - Голокост в Україні — масштаб

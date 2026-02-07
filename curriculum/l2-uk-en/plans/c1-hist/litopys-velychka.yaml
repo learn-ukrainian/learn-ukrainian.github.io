@@ -1,3 +1,4 @@
+---
 module: litopys-velychka
 level: c1-hist
 sequence: 22
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of літопис величка: барокова історія'
 - Evaluate the historical significance of найповніший козацький літопис
 content_outline:
-- section: Вступ — Найповніший козацький літопис
+- section: "Вступ — Найповніший козацький літопис"
   words: 457
   subsections:
   - Самійло Величко — канцелярист
@@ -39,7 +40,7 @@ content_outline:
   - Договори
   - Чому це революційний підхід
   - Верифікація — чи автентичні?
-- section: Фрагмент — Переяславська рада
+- section: "Фрагмент — Переяславська рада"
   words: 686
   subsections:
   - Текст (з глосами)

@@ -1,39 +1,24 @@
-# Module Plan: RUTH Capstone
-# Track: RUTH
-# Module: 100
-# Source: Gemini Research (ISSUE-496)
-# Generated: 2026-02-04
-
 module_number: 100
 slug: ruth-capstone
-title_uk: "Капстоун RUTH"
-title_en: "RUTH Capstone"
-
+title_uk: Капстоун RUTH
+title_en: RUTH Capstone
 phase: 4
 phase_id: cossack-word
-phase_name: "Cossack Word"
-
-focus: "Tracing a word from 1529 to 1794"
-
-word_target: 2500
-
-# Content outline to be expanded during content generation
+phase_name: Cossack Word
+focus: Tracing a word from 1529 to 1794
+word_target: 4000
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to RUTH Capstone"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to RUTH Capstone
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
-  - historical-writing
+- transcription
+- etymology-trace
+- grammar-identify
+- historical-writing

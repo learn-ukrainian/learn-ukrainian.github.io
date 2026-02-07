@@ -1,3 +1,4 @@
+---
 module: b1-48
 level: B1
 sequence: 48
@@ -77,4 +78,4 @@ grammar:
 - Прагматичні функції демінутивів
 - Регістрові та стилістичні відтінки
 register: розмовний
-phase: B1.4b [Word Formation]
+phase: "B1.4b [Word Formation]"

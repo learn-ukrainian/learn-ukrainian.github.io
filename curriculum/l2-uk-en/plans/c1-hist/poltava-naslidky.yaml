@@ -1,3 +1,4 @@
+---
 module: poltava-naslidky
 level: c1-hist
 sequence: 90
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of полтава 1709: якби мазепа переміг?'
 - Evaluate the historical significance of доля європи на одному полі
 content_outline:
-- section: Вступ — Доля Європи на одному полі
+- section: "Вступ — Доля Європи на одному полі"
   words: 457
   subsections:
   - Полтава — вирішальна битва

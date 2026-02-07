@@ -1,3 +1,4 @@
+---
 module: viyna-donbas
 level: B2-HIST
 sequence: 131
@@ -88,4 +89,4 @@ grammar:
 - Військова та політична лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

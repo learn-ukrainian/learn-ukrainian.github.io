@@ -1,3 +1,4 @@
+---
 module: c1-83
 level: C1
 sequence: 83
@@ -6,7 +7,7 @@ version: '2.0'
 title: Балет і танець
 subtitle: Ballet and Dance
 content_outline:
-- section: Розминка — Танець як мистецтво
+- section: "Розминка — Танець як мистецтво"
   words: 700
   points:
   - Серж Лифар — українець, що змінив світовий балет
@@ -20,7 +21,7 @@ content_outline:
   - 'Classical ballet: Київський балет, Львівська балетна школа'
   - 'Folk dance: Гопак, Аркан, ансамблі (Вірський)'
   - 'Contemporary: Kyiv Modern Ballet, сучасний танець'
-- section: Практика — танцювальний дискурс
+- section: "Практика — танцювальний дискурс"
   words: 1050
   points:
   - Написати біографію Сержа Лифаря

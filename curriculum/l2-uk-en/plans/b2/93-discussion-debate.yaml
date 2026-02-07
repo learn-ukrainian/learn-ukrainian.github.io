@@ -1,3 +1,4 @@
+---
 module: b2-93
 level: B2
 sequence: 93
@@ -6,7 +7,7 @@ version: '2.0'
 title: Дискусії та дебати
 subtitle: Discussion and Debate Skills
 content_outline:
-- section: Розминка — Мистецтво дискусії
+- section: "Розминка — Мистецтво дискусії"
   words: 200
   points:
   - Дискусія vs суперечка vs дебати

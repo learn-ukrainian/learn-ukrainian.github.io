@@ -1,3 +1,4 @@
+---
 module: b1-51
 level: B1
 sequence: 51
@@ -119,4 +120,4 @@ grammar:
 - Participles, passive voice, diminutives, numerals
 - Comprehensive review and testing
 register: розмовний
-phase: B1.4b [Advanced Grammar Checkpoint]
+phase: "B1.4b [Advanced Grammar Checkpoint]"

@@ -1,3 +1,4 @@
+---
 module: 2004-vs-2014
 level: c1-hist
 sequence: 93
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
 - Evaluate the historical significance of дві революції, різні наслідки
 content_outline:
-- section: Вступ — Дві революції, різні наслідки
+- section: "Вступ — Дві революції, різні наслідки"
   words: 457
   subsections:
   - 2004 — перемога, потім розчарування

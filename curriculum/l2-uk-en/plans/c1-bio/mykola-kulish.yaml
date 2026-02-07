@@ -1,3 +1,4 @@
+---
 module: c1-bio-095
 level: C1-BIO
 sequence: 95
@@ -5,7 +6,7 @@ slug: mykola-kulish
 version: '2.0'
 title: 'Микола Куліш: Геній українського театру'
 content_outline:
-- section: Вступ — Найбільший драматург XX століття
+- section: "Вступ — Найбільший драматург XX століття"
   words: 400
   points:
   - Куліш як геній українського театру

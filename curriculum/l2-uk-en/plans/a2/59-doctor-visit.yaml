@@ -7,31 +7,31 @@ title: At the Doctor
 subtitle: Medical Consultation
 content_outline:
 - section: Вступ
-  words: 80
+  words: 100
   points:
   - Healthcare system basics
   - Medical vocabulary overview
 - section: Презентація
-  words: 295
+  words: 309
   points:
   - Making appointments
   - Describing symptoms
   - Doctor's questions
 - section: Practice / Практика
-  words: 345
+  words: 361
   points:
   - Medical dialogue exercises
   - Complete consultation practice
 - section: Narrative / Розповідь
-  words: 205
+  words: 215
   points:
   - Story about doctor visit
   - Diagnosis and treatment
 - section: Need More Practice?
-  words: 30
+  words: 15
   points:
   - Summary and key phrases
-word_target: 955
+word_target: 1000
 vocabulary_hints:
   required:
   - лікар (doctor)

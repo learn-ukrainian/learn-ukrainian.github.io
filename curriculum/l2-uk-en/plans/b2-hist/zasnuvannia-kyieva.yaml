@@ -1,3 +1,4 @@
+---
 module: zasnuvannia-kyieva
 level: B2-HIST
 sequence: 6
@@ -93,4 +94,4 @@ sources:
   url: "http://litopys.org.ua/izborn79/izb79_03.htm"
   type: primary
 register: публіцистичний
-phase: B2-HIST.1 [Origins]
+phase: "B2-HIST.1 [Origins]"

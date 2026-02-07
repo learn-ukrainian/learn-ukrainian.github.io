@@ -1,3 +1,4 @@
+---
 module: donbas-industrializatsiia
 level: c1-hist
 sequence: 77
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of донбас: індустріалізація та ідентичність'
 - Evaluate the historical significance of регіон, якого не було
 content_outline:
-- section: Вступ — Регіон, якого не було
+- section: "Вступ — Регіон, якого не було"
   words: 457
   subsections:
   - Донбас — штучне створення

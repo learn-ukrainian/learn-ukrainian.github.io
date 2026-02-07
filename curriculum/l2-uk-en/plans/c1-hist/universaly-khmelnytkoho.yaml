@@ -1,3 +1,4 @@
+---
 module: universaly-khmelnytkoho
 level: c1-hist
 sequence: 23
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of універсали хмельницького
 - Evaluate the historical significance of голос гетьмана
 content_outline:
-- section: Вступ — Голос гетьмана
+- section: "Вступ — Голос гетьмана"
   words: 457
   subsections:
   - Що таке універсал?
@@ -32,7 +33,7 @@ content_outline:
   - Звернення до селян
   - Дипломатичні — до Москви, Варшави
   - Еволюція риторики
-- section: Фрагмент — Універсал 1648 року
+- section: "Фрагмент — Універсал 1648 року"
   words: 686
   subsections:
   - Текст (з глосами)

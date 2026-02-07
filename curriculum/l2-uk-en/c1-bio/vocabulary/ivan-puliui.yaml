@@ -1,3 +1,4 @@
+---
 items:
 - lemma: випромінювання
   ipa: /ʋɪprɔmʲiˈnʲuʋɐnʲnʲɐ/
@@ -23,12 +24,6 @@ items:
   pos: noun
   gender: f
   note: празька школа електротехніки
-- lemma: скрипторій
-  ipa: /skrɪpˈtɔrʲij/
-  translation: scriptorium
-  pos: noun
-  gender: m
-  note: місце для переписування книг
 - lemma: теологія
   ipa: /teɔˈlɔɦʲijɐ/
   translation: theology
@@ -83,12 +78,6 @@ items:
   pos: noun
   gender: n
   note: культурна місія
-- lemma: референт
-  ipa: /rɛfɛˈrɛnt/
-  translation: referent / advisor
-  pos: noun
-  gender: m
-  note: науковий референт
 - lemma: термінологія
   ipa: /tɛrmʲinɔˈlɔɦʲijɐ/
   translation: terminology
@@ -113,12 +102,6 @@ items:
   pos: noun
   gender: m
   note: підтримка студентів
-- lemma: кафедра
-  ipa: /kɐˈfɛdrɐ/
-  translation: department / chair
-  pos: noun
-  gender: f
-  note: завідувач кафедри
 - lemma: експеримент
   ipa: /ekspɛrɪˈmɛnt/
   translation: experiment
@@ -131,15 +114,39 @@ items:
   pos: noun
   gender: m
   note: отримання патенту
-- lemma: переклад
-  ipa: /perɛˈklɑd/
-  translation: translation
-  pos: noun
-  gender: m
-  note: переклад Біблії
 - lemma: асиміляція
   ipa: /ɐsɪmʲilʲɐˈt͡sʲijɐ/
   translation: assimilation
   pos: noun
   gender: f
   note: протидія асиміляції
+- lemma: антикатод
+  ipa: /ɐntɪkɐˈtɔd/
+  translation: anticathode
+  pos: noun
+  gender: m
+  note: фокусування променів
+- lemma: передумова
+  ipa: /perɛduˈmɔʋɐ/
+  translation: prerequisite
+  pos: noun
+  gender: f
+  note: наукові передумови
+- lemma: наступництво
+  ipa: /nɐstupˈnɪt͡stʋɔ/
+  translation: succession / heritage
+  pos: noun
+  gender: n
+  note: тяглість поколінь
+- lemma: корифей
+  ipa: /kɔrɪˈfɛj/
+  translation: luminary / star
+  pos: noun
+  gender: m
+  note: корифей науки
+- lemma: самобутність
+  ipa: /sɐmɔˈbutnʲistʲ/
+  translation: originality / authenticity
+  pos: noun
+  gender: f
+  note: національна самобутність

@@ -1,3 +1,4 @@
+---
 module: khozary-i-sloviany
 level: B2-HIST
 sequence: 7
@@ -82,4 +83,4 @@ sources:
   url: "http://litopys.org.ua/khazar/kh02.htm"
   type: primary
 register: публіцистичний
-phase: B2-HIST.1 [Origins]
+phase: "B2-HIST.1 [Origins]"

@@ -1,3 +1,4 @@
+---
 module: habsburzka-halichyna
 level: B2-HIST
 sequence: 76
@@ -91,4 +92,4 @@ grammar:
 - Порівняльні конструкції
 - Адміністративна лексика
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

@@ -1,3 +1,4 @@
+---
 module: kozatski-litopysy-ohliad
 level: c1-hist
 sequence: 19
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of козацькі літописи: огляд традиції'
 - Evaluate the historical significance of козацька історіографія
 content_outline:
-- section: Вступ — Козацька історіографія
+- section: "Вступ — Козацька історіографія"
   words: 457
   subsections:
   - Новий тип літописання
@@ -23,7 +24,7 @@ content_outline:
   - Освічена еліта — хто писав історію?
   - Кінець XVII — поч. XVIII ст.
   - Криза автономії — мотив писати
-- section: Три літописи — порівняння
+- section: "Три літописи — порівняння"
   words: 800
   subsections:
   - Самовидець — очевидець, стислий

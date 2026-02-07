@@ -1,3 +1,4 @@
+---
 module: panteleimon-kulish
 level: LIT
 slug: panteleimon-kulish
@@ -5,13 +6,13 @@ version: '2.0'
 title: 'Пантелеймон Куліш: Європеєць на Хуторі'
 subtitle: 'Panteleimon Kulish: The European on the Farmstead'
 content_outline:
-- section: Вступ — Інтелектуал епохи романтизму
+- section: "Вступ — Інтелектуал епохи романтизму"
   words: 625
   points:
   - Куліш у трійці Шевченко-Куліш-Костомаров
   - Гарячий характер і суперечливість
   - Чому його менше знають
-- section: Біографія — від села до Європи
+- section: "Біографія — від села до Європи"
   words: 875
   points:
   - Дитинство на Чернігівщині
@@ -35,7 +36,7 @@ content_outline:
   - Ідеалізація сільського життя
   - Критика міста і модернізації
   - Європеїзм vs консерватизм
-- section: Підсумок — Найсуперечливіша постать
+- section: "Підсумок — Найсуперечливіша постать"
   words: 500
   points:
   - Внесок Куліша в українську культуру
@@ -87,11 +88,11 @@ grammar:
 - Intellectual lexicon
 module_type: biography
 sources:
-- name: Пантелеймон Куліш — біографія
+- name: "Пантелеймон Куліш — біографія"
   url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1701"
   type: primary
   notes: Офіційна біографія на UkrLib
-- name: Чорна рада — текст
+- name: "Чорна рада — текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=263"
   type: secondary
   notes: Головний роман для контексту

@@ -1,3 +1,4 @@
+---
 module: writing-professional-documents-i
 level: c2
 sequence: 52
@@ -8,38 +9,38 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: ДСТУ 3008:2015 — Звіти у сфері науки і техніки
+- name: "ДСТУ 3008:2015 — Звіти у сфері науки і техніки"
   url: "https://dnaop.com/"
   type: reference
   notes: Ukrainian standard for scientific and technical reports
-- name: НАН України — вимоги до наукових звітів
+- name: "НАН України — вимоги до наукових звітів"
   url: "https://www.nas.gov.ua/"
   type: reference
   notes: Academic requirements for research reports
-- name: Міністерство освіти і науки — методичні рекомендації
+- name: "Міністерство освіти і науки — методичні рекомендації"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Guidelines for academic writing in Ukrainian
 content_outline:
-- section: Вступ — Письмове професійне мовлення
+- section: "Вступ — Письмове професійне мовлення"
   words: 432
   points:
   - Відмінність усної та письмової професійної комунікації
   - Принципи ефективного професійного письма
   - Підготовка до написання
-- section: Реферат — Короткий виклад
+- section: "Реферат — Короткий виклад"
   words: 757
   points:
   - Типи рефератів (інформативний, індикативний)
   - Структура реферату
   - Техніка реферування
-- section: Анотація — Стисла характеристика
+- section: "Анотація — Стисла характеристика"
   words: 649
   points:
   - Відмінність анотації від реферату
   - Структура та обсяг анотації
   - Ключові слова
-- section: Звіт — Офіційний документ
+- section: "Звіт — Офіційний документ"
   words: 865
   points:
   - Типи звітів (науковий, технічний, фінансовий)
@@ -76,7 +77,7 @@ vocabulary:
   - резюме (summary)
   - компіляція (compilation)
   - синтезування (synthesizing)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

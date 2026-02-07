@@ -1,3 +1,4 @@
+---
 # Module Plan: The Eye Witness
 # Track: RUTH
 # Module: 062
@@ -13,7 +14,7 @@ phase: 3
 phase_id: baroque-fight
 phase_name: "Baroque Fight"
 
-focus: "Intro to genre — "Year 1648""
+focus: 'Intro to genre — "Year 1648"'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

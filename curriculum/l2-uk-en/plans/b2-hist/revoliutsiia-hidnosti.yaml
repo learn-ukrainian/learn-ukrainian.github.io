@@ -1,3 +1,4 @@
+---
 module: revoliutsiia-hidnosti
 level: B2-HIST
 sequence: 126
@@ -90,4 +91,4 @@ grammar:
 - Політична та соціальна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

@@ -1,3 +1,4 @@
+---
 module: kozatska-kultura
 level: B2-HIST
 sequence: 47
@@ -97,4 +98,4 @@ sources:
   type: reference
   notes: Detailed description of the style
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"

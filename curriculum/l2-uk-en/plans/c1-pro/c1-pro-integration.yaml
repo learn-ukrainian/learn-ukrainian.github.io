@@ -1,3 +1,4 @@
+---
 module: c1-pro-49
 level: C1-PRO
 sequence: 49
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Інтеграція: C1-PRO'
 subtitle: C1-PRO Integration
 content_outline:
-- section: Розминка — Синтез професійних навичок
+- section: "Розминка — Синтез професійних навичок"
   words: 400
   points:
   - Огляд усіх фаз C1-PRO (Executive, Academic, Industry, Career)
@@ -39,7 +40,7 @@ content_outline:
   - Зразок комплексного плану проєкту
   - Приклад презентації для різних аудиторій
   - Шаблон звіту про статус проєкту
-- section: Практика — Комплексний проєкт
+- section: "Практика — Комплексний проєкт"
   words: 400
   points:
   - 'Завдання: Підготувати повний пакет документів для проєкту'

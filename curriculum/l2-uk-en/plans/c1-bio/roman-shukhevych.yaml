@@ -1,3 +1,4 @@
+---
 module: c1-bio-113
 level: C1-BIO
 sequence: 113
@@ -5,7 +6,7 @@ slug: roman-shukhevych
 version: '2.0'
 title: 'Роман Шухевич: Головний командир УПА'
 content_outline:
-- section: Вступ — Легенда УПА
+- section: "Вступ — Легенда УПА"
   words: 457
   points:
   - Шухевич як символ збройного опору
@@ -93,7 +94,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Українська_повстанська_армія"
   type: reference
   notes: Organization he led
-- name: Герой України — Шухевич
+- name: "Герой України — Шухевич"
   url: "https://uk.wikipedia.org/wiki/Герой_України"
   type: reference
   notes: State recognition

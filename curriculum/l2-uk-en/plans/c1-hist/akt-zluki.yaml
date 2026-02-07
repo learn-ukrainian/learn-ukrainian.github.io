@@ -1,3 +1,4 @@
+---
 module: akt-zluki
 level: c1-hist
 sequence: 35
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of акт злуки 1919: символ єдності'
 - Evaluate the historical significance of найважливіший день
 content_outline:
-- section: Вступ — Найважливіший день
+- section: "Вступ — Найважливіший день"
   words: 457
   subsections:
   - 22 січня 1919 — що відбулося

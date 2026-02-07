@@ -1,8 +1,9 @@
+---
 module: women-in-kobzar
 level: LIT
 slug: women-in-kobzar
 version: '2.0'
-title: Жіноча доля в "Кобзарі"
+title: "Жіноча доля в \"Кобзарі\""
 subtitle: 'Women in Kobzar: The Tragic Archetype'
 content_outline:
 - section: Вступ
@@ -87,11 +88,11 @@ grammar:
 - Diminutives usage
 module_type: literature
 sources:
-- name: Катерина — поема
+- name: "Катерина — поема"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=6"
   type: primary
   notes: Рання поема про покритку
-- name: Наймичка — поема
+- name: "Наймичка — поема"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=30"
   type: primary
   notes: Зріла поема про матір

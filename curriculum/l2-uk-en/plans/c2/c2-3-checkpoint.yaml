@@ -1,3 +1,4 @@
+---
 module: c2-3-checkpoint
 level: c2
 sequence: 75
@@ -8,11 +9,11 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: C2-CURRICULUM-PLAN.md — Checkpoints
+- name: "C2-CURRICULUM-PLAN.md — Checkpoints"
   url: internal
   type: reference
   notes: Вимоги до checkpoint модулів
-- name: Ukrainian State Standard 2024 — C2 Assessment
+- name: "Ukrainian State Standard 2024 — C2 Assessment"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Стандарти оцінювання C2 рівня
@@ -21,42 +22,42 @@ sources:
   type: reference
   notes: Шаблон checkpoint модуля
 content_outline:
-- section: Вступ — Структура оцінювання C2.3
+- section: "Вступ — Структура оцінювання C2.3"
   words: 400
   points:
   - Охоплення модулів M46-74
   - Формат оцінювання
   - Критерії успіху
   - Час на виконання
-- section: Частина I — Термінологія та розуміння (20%)
+- section: "Частина I — Термінологія та розуміння (20%)"
   words: 600
   points:
   - Правнича термінологія
   - Медична термінологія
   - Професійна лексика
   - Контекстуальне розуміння
-- section: Частина II — Читання професійних текстів (20%)
+- section: "Частина II — Читання професійних текстів (20%)"
   words: 600
   points:
   - Юридичний документ
   - Медичний текст
   - Професійна кореспонденція
   - Критичний аналіз
-- section: Частина III — Письмо (30%)
+- section: "Частина III — Письмо (30%)"
   words: 800
   points:
   - Юридичний висновок (вибір)
   - Медична документація (вибір)
   - Професійний лист
   - Кейс-стаді
-- section: Частина IV — Усна комунікація (20%)
+- section: "Частина IV — Усна комунікація (20%)"
   words: 600
   points:
   - Симуляція професійної консультації
   - Презентація портфоліо
   - Відповіді на запитання
   - Професійний діалог
-- section: Частина V — Інтеграція та рефлексія (10%)
+- section: "Частина V — Інтеграція та рефлексія (10%)"
   words: 500
   points:
   - Інтегроване завдання
@@ -89,7 +90,7 @@ vocabulary:
   - портфоліо (portfolio)
   - кейс-стаді (case study)
   - презентація (presentation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

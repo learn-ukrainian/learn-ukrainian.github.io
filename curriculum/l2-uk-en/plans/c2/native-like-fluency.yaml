@@ -1,3 +1,4 @@
+---
 module: native-like-fluency
 level: c2
 sequence: 81
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — C2 Descriptors
+- name: "Ukrainian State Standard 2024 — C2 Descriptors"
   url: "https://mon.gov.ua/"
   type: primary
   notes: Дескриптори вільного володіння
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Приклади природного мовлення
 content_outline:
-- section: Вступ — Що означає "як носій мови"
+- section: 'Вступ — Що означає \"як носій мови\"'
   words: 500
   points:
   - Визначення native-like fluency
@@ -63,7 +64,7 @@ content_outline:
   - Гумор та іронія
   - Соціальні норми комунікації
   - Implicit meaning
-- section: Практикум — Демонстрація fluency
+- section: "Практикум — Демонстрація fluency"
   words: 400
   points:
   - Спонтанні діалоги
@@ -88,7 +89,7 @@ vocabulary:
   - референція (reference)
   - алюзія (allusion)
   - нейтральність (neutrality)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

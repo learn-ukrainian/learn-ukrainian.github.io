@@ -1,3 +1,4 @@
+---
 module: sich-dokumenty
 level: c1-hist
 sequence: 27
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of документи січі: козацьке самоврядування'
 - Evaluate the historical significance of січ як держава
 content_outline:
-- section: Вступ — Січ як держава
+- section: "Вступ — Січ як держава"
   words: 457
   subsections:
   - Запорозька Січ — що це було?
@@ -40,7 +41,7 @@ content_outline:
   - Покарання — жорстокі
   - Захист власності
   - Рівність? — для кого
-- section: Фрагмент — Судова справа
+- section: "Фрагмент — Судова справа"
   words: 686
   subsections:
   - Текст (з глосами)

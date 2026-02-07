@@ -1,3 +1,4 @@
+---
 module: deportatsii-ukraintsiv
 level: B2-HIST
 sequence: 110
@@ -87,4 +88,4 @@ grammar:
 - Пасивні конструкції для опису насильства
 - Числівники та статистика
 register: публіцистичний
-phase: HIST.11 [Post-War Soviet Ukraine]
+phase: "HIST.11 [Post-War Soviet Ukraine]"

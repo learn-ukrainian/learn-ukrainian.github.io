@@ -1,3 +1,4 @@
+---
 module: polska-i-ukraina-symbioz
 level: c1-hist
 sequence: 114
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of польща і україна: симбіоз і конфлікт'
 - Evaluate the historical significance of 600 років разом
 content_outline:
-- section: Вступ — 600 років разом
+- section: "Вступ — 600 років разом"
   words: 515
   subsections:
   - Найскладніші відносини в Європі

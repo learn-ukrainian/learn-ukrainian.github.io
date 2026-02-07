@@ -1,3 +1,4 @@
+---
 module: tsentralna-rada
 level: B2-HIST
 sequence: 90
@@ -88,4 +89,4 @@ grammar:
 - Політична та юридична лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.9 [WWI & Revolution]
+phase: "HIST.9 [WWI & Revolution]"

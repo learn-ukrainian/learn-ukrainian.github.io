@@ -1,3 +1,4 @@
+---
 module: b2-38
 level: B2
 sequence: 38
@@ -6,7 +7,7 @@ version: '2.0'
 title: Односкладні речення
 subtitle: One-member Sentences
 content_outline:
-- section: Розминка — Речення без підмета
+- section: "Розминка — Речення без підмета"
   words: 300
   points:
   - Чому деякі речення не мають підмета
@@ -36,7 +37,7 @@ content_outline:
   - Дорога довга. Чагарі, долини. (A long road. Bushes, valleys.)
   - Ніч. Тиша. Зорі. (Night. Silence. Stars.)
   - Київ! Древня столиця! (Kyiv! Ancient capital!)
-- section: Практика — односкладні речення
+- section: "Практика — односкладні речення"
   words: 400
   points:
   - Визначити тип односкладного речення
@@ -56,7 +57,7 @@ grammar:
 - Неозначено-особові речення
 - Безособові речення
 - Номінативні речення
-phase: B2.1c [Register & Domain Vocab]
+phase: "B2.1c [Register & Domain Vocab]"
 vocabulary_hints:
   required:
   - термін (term)

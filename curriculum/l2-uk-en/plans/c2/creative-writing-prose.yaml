@@ -1,3 +1,4 @@
+---
 module: creative-writing-prose
 level: c2
 sequence: 37
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Creative writing workshop tradition
 content_outline:
-- section: Вступ — Проза як мистецтво
+- section: "Вступ — Проза як мистецтво"
   words: 500
   points:
   - Від споживача до творця прози
@@ -87,7 +88,7 @@ vocabulary:
   - кульмінація (climax)
   - зав'язка (exposition)
   - флешбек (flashback)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

@@ -1,3 +1,4 @@
+---
 module: c1-bio-114
 level: C1-BIO
 sequence: 114
@@ -5,7 +6,7 @@ slug: serhiy-korolyov
 version: '2.0'
 title: 'Сергій Корольов: Батько космічної ери'
 content_outline:
-- section: Вступ — Українець, який відкрив космос
+- section: "Вступ — Українець, який відкрив космос"
   words: 444
   points:
   - Корольов як творець радянської космічної програми

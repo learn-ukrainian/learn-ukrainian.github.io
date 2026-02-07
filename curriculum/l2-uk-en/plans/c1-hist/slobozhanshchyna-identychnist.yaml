@@ -1,3 +1,4 @@
+---
 module: slobozhanshchyna-identychnist
 level: c1-hist
 sequence: 76
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
 - Evaluate the historical significance of вільні землі
 content_outline:
-- section: Вступ — «Слободи» — вільні землі
+- section: "Вступ — «Слободи» — вільні землі"
   words: 457
   subsections:
   - Слобожанщина — де це
@@ -30,7 +31,7 @@ content_outline:
   - Відмінності від Запорожжя
   - Служба Росії
   - Скасування — 1765
-- section: Харків — культурний центр
+- section: "Харків — культурний центр"
   words: 800
   subsections:
   - Заснування — 1654

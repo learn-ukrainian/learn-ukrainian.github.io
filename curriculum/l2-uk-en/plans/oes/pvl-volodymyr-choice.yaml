@@ -1,38 +1,24 @@
-# Module Plan: PVL: Volodymyr's Choice
-# Track: OES
-# Module: 026
-# Source: Gemini Research (ISSUE-490)
-# Generated: 2026-02-04
-
+---
 module_number: 26
 slug: pvl-volodymyr-choice
-title_uk: "ПВЛ: Вибір Володимира"
-title_en: "PVL: Volodymyr's Choice"
-
+title_uk: 'ПВЛ: Вибір Володимира'
+title_en: 'PVL: Volodymyr''s Choice'
 phase: 2
 phase_id: literary-tradition
-phase_name: "Literary Tradition"
-
-focus: "Comparative religion vocabulary"
-
+phase_name: Literary Tradition
+focus: Comparative religion vocabulary
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to PVL: Volodymyr's Choice"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to PVL: Volodymyr''s Choice'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

@@ -1,3 +1,4 @@
+---
 module: c1-pro-28
 level: C1-PRO
 sequence: 28
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Контрольна точка: Академічне письмо'
 subtitle: Academic Checkpoint
 content_outline:
-- section: Огляд фази — Академічне письмо
+- section: "Огляд фази — Академічне письмо"
   words: 350
   points:
   - 'Ключові компетенції C1-PRO.2: структура IMRAD, огляд літератури, методологія'

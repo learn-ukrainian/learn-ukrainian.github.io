@@ -1,3 +1,4 @@
+---
 module: literary-prizes-canon
 level: c2
 sequence: 40
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Літературні премії України — Вікіпедія
+- name: "Літературні премії України — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Категорія:Літературні_премії_України"
   type: reference
   notes: Overview of Ukrainian literary prizes
@@ -16,12 +17,12 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Шевченківська_премія"
   type: reference
   notes: Highest state literary award
-- name: Літературний канон — теорія
+- name: "Літературний канон — теорія"
   url: "https://uk.wikipedia.org/wiki/Канон_(література)"
   type: reference
   notes: Canon formation and debate
 content_outline:
-- section: Вступ — Хто визначає, що читати?
+- section: "Вступ — Хто визначає, що читати?"
   words: 500
   points:
   - Поняття літературного канону
@@ -86,7 +87,7 @@ vocabulary:
   - маргіналізація (marginalization)
   - інституція (institution)
   - легітимація (legitimation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

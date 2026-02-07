@@ -1,3 +1,4 @@
+---
 module: digital-literature
 level: c2
 sequence: 39
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Електронна література — Вікіпедія
+- name: "Електронна література — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Електронна_література"
   type: reference
   notes: Digital/electronic literature concepts
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Media and literature intersection
 content_outline:
-- section: Вступ — Література в цифрову епоху
+- section: "Вступ — Література в цифрову епоху"
   words: 500
   points:
   - Що таке цифрова література
@@ -87,7 +88,7 @@ vocabulary:
   - дигіталізація (digitization)
   - інтерфейс (interface)
   - мультимедіа (multimedia)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

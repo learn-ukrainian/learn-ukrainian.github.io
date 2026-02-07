@@ -1,3 +1,4 @@
+---
 module: 31-diaspora-ukrainian
 level: C1
 sequence: 31
@@ -5,7 +6,7 @@ slug: 31-diaspora-ukrainian
 version: '2.0'
 title: Українська діаспора
 content_outline:
-- section: Вступ — Історія еміграції
+- section: "Вступ — Історія еміграції"
   words: 500
   points:
   - Хвилі еміграції

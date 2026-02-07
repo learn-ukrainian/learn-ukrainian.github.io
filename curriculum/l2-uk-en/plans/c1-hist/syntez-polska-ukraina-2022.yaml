@@ -1,3 +1,4 @@
+---
 module: syntez-polska-ukraina-2022
 level: c1-hist
 sequence: 117
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: 2022 — історичний перелом'
 - Evaluate the historical significance of неочікуване братерство
 content_outline:
-- section: Вступ — Неочікуване братерство
+- section: "Вступ — Неочікуване братерство"
   words: 515
   subsections:
   - Огляд модулів 114-116

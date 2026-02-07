@@ -1,3 +1,4 @@
+---
 module: khreshchennia-spadshchyna
 level: c1-hist
 sequence: 58
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of спадщина хрещення: візантійська традиція'
 - Evaluate the historical significance of релігія і нація
 content_outline:
-- section: Вступ — Релігія і нація
+- section: "Вступ — Релігія і нація"
   words: 457
   subsections:
   - Чому релігійна ідентичність важлива
   - Хрещення 988 — початок
   - Візантійський вибір — наслідки
   - Структура фази
-- section: Хрещення Русі — факти і міфи
+- section: "Хрещення Русі — факти і міфи"
   words: 686
   subsections:
   - Володимир і вибір віри — легенда

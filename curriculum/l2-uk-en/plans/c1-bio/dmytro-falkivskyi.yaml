@@ -1,3 +1,4 @@
+---
 module: c1-bio-106
 level: C1-BIO
 sequence: 106
@@ -5,7 +6,7 @@ slug: dmytro-falkivskyi
 version: '2.0'
 title: 'Дмитро Фальківський: <!-- Title -->'
 content_outline:
-- section: Вступ — Poet
+- section: "Вступ — Poet"
   words: 400
   points:
   - <!-- point -->

@@ -1,3 +1,4 @@
+---
 module: biblical-themes
 level: LIT
 slug: biblical-themes
@@ -5,13 +6,13 @@ version: '2.0'
 title: 'Біблійні теми: Давидові псалми і "Марія"'
 subtitle: 'Biblical Themes: Psalms of David and "Maria"'
 content_outline:
-- section: Вступ — Шевченко і Біблія
+- section: "Вступ — Шевченко і Біблія"
   words: 608
   points:
   - Релігійність vs антиклерикалізм
   - Біблія як джерело поетичних образів
   - Високий стиль у творчості поета
-- section: Давидові псалми — переосмислення
+- section: "Давидові псалми — переосмислення"
   words: 973
   points:
   - Вибір псалмів (12 переспівів)
@@ -29,13 +30,13 @@ content_outline:
   - Сюжет поеми
   - Марія як українська жінка
   - Критика фарисейства
-- section: Концепція "Святої Правди"
+- section: "Концепція \"Святої Правди\""
   words: 608
   points:
   - Етика Шевченка
   - Правда vs закон
   - Пророк як голос Бога
-- section: Підсумок — Від Біблії до народу
+- section: "Підсумок — Від Біблії до народу"
   words: 487
   points:
   - Шевченко як "український пророк"
@@ -62,11 +63,11 @@ vocabulary_hints:
   - євангеліє (gospel)
 activity_hints:
 - type: reading
-  focus: Переспіви псалмів і уривки з "Марії"
+  focus: "Переспіви псалмів і уривки з \"Марії\""
   source: UkrLib
   items: 6+
 - type: essay-response
-  focus: Концепція "Святої Правди" в етиці Шевченка
+  focus: "Концепція \"Святої Правди\" в етиці Шевченка"
   word_target: 300
   output: Філософське есе
 focus: literature
@@ -87,11 +88,11 @@ grammar:
 - High style syntax
 module_type: literature
 sources:
-- name: Давидові псалми — переспіви
+- name: "Давидові псалми — переспіви"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=40"
   type: primary
   notes: Біблійні переспіви Шевченка
-- name: Марія — поема
+- name: "Марія — поема"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=42"
   type: primary
   notes: Поема про Богородицю

@@ -1,3 +1,4 @@
+---
 module: hrushevskyi
 level: B2-HIST
 sequence: 87
@@ -91,4 +92,4 @@ grammar:
 - Наукова термінологія
 - Непряма мова для передачі ідей
 register: публіцистичний
-phase: HIST.9 [WWI & Revolution]
+phase: "HIST.9 [WWI & Revolution]"

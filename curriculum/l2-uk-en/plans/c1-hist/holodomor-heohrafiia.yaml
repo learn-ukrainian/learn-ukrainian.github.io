@@ -1,3 +1,4 @@
+---
 module: holodomor-heohrafiia
 level: c1-hist
 sequence: 48
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
 - Evaluate the historical significance of голодомор на карті
 content_outline:
-- section: Вступ — Голодомор на карті
+- section: "Вступ — Голодомор на карті"
   words: 457
   subsections:
   - Не всі регіони постраждали однаково

@@ -1,3 +1,4 @@
+---
 module: c2-2-practice-i
 level: c2
 sequence: 42
@@ -8,26 +9,26 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Літературна Україна — творчі конкурси
+- name: "Літературна Україна — творчі конкурси"
   url: "https://litukraina.org.ua/"
   type: reference
   notes: Guidelines for literary portfolio compilation and evaluation criteria
-- name: Київський національний університет — творче письмо
+- name: "Київський національний університет — творче письмо"
   url: "https://www.univ.kiev.ua/"
   type: reference
   notes: Academic standards for literary portfolio assessment
-- name: Часопис "Кур'єр Кривбасу"
+- name: "Часопис \"Кур'єр Кривбасу\""
   url: "https://kr-elib.com.ua/"
   type: reference
   notes: Examples of contemporary Ukrainian literary works for portfolio models
 content_outline:
-- section: Вступ — Мета літературного портфоліо
+- section: "Вступ — Мета літературного портфоліо"
   words: 432
   points:
   - Визначення літературного портфоліо як інструменту самооцінки
   - Критерії відбору текстів для портфоліо
   - Баланс між жанрами та стилями
-- section: Аналітичне есе — Літературознавчий аналіз
+- section: "Аналітичне есе — Літературознавчий аналіз"
   words: 757
   points:
   - Структура літературознавчого есе
@@ -76,7 +77,7 @@ vocabulary:
   - репрезентативність (representativeness)
   - стилістична цілісність (stylistic integrity)
   - творча еволюція (creative evolution)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

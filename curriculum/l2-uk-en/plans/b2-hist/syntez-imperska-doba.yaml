@@ -1,3 +1,4 @@
+---
 module: syntez-imperska-doba
 level: B2-HIST
 sequence: 86
@@ -87,4 +88,4 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

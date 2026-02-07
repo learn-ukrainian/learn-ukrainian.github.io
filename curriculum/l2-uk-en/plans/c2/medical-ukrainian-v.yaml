@@ -1,3 +1,4 @@
+---
 module: medical-ukrainian-v
 level: c2
 sequence: 70
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Правила проведення клінічних досліджень
 content_outline:
-- section: Вступ — Наукова медична діяльність в Україні
+- section: "Вступ — Наукова медична діяльність в Україні"
   words: 500
   points:
   - Система медичної науки в Україні
@@ -63,7 +64,7 @@ content_outline:
   - Постерна презентація
   - Захист дисертації
   - Відповіді на запитання
-- section: Практикум — Наукове медичне письмо
+- section: "Практикум — Наукове медичне письмо"
   words: 400
   points:
   - Написання анотації дослідження
@@ -88,7 +89,7 @@ vocabulary:
   - метааналіз (meta-analysis)
   - систематичний огляд (systematic review)
   - довірчий інтервал (confidence interval)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

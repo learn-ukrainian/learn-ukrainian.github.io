@@ -1,3 +1,4 @@
+---
 module: a1-43
 level: A1
 slug: combined-practice
@@ -22,7 +23,7 @@ content_outline:
   - Діалог 1: Зміна планів через проблему
   - Діалог 2: Комбінація покупок та їжі
   - Діалог 3: Несподіванка та адаптація
-- section: Warm-up
+- section: "Warm-up 2"
   words: 223
   points:
   - Наратив про день з багатьма справами
@@ -74,4 +75,4 @@ grammar:
 - Connecting different scenarios
 - Problem-solving language
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: "A1.4 [Practical Scenarios]"

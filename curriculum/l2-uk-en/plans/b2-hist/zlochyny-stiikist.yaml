@@ -1,3 +1,4 @@
+---
 module: zlochyny-stiikist
 level: B2-HIST
 sequence: 139
@@ -88,4 +89,4 @@ grammar:
 - Юридична та емоційна лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

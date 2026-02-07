@@ -1,3 +1,4 @@
+---
 module: ivan-sirko
 level: B2-HIST
 sequence: 61
@@ -95,4 +96,4 @@ sources:
   type: secondary
   notes: Класична біографія Сірка, написана видатним істориком козацтва
 register: публіцистичний
-phase: HIST.6 [Khmelnytsky & Cossack State]
+phase: "HIST.6 [Khmelnytsky & Cossack State]"

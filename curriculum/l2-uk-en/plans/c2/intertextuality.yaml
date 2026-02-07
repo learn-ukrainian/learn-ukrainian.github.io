@@ -1,3 +1,4 @@
+---
 module: intertextuality
 level: c2
 sequence: 23
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Інтертекстуальність — Вікіпедія
+- name: "Інтертекстуальність — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Інтертекстуальність"
   type: reference
   notes: Theoretical foundation and terminology
@@ -16,18 +17,18 @@ sources:
   url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of intertextuality in Zhadan, Andrukhovych
-- name: Теорія літератури — Ю. Крістева
+- name: "Теорія літератури — Ю. Крістева"
   url: "https://uk.wikipedia.org/wiki/Юлія_Крістева"
   type: reference
   notes: Origin of intertextuality concept
 content_outline:
-- section: Вступ — Що таке інтертекстуальність?
+- section: "Вступ — Що таке інтертекстуальність?"
   words: 500
   points:
   - Визначення Ю. Крістевої
   - Кожен текст як мозаїка цитат
   - Типи інтертекстуальних зв'язків
-- section: Алюзія — непряме посилання
+- section: "Алюзія — непряме посилання"
   words: 700
   points:
   - Літературні алюзії
@@ -55,7 +56,7 @@ content_outline:
   - Гіпертекст за Жераром Женеттом
   - Архітекстуальність (жанрові зв'язки)
   - Паратекстуальність (заголовки, епіграфи)
-- section: Практикум — створення інтертекстуального тексту
+- section: "Практикум — створення інтертекстуального тексту"
   words: 500
   points:
   - Свідоме використання алюзій
@@ -87,7 +88,7 @@ vocabulary:
   - претекст (pretext/source text)
   - метатекст (metatext)
   - інтерпретація (interpretation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

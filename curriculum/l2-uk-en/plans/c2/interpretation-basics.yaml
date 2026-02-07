@@ -1,3 +1,4 @@
+---
 module: interpretation-basics
 level: c2
 sequence: 88
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: AIIC — Training for Conference Interpreters
+- name: "AIIC — Training for Conference Interpreters"
   url: "https://aiic.org/"
   type: reference
   notes: International standards for interpreter training
-- name: Чернов — Теорія і практика синхронного перекладу
+- name: "Чернов — Теорія і практика синхронного перекладу"
   url: "https://uk.wikipedia.org/wiki/Синхронний_переклад"
   type: primary
   notes: Classic Soviet/Ukrainian interpretation methodology
-- name: Gile — Basic Concepts and Models for Interpreter Training
+- name: "Gile — Basic Concepts and Models for Interpreter Training"
   url: "https://benjamins.com/"
   type: secondary
   notes: Cognitive load model for interpretation
 content_outline:
-- section: Вступ — Усний переклад як професія
+- section: "Вступ — Усний переклад як професія"
   words: 541
   points:
   - Різниця між письмовим і усним перекладом
@@ -34,7 +35,7 @@ content_outline:
   - Символи та скорочення
   - Тренування пам'яті
   - Відтворення змісту українською
-- section: Синхронний переклад — Знайомство
+- section: "Синхронний переклад — Знайомство"
   words: 757
   points:
   - Когнітивні вимоги синхронного перекладу
@@ -81,7 +82,7 @@ vocabulary:
   - релейний переклад (relay interpretation)
   - ретур (retour/B language)
   - модель зусиль (effort model)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

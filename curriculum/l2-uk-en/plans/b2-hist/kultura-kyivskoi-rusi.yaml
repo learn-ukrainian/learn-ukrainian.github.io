@@ -1,3 +1,4 @@
+---
 module: kultura-kyivskoi-rusi
 level: B2-HIST
 sequence: 16
@@ -9,7 +10,7 @@ content_outline:
   words: 100
   points:
   - Огляд основних тем культурного розвитку Київської Русі
-- section: Вступ — Культурний світ Русі
+- section: "Вступ — Культурний світ Русі"
   words: 425
   points:
   - Культурне багатство Київської Русі як синтез візантійських та місцевих традицій
@@ -125,5 +126,5 @@ sources:
   type: primary
   notes: Epic poem text
 immersion: 100% Ukrainian
-phase: B2-HIST.1 [Kyivan Rus]
+phase: "B2-HIST.1 [Kyivan Rus]"
 word_target: 4000

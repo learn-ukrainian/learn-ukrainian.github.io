@@ -1,3 +1,4 @@
+---
 module: naukovyi-styl-mastery
 level: c2
 sequence: 3
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: ДСТУ 8302:2015 Бібліографічне посилання
+- name: "ДСТУ 8302:2015 Бібліографічне посилання"
   url: "https://dstu.org.ua/"
   type: reference
   notes: Ukrainian citation standard for academic publications
-- name: Наукова комунікація в Україні — НАН
+- name: "Наукова комунікація в Україні — НАН"
   url: "https://nbuv.gov.ua/"
   type: primary
   notes: Standards for academic writing in Ukraine
-- name: Ukrainian State Standard 2024 — Academic writing
+- name: "Ukrainian State Standard 2024 — Academic writing"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for scientific style
 content_outline:
-- section: Вступ — Науковий стиль на рівні публікації
+- section: "Вступ — Науковий стиль на рівні публікації"
   words: 400
   points:
   - Різниця між студентським та професійним письмом
@@ -63,7 +64,7 @@ content_outline:
   - Peer review — що очікують рецензенти
   - Редагування власного тексту
   - Робота з коментарями редактора
-- section: Практикум — Написання наукового тексту
+- section: "Практикум — Написання наукового тексту"
   words: 500
   points:
   - Написання анотації до власного дослідження
@@ -89,7 +90,7 @@ vocabulary:
   - апробація (approbation)
   - публікаційний (publication-ready)
   - імпакт-фактор (impact factor)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

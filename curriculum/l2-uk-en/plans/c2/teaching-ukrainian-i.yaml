@@ -1,3 +1,4 @@
+---
 module: teaching-ukrainian-i
 level: c2
 sequence: 82
@@ -12,16 +13,16 @@ sources:
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official methodology for teaching Ukrainian as a foreign language
-- name: Ukrainian State Standard 2024 — Педагогічна компетенція
+- name: "Ukrainian State Standard 2024 — Педагогічна компетенція"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Teacher competency requirements and standards
-- name: CEFR Companion Volume — Teacher Training
+- name: "CEFR Companion Volume — Teacher Training"
   url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: secondary
   notes: European framework for language teacher training
 content_outline:
-- section: Вступ — Педагогічна свідомість на рівні C2
+- section: "Вступ — Педагогічна свідомість на рівні C2"
   words: 541
   points:
   - Перехід від учня до вчителя
@@ -48,14 +49,14 @@ content_outline:
   - Визначення цілей і завдань
   - Розподіл часу і темпу
   - Адаптація до рівня учнів
-- section: Практика викладання — Симуляція
+- section: "Практика викладання — Симуляція"
   words: 865
   points:
   - Мікровикладання фрагмента уроку
   - Самоаналіз і рефлексія
   - Зворотний зв'язок від колег
   - Вдосконалення техніки
-- section: Підсумок — Перші кроки у викладанні
+- section: "Підсумок — Перші кроки у викладанні"
   words: 431
   points:
   - Індивідуальний стиль викладання
@@ -80,7 +81,7 @@ vocabulary:
   - формувальне оцінювання (formative assessment)
   - автентичні матеріали (authentic materials)
   - мотивація учнів (student motivation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

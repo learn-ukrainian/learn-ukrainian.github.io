@@ -1,3 +1,4 @@
+---
 module: legal-ukrainian-ii
 level: c2
 sequence: 62
@@ -8,11 +9,11 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Законодавство України — Цивільний кодекс
+- name: "Законодавство України — Цивільний кодекс"
   url: "https://zakon.rada.gov.ua/laws/show/435-15"
   type: primary
   notes: Цивільний кодекс України, розділ про договори
-- name: Верховна Рада України — Зразки договорів
+- name: "Верховна Рада України — Зразки договорів"
   url: "https://zakon.rada.gov.ua/"
   type: reference
   notes: Типові форми договорів та угод
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Правнича термінологія
 content_outline:
-- section: Вступ — Структура договору в українському праві
+- section: "Вступ — Структура договору в українському праві"
   words: 500
   points:
   - Загальна структура договору
@@ -62,7 +63,7 @@ content_outline:
   - Порядок внесення змін
   - Додатки як невід'ємні частини
   - Формат підписання
-- section: Практикум — Аналіз та складання договорів
+- section: "Практикум — Аналіз та складання договорів"
   words: 500
   points:
   - Аналіз типового договору оренди
@@ -87,7 +88,7 @@ vocabulary:
   - акцепт (acceptance)
   - оферта (offer)
   - розірвання (termination)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

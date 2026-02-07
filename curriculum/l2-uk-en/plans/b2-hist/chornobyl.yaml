@@ -1,3 +1,4 @@
+---
 module: chornobyl
 level: B2-HIST
 sequence: 117
@@ -5,7 +6,7 @@ slug: chornobyl
 version: '2.0'
 title: 'Чорнобиль: Трагедія і Попередження'
 content_outline:
-- section: Вступ — Мирний атом?
+- section: "Вступ — Мирний атом?"
   words: 615
   points:
   - Pripyat as a Soviet model city of the future
@@ -36,13 +37,13 @@ content_outline:
 word_target: 4000
 focus: history
 pedagogy: CBI
-prerequisites: []
+prerequisites: "[]"
 objectives:
 - 'Analyze the causes and consequences of чорнобиль: трагедія і попередження'
 - Evaluate the historical significance of мирний атом?
 - Trace the development of деколонізаційний погляд
-phase: HIST.11 [Post-War Soviet Ukraine]
-learning_outcomes: []
+phase: "HIST.11 [Post-War Soviet Ukraine]"
+learning_outcomes: "[]"
 vocabulary_hints:
   required:
   - історія (history)

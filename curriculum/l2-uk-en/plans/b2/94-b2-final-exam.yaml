@@ -1,3 +1,4 @@
+---
 module: b2-final-exam
 level: B2
 sequence: 94
@@ -6,7 +7,7 @@ version: '2.0'
 title: B2 Підсумковий іспит
 subtitle: B2 Final Exam
 content_outline:
-- section: Огляд — Фінальний іспит B2
+- section: "Огляд — Фінальний іспит B2"
   words: 150
   points:
   - Мета іспиту — підтвердити рівень B2 за CEFR

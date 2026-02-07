@@ -1,3 +1,4 @@
+---
 module: ukrainski-kontrnararyvy
 level: c1-hist
 sequence: 112
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of українські контрнаративи
 - Evaluate the historical significance of боротьба за наратив
 content_outline:
-- section: Вступ — Боротьба за наратив
+- section: "Вступ — Боротьба за наратив"
   words: 457
   subsections:
   - Україна не тільки захищається

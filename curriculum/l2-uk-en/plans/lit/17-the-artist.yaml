@@ -1,3 +1,4 @@
+---
 module: the-artist
 level: LIT
 slug: the-artist
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Художник: Шевченко-маляр'
 subtitle: 'The Artist: Shevchenko the Painter'
 content_outline:
-- section: Вступ — Поет чи художник?
+- section: "Вступ — Поет чи художник?"
   words: 625
   points:
   - Шевченко як "подвійний талант"
@@ -29,13 +30,13 @@ content_outline:
   - Казахські степи в акварелях
   - Документальна функція малюнків
   - Мистецтво vs заборона писати
-- section: Повість "Художник"
+- section: "Повість \"Художник\""
   words: 750
   points:
   - Автобіографічні елементи
   - Образ митця в суспільстві
   - Російська мова повісті
-- section: Підсумок — Слово і образ
+- section: "Підсумок — Слово і образ"
   words: 500
   points:
   - Взаємодія поезії та живопису
@@ -62,7 +63,7 @@ vocabulary_hints:
   - світлотінь (chiaroscuro)
 activity_hints:
 - type: reading
-  focus: Уривки з повісті "Художник"
+  focus: "Уривки з повісті \"Художник\""
   source: UkrLib tid=43
   items: 4+
 - type: essay-response
@@ -87,7 +88,7 @@ grammar:
 - Biographical Narrative
 module_type: biography
 sources:
-- name: Художник — повість
+- name: "Художник — повість"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=43"
   type: primary
   notes: Автобіографічна повість

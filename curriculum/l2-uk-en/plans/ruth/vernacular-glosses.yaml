@@ -1,3 +1,4 @@
+---
 # Module Plan: Vernacular Glosses
 # Track: RUTH
 # Module: 023
@@ -13,7 +14,7 @@ phase: 1
 phase_id: chancery-legal
 phase_name: "Chancery & Legal"
 
-focus: "Synonyms: чыто -> або — "Translating for the people""
+focus: 'Synonyms: чыто -> або — "Translating for the people"'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

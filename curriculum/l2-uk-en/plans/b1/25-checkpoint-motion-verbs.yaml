@@ -1,3 +1,4 @@
+---
 module: 25-checkpoint-motion-verbs
 level: B1
 sequence: 25
@@ -8,7 +9,7 @@ subtitle: 'Checkpoint: Motion Verbs'
 content_outline:
 - section: Огляд
   words: 106
-  points: []
+  points: "[]"
 - section: 'Навичка 1: Пари дієслів руху'
   words: 310
   points:

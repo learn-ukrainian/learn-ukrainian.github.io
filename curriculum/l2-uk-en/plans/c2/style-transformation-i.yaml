@@ -1,3 +1,4 @@
+---
 module: style-transformation-i
 level: c2
 sequence: 10
@@ -16,12 +17,12 @@ sources:
   url: "https://mon.gov.ua/"
   type: reference
   notes: Strategies for accessible science writing
-- name: Ukrainian State Standard 2024 — Style transformation
+- name: "Ukrainian State Standard 2024 — Style transformation"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for register shifting
 content_outline:
-- section: Вступ — Навіщо популяризувати науку?
+- section: "Вступ — Навіщо популяризувати науку?"
   words: 400
   points:
   - Роль науково-популярного стилю
@@ -62,7 +63,7 @@ content_outline:
   - Блог-пост
   - Публічна лекція
   - Соціальні мережі
-- section: Практикум — Трансформація текстів
+- section: "Практикум — Трансформація текстів"
   words: 500
   points:
   - Перетворення анотації на блог-пост
@@ -88,7 +89,7 @@ vocabulary:
   - діалогічність (dialogicity)
   - вульгаризація (vulgarization — negative)
   - просвітництво (enlightenment)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

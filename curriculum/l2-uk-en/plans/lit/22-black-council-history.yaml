@@ -1,3 +1,4 @@
+---
 module: black-council-history
 level: LIT
 slug: black-council-history
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Чорна рада: Історичний контекст'
 subtitle: 'The Black Council: Historical Context'
 content_outline:
-- section: Вступ — Що таке "Руїна"?
+- section: 'Вступ — Що таке \"Руїна\"?'
   words: 750
   points:
   - Період 1657-1687 років
@@ -35,7 +36,7 @@ content_outline:
   - Яким Сомко — трагічний герой
   - Іван Брюховецький — демагог
   - Василь Золотаренко
-- section: Підсумок — Від історії до роману
+- section: "Підсумок — Від історії до роману"
   words: 500
   points:
   - Як Куліш використав історію
@@ -66,7 +67,7 @@ activity_hints:
   source: Wikipedia and historical sources
   items: 4+
 - type: essay-response
-  focus: Чи була Чорна рада "демократією" чи "охлократією"?
+  focus: "Чи була Чорна рада \"демократією\" чи \"охлократією\"?"
   word_target: 300
   output: Історичне есе
 focus: history
@@ -86,15 +87,15 @@ grammar:
 - Historical terminology
 module_type: history
 sources:
-- name: Чорна рада 1663 — історія
+- name: "Чорна рада 1663 — історія"
   url: "https://uk.wikipedia.org/wiki/Чорна_рада_(1663)"
   type: primary
   notes: Історичний контекст події
-- name: Руїна — історія
+- name: "Руїна — історія"
   url: "https://uk.wikipedia.org/wiki/Руїна_(історія_України)"
   type: primary
   notes: Ширший історичний контекст
-- name: Чорна рада — роман
+- name: "Чорна рада — роман"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=263"
   type: secondary
   notes: Для порівняння з історією

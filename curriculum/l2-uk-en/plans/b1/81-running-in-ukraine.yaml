@@ -6,12 +6,12 @@ version: '2.0'
 title: Біг в Україні
 subtitle: Running Culture and Marathon Events
 content_outline:
-- section: "Огляд"
-  words: 4
+- section: Огляд
+  words: 100
   points:
   - Бігова культура в Україні — гачок
-- section: "Інтеграція"
-  words: 841
+- section: Інтеграція
+  words: 1606
   points:
   - Бігова культура в Україні
   - Чому біг став популярним
@@ -22,21 +22,21 @@ content_outline:
   - Ветеранські спортивні проекти
   - Parkrun в Україні
   - Як знайти бігову спільноту
-- section: "Практика"
-  words: 76
+- section: Практика
+  words: 145
   points:
   - Ключові концепції
-- section: "Продукція"
-  words: 402
+- section: Продукція
+  words: 768
   points:
   - Діалоги про реєстрацію, тренування, фініш
-- section: "Підсумок — Перший крок"
-  words: 139
+- section: Підсумок — Перший крок
+  words: 265
   points:
   - Як почати бігати
-- section: "Потрібно більше практики?"
-  words: 109
-word_target: 1571
+- section: Потрібно більше практики?
+  words: 116
+word_target: 3000
 vocabulary_hints:
   required:
   - біг (running)

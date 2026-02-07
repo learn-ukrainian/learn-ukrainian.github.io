@@ -1,3 +1,4 @@
+---
 module: mykhailo-chernigivskyi
 level: B2-HIST
 sequence: 22
@@ -35,13 +36,13 @@ content_outline:
 word_target: 4000
 focus: history
 pedagogy: CBI
-prerequisites: []
+prerequisites: "[]"
 objectives:
 - 'Analyze the causes and consequences of михайло чернігівський: опір орді'
 - Evaluate the historical significance of вступ
 - Trace the development of потрібно більше практики?
-phase: HIST.3 [Mongol Era & Galicia-Volhynia]
-learning_outcomes: []
+phase: "HIST.3 [Mongol Era & Galicia-Volhynia]"
+learning_outcomes: "[]"
 vocabulary_hints:
   required:
   - Михайло Всеволодович

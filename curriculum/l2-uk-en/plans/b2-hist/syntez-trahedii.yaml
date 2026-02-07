@@ -1,3 +1,4 @@
+---
 module: syntez-trahedii
 level: B2-HIST
 sequence: 108
@@ -88,4 +89,4 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.10 [WWII & Soviet Terror]
+phase: "HIST.10 [WWII & Soviet Terror]"

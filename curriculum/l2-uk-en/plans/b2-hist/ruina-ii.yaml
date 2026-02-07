@@ -1,3 +1,4 @@
+---
 module: ruina-ii
 level: B2-HIST
 sequence: 59
@@ -94,4 +95,4 @@ sources:
   type: primary
   notes: Chronicles about the siege
 register: публіцистичний
-phase: HIST.6 [Khmelnytsky & Cossack State]
+phase: "HIST.6 [Khmelnytsky & Cossack State]"

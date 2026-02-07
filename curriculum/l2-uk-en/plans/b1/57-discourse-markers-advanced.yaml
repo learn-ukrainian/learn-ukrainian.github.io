@@ -1,3 +1,4 @@
+---
 module: b1-57
 level: B1
 sequence: 57
@@ -85,4 +86,4 @@ grammar:
 - Academic and formal connectors
 - Structuring arguments and conclusions
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
+phase: "B1.5 [Vocabulary Expansion I]"

@@ -1,3 +1,4 @@
+---
 module: krym-bahatosharovyi
 level: c1-hist
 sequence: 78
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of крим: багатошарова історія'
 - Evaluate the historical significance of шари історії
 content_outline:
-- section: Вступ — Шари історії
+- section: "Вступ — Шари історії"
   words: 457
   subsections:
   - Крим — не тільки росіяни

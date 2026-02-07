@@ -1,3 +1,4 @@
+---
 module: the-ballads
 level: LIT
 slug: the-ballads
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Балади: Між Світами'
 subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
 content_outline:
-- section: Вступ — Жанр романтичної балади
+- section: "Вступ — Жанр романтичної балади"
   words: 625
   points:
   - Що таке балада (європейський контекст)
@@ -35,7 +36,7 @@ content_outline:
   - Русалки, відьми, мавки
   - Функція фантастичного
   - Зв'язок з європейським романтизмом
-- section: Підсумок — Фатум і доля
+- section: "Підсумок — Фатум і доля"
   words: 500
   points:
   - Концепція долі у раннього Шевченка
@@ -99,7 +100,7 @@ sources:
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=5"
   type: primary
   notes: Балада для аналізу
-- name: Кобзар — повний текст
+- name: "Кобзар — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=1"
   type: secondary
   notes: Контекст ранньої поезії

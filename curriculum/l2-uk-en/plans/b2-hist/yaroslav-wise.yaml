@@ -1,3 +1,4 @@
+---
 module: yaroslav-wise
 level: B2-HIST
 sequence: 12
@@ -7,14 +8,14 @@ title: 'Ярослав Мудрий: Золота доба'
 content_outline:
 - section: Розминка
   words: 115
-  points: []
+  points: "[]"
 - section: 'Читання: Руська Правда — Перший правовий кодекс'
   words: 443
   points:
   - Історичне тло
   - Основні положення
   - Наслідки
-- section: Софія Київська — Символ могутності
+- section: "Софія Київська — Символ могутності"
   words: 258
   points:
   - Будівництво собору
@@ -123,6 +124,6 @@ sources:
   url: "https://litopys.org.ua/oldukr2/oldukr51.htm"
   type: primary
   notes: Legal code text
-phase: B2-HIST.1 [Kyivan Rus]
+phase: "B2-HIST.1 [Kyivan Rus]"
 module_type: history
 immersion: 100% Ukrainian

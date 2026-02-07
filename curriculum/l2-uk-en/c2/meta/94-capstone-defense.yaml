@@ -1,3 +1,4 @@
+---
 module: capstone-defense
 level: C2
 slug: capstone-defense

@@ -1,3 +1,4 @@
+---
 module: ukrainska-helsinska-hrupa
 level: B2-HIST
 sequence: 115
@@ -88,4 +89,4 @@ grammar:
 - Правозахисна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.11 [Post-War Soviet Ukraine]
+phase: "HIST.11 [Post-War Soviet Ukraine]"

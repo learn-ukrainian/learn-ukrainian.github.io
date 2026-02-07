@@ -1,3 +1,4 @@
+---
 module: svidchennia-holodomoru-ii
 level: c1-hist
 sequence: 37
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of свідчення голодомору ii: документи'
 - Evaluate the historical significance of документальні докази
 content_outline:
-- section: Вступ — Документальні докази
+- section: "Вступ — Документальні докази"
   words: 457
   subsections:
   - Від свідчень до документів
@@ -38,7 +39,7 @@ content_outline:
   - Документальні свідчення
   - Приклад — постанова про село
   - Наслідки для населення
-- section: Фрагмент — Телеграма про хлібозаготівлі
+- section: "Фрагмент — Телеграма про хлібозаготівлі"
   words: 571
   subsections:
   - Текст (з глосами)

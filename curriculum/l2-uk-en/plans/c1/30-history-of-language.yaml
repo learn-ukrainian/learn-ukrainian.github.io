@@ -1,3 +1,4 @@
+---
 module: 30-history-of-language
 level: C1
 sequence: 30
@@ -5,7 +6,7 @@ slug: 30-history-of-language
 version: '2.0'
 title: 'Історія мови: Від Русі до сьогодення'
 content_outline:
-- section: Вступ — Давньоруський період
+- section: "Вступ — Давньоруський період"
   words: 500
   points:
   - Праслов'янська спадщина

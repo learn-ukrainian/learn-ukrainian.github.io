@@ -1,3 +1,4 @@
+---
 module: syntez-dvokniazivstvo
 level: B2-HIST
 sequence: 28
@@ -51,7 +52,7 @@ grammar:
 - Historical narrative synthesis
 - Argumentative writing structures
 register: публіцистичний
-phase: B2.3 [Ukrainian History] Synthesis
+phase: "B2.3 [Ukrainian History] Synthesis"
 vocabulary_hints:
   required:
   - монгольська навала

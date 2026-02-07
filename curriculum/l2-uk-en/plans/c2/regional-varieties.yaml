@@ -1,3 +1,4 @@
+---
 module: regional-varieties
 level: c2
 sequence: 78
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Огляд діалектних груп
 content_outline:
-- section: Вступ — Діалектний ландшафт України
+- section: "Вступ — Діалектний ландшафт України"
   words: 500
   points:
   - Три наріччя української мови
@@ -64,7 +65,7 @@ content_outline:
   - Фольклор та діалекти
   - Сучасна музика та регіональні особливості
   - Медіа та регіональна мова
-- section: Практикум — Розпізнавання та розуміння
+- section: "Практикум — Розпізнавання та розуміння"
   words: 500
   points:
   - Аналіз діалектних текстів
@@ -89,7 +90,7 @@ vocabulary:
   - ізоглоса (isogloss)
   - полісизм (polisism - Polissian word)
   - галицизм (galicianisms)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

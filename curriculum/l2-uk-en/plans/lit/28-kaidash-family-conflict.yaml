@@ -1,3 +1,4 @@
+---
 module: kaidash-family-conflict
 level: LIT
 slug: kaidash-family-conflict
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Кайдашева сім''я: Анатомія Конфлікту'
 subtitle: 'Kaidash Family: Anatomy of Conflict'
 content_outline:
-- section: Вступ — Чому вони сваряться?
+- section: "Вступ — Чому вони сваряться?"
   words: 643
   points:
   - Сімейні конфлікти в літературі
@@ -35,7 +36,7 @@ content_outline:
   - Сміх крізь сльози
   - Де закінчується сатира
   - Читацьке співчуття
-- section: Підсумок — Сучасність класики
+- section: "Підсумок — Сучасність класики"
   words: 515
   points:
   - Чи змінилися сімейні конфлікти?
@@ -87,11 +88,11 @@ grammar:
 - Emotional register
 module_type: literature
 sources:
-- name: Кайдашева сім'я — повний текст
+- name: "Кайдашева сім'я — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=907"
   type: primary
   notes: Ключові сцени конфліктів
-- name: Аналіз "Кайдашевої сім'ї"
+- name: "Аналіз \"Кайдашевої сім'ї\""
   url: "https://www.ukrlib.com.ua/review/printit.php?tid=18137"
   type: primary
   notes: Проблематика твору

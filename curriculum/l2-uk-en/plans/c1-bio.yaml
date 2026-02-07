@@ -1,3 +1,4 @@
+---
 # Level Plan: C1-BIO (Ukrainian Biographies Track)
 # Post-C1 specialization track
 
@@ -8,7 +9,7 @@ version: "1.0"
 overview:
   total_modules: 156
   description: "Comprehensive biographies of significant Ukrainians across all fields and eras"
-  prerequisites: [c1]
+  prerequisites: "[c1]"
   target_audience: "Advanced learners seeking deep knowledge of Ukrainian historical figures"
 
 # Primary source of truth
@@ -22,7 +23,7 @@ sources:
 
 # Vocabulary scope
 vocabulary:
-  cumulative_from: [a1, a2, b1, b2, c1]
+  cumulative_from: "[a1, a2, b1, b2, c1]"
   new_words: 2000
   focus_areas:
     - "Biographical terminology (народження, смерть, освіта, кар'єра)"
@@ -34,35 +35,35 @@ vocabulary:
 thematic_areas:
   - name: "Політики та державні діячі"
     focus: "Leaders who shaped Ukrainian statehood"
-    examples: ["Bohdan Khmelnytsky", "Symon Petliura", "Viacheslav Chornovil", "Yurii Lypa"]
+    examples: '[\"Bohdan Khmelnytsky\", \"Symon Petliura\", \"Viacheslav Chornovil\", \"Yurii Lypa\"]'
 
   - name: "Письменники та поети"
     focus: "Literary figures beyond LIT track"
-    examples: ["Lina Kostenko", "Serhiy Zhadan", "Oksana Zabuzhko", "Mykhailo Kotsiubynsky", "Vasyl Stefanyk", "Bohdan-Ihor Antonych", "Oles Honchar", "Yuri Andrukhovych"]
+    examples: '[\"Lina Kostenko\", \"Serhiy Zhadan\", \"Oksana Zabuzhko\", \"Mykhailo Kotsiubynsky\", \"Vasyl Stefanyk\", \"Bohdan-Ihor Antonych\", \"Oles Honchar\", \"Yuri Andrukhovych\"]'
 
   - name: "Вчені та винахідники"
     focus: "Scientific achievements of Ukrainians"
-    examples: ["Serhiy Korolyov", "Volodymyr Vernadsky", "Ivan Puliui"]
+    examples: '[\"Serhiy Korolyov\", \"Volodymyr Vernadsky\", \"Ivan Puliui\"]'
 
   - name: "Митці та музиканти"
     focus: "Cultural contributions"
-    examples: ["Kazimir Malevich", "Solomiya Krushelnytska", "Maria Prymachenko"]
+    examples: '[\"Kazimir Malevich\", \"Solomiya Krushelnytska\", \"Maria Prymachenko\"]'
 
   - name: "Військові діячі"
     focus: "Defenders of Ukraine across eras"
-    examples: ["Ivan Sirko", "Roman Shukhevych", "Oleksandra Matviichuk"]
+    examples: '[\"Ivan Sirko\", \"Roman Shukhevych\", \"Oleksandra Matviichuk\"]'
 
   - name: "Релігійні діячі"
     focus: "Spiritual leaders and their impact"
-    examples: ["Andrey Sheptytsky", "Josyf Slipyj", "Iov Boretskyi"]
+    examples: '[\"Andrey Sheptytsky\", \"Josyf Slipyj\", \"Iov Boretskyi\"]'
 
   - name: "Дисиденти та правозахисники"
     focus: "Resistance to Soviet oppression"
-    examples: ["Vasyl Stus", "Levko Lukyanenko", "Alla Horska", "Ivan Dziuba", "Yevhen Sverstiuk"]
+    examples: '[\"Vasyl Stus\", \"Levko Lukyanenko\", \"Alla Horska\", \"Ivan Dziuba\", \"Yevhen Sverstiuk\"]'
 
   - name: "Сучасні герої"
     focus: "Contemporary figures and war heroes"
-    examples: ["Oleg Sentsov", "Oleksandra Matviichuk"]
+    examples: '[\"Oleg Sentsov\", \"Oleksandra Matviichuk\"]'
 
 # Constraints for all modules
 constraints:

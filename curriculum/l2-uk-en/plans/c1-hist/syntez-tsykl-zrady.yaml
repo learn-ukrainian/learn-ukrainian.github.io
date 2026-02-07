@@ -1,3 +1,4 @@
+---
 module: syntez-tsykl-zrady
 level: c1-hist
 sequence: 88
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: чому цикл повторюється?'
 - Evaluate the historical significance of паттерн через віки
 content_outline:
-- section: Вступ — Паттерн через віки
+- section: "Вступ — Паттерн через віки"
   words: 457
   subsections:
   - Огляд модулів 81-87

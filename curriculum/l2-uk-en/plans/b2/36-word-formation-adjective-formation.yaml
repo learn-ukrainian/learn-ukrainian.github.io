@@ -1,3 +1,4 @@
+---
 module: b2-36
 level: B2
 sequence: 36
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Словотворення: прикметники'
 subtitle: Творення прикметників від іменників та складні прикметники
 content_outline:
-- section: Розминка — Словотвір прикметників
+- section: "Розминка — Словотвір прикметників"
   words: 300
   points:
   - Прикметники від географічних назв (Україна → український)
@@ -33,7 +34,7 @@ content_outline:
   - білолиций (white-faced)
   - науково-публіцистичний (scientific-journalistic)
   - головнокомандувач → who is head commander
-- section: Практика — утворення прикметників
+- section: "Практика — утворення прикметників"
   words: 500
   points:
   - Утворити прикметники від назв країн та міст
@@ -53,7 +54,7 @@ grammar:
 - Суфікс -ний/-альний (якість, відношення)
 - Складні прикметники (колір, зовнішність, сфера)
 register: науковий
-phase: B2.1b [Grammar Completion]
+phase: "B2.1b [Grammar Completion]"
 vocabulary_hints:
   required:
   - термін (term)

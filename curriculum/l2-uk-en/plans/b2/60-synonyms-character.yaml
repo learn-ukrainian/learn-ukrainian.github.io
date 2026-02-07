@@ -1,3 +1,4 @@
+---
 module: b2-60
 level: B2
 sequence: 60
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Синоніми: Характер та Особистість'
 subtitle: Synonyms - Character and Personality
 content_outline:
-- section: Розминка — Описуємо людину
+- section: "Розминка — Описуємо людину"
   words: 350
   points:
   - Розумний vs мудрий vs кмітливий — різні типи інтелекту
@@ -28,7 +29,7 @@ content_outline:
   - милосердний (merciful - compassionate)
   - чуйний (sensitive/responsive)
   - лагідний (gentle - soft)
-- section: Практика — психологічний портрет
+- section: "Практика — психологічний портрет"
   words: 400
   points:
   - Обрати прикметники для опису характеру літературного героя
@@ -49,7 +50,7 @@ grammar:
 - Abstract nouns for traits
 immersion: 100
 register: художній
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - синонім (synonym)

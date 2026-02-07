@@ -1,3 +1,4 @@
+---
 module: ludy-rusi
 level: B2-HIST
 sequence: 18
@@ -78,12 +79,12 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі"
   type: reference
   notes: Everyday life
-- name: Руська Правда — соціальні норми
+- name: "Руська Правда — соціальні норми"
   url: "https://litopys.org.ua/oldukr2/oldukr51.htm"
   type: primary
   notes: Legal text on social classes
 immersion: 100% Ukrainian
-phase: B2-HIST.1 [Kyivan Rus]
+phase: "B2-HIST.1 [Kyivan Rus]"
 word_target: 4000
 activity_hints:
 - type: reading

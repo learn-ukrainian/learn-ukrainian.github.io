@@ -1,3 +1,4 @@
+---
 module: khvylovyi-kulish-debaty
 level: c1-hist
 sequence: 54
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
 - Evaluate the historical significance of найсміливіший голос
 content_outline:
-- section: Вступ — Найсміливіший голос
+- section: "Вступ — Найсміливіший голос"
   words: 457
   subsections:
   - Хвильовий — хто він
@@ -79,7 +80,7 @@ vocabulary:
 - інтернаціоналізм
 activities:
 - type: reading
-  focus: Key passages from "Kamo hriadeshi"
+  focus: "Key passages from \"Kamo hriadeshi\""
 - type: critical-analysis
   focus: Reconstruct Khvylovyi's main argument
 - type: critical-analysis
@@ -87,7 +88,7 @@ activities:
 - type: essay-response
   focus: Чому ідеї Хвильового актуальні й сьогодні?
 sources:
-- name: Хвильовий Микола — памфлети
+- name: "Хвильовий Микола — памфлети"
   url: "https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола"
   type: primary
   notes: Pamphlet texts

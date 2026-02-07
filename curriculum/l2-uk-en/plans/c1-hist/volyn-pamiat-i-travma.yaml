@@ -1,3 +1,4 @@
+---
 module: volyn-pamiat-i-travma
 level: c1-hist
 sequence: 74
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of волинь: пам''ять і травма'
 - Evaluate the historical significance of більше ніж 1943
 content_outline:
-- section: Вступ — Більше ніж 1943
+- section: "Вступ — Більше ніж 1943"
   words: 457
   subsections:
   - Волинь — не тільки трагедія

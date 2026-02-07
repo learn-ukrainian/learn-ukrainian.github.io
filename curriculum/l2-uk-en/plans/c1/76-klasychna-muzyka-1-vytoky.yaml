@@ -1,3 +1,4 @@
+---
 module: c1-76
 level: C1
 sequence: 76
@@ -6,7 +7,7 @@ version: '2.0'
 title: "Класична музика I — Витоки"
 subtitle: "Classical Music I — Origins (1745-1863)"
 content_outline:
-- section: Розминка — Українці у світовій музиці
+- section: "Розминка — Українці у світовій музиці"
   words: 700
   points:
   - Українські композитори XVIII-XIX ст. на європейській сцені
@@ -21,7 +22,7 @@ content_outline:
     European influence'
   - 'Семен Гулак-Артемовський (1813-1873): **"Запорожець за Дунаєм"** (1863) — first
     NATIONAL Ukrainian opera'
-- section: Практика — аналіз музики
+- section: "Практика — аналіз музики"
   words: 1050
   points:
   - Прослухати фрагмент "Демофонта" — описати музичними термінами

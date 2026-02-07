@@ -1,3 +1,4 @@
+---
 module: a1-05
 level: A1
 sequence: 5
@@ -83,4 +84,4 @@ grammar:
 - Demonstratives той/та/те/ті (that)
 - Gender agreement with demonstratives
 register: розмовний
-phase: A1.1 [First Contact]
+phase: "A1.1 [First Contact]"

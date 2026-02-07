@@ -1,3 +1,4 @@
+---
 module: b2-65
 level: B2
 sequence: 65
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Синоніми: Стан та Буття'
 subtitle: Synonyms - State and Existence
 content_outline:
-- section: Розминка — Бути чи існувати?
+- section: "Розминка — Бути чи існувати?"
   words: 350
   points:
   - Бути vs існувати vs перебувати — різні аспекти буття
@@ -28,7 +29,7 @@ content_outline:
   - видаватися (appear - impression)
   - виявлятися (turn out to be)
   - справляти враження (make impression)
-- section: Практика — опис стану
+- section: "Практика — опис стану"
   words: 400
   points:
   - Обрати дієслово буття відповідно до контексту (філософський текст vs новина)
@@ -48,7 +49,7 @@ grammar:
 - Static vs Appearative verbs
 immersion: 100
 register: науковий
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - синонім (synonym)

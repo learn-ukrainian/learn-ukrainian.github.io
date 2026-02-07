@@ -1,11 +1,12 @@
+---
 module: shevchenkos-diary
 level: LIT
 slug: shevchenkos-diary
 version: '2.0'
-title: Щоденник ("Журнал") Шевченка
+title: "Щоденник (\"Журнал\") Шевченка"
 subtitle: 'Shevchenko''s Diary: The Inner World'
 content_outline:
-- section: Вступ — Публічний vs приватний Шевченко
+- section: "Вступ — Публічний vs приватний Шевченко"
   words: 625
   points:
   - Кобзар vs Журнал
@@ -35,7 +36,7 @@ content_outline:
   - Самотність і пошук кохання
   - Стосунки з друзями
   - Здоров'я і передчуття смерті
-- section: Підсумок — Людина за маскою пророка
+- section: "Підсумок — Людина за маскою пророка"
   words: 500
   points:
   - Щоденник як документ епохи
@@ -62,11 +63,11 @@ vocabulary_hints:
   - епоха (era)
 activity_hints:
 - type: reading
-  focus: Уривки з "Журналу" Шевченка
+  focus: "Уривки з \"Журналу\" Шевченка"
   source: UkrLib tid=44
   items: 5+
 - type: essay-response
-  focus: Контраст між "Кобзарем" і "Журналом"
+  focus: "Контраст між \"Кобзарем\" і \"Журналом\""
   word_target: 300
   output: Компаративне есе
 focus: literature
@@ -86,11 +87,11 @@ grammar:
 - Conversational Russian of 19th c.
 module_type: literature
 sources:
-- name: Щоденник Шевченка — повний текст
+- name: "Щоденник Шевченка — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=44"
   type: primary
   notes: Щоденник 1857-1858 років
-- name: Аналіз "Журналу"
+- name: "Аналіз \"Журналу\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=44"
   type: secondary
   notes: Літературознавчий аналіз

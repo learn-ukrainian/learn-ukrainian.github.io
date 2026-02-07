@@ -1,3 +1,4 @@
+---
 module: c1-bio-013
 level: C1-BIO
 sequence: 13
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Костянтин Іванович Острозький: Гетьман двох народів'
 subtitle: 'Kostiantyn Ostrozky: Hetman of Two Nations'
 content_outline:
-- section: Вступ — Гетьман двох народів
+- section: "Вступ — Гетьман двох народів"
   words: 615
   points:
   - Великий гетьман Литовський

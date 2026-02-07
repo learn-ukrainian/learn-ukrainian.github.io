@@ -1,3 +1,4 @@
+---
 module: 24-motion-practice-integration
 level: B1
 sequence: 24
@@ -8,7 +9,7 @@ subtitle: 'Motion verbs: practice and integration'
 content_outline:
 - section: Тест
   words: 167
-  points: []
+  points: "[]"
 - section: Пояснення
   words: 1671
   points:
@@ -59,7 +60,7 @@ vocabulary_hints:
   - кілька кварталів (a few blocks)
 activity_hints:
 - type: cloze
-  focus: Extended writing - "A journey I took"
+  focus: "Extended writing - \"A journey I took\""
   items: 15+
 - type: fill-in
   focus: Map-based - Give complex directions

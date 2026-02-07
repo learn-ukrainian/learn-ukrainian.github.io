@@ -1,3 +1,4 @@
+---
 module: kozatske-viisko
 level: B2-HIST
 sequence: 48
@@ -90,4 +91,4 @@ sources:
   type: reference
   notes: Visual and technical details
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"

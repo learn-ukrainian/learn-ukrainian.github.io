@@ -6,39 +6,39 @@ version: '2.0'
 title: Активний відпочинок
 subtitle: Active Lifestyle and Outdoor Recreation
 content_outline:
-- section: "Вступ"
-  words: 180
+- section: Вступ
+  words: 295
   points:
   - Культура активного відпочинку в Україні
   - Від фізкультури до фітнесу
-- section: "Історія та культура"
-  words: 400
+- section: Історія та культура
+  words: 655
   points:
   - Традиції активного відпочинку
   - Фітнес і спортзали в Україні
   - Здоровий спосіб життя
-- section: "Сучасність"
-  words: 600
+- section: Сучасність
+  words: 982
   points:
   - На свіжому повітрі
   - Активний туризм
   - Парки, велодоріжки, воркаут-майданчики
-- section: "Практика"
-  words: 150
+- section: Практика
+  words: 245
   points:
   - Ключові концепції
   - Таблиці активностей
-- section: "Продукція"
-  words: 250
+- section: Продукція
+  words: 409
   points:
   - Діалоги про активний спосіб життя
-- section: "Підсумок — Будь активним!"
-  words: 144
+- section: Підсумок — Будь активним!
+  words: 236
   points:
   - Як почати активне життя
-- section: "Потрібно більше практики?"
-  words: 109
-word_target: 1833
+- section: Потрібно більше практики?
+  words: 178
+word_target: 3000
 vocabulary_hints:
   required:
   - активний (active)

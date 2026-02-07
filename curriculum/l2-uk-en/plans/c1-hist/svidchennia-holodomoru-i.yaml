@@ -1,3 +1,4 @@
+---
 module: svidchennia-holodomoru-i
 level: c1-hist
 sequence: 36
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of свідчення голодомору i: усна історія'
 - Evaluate the historical significance of голоси вижилих
 content_outline:
-- section: Вступ — Голоси вижилих
+- section: "Вступ — Голоси вижилих"
   words: 457
   subsections:
   - Усна історія — що це?

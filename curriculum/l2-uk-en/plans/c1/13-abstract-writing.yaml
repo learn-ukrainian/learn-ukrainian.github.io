@@ -1,3 +1,4 @@
+---
 module: 13-abstract-writing
 level: C1
 sequence: 13
@@ -5,7 +6,7 @@ slug: 13-abstract-writing
 version: '2.0'
 title: "Жанр — Анотація та реферат"
 content_outline:
-- section: Вступ — Роль анотації
+- section: "Вступ — Роль анотації"
   words: 400
   points:
   - Визначення та функції анотації
@@ -37,7 +38,7 @@ content_outline:
   - Різниця в структурі та змісті
   - Коли використовувати яку
   - Переваги та недоліки
-- section: Реферат — розширена форма
+- section: "Реферат — розширена форма"
   words: 600
   points:
   - Різниця між анотацією та рефератом

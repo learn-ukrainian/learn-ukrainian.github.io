@@ -1,3 +1,4 @@
+---
 module: 12-parenthetical-expressions
 level: B2
 sequence: 12
@@ -5,7 +6,7 @@ slug: 12-parenthetical-expressions
 version: '2.0'
 title: Вставні слова та вирази
 content_outline:
-- section: Вступ — Вставні слова та вирази
+- section: "Вступ — Вставні слова та вирази"
   words: 422
   points:
   - Що таке вставні конструкції
@@ -115,7 +116,7 @@ sources:
   type: reference
   notes: B2 discourse organization requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Identify and correctly use вставні слова та вирази
 - Form and apply вставні слова та вирази

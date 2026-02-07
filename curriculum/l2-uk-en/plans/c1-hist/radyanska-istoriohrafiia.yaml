@@ -1,3 +1,4 @@
+---
 module: radyanska-istoriohrafiia
 level: c1-hist
 sequence: 4
@@ -10,7 +11,7 @@ objectives:
 - Evaluate the historical significance of історія на службі партії
 - Trace the development of спадщина радянської історіографії
 content_outline:
-- section: Вступ — Історія на службі партії
+- section: "Вступ — Історія на службі партії"
   words: 457
   subsections:
   - Марксизм-ленінізм як єдина методологія
@@ -33,7 +34,7 @@ content_outline:
   - Прогресивність приєднання до Росії
   - Негативний образ козацької старшини
   - Позитивний образ Богдана Хмельницького
-- section: Тези 1954 року — аналіз документа
+- section: "Тези 1954 року — аналіз документа"
   words: 571
   subsections:
   - Контекст — 300-річчя Переяслава

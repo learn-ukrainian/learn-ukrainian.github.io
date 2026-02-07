@@ -1,3 +1,4 @@
+---
 module: trypillian-civilization
 level: B2-HIST
 sequence: 1
@@ -131,7 +132,7 @@ grammar:
 - Пасивні конструкції (були виявлені, вважається, називають)
 - Порівняльні структури (більший за, нагадує, на відміну від)
 sources:
-- name: Трипільська культура — Енциклопедія історії України
+- name: "Трипільська культура — Енциклопедія історії України"
   url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Trypilska_kultura"
   type: secondary
   notes: Академічна енциклопедична стаття про Трипільську культуру
@@ -144,4 +145,4 @@ sources:
   type: primary
   notes: Класична праця першовідкривача Трипільської культури (доступна через архіви)
 register: публіцистичний
-phase: B2-HIST.1 [Витоки]
+phase: "B2-HIST.1 [Витоки]"

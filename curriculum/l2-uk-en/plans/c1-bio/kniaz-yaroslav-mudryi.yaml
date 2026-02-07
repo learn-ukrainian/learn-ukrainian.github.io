@@ -6,7 +6,7 @@ version: '2.0'
 title: 'Князь Ярослав Мудрий: Законодавець'
 content_outline:
 - section: Вступ — Будівничий держави
-  words: 400
+  words: 381
   points:
   - Ярослав як законодавець і культуртрегер
   - Порівняння з європейськими монархами
@@ -16,49 +16,49 @@ content_outline:
   points:
   - Основні етапи життя князя
 - section: Шлях до влади
-  words: 600
+  words: 571
   points:
   - Молодість у Ростові та Новгороді
   - Конфлікт із батьком Володимиром
   - Усобиця після смерті батька
   - Боротьба зі Святополком Окаянним
 - section: Руська правда
-  words: 800
+  words: 762
   points:
   - Перший писаний збірник законів
   - Структура та основні норми
   - Віра (штраф за вбивство)
   - Порівняння з європейським правом
 - section: Культурний розквіт
-  words: 700
+  words: 667
   points:
   - Будівництво Софійського собору
   - Золоті ворота
   - Заснування бібліотеки та скрипторію
   - Переклади та освіта
 - section: 'Останні роки: Династична дипломатія'
-  words: 700
+  words: 667
   points:
   - Шлюби дітей з європейськими монархами
   - Анна — королева Франції
   - Міжнародний престиж Києва
   - Русь як частина європейської спільноти
 - section: Внесок у розбудову держави
-  words: 400
+  words: 381
   points:
   - Формування правового поля
   - Архітектурний канон Києва
 - section: Спадщина та канонізація
-  words: 400
+  words: 381
   points:
   - Завіт синам
   - Смерть та поховання
   - Образ у пізнішій культурі
 - section: Підсумок
-  words: 100
+  words: 90
   points:
   - Квінтесенція правління Ярослава Мудрого
-vocabulary_hints:
+vocabulary_hints: null
 activity_hints:
 - type: reading
   focus: Excerpts from Ruska Pravda
@@ -90,16 +90,17 @@ grammar:
 module_type: biography
 sources:
 - name: Ярослав Мудрий (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Ярослав_Мудрий"
+  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
   type: primary
   notes: Biography, Ruska Pravda, cultural achievements
 - name: Руська правда (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Руська_правда"
+  url: https://uk.wikipedia.org/wiki/Руська_правда
   type: primary
   notes: Legal code details and significance
 - name: Софійський собор (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)"
+  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
   type: reference
   notes: Architectural legacy
 immersion: 100% Ukrainian
 phase: C1-BIO
+word_target: 4000

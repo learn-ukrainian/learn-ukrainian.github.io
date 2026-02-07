@@ -1,3 +1,4 @@
+---
 module: 20-c1-1-checkpoint
 level: c1
 sequence: 20
@@ -17,7 +18,7 @@ sources:
   type: reference
   notes: National C1 competency requirements
 content_outline:
-- section: Огляд C1.1 — Академічні основи
+- section: "Огляд C1.1 — Академічні основи"
   words: 500
   points:
   - Підсумок модулів M01-M19
@@ -81,7 +82,7 @@ vocabulary:
   - контрольна точка (checkpoint)
   - досягнення (achievement)
   - прогрес (progress)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

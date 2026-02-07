@@ -1,3 +1,4 @@
+---
 module: velyke-kniazivstvo-lytovske
 level: B2-HIST
 sequence: 29
@@ -35,7 +36,7 @@ content_outline:
   words: 406
   points:
   - Приклад виконання завдання
-- section: Підсумок — Спільна спадщина
+- section: "Підсумок — Спільна спадщина"
   words: 136
   points:
   - Литва, Білорусь, Україна — три народи однієї держави
@@ -53,7 +54,7 @@ objectives:
 grammar:
 - Passive voice in historical texts
 - Analytical structures
-phase: B2.3a [Українська історія]
+phase: "B2.3a [Українська історія]"
 vocabulary_hints:
   required:
   - історія (history)

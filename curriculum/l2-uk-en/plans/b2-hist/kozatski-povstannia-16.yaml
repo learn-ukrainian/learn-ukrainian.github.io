@@ -1,3 +1,4 @@
+---
 module: kozatski-povstannia-16
 level: B2-HIST
 sequence: 44
@@ -64,7 +65,7 @@ grammar:
 - 'Historical narrative: complex sentences with causal links'
 - Conditionals in historical analysis (якби... то...)
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"
 vocabulary_hints:
   required:
   - історія (history)

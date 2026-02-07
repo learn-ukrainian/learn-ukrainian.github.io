@@ -1,3 +1,4 @@
+---
 module: narratology
 level: c2
 sequence: 27
@@ -8,11 +9,11 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Наратологія — Вікіпедія
+- name: "Наратологія — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Наратологія"
   type: reference
   notes: Core narratological concepts
-- name: Жерар Женетт — теорія нарації
+- name: "Жерар Женетт — теорія нарації"
   url: "https://uk.wikipedia.org/wiki/Жерар_Женетт"
   type: reference
   notes: Foundational narratological framework
@@ -21,7 +22,7 @@ sources:
   type: primary
   notes: Examples for narrative analysis
 content_outline:
-- section: Вступ — Що таке наратологія?
+- section: "Вступ — Що таке наратологія?"
   words: 500
   points:
   - Наука про оповідь
@@ -85,7 +86,7 @@ vocabulary:
   - інтрадієгетичний (intradiegetic)
   - ітератив (iterative)
   - невласне-пряма мова (free indirect speech)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

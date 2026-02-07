@@ -1,3 +1,4 @@
+---
 module: c1-bio-073
 level: C1-BIO
 sequence: 73
@@ -5,7 +6,7 @@ slug: mykola-leontovych
 version: '2.0'
 title: 'Микола Леонтович: Автор «Щедрика»'
 content_outline:
-- section: Вступ — Пісня, що підкорила світ
+- section: "Вступ — Пісня, що підкорила світ"
   words: 400
   points:
   - Микола Леонтович — автор «Щедрика», відомого як Carol of the Bells

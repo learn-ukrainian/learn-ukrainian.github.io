@@ -1,3 +1,4 @@
+---
 module: medical-ukrainian-iii
 level: c2
 sequence: 68
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: МКХ-10 українською
 content_outline:
-- section: Вступ — Система медичної документації в Україні
+- section: "Вступ — Система медичної документації в Україні"
   words: 500
   points:
   - Правові основи ведення документації
@@ -63,7 +64,7 @@ content_outline:
   - Кодування діагнозів за МКХ-10
   - Звіти про надані послуги
   - Контроль якості даних
-- section: Практикум — Заповнення медичної документації
+- section: "Практикум — Заповнення медичної документації"
   words: 500
   points:
   - Ведення записів у медичній карті
@@ -88,7 +89,7 @@ vocabulary:
   - кодування (coding)
   - статистична звітність (statistical reporting)
   - форма (form)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

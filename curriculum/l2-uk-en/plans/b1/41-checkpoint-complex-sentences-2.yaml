@@ -1,3 +1,4 @@
+---
 module: b1-41
 level: B1
 sequence: 41
@@ -115,4 +116,4 @@ grammar:
 - Concessive, causal, temporal, reported speech
 - Comprehensive complex sentence mastery
 register: розмовний
-phase: B1.3b [Complex Sentences Checkpoint]
+phase: "B1.3b [Complex Sentences Checkpoint]"

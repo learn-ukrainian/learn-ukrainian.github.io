@@ -1,84 +1,70 @@
-# Module Plan: Intro to RUTH
-# Track: RUTH
-# Module: 001
-# Source: Gemini Research (ISSUE-493)
-# Generated: 2026-02-04
-
+---
 module_number: 1
 slug: intro-to-ruth
-title_uk: "Вступ до руської мови"
-title_en: "Intro to RUTH"
-
+title_uk: Вступ до руської мови
+title_en: Intro to RUTH
 phase: 1
 phase_id: chancery-legal
-phase_name: "Chancery & Legal"
-
-focus: "Transition from OES to Ruthenian — Diglossia"
-
+phase_name: Chancery & Legal
+focus: Transition from OES to Ruthenian — Diglossia
 word_target: 4000
-
-# Content outline with word targets
 content_outline:
-  - section: "Передмова"
-    words: 300
-    description: "Hook and introduction to the course"
-  - section: "Від давньоруської до руської: Великий перехід"
-    words: 700
-    subsections:
-      - "Що змінилося після XIII століття"
-      - "Три регістри руської мови"
-      - "Як ці регістри співіснували"
-  - section: "Первинний текст: Преамбула Литовського статуту (1529)"
-    words: 600
-    subsections:
-      - "Оригінальний текст"
-      - "Транскрипція сучасною українською"
-      - "Аналіз тексту"
-  - section: "Фонетичні зміни: Від давньоруської до руської"
-    words: 500
-    subsections:
-      - "Повноголосся залишається"
-      - "Ікавізм набирає сили"
-      - "Занепад єрів"
-  - section: "Морфологічні зміни"
-    words: 400
-    subsections:
-      - "Спрощення системи відмін"
-      - "Занепад двоїни"
-      - "Розвиток майбутнього часу"
-  - section: "Польські запозичення"
-    words: 400
-    description: "Polish loanwords in legal and administrative terminology"
-  - section: "Латинські запозичення"
-    words: 200
-    description: "Latin loanwords via Polish"
-  - section: "Структура курсу: Чотири фази"
-    words: 500
-    description: "Overview of the four phases of RUTH track"
-  - section: "Практичні вправи"
-    words: 300
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    words: 200
-    description: "Summary and connection to next module"
-
-# Vocabulary hints
+- section: Передмова
+  words: 300
+  description: Hook and introduction to the course
+- section: 'Від давньоруської до руської: Великий перехід'
+  words: 700
+  subsections:
+  - Що змінилося після XIII століття
+  - Три регістри руської мови
+  - Як ці регістри співіснували
+- section: 'Первинний текст: Преамбула Литовського статуту (1529)'
+  words: 600
+  subsections:
+  - Оригінальний текст
+  - Транскрипція сучасною українською
+  - Аналіз тексту
+- section: 'Фонетичні зміни: Від давньоруської до руської'
+  words: 500
+  subsections:
+  - Повноголосся залишається
+  - Ікавізм набирає сили
+  - Занепад єрів
+- section: Морфологічні зміни
+  words: 400
+  subsections:
+  - Спрощення системи відмін
+  - Занепад двоїни
+  - Розвиток майбутнього часу
+- section: Польські запозичення
+  words: 400
+  description: Polish loanwords in legal and administrative terminology
+- section: Латинські запозичення
+  words: 200
+  description: Latin loanwords via Polish
+- section: 'Структура курсу: Чотири фази'
+  words: 500
+  description: Overview of the four phases of RUTH track
+- section: Практичні вправи
+  words: 300
+  description: Exercises and activities
+- section: Підсумок
+  words: 200
+  description: Summary and connection to next module
 vocabulary_hints:
-  - диглосія
-  - регістр
-  - канцелярський стиль
-  - проста мова
-  - господар
-  - шляхта
-  - статут
-  - ікавізм
-  - повноголосся
-  - привілей
-  - воєводство
-  - головщина
-
-# Activity types appropriate for this module
+- диглосія
+- регістр
+- канцелярський стиль
+- проста мова
+- господар
+- шляхта
+- статут
+- ікавізм
+- повноголосся
+- привілей
+- воєводство
+- головщина
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

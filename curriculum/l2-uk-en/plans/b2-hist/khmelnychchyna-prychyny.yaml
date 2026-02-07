@@ -1,3 +1,4 @@
+---
 module: khmelnychchyna-prychyny
 level: B2-HIST
 sequence: 51
@@ -85,4 +86,4 @@ sources:
   type: academic
   notes: Modern analysis
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"

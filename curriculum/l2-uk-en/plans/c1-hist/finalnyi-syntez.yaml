@@ -1,3 +1,4 @@
+---
 module: finalnyi-syntez
 level: c1-hist
 sequence: 135
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of фінальний синтез: що ми дізналися'
 - Evaluate the historical significance of кінець курсу, початок розуміння
 content_outline:
-- section: Вступ — Кінець курсу, початок розуміння
+- section: "Вступ — Кінець курсу, початок розуміння"
   words: 515
   subsections:
   - 135 модулів — що ми пройшли

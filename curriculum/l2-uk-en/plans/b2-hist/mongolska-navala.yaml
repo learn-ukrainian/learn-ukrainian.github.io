@@ -1,3 +1,4 @@
+---
 module: mongolska-navala
 level: B2-HIST
 sequence: 21
@@ -87,4 +88,4 @@ sources:
   url: "http://litopys.org.ua/travelj/travelj.htm"
   type: primary
   notes: Свідчення європейського мандрівника
-phase: B2-HIST.2 [Fragmentation]
+phase: "B2-HIST.2 [Fragmentation]"

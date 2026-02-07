@@ -1,3 +1,4 @@
+---
 module: c1-bio-006
 level: C1-BIO
 sequence: 6
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Володимир Мономах: Укріплювач Русі'
 word_target: 4300
 content_outline:
-- section: Вступ — Останній великий самодержець Києва
+- section: "Вступ — Останній великий самодержець Києва"
   words: 600
   points:
   - Мономах як ідеал руського князя

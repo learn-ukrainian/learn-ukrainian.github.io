@@ -1,3 +1,4 @@
+---
 module: voienna-ekonomika
 level: B2-HIST
 sequence: 136
@@ -88,4 +89,4 @@ grammar:
 - Економічна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

@@ -1,3 +1,4 @@
+---
 module: sichovi-striltsi
 level: B2-HIST
 sequence: 89
@@ -88,4 +89,4 @@ grammar:
 - Військова лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.9 [WWI & Revolution]
+phase: "HIST.9 [WWI & Revolution]"

@@ -1,4 +1,5 @@
-# Module Plan: Ivan Vyshensky: Epistles
+---
+# Module Plan: "Ivan Vyshensky: Epistles"
 # Track: RUTH
 # Module: 039
 # Source: Gemini Research (ISSUE-494)
@@ -13,7 +14,7 @@ phase: 2
 phase_id: sacred-word
 phase_name: "Sacred Word"
 
-focus: "Argument against vernacular — "Simple tongue is for pigs""
+focus: 'Argument against vernacular — "Simple tongue is for pigs"'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

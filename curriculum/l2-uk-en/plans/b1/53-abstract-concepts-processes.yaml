@@ -1,3 +1,4 @@
+---
 module: b1-53
 level: B1
 sequence: 53
@@ -86,4 +87,4 @@ grammar:
 - Verb-noun pairs for change descriptions
 - Temporal markers with process words
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
+phase: "B1.5 [Vocabulary Expansion I]"

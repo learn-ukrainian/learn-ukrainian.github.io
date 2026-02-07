@@ -1,3 +1,4 @@
+---
 module: yevrei-v-ukraini-do-1917
 level: c1-hist
 sequence: 118
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of євреї в україні до 1917
 - Evaluate the historical significance of спільна земля
 content_outline:
-- section: Вступ — Спільна земля
+- section: "Вступ — Спільна земля"
   words: 515
   subsections:
   - Євреї в Україні — 1000 років
@@ -23,7 +24,7 @@ content_outline:
   - Орендарі і посередники
   - Хмельниччина 1648
   - Гайдамаччина
-- section: Штетл — життя
+- section: "Штетл — життя"
   words: 903
   subsections:
   - «Смуга осілості»

@@ -1,3 +1,4 @@
+---
 module: scythians-sarmatians
 level: B2-HIST
 sequence: 2
@@ -110,6 +111,6 @@ sources:
   type: primary
   notes: Ancient Greek descriptions of Scythians
 register: публіцистичний
-phase: B2-HIST.1 [Витоки]
+phase: "B2-HIST.1 [Витоки]"
 module_type: history
 immersion: 100% Ukrainian

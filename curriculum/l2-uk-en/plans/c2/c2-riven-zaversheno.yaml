@@ -1,3 +1,4 @@
+---
 module: c2-riven-zaversheno
 level: c2
 sequence: 100
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — C2 Proficiency Descriptors
+- name: "Ukrainian State Standard 2024 — C2 Proficiency Descriptors"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 mastery level descriptors
-- name: CEFR C2 — Can-Do Statements
+- name: "CEFR C2 — Can-Do Statements"
   url: "https://www.coe.int/"
   type: reference
   notes: C2 competence descriptors
-- name: Українська мова у світі — Перспективи
+- name: "Українська мова у світі — Перспективи"
   url: "https://uk.wikipedia.org/"
   type: secondary
   notes: Ukrainian language in global context
 content_outline:
-- section: Вступ — Досягнення найвищого рівня
+- section: "Вступ — Досягнення найвищого рівня"
   words: 556
   points:
   - Що означає C2 — рівень освіченого носія
@@ -83,7 +84,7 @@ vocabulary:
   - самореалізація (self-fulfillment)
   - культурний посередник (cultural mediator)
   - мовний активізм (language activism)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

@@ -1,3 +1,4 @@
+---
 module: b1-43
 level: B1
 sequence: 43
@@ -76,4 +77,4 @@ grammar:
 - Суфікси -вши/-ши formation rules
 - Попередність дій (prior actions)
 register: розмовний
-phase: B1.4a [Participles]
+phase: "B1.4a [Participles]"

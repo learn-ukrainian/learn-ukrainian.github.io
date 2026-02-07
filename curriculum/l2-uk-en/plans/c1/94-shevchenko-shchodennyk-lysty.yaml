@@ -1,3 +1,4 @@
+---
 module: c1-94
 level: C1
 sequence: 94
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Шевченко: Щоденник та листи'
 subtitle: 'Shevchenko: Diary and Letters'
 content_outline:
-- section: Розминка — Інтимний Шевченко
+- section: "Розминка — Інтимний Шевченко"
   words: 700
   points:
   - Щоденник на засланні — внутрішній голос
@@ -20,7 +21,7 @@ content_outline:
   - Vernacular vs. Imperial Russian in correspondence
   - The "Artist" (Художник) novella excerpts
   - Social commentary in private writings
-- section: Практика — аналіз прози
+- section: "Практика — аналіз прози"
   words: 1050
   points:
   - Проаналізувати запис з Щоденника — настрій, стиль

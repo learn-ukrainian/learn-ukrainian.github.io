@@ -1,3 +1,4 @@
+---
 module: c1-84
 level: C1
 sequence: 84
@@ -6,7 +7,7 @@ version: '2.0'
 title: Театральне мистецтво I
 subtitle: "Theater Arts I — From Origins to Kurbas"
 content_outline:
-- section: Розминка — Витоки українського театру
+- section: "Розминка — Витоки українського театру"
   words: 700
   points:
   - Від вертепу до професійної сцени
@@ -20,7 +21,7 @@ content_outline:
     theater birth'
   - 'Revolutionary: **Лесь Курбас**, Театр "Березіль" — world-class experimental theater,
     Executed Renaissance martyr'
-- section: Практика — історія театру
+- section: "Практика — історія театру"
   words: 1050
   points:
   - Описати структуру вертепу — персонажі, сюжет

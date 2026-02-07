@@ -1,3 +1,4 @@
+---
 module: medical-ukrainian-ii
 level: c2
 sequence: 67
@@ -12,7 +13,7 @@ sources:
   url: "https://moz.gov.ua/protokoli"
   type: primary
   notes: Стандарти комунікації з пацієнтами
-- name: Національна служба здоров'я — Пакети послуг
+- name: "Національна служба здоров'я — Пакети послуг"
   url: "https://nszu.gov.ua/"
   type: reference
   notes: Медичні послуги та права пацієнтів
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Етика медичної комунікації
 content_outline:
-- section: Вступ — Комунікація в медицині
+- section: "Вступ — Комунікація в медицині"
   words: 500
   points:
   - Роль комунікації в медичній практиці
@@ -35,7 +36,7 @@ content_outline:
   - Відкриті та закриті питання
   - Скарги та їх характеристика
   - Анамнез захворювання та життя
-- section: Фізикальний огляд — комунікація
+- section: "Фізикальний огляд — комунікація"
   words: 600
   points:
   - Пояснення процедури пацієнту
@@ -63,7 +64,7 @@ content_outline:
   - Люди похилого віку
   - Пацієнти з порушеннями слуху/зору
   - Пацієнти з іншою рідною мовою
-- section: Практикум — Симуляційні діалоги
+- section: "Практикум — Симуляційні діалоги"
   words: 400
   points:
   - 'Рольові ігри: збір анамнезу'
@@ -88,7 +89,7 @@ vocabulary:
   - повторний огляд (follow-up)
   - госпіталізація (hospitalization)
   - амбулаторне лікування (outpatient treatment)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

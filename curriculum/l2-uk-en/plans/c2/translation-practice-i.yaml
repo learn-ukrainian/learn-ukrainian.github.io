@@ -1,3 +1,4 @@
+---
 module: translation-practice-i
 level: c2
 sequence: 86
@@ -8,11 +9,11 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Зеров — Переклади з поезії
+- name: "Зеров — Переклади з поезії"
   url: "https://uk.wikipedia.org/wiki/Зеров_Микола_Костьович"
   type: primary
   notes: Classic examples of Ukrainian poetic translation
-- name: Кундзіч — Теорія та практика художнього перекладу
+- name: "Кундзіч — Теорія та практика художнього перекладу"
   url: "https://uk.wikipedia.org/wiki/Кундзіч_Олексій_Леонідович"
   type: reference
   notes: Ukrainian literary translation methodology
@@ -21,7 +22,7 @@ sources:
   type: secondary
   notes: Contemporary translation examples and reviews
 content_outline:
-- section: Вступ — Художній переклад як мистецтво
+- section: "Вступ — Художній переклад як мистецтво"
   words: 500
   points:
   - Відмінність художнього перекладу від інших видів
@@ -48,14 +49,14 @@ content_outline:
   - Природність діалогів
   - Збереження підтексту
   - Адаптація для українського глядача
-- section: Практична майстерня — Переклад прози
+- section: "Практична майстерня — Переклад прози"
   words: 700
   points:
   - Переклад уривка англійської прози
   - Обґрунтування перекладацьких рішень
   - Порівняння з існуючим перекладом (якщо є)
   - Рецензування перекладу колеги
-- section: Практична майстерня — Переклад поезії
+- section: "Практична майстерня — Переклад поезії"
   words: 600
   points:
   - Переклад англійського вірша
@@ -80,7 +81,7 @@ vocabulary:
   - перекладацький коментар (translator's note)
   - редакторська правка (editorial revision)
   - перевидання перекладу (retranslation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

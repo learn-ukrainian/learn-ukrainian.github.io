@@ -1,3 +1,4 @@
+---
 module: 18-essay-writing-practice
 level: C1
 sequence: 18
@@ -5,7 +6,7 @@ slug: 18-essay-writing-practice
 version: '2.0'
 title: "Практикум — Написання есе"
 content_outline:
-- section: Вступ — Інтеграція навичок
+- section: "Вступ — Інтеграція навичок"
   words: 267
   points:
   - Огляд академічного письма M01-M17

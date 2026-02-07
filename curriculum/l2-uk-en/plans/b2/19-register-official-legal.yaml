@@ -1,3 +1,4 @@
+---
 module: 19-register-official-legal
 level: B2
 sequence: 19
@@ -5,7 +6,7 @@ slug: 19-register-official-legal
 version: '2.0'
 title: 'Офіційно-діловий стиль: документи, закони, заяви'
 content_outline:
-- section: Вступ — Офіційно-діловий стиль
+- section: "Вступ — Офіційно-діловий стиль"
   words: 400
   points:
   - Визначення та сфера застосування
@@ -118,7 +119,7 @@ sources:
   type: reference
   notes: B2 formal document comprehension
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - 'Understand and apply офіційно-діловий стиль: документи, закони, заяви'
 - Analyze and evaluate офіційно-діловий стиль

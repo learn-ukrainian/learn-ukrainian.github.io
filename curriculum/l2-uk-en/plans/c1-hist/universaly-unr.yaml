@@ -1,3 +1,4 @@
+---
 module: universaly-unr
 level: c1-hist
 sequence: 34
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of універсали унр
 - Evaluate the historical significance of чотири кроки до незалежності
 content_outline:
-- section: Вступ — Чотири кроки до незалежності
+- section: "Вступ — Чотири кроки до незалежності"
   words: 457
   subsections:
   - 1917-1918 — революційний рік

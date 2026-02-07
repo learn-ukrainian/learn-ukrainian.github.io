@@ -1,3 +1,4 @@
+---
 module: rozstriliane-kontekst
 level: c1-hist
 sequence: 52
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of розстріляне відродження: контекст 1920-х'
 - Evaluate the historical significance of парадокс 1920-х
 content_outline:
-- section: Вступ — Парадокс 1920-х
+- section: "Вступ — Парадокс 1920-х"
   words: 457
   subsections:
   - Найбільший культурний вибух в УРСР
@@ -94,7 +95,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Українізація"
   type: reference
   notes: Ukrainization policy
-- name: Юрій Лавріненко — Розстріляне відродження
+- name: "Юрій Лавріненко — Розстріляне відродження"
   url: "https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович"
   type: reference
   notes: Term originator

@@ -1,3 +1,4 @@
+---
 # C1 Level Plan - Ukrainian for English Speakers
 # Source of truth: docs/l2-uk-en/C1-CURRICULUM-PLAN.md
 
@@ -12,27 +13,27 @@ immersion: "100%"
 phases:
   - id: C1.1
     name: "Academic Foundation"
-    modules: [1, 20]
+    modules: "[1, 20]"
     focus: "Academic discourse, research terminology"
 
   - id: C1.2
     name: "Professional & Social Context"
-    modules: [21, 35]
+    modules: "[21, 35]"
     focus: "Professional communication, social issues"
 
   - id: C1.3
     name: "Advanced Stylistics & Rhetoric"
-    modules: [36, 55]
+    modules: "[36, 55]"
     focus: "Rhetorical devices, persuasion, argumentation"
 
   - id: C1.4
     name: "Folk Culture & Fine Arts"
-    modules: [56, 91]
+    modules: "[56, 91]"
     focus: "Traditional culture, music, visual arts"
 
   - id: C1.5
     name: "Literature"
-    modules: [92, 106]
+    modules: "[92, 106]"
     focus: "Literary analysis, critical thinking"
 
 grammar_scope:

@@ -1,3 +1,4 @@
+---
 module: b1-42
 level: B1
 sequence: 42
@@ -76,4 +77,4 @@ grammar:
 - Суфікси -ючи/-ачи formation rules
 - Одночасність дій (simultaneous actions)
 register: розмовний
-phase: B1.4a [Participles]
+phase: "B1.4a [Participles]"

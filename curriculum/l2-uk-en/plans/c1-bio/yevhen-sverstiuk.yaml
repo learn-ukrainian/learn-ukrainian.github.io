@@ -6,20 +6,20 @@ version: '2.0'
 title: 'Євген Сверстюк: Моральний авторитет нації'
 content_outline:
 - section: Вступ — Філософ свободи
-  words: 400
+  words: 444
   points:
   - Моральний авторитет українського дисидентства
   - Поєднання філософії, літературної критики та мужності
   - Один із стовпів шістдесятницького руху
 - section: Волинь та юність (1928-1954)
-  words: 600
+  words: 667
   points:
   - Народження на Волині
   - Селянська родина та формування характеру
   - Навчання у Львові та Києві
   - Формування філософського світогляду
 - section: Шістдесятники (1954-1972)
-  words: 800
+  words: 889
   points:
   - Робота у психології та літературній критиці
   - «Собор у риштованні» — захист Гончаревого «Собору»
@@ -27,7 +27,7 @@ content_outline:
   - Дружба з Чорноволом, Стусом, Дзюбою
   - Інтелектуальне лідерство
 - section: Ув'язнення та заслання (1972-1983)
-  words: 700
+  words: 778
   points:
   - Арешт за «антирадянську агітацію»
   - Мордовські табори та Владимирська в'язниця
@@ -35,20 +35,20 @@ content_outline:
   - Непоступливість та моральна стійкість
   - Тюремна творчість
 - section: Повернення та незалежна Україна (1983-2014)
-  words: 600
+  words: 667
   points:
   - Правозахисна діяльність після звільнення
   - Журнал «Наша віра»
   - Моральний голос Майдану
   - Останні роки та визнання
 - section: Спадщина — Совість у часи безсовісності
-  words: 500
+  words: 555
   points:
   - Сверстюк як моральний компас
   - Духовна спадщина для сучасної України
   - Деколонізація моральних орієнтирів
   - Роль у формуванні громадянського суспільства
-word_target: 3600
+word_target: 4000
 vocabulary_hints:
   required:
   - моральний авторитет (moral authority)
@@ -85,16 +85,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Сверстюк (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Сверстюк_Євген_Олександрович"
+  url: https://uk.wikipedia.org/wiki/Сверстюк_Євген_Олександрович
   type: primary
   notes: Comprehensive biography of the moral authority of Ukrainian dissent
 - name: ПЕН Україна — Євген Сверстюк
-  url: "https://pen.org.ua/"
+  url: https://pen.org.ua/
   type: reference
   notes: Literary and human rights context
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Євген Сверстюк as a moral authority'
+- Analyze the life and legacy of Євген Сверстюк as a moral authority
 - Evaluate the role of philosophical thought in resistance movements
 - Trace the trajectory from academic to dissident to moral compass of a nation

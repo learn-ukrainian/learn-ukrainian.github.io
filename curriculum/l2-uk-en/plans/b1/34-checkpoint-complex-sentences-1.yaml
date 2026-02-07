@@ -1,3 +1,4 @@
+---
 module: b1-34
 level: B1
 sequence: 34
@@ -83,4 +84,4 @@ grammar:
 - Relative clauses (який, де/куди/звідки, коли/що)
 - Purpose clauses and conditionals
 register: розмовний
-phase: B1.3a [Complex Sentences Checkpoint]
+phase: "B1.3a [Complex Sentences Checkpoint]"

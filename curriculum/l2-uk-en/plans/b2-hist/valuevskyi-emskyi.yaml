@@ -1,3 +1,4 @@
+---
 module: valuevskyi-emskyi
 level: B2-HIST
 sequence: 82
@@ -91,4 +92,4 @@ grammar:
 - Юридична та офіційна лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

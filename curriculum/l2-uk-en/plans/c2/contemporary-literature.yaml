@@ -1,3 +1,4 @@
+---
 module: contemporary-literature
 level: c2
 sequence: 38
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Сучасна українська література — Вікіпедія
+- name: "Сучасна українська література — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Сучасна_українська_література"
   type: reference
   notes: Overview of contemporary literary scene
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Prize-winning contemporary literature
 content_outline:
-- section: Вступ — Літературний ландшафт сьогодення
+- section: "Вступ — Літературний ландшафт сьогодення"
   words: 500
   points:
   - Періодизація сучасної літератури
@@ -87,7 +88,7 @@ vocabulary:
   - слем (slam poetry)
   - трилер (thriller)
   - бестселер (bestseller)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

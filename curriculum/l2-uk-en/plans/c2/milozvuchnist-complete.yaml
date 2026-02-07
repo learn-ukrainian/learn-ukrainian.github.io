@@ -1,3 +1,4 @@
+---
 module: milozvuchnist-complete
 level: c2
 sequence: 2
@@ -12,7 +13,7 @@ sources:
   url: "https://r2u.org.ua/"
   type: primary
   notes: Canonical reference for Ukrainian euphony and phonetic harmony
-- name: Ukrainian State Standard 2024 — Phonetic section
+- name: "Ukrainian State Standard 2024 — Phonetic section"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 phonetic requirements
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Euphonic variants and stylistic choices
 content_outline:
-- section: Вступ — Що таке милозвучність?
+- section: "Вступ — Що таке милозвучність?"
   words: 400
   points:
   - Визначення та історія поняття
@@ -62,7 +63,7 @@ content_outline:
   - Ритм і мелодика української прози
   - Аналіз літературних текстів
   - Авторське редагування для милозвучності
-- section: Практикум — Редагування текстів
+- section: "Практикум — Редагування текстів"
   words: 500
   points:
   - Виявлення порушень милозвучності
@@ -88,7 +89,7 @@ vocabulary:
   - ритміка (rhythmics)
   - гармонія (harmony)
   - редагування (editing)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

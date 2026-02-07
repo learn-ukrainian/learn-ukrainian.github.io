@@ -1,3 +1,4 @@
+---
 module: zaporizka-sich
 level: B2-HIST
 sequence: 42
@@ -10,7 +11,7 @@ content_outline:
   points:
   - Виникнення Січі в XVI ст.
   - Географічне положення
-- section: Острів Хортиця — серце козацтва
+- section: "Острів Хортиця — серце козацтва"
   words: 1303
   points:
   - Становлення фортеці (Дмитро Вишневецький)
@@ -60,7 +61,7 @@ grammar:
 - Історичний наратив
 - Пасивний стан у науковому тексті
 register: публіцистичний
-phase: B2.3b [Українська історія]
+phase: "B2.3b [Українська історія]"
 vocabulary_hints:
   required:
   - історія (history)

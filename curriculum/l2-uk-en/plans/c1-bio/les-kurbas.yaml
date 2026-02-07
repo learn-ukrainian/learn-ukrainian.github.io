@@ -1,3 +1,4 @@
+---
 module: c1-bio-088
 level: C1-BIO
 sequence: 88
@@ -5,7 +6,7 @@ slug: les-kurbas
 version: '2.0'
 title: 'Лесь Курбас: Реформатор театру'
 content_outline:
-- section: Вступ — Людина, що перевернула театр
+- section: "Вступ — Людина, що перевернула театр"
   words: 400
   points:
   - Лесь Курбас як найвпливовіший український режисер XX століття

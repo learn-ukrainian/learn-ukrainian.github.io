@@ -1,3 +1,4 @@
+---
 module: b2-61
 level: B2
 sequence: 61
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Синоніми: Час та Періоди'
 subtitle: Synonyms - Time and Periods
 content_outline:
-- section: Розминка — Нюанси часу
+- section: "Розминка — Нюанси часу"
   words: 350
   points:
   - Зараз vs тепер vs нині — різниця у вживанні
@@ -28,7 +29,7 @@ content_outline:
   - давно (long ago)
   - недавно (recently)
   - щойно (just now)
-- section: Практика — часові вирази в контексті
+- section: "Практика — часові вирази в контексті"
   words: 400
   points:
   - Обрати часовий прислівник відповідно до регістру (офіційний лист vs розмова)
@@ -49,7 +50,7 @@ grammar:
 - Temporal nouns and intensity
 immersion: 100
 register: публіцистичний
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - синонім (synonym)

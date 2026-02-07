@@ -1,3 +1,4 @@
+---
 module: syntez-ahentsnist
 level: c1-hist
 sequence: 133
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
 - Evaluate the historical significance of наратив агентності
 content_outline:
-- section: Вступ — Наратив агентності
+- section: "Вступ — Наратив агентності"
   words: 515
   subsections:
   - Огляд модулів 126-132

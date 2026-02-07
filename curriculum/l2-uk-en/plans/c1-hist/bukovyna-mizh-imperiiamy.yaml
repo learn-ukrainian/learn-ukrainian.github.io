@@ -1,3 +1,4 @@
+---
 module: bukovyna-mizh-imperiiamy
 level: c1-hist
 sequence: 72
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of буковина між імперіями
 - Evaluate the historical significance of багатонаціональний край
 content_outline:
-- section: Вступ — Багатонаціональний край
+- section: "Вступ — Багатонаціональний край"
   words: 457
   subsections:
   - Буковина — де це

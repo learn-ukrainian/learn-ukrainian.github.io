@@ -1,3 +1,4 @@
+---
 module: c1-87
 level: C1
 sequence: 87
@@ -6,7 +7,7 @@ version: '2.0'
 title: Сучасна музика
 subtitle: "Contemporary Music — The Sound of Freedom"
 content_outline:
-- section: Розминка — Звуки свободи
+- section: "Розминка — Звуки свободи"
   words: 700
   points:
   - Український рок — ВВ, Океан Ельзи, символи покоління
@@ -20,7 +21,7 @@ content_outline:
   - 'Фолк-рок: ДахаБраха, ONUKA fusion'
   - 'War-era music: patriotic revival'
   - Music as identity and resistance
-- section: Практика — музичний дискурс
+- section: "Практика — музичний дискурс"
   words: 1050
   points:
   - Проаналізувати текст пісні Океану Ельзи — мова, образи

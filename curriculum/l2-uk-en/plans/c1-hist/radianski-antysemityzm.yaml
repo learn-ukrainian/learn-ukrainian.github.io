@@ -1,3 +1,4 @@
+---
 module: radianski-antysemityzm
 level: c1-hist
 sequence: 120
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of радянський антисемітизм
 - Evaluate the historical significance of антисемітизм «без антисемітів»
 content_outline:
-- section: Вступ — Антисемітизм «без антисемітів»
+- section: "Вступ — Антисемітизм «без антисемітів»"
   words: 515
   subsections:
   - СРСР — «інтернаціоналізм»

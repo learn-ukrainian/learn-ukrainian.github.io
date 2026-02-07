@@ -1,3 +1,4 @@
+---
 # Module Plan: Sviatoslav Vsevolodovych
 # Track: OES
 # Module: 037
@@ -13,7 +14,7 @@ phase: 2
 phase_id: literary-tradition
 phase_name: "Literary Tradition"
 
-focus: ""Golden Word" context"
+focus: '"Golden Word" context'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

@@ -1,3 +1,4 @@
+---
 module: c2-1-practice-ii
 level: c2
 sequence: 18
@@ -16,32 +17,32 @@ sources:
   url: "https://mon.gov.ua/"
   type: reference
   notes: Transformation exercise examples
-- name: Ukrainian State Standard 2024 — Style flexibility
+- name: "Ukrainian State Standard 2024 — Style flexibility"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for register control
 content_outline:
-- section: Вступ — Трансформація як майстерність
+- section: "Вступ — Трансформація як майстерність"
   words: 400
   points:
   - Чому вміння трансформувати — ознака C2
   - Збереження змісту при зміні форми
   - Критерії успішної трансформації
-- section: Трансформація 1 — Юридичний → Журналістський → Блог
+- section: "Трансформація 1 — Юридичний → Журналістський → Блог"
   words: 700
   points:
   - Вихідний юридичний документ
   - Етапи спрощення
   - Аналіз втрат та здобутків
   - Три версії одного змісту
-- section: Трансформація 2 — Наукова стаття → Популярна → Соцмережі
+- section: "Трансформація 2 — Наукова стаття → Популярна → Соцмережі"
   words: 700
   points:
   - Академічний оригінал
   - Адаптація для журналу
   - Скорочення для Twitter/Facebook
   - Збереження точності
-- section: Трансформація 3 — Формальна промова → Неформальне пояснення → Жарт
+- section: "Трансформація 3 — Формальна промова → Неформальне пояснення → Жарт"
   words: 600
   points:
   - Офіційний виступ
@@ -88,7 +89,7 @@ vocabulary:
   - зворотний (reverse)
   - втрата (loss)
   - здобуток (gain)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

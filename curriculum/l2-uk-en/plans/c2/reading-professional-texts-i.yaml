@@ -1,3 +1,4 @@
+---
 module: reading-professional-texts-i
 level: c2
 sequence: 49
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Наукова періодика України — база НБУВ
+- name: "Наукова періодика України — база НБУВ"
   url: "https://nbuv.gov.ua/"
   type: reference
   notes: Database of Ukrainian scientific periodicals for text examples
-- name: Українські наукові журнали — платформа
+- name: "Українські наукові журнали — платформа"
   url: "https://usj.org.ua/"
   type: reference
   notes: Open access Ukrainian academic journals across fields
-- name: ДСТУ 3017:2015 — Видання
+- name: "ДСТУ 3017:2015 — Видання"
   url: "https://dnaop.com/"
   type: reference
   notes: Ukrainian standards for academic publication structure
 content_outline:
-- section: Вступ — Читання як активний процес
+- section: "Вступ — Читання як активний процес"
   words: 541
   points:
   - Відмінність між читанням для задоволення та фаховим читанням
@@ -33,13 +34,13 @@ content_outline:
   - Типові структури наукових статей (IMRAD)
   - Структура технічних документів
   - Навігація за допомогою заголовків та підзаголовків
-- section: Скімінг — Швидкий огляд
+- section: "Скімінг — Швидкий огляд"
   words: 649
   points:
   - Техніка швидкого огляду тексту
   - Ідентифікація основної ідеї
   - Оцінка релевантності тексту
-- section: Сканінг — Пошук інформації
+- section: "Сканінг — Пошук інформації"
   words: 649
   points:
   - Техніка цілеспрямованого пошуку
@@ -76,7 +77,7 @@ vocabulary:
   - навігація (navigation)
   - анотація (annotation)
   - абстракт (abstract)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

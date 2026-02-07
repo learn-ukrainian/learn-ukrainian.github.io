@@ -1,38 +1,24 @@
-# Module Plan: PVL: The Three Brothers
-# Track: OES
-# Module: 029
-# Source: Gemini Research (ISSUE-490)
-# Generated: 2026-02-04
-
+---
 module_number: 29
 slug: pvl-three-brothers
-title_uk: "ПВЛ: Три брати"
-title_en: "PVL: The Three Brothers"
-
+title_uk: 'ПВЛ: Три брати'
+title_en: 'PVL: The Three Brothers'
 phase: 2
 phase_id: literary-tradition
-phase_name: "Literary Tradition"
-
-focus: "Yaroslavychi — Feudal terminology"
-
+phase_name: Literary Tradition
+focus: Yaroslavychi — Feudal terminology
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to PVL: The Three Brothers"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to PVL: The Three Brothers'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

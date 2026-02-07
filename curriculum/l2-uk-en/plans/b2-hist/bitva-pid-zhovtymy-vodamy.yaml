@@ -1,3 +1,4 @@
+---
 module: bitva-pid-zhovtymy-vodamy
 level: B2-HIST
 sequence: 53
@@ -96,4 +97,4 @@ sources:
   type: secondary
   notes: Tactical analysis
 register: публіцистичний
-phase: HIST.6 [Khmelnytsky & Cossack State]
+phase: "HIST.6 [Khmelnytsky & Cossack State]"

@@ -1,3 +1,4 @@
+---
 module: povist-mynulykh-lit-i
 level: c1-hist
 sequence: 11
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of повість минулих літ i: структура та автори'
 - Evaluate the historical significance of найстаріший літопис русі
 content_outline:
-- section: Вступ — Найстаріший літопис Русі
+- section: "Вступ — Найстаріший літопис Русі"
   words: 457
   subsections:
   - Що таке Повість минулих літ (ПМЛ)?
@@ -79,7 +80,7 @@ vocabulary:
 - інтерполяція
 activities:
 - type: reading
-  focus: "Opening passage \"Откуда есть пошла Руская земля\" — modern translation"
+  focus: 'Opening passage \"Откуда есть пошла Руская земля\" — modern translation'
 - type: critical-analysis
   focus: Who benefits from specific passages? Identify political purpose
 - type: comparative-study

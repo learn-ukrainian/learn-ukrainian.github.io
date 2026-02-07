@@ -1,3 +1,4 @@
+---
 module: c1-80
 level: C1
 sequence: 80
@@ -6,7 +7,7 @@ version: '2.0'
 title: Вокальне мистецтво
 subtitle: Vocal Art
 content_outline:
-- section: Розминка — Голос України
+- section: "Розминка — Голос України"
   words: 700
   points:
   - Багата хорова традиція від козацьких часів
@@ -18,7 +19,7 @@ content_outline:
   - 'Choral tradition: Church choirs, Капела Думка, Капела Ревуцького'
   - 'Art song (романс): Лисенко, Степовий, contemporary composers'
   - 'Folk crossover: ДахаБраха, ONUKA — art music meets folk'
-- section: Практика — вокальне мистецтво
+- section: "Практика — вокальне мистецтво"
   words: 1050
   points:
   - Прослухати хоровий твір Капели Думка — описати звучання

@@ -6,47 +6,47 @@ version: '2.0'
 title: 'Василь Стефаник: Слово як крик душі'
 content_outline:
 - section: Вступ — Найсильніший новеліст
-  words: 400
+  words: 432
   points:
   - Стефаник як майстер експресіоністичної новели
   - Визнання Франком як «найбільшої сили» в малій прозі
   - Покутський геній світового масштабу
 - section: Покутське дитинство (1871-1890)
-  words: 600
+  words: 649
   points:
   - Народження в Русові на Покутті
   - Заможна селянська родина
   - Покутська культура та трагізм селянського буття
   - Навчання у Коломиї
 - section: Краківський студент (1890-1900)
-  words: 800
+  words: 865
   points:
   - Медичний факультет та відмова від лікарства
   - Знайомство з Франком та польськими письменниками
   - «Синя книжечка» та «Камінний хрест»
   - Миттєва літературна слава
 - section: Мовчання та громадська діяльність (1900-1939)
-  words: 700
+  words: 757
   points:
   - Повернення на Покуття
   - Депутатство у Віденському парламенті
   - Тридцять років «мовчання» — причини
   - Посол до Сейму та захист селян
 - section: Поетика болю
-  words: 700
+  words: 757
   points:
   - Лаконізм та мінімалізм як метод
   - Покутський діалект як літературна мова
   - Порівняння з Мопассаном та Чеховим
   - Трагізм еміграції у новелах
 - section: Спадщина — Голос знедолених
-  words: 500
+  words: 540
   points:
   - Стефаник у контексті європейського експресіонізму
   - Музей у Русові та сучасне значення
   - Вплив на Стельмаха, Тютюнника
   - Деколонізація селянського наративу
-word_target: 3700
+word_target: 4000
 vocabulary_hints:
   required:
   - новеліст (short story writer)
@@ -83,16 +83,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Стефаник (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович"
+  url: https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович
   type: primary
   notes: Comprehensive biography of the expressionist master
 - name: Музей Василя Стефаника
-  url: "https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника"
+  url: https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника
   type: reference
   notes: Literary-memorial museum in Rusiv
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Василь Стефаник as an expressionist writer'
+- Analyze the life and legacy of Василь Стефаник as an expressionist writer
 - Evaluate the artistic significance of laconism and dialect in literature
 - Trace the connection between Pokuttian peasant life and literary innovation

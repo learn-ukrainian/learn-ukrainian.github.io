@@ -54,6 +54,34 @@ def run_command(cmd: list[str], capture: bool = True) -> tuple[int, str, str]:
     except Exception as e:
         return 1, "", str(e)
 
+def step_validate_plans(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+    """Step 0: Validate YAML plan files."""
+    print("\n" + "="*60)
+    print("🔍 Step 0: Validate Plans")
+    print("="*60)
+
+    # 1. Structural validation
+    print("  Checking YAML structure...")
+    cmd1 = [str(VENV_PYTHON), "scripts/validate_plans.py"]
+    if level:
+        cmd1.append(level)
+    
+    code1, stdout1, stderr1 = run_command(cmd1, capture=False)
+    if code1 != 0:
+        return StepResult("validate_plans", False, "Plan structural validation failed")
+
+    # 2. Config consistency validation (word_target matching)
+    print("\n  Checking config consistency...")
+    cmd2 = [str(VENV_PYTHON), "scripts/validate_plan_config.py"]
+    if level:
+        cmd2.append(level)
+    
+    code2, stdout2, stderr2 = run_command(cmd2, capture=False)
+    if code2 != 0:
+        return StepResult("validate_plans", False, "Plan config consistency failed")
+
+    return StepResult("validate_plans", True, "Plan validation passed")
+
 def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
     """Run MD audit/lint."""
     print("\n" + "="*60)
@@ -233,6 +261,7 @@ def run_pipeline(
     results: list[StepResult] = []
 
     step_functions = {
+        "validate_plans": step_validate_plans,
         "lint": step_lint,
         "generate": step_generate,
         "validate_mdx": step_validate_mdx,
@@ -284,7 +313,7 @@ def main():
                        help="CEFR level (a1, a2, b1, b2, c1, c2)")
     parser.add_argument("module_num", nargs="?", type=int, default=None,
                        help="Module number")
-    parser.add_argument("--steps", default="lint,generate,validate_mdx,validate_html",
+    parser.add_argument("--steps", default="validate_plans,lint,generate,validate_mdx,validate_html",
                        help="Comma-separated steps to run (default: all)")
 
     args = parser.parse_args()

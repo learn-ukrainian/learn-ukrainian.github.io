@@ -1,3 +1,4 @@
+---
 module: b1-55
 level: B1
 sequence: 55
@@ -87,4 +88,4 @@ grammar:
 - Concessive structures (хоча, але)
 - Partial agreement constructions
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
+phase: "B1.5 [Vocabulary Expansion I]"

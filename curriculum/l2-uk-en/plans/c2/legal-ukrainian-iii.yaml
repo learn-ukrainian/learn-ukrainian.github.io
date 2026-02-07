@@ -1,3 +1,4 @@
+---
 module: legal-ukrainian-iii
 level: c2
 sequence: 63
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Офіційний портал судової влади
 content_outline:
-- section: Вступ — Судова система України
+- section: "Вступ — Судова система України"
   words: 500
   points:
   - Структура судової системи
@@ -63,7 +64,7 @@ content_outline:
   - Виконавчий лист
   - Державна виконавча служба
   - Примусове виконання рішень
-- section: Практикум — Складання процесуальних документів
+- section: "Практикум — Складання процесуальних документів"
   words: 400
   points:
   - Аналіз позовної заяви
@@ -88,7 +89,7 @@ vocabulary:
   - клопотання (motion/petition)
   - свідок (witness)
   - присяжні (jury)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

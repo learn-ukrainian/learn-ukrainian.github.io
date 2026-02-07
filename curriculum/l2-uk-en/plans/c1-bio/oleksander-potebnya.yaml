@@ -1,3 +1,4 @@
+---
 module: c1-bio-043
 level: C1-BIO
 sequence: 43
@@ -5,7 +6,7 @@ slug: oleksander-potebnya
 version: '2.0'
 title: 'Олександр Потебня: Філософ мови'
 content_outline:
-- section: Вступ — Український Гумбольдт
+- section: "Вступ — Український Гумбольдт"
   words: 444
   points:
   - Потебня як найвидатніший український мовознавець XIX ст.
@@ -67,7 +68,7 @@ vocabulary_hints:
   - діалектологія (dialectology)
 activity_hints:
 - type: reading
-  focus: Excerpts from "Думка і мова"
+  focus: "Excerpts from \"Думка і мова\""
   source: Original texts (adapted)
   items: 3 passages
 - type: essay-response

@@ -1,3 +1,4 @@
+---
 module: c1-bio-089
 level: C1-BIO
 sequence: 89
@@ -5,7 +6,7 @@ slug: olha-basarab
 version: '2.0'
 title: 'Ольга Басараб: Розвідниця і мучениця'
 content_outline:
-- section: Вступ — Незламна розвідниця
+- section: "Вступ — Незламна розвідниця"
   words: 400
   points:
   - Басараб як символ жіночого героїзму в підпіллі

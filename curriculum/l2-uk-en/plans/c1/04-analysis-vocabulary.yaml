@@ -1,3 +1,4 @@
+---
 module: 04-analysis-vocabulary
 level: C1
 sequence: 4
@@ -5,7 +6,7 @@ slug: 04-analysis-vocabulary
 version: '2.0'
 title: Словник аналізу та критики
 content_outline:
-- section: Вступ — Мова критичного мислення
+- section: "Вступ — Мова критичного мислення"
   words: 400
   points:
   - Роль аналітичної лексики в науці

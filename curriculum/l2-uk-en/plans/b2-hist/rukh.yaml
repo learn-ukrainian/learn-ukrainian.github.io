@@ -1,3 +1,4 @@
+---
 module: rukh
 level: B2-HIST
 sequence: 120
@@ -91,4 +92,4 @@ grammar:
 - Політична лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.12 [Independence & Modern Era]
+phase: "HIST.12 [Independence & Modern Era]"

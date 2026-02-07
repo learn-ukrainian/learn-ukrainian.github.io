@@ -1,3 +1,4 @@
+---
 module: b2-83
 level: B2
 sequence: 83
@@ -6,7 +7,7 @@ version: '2.0'
 title: B2 Підсумковий огляд
 subtitle: B2 Final Review
 content_outline:
-- section: Огляд — Що ви опанували на B2
+- section: "Огляд — Що ви опанували на B2"
   words: 200
   points:
   - Ретроспектива рівня — від М01 до М82

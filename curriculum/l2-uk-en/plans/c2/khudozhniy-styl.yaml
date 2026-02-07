@@ -1,3 +1,4 @@
+---
 module: khudozhniy-styl
 level: c2
 sequence: 6
@@ -12,29 +13,29 @@ sources:
   url: "https://litopys.org.ua/"
   type: primary
   notes: Classic and contemporary literary examples
-- name: Письменники України — біографії та твори
+- name: "Письменники України — біографії та твори"
   url: "https://ukrlib.com.ua/"
   type: reference
   notes: Author styles and creative techniques
-- name: Ukrainian State Standard 2024 — Literary style
+- name: "Ukrainian State Standard 2024 — Literary style"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for artistic expression
 content_outline:
-- section: Вступ — Художній стиль як мистецтво слова
+- section: "Вступ — Художній стиль як мистецтво слова"
   words: 400
   points:
   - Функції художнього стилю
   - Естетична функція мови
   - Індивідуальний стиль автора
-- section: Оповідання — мала проза
+- section: "Оповідання — мала проза"
   words: 700
   points:
   - Структура оповідання
   - Композиційні елементи (зав'язка, кульмінація, розв'язка)
   - Наратор та точка зору
   - Приклади — Стефаник, Коцюбинський
-- section: Поезія — ліричний вимір
+- section: "Поезія — ліричний вимір"
   words: 600
   points:
   - Ліричний герой
@@ -55,14 +56,14 @@ content_outline:
   - Символ та алегорія
   - Іронія та сатира
   - Інтертекстуальність
-- section: Хронотоп — простір і час
+- section: "Хронотоп — простір і час"
   words: 500
   points:
   - Художній час
   - Художній простір
   - Атмосфера та настрій
   - Пейзаж і портрет
-- section: Практикум — Творче письмо
+- section: "Практикум — Творче письмо"
   words: 500
   points:
   - Написання flash fiction (500 слів)
@@ -88,7 +89,7 @@ vocabulary:
   - розв'язка (denouement)
   - персоніфікація (personification)
   - алегорія (allegory)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

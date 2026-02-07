@@ -1,3 +1,4 @@
+---
 module: b1-69
 level: B1
 sequence: 69
@@ -67,4 +68,4 @@ grammar:
 - Register differentiation in reporting verbs
 - Direct and indirect speech verb patterns
 register: розмовний
-phase: B1.6 [Vocabulary Expansion II]
+phase: "B1.6 [Vocabulary Expansion II]"

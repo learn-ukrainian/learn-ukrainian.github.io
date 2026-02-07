@@ -1,3 +1,4 @@
+---
 module: c1-bio-147
 level: C1-BIO
 sequence: 147
@@ -5,7 +6,7 @@ slug: oleksandra-matviichuk
 version: '2.0'
 title: 'Олександра Матвійчук: Захист прав людини'
 content_outline:
-- section: Вступ — Голос справедливості
+- section: "Вступ — Голос справедливості"
   words: 400
   points:
   - Матвійчук як символ української правозахисної спільноти

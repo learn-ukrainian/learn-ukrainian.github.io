@@ -1,3 +1,4 @@
+---
 module: holodomor-mekhanizmy-i
 level: c1-hist
 sequence: 46
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of механізми голодомору i: колективізація'
 - Evaluate the historical significance of як створили голод
 content_outline:
-- section: Вступ — Як створили голод
+- section: "Вступ — Як створили голод"
   words: 457
   subsections:
   - Голодомор — не випадковість
@@ -80,7 +81,7 @@ activities:
 - type: critical-analysis
   focus: 'Map the chain: collectivization → famine'
 - type: critical-analysis
-  focus: "Analyze \"kulak\" categorization — who decided, how?"
+  focus: 'Analyze \"kulak\" categorization — who decided, how?'
 - type: comparative-study
   focus: Compare Ukrainian and Russian collectivization quotas
 - type: reading

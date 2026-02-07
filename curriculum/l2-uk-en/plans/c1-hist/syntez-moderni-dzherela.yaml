@@ -1,3 +1,4 @@
+---
 module: syntez-moderni-dzherela
 level: c1-hist
 sequence: 38
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: джерела нової доби'
 - Evaluate the historical significance of від козаків до xx століття
 content_outline:
-- section: Вступ — Від козаків до XX століття
+- section: "Вступ — Від козаків до XX століття"
   words: 457
   subsections:
   - Огляд модулів 29-37

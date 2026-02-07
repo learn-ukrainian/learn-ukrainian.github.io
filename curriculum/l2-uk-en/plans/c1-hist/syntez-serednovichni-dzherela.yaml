@@ -1,3 +1,4 @@
+---
 module: syntez-serednovichni-dzherela
 level: c1-hist
 sequence: 18
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: методи роботи з літописами'
 - Evaluate the historical significance of що ми вивчили
 content_outline:
-- section: Вступ — Що ми вивчили
+- section: "Вступ — Що ми вивчили"
   words: 457
   subsections:
   - Огляд середньовічних джерел
@@ -39,7 +40,7 @@ content_outline:
   - Проблема — пізня копія
   - Проблема — суперечливі джерела
   - Як вирішувати кожну
-- section: Практикум — комплексний аналіз
+- section: "Практикум — комплексний аналіз"
   words: 686
   subsections:
   - Вибрана подія (напр., Батиєва навала)

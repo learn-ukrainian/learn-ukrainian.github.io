@@ -1,3 +1,4 @@
+---
 module: teatr-kurbasa
 level: c1-hist
 sequence: 55
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of театр курбаса: реформа і знищення'
 - Evaluate the historical significance of революціонер сцени
 content_outline:
-- section: Вступ — Революціонер сцени
+- section: "Вступ — Революціонер сцени"
   words: 457
   subsections:
   - Курбас — хто він
   - Театральна революція
   - Чому театр — політика
   - Структура модуля
-- section: Шлях до "Березоля"
+- section: "Шлях до \"Березоля\""
   words: 571
   subsections:
   - Ранні роки і навчання
@@ -84,7 +85,7 @@ activities:
 - type: comparative-study
   focus: Compare Kurbas with European avant-garde (Meyerhold)
 - type: comparative-study
-  focus: How was "formalism" used to attack artists?
+  focus: "How was \"formalism\" used to attack artists?"
 - type: essay-response
   focus: Чому радянська влада знищила авангардний театр?
 sources:

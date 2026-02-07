@@ -1,4 +1,5 @@
-# Module Plan: PVL: The Varangians
+---
+# Module Plan: "PVL: The Varangians"
 # Track: OES
 # Module: 023
 # Source: Gemini Research (ISSUE-501)
@@ -13,7 +14,7 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: "Vernacular Foundations"
 
-focus: "Aorist intro — "Riksha" (They said)"
+focus: 'Aorist intro — "Riksha" (They said)'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

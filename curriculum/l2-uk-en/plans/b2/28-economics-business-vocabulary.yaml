@@ -1,3 +1,4 @@
+---
 module: b2-28
 level: B2
 sequence: 28
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Економічна лексика: говоримо про бізнес'
 subtitle: Economics & Business Vocabulary
 content_outline:
-- section: Розминка — Економіка України
+- section: "Розминка — Економіка України"
   words: 300
   points:
   - Основні галузі економіки (АПК, IT, промисловість)
@@ -33,7 +34,7 @@ content_outline:
   - Податки (ПДВ, податок на прибуток, ЄСВ)
   - Страхування та пенсійне забезпечення
   - Криптовалюти та фінтех
-- section: Практика — економічні новини
+- section: "Практика — економічні новини"
   words: 450
   points:
   - Читання статті про економічну ситуацію
@@ -52,7 +53,7 @@ grammar:
 - Business communication conventions
 - Financial news reading strategies
 register: науковий
-phase: B2.1c [Register & Domain Vocab]
+phase: "B2.1c [Register & Domain Vocab]"
 vocabulary_hints:
   required:
   - термін (term)

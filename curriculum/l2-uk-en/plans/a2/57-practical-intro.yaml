@@ -7,40 +7,40 @@ title: Practical Intro
 subtitle: Real World Ukrainian
 content_outline:
 - section: Огляд
-  words: 60
+  words: 100
   points:
   - From theory to practice
   - Real-world communication
 - section: 'Skill 1: The 7 Cases (Сім відмінків)'
-  words: 300
+  words: 306
   points:
   - All cases overview
   - When to use each case
 - section: 'Skill 2: Verb Aspect (Вид дієслова)'
-  words: 160
+  words: 163
   points:
   - Perfective vs imperfective
   - Aspect in context
 - section: 'Skill 3: Complex Sentences (Складні речення)'
-  words: 170
+  words: 173
   points:
   - Conjunctions and connectors
   - Building complex sentences
 - section: 'Skill 4: Common Mistakes (Типові помилки)'
-  words: 130
+  words: 133
   points:
   - Case confusion
   - Aspect errors
 - section: Інтеграційне завдання
-  words: 90
+  words: 100
   points:
   - Integration challenge
   - Apply all skills
 - section: Підсумок
-  words: 70
+  words: 25
   points:
   - Summary and next steps
-word_target: 980
+word_target: 1000
 vocabulary_hints:
   required:
   - речення (sentence)

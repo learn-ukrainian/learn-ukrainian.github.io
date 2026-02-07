@@ -1,3 +1,4 @@
+---
 module: 17-irregular-verbs-complete
 level: C1
 sequence: 17
@@ -5,7 +6,7 @@ slug: 17-irregular-verbs-complete
 version: '2.0'
 title: "Неправильні дієслова — повний огляд"
 content_outline:
-- section: Вступ — Чому дієслова «неправильні»?
+- section: "Вступ — Чому дієслова «неправильні»?"
   words: 400
   points:
   - Історичні причини нерегулярностей

@@ -1,3 +1,4 @@
+---
 module: c1-89
 level: C1
 sequence: 89
@@ -6,7 +7,7 @@ version: '2.0'
 title: "C1.5 Практика I — Народна культура"
 subtitle: "Practice I — Folk Culture Review"
 content_outline:
-- section: Розминка — Огляд народної культури
+- section: "Розминка — Огляд народної культури"
   words: 700
   points:
   - Фольклор як національна ідентичність
@@ -20,7 +21,7 @@ content_outline:
   - Review of folk crafts (M47-139)
   - Review of folk beliefs and tales (M50-143)
   - Review of calendar and life rituals (M54-147)
-- section: Практика — інтеграційні завдання
+- section: "Практика — інтеграційні завдання"
   words: 1050
   points:
   - Порівняти гопак та аркан — структура, символіка

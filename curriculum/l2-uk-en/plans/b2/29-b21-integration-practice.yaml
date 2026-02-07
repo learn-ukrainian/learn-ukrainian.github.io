@@ -1,3 +1,4 @@
+---
 module: b2-29
 level: B2
 sequence: 29
@@ -6,28 +7,28 @@ version: '2.0'
 title: Інтеграційна практика B2.1
 subtitle: B2.1 Integration Practice
 content_outline:
-- section: Огляд — Що ми вивчили в B2.1
+- section: "Огляд — Що ми вивчили в B2.1"
   words: 300
   points:
   - Пасивний стан — чотири форми
   - Дієприкметники — активні та пасивні
   - Регістри — науковий, офіційний, публіцистичний, розмовний
   - Доменна лексика — політика, право, економіка
-- section: Інтеграційний текст 1 — Офіційний документ
+- section: "Інтеграційний текст 1 — Офіційний документ"
   words: 450
   points:
   - Читання офіційного листа або постанови
   - Виділення пасивних конструкцій
   - Аналіз регістру та лексики
   - Трансформація в інший регістр
-- section: Інтеграційний текст 2 — Новина
+- section: "Інтеграційний текст 2 — Новина"
   words: 450
   points:
   - Читання політичної або економічної новини
   - Виділення дієприкметників і дієприкметникових зворотів
   - Аналіз структури заголовка та ліду
   - Написання власного ліду
-- section: Інтеграційний текст 3 — Науковий опис
+- section: "Інтеграційний текст 3 — Науковий опис"
   words: 400
   points:
   - Читання науково-популярного тексту
@@ -51,7 +52,7 @@ grammar:
 - 'All B2.1 grammar: passive voice, participles, register, complex sentences'
 - Cross-skill application in authentic contexts
 register: varies
-phase: B2.1c [Register & Domain Vocab]
+phase: "B2.1c [Register & Domain Vocab]"
 vocabulary_hints:
   required:
   - термін (term)

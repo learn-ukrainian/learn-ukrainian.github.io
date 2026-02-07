@@ -1,3 +1,4 @@
+---
 module: ekonomika-imperii
 level: c1-hist
 sequence: 103
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of економіка імперії: україна як житниця'
 - Evaluate the historical significance of колонія ресурсів
 content_outline:
-- section: Вступ — Колонія ресурсів
+- section: "Вступ — Колонія ресурсів"
   words: 533
   subsections:
   - Україна — «житниця Європи»

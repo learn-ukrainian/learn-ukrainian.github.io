@@ -1,3 +1,4 @@
+---
 module: a1-40
 level: A1
 slug: taking-transport
@@ -23,7 +24,7 @@ content_outline:
   - Запитати дорогу (Як доїхати до...?)
   - Купити квиток (Один квиток, будь ласка)
   - На зупинці (Цей автобус їде до...?)
-- section: Warm-up
+- section: "Warm-up 2"
   words: 207
   points:
   - Наратив про подорож метром
@@ -76,4 +77,4 @@ grammar:
 - Imperative for directions
 - Locative for stops
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: "A1.4 [Practical Scenarios]"

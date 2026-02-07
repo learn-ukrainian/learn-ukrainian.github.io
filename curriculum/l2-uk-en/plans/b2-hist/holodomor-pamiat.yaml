@@ -1,3 +1,4 @@
+---
 module: holodomor-pamiat
 level: B2-HIST
 sequence: 102
@@ -91,4 +92,4 @@ grammar:
 - Пасивні конструкції для опису злочинів
 - Юридична та мемориальна лексика
 register: публіцистичний
-phase: HIST.10 [Soviet Period & Tragedies]
+phase: "HIST.10 [Soviet Period & Tragedies]"

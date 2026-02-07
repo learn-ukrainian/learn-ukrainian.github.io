@@ -1,3 +1,4 @@
+---
 module: zhinky-v-revoiuutsiiakh
 level: c1-hist
 sequence: 130
@@ -9,21 +10,21 @@ objectives:
 - 'Analyze the causes and consequences of жінки в революціях: прихована історія'
 - Evaluate the historical significance of невидимі героїні
 content_outline:
-- section: Вступ — Невидимі героїні
+- section: "Вступ — Невидимі героїні"
   words: 515
   subsections:
   - Жінки в українській історії — де вони?
   - Прихована агентність
   - Від 1917 до 2022
   - Структура модуля
-- section: 1917-1921 — Революція і війна
+- section: "1917-1921 — Революція і війна"
   words: 774
   subsections:
   - Жіночі організації УНР
   - Олена Теліга — символ
   - Медицина і тил
   - Чому забули
-- section: 1990 — Гранітна революція
+- section: "1990 — Гранітна революція"
   words: 645
   subsections:
   - Студентки — половина учасників
@@ -37,7 +38,7 @@ content_outline:
   - Євромайдан — жінки в бою
   - «Жіноча сотня»
   - Волонтерство — переважно жіноче
-- section: 2022 — Нова видимість
+- section: "2022 — Нова видимість"
   words: 774
   subsections:
   - Жінки в ЗСУ

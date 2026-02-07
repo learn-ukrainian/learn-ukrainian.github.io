@@ -1,3 +1,4 @@
+---
 module: 04-reflexive-passive
 level: B2
 sequence: 4
@@ -5,7 +6,7 @@ slug: 04-reflexive-passive
 version: '2.0'
 title: Зворотний пасив із -ся
 content_outline:
-- section: Вступ — Зворотний пасив
+- section: "Вступ — Зворотний пасив"
   words: 400
   points:
   - Концепція зворотності в українських дієсловах
@@ -116,7 +117,7 @@ sources:
   type: secondary
   notes: Technical writing patterns
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: "B2.1a [Passive Voice]"
 objectives:
 - Identify and correctly use зворотний пасив із -ся
 - Form and apply зворотний пасив

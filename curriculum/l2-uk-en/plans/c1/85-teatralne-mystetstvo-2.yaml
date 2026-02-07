@@ -1,3 +1,4 @@
+---
 module: c1-85
 level: C1
 sequence: 85
@@ -6,7 +7,7 @@ version: '2.0'
 title: Театральне мистецтво II
 subtitle: "Theater Arts II — Contemporary Stage"
 content_outline:
-- section: Розминка — Сучасний український театр
+- section: "Розминка — Сучасний український театр"
   words: 700
   points:
   - Головні театри України — Франка, Молодий, Лівий берег
@@ -19,7 +20,7 @@ content_outline:
   - 'Contemporary directors: Сучасна режисура, нові імена'
   - 'Experimental: Dakh Daughters, театр-перформанс'
   - 'War and theater: Театр під час війни, cultural resistance'
-- section: Практика — театральна критика
+- section: "Практика — театральна критика"
   words: 1050
   points:
   - Написати рецензію на уявну виставу театру Франка

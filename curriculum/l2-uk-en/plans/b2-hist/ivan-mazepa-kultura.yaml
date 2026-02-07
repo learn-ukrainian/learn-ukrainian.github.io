@@ -1,3 +1,4 @@
+---
 module: ivan-mazepa-kultura
 level: B2-HIST
 sequence: 64
@@ -84,7 +85,7 @@ grammar:
 - Історичний наратив
 - Культурна термінологія
 register: публіцистичний
-phase: B2.3b [Українська історія]
+phase: "B2.3b [Українська історія]"
 vocabulary_hints:
   required:
   - меценат (patron)

@@ -1,3 +1,4 @@
+---
 module: drahomanov
 level: B2-HIST
 sequence: 84
@@ -88,4 +89,4 @@ grammar:
 - Непряма мова для передачі ідей
 - Політична та філософська лексика
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

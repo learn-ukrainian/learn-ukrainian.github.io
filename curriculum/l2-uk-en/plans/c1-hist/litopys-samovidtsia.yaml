@@ -1,3 +1,4 @@
+---
 module: litopys-samovidtsia
 level: c1-hist
 sequence: 20
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of літопис самовидця: голос очевидця'
 - Evaluate the historical significance of найстаріший козацький літопис
 content_outline:
-- section: Вступ — Найстаріший козацький літопис
+- section: "Вступ — Найстаріший козацький літопис"
   words: 457
   subsections:
   - Чому «Самовидець» — очевидець
@@ -38,7 +39,7 @@ content_outline:
   - Мінімум риторики
   - Фактографічність
   - Мова — українська канцелярська
-- section: Фрагмент — Початок повстання 1648
+- section: "Фрагмент — Початок повстання 1648"
   words: 800
   subsections:
   - Текст (з глосами)

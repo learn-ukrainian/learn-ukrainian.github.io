@@ -1,38 +1,24 @@
-# Module Plan: Kyiv-Mohyla Rhetoric
-# Track: RUTH
-# Module: 058
-# Source: Gemini Research (ISSUE-495)
-# Generated: 2026-02-04
-
+---
 module_number: 58
 slug: kyiv-mohyla-rhetoric
-title_uk: "Риторика Могилянки"
-title_en: "Kyiv-Mohyla Rhetoric"
-
+title_uk: Риторика Могилянки
+title_en: Kyiv-Mohyla Rhetoric
 phase: 3
 phase_id: baroque-fight
-phase_name: "Baroque Fight"
-
-focus: "Loci Communes — The 5 Canons"
-
+phase_name: Baroque Fight
+focus: Loci Communes — The 5 Canons
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Kyiv-Mohyla Rhetoric"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Kyiv-Mohyla Rhetoric
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

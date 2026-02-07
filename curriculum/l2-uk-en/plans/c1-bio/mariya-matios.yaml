@@ -1,3 +1,4 @@
+---
 module: c1-bio-137
 level: C1-BIO
 sequence: 137
@@ -5,7 +6,7 @@ slug: mariya-matios
 version: '2.0'
 title: 'Марія Матіос: Буковинський голос'
 content_outline:
-- section: Вступ — Голос гірського краю
+- section: "Вступ — Голос гірського краю"
   words: 400
   points:
   - Марія Матіос — найвідоміша буковинська письменниця сучасності

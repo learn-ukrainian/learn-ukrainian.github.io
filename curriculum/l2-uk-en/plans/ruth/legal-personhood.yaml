@@ -1,38 +1,24 @@
-# Module Plan: Legal Personhood
-# Track: RUTH
-# Module: 004
-# Source: Gemini Research (ISSUE-493)
-# Generated: 2026-02-04
-
+---
 module_number: 4
 slug: legal-personhood
-title_uk: "Правова особа"
-title_en: "Legal Personhood"
-
+title_uk: Правова особа
+title_en: Legal Personhood
 phase: 1
 phase_id: chancery-legal
-phase_name: "Chancery & Legal"
-
-focus: "Особа, Чоловек — Who has rights?"
-
+phase_name: Chancery & Legal
+focus: Особа, Чоловек — Who has rights?
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Legal Personhood"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Legal Personhood
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

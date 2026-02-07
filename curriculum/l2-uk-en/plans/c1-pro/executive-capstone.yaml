@@ -1,3 +1,4 @@
+---
 module: c1-pro-15
 level: C1-PRO
 sequence: 15
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Підсумок: Виконавчий рівень'
 subtitle: Executive Capstone
 content_outline:
-- section: Capstone — Комплексний виконавчий проєкт
+- section: "Capstone — Комплексний виконавчий проєкт"
   words: 400
   points:
   - 'Завдання: Розробити повну комунікаційну кампанію для корпоративної події'

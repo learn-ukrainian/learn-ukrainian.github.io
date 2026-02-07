@@ -1,3 +1,4 @@
+---
 module: c2-2-review
 level: c2
 sequence: 44
@@ -16,12 +17,12 @@ sources:
   url: "https://uvan.us/"
   type: reference
   notes: International standards for Ukrainian literary scholarship
-- name: Слово і Час — науковий журнал
+- name: "Слово і Час — науковий журнал"
   url: "http://dspace.nbuv.gov.ua/handle/123456789/8800"
   type: reference
   notes: Peer-reviewed literary criticism examples
 content_outline:
-- section: Вступ — Консолідація літературних компетенцій
+- section: "Вступ — Консолідація літературних компетенцій"
   words: 432
   points:
   - Огляд пройденого матеріалу М26-43
@@ -82,7 +83,7 @@ vocabulary:
   - метакогнітивний (metacognitive)
   - пріоритезація (prioritization)
   - індивідуальний план (individual plan)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

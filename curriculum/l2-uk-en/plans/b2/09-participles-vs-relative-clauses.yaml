@@ -1,3 +1,4 @@
+---
 module: 09-participles-vs-relative-clauses
 level: B2
 sequence: 9
@@ -5,7 +6,7 @@ slug: 09-participles-vs-relative-clauses
 version: '2.0'
 title: Дієприкметники проти підрядних речень
 content_outline:
-- section: Вступ — Два способи вираження ознаки за дією
+- section: "Вступ — Два способи вираження ознаки за дією"
   words: 400
   points:
   - Дієприкметник як компактна форма
@@ -118,7 +119,7 @@ sources:
   type: reference
   notes: B2 complex sentence requirements
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: "B2.1a [Passive Voice]"
 objectives:
 - Identify and correctly use дієприкметники проти підрядних речень
 - Form and apply два способи вираження ознаки за дією

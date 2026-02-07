@@ -1,3 +1,4 @@
+---
 module: halytsko-volynskyi-litopys-i
 level: c1-hist
 sequence: 15
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of галицько-волинський літопис i: про данила'
 - Evaluate the historical significance of літопис королівства
 content_outline:
-- section: Вступ — Літопис королівства
+- section: "Вступ — Літопис королівства"
   words: 457
   subsections:
   - Що таке Галицько-Волинський літопис?
   - Чому це інший літопис ніж ПМЛ?
   - Західна Русь — окрема традиція
   - Хронологія — XIII ст.
-- section: Контекст — Галицько-Волинське князівство
+- section: "Контекст — Галицько-Волинське князівство"
   words: 571
   subsections:
   - Географія — західні землі
@@ -38,7 +39,7 @@ content_outline:
   - Монгольське підкорення
   - Королівська коронація 1253
   - Дипломатія — Папа, Угорщина, Польща
-- section: Фрагмент — Коронація Данила
+- section: "Фрагмент — Коронація Данила"
   words: 686
   subsections:
   - Текст (з глосами)

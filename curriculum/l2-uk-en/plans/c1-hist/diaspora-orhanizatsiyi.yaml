@@ -1,3 +1,4 @@
+---
 module: diaspora-orhanizatsiyi
 level: c1-hist
 sequence: 67
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of діаспорні організації: ucc, ucca, oun'
 - Evaluate the historical significance of держава в еміграції
 content_outline:
-- section: Вступ — Держава в еміграції
+- section: "Вступ — Держава в еміграції"
   words: 457
   subsections:
   - Без держави — потреба організації
@@ -23,7 +24,7 @@ content_outline:
   - Структура — парасолькова організація
   - Функції — представництво, лобіювання
   - Досягнення — мультикультуралізм
-- section: UCCA — Український конгрес Америки
+- section: "UCCA — Український конгрес Америки"
   words: 686
   subsections:
   - Заснування — 1940
@@ -37,7 +38,7 @@ content_outline:
   - Міжнародне представництво
   - Зв'язок з Україною після 1991
   - Сучасна роль
-- section: Політичні організації — ОУН в еміграції
+- section: "Політичні організації — ОУН в еміграції"
   words: 686
   subsections:
   - Бандерівці vs. мельниківці

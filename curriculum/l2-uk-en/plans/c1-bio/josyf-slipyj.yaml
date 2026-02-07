@@ -1,3 +1,4 @@
+---
 module: c1-bio-092
 level: C1-BIO
 sequence: 92
@@ -5,7 +6,7 @@ slug: josyf-slipyj
 version: '2.0'
 title: 'Патріарх Йосиф Сліпий: Незламний сповідник віри'
 content_outline:
-- section: Вступ — 18 років у ГУЛАЗі
+- section: "Вступ — 18 років у ГУЛАЗі"
   words: 457
   points:
   - Сліпий як символ незламності
@@ -67,7 +68,7 @@ vocabulary_hints:
   - канонізація (canonization)
 activity_hints:
 - type: reading
-  focus: Excerpts from Slipyj's "Заповіт"
+  focus: "Excerpts from Slipyj's \"Заповіт\""
   source: Historical documents
   items: 3 passages
 - type: essay-response

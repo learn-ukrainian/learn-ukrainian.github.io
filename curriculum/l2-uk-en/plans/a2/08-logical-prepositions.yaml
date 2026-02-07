@@ -1,3 +1,4 @@
+---
 module: 08-logical-prepositions
 level: A2
 sequence: 8
@@ -60,7 +61,7 @@ activity_hints:
   focus: Abstract context sentences
   items: 12+
 - type: fill-in
-  focus: Translation - "because of", "instead of", "about"
+  focus: "Translation - \"because of\", \"instead of\", \"about\""
   items: 10+
 - type: quiz
   focus: Time preposition selection

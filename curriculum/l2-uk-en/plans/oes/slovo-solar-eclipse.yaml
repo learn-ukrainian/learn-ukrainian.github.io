@@ -1,38 +1,24 @@
-# Module Plan: Slovo: The Solar Eclipse
-# Track: OES
-# Module: 063
-# Source: Gemini Research (ISSUE-491)
-# Generated: 2026-02-04
-
+---
 module_number: 63
 slug: slovo-solar-eclipse
-title_uk: "Слово: Сонячне затемнення"
-title_en: "Slovo: The Solar Eclipse"
-
+title_uk: 'Слово: Сонячне затемнення'
+title_en: 'Slovo: The Solar Eclipse'
 phase: 3
 phase_id: legal-tradition
-phase_name: "Legal Tradition"
-
-focus: "Nature as actor — Omen vocabulary"
-
+phase_name: Legal Tradition
+focus: Nature as actor — Omen vocabulary
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Slovo: The Solar Eclipse"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to Slovo: The Solar Eclipse'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

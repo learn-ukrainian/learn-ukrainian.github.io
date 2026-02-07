@@ -1,3 +1,4 @@
+---
 module: literary-criticism-methods
 level: c2
 sequence: 31
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Літературна критика — Вікіпедія
+- name: "Літературна критика — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Літературна_критика"
   type: reference
   notes: Overview of critical approaches
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Contemporary critical methodologies
 content_outline:
-- section: Вступ — Критика як професія
+- section: "Вступ — Критика як професія"
   words: 500
   points:
   - Роль критика в літературному процесі
@@ -55,7 +56,7 @@ content_outline:
   - Деконструктивна критика
   - Культурні студії
   - Екокритика
-- section: Практикум — написання рецензії
+- section: "Практикум — написання рецензії"
   words: 500
   points:
   - Структура рецензії
@@ -87,7 +88,7 @@ vocabulary:
   - екокритика (ecocriticism)
   - гендер (gender)
   - канон (canon)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

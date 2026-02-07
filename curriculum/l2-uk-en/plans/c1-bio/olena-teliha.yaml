@@ -1,3 +1,4 @@
+---
 module: c1-bio-112
 level: C1-BIO
 sequence: 112
@@ -5,7 +6,7 @@ slug: olena-teliha
 version: '2.0'
 title: 'Олена Теліга: Поетка-патріотка'
 content_outline:
-- section: Вступ — Вогняна муза
+- section: "Вступ — Вогняна муза"
   words: 400
   points:
   - Теліга як символ поєднання поезії та чину

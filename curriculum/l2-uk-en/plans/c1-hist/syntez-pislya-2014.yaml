@@ -1,3 +1,4 @@
+---
 module: syntez-pislya-2014
 level: c1-hist
 sequence: 125
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of синтез: після 2014 і 2022'
 - Evaluate the historical significance of новий цикл
 content_outline:
-- section: Вступ — Новий цикл
+- section: "Вступ — Новий цикл"
   words: 515
   subsections:
   - Огляд модулів 122-124
   - 2014 — початок деколонізації
   - 2022 — прискорення
   - Мета синтезу
-- section: Пост-2014 — Декомунізація
+- section: "Пост-2014 — Декомунізація"
   words: 903
   subsections:
   - Закони 2015 року
@@ -30,7 +31,7 @@ content_outline:
   - Практика vs закон
   - Російськомовні українці
   - Добровільний перехід
-- section: 2022 — Культурний вибух
+- section: "2022 — Культурний вибух"
   words: 774
   subsections:
   - Війна і культура

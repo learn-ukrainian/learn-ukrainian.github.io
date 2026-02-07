@@ -1,3 +1,4 @@
+---
 module: c1-pro-30
 level: C1-PRO
 sequence: 30
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Підсумок: Академічний рівень'
 subtitle: Academic Capstone
 content_outline:
-- section: Capstone — Комплексний академічний проєкт
+- section: "Capstone — Комплексний академічний проєкт"
   words: 400
   points:
   - 'Завдання: Підготувати повний пакет для публікації наукової статті'

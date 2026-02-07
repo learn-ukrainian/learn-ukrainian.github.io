@@ -1,3 +1,4 @@
+---
 - type: group-sort
   title: Root Sorting (Сортування коренів)
   instruction: 'Sort the words into their Root families (РІД vs СВІТ vs ЗЕМ).'

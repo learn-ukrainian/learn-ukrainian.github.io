@@ -1,3 +1,4 @@
+---
 module: 24-digital-communication
 level: C1
 sequence: 24
@@ -5,7 +6,7 @@ slug: 24-digital-communication
 version: '2.0'
 title: Цифрова комунікація
 content_outline:
-- section: Вступ — Регістри цифрової комунікації
+- section: "Вступ — Регістри цифрової комунікації"
   words: 400
   points:
   - Формальний vs неформальний регістр

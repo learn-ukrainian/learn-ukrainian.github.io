@@ -1,3 +1,4 @@
+---
 module: franko-lesia-hrinchenko
 level: B2-HIST
 sequence: 85
@@ -87,4 +88,4 @@ grammar:
 - Цитати та пряма мова
 - Літературознавча термінологія
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

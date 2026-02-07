@@ -1,3 +1,4 @@
+---
 module: b2-73
 level: B2
 sequence: 73
@@ -6,7 +7,7 @@ version: '2.0'
 title: Наука і дослідження
 subtitle: Science & Research
 content_outline:
-- section: Розминка — Українська наука
+- section: "Розминка — Українська наука"
   words: 200
   points:
   - НАН України та університети як наукові центри

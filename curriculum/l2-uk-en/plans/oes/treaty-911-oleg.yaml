@@ -1,3 +1,4 @@
+---
 # Module Plan: Treaty of 911 (Oleg)
 # Track: OES
 # Module: 057
@@ -13,7 +14,7 @@ phase: 3
 phase_id: legal-tradition
 phase_name: "Legal Tradition"
 
-focus: "Diplomatic formulas — "My ot rodu ruskoho...""
+focus: 'Diplomatic formulas — "My ot rodu ruskoho..."'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

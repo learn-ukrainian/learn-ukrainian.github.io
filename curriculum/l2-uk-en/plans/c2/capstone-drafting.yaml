@@ -1,3 +1,4 @@
+---
 module: capstone-drafting
 level: c2
 sequence: 91
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Структура наукової роботи — Вимоги МОН
+- name: "Структура наукової роботи — Вимоги МОН"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official structure requirements for academic papers
-- name: Академічне письмо — Практичний посібник
+- name: "Академічне письмо — Практичний посібник"
   url: "https://naqa.gov.ua/"
   type: reference
   notes: Academic writing guidelines for Ukrainian institutions
-- name: Науковий стиль — Норми і практика
+- name: "Науковий стиль — Норми і практика"
   url: "https://lcorp.ulif.org.ua/"
   type: secondary
   notes: Scientific style norms and conventions
 content_outline:
-- section: Вступ — Від матеріалу до тексту
+- section: "Вступ — Від матеріалу до тексту"
   words: 432
   points:
   - Перехід від дослідження до написання
@@ -56,7 +57,7 @@ content_outline:
   - Відповідь на дослідницьке питання
   - Обмеження дослідження
   - Перспективи подальших досліджень
-- section: Практика — Написання чернетки
+- section: "Практика — Написання чернетки"
   words: 864
   points:
   - Написання вступу (1000+ слів)
@@ -82,7 +83,7 @@ vocabulary:
   - теза (thesis statement)
   - антитеза (antithesis)
   - синтез (synthesis)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

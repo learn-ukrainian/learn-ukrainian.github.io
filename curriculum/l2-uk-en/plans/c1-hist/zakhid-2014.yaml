@@ -1,3 +1,4 @@
+---
 module: zakhid-2014
 level: c1-hist
 sequence: 101
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of 2014: анексія без відповіді'
 - Evaluate the historical significance of безкарність
 content_outline:
-- section: Вступ — Безкарність
+- section: "Вступ — Безкарність"
   words: 457
   subsections:
   - Лютий-березень 2014
   - Росія захоплює Крим
   - Захід — що зробив
   - Структура модуля
-- section: Анексія — хроніка
+- section: "Анексія — хроніка"
   words: 686
   subsections:
   - «Зелені чоловічки»
@@ -30,7 +31,7 @@ content_outline:
   - Санкції — символічні
   - «Летальна зброя» — відмова
   - «Деескалація» — пріоритет
-- section: Мінськ — капітуляція під виглядом дипломатії
+- section: "Мінськ — капітуляція під виглядом дипломатії"
   words: 686
   subsections:
   - Мінськ I, Мінськ II

@@ -7,45 +7,45 @@ title: 'Checkpoint: Word Formation'
 subtitle: Review and Mastery Assessment
 content_outline:
 - section: Огляд
-  words: 55
+  words: 95
   points:
   - Skills overview
   - Checkpoint goals
 - section: 'Skill 1: Verb Prefixes'
-  words: 210
+  words: 234
   points:
   - Direction prefixes
   - Practice exercises
   - Myth Buster and History
 - section: 'Skill 2: Noun Suffixes'
-  words: 140
+  words: 156
   points:
   - Verbal noun -ння
   - Abstract noun -ість
   - Agent noun -ач
 - section: 'Skill 3: Adjective Suffixes'
-  words: 105
+  words: 117
   points:
   - General relation -ний
   - Material/type -овий
   - Place/nation -ський
 - section: 'Skill 4: Root Families'
-  words: 230
+  words: 256
   points:
   - Core root meaning
   - Root recognition practice
   - Extended root families
 - section: Integration Challenge
-  words: 55
+  words: 95
   points:
   - Word analysis practice
   - Common mistakes
 - section: Підсумок
-  words: 60
+  words: 50
   points:
   - Summary table
   - Linguistic insight
-word_target: 855
+word_target: 1000
 vocabulary_hints:
   required:
   - корінь (root)

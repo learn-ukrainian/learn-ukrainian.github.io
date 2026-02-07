@@ -1,3 +1,4 @@
+---
 module: text-coherence
 level: c2
 sequence: 16
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Лінгвістика тексту — дискурсознавство
+- name: "Лінгвістика тексту — дискурсознавство"
   url: "https://www.nbuv.gov.ua/"
   type: primary
   notes: Academic discourse analysis resources
-- name: Halliday & Hasan — Cohesion in English (Ukrainian adaptation)
+- name: "Halliday & Hasan — Cohesion in English (Ukrainian adaptation)"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Theoretical framework for text cohesion
-- name: Ukrainian State Standard 2024 — Text organization
+- name: "Ukrainian State Standard 2024 — Text organization"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for seamless text flow
 content_outline:
-- section: Вступ — Когерентність vs когезія
+- section: "Вступ — Когерентність vs когезія"
   words: 400
   points:
   - Визначення термінів
@@ -62,7 +63,7 @@ content_outline:
   - Given-new principle
   - Передбачуваність vs сюрприз
   - Темп і напруга
-- section: Практикум — Створення плинних текстів
+- section: "Практикум — Створення плинних текстів"
   words: 500
   points:
   - Аналіз когезійних засобів у професійному тексті
@@ -88,7 +89,7 @@ vocabulary:
   - momentum (momentum)
   - секціонування (sectioning)
   - перехід (transition)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

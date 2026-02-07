@@ -1,3 +1,4 @@
+---
 module: c1-bio-111
 level: C1-BIO
 sequence: 111
@@ -5,7 +6,7 @@ slug: serge-lifar
 version: '2.0'
 title: 'Серж Лифар: Зірка балету'
 content_outline:
-- section: Вступ — Бог танцю з Києва
+- section: "Вступ — Бог танцю з Києва"
   words: 400
   points:
   - Лифар як один із найвидатніших танцівників та хореографів XX століття

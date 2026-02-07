@@ -1,3 +1,4 @@
+---
 module: c1-bio-055
 level: C1-BIO
 sequence: 55
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Володимир Вернадський: Батько української науки'
 word_target: 4300
 content_outline:
-- section: Вступ — Вчений, який змінив науку
+- section: "Вступ — Вчений, який змінив науку"
   words: 600
   points:
   - Вернадський як мислитель планетарного масштабу
@@ -80,7 +81,7 @@ vocabulary_hints:
   - Академія наук (Academy of Sciences)
 activity_hints:
 - type: reading
-  focus: Аналіз уривків з праці "Біосфера"
+  focus: "Аналіз уривків з праці \"Біосфера\""
   source: Original text (adapted)
 - type: critical-analysis
   focus: Співвідношення науки та політики в житті вченого

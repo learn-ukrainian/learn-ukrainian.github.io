@@ -1,3 +1,4 @@
+---
 module: c2-1-final-checkpoint
 level: c2
 sequence: 25
@@ -17,7 +18,7 @@ sources:
   type: reference
   notes: Writing proficiency expectations at C2 level
 content_outline:
-- section: Вступ — Що перевіряємо
+- section: "Вступ — Що перевіряємо"
   words: 400
   points:
   - Огляд компетенцій C2.1
@@ -55,7 +56,7 @@ content_outline:
   - Свідомі стилістичні вибори
   - Обґрунтування рішень
   - Когерентність тексту
-- section: Усна перевірка — переключення регістрів
+- section: "Усна перевірка — переключення регістрів"
   words: 500
   points:
   - Імпровізована трансформація
@@ -86,7 +87,7 @@ vocabulary:
   - рубрика (rubric)
   - самооцінка (self-assessment)
   - консолідація (consolidation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - authorial-intent

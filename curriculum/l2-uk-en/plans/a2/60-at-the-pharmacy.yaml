@@ -1,3 +1,4 @@
+---
 module: a2-60
 level: A2
 sequence: 60
@@ -82,4 +83,4 @@ grammar:
 - Understanding dosage instructions
 - Side effects and warnings vocabulary
 register: розмовний
-phase: A2.6 [Practical]
+phase: "A2.6 [Practical]"

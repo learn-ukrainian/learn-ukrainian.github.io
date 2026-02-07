@@ -1,3 +1,4 @@
+---
 module: holodomor-ekonomika
 level: c1-hist
 sequence: 105
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of голодомор як економічна зброя
 - Evaluate the historical significance of голод як інструмент
 content_outline:
-- section: Вступ — Голод як інструмент
+- section: "Вступ — Голод як інструмент"
   words: 515
   subsections:
   - Голодомор — не природна катастрофа

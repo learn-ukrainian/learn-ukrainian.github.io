@@ -1,3 +1,4 @@
+---
 module: metodolohiia-dekolonizatsii
 level: c1-hist
 sequence: 8
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of методологія деколонізації
 - Evaluate the historical significance of що таке деколонізація?
 content_outline:
-- section: Вступ — Що таке деколонізація?
+- section: "Вступ — Що таке деколонізація?"
   words: 457
   subsections:
   - Колоніалізм — не тільки заморський
@@ -98,11 +99,11 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Постколоніальні_студії"
   type: reference
   notes: Theoretical framework
-- name: Едвард Саїд — Орієнталізм
+- name: "Едвард Саїд — Орієнталізм"
   url: "https://uk.wikipedia.org/wiki/Орієнталізм_(книга)"
   type: reference
   notes: Foundational postcolonial text
-- name: Тамара Гундорова — Післячорнобильська бібліотека
+- name: "Тамара Гундорова — Післячорнобильська бібліотека"
   url: "https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна"
   type: reference
   notes: Ukrainian postcolonial scholar

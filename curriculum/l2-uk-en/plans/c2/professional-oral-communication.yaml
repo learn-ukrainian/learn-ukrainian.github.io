@@ -1,3 +1,4 @@
+---
 module: professional-oral-communication
 level: c2
 sequence: 54
@@ -16,12 +17,12 @@ sources:
   url: "https://www.ted.com/"
   type: reference
   notes: Examples of professional presentations in Ukrainian
-- name: Національна академія наук — конференції
+- name: "Національна академія наук — конференції"
   url: "https://www.nas.gov.ua/"
   type: reference
   notes: Academic conference presentation standards
 content_outline:
-- section: Вступ — Особливості усної професійної комунікації
+- section: "Вступ — Особливості усної професійної комунікації"
   words: 541
   points:
   - Відмінність усного та письмового професійного мовлення
@@ -78,7 +79,7 @@ vocabulary:
   - протокол (minutes)
   - кворум (quorum)
   - постер (poster)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

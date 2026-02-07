@@ -1,3 +1,4 @@
+---
 module: a1-26
 level: A1
 sequence: 26
@@ -17,22 +18,22 @@ content_outline:
   - Тверда група (-ий/-а/-е/-і)
   - Приклади (новий дім, нова книга, нове вікно)
   - Узгодження з родом іменника
-- section: Presentation
+- section: "Presentation 2"
   words: 98
   points:
   - Закінчення -ій/-я/-є/-і
   - Приклади (синій, синя, синє, сині)
-- section: Presentation
+- section: "Presentation 3"
   words: 24
   points:
   - Прикметник перед іменником (гарний день)
   - Прикметник після бути (День гарний)
-- section: Presentation
+- section: "Presentation 4"
   words: 61
   points:
   - Великий ↔ малий, новий ↔ старий
   - Добрий ↔ поганий, дорогий ↔ дешевий
-- section: Presentation
+- section: "Presentation 5"
   words: 211
   points:
   - Опис кімнати (велика кімната, біле вікно)
@@ -42,7 +43,7 @@ content_outline:
   points:
   - Діалог про новий телефон
   - Діалог про квартиру
-- section: Practice
+- section: "Practice 2"
   words: 20
   points:
   - Опис свого дому/кімнати
@@ -95,4 +96,4 @@ grammar:
 - Hard stem adjectives (-ий/-а/-е/-і)
 - Soft stem adjectives (-ій/-я/-є/-і)
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: "A1.3 [Consolidation]"

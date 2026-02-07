@@ -1,3 +1,4 @@
+---
 module: teaching-ukrainian-ii
 level: c2
 sequence: 83
@@ -12,7 +13,7 @@ sources:
   url: "https://mon.gov.ua/"
   type: reference
   notes: Standard curricula for Ukrainian as a foreign language
-- name: Ukrainian State Standard 2024 — Рівні володіння
+- name: "Ukrainian State Standard 2024 — Рівні володіння"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official level descriptors A1-C2
@@ -21,7 +22,7 @@ sources:
   type: secondary
   notes: Task-based and action-oriented curriculum design
 content_outline:
-- section: Вступ — Від уроку до курсу
+- section: "Вступ — Від уроку до курсу"
   words: 432
   points:
   - Різниця між плануванням уроку і курсу
@@ -55,7 +56,7 @@ content_outline:
   - Критерії успішності
   - Самооцінювання учнів
   - Корекція курсу на основі результатів
-- section: Практика — Розробка силабусу
+- section: "Практика — Розробка силабусу"
   words: 756
   points:
   - Створення силабусу для конкретного рівня
@@ -81,7 +82,7 @@ vocabulary:
   - інпут (input)
   - аутпут (output)
   - взаємодія (interaction)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

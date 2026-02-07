@@ -1,3 +1,4 @@
+---
 module: poetyka-prose-analysis
 level: c2
 sequence: 29
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Теорія прози — Вікіпедія
+- name: "Теорія прози — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Проза"
   type: reference
   notes: Prose theory and genres
-- name: Українська проза — укрліб
+- name: "Українська проза — укрліб"
   url: "https://ukrlib.com.ua/"
   type: primary
   notes: Classic and contemporary Ukrainian prose
-- name: Поетика прози — Михайло Бахтін
+- name: "Поетика прози — Михайло Бахтін"
   url: "https://uk.wikipedia.org/wiki/Михайло_Бахтін"
   type: reference
   notes: Bakhtinian concepts for prose analysis
 content_outline:
-- section: Вступ — Поетика прози
+- section: "Вступ — Поетика прози"
   words: 500
   points:
   - Специфіка прозового слова
@@ -86,7 +87,7 @@ vocabulary:
   - експозиція (exposition)
   - зав'язка (rising action)
   - монтаж (montage)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

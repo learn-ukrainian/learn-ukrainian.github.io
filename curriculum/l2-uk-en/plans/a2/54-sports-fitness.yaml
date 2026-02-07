@@ -1,3 +1,4 @@
+---
 module: a2-54
 level: A2
 sequence: 54
@@ -75,4 +76,4 @@ grammar:
 - Accusative vs instrumental in sports contexts
 - Describing events (match, game, competition)
 register: розмовний
-phase: A2.5 [Vocabulary Expansion]
+phase: "A2.5 [Vocabulary Expansion]"

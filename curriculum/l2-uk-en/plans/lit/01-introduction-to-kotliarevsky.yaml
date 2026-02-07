@@ -1,3 +1,4 @@
+---
 module: introduction-to-kotliarevsky
 level: LIT
 slug: introduction-to-kotliarevsky
@@ -5,7 +6,7 @@ version: '2.0'
 title: Феномен Івана Котляревського
 subtitle: Ivan Kotliarevsky
 content_outline:
-- section: Вступ — Чому 1798 рік?
+- section: "Вступ — Чому 1798 рік?"
   words: 750
   points:
   - Історичний контекст появи "Енеїди"
@@ -17,7 +18,7 @@ content_outline:
   - Дитинство та освіта в Полтаві
   - Військова кар'єра та масонство
   - Театральна діяльність і просвітництво
-- section: Феномен "Котляревщини"
+- section: "Феномен \"Котляревщини\""
   words: 875
   points:
   - Що таке бурлеск і травестія
@@ -35,7 +36,7 @@ content_outline:
   - Асиміляція vs опір
   - '"Людина вчинку" — Котляревський як архетип'
   - Вплив на наступні покоління
-- section: Підсумок — Від жарту до нації
+- section: "Підсумок — Від жарту до нації"
   words: 500
   points:
   - Значення Котляревського для українського відродження
@@ -80,11 +81,11 @@ connects_to:
 - lit-05 (Natalka Poltavka — перехід до сентименталізму)
 module_type: biography
 sources:
-- name: Іван Котляревський — біографія
+- name: "Іван Котляревський — біографія"
   url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1697"
   type: primary
   notes: Офіційна біографія автора на UkrLib
-- name: Енеїда — повний текст
+- name: "Енеїда — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
   type: primary
   notes: Для контексту появи твору

@@ -1,3 +1,4 @@
+---
 module: halychyna-natsionalnyi-rukh
 level: c1-hist
 sequence: 71
@@ -9,28 +10,28 @@ objectives:
 - Analyze the causes and consequences of галицький національний рух
 - Evaluate the historical significance of боротьба за душу галичини
 content_outline:
-- section: Вступ — Боротьба за душу Галичини
+- section: "Вступ — Боротьба за душу Галичини"
   words: 457
   subsections:
   - Три варіанти ідентичності
   - Народовці vs. москвофіли
   - Ставки — яким буде народ
   - Структура модуля
-- section: Москвофіли — хибний шлях
+- section: "Москвофіли — хибний шлях"
   words: 686
   subsections:
   - Хто вони — соціальний склад
   - Ідеологія — «єдиний руський народ»
   - Русификація як модернізація?
   - Чому програли
-- section: Народовці — український вибір
+- section: "Народовці — український вибір"
   words: 800
   subsections:
   - Молоде покоління
   - Ідеологія — окремий народ
   - Зв'язки з Наддніпрянщиною
   - Перемога до 1914
-- section: «Просвіта» — культурний рух
+- section: "«Просвіта» — культурний рух"
   words: 686
   subsections:
   - Заснування — 1868

@@ -1,3 +1,4 @@
+---
 module: b1-32
 level: B1
 sequence: 32
@@ -75,4 +76,4 @@ grammar:
 - Conditional mood (умовний спосіб)
 - Past form + би construction
 register: розмовний
-phase: B1.3a [Complex Sentences]
+phase: "B1.3a [Complex Sentences]"

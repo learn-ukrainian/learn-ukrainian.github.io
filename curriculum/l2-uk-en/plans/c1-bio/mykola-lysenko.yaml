@@ -1,3 +1,4 @@
+---
 module: c1-bio-047
 level: C1-BIO
 sequence: 47
@@ -5,7 +6,7 @@ slug: mykola-lysenko
 version: '2.0'
 title: 'Микола Лисенко: Батько української музики'
 content_outline:
-- section: Вступ — Засновник національної музики
+- section: "Вступ — Засновник національної музики"
   words: 400
   points:
   - Микола Лисенко — найвидатніший український композитор XIX століття

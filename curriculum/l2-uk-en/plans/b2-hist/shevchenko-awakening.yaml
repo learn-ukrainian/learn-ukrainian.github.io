@@ -1,3 +1,4 @@
+---
 module: shevchenko-awakening
 level: B2-HIST
 sequence: 81
@@ -90,4 +91,4 @@ grammar:
 - Цитати та пряма мова
 - Дієприкметникові звороти
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

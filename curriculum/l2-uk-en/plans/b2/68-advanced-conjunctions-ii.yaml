@@ -1,3 +1,4 @@
+---
 module: b2-68
 level: B2
 sequence: 68
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Складні Сполучники II: Час та Умова'
 subtitle: Advanced Conjunctions II - Temporal and Conditional
 content_outline:
-- section: Розминка — Коли і якщо
+- section: "Розминка — Коли і якщо"
   words: 350
   points:
   - Часові сполучники — коли vs щойно vs поки vs перед тим як
@@ -28,7 +29,7 @@ content_outline:
   - коли б (if/when - conditional)
   - у випадку якщо (in case)
   - за умови що (on condition that)
-- section: Практика — часові та умовні зв'язки
+- section: "Практика — часові та умовні зв'язки"
   words: 400
   points:
   - Об'єднати речення з часовими сполучниками (послідовність подій)
@@ -49,7 +50,7 @@ grammar:
 - Conditional conjunctions (якщо vs якби)
 immersion: 100
 register: публіцистичний
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - термін (term)

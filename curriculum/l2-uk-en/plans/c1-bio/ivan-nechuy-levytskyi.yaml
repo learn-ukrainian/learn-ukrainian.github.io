@@ -1,3 +1,4 @@
+---
 module: c1-bio-044
 level: C1-BIO
 sequence: 44
@@ -5,7 +6,7 @@ slug: ivan-nechuy-levytskyi
 version: '2.0'
 title: 'Іван Нечуй-Левицький: Майстер українського реалізму'
 content_outline:
-- section: Вступ — Великий оповідач
+- section: "Вступ — Великий оповідач"
   words: 400
   points:
   - Нечуй-Левицький як вершина українського реалізму
@@ -76,11 +77,11 @@ vocabulary_hints:
   - мовна полеміка (language polemic)
 activity_hints:
 - type: reading
-  focus: Excerpts from "Кайдашева сім'я" and "Микола Джеря"
+  focus: "Excerpts from \"Кайдашева сім'я\" and \"Микола Джеря\""
   source: UkrLib
   items: 4 passages
 - type: essay-response
-  focus: Why is "Кайдашева сім'я" still relevant today?
+  focus: "Why is \"Кайдашева сім'я\" still relevant today?"
   word_target: 300
   output: Social analysis with modern parallels
 - type: critical-analysis

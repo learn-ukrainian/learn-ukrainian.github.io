@@ -1,3 +1,4 @@
+---
 module: b1-50
 level: B1
 sequence: 50
@@ -90,4 +91,4 @@ grammar:
 - Перемикання регістрів (register switching)
 - Односкладні речення (one-member sentences) — State Standard 2024
 register: розмовний
-phase: B1.4b [Advanced Grammar Synthesis]
+phase: "B1.4b [Advanced Grammar Synthesis]"

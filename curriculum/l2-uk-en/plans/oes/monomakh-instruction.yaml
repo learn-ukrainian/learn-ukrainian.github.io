@@ -1,38 +1,24 @@
-# Module Plan: Monomakh's Instruction
-# Track: OES
-# Module: 039
-# Source: Gemini Research (ISSUE-490)
-# Generated: 2026-02-04
-
+---
 module_number: 39
 slug: monomakh-instruction
-title_uk: "Повчання Мономаха"
-title_en: "Monomakh's Instruction"
-
+title_uk: Повчання Мономаха
+title_en: Monomakh's Instruction
 phase: 2
 phase_id: literary-tradition
-phase_name: "Literary Tradition"
-
-focus: "Didactic genre — Imperative mood"
-
+phase_name: Literary Tradition
+focus: Didactic genre — Imperative mood
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Monomakh's Instruction"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Monomakh's Instruction
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

@@ -1,3 +1,4 @@
+---
 module: legal-ukrainian-v
 level: c2
 sequence: 65
@@ -12,7 +13,7 @@ sources:
   url: "https://reyestr.court.gov.ua/"
   type: primary
   notes: База судових рішень України
-- name: Верховний Суд України — Правові позиції
+- name: "Верховний Суд України — Правові позиції"
   url: "https://supreme.court.gov.ua/"
   type: primary
   notes: Правові позиції Верховного Суду
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Рішення та висновки КСУ
 content_outline:
-- section: Вступ — Методологія аналізу судових справ
+- section: "Вступ — Методологія аналізу судових справ"
   words: 500
   points:
   - Мета та завдання аналізу справ
@@ -63,7 +64,7 @@ content_outline:
   - Виклад обставин справи
   - Правова оцінка та висновки
   - Практичні рекомендації
-- section: Практикум — Комплексний аналіз справи
+- section: "Практикум — Комплексний аналіз справи"
   words: 400
   points:
   - Робота з реальним судовим рішенням
@@ -88,7 +89,7 @@ vocabulary:
   - обтяжуючі обставини (aggravating circumstances)
   - правовідносини (legal relations)
   - юридичний факт (legal fact)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

@@ -1,3 +1,4 @@
+---
 module: 2004-krymska-kryza
 level: c1-hist
 sequence: 129
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of 2004: кримська криза під час помаранчевої'
 - Evaluate the historical significance of забута загроза
 content_outline:
-- section: Вступ — Забута загроза
+- section: "Вступ — Забута загроза"
   words: 515
   subsections:
   - Листопад 2004
   - Сепаратистський з'їзд у Сєвєродонецьку
   - Чому не спрацювало
   - Структура модуля
-- section: Помаранчева революція — контекст
+- section: "Помаранчева революція — контекст"
   words: 774
   subsections:
   - Фальсифікація виборів

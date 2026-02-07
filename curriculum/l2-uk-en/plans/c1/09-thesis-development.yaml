@@ -1,3 +1,4 @@
+---
 module: 09-thesis-development
 level: C1
 sequence: 9
@@ -5,7 +6,7 @@ slug: 09-thesis-development
 version: '2.0'
 title: Розвиток наукової тези
 content_outline:
-- section: Вступ — Що таке теза?
+- section: "Вступ — Що таке теза?"
   words: 400
   points:
   - Визначення наукової тези

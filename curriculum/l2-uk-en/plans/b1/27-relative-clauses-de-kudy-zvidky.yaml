@@ -1,3 +1,4 @@
+---
 module: b1-27
 level: B1
 sequence: 27
@@ -8,7 +9,7 @@ subtitle: Place Relative Clauses
 content_outline:
 - section: Тест
   words: 233
-  points: []
+  points: "[]"
 - section: Теорія
   words: 427
   points:
@@ -24,7 +25,7 @@ content_outline:
   - Невизначені та заперечні форми
 - section: Практика
   words: 110
-  points: []
+  points: "[]"
 - section: Діалоги
   words: 419
   points:
@@ -35,7 +36,7 @@ content_outline:
   - 'Діалог 5: Про походження'
 - section: Українське прислів'я
   words: 396
-  points: []
+  points: "[]"
 - section: Потрібно більше практики?
   words: 209
   points:
@@ -87,4 +88,4 @@ grammar:
 - Place relatives with куди (where - direction to)
 - Place relatives with звідки (where - direction from)
 register: розмовний
-phase: B1.3a [Complex Sentences]
+phase: "B1.3a [Complex Sentences]"

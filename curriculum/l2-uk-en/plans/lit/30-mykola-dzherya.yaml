@@ -1,3 +1,4 @@
+---
 module: mykola-dzherya
 level: LIT
 slug: mykola-dzherya
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Микола Джеря: Епос Кріпацької Долі'
 subtitle: 'Mykola Dzherya: Epic of Serf Fate'
 content_outline:
-- section: Вступ — Тема кріпацтва в літературі
+- section: "Вступ — Тема кріпацтва в літературі"
   words: 625
   points:
   - Шевченко і Нечуй — різні підходи
@@ -35,7 +36,7 @@ content_outline:
   - Як Нечуй показує визволення
   - Ціна свободи
   - Іронія фіналу
-- section: Підсумок — Від Енея до Джері
+- section: "Підсумок — Від Енея до Джері"
   words: 500
   points:
   - Еволюція українського героя (курсовий підсумок)
@@ -87,15 +88,15 @@ grammar:
 - Social protest language
 module_type: literature
 sources:
-- name: Микола Джеря — повний текст
+- name: "Микола Джеря — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=908"
   type: primary
   notes: Для детального аналізу
-- name: Микола Джеря — скорочено
+- name: "Микола Джеря — скорочено"
   url: "https://www.ukrlib.com.ua/styslo/printit.php?tid=3507"
   type: secondary
   notes: Для повторення сюжету
-- name: Микола Джеря — бунтар
+- name: "Микола Джеря — бунтар"
   url: "https://www.ukrlib.com.ua/tvory/printit.php?tid=8464"
   type: reference
   notes: Аналіз образу

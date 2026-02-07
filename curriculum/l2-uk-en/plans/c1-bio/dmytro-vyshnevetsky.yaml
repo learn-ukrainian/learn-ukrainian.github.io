@@ -1,3 +1,4 @@
+---
 module: c1-bio-015
 level: C1-BIO
 sequence: 15
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Дмитро Вишневецький: Байда — Перший Гетьман'
 subtitle: 'Dmytro Vyshnevetsky: Baida — The First Hetman'
 content_outline:
-- section: Вступ — Князь і Козак
+- section: "Вступ — Князь і Козак"
   words: 615
   points:
   - Аристократ, що став козаком

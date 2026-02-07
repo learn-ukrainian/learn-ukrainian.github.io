@@ -1,3 +1,4 @@
+---
 module: slovo-o-polku-ihorevim
 level: c1-hist
 sequence: 14
@@ -10,7 +11,7 @@ objectives:
   значення'
 - Evaluate the historical significance of найзагадковіша пам'ятка
 content_outline:
-- section: Вступ — Найзагадковіша пам'ятка
+- section: "Вступ — Найзагадковіша пам'ятка"
   words: 457
   subsections:
   - Що таке Слово?
@@ -39,7 +40,7 @@ content_outline:
   - Структура — вступ, похід, поразка, плач, втеча
   - Плач Ярославни — найвідоміший фрагмент
   - Язичницькі та християнські елементи
-- section: Фрагмент — Плач Ярославни
+- section: "Фрагмент — Плач Ярославни"
   words: 571
   subsections:
   - Текст (з глосами)

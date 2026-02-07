@@ -1,3 +1,4 @@
+---
 module: c2-2-checkpoint
 level: c2
 sequence: 45
@@ -12,46 +13,46 @@ sources:
   url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: C2 literature-related can-do statements
-- name: Ukrainian State Standard 2024 — C2 Level
+- name: "Ukrainian State Standard 2024 — C2 Level"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 proficiency requirements for literary competence
-- name: Національна академія наук України — літературознавство
+- name: "Національна академія наук України — літературознавство"
   url: "https://www.nas.gov.ua/"
   type: reference
   notes: Academic standards for literary scholarship assessment
 content_outline:
-- section: Вступ — Структура контрольної оцінки
+- section: "Вступ — Структура контрольної оцінки"
   words: 300
   points:
   - Огляд компетенцій, що оцінюються
   - Формат та критерії оцінювання
   - Очікування від кожного розділу
-- section: Частина I — Літературна теорія (М26-27)
+- section: "Частина I — Літературна теорія (М26-27)"
   words: 700
   points:
   - Теоретичні концепції та їх застосування
   - Наратологічний аналіз
   - Ідентифікація літературознавчих підходів
-- section: Частина II — Поетика та стилістика (М28-29)
+- section: "Частина II — Поетика та стилістика (М28-29)"
   words: 700
   points:
   - Версифікаційний аналіз
   - Прозова поетика
   - Стилістичні прийоми та їх ефект
-- section: Частина III — Інтертекстуальність та критика (М30-32)
+- section: "Частина III — Інтертекстуальність та критика (М30-32)"
   words: 700
   points:
   - Розпізнавання інтертекстуальних зв'язків
   - Критичний аналіз літературного твору
   - Написання літературознавчого есе
-- section: Частина IV — Переклад та творче письмо (М33-37)
+- section: "Частина IV — Переклад та творче письмо (М33-37)"
   words: 700
   points:
   - Перекладацький аналіз та практика
   - Оригінальне творче письмо
   - Демонстрація індивідуального голосу
-- section: Частина V — Сучасна література (М38-41)
+- section: "Частина V — Сучасна література (М38-41)"
   words: 600
   points:
   - Орієнтація в сучасному літературному процесі
@@ -82,7 +83,7 @@ vocabulary:
   - еталонний (benchmark)
   - підсумковий (summative)
   - формативний (formative)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

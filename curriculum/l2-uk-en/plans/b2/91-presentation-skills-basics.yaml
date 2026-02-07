@@ -1,3 +1,4 @@
+---
 module: presentation-skills-basics
 level: B2
 sequence: 91
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Презентації: Основи'
 subtitle: Структура та подання професійних презентацій
 content_outline:
-- section: Розминка — Що таке ефективна презентація
+- section: "Розминка — Що таке ефективна презентація"
   words: 200
   points:
   - Мета презентації — інформувати, переконувати, надихати
@@ -19,7 +20,7 @@ content_outline:
   - Основна частина — 3-4 ключові пункти з доказами
   - Висновок — узагальнення, заклик до дії, запам'ятовувана фраза
   - Тривалість — правило 10-20-30 (слайди, хвилини, шрифт)
-- section: Signposting — мовна навігація
+- section: "Signposting — мовна навігація"
   words: 350
   points:
   - Вступні маркери (Сьогодні я розповім про..., Почнемо з...)
@@ -33,7 +34,7 @@ content_outline:
   - Графіки та діаграми — коли і як використовувати
   - Зображення — доповнення, не заміна тексту
   - Типові помилки (перевантаження, дрібний шрифт, анімація)
-- section: Техніка виступу — основи
+- section: "Техніка виступу — основи"
   words: 350
   points:
   - Голос — гучність, чіткість, темп
@@ -62,7 +63,7 @@ grammar:
 - Modal constructions for recommendations
 immersion: 100
 register: публіцистичний
-phase: B2.4 [Communication Skills]
+phase: "B2.4 [Communication Skills]"
 vocabulary_hints:
   required:
   - термін (term)

@@ -65,10 +65,13 @@ def save_plan(plan_path: Path, plan: dict) -> None:
         yaml.dump(plan, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
 
-def recalculate_sections(content_outline: list, current_total: int, new_total: int) -> list:
+def recalculate_sections(content_outline: list, current_total: int, new_total: int, level: str = 'b1') -> list:
     """Recalculate section word budgets proportionally."""
     if current_total == 0:
         return content_outline
+
+    # Use lower minimum for A1/A2 to avoid negative remainders
+    min_words = 50 if level.lower() in ('a1', 'a2') else 100
 
     ratio = new_total / current_total
     new_outline = []
@@ -81,9 +84,15 @@ def recalculate_sections(content_outline: list, current_total: int, new_total: i
         if i == len(content_outline) - 1:
             # Last section gets remainder to ensure exact total
             new_words = new_total - running_total
+            # If last section ends up too small or negative, we have a problem
+            # But with min_words logic it's less likely. 
+            # If it happens, we'll just set it to min_words and let validation catch it
+            # so the user can fix the outline structure.
+            if new_words < min_words:
+                new_words = min_words
         else:
-            # Round to nearest integer, but ensure minimum of 100 words
-            new_words = max(100, round(old_words * ratio))
+            # Round to nearest integer, but ensure minimum
+            new_words = max(min_words, round(old_words * ratio))
 
         new_section['words'] = new_words
         running_total += new_words
@@ -108,12 +117,14 @@ def check_plan(plan_path: Path, level: str) -> dict:
     # Calculate current outline total
     outline = plan.get('content_outline', [])
     outline_total = sum(s.get('words', 0) for s in outline)
+    has_negative = any(s.get('words', 0) < 0 for s in outline)
 
     # Flag as mismatch if:
     # 1. plan_target < config_target (needs more words)
     # 2. outline_sum != plan_target (sections don't match word_target)
+    # 3. has negative word counts
     is_under = plan_target < config_target
-    outline_mismatch = outline_total > 0 and abs(outline_total - plan_target) > plan_target * 0.05
+    outline_mismatch = (outline_total > 0 and abs(outline_total - plan_target) > plan_target * 0.05) or has_negative
 
     return {
         'path': plan_path,
@@ -152,7 +163,7 @@ def fix_plan(plan_path: Path, level: str, dry_run: bool = False) -> dict:
     old_total = sum(s.get('words', 0) for s in old_outline)
 
     if old_total > 0:
-        new_outline = recalculate_sections(old_outline, old_total, new_target)
+        new_outline = recalculate_sections(old_outline, old_total, new_target, level)
         plan['content_outline'] = new_outline
 
     if not dry_run:

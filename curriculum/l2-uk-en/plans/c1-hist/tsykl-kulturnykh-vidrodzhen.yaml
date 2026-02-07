@@ -1,3 +1,4 @@
+---
 module: tsykl-kulturnykh-vidrodzhen
 level: c1-hist
 sequence: 122
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
 - Evaluate the historical significance of пригнічення → відродження
 content_outline:
-- section: Вступ — Пригнічення → Відродження
+- section: "Вступ — Пригнічення → Відродження"
   words: 515
   subsections:
   - Український культурний цикл

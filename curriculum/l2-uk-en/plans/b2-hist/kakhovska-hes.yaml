@@ -1,3 +1,4 @@
+---
 module: kakhovska-hes
 level: B2-HIST
 sequence: 135
@@ -89,4 +90,4 @@ grammar:
 - Теперішній час для наслідків
 - Екологічна та юридична лексика
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

@@ -1,3 +1,4 @@
+---
 module: c1-bio-079
 level: C1-BIO
 sequence: 79
@@ -5,7 +6,7 @@ slug: mykhailo-boichuk
 version: '2.0'
 title: 'Михайло Бойчук: <!-- Title -->'
 content_outline:
-- section: Вступ — Painter, founded Boychukism
+- section: "Вступ — Painter, founded Boychukism"
   words: 400
   points:
   - <!-- point -->

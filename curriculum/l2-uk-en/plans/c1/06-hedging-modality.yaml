@@ -1,3 +1,4 @@
+---
 module: 06-hedging-modality
 level: C1
 sequence: 6
@@ -5,7 +6,7 @@ slug: 06-hedging-modality
 version: '2.0'
 title: Хеджінг та модальність
 content_outline:
-- section: Вступ — Навіщо пом'якшувати?
+- section: "Вступ — Навіщо пом'якшувати?"
   words: 400
   points:
   - Роль хеджінгу в академічному дискурсі

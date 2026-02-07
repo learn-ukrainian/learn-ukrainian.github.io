@@ -1,3 +1,4 @@
+---
 module: b1-36
 level: B1
 sequence: 36
@@ -74,4 +75,4 @@ grammar:
 - Result clauses with тому, отже, внаслідок
 - Cause-effect transformation
 register: розмовний
-phase: B1.3b [Complex Sentences]
+phase: "B1.3b [Complex Sentences]"

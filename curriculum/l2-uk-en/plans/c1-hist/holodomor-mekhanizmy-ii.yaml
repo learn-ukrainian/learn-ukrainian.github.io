@@ -1,3 +1,4 @@
+---
 module: holodomor-mekhanizmy-ii
 level: c1-hist
 sequence: 47
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of механізми голодомору ii: чорні дошки'
 - Evaluate the historical significance of механізм знищення
 content_outline:
-- section: Вступ — Механізм знищення
+- section: "Вступ — Механізм знищення"
   words: 457
   subsections:
   - Від колективізації до активного терору
@@ -81,7 +82,7 @@ activities:
 - type: critical-analysis
   focus: Create detailed diagram of blacklist system
 - type: critical-analysis
-  focus: Analyze a "black board" decree
+  focus: "Analyze a \"black board\" decree"
 - type: critical-analysis
   focus: Match mechanisms to genocide convention criteria
 - type: comparative-study

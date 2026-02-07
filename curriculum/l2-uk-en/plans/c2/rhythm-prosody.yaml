@@ -1,3 +1,4 @@
+---
 module: rhythm-prosody
 level: c2
 sequence: 22
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Поетика прози — Вікіпедія
+- name: "Поетика прози — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Поетика"
   type: reference
   notes: General poetics terminology and concepts
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Sound devices and euphony in Ukrainian stylistics
 content_outline:
-- section: Вступ — Ритм у прозі vs. поезії
+- section: "Вступ — Ритм у прозі vs. поезії"
   words: 500
   points:
   - Що таке ритм прози
@@ -55,7 +56,7 @@ content_outline:
   - Навмисна різкість для ефекту
   - Практичні приклади з сучасної прози
   - Редагування для покращення звучання
-- section: Практикум — редагування ритму
+- section: "Практикум — редагування ритму"
   words: 500
   points:
   - Аналіз власних текстів
@@ -86,7 +87,7 @@ vocabulary:
   - модуляція (modulation)
   - темп (tempo)
   - пауза (pause)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

@@ -1,3 +1,4 @@
+---
 module: building-domain-expertise
 level: c2
 sequence: 60
@@ -16,12 +17,12 @@ sources:
   url: "https://uace.org.ua/"
   type: reference
   notes: Standards for continuous professional development
-- name: Prometheus — українська платформа онлайн-освіти
+- name: "Prometheus — українська платформа онлайн-освіти"
   url: "https://prometheus.org.ua/"
   type: reference
   notes: Examples of professional development courses in Ukrainian
 content_outline:
-- section: Вступ — Шлях до галузевої експертизи
+- section: "Вступ — Шлях до галузевої експертизи"
   words: 541
   points:
   - Що означає бути експертом
@@ -80,7 +81,7 @@ vocabulary:
   - тренд (trend)
   - візія (vision)
   - траєкторія (trajectory)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

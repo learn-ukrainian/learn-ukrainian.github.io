@@ -1,3 +1,4 @@
+---
 module: b1-65
 level: B1
 sequence: 65
@@ -67,4 +68,4 @@ grammar:
 - Verb patterns with emotional states
 - Preposition usage in relationship contexts
 register: розмовний
-phase: B1.6 [Vocabulary Expansion II]
+phase: "B1.6 [Vocabulary Expansion II]"

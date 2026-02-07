@@ -1,3 +1,4 @@
+---
 # B1 Level Plan - Ukrainian for English Speakers
 # Source of truth: docs/l2-uk-en/B1-CURRICULUM-PLAN.md
 
@@ -12,63 +13,63 @@ immersion: "75-100%"
 phases:
   - id: B1.0
     name: "Metalanguage Bridge"
-    modules: [1, 5]
+    modules: "[1, 5]"
     focus: "Grammar terminology in Ukrainian"
     immersion: "no limit"
 
   - id: B1.1
     name: "Aspect Mastery"
-    modules: [6, 15]
+    modules: "[6, 15]"
     focus: "Verbal aspect - full system"
     checkpoint: 15
 
   - id: B1.2
     name: "Motion Verbs with Prefixes"
-    modules: [16, 25]
+    modules: "[16, 25]"
     focus: "14 motion verb pairs, prefix system"
     checkpoint: 25
 
   - id: B1.3a
     name: "Complex Sentences Part 1"
-    modules: [26, 34]
+    modules: "[26, 34]"
     focus: "Relative, purpose, conditional clauses"
     checkpoint: 34
 
   - id: B1.3b
     name: "Complex Sentences Part 2"
-    modules: [35, 41]
+    modules: "[35, 41]"
     focus: "Concessive, temporal, reported speech"
     checkpoint: 41
 
   - id: B1.4
     name: "Advanced Grammar"
-    modules: [42, 51]
+    modules: "[42, 51]"
     focus: "Participles, passive, diminutives"
     checkpoint: 51
 
   - id: B1.5
     name: "Vocabulary Expansion I"
-    modules: [52, 61]
+    modules: "[52, 61]"
     focus: "Abstract concepts, discourse markers"
 
   - id: B1.6
     name: "Vocabulary Expansion II"
-    modules: [62, 71]
+    modules: "[62, 71]"
     focus: "Professional, emotional vocabulary"
 
   - id: B1.7
     name: "Contemporary Ukraine"
-    modules: [72, 86]
+    modules: "[72, 86]"
     focus: "Regions, culture, active lifestyle"
 
   - id: B1.8
     name: "Media Skills"
-    modules: [87, 88]
+    modules: "[87, 88]"
     focus: "News reading, podcasts/interviews"
 
   - id: B1.9
     name: "Communication Skills"
-    modules: [89, 92]
+    modules: "[89, 92]"
     focus: "Communication channels, presentations, feedback/negotiation"
     checkpoint: 92  # B1 Final Exam
 

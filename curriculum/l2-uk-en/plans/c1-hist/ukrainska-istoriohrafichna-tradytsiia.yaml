@@ -1,3 +1,4 @@
+---
 module: ukrainska-istoriohrafichna-tradytsiia
 level: c1-hist
 sequence: 2
@@ -9,14 +10,14 @@ objectives:
 - Trace the evolution of Ukrainian historical thought
 - Assess the contribution of Mykhailo Hrushevsky
 content_outline:
-- section: Вступ — Чому українська історіографія особлива?
+- section: "Вступ — Чому українська історіографія особлива?"
   words: 457
   subsections:
   - Історія бездержавної нації
   - Писати історію під забороною
   - Еміграція як збереження традиції
   - Повернення після 1991
-- section: Михайло Грушевський — батько української історії
+- section: "Михайло Грушевський — батько української історії"
   words: 800
   subsections:
   - Біографія (1866-1934)

@@ -1,3 +1,4 @@
+---
 module: cyrillo-methodian-brotherhood
 level: LIT
 slug: cyrillo-methodian-brotherhood
@@ -5,7 +6,7 @@ version: '2.0'
 title: Кирило-Мефодіївське братство
 subtitle: The Cyrillo-Methodian Brotherhood
 content_outline:
-- section: Вступ — Перша політична організація
+- section: "Вступ — Перша політична організація"
   words: 625
   points:
   - Київ, 1845-1847 роки
@@ -35,7 +36,7 @@ content_outline:
   - Донос і арешти (1847)
   - Покарання членів
   - Шевченко — найсуворіший вирок
-- section: Підсумок — Ідея, що пережила репресії
+- section: "Підсумок — Ідея, що пережила репресії"
   words: 500
   points:
   - Вплив братства на українську думку
@@ -62,11 +63,11 @@ vocabulary_hints:
   - заслання (exile)
 activity_hints:
 - type: reading
-  focus: Уривки з "Книг буття українського народу"
+  focus: "Уривки з \"Книг буття українського народу\""
   source: Wikipedia and historical sources
   items: 4+
 - type: essay-response
-  focus: "Україна як \"месія народів\" — утопія чи візія?"
+  focus: 'Україна як \"месія народів\" — утопія чи візія?'
   word_target: 300
   output: Політико-філософське есе
 focus: history
@@ -84,7 +85,7 @@ grammar:
 - Historical Narrative
 module_type: history
 sources:
-- name: Кирило-Мефодіївське братство — стаття
+- name: "Кирило-Мефодіївське братство — стаття"
   url: "https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство"
   type: primary
   notes: Історія організації
@@ -92,7 +93,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Книги_буття_українського_народу"
   type: primary
   notes: Програмний документ
-- name: Микола Костомаров — біографія
+- name: "Микола Костомаров — біографія"
   url: "https://uk.wikipedia.org/wiki/Микола_Костомаров"
   type: secondary
   notes: Біографія одного з лідерів

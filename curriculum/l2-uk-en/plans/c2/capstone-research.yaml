@@ -1,3 +1,4 @@
+---
 module: capstone-research
 level: c2
 sequence: 90
@@ -12,7 +13,7 @@ sources:
   url: "https://mon.gov.ua/"
   type: reference
   notes: Research methodology standards for Ukrainian academia
-- name: Академічна доброчесність — Рекомендації МОН
+- name: "Академічна доброчесність — Рекомендації МОН"
   url: "https://naqa.gov.ua/"
   type: reference
   notes: Academic integrity guidelines
@@ -21,7 +22,7 @@ sources:
   type: secondary
   notes: Corpus-based examples of academic Ukrainian
 content_outline:
-- section: Вступ — Етап збору матеріалу
+- section: "Вступ — Етап збору матеріалу"
   words: 432
   points:
   - Від теми до дослідження
@@ -55,7 +56,7 @@ content_outline:
   - Конспектування джерел
   - Каталогізація цитат
   - Цифрові інструменти для дослідження
-- section: Практика — Збір матеріалу
+- section: "Практика — Збір матеріалу"
   words: 864
   points:
   - Складання робочої бібліографії (20+ джерел)
@@ -81,7 +82,7 @@ vocabulary:
   - систематичний огляд (systematic review)
   - триангуляція (triangulation)
   - валідність (validity)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

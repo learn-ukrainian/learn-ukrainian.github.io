@@ -1,3 +1,4 @@
+---
 module: c1-bio-085
 level: C1-BIO
 sequence: 85
@@ -5,7 +6,7 @@ slug: pavlo-fylypovych
 version: '2.0'
 title: 'Павло Филипович: <!-- Title -->'
 content_outline:
-- section: Вступ — Poet, Neoclassicist
+- section: "Вступ — Poet, Neoclassicist"
   words: 400
   points:
   - <!-- point -->

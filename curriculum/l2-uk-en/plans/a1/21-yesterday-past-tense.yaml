@@ -1,3 +1,4 @@
+---
 module: a1-21
 level: A1
 sequence: 21
@@ -70,4 +71,4 @@ grammar:
 - Gender agreement in past tense
 - Time expressions for past events
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: "A1.3 [Consolidation]"

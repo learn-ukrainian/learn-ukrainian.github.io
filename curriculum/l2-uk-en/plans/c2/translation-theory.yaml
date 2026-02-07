@@ -1,3 +1,4 @@
+---
 module: translation-theory
 level: c2
 sequence: 33
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Перекладознавство — Вікіпедія
+- name: "Перекладознавство — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Перекладознавство"
   type: reference
   notes: Translation studies overview
@@ -16,12 +17,12 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Український_художній_переклад"
   type: reference
   notes: Ukrainian translation tradition
-- name: Григорій Кочур — перекладач
+- name: "Григорій Кочур — перекладач"
   url: "https://ukrlib.com.ua/"
   type: primary
   notes: Master of Ukrainian literary translation
 content_outline:
-- section: Вступ — Що таке переклад?
+- section: "Вступ — Що таке переклад?"
   words: 500
   points:
   - Визначення перекладу
@@ -87,7 +88,7 @@ vocabulary:
   - локалізація (localization)
   - втрата (loss)
   - інтерпретація (interpretation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

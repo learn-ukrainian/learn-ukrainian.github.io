@@ -1,3 +1,4 @@
+---
 module: c1-bio-031
 level: C1-BIO
 sequence: 31
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Пилип Орлик: Автор першої конституції'
 word_target: 4000
 content_outline:
-  - section: Вступ — Батько українського конституціоналізму
+  - section: "Вступ — Батько українського конституціоналізму"
     words: 400
     points:
       - Значення Конституції 1710 року
@@ -48,7 +49,7 @@ content_outline:
       - Смерть у Молдові
       - Доля нащадків
       - Конституція як символ
-  - section: Підсумок — Візія, що випередила час
+  - section: "Підсумок — Візія, що випередила час"
     words: 300
     points:
       - Орлик як провісник демократії
@@ -80,7 +81,7 @@ activity_hints:
     focus: "Was Orlyk's Constitution democratic for its time?"
     word_target: 300
   - type: critical-analysis
-    focus: Evaluate claims of "first European constitution"
+    focus: "Evaluate claims of \"first European constitution\""
 focus: biography
 pedagogy: seminar
 prerequisites:

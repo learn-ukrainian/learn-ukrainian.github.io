@@ -6,27 +6,27 @@ version: '2.0'
 title: 'Михайло Коцюбинський: Імпресіоніст українського слова'
 content_outline:
 - section: Вступ — Чарівник настрою
-  words: 400
+  words: 432
   points:
   - Піонер імпресіонізму в українській прозі
   - Модернізація української літератури
   - Один із «трьох великих» поруч із Франком та Лесею Українкою
 - section: Вінниччина та Поділля (1864-1882)
-  words: 600
+  words: 649
   points:
   - Народження у Вінниці
   - Подільська природа як першоджерело
   - Школи в Шаргороді та Барі
   - Раннє формування чутливості до краєвидів
 - section: Учитель і народник (1882-1897)
-  words: 700
+  words: 757
   points:
   - Учителювання на Поділлі та в Криму
   - Вплив громадівського руху
   - Перші оповідання та етнографічні студії
   - Молдавський період
 - section: Чернігівський розквіт (1898-1913)
-  words: 800
+  words: 865
   points:
   - Переїзд до Чернігова та літературна зрілість
   - «Fata morgana» — соціальний реалізм
@@ -34,20 +34,20 @@ content_outline:
   - Подорожі до Криму та Капрі
   - Дружба з Горьким та європейський контекст
 - section: Імпресіоністична поетика
-  words: 700
+  words: 757
   points:
   - Настроєва проза та пейзажний психологізм
   - Синтез фольклору та модернізму
   - Техніка ритмічної прози
   - Вплив на подальшу українську літературу
 - section: Спадщина — Сонцепоклонник
-  words: 500
+  words: 540
   points:
   - Рання смерть від туберкульозу
   - Музей Коцюбинського у Чернігові
   - Вплив на кінематограф (Параджанов)
   - Актуальність творчості сьогодні
-word_target: 3700
+word_target: 4000
 vocabulary_hints:
   required:
   - імпресіонізм (impressionism)
@@ -68,7 +68,7 @@ vocabulary_hints:
   - вітаїзм (vitalism)
 activity_hints:
 - type: reading
-  focus: "Українська проза кінця XIX — початку XX ст."
+  focus: Українська проза кінця XIX — початку XX ст.
   source: Literary history sources
   items: 3 passages
 - type: essay-response
@@ -84,16 +84,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Михайло Коцюбинський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович"
+  url: https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович
   type: primary
   notes: Comprehensive biography of the impressionist prose master
 - name: Музей Коцюбинського у Чернігові
-  url: "https://kotsyubynsky.org.ua/"
+  url: https://kotsyubynsky.org.ua/
   type: reference
   notes: Memorial museum dedicated to Kotsiubynsky's life and work
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Михайло Коцюбинський as an impressionist writer'
+- Analyze the life and legacy of Михайло Коцюбинський as an impressionist writer
 - Evaluate the contributions of the pioneer of Ukrainian literary modernism
 - Trace the evolution from ethnographic realism to impressionist prose

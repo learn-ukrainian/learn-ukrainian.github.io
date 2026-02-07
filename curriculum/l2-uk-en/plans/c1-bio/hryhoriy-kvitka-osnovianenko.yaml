@@ -1,3 +1,4 @@
+---
 module: c1-bio-037
 level: C1-BIO
 sequence: 37
@@ -5,7 +6,7 @@ slug: hryhoriy-kvitka-osnovianenko
 version: '2.0'
 title: 'Григорій Квітка-Основ''яненко: Батько української прози'
 content_outline:
-- section: Вступ — Перший прозаїк
+- section: "Вступ — Перший прозаїк"
   words: 400
   points:
   - Квітка як засновник української художньої прози
@@ -74,11 +75,11 @@ vocabulary_hints:
   - трагічна любов (tragic love)
 activity_hints:
 - type: reading
-  focus: Excerpts from "Маруся" and "Конотопська відьма"
+  focus: "Excerpts from \"Маруся\" and \"Конотопська відьма\""
   source: UkrLib or Wikisource
   items: 4 passages
 - type: essay-response
-  focus: Why is Kvitka called "Father of Ukrainian Prose"?
+  focus: "Why is Kvitka called \"Father of Ukrainian Prose\"?"
   word_target: 300
   output: Literary analysis with examples
 - type: critical-analysis

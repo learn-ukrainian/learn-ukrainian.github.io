@@ -1,3 +1,4 @@
+---
 # Module Plan: Greetings & Invocations
 # Track: OES
 # Module: 006
@@ -13,7 +14,7 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: "Vernacular Foundations"
 
-focus: ""Господи, помози..." — Dative case in prayers"
+focus: '"Господи, помози..." — Dative case in prayers'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

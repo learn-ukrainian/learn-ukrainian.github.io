@@ -1,3 +1,4 @@
+---
 module: b2-84
 level: B2
 sequence: 84
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Checkpoint: Register Synthesis (Синтез регістрів)'
 subtitle: Confirm register readiness before communication skills
 content_outline:
-- section: Огляд — Контрольна точка
+- section: "Огляд — Контрольна точка"
   words: 150
   points:
   - Мета модуля — перевірити готовність до комунікаційних навичок

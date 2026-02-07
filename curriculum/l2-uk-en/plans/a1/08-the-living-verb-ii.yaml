@@ -1,3 +1,4 @@
+---
 module: a1-08
 level: A1
 sequence: 8
@@ -77,4 +78,4 @@ grammar:
 - Consonant mutation patterns
 - Irregular verbs
 register: розмовний
-phase: A1.1 [First Contact]
+phase: "A1.1 [First Contact]"

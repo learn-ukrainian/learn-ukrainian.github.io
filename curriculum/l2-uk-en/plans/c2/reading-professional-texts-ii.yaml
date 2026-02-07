@@ -1,3 +1,4 @@
+---
 module: reading-professional-texts-ii
 level: c2
 sequence: 50
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Вища освіта України — науковий журнал
+- name: "Вища освіта України — науковий журнал"
   url: "https://vnz.org.ua/"
   type: reference
   notes: Examples of academic discourse for critical analysis
@@ -16,12 +17,12 @@ sources:
   url: "https://nbuviap.gov.ua/bpnu/"
   type: reference
   notes: Metrics and standards for evaluating Ukrainian scholarship
-- name: Наукова думка — видавництво НАН України
+- name: "Наукова думка — видавництво НАН України"
   url: "https://naukova-dumka.com.ua/"
   type: reference
   notes: High-quality academic publications across disciplines
 content_outline:
-- section: Вступ — Від розуміння до критичного аналізу
+- section: "Вступ — Від розуміння до критичного аналізу"
   words: 541
   points:
   - Різниця між розумінням та оцінюванням
@@ -76,7 +77,7 @@ vocabulary:
   - надійність (reliability)
   - первинне джерело (primary source)
   - вторинне джерело (secondary source)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

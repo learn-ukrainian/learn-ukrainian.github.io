@@ -1,3 +1,4 @@
+---
 module: petro-kalnyshevskyi
 level: B2-HIST
 sequence: 73
@@ -81,7 +82,7 @@ grammar:
 - Релігійна та тюремна лексика
 - Опис душевного стану
 register: публіцистичний
-phase: B2.3b [Українська історія]
+phase: "B2.3b [Українська історія]"
 vocabulary_hints:
   required:
   - кошовий отаман

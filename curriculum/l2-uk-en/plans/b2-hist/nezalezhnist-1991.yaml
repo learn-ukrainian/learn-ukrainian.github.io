@@ -1,3 +1,4 @@
+---
 module: nezalezhnist-1991
 level: B2-HIST
 sequence: 121
@@ -88,4 +89,4 @@ grammar:
 - Політична та економічна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.12 [Independence & Modern Era]
+phase: "HIST.12 [Independence & Modern Era]"

@@ -1,3 +1,4 @@
+---
 module: 44-intimate-register
 level: c1
 sequence: 44
@@ -17,6 +18,6 @@ content_outline:
   - TBD
 word_target: 3000
 vocabulary:
-  required: []
-  recommended: []
-  forbidden: []
+  required: "[]"
+  recommended: "[]"
+  forbidden: "[]"

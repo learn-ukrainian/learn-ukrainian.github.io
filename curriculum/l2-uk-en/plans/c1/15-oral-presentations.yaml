@@ -1,3 +1,4 @@
+---
 module: 15-oral-presentations
 level: C1
 sequence: 15
@@ -5,7 +6,7 @@ slug: 15-oral-presentations
 version: '2.0'
 title: Доповідь та презентація
 content_outline:
-- section: Вступ — Мистецтво усної презентації
+- section: "Вступ — Мистецтво усної презентації"
   words: 400
   points:
   - Типи академічних доповідей

@@ -1,38 +1,24 @@
-# Module Plan: Sovereign & State
-# Track: RUTH
-# Module: 002
-# Source: Gemini Research (ISSUE-493)
-# Generated: 2026-02-04
-
+---
 module_number: 2
 slug: sovereign-state
-title_uk: "Господар і держава"
-title_en: "Sovereign & State"
-
+title_uk: Господар і держава
+title_en: Sovereign & State
 phase: 1
 phase_id: chancery-legal
-phase_name: "Chancery & Legal"
-
-focus: "Господар, Панство — Concepts of statehood"
-
+phase_name: Chancery & Legal
+focus: Господар, Панство — Concepts of statehood
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Sovereign & State"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Sovereign & State
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

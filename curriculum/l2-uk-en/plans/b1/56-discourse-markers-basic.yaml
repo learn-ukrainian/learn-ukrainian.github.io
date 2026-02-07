@@ -1,3 +1,4 @@
+---
 module: b1-56
 level: B1
 sequence: 56
@@ -92,4 +93,4 @@ grammar:
 - Connector categories and functions
 - Punctuation with discourse markers
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
+phase: "B1.5 [Vocabulary Expansion I]"

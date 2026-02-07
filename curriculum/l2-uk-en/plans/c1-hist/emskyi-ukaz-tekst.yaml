@@ -1,3 +1,4 @@
+---
 module: emskyi-ukaz-tekst
 level: c1-hist
 sequence: 32
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of емський указ: повний текст'
 - Evaluate the historical significance of суворіший за валуєва
 content_outline:
-- section: Вступ — Суворіший за Валуєва
+- section: "Вступ — Суворіший за Валуєва"
   words: 457
   subsections:
   - 1876 рік — 13 років після циркуляра
@@ -23,7 +24,7 @@ content_outline:
   - Київська громада
   - Драгоманов і закордонна діяльність
   - Імперська реакція
-- section: Текст указу — детальний аналіз
+- section: "Текст указу — детальний аналіз"
   words: 914
   subsections:
   - Текст (з глосами)
@@ -38,7 +39,7 @@ content_outline:
   - Що нового — суворіше
   - Таблиця порівняння
   - Логіка ескалації
-- section: Фрагмент — Заборона театру
+- section: "Фрагмент — Заборона театру"
   words: 457
   subsections:
   - Текст (з глосами)

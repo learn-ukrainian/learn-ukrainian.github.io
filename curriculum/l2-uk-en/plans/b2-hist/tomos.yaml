@@ -1,3 +1,4 @@
+---
 module: tomos
 level: B2-HIST
 sequence: 129
@@ -91,4 +92,4 @@ grammar:
 - Церковна та релігійна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.12 [Independence & Modern Era]
+phase: "HIST.12 [Independence & Modern Era]"

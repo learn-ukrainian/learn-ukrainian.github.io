@@ -1,3 +1,4 @@
+---
 module: final-review-iii
 level: c2
 sequence: 97
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — Комунікативна компетенція C2
+- name: "Ukrainian State Standard 2024 — Комунікативна компетенція C2"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 communicative competence requirements
-- name: CEFR C2 — Integrated Skills
+- name: "CEFR C2 — Integrated Skills"
   url: "https://www.coe.int/"
   type: reference
   notes: C2 productive and receptive skills integration
-- name: Профільні стандарти C2 — Аудіювання, читання, письмо, говоріння
+- name: "Профільні стандарти C2 — Аудіювання, читання, письмо, говоріння"
   url: "https://naqa.gov.ua/"
   type: secondary
   notes: Skill-specific C2 standards
 content_outline:
-- section: Вступ — Інтеграція мовленнєвих навичок
+- section: "Вступ — Інтеграція мовленнєвих навичок"
   words: 444
   points:
   - Чотири навички на рівні C2
@@ -81,7 +82,7 @@ vocabulary:
   - ідіоматичність (idiomaticity)
   - флуентність (fluency)
   - точність (accuracy)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

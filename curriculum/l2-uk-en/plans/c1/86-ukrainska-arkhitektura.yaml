@@ -1,3 +1,4 @@
+---
 module: c1-86
 level: C1
 sequence: 86
@@ -6,7 +7,7 @@ version: '2.0'
 title: Українська архітектура
 subtitle: "Ukrainian Architecture — Stone Chronicles"
 content_outline:
-- section: Розминка — Камʼяні хроніки
+- section: "Розминка — Камʼяні хроніки"
   words: 700
   points:
   - Софія Київська — візантійська спадщина
@@ -20,7 +21,7 @@ content_outline:
   - 'Wooden churches: Карпатські церкви (UNESCO) — world heritage'
   - 'Modernism: Конструктивізм Харкова, Держпром — Soviet avant-garde'
   - 'Contemporary: Сучасна архітектура, відбудова — post-war rebuilding'
-- section: Практика — архітектурний аналіз
+- section: "Практика — архітектурний аналіз"
   words: 1050
   points:
   - Описати Софію Київську — візантійська архітектура, мозаїки, фрески

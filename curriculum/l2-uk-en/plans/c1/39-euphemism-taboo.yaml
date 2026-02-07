@@ -1,3 +1,4 @@
+---
 module: c1-39
 level: C1
 sequence: 39
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Евфемізми та табу: Мова делікатності'
 subtitle: 'Euphemisms & Taboo: The Language of Delicacy'
 content_outline:
-- section: Розминка — Чому ми не говоримо прямо
+- section: "Розминка — Чому ми не говоримо прямо"
   words: 600
   points:
   - Евфемізм — м'яка заміна для делікатних тем
@@ -25,7 +26,7 @@ content_outline:
   - Recognition for comprehension
   - Avoidance in production
   - Register appropriateness
-- section: Практика — делікатне мовлення
+- section: "Практика — делікатне мовлення"
   words: 600
   points:
   - Замінити прямі вирази на евфемізми в тексті

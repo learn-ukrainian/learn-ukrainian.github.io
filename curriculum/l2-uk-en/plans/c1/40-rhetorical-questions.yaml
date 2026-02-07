@@ -1,3 +1,4 @@
+---
 module: c1-40
 level: C1
 sequence: 40
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Риторичні питання: Мистецтво переконання'
 subtitle: 'Rhetorical Questions: The Art of Persuasion'
 content_outline:
-- section: Розминка — Питання без відповіді
+- section: "Розминка — Питання без відповіді"
   words: 600
   points:
   - Риторичне питання — відповідь очевидна або не очікується
@@ -23,7 +24,7 @@ content_outline:
   points:
   - Хіба...? Невже...? Чи ж...?
   - Як можна...? Чому б не...?
-- section: Практика — риторика в дії
+- section: "Практика — риторика в дії"
   words: 600
   points:
   - Знайти риторичні питання в політичній промові

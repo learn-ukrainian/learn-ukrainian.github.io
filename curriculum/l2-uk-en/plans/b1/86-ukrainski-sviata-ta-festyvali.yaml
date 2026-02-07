@@ -6,43 +6,43 @@ version: '2.0'
 title: Українські свята та фестивалі
 subtitle: Ukrainian Holidays and Festivals
 content_outline:
-- section: "Вступ"
-  words: 100
+- section: Вступ
+  words: 147
   points:
   - Українські свята — вступ
-- section: "Історія та культура"
-  words: 716
+- section: Історія та культура
+  words: 1053
   points:
   - Різдво і традиції
   - Колядки і щедрівки
   - Великдень — писанки і паска
   - Народні свята — Масляна, Івана Купала
-- section: "Сучасність"
-  words: 240
+- section: Сучасність
+  words: 353
   points:
   - Державні свята (День Незалежності)
   - Музичні фестивалі
-- section: "Практика"
-  words: 156
+- section: Практика
+  words: 229
   points:
   - Вітання зі святами
-- section: "Продукція"
-  words: 419
+- section: Продукція
+  words: 616
   points:
   - Діалоги про свята та фестивалі
-- section: "Підсумок — Як святкують українці"
-  words: 100
+- section: Підсумок — Як святкують українці
+  words: 147
   points:
   - Як привітати українською
-- section: "Міні-чекпоінт: Культура B1.7"
-  words: 200
+- section: 'Міні-чекпоінт: Культура B1.7'
+  words: 294
   points:
   - Самооцінка знань про сучасну Україну
   - Тест на регіони (M72-75)
   - Тест на культуру та спорт (M76-86)
-- section: "Потрібно більше практики?"
-  words: 109
-word_target: 1900
+- section: Потрібно більше практики?
+  words: 161
+word_target: 3000
 vocabulary_hints:
   required:
   - свято (holiday)

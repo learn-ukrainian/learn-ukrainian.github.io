@@ -1,3 +1,4 @@
+---
 module: bohdan-khmelnytskyi
 level: B2-HIST
 sequence: 52
@@ -90,4 +91,4 @@ sources:
   type: secondary
   notes: Modern analysis
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"

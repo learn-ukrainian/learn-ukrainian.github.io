@@ -1,3 +1,4 @@
+---
 module: professional-discussions
 level: c2
 sequence: 57
@@ -16,12 +17,12 @@ sources:
   url: "https://niss.gov.ua/"
   type: reference
   notes: Examples of policy discussions and expert debates
-- name: Громадське телебачення — дебати
+- name: "Громадське телебачення — дебати"
   url: "https://hromadske.ua/"
   type: reference
   notes: Examples of professional discussions and debates
 content_outline:
-- section: Вступ — Культура професійної дискусії
+- section: "Вступ — Культура професійної дискусії"
   words: 541
   points:
   - Відмінність дискусії від суперечки
@@ -80,7 +81,7 @@ vocabulary:
   - опонент (opponent)
   - пропонент (proponent)
   - резюмування (summarizing)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

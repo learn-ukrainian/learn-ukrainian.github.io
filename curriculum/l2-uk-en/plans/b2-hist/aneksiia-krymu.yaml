@@ -1,3 +1,4 @@
+---
 module: aneksiia-krymu
 level: B2-HIST
 sequence: 127
@@ -78,4 +79,4 @@ sources:
   url: "https://krymsos.com"
   type: secondary
   notes: Свідчення очевидців та звіти про порушення прав людини
-phase: B2-HIST.12 [Independence]
+phase: "B2-HIST.12 [Independence]"

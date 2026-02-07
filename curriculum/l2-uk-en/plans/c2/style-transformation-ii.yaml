@@ -1,3 +1,4 @@
+---
 module: style-transformation-ii
 level: c2
 sequence: 11
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Українські ЗМІ — аналіз трансформації джерел
+- name: "Українські ЗМІ — аналіз трансформації джерел"
   url: "https://detector.media/"
   type: primary
   notes: Media analysis of official sources transformation
@@ -16,12 +17,12 @@ sources:
   url: "https://www.ukrinform.ua/"
   type: reference
   notes: Examples of press release to news transformation
-- name: Ukrainian State Standard 2024 — Media production
+- name: "Ukrainian State Standard 2024 — Media production"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for journalistic transformation
 content_outline:
-- section: Вступ — Від бюрократії до читабельності
+- section: "Вступ — Від бюрократії до читабельності"
   words: 400
   points:
   - Чому офіційні тексти важко читати
@@ -62,7 +63,7 @@ content_outline:
   - Офіційні заяви
   - Статистичні звіти
   - Законодавчі акти
-- section: Практикум — Трансформація документів
+- section: "Практикум — Трансформація документів"
   words: 500
   points:
   - Прес-реліз → новина
@@ -88,7 +89,7 @@ vocabulary:
   - дані (data)
   - джерело (source)
   - верифікація (verification)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

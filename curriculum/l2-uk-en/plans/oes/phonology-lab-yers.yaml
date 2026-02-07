@@ -1,39 +1,24 @@
-# Module Plan: Phonology Lab: Fall of Yers
-# Track: OES
-# Module: 099
-# Source: Gemini Research (ISSUE-492)
-# Generated: 2026-02-04
-
 module_number: 99
 slug: phonology-lab-yers
-title_uk: "Фонологічна лабораторія: Єри"
-title_en: "Phonology Lab: Fall of Yers"
-
+title_uk: 'Фонологічна лабораторія: Єри'
+title_en: 'Phonology Lab: Fall of Yers'
 phase: 4
 phase_id: literary-art
-phase_name: "Literary Art"
-
-focus: "Tracing Yer loss & Yat evolution"
-
-word_target: 2500
-
-# Content outline to be expanded during content generation
+phase_name: Literary Art
+focus: Tracing Yer loss & Yat evolution
+word_target: 4000
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Phonology Lab: Fall of Yers"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to Phonology Lab: Fall of Yers'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
-  - phonology-lab
+- transcription
+- etymology-trace
+- grammar-identify
+- phonology-lab

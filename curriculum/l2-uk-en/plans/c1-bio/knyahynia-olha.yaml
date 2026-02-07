@@ -1,3 +1,4 @@
+---
 module: c1-bio-002
 level: C1-BIO
 sequence: 2
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Княгиня Ольга: Дипломатія та реформи'
 word_target: 4300
 content_outline:
-- section: Вступ — Мудра володарка Києва
+- section: "Вступ — Мудра володарка Києва"
   words: 600
   points:
   - Ольга як символ державної мудрості

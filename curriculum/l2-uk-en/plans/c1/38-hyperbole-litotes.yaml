@@ -1,3 +1,4 @@
+---
 module: c1-38
 level: C1
 sequence: 38
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Гіпербола та літота: Гра масштабів'
 subtitle: 'Hyperbole & Litotes: Playing with Scale'
 content_outline:
-- section: Розминка — Перебільшення та применшення
+- section: "Розминка — Перебільшення та применшення"
   words: 600
   points:
   - Гіпербола — свідоме перебільшення для ефекту
@@ -22,7 +23,7 @@ content_outline:
   points:
   - 'Применшення: Непоганий (= дуже добрий)'
   - 'Function: Modesty, understatement, irony'
-- section: Практика — масштаб у мовленні
+- section: "Практика — масштаб у мовленні"
   words: 600
   points:
   - Знайти гіперболи в народних піснях та казках

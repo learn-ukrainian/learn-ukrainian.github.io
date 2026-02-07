@@ -1,3 +1,4 @@
+---
 module: b1-54
 level: B1
 sequence: 54
@@ -86,4 +87,4 @@ grammar:
 - Opinion phrase patterns
 - Hedging and intensifying expressions
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
+phase: "B1.5 [Vocabulary Expansion I]"

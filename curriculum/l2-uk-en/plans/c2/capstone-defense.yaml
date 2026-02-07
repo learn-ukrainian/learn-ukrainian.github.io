@@ -1,3 +1,4 @@
+---
 module: capstone-defense
 level: c2
 sequence: 94
@@ -21,7 +22,7 @@ sources:
   type: secondary
   notes: Presentation skills for academic contexts
 content_outline:
-- section: Вступ — Захист як кульмінація проєкту
+- section: "Вступ — Захист як кульмінація проєкту"
   words: 432
   points:
   - Мета і формат захисту
@@ -55,7 +56,7 @@ content_outline:
   - Візуалізація успіху
   - Підготовка до несподіванок
   - Позитивний внутрішній діалог
-- section: Практика — Пробний захист
+- section: "Практика — Пробний захист"
   words: 864
   points:
   - Підготовка повної презентації (15-20 хв)
@@ -81,7 +82,7 @@ vocabulary:
   - риторичне запитання (rhetorical question)
   - контраргумент (counterargument)
   - регламент (time limit)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

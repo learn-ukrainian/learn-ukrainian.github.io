@@ -1,3 +1,4 @@
+---
 module: c1-bio-082
 level: C1-BIO
 sequence: 82
@@ -5,7 +6,7 @@ slug: nataliia-polonska-vasylenko
 version: '2.0'
 title: 'Наталія Полонська-Василенко: Історикиня'
 content_outline:
-- section: Вступ — Жінка, яка написала історію України
+- section: "Вступ — Жінка, яка написала історію України"
   words: 400
   points:
   - Полонська-Василенко як видатна історикиня XX століття

@@ -1,3 +1,4 @@
+---
 module: petro-sahaidachnyi
 level: B2-HIST
 sequence: 45
@@ -69,7 +70,7 @@ grammar:
 - 'Historical narrative: sophisticated causal structures'
 - Participles in historical descriptions
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"
 vocabulary_hints:
   required:
   - історія (history)

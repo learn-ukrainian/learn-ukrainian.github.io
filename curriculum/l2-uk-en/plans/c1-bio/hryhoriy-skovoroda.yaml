@@ -1,3 +1,4 @@
+---
 module: c1-bio-033
 level: C1-BIO
 sequence: 33
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Григорій Сковорода: Мандрівний філософ'
 word_target: 4300
 content_outline:
-- section: Вступ — Український Сократ
+- section: "Вступ — Український Сократ"
   words: 600
   points:
   - Сковорода як символ духовної свободи

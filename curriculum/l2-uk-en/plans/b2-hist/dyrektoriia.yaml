@@ -1,3 +1,4 @@
+---
 module: dyrektoriia
 level: B2-HIST
 sequence: 93
@@ -89,4 +90,4 @@ grammar:
 - Пасивні конструкції для опису подій
 - Офіційна лексика
 register: публіцистичний
-phase: HIST.9 [WWI & Revolution]
+phase: "HIST.9 [WWI & Revolution]"

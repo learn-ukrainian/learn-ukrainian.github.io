@@ -1,3 +1,4 @@
+---
 module: syntez-rozdorizhzhia
 level: c1-hist
 sequence: 94
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: закономірність чи випадок?'
 - Evaluate the historical significance of паттерни на роздоріжжях
 content_outline:
-- section: Вступ — Паттерни на роздоріжжях
+- section: "Вступ — Паттерни на роздоріжжях"
   words: 457
   subsections:
   - Огляд модулів 89-93
@@ -44,7 +45,7 @@ content_outline:
   - Конкретний результат — ні
   - Цінність історичного аналізу
   - Підготовка до майбутнього
-- section: 2022 — найбільше роздоріжжя
+- section: "2022 — найбільше роздоріжжя"
   words: 457
   subsections:
   - Всі попередні досвіди

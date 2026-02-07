@@ -1,3 +1,4 @@
+---
 module: c1-bio-099
 level: C1-BIO
 sequence: 99
@@ -5,7 +6,7 @@ slug: maik-yohansen
 version: '2.0'
 title: 'Майк Йогансен: <!-- Title -->'
 content_outline:
-- section: Вступ — Writer, Futurist
+- section: "Вступ — Writer, Futurist"
   words: 400
   points:
   - <!-- point -->

@@ -1,3 +1,4 @@
+---
 module: 1991-referendum
 level: c1-hist
 sequence: 92
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of 1991: чому 90% сказали «так»?'
 - Evaluate the historical significance of неймовірний результат
 content_outline:
-- section: Вступ — Неймовірний результат
+- section: "Вступ — Неймовірний результат"
   words: 457
   subsections:
   - 90.32% за незалежність
@@ -77,7 +78,7 @@ vocabulary:
 - консенсус
 activities:
 - type: critical-analysis
-  focus: Different groups, different reasons for "yes"
+  focus: "Different groups, different reasons for \"yes\""
 - type: critical-analysis
   focus: Map and analyze regional voting patterns
 - type: critical-analysis

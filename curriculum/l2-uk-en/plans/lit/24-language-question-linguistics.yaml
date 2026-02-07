@@ -1,3 +1,4 @@
+---
 module: language-question-linguistics
 level: LIT
 slug: language-question-linguistics
@@ -5,13 +6,13 @@ version: '2.0'
 title: Мовне питання
 subtitle: The Language Question
 content_outline:
-- section: Вступ — Чому правопис — це політика?
+- section: "Вступ — Чому правопис — це політика?"
   words: 625
   points:
   - Мова як поле битви
   - Зв'язок орфографії та ідентичності
   - XIX століття — час "мовних війн"
-- section: Кулішівка — система Куліша
+- section: "Кулішівка — система Куліша"
   words: 1000
   points:
   - Принципи фонетичного правопису
@@ -35,7 +36,7 @@ content_outline:
   - 'Фонетичний принцип: «як чую, так пишу»'
   - 'Етимологічний принцип: історичне написання'
   - Сучасний український правопис
-- section: Підсумок — Мова як нація
+- section: "Підсумок — Мова як нація"
   words: 500
   points:
   - Внесок Куліша в мовознавство
@@ -83,7 +84,7 @@ grammar:
 - Historical Terminology
 module_type: linguistics
 sources:
-- name: Кулішівка — стаття
+- name: "Кулішівка — стаття"
   url: "https://uk.wikipedia.org/wiki/Кулішівка"
   type: primary
   notes: Історія правопису

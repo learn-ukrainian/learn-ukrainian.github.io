@@ -1,3 +1,4 @@
+---
 module: c1-bio-024
 level: C1-BIO
 sequence: 24
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Іван Виговський: Гетьман-дипломат'
 word_target: 4300
 content_outline:
-- section: Вступ — Архітектор Гадяцької унії
+- section: "Вступ — Архітектор Гадяцької унії"
   words: 600
   points:
   - Виговський як альтернатива московському курсу

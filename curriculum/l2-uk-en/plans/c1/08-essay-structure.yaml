@@ -1,3 +1,4 @@
+---
 module: 08-essay-structure
 level: C1
 sequence: 8
@@ -5,7 +6,7 @@ slug: 08-essay-structure
 version: '2.0'
 title: Структура академічного есе
 content_outline:
-- section: Вступ — Архітектура тексту
+- section: "Вступ — Архітектура тексту"
   words: 400
   points:
   - Чому структура важлива
@@ -17,7 +18,7 @@ content_outline:
   - Привертання уваги (hook)
   - Контекст і передумови
   - Формулювання тези
-- section: Основна частина — TEEL
+- section: "Основна частина — TEEL"
   words: 800
   points:
   - Topic sentence (тематичне речення)

@@ -1,3 +1,4 @@
+---
 module: ofitsiynyi-styl-mastery
 level: c2
 sequence: 4
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Кодекс України — Законодавство
+- name: "Кодекс України — Законодавство"
   url: "https://zakon.rada.gov.ua/"
   type: primary
   notes: Official legal document examples
@@ -16,12 +17,12 @@ sources:
   url: "https://minjust.gov.ua/"
   type: reference
   notes: Ministry of Justice document templates
-- name: Ukrainian State Standard 2024 — Official style
+- name: "Ukrainian State Standard 2024 — Official style"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for official document production
 content_outline:
-- section: Вступ — Офіційний стиль на рівні юриста
+- section: "Вступ — Офіційний стиль на рівні юриста"
   words: 400
   points:
   - Характеристика офіційно-ділового стилю
@@ -62,7 +63,7 @@ content_outline:
   - Юридична точність vs зрозумілість
   - Адаптація міжнародних документів
   - Переклад правових текстів
-- section: Практикум — Створення документів
+- section: "Практикум — Створення документів"
   words: 500
   points:
   - Складання простого договору
@@ -88,7 +89,7 @@ vocabulary:
   - касація (cassation)
   - чинний (valid/in force)
   - уповноважений (authorized)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

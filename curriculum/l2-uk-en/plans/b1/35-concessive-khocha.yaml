@@ -1,3 +1,4 @@
+---
 module: b1-35
 level: B1
 sequence: 35
@@ -74,4 +75,4 @@ grammar:
 - Concessive phrases with незважаючи на (despite)
 - Contrast and unexpected outcome expressions
 register: розмовний
-phase: B1.3b [Complex Sentences]
+phase: "B1.3b [Complex Sentences]"

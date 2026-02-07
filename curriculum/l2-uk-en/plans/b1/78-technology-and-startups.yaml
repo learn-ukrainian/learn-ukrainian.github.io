@@ -6,36 +6,36 @@ version: '2.0'
 title: Технології та стартапи
 subtitle: Ukraine's Tech Industry and Startup Ecosystem
 content_outline:
-- section: "Історія та культура"
-  words: 400
+- section: Історія та культура
+  words: 720
   points:
   - Історія IT в Україні
   - Від радянських ЕОМ до незалежності
   - Перші українські IT-компанії
   - Україна як центр аутсорсингу
-- section: "Сучасність"
-  words: 700
+- section: Сучасність
+  words: 1260
   points:
   - Українські єдинороги (Grammarly, GitLab, Ajax)
   - Diia — держава в смартфоні
   - IT і війна
   - Волонтерські технологічні проекти
-- section: "Практика"
-  words: 150
+- section: Практика
+  words: 270
   points:
   - Ключові концепції
   - Порівняльні таблиці
-- section: "Продукція"
-  words: 200
+- section: Продукція
+  words: 360
   points:
   - Діалоги про технології
-- section: "Підсумок — Майбутнє за технологіями"
-  words: 108
+- section: Підсумок — Майбутнє за технологіями
+  words: 194
   points:
   - Перспективи IT-сектору України
-- section: "Потрібно більше практики?"
-  words: 109
-word_target: 1667
+- section: Потрібно більше практики?
+  words: 196
+word_target: 3000
 vocabulary_hints:
   required:
   - технологія (technology)

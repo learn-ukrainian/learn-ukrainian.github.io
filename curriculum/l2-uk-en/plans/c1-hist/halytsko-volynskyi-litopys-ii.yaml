@@ -1,3 +1,4 @@
+---
 module: halytsko-volynskyi-litopys-ii
 level: c1-hist
 sequence: 16
@@ -10,7 +11,7 @@ objectives:
   світогляд'
 - Evaluate the historical significance of література як історія
 content_outline:
-- section: Вступ — Література як історія
+- section: "Вступ — Література як історія"
   words: 457
   subsections:
   - Від змісту до форми
@@ -38,7 +39,7 @@ content_outline:
   - Політичні ідеали — єдність, сила
   - Відношення до «поганих» — татар, литовців
   - Руська ідентичність — що це означало?
-- section: Фрагмент — Опис битви
+- section: "Фрагмент — Опис битви"
   words: 571
   subsections:
   - Текст (з глосами)

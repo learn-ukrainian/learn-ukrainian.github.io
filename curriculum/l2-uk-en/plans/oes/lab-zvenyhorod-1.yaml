@@ -1,39 +1,24 @@
-# Module Plan: Lab: Zvenyhorod Letter #1
-# Track: OES
-# Module: 015
-# Source: Gemini Research (ISSUE-501)
-# Generated: 2026-02-04
-
 module_number: 15
 slug: lab-zvenyhorod-1
-title_uk: "Лабораторія: Звенигород №1"
-title_en: "Lab: Zvenyhorod Letter #1"
-
+title_uk: 'Лабораторія: Звенигород №1'
+title_en: 'Lab: Zvenyhorod Letter #1'
 phase: 1
 phase_id: vernacular-foundations
-phase_name: "Vernacular Foundations"
-
-focus: "Detailed breakdown of the Govinova letter"
-
-word_target: 2500
-
-# Content outline to be expanded during content generation
+phase_name: Vernacular Foundations
+focus: Detailed breakdown of the Govinova letter
+word_target: 4000
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Lab: Zvenyhorod Letter #1"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to Lab: Zvenyhorod Letter #1'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
-  - grammar-lab
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab

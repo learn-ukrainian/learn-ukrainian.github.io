@@ -1,3 +1,4 @@
+---
 module: a1-29
 level: A1
 sequence: 29
@@ -17,18 +18,18 @@ content_outline:
   - Тепло, холодно, спекотно, прохолодно (прислівники)
   - Йде дощ, йде сніг, світить сонце
   - Сьогодні... / Вчора було... / Завтра буде...
-- section: Presentation
+- section: "Presentation 2"
   words: 69
   points:
   - Яка сьогодні погода?
   - Чи буде дощ?
   - Яка температура?
-- section: Presentation
+- section: "Presentation 3"
   words: 39
   points:
   - Весна, літо, осінь, зима
   - Прийменник у/взимку (Взимку холодно)
-- section: Presentation
+- section: "Presentation 4"
   words: 183
   points:
   - Опис погоди в різні пори року
@@ -39,7 +40,7 @@ content_outline:
   - Діалог про погоду сьогодні
   - Діалог про плани залежно від погоди
   - Обговорення улюбленої пори року
-- section: Practice
+- section: "Practice 2"
   words: 13
   points:
   - Опис погоди у вашому місті сьогодні
@@ -91,4 +92,4 @@ grammar:
 - Seasons with prepositions
 - Temperature and weather adjectives
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: "A1.3 [Consolidation]"

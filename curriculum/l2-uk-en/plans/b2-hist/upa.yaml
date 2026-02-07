@@ -1,3 +1,4 @@
+---
 module: upa
 level: B2-HIST
 sequence: 107
@@ -88,4 +89,4 @@ grammar:
 - Військова лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.10 [WWII & Soviet Terror]
+phase: "HIST.10 [WWII & Soviet Terror]"

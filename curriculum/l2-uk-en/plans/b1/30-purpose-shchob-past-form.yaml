@@ -1,3 +1,4 @@
+---
 module: b1-30
 level: B1
 sequence: 30
@@ -8,7 +9,7 @@ subtitle: Purpose Clauses - Different Subjects
 content_outline:
 - section: 'Тест: Перевірте себе'
   words: 195
-  points: []
+  points: "[]"
 - section: Пояснення
   words: 932
   points:
@@ -83,4 +84,4 @@ grammar:
 - Subject agreement in subordinate clause
 - Subjunctive mood (умовний спосіб) formation
 register: розмовний
-phase: B1.3a [Complex Sentences]
+phase: "B1.3a [Complex Sentences]"

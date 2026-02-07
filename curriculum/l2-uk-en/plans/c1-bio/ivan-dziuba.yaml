@@ -6,27 +6,27 @@ version: '2.0'
 title: 'Іван Дзюба: Інтернаціоналізм чи русифікація?'
 content_outline:
 - section: Вступ — Інтелектуальний бунтар
-  words: 400
+  words: 432
   points:
   - Автор найважливішого дисидентського тексту в УРСР
   - Від шістдесятника до міністра культури
   - Людина, що довела русифікацію мовою марксизму
 - section: Донеччина та формування (1931-1957)
-  words: 600
+  words: 649
   points:
   - Народження у Миколаївці на Донеччині
   - Робітнича юність
   - Навчання у Донецькому та Київському університетах
   - Формування як літературного критика
 - section: Шістдесятники (1957-1965)
-  words: 800
+  words: 865
   points:
   - Входження у літературну критику
   - Формування інтелектуального кола опору
   - Дружба зі Стусом, Чорноволом, Сверстюком
   - Виступ у Бабиному Яру 1966 року
 - section: «Інтернаціоналізм чи русифікація?» (1965)
-  words: 800
+  words: 865
   points:
   - Написання трактату за три тижні
   - Аргументація на основі ленінських праць
@@ -34,7 +34,7 @@ content_outline:
   - Міжнародний резонанс
   - Арешт та переслідування
 - section: Від в'язниці до міністерства (1973-2022)
-  words: 600
+  words: 649
   points:
   - Вимушене «покаяння» та моральна дилема
   - Повернення до критичної діяльності
@@ -42,13 +42,13 @@ content_outline:
   - Академік та інтелектуальна спадщина
   - Останні роки
 - section: Спадщина — Критик як зброя
-  words: 500
+  words: 540
   points:
   - Актуальність тексту сьогодні
   - Дзюба як зразок інтелектуальної мужності
   - Деколонізація інтелектуального простору
   - Вплив на сучасну мовну політику
-word_target: 3700
+word_target: 4000
 vocabulary_hints:
   required:
   - інтернаціоналізм (internationalism)
@@ -85,16 +85,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Дзюба (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович"
+  url: https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович
   type: primary
   notes: Comprehensive biography of the dissident intellectual
 - name: «Інтернаціоналізм чи русифікація?»
-  url: "https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F"
+  url: https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F
   type: reference
   notes: Analysis of the landmark text against Russification
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Іван Дзюба as a dissident intellectual'
+- Analyze the life and legacy of Іван Дзюба as a dissident intellectual
 - Evaluate the argumentative strategy of Internationalism or Russification
 - Trace the moral arc from dissident to minister of culture

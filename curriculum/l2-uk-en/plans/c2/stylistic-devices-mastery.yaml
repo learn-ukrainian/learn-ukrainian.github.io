@@ -1,3 +1,4 @@
+---
 module: stylistic-devices-mastery
 level: c2
 sequence: 21
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Українська стилістика — тропи та фігури
+- name: "Українська стилістика — тропи та фігури"
   url: "https://www.nbuv.gov.ua/"
   type: primary
   notes: Academic analysis of Ukrainian stylistic devices
@@ -16,18 +17,18 @@ sources:
   url: "https://r2u.org.ua/"
   type: reference
   notes: Definitions and examples of all devices
-- name: Ukrainian State Standard 2024 — Figurative language
+- name: "Ukrainian State Standard 2024 — Figurative language"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for stylistic devices
 content_outline:
-- section: Вступ — Тропи та фігури
+- section: "Вступ — Тропи та фігури"
   words: 400
   points:
   - Різниця між тропами та фігурами
   - Класифікація стилістичних засобів
   - Функції образності в тексті
-- section: Метафора — розширена та стерта
+- section: "Метафора — розширена та стерта"
   words: 700
   points:
   - Проста метафора
@@ -63,7 +64,7 @@ content_outline:
   - Порівняння — пряме зіставлення
   - Перифраз — описова заміна
   - Евфемізм — пом'якшення
-- section: Практикум — Створення та аналіз
+- section: "Практикум — Створення та аналіз"
   words: 500
   points:
   - Ідентифікація засобів у літературі
@@ -89,7 +90,7 @@ vocabulary:
   - олюднення (anthropomorphization)
   - перифраз (periphrasis)
   - образність (imagery)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

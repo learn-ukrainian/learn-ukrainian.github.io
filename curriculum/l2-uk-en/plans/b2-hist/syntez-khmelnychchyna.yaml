@@ -1,3 +1,4 @@
+---
 module: syntez-khmelnychchyna
 level: B2-HIST
 sequence: 62
@@ -51,9 +52,9 @@ content_outline:
 word_target: 4000
 focus: history
 pedagogy: CBI
-prerequisites: []
-learning_outcomes: []
-phase: HIST.6 [Khmelnytsky & Cossack State]
+prerequisites: "[]"
+learning_outcomes: "[]"
+phase: "HIST.6 [Khmelnytsky & Cossack State]"
 objectives:
 - 'Analyze the causes and consequences of синтез: козацька революція'
 - Evaluate the historical significance of вибух, що змінив усе

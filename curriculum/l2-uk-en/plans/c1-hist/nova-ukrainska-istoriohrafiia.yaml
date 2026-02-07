@@ -1,3 +1,4 @@
+---
 module: nova-ukrainska-istoriohrafiia
 level: c1-hist
 sequence: 7
@@ -10,7 +11,7 @@ objectives:
 - Evaluate the historical significance of історія для нової держави
 - Trace the development of виклики і перспективи
 content_outline:
-- section: Вступ — Історія для нової держави
+- section: "Вступ — Історія для нової держави"
   words: 457
   subsections:
   - 1991 — що змінилося?

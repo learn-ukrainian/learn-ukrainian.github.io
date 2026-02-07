@@ -1,3 +1,4 @@
+---
 module: c1-bio-127
 level: C1-BIO
 sequence: 127
@@ -5,7 +6,7 @@ slug: viacheslav-chornovil
 version: '2.0'
 title: 'В''ячеслав Чорновіл: Незламний правозахисник'
 content_outline:
-- section: Вступ — Людина, яка не схилялася
+- section: "Вступ — Людина, яка не схилялася"
   words: 400
   points:
   - Чорновіл як символ української незламності

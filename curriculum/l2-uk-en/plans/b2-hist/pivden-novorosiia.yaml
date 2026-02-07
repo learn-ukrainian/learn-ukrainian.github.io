@@ -1,3 +1,4 @@
+---
 module: pivden-novorosiia
 level: B2-HIST
 sequence: 77
@@ -91,4 +92,4 @@ grammar:
 - Топоніміка та етимологія
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

@@ -1,40 +1,25 @@
-# Module Plan: Comparative Lab
-# Track: RUTH
-# Module: 049
-# Source: Gemini Research (ISSUE-494)
-# Generated: 2026-02-04
-
 module_number: 49
 slug: comparative-lab-parallel
-title_uk: "Порівняльна лабораторія"
-title_en: "Comparative Lab"
-
+title_uk: Порівняльна лабораторія
+title_en: Comparative Lab
 phase: 2
 phase_id: sacred-word
-phase_name: "Sacred Word"
-
-focus: "Analyzing one verse across 4 versions"
-
-word_target: 2500
-
-# Content outline to be expanded during content generation
+phase_name: Sacred Word
+focus: Analyzing one verse across 4 versions
+word_target: 4000
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Comparative Lab"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Comparative Lab
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
-  - grammar-lab
-  - parallel-text
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+- parallel-text

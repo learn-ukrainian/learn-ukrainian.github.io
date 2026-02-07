@@ -1,3 +1,4 @@
+---
 module: c1-bio-009
 level: C1-BIO
 sequence: 9
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Михайло Чернігівський: Князь-мученик'
 word_target: 4300
 content_outline:
-- section: Вступ — Вибір між життям і вірою
+- section: "Вступ — Вибір між життям і вірою"
   words: 600
   points:
   - Михайло як символ духовного опору Орді

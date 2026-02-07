@@ -1,3 +1,4 @@
+---
 module: c1-bio-096
 level: C1-BIO
 sequence: 96
@@ -5,7 +6,7 @@ slug: mykola-khvylovyi
 version: '2.0'
 title: 'Микола Хвильовий: Геть від Москви!'
 content_outline:
-- section: Вступ — Бунтар, що обрав смерть
+- section: "Вступ — Бунтар, що обрав смерть"
   words: 400
   points:
   - Микола Хвильовий — найяскравіша постать Розстріляного відродження

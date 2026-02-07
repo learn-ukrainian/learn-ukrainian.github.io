@@ -1,38 +1,24 @@
-# Module Plan: The Parables I: Sower
-# Track: RUTH
-# Module: 025
-# Source: Gemini Research (ISSUE-493)
-# Generated: 2026-02-04
-
+---
 module_number: 25
 slug: parable-sower
-title_uk: "Притча: Сіяч"
-title_en: "The Parables I: Sower"
-
+title_uk: 'Притча: Сіяч'
+title_en: 'The Parables I: Sower'
 phase: 1
 phase_id: chancery-legal
-phase_name: "Chancery & Legal"
-
-focus: "Agricultural vocabulary — Ролія, Зерно"
-
+phase_name: Chancery & Legal
+focus: Agricultural vocabulary — Ролія, Зерно
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to The Parables I: Sower"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to The Parables I: Sower'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

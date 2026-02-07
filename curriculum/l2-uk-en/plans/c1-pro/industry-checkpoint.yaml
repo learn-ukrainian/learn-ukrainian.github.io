@@ -1,3 +1,4 @@
+---
 module: c1-pro-44
 level: C1-PRO
 sequence: 44
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Контрольна точка: Галузева спеціалізація'
 subtitle: Industry Checkpoint
 content_outline:
-- section: Огляд фази — Галузева спеціалізація
+- section: "Огляд фази — Галузева спеціалізація"
   words: 400
   points:
   - Ключові навички C1-PRO.3 (IT, фінанси, право, медицина, переклад)

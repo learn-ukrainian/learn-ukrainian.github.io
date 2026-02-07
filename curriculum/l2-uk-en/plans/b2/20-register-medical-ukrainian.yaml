@@ -1,3 +1,4 @@
+---
 module: 20-register-medical-ukrainian
 level: B2
 sequence: 20
@@ -5,7 +6,7 @@ slug: 20-register-medical-ukrainian
 version: '2.0'
 title: 'Медична українська: спілкування у сфері охорони здоров''я'
 content_outline:
-- section: Вступ — Медичний регістр
+- section: "Вступ — Медичний регістр"
   words: 400
   points:
   - Особливості медичної комунікації
@@ -115,7 +116,7 @@ sources:
   type: reference
   notes: B2 specialized vocabulary requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - 'Understand and apply медична українська: спілкування у сфері охорони здоров''я'
 - Analyze and evaluate медичний регістр

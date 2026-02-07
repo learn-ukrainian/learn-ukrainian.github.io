@@ -1,3 +1,4 @@
+---
 module: legal-ukrainian-iv
 level: c2
 sequence: 64
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Законодавство України — Нормотворча техніка
+- name: "Законодавство України — Нормотворча техніка"
   url: "https://zakon.rada.gov.ua/"
   type: primary
   notes: Вимоги до юридичних текстів
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Методика юридичного письма
 content_outline:
-- section: Вступ — Особливості юридичного письма
+- section: "Вступ — Особливості юридичного письма"
   words: 500
   points:
   - Точність і однозначність
@@ -63,7 +64,7 @@ content_outline:
   - Перевірка логічності та послідовності
   - Усунення двозначностей
   - Форматування та оформлення
-- section: Практикум — Юридичне письмо
+- section: "Практикум — Юридичне письмо"
   words: 500
   points:
   - Складання юридичного висновку
@@ -88,7 +89,7 @@ vocabulary:
   - заперечення (objection)
   - повістка (summons)
   - правонаступник (legal successor)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

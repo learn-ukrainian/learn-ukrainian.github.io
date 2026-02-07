@@ -1,3 +1,4 @@
+---
 module: memorandum-uhh
 level: c1-hist
 sequence: 42
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of меморандум української гельсінської групи
 - Evaluate the historical significance of права людини як зброя
 content_outline:
-- section: Вступ — Права людини як зброя
+- section: "Вступ — Права людини як зброя"
   words: 457
   subsections:
   - 1976 рік — контекст
@@ -30,7 +31,7 @@ content_outline:
   - Руденко, Лук'яненко, Тихий
   - Мотивація — чому ризикували
   - Перші дії
-- section: Меморандум — аналіз тексту
+- section: "Меморандум — аналіз тексту"
   words: 914
   subsections:
   - Текст (фрагменти з глосами)

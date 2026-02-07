@@ -1,3 +1,4 @@
+---
 module: kinets-hetmanshchyny
 level: B2-HIST
 sequence: 74
@@ -57,7 +58,7 @@ grammar:
 - Пасивні конструкції
 - Історична термінологія
 register: публіцистичний
-phase: B2.3b [Українська історія]
+phase: "B2.3b [Українська історія]"
 vocabulary_hints:
   required:
   - ліквідація (liquidation)

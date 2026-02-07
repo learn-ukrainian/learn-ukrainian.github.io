@@ -1,3 +1,4 @@
+---
 module: 02-past-passive-participles
 level: B2
 sequence: 2
@@ -5,7 +6,7 @@ slug: 02-past-passive-participles
 version: '2.0'
 title: Дієприкметники минулого часу на -ний/-тий
 content_outline:
-- section: Вступ — Що таке дієприкметник?
+- section: "Вступ — Що таке дієприкметник?"
   words: 400
   points:
   - Дієприкметник як прикметникова форма дієслова
@@ -117,7 +118,7 @@ sources:
   type: reference
   notes: B2 grammar complexity expectations
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: "B2.1a [Passive Voice]"
 objectives:
 - Identify and correctly use дієприкметники минулого часу на -ний/-тий
 - Form and apply що таке дієприкметник?

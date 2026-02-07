@@ -1,3 +1,4 @@
+---
 module: complete-grammar-review
 level: c2
 sequence: 76
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — Каталог В
+- name: "Ukrainian State Standard 2024 — Каталог В"
   url: "https://mon.gov.ua/"
   type: primary
   notes: Повний граматичний каталог C2 рівня
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Фундаментальний граматичний опис
 content_outline:
-- section: Вступ — Граматика як система
+- section: "Вступ — Граматика як система"
   words: 400
   points:
   - Рівні граматичного опису
@@ -63,7 +64,7 @@ content_outline:
   - Складнопідрядні речення
   - Безсполучникові речення
   - Багатокомпонентні конструкції
-- section: Практикум — Комплексна перевірка
+- section: "Практикум — Комплексна перевірка"
   words: 500
   points:
   - Діагностичний тест
@@ -88,7 +89,7 @@ vocabulary:
   - прийменник (preposition)
   - частка (particle)
   - вигук (interjection)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - group-sort

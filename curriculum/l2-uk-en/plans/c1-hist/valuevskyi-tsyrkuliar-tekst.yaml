@@ -1,3 +1,4 @@
+---
 module: valuevskyi-tsyrkuliar-tekst
 level: c1-hist
 sequence: 31
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of валуєвський циркуляр: повний текст'
 - Evaluate the historical significance of заборона мови
 content_outline:
-- section: Вступ — Заборона мови
+- section: "Вступ — Заборона мови"
   words: 457
   subsections:
   - 1863 рік — контекст
@@ -23,7 +24,7 @@ content_outline:
   - Українофільство — що це?
   - Загроза для імперії
   - Валуєв — хто він
-- section: Текст циркуляра — повний аналіз
+- section: "Текст циркуляра — повний аналіз"
   words: 914
   subsections:
   - Текст (з глосами)
@@ -78,7 +79,7 @@ activities:
 - type: reading
   focus: Full text with glosses
 - type: critical-analysis
-  focus: How does Valuev argue that Ukrainian "doesn't exist"?
+  focus: "How does Valuev argue that Ukrainian \"doesn't exist\"?"
 - type: comparative-study
   focus: Compare with colonial language policies elsewhere
 - type: critical-analysis

@@ -1,3 +1,4 @@
+---
 module: pivden-kolonizatsiia-mify
 level: c1-hist
 sequence: 79
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of південь: колонізація та міфи «новоросії»'
 - Evaluate the historical significance of що це?
 content_outline:
-- section: Вступ — «Новоросія» — що це?
+- section: "Вступ — «Новоросія» — що це?"
   words: 457
   subsections:
   - Імперська назва
@@ -31,7 +32,7 @@ content_outline:
   - Українці — більшість
   - Греки, болгари, німці
   - Росіяни — меншість
-- section: Одеса — імперське місто
+- section: "Одеса — імперське місто"
   words: 686
   subsections:
   - Заснування — 1794
@@ -81,9 +82,9 @@ activities:
 - type: comparative-study
   focus: "Who settled Southern Ukraine — ethnic breakdown"
 - type: critical-analysis
-  focus: "Odesa — Ukrainian or \"other\"?"
+  focus: 'Odesa — Ukrainian or \"other\"?'
 - type: critical-analysis
-  focus: "2014 vs. 2022 — why \"Novorossiya\" project failed"
+  focus: '2014 vs. 2022 — why \"Novorossiya\" project failed'
 - type: essay-response
   focus: Чому російський проект 'Новоросії' провалився?
 sources:

@@ -1,3 +1,4 @@
+---
 module: haidamaky
 level: LIT
 slug: haidamaky
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Гайдамаки: Кривава Свобода'
 subtitle: 'LIT-013: Епос Гніву і Спокути'
 content_outline:
-- section: Вступ — Коліївщина 1768 року
+- section: "Вступ — Коліївщина 1768 року"
   words: 730
   points:
   - Історичне підґрунтя повстання
@@ -17,13 +18,13 @@ content_outline:
   - Жанрова специфіка (епос + лірика)
   - Три сюжетні лінії
   - Авторські відступи
-- section: Ярема і Оксана — любовний роман
+- section: "Ярема і Оксана — любовний роман"
   words: 851
   points:
   - Образ Яреми як "нового козака"
   - Кохання посеред хаосу
   - Художня вигадка vs історія
-- section: Гонта і сини — античний фатум
+- section: "Гонта і сини — античний фатум"
   words: 973
   points:
   - Іван Гонта як трагічний герой
@@ -35,7 +36,7 @@ content_outline:
   - Чи виправдовує мета засоби?
   - Насильство і спокута
   - Шевченко як суддя історії
-- section: Підсумок — Пам'ять і травма
+- section: "Підсумок — Пам'ять і травма"
   words: 486
   points:
   - Як пам'ятати страшне минуле
@@ -88,15 +89,15 @@ grammar:
 - Rhetorical questions and exclamations
 module_type: literature
 sources:
-- name: Гайдамаки — повний текст
+- name: "Гайдамаки — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=10"
   type: primary
   notes: Поема для детального аналізу
-- name: Аналіз "Гайдамаків"
+- name: "Аналіз \"Гайдамаків\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=10"
   type: secondary
   notes: Літературознавчий аналіз
-- name: Коліївщина — історія
+- name: "Коліївщина — історія"
   url: "https://uk.wikipedia.org/wiki/Коліївщина"
   type: reference
   notes: Історичний контекст

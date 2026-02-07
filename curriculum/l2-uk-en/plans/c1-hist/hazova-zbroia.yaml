@@ -1,3 +1,4 @@
+---
 module: hazova-zbroia
 level: c1-hist
 sequence: 106
@@ -9,28 +10,28 @@ objectives:
 - 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
 - Evaluate the historical significance of газ як зброя
 content_outline:
-- section: Вступ — Газ як зброя
+- section: "Вступ — Газ як зброя"
   words: 457
   subsections:
   - Енергетична залежність
   - Росія — постачальник
   - Газ як інструмент тиску
   - Структура модуля
-- section: 1990-ті — Борги і залежність
+- section: "1990-ті — Борги і залежність"
   words: 686
   subsections:
   - Успадкована залежність
   - Накопичення боргів
   - Бартерні схеми
   - Корупція — з обох сторін
-- section: 2006 і 2009 — Газові війни
+- section: "2006 і 2009 — Газові війни"
   words: 800
   subsections:
   - Відключення газу
   - Вплив на Європу
   - Україна — «ненадійний транзитер»
   - Хто виграв
-- section: Nord Stream — обхід України
+- section: "Nord Stream — обхід України"
   words: 686
   subsections:
   - Навіщо Росії

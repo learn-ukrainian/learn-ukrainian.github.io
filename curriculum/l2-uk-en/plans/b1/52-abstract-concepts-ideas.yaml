@@ -1,3 +1,4 @@
+---
 module: b1-52
 level: B1
 sequence: 52
@@ -85,4 +86,4 @@ grammar:
 - Verb + abstract noun patterns
 - Preposition usage with abstracts
 register: розмовний
-phase: B1.5 [Vocabulary Expansion I]
+phase: "B1.5 [Vocabulary Expansion I]"

@@ -1,3 +1,4 @@
+---
 module: hromadske-suspilstvo
 level: B2-HIST
 sequence: 137
@@ -88,4 +89,4 @@ grammar:
 - Минулий час для нещодавніх подій
 - Соціологічна лексика
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

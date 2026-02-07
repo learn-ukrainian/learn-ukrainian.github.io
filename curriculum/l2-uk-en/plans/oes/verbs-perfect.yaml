@@ -1,4 +1,5 @@
-# Module Plan: Verbs III: The Perfect
+---
+# Module Plan: "Verbs III: The Perfect"
 # Track: OES
 # Module: 010
 # Source: Gemini Research (ISSUE-501)
@@ -13,7 +14,7 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: "Vernacular Foundations"
 
-focus: ""Вкрав єси..." — Origin of modern past tense"
+focus: '"Вкрав єси..." — Origin of modern past tense'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

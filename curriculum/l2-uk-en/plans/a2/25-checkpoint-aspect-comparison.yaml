@@ -7,7 +7,7 @@ title: 'Checkpoint: Aspect, Comparison & Modality'
 subtitle: Review of Modules 11-24
 content_outline:
 - section: Огляд / Overview
-  words: 258
+  words: 220
   points:
   - Consolidating the 'Quality and Time' block
   - The map of skills from M11 to M24
@@ -32,18 +32,18 @@ content_outline:
   - Zone 1-2-3 agreement rules
   - Counting with nouns
 - section: Practice / Практика (The Mega-Review)
-  words: 155
+  words: 132
   points:
   - Aspect transformation
   - Comparison marathon
   - Modality check
   - Counting money
 - section: 'Dialogue / Діалог: Synthesis (Синтез навичок)'
-  words: 258
+  words: 220
   points:
   - Synthesizing all four skills in dialogue with analysis
 - section: Integration Challenge / Інтеграційне завдання
-  words: 100
+  words: 28
   points:
   - Combined task using all skills
 word_target: 1000
@@ -63,7 +63,7 @@ grammar:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - A2 Review
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Standards for integrating intermediate A2 skills
 immersion: 40-50% Ukrainian

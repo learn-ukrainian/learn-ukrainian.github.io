@@ -1,3 +1,4 @@
+---
 module: c2-2-practice-ii
 level: c2
 sequence: 43
@@ -8,44 +9,44 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Літературний конкурс "Коронація слова"
+- name: "Літературний конкурс \"Коронація слова\""
   url: "https://koronacijaslova.org.ua/"
   type: reference
   notes: Standards for contemporary Ukrainian creative writing competitions
-- name: Видавництво "Старий Лев"
+- name: "Видавництво \"Старий Лев\""
   url: "https://starylev.com.ua/"
   type: reference
   notes: Contemporary Ukrainian prose and poetry for creative models
-- name: ЛітАкцент — сучасна література
+- name: "ЛітАкцент — сучасна література"
   url: "https://litakcent.com/"
   type: reference
   notes: Reviews and analysis of current Ukrainian literary scene
 content_outline:
-- section: Вступ — Творче портфоліо як мистецький проєкт
+- section: "Вступ — Творче портфоліо як мистецький проєкт"
   words: 432
   points:
   - Відмінність творчого портфоліо від літературознавчого
   - Концептуальна єдність творчої збірки
   - Авторська ідентичність через добір творів
-- section: Поезія — Цикл віршів
+- section: "Поезія — Цикл віршів"
   words: 757
   points:
   - Створення тематично пов'язаного поетичного циклу
   - Експерименти з формою (верлібр, традиційні форми, візуальна поезія)
   - Робота зі звукописом та ритмом (М22)
-- section: Проза — Оповідання
+- section: "Проза — Оповідання"
   words: 973
   points:
   - Написання повноцінного оповідання
   - Наративні техніки та фокалізація (М27)
   - Робота з хронотопом та атмосферою
-- section: Драматургія — Діалог або сцена
+- section: "Драматургія — Діалог або сцена"
   words: 649
   points:
   - Написання драматичного діалогу
   - Підтекст та непряма характеризація
   - Сценічні ремарки та візуальна мова
-- section: Есеїстика — Літературний есей
+- section: "Есеїстика — Літературний есей"
   words: 757
   points:
   - Особистий голос в есеїстичному жанрі
@@ -76,7 +77,7 @@ vocabulary:
   - сценічна ремарка (stage direction)
   - непряма характеризація (indirect characterization)
   - мистецький проєкт (artistic project)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

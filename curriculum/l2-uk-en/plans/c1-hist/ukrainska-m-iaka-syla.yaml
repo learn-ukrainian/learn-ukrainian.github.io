@@ -1,3 +1,4 @@
+---
 module: ukrainska-m-iaka-syla
 level: c1-hist
 sequence: 132
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
 - Evaluate the historical significance of культура як зброя
 content_outline:
-- section: Вступ — Культура як зброя
+- section: "Вступ — Культура як зброя"
   words: 515
   subsections:
   - М'яка сила — що це

@@ -1,3 +1,4 @@
+---
 module: ukrainski-zemli-u-vkl
 level: B2-HIST
 sequence: 30
@@ -35,7 +36,7 @@ content_outline:
   words: 422
   points:
   - Приклад виконання завдання
-- section: Підсумок — Напередодні Люблінської унії
+- section: "Підсумок — Напередодні Люблінської унії"
   words: 170
   points:
   - 1569 рік як переломний момент
@@ -54,7 +55,7 @@ objectives:
 grammar:
 - Administrative terminology
 - Regional descriptions
-phase: B2.3b [Українська історія]
+phase: "B2.3b [Українська історія]"
 vocabulary_hints:
   required:
   - історія (history)

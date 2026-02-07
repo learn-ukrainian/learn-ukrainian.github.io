@@ -1,3 +1,4 @@
+---
 module: bucha-irpin
 level: B2-HIST
 sequence: 134
@@ -88,4 +89,4 @@ grammar:
 - Пасивний стан для опису злочинів
 - Юридична лексика
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

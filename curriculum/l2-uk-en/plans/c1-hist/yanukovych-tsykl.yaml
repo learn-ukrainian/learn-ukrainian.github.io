@@ -1,3 +1,4 @@
+---
 module: yanukovych-tsykl
 level: c1-hist
 sequence: 87
@@ -9,35 +10,35 @@ objectives:
 - 'Analyze the causes and consequences of янукович: сучасна версія циклу'
 - Evaluate the historical significance of цикл у xxi столітті
 content_outline:
-- section: Вступ — Цикл у XXI столітті
+- section: "Вступ — Цикл у XXI столітті"
   words: 457
   subsections:
   - Янукович — не перший і не останній
   - Чому це кооптація
   - Сучасна версія старого паттерну
   - Структура модуля
-- section: Фаза 1 — Підкуп (2010-2013)
+- section: "Фаза 1 — Підкуп (2010-2013)"
   words: 800
   subsections:
   - 15 мільярдів від Путіна
   - Харківські угоди — флот
   - Знижка на газ
   - Що обіцяли натомість
-- section: Фаза 2 — Залежність
+- section: "Фаза 2 — Залежність"
   words: 686
   subsections:
   - Газова залежність
   - Кредитна залежність
   - Політичний тиск
   - Шлях до ЄС — закритий
-- section: Фаза 3 — Вілнюс 2013
+- section: "Фаза 3 — Вілнюс 2013"
   words: 686
   subsections:
   - Угода про асоціацію — готова
   - Відмова — чому
   - Тиск Росії
   - Точка неповернення
-- section: Фаза 4 — Крах
+- section: "Фаза 4 — Крах"
   words: 571
   subsections:
   - Майдан

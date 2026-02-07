@@ -1,3 +1,4 @@
+---
 module: holodomor-vyznannia
 level: c1-hist
 sequence: 50
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of визнання геноцидом: правовий аспект'
 - Evaluate the historical significance of від історії до права
 content_outline:
-- section: Вступ — Від історії до права
+- section: "Вступ — Від історії до права"
   words: 457
   subsections:
   - Чому визнання важливе

@@ -1,3 +1,4 @@
+---
 module: zunr
 level: B2-HIST
 sequence: 92
@@ -88,4 +89,4 @@ grammar:
 - Політична та юридична лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.9 [WWI & Revolution]
+phase: "HIST.9 [WWI & Revolution]"

@@ -1,7 +1,3 @@
-module: 01-the-cyrillic-code-i
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: True Friends
   pairs:

@@ -1,3 +1,4 @@
+---
 module: c1-bio-072
 level: C1-BIO
 sequence: 72
@@ -5,7 +6,7 @@ slug: oleksandr-hrekiv
 version: '2.0'
 title: 'Олександр Греків: Полководець УНР'
 content_outline:
-- section: Вступ — Генерал української незалежності
+- section: "Вступ — Генерал української незалежності"
   words: 400
   points:
   - Греків як один із провідних військових діячів УНР

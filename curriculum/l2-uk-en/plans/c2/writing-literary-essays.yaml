@@ -1,3 +1,4 @@
+---
 module: writing-literary-essays
 level: c2
 sequence: 32
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Есей — Вікіпедія
+- name: "Есей — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Есей"
   type: reference
   notes: Essay genre characteristics
@@ -21,7 +22,7 @@ sources:
   type: primary
   notes: Examples of published literary essays
 content_outline:
-- section: Вступ — Літературознавчий есей як жанр
+- section: "Вступ — Літературознавчий есей як жанр"
   words: 500
   points:
   - Есей vs. стаття vs. рецензія
@@ -87,7 +88,7 @@ vocabulary:
   - методологія (methodology)
   - контекстуалізація (contextualization)
   - синтез (synthesis)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

@@ -1,3 +1,4 @@
+---
 module: a2-46
 level: A2
 sequence: 46
@@ -79,4 +80,4 @@ grammar:
 - Prepositions of place review
 - Adjectives for home description
 register: розмовний
-phase: A2.5 [Vocabulary Expansion]
+phase: "A2.5 [Vocabulary Expansion]"

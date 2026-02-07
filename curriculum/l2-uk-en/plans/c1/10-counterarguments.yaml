@@ -1,3 +1,4 @@
+---
 module: 10-counterarguments
 level: C1
 sequence: 10
@@ -5,7 +6,7 @@ slug: 10-counterarguments
 version: '2.0'
 title: Контраргументи та спростування
 content_outline:
-- section: Вступ — Сила контраргументу
+- section: "Вступ — Сила контраргументу"
   words: 400
   points:
   - Чому важливо враховувати протилежні погляди

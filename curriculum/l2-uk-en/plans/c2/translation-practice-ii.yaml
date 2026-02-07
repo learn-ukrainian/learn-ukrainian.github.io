@@ -1,3 +1,4 @@
+---
 module: translation-practice-ii
 level: c2
 sequence: 87
@@ -8,11 +9,11 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Карабан — Переклад науково-технічної літератури
+- name: "Карабан — Переклад науково-технічної літератури"
   url: "https://uk.wikipedia.org/wiki/Карабан_В'ячеслав_Іванович"
   type: primary
   notes: Standard textbook for technical translation Ukrainian-English
-- name: ISO 17100 — Translation Services Requirements
+- name: "ISO 17100 — Translation Services Requirements"
   url: "https://www.iso.org/"
   type: reference
   notes: International standard for translation quality
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Ukrainian terminology standardization
 content_outline:
-- section: Вступ — Світ спеціалізованого перекладу
+- section: "Вступ — Світ спеціалізованого перекладу"
   words: 541
   points:
   - Види спеціалізованого перекладу
@@ -81,7 +82,7 @@ vocabulary:
   - пам'ять перекладів (translation memory)
   - сертифікований переклад (certified translation)
   - апостиль (apostille)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - critical-analysis

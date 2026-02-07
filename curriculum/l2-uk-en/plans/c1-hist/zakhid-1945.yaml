@@ -1,3 +1,4 @@
+---
 module: zakhid-1945
 level: c1-hist
 sequence: 96
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of 1945: ялта і зрада'
 - Evaluate the historical significance of друга зрада
 content_outline:
-- section: Вступ — Друга зрада
+- section: "Вступ — Друга зрада"
   words: 457
   subsections:
   - 1945 — новий світовий порядок

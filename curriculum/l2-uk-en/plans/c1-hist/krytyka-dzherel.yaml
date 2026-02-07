@@ -1,3 +1,4 @@
+---
 module: krytyka-dzherel
 level: c1-hist
 sequence: 9
@@ -10,7 +11,7 @@ objectives:
 - Evaluate the historical significance of чому джерела брешуть
 - Trace the development of особливості українських джерел
 content_outline:
-- section: Вступ — Чому джерела брешуть
+- section: "Вступ — Чому джерела брешуть"
   words: 457
   subsections:
   - Кожне джерело має автора з інтересами
@@ -54,7 +55,7 @@ content_outline:
   - ЧОМУ? — інтереси автора
   - ЩО ОПУЩЕНО? — аналіз мовчання
   - Практичний чекліст
-- section: Практикум — аналіз джерела
+- section: "Практикум — аналіз джерела"
   words: 571
   subsections:
   - Вибране джерело (Universal Хмельницького або інше)

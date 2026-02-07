@@ -1,3 +1,4 @@
+---
 module: 18-register-academic-ukrainian
 level: B2
 sequence: 18
@@ -5,7 +6,7 @@ slug: 18-register-academic-ukrainian
 version: '2.0'
 title: Науковий стиль української мови
 content_outline:
-- section: Вступ — Науковий стиль
+- section: "Вступ — Науковий стиль"
   words: 400
   points:
   - Характерні риси наукового стилю
@@ -118,7 +119,7 @@ sources:
   type: reference
   notes: B2 academic reading and writing
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Understand and apply науковий стиль української мови
 - Analyze and evaluate науковий стиль

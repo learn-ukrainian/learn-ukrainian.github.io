@@ -1,3 +1,4 @@
+---
 module: nechuy-levytsky
 level: LIT
 slug: nechuy-levytsky
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Іван Нечуй-Левицький: Літописець Українського Села'
 subtitle: 'Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village'
 content_outline:
-- section: Вступ — Від Куліша до Нечуя
+- section: "Вступ — Від Куліша до Нечуя"
   words: 608
   points:
   - Перехід від романтизму до реалізму
@@ -35,7 +36,7 @@ content_outline:
   - Етнографічна точність
   - Мова як інструмент реалізму
   - Конфлікт з "галицькою" нормою
-- section: Підсумок — Останні роки і спадщина
+- section: "Підсумок — Останні роки і спадщина"
   words: 487
   points:
   - Київський період (1885-1918)
@@ -95,7 +96,7 @@ sources:
   url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1647"
   type: primary
   notes: Розширена біографічна стаття
-- name: Нечуй-Левицький — Вікіпедія
+- name: "Нечуй-Левицький — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович"
   type: reference
   notes: Загальний контекст

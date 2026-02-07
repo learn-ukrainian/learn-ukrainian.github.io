@@ -1,3 +1,4 @@
+---
 module: syntez-viyna
 level: B2-HIST
 sequence: 140
@@ -88,4 +89,4 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.13 [Full-Scale War]
+phase: "HIST.13 [Full-Scale War]"

@@ -1,3 +1,4 @@
+---
 module: syntez-rozstriliane
 level: c1-hist
 sequence: 57
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: культурний геноцид'
 - Evaluate the historical significance of що ми дізналися
 content_outline:
-- section: Вступ — Що ми дізналися
+- section: "Вступ — Що ми дізналися"
   words: 457
   subsections:
   - Огляд модулів 52-56
@@ -31,7 +32,7 @@ content_outline:
   - Наукова традиція
   - Альтернативний шлях розвитку
   - Що могло б бути
-- section: Культурний геноцид — поняття
+- section: "Культурний геноцид — поняття"
   words: 686
   subsections:
   - Визначення

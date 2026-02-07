@@ -1,3 +1,4 @@
+---
 module: c1-bio-118
 level: C1-BIO
 sequence: 118
@@ -5,7 +6,7 @@ slug: borys-paton
 version: '2.0'
 title: 'Борис Патон: Академік століття'
 content_outline:
-- section: Вступ — Найдовше президентство в історії науки
+- section: "Вступ — Найдовше президентство в історії науки"
   words: 457
   points:
   - Борис Патон — 58 років на чолі НАН України

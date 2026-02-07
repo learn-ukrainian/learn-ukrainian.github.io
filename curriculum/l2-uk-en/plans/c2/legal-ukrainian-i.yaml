@@ -1,3 +1,4 @@
+---
 module: legal-ukrainian-i
 level: c2
 sequence: 61
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Верховна Рада України — законодавство
+- name: "Верховна Рада України — законодавство"
   url: "https://zakon.rada.gov.ua/"
   type: primary
   notes: "Official Ukrainian legislation database — primary source for legal texts"
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Ukrainian legal encyclopedia for terminology
 content_outline:
-- section: Вступ — Правнича мова як система
+- section: "Вступ — Правнича мова як система"
   words: 541
   points:
   - Особливості юридичної української
@@ -79,7 +80,7 @@ vocabulary:
   - нормативний акт (normative act)
   - підсудність (jurisdiction)
   - правоздатність (legal capacity)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - group-sort

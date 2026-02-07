@@ -1,3 +1,4 @@
+---
 module: druha-khvylia-politychna
 level: c1-hist
 sequence: 65
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of друга хвиля: політична (1920-1923)'
 - Evaluate the historical significance of поразка і відступ
 content_outline:
-- section: Вступ — Поразка і відступ
+- section: "Вступ — Поразка і відступ"
   words: 457
   subsections:
   - 1920-1921 — кінець визвольних змагань
@@ -23,7 +24,7 @@ content_outline:
   - Умови життя
   - Культурне життя в таборах
   - Шлях до цивільного життя
-- section: Прага — столиця еміграції
+- section: "Прага — столиця еміграції"
   words: 800
   subsections:
   - Чому Чехословаччина?
@@ -80,7 +81,7 @@ activities:
 - type: reading
   focus: Paths of UNR leaders after 1921
 - type: critical-analysis
-  focus: "Czech \"Russian Action\" — why support Ukrainians?"
+  focus: 'Czech \"Russian Action\" — why support Ukrainians?'
 - type: critical-analysis
   focus: Map emigre political factions and conflicts
 - type: essay-response

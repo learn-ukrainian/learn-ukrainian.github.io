@@ -1,3 +1,4 @@
+---
 module: c1-bio-066
 level: C1-BIO
 sequence: 66
@@ -5,7 +6,7 @@ slug: yevhen-paton
 version: '2.0'
 title: 'Євген Патон: Батько українського мостобудування'
 content_outline:
-- section: Вступ — Інженер, який з'єднав береги
+- section: "Вступ — Інженер, який з'єднав береги"
   words: 457
   points:
   - Патон як засновник української школи зварювання

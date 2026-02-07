@@ -1,3 +1,4 @@
+---
 module: chicken-kyiv
 level: c1-hist
 sequence: 97
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of 1991: промова «курча по-київськи»'
 - Evaluate the historical significance of «суїцидальний націоналізм»
 content_outline:
-- section: Вступ — «Суїцидальний націоналізм»
+- section: "Вступ — «Суїцидальний націоналізм»"
   words: 457
   subsections:
   - 1 серпня 1991 — Буш у Києві
   - Що він сказав
   - Чому це називають «Курча по-київськи»
   - Структура модуля
-- section: Контекст — Горбачов і Буш
+- section: "Контекст — Горбачов і Буш"
   words: 686
   subsections:
   - Буш вірить Горбачову
@@ -44,7 +45,7 @@ content_outline:
   - Ставка на Москву
   - Страх невідомого
   - Традиційна політика
-- section: «Chicken Kyiv» — ярлик
+- section: "«Chicken Kyiv» — ярлик"
   words: 571
   subsections:
   - Як виник термін

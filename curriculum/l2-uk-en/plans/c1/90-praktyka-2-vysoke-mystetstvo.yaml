@@ -1,3 +1,4 @@
+---
 module: c1-90
 level: C1
 sequence: 90
@@ -6,7 +7,7 @@ version: '2.0'
 title: "Практика II — Високе мистецтво"
 subtitle: "Practice II — Fine Arts"
 content_outline:
-- section: Розминка — Огляд високого мистецтва
+- section: "Розминка — Огляд високого мистецтва"
   words: 700
   points:
   - Від Бортнянського до Сильвестрова — музична еволюція
@@ -20,7 +21,7 @@ content_outline:
   - Review of visual arts (M67-158)
   - Review of ballet and theater (M69-161)
   - Review of architecture (M72)
-- section: Практика — мистецтвознавчий аналіз
+- section: "Практика — мистецтвознавчий аналіз"
   words: 1050
   points:
   - Порівняти Лисенка та Бортнянського — два покоління

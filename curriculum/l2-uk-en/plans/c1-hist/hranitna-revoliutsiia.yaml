@@ -1,3 +1,4 @@
+---
 module: hranitna-revoliutsiia
 level: c1-hist
 sequence: 128
@@ -9,14 +10,14 @@ objectives:
 - Analyze the causes and consequences of гранітна революція 1990
 - Evaluate the historical significance of забута революція
 content_outline:
-- section: Вступ — Забута революція
+- section: "Вступ — Забута революція"
   words: 515
   subsections:
   - Жовтень 1990 — студенти
   - Перша українська революція
   - Чому забули
   - Структура модуля
-- section: Контекст — 1990 рік
+- section: "Контекст — 1990 рік"
   words: 774
   subsections:
   - СРСР ще існує

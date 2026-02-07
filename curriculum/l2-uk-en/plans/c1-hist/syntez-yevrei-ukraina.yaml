@@ -1,3 +1,4 @@
+---
 module: syntez-yevrei-ukraina
 level: c1-hist
 sequence: 121
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: зеленський і нова сторінка'
 - Evaluate the historical significance of символічний момент
 content_outline:
-- section: Вступ — Символічний момент
+- section: "Вступ — Символічний момент"
   words: 515
   subsections:
   - Огляд модулів 118-120
@@ -30,7 +31,7 @@ content_outline:
   - Новий проект — 2020-ті
   - Російський удар 2022
   - Пам'ять як боротьба
-- section: «Денацифікація» — іронія
+- section: "«Денацифікація» — іронія"
   words: 774
   subsections:
   - 'Путін: «нацистська Україна»'

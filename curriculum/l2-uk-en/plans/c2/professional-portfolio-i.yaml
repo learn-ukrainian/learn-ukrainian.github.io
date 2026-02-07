@@ -1,3 +1,4 @@
+---
 module: professional-portfolio-i
 level: c2
 sequence: 71
@@ -16,12 +17,12 @@ sources:
   url: "https://www.me.gov.ua/"
   type: reference
   notes: Професійні стандарти
-- name: Резюме та портфоліо — best practices
+- name: "Резюме та портфоліо — best practices"
   url: "https://work.ua/"
   type: reference
   notes: Українські стандарти оформлення
 content_outline:
-- section: Вступ — Професійне портфоліо в українському контексті
+- section: "Вступ — Професійне портфоліо в українському контексті"
   words: 500
   points:
   - Що таке професійне портфоліо
@@ -63,7 +64,7 @@ content_outline:
   - PDF-версія
   - Усна презентація
   - Адаптація для різних авдиторій
-- section: Практикум — Створення власного портфоліо
+- section: "Практикум — Створення власного портфоліо"
   words: 500
   points:
   - Аудит власних досягнень
@@ -88,7 +89,7 @@ vocabulary:
   - вакансія (job opening)
   - кар'єра (career)
   - потенційний роботодавець (potential employer)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

@@ -1,3 +1,4 @@
+---
 module: lysty-mazepy
 level: c1-hist
 sequence: 26
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of листи мазепи: дипломат і меценат'
 - Evaluate the historical significance of мазепа у листах
 content_outline:
-- section: Вступ — Мазепа у листах
+- section: "Вступ — Мазепа у листах"
   words: 457
   subsections:
   - Листування як джерело
@@ -31,7 +32,7 @@ content_outline:
   - Що Мазепа просив
   - Як маневрував
   - Останні листи перед зрадою
-- section: Фрагмент — Лист до Петра I
+- section: "Фрагмент — Лист до Петра I"
   words: 686
   subsections:
   - Текст (з глосами)

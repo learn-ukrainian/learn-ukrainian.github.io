@@ -1,3 +1,4 @@
+---
 module: holodomor-svidky
 level: c1-hist
 sequence: 49
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of свідки і свідчення: усна історія'
 - Evaluate the historical significance of голоси тих, хто пережив
 content_outline:
-- section: Вступ — Голоси тих, хто пережив
+- section: "Вступ — Голоси тих, хто пережив"
   words: 457
   subsections:
   - Повернення до усної історії
@@ -91,7 +92,7 @@ sources:
   url: "https://ucrdc.org/"
   type: primary
   notes: UCRDC testimony archive
-- name: Проєкт "Голодомор у людських долях"
+- name: "Проєкт \"Голодомор у людських долях\""
   url: "https://archive.khpg.org/"
   type: primary
   notes: Memorial project

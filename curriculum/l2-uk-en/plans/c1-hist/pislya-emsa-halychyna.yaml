@@ -1,3 +1,4 @@
+---
 module: pislya-emsa-halychyna
 level: c1-hist
 sequence: 123
@@ -9,21 +10,21 @@ objectives:
 - 'Analyze the causes and consequences of після емса: галицький розквіт'
 - Evaluate the historical significance of культура переїжджає
 content_outline:
-- section: Вступ — Культура переїжджає
+- section: "Вступ — Культура переїжджає"
   words: 515
   subsections:
   - 1876 — Емський указ
   - Заборона української мови
   - Галичина — рятівний острів
   - Структура модуля
-- section: Емський указ — що заборонили
+- section: "Емський указ — що заборонили"
   words: 774
   subsections:
   - Текст указу
   - Що неможливо було друкувати
   - Освіта — закрита
   - Наслідки для Наддніпрянщини
-- section: Галичина — інший світ
+- section: "Галичина — інший світ"
   words: 903
   subsections:
   - Австрія — відносна свобода

@@ -1,3 +1,4 @@
+---
 module: b1-44
 level: B1
 sequence: 44
@@ -77,4 +78,4 @@ grammar:
 - Активні дієприкметники минулого часу (-лий)
 - Стилістична маркованість та канцелярит
 register: розмовний
-phase: B1.4a [Participles]
+phase: "B1.4a [Participles]"

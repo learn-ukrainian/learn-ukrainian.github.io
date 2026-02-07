@@ -1,3 +1,4 @@
+---
 module: c1-37
 level: C1
 sequence: 37
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Іронія та сарказм: Тонкощі змісту'
 subtitle: 'Irony & Sarcasm: Nuances of Meaning'
 content_outline:
-- section: Розминка — Коли слова означають протилежне
+- section: "Розминка — Коли слова означають протилежне"
   words: 600
   points:
   - Іронія — невідповідність між словами та значенням
@@ -25,7 +26,7 @@ content_outline:
   - 'Вербальна іронія: Saying opposite of meaning'
   - 'Ситуативна іронія: Unexpected outcomes'
   - 'Сарказм: Bitter, cutting irony'
-- section: Практика — розпізнавання іронії
+- section: "Практика — розпізнавання іронії"
   words: 600
   points:
   - Визначити іронію в публіцистичному тексті

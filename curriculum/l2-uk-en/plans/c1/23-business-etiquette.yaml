@@ -1,3 +1,4 @@
+---
 module: 23-business-etiquette
 level: C1
 sequence: 23
@@ -5,7 +6,7 @@ slug: 23-business-etiquette
 version: '2.0'
 title: Діловий етикет в Україні
 content_outline:
-- section: Вступ — Ділова культура України
+- section: "Вступ — Ділова культура України"
   words: 400
   points:
   - Особливості українського бізнес-середовища

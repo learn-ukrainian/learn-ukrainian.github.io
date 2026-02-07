@@ -1,3 +1,4 @@
+---
 module: intertextuality-ii
 level: c2
 sequence: 30
@@ -12,16 +13,16 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Постмодернізм"
   type: reference
   notes: Advanced intertextual strategies in postmodernism
-- name: Юрій Андрухович — твори
+- name: "Юрій Андрухович — твори"
   url: "https://ukrlib.com.ua/"
   type: primary
   notes: Master of Ukrainian intertextuality
-- name: Теорія гіпертексту — Женетт
+- name: "Теорія гіпертексту — Женетт"
   url: "https://uk.wikipedia.org/wiki/Жерар_Женетт"
   type: reference
   notes: Genette's transtextual framework
 content_outline:
-- section: Вступ — від базової до глибинної інтертекстуальності
+- section: "Вступ — від базової до глибинної інтертекстуальності"
   words: 500
   points:
   - Повторення базових концепцій
@@ -55,7 +56,7 @@ content_outline:
   - Література і кіно
   - Література і музика
   - Екфразис у сучасній прозі
-- section: Практикум — багаторівневий аналіз
+- section: "Практикум — багаторівневий аналіз"
   words: 500
   points:
   - Виявлення всіх інтертекстуальних шарів
@@ -86,7 +87,7 @@ vocabulary:
   - пастиш (pastiche)
   - колаж (collage)
   - децентрація (decentering)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

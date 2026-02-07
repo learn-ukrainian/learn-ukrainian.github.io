@@ -1,3 +1,4 @@
+---
 module: professional-portfolio-ii
 level: c2
 sequence: 72
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Дія.Бізнес — Підприємництво
+- name: "Дія.Бізнес — Підприємництво"
   url: "https://business.diia.gov.ua/"
   type: reference
   notes: Цифрові інструменти для професіоналів
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Портфоліо креативних спеціалістів
 content_outline:
-- section: Вступ — Мультиформатне портфоліо
+- section: "Вступ — Мультиформатне портфоліо"
   words: 500
   points:
   - Різні формати для різних цілей
@@ -63,7 +64,7 @@ content_outline:
   - Перехресні посилання
   - Оновлення та підтримка
   - Архівування та версіонування
-- section: Практикум — Багатоформатна презентація
+- section: "Практикум — Багатоформатна презентація"
   words: 500
   points:
   - Створення LinkedIn-профілю
@@ -88,7 +89,7 @@ vocabulary:
   - вебінар (webinar)
   - контент (content)
   - платформа (platform)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

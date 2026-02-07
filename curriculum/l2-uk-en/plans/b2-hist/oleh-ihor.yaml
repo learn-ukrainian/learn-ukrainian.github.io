@@ -1,3 +1,4 @@
+---
 module: oleh-ihor
 level: B2-HIST
 sequence: 9
@@ -123,4 +124,4 @@ sources:
   type: primary
   notes: Chronicle accounts of early rulers
 register: публіцистичний
-phase: B2-HIST.1 [Kyivan Rus]
+phase: "B2-HIST.1 [Kyivan Rus]"

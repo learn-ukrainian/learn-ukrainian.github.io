@@ -1,3 +1,4 @@
+---
 module: rare-archaic-forms
 level: c2
 sequence: 77
@@ -12,7 +13,7 @@ sources:
   url: "https://inmo.org.ua/"
   type: primary
   notes: Історичний розвиток граматичних форм
-- name: Словник української мови XVI—XVII ст.
+- name: "Словник української мови XVI—XVII ст."
   url: "https://lcorp.ulif.org.ua/"
   type: reference
   notes: Історична лексика та форми
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Церковнослов'янізми в українській мові
 content_outline:
-- section: Вступ — Мовна археологія
+- section: "Вступ — Мовна археологія"
   words: 400
   points:
   - Що таке архаїзми та історизми
@@ -63,7 +64,7 @@ content_outline:
   - Релігійні тексти
   - Офіційно-урочистий стиль
   - Стилізація та пародія
-- section: Практикум — Робота з архаїчними текстами
+- section: "Практикум — Робота з архаїчними текстами"
   words: 500
   points:
   - Читання давніх текстів
@@ -88,7 +89,7 @@ vocabulary:
   - стягнена форма (contracted form)
   - лексичний (lexical)
   - морфологічний (morphological)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - reading

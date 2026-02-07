@@ -1,3 +1,4 @@
+---
 module: hreko-katolytska-tserkva
 level: c1-hist
 sequence: 61
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
 - Evaluate the historical significance of унікальна церква
 content_outline:
-- section: Вступ — Унікальна церква
+- section: "Вступ — Унікальна церква"
   words: 457
   subsections:
   - УГКЦ — що це

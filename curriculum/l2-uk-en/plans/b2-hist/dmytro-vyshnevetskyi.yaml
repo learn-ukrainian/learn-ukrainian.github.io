@@ -1,3 +1,4 @@
+---
 module: dmytro-vyshnevetskyi
 level: B2-HIST
 sequence: 43
@@ -62,7 +63,7 @@ grammar:
 - 'Historical narrative: past perfective'
 - Passive voice in historical descriptions
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"
 vocabulary_hints:
   required:
   - історія (history)

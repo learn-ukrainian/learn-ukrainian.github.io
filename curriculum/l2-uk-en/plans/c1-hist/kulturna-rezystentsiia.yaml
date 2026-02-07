@@ -1,3 +1,4 @@
+---
 module: kulturna-rezystentsiia
 level: c1-hist
 sequence: 126
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of культурна резистенція: стратегії виживання'
 - Evaluate the historical significance of як виживає культура
 content_outline:
-- section: Вступ — Як виживає культура
+- section: "Вступ — Як виживає культура"
   words: 515
   subsections:
   - Культурна резистенція — що це

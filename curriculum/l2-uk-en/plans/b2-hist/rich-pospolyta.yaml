@@ -1,3 +1,4 @@
+---
 module: rich-pospolyta
 level: B2-HIST
 sequence: 32
@@ -80,7 +81,7 @@ grammar:
 - Історичний наратив
 - Пасивний стан у науковому тексті
 register: публіцистичний
-phase: B2.3a [Українська історія]
+phase: "B2.3a [Українська історія]"
 vocabulary_hints:
   required:
   - Люблінська унія

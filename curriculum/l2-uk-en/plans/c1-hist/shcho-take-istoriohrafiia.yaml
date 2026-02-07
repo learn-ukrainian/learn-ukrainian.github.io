@@ -1,3 +1,4 @@
+---
 module: shcho-take-istoriohrafiia
 level: c1-hist
 sequence: 1
@@ -9,7 +10,7 @@ objectives:
 - Analyze the difference between history and historiography
 - Evaluate the impact of bias and narrative on historical writing
 content_outline:
-- section: Вступ — Історія vs. Історіографія
+- section: "Вступ — Історія vs. Історіографія"
   words: 485
   subsections:
   - Що таке історія? Що таке історіографія?
@@ -32,7 +33,7 @@ content_outline:
   - Держава як автор історії — офіційні наративи
   - Еміграція та діаспора — альтернативні голоси
   - Сучасність — public history, Wikipedia, соцмережі
-- section: Українська історіографічна традиція — огляд
+- section: "Українська історіографічна традиція — огляд"
   words: 727
   subsections:
   - Від літописів до Грушевського
@@ -89,7 +90,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Історіографія_України"
   type: reference
   notes: Overview of Ukrainian historiographical tradition
-- name: Грушевський — Історія України-Руси (вступ)
+- name: "Грушевський — Історія України-Руси (вступ)"
   url: "https://litopys.org.ua/hrushukr/ihu.htm"
   type: primary
   notes: Hrushevsky's methodological introduction

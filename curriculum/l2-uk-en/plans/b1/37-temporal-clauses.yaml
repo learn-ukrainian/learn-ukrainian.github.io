@@ -1,3 +1,4 @@
+---
 module: b1-37
 level: B1
 sequence: 37
@@ -73,4 +74,4 @@ grammar:
 - 'Sequence markers: перш ніж, як тільки'
 - Simultaneous vs sequential action
 register: розмовний
-phase: B1.3b [Complex Sentences]
+phase: "B1.3b [Complex Sentences]"

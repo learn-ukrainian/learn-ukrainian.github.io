@@ -1,3 +1,4 @@
+---
 module: zapovit-ta-lysty-shevchenka
 level: c1-hist
 sequence: 30
@@ -9,14 +10,14 @@ objectives:
 - Analyze the causes and consequences of «заповіт» і листи шевченка
 - Evaluate the historical significance of шевченко як джерело
 content_outline:
-- section: Вступ — Шевченко як джерело
+- section: "Вступ — Шевченко як джерело"
   words: 457
   subsections:
   - Поезія vs. історичне джерело
   - Листи — приватний голос
   - «Заповіт» — політичний маніфест
   - Як читати Шевченка критично
-- section: «Заповіт» — аналіз тексту
+- section: "«Заповіт» — аналіз тексту"
   words: 800
   subsections:
   - Текст із коментарями
@@ -39,7 +40,7 @@ content_outline:
   - Приватні думки
   - Мова листів — українська vs. російська
   - Що дізнаємося про людину
-- section: Фрагмент — Лист із заслання
+- section: "Фрагмент — Лист із заслання"
   words: 571
   subsections:
   - Текст (з глосами)
@@ -78,11 +79,11 @@ vocabulary:
 - ідол
 activities:
 - type: reading
-  focus: Line-by-line analysis of "Zapovit"
+  focus: "Line-by-line analysis of \"Zapovit\""
 - type: reading
   focus: Letter from exile with glosses
 - type: comparative-study
-  focus: Compare "Zapovit" in Soviet vs. diaspora interpretations
+  focus: "Compare \"Zapovit\" in Soviet vs. diaspora interpretations"
 - type: critical-analysis
   focus: What can letters tell us that poems cannot?
 - type: essay-response

@@ -1,38 +1,24 @@
-# Module Plan: The Epistles: Romans
-# Track: RUTH
-# Module: 033
-# Source: Gemini Research (ISSUE-494)
-# Generated: 2026-02-04
-
+---
 module_number: 33
 slug: epistles-romans
-title_uk: "Послання: Римляни"
-title_en: "The Epistles: Romans"
-
+title_uk: 'Послання: Римляни'
+title_en: 'The Epistles: Romans'
 phase: 2
 phase_id: sacred-word
-phase_name: "Sacred Word"
-
-focus: "Theological terminology — Оправданіє, Благодать"
-
+phase_name: Sacred Word
+focus: Theological terminology — Оправданіє, Благодать
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to The Epistles: Romans"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to The Epistles: Romans'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify

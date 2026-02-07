@@ -1,3 +1,4 @@
+---
 module: c1-bio-025
 level: C1-BIO
 sequence: 25
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Іван Сірко: Легендарний кошовий отаман'
 word_target: 4300
 content_outline:
-- section: Вступ — Легенда Запорозької Січі
+- section: "Вступ — Легенда Запорозької Січі"
   words: 600
   points:
   - Сірко як символ непереможності
@@ -65,7 +66,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Іван_Сірко"
   type: primary
   notes: Біографія та походи
-- name: Дмитро Яворницький "Історія запорозьких козаків"
+- name: "Дмитро Яворницький \"Історія запорозьких козаків\""
   url: "http://izbornyk.org.ua/"
   type: reference
   notes: Класичне дослідження

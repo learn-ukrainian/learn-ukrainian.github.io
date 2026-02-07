@@ -1,3 +1,4 @@
+---
 module: krymske-khanstvo
 level: B2-HIST
 sequence: 27
@@ -32,7 +33,7 @@ content_outline:
   words: 276
   points:
   - Економічна основа ханства
-- section: Підсумок — Спадщина для сучасності
+- section: "Підсумок — Спадщина для сучасності"
   words: 244
   points:
   - Анексія 1783 року та депортація 1944-го
@@ -51,7 +52,7 @@ objectives:
 grammar:
 - Historical narrative style
 - Descriptive constructions
-phase: B2.3c [Українська історія]
+phase: "B2.3c [Українська історія]"
 vocabulary_hints:
   required:
   - історія (history)

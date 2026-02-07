@@ -1,3 +1,4 @@
+---
 module: knyhy-butiia-shevchenko
 level: c1-hist
 sequence: 29
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of книги буття: шевченко та кирило-мефодіївці'
 - Evaluate the historical significance of перша політична програма
 content_outline:
-- section: Вступ — Перша політична програма
+- section: "Вступ — Перша політична програма"
   words: 457
   subsections:
   - 1846-1847 — контекст
@@ -31,7 +32,7 @@ content_outline:
   - Куліш — письменник
   - Інші члени
   - Як організувалися
-- section: «Книги буття» — зміст
+- section: "«Книги буття» — зміст"
   words: 800
   subsections:
   - Структура — біблійна форма
@@ -39,7 +40,7 @@ content_outline:
   - Україна як месія народів
   - Федерація — політичний ідеал
   - Скасування кріпацтва
-- section: Фрагмент — Україна як месія
+- section: "Фрагмент — Україна як месія"
   words: 686
   subsections:
   - Текст (з глосами)
@@ -96,7 +97,7 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Книги_буття_українського_народу"
   type: reference
   notes: Brotherhood manifesto
-- name: Текст "Книг буття"
+- name: "Текст \"Книг буття\""
   url: "https://uk.wikisource.org/wiki/Книга_буття_українського_народу"
   type: primary
   notes: Full text

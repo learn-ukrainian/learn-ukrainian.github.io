@@ -1,3 +1,4 @@
+---
 module: greeks-crimea-olbia
 level: B2-HIST
 sequence: 3
@@ -123,6 +124,6 @@ sources:
   type: reference
   notes: History of Chersonesus
 register: публіцистичний
-phase: B2-HIST.1 [Витоки]
+phase: "B2-HIST.1 [Витоки]"
 module_type: history
 immersion: 100% Ukrainian

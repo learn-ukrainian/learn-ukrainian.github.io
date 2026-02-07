@@ -1,3 +1,4 @@
+---
 module: b2-33
 level: B2
 sequence: 33
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Словотворення: суфікси на позначення осіб'
 subtitle: Word Formation - Person Suffixes
 content_outline:
-- section: Розминка — Як утворюються назви осіб
+- section: "Розминка — Як утворюються назви осіб"
   words: 300
   points:
   - Словотвір як ключ до розширення словника
@@ -33,7 +34,7 @@ content_outline:
   - Від прикметників (художній → художник)
   - Роль у групі (учасник, спільник, союзник)
   - Варіант -івник (працівник, службовець)
-- section: Практика — визначення словотвору
+- section: "Практика — визначення словотвору"
   words: 400
   points:
   - Визначити, від якого слова утворено назву особи
@@ -52,7 +53,7 @@ grammar:
 - Суфікс -ач для позначення виконавця дії
 - Суфікс -ник для позначення роду занять
 register: науковий
-phase: B2.1c [Register & Word Formation]
+phase: "B2.1c [Register & Word Formation]"
 vocabulary_hints:
   required:
   - термін (term)

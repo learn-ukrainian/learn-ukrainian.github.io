@@ -1,3 +1,4 @@
+---
 module: 23-motion-patterns-other-verbs
 level: B1
 sequence: 23
@@ -8,7 +9,7 @@ subtitle: Motion prefixes in non-motion verbs
 content_outline:
 - section: Тест
   words: 121
-  points: []
+  points: "[]"
 - section: Пояснення
   words: 1375
   points:

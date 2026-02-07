@@ -1,3 +1,4 @@
+---
 module: syntez-informatsiina-viina
 level: c1-hist
 sequence: 113
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: хто виграє війну наративів?'
 - Evaluate the historical significance of війна за правду
 content_outline:
-- section: Вступ — Війна за правду
+- section: "Вступ — Війна за правду"
   words: 515
   subsections:
   - Огляд модулів 108-112

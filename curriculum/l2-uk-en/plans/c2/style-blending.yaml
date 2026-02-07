@@ -1,3 +1,4 @@
+---
 module: style-blending
 level: c2
 sequence: 24
@@ -21,7 +22,7 @@ sources:
   type: primary
   notes: Examples of style blending in contemporary journalism
 content_outline:
-- section: Вступ — коли стилі змішуються
+- section: "Вступ — коли стилі змішуються"
   words: 500
   points:
   - Чисті стилі vs. гібриди
@@ -87,7 +88,7 @@ vocabulary:
   - колонка (column)
   - фейлетон (feuilleton)
   - нарис (sketch/essay)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

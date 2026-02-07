@@ -1,3 +1,4 @@
+---
 module: c1-bio-059
 level: C1-BIO
 sequence: 59
@@ -5,7 +6,7 @@ slug: andrey-sheptytsky
 version: '2.0'
 title: 'Митрополит Андрей Шептицький: Пастир і рятівник'
 content_outline:
-- section: Вступ — Найвеличніший українець XX століття
+- section: "Вступ — Найвеличніший українець XX століття"
   words: 444
   points:
   - Шептицький як духовний лідер і рятівник
@@ -67,7 +68,7 @@ vocabulary_hints:
   - екуменізм (ecumenism)
 activity_hints:
 - type: reading
-  focus: Excerpts from "Не вбий" pastoral letter
+  focus: "Excerpts from \"Не вбий\" pastoral letter"
   source: Historical documents
   items: 3 passages
 - type: essay-response

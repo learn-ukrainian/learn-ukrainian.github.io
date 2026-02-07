@@ -1,3 +1,4 @@
+---
 module: final-review-ii
 level: c2
 sequence: 96
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Ukrainian State Standard 2024 — Лексична компетенція C2
+- name: "Ukrainian State Standard 2024 — Лексична компетенція C2"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 vocabulary competence requirements
@@ -21,7 +22,7 @@ sources:
   type: secondary
   notes: C2 lexical competence descriptors
 content_outline:
-- section: Вступ — Лексична майстерність C2
+- section: "Вступ — Лексична майстерність C2"
   words: 444
   points:
   - Обсяг активного словника C2 (~12,000 слів)
@@ -81,7 +82,7 @@ vocabulary:
   - семантичне поле (semantic field)
   - словотворення (word formation)
   - етимологія (etymology)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - critical-analysis

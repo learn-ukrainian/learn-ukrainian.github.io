@@ -1,3 +1,4 @@
+---
 module: petro-mohyla
 level: B2-HIST
 sequence: 35
@@ -100,4 +101,4 @@ sources:
 - name: Petro Mohyla (Encyclopedia of Ukraine)
   url: "http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm"
   type: reference
-phase: HIST.4 [Lithuanian-Polish Era]
+phase: "HIST.4 [Lithuanian-Polish Era]"

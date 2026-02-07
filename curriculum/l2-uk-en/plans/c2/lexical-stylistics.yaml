@@ -1,3 +1,4 @@
+---
 module: lexical-stylistics
 level: c2
 sequence: 12
@@ -16,25 +17,25 @@ sources:
   url: "https://sum.in.ua/"
   type: reference
   notes: Authoritative definitions and usage notes
-- name: Ukrainian State Standard 2024 — Lexical precision
+- name: "Ukrainian State Standard 2024 — Lexical precision"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for word choice
 content_outline:
-- section: Вступ — Чому кожне слово важливе
+- section: "Вступ — Чому кожне слово важливе"
   words: 400
   points:
   - Лексична стилістика як наука
   - Денотація vs конотація
   - Стилістичне забарвлення слова
-- section: Синоніми — мистецтво вибору
+- section: "Синоніми — мистецтво вибору"
   words: 700
   points:
   - Типи синонімів (абсолютні, часткові)
   - Стилістичні відтінки синонімів
   - Контекстуальні синоніми
   - Уникнення тавтології
-- section: Антоніми — сила контрасту
+- section: "Антоніми — сила контрасту"
   words: 600
   points:
   - Типи антонімів
@@ -55,14 +56,14 @@ content_outline:
   - Неологізми для свіжості
   - Діалектизми для колориту
   - Жаргонізми для автентичності
-- section: Тропи — лексичні образи
+- section: "Тропи — лексичні образи"
   words: 600
   points:
   - Метафора і метонімія
   - Гіпербола і литота
   - Епітет і порівняння
   - Евфемізм і перифраз
-- section: Практикум — Робота зі словом
+- section: "Практикум — Робота зі словом"
   words: 400
   points:
   - Вибір найточнішого синоніма
@@ -88,7 +89,7 @@ vocabulary:
   - оксиморон (oxymoron)
   - литота (litotes)
   - перифраз (periphrasis)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

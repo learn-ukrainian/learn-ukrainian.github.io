@@ -1,57 +1,59 @@
-module: c1-bio-006
-level: C1-BIO
+# Module Metadata: volodymyr-monomakh
 slug: volodymyr-monomakh
-version: '2.0'
-id: c1-bio-006
-title: "Володимир Мономах: Укріплювач Русі"
-naturalness:
-  score: 10
-  status: PASS
-duration: 120
-transliteration: none
-tags:
-- history
-- biography
-- middle-ages
-- kyivan-rus
-- law
-content_outline:
-- section: Вступ — Останній великий самодержець Києва
-  words: 600
-  points:
-  - Мономах як ідеал руського князя
-  - Зупинення розпаду держави
-- section: Життєпис
-  words: 1600
-  points:
-  - Любецький з'їзд
-  - Шлях до Києва
-  - Правління (1113–1125)
-- section: Історичний контекст
-  words: 600
-  points:
-  - Роздробленість
-  - Половці
-- section: Внесок
-  words: 400
-  points:
-  - Повчання дітям
-  - Реформа законодавства
-- section: Останні роки
-  words: 400
-  points:
-  - Династія
-  - Смерть
-- section: Спадщина
-  words: 400
-  points:
-  - Літописний образ
-  - Легенди про символи влади
-- section: Підсумок
-  words: 300
-  points:
-  - Значення правління
+title: "Володимир Мономах: Філософ на троні та будівничий коаліцій"
 word_target: 4300
-vital_status: deceased
-build:
-  last_modified: '2026-02-05'
+naturalness:
+  status: PASS
+  checked_by: gemini
+  date: "2026-02-07"
+content_outline:
+- section: "Вступ: Моральна криза та Любецький з’їзд"
+  words: 700
+- section: "Життєпис: Шлях від Переяслава до Києва"
+  words: 800
+- section: "Битва на Сальниці: Тріумф коаліційної стратегії"
+  words: 900
+- section: "«Повчання дітям»: Перший політичний маніфест Русі"
+  words: 900
+- section: "Деколонізація: Київський центр vs московські міфи"
+  words: 600
+- section: "Спадщина та уроки для сучасності"
+  words: 400
+status: draft
+last_updated: "2026-02-07"
+version: "2.0"
+level: "C1"
+id: "c1-bio-006"
+tags:
+  - biography
+  - era: pre-modern
+  - domain: politics
+  - domain: military
+  - philosophy
+  - middle-ages
+vocabulary_hints:
+  - міжусобиці
+  - коаліція
+  - повчання
+  - отчина
+  - лихварство
+  - закуп
+  - смерд
+  - статут
+  - каяття
+  - християнська етика
+activity_hints:
+  - type: reading-comprehension
+    focus: "Любецький з'їзд"
+  - type: critical-analysis
+    focus: "Осліплення Василька"
+  - type: comparative-study
+    focus: "Мономах vs Макіавеллі"
+  - type: linguistic-analysis
+    focus: "Староукраїнська мова Повчання"
+  - type: essay-response
+    focus: "Етика правління"
+  - type: decolonization-debate
+    focus: "Шапка Мономаха"
+  - type: source-analysis
+    focus: "Лист до Олега Святославича"

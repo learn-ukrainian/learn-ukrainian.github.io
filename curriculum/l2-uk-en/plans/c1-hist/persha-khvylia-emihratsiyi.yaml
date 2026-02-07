@@ -1,3 +1,4 @@
+---
 module: persha-khvylia-emihratsiyi
 level: c1-hist
 sequence: 64
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of перша хвиля еміграції: трудова (1880-1914)'
 - Evaluate the historical significance of чому виїжджали?
 content_outline:
-- section: Вступ — Чому виїжджали?
+- section: "Вступ — Чому виїжджали?"
   words: 457
   subsections:
   - Економічні причини — земельний голод
@@ -23,7 +24,7 @@ content_outline:
   - Маршрути — порти, кораблі
   - Агенти еміграції — реклама «нового світу»
   - Ілюзії і реальність
-- section: Канада — «безкрайні прерії»
+- section: "Канада — «безкрайні прерії»"
   words: 800
   subsections:
   - Сіфтон і «чоловіки в кожухах»
@@ -31,7 +32,7 @@ content_outline:
   - Блокові поселення
   - Важке життя — землянки, холод
   - Перші церкви і школи
-- section: США — вугільні копальні
+- section: "США — вугільні копальні"
   words: 686
   subsections:
   - Пенсільванія — шахтарські містечка

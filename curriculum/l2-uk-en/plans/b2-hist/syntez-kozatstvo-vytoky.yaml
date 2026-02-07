@@ -1,3 +1,4 @@
+---
 module: syntez-kozatstvo-vytoky
 level: B2-HIST
 sequence: 50
@@ -77,4 +78,4 @@ sources:
   type: academic
   notes: Comparative analysis
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"

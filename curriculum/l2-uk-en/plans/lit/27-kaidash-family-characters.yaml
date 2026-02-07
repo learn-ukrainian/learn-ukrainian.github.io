@@ -1,3 +1,4 @@
+---
 module: kaidash-family-characters
 level: LIT
 slug: kaidash-family-characters
@@ -5,19 +6,19 @@ version: '2.0'
 title: 'Кайдашева сім''я: Галерея Характерів'
 subtitle: 'Kaidash Family: A Gallery of Characters'
 content_outline:
-- section: Вступ — Сім'я як мікрокосм
+- section: "Вступ — Сім'я як мікрокосм"
   words: 625
   points:
   - Родина в українській літературі
   - Чому "Кайдашева сім'я" стала класикою
   - Історичний контекст (після 1861 року)
-- section: Омелько Кайдаш — патріарх
+- section: "Омелько Кайдаш — патріарх"
   words: 875
   points:
   - Характеристика голови родини
   - Слабкості та чесноти
   - Конфлікт традиції та змін
-- section: Маруся Кайдашиха — справжня влада
+- section: "Маруся Кайдашиха — справжня влада"
   words: 875
   points:
   - Образ свекрухи в українській культурі
@@ -35,7 +36,7 @@ content_outline:
   - Село як колективний персонаж
   - Сусіди та їхня роль
   - Функція гумору
-- section: Підсумок — Від типу до індивідуальності
+- section: "Підсумок — Від типу до індивідуальності"
   words: 500
   points:
   - Як Нечуй створює живих людей
@@ -87,15 +88,15 @@ grammar:
 - Psychological motivation
 module_type: literature
 sources:
-- name: Кайдашева сім'я — повний текст
+- name: "Кайдашева сім'я — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=907"
   type: primary
   notes: Для цитат і аналізу
-- name: Аналіз "Кайдашевої сім'ї"
+- name: "Аналіз \"Кайдашевої сім'ї\""
   url: "https://www.ukrlib.com.ua/review/printit.php?tid=18137"
   type: primary
   notes: Літературознавчий аналіз
-- name: Кайдашева сім'я — скорочено
+- name: "Кайдашева сім'я — скорочено"
   url: "https://www.ukrlib.com.ua/styslo/printit.php?tid=3505"
   type: reference
   notes: Для швидкого повторення сюжету

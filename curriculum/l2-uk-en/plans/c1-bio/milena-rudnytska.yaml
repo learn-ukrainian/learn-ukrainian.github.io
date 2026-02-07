@@ -1,3 +1,4 @@
+---
 module: c1-bio-093
 level: C1-BIO
 sequence: 93
@@ -5,7 +6,7 @@ slug: milena-rudnytska
 version: '2.0'
 title: 'Мілена Рудницька: Голос українського фемінізму'
 content_outline:
-- section: Вступ — Піонерка жіночого руху
+- section: "Вступ — Піонерка жіночого руху"
   words: 470
   points:
   - Рудницька як перша жінка-посол у польському сеймі від українців

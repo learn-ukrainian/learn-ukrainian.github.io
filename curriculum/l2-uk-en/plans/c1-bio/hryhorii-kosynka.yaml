@@ -1,3 +1,4 @@
+---
 module: c1-bio-107
 level: C1-BIO
 sequence: 107
@@ -5,7 +6,7 @@ slug: hryhorii-kosynka
 version: '2.0'
 title: 'Григорій Косинка: <!-- Title -->'
 content_outline:
-- section: Вступ — Short story master
+- section: "Вступ — Short story master"
   words: 400
   points:
   - <!-- point -->

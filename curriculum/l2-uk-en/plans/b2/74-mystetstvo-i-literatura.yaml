@@ -1,3 +1,4 @@
+---
 module: b2-74
 level: B2
 sequence: 74
@@ -6,7 +7,7 @@ version: '2.0'
 title: Мистецтво і література
 subtitle: Art & Literature
 content_outline:
-- section: Розминка — Культурний ландшафт України
+- section: "Розминка — Культурний ландшафт України"
   words: 200
   points:
   - Україна як перехрестя культур — Європа, Степ, Візантія

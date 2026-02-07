@@ -1,3 +1,4 @@
+---
 module: a1-44
 level: A1
 slug: a1-final-exam
@@ -18,13 +19,13 @@ content_outline:
   - Дієслова (теперішній, минулий, майбутній час)
   - Відмінки (називний, знахідний, родовий, місцевий)
   - Узгодження прикметників та займенників
-- section: Presentation
+- section: "Presentation 2"
   words: 100
   points:
   - Тематичні групи (їжа, транспорт, покупки)
   - Базові фрази для спілкування
   - Числа та час
-- section: Presentation
+- section: "Presentation 3"
   words: 100
   points:
   - Аудіювання (розуміння простих діалогів)
@@ -35,7 +36,7 @@ content_outline:
   points:
   - Інтеграційні завдання
   - Практичні сценарії
-- section: Warm-up
+- section: "Warm-up 2"
   words: 189
   points:
   - Фінальний наратив про подорож Україною
@@ -83,4 +84,4 @@ grammar:
 - All four cases
 - All verb tenses
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: "A1.4 [Practical Scenarios]"

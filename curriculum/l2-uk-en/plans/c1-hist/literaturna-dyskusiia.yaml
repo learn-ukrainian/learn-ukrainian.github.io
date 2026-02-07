@@ -1,3 +1,4 @@
+---
 module: literaturna-dyskusiia
 level: c1-hist
 sequence: 53
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of літературна дискусія 1925-1928
 - Evaluate the historical significance of битва за культуру
 content_outline:
-- section: Вступ — Битва за культуру
+- section: "Вступ — Битва за культуру"
   words: 457
   subsections:
   - Що таке «літературна дискусія»?
@@ -32,7 +33,7 @@ content_outline:
   - Мова — якою писати?
   - Традиція чи модернізм?
   - «Азіатський ренесанс» — що це
-- section: «Геть від Москви!» — Хвильовий
+- section: "«Геть від Москви!» — Хвильовий"
   words: 686
   subsections:
   - Тези Хвильового

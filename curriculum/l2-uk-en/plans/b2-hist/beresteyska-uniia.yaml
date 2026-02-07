@@ -1,3 +1,4 @@
+---
 module: beresteyska-uniia
 level: B2-HIST
 sequence: 33
@@ -59,7 +60,7 @@ grammar:
 - Історичний наратив
 - Складні синтаксичні конструкції
 register: публіцистичний
-phase: B2.3a [Українська історія]
+phase: "B2.3a [Українська історія]"
 vocabulary_hints:
   required:
   - унія

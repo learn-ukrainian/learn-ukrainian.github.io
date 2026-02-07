@@ -1,3 +1,4 @@
+---
 module: 16-register-formal-informal
 level: B2
 sequence: 16
@@ -5,7 +6,7 @@ slug: 16-register-formal-informal
 version: '2.0'
 title: Формальне та неформальне спілкування
 content_outline:
-- section: Вступ — Формальність у спілкуванні
+- section: "Вступ — Формальність у спілкуванні"
   words: 400
   points:
   - Що визначає формальність
@@ -115,7 +116,7 @@ sources:
   type: reference
   notes: B2 politeness conventions
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Understand and apply формальне та неформальне спілкування
 - Analyze and evaluate формальність у спілкуванні

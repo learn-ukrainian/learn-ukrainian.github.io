@@ -1,3 +1,4 @@
+---
 module: c1-bio-017
 level: C1-BIO
 sequence: 17
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Северин Наливайко: Лідер козацького повстання'
 subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 content_outline:
-- section: Вступ — Перший бунтар
+- section: "Вступ — Перший бунтар"
   words: 600
   points:
   - Лідер першого масштабного козацького повстання (1594-1596)

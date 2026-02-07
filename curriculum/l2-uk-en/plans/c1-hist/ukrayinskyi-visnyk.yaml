@@ -1,3 +1,4 @@
+---
 module: ukrayinskyi-visnyk
 level: c1-hist
 sequence: 41
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of «український вісник» чорновола
 - Evaluate the historical significance of хроніка опору
 content_outline:
-- section: Вступ — Хроніка опору
+- section: "Вступ — Хроніка опору"
   words: 457
   subsections:
   - Що таке «Український вісник»?
@@ -38,7 +39,7 @@ content_outline:
   - Протести
   - Літературні твори
   - Статті про культуру
-- section: Фрагмент — Хроніка репресій
+- section: "Фрагмент — Хроніка репресій"
   words: 800
   subsections:
   - Текст (з глосами)
@@ -81,7 +82,7 @@ activities:
 - type: critical-analysis
   focus: How does Chornovil document without editorializing?
 - type: comparative-study
-  focus: Compare "Visnyk" with Russian "Хроника текущих событий"
+  focus: "Compare \"Visnyk\" with Russian \"Хроника текущих событий\""
 - type: critical-analysis
   focus: How did the publication affect the movement?
 - type: essay-response

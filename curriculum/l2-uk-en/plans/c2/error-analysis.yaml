@@ -1,3 +1,4 @@
+---
 module: error-analysis
 level: c2
 sequence: 80
@@ -12,7 +13,7 @@ sources:
   url: "https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019"
   type: primary
   notes: Офіційні правописні норми
-- name: Культура мови — НАНУ
+- name: "Культура мови — НАНУ"
   url: "https://inmo.org.ua/"
   type: reference
   notes: Нормативні рекомендації
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Каталоги типових помилок
 content_outline:
-- section: Вступ — Помилка як інструмент навчання
+- section: "Вступ — Помилка як інструмент навчання"
   words: 400
   points:
   - Типологія мовних помилок
@@ -63,7 +64,7 @@ content_outline:
   - Використання словників та довідників
   - Редагування та вичитка
   - Робота з рецензентом
-- section: Практикум — Редагування та корекція
+- section: "Практикум — Редагування та корекція"
   words: 500
   points:
   - Аналіз текстів з помилками
@@ -88,7 +89,7 @@ vocabulary:
   - сполучуваність (collocability)
   - канцеляризм (officialese)
   - мовленнєвий (speech/spoken)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

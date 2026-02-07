@@ -1,3 +1,4 @@
+---
 module: syntez-relihiina-identychnist
 level: c1-hist
 sequence: 63
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: релігія і національна ідентичність'
 - Evaluate the historical significance of релігія і нація
 content_outline:
-- section: Вступ — Релігія і нація
+- section: "Вступ — Релігія і нація"
   words: 457
   subsections:
   - Огляд модулів 58-62
@@ -33,7 +34,7 @@ content_outline:
   - 1946 — ліквідація УГКЦ
   - 1991-2019 — боротьба за автокефалію
   - Томос 2019 — що змінилося
-- section: 2022 — Релігія на війні
+- section: "2022 — Релігія на війні"
   words: 686
   subsections:
   - УПЦ МП — криза лояльності

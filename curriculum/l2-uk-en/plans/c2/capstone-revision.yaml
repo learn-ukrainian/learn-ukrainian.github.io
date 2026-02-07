@@ -1,3 +1,4 @@
+---
 module: capstone-revision
 level: c2
 sequence: 92
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Редагування наукового тексту — Практичний посібник
+- name: "Редагування наукового тексту — Практичний посібник"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Guidelines for editing academic texts
@@ -21,7 +22,7 @@ sources:
   type: secondary
   notes: Common errors in Ukrainian academic writing
 content_outline:
-- section: Вступ — Редагування як етап творення
+- section: "Вступ — Редагування як етап творення"
   words: 432
   points:
   - Різниця між написанням і редагуванням
@@ -55,7 +56,7 @@ content_outline:
   - Інтерпретація критики
   - Пріоритизація змін
   - Обґрунтування авторських рішень
-- section: Практика — Редагування роботи
+- section: "Практика — Редагування роботи"
   words: 864
   points:
   - Самоперевірка за чеклістом
@@ -81,7 +82,7 @@ vocabulary:
   - плеоназм (pleonasm)
   - пасивний стан (passive voice)
   - номіналізація (nominalization)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

@@ -1,3 +1,4 @@
+---
 module: radianska-industrializatsiia
 level: c1-hist
 sequence: 104
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of радянська індустріалізація: хто платив?'
 - Evaluate the historical significance of для кого будували
 content_outline:
-- section: Вступ — Для кого будували
+- section: "Вступ — Для кого будували"
   words: 457
   subsections:
   - 1930-ті — індустріалізація
@@ -23,7 +24,7 @@ content_outline:
   - Металургійні гіганти
   - Шахти Донбасу
   - Масштаби будівництва
-- section: Ціна — Голодомор
+- section: "Ціна — Голодомор"
   words: 800
   subsections:
   - Зв'язок колективізації та індустріалізації

@@ -1,3 +1,4 @@
+---
 module: b2-21
 level: B2
 sequence: 21
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Регістр: науково-технічний стиль'
 subtitle: Технічна документація та наукові тексти
 content_outline:
-- section: Розминка — Що таке науково-технічний стиль
+- section: "Розминка — Що таке науково-технічний стиль"
   words: 300
   points:
   - Де зустрічається (інструкції, документація, патенти, наукові статті)
@@ -33,7 +34,7 @@ content_outline:
   - Технічний опис — характеристики продукту
   - Науковий звіт — структура ІМРД (вступ, методи, результати, дискусія)
   - Патент — формальна структура заявки
-- section: Практика — аналіз і створення
+- section: "Практика — аналіз і створення"
   words: 450
   points:
   - Аналіз технічного тексту — виділення характерних рис
@@ -52,7 +53,7 @@ grammar:
 - Impersonal constructions (-но/-то)
 - Numbered procedures and instructions
 - Abbreviations and acronyms
-phase: B2.1c [Register System & Domain Vocab]
+phase: "B2.1c [Register System & Domain Vocab]"
 vocabulary_hints:
   required:
   - термін (term)

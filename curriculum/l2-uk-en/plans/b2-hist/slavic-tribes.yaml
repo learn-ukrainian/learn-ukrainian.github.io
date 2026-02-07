@@ -1,3 +1,4 @@
+---
 module: slavic-tribes
 level: B2-HIST
 sequence: 5
@@ -115,6 +116,6 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Поляни_(плем%27я)"
   type: reference
   notes: Detailed article on Polyany tribe
-phase: B2-HIST.1 [Витоки]
+phase: "B2-HIST.1 [Витоки]"
 module_type: history
 immersion: 100% Ukrainian

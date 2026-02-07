@@ -1,3 +1,4 @@
+---
 module: c1-bio-121
 level: C1-BIO
 sequence: 121
@@ -5,7 +6,7 @@ slug: mykola-pohribnyi
 version: '2.0'
 title: 'Микола Погрібний: Українська редакторська школа'
 content_outline:
-- section: Вступ — Голос української вимови
+- section: "Вступ — Голос української вимови"
   words: 400
   points:
   - Микола Погрібний — легендарний диктор і редактор

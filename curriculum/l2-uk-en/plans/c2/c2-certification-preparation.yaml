@@ -1,3 +1,4 @@
+---
 module: c2-certification-preparation
 level: c2
 sequence: 99
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Державний іспит з української мови — Вимоги
+- name: "Державний іспит з української мови — Вимоги"
   url: "https://mon.gov.ua/"
   type: reference
   notes: Official certification requirements
-- name: Українська мова як іноземна — Сертифікаційні програми
+- name: "Українська мова як іноземна — Сертифікаційні програми"
   url: "https://naqa.gov.ua/"
   type: reference
   notes: Available certification paths
-- name: Підготовка до мовних іспитів — Методичні рекомендації
+- name: "Підготовка до мовних іспитів — Методичні рекомендації"
   url: "https://www.coe.int/"
   type: secondary
   notes: Test preparation strategies
 content_outline:
-- section: Вступ — Сертифікація як підтвердження рівня
+- section: "Вступ — Сертифікація як підтвердження рівня"
   words: 432
   points:
   - Значення сертифікації C2
@@ -55,7 +56,7 @@ content_outline:
   - Необхідні документи
   - День іспиту — що очікувати
   - Отримання результатів і сертифіката
-- section: Практика — Фінальна підготовка
+- section: "Практика — Фінальна підготовка"
   words: 864
   points:
   - Повний пробний іспит в умовах, наближених до реальних
@@ -81,7 +82,7 @@ vocabulary:
   - апеляція (appeal)
   - перездача (retake)
   - термін дії (validity period)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

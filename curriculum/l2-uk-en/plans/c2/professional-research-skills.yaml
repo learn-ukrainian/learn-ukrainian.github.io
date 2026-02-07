@@ -1,3 +1,4 @@
+---
 module: professional-research-skills
 level: c2
 sequence: 59
@@ -12,16 +13,16 @@ sources:
   url: "https://nbuv.gov.ua/"
   type: reference
   notes: Research resources and methodology guidelines
-- name: Scopus — база наукових публікацій
+- name: "Scopus — база наукових публікацій"
   url: "https://www.scopus.com/"
   type: reference
   notes: International database for academic research
-- name: УРАН — українська дослідницька та академічна мережа
+- name: "УРАН — українська дослідницька та академічна мережа"
   url: "https://www.uran.ua/"
   type: reference
   notes: Ukrainian academic network and research resources
 content_outline:
-- section: Вступ — Дослідницькі компетенції для професіонала
+- section: "Вступ — Дослідницькі компетенції для професіонала"
   words: 541
   points:
   - Роль дослідження в професійній діяльності
@@ -80,7 +81,7 @@ vocabulary:
   - надійність (reliability)
   - вибірка (sample)
   - кореляція (correlation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

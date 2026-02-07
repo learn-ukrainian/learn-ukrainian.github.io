@@ -1,3 +1,4 @@
+---
 module: literary-community
 level: c2
 sequence: 41
@@ -21,7 +22,7 @@ sources:
   type: primary
   notes: Major literary festival
 content_outline:
-- section: Вступ — Літературне поле
+- section: "Вступ — Літературне поле"
   words: 500
   points:
   - Бурдьє і поняття поля
@@ -87,7 +88,7 @@ vocabulary:
   - роялті (royalty)
   - контракт (contract)
   - дебют (debut)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

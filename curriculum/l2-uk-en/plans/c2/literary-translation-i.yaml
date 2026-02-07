@@ -1,3 +1,4 @@
+---
 module: literary-translation-i
 level: c2
 sequence: 34
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Переклад поезії — Вікіпедія
+- name: "Переклад поезії — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Поетичний_переклад"
   type: reference
   notes: Challenges of poetry translation
@@ -16,12 +17,12 @@ sources:
   url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of translated poetry
-- name: Максим Рильський — перекладач
+- name: "Максим Рильський — перекладач"
   url: "https://uk.wikipedia.org/wiki/Максим_Рильський"
   type: reference
   notes: Master poetry translator
 content_outline:
-- section: Вступ — Чи можна перекласти поезію?
+- section: "Вступ — Чи можна перекласти поезію?"
   words: 500
   points:
   - Проблема перекладу поезії
@@ -48,14 +49,14 @@ content_outline:
   - Культурно-специфічні образи
   - Інтертекстуальні посилання
   - Збереження vs. адаптація
-- section: Практикум — переклад з англійської
+- section: "Практикум — переклад з англійської"
   words: 600
   points:
   - Аналіз оригіналу
   - Вибір стратегії
   - Процес перекладу
   - Самоаналіз результату
-- section: Практикум — переклад на англійську
+- section: "Практикум — переклад на англійську"
   words: 500
   points:
   - Специфіка перекладу з української
@@ -86,7 +87,7 @@ vocabulary:
   - калька (calque)
   - трансформація (transformation)
   - конотація (connotation)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

@@ -1,3 +1,4 @@
+---
 module: kyievo-pecherskyi-pateryk
 level: c1-hist
 sequence: 13
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of києво-печерський патерик
 - Evaluate the historical significance of агіографія як джерело
 content_outline:
-- section: Вступ — Агіографія як джерело
+- section: "Вступ — Агіографія як джерело"
   words: 457
   subsections:
   - Що таке патерик?
@@ -30,7 +31,7 @@ content_outline:
   - Оповіді про ченців
   - Чудеса та видіння
   - Бесоборство та аскеза
-- section: Фрагмент — Житіє Феодосія Печерського
+- section: "Фрагмент — Житіє Феодосія Печерського"
   words: 800
   subsections:
   - Текст (з глосами)

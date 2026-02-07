@@ -1,3 +1,4 @@
+---
 # B2 Level Plan - Ukrainian for English Speakers
 # Source of truth: docs/l2-uk-en/B2-CURRICULUM-PLAN.md
 
@@ -12,33 +13,33 @@ immersion: "100%"
 phases:
   - id: B2.1a
     name: "Passive Voice System"
-    modules: [1, 10]
+    modules: "[1, 10]"
     focus: "Passive constructions, agent expressions"
     checkpoint: 10
 
   - id: B2.1b
     name: "Participles & Register Intro"
-    modules: [11, 25]
+    modules: "[11, 25]"
     focus: "Active participles, register awareness"
 
   - id: B2.1c
     name: "Register System & Domain Vocabulary"
-    modules: [26, 40]
+    modules: "[26, 40]"
     focus: "Formal/informal, professional domains"
 
   - id: B2.2
     name: "Phraseology & Synonymy"
-    modules: [41, 70]
+    modules: "[41, 70]"
     focus: "Idioms, collocations, word families"
 
   - id: B2.3
     name: "Skills & Checkpoint"
-    modules: [71, 84]
+    modules: "[71, 84]"
     focus: "Reading, listening, writing skills"
 
   - id: B2.4
     name: "Communication Skills"
-    modules: [85, 94]
+    modules: "[85, 94]"
     focus: "Presentations, discussions, negotiations"
 
 grammar_scope:

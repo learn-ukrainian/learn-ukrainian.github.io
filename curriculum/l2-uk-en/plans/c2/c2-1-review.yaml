@@ -1,3 +1,4 @@
+---
 module: c2-1-review
 level: c2
 sequence: 19
@@ -16,12 +17,12 @@ sources:
   url: "https://www.nbuv.gov.ua/"
   type: reference
   notes: Integration of stylistic concepts
-- name: Ukrainian State Standard 2024 — Review methodology
+- name: "Ukrainian State Standard 2024 — Review methodology"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 consolidation requirements
 content_outline:
-- section: Огляд — Сім функціональних стилів
+- section: "Огляд — Сім функціональних стилів"
   words: 700
   points:
   - Науковий — ключові характеристики
@@ -92,7 +93,7 @@ vocabulary:
   - компетенція (competence)
   - готовність (readiness)
   - ретроспекція (retrospection)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

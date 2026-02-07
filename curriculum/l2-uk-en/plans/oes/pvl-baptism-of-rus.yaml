@@ -1,4 +1,5 @@
-# Module Plan: PVL: Baptism of Rus'
+---
+# Module Plan: "PVL: Baptism of Rus'"
 # Track: OES
 # Module: 027
 # Source: Gemini Research (ISSUE-490)
@@ -13,7 +14,7 @@ phase: 2
 phase_id: literary-tradition
 phase_name: "Literary Tradition"
 
-focus: "Ritual vocabulary — "Povele" (He commanded)"
+focus: 'Ritual vocabulary — "Povele" (He commanded)'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

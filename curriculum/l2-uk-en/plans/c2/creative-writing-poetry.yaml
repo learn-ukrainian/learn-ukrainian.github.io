@@ -1,3 +1,4 @@
+---
 module: creative-writing-poetry
 level: c2
 sequence: 36
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Поетична творчість — Вікіпедія
+- name: "Поетична творчість — Вікіпедія"
   url: "https://uk.wikipedia.org/wiki/Поезія"
   type: reference
   notes: Poetry creation fundamentals
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Craft of poetry writing
 content_outline:
-- section: Вступ — Від читача до творця
+- section: "Вступ — Від читача до творця"
   words: 500
   points:
   - Перехід від аналізу до творчості
@@ -87,7 +88,7 @@ vocabulary:
   - рефлексія (reflection)
   - мініатюра (miniature)
   - збірка (collection)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

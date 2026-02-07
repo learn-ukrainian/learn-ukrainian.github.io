@@ -1,3 +1,4 @@
+---
 module: pereiaslav-alternatyvy
 level: c1-hist
 sequence: 89
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of переяслав 1654: які були альтернативи?'
 - Evaluate the historical significance of «що якби...»
 content_outline:
-- section: Вступ — «Що якби...»
+- section: "Вступ — «Що якби...»"
   words: 457
   subsections:
   - Переяслав — не єдиний варіант

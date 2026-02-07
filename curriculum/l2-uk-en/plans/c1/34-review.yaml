@@ -1,3 +1,4 @@
+---
 module: 34-review
 level: C1
 sequence: 34
@@ -5,7 +6,7 @@ slug: 34-review
 version: '2.0'
 title: 'Огляд і повторення: Професійна комунікація'
 content_outline:
-- section: Огляд C1.2 — Підсумок
+- section: "Огляд C1.2 — Підсумок"
   words: 500
   points:
   - Основні теми M21-M33

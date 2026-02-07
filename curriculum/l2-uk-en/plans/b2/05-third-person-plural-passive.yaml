@@ -1,3 +1,4 @@
+---
 module: 05-third-person-plural-passive
 level: B2
 sequence: 5
@@ -5,7 +6,7 @@ slug: 05-third-person-plural-passive
 version: '2.0'
 title: Пасив третьою особою множини
 content_outline:
-- section: Вступ — Найрозмовніший пасив
+- section: "Вступ — Найрозмовніший пасив"
   words: 400
   points:
   - Третя особа множини як пасивна конструкція
@@ -115,7 +116,7 @@ sources:
   type: reference
   notes: B2 speaking fluency expectations
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: "B2.1a [Passive Voice]"
 objectives:
 - Identify and correctly use пасив третьою особою множини
 - Form and apply найрозмовніший пасив

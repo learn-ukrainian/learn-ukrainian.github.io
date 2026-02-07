@@ -1,3 +1,4 @@
+---
 module: volodymyr-monomakh
 level: B2-HIST
 sequence: 15
@@ -137,4 +138,4 @@ sources:
   url: "https://litopys.org.ua/pvl/pvl21.htm"
   type: primary
 register: публіцистичний
-phase: B2-HIST.2 [Kyivan Rus]
+phase: "B2-HIST.2 [Kyivan Rus]"

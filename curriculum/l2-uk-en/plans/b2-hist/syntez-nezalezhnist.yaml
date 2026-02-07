@@ -1,3 +1,4 @@
+---
 module: syntez-nezalezhnist
 level: B2-HIST
 sequence: 130
@@ -87,4 +88,4 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.12 [Independence & Modern Era]
+phase: "HIST.12 [Independence & Modern Era]"

@@ -1,3 +1,4 @@
+---
 module: 26-media-landscape
 level: C1
 sequence: 26
@@ -5,7 +6,7 @@ slug: 26-media-landscape
 version: '2.0'
 title: 'Медіаландшафт: Як не потонути в інформації'
 content_outline:
-- section: Вступ — Медіа в Україні
+- section: "Вступ — Медіа в Україні"
   words: 400
   points:
   - Огляд медіаландшафту

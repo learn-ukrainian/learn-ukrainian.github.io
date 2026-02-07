@@ -1,3 +1,4 @@
+---
 module: syntez-zakhidni-rehiony
 level: c1-hist
 sequence: 75
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: західні землі'
 - Evaluate the historical significance of чому «більш українські»?
 content_outline:
-- section: Вступ — Чому «більш українські»?
+- section: "Вступ — Чому «більш українські»?"
   words: 457
   subsections:
   - Огляд модулів 70-74

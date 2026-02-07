@@ -1,3 +1,4 @@
+---
 module: zakhid-2008
 level: c1-hist
 sequence: 100
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of бухарест 2008: nato каже «ні»'
 - Evaluate the historical significance of вето на безпеку
 content_outline:
-- section: Вступ — Вето на безпеку
+- section: "Вступ — Вето на безпеку"
   words: 457
   subsections:
   - Квітень 2008 — Бухарест
   - Україна і Грузія — просять MAP
   - Меркель і Саркозі — «ні»
   - Структура модуля
-- section: Контекст — Що таке MAP
+- section: "Контекст — Що таке MAP"
   words: 571
   subsections:
   - План дій щодо членства
@@ -30,14 +31,14 @@ content_outline:
   - Німеччина, Франція — проти
   - Аргументи проти
   - «Провокація Росії»
-- section: Компроміс — гірший за відмову
+- section: "Компроміс — гірший за відмову"
   words: 800
   subsections:
   - «Колись стануть членами»
   - Але без MAP зараз
   - Найгірший варіант
   - Сигнал для Росії
-- section: Серпень 2008 — Грузія
+- section: "Серпень 2008 — Грузія"
   words: 571
   subsections:
   - Війна через 4 місяці

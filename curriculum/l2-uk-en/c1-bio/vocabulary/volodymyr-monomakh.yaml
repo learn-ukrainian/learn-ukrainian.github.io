@@ -1,76 +1,120 @@
-vocabulary:
-  - term: самодержець
-    translation: autocrat
-    definition: Правитель з необмеженою владою.
-  - term: усобиця
-    translation: internal strife
-    definition: Збройний конфлікт між членами однієї спільноти.
-  - term: віче
-    translation: veche (assembly)
-    definition: Народні збори в давній Русі.
-  - term: лихвар
-    translation: usurer
-    definition: Людина, яка позичає гроші під великий відсоток.
-  - term: закуп
-    translation: indentured servant
-    definition: Категорія напіввільних селян, що потрапили в залежність через борг.
-  - term: смерд
-    translation: peasant
-    definition: Вільний селянин-общинник.
-  - term: ізгой
-    translation: outcast
-    definition: Людина, що втратила зв'язок зі своїм соціальним середовищем.
-  - term: половці
-    translation: Cumans
-    definition: Тюркський кочовий народ.
-  - term: хрестовий похід
-    translation: crusade
-    definition: Релігійно вмотивована військова кампанія.
-  - term: повчання
-    translation: instruction
-    definition: Твір повчального характеру.
-  - term: заповіт
-    translation: testament
-    definition: Останнє волевиявлення.
-  - term: легітимність
-    translation: legitimacy
-    definition: Законність, визнання влади народом.
-  - term: династія
-    translation: dynasty
-    definition: Ряд правителів з одного роду.
-  - term: устав
-    translation: statute
-    definition: Зведення законів або правил.
-  - term: різ
-    translation: interest (financial)
-    definition: Відсоток за позикою в давній Русі.
-  - term: банкрутство
-    translation: bankruptcy
-    definition: Неспроможність боржника сплатити борги.
-  - term: консолідація
-    translation: consolidation
-    definition: Згуртування, об'єднання сил.
-  - term: сепаратизм
-    translation: separatism
-    definition: Прагнення до відокремлення.
-  - term: намісник
-    translation: viceroy
-    definition: Представник князя на місцях.
-  - term: тіун
-    translation: steward
-    definition: Управитель князівським господарством.
-  - term: хоругва
-    translation: banner
-    definition: Військовий прапор.
-  - term: шолом
-    translation: helmet
-    definition: Захисний головний убір воїна.
-  - term: кольчуга
-    translation: chainmail
-    definition: Обладунок з металевих кілець.
-  - term: меч
-    translation: sword
-    definition: Холодна зброя.
-  - term: щит
-    translation: shield
-    definition: Захисне озброєння.
+- term: повчання
+  ipa: /pɔu̯ˈtʃɑɲːɐ/
+  translation: instruction, teaching, lesson
+  pos: noun
+  example: "«Повчання дітям» Володимира Мономаха — це видатна пам'ятка давньоукраїнської літератури."
+- term: міжусобиця
+  ipa: /mʲiʒuˈsɔbɪt͡sʲɐ/
+  translation: internecine strife, civil war
+  pos: noun
+  example: "Князь намагався припинити князівські міжусобиці заради єдності держави."
+- term: чвари
+  ipa: /ˈtʃʋɑrɪ/
+  translation: squabbles, discord, feuds
+  pos: noun
+  example: "Політичні чвари послаблювали Русь перед загрозою зі степу."
+- term: отчина
+  ipa: /ˈɔtt͡ʃɪnɐ/
+  translation: patrimony, ancestral land
+  pos: noun
+  example: "На Любецькому з'їзді було вирішено: «Кожен хай держить отчину свою»."
+- term: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  example: "Мономах зумів створити широку коаліцію князів для походу на половців."
+- term: статут
+  ipa: /stɐˈtut/
+  translation: statute, charter, regulations
+  pos: noun
+  example: "«Статут» Мономаха полегшив становище закупів та обмежив свавілля лихварів."
+- term: лихварство
+  ipa: /lɪˈxʋɑrstʋɔ/
+  translation: usury
+  pos: noun
+  example: "Надмірне лихварство стало причиною київського повстання 1113 року."
+- term: закуп
+  ipa: /zɐˈkup/
+  translation: zakup (semi-free peasant in Kyivan Rus)
+  pos: noun
+  example: "Мономах захистив права закупів у своєму законодавстві."
+- term: смиренність
+  ipa: /smɪˈrɛnʲːistʲ/
+  translation: humility, meekness
+  pos: noun
+  example: "Християнська смиренність поєднувалася в образі князя з військовою доблестю."
+- term: милосердя
+  ipa: /mɪlɔˈsɛrdʲɐ/
+  translation: mercy, compassion
+  pos: noun
+  example: "Князь закликав до милосердя щодо сиріт та вдів."
+- term: кочовики
+  ipa: /kɔˈtʃɔu̯ɪkɪ/
+  translation: nomads
+  pos: noun
+  example: "Половці були небезпечними кочовиками, що спустошували руські землі."
+- term: заповіт
+  ipa: /zɐpɔˈʋʲit/
+  translation: testament, covenant, legacy
+  pos: noun
+  example: "Його слова звучать як духовний заповіт майбутнім поколінням."
+- term: солідарність
+  ipa: /sɔlʲidˈɑrnʲistʲ/
+  translation: solidarity
+  pos: noun
+  example: "Міжкнязівська солідарність була ключем до успішної оборони кордонів."
+- term: аристократія
+  ipa: /ɐrɪstɔˈkrɑtʲijɐ/
+  translation: aristocracy
+  pos: noun
+  example: "Київська аристократія підтримала кандидатуру Мономаха на престол."
+- term: спадкоємність
+  ipa: /spɐdkɔˈjɛmnʲistʲ/
+  translation: continuity, succession
+  pos: noun
+  example: "Україна демонструє історичну спадкоємність від держави Володимира Мономаха."
+- term: канон
+  ipa: /kɐˈnɔn/
+  translation: canon
+  pos: noun
+  example: "Князь дотримувався релігійних канонів у своєму повсякденному житті."
+- term: етика
+  ipa: /ˈɛtɪkɐ/
+  translation: ethics
+  pos: noun
+  example: "Політична етика Мономаха базувалася на принципах справедливості."
+- term: легітимність
+  ipa: /lɛɦʲitˈɪmnʲistʲ/
+  translation: legitimacy
+  pos: noun
+  example: "Запрошення вічем забезпечило повну легітимність влади князя в Києві."
+- term: реформатор
+  ipa: /rɛfɔrmˈɑtɔr/
+  translation: reformer
+  pos: noun
+  example: "Володимир Мономах увійшов в історію як мудрий реформатор."
+- term: суверенітет
+  ipa: /suʋɛrɛnʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  example: "Зміцнення суверенітету Русі було головною метою його зовнішньої політики."
+- term: трактат
+  ipa: /trɐkˈtɑt/
+  translation: treatise
+  pos: noun
+  example: "Його «Повчання» можна розглядати як перший політичний трактат Русі."
+- term: ідеологія
+  ipa: /idɛɔˈlɔɦʲijɐ/
+  translation: ideology
+  pos: noun
+  example: "Державна ідеологія часів Мономаха була спрямована на єднання земель."
+- term: деколонізація
+  ipa: /dɛkɔlɔnʲizˈɑt͡sʲijɐ/
+  translation: decolonization
+  pos: noun
+  example: "Деколонізація історії вимагає повернення імені Мономаха в український контекст."
+- term: тяглість
+  ipa: /ˈtʲɑɦlʲistʲ/
+  translation: continuity, duration
+  pos: noun
+  example: "Культурна тяглість від Києва до сучасної України є беззаперечною."

@@ -6,20 +6,20 @@ version: '2.0'
 title: 'Юрій Андрухович: Карнавал на руїнах імперії'
 content_outline:
 - section: Вступ — Enfant terrible української літератури
-  words: 400
+  words: 444
   points:
   - Засновник українського постмодернізму
   - Руйнівник радянського канону
   - Публічний інтелектуал з європейським визнанням
 - section: Станіславів та юність (1960-1982)
-  words: 600
+  words: 667
   points:
   - Народження в Івано-Франківську (Станіславі)
   - Галицька ідентичність та підліткове бунтарство
   - Навчання у Львівському поліграфічному інституті
   - Армійська служба та перші вірші
 - section: Бу-Ба-Бу (1985-1991)
-  words: 800
+  words: 889
   points:
   - Заснування групи Бу-Ба-Бу з Неборак та Ірванець
   - Перформанси та епатаж
@@ -27,7 +27,7 @@ content_outline:
   - Збірки поезій
   - Крах СРСР та літературна свобода
 - section: Романи (1992-1999)
-  words: 800
+  words: 889
   points:
   - «Рекреації» — карнавал і смерть поета
   - «Московіада» — прощання з імперським простором
@@ -35,20 +35,20 @@ content_outline:
   - Визнання в Європі та переклади
   - «Дванадцять обручів» та подальша проза
 - section: Громадянська позиція (2000-)
-  words: 500
+  words: 556
   points:
   - Есеїстика про Центральну Європу
   - Позиція щодо Революції Гідності та війни
   - Андрухович як публічний інтелектуал
   - Сучасна діяльність
 - section: Спадщина — Постмодерніст як деколонізатор
-  words: 500
+  words: 555
   points:
   - Роль у деколонізації літературного простору
   - Вплив на нову генерацію письменників
   - Андрухович і європейська ідентичність
   - Станіслав як ключ до розуміння
-word_target: 3600
+word_target: 4000
 vocabulary_hints:
   required:
   - постмодернізм (postmodernism)
@@ -85,16 +85,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Андрухович (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович"
+  url: https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович
   type: primary
   notes: Comprehensive biography of the postmodernist writer
 - name: Літературний фестиваль «Meridian Czernowitz»
-  url: "https://meridiancz.com/"
+  url: https://meridiancz.com/
   type: reference
   notes: Literary festival co-founded by Andrukhovych
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Юрій Андрухович as founder of Ukrainian postmodernism'
+- Analyze the life and legacy of Юрій Андрухович as founder of Ukrainian postmodernism
 - Evaluate the role of carnival aesthetics in cultural decolonization
 - Trace the evolution from Bu-Ba-Bu provocateur to European public intellectual

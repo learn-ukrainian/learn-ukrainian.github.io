@@ -1,3 +1,4 @@
+---
 module: cross-domain-communication
 level: c2
 sequence: 58
@@ -8,7 +9,7 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Науково-популярний журнал "Світогляд"
+- name: "Науково-популярний журнал \"Світогляд\""
   url: "https://svitohlyad.org.ua/"
   type: reference
   notes: Examples of cross-domain scientific communication
@@ -21,7 +22,7 @@ sources:
   type: reference
   notes: Educational content explaining specialized topics accessibly
 content_outline:
-- section: Вступ — Чому міжгалузева комунікація важлива
+- section: "Вступ — Чому міжгалузева комунікація важлива"
   words: 541
   points:
   - Виклики спілкування між різними галузями
@@ -77,7 +78,7 @@ vocabulary:
   - градація (gradation)
   - когнітивне навантаження (cognitive load)
   - інфографіка (infographic)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz

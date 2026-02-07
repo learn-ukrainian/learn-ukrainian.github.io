@@ -1,3 +1,4 @@
+---
 module: hromady
 level: B2-HIST
 sequence: 83
@@ -88,4 +89,4 @@ grammar:
 - Політична та культурна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: HIST.8 [Imperial Era]
+phase: "HIST.8 [Imperial Era]"

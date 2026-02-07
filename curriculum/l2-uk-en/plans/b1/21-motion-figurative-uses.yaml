@@ -1,3 +1,4 @@
+---
 module: 21-motion-figurative-uses
 level: B1
 sequence: 21
@@ -8,7 +9,7 @@ subtitle: Figurative uses of motion verbs
 content_outline:
 - section: Тест
   words: 338
-  points: []
+  points: "[]"
 - section: Пояснення
   words: 1191
   points:
@@ -23,7 +24,7 @@ content_outline:
   - 'Діалог: Культурні плани'
 - section: 'Читання: Метафори в нашому житті'
   words: 748
-  points: []
+  points: "[]"
 - section: Потрібно більше практики?
   words: 164
   points:

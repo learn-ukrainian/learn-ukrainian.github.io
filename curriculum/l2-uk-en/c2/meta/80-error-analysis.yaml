@@ -1,3 +1,4 @@
+---
 module: error-analysis
 level: C2
 slug: error-analysis

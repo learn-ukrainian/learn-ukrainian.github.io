@@ -1,3 +1,4 @@
+---
 module: andrusivske-peremyrya
 level: B2-HIST
 sequence: 60
@@ -91,4 +92,4 @@ sources:
   type: primary
   notes: Original articles
 register: публіцистичний
-phase: HIST.6 [Khmelnytsky & Cossack State]
+phase: "HIST.6 [Khmelnytsky & Cossack State]"

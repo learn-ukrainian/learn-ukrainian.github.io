@@ -1,3 +1,4 @@
+---
 module: hromadianske-suspilstvo
 level: c1-hist
 sequence: 127
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of громадянське суспільство: держава без держави'
 - Evaluate the historical significance of самоорганізація
 content_outline:
-- section: Вступ — Самоорганізація
+- section: "Вступ — Самоорганізація"
   words: 515
   subsections:
   - Громадянське суспільство — що це

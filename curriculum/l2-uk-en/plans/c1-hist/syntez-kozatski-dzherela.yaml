@@ -1,3 +1,4 @@
+---
 module: syntez-kozatski-dzherela
 level: c1-hist
 sequence: 28
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: голоси козацької доби'
 - Evaluate the historical significance of що ми вивчили
 content_outline:
-- section: Вступ — Що ми вивчили
+- section: "Вступ — Що ми вивчили"
   words: 457
   subsections:
   - Огляд модулів 19-27
@@ -23,7 +24,7 @@ content_outline:
   - Листування — дипломатичне, приватне
   - Правові документи — Конституція, суди
   - Таблиця порівняння
-- section: Голоси епохи — хто говорить?
+- section: "Голоси епохи — хто говорить?"
   words: 800
   subsections:
   - Старшина — домінуючий голос
@@ -47,7 +48,7 @@ content_outline:
   - Польські джерела — альтернатива
   - Російські джерела — інша перспектива
   - Комплексний підхід
-- section: Практикум — комплексний аналіз
+- section: "Практикум — комплексний аналіз"
   words: 571
   subsections:
   - Одна подія — кілька джерел

@@ -1,3 +1,4 @@
+---
 module: pravoslavna-identychnist
 level: c1-hist
 sequence: 60
@@ -9,14 +10,14 @@ objectives:
 - Analyze the causes and consequences of православна ідентичність xvii-xviii ст.
 - Evaluate the historical significance of відповідь на унію
 content_outline:
-- section: Вступ — Відповідь на унію
+- section: "Вступ — Відповідь на унію"
   words: 457
   subsections:
   - Православ'я після Берестя
   - Криза як стимул
   - Відродження XVII ст.
   - Структура модуля
-- section: Петро Могила — реформатор
+- section: "Петро Могила — реформатор"
   words: 800
   subsections:
   - Біографія — молдавський князь

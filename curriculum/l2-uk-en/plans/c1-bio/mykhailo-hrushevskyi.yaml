@@ -1,3 +1,4 @@
+---
 module: c1-bio-063
 level: C1-BIO
 sequence: 63
@@ -5,7 +6,7 @@ slug: mykhailo-hrushevskyi
 version: '2.0'
 title: 'Михайло Грушевський: Історик і президент'
 content_outline:
-- section: Вступ — Батько української історії
+- section: "Вступ — Батько української історії"
   words: 400
   points:
   - Михайло Грушевський — найвидатніший український історик

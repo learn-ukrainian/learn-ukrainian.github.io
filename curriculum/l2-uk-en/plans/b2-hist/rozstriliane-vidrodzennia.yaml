@@ -1,3 +1,4 @@
+---
 module: rozstriliane-vidrodzennia
 level: B2-HIST
 sequence: 98
@@ -88,4 +89,4 @@ grammar:
 - Літературна та мистецька лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.10 [WWII & Soviet Terror]
+phase: "HIST.10 [WWII & Soviet Terror]"

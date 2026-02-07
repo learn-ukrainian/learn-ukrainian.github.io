@@ -1,3 +1,4 @@
+---
 module: kozatstvo-vytoky
 level: B2-HIST
 sequence: 41
@@ -94,4 +95,4 @@ sources:
   type: secondary
   notes: Сучасний синтез історії України з акцентом на глобальних процесах
 register: публіцистичний
-phase: HIST.5 [Становлення козацтва]
+phase: "HIST.5 [Становлення козацтва]"

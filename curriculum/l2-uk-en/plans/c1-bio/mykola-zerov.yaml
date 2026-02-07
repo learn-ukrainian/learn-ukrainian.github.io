@@ -1,3 +1,4 @@
+---
 module: c1-bio-084
 level: C1-BIO
 sequence: 84
@@ -5,7 +6,7 @@ slug: mykola-zerov
 version: '2.0'
 title: 'Микола Зеров: <!-- Title -->'
 content_outline:
-- section: Вступ — Poet, translator, Neoclassicist leader
+- section: "Вступ — Poet, translator, Neoclassicist leader"
   words: 400
   points:
   - <!-- point -->

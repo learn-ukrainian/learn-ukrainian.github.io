@@ -1,3 +1,4 @@
+---
 module: c1-bio-145
 level: C1-BIO
 sequence: 145
@@ -5,7 +6,7 @@ slug: sofia-andrukhovych
 version: '2.0'
 title: 'Софія Андрухович: Наратор пам''яті'
 content_outline:
-- section: Вступ — Археолог пам'яті
+- section: "Вступ — Археолог пам'яті"
   words: 400
   points:
   - Андрухович як одна з найцікавіших письменниць сучасності

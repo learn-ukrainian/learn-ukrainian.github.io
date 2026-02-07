@@ -1,3 +1,4 @@
+---
 module: c1-bio-117
 level: C1-BIO
 sequence: 117
@@ -5,7 +6,7 @@ slug: mykola-amosov
 version: '2.0'
 title: 'Микола Амосов: Хірург і філософ здоров''я'
 content_outline:
-- section: Вступ — Лікар, який лікував Україну
+- section: "Вступ — Лікар, який лікував Україну"
   words: 457
   points:
   - Амосов як піонер кардіохірургії
@@ -67,7 +68,7 @@ vocabulary_hints:
   - пацієнт (patient)
 activity_hints:
 - type: reading
-  focus: Excerpts from "Роздуми про здоров'я"
+  focus: "Excerpts from \"Роздуми про здоров'я\""
   source: Medical and philosophical texts
   items: 3 passages
 - type: essay-response

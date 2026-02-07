@@ -1,3 +1,4 @@
+---
 module: professional-email-basics
 level: B2
 slug: professional-email-basics
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Ділова пошта: Основи'
 subtitle: Business Email Structure and Tone
 content_outline:
-- section: Розминка — Ділова комунікація
+- section: "Розминка — Ділова комунікація"
   words: 200
   points:
   - Роль електронної пошти у професійному середовищі

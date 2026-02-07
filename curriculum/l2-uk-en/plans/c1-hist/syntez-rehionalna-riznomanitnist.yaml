@@ -1,3 +1,4 @@
+---
 module: syntez-rehionalna-riznomanitnist
 level: c1-hist
 sequence: 80
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: регіональна різноманітність'
 - Evaluate the historical significance of єдність у різноманітності
 content_outline:
-- section: Вступ — Єдність у різноманітності
+- section: "Вступ — Єдність у різноманітності"
   words: 457
   subsections:
   - Огляд модулів 70-79
@@ -38,7 +39,7 @@ content_outline:
   - Міф «русифікованого сходу»
   - Реальність — спектр
   - Ідентичність — процес
-- section: 2014 і 2022 — перевірка
+- section: "2014 і 2022 — перевірка"
   words: 571
   subsections:
   - Майдан — не тільки Київ

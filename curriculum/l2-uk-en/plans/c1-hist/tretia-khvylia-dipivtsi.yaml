@@ -1,3 +1,4 @@
+---
 module: tretia-khvylia-dipivtsi
 level: c1-hist
 sequence: 66
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of третя хвиля: діпі (1945-1950)'
 - Evaluate the historical significance of хто такі діпі?
 content_outline:
-- section: Вступ — Хто такі ДіПі?
+- section: "Вступ — Хто такі ДіПі?"
   words: 457
   subsections:
   - Displaced Persons — визначення

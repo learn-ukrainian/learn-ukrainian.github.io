@@ -1,3 +1,4 @@
+---
 module: syntez-diaspora
 level: c1-hist
 sequence: 69
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: ковчег нації'
 - Evaluate the historical significance of три хвилі, одна місія
 content_outline:
-- section: Вступ — Три хвилі, одна місія
+- section: "Вступ — Три хвилі, одна місія"
   words: 457
   subsections:
   - Огляд модулів 64-68
@@ -39,7 +40,7 @@ content_outline:
   - Тиск на Захід
   - 1991 — перші контакти
   - Після незалежності — нова роль
-- section: 2022 — Четверта хвиля?
+- section: "2022 — Четверта хвиля?"
   words: 571
   subsections:
   - Біженці 2022 — мільйони

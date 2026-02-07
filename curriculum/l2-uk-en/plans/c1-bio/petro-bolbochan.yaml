@@ -1,3 +1,4 @@
+---
 module: c1-bio-080
 level: C1-BIO
 sequence: 80
@@ -5,7 +6,7 @@ slug: petro-bolbochan
 version: '2.0'
 title: 'Петро Болбочан: Полковник-герой'
 content_outline:
-- section: Вступ — Герой Криму
+- section: "Вступ — Герой Криму"
   words: 400
   points:
   - Болбочан як один із найталановитіших полководців УНР

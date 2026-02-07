@@ -1,3 +1,4 @@
+---
 module: 11-multi-clause-sentences
 level: B2
 sequence: 11
@@ -5,7 +6,7 @@ slug: 11-multi-clause-sentences
 version: '2.0'
 title: Багатоскладні речення
 content_outline:
-- section: Вступ — Багатоскладні речення
+- section: "Вступ — Багатоскладні речення"
   words: 400
   points:
   - Різниця між простими та складними реченнями
@@ -113,7 +114,7 @@ sources:
   type: reference
   notes: B2 complex sentence requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Identify and correctly use багатоскладні речення
 - Form and apply багатоскладні речення

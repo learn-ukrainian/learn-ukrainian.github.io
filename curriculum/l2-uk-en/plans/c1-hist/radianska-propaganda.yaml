@@ -1,3 +1,4 @@
+---
 module: radianska-propaganda
 level: c1-hist
 sequence: 109
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of радянська пропаганда: механізми'
 - Evaluate the historical significance of машина переписування
 content_outline:
-- section: Вступ — Машина переписування
+- section: "Вступ — Машина переписування"
   words: 457
   subsections:
   - Радянська пропаганда — система
@@ -76,7 +77,7 @@ vocabulary:
 - спадок
 activities:
 - type: critical-analysis
-  focus: How "friendship of peoples" ideology worked
+  focus: "How \"friendship of peoples\" ideology worked"
 - type: comparative-study
   focus: "Soviet textbooks — how history was rewritten"
 - type: critical-analysis

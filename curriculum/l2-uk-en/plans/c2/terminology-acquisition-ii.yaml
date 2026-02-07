@@ -1,3 +1,4 @@
+---
 module: terminology-acquisition-ii
 level: c2
 sequence: 48
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: ISO 1087:2019 — Термінологія та терміни
+- name: "ISO 1087:2019 — Термінологія та терміни"
   url: "https://www.iso.org/"
   type: reference
   notes: International standards for terminology and glossary creation
-- name: Українське термінознавство — підручник
+- name: "Українське термінознавство — підручник"
   url: "https://ium.org.ua/"
   type: reference
   notes: Academic textbook on Ukrainian terminology methodology
-- name: СУМ-20 — Словник української мови
+- name: "СУМ-20 — Словник української мови"
   url: "https://sum20ua.com/"
   type: reference
   notes: Authoritative Ukrainian dictionary for term verification
 content_outline:
-- section: Вступ — Персональний глосарій як інструмент
+- section: "Вступ — Персональний глосарій як інструмент"
   words: 432
   points:
   - Переваги ведення власного глосарію
@@ -76,7 +77,7 @@ vocabulary:
   - конкордансний (concordance)
   - кодифікований (codified)
   - нормативний (normative)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - match-up

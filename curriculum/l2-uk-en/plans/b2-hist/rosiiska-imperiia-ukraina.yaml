@@ -1,3 +1,4 @@
+---
 module: rosiiska-imperiia-ukraina
 level: B2-HIST
 sequence: 75
@@ -97,7 +98,7 @@ grammar:
 - Топонімічна лексика
 - Опис географічних процесів
 register: публіцистичний
-phase: B2.3b [Українська історія]
+phase: "B2.3b [Українська історія]"
 vocabulary_hints:
   required:
   - Великий Луг
@@ -117,7 +118,7 @@ activity_hints:
 - type: reading
   title: Козацькі зимівники на Великому Лузі
 - type: essay-response
-  prompt: Чому міф про "Новоросію" є інструментом імперської пропаганди?
+  prompt: "Чому міф про \"Новоросію\" є інструментом імперської пропаганди?"
 - type: critical-analysis
   focus: 'Критичний аналіз послідовності: '
   items: 3

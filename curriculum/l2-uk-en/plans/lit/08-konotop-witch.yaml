@@ -1,3 +1,4 @@
+---
 module: konotop-witch
 level: LIT
 slug: konotop-witch
@@ -5,19 +6,19 @@ version: '2.0'
 title: 'Конотопська Відьма: Сатира на Руїну'
 subtitle: 'LIT-008: Гумор як Дзеркало Деградації'
 content_outline:
-- section: Вступ — Найтемніша і найсмішніша повість
+- section: "Вступ — Найтемніша і найсмішніша повість"
   words: 625
   points:
   - Контраст з "Марусею"
   - Бурлескний реалізм
   - Сатира на адміністративний ідіотизм
-- section: Сюжет — полювання на відьму
+- section: "Сюжет — полювання на відьму"
   words: 875
   points:
   - Сотник Забрьоха і його «похід»
   - Писар Пістряк — справжній керманич
   - 'Кульмінація: топлення жінок'
-- section: Антигерої — галерея типів
+- section: "Антигерої — галерея типів"
   words: 1000
   points:
   - Забрьоха — тупість і лінь
@@ -35,7 +36,7 @@ content_outline:
   - Канцеляризми XVIII століття
   - '"Макаронічна" мова Пістряка'
   - Вульгаризми та лайка
-- section: Підсумок — Енциклопедія шахрайства
+- section: "Підсумок — Енциклопедія шахрайства"
   words: 500
   points:
   - Вплив на "Майстра і Маргариту"
@@ -62,7 +63,7 @@ vocabulary_hints:
   - неуцтво (ignorance)
 activity_hints:
 - type: reading
-  focus: Ключові епізоди "Конотопської відьми"
+  focus: "Ключові епізоди \"Конотопської відьми\""
   source: UkrLib tid=254
   items: 5+
 - type: essay-response
@@ -87,11 +88,11 @@ grammar:
 - Archaic bureaucratic vocabulary (Kantseliaryt)
 module_type: literature
 sources:
-- name: Конотопська відьма — повний текст
+- name: "Конотопська відьма — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=254"
   type: primary
   notes: Повість для детального аналізу
-- name: Аналіз "Конотопської відьми"
+- name: "Аналіз \"Конотопської відьми\""
   url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=254"
   type: secondary
   notes: Літературознавчий аналіз

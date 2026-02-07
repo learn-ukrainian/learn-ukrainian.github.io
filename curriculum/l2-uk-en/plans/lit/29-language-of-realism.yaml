@@ -1,3 +1,4 @@
+---
 module: language-of-realism
 level: LIT
 slug: language-of-realism
@@ -5,7 +6,7 @@ version: '2.0'
 title: 'Мова Реалізму: Стиль Нечуя-Левицького'
 subtitle: 'The Language of Realism: Nechuy-Levytsky''s Style'
 content_outline:
-- section: Вступ — Від поезії до прози
+- section: "Вступ — Від поезії до прози"
   words: 643
   points:
   - Еволюція літературної мови (Котляревський → Нечуй)
@@ -35,7 +36,7 @@ content_outline:
   - Нечуй vs Котляревський (бурлеск)
   - Нечуй vs Квітка (сентименталізм)
   - Нечуй vs Шевченко (поезія)
-- section: Підсумок — Спадщина для ХХ століття
+- section: "Підсумок — Спадщина для ХХ століття"
   words: 515
   points:
   - Вплив на пізніших прозаїків
@@ -88,11 +89,11 @@ grammar:
 - Stylistic analysis
 module_type: literature
 sources:
-- name: Кайдашева сім'я — повний текст
+- name: "Кайдашева сім'я — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=907"
   type: primary
   notes: Зразки діалектної та розмовної мови
-- name: Микола Джеря — повний текст
+- name: "Микола Джеря — повний текст"
   url: "https://www.ukrlib.com.ua/books/printit.php?tid=908"
   type: primary
   notes: Порівняння стилю

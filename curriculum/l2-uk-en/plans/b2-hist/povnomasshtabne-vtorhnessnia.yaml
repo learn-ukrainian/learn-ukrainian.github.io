@@ -1,3 +1,4 @@
+---
 module: povnomasshtabne-vtorhnessnia
 level: B2-HIST
 sequence: 132
@@ -88,4 +89,4 @@ grammar:
 - Військова та надзвичайна лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: HIST.13 [Russian Aggression]
+phase: "HIST.13 [Russian Aggression]"

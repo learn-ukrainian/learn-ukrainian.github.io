@@ -1,3 +1,4 @@
+---
 module: c1-bio-135
 level: C1-BIO
 sequence: 135
@@ -5,7 +6,7 @@ slug: serhii-plokhy
 version: '2.0'
 title: 'Сергій Плохій: Історик, який пояснив Україну світові'
 content_outline:
-- section: Вступ — Голос України в Гарварді
+- section: "Вступ — Голос України в Гарварді"
   words: 470
   points:
   - Плохій як найвпливовіший історик України у світі

@@ -1,3 +1,4 @@
+---
 module: litopys-hrabianky
 level: c1-hist
 sequence: 21
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of літопис грабянки: козацький патріотизм'
 - Evaluate the historical significance of патріотичний літопис
 content_outline:
-- section: Вступ — Патріотичний літопис
+- section: "Вступ — Патріотичний літопис"
   words: 457
   subsections:
   - Григорій Грабянка — автор і діяч
@@ -38,7 +39,7 @@ content_outline:
   - Козаки як захисники православ'я
   - Критика Москви — закамуфльована
   - Ідеал козацької «республіки»
-- section: Фрагмент — Козацьке походження
+- section: "Фрагмент — Козацьке походження"
   words: 686
   subsections:
   - Текст (з глосами)

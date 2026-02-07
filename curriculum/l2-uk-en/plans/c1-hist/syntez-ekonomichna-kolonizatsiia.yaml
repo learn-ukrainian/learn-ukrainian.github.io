@@ -1,3 +1,4 @@
+---
 module: syntez-ekonomichna-kolonizatsiia
 level: c1-hist
 sequence: 107
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: економічна деколонізація'
 - Evaluate the historical significance of від колонії до суб'єкта
 content_outline:
-- section: Вступ — Від колонії до суб'єкта
+- section: "Вступ — Від колонії до суб'єкта"
   words: 515
   subsections:
   - Огляд модулів 103-106
@@ -37,7 +38,7 @@ content_outline:
   - Торговельна переорієнтація
   - Енергетична незалежність
   - 2022 — повний розрив
-- section: ЄС — нова залежність чи партнерство?
+- section: "ЄС — нова залежність чи партнерство?"
   words: 645
   subsections:
   - Угода про асоціацію

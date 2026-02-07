@@ -1,3 +1,4 @@
+---
 module: b2-66
 level: B2
 sequence: 66
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Синоніми: Абстрактні Поняття та Ідеї'
 subtitle: Synonyms - Abstract Concepts and Ideas
 content_outline:
-- section: Розминка — Думка чи ідея?
+- section: "Розминка — Думка чи ідея?"
   words: 350
   points:
   - Думка vs ідея vs погляд — різні рівні абстракції
@@ -28,7 +29,7 @@ content_outline:
   - концепція (conception - framework)
   - теорія (theory - systematic)
   - гіпотеза (hypothesis - tentative)
-- section: Практика — абстрактна лексика
+- section: "Практика — абстрактна лексика"
   words: 400
   points:
   - Обрати слово для опису інтелектуальної діяльності (наукова стаття vs есе)
@@ -48,7 +49,7 @@ grammar:
 - Collocations with idea/thought
 immersion: 100
 register: науковий
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - синонім (synonym)

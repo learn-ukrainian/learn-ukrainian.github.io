@@ -1,3 +1,4 @@
+---
 module: a1-37
 level: A1
 slug: at-the-market
@@ -24,7 +25,7 @@ content_outline:
   - Діалог 1: Купівля овочів (картопля, помідори)
   - Діалог 2: Купівля фруктів на вагу
   - Діалог 3: Запитання про здачу
-- section: Warm-up
+- section: "Warm-up 2"
   words: 144
   points:
   - Наратив про похід на ринок
@@ -77,4 +78,4 @@ grammar:
 - Accusative for requests
 - Numbers with nouns
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: "A1.4 [Practical Scenarios]"

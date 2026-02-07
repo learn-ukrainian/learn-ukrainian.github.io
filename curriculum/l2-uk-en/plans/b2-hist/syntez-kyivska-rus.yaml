@@ -1,3 +1,4 @@
+---
 module: syntez-kyivska-rus
 level: B2-HIST
 sequence: 20
@@ -5,7 +6,7 @@ slug: syntez-kyivska-rus
 version: '2.0'
 title: 'Синтез: Київська Русь — спадщина'
 content_outline:
-- section: Вступ — Три століття Русі
+- section: "Вступ — Три століття Русі"
   words: 444
   points:
   - Огляд періоду 882-1240
@@ -40,7 +41,7 @@ content_outline:
   - Династичні шлюби
   - Культурний обмін
   - Русь очима сучасників
-- section: Спадщина Русі — хто спадкоємець?
+- section: "Спадщина Русі — хто спадкоємець?"
   words: 666
   points:
   - Український погляд — пряма спадкоємність
@@ -106,5 +107,5 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі"
   type: reference
   notes: Legacy and claims
-phase: B2-HIST.1 [Kyivan Rus]
+phase: "B2-HIST.1 [Kyivan Rus]"
 immersion: 100% Ukrainian

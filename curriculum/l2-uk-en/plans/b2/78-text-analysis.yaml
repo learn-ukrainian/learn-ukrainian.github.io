@@ -1,3 +1,4 @@
+---
 module: 78-text-analysis
 level: B2
 sequence: 78
@@ -6,7 +7,7 @@ version: '2.0'
 title: Аналіз тексту
 subtitle: Text Analysis
 content_outline:
-- section: Розминка — Навіщо аналізувати тексти
+- section: "Розминка — Навіщо аналізувати тексти"
   words: 200
   points:
   - Критичне мислення в епоху інформаційного шуму

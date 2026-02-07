@@ -1,3 +1,4 @@
+---
 module: pislya-stalina-shistdesiatnyky
 level: c1-hist
 sequence: 124
@@ -9,7 +10,7 @@ objectives:
 - 'Analyze the causes and consequences of після сталіна: шістдесятники'
 - Evaluate the historical significance of відлига
 content_outline:
-- section: Вступ — Відлига
+- section: "Вступ — Відлига"
   words: 515
   subsections:
   - 1953 — смерть Сталіна

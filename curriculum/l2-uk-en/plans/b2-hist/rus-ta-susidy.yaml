@@ -1,3 +1,4 @@
+---
 module: rus-ta-susidy
 level: B2-HIST
 sequence: 19
@@ -5,7 +6,7 @@ slug: rus-ta-susidy
 version: '2.0'
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
 content_outline:
-- section: Вступ — Русь у міжнародному контексті
+- section: "Вступ — Русь у міжнародному контексті"
   words: 529
   points:
   - Геополітичне положення Русі
@@ -100,9 +101,9 @@ sources:
   url: "https://uk.wikipedia.org/wiki/Русько-візантійські_договори"
   type: reference
   notes: Treaties with Byzantium
-- name: Повість минулих літ — дипломатичні місії
+- name: "Повість минулих літ — дипломатичні місії"
   url: "https://litopys.org.ua/pvl/pvl.htm"
   type: primary
   notes: Chronicle accounts
-phase: B2-HIST.1 [Kyivan Rus]
+phase: "B2-HIST.1 [Kyivan Rus]"
 immersion: 100% Ukrainian

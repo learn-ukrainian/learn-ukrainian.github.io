@@ -1,3 +1,4 @@
+---
 module: b1-68
 level: B1
 sequence: 68
@@ -67,4 +68,4 @@ grammar:
 - Thinking verb collocations
 - Cognitive verb patterns
 register: розмовний
-phase: B1.6 [Vocabulary Expansion II]
+phase: "B1.6 [Vocabulary Expansion II]"

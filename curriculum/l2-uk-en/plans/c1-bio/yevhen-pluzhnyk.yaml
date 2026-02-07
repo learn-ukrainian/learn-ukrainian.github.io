@@ -1,3 +1,4 @@
+---
 module: c1-bio-105
 level: C1-BIO
 sequence: 105
@@ -5,7 +6,7 @@ slug: yevhen-pluzhnyk
 version: '2.0'
 title: 'Євген Плужник: <!-- Title -->'
 content_outline:
-- section: Вступ — Poet, died in Solovki
+- section: "Вступ — Poet, died in Solovki"
   words: 400
   points:
   - <!-- point -->

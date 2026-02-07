@@ -1,3 +1,4 @@
+---
 module: c1-bridge-assessment
 level: c2
 sequence: 1
@@ -17,7 +18,7 @@ sources:
   type: reference
   notes: General C2 level descriptors for comparison
 content_outline:
-- section: Вступ — Що означає рівень C2?
+- section: "Вступ — Що означає рівень C2?"
   words: 571
   points:
   - Різниця між C1 і C2
@@ -73,7 +74,7 @@ vocabulary:
   - еталон (standard/benchmark)
   - рефлексія (reflection)
   - траєкторія (trajectory)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

@@ -1,3 +1,4 @@
+---
 module: franko-politychni-ese
 level: c1-hist
 sequence: 33
@@ -9,14 +10,14 @@ objectives:
 - 'Analyze the causes and consequences of франко: політичні есе'
 - Evaluate the historical significance of франко як мислитель
 content_outline:
-- section: Вступ — Франко як мислитель
+- section: "Вступ — Франко як мислитель"
   words: 457
   subsections:
   - Не тільки поет — публіцист
   - Політичні есе — окремий жанр
   - «Поза межами можливого» — головний текст
   - Чому важливо читати сьогодні
-- section: Контекст — Галичина кінця XIX ст.
+- section: "Контекст — Галичина кінця XIX ст."
   words: 571
   subsections:
   - Австрійська Галичина — інші умови
@@ -77,7 +78,7 @@ vocabulary:
 - прагматизм
 activities:
 - type: reading
-  focus: Excerpt from "Poza mezhamy mozhlyvoho"
+  focus: "Excerpt from \"Poza mezhamy mozhlyvoho\""
 - type: critical-analysis
   focus: Map Franko's argument structure
 - type: critical-analysis

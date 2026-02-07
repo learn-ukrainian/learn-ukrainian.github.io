@@ -1,3 +1,4 @@
+---
 module: 28-dialects-of-ukrainian
 level: C1
 sequence: 28
@@ -5,7 +6,7 @@ slug: 28-dialects-of-ukrainian
 version: '2.0'
 title: Діалекти та наріччя
 content_outline:
-- section: Вступ — Діалектологія
+- section: "Вступ — Діалектологія"
   words: 400
   points:
   - Що таке діалект

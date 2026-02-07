@@ -1,3 +1,4 @@
+---
 module: a1-22
 level: A1
 sequence: 22
@@ -16,21 +17,21 @@ content_outline:
   - Складений майбутній (буду + інфінітив)
   - Дієвідміна буду (буду, будеш, буде, будемо, будете, будуть)
   - Синтетичний майбутній (-му, -меш, -ме) — згадка
-- section: Presentation
+- section: "Presentation 2"
   words: 136
   points:
   - Вираження планів (Я буду працювати)
   - Вираження намірів (Я хочу..., Я збираюся...)
-- section: Presentation
+- section: "Presentation 3"
   words: 117
   points:
   - Завтра, післязавтра, наступного тижня
   - У понеділок, у січні, наступного року
-- section: Presentation
+- section: "Presentation 4"
   words: 76
   points:
   - Скоро, незабаром, потім, пізніше
-- section: Presentation
+- section: "Presentation 5"
   words: 190
   points:
   - Плани на вихідні
@@ -40,7 +41,7 @@ content_outline:
   points:
   - Діалог про плани на вечір
   - Діалог про плани на канікули
-- section: Practice
+- section: "Practice 2"
   words: 18
   points:
   - Розповідь про свої плани на завтра
@@ -83,4 +84,4 @@ grammar:
 - Буду conjugation for all persons
 - Future time expressions
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: "A1.3 [Consolidation]"

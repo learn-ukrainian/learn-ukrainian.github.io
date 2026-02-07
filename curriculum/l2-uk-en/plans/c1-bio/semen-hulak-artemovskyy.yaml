@@ -1,3 +1,4 @@
+---
 module: c1-bio-038
 level: C1-BIO
 sequence: 38
@@ -5,7 +6,7 @@ slug: semen-hulak-artemovskyy
 version: '2.0'
 title: 'Семен Гулак-Артемовський: Оперний співак'
 content_outline:
-- section: Вступ — Творець першої української опери
+- section: "Вступ — Творець першої української опери"
   words: 400
   points:
   - Значення "Запорожця за Дунаєм"
@@ -25,7 +26,7 @@ content_outline:
   - Головні партії
   - Визнання як баритона
   - Гастролі Європою
-- section: Створення "Запорожця за Дунаєм"
+- section: "Створення \"Запорожця за Дунаєм\""
   words: 900
   points:
   - Ідея національної опери
@@ -47,7 +48,7 @@ content_outline:
   - Вплив на українську оперу
   - Постановки твору
   - Сучасне значення
-- section: Підсумок — Голос нації
+- section: "Підсумок — Голос нації"
   words: 300
   points:
   - Гулак-Артемовський як піонер
@@ -74,7 +75,7 @@ vocabulary_hints:
   - декорації (scenery)
 activity_hints:
 - type: reading
-  focus: Reviews and descriptions of "Zaporozhets"
+  focus: "Reviews and descriptions of \"Zaporozhets\""
   source: 19th century sources (adapted)
   items: 3 passages
 - type: essay-response
@@ -82,7 +83,7 @@ activity_hints:
   word_target: 250
   output: Analysis of cultural-political context
 - type: critical-analysis
-  focus: How does "Zaporozhets" represent Ukrainian identity?
+  focus: "How does \"Zaporozhets\" represent Ukrainian identity?"
   output: Cultural analysis
 focus: biography
 prerequisites:

@@ -1,3 +1,4 @@
+---
 module: lysty-stusa
 level: c1-hist
 sequence: 40
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of листи василя стуса з таборів
 - Evaluate the historical significance of голос із гулагу
 content_outline:
-- section: Вступ — Голос із ГУЛАГу
+- section: "Вступ — Голос із ГУЛАГу"
   words: 457
   subsections:
   - Стус — поет і дисидент

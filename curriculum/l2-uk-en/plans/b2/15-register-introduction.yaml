@@ -1,3 +1,4 @@
+---
 module: 15-register-introduction
 level: B2
 sequence: 15
@@ -5,7 +6,7 @@ slug: 15-register-introduction
 version: '2.0'
 title: Функціональні стилі мови
 content_outline:
-- section: Вступ — Що таке функціональний стиль?
+- section: "Вступ — Що таке функціональний стиль?"
   words: 400
   points:
   - Визначення функціонального стилю
@@ -120,7 +121,7 @@ sources:
   type: reference
   notes: B2 register awareness requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: "B2.1b [Participles & Register Intro]"
 objectives:
 - Understand and apply функціональні стилі мови
 - Analyze and evaluate що таке функціональний стиль?

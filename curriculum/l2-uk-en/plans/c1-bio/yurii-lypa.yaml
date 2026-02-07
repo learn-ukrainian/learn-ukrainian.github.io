@@ -6,20 +6,20 @@ version: '2.0'
 title: 'Юрій Липа: Геополітик Чорного моря'
 content_outline:
 - section: Вступ — Пророк Чорноморської доктрини
-  words: 400
+  words: 444
   points:
   - Юрій Липа як геополітичний мислитель
   - Син Івана Липи — спадкоємність державницької ідеї
   - Поєднання поезії, медицини та геополітики
 - section: Одеса та еміграція (1900-1920)
-  words: 600
+  words: 667
   points:
   - Народження в Одесі в родині Івана Липи
   - Дитинство серед української інтелігенції Півдня
   - Еміграція до Польщі після поразки УНР
   - Вплив батька на формування поглядів
 - section: Поет і лікар у Варшаві та Львові (1920-1939)
-  words: 800
+  words: 889
   points:
   - Медична освіта у Познані
   - Лікарська практика у Варшаві та Львові
@@ -27,27 +27,27 @@ content_outline:
   - «Призначення України» — головна геополітична праця
   - Чорноморська доктрина та ідея морської держави
 - section: Друга світова війна (1939-1944)
-  words: 700
+  words: 778
   points:
   - Робота лікарем на Яворівщині
   - Допомога пораненим та цивільному населенню
   - Зв'язки з ОУН та УПА
   - Загибель від рук НКВС у серпні 1944
 - section: Геополітична спадщина
-  words: 600
+  words: 667
   points:
   - Актуальність Чорноморської доктрини
   - «Розподіл Росії» — пророчий текст
   - Липа як пророк українського морського потенціалу
   - Зв'язок батька і сина у державницькій традиції
 - section: Спадщина — Лікар, поет, стратег
-  words: 500
+  words: 555
   points:
   - Посмертне визнання та перевидання
   - Вплив на сучасну геополітичну думку
   - Деколонізація південних регіонів
   - Липа та сучасна морська стратегія України
-word_target: 3600
+word_target: 4000
 vocabulary_hints:
   required:
   - геополітика (geopolitics)
@@ -84,16 +84,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Липа (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Липа_Юрій_Іванович"
+  url: https://uk.wikipedia.org/wiki/Липа_Юрій_Іванович
   type: primary
   notes: Biography of the geopolitician, poet, and physician
 - name: «Призначення України» (електронна бібліотека)
-  url: "https://uk.wikisource.org/wiki/Призначення_України"
+  url: https://uk.wikisource.org/wiki/Призначення_України
   type: reference
   notes: Full text of Lypa's major geopolitical work
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Юрій Липа as a geopolitical thinker'
+- Analyze the life and legacy of Юрій Липа as a geopolitical thinker
 - Evaluate the Black Sea doctrine and its contemporary relevance
 - Trace the father-son intellectual dynasty of the Lypa family

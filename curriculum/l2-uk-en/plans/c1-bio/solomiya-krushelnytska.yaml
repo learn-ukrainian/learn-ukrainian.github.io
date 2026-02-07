@@ -1,3 +1,4 @@
+---
 module: c1-bio-070
 level: C1-BIO
 sequence: 70
@@ -5,7 +6,7 @@ slug: solomiya-krushelnytska
 version: '2.0'
 title: 'Соломія Крушельницька: Оперна діва'
 content_outline:
-- section: Вступ — Соловейко з України
+- section: "Вступ — Соловейко з України"
   words: 400
   points:
   - Крушельницька як одна з найвидатніших оперних співачок світу

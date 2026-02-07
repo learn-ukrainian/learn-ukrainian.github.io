@@ -1,3 +1,4 @@
+---
 module: 102-kotsiubynskyi
 level: C1
 sequence: 102
@@ -6,13 +7,13 @@ version: '2.0'
 title: 'Імпресіонізм: Коцюбинський'
 subtitle: 'Impressionism: Kotsiubynsky'
 content_outline:
-- section: Розминка — Імпресіоніст з Вінниці
+- section: "Розминка — Імпресіоніст з Вінниці"
   words: 700
   points:
-  - "Тіні забутих предків" — гуцульське життя, кохання, смерть
-  - "Intermezzo" — психологічна глибина
-  - Вплив на кіно — Параджанов та візуальна поезія
-- section: Content Areas
+  - '"Тіні забутих предків" — гуцульське життя, кохання, смерть'
+  - '"Intermezzo" — психологічна глибина'
+  - 'Вплив на кіно — Параджанов та візуальна поезія'
+- section: "Content Areas"
   words: 1250
   points:
   - 'Біографія: Вінниця, travel, European influences'
@@ -20,7 +21,7 @@ content_outline:
   - 'Fata Morgana: peasant revolution'
   - 'Impressionist techniques: sensory detail, mood'
   - Influence on Ukrainian cinema (Параджанов)
-- section: Практика — імпресіоністичний аналіз
+- section: "Практика — імпресіоністичний аналіз"
   words: 1050
   points:
   - Проаналізувати сенсорну образність у "Тінях забутих предків"

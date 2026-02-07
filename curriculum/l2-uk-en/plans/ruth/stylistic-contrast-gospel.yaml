@@ -1,40 +1,26 @@
-# Module Plan: Stylistic Contrast
-# Track: RUTH
-# Module: 008
-# Source: Gemini Research (ISSUE-493)
-# Generated: 2026-02-04
-
+---
 module_number: 8
 slug: stylistic-contrast-gospel
-title_uk: "Стилістичний контраст"
-title_en: "Stylistic Contrast"
-
+title_uk: Стилістичний контраст
+title_en: Stylistic Contrast
 phase: 1
 phase_id: chancery-legal
-phase_name: "Chancery & Legal"
-
-focus: "Peresopnytsia Gospel vs Chancery style"
-
+phase_name: Chancery & Legal
+focus: Peresopnytsia Gospel vs Chancery style
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Stylistic Contrast"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Stylistic Contrast
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
-  - parallel-text
-  - register-identify
+- transcription
+- etymology-trace
+- grammar-identify
+- parallel-text
+- register-identify

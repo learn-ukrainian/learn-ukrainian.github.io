@@ -1,3 +1,4 @@
+---
 module: a2-49
 level: A2
 sequence: 49
@@ -75,4 +76,4 @@ grammar:
 - Workplace vocabulary
 - Describing duties and responsibilities
 register: розмовний
-phase: A2.5 [Vocabulary Expansion]
+phase: "A2.5 [Vocabulary Expansion]"

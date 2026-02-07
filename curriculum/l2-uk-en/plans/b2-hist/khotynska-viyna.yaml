@@ -1,3 +1,4 @@
+---
 module: khotynska-viyna
 level: B2-HIST
 sequence: 46
@@ -70,7 +71,7 @@ grammar:
 - 'Historical narrative: detailed battle descriptions'
 - Military terminology and formations
 register: публіцистичний
-phase: HIST.5 [Rise of Cossacks]
+phase: "HIST.5 [Rise of Cossacks]"
 vocabulary_hints:
   required:
   - історія (history)

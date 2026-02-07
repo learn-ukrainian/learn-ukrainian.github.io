@@ -1,3 +1,4 @@
+---
 module: eneida-feast
 level: LIT
 slug: eneida-feast
@@ -5,19 +6,19 @@ version: '2.0'
 title: 'Енеїда: Філософія Бенкету (Частина II)'
 subtitle: 'Eneida Part II: The Feast'
 content_outline:
-  - section: Вступ — "Енеїда" як енциклопедія тілесного
+  - section: 'Вступ — \"Енеїда\" як енциклопедія тілесного'
     words: 625
     points:
       - Тіло у бурлескній традиції
       - Їжа, напої, секс, смерть
       - Карнавальна культура (за Бахтіним)
-  - section: Словник Шлунку — гастрономічна лексика
+  - section: "Словник Шлунку — гастрономічна лексика"
     words: 1000
     points:
       - Назви страв (борщ, галушки, ковбаса)
       - Синоніми на позначення їжі та напоїв
       - Дієслова споживання (їсти, пити, жерти)
-  - section: Бенкет у Дідони — аналіз сцени
+  - section: "Бенкет у Дідони — аналіз сцени"
     words: 875
     points:
       - Опис банкету в Карфагені
@@ -35,7 +36,7 @@ content_outline:
       - Категорії грішників у "Енеїді"
       - Лексика пекла та страждання
       - Сатира на соціальні вади
-  - section: Підсумок — Смак життя у прямому сенсі
+  - section: "Підсумок — Смак життя у прямому сенсі"
     words: 500
     points:
       - Тілесний низ як філософія
@@ -62,7 +63,7 @@ vocabulary_hints:
     - ненаситність (insatiability)
 activity_hints:
   - type: reading
-    focus: Сцени бенкету та пекла з "Енеїди"
+    focus: "Сцени бенкету та пекла з \"Енеїди\""
     source: UkrLib tid=51
     items: 4+
   - type: essay-response
@@ -87,11 +88,11 @@ grammar:
   - Synonymic series
 module_type: literature
 sources:
-  - name: Енеїда — повний текст
+  - name: "Енеїда — повний текст"
     url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
     type: primary
     notes: Частини II-III для аналізу бенкету та пекла
-  - name: Аналіз "Енеїди"
+  - name: "Аналіз \"Енеїди\""
     url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
     type: secondary
     notes: Тематичний аналіз

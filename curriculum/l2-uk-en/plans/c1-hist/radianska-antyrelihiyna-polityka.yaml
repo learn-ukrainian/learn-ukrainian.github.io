@@ -1,3 +1,4 @@
+---
 module: radianska-antyrelihiyna-polityka
 level: c1-hist
 sequence: 62
@@ -9,7 +10,7 @@ objectives:
 - Analyze the causes and consequences of радянська антирелігійна політика
 - Evaluate the historical significance of війна з богом
 content_outline:
-- section: Вступ — Війна з Богом
+- section: "Вступ — Війна з Богом"
   words: 457
   subsections:
   - Більшовики і релігія

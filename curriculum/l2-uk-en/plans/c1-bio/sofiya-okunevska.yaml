@@ -1,3 +1,4 @@
+---
 module: c1-bio-061
 level: C1-BIO
 sequence: 61
@@ -5,7 +6,7 @@ slug: sofiya-okunevska
 version: '2.0'
 title: 'Софія Окуневська: Перша жінка-лікар'
 content_outline:
-- section: Вступ — Першопрохідниця медицини
+- section: "Вступ — Першопрохідниця медицини"
   words: 400
   points:
   - Окуневська як перша українка з медичним дипломом

@@ -1,3 +1,4 @@
+---
 module: destalinizatsiia
 level: B2-HIST
 sequence: 113
@@ -91,4 +92,4 @@ grammar:
 - Умовний спосіб для альтернативних сценаріїв
 - Політична лексика
 register: публіцистичний
-phase: HIST.11 [Post-War Soviet Ukraine]
+phase: "HIST.11 [Post-War Soviet Ukraine]"

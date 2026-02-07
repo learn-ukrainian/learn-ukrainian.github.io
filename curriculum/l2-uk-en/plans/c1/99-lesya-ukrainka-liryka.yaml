@@ -1,3 +1,4 @@
+---
 module: 99-lesya-ukrainka-liryka
 level: C1
 sequence: 99
@@ -6,13 +7,13 @@ version: '2.0'
 title: 'Леся Українка: Лірична поезія'
 subtitle: Lesya Ukrainka's Lyric Poetry
 content_outline:
-- section: Розминка — Contra Spem Spero
+- section: "Розминка — Contra Spem Spero"
   words: 700
   points:
-  - "Contra Spem Spero" — стоїцизм та сила волі
-  - Природна лірика — Полісся та Волинь
-  - Патріотичні цикли — "Сім струн", "Невільничі пісні"
-- section: Content Areas
+  - '"Contra Spem Spero" — стоїцизм та сила волі'
+  - 'Природна лірика — Полісся та Волинь'
+  - 'Патріотичні цикли — "Сім струн", "Невільничі пісні"'
+- section: "Content Areas"
   words: 1250
   points:
   - 'Contra Spem Spero: stoicism and willpower'
@@ -20,10 +21,10 @@ content_outline:
   - 'Patriotic cycles: "Seven Strings", "Slave Songs"'
   - 'Philosophical themes: artist''s role, freedom vs. necessity'
   - Feminist perspective in lyrical works
-- section: Практика — лірика Лесі
+- section: "Практика — лірика Лесі"
   words: 1050
   points:
-  - Проаналізувати "Contra Spem Spero" — філософія стоїцизму
+  - 'Проаналізувати "Contra Spem Spero" — філософія стоїцизму'
   - Порівняти природну лірику Лесі та Шевченка
   - Написати есе про феміністичні мотиви в поезії
   - Обговорити роль митця та свободи у творчості Лесі

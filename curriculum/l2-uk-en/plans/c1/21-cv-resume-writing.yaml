@@ -1,3 +1,4 @@
+---
 module: 21-cv-resume-writing
 level: C1
 sequence: 21
@@ -5,7 +6,7 @@ slug: 21-cv-resume-writing
 version: '2.0'
 title: Написання резюме та CV
 content_outline:
-- section: Вступ — Резюме vs CV
+- section: "Вступ — Резюме vs CV"
   words: 400
   points:
   - Різниця між резюме та CV

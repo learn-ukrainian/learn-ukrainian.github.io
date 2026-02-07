@@ -1,3 +1,4 @@
+---
 module: literary-translation-ii
 level: c2
 sequence: 35
@@ -16,12 +17,12 @@ sources:
   url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of translated prose
-- name: Микола Лукаш — перекладач
+- name: "Микола Лукаш — перекладач"
   url: "https://uk.wikipedia.org/wiki/Микола_Лукаш"
   type: reference
   notes: Legendary prose translator
 content_outline:
-- section: Вступ — Специфіка перекладу прози
+- section: "Вступ — Специфіка перекладу прози"
   words: 500
   points:
   - Відмінності від перекладу поезії
@@ -48,14 +49,14 @@ content_outline:
   - Стратегії перекладу реалій
   - Примітки перекладача
   - Баланс зрозумілості і автентичності
-- section: Практикум — переклад прози з англійської
+- section: "Практикум — переклад прози з англійської"
   words: 600
   points:
   - Вибір уривка для перекладу
   - Аналіз стилістичних особливостей
   - Процес перекладу
   - Редагування і вдосконалення
-- section: Практикум — переклад української прози на англійську
+- section: "Практикум — переклад української прози на англійську"
   words: 500
   points:
   - Представлення українського автора
@@ -86,7 +87,7 @@ vocabulary:
   - експлікація (explicitation)
   - генералізація (generalization)
   - конкретизація (particularization)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - essay-response

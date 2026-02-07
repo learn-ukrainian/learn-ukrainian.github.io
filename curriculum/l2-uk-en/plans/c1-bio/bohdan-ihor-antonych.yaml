@@ -6,27 +6,27 @@ version: '2.0'
 title: 'Богдан-Ігор Антонич: Зелена Євангелія'
 content_outline:
 - section: Вступ — Поет космічного організму
-  words: 400
+  words: 457
   points:
   - Найоригінальніший поет міжвоєнного Львова
   - Унікальний синтез язичницького пантеїзму та модернізму
   - Культовий статус серед сучасних поетів
 - section: Лемківщина та дитинство (1909-1928)
-  words: 600
+  words: 686
   points:
   - Народження в Новиці на Лемківщині
   - Сільське дитинство та природа як першовитоки
   - Гімназія у Сяноку
   - Перші вірші та формування таланту
 - section: Львівський університет (1928-1933)
-  words: 700
+  words: 800
   points:
   - Навчання на філософському факультеті
   - Публікації та збірка «Привітання життя»
   - Полеміка щодо національної ідентичності
   - Лемківське коріння та українська свідомість
 - section: Зелена поетика (1931-1937)
-  words: 800
+  words: 914
   points:
   - «Три перстені» та «Книга Лева»
   - Природа як храм — вітаїзм та біокосмізм
@@ -34,20 +34,20 @@ content_outline:
   - «Ротації» — космічний масштаб
   - Архітектоніка та музичність вірша
 - section: Передчасна смерть та посмертна слава (1937)
-  words: 500
+  words: 571
   points:
   - Загадкова смерть у 28 років
   - Посмертні видання 1960-х років
   - Відкриття Антонича новим поколінням
   - Вплив на Стуса, Калинця, сучасних поетів
 - section: Спадщина — Безсмертний лемко Львова
-  words: 500
+  words: 572
   points:
   - Антонич у контексті європейського авангарду
   - Культ Антонича у сучасній поезії та музиці
   - Деколонізація: повернення лемківського голосу
   - Фестивалі та вшанування
-word_target: 3500
+word_target: 4000
 vocabulary_hints:
   required:
   - поет (poet)
@@ -84,16 +84,16 @@ connects_to:
 module_type: biography
 sources:
 - name: Богдан-Ігор Антонич (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор"
+  url: https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор
   type: primary
   notes: Comprehensive biography of the Lemko-born modernist poet
 - name: Антонич у бібліотеці
-  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=126"
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=126
   type: reference
   notes: Bio and works in Ukrainian digital library
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:
-- 'Analyze the life and legacy of Богдан-Ігор Антонич as a modernist poet'
+- Analyze the life and legacy of Богдан-Ігор Антонич as a modernist poet
 - Evaluate the unique synthesis of pantheism and avant-garde in his poetry
 - Trace the influence of Lemko origins on literary identity

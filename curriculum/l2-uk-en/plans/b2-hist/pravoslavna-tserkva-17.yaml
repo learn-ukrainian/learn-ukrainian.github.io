@@ -1,3 +1,4 @@
+---
 module: pravoslavna-tserkva-17
 level: B2-HIST
 sequence: 34
@@ -91,4 +92,4 @@ grammar:
 - Історичний наратив
 - Церковна та богословська термінологія
 register: публіцистичний
-phase: HIST.4 [Lithuanian-Polish Era]
+phase: "HIST.4 [Lithuanian-Polish Era]"

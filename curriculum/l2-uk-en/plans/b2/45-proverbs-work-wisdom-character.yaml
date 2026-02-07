@@ -1,3 +1,4 @@
+---
 module: b2-45
 level: B2
 sequence: 45
@@ -6,7 +7,7 @@ version: '2.0'
 title: 'Прислів''я I: Праця, мудрість і характер'
 subtitle: 'Proverbs I: Work, Wisdom & Character'
 content_outline:
-- section: Розминка — Народна мудрість про працю
+- section: "Розминка — Народна мудрість про працю"
   words: 300
   points:
   - Роль прислів'їв у культурі — короткі істини поколінь
@@ -35,7 +36,7 @@ content_outline:
   - Горда птиця не живе в стаді
   - Слово — не горобець: вилетить — не впіймаєш
   - Не той друг, хто медом маже, а той, хто правду каже
-- section: Практика — вживання прислів'їв
+- section: "Практика — вживання прислів'їв"
   words: 300
   points:
   - Підібрати прислів'я до ситуації
@@ -56,7 +57,7 @@ grammar:
 - Proverb structure and variation
 immersion: 100
 register: varies
-phase: B2.2 [Phraseology & Synonymy]
+phase: "B2.2 [Phraseology & Synonymy]"
 vocabulary_hints:
   required:
   - термін (term)

@@ -1,3 +1,4 @@
+---
 # C2 Level Plan - Ukrainian for English Speakers
 # Source of truth: docs/l2-uk-en/C2-CURRICULUM-PLAN.md
 
@@ -12,24 +13,24 @@ immersion: "100%"
 phases:
   - id: C2.1
     name: "Stylistic Perfection"
-    modules: [1, 25]
+    modules: "[1, 25]"
     focus: "Native-like fluency, stylistic mastery"
     checkpoint: 25
 
   - id: C2.2
     name: "Literary Mastery"
-    modules: [26, 45]
+    modules: "[26, 45]"
     focus: "Literary analysis, creative writing"
 
   - id: C2.3
     name: "Professional Specialization"
-    modules: [46, 75]
+    modules: "[46, 75]"
     focus: "Domain expertise, technical mastery"
     checkpoint: 75
 
   - id: C2.4
     name: "Meta-Skills & Capstone"
-    modules: [76, 100]
+    modules: "[76, 100]"
     focus: "Teaching, translation, final projects"
 
 grammar_scope:

@@ -1,3 +1,4 @@
+---
 module: b1-29
 level: B1
 sequence: 29
@@ -8,7 +9,7 @@ subtitle: Purpose Clauses - Same Subject
 content_outline:
 - section: Тест
   words: 247
-  points: []
+  points: "[]"
 - section: Граматика
   words: 404
   points:
@@ -81,4 +82,4 @@ grammar:
 - Alternative expressions (для того щоб, аби)
 - When щоб + infinitive is required
 register: розмовний
-phase: B1.3a [Complex Sentences]
+phase: "B1.3a [Complex Sentences]"

@@ -1,3 +1,4 @@
+---
 # Module Plan: Fables of Kharkiv
 # Track: RUTH
 # Module: 092
@@ -13,7 +14,7 @@ phase: 4
 phase_id: cossack-word
 phase_name: "Cossack Word"
 
-focus: "Genre of Fable — "The Bee and the Hornet""
+focus: 'Genre of Fable — "The Bee and the Hornet"'
 
 word_target: 4000
 
@@ -29,7 +30,7 @@ content_outline:
     description: "Summary and connection to next module"
 
 # Vocabulary hints (to be populated during content generation)
-vocabulary_hints: []
+vocabulary_hints: "[]"
 
 # Activity types appropriate for this module
 activity_types:

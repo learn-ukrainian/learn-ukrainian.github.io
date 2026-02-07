@@ -1,3 +1,4 @@
+---
 module: rozmovnyi-styl
 level: c2
 sequence: 7
@@ -8,20 +9,20 @@ pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: Сучасна українська розмовна мова — дослідження
+- name: "Сучасна українська розмовна мова — дослідження"
   url: "https://www.nbuv.gov.ua/"
   type: primary
   notes: Scholarly analysis of colloquial Ukrainian
-- name: Українські діалоги — корпус усного мовлення
+- name: "Українські діалоги — корпус усного мовлення"
   url: "https://mova.info/"
   type: reference
   notes: Authentic spoken Ukrainian examples
-- name: Ukrainian State Standard 2024 — Oral communication
+- name: "Ukrainian State Standard 2024 — Oral communication"
   url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for native-like oral fluency
 content_outline:
-- section: Вступ — Розмовний стиль vs "суржик"
+- section: 'Вступ — Розмовний стиль vs \"суржик\"'
   words: 400
   points:
   - Характеристика розмовного стилю
@@ -62,7 +63,7 @@ content_outline:
   - Професійний жаргон
   - Регіональні особливості
   - Гендерні відмінності у мовленні
-- section: Практикум — Природні діалоги
+- section: "Практикум — Природні діалоги"
   words: 500
   points:
   - Симуляція побутової розмови
@@ -88,7 +89,7 @@ vocabulary:
   - просторіччя (colloquialism)
   - хезитація (hesitation)
   - фатичний (phatic)
-  forbidden: []
+  forbidden: "[]"
 activities:
   types_required:
   - quiz
