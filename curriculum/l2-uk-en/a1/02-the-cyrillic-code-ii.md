@@ -22,7 +22,7 @@ These letters exist in other Slavic languages, but Ukrainian uses them in its ow
 | **Ч ч** | /t͡ʃ/ like «ch» in «church» | **ч**емпіо́н (chempión) | champion  |
 | **Ц ц** | /t͡s/ like «ts» in «cats»   | **ц**ентр (tsentr)     | center    |
 
-The letters **Г** and **Ґ** are perhaps the most important distinction. **Г** (hook) makes a soft breathy «h» sound. **Ґ** (hook with hat) makes a hard «g» sound like in English «go.» Russian lost the **Ґ** sound centuries ago, but Ukrainian kept it!
+The letters **Г** and **Ґ** are perhaps the most important distinction in Ukrainian phonology. **Г** (hook) makes a soft breathy «h» sound, as in **гарний** (beautiful) or **голова** (head). **Ґ** (hook with hat) makes a hard «g» sound like in English «go,» as in **ґанок** (porch). Russian lost the **Ґ** sound centuries ago, but Ukrainian kept it! This **Г vs Ґ** distinction is one of the clearest markers separating Ukrainian from Russian pronunciation.
 
 > 💡 **Did You Know?**
 >
@@ -69,14 +69,14 @@ The soft sign appears in the word **будь ла́ска** (please): «budʲ l�
 
 ### The Hard I (И)
 
-The letter **И** is different from **І**. While **І** makes the soft «ee» sound (like in «meet»), **И** makes a harder sound, like «i» in «bit» or «sit»:
+The letter **И** is different from **І**. While **І** makes the soft «ee» sound (like in «meet»), **И** makes a harder sound, like «i» in «bit» or «sit». This **И vs І** distinction is crucial for pronunciation:
 
 | Letter  | Sound           | Example              | English |
 | ------- | --------------- | -------------------- | ------- |
 | **І і** | /i/ like «meet» | п**і**ца (píttsa)    | pizza   |
 | **И и** | /ɪ/ like «bit»  | джи́нс**и** (dzhýnsy) | jeans   |
 
-The word **джинси** (jeans) has the hard **И** at the end: «dzhýnsy.» The city **Київ** has the soft **І**: «Kýyiv.»
+The word **джинси** (jeans) has the hard **И** at the end: «dzhýnsy.» The city **Київ** has the soft **І**: «Kýyiv.» Try these words: **день** (day), **жити** (to live), **школа** (school), **чай** (tea). Each uses different vowels, and getting **И vs І** right is essential for clear pronunciation.
 
 > 🌍 **Real World**
 >

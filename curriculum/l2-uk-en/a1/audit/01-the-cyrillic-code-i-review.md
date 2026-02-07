@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1019
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:46:17
+**Generated:** 2026-02-07 09:48:51
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 958/1019 (raw: 1327) (61 short)
+- **Words:** ✅ 1024/1019 (raw: 1393)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 7.1% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 7.2% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -57,9 +57,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 109 | Included in Core |
-| **Presentation** | ✅ | 351 | Included in Core |
-| **Practice** | ⚪️ | 134 | Skipped |
+| **Warm-up** | ✅ | 121 | Included in Core |
+| **Presentation** | ✅ | 391 | Included in Core |
+| **Practice** | ⚪️ | 148 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Production** | ➖ | 68 | Excluded Type |
 | **Підсумок** | ✅ | 122 | Included in Core |

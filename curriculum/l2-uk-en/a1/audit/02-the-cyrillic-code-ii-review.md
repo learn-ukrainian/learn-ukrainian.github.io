@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1531
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 12:46:18
+**Generated:** 2026-02-07 09:50:35
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,19 +38,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1463/1531 (raw: 1964) (68 short)
+- **Words:** ⚠️ 1529/1531 (raw: 2030) (2 short)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 9.0% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 9.1% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -59,7 +59,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 96 | Included in Core |
-| **Presentation** | ✅ | 639 | Included in Core |
+| **Presentation** | ✅ | 705 | Included in Core |
 | **Practice** | ⚪️ | 194 | Skipped |
 | **Production** | ➖ | 80 | Excluded Type |
 | **Cultural Insight** | ✅ | 291 | Included in Core |

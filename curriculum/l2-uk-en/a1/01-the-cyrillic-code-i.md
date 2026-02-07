@@ -4,7 +4,7 @@
 
 You're about to crack a code that 45 million people use every day. The Ukrainian Cyrillic alphabet isn't as foreign as it looks. In fact, you already know how to read about a third of it. Some letters are **True Friends** (they look AND sound like their English equivalents). Some are **False Friends** (they look familiar but make completely different sounds). And some are entirely new.
 
-Think of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. Let's start with the letters you already know.
+Think of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. **Great news:** You're already equipped with the skills to decode many letters! Let's start with the letters you already know.
 
 ## Presentation
 
@@ -44,6 +44,8 @@ These letters LOOK like English letters but make COMPLETELY different sounds. Th
 The word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced «bank», not «bahk»!
 
 Look at **радіо** (radio): the **Р** looks like a P, but it's actually an R. So it says «radio». Exactly what you'd expect, just with a different letter!
+
+Now try these family words: **мама** (mama) and **тато** (tato, dad). Both use True Friends and one False Friend. **Мама** is М-А-М-А (all True Friends). **Тато** is Т-А-Т-О (also all True Friends). These are often the first words beginners learn!
 
 > 🔍 **Myth Buster**
 >
@@ -87,9 +89,9 @@ Many words in Ukrainian are international. They're borrowed from Latin, Greek, o
 ### Mini-Dialogue 1: At the Metro Station
 
 — Це метро? *(Tse metro?)* — Is this the metro?
-— Так, метро. *(Tak, metro.)* — Yes, the metro.
+— **Так**, метро. *(Tak, metro.)* — **Yes**, the metro.
 
-Notice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!
+Notice two things: the word **так** (yes) is one of the most frequent words in Ukrainian. And **метро** looks almost English because it IS almost English, just written in Cyrillic!
 
 ### Mini-Dialogue 2: At a Café
 
