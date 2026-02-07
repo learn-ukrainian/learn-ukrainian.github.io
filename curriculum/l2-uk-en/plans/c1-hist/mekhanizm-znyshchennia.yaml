@@ -83,7 +83,7 @@ activities:
 - type: critical-analysis
   focus: Map the stages of persecution
 - type: comparative-study
-  focus: Analyze terror vocabulary — how accusations work
+  focus: "Analyze terror vocabulary — how accusations work"
 - type: critical-analysis
   focus: Numbers of repressions by year/type
 - type: comparative-study
@@ -92,15 +92,15 @@ activities:
   focus: Чи було знищення Розстріляного відродження культурним геноцидом?
 sources:
 - name: Великий терор в Україні
-  url: https://uk.wikipedia.org/wiki/Великий_терор
+  url: "https://uk.wikipedia.org/wiki/Великий_терор"
   type: reference
   notes: Great Terror overview
 - name: Сталінські репресії
-  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні"
   type: reference
   notes: Ukrainian repressions
 - name: Список жертв Розстріляного відродження
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
   type: reference
   notes: Victims list
 vocabulary_hints:

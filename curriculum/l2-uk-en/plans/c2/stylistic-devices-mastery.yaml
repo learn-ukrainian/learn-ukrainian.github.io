@@ -2,22 +2,22 @@ module: stylistic-devices-mastery
 level: c2
 sequence: 21
 version: '2.0'
-title: Стилістичні засоби — Повне володіння
+title: "Стилістичні засоби — Повне володіння"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Українська стилістика — тропи та фігури
-  url: https://www.nbuv.gov.ua/
+  url: "https://www.nbuv.gov.ua/"
   type: primary
   notes: Academic analysis of Ukrainian stylistic devices
 - name: Літературознавчий словник-довідник
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: reference
   notes: Definitions and examples of all devices
 - name: Ukrainian State Standard 2024 — Figurative language
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for stylistic devices
 content_outline:

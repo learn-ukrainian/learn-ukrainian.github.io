@@ -85,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: В'ячеслав Чорновіл (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович
+  url: "https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович"
   type: primary
   notes: Основна біографічна інформація
 - name: Український Гельсінський союз
-  url: https://helsinki.org.ua/
+  url: "https://helsinki.org.ua/"
   type: reference
   notes: Історія правозахисного руху
 - name: Народний Рух України
-  url: https://nru.org.ua/
+  url: "https://nru.org.ua/"
   type: reference
   notes: Політична діяльність
 immersion: 100% Ukrainian

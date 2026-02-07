@@ -2,22 +2,22 @@ module: legal-ukrainian-ii
 level: c2
 sequence: 62
 version: '2.0'
-title: Правнича українська II — Договори та угоди
+title: "Правнича українська II — Договори та угоди"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Законодавство України — Цивільний кодекс
-  url: https://zakon.rada.gov.ua/laws/show/435-15
+  url: "https://zakon.rada.gov.ua/laws/show/435-15"
   type: primary
   notes: Цивільний кодекс України, розділ про договори
 - name: Верховна Рада України — Зразки договорів
-  url: https://zakon.rada.gov.ua/
+  url: "https://zakon.rada.gov.ua/"
   type: reference
   notes: Типові форми договорів та угод
 - name: Юридичний словник термінів
-  url: https://uk.wikipedia.org/wiki/Юридичний_словник
+  url: "https://uk.wikipedia.org/wiki/Юридичний_словник"
   type: reference
   notes: Правнича термінологія
 content_outline:

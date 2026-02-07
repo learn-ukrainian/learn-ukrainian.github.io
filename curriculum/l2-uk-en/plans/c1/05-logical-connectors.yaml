@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Граматика сучасної української мови
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: reference
   notes: Comprehensive grammar of connectors
 - name: Ukrainian Academic Discourse Analysis
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Connector usage in academic texts
 immersion: 100% Ukrainian

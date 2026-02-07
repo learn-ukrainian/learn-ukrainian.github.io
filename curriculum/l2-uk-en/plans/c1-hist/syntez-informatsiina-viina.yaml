@@ -73,18 +73,18 @@ activities:
 - type: critical-analysis
   focus: Where each side wins/loses information war
 - type: critical-analysis
-  focus: AI and deepfakes — future information war
+  focus: "AI and deepfakes — future information war"
 - type: essay-response
   focus: What 2022 taught about information warfare
 - type: essay-response
   focus: Чи може правда перемогти пропаганду?
 sources:
 - name: Інформаційна війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
+  url: "https://uk.wikipedia.org/wiki/Інформаційна_війна"
   type: reference
   notes: Information warfare overview
 - name: Російсько-українська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  url: "https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)"
   type: reference
   notes: Current war context
 vocabulary_hints:

@@ -90,11 +90,11 @@ activities:
   focus: Чи можна назвати знищення Розстріляного відродження культурним геноцидом?
 sources:
 - name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
   type: reference
   notes: Overview
 - name: Культурний геноцид
-  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
+  url: "https://uk.wikipedia.org/wiki/Культурний_геноцид"
   type: reference
   notes: Concept
 vocabulary_hints:

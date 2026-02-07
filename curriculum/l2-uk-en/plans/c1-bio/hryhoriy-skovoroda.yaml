@@ -66,11 +66,11 @@ grammar:
 module_type: biography
 sources:
 - name: Григорій Сковорода (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич
+  url: "https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич"
   type: primary
   notes: Життєпис та вчення
 - name: Повне зібрання творів Сковороди
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Тексти творів
 immersion: 100% Ukrainian

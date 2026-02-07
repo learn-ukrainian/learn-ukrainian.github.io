@@ -90,11 +90,11 @@ activities:
   focus: Чи 2022 рік став справжнім переломом у західній політиці щодо України?
 sources:
 - name: Вторгнення Росії в Україну (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  url: "https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)"
   type: reference
   notes: War context
 - name: Допомога Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Допомога_Україні
+  url: "https://uk.wikipedia.org/wiki/Допомога_Україні"
   type: reference
   notes: Western aid
 vocabulary_hints:

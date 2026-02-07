@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Микола Джеря — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=908"
   type: primary
   notes: Для детального аналізу
 - name: Микола Джеря — скорочено
-  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3507
+  url: "https://www.ukrlib.com.ua/styslo/printit.php?tid=3507"
   type: secondary
   notes: Для повторення сюжету
 - name: Микола Джеря — бунтар
-  url: https://www.ukrlib.com.ua/tvory/printit.php?tid=8464
+  url: "https://www.ukrlib.com.ua/tvory/printit.php?tid=8464"
   type: reference
   notes: Аналіз образу
 immersion: 100% Ukrainian

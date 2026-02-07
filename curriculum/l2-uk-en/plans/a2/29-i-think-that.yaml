@@ -44,11 +44,11 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Opinions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Communicative requirements for expressing stance and debate at A2
 - name: Rhetoric and Debate in Ukrainian Culture
-  url: https://uk.wikipedia.org/wiki/Дискусія
+  url: "https://uk.wikipedia.org/wiki/Дискусія"
   type: reference
   notes: Social norms for agreement and disagreement
 immersion: 40-50% Ukrainian

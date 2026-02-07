@@ -43,7 +43,7 @@ grammar:
 module_type: word-formation
 sources:
 - name: Ukrainian Word Formation - Communication
-  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  url: "https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові"
   type: reference
   notes: Focus on communicative root expansion
 immersion: 65-75% Ukrainian

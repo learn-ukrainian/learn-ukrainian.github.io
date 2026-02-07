@@ -2,22 +2,22 @@ module: ofitsiynyi-styl-mastery
 level: c2
 sequence: 4
 version: '2.0'
-title: Офіційний стиль — Юридичні документи
+title: "Офіційний стиль — Юридичні документи"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Кодекс України — Законодавство
-  url: https://zakon.rada.gov.ua/
+  url: "https://zakon.rada.gov.ua/"
   type: primary
   notes: Official legal document examples
 - name: Зразки юридичних документів
-  url: https://minjust.gov.ua/
+  url: "https://minjust.gov.ua/"
   type: reference
   notes: Ministry of Justice document templates
 - name: Ukrainian State Standard 2024 — Official style
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for official document production
 content_outline:

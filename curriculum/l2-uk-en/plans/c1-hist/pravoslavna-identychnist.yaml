@@ -79,26 +79,26 @@ vocabulary:
 - колегіум
 activities:
 - type: reading
-  focus: Petro Mohyla's reforms — what changed?
+  focus: "Petro Mohyla's reforms — what changed?"
 - type: critical-analysis
   focus: Kyiv-Mohyla Academy curriculum and influence
 - type: critical-analysis
-  focus: Ukrainian Baroque — Western and Eastern elements
+  focus: "Ukrainian Baroque — Western and Eastern elements"
 - type: critical-analysis
-  focus: 1686 transfer — why and what consequences?
+  focus: "1686 transfer — why and what consequences?"
 - type: essay-response
   focus: Як Київська церква XVII ст. відповіла на виклик унії?
 sources:
 - name: Петро Могила (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Петро_Могила
+  url: "https://uk.wikipedia.org/wiki/Петро_Могила"
   type: reference
   notes: Key reformer
 - name: Києво-Могилянська академія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Києво-Могилянська_академія
+  url: "https://uk.wikipedia.org/wiki/Києво-Могилянська_академія"
   type: reference
   notes: Orthodox education center
 - name: Українське бароко
-  url: https://uk.wikipedia.org/wiki/Українське_бароко
+  url: "https://uk.wikipedia.org/wiki/Українське_бароко"
   type: reference
   notes: Cultural context
 vocabulary_hints:

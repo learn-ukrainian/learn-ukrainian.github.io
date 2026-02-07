@@ -39,11 +39,11 @@ objectives:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Conjunctions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Functional logic and conjunction requirements for A2
 - name: Syntax of Modern Ukrainian - Complex Sentences
-  url: https://uk.wikipedia.org/wiki/Складне_речення
+  url: "https://uk.wikipedia.org/wiki/Складне_речення"
   type: reference
   notes: Rules for causal and concessive clauses
 immersion: 40-50% Ukrainian

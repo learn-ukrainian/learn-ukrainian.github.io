@@ -2,22 +2,22 @@ module: professional-portfolio-ii
 level: c2
 sequence: 72
 version: '2.0'
-title: Професійне портфоліо II — Багатоформатна презентація
+title: "Професійне портфоліо II — Багатоформатна презентація"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Дія.Бізнес — Підприємництво
-  url: https://business.diia.gov.ua/
+  url: "https://business.diia.gov.ua/"
   type: reference
   notes: Цифрові інструменти для професіоналів
 - name: LinkedIn Україна
-  url: https://www.linkedin.com/
+  url: "https://www.linkedin.com/"
   type: reference
   notes: Професійні мережі
 - name: Behance/Dribbble для творчих професій
-  url: https://www.behance.net/
+  url: "https://www.behance.net/"
   type: reference
   notes: Портфоліо креативних спеціалістів
 content_outline:

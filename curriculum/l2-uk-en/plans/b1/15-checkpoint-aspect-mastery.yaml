@@ -101,11 +101,11 @@ grammar:
 module_type: checkpoint
 sources:
 - name: CEFR B1 Descriptors - Grammar
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: Assessment standards for B1 grammar competence
 - name: Ukrainian State Standard 2024 - Aspect Assessment
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official criteria for aspect mastery
 immersion: 100% Ukrainian

@@ -2,22 +2,22 @@ module: legal-ukrainian-i
 level: c2
 sequence: 61
 version: '2.0'
-title: Юридична українська I — Основи правничої термінології
+title: "Юридична українська I — Основи правничої термінології"
 focus: vocabulary
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Верховна Рада України — законодавство
-  url: https://zakon.rada.gov.ua/
+  url: "https://zakon.rada.gov.ua/"
   type: primary
-  notes: Official Ukrainian legislation database — primary source for legal texts
+  notes: "Official Ukrainian legislation database — primary source for legal texts"
 - name: Конституція України
-  url: https://zakon.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80
+  url: "https://zakon.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80"
   type: primary
-  notes: Constitution of Ukraine — foundational legal document
+  notes: "Constitution of Ukraine — foundational legal document"
 - name: Юридична енциклопедія
-  url: https://cyclop.com.ua/content/view/1284/
+  url: "https://cyclop.com.ua/content/view/1284/"
   type: reference
   notes: Ukrainian legal encyclopedia for terminology
 content_outline:

@@ -113,11 +113,11 @@ grammar:
 module_type: bridge
 sources:
 - name: Ukrainian Syntax (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  url: "https://uk.wikipedia.org/wiki/Синтаксис_української_мови"
   type: reference
   notes: Overview of Ukrainian sentence structure terminology
 - name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official terminology for sentence analysis
 immersion: 75% Ukrainian

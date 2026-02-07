@@ -87,15 +87,15 @@ grammar:
 module_type: literature
 sources:
 - name: Щоденник Шевченка — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=44
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=44"
   type: primary
   notes: Щоденник 1857-1858 років
 - name: Аналіз "Журналу"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=44
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=44"
   type: secondary
   notes: Літературознавчий аналіз
 - name: Заслання Шевченка
-  url: https://uk.wikipedia.org/wiki/Заслання_Тараса_Шевченка
+  url: "https://uk.wikipedia.org/wiki/Заслання_Тараса_Шевченка"
   type: reference
   notes: Історичний контекст
 immersion: 100% Ukrainian

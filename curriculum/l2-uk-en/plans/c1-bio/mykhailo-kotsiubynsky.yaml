@@ -68,7 +68,7 @@ vocabulary_hints:
   - вітаїзм (vitalism)
 activity_hints:
 - type: reading
-  focus: Українська проза кінця XIX — початку XX ст.
+  focus: "Українська проза кінця XIX — початку XX ст."
   source: Literary history sources
   items: 3 passages
 - type: essay-response
@@ -84,11 +84,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Михайло Коцюбинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович
+  url: "https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович"
   type: primary
   notes: Comprehensive biography of the impressionist prose master
 - name: Музей Коцюбинського у Чернігові
-  url: https://kotsyubynsky.org.ua/
+  url: "https://kotsyubynsky.org.ua/"
   type: reference
   notes: Memorial museum dedicated to Kotsiubynsky's life and work
 immersion: 100% Ukrainian

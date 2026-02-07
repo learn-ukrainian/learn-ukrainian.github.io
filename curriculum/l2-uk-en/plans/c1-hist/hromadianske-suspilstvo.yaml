@@ -71,20 +71,20 @@ activities:
 - type: critical-analysis
   focus: Trace civil society from Cossacks to Maidan
 - type: critical-analysis
-  focus: How Euromaidan self-organized — case study
+  focus: "How Euromaidan self-organized — case study"
 - type: critical-analysis
-  focus: 2014 volunteer army — how it worked
+  focus: "2014 volunteer army — how it worked"
 - type: critical-analysis
-  focus: Instant mobilization — why it worked
+  focus: "Instant mobilization — why it worked"
 - type: essay-response
   focus: Чому українське громадянське суспільство сильніше за державу?
 sources:
 - name: Громадянське суспільство в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні"
   type: reference
   notes: Civil society overview
 - name: Євромайдан (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Євромайдан
+  url: "https://uk.wikipedia.org/wiki/Євромайдан"
   type: reference
   notes: Euromaidan self-organization
 vocabulary_hints:

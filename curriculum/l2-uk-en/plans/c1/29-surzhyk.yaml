@@ -97,11 +97,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Антоненко-Давидович - Як ми говоримо
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: primary
   notes: Classic guide to Russianisms
 - name: Масенко - Суржик
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Academic analysis of Surzhyk
 immersion: 100% Ukrainian

@@ -96,15 +96,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Петро Калнишевський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
+  url: "https://uk.wikipedia.org/wiki/Петро_Калнишевський"
   type: primary
   notes: Biography, last koshovyi, imprisonment
 - name: Знищення Запорозької Січі
-  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
+  url: "https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі"
   type: primary
   notes: Events of 1775
 - name: Соловецький монастир
-  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
+  url: "https://uk.wikipedia.org/wiki/Соловецький_монастир"
   type: reference
   notes: Place of imprisonment
 immersion: 100% Ukrainian

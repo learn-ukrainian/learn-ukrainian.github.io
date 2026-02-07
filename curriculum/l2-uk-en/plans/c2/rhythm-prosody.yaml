@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Поетика прози — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Поетика
+  url: "https://uk.wikipedia.org/wiki/Поетика"
   type: reference
   notes: General poetics terminology and concepts
 - name: Український літературний модернізм
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of rhythmic prose from Ukrainian modernists (Stefanyk, Kotsyubynsky)
 - name: Стилістика української мови
-  url: https://uk.wikipedia.org/wiki/Стилістика
+  url: "https://uk.wikipedia.org/wiki/Стилістика"
   type: reference
   notes: Sound devices and euphony in Ukrainian stylistics
 content_outline:

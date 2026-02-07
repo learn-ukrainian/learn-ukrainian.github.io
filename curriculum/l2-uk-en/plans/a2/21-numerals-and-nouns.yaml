@@ -51,11 +51,11 @@ objectives:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Numerals
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Numeral-noun agreement requirements for A2
 - name: Historical Ukrainian Grammar - Dual Number
-  url: https://uk.wikipedia.org/wiki/Двоїна
+  url: "https://uk.wikipedia.org/wiki/Двоїна"
   type: reference
   notes: Context for the 2-4 agreement pattern
 immersion: 40-50% Ukrainian

@@ -3,7 +3,7 @@ level: A2
 sequence: 5
 slug: 05-the-instrumental-ii-means-and-tools
 version: '2.0'
-title: The Instrumental II — Means and Tools
+title: "The Instrumental II — Means and Tools"
 subtitle: How? By What Means?
 content_outline:
 - section: Introduction / Вступ
@@ -89,11 +89,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Instrumental Uses
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Instrumental without preposition for means and tools
 - name: Ukrainian Transport Vocabulary
-  url: https://uk.wikipedia.org/wiki/Транспорт
+  url: "https://uk.wikipedia.org/wiki/Транспорт"
   type: reference
   notes: Transport modes vocabulary
 immersion: 40-50% Ukrainian

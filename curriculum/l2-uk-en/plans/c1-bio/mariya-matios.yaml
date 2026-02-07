@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Матіос (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марія_Матіос
+  url: "https://uk.wikipedia.org/wiki/Марія_Матіос"
   type: primary
   notes: Біографія, творчість, громадська позиція
 - name: Солодка Даруся
-  url: https://uk.wikipedia.org/wiki/Солодка_Даруся
+  url: "https://uk.wikipedia.org/wiki/Солодка_Даруся"
   type: reference
   notes: Найвідоміший роман письменниці
 - name: Буковина
-  url: https://uk.wikipedia.org/wiki/Буковина
+  url: "https://uk.wikipedia.org/wiki/Буковина"
   type: reference
   notes: Регіональний контекст творчості
 immersion: 100% Ukrainian

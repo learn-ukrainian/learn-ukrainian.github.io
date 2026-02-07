@@ -81,15 +81,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Котляревський — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1697
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1697"
   type: primary
   notes: Офіційна біографія автора на UkrLib
 - name: Енеїда — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
   type: primary
   notes: Для контексту появи твору
 - name: Аналіз творчості Котляревського
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
   type: secondary
   notes: Літературознавчий аналіз
 immersion: 100% Ukrainian

@@ -110,15 +110,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Connectors
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Connector inventory for B2 level
 - name: Сучасна українська літературна мова - Сполучники
-  url: https://uk.wikipedia.org/wiki/Сполучник
+  url: "https://uk.wikipedia.org/wiki/Сполучник"
   type: secondary
   notes: Classification of Ukrainian connectors
 - name: CEFR B2 Cohesion
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 text cohesion requirements
 immersion: 100% Ukrainian

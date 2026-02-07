@@ -76,24 +76,24 @@ vocabulary:
 - масовий рух
 activities:
 - type: comparative-study
-  focus: Narodovtsi vs. Russophiles — key differences
+  focus: "Narodovtsi vs. Russophiles — key differences"
 - type: critical-analysis
-  focus: Prosvita network — how it worked
+  focus: "Prosvita network — how it worked"
 - type: critical-analysis
-  focus: Who supported each movement — social map
+  focus: "Who supported each movement — social map"
 - type: essay-response
   focus: Чому москвофіли програли в Галичині?
 sources:
 - name: Українофіли (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українофіли
+  url: "https://uk.wikipedia.org/wiki/Українофіли"
   type: reference
   notes: Ukrainophile movement
 - name: Москвофіли (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Москвофіли
+  url: "https://uk.wikipedia.org/wiki/Москвофіли"
   type: reference
   notes: Russophile movement
 - name: Товариство «Просвіта» (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Просвіта_(товариство)
+  url: "https://uk.wikipedia.org/wiki/Просвіта_(товариство)"
   type: reference
   notes: Prosvita society
 vocabulary_hints:

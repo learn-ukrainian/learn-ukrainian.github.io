@@ -96,11 +96,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Ukrainian Business Culture
-  url: https://chamber.ua/
+  url: "https://chamber.ua/"
   type: reference
   notes: Chamber of Commerce business guidelines
 - name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C1 cultural competency requirements
 immersion: 100% Ukrainian

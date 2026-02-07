@@ -2,22 +2,22 @@ module: final-exam-integrated-skills
 level: c2
 sequence: 98
 version: '2.0'
-title: Фінальний екзамен — Інтегровані навички
+title: "Фінальний екзамен — Інтегровані навички"
 focus: checkpoint
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — C2 Assessment Criteria
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 assessment standards and rubrics
 - name: CEFR C2 Assessment Guidelines
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: reference
   notes: European framework for C2 assessment
 - name: Іспит з української мови як іноземної — Зразки
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: secondary
   notes: Sample exam formats and tasks
 content_outline:

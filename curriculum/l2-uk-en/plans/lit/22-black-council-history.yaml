@@ -87,15 +87,15 @@ grammar:
 module_type: history
 sources:
 - name: Чорна рада 1663 — історія
-  url: https://uk.wikipedia.org/wiki/Чорна_рада_(1663)
+  url: "https://uk.wikipedia.org/wiki/Чорна_рада_(1663)"
   type: primary
   notes: Історичний контекст події
 - name: Руїна — історія
-  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+  url: "https://uk.wikipedia.org/wiki/Руїна_(історія_України)"
   type: primary
   notes: Ширший історичний контекст
 - name: Чорна рада — роман
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=263"
   type: secondary
   notes: Для порівняння з історією
 immersion: 100% Ukrainian

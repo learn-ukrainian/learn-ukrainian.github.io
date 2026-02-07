@@ -3,7 +3,7 @@ level: C1-BIO
 sequence: 18
 slug: meletii-smotrytskyi
 version: '2.0'
-title: 'Мелетій Смотрицький: Творець граматики'
+title: "Мелетій Смотрицький: Творець граматики"
 word_target: 4300
 content_outline:
 - section: Вступ — Інтелектуальний титан доби бароко
@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Мелетій Смотрицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Мелетій_Смотрицький
+  url: "https://uk.wikipedia.org/wiki/Мелетій_Смотрицький"
   type: primary
   notes: Життя та праці
 - name: Граматика Смотрицького
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Електронне видання 1619 р.
 immersion: 100% Ukrainian

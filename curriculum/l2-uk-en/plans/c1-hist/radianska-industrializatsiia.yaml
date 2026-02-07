@@ -86,15 +86,15 @@ activities:
   focus: Чи радянська індустріалізація розвивала Україну?
 sources:
 - name: Індустріалізація УРСР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Індустріалізація_УРСР
+  url: "https://uk.wikipedia.org/wiki/Індустріалізація_УРСР"
   type: reference
   notes: Soviet industrialization
 - name: Донбас (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Донбас
+  url: "https://uk.wikipedia.org/wiki/Донбас"
   type: reference
   notes: Industrial region
 - name: Колективізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
+  url: "https://uk.wikipedia.org/wiki/Колективізація_в_УРСР"
   type: reference
   notes: Collectivization context
 vocabulary_hints:

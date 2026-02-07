@@ -66,7 +66,7 @@ activity_hints:
   source: Wikipedia and academic sources
   items: 4+
 - type: essay-response
-  focus: Концепція "Національного Батька" — ризики і переваги
+  focus: "Концепція \"Національного Батька\" — ризики і переваги"
   word_target: 300
   output: Критичне есе
 focus: culture
@@ -87,15 +87,15 @@ grammar:
 module_type: culture
 sources:
 - name: Шевченко — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко"
   type: primary
   notes: Загальна інформація та рецепція
 - name: Пам'ятники Шевченку
-  url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
+  url: "https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку"
   type: secondary
   notes: Меморіальна культура
 - name: Шевченко в поп-культурі
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
+  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі"
   type: reference
   notes: Сучасні інтерпретації
 immersion: 100% Ukrainian

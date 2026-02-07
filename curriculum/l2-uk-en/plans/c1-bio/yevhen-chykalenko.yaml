@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Чикаленко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович
+  url: "https://uk.wikipedia.org/wiki/Чикаленко_Євген_Харлампійович"
   type: primary
   notes: Основна біографічна інформація
 - name: Щоденники Чикаленка
-  url: https://diasporiana.org.ua/
+  url: "https://diasporiana.org.ua/"
   type: reference
   notes: Первинні джерела
 - name: Газета Рада
-  url: https://archives.gov.ua/
+  url: "https://archives.gov.ua/"
   type: reference
   notes: Видавнича діяльність
 immersion: 100% Ukrainian

@@ -97,11 +97,11 @@ connects_to:
 module_type: practice
 sources:
 - name: Case Study Methodology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Academic case study standards
 - name: Ukrainian Sociolinguistic Studies
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Real-world language situations
 immersion: 100% Ukrainian

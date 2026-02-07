@@ -77,7 +77,7 @@ vocabulary:
 - депопуляція
 activities:
 - type: critical-analysis
-  focus: Analyze Holodomor mortality map — what patterns?
+  focus: "Analyze Holodomor mortality map — what patterns?"
 - type: comparative-study
   focus: Compare mortality rates in different oblasts
 - type: critical-analysis
@@ -88,15 +88,15 @@ activities:
   focus: Що географія Голодомору говорить нам про його характер?
 sources:
 - name: Втрати населення в Голодомор
-  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
+  url: "https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі"
   type: reference
   notes: Casualty estimates
 - name: Регіональний розподіл Голодомору
-  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
+  url: "https://uk.wikipedia.org/wiki/Голодомор#Географія"
   type: reference
   notes: Regional breakdown
 - name: Карти Голодомору
-  url: https://ucrdc.org/
+  url: "https://ucrdc.org/"
   type: reference
   notes: UCRDC mapping projects
 vocabulary_hints:

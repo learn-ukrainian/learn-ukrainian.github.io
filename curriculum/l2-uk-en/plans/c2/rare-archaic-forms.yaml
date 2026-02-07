@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Історична граматика української мови
-  url: https://inmo.org.ua/
+  url: "https://inmo.org.ua/"
   type: primary
   notes: Історичний розвиток граматичних форм
 - name: Словник української мови XVI—XVII ст.
-  url: https://lcorp.ulif.org.ua/
+  url: "https://lcorp.ulif.org.ua/"
   type: reference
   notes: Історична лексика та форми
 - name: Церковнослов'янсько-український словник
-  url: https://uk.wikipedia.org/
+  url: "https://uk.wikipedia.org/"
   type: reference
   notes: Церковнослов'янізми в українській мові
 content_outline:

@@ -65,7 +65,7 @@ vocabulary_hints:
   - нострифікація (nostrification)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати вступ до дисертації — оцінити повноту елементів
+  focus: "Проаналізувати вступ до дисертації — оцінити повноту елементів"
   items: 2
 - type: writing-task
   focus: Написати вступ до кваліфікаційної роботи з усіма елементами

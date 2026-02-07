@@ -69,22 +69,22 @@ vocabulary:
 - Янукович
 activities:
 - type: critical-analysis
-  focus: Severodonetsk congress — what happened
+  focus: "Severodonetsk congress — what happened"
 - type: critical-analysis
   focus: Why 2004 separatism failed
 - type: critical-analysis
-  focus: 2004 vs 2014 — why different outcomes
+  focus: "2004 vs 2014 — why different outcomes"
 - type: comparative-study
-  focus: Regional elites — loyalty and calculation
+  focus: "Regional elites — loyalty and calculation"
 - type: essay-response
   focus: Чому Україна не розкололась у 2004?
 sources:
 - name: Помаранчева революція (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  url: "https://uk.wikipedia.org/wiki/Помаранчева_революція"
   type: reference
   notes: Orange Revolution
 - name: Сепаратизм в Криму (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Сепаратизм_в_Криму
+  url: "https://uk.wikipedia.org/wiki/Сепаратизм_в_Криму"
   type: reference
   notes: Crimean separatism
 vocabulary_hints:

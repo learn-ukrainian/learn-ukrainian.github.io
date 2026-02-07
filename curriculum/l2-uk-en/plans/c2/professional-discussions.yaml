@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Українська асоціація медіаторів
-  url: https://ukrmediation.org.ua/
+  url: "https://ukrmediation.org.ua/"
   type: reference
   notes: Standards for professional negotiations and mediation
 - name: Національний інститут стратегічних досліджень
-  url: https://niss.gov.ua/
+  url: "https://niss.gov.ua/"
   type: reference
   notes: Examples of policy discussions and expert debates
 - name: Громадське телебачення — дебати
-  url: https://hromadske.ua/
+  url: "https://hromadske.ua/"
   type: reference
   notes: Examples of professional discussions and debates
 content_outline:

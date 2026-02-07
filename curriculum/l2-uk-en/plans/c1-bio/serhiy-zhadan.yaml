@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Сергій Жадан (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович
+  url: "https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович"
   type: primary
   notes: Біографія, творчість, громадська діяльність
 - name: Meridian Czernowitz
-  url: https://meridiancz.com
+  url: "https://meridiancz.com"
   type: reference
   notes: Літературні фестивалі та інтерв'ю
 - name: Гурт «Собаки в космосі»
-  url: https://sobakyvkosmosi.com.ua
+  url: "https://sobakyvkosmosi.com.ua"
   type: reference
   notes: Музична діяльність
 immersion: 100% Ukrainian

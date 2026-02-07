@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Стефаник (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович
+  url: "https://uk.wikipedia.org/wiki/Стефаник_Василь_Семенович"
   type: primary
   notes: Comprehensive biography of the expressionist master
 - name: Музей Василя Стефаника
-  url: https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника
+  url: "https://uk.wikipedia.org/wiki/Літературно-меморіальний_музей_Василя_Стефаника"
   type: reference
   notes: Literary-memorial museum in Rusiv
 immersion: 100% Ukrainian

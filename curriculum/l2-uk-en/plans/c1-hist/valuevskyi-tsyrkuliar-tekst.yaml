@@ -87,15 +87,15 @@ activities:
   focus: Чому імперія боялася української мови?
 sources:
 - name: Валуєвський циркуляр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+  url: "https://uk.wikipedia.org/wiki/Валуєвський_циркуляр"
   type: reference
   notes: Overview
 - name: Текст циркуляра
-  url: https://uk.wikisource.org/wiki/Циркуляр_Валуєва
+  url: "https://uk.wikisource.org/wiki/Циркуляр_Валуєва"
   type: primary
   notes: Full text
 - name: Петро Валуєв
-  url: https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович"
   type: reference
   notes: Author biography
 vocabulary_hints:

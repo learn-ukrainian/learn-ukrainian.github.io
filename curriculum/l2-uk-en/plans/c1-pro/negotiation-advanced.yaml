@@ -65,7 +65,7 @@ vocabulary_hints:
   - win-win (взаємовигідний результат)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати кейс переговорів — визначити тактики сторін
+  focus: "Проаналізувати кейс переговорів — визначити тактики сторін"
   items: 2
 - type: case-study
   focus: Підготувати BATNA та стратегію для складних переговорів

@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марко Кропивницький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марко_Кропивницький
+  url: "https://uk.wikipedia.org/wiki/Марко_Кропивницький"
   type: primary
   notes: Біографія, театральна та літературна діяльність
 - name: Театр корифеїв
-  url: https://uk.wikipedia.org/wiki/Театр_корифеїв
+  url: "https://uk.wikipedia.org/wiki/Театр_корифеїв"
   type: reference
   notes: Український театр XIX століття
 - name: Українська драматургія XIX століття
-  url: https://uk.wikipedia.org/wiki/Українська_драматургія
+  url: "https://uk.wikipedia.org/wiki/Українська_драматургія"
   type: reference
   notes: Контекст розвитку театру
 immersion: 100% Ukrainian

@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександра Матвійчук (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Матвійчук_Олександра_Вікторівна
+  url: "https://uk.wikipedia.org/wiki/Матвійчук_Олександра_Вікторівна"
   type: primary
   notes: Біографія, правозахисна діяльність, Нобелівська премія
 - name: Центр громадянських свобод
-  url: https://ccl.org.ua
+  url: "https://ccl.org.ua"
   type: reference
   notes: Діяльність ЦГС та документування злочинів
 - name: Nobel Prize
-  url: https://www.nobelprize.org/prizes/peace/2022/ccl/facts/
+  url: "https://www.nobelprize.org/prizes/peace/2022/ccl/facts/"
   type: reference
   notes: Нобелівська премія миру 2022
 immersion: 100% Ukrainian

@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Пантелеймон Куліш (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Куліш_Пантелеймон_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Куліш_Пантелеймон_Олександрович"
   type: primary
   notes: Біографія, творчість, мовознавча діяльність
 - name: Інститут української мови НАНУ
-  url: https://iulm.org.ua
+  url: "https://iulm.org.ua"
   type: reference
   notes: Кулішівка та правопис
 - name: Кирило-Мефодіївське братство
-  url: https://www.history.org.ua
+  url: "https://www.history.org.ua"
   type: reference
   notes: Політична діяльність
 immersion: 100% Ukrainian

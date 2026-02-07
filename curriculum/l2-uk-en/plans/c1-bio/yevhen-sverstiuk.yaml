@@ -85,11 +85,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Сверстюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сверстюк_Євген_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Сверстюк_Євген_Олександрович"
   type: primary
   notes: Comprehensive biography of the moral authority of Ukrainian dissent
 - name: ПЕН Україна — Євген Сверстюк
-  url: https://pen.org.ua/
+  url: "https://pen.org.ua/"
   type: reference
   notes: Literary and human rights context
 immersion: 100% Ukrainian

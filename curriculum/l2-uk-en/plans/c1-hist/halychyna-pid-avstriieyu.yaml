@@ -87,15 +87,15 @@ activities:
   focus: Чому Галичину називали 'українським П'ємонтом'?
 sources:
 - name: Галичина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
+  url: "https://uk.wikipedia.org/wiki/Галичина"
   type: reference
   notes: Regional overview
 - name: Королівство Галичини та Володимирії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
+  url: "https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії"
   type: reference
   notes: Habsburg period
 - name: Українці в Австро-Угорщині (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
+  url: "https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині"
   type: reference
   notes: Ukrainian status
 vocabulary_hints:

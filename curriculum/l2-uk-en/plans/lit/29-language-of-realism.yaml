@@ -89,15 +89,15 @@ grammar:
 module_type: literature
 sources:
 - name: Кайдашева сім'я — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=907"
   type: primary
   notes: Зразки діалектної та розмовної мови
 - name: Микола Джеря — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=908"
   type: primary
   notes: Порівняння стилю
 - name: Мовознавчі погляди Нечуя
-  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  url: "https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович"
   type: reference
   notes: Контекст дискусії
 immersion: 100% Ukrainian

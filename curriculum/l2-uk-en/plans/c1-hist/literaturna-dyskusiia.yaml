@@ -90,15 +90,15 @@ activities:
   focus: Чому гасло 'Геть від Москви!' було таким небезпечним?
 sources:
 - name: Літературна дискусія 1925-1928 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928
+  url: "https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928"
   type: reference
   notes: Overview
 - name: ВАПЛІТЕ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/ВАПЛІТЕ
+  url: "https://uk.wikipedia.org/wiki/ВАПЛІТЕ"
   type: reference
   notes: Literary organization
 - name: Микола Хвильовий (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  url: "https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович"
   type: reference
   notes: Key figure
 vocabulary_hints:

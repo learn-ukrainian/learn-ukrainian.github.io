@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Греків (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Греків_Олександр_Петрович
+  url: "https://uk.wikipedia.org/wiki/Греків_Олександр_Петрович"
   type: primary
   notes: Біографія, військова кар'єра, еміграція
 - name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
+  url: "https://www.history.org.ua"
   type: reference
   notes: Дослідження Української революції
 - name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
+  url: "https://mvbu.org.ua"
   type: reference
   notes: Військова історія УНР
 immersion: 100% Ukrainian

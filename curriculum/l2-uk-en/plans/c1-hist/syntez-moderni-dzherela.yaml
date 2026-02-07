@@ -88,11 +88,11 @@ activities:
   focus: Чим джерела XX ст. відрізняються від козацьких?
 sources:
 - name: Джерелознавство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
   type: reference
   notes: Source studies
 - name: Історичне джерело
-  url: https://uk.wikipedia.org/wiki/Історичне_джерело
+  url: "https://uk.wikipedia.org/wiki/Історичне_джерело"
   type: reference
   notes: Source types
 vocabulary_hints:

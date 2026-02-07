@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: ДСТУ 4163:2020 — Вимоги до оформлювання документів
-  url: https://dnaop.com/
+  url: "https://dnaop.com/"
   type: reference
   notes: Ukrainian state standard for document formatting including letters
 - name: Кабінет Міністрів України — зразки листів
-  url: https://www.kmu.gov.ua/
+  url: "https://www.kmu.gov.ua/"
   type: reference
   notes: Examples of official government correspondence
 - name: Ділова кореспонденція — навчальний посібник
-  url: https://nbuv.gov.ua/
+  url: "https://nbuv.gov.ua/"
   type: reference
   notes: Academic textbook on Ukrainian business correspondence
 content_outline:

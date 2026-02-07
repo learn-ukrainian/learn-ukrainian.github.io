@@ -88,11 +88,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Past Tense
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Perfective past tense requirements
 - name: Ukrainian Verb Conjugation
-  url: https://uk.wikipedia.org/wiki/Дієслово
+  url: "https://uk.wikipedia.org/wiki/Дієслово"
   type: reference
   notes: Past tense formation patterns
 immersion: 40-50% Ukrainian

@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Міхновський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Микола_Міхновський
+  url: "https://uk.wikipedia.org/wiki/Микола_Міхновський"
   type: primary
   notes: Біографія, політична діяльність, ідеологія
 - name: Самостійна Україна (брошура)
-  url: https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)
+  url: "https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)"
   type: reference
   notes: Програмний документ українського самостійництва
 - name: Братство тарасівців
-  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+  url: "https://uk.wikipedia.org/wiki/Братство_тарасівців"
   type: reference
   notes: Перша політична організація Міхновського
 immersion: 100% Ukrainian

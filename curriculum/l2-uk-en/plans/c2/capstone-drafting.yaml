@@ -2,22 +2,22 @@ module: capstone-drafting
 level: c2
 sequence: 91
 version: '2.0'
-title: Дипломний проєкт — Написання чернетки
+title: "Дипломний проєкт — Написання чернетки"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Структура наукової роботи — Вимоги МОН
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official structure requirements for academic papers
 - name: Академічне письмо — Практичний посібник
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: reference
   notes: Academic writing guidelines for Ukrainian institutions
 - name: Науковий стиль — Норми і практика
-  url: https://lcorp.ulif.org.ua/
+  url: "https://lcorp.ulif.org.ua/"
   type: secondary
   notes: Scientific style norms and conventions
 content_outline:

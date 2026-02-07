@@ -77,26 +77,26 @@ vocabulary:
 - транскордонний
 activities:
 - type: critical-analysis
-  focus: Bukovyna's ethnic composition — changes over time
+  focus: "Bukovyna's ethnic composition — changes over time"
 - type: comparative-study
   focus: Austrian vs. Romanian treatment of Ukrainians
 - type: critical-analysis
   focus: Chernivtsi as multicultural city
 - type: critical-analysis
-  focus: Divided Bukovyna today — north vs. south
+  focus: "Divided Bukovyna today — north vs. south"
 - type: essay-response
   focus: Як австрійський період вплинув на буковинську ідентичність?
 sources:
 - name: Буковина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Буковина
+  url: "https://uk.wikipedia.org/wiki/Буковина"
   type: reference
   notes: Regional overview
 - name: Герцогство Буковина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Герцогство_Буковина
+  url: "https://uk.wikipedia.org/wiki/Герцогство_Буковина"
   type: reference
   notes: Habsburg period
 - name: Румунізація Буковини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Румунізація_Буковини
+  url: "https://uk.wikipedia.org/wiki/Румунізація_Буковини"
   type: reference
   notes: Romanian period
 vocabulary_hints:

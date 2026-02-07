@@ -2,22 +2,22 @@ module: final-review-i
 level: c2
 sequence: 95
 version: '2.0'
-title: Фінальне повторення I — Граматична консолідація
+title: "Фінальне повторення I — Граматична консолідація"
 focus: integration
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — Повна граматика C2
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Complete C2 grammar requirements
 - name: Сучасна українська літературна мова — Повний курс
-  url: https://lcorp.ulif.org.ua/
+  url: "https://lcorp.ulif.org.ua/"
   type: primary
   notes: Comprehensive Ukrainian grammar reference
 - name: CEFR C2 Grammar Inventory
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: secondary
   notes: C2 grammatical competence requirements
 content_outline:

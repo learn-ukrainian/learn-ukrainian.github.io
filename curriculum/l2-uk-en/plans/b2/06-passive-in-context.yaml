@@ -3,7 +3,7 @@ level: B2
 sequence: 6
 slug: 06-passive-in-context
 version: '2.0'
-title: Пасив у контексті — вибір за регістром
+title: "Пасив у контексті — вибір за регістром"
 content_outline:
 - section: Вступ — Регістр і пасив
   words: 400
@@ -76,7 +76,7 @@ activity_hints:
   focus: Context → appropriate passive form
   items: 16+
 - type: quiz
-  focus: «Which passive would you use?» — scenario-based
+  focus: "«Which passive would you use?» — scenario-based"
   items: 15+
 - type: error-correction
   focus: Fix register-inappropriate passive usage
@@ -105,15 +105,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Register System
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Functional styles and passive voice distribution
 - name: Функціональні стилі української мови
-  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
+  url: "https://uk.wikipedia.org/wiki/Стиль_мовлення"
   type: secondary
   notes: Overview of Ukrainian functional styles
 - name: CEFR B2 Sociolinguistic Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 register awareness requirements
 immersion: 100% Ukrainian

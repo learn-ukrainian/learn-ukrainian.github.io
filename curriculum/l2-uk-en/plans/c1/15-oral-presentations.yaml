@@ -93,11 +93,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Академічна риторика
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Academic public speaking guidelines
 - name: Presentation Skills in Ukrainian
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Oral presentation language and techniques
 immersion: 100% Ukrainian

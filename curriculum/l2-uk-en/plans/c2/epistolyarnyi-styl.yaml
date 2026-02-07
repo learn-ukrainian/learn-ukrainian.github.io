@@ -2,22 +2,22 @@ module: epistolyarnyi-styl
 level: c2
 sequence: 9
 version: '2.0'
-title: Епістолярний стиль — Повна кореспонденція
+title: "Епістолярний стиль — Повна кореспонденція"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Листування українських письменників
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Historical correspondence examples
 - name: Ділова кореспонденція — зразки
-  url: https://minjust.gov.ua/
+  url: "https://minjust.gov.ua/"
   type: reference
   notes: Official letter templates and standards
 - name: Ukrainian State Standard 2024 — Epistolary style
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for all correspondence types
 content_outline:

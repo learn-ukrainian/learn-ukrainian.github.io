@@ -115,15 +115,15 @@ grammar:
 module_type: biography
 sources:
 - name: Святослав Ігорович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
+  url: "https://uk.wikipedia.org/wiki/Святослав_Ігорович"
   type: primary
   notes: Military campaigns, death, historical significance
 - name: Повість минулих літ
-  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+  url: "https://uk.wikipedia.org/wiki/Повість_минулих_літ"
   type: primary
   notes: Chronicle accounts of campaigns
 - name: Хозарський каганат
-  url: https://uk.wikipedia.org/wiki/Хозарський_каганат
+  url: "https://uk.wikipedia.org/wiki/Хозарський_каганат"
   type: reference
   notes: Context for Khazar campaign
 immersion: 100% Ukrainian

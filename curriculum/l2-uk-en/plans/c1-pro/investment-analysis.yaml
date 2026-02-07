@@ -65,7 +65,7 @@ vocabulary_hints:
   - dilution (розмивання частки)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати investment memorandum — оцінити структуру та повноту
+  focus: "Проаналізувати investment memorandum — оцінити структуру та повноту"
   items: 2
 - type: writing-task
   focus: Написати executive summary для інвестиційного меморандуму

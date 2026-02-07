@@ -2,22 +2,22 @@ module: c2-2-practice-ii
 level: c2
 sequence: 43
 version: '2.0'
-title: Практика C2.2 II — Творче портфоліо
+title: "Практика C2.2 II — Творче портфоліо"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Літературний конкурс "Коронація слова"
-  url: https://koronacijaslova.org.ua/
+  url: "https://koronacijaslova.org.ua/"
   type: reference
   notes: Standards for contemporary Ukrainian creative writing competitions
 - name: Видавництво "Старий Лев"
-  url: https://starylev.com.ua/
+  url: "https://starylev.com.ua/"
   type: reference
   notes: Contemporary Ukrainian prose and poetry for creative models
 - name: ЛітАкцент — сучасна література
-  url: https://litakcent.com/
+  url: "https://litakcent.com/"
   type: reference
   notes: Reviews and analysis of current Ukrainian literary scene
 content_outline:

@@ -60,12 +60,12 @@ grammar:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - A2.2 Assessment
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Proficiency benchmarks for complex sentences and health communication at
     A2.2
 - name: Review of Ukrainian Syntax for A2
-  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  url: "https://uk.wikipedia.org/wiki/Синтаксис_української_мови"
   type: reference
   notes: Synthesized logic for coordinating multiple subordinate clauses
 immersion: 40-50% Ukrainian

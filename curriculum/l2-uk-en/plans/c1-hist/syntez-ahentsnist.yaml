@@ -73,16 +73,16 @@ activities:
 - type: critical-analysis
   focus: Connect all turning points of agency
 - type: critical-analysis
-  focus: Who built Ukraine — beyond elites
+  focus: "Who built Ukraine — beyond elites"
 - type: essay-response
   focus: Як Україна стала суб'єктом історії?
 sources:
 - name: Історія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_України
+  url: "https://uk.wikipedia.org/wiki/Історія_України"
   type: reference
   notes: History overview
 - name: Українська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
+  url: "https://uk.wikipedia.org/wiki/Українська_національна_ідентичність"
   type: reference
   notes: National identity
 vocabulary_hints:

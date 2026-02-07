@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Огієнко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович
+  url: "https://uk.wikipedia.org/wiki/Огієнко_Іван_Іванович"
   type: primary
   notes: Основна біографічна інформація
 - name: Переклад Біблії
-  url: https://bible.ua/
+  url: "https://bible.ua/"
   type: reference
   notes: Біблійний переклад
 - name: Митрополія УАПЦ
-  url: https://uaoc.org.ua/
+  url: "https://uaoc.org.ua/"
   type: reference
   notes: Церковна діяльність
 immersion: 100% Ukrainian

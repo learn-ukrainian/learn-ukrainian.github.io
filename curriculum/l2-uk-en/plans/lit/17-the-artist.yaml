@@ -88,15 +88,15 @@ grammar:
 module_type: biography
 sources:
 - name: Художник — повість
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=43
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=43"
   type: primary
   notes: Автобіографічна повість
 - name: Живопис Шевченка
-  url: https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка
+  url: "https://uk.wikipedia.org/wiki/Живопис_Тараса_Шевченка"
   type: primary
   notes: Огляд художньої спадщини
 - name: Шевченко і Брюллов
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1749"
   type: reference
   notes: Контекст навчання
 immersion: 100% Ukrainian

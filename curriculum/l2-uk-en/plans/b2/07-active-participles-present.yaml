@@ -105,15 +105,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Active Participles
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Recognition requirements for active participles
 - name: Літературна мова та її стилі
-  url: https://uk.wikipedia.org/wiki/Літературна_мова
+  url: "https://uk.wikipedia.org/wiki/Літературна_мова"
   type: secondary
   notes: Literary usage of participles
 - name: Правопис української мови 2019
-  url: https://uk.wikipedia.org/wiki/Український_правопис
+  url: "https://uk.wikipedia.org/wiki/Український_правопис"
   type: reference
   notes: Official orthography rules for participles
 immersion: 100% Ukrainian

@@ -69,26 +69,26 @@ vocabulary:
 - українофіли
 activities:
 - type: critical-analysis
-  focus: What Ems Decree prohibited — text analysis
+  focus: "What Ems Decree prohibited — text analysis"
 - type: comparative-study
   focus: Galician institution building 1876-1914
 - type: critical-analysis
   focus: How Galicia influenced all of Ukraine
 - type: comparative-study
-  focus: Galicia vs. Russian Empire — cultural freedom
+  focus: "Galicia vs. Russian Empire — cultural freedom"
 - type: essay-response
   focus: Чому Галичина стала 'українським П'ємонтом'?
 sources:
 - name: Емський указ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Емський_указ
+  url: "https://uk.wikipedia.org/wiki/Емський_указ"
   type: reference
   notes: Ems Decree
 - name: Галицьке українство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
+  url: "https://uk.wikipedia.org/wiki/Галичина"
   type: reference
   notes: Galician Ukrainians
 - name: НТШ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  url: "https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка"
   type: reference
   notes: Shevchenko Scientific Society
 vocabulary_hints:

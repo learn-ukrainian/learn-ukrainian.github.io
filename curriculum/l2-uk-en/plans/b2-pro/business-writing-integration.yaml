@@ -64,7 +64,7 @@ vocabulary_hints:
   - термін виконання (deadline for completion)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати комплект пов'язаних документів — знайти посилання
+  focus: "Проаналізувати комплект пов'язаних документів — знайти посилання"
   items: 3
 - type: writing-task
   focus: Написати комплект документів для закупівлі (лист, записка, проєкт)

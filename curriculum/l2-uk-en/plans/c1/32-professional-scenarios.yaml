@@ -96,11 +96,11 @@ connects_to:
 module_type: practice
 sources:
 - name: Ukrainian Professional Standards
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C1 professional communication requirements
 - name: Business Ukrainian Guide
-  url: https://chamber.ua/
+  url: "https://chamber.ua/"
   type: secondary
   notes: Practical business scenarios
 immersion: 100% Ukrainian

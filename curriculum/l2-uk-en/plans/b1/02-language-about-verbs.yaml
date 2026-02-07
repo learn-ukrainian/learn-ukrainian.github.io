@@ -123,11 +123,11 @@ grammar:
 module_type: bridge
 sources:
 - name: Ukrainian State Standard 2024 - Verb System
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official terminology for Ukrainian verb categories
 - name: Ukrainian Verb Aspect (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  url: "https://uk.wikipedia.org/wiki/Вид_дієслова"
   type: reference
   notes: Overview of aspectual system terminology
 immersion: 75% Ukrainian

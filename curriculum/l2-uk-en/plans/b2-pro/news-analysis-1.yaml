@@ -64,7 +64,7 @@ vocabulary_hints:
   - первинне джерело (primary source)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати новинну статтю — визначити факти та думки
+  focus: "Проаналізувати новинну статтю — визначити факти та думки"
   items: 2
 - type: comparison
   focus: Порівняти подачу однієї події у двох різних джерелах

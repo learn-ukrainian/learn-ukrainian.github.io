@@ -2,22 +2,22 @@ module: medical-ukrainian-iv
 level: c2
 sequence: 69
 version: '2.0'
-title: Медична українська IV — Клінічні сценарії
+title: "Медична українська IV — Клінічні сценарії"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Клінічні протоколи МОЗ
-  url: https://moz.gov.ua/protokoli
+  url: "https://moz.gov.ua/protokoli"
   type: primary
   notes: Стандарти діагностики та лікування
 - name: Уніфіковані клінічні протоколи
-  url: https://dec.gov.ua/
+  url: "https://dec.gov.ua/"
   type: primary
   notes: Державний експертний центр МОЗ
 - name: Медичні стандарти
-  url: https://nszu.gov.ua/
+  url: "https://nszu.gov.ua/"
   type: reference
   notes: Протоколи первинної та вторинної допомоги
 content_outline:

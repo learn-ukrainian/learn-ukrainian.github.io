@@ -80,7 +80,7 @@ activities:
 - type: critical-analysis
   focus: 'Map the chain: collectivization → famine'
 - type: critical-analysis
-  focus: Analyze "kulak" categorization — who decided, how?
+  focus: "Analyze \"kulak\" categorization — who decided, how?"
 - type: comparative-study
   focus: Compare Ukrainian and Russian collectivization quotas
 - type: reading
@@ -89,15 +89,15 @@ activities:
   focus: Як колективізація створила передумови для Голодомору?
 sources:
 - name: Колективізація в УРСР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
+  url: "https://uk.wikipedia.org/wiki/Колективізація_в_УРСР"
   type: reference
   notes: Ukrainian collectivization
 - name: Розкуркулення (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розкуркулення
+  url: "https://uk.wikipedia.org/wiki/Розкуркулення"
   type: reference
   notes: Dekulakization
 - name: Колгосп (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Колгосп
+  url: "https://uk.wikipedia.org/wiki/Колгосп"
   type: reference
   notes: Collective farm system
 vocabulary_hints:

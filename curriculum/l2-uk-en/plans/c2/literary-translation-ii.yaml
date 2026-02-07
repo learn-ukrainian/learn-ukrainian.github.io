@@ -2,22 +2,22 @@ module: literary-translation-ii
 level: c2
 sequence: 35
 version: '2.0'
-title: Літературний переклад II — проза
+title: "Літературний переклад II — проза"
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Художній переклад прози
-  url: https://uk.wikipedia.org/wiki/Художній_переклад
+  url: "https://uk.wikipedia.org/wiki/Художній_переклад"
   type: reference
   notes: Prose translation principles
 - name: Переклади світової літератури
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of translated prose
 - name: Микола Лукаш — перекладач
-  url: https://uk.wikipedia.org/wiki/Микола_Лукаш
+  url: "https://uk.wikipedia.org/wiki/Микола_Лукаш"
   type: reference
   notes: Legendary prose translator
 content_outline:

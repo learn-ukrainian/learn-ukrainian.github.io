@@ -80,11 +80,11 @@ grammar:
 - Passive voice in historical writing
 sources:
 - name: Іпатіївський літопис
-  url: http://litopys.org.ua/ipatlet/ipat.htm
+  url: "http://litopys.org.ua/ipatlet/ipat.htm"
   type: primary
   notes: Основне джерело про події 1240 року
 - name: Джованні да Плано Карпіні. Історія Монгалів
-  url: http://litopys.org.ua/travelj/travelj.htm
+  url: "http://litopys.org.ua/travelj/travelj.htm"
   type: primary
   notes: Свідчення європейського мандрівника
 phase: B2-HIST.2 [Fragmentation]

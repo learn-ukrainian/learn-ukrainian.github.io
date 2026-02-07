@@ -63,11 +63,11 @@ grammar:
 module_type: biography
 sources:
 - name: Кость Гордієнко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
+  url: "https://uk.wikipedia.org/wiki/Кость_Гордієнко"
   type: primary
   notes: Біографія та діяльність
 - name: Запорожці у вигнанні
-  url: http://resource.history.org.ua/
+  url: "http://resource.history.org.ua/"
   type: reference
   notes: Олешківська та Кам'янська Січ
 immersion: 100% Ukrainian

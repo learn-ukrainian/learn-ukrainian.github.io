@@ -2,22 +2,22 @@ module: professional-portfolio-i
 level: c2
 sequence: 71
 version: '2.0'
-title: Професійне портфоліо I — Демонстрація компетентності
+title: "Професійне портфоліо I — Демонстрація компетентності"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Державна служба зайнятості
-  url: https://www.dcz.gov.ua/
+  url: "https://www.dcz.gov.ua/"
   type: reference
   notes: Вимоги ринку праці
 - name: Профстандарти України
-  url: https://www.me.gov.ua/
+  url: "https://www.me.gov.ua/"
   type: reference
   notes: Професійні стандарти
 - name: Резюме та портфоліо — best practices
-  url: https://work.ua/
+  url: "https://work.ua/"
   type: reference
   notes: Українські стандарти оформлення
 content_outline:

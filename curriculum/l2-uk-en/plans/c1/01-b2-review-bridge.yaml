@@ -97,11 +97,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C1 proficiency descriptors and grammar requirements
 - name: CEFR C1 Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: General C1 level descriptors for comparison
 immersion: 100% Ukrainian

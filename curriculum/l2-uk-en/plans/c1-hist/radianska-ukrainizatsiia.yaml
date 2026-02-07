@@ -80,22 +80,22 @@ activities:
 - type: critical-analysis
   focus: Why did Moscow allow Ukrainization?
 - type: critical-analysis
-  focus: How the trap worked — step by step
+  focus: "How the trap worked — step by step"
 - type: comparative-study
-  focus: Ukrainization vs. Pereiaslav — same pattern?
+  focus: "Ukrainization vs. Pereiaslav — same pattern?"
 - type: essay-response
   focus: Чи можна було скористатися українізацією без наслідків?
 sources:
 - name: Українізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українізація
+  url: "https://uk.wikipedia.org/wiki/Українізація"
   type: reference
   notes: Ukrainization policy
 - name: Коренізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Коренізація
+  url: "https://uk.wikipedia.org/wiki/Коренізація"
   type: reference
   notes: Broader policy
 - name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
   type: reference
   notes: Cultural outcome
 vocabulary_hints:

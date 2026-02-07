@@ -88,7 +88,7 @@ activities:
   focus: Як дисидентський рух підготував незалежність?
 sources:
 - name: Дисидентський рух в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні"
   type: reference
   notes: Overview
 vocabulary_hints:

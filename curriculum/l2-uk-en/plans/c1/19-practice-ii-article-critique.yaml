@@ -3,7 +3,7 @@ level: C1
 sequence: 19
 slug: 19-practice-ii-article-critique
 version: '2.0'
-title: Практика II — Критика статті
+title: "Практика II — Критика статті"
 content_outline:
 - section: Вступ — Критичне читання
   words: 400
@@ -95,11 +95,11 @@ connects_to:
 module_type: practice
 sources:
 - name: Academic Review Writing
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for article reviews
 - name: Critical Analysis Methodology
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Techniques for evaluating research
 immersion: 100% Ukrainian

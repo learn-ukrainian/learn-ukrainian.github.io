@@ -65,7 +65,7 @@ vocabulary_hints:
   - комунікаційний місток (communication bridge)
 activity_hints:
 - type: case-study
-  focus: Опрацювати міжгалузевий сценарій — підготувати рішення
+  focus: "Опрацювати міжгалузевий сценарій — підготувати рішення"
   items: 2
 - type: writing-task
   focus: Підготувати документацію для міжгалузевого проєкту

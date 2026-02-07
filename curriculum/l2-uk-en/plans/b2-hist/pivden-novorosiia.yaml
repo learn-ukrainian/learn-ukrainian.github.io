@@ -72,7 +72,7 @@ activity_hints:
   focus: 'Спростування міфів: Міфи «Новоросії»'
   items: 5
 - type: essay-response
-  focus: Чому російський міф «Новоросія» — це пропаганда?
+  focus: "Чому російський міф «Новоросія» — це пропаганда?"
   word_target: 250
 focus: history
 pedagogy: CBI

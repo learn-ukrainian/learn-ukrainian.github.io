@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — Professional Communication
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for professional language competence across domains
 - name: Національна бібліотека України — фахова література
-  url: https://nbuv.gov.ua/
+  url: "https://nbuv.gov.ua/"
   type: reference
   notes: Examples of professional texts across multiple domains
 - name: Українська термінологія — термінологічний портал
-  url: https://term.namu.wiki/
+  url: "https://term.namu.wiki/"
   type: reference
   notes: Overview of Ukrainian terminology systems across fields
 content_outline:

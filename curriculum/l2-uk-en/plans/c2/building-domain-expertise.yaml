@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Національна рамка кваліфікацій України
-  url: https://zakon.rada.gov.ua/
+  url: "https://zakon.rada.gov.ua/"
   type: reference
   notes: Framework for professional qualifications and expertise development
 - name: Українська асоціація неперервної освіти
-  url: https://uace.org.ua/
+  url: "https://uace.org.ua/"
   type: reference
   notes: Standards for continuous professional development
 - name: Prometheus — українська платформа онлайн-освіти
-  url: https://prometheus.org.ua/
+  url: "https://prometheus.org.ua/"
   type: reference
   notes: Examples of professional development courses in Ukrainian
 content_outline:

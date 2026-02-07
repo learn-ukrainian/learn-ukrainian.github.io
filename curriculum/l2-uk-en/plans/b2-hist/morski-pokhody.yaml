@@ -81,11 +81,11 @@ grammar:
 - Geographical descriptions and directions
 sources:
 - name: Naval Expeditions of Zaporozhian Cossacks
-  url: https://history.org.ua/uk/lib/12345
+  url: "https://history.org.ua/uk/lib/12345"
   type: academic
   notes: Detailed historical reconstruction
 - name: Guillaume de Beauplan - Description of Ukraine
-  url: http://litopys.org.ua/boplan/bop.htm
+  url: "http://litopys.org.ua/boplan/bop.htm"
   type: primary
   notes: Classic source on boat construction
 register: публіцистичний

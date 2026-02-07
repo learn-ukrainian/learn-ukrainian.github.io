@@ -84,15 +84,15 @@ activities:
   focus: Яка ідеологічна програма Повісті минулих літ?
 sources:
 - name: Повість минулих літ (повний текст)
-  url: https://litopys.org.ua/pvlyar/yar.htm
+  url: "https://litopys.org.ua/pvlyar/yar.htm"
   type: primary
   notes: Full text with fragments
 - name: Покликання варягів
-  url: https://uk.wikipedia.org/wiki/Покликання_варягів
+  url: "https://uk.wikipedia.org/wiki/Покликання_варягів"
   type: reference
   notes: Varangian calling legend
 - name: Хрещення Русі
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
   type: reference
   notes: Baptism narrative
 vocabulary_hints:

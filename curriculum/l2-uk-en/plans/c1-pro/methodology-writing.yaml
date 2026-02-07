@@ -65,7 +65,7 @@ vocabulary_hints:
   - операціоналізація (operationalization)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати розділ методології — оцінити повноту та чіткість
+  focus: "Проаналізувати розділ методології — оцінити повноту та чіткість"
   items: 2
 - type: writing-task
   focus: Написати розділ методології для запропонованого дослідження

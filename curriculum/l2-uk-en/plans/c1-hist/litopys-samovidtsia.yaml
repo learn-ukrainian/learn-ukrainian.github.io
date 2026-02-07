@@ -88,15 +88,15 @@ activities:
   focus: Чи означає 'очевидець' об'єктивність?
 sources:
 - name: Літопис Самовидця (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  url: "https://uk.wikipedia.org/wiki/Літопис_Самовидця"
   type: reference
   notes: Overview
 - name: Літопис Самовидця (текст)
-  url: https://litopys.org.ua/samovyd/sam.htm
+  url: "https://litopys.org.ua/samovyd/sam.htm"
   type: primary
   notes: Full text
 - name: Хмельниччина
-  url: https://uk.wikipedia.org/wiki/Хмельниччина
+  url: "https://uk.wikipedia.org/wiki/Хмельниччина"
   type: reference
   notes: Historical context
 vocabulary_hints:

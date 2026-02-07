@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Ганна Барвінок (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
+  url: "https://uk.wikipedia.org/wiki/Ганна_Барвінок"
   type: primary
   notes: Biography of the pioneering woman writer
 - name: Інститут літератури ім. Т.Г. Шевченка
-  url: https://ilnan.gov.ua/
+  url: "https://ilnan.gov.ua/"
   type: reference
   notes: Literary archive materials
 immersion: 100% Ukrainian

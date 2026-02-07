@@ -97,11 +97,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Academic Hedging in Ukrainian
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Research on hedging devices in Ukrainian academic writing
 - name: Модальність у сучасній українській мові
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: secondary
   notes: Comprehensive modality analysis
 immersion: 100% Ukrainian

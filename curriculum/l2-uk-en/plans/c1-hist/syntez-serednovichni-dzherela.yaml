@@ -86,15 +86,15 @@ activities:
   focus: Який метод найважливіший для роботи з середньовічними джерелами?
 sources:
 - name: Джерелознавство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
   type: reference
   notes: Source studies overview
 - name: Критика джерел
-  url: https://uk.wikipedia.org/wiki/Критика_джерел
+  url: "https://uk.wikipedia.org/wiki/Критика_джерел"
   type: reference
   notes: Source criticism methods
 - name: Шахматов О.О.
-  url: https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Шахматов_Олексій_Олександрович"
   type: reference
   notes: Chronicle studies pioneer
 vocabulary_hints:

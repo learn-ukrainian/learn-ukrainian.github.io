@@ -75,20 +75,20 @@ activities:
 - type: critical-analysis
   focus: How Volhynia is used politically
 - type: critical-analysis
-  focus: Context vs justification — where's the line?
+  focus: "Context vs justification — where's the line?"
 - type: essay-response
   focus: Як говорити про Волинь без релятивізації?
 sources:
 - name: Волинська трагедія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
+  url: "https://uk.wikipedia.org/wiki/Волинська_трагедія"
   type: reference
   notes: Volhynia tragedy
 - name: ОУН-УПА (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
+  url: "https://uk.wikipedia.org/wiki/Українська_повстанська_армія"
   type: reference
   notes: UPA context
 - name: Армія Крайова (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Армія_Крайова
+  url: "https://uk.wikipedia.org/wiki/Армія_Крайова"
   type: reference
   notes: AK context
 vocabulary_hints:

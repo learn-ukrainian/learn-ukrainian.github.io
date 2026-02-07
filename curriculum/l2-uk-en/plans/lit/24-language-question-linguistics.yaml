@@ -84,15 +84,15 @@ grammar:
 module_type: linguistics
 sources:
 - name: Кулішівка — стаття
-  url: https://uk.wikipedia.org/wiki/Кулішівка
+  url: "https://uk.wikipedia.org/wiki/Кулішівка"
   type: primary
   notes: Історія правопису
 - name: Історія українського правопису
-  url: https://uk.wikipedia.org/wiki/Українська_мова#Правопис
+  url: "https://uk.wikipedia.org/wiki/Українська_мова#Правопис"
   type: secondary
   notes: Ширший контекст
 - name: Валуєвський циркуляр
-  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
+  url: "https://uk.wikipedia.org/wiki/Валуєвський_циркуляр"
   type: reference
   notes: Політичний контекст
 immersion: 100% Ukrainian

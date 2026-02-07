@@ -68,7 +68,7 @@ vocabulary_hints:
   - конфіденційність (confidentiality)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати договір — знайти ключові положення та потенційні ризики
+  focus: "Проаналізувати договір — знайти ключові положення та потенційні ризики"
   items: 2
 - type: reading-comprehension
   focus: Прочитати договір і відповісти на питання про права та обов'язки

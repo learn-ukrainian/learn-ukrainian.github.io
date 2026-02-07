@@ -87,11 +87,11 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Services Theme
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Required service vocabulary for A2
 - name: Ukrposhta Official
-  url: https://www.ukrposhta.ua/
+  url: "https://www.ukrposhta.ua/"
   type: reference
   notes: Authentic postal service terminology
 immersion: 40-50% Ukrainian

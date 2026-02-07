@@ -85,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олена Пчілка (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
+  url: "https://uk.wikipedia.org/wiki/Олена_Пчілка"
   type: primary
   notes: Біографія, творчість, громадська діяльність
 - name: Музей Лесі Українки
-  url: https://www.lesya.lutsk.ua
+  url: "https://www.lesya.lutsk.ua"
   type: reference
   notes: Родинна історія та спадщина
 - name: Інститут літератури НАНУ
-  url: https://ilnan.gov.ua
+  url: "https://ilnan.gov.ua"
   type: reference
   notes: Літературознавчі дослідження
 immersion: 100% Ukrainian

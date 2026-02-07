@@ -75,26 +75,26 @@ vocabulary:
 - гегемонія
 activities:
 - type: essay-response
-  focus: Swedish victory at Poltava — full scenario
+  focus: "Swedish victory at Poltava — full scenario"
 - type: critical-analysis
   focus: Why did Mazepa-Charles lose?
 - type: critical-analysis
-  focus: Orlik Constitution — would it have worked?
+  focus: "Orlik Constitution — would it have worked?"
 - type: critical-analysis
   focus: Russia without Poltava victory
 - type: essay-response
   focus: Як змінилася б Європа, якби Мазепа переміг під Полтавою?
 sources:
 - name: Полтавська битва (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
   type: reference
   notes: Battle context
 - name: Північна війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Північна_війна
+  url: "https://uk.wikipedia.org/wiki/Північна_війна"
   type: reference
   notes: War context
 - name: Іван Мазепа (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
   type: reference
   notes: Mazepa's plan
 vocabulary_hints:

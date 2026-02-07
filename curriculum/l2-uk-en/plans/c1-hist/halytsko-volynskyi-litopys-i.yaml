@@ -87,15 +87,15 @@ activities:
   focus: Чому Данило Галицький важливий для української історії?
 sources:
 - name: Галицько-Волинський літопис (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
   type: reference
   notes: Overview
 - name: Галицько-Волинський літопис (текст)
-  url: https://litopys.org.ua/hvlitop/hvl.htm
+  url: "https://litopys.org.ua/hvlitop/hvl.htm"
   type: primary
   notes: Full text
 - name: Данило Галицький
-  url: https://uk.wikipedia.org/wiki/Данило_Романович
+  url: "https://uk.wikipedia.org/wiki/Данило_Романович"
   type: reference
   notes: King Danylo biography
 vocabulary_hints:

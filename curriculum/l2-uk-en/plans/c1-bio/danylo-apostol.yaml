@@ -64,11 +64,11 @@ grammar:
 module_type: biography
 sources:
   - name: Данило Апостол (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Данило_Апостол
+    url: "https://uk.wikipedia.org/wiki/Данило_Апостол"
     type: primary
     notes: Повна біографія
   - name: Рішительні пункти 1728
-    url: http://izbornyk.org.ua/
+    url: "http://izbornyk.org.ua/"
     type: primary
     notes: Текст документа
 immersion: 100% Ukrainian

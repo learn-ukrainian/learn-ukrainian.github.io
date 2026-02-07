@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Симон Петлюра (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович
+  url: "https://uk.wikipedia.org/wiki/Петлюра_Симон_Васильович"
   type: primary
   notes: Основна біографічна інформація, хронологія подій
 - name: Енциклопедія історії України
-  url: http://www.history.org.ua/
+  url: "http://www.history.org.ua/"
   type: reference
   notes: Академічний контекст УНР та визвольних змагань
 - name: Архів УНР
-  url: https://archives.gov.ua/
+  url: "https://archives.gov.ua/"
   type: reference
   notes: Документи періоду Директорії
 immersion: 100% Ukrainian

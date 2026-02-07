@@ -90,15 +90,15 @@ activities:
   focus: Чому радянська влада так агресивно боролася з релігією?
 sources:
 - name: Антирелігійна кампанія в СРСР
-  url: https://uk.wikipedia.org/wiki/Антирелігійна_кампанія_в_СРСР
+  url: "https://uk.wikipedia.org/wiki/Антирелігійна_кампанія_в_СРСР"
   type: reference
   notes: Campaign overview
 - name: Руйнування храмів в Україні
-  url: https://uk.wikipedia.org/wiki/Руйнування_храмів_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Руйнування_храмів_в_Україні"
   type: reference
   notes: Church destruction
 - name: Підпільна церква в СРСР
-  url: https://uk.wikipedia.org/wiki/Підпільна_церква_в_СРСР
+  url: "https://uk.wikipedia.org/wiki/Підпільна_церква_в_СРСР"
   type: reference
   notes: Underground church
 vocabulary_hints:

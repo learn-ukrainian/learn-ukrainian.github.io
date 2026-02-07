@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Український правопис 2019
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official punctuation rules
 - name: Пунктуація сучасної української мови
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: secondary
   notes: Comprehensive punctuation guide
 immersion: 100% Ukrainian

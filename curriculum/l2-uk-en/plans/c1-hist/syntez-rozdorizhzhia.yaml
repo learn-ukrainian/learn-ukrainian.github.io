@@ -86,11 +86,11 @@ activities:
   focus: Чи можна передбачити наступне роздоріжжя української історії?
 sources:
 - name: Історія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_України
+  url: "https://uk.wikipedia.org/wiki/Історія_України"
   type: reference
   notes: General history
 - name: Контрфактична історія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Контрфактична_історія
+  url: "https://uk.wikipedia.org/wiki/Контрфактична_історія"
   type: reference
   notes: Methodology
 vocabulary_hints:

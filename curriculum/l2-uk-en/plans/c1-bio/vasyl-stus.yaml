@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Стус (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
+  url: "https://uk.wikipedia.org/wiki/Стус_Василь_Семенович"
   type: primary
   notes: Основна біографічна інформація
 - name: Архів Українського правозахисного руху
-  url: https://archive.khpg.org/
+  url: "https://archive.khpg.org/"
   type: reference
   notes: Документи дисидентського руху
 - name: Музей Василя Стуса
-  url: https://stus.museum/
+  url: "https://stus.museum/"
   type: reference
   notes: Матеріали про життя та творчість
 immersion: 100% Ukrainian

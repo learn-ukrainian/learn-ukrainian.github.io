@@ -94,15 +94,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Максим Березовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Максим_Березовський
+  url: "https://uk.wikipedia.org/wiki/Максим_Березовський"
   type: primary
   notes: Biography, musical works, tragic death
 - name: Українське барокове мистецтво
-  url: https://uk.wikipedia.org/wiki/Українське_бароко
+  url: "https://uk.wikipedia.org/wiki/Українське_бароко"
   type: reference
   notes: Cultural context
 - name: Глухівська музична школа
-  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  url: "https://uk.wikipedia.org/wiki/Глухівська_співацька_школа"
   type: reference
   notes: Musical education context
 immersion: 100% Ukrainian

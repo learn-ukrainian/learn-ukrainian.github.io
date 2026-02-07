@@ -2,22 +2,22 @@ module: legal-ukrainian-v
 level: c2
 sequence: 65
 version: '2.0'
-title: Правнича українська V — Аналіз справ
+title: "Правнича українська V — Аналіз справ"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Єдиний державний реєстр судових рішень
-  url: https://reyestr.court.gov.ua/
+  url: "https://reyestr.court.gov.ua/"
   type: primary
   notes: База судових рішень України
 - name: Верховний Суд України — Правові позиції
-  url: https://supreme.court.gov.ua/
+  url: "https://supreme.court.gov.ua/"
   type: primary
   notes: Правові позиції Верховного Суду
 - name: Конституційний Суд України
-  url: https://ccu.gov.ua/
+  url: "https://ccu.gov.ua/"
   type: reference
   notes: Рішення та висновки КСУ
 content_outline:

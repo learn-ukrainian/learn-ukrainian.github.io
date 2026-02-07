@@ -144,7 +144,7 @@ class ComparativeStudyData:
 def escape_jsx(text: str) -> str:
     """Escape text for use in JSX strings (both template literals and double quotes).
     
-    Uses HTML entity &quot; for double quotes to avoid JSX parsing errors.
+    Uses HTML entities for special chars to avoid JSX parsing errors.
     See issue #396 for details.
     """
     if not text:
@@ -152,10 +152,12 @@ def escape_jsx(text: str) -> str:
     # Convert to string if not already (handles int/float from YAML)
     if not isinstance(text, str):
         text = str(text)
-    # Escape backslashes first, then other special chars
+    # Escape backslashes first
     text = text.replace('\\', '\\\\')
     text = text.replace('`', '\\`')
-    text = text.replace('"', '&quot;')  # HTML entity, not backslash escape
+    text = text.replace('"', '&quot;')  # HTML entity
+    text = text.replace('<', '&lt;')    # Escape <
+    text = text.replace('>', '&gt;')    # Escape >
     text = text.replace('${', '\\${')
     return text
 
@@ -1791,8 +1793,6 @@ def main():
         else:
             output_file = output_dir / f'module-{mod.local_num:02d}.mdx'
         output_file.write_text(mdx_content, encoding='utf-8')
-
-        print(f'  ✓ {mod.local_num:02d}. {mod.title}')
 
     print('\n✅ MDX generation complete!')
 

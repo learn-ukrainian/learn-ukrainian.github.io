@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Княгиня Ольга (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Княгиня_Ольга
+  url: "https://uk.wikipedia.org/wiki/Княгиня_Ольга"
   type: primary
   notes: Основне джерело фактів
 - name: Повість минулих літ
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Літописні легенди
 immersion: 100% Ukrainian

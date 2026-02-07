@@ -79,11 +79,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Motion Verbs
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official system of motion verb pairs
 - name: Ukrainian Motion Verbs (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  url: "https://uk.wikipedia.org/wiki/Дієслова_руху"
   type: reference
   notes: Complete list of motion verb pairs
 immersion: 100% Ukrainian

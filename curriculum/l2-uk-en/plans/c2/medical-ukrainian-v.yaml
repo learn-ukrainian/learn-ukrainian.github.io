@@ -2,22 +2,22 @@ module: medical-ukrainian-v
 level: c2
 sequence: 70
 version: '2.0'
-title: Медична українська V — Медичні дослідження
+title: "Медична українська V — Медичні дослідження"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Український медичний часопис
-  url: https://www.umj.com.ua/
+  url: "https://www.umj.com.ua/"
   type: primary
   notes: Наукові публікації українською
 - name: Вимоги ДАК до дисертацій
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Вимоги до наукових робіт у медицині
 - name: Етичні комітети та дослідження
-  url: https://moz.gov.ua/
+  url: "https://moz.gov.ua/"
   type: reference
   notes: Правила проведення клінічних досліджень
 content_outline:

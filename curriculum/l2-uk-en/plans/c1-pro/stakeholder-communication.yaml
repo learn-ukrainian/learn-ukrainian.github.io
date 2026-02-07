@@ -65,7 +65,7 @@ vocabulary_hints:
   - канал комунікації (communication channel)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати статус-репорт — оцінити адаптацію для аудиторії
+  focus: "Проаналізувати статус-репорт — оцінити адаптацію для аудиторії"
   items: 2
 - type: writing-task
   focus: Написати лист про зміну термінів проєкту для різних стейкхолдерів

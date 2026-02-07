@@ -92,11 +92,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Negation and Aspect
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official rules for aspect in negative contexts
 - name: Ukrainian Negation Patterns
-  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
+  url: "https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)"
   type: reference
   notes: Negation with aspect selection
 immersion: 100% Ukrainian

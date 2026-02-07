@@ -87,19 +87,19 @@ activities:
   focus: Чому теорія Погодіна є науково неспроможною?
 sources:
 - name: Михайло Погодін (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Погодін_Михайло_Петрович
+  url: "https://uk.wikipedia.org/wiki/Погодін_Михайло_Петрович"
   type: reference
   notes: Creator of "Pogodin theory" denying Ukrainian distinctiveness
 - name: Теорія Погодіна
-  url: https://uk.wikipedia.org/wiki/Теорія_Погодіна
+  url: "https://uk.wikipedia.org/wiki/Теорія_Погодіна"
   type: reference
   notes: The theory itself explained
 - name: Малоросійство
-  url: https://uk.wikipedia.org/wiki/Малоросійство
+  url: "https://uk.wikipedia.org/wiki/Малоросійство"
   type: reference
   notes: «Little Russia» ideology analysis
 - name: Serhii Plokhy - Lost Kingdom
-  url: https://www.huri.harvard.edu/publications/lost-kingdom-the-quest-for-empire-and-the-making-of-the-russian-nation
+  url: "https://www.huri.harvard.edu/publications/lost-kingdom-the-quest-for-empire-and-the-making-of-the-russian-nation"
   type: secondary
   notes: Modern analysis of Russian imperial nationalism
 vocabulary_hints:

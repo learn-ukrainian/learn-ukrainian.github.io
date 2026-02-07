@@ -88,19 +88,19 @@ grammar:
 module_type: literature
 sources:
 - name: Причинна
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=3"
   type: primary
   notes: Балада для аналізу
 - name: Тополя
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=4"
   type: primary
   notes: Балада для аналізу
 - name: Утоплена
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=5"
   type: primary
   notes: Балада для аналізу
 - name: Кобзар — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=1"
   type: secondary
   notes: Контекст ранньої поезії
 immersion: 100% Ukrainian

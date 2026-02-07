@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Михайло Грушевський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Михайло_Грушевський
+  url: "https://uk.wikipedia.org/wiki/Михайло_Грушевський"
   type: primary
   notes: Біографія, наукова та політична діяльність
 - name: Історія України-Руси
-  url: https://uk.wikipedia.org/wiki/Історія_України-Руси
+  url: "https://uk.wikipedia.org/wiki/Історія_України-Руси"
   type: reference
   notes: Головна наукова праця
 - name: Українська Центральна Рада
-  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+  url: "https://uk.wikipedia.org/wiki/Українська_Центральна_Рада"
   type: reference
   notes: Політична діяльність 1917-1918
 immersion: 100% Ukrainian

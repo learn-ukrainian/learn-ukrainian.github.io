@@ -69,22 +69,22 @@ vocabulary:
 - ненасильницький спротив
 activities:
 - type: critical-analysis
-  focus: October 1990 — day-by-day reconstruction
+  focus: "October 1990 — day-by-day reconstruction"
 - type: critical-analysis
-  focus: Five demands — what they meant
+  focus: "Five demands — what they meant"
 - type: comparative-study
-  focus: Who were the students — where are they now
+  focus: "Who were the students — where are they now"
 - type: critical-analysis
-  focus: Granite → Orange → Dignity — continuity
+  focus: "Granite → Orange → Dignity — continuity"
 - type: essay-response
   focus: Чому Гранітну революцію забули?
 sources:
 - name: Революція на граніті (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
+  url: "https://uk.wikipedia.org/wiki/Революція_на_граніті"
   type: reference
   notes: Granite Revolution
 - name: Студентське голодування 1990 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
+  url: "https://uk.wikipedia.org/wiki/Студентське_голодування_1990"
   type: reference
   notes: Student hunger strike
 vocabulary_hints:

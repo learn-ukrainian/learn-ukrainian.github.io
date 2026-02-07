@@ -77,11 +77,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Aspect Integration
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Comprehensive aspect usage in connected discourse
 - name: Ukrainian Narrative Patterns
-  url: https://uk.wikipedia.org/wiki/Нарація
+  url: "https://uk.wikipedia.org/wiki/Нарація"
   type: reference
   notes: Aspect in storytelling and narratives
 immersion: 100% Ukrainian

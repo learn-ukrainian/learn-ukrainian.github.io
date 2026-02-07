@@ -46,11 +46,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Purpose Clauses
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Communicative requirements for expressing intentionality and purpose at A2
 - name: Syntax of Ukrainian Language - Purpose Clauses
-  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_мети
+  url: "https://uk.wikipedia.org/wiki/Складнопідрядне_речення_мети"
   type: reference
   notes: Rules for mood and tense in purpose clauses
 immersion: 40-50% Ukrainian

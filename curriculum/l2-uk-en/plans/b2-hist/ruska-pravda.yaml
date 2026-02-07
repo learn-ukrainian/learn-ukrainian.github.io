@@ -121,15 +121,15 @@ grammar:
 - Conditional sentences
 sources:
 - name: Руська Правда (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Руська_Правда
+  url: "https://uk.wikipedia.org/wiki/Руська_Правда"
   type: reference
   notes: Overview of the legal code
 - name: Текст Руської Правди
-  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  url: "https://litopys.org.ua/oldukr2/oldukr51.htm"
   type: primary
   notes: Original text with translation
 - name: Правда Ярослава (Коротка редакція)
-  url: https://uk.wikipedia.org/wiki/Правда_Ярослава
+  url: "https://uk.wikipedia.org/wiki/Правда_Ярослава"
   type: reference
   notes: First version of the code
 phase: B2-HIST.1 [Kyivan Rus]

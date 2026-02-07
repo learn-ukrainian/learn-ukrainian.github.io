@@ -89,11 +89,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Verb Government
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: List of verbs requiring dative case per A2 level
 - name: Ukrainian Verb Government Reference
-  url: https://uk.wiktionary.org/
+  url: "https://uk.wiktionary.org/"
   type: reference
   notes: Case requirements for common verbs
 immersion: 40-50% Ukrainian

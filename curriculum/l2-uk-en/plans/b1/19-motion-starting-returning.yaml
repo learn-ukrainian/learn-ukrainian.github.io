@@ -79,11 +79,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official prefix meanings for starting/returning
 - name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  url: "https://uk.wikipedia.org/wiki/Дієслівні_префікси"
   type: reference
   notes: по-, за-, роз- semantics
 immersion: 100% Ukrainian

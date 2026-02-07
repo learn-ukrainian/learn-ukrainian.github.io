@@ -88,15 +88,15 @@ activities:
   focus: Яку роль відіграв 'Український вісник' у дисидентському русі?
 sources:
 - name: Український вісник (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)
+  url: "https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)"
   type: reference
   notes: Publication overview
 - name: В'ячеслав Чорновіл
-  url: https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович
+  url: "https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович"
   type: reference
   notes: Editor biography
 - name: Архів Чорновола
-  url: https://khpg.org/
+  url: "https://khpg.org/"
   type: primary
   notes: Kharkiv Human Rights Group archive
 vocabulary_hints:

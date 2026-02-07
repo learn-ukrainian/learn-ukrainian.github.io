@@ -96,11 +96,11 @@ connects_to:
 module_type: vocabulary
 sources:
 - name: Академічний тлумачний словник української мови
-  url: https://sum.in.ua/
+  url: "https://sum.in.ua/"
   type: reference
   notes: Definitions of analytical terms
 - name: Ukrainian Academic Writing Corpus
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Usage patterns in academic texts
 immersion: 100% Ukrainian

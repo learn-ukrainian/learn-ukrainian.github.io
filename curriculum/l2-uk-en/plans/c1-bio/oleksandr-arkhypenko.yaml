@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Архипенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович
+  url: "https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович"
   type: primary
   notes: Біографія, творчий шлях, інновації
 - name: Archipenko Foundation
-  url: https://www.archipenko.org
+  url: "https://www.archipenko.org"
   type: reference
   notes: Каталог творів та біографічні матеріали
 - name: MoMA Collection
-  url: https://www.moma.org/artists/229
+  url: "https://www.moma.org/artists/229"
   type: reference
   notes: Роботи в колекції Музею сучасного мистецтва
 immersion: 100% Ukrainian

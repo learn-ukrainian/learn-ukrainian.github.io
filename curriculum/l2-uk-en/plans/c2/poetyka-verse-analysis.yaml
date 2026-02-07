@@ -2,22 +2,22 @@ module: poetyka-verse-analysis
 level: c2
 sequence: 28
 version: '2.0'
-title: Поетика — аналіз віршів
+title: "Поетика — аналіз віршів"
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Віршування — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Віршування
+  url: "https://uk.wikipedia.org/wiki/Віршування"
   type: reference
   notes: Ukrainian versification systems
 - name: Українська поезія — укрліб
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Classic and contemporary Ukrainian poetry examples
 - name: Тарас Шевченко — Кобзар
-  url: https://uk.wikisource.org/wiki/Кобзар_(Шевченко)
+  url: "https://uk.wikisource.org/wiki/Кобзар_(Шевченко)"
   type: primary
   notes: Foundation of modern Ukrainian poetics
 content_outline:

@@ -2,22 +2,22 @@ module: publitsystychnyi-styl
 level: c2
 sequence: 5
 version: '2.0'
-title: Публіцистичний стиль — Журналістика
+title: "Публіцистичний стиль — Журналістика"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Українська правда
-  url: https://www.pravda.com.ua/
+  url: "https://www.pravda.com.ua/"
   type: reference
   notes: Contemporary Ukrainian journalism examples
 - name: Стандарти журналістики — ІМІ
-  url: https://imi.org.ua/
+  url: "https://imi.org.ua/"
   type: primary
   notes: Institute of Mass Information journalism standards
 - name: Ukrainian State Standard 2024 — Media communication
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for publicistic style
 content_outline:

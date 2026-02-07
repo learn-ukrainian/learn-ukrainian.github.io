@@ -77,26 +77,26 @@ vocabulary:
 - регіональний міф
 activities:
 - type: critical-analysis
-  focus: «Novorossiya» — imperial construct analysis
+  focus: "«Novorossiya» — imperial construct analysis"
 - type: comparative-study
-  focus: Who settled Southern Ukraine — ethnic breakdown
+  focus: "Who settled Southern Ukraine — ethnic breakdown"
 - type: critical-analysis
-  focus: Odesa — Ukrainian or "other"?
+  focus: "Odesa — Ukrainian or \"other\"?"
 - type: critical-analysis
-  focus: 2014 vs. 2022 — why "Novorossiya" project failed
+  focus: "2014 vs. 2022 — why \"Novorossiya\" project failed"
 - type: essay-response
   focus: Чому російський проект 'Новоросії' провалився?
 sources:
 - name: Новоросія (історичний регіон) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)
+  url: "https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)"
   type: reference
   notes: Historical region
 - name: Одеса (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Одеса
+  url: "https://uk.wikipedia.org/wiki/Одеса"
   type: reference
   notes: City history
 - name: Українці на Півдні України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці
+  url: "https://uk.wikipedia.org/wiki/Українці"
   type: reference
   notes: Ukrainian presence
 vocabulary_hints:

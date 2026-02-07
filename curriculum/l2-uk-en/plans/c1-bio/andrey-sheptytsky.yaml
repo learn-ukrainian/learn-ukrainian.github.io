@@ -86,19 +86,19 @@ connects_to:
 module_type: biography
 sources:
 - name: Андрей Шептицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
+  url: "https://uk.wikipedia.org/wiki/Шептицький_Андрей"
   type: primary
   notes: Biography, church leadership, rescue activities
 - name: УГКЦ - Митрополит Шептицький
-  url: https://ugcc.ua/en/church/history/metropolitan-andrey-sheptytsky/
+  url: "https://ugcc.ua/en/church/history/metropolitan-andrey-sheptytsky/"
   type: reference
   notes: Official church biography
 - name: Yad Vashem documentation
-  url: https://www.yadvashem.org/
+  url: "https://www.yadvashem.org/"
   type: reference
   notes: Holocaust rescue documentation
 - name: Національний музей у Львові
-  url: https://uk.wikipedia.org/wiki/Національний_музей_у_Львові_імені_Андрея_Шептицького
+  url: "https://uk.wikipedia.org/wiki/Національний_музей_у_Львові_імені_Андрея_Шептицького"
   type: reference
   notes: Museum he founded
 immersion: 100% Ukrainian

@@ -3,7 +3,7 @@ level: A2
 sequence: 40
 slug: 40-adj-suffixes
 version: '2.0'
-title: Adjective Suffixes — Types
+title: "Adjective Suffixes — Types"
 subtitle: Materials and Origins
 content_outline:
 - section: Introduction / Вступ
@@ -40,11 +40,11 @@ objectives:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Adjective Morphology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for material and origin adjective suffixes at A2
 - name: Ukrainian Word Formation - Consonant Changes
-  url: https://uk.wikipedia.org/wiki/Чергування_приголосних_при_творенні_прикметників
+  url: "https://uk.wikipedia.org/wiki/Чергування_приголосних_при_творенні_прикметників"
   type: reference
   notes: Rules for mutations like k->ts, h->z when adding -sk-
 immersion: 65-75% Ukrainian

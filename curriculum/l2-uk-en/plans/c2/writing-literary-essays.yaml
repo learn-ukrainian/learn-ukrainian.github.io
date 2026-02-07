@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Есей — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Есей
+  url: "https://uk.wikipedia.org/wiki/Есей"
   type: reference
   notes: Essay genre characteristics
 - name: Академічне письмо
-  url: https://uk.wikipedia.org/wiki/Академічне_письмо
+  url: "https://uk.wikipedia.org/wiki/Академічне_письмо"
   type: reference
   notes: Scholarly writing conventions
 - name: Літературознавчі журнали
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of published literary essays
 content_outline:

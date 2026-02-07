@@ -45,12 +45,12 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Temporal Clauses
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Communicative requirements for sequencing events and temporal coordination
     at A2
 - name: Grammar of Ukrainian Language - Time Conjunctions
-  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу
+  url: "https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу"
   type: reference
   notes: Detailed rules for 'коли', 'поки', and 'як тільки'
 immersion: 40-50% Ukrainian

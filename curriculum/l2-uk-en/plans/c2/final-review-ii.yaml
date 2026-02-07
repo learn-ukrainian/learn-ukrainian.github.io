@@ -2,22 +2,22 @@ module: final-review-ii
 level: c2
 sequence: 96
 version: '2.0'
-title: Фінальне повторення II — Лексична консолідація
+title: "Фінальне повторення II — Лексична консолідація"
 focus: integration
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — Лексична компетенція C2
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 vocabulary competence requirements
 - name: Словник української мови в 11 томах (СУМ)
-  url: https://sum.in.ua/
+  url: "https://sum.in.ua/"
   type: primary
   notes: Comprehensive Ukrainian dictionary
 - name: CEFR C2 Lexical Range
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: secondary
   notes: C2 lexical competence descriptors
 content_outline:

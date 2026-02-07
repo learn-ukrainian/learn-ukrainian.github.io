@@ -77,7 +77,7 @@ activity_hints:
   focus: Доповнити кар'єрний план конкретними діями
   items: 8
 - type: case-study
-  focus: Опрацювати ситуацію кар'єрної кризи — запропонувати рішення
+  focus: "Опрацювати ситуацію кар'єрної кризи — запропонувати рішення"
   items: 1
 focus: professional
 pedagogy: ESP

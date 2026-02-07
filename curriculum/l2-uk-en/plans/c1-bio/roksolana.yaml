@@ -103,15 +103,15 @@ grammar:
 module_type: biography
 sources:
 - name: Роксолана (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Роксолана
+  url: "https://uk.wikipedia.org/wiki/Роксолана"
   type: primary
   notes: Biography, rise to power, influence
 - name: Сулейман I (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сулейман_I
+  url: "https://uk.wikipedia.org/wiki/Сулейман_I"
   type: reference
   notes: Context of Ottoman court
 - name: Гарем (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гарем
+  url: "https://uk.wikipedia.org/wiki/Гарем"
   type: reference
   notes: Structure of Ottoman harem system
 immersion: 100% Ukrainian

@@ -81,11 +81,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Imperative Mood
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official rules for aspect in imperative constructions
 - name: Ukrainian Imperative (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
+  url: "https://uk.wikipedia.org/wiki/Наказовий_спосіб"
   type: reference
   notes: Imperative formation with aspect
 immersion: 100% Ukrainian

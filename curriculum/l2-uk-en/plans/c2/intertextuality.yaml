@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Інтертекстуальність — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Інтертекстуальність
+  url: "https://uk.wikipedia.org/wiki/Інтертекстуальність"
   type: reference
   notes: Theoretical foundation and terminology
 - name: Українська постмодерна література
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of intertextuality in Zhadan, Andrukhovych
 - name: Теорія літератури — Ю. Крістева
-  url: https://uk.wikipedia.org/wiki/Юлія_Крістева
+  url: "https://uk.wikipedia.org/wiki/Юлія_Крістева"
   type: reference
   notes: Origin of intertextuality concept
 content_outline:

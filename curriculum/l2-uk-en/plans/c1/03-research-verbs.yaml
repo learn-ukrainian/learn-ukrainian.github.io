@@ -96,11 +96,11 @@ connects_to:
 module_type: vocabulary
 sources:
 - name: Ukrainian Academic Corpus
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Frequency data for academic verbs
 - name: Наукова комунікація українською
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: secondary
   notes: Official academic communication guidelines
 immersion: 100% Ukrainian

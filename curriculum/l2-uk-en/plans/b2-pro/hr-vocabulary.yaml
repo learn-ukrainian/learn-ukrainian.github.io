@@ -63,7 +63,7 @@ vocabulary_hints:
   - скорочення штату (staff reduction)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати опис вакансії — визначити вимоги та обов'язки
+  focus: "Проаналізувати опис вакансії — визначити вимоги та обов'язки"
   items: 1
 - type: writing-task
   focus: Скласти резюме на задану вакансію

@@ -106,15 +106,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Academic Writing
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Academic writing standards for B2
 - name: Науковий стиль української мови
-  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  url: "https://uk.wikipedia.org/wiki/Науковий_стиль"
   type: secondary
   notes: Scientific writing conventions
 - name: CEFR B2 Academic Skills
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 academic reading and writing
 immersion: 100% Ukrainian

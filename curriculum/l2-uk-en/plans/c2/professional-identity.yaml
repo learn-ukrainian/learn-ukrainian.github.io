@@ -2,22 +2,22 @@ module: professional-identity
 level: c2
 sequence: 73
 version: '2.0'
-title: Професійна ідентичність — Особистий бренд українською
+title: "Професійна ідентичність — Особистий бренд українською"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Українські бізнес-медіа
-  url: https://mind.ua/
+  url: "https://mind.ua/"
   type: reference
   notes: Кейси особистого брендингу
 - name: Forbes Україна
-  url: https://forbes.ua/
+  url: "https://forbes.ua/"
   type: reference
   notes: Профілі успішних професіоналів
 - name: Лідери думок у професійних спільнотах
-  url: https://dou.ua/
+  url: "https://dou.ua/"
   type: reference
   notes: IT-спільнота як приклад
 content_outline:

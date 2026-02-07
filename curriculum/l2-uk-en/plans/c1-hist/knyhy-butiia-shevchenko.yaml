@@ -89,15 +89,15 @@ activities:
   focus: Чому Кирило-Мефодіївське братство важливе для українського руху?
 sources:
 - name: Кирило-Мефодіївське братство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  url: "https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство"
   type: reference
   notes: Brotherhood overview
 - name: Книги буття українського народу
-  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  url: "https://uk.wikipedia.org/wiki/Книги_буття_українського_народу"
   type: reference
   notes: Brotherhood manifesto
 - name: Текст "Книг буття"
-  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
+  url: "https://uk.wikisource.org/wiki/Книга_буття_українського_народу"
   type: primary
   notes: Full text
 vocabulary_hints:

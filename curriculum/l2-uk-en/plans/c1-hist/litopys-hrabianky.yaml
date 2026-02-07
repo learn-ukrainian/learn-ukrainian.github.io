@@ -79,7 +79,7 @@ activities:
 - type: reading
   focus: Cossack origin myth passage
 - type: critical-analysis
-  focus: Identify ideological claims — what does author want readers to believe?
+  focus: "Identify ideological claims — what does author want readers to believe?"
 - type: comparative-study
   focus: Compare Hrabianka's Khmelnytsky with Samovydets'
 - type: critical-analysis
@@ -88,15 +88,15 @@ activities:
   focus: Чому Грабянка створив міфічну генеалогію козаків?
 sources:
 - name: Літопис Григорія Граб'янки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  url: "https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки"
   type: reference
   notes: Overview
 - name: Літопис Грабянки (текст)
-  url: https://litopys.org.ua/grab/hrab.htm
+  url: "https://litopys.org.ua/grab/hrab.htm"
   type: primary
   notes: Full text
 - name: Граб'янка Григорій Іванович
-  url: https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович
+  url: "https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович"
   type: reference
   notes: Author biography
 vocabulary_hints:

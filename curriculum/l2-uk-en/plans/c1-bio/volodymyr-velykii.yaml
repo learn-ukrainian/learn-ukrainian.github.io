@@ -116,15 +116,15 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Святославич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Володимир_Святославич
+  url: "https://uk.wikipedia.org/wiki/Володимир_Святославич"
   type: primary
   notes: Biography, Christianization, reign
 - name: Хрещення Русі (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
   type: primary
   notes: Process and significance of Christianization
 - name: Вибір віри
-  url: https://uk.wikipedia.org/wiki/Вибір_віри
+  url: "https://uk.wikipedia.org/wiki/Вибір_віри"
   type: reference
   notes: Legend of choosing religion
 immersion: 100% Ukrainian

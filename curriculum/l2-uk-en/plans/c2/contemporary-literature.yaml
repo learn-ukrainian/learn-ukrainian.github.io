@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Сучасна українська література — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Сучасна_українська_література
+  url: "https://uk.wikipedia.org/wiki/Сучасна_українська_література"
   type: reference
   notes: Overview of contemporary literary scene
 - name: Видавництво Фабула / Клуб сімейного дозвілля
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Contemporary Ukrainian authors
 - name: Літературні премії України
-  url: https://uk.wikipedia.org/wiki/Категорія:Літературні_премії_України
+  url: "https://uk.wikipedia.org/wiki/Категорія:Літературні_премії_України"
   type: reference
   notes: Prize-winning contemporary literature
 content_outline:

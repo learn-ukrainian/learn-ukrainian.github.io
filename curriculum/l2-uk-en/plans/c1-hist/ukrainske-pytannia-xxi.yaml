@@ -78,11 +78,11 @@ activities:
   focus: Чи 'українське питання' вирішене?
 sources:
 - name: Україна у XXI столітті (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_України#XXI_століття
+  url: "https://uk.wikipedia.org/wiki/Історія_України#XXI_століття"
   type: reference
   notes: 21st century Ukraine
 - name: Російсько-українська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російсько-українська_війна
+  url: "https://uk.wikipedia.org/wiki/Російсько-українська_війна"
   type: reference
   notes: Current war
 vocabulary_hints:

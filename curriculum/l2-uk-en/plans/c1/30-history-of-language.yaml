@@ -96,11 +96,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Історія української мови
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: primary
   notes: Comprehensive language history
 - name: Шевельов - Історична фонологія
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Academic linguistic history
 immersion: 100% Ukrainian

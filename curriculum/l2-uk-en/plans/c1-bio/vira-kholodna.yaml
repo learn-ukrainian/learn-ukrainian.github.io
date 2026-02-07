@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Віра Холодна (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
+  url: "https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна"
   type: primary
   notes: Основна біографічна інформація
 - name: Історія українського кіно
-  url: https://kinokolo.ua/
+  url: "https://kinokolo.ua/"
   type: reference
   notes: Контекст раннього кінематографу
 - name: Фільмографія
-  url: https://www.imdb.com/
+  url: "https://www.imdb.com/"
   type: reference
   notes: Список фільмів
 immersion: 100% Ukrainian

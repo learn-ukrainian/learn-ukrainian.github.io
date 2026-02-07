@@ -63,11 +63,11 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Мономах (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
+  url: "https://uk.wikipedia.org/wiki/Володимир_Мономах"
   type: primary
   notes: Детальний життєпис
 - name: '"Повчання" Володимира Мономаха'
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Оригінальний текст та коментарі
 immersion: 100% Ukrainian

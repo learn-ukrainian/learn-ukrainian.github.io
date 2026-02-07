@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Хвильовий (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Микола_Хвильовий
+  url: "https://uk.wikipedia.org/wiki/Микола_Хвильовий"
   type: primary
   notes: Біографія, творчість, літературна дискусія
 - name: Літературна дискусія 1925-1928
-  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років
+  url: "https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років"
   type: reference
   notes: Контекст полеміки «Геть від Москви!»
 - name: Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
   type: reference
   notes: Доля української інтелігенції 1920-30-х
 immersion: 100% Ukrainian

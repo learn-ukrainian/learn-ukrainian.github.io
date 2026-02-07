@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Соціолінгвістика — НАНУ
-  url: https://inmo.org.ua/
+  url: "https://inmo.org.ua/"
   type: primary
   notes: Соціолінгвістичні дослідження
 - name: Мовна політика України
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Законодавство про мову
 - name: Rating Sociological Group — мовне питання
-  url: https://ratinggroup.ua/
+  url: "https://ratinggroup.ua/"
   type: reference
   notes: Соціологічні дослідження мовної ситуації
 content_outline:

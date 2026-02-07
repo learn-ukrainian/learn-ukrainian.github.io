@@ -67,7 +67,7 @@ vocabulary_hints:
   - умови праці (working conditions)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати резюме та супровідний лист — визначити сильні та слабкі сторони
+  focus: "Проаналізувати резюме та супровідний лист — визначити сильні та слабкі сторони"
   items: 2
 - type: writing-task
   focus: Написати резюме на задану вакансію

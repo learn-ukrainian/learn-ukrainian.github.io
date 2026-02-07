@@ -68,10 +68,10 @@ grammar:
 - Military strategy terms
 sources:
 - name: Петро Конашевич-Сагайдачний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+  url: "https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний"
   type: primary
 - name: Хотинська битва 1621
-  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+  url: "https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)"
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO

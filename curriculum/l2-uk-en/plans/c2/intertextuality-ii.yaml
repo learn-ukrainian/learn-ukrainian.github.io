@@ -2,22 +2,22 @@ module: intertextuality-ii
 level: c2
 sequence: 30
 version: '2.0'
-title: Інтертекстуальність II — поглиблене вивчення
+title: "Інтертекстуальність II — поглиблене вивчення"
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Інтертекстуальність у постмодернізмі
-  url: https://uk.wikipedia.org/wiki/Постмодернізм
+  url: "https://uk.wikipedia.org/wiki/Постмодернізм"
   type: reference
   notes: Advanced intertextual strategies in postmodernism
 - name: Юрій Андрухович — твори
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Master of Ukrainian intertextuality
 - name: Теорія гіпертексту — Женетт
-  url: https://uk.wikipedia.org/wiki/Жерар_Женетт
+  url: "https://uk.wikipedia.org/wiki/Жерар_Женетт"
   type: reference
   notes: Genette's transtextual framework
 content_outline:

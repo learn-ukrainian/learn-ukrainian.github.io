@@ -88,15 +88,15 @@ activities:
   focus: Чи можна назвати документ Орлика 'конституцією'?
 sources:
 - name: Конституція Пилипа Орлика (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+  url: "https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика"
   type: reference
   notes: Overview
 - name: Текст Конституції
-  url: https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика
+  url: "https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика"
   type: primary
   notes: Full text
 - name: Пилип Орлик
-  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+  url: "https://uk.wikipedia.org/wiki/Пилип_Орлик"
   type: reference
   notes: Author biography
 vocabulary_hints:

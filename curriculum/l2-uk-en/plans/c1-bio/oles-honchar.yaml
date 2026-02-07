@@ -84,11 +84,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Олесь Гончар (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гончар_Олесь_Терентійович
+  url: "https://uk.wikipedia.org/wiki/Гончар_Олесь_Терентійович"
   type: primary
   notes: Comprehensive biography of the Soviet-era Ukrainian writer
 - name: Роман «Собор» (аналіз)
-  url: https://uk.wikipedia.org/wiki/Собор_(роман)
+  url: "https://uk.wikipedia.org/wiki/Собор_(роман)"
   type: reference
   notes: Analysis of the banned novel that became a symbol of resistance
 immersion: 100% Ukrainian

@@ -2,22 +2,22 @@ module: teaching-ukrainian-ii
 level: c2
 sequence: 83
 version: '2.0'
-title: Викладання української мови II — Планування курсів
+title: "Викладання української мови II — Планування курсів"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Типові програми з української мови як іноземної
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standard curricula for Ukrainian as a foreign language
 - name: Ukrainian State Standard 2024 — Рівні володіння
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official level descriptors A1-C2
 - name: CEFR Action-Oriented Approach
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: secondary
   notes: Task-based and action-oriented curriculum design
 content_outline:

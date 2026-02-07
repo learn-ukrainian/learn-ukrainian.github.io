@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Леонід Каденюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович
+  url: "https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович"
   type: primary
   notes: Biography of Ukraine's first astronaut
 - name: NASA - STS-87
-  url: https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html
+  url: "https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html"
   type: reference
   notes: Mission information
 immersion: 100% Ukrainian

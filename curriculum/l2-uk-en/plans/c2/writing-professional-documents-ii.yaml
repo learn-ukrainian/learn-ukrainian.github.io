@@ -2,22 +2,22 @@ module: writing-professional-documents-ii
 level: c2
 sequence: 53
 version: '2.0'
-title: Написання професійних документів II — Пропозиції та презентації
+title: "Написання професійних документів II — Пропозиції та презентації"
 focus: grammar
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Фонд державного майна України — тендерна документація
-  url: https://www.spfu.gov.ua/
+  url: "https://www.spfu.gov.ua/"
   type: reference
   notes: Examples of professional proposals and tender documentation
 - name: Національне агентство з питань державної служби
-  url: https://nads.gov.ua/
+  url: "https://nads.gov.ua/"
   type: reference
   notes: Standards for official presentations and proposals
 - name: Prozorro — публічні закупівлі
-  url: https://prozorro.gov.ua/
+  url: "https://prozorro.gov.ua/"
   type: reference
   notes: Real examples of professional proposals in procurement
 content_outline:

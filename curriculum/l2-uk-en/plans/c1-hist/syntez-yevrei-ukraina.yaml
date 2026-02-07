@@ -77,18 +77,18 @@ activities:
 - type: comparative-study
   focus: Jewish community in Ukraine today
 - type: essay-response
-  focus: Чи Зеленський — кінець єврейсько-українського конфлікту?
+  focus: "Чи Зеленський — кінець єврейсько-українського конфлікту?"
 sources:
 - name: Володимир Зеленський (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Зеленський
+  url: "https://uk.wikipedia.org/wiki/Володимир_Зеленський"
   type: reference
   notes: Zelensky biography
 - name: Меморіальний центр Бабин Яр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Меморіальний_центр_«Бабин_Яр»
+  url: "https://uk.wikipedia.org/wiki/Меморіальний_центр_«Бабин_Яр»"
   type: reference
   notes: Babi Yar memorial
 - name: Єврейська громада України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Євреї_України
+  url: "https://uk.wikipedia.org/wiki/Євреї_України"
   type: reference
   notes: Jewish community today
 vocabulary_hints:

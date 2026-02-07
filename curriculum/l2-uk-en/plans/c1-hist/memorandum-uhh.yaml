@@ -88,15 +88,15 @@ activities:
   focus: Як Гельсінські угоди стали зброєю дисидентів?
 sources:
 - name: Українська Гельсінська група (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
+  url: "https://uk.wikipedia.org/wiki/Українська_Гельсінська_група"
   type: reference
   notes: Group overview
 - name: Установчий документ УГГ
-  url: https://khpg.org/
+  url: "https://khpg.org/"
   type: primary
   notes: Founding documents
 - name: Гельсінські угоди
-  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
+  url: "https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт"
   type: reference
   notes: Helsinki Accords context
 vocabulary_hints:

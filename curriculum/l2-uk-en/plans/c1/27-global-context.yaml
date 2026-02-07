@@ -96,11 +96,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Європейська правда
-  url: https://www.eurointegration.com.ua/
+  url: "https://www.eurointegration.com.ua/"
   type: reference
   notes: EU integration news and analysis
 - name: МЗС України
-  url: https://mfa.gov.ua/
+  url: "https://mfa.gov.ua/"
   type: primary
   notes: Official foreign policy information
 immersion: 100% Ukrainian

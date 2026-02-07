@@ -80,7 +80,7 @@ activities:
 - type: reading
   focus: Pereiaslav Council passage with inserted documents
 - type: critical-analysis
-  focus: Verify one inserted document — is it authentic?
+  focus: "Verify one inserted document — is it authentic?"
 - type: comparative-study
   focus: Compare Velychko's Pereiaslav with Samovydets and Hrabianka
 - type: critical-analysis
@@ -89,15 +89,15 @@ activities:
   focus: Чому Величко вставляв документи в літопис?
 sources:
 - name: Літопис Самійла Величка (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+  url: "https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка"
   type: reference
   notes: Overview
 - name: Літопис Величка (текст)
-  url: https://litopys.org.ua/velichko/vel.htm
+  url: "https://litopys.org.ua/velichko/vel.htm"
   type: primary
   notes: Full text (partial)
 - name: Величко Самійло Васильович
-  url: https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович
+  url: "https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович"
   type: reference
   notes: Author biography
 vocabulary_hints:

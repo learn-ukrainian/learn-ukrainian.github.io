@@ -77,7 +77,7 @@ vocabulary:
 - антирадянський
 activities:
 - type: critical-analysis
-  focus: Daily life in DP camps — sources
+  focus: "Daily life in DP camps — sources"
 - type: critical-analysis
   focus: How did Yalta agreements affect Ukrainians?
 - type: comparative-study
@@ -88,15 +88,15 @@ activities:
   focus: Чому третю хвилю називають 'найосвіченішою'?
 sources:
 - name: Переміщені особи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переміщені_особи
+  url: "https://uk.wikipedia.org/wiki/Переміщені_особи"
   type: reference
   notes: DP overview
 - name: Табори ДіПі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Табори_переміщених_осіб
+  url: "https://uk.wikipedia.org/wiki/Табори_переміщених_осіб"
   type: reference
   notes: DP camps
 - name: Українські ДіПі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб
+  url: "https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб"
   type: reference
   notes: Ukrainian DPs specifically
 vocabulary_hints:

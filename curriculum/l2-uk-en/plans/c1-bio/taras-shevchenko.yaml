@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Тарас Шевченко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович
+  url: "https://uk.wikipedia.org/wiki/Шевченко_Тарас_Григорович"
   type: primary
   notes: Основна біографічна інформація
 - name: Інститут літератури НАН України
-  url: https://shevchenko.inst.gov.ua/
+  url: "https://shevchenko.inst.gov.ua/"
   type: reference
   notes: Академічні дослідження творчості
 - name: Музей Тараса Шевченка
-  url: https://museumshevchenko.org.ua/
+  url: "https://museumshevchenko.org.ua/"
   type: reference
   notes: Архівні матеріали та експозиції
 immersion: 100% Ukrainian

@@ -67,7 +67,7 @@ vocabulary_hints:
   - редакція (editorial office)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати структуру новинної статті — знайти лід, бекграунд, цитати
+  focus: "Проаналізувати структуру новинної статті — знайти лід, бекграунд, цитати"
   items: 2
 - type: writing-task
   focus: Написати новину (200 слів) за наданим прес-релізом

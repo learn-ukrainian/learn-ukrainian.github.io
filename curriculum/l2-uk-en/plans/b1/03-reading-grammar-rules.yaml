@@ -126,11 +126,11 @@ grammar:
 module_type: bridge
 sources:
 - name: Ukrainian Grammar Textbooks
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standard patterns used in Ukrainian grammar instruction
 - name: Ukrainian Language Teaching Resources
-  url: https://osvita.ua/
+  url: "https://osvita.ua/"
   type: reference
   notes: Common instructional language in educational materials
 immersion: 75% Ukrainian

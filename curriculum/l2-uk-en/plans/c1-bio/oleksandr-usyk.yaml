@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Усик (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Усик_Олександр_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Усик_Олександр_Олександрович"
   type: primary
   notes: Biography, boxing career, patriotism
 - name: Олімпійські ігри 2012
-  url: https://uk.wikipedia.org/wiki/Україна_на_літніх_Олімпійських_іграх_2012
+  url: "https://uk.wikipedia.org/wiki/Україна_на_літніх_Олімпійських_іграх_2012"
   type: reference
   notes: Olympic gold medal
 - name: Undisputed champion
-  url: https://uk.wikipedia.org/wiki/Undisputed_champion
+  url: "https://uk.wikipedia.org/wiki/Undisputed_champion"
   type: reference
   notes: His championship status
 immersion: 100% Ukrainian

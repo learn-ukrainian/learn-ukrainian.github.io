@@ -78,24 +78,24 @@ activities:
 - type: comparative-study
   focus: Compare Conquest, Mace, Kulchytsky interpretations
 - type: critical-analysis
-  focus: Evaluate one denial argument — how to counter?
+  focus: "Evaluate one denial argument — how to counter?"
 - type: essay-response
   focus: Чому Голодомор так довго замовчувався?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
+  url: "https://uk.wikipedia.org/wiki/Голодомор"
   type: reference
   notes: Overview
 - name: Роберт Конквест
-  url: https://uk.wikipedia.org/wiki/Роберт_Конквест
+  url: "https://uk.wikipedia.org/wiki/Роберт_Конквест"
   type: reference
   notes: «Harvest of Sorrow» author
 - name: Джеймс Мейс
-  url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
+  url: "https://uk.wikipedia.org/wiki/Мейс_Джеймс"
   type: reference
   notes: US Commission researcher
 - name: Станіслав Кульчицький
-  url: https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович
+  url: "https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович"
   type: reference
   notes: Ukrainian scholar
 vocabulary_hints:

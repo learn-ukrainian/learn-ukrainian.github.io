@@ -3,7 +3,7 @@ level: A2
 sequence: 11
 slug: 11-checkpoint-cases
 version: '2.0'
-title: Checkpoint — Cases
+title: "Checkpoint — Cases"
 subtitle: Review and Mastery
 content_outline:
 - section: Overview
@@ -84,11 +84,11 @@ grammar:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - A2 Assessment
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Assessment criteria for case system mastery
 - name: CEFR A2 Can-Do Statements
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: A2 grammar proficiency requirements
 immersion: 40-50% Ukrainian

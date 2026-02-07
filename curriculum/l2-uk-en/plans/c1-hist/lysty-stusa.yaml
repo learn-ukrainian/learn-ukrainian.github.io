@@ -79,7 +79,7 @@ activities:
 - type: reading
   focus: Letter to son with glosses
 - type: critical-analysis
-  focus: Read a censored letter — what might have been cut?
+  focus: "Read a censored letter — what might have been cut?"
 - type: comparative-study
   focus: Compare letter tone to poetry on same themes
 - type: comparative-study
@@ -88,15 +88,15 @@ activities:
   focus: Як Стус зберігав людяність у нелюдських умовах?
 sources:
 - name: Василь Стус (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Василь_Стус
+  url: "https://uk.wikipedia.org/wiki/Василь_Стус"
   type: reference
   notes: Biography
 - name: Листи Стуса
-  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
+  url: "https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса"
   type: primary
   notes: Letters collection
 - name: Табори для політв'язнів
-  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
+  url: "https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР"
   type: reference
   notes: Gulag context
 vocabulary_hints:

@@ -2,22 +2,22 @@ module: c2-1-practice-i
 level: c2
 sequence: 17
 version: '2.0'
-title: Практика C2.1 I — Стилістичне портфоліо
+title: "Практика C2.1 I — Стилістичне портфоліо"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Portfolio assessment methodology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Ukrainian education standards for portfolio evaluation
 - name: Writing portfolio examples
-  url: https://www.nbuv.gov.ua/
+  url: "https://www.nbuv.gov.ua/"
   type: reference
   notes: Sample portfolio structures and rubrics
 - name: Ukrainian State Standard 2024 — Production assessment
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for writing production
 content_outline:

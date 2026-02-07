@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ольга Басараб (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
+  url: "https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна"
   type: primary
   notes: Біографія, розвідницька діяльність, загибель
 - name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
+  url: "https://mvbu.org.ua"
   type: reference
   notes: УВО та розвідка
 - name: Центр досліджень визвольного руху
-  url: https://cdvr.org.ua
+  url: "https://cdvr.org.ua"
   type: reference
   notes: Дослідження підпільної діяльності
 immersion: 100% Ukrainian

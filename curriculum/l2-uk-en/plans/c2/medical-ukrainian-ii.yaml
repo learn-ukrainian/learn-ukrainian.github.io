@@ -2,22 +2,22 @@ module: medical-ukrainian-ii
 level: c2
 sequence: 67
 version: '2.0'
-title: Медична українська II — Спілкування з пацієнтами
+title: "Медична українська II — Спілкування з пацієнтами"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Протоколи надання медичної допомоги МОЗ
-  url: https://moz.gov.ua/protokoli
+  url: "https://moz.gov.ua/protokoli"
   type: primary
   notes: Стандарти комунікації з пацієнтами
 - name: Національна служба здоров'я — Пакети послуг
-  url: https://nszu.gov.ua/
+  url: "https://nszu.gov.ua/"
   type: reference
   notes: Медичні послуги та права пацієнтів
 - name: Етичний кодекс лікаря України
-  url: https://moz.gov.ua/
+  url: "https://moz.gov.ua/"
   type: reference
   notes: Етика медичної комунікації
 content_outline:

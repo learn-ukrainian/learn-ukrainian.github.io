@@ -98,11 +98,11 @@ connects_to:
 module_type: skills
 sources:
 - name: Ukrainian HR Standards
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Professional interview practices in Ukraine
 - name: STAR Method Guidelines
-  url: https://careers.gov.ua/
+  url: "https://careers.gov.ua/"
   type: secondary
   notes: Behavioral interview techniques
 immersion: 100% Ukrainian

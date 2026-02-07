@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Іван Пулюй (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
+  url: "https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович"
   type: primary
   notes: Життя та відкриття
 - name: Пулюй та Рентген
-  url: https://puliui.org.ua/
+  url: "https://puliui.org.ua/"
   type: reference
   notes: Музей та архіви
 immersion: 100% Ukrainian
@@ -78,7 +78,7 @@ vocabulary_hints:
   - переклад (translation)
 activity_hints:
 - type: reading
-  focus: Порівняння робіт Пулюя та Рентгена
+  focus: "Порівняння робіт Пулюя та Рентгена"
   source: Scientific articles (adapted)
 - type: critical-analysis
-  focus: Чому Нобелівську премію отримав не Пулюй?
+  focus: "Чому Нобелівську премію отримав не Пулюй?"

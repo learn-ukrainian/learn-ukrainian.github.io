@@ -78,24 +78,24 @@ activities:
 - type: critical-analysis
   focus: Map Crimea's historical layers
 - type: reading
-  focus: Crimean Khanate — beyond raids
+  focus: "Crimean Khanate — beyond raids"
 - type: critical-analysis
-  focus: 1944 deportation — mechanism and legacy
+  focus: "1944 deportation — mechanism and legacy"
 - type: critical-analysis
   focus: 1954 transfer vs. 2014 annexation
 - type: essay-response
   focus: Чий Крим? Історичні аргументи різних сторін
 sources:
 - name: Крим (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Крим
+  url: "https://uk.wikipedia.org/wiki/Крим"
   type: reference
   notes: Regional overview
 - name: Кримське ханство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кримське_ханство
+  url: "https://uk.wikipedia.org/wiki/Кримське_ханство"
   type: reference
   notes: Tatar state
 - name: Кримські татари (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кримські_татари
+  url: "https://uk.wikipedia.org/wiki/Кримські_татари"
   type: reference
   notes: Crimean Tatars
 vocabulary_hints:

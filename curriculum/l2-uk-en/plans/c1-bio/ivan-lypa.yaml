@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Липа (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
+  url: "https://uk.wikipedia.org/wiki/Липа_Іван_Львович"
   type: primary
   notes: Biography of the doctor, writer, and patriot
 - name: Братство тарасівців
-  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+  url: "https://uk.wikipedia.org/wiki/Братство_тарасівців"
   type: reference
   notes: Information about the organization Lypa co-founded
 immersion: 100% Ukrainian

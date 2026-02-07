@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Український правопис 2019
-  url: https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019
+  url: "https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019"
   type: primary
   notes: Офіційні правописні норми
 - name: Культура мови — НАНУ
-  url: https://inmo.org.ua/
+  url: "https://inmo.org.ua/"
   type: reference
   notes: Нормативні рекомендації
 - name: Типові помилки у мовленні
-  url: https://uk.wikipedia.org/
+  url: "https://uk.wikipedia.org/"
   type: reference
   notes: Каталоги типових помилок
 content_outline:

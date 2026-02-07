@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Котляревський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович
+  url: "https://uk.wikipedia.org/wiki/Котляревський_Іван_Петрович"
   type: primary
   notes: Biography of the founder of modern Ukrainian literature
 - name: Полтавський літературно-меморіальний музей
-  url: https://kotliarevskyi.poltava.ua/
+  url: "https://kotliarevskyi.poltava.ua/"
   type: reference
   notes: Museum dedicated to Kotliarevsky's life and work
 immersion: 100% Ukrainian

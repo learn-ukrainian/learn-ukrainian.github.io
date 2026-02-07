@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: AIIC — Training for Conference Interpreters
-  url: https://aiic.org/
+  url: "https://aiic.org/"
   type: reference
   notes: International standards for interpreter training
 - name: Чернов — Теорія і практика синхронного перекладу
-  url: https://uk.wikipedia.org/wiki/Синхронний_переклад
+  url: "https://uk.wikipedia.org/wiki/Синхронний_переклад"
   type: primary
   notes: Classic Soviet/Ukrainian interpretation methodology
 - name: Gile — Basic Concepts and Models for Interpreter Training
-  url: https://benjamins.com/
+  url: "https://benjamins.com/"
   type: secondary
   notes: Cognitive load model for interpretation
 content_outline:

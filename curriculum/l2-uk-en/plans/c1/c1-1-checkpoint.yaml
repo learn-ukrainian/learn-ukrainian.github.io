@@ -2,18 +2,18 @@ module: 20-c1-1-checkpoint
 level: c1
 sequence: 20
 version: '2.0'
-title: Контрольна точка — Академічна база
+title: "Контрольна точка — Академічна база"
 focus: checkpoint
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: CEFR C1 Assessment Criteria
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: reference
   notes: C1 level assessment descriptors
 - name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: National C1 competency requirements
 content_outline:

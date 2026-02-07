@@ -65,7 +65,7 @@ vocabulary_hints:
   - делегування (delegation)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати транскрипт коучингової сесії — визначити етапи GROW
+  focus: "Проаналізувати транскрипт коучингової сесії — визначити етапи GROW"
   items: 2
 - type: role-play
   focus: Провести коучингову сесію за моделлю GROW

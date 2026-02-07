@@ -102,11 +102,11 @@ grammar:
 module_type: bridge
 sources:
 - name: Ukrainian State Standard 2024 - Grammar Terminology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official metalanguage terms for Ukrainian grammar education
 - name: Ukrainian Grammar (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  url: "https://uk.wikipedia.org/wiki/Граматика_української_мови"
   type: reference
   notes: Overview of Ukrainian grammatical terminology
 immersion: 75% Ukrainian

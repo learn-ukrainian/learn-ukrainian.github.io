@@ -106,15 +106,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Impersonal Constructions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official requirements for -но/-то usage
 - name: Юридична мова України
-  url: https://uk.wikipedia.org/wiki/Юридична_мова
+  url: "https://uk.wikipedia.org/wiki/Юридична_мова"
   type: secondary
   notes: Examples of -но/-то in legal documents
 - name: Офіційно-діловий стиль
-  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
+  url: "https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль"
   type: secondary
   notes: Register characteristics and examples
 immersion: 100% Ukrainian

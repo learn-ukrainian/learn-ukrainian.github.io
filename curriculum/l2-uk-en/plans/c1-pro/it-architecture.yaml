@@ -65,7 +65,7 @@ vocabulary_hints:
   - throughput (пропускна здатність)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати ADR — оцінити структуру та обґрунтування
+  focus: "Проаналізувати ADR — оцінити структуру та обґрунтування"
   items: 2
 - type: writing-task
   focus: Написати ADR для архітектурного рішення

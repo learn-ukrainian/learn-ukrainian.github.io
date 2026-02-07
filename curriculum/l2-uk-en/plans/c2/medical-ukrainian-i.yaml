@@ -2,22 +2,22 @@ module: medical-ukrainian-i
 level: c2
 sequence: 66
 version: '2.0'
-title: Медична українська I — Основи термінології
+title: "Медична українська I — Основи термінології"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Міністерство охорони здоров'я України
-  url: https://moz.gov.ua/
+  url: "https://moz.gov.ua/"
   type: primary
   notes: Офіційні медичні документи та стандарти
 - name: Національна служба здоров'я України
-  url: https://nszu.gov.ua/
+  url: "https://nszu.gov.ua/"
   type: reference
   notes: Медична документація та протоколи
 - name: Медичний словник УМСА
-  url: https://www.umsa.edu.ua/
+  url: "https://www.umsa.edu.ua/"
   type: reference
   notes: Українська медична термінологія
 content_outline:

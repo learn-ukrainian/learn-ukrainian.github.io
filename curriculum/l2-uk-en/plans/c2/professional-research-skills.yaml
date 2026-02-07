@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Національна бібліотека України імені В. І. Вернадського
-  url: https://nbuv.gov.ua/
+  url: "https://nbuv.gov.ua/"
   type: reference
   notes: Research resources and methodology guidelines
 - name: Scopus — база наукових публікацій
-  url: https://www.scopus.com/
+  url: "https://www.scopus.com/"
   type: reference
   notes: International database for academic research
 - name: УРАН — українська дослідницька та академічна мережа
-  url: https://www.uran.ua/
+  url: "https://www.uran.ua/"
   type: reference
   notes: Ukrainian academic network and research resources
 content_outline:

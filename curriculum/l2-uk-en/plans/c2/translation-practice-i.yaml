@@ -2,22 +2,22 @@ module: translation-practice-i
 level: c2
 sequence: 86
 version: '2.0'
-title: Практика перекладу I — Літературний переклад
+title: "Практика перекладу I — Літературний переклад"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Зеров — Переклади з поезії
-  url: https://uk.wikipedia.org/wiki/Зеров_Микола_Костьович
+  url: "https://uk.wikipedia.org/wiki/Зеров_Микола_Костьович"
   type: primary
   notes: Classic examples of Ukrainian poetic translation
 - name: Кундзіч — Теорія та практика художнього перекладу
-  url: https://uk.wikipedia.org/wiki/Кундзіч_Олексій_Леонідович
+  url: "https://uk.wikipedia.org/wiki/Кундзіч_Олексій_Леонідович"
   type: reference
   notes: Ukrainian literary translation methodology
 - name: Сучасні українські переклади світової класики
-  url: https://chytomo.com/
+  url: "https://chytomo.com/"
   type: secondary
   notes: Contemporary translation examples and reviews
 content_outline:

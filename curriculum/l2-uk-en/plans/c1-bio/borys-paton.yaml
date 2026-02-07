@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Борис Патон (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Патон_Борис_Євгенович
+  url: "https://uk.wikipedia.org/wiki/Патон_Борис_Євгенович"
   type: primary
   notes: Biography, scientific achievements, NAS presidency
 - name: Національна академія наук України
-  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
+  url: "https://uk.wikipedia.org/wiki/Національна_академія_наук_України"
   type: reference
   notes: Institution he led for 58 years
 - name: Зварювання в космосі
-  url: https://uk.wikipedia.org/wiki/Зварювання_в_космосі
+  url: "https://uk.wikipedia.org/wiki/Зварювання_в_космосі"
   type: reference
   notes: His pioneering space technology
 immersion: 100% Ukrainian

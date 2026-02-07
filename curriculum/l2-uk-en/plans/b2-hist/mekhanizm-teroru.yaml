@@ -72,7 +72,7 @@ activity_hints:
   focus: 'Спростування міфів: Міфи про «ворогів народу»'
   items: 5
 - type: essay-response
-  focus: Чому знищення української інтелігенції — це геноцид?
+  focus: "Чому знищення української інтелігенції — це геноцид?"
   word_target: 250
 focus: history
 pedagogy: CBI

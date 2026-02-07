@@ -65,7 +65,7 @@ vocabulary_hints:
   - лист прийняття (acceptance letter)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати тези — оцінити структуру та повноту
+  focus: "Проаналізувати тези — оцінити структуру та повноту"
   items: 2
 - type: writing-task
   focus: Написати тези для конференції за вимогами

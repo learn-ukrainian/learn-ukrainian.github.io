@@ -44,11 +44,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Indirect Speech
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for speech reporting and indirect questions for A2
 - name: Grammar of Ukrainian Language - Reported Statements
-  url: https://uk.wikipedia.org/wiki/Непряма_мова
+  url: "https://uk.wikipedia.org/wiki/Непряма_мова"
   type: reference
   notes: Rules for tense retention and pronoun shifts
 immersion: 40-50% Ukrainian

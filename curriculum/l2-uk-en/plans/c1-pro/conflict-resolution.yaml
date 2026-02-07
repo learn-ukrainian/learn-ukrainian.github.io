@@ -65,7 +65,7 @@ vocabulary_hints:
   - конструктивний діалог (constructive dialogue)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати транскрипт медіації — оцінити техніки посередника
+  focus: "Проаналізувати транскрипт медіації — оцінити техніки посередника"
   items: 2
 - type: role-play
   focus: Провести медіаційну сесію між двома сторонами

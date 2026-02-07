@@ -2,22 +2,22 @@ module: c2-2-practice-i
 level: c2
 sequence: 42
 version: '2.0'
-title: Практика C2.2 I — Літературне портфоліо
+title: "Практика C2.2 I — Літературне портфоліо"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Літературна Україна — творчі конкурси
-  url: https://litukraina.org.ua/
+  url: "https://litukraina.org.ua/"
   type: reference
   notes: Guidelines for literary portfolio compilation and evaluation criteria
 - name: Київський національний університет — творче письмо
-  url: https://www.univ.kiev.ua/
+  url: "https://www.univ.kiev.ua/"
   type: reference
   notes: Academic standards for literary portfolio assessment
 - name: Часопис "Кур'єр Кривбасу"
-  url: https://kr-elib.com.ua/
+  url: "https://kr-elib.com.ua/"
   type: reference
   notes: Examples of contemporary Ukrainian literary works for portfolio models
 content_outline:

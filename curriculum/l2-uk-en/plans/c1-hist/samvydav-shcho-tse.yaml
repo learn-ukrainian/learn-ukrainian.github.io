@@ -78,7 +78,7 @@ vocabulary:
 - обшук
 activities:
 - type: reading
-  focus: Sample samvydav text — introduction to a publication
+  focus: "Sample samvydav text — introduction to a publication"
 - type: critical-analysis
   focus: Map the samvydav production and distribution network
 - type: critical-analysis
@@ -89,15 +89,15 @@ activities:
   focus: Чому самвидав був ефективним способом опору?
 sources:
 - name: Самвидав (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Самвидав
+  url: "https://uk.wikipedia.org/wiki/Самвидав"
   type: reference
   notes: Overview
 - name: Український самвидав
-  url: https://uk.wikipedia.org/wiki/Український_самвидав
+  url: "https://uk.wikipedia.org/wiki/Український_самвидав"
   type: reference
   notes: Ukrainian samizdat specifically
 - name: Архів самвидаву
-  url: https://diasporiana.org.ua/
+  url: "https://diasporiana.org.ua/"
   type: primary
   notes: Diaspora digital archive
 vocabulary_hints:

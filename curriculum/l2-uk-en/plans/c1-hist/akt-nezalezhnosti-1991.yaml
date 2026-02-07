@@ -79,22 +79,22 @@ activities:
 - type: critical-analysis
   focus: Who voted yes and why? Analyze motivations
 - type: critical-analysis
-  focus: Map regional referendum results — what patterns?
+  focus: "Map regional referendum results — what patterns?"
 - type: comparative-study
   focus: Compare with Baltic independence declarations
 - type: essay-response
   focus: Чому 90% українців проголосували за незалежність?
 sources:
 - name: Акт проголошення незалежності України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  url: "https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України"
   type: reference
   notes: Overview
 - name: Текст Акту
-  url: https://zakon.rada.gov.ua/laws/show/1427-12
+  url: "https://zakon.rada.gov.ua/laws/show/1427-12"
   type: primary
   notes: Official text
 - name: Референдум 1991
-  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
+  url: "https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991"
   type: reference
   notes: Confirmation referendum
 vocabulary_hints:

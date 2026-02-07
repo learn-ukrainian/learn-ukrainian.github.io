@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Квітка Цісик (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Цісик_Квітка
+  url: "https://uk.wikipedia.org/wiki/Цісик_Квітка"
   type: primary
   notes: Biography of the Ukrainian-American singer
 - name: Kvitka Cisyk Official
-  url: https://www.kvitka.com/
+  url: "https://www.kvitka.com/"
   type: reference
   notes: Official site with discography and biography
 immersion: 100% Ukrainian

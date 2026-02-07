@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Перекладознавство — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Перекладознавство
+  url: "https://uk.wikipedia.org/wiki/Перекладознавство"
   type: reference
   notes: Translation studies overview
 - name: Українська школа перекладу
-  url: https://uk.wikipedia.org/wiki/Український_художній_переклад
+  url: "https://uk.wikipedia.org/wiki/Український_художній_переклад"
   type: reference
   notes: Ukrainian translation tradition
 - name: Григорій Кочур — перекладач
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Master of Ukrainian literary translation
 content_outline:

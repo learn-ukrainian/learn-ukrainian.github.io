@@ -64,11 +64,11 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Вернадський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
+  url: "https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович"
   type: primary
   notes: Життєпис та вчення
 - name: Праці В.І. Вернадського
-  url: http://vernadsky.lib.ru/
+  url: "http://vernadsky.lib.ru/"
   type: reference
   notes: Наукові тексти
 immersion: 100% Ukrainian

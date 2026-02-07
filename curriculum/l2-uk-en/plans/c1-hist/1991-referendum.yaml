@@ -88,15 +88,15 @@ activities:
   focus: Чому навіть Крим проголосував за незалежність у 1991?
 sources:
 - name: Всеукраїнський референдум 1991 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_(1991)
+  url: "https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_(1991)"
   type: reference
   notes: Referendum data
 - name: Акт проголошення незалежності (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  url: "https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України"
   type: reference
   notes: Declaration context
 - name: Розпад СРСР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розпад_СРСР
+  url: "https://uk.wikipedia.org/wiki/Розпад_СРСР"
   type: reference
   notes: USSR collapse
 vocabulary_hints:

@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Сильвестр Косів (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+  url: "https://uk.wikipedia.org/wiki/Сильвестр_Косів"
   type: primary
   notes: Біографія та діяльність
 - name: Патерикон Сильвестра Косіва
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Літературна праця
 immersion: 100% Ukrainian

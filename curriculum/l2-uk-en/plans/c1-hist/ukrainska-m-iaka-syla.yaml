@@ -80,15 +80,15 @@ activities:
   focus: Як війна зробила Україну 'видимою'?
 sources:
 - name: М'яка сила України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/М%27яка_сила
+  url: "https://uk.wikipedia.org/wiki/М%27яка_сила"
   type: reference
   notes: Soft power concept
 - name: Kalush Orchestra (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Kalush_Orchestra
+  url: "https://uk.wikipedia.org/wiki/Kalush_Orchestra"
   type: reference
   notes: Eurovision 2022
 - name: Культурна дипломатія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурна_дипломатія_України
+  url: "https://uk.wikipedia.org/wiki/Культурна_дипломатія_України"
   type: reference
   notes: Cultural diplomacy
 vocabulary_hints:

@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Українська асоціація ораторського мистецтва
-  url: https://uapa.org.ua/
+  url: "https://uapa.org.ua/"
   type: reference
   notes: Standards for public speaking and presentation in Ukrainian
 - name: TED Talks Ukraine
-  url: https://www.ted.com/
+  url: "https://www.ted.com/"
   type: reference
   notes: Examples of professional presentations in Ukrainian
 - name: Національна академія наук — конференції
-  url: https://www.nas.gov.ua/
+  url: "https://www.nas.gov.ua/"
   type: reference
   notes: Academic conference presentation standards
 content_outline:

@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олена Степанів (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Степанів_Олена_Львівна
+  url: "https://uk.wikipedia.org/wiki/Степанів_Олена_Львівна"
   type: primary
   notes: Біографія, військова кар'єра, наукова діяльність
 - name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
+  url: "https://mvbu.org.ua"
   type: reference
   notes: Українські Січові Стрільці
 - name: Національний університет ім. І. Франка
-  url: https://lnu.edu.ua
+  url: "https://lnu.edu.ua"
   type: reference
   notes: Географічні дослідження
 immersion: 100% Ukrainian

@@ -77,11 +77,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian Frequency Dictionaries
-  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  url: "https://uk.wikipedia.org/wiki/Частотний_словник"
   type: reference
   notes: Most frequent verbs in Ukrainian corpus
 - name: Ukrainian Aspectual Pairs
-  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  url: "https://uk.wikipedia.org/wiki/Видові_пари_дієслів"
   type: reference
   notes: Formation patterns for aspectual pairs
 immersion: 100% Ukrainian

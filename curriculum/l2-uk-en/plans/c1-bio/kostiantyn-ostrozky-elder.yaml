@@ -67,10 +67,10 @@ grammar:
 - Military terminology
 sources:
 - name: Костянтин Іванович Острозький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький
+  url: "https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький"
   type: primary
 - name: Битва під Оршею
-  url: https://uk.wikipedia.org/wiki/Битва_під_Оршею
+  url: "https://uk.wikipedia.org/wiki/Битва_під_Оршею"
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO

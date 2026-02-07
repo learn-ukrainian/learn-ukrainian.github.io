@@ -63,7 +63,7 @@ grammar:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - A2 Review
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for integrating intermediate A2 skills
 immersion: 40-50% Ukrainian

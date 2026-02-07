@@ -90,15 +90,15 @@ grammar:
 module_type: culture
 sources:
 - name: Маруся — весілля та похорон
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=252"
   type: primary
   notes: Етнографічні описи в повісті
 - name: Сватання на Гончарівці
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=253
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=253"
   type: primary
   notes: Весільний обряд у п'єсі
 - name: Українські народні обряди
-  url: https://uk.wikipedia.org/wiki/Українські_народні_обряди
+  url: "https://uk.wikipedia.org/wiki/Українські_народні_обряди"
   type: reference
   notes: Етнографічний контекст
 immersion: 100% Ukrainian

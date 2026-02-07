@@ -89,15 +89,15 @@ activities:
   focus: Як усна історія допомагає зрозуміти Голодомор?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
+  url: "https://uk.wikipedia.org/wiki/Голодомор"
   type: reference
   notes: Overview
 - name: Архів свідчень Голодомору (UCRDC)
-  url: https://ucrdc.org/
+  url: "https://ucrdc.org/"
   type: primary
   notes: Testimony archive
 - name: Усна історія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Усна_історія
+  url: "https://uk.wikipedia.org/wiki/Усна_історія"
   type: reference
   notes: Methodology
 vocabulary_hints:

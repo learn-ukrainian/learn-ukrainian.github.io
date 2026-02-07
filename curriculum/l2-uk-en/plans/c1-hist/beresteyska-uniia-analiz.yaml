@@ -91,15 +91,15 @@ activities:
   focus: Чи була Берестейська унія 'зрадою' чи 'порятунком'?
 sources:
 - name: Берестейська унія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія
+  url: "https://uk.wikipedia.org/wiki/Берестейська_унія"
   type: reference
   notes: Overview
 - name: Греко-католицька церква (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  url: "https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква"
   type: reference
   notes: UGCC history
 - name: Православна опозиція унії
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
+  url: "https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії"
   type: reference
   notes: Opposition
 vocabulary_hints:

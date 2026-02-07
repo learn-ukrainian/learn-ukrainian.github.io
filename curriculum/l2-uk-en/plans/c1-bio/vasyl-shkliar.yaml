@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Шкляр (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
+  url: "https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович"
   type: primary
   notes: Основна біографічна інформація
 - name: Видавництво Клуб сімейного дозвілля
-  url: https://www.bookclub.ua/
+  url: "https://www.bookclub.ua/"
   type: reference
   notes: Бібліографія та видання
 - name: Літературна критика
-  url: https://litakcent.com/
+  url: "https://litakcent.com/"
   type: reference
   notes: Рецензії та аналіз творчості
 immersion: 100% Ukrainian

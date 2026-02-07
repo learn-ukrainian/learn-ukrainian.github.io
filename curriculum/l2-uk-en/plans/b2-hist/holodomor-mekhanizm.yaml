@@ -77,18 +77,18 @@ grammar:
 - Hypothetical structures in trauma narratives
 sources:
 - name: Національний музей Голодомору-геноциду
-  url: https://holodomormuseum.org.ua/
+  url: "https://holodomormuseum.org.ua/"
   type: reference
 - name: 'Енциклопедія історії України: Голодомор'
-  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe"
   type: secondary
 - name: Джеймс Мейс. Повість про двох журналістів
-  url: https://day.kyiv.ua/
+  url: "https://day.kyiv.ua/"
   type: secondary
 - name: 'Енн Епплбом. Червоний голод: Війна Сталіна проти України'
-  url: https://www.anneapplebaum.com/
+  url: "https://www.anneapplebaum.com/"
   type: secondary
 - name: 'Тімоті Снайдер. Криваві землі: Європа між Гітлером і Сталіним'
-  url: https://timothysnyder.org/
+  url: "https://timothysnyder.org/"
   type: secondary
 phase: HIST.10

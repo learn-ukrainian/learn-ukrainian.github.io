@@ -65,7 +65,7 @@ vocabulary_hints:
   - частотний розподіл (frequency distribution)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати розділ результатів — оцінити чіткість та повноту
+  focus: "Проаналізувати розділ результатів — оцінити чіткість та повноту"
   items: 2
 - type: writing-task
   focus: Написати розділ результатів за наданими даними

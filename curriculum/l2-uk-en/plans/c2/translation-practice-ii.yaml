@@ -2,22 +2,22 @@ module: translation-practice-ii
 level: c2
 sequence: 87
 version: '2.0'
-title: Практика перекладу II — Спеціалізований переклад
+title: "Практика перекладу II — Спеціалізований переклад"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Карабан — Переклад науково-технічної літератури
-  url: https://uk.wikipedia.org/wiki/Карабан_В'ячеслав_Іванович
+  url: "https://uk.wikipedia.org/wiki/Карабан_В'ячеслав_Іванович"
   type: primary
   notes: Standard textbook for technical translation Ukrainian-English
 - name: ISO 17100 — Translation Services Requirements
-  url: https://www.iso.org/
+  url: "https://www.iso.org/"
   type: reference
   notes: International standard for translation quality
 - name: Державний стандарт термінології
-  url: https://dstu-online.com/
+  url: "https://dstu-online.com/"
   type: reference
   notes: Ukrainian terminology standardization
 content_outline:

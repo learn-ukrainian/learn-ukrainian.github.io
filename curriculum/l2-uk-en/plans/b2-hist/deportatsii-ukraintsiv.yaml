@@ -68,7 +68,7 @@ activity_hints:
   source: Усна історія
   items: 4
 - type: essay-response
-  focus: Чому операція «Вісла» — це етнічна чистка?
+  focus: "Чому операція «Вісла» — це етнічна чистка?"
   word_target: 250
 focus: history
 pedagogy: CBI

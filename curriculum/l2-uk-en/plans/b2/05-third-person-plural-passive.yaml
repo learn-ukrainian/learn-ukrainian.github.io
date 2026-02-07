@@ -103,15 +103,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Impersonal Constructions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Colloquial impersonal passive patterns
 - name: Розмовний стиль української мови
-  url: https://uk.wikipedia.org/wiki/Розмовний_стиль
+  url: "https://uk.wikipedia.org/wiki/Розмовний_стиль"
   type: secondary
   notes: Colloquial speech characteristics
 - name: CEFR B2 Speaking Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 speaking fluency expectations
 immersion: 100% Ukrainian

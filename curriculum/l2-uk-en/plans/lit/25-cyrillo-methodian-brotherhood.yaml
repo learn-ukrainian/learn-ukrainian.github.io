@@ -66,7 +66,7 @@ activity_hints:
   source: Wikipedia and historical sources
   items: 4+
 - type: essay-response
-  focus: Україна як "месія народів" — утопія чи візія?
+  focus: "Україна як \"месія народів\" — утопія чи візія?"
   word_target: 300
   output: Політико-філософське есе
 focus: history
@@ -85,15 +85,15 @@ grammar:
 module_type: history
 sources:
 - name: Кирило-Мефодіївське братство — стаття
-  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  url: "https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство"
   type: primary
   notes: Історія організації
 - name: Книги буття українського народу
-  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  url: "https://uk.wikipedia.org/wiki/Книги_буття_українського_народу"
   type: primary
   notes: Програмний документ
 - name: Микола Костомаров — біографія
-  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
+  url: "https://uk.wikipedia.org/wiki/Микола_Костомаров"
   type: secondary
   notes: Біографія одного з лідерів
 immersion: 100% Ukrainian

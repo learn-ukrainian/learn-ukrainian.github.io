@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Тарас Прохасько (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
+  url: "https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович"
   type: primary
   notes: Основна біографічна інформація
 - name: Видавництво Кальварія
-  url: https://www.calvaria.com.ua/
+  url: "https://www.calvaria.com.ua/"
   type: reference
   notes: Бібліографія та видання
 - name: Літературна критика
-  url: https://litakcent.com/
+  url: "https://litakcent.com/"
   type: reference
   notes: Аналіз творчості
 immersion: 100% Ukrainian

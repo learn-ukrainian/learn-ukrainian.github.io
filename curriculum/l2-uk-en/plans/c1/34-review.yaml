@@ -98,11 +98,11 @@ connects_to:
 module_type: review
 sources:
 - name: CEFR C1 Assessment Criteria
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: reference
   notes: C1 level review standards
 - name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: National C1 competency requirements
 immersion: 100% Ukrainian

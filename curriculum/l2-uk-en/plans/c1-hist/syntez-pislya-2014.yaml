@@ -71,24 +71,24 @@ activities:
 - type: essay-response
   focus: Map cultural cycles from Ems to 2022
 - type: critical-analysis
-  focus: 2015 laws — impact assessment
+  focus: "2015 laws — impact assessment"
 - type: critical-analysis
   focus: Document post-2022 language shift
 - type: critical-analysis
   focus: How 2022 differs from previous cycles
 - type: essay-response
-  focus: Чи 2022 — кінець циклу пригнічень?
+  focus: "Чи 2022 — кінець циклу пригнічень?"
 sources:
 - name: Декомунізація в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Декомунізація_в_Україні"
   type: reference
   notes: Decommunization
 - name: Мовна політика України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Мовна_політика_України
+  url: "https://uk.wikipedia.org/wiki/Мовна_політика_України"
   type: reference
   notes: Language policy
 - name: Культура України під час війни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культура_України
+  url: "https://uk.wikipedia.org/wiki/Культура_України"
   type: reference
   notes: Wartime culture
 vocabulary_hints:

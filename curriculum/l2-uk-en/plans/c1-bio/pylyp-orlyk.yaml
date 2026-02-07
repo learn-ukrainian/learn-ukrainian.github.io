@@ -91,11 +91,11 @@ connects_to:
 module_type: biography
 sources:
   - name: Пилип Орлик (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+    url: "https://uk.wikipedia.org/wiki/Пилип_Орлик"
     type: primary
     notes: Biography, Constitution of 1710, exile
   - name: Конституція Пилипа Орлика
-    url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+    url: "https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика"
     type: primary
     notes: Text and analysis of Constitution
 immersion: 100% Ukrainian

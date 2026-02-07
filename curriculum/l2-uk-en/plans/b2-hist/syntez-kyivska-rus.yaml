@@ -99,11 +99,11 @@ grammar:
 - Academic historical terminology
 sources:
 - name: Київська Русь (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Київська_Русь
+  url: "https://uk.wikipedia.org/wiki/Київська_Русь"
   type: reference
   notes: Comprehensive overview for synthesis
 - name: Спадщина Київської Русі
-  url: https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі
+  url: "https://uk.wikipedia.org/wiki/Спадщина_Київської_Русі"
   type: reference
   notes: Legacy and claims
 phase: B2-HIST.1 [Kyivan Rus]

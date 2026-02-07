@@ -84,11 +84,11 @@ grammar:
 - Conditional sentences in negotiations
 sources:
 - name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
+  url: "http://litopys.org.ua/hrushrus/iur.htm"
   type: reference
   notes: Detailed analysis of treaties
 - name: Diplomacy of Bohdan Khmelnytsky
-  url: https://history.org.ua
+  url: "https://history.org.ua"
   type: reference
   notes: International context
 register: публіцистичний

@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Борис Грінченко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
+  url: "https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович"
   type: primary
   notes: Comprehensive biography of lexicographer and educator
 - name: Словник Грінченка онлайн
-  url: https://hrinchenko.com/
+  url: "https://hrinchenko.com/"
   type: reference
   notes: Digital version of the famous dictionary
 immersion: 100% Ukrainian

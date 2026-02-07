@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Заньковецька (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марія_Заньковецька
+  url: "https://uk.wikipedia.org/wiki/Марія_Заньковецька"
   type: primary
   notes: Біографія, театральна кар'єра, вплив на культуру
 - name: Театр корифеїв
-  url: https://uk.wikipedia.org/wiki/Театр_корифеїв
+  url: "https://uk.wikipedia.org/wiki/Театр_корифеїв"
   type: reference
   notes: Український театр XIX століття
 - name: Микола Садовський
-  url: https://uk.wikipedia.org/wiki/Микола_Садовський
+  url: "https://uk.wikipedia.org/wiki/Микола_Садовський"
   type: reference
   notes: Партнер по сцені та засновник театру
 immersion: 100% Ukrainian

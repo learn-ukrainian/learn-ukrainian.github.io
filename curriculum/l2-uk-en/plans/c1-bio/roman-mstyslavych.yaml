@@ -104,15 +104,15 @@ grammar:
 module_type: biography
 sources:
 - name: Роман Мстиславич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
+  url: "https://uk.wikipedia.org/wiki/Роман_Мстиславич"
   type: primary
   notes: Biography, military campaigns, unification of principalities
 - name: Галицько-Волинське князівство
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  url: "https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство"
   type: primary
   notes: Context for state formation
 - name: Галицько-Волинський літопис
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
   type: reference
   notes: Primary chronicle source
 immersion: 100% Ukrainian

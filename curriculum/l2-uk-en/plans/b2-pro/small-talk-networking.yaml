@@ -65,7 +65,7 @@ vocabulary_hints:
   - професійний захід (professional event)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати діалог нетворкінгу — визначити етапи розмови
+  focus: "Проаналізувати діалог нетворкінгу — визначити етапи розмови"
   items: 1
 - type: role-play
   focus: Провести нетворкінг на імітованій конференції

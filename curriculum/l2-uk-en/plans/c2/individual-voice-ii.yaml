@@ -2,22 +2,22 @@ module: individual-voice-ii
 level: c2
 sequence: 15
 version: '2.0'
-title: Індивідуальний голос II — Вдосконалення стилю
+title: "Індивідуальний голос II — Вдосконалення стилю"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Майстерність письменника — творчі поради
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Writing craft advice from Ukrainian authors
 - name: Редагування художнього тексту
-  url: https://www.nbuv.gov.ua/
+  url: "https://www.nbuv.gov.ua/"
   type: reference
   notes: Self-editing for stylistic refinement
 - name: Ukrainian State Standard 2024 — Advanced style
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for distinctive writing
 content_outline:

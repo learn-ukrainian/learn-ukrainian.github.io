@@ -86,15 +86,15 @@ activities:
   focus: Чи Бухарест 2008 спровокував агресію Росії?
 sources:
 - name: Бухарестський саміт (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
+  url: "https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО"
   type: reference
   notes: Summit decisions
 - name: План дій щодо членства (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
+  url: "https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО"
   type: reference
   notes: MAP explanation
 - name: Розширення НАТО (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розширення_НАТО
+  url: "https://uk.wikipedia.org/wiki/Розширення_НАТО"
   type: reference
   notes: Enlargement context
 vocabulary_hints:

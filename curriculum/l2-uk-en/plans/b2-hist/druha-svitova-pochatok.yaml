@@ -69,7 +69,7 @@ activity_hints:
   source: Архівні документи
   items: 4
 - type: essay-response
-  focus: Чому «возз'єднання» 1939 року — це окупація?
+  focus: "Чому «возз'єднання» 1939 року — це окупація?"
   word_target: 250
 focus: history
 pedagogy: CBI

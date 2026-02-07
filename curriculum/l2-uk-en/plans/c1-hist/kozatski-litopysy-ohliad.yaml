@@ -80,26 +80,26 @@ activities:
 - type: comparative-study
   focus: Create comparison table of three chronicles
 - type: reading
-  focus: Opening passages of each chronicle — first impressions
+  focus: "Opening passages of each chronicle — first impressions"
 - type: critical-analysis
   focus: What is the purpose of each chronicle? Who benefits?
 - type: essay-response
   focus: Чому козацька старшина відчувала потребу писати історію?
 sources:
 - name: Козацькі літописи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  url: "https://uk.wikipedia.org/wiki/Козацькі_літописи"
   type: reference
   notes: Overview of Cossack chronicles
 - name: Літопис Самовидця
-  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  url: "https://uk.wikipedia.org/wiki/Літопис_Самовидця"
   type: reference
   notes: Eyewitness chronicle
 - name: Літопис Григорія Граб'янки
-  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  url: "https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки"
   type: reference
   notes: Hrabianka chronicle
 - name: Літопис Самійла Величка
-  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+  url: "https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка"
   type: reference
   notes: Velychko chronicle
 vocabulary_hints:

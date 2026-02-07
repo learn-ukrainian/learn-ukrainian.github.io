@@ -60,7 +60,7 @@ vocabulary_hints:
   - орієнтовна вартість (estimated cost)
 activity_hints:
 - type: document-analysis
-  focus: Порівняти тон трьох листів-запитів — нейтральний vs формальний
+  focus: "Порівняти тон трьох листів-запитів — нейтральний vs формальний"
   items: 3
 - type: writing-task
   focus: Написати запит на отримання інформації від постачальника

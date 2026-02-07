@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Франко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  url: "https://uk.wikipedia.org/wiki/Франко_Іван_Якович"
   type: primary
   notes: Comprehensive biography of the titan of Ukrainian culture
 - name: Інститут Івана Франка НАН України
-  url: https://ifnan.gov.ua/
+  url: "https://ifnan.gov.ua/"
   type: reference
   notes: Academic institution dedicated to Franko studies
 immersion: 100% Ukrainian

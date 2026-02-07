@@ -82,11 +82,11 @@ grammar:
 - Historical narrative register
 sources:
 - name: Military Art of Ukrainian Cossacks
-  url: https://resource.history.org.ua/item/0002345
+  url: "https://resource.history.org.ua/item/0002345"
   type: academic
   notes: Detailed analysis of tactics
 - name: Cossack Weaponry - Museum Project
-  url: https://warmuseum.kyiv.ua
+  url: "https://warmuseum.kyiv.ua"
   type: reference
   notes: Visual and technical details
 register: публіцистичний

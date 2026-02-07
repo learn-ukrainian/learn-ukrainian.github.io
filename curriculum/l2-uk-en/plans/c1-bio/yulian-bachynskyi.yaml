@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Юліан Бачинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович"
   type: primary
   notes: Основна біографічна інформація
 - name: Україна irredenta
-  url: https://diasporiana.org.ua/
+  url: "https://diasporiana.org.ua/"
   type: reference
   notes: Головна праця
 - name: Історія української політичної думки
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: reference
   notes: Контекст політичної думки
 immersion: 100% Ukrainian

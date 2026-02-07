@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ярослав Грицак (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
+  url: "https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович"
   type: primary
   notes: Основна біографічна інформація
 - name: Український католицький університет
-  url: https://ucu.edu.ua/
+  url: "https://ucu.edu.ua/"
   type: reference
   notes: Академічна діяльність
 - name: Книги та публікації
-  url: https://krytyka.com/
+  url: "https://krytyka.com/"
   type: reference
   notes: Наукові праці
 immersion: 100% Ukrainian

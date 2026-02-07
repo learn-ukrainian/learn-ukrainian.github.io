@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Леонтович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Микола_Леонтович
+  url: "https://uk.wikipedia.org/wiki/Микола_Леонтович"
   type: primary
   notes: Біографія, музична діяльність, загибель
 - name: Щедрик
-  url: https://uk.wikipedia.org/wiki/Щедрик_(пісня)
+  url: "https://uk.wikipedia.org/wiki/Щедрик_(пісня)"
   type: reference
   notes: Найвідоміший твір та його всесвітнє поширення
 - name: Українська хорова музика
-  url: https://uk.wikipedia.org/wiki/Українська_хорова_музика
+  url: "https://uk.wikipedia.org/wiki/Українська_хорова_музика"
   type: reference
   notes: Контекст розвитку хорового мистецтва
 immersion: 100% Ukrainian

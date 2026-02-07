@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Літературні премії України — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Категорія:Літературні_премії_України
+  url: "https://uk.wikipedia.org/wiki/Категорія:Літературні_премії_України"
   type: reference
   notes: Overview of Ukrainian literary prizes
 - name: Шевченківська премія
-  url: https://uk.wikipedia.org/wiki/Шевченківська_премія
+  url: "https://uk.wikipedia.org/wiki/Шевченківська_премія"
   type: reference
   notes: Highest state literary award
 - name: Літературний канон — теорія
-  url: https://uk.wikipedia.org/wiki/Канон_(література)
+  url: "https://uk.wikipedia.org/wiki/Канон_(література)"
   type: reference
   notes: Canon formation and debate
 content_outline:

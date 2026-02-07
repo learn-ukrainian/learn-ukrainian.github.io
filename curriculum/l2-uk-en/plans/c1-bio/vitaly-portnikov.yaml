@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Віталій Портников (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
+  url: "https://uk.wikipedia.org/wiki/Портников_Віталій_Янович"
   type: primary
   notes: Основна біографічна інформація
 - name: Espreso.TV
-  url: https://espreso.tv/
+  url: "https://espreso.tv/"
   type: reference
   notes: Публікації та виступи
 - name: Радіо Свобода
-  url: https://www.radiosvoboda.org/
+  url: "https://www.radiosvoboda.org/"
   type: reference
   notes: Архів публікацій
 immersion: 100% Ukrainian

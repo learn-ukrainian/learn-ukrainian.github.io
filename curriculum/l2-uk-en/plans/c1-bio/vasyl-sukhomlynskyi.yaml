@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Сухомлинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович
+  url: "https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович"
   type: primary
   notes: Biography, educational philosophy, works
 - name: Павлиська школа
-  url: https://uk.wikipedia.org/wiki/Павлиська_середня_школа
+  url: "https://uk.wikipedia.org/wiki/Павлиська_середня_школа"
   type: reference
   notes: School he directed for 22 years
 - name: '"Серце віддаю дітям"'
-  url: https://uk.wikipedia.org/wiki/Серце_віддаю_дітям
+  url: "https://uk.wikipedia.org/wiki/Серце_віддаю_дітям"
   type: reference
   notes: His most famous work
 immersion: 100% Ukrainian

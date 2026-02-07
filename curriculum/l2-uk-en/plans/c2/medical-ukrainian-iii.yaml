@@ -2,22 +2,22 @@ module: medical-ukrainian-iii
 level: c2
 sequence: 68
 version: '2.0'
-title: Медична українська III — Медична документація
+title: "Медична українська III — Медична документація"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Накази МОЗ щодо медичної документації
-  url: https://moz.gov.ua/dokumenti
+  url: "https://moz.gov.ua/dokumenti"
   type: primary
   notes: Форми медичної документації
 - name: Електронна система охорони здоров'я
-  url: https://ehealth.gov.ua/
+  url: "https://ehealth.gov.ua/"
   type: primary
   notes: Електронна медична документація
 - name: Національний класифікатор захворювань
-  url: https://moz.gov.ua/
+  url: "https://moz.gov.ua/"
   type: reference
   notes: МКХ-10 українською
 content_outline:

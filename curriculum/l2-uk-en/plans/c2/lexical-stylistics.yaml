@@ -2,22 +2,22 @@ module: lexical-stylistics
 level: c2
 sequence: 12
 version: '2.0'
-title: Лексична стилістика — Точність слововживання
+title: "Лексична стилістика — Точність слововживання"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Караванський С. Практичний словник синонімів
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: primary
   notes: Canonical Ukrainian synonym dictionary
 - name: Словник української мови в 11 томах
-  url: https://sum.in.ua/
+  url: "https://sum.in.ua/"
   type: reference
   notes: Authoritative definitions and usage notes
 - name: Ukrainian State Standard 2024 — Lexical precision
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for word choice
 content_outline:

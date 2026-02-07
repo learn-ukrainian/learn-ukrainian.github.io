@@ -77,26 +77,26 @@ vocabulary:
 - мощі
 activities:
 - type: reading
-  focus: Excerpt from Life of Theodosius — childhood narrative
+  focus: "Excerpt from Life of Theodosius — childhood narrative"
 - type: critical-analysis
   focus: Identify hagiographic topoi vs. historical facts
 - type: comparative-study
-  focus: Compare with Byzantine paterica — what's borrowed?
+  focus: "Compare with Byzantine paterica — what's borrowed?"
 - type: reading
   focus: What does Patericon tell us about 11th century economics?
 - type: essay-response
   focus: Чи можна використовувати агіографію як історичне джерело?
 sources:
 - name: Києво-Печерський патерик (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
+  url: "https://uk.wikipedia.org/wiki/Києво-Печерський_патерик"
   type: reference
   notes: Overview
 - name: Патерик (повний текст)
-  url: https://litopys.org.ua/paterikon/pat.htm
+  url: "https://litopys.org.ua/paterikon/pat.htm"
   type: primary
   notes: Full text
 - name: Києво-Печерська лавра
-  url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
+  url: "https://uk.wikipedia.org/wiki/Києво-Печерська_лавра"
   type: reference
   notes: Monastery history
 vocabulary_hints:

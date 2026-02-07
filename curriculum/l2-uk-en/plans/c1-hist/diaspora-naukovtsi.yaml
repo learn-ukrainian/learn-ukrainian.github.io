@@ -79,7 +79,7 @@ vocabulary:
 - рецепція
 activities:
 - type: comparative-study
-  focus: Compare HURI, UVAN, NTSh — missions and methods
+  focus: "Compare HURI, UVAN, NTSh — missions and methods"
 - type: reading
   focus: Pritsak's vision for Ukrainian studies
 - type: critical-analysis
@@ -90,15 +90,15 @@ activities:
   focus: Що українська наука втратила б без діаспори?
 sources:
 - name: Український науковий інститут Гарварду (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету
+  url: "https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету"
   type: reference
   notes: HURI history
 - name: УВАН (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук
+  url: "https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук"
   type: reference
   notes: UVAN history
 - name: НТШ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  url: "https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка"
   type: reference
   notes: Shevchenko Society
 vocabulary_hints:

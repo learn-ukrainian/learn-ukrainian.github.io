@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Володимир Івасюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Івасюк_Володимир_Михайлович
+  url: "https://uk.wikipedia.org/wiki/Івасюк_Володимир_Михайлович"
   type: primary
   notes: Основна біографічна інформація
 - name: Музей Володимира Івасюка
-  url: https://ivasyuk.org.ua/
+  url: "https://ivasyuk.org.ua/"
   type: reference
   notes: Архівні матеріали та творча спадщина
 - name: Фестиваль Червона рута
-  url: https://chervona-ruta.org/
+  url: "https://chervona-ruta.org/"
   type: reference
   notes: Культурний вплив
 immersion: 100% Ukrainian

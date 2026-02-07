@@ -3,7 +3,7 @@ level: A2
 sequence: 4
 slug: 04-the-instrumental-i-accompaniment
 version: '2.0'
-title: The Instrumental I — Accompaniment
+title: "The Instrumental I — Accompaniment"
 subtitle: With Whom? Using 'З'
 content_outline:
 - section: Introduction / Вступ
@@ -90,11 +90,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Instrumental Case
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Instrumental endings and з/із/зі usage rules
 - name: Ukrainian Grammar Reference
-  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  url: "https://uk.wikipedia.org/wiki/Орудний_відмінок"
   type: reference
   notes: Complete instrumental paradigm
 immersion: 40-50% Ukrainian

@@ -103,15 +103,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Discourse Markers
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Requirements for discourse organization at B2
 - name: Сучасна українська літературна мова - Синтаксис
-  url: https://uk.wikipedia.org/wiki/Синтаксис
+  url: "https://uk.wikipedia.org/wiki/Синтаксис"
   type: secondary
   notes: Parenthetical expressions classification
 - name: CEFR B2 Discourse Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 discourse organization requirements
 immersion: 100% Ukrainian

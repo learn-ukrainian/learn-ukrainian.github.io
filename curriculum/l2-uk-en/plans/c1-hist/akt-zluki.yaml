@@ -87,15 +87,15 @@ activities:
   focus: Чому Акт Злуки став найважливішим символом української єдності?
 sources:
 - name: Акт Злуки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Акт_Злуки
+  url: "https://uk.wikipedia.org/wiki/Акт_Злуки"
   type: reference
   notes: Overview
 - name: Текст Акту Злуки
-  url: https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР
+  url: "https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР"
   type: primary
   notes: Full text
 - name: День Соборності
-  url: https://uk.wikipedia.org/wiki/День_Соборності_України
+  url: "https://uk.wikipedia.org/wiki/День_Соборності_України"
   type: reference
   notes: Modern commemoration
 vocabulary_hints:

@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Казимир Малевич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
+  url: "https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович"
   type: primary
   notes: Biography covering Ukrainian roots and artistic revolution
 - name: MoMA - Kazimir Malevich
-  url: https://www.moma.org/artists/3710
+  url: "https://www.moma.org/artists/3710"
   type: reference
   notes: International context of Malevich's work
 immersion: 100% Ukrainian

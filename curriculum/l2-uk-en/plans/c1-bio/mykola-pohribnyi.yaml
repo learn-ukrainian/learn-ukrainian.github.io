@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Погрібний (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
+  url: "https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович"
   type: primary
   notes: Біографія, професійна діяльність, внесок у мовну культуру
 - name: Українське радіомовлення
-  url: https://uk.wikipedia.org/wiki/Українське_радіо
+  url: "https://uk.wikipedia.org/wiki/Українське_радіо"
   type: reference
   notes: Контекст роботи на радіо
 - name: Культура української мови
-  url: https://uk.wikipedia.org/wiki/Культура_мови
+  url: "https://uk.wikipedia.org/wiki/Культура_мови"
   type: reference
   notes: Норми літературної мови та орфоепія
 immersion: 100% Ukrainian

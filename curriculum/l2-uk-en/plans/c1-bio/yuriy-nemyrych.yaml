@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
   - name: Юрій Немирич (Wikipedia UA)
-    url: https://uk.wikipedia.org/wiki/Юрій_Немирич
+    url: "https://uk.wikipedia.org/wiki/Юрій_Немирич"
     type: primary
     notes: Повна біографія
   - name: Гадяцький договір 1658
-    url: http://izbornyk.org.ua/
+    url: "http://izbornyk.org.ua/"
     type: reference
     notes: Аналіз документа
 immersion: 100% Ukrainian

@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: ДСТУ 8302:2015 Бібліографічне посилання
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Ukrainian citation standards
 - name: Academic Integrity Guidelines
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Plagiarism prevention and proper citation
 immersion: 100% Ukrainian

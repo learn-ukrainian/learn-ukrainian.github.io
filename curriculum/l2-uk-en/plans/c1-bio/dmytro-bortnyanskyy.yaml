@@ -95,15 +95,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Дмитро Бортнянський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
+  url: "https://uk.wikipedia.org/wiki/Дмитро_Бортнянський"
   type: primary
   notes: Biography, court career, choral works
 - name: Придворна співацька капела
-  url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
+  url: "https://uk.wikipedia.org/wiki/Придворна_співацька_капела"
   type: reference
   notes: Institutional context
 - name: Глухівська співацька школа
-  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  url: "https://uk.wikipedia.org/wiki/Глухівська_співацька_школа"
   type: reference
   notes: Early education
 immersion: 100% Ukrainian

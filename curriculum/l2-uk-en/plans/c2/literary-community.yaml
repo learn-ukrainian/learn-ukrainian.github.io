@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Літературне життя України
-  url: https://uk.wikipedia.org/wiki/Українська_література
+  url: "https://uk.wikipedia.org/wiki/Українська_література"
   type: reference
   notes: Overview of Ukrainian literary life
 - name: Спілка письменників України
-  url: https://uk.wikipedia.org/wiki/Спілка_письменників_України
+  url: "https://uk.wikipedia.org/wiki/Спілка_письменників_України"
   type: reference
   notes: Writers' union and professional organizations
 - name: Книжковий Арсенал
-  url: https://artarsenal.in.ua/
+  url: "https://artarsenal.in.ua/"
   type: primary
   notes: Major literary festival
 content_outline:

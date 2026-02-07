@@ -77,7 +77,7 @@ activities:
 - type: critical-analysis
   focus: What did the West actually do in 2014?
 - type: critical-analysis
-  focus: Minsk Agreements — who benefited?
+  focus: "Minsk Agreements — who benefited?"
 - type: comparative-study
   focus: Why was Western response weak?
 - type: critical-analysis
@@ -86,15 +86,15 @@ activities:
   focus: Чи слабка відповідь Заходу у 2014 спричинила 2022?
 sources:
 - name: Анексія Криму (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
+  url: "https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)"
   type: reference
   notes: Annexation
 - name: Санкції проти Росії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
+  url: "https://uk.wikipedia.org/wiki/Санкції_проти_Росії"
   type: reference
   notes: Western response
 - name: Мінські угоди (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Мінські_угоди
+  url: "https://uk.wikipedia.org/wiki/Мінські_угоди"
   type: reference
   notes: Minsk process
 vocabulary_hints:

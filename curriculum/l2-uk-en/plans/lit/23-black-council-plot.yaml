@@ -67,7 +67,7 @@ activity_hints:
   source: UkrLib tid=263
   items: 5+
 - type: essay-response
-  focus: Шрам vs Череваний — два погляди на Україну
+  focus: "Шрам vs Череваний — два погляди на Україну"
   word_target: 300
   output: Компаративне есе
 focus: literature
@@ -83,15 +83,15 @@ grammar:
 module_type: literature
 sources:
 - name: Чорна рада — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=263"
   type: primary
   notes: Роман для детального аналізу
 - name: Аналіз "Чорної ради"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=263"
   type: secondary
   notes: Літературознавчий аналіз
 - name: Вальтер Скотт — вплив
-  url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
+  url: "https://uk.wikipedia.org/wiki/Вальтер_Скотт"
   type: reference
   notes: Літературний контекст
 immersion: 100% Ukrainian

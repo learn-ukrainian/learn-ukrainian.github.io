@@ -87,15 +87,15 @@ activities:
   focus: Чому Буш попереджав українців проти незалежності?
 sources:
 - name: Chicken Kiev speech (Wikipedia EN)
-  url: https://en.wikipedia.org/wiki/Chicken_Kiev_speech
+  url: "https://en.wikipedia.org/wiki/Chicken_Kiev_speech"
   type: reference
   notes: Speech context
 - name: Джордж Буш-старший (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джордж_Герберт_Вокер_Буш
+  url: "https://uk.wikipedia.org/wiki/Джордж_Герберт_Вокер_Буш"
   type: reference
   notes: Speaker
 - name: Незалежність України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Проголошення_незалежності_України
+  url: "https://uk.wikipedia.org/wiki/Проголошення_незалежності_України"
   type: reference
   notes: Independence context
 vocabulary_hints:

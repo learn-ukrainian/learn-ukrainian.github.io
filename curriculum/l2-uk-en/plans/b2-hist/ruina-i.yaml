@@ -84,11 +84,11 @@ grammar:
 - 'Political terminology: factions and parties'
 sources:
 - name: The Ruin - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
+  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm"
   type: reference
   notes: Overview of the period
 - name: Chronicle of Eyewitness
-  url: http://litopys.org.ua/samovyd/sam.htm
+  url: "http://litopys.org.ua/samovyd/sam.htm"
   type: primary
   notes: Primary source for the period
 register: публіцистичний

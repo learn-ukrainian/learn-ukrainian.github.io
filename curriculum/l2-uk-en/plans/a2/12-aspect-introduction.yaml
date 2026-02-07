@@ -89,11 +89,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Verbal Aspect
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Aspect pair requirements for A2 level
 - name: Ukrainian Verb Aspect Reference
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  url: "https://uk.wikipedia.org/wiki/Вид_дієслова"
   type: reference
   notes: Complete aspect system overview
 immersion: 40-50% Ukrainian

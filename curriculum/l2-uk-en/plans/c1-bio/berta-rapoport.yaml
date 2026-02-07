@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Берта Рапопорт (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
+  url: "https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна"
   type: primary
   notes: Biography of the pioneering woman doctor and activist
 - name: Одеська медична спадщина
-  url: https://omu.odessa.ua/
+  url: "https://omu.odessa.ua/"
   type: reference
   notes: Historical medical archives of Odesa
 immersion: 100% Ukrainian

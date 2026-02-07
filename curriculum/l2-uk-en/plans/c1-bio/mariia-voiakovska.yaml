@@ -83,17 +83,17 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Вояківська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марія_Вояківська
+  url: "https://uk.wikipedia.org/wiki/Марія_Вояківська"
   type: primary
   notes: Біографія, громадська діяльність, шлюб з Грушевським
 - name: Михайло Грушевський
-  url: https://uk.wikipedia.org/wiki/Михайло_Грушевський
+  url: "https://uk.wikipedia.org/wiki/Михайло_Грушевський"
   type: reference
-  notes: Чоловік — перший президент УНР
+  notes: "Чоловік — перший президент УНР"
 - name: Жіночий рух в Україні
-  url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні"
   type: reference
-  notes: Контекст фемінізму кінця XIX — початку XX ст.
+  notes: "Контекст фемінізму кінця XIX — початку XX ст."
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:

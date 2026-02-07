@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Academic Argumentation in Ukrainian
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Thesis formulation standards
 - name: Логіка наукового дослідження
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: secondary
   notes: Research logic and hypothesis development
 immersion: 100% Ukrainian

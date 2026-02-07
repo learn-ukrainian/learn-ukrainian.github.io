@@ -63,11 +63,11 @@ grammar:
 module_type: biography
 sources:
 - name: Петро Могила (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Петро_Могила
+  url: "https://uk.wikipedia.org/wiki/Петро_Могила"
   type: primary
   notes: Основні факти життя
 - name: Києво-Могилянська академія
-  url: https://ukma.edu.ua/
+  url: "https://ukma.edu.ua/"
   type: reference
   notes: Історія інституції
 immersion: 100% Ukrainian

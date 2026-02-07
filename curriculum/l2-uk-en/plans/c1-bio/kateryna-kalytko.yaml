@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Катерина Калитко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Калитко_Катерина_Вікторівна
+  url: "https://uk.wikipedia.org/wiki/Калитко_Катерина_Вікторівна"
   type: primary
   notes: Biography of the contemporary poet and novelist
 - name: Видавництво «Видавництво Старого Лева»
-  url: https://starylev.com.ua/
+  url: "https://starylev.com.ua/"
   type: reference
   notes: Publisher of Kalytko's major works
 immersion: 100% Ukrainian

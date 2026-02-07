@@ -84,24 +84,24 @@ activities:
 - type: comparative-study
   focus: Compare Polish and Ukrainian textbook treatment of Volhynia 1943
 - type: critical-analysis
-  focus: Analyze "Kresy" concept — nostalgia vs. imperialism
+  focus: "Analyze \"Kresy\" concept — nostalgia vs. imperialism"
 - type: essay-response
   focus: Як доктрина Ґедройця змінила польсько-українські відносини?
 sources:
 - name: Креси (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Креси
+  url: "https://uk.wikipedia.org/wiki/Креси"
   type: reference
   notes: «Kresy» concept - Polish eastern borderlands
 - name: Єжи Ґедройць
-  url: https://uk.wikipedia.org/wiki/Ґедройць_Єжи
+  url: "https://uk.wikipedia.org/wiki/Ґедройць_Єжи"
   type: reference
   notes: Key figure in Polish-Ukrainian reconciliation
 - name: Доктрина Ґедройця
-  url: https://uk.wikipedia.org/wiki/Доктрина_Ґедройця
+  url: "https://uk.wikipedia.org/wiki/Доктрина_Ґедройця"
   type: reference
   notes: Giedroyc doctrine on Eastern policy
 - name: Культура (часопис)
-  url: https://uk.wikipedia.org/wiki/Культура_(паризький_часопис)
+  url: "https://uk.wikipedia.org/wiki/Культура_(паризький_часопис)"
   type: reference
   notes: Kultura journal - key platform
 vocabulary_hints:

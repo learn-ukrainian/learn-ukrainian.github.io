@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Наталія Кобринська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кобринська_Наталія_Іванівна
+  url: "https://uk.wikipedia.org/wiki/Кобринська_Наталія_Іванівна"
   type: primary
   notes: Біографія, літературна та громадська діяльність
 - name: Франко та жіночий рух
-  url: https://franko.lnu.edu.ua
+  url: "https://franko.lnu.edu.ua"
   type: reference
   notes: Співпраця з Іваном Франком
 - name: Архів жіночого руху
-  url: https://uma.lvivcenter.org
+  url: "https://uma.lvivcenter.org"
   type: reference
   notes: Матеріали про «Перший вінок»
 immersion: 100% Ukrainian

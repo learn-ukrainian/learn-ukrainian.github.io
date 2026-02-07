@@ -88,15 +88,15 @@ activities:
   focus: Як радянські документи доводять намір знищити?
 sources:
 - name: Архівні документи Голодомору
-  url: https://cdiak.archives.gov.ua/
+  url: "https://cdiak.archives.gov.ua/"
   type: primary
   notes: Central State Archive
 - name: Чорні дошки
-  url: https://uk.wikipedia.org/wiki/Чорні_дошки
+  url: "https://uk.wikipedia.org/wiki/Чорні_дошки"
   type: reference
   notes: Blacklists
 - name: Закон про п'ять колосків
-  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
+  url: "https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків"
   type: reference
   notes: August 7, 1932 law
 vocabulary_hints:

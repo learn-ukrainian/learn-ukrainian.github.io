@@ -2,22 +2,22 @@ module: legal-ukrainian-iv
 level: c2
 sequence: 64
 version: '2.0'
-title: Правнича українська IV — Юридичне письмо
+title: "Правнича українська IV — Юридичне письмо"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Законодавство України — Нормотворча техніка
-  url: https://zakon.rada.gov.ua/
+  url: "https://zakon.rada.gov.ua/"
   type: primary
   notes: Вимоги до юридичних текстів
 - name: Методичні рекомендації МЮУ
-  url: https://minjust.gov.ua/
+  url: "https://minjust.gov.ua/"
   type: reference
   notes: Методичні матеріали Міністерства юстиції
 - name: Академія адвокатури України
-  url: https://aau.edu.ua/
+  url: "https://aau.edu.ua/"
   type: reference
   notes: Методика юридичного письма
 content_outline:

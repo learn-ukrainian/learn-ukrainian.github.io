@@ -81,18 +81,18 @@ activities:
 - type: essay-response
   focus: Create comprehensive source matrix for modules 19-27
 - type: critical-analysis
-  focus: One event from 4+ sources — compare
+  focus: "One event from 4+ sources — compare"
 - type: critical-analysis
   focus: What social groups are missing from sources?
 - type: essay-response
   focus: Чий голос домінує в козацьких джерелах і чому?
 sources:
 - name: Козацькі літописи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  url: "https://uk.wikipedia.org/wiki/Козацькі_літописи"
   type: reference
   notes: Overview
 - name: Джерелознавство
-  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
   type: reference
   notes: Source studies
 vocabulary_hints:

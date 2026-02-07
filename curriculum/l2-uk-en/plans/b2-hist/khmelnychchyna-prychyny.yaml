@@ -77,11 +77,11 @@ grammar:
 - Military and political terminology
 sources:
 - name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
+  url: "http://litopys.org.ua/hrushrus/iur.htm"
   type: reference
   notes: Classic historical account
 - name: The Khmelnytsky Uprising
-  url: https://encyclopediaofukraine.com
+  url: "https://encyclopediaofukraine.com"
   type: academic
   notes: Modern analysis
 register: публіцистичний

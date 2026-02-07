@@ -86,15 +86,15 @@ activities:
   focus: Чому важливо знати, хто написав історію?
 sources:
 - name: Історіографія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  url: "https://uk.wikipedia.org/wiki/Історіографія_України"
   type: reference
   notes: Overview of Ukrainian historiographical tradition
 - name: Грушевський — Історія України-Руси (вступ)
-  url: https://litopys.org.ua/hrushukr/ihu.htm
+  url: "https://litopys.org.ua/hrushukr/ihu.htm"
   type: primary
   notes: Hrushevsky's methodological introduction
 - name: What is Historiography? (academic intro)
-  url: https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography
+  url: "https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography"
   type: reference
   notes: English reference for conceptual framework
 vocabulary_hints:

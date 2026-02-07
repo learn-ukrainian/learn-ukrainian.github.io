@@ -91,7 +91,7 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Куліш (Енциклопедія історії України)
-  url: https://esu.com.ua/article-7980
+  url: "https://esu.com.ua/article-7980"
   type: primary
   notes: Академічна біографія
 - name: Куліш М. П'єси

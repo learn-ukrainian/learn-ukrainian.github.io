@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Логіка та критичне мислення
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Argumentation and refutation techniques
 - name: Academic Debate in Ukrainian
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Debate language and structures
 immersion: 100% Ukrainian

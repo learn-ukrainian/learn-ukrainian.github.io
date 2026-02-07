@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Мирослав Маринович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Маринович_Мирослав_Франкович
+  url: "https://uk.wikipedia.org/wiki/Маринович_Мирослав_Франкович"
   type: primary
   notes: Біографія, дисидентська діяльність, роль в УГГ
 - name: Український католицький університет
-  url: https://ucu.edu.ua/about/leadership/marynovych/
+  url: "https://ucu.edu.ua/about/leadership/marynovych/"
   type: reference
   notes: Сучасна діяльність, роль в УКУ
 - name: Amnesty International
-  url: https://www.amnesty.org
+  url: "https://www.amnesty.org"
   type: reference
   notes: Документація справ в'язнів сумління
 immersion: 100% Ukrainian

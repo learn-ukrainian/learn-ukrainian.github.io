@@ -66,7 +66,7 @@ vocabulary_hints:
   - стратегічне рішення (strategic decision)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати презентацію для ради — оцінити структуру та візуалізацію
+  focus: "Проаналізувати презентацію для ради — оцінити структуру та візуалізацію"
   items: 2
 - type: writing-task
   focus: Написати виконавче резюме для презентації

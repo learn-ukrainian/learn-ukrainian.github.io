@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Тамара Горіха Зерня (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Горіха_Зерня_Тамара
+  url: "https://uk.wikipedia.org/wiki/Горіха_Зерня_Тамара"
   type: primary
   notes: Основна біографічна інформація
 - name: Інтервью та публікації
-  url: https://chytomo.com/
+  url: "https://chytomo.com/"
   type: reference
   notes: Інтервю про волонтерство та творчість
 - name: Видавництво Клуб сімейного дозвілля
-  url: https://www.bookclub.ua/
+  url: "https://www.bookclub.ua/"
   type: reference
   notes: Інформація про публікації
 immersion: 100% Ukrainian

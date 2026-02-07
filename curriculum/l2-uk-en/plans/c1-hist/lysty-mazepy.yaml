@@ -88,15 +88,15 @@ activities:
   focus: Чи можна зрозуміти Мазепу через його листування?
 sources:
 - name: Іван Мазепа (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
   type: reference
   notes: Hetman biography
 - name: Листування Мазепи
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Correspondence collection
 - name: Мазепа як меценат
-  url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
+  url: "https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи"
   type: reference
   notes: Cultural patronage
 vocabulary_hints:

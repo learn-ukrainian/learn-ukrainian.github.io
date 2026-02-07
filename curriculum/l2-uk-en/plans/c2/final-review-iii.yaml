@@ -2,22 +2,22 @@ module: final-review-iii
 level: c2
 sequence: 97
 version: '2.0'
-title: Фінальне повторення III — Інтегровані навички
+title: "Фінальне повторення III — Інтегровані навички"
 focus: integration
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — Комунікативна компетенція C2
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 communicative competence requirements
 - name: CEFR C2 — Integrated Skills
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: reference
   notes: C2 productive and receptive skills integration
 - name: Профільні стандарти C2 — Аудіювання, читання, письмо, говоріння
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: secondary
   notes: Skill-specific C2 standards
 content_outline:

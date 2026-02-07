@@ -95,15 +95,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Мазепа (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
   type: primary
   notes: Biography, hetmanate, Poltava
 - name: Полтавська битва (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
   type: reference
   notes: Military context and consequences
 - name: Мазепинське бароко
-  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
+  url: "https://uk.wikipedia.org/wiki/Мазепинське_бароко"
   type: reference
   notes: Cultural patronage
 immersion: 100% Ukrainian

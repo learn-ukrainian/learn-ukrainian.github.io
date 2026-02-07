@@ -84,7 +84,7 @@ activity_hints:
   focus: Participle form → equivalent clause
   items: 12+
 - type: group-sort
-  focus: Same sentence in both forms — analyze style
+  focus: "Same sentence in both forms — analyze style"
   items: 10+
 - type: fill-in
   focus: Complete with appropriate form (participle or clause)
@@ -106,15 +106,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Relative clause formation and usage
 - name: Сучасна українська літературна мова - Синтаксис
-  url: https://uk.wikipedia.org/wiki/Синтаксис
+  url: "https://uk.wikipedia.org/wiki/Синтаксис"
   type: secondary
   notes: Syntactic structures and stylistic choices
 - name: CEFR B2 Grammar Complexity
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 complex sentence requirements
 immersion: 100% Ukrainian

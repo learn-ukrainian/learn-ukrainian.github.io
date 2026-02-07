@@ -78,7 +78,7 @@ vocabulary:
 - попутник
 activities:
 - type: critical-analysis
-  focus: Map the Ukrainization policy — what was allowed, what not
+  focus: "Map the Ukrainization policy — what was allowed, what not"
 - type: reading
   focus: Research 3 key figures of the era
 - type: critical-analysis
@@ -87,15 +87,15 @@ activities:
   focus: Чому 1920-ті були 'золотою добою' української культури?
 sources:
 - name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
   type: reference
   notes: Overview
 - name: Українізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українізація
+  url: "https://uk.wikipedia.org/wiki/Українізація"
   type: reference
   notes: Ukrainization policy
 - name: Юрій Лавріненко — Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
+  url: "https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович"
   type: reference
   notes: Term originator
 vocabulary_hints:

@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Державний іспит з української мови — Вимоги
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official certification requirements
 - name: Українська мова як іноземна — Сертифікаційні програми
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: reference
   notes: Available certification paths
 - name: Підготовка до мовних іспитів — Методичні рекомендації
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: secondary
   notes: Test preparation strategies
 content_outline:

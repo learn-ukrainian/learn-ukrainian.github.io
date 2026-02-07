@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Біографія Івана Нечуя-Левицького
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1646"
   type: primary
   notes: Офіційна біографія на UkrLib
 - name: Життя та творчість Івана Нечуя-Левицького
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1647"
   type: primary
   notes: Розширена біографічна стаття
 - name: Нечуй-Левицький — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  url: "https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович"
   type: reference
   notes: Загальний контекст
 immersion: 100% Ukrainian

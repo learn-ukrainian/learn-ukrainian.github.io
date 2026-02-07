@@ -71,24 +71,24 @@ activities:
 - type: critical-analysis
   focus: 1000 years of Jewish presence in Ukraine
 - type: comparative-study
-  focus: Why Jews became middlemen — structural analysis
+  focus: "Why Jews became middlemen — structural analysis"
 - type: critical-analysis
   focus: Who was responsible for pogroms?
 - type: comparative-study
   focus: Shtetl life and Ukrainian-Jewish interaction
 - type: essay-response
-  focus: Чи український антисемітизм — 'особливий'?
+  focus: "Чи український антисемітизм — 'особливий'?"
 sources:
 - name: Історія євреїв в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні"
   type: reference
   notes: Jewish history overview
 - name: Погроми в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Погроми_в_Україні"
   type: reference
   notes: Pogroms
 - name: Штетл (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Штетл
+  url: "https://uk.wikipedia.org/wiki/Штетл"
   type: reference
   notes: Shtetl life
 vocabulary_hints:

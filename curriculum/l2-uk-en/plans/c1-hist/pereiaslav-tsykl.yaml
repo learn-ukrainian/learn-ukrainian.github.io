@@ -86,15 +86,15 @@ activities:
   focus: На якому етапі Переяславська угода була приречена на провал?
 sources:
 - name: Переяславська рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  url: "https://uk.wikipedia.org/wiki/Переяславська_рада"
   type: reference
   notes: 1654 agreement
 - name: Руїна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+  url: "https://uk.wikipedia.org/wiki/Руїна_(історія_України)"
   type: reference
   notes: Ruin period
 - name: Статті Богдана Хмельницького (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького
+  url: "https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького"
   type: reference
   notes: Agreement articles
 vocabulary_hints:

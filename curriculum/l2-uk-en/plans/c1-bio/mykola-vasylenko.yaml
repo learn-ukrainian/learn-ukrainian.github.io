@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Василенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Микола_Василенко
+  url: "https://uk.wikipedia.org/wiki/Микола_Василенко"
   type: primary
   notes: Біографія, юридична та наукова діяльність
 - name: Гетьманат Павла Скоропадського
-  url: https://uk.wikipedia.org/wiki/Українська_Держава
+  url: "https://uk.wikipedia.org/wiki/Українська_Держава"
   type: reference
   notes: Політичний контекст 1918 року
 - name: Академія наук України
-  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
+  url: "https://uk.wikipedia.org/wiki/Національна_академія_наук_України"
   type: reference
   notes: Роль у заснуванні Академії
 immersion: 100% Ukrainian

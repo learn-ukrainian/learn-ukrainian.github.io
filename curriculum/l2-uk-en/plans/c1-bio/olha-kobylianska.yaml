@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ольга Кобилянська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кобилянська_Ольга_Юліанівна
+  url: "https://uk.wikipedia.org/wiki/Кобилянська_Ольга_Юліанівна"
   type: primary
   notes: Біографія, творчість, світогляд
 - name: Музей Ольги Кобилянської (Чернівці)
-  url: https://kobylanska.cv.ua
+  url: "https://kobylanska.cv.ua"
   type: reference
   notes: Меморіальний музей та архів
 - name: Інститут літератури НАНУ
-  url: https://ilnan.gov.ua
+  url: "https://ilnan.gov.ua"
   type: reference
   notes: Літературознавчі дослідження
 immersion: 100% Ukrainian

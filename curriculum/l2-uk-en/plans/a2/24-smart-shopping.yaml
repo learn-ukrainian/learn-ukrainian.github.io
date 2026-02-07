@@ -44,11 +44,11 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Shopping
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Communicative requirements for shopping and negotiation
 - name: Cultural Guide to Ukrainian Markets
-  url: https://uk.wikipedia.org/wiki/Ринок
+  url: "https://uk.wikipedia.org/wiki/Ринок"
   type: reference
   notes: Social etiquette of bargaining in Ukraine
 immersion: 40-50% Ukrainian

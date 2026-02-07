@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Функціональні стилі української мови
-  url: https://uk.wikipedia.org/wiki/Функціональний_стиль
+  url: "https://uk.wikipedia.org/wiki/Функціональний_стиль"
   type: reference
   notes: Foundation of 7 Ukrainian styles
 - name: Науково-популярний стиль
-  url: https://uk.wikipedia.org/wiki/Науково-популярний_стиль
+  url: "https://uk.wikipedia.org/wiki/Науково-популярний_стиль"
   type: reference
   notes: Example of hybrid style analysis
 - name: Сучасна українська публіцистика
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of style blending in contemporary journalism
 content_outline:

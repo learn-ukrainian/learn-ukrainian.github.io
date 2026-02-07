@@ -71,11 +71,11 @@ grammar:
 - Official vs. Informal register
 sources:
 - name: Резолюція ГА ООН 68/262
-  url: https://undocs.org/ua/A/RES/68/262
+  url: "https://undocs.org/ua/A/RES/68/262"
   type: primary
   notes: Офіційний міжнародний документ
 - name: КримSOS
-  url: https://krymsos.com
+  url: "https://krymsos.com"
   type: secondary
   notes: Свідчення очевидців та звіти про порушення прав людини
 phase: B2-HIST.12 [Independence]

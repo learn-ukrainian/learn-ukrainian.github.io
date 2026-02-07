@@ -2,22 +2,22 @@ module: capstone-defense
 level: c2
 sequence: 94
 version: '2.0'
-title: Дипломний проєкт — Захист
+title: "Дипломний проєкт — Захист"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Процедура захисту академічних робіт
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official defense procedures in Ukrainian academia
 - name: Риторика наукового виступу
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: reference
   notes: Rhetoric of academic presentations
 - name: Презентаційні навички для науковців
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: secondary
   notes: Presentation skills for academic contexts
 content_outline:

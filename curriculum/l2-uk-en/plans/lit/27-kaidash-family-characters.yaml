@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Кайдашева сім'я — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=907"
   type: primary
   notes: Для цитат і аналізу
 - name: Аналіз "Кайдашевої сім'ї"
-  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  url: "https://www.ukrlib.com.ua/review/printit.php?tid=18137"
   type: primary
   notes: Літературознавчий аналіз
 - name: Кайдашева сім'я — скорочено
-  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+  url: "https://www.ukrlib.com.ua/styslo/printit.php?tid=3505"
   type: reference
   notes: Для швидкого повторення сюжету
 immersion: 100% Ukrainian

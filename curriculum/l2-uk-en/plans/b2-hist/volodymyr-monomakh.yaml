@@ -131,10 +131,10 @@ grammar:
 - Вживання дієприкметників у публіцистичному стилі
 sources:
 - name: Володимир Мономах (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
+  url: "https://uk.wikipedia.org/wiki/Володимир_Мономах"
   type: reference
 - name: Повчання Володимира Мономаха (Електронні Літописи)
-  url: https://litopys.org.ua/pvl/pvl21.htm
+  url: "https://litopys.org.ua/pvl/pvl21.htm"
   type: primary
 register: публіцистичний
 phase: B2-HIST.2 [Kyivan Rus]

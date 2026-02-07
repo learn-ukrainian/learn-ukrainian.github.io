@@ -60,11 +60,11 @@ grammar:
 module_type: biography
 sources:
 - name: Данило Галицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Данило_Галицький
+  url: "https://uk.wikipedia.org/wiki/Данило_Галицький"
   type: primary
   notes: Біографія та діяльність
 - name: Галицько-Волинський літопис (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
   type: primary
   notes: Основне джерело
 immersion: 100% Ukrainian

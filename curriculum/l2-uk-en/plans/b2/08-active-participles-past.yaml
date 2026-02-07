@@ -71,7 +71,7 @@ vocabulary_hints:
   - альтернатива (alternative)
 activity_hints:
 - type: quiz
-  focus: Legitimate vs russism participles — identification
+  focus: "Legitimate vs russism participles — identification"
   items: 15+
 - type: fill-in
   focus: Russism participle → relative clause
@@ -104,15 +104,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Participles
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Recognition of -лий forms, russism awareness
 - name: Антисуржик
-  url: https://uk.wikipedia.org/wiki/Антисуржик
+  url: "https://uk.wikipedia.org/wiki/Антисуржик"
   type: secondary
   notes: Distinguishing Ukrainian from Russian-influenced forms
 - name: Правопис української мови 2019
-  url: https://uk.wikipedia.org/wiki/Український_правопис
+  url: "https://uk.wikipedia.org/wiki/Український_правопис"
   type: reference
   notes: Official position on -лий participles
 immersion: 100% Ukrainian

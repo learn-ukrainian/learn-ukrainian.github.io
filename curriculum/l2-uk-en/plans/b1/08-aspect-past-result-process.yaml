@@ -91,11 +91,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Aspect and Result
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official guidance on result-oriented aspect usage
 - name: Ukrainian Grammar - Aspect
-  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  url: "https://uk.wikipedia.org/wiki/Вид_дієслова"
   type: reference
   notes: Process vs result distinction in Ukrainian
 immersion: 100% Ukrainian

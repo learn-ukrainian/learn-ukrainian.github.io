@@ -76,26 +76,26 @@ vocabulary:
 - державницька ідея
 activities:
 - type: critical-analysis
-  focus: Ukrainian institutions in Prague — inventory
+  focus: "Ukrainian institutions in Prague — inventory"
 - type: reading
   focus: Paths of UNR leaders after 1921
 - type: critical-analysis
-  focus: Czech "Russian Action" — why support Ukrainians?
+  focus: "Czech \"Russian Action\" — why support Ukrainians?"
 - type: critical-analysis
   focus: Map emigre political factions and conflicts
 - type: essay-response
   focus: Чому Прага стала 'столицею' української еміграції?
 sources:
 - name: Еміграція УНР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_еміграція
+  url: "https://uk.wikipedia.org/wiki/Українська_еміграція"
   type: reference
   notes: Political emigration
 - name: Уряд УНР в екзилі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Уряд_Української_Народної_Республіки_в_екзилі
+  url: "https://uk.wikipedia.org/wiki/Уряд_Української_Народної_Республіки_в_екзилі"
   type: reference
   notes: Government in exile
 - name: Табори інтернованих (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Табори_інтернованих_вояків_Армії_УНР
+  url: "https://uk.wikipedia.org/wiki/Табори_інтернованих_вояків_Армії_УНР"
   type: reference
   notes: Internment camps
 vocabulary_hints:

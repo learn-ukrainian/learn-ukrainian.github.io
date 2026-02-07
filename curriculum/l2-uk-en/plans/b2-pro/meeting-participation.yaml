@@ -66,7 +66,7 @@ vocabulary_hints:
   - головуючий (chairperson)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати діалог з наради — визначити регістр кожного учасника
+  focus: "Проаналізувати діалог з наради — визначити регістр кожного учасника"
   items: 1
 - type: role-play
   focus: Провести міні-нараду з розподілом ролей

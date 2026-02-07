@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Валентина Радзимовська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
+  url: "https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна"
   type: primary
   notes: Основна біографічна інформація
 - name: Меморіал жертв репресій
-  url: https://www.reabit.org.ua/
+  url: "https://www.reabit.org.ua/"
   type: reference
   notes: База даних репресованих
 - name: Історія української біохімії
-  url: https://biochemistry.org.ua/
+  url: "https://biochemistry.org.ua/"
   type: reference
   notes: Науковий контекст
 immersion: 100% Ukrainian

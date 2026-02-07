@@ -84,18 +84,18 @@ activities:
 - type: critical-analysis
   focus: How the same logic appears today
 - type: essay-response
-  focus: Чому 'Малоросія' — не географічний, а політичний термін?
+  focus: "Чому 'Малоросія' — не географічний, а політичний термін?"
 sources:
 - name: Малоросія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Малоросія
+  url: "https://uk.wikipedia.org/wiki/Малоросія"
   type: reference
   notes: Term history
 - name: Малоросійська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
+  url: "https://uk.wikipedia.org/wiki/Малоросійська_ідентичність"
   type: reference
   notes: Identity construction
 - name: Русифікація України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Русифікація_України
+  url: "https://uk.wikipedia.org/wiki/Русифікація_України"
   type: reference
   notes: Russification policies
 vocabulary_hints:

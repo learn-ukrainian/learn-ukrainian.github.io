@@ -67,7 +67,7 @@ vocabulary_hints:
   - маніпуляція (manipulation)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати переконливий виступ — визначити етос, пафос, логос
+  focus: "Проаналізувати переконливий виступ — визначити етос, пафос, логос"
   items: 2
 - type: writing-task
   focus: Написати емоційну історію для вступу до виступу

@@ -2,22 +2,22 @@ module: legal-ukrainian-iii
 level: c2
 sequence: 63
 version: '2.0'
-title: Правнича українська III — Судові процедури
+title: "Правнича українська III — Судові процедури"
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Цивільний процесуальний кодекс України
-  url: https://zakon.rada.gov.ua/laws/show/1618-15
+  url: "https://zakon.rada.gov.ua/laws/show/1618-15"
   type: primary
   notes: Процесуальні норми цивільного судочинства
 - name: Кримінальний процесуальний кодекс України
-  url: https://zakon.rada.gov.ua/laws/show/4651-17
+  url: "https://zakon.rada.gov.ua/laws/show/4651-17"
   type: primary
   notes: Процесуальні норми кримінального судочинства
 - name: Судова влада України
-  url: https://court.gov.ua/
+  url: "https://court.gov.ua/"
   type: reference
   notes: Офіційний портал судової влади
 content_outline:

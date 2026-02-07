@@ -55,10 +55,10 @@ grammar:
 module_type: biography
 sources:
   - name: Povist mynulykh lit
-    url: http://litopys.org.ua
+    url: "http://litopys.org.ua"
     type: primary
   - name: Pateryk
-    url: http://litopys.org.ua
+    url: "http://litopys.org.ua"
     type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO

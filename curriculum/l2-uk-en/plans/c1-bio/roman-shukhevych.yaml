@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Роман Шухевич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович
+  url: "https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович"
   type: primary
   notes: Biography, UPA command, death
 - name: Українська повстанська армія
-  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
+  url: "https://uk.wikipedia.org/wiki/Українська_повстанська_армія"
   type: reference
   notes: Organization he led
 - name: Герой України — Шухевич
-  url: https://uk.wikipedia.org/wiki/Герой_України
+  url: "https://uk.wikipedia.org/wiki/Герой_України"
   type: reference
   notes: State recognition
 immersion: 100% Ukrainian

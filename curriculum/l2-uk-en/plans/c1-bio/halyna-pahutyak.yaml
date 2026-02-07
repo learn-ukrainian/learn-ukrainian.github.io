@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Галина Пагутяк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
+  url: "https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна"
   type: primary
   notes: Biography of the mystical prose writer
 - name: Видавництво «Піраміда»
-  url: https://www.pyramida.kiev.ua/
+  url: "https://www.pyramida.kiev.ua/"
   type: reference
   notes: Publisher of Pahutyak's major works
 immersion: 100% Ukrainian

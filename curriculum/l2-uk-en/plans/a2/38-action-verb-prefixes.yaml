@@ -49,11 +49,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Verb Morphology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for non-motion verb prefixes and semantic transformation at A2
 - name: Grammar of Ukrainian Language - Semantic Prefixes
-  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
+  url: "https://uk.wikipedia.org/wiki/Префікси_в_українській_мові"
   type: reference
   notes: Functional analysis of Po-, Za-, Vy-, and Pere- in action stems
 immersion: 40-50% Ukrainian

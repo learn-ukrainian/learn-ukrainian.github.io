@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Сергій Корольов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
+  url: "https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович"
   type: primary
   notes: Biography, space achievements, Ukrainian origins
 - name: Музей космонавтики Корольова в Житомирі
-  url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
+  url: "https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова"
   type: reference
   notes: Museum in his birthplace
 - name: ГУЛАГ
-  url: https://uk.wikipedia.org/wiki/ГУЛАГ
+  url: "https://uk.wikipedia.org/wiki/ГУЛАГ"
   type: reference
   notes: His imprisonment
 immersion: 100% Ukrainian

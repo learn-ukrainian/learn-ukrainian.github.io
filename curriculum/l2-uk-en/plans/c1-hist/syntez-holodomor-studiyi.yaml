@@ -78,7 +78,7 @@ activities:
 - type: essay-response
   focus: Create integrated Holodomor knowledge map
 - type: critical-analysis
-  focus: Evaluate main scholarly debates — where do you stand?
+  focus: "Evaluate main scholarly debates — where do you stand?"
 - type: critical-analysis
   focus: What questions remain unanswered?
 - type: critical-analysis
@@ -87,11 +87,11 @@ activities:
   focus: Що означає 'знати' Голодомор для сучасного українця?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голодомор
+  url: "https://uk.wikipedia.org/wiki/Голодомор"
   type: reference
   notes: Comprehensive overview
 - name: Harvard Ukrainian Research Institute — Holodomor
-  url: https://huri.harvard.edu/
+  url: "https://huri.harvard.edu/"
   type: reference
   notes: Research center
 vocabulary_hints:

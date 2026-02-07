@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Academic Writing Skills in Ukrainian
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Paraphrasing and summarizing guidelines
 - name: Academic Integrity Resources
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Avoiding plagiarism through proper paraphrasing
 immersion: 100% Ukrainian

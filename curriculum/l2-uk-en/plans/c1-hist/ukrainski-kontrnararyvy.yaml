@@ -78,20 +78,20 @@ activities:
 - type: critical-analysis
   focus: Ukrainian counter-disinformation infrastructure
 - type: comparative-study
-  focus: NAFO — how humor fights disinformation
+  focus: "NAFO — how humor fights disinformation"
 - type: critical-analysis
   focus: What works and what doesn't
 - type: critical-analysis
-  focus: Counter-narrative vs. propaganda — where's the line?
+  focus: "Counter-narrative vs. propaganda — where's the line?"
 - type: essay-response
   focus: Чи може Україна виграти інформаційну війну?
 sources:
 - name: Інформаційна політика України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Інформаційна_політика_України
+  url: "https://uk.wikipedia.org/wiki/Інформаційна_політика_України"
   type: reference
   notes: Ukraine's information policy
 - name: NAFO (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/NAFO
+  url: "https://uk.wikipedia.org/wiki/NAFO"
   type: reference
   notes: NAFO phenomenon
 vocabulary_hints:

@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Сон — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=18"
   type: primary
   notes: Поема для детального аналізу
 - name: Аналіз "Сну"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=18"
   type: secondary
   notes: Літературознавчий аналіз
 - name: Російська імперія — контекст
-  url: https://uk.wikipedia.org/wiki/Російська_імперія
+  url: "https://uk.wikipedia.org/wiki/Російська_імперія"
   type: reference
   notes: Політичний контекст 1844 року
 immersion: 100% Ukrainian

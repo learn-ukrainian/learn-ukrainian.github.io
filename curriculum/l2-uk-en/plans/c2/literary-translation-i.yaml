@@ -2,22 +2,22 @@ module: literary-translation-i
 level: c2
 sequence: 34
 version: '2.0'
-title: Літературний переклад I — поезія
+title: "Літературний переклад I — поезія"
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Переклад поезії — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Поетичний_переклад
+  url: "https://uk.wikipedia.org/wiki/Поетичний_переклад"
   type: reference
   notes: Challenges of poetry translation
 - name: Український поетичний переклад
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of translated poetry
 - name: Максим Рильський — перекладач
-  url: https://uk.wikipedia.org/wiki/Максим_Рильський
+  url: "https://uk.wikipedia.org/wiki/Максим_Рильський"
   type: reference
   notes: Master poetry translator
 content_outline:

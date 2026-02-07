@@ -71,7 +71,7 @@ activities:
 - type: critical-analysis
   focus: How war and alliance coexisted 1918-1920
 - type: critical-analysis
-  focus: Warsaw Treaty 1920 — terms and consequences
+  focus: "Warsaw Treaty 1920 — terms and consequences"
 - type: comparative-study
   focus: Polish vs Ukrainian views on 1920 alliance
 - type: essay-response
@@ -80,15 +80,15 @@ activities:
   focus: Чи Петлюра зрадив Галичину?
 sources:
 - name: Українсько-польська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українсько-польська_війна
+  url: "https://uk.wikipedia.org/wiki/Українсько-польська_війна"
   type: reference
   notes: War in Galicia
 - name: Варшавський договір 1920 (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Варшавський_договір_(1920)
+  url: "https://uk.wikipedia.org/wiki/Варшавський_договір_(1920)"
   type: reference
   notes: Petliura-Piłsudski alliance
 - name: Радянсько-польська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Радянсько-польська_війна
+  url: "https://uk.wikipedia.org/wiki/Радянсько-польська_війна"
   type: reference
   notes: Soviet-Polish war
 vocabulary_hints:

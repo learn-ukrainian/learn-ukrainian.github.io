@@ -39,11 +39,11 @@ objectives:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - States and Emotions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for expressing subjective physical and mental states at A2
 - name: Psychology of Language - Slavic Subjective Dative
-  url: https://uk.wikipedia.org/wiki/Безособові_речення
+  url: "https://uk.wikipedia.org/wiki/Безособові_речення"
   type: reference
   notes: Syntax of impersonal sentences for expressing feelings
 immersion: 40-50% Ukrainian

@@ -89,15 +89,15 @@ activities:
   focus: Чи можна використовувати поезію як історичне джерело?
 sources:
 - name: Заповіт (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)
+  url: "https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)"
   type: reference
   notes: Poem overview
 - name: Тарас Шевченко (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко"
   type: reference
   notes: Biography
 - name: Листування Шевченка
-  url: https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка
+  url: "https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка"
   type: primary
   notes: Letters collection
 vocabulary_hints:

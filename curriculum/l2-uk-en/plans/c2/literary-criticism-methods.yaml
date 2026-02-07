@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Літературна критика — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Літературна_критика
+  url: "https://uk.wikipedia.org/wiki/Літературна_критика"
   type: reference
   notes: Overview of critical approaches
 - name: Українська літературна критика
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples of Ukrainian literary criticism
 - name: Сучасні критичні підходи
-  url: https://uk.wikipedia.org/wiki/Літературознавство
+  url: "https://uk.wikipedia.org/wiki/Літературознавство"
   type: reference
   notes: Contemporary critical methodologies
 content_outline:

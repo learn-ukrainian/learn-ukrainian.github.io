@@ -43,11 +43,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Conditional
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Conditional mood requirements for A2
 - name: Functional Grammar of Ukrainian - Modality
-  url: https://uk.wikipedia.org/wiki/Умовний_спосіб
+  url: "https://uk.wikipedia.org/wiki/Умовний_спосіб"
   type: reference
   notes: Deep dive into hypothetical vs real conditions
 immersion: 40-50% Ukrainian

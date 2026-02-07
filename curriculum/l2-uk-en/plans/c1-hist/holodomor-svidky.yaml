@@ -88,15 +88,15 @@ activities:
   focus: Яке місце мають свідчення вижилих у дослідженні Голодомору?
 sources:
 - name: Усна історія Голодомору
-  url: https://ucrdc.org/
+  url: "https://ucrdc.org/"
   type: primary
   notes: UCRDC testimony archive
 - name: Проєкт "Голодомор у людських долях"
-  url: https://archive.khpg.org/
+  url: "https://archive.khpg.org/"
   type: primary
   notes: Memorial project
 - name: Усна історія (методологія)
-  url: https://uk.wikipedia.org/wiki/Усна_історія
+  url: "https://uk.wikipedia.org/wiki/Усна_історія"
   type: reference
   notes: Methodology
 vocabulary_hints:

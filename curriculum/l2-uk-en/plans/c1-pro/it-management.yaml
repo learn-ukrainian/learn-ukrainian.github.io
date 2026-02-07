@@ -65,7 +65,7 @@ vocabulary_hints:
   - code review (огляд коду)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати проєктну документацію — оцінити структуру та повноту
+  focus: "Проаналізувати проєктну документацію — оцінити структуру та повноту"
   items: 2
 - type: writing-task
   focus: Написати kickoff presentation для ІТ-проєкту

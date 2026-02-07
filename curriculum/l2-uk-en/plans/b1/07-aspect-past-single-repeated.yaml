@@ -89,11 +89,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Past Tense Aspect
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official rules for aspect in past tense contexts
 - name: Ukrainian Aspectual Pairs
-  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  url: "https://uk.wikipedia.org/wiki/Видові_пари_дієслів"
   type: reference
   notes: Comprehensive list of aspectual pairs
 immersion: 100% Ukrainian

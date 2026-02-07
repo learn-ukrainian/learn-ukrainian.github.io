@@ -64,7 +64,7 @@ vocabulary_hints:
   - версія документа (document version)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати технічне завдання — визначити вимоги та обмеження
+  focus: "Проаналізувати технічне завдання — визначити вимоги та обмеження"
   items: 1
 - type: writing-task
   focus: Написати інструкцію для простої процедури (5-7 кроків)

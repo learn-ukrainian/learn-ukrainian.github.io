@@ -90,11 +90,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Comparison
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Comparative adjective requirements for A2
 - name: Ukrainian Adjective Reference
-  url: https://uk.wikipedia.org/wiki/Прикметник
+  url: "https://uk.wikipedia.org/wiki/Прикметник"
   type: reference
   notes: Complete comparison paradigms
 immersion: 40-50% Ukrainian

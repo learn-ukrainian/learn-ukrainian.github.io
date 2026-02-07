@@ -65,7 +65,7 @@ vocabulary_hints:
   - deliverable (продукт проєкту)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати грантову заявку — оцінити структуру та переконливість
+  focus: "Проаналізувати грантову заявку — оцінити структуру та переконливість"
   items: 2
 - type: writing-task
   focus: Написати executive summary та план робіт для дослідницького гранту

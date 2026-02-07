@@ -89,7 +89,7 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Довженко (Енциклопедія історії України)
-  url: https://esu.com.ua/article-5367
+  url: "https://esu.com.ua/article-5367"
   type: primary
   notes: Академічна біографія
 - name: Довженко О. Щоденник

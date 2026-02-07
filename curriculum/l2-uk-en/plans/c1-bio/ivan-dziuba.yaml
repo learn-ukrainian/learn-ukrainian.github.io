@@ -85,11 +85,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Дзюба (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович
+  url: "https://uk.wikipedia.org/wiki/Дзюба_Іван_Михайлович"
   type: primary
   notes: Comprehensive biography of the dissident intellectual
 - name: «Інтернаціоналізм чи русифікація?»
-  url: https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F
+  url: "https://uk.wikipedia.org/wiki/Інтернаціоналізм_чи_русифікація%3F"
   type: reference
   notes: Analysis of the landmark text against Russification
 immersion: 100% Ukrainian

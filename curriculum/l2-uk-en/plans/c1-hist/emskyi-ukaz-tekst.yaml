@@ -89,15 +89,15 @@ activities:
   focus: Чому заборони не знищили українську культуру?
 sources:
 - name: Емський указ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Емський_указ
+  url: "https://uk.wikipedia.org/wiki/Емський_указ"
   type: reference
   notes: Overview
 - name: Текст указу
-  url: https://uk.wikisource.org/wiki/Емський_указ
+  url: "https://uk.wikisource.org/wiki/Емський_указ"
   type: primary
   notes: Full text
 - name: Олександр II
-  url: https://uk.wikipedia.org/wiki/Олександр_II
+  url: "https://uk.wikipedia.org/wiki/Олександр_II"
   type: reference
   notes: Emperor context
 vocabulary_hints:

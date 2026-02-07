@@ -83,20 +83,20 @@ activities:
 - type: critical-analysis
   focus: Reconstruct Khvylovyi's main argument
 - type: critical-analysis
-  focus: Analyze suicide note — what does it mean?
+  focus: "Analyze suicide note — what does it mean?"
 - type: essay-response
   focus: Чому ідеї Хвильового актуальні й сьогодні?
 sources:
 - name: Хвильовий Микола — памфлети
-  url: https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола
+  url: "https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола"
   type: primary
   notes: Pamphlet texts
 - name: Микола Хвильовий (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  url: "https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович"
   type: reference
   notes: Biography
 - name: «Камо грядеши» та інші памфлети
-  url: https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)
+  url: "https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)"
   type: reference
   notes: Key work
 vocabulary_hints:

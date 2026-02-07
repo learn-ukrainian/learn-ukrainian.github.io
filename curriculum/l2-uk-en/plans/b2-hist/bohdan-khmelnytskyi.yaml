@@ -82,11 +82,11 @@ grammar:
 - Verbs of political action
 sources:
 - name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
+  url: "http://litopys.org.ua/hrushrus/iur.htm"
   type: reference
   notes: Classic historical account
 - name: The Khmelnytsky Uprising
-  url: https://encyclopediaofukraine.com
+  url: "https://encyclopediaofukraine.com"
   type: secondary
   notes: Modern analysis
 register: публіцистичний

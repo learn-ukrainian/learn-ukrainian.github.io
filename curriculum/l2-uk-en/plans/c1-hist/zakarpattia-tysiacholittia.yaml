@@ -78,26 +78,26 @@ vocabulary:
 - інструменталізація
 activities:
 - type: critical-analysis
-  focus: Rusyn vs. Ukrainian identity — what's the question?
+  focus: "Rusyn vs. Ukrainian identity — what's the question?"
 - type: comparative-study
-  focus: Carpatho-Ukraine — shortest independence
+  focus: "Carpatho-Ukraine — shortest independence"
 - type: comparative-study
   focus: Transcarpathia vs. other western regions
 - type: critical-analysis
   focus: How different rulers treated Transcarpathia
 - type: essay-response
-  focus: Чи русини — окремий народ чи частина українців?
+  focus: "Чи русини — окремий народ чи частина українців?"
 sources:
 - name: Закарпаття (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Закарпаття
+  url: "https://uk.wikipedia.org/wiki/Закарпаття"
   type: reference
   notes: Regional overview
 - name: Карпатська Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Карпатська_Україна
+  url: "https://uk.wikipedia.org/wiki/Карпатська_Україна"
   type: reference
   notes: 1939 independence
 - name: Русини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Русини
+  url: "https://uk.wikipedia.org/wiki/Русини"
   type: reference
   notes: Rusyn identity question
 vocabulary_hints:

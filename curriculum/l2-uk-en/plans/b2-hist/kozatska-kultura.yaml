@@ -3,7 +3,7 @@ level: B2-HIST
 sequence: 47
 slug: kozatska-kultura
 version: '2.0'
-title: Козацька культура — кобзарі, думи та бароко
+title: "Козацька культура — кобзарі, думи та бароко"
 subtitle: 'Cossack Culture: Kobzars, Dumas, and Baroque'
 content_outline:
 - section: Вступ та Контекст
@@ -89,11 +89,11 @@ grammar:
 - Artistic and academic terminology
 sources:
 - name: History of Ukrainian Culture
-  url: https://litopys.org.ua/istkult/istkult.htm
+  url: "https://litopys.org.ua/istkult/istkult.htm"
   type: reference
   notes: Comprehensive overview of the era
 - name: Cossack Baroque - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm
+  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm"
   type: reference
   notes: Detailed description of the style
 register: публіцистичний

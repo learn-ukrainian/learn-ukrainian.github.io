@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Наратологія — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Наратологія
+  url: "https://uk.wikipedia.org/wiki/Наратологія"
   type: reference
   notes: Core narratological concepts
 - name: Жерар Женетт — теорія нарації
-  url: https://uk.wikipedia.org/wiki/Жерар_Женетт
+  url: "https://uk.wikipedia.org/wiki/Жерар_Женетт"
   type: reference
   notes: Foundational narratological framework
 - name: Українська проза XX століття
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Examples for narrative analysis
 content_outline:

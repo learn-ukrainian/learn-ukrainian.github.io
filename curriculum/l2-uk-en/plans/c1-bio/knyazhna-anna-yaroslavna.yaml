@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Анна Ярославна (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Анна_Ярославна
+  url: "https://uk.wikipedia.org/wiki/Анна_Ярославна"
   type: primary
   notes: Основні факти
 - name: Реймське Євангеліє
-  url: https://archives.marne.fr/
+  url: "https://archives.marne.fr/"
   type: reference
   notes: Артефакт
 immersion: 100% Ukrainian

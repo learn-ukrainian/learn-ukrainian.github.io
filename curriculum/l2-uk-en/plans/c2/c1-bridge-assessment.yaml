@@ -9,11 +9,11 @@ objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard C2 (2024)
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 proficiency descriptors and requirements
 - name: CEFR C2 Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: General C2 level descriptors for comparison
 content_outline:

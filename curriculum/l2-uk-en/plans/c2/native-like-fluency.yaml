@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — C2 Descriptors
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: primary
   notes: Дескриптори вільного володіння
 - name: CEFR Companion Volume 2020
-  url: https://www.coe.int/
+  url: "https://www.coe.int/"
   type: reference
   notes: C2 production and interaction scales
 - name: Native speaker corpora
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Приклади природного мовлення
 content_outline:

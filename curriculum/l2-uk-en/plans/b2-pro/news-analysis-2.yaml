@@ -65,7 +65,7 @@ vocabulary_hints:
   - незалежне медіа (independent media)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати одну новину з трьох різних джерел — порівняти подачу
+  focus: "Проаналізувати одну новину з трьох різних джерел — порівняти подачу"
   items: 3
 - type: comparison
   focus: Заповнити таблицю порівняння джерел для однієї події

@@ -2,22 +2,22 @@ module: style-transformation-i
 level: c2
 sequence: 10
 version: '2.0'
-title: Трансформація стилю I — Науковий → Популярний
+title: "Трансформація стилю I — Науковий → Популярний"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Науково-популярні видання України
-  url: https://www.nbuv.gov.ua/
+  url: "https://www.nbuv.gov.ua/"
   type: reference
   notes: Examples of academic-to-popular transformation
 - name: Science popularization methodology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Strategies for accessible science writing
 - name: Ukrainian State Standard 2024 — Style transformation
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for register shifting
 content_outline:

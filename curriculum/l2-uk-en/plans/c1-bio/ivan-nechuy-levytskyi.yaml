@@ -98,23 +98,23 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Нечуй-Левицький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький
+  url: "https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький"
   type: primary
   notes: Biography, works, literary significance
 - name: Кайдашева сім'я
-  url: https://uk.wikipedia.org/wiki/Кайдашева_сім%27я
+  url: "https://uk.wikipedia.org/wiki/Кайдашева_сім%27я"
   type: reference
   notes: His most famous novel
 - name: Микола Джеря
-  url: https://uk.wikipedia.org/wiki/Микола_Джеря
+  url: "https://uk.wikipedia.org/wiki/Микола_Джеря"
   type: reference
   notes: Novel about serfdom and industrialization
 - name: Український реалізм
-  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
+  url: "https://uk.wikipedia.org/wiki/Реалізм_(література)"
   type: reference
   notes: Literary movement context
 - name: UkrLib - Нечуй-Левицький
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1646"
   type: reference
   notes: Full texts and analysis
 immersion: 100% Ukrainian

@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олена Теліга (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Теліга_Олена_Іванівна
+  url: "https://uk.wikipedia.org/wiki/Теліга_Олена_Іванівна"
   type: primary
   notes: Біографія, творчість, загибель
 - name: Музей Олени Теліги (Київ)
-  url: https://teliha.kyiv.ua
+  url: "https://teliha.kyiv.ua"
   type: reference
   notes: Архів та експозиція
 - name: Бабин Яр
-  url: https://babynyar.org
+  url: "https://babynyar.org"
   type: reference
   notes: Місце розстрілу
 immersion: 100% Ukrainian

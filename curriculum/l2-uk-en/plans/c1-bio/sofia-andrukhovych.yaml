@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Софія Андрухович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Андрухович_Софія_Юріївна
+  url: "https://uk.wikipedia.org/wiki/Андрухович_Софія_Юріївна"
   type: primary
   notes: Біографія, творчість, переклади
 - name: Видавництво «Старого Лева»
-  url: https://starylev.com.ua
+  url: "https://starylev.com.ua"
   type: reference
   notes: Видання творів
 - name: BookForum
-  url: https://bookforum.ua
+  url: "https://bookforum.ua"
   type: reference
   notes: Літературна критика
 immersion: 100% Ukrainian

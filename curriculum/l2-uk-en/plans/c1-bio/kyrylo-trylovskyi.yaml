@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Кирило Трильовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
+  url: "https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович"
   type: primary
   notes: Biography of the founder of the Sich movement
 - name: Українські Січові Стрільці
-  url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
+  url: "https://uk.wikipedia.org/wiki/Українські_січові_стрільці"
   type: reference
   notes: History of the movement Trylovsky founded
 immersion: 100% Ukrainian

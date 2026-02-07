@@ -66,7 +66,7 @@ vocabulary_hints:
   - визнання досягнень (recognition of achievements)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати лідерський виступ — визначити візію, виклик, заклик
+  focus: "Проаналізувати лідерський виступ — визначити візію, виклик, заклик"
   items: 2
 - type: writing-task
   focus: Написати виступ CEO для команди про нову стратегію

@@ -91,11 +91,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Future Tense
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official future tense forms and usage
 - name: Ukrainian Future Tense (Wikipedia)
-  url: https://uk.wikipedia.org/wiki/Майбутній_час
+  url: "https://uk.wikipedia.org/wiki/Майбутній_час"
   type: reference
   notes: Three future forms with examples
 immersion: 100% Ukrainian

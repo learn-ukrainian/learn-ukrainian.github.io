@@ -105,15 +105,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Participles
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official participle formation and usage rules
 - name: Граматика сучасної української мови
-  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  url: "https://uk.wikipedia.org/wiki/Граматика_української_мови"
   type: secondary
   notes: Academic reference for participle morphology
 - name: CEFR B2 Grammar Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 grammar complexity expectations
 immersion: 100% Ukrainian

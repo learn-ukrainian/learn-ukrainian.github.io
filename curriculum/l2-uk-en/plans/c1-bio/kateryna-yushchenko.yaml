@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Катерина Ющенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
+  url: "https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна"
   type: primary
   notes: Biography of the pioneering computer scientist
 - name: Інститут кібернетики ім. В.М. Глушкова НАН України
-  url: https://icyb.kiev.ua/
+  url: "https://icyb.kiev.ua/"
   type: reference
   notes: Institute where Yushchenko worked
 immersion: 100% Ukrainian

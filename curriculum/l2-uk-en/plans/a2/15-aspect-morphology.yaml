@@ -93,11 +93,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Word Formation
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Verbal prefix and suffix patterns
 - name: Ukrainian Verb Morphology
-  url: https://uk.wikipedia.org/wiki/Словотвір
+  url: "https://uk.wikipedia.org/wiki/Словотвір"
   type: reference
   notes: Aspect formation patterns
 immersion: 40-50% Ukrainian

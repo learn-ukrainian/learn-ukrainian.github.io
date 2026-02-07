@@ -78,7 +78,7 @@ activities:
 - type: critical-analysis
   focus: Map Russian disinformation infrastructure
 - type: comparative-study
-  focus: «Firehose of falsehood» — how it works
+  focus: "«Firehose of falsehood» — how it works"
 - type: comparative-study
   focus: MH17 disinformation campaign analysis
 - type: critical-analysis
@@ -87,15 +87,15 @@ activities:
   focus: Чому 'пожежний шланг брехні' ефективний?
 sources:
 - name: Російська дезінформація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  url: "https://uk.wikipedia.org/wiki/Російська_дезінформація"
   type: reference
   notes: Disinformation overview
 - name: Russia Today (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Russia_Today
+  url: "https://uk.wikipedia.org/wiki/Russia_Today"
   type: reference
   notes: RT network
 - name: Тролі з Ольгіна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
+  url: "https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень"
   type: reference
   notes: Troll farms
 vocabulary_hints:

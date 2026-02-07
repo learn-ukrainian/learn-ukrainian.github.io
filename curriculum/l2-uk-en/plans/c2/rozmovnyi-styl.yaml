@@ -2,22 +2,22 @@ module: rozmovnyi-styl
 level: c2
 sequence: 7
 version: '2.0'
-title: Розмовний стиль — Рівень носія
+title: "Розмовний стиль — Рівень носія"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Сучасна українська розмовна мова — дослідження
-  url: https://www.nbuv.gov.ua/
+  url: "https://www.nbuv.gov.ua/"
   type: primary
   notes: Scholarly analysis of colloquial Ukrainian
 - name: Українські діалоги — корпус усного мовлення
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Authentic spoken Ukrainian examples
 - name: Ukrainian State Standard 2024 — Oral communication
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for native-like oral fluency
 content_outline:

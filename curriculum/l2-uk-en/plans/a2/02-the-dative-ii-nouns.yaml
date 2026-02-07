@@ -3,7 +3,7 @@ level: A2
 sequence: 2
 slug: 02-the-dative-ii-nouns
 version: '2.0'
-title: The Dative II — Nouns
+title: "The Dative II — Nouns"
 subtitle: Giving, Sending, and Showing
 content_outline:
 - section: Introduction / Вступ
@@ -91,11 +91,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Noun Declension
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Complete dative endings for all noun genders
 - name: Ukrainian Grammar Tables
-  url: https://uk.wikipedia.org/wiki/Відмінювання_іменників
+  url: "https://uk.wikipedia.org/wiki/Відмінювання_іменників"
   type: reference
   notes: Declension patterns and exceptions
 immersion: 50-60% Ukrainian

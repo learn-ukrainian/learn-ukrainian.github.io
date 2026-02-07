@@ -69,26 +69,26 @@ vocabulary:
 - колабораціонізм
 activities:
 - type: critical-analysis
-  focus: Holocaust in Ukraine — numbers and geography
+  focus: "Holocaust in Ukraine — numbers and geography"
 - type: critical-analysis
   focus: Who collaborated and why
 - type: reading
-  focus: Ukrainian Righteous — stories and patterns
+  focus: "Ukrainian Righteous — stories and patterns"
 - type: critical-analysis
-  focus: OUN and Jews — complex relationship
+  focus: "OUN and Jews — complex relationship"
 - type: essay-response
   focus: Як оцінювати українську роль у Голокості?
 sources:
 - name: Голокост в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Голокост_в_Україні"
   type: reference
   notes: Holocaust overview
 - name: Бабин Яр (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  url: "https://uk.wikipedia.org/wiki/Бабин_Яр"
   type: reference
   notes: Babi Yar
 - name: Праведники народів світу (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
+  url: "https://uk.wikipedia.org/wiki/Праведники_народів_світу"
   type: reference
   notes: Righteous Among Nations
 vocabulary_hints:

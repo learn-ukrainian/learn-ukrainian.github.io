@@ -97,11 +97,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian Academic Essay Writing Guide
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official essay structure guidelines
 - name: Науковий стиль сучасної української мови
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Academic text organization
 immersion: 100% Ukrainian

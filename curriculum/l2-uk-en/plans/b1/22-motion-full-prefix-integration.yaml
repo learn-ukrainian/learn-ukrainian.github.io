@@ -94,15 +94,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official prefix system for motion verbs
 - name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  url: "https://uk.wikipedia.org/wiki/Дієслівні_префікси"
   type: reference
   notes: Complete prefix reference with all meanings
 - name: Ukrainian Motion Verbs (Academic)
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  url: "https://uk.wikipedia.org/wiki/Дієслова_руху"
   type: reference
   notes: Academic treatment of motion verb system
 immersion: 100% Ukrainian

@@ -85,20 +85,20 @@ activities:
 - type: critical-analysis
   focus: Compare Soviet textbook treatment of 1932-33 (if mentioned at all) vs. modern
 - type: critical-analysis
-  focus: Analyze a Soviet-era historical text — identify required narratives
+  focus: "Analyze a Soviet-era historical text — identify required narratives"
 - type: essay-response
   focus: Як радянська історіографія вплинула на українську історичну пам'ять?
 sources:
 - name: Радянська історіографія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Радянська_історіографія
+  url: "https://uk.wikipedia.org/wiki/Радянська_історіографія"
   type: reference
   notes: Overview of Soviet historical writing
 - name: Тези про 300-річчя возз'єднання (1954)
-  url: https://uk.wikipedia.org/wiki/Тези_про_300-річчя_возз'єднання_України_з_Росією
+  url: "https://uk.wikipedia.org/wiki/Тези_про_300-річчя_возз'єднання_України_з_Росією"
   type: primary
   notes: Official Soviet interpretation of 1654
 - name: Декомунізація в Україні
-  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Декомунізація_в_Україні"
   type: reference
   notes: Post-Soviet revision context
 vocabulary_hints:

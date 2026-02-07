@@ -88,15 +88,15 @@ activities:
   focus: Яке значення має Слово о полку Ігоревім для української культури?
 sources:
 - name: Слово о полку Ігоревім (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім
+  url: "https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім"
   type: reference
   notes: Overview and debates
 - name: Слово о полку Ігоревім (текст)
-  url: https://litopys.org.ua/slovo/slov.htm
+  url: "https://litopys.org.ua/slovo/slov.htm"
   type: primary
   notes: Full text with translation
 - name: Ігор Святославич
-  url: https://uk.wikipedia.org/wiki/Ігор_Святославич
+  url: "https://uk.wikipedia.org/wiki/Ігор_Святославич"
   type: reference
   notes: Historical context of 1185 campaign
 vocabulary_hints:

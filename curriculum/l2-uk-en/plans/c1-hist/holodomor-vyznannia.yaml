@@ -83,15 +83,15 @@ activities:
   focus: Чому міжнародне визнання Голодомору геноцидом залишається неповним?
 sources:
 - name: Визнання Голодомору геноцидом
-  url: https://uk.wikipedia.org/wiki/Визнання_Голодомору_геноцидом
+  url: "https://uk.wikipedia.org/wiki/Визнання_Голодомору_геноцидом"
   type: reference
   notes: Recognition overview
 - name: Конвенція ООН про геноцид
-  url: https://uk.wikipedia.org/wiki/Конвенція_про_запобігання_злочину_геноциду_та_покарання_за_нього
+  url: "https://uk.wikipedia.org/wiki/Конвенція_про_запобігання_злочину_геноциду_та_покарання_за_нього"
   type: reference
   notes: UN Convention
 - name: Закон України про Голодомор
-  url: https://zakon.rada.gov.ua/laws/show/376-16
+  url: "https://zakon.rada.gov.ua/laws/show/376-16"
   type: primary
   notes: 2006 law text
 vocabulary_hints:

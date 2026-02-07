@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Ukrainian State Standard 2024 — Каталог В
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: primary
   notes: Повний граматичний каталог C2 рівня
 - name: Український правопис 2019
-  url: https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019
+  url: "https://mon.gov.ua/ua/osvita/zagalna-serednya-osvita/navchalni-programi/ukrayinskij-pravopis-2019"
   type: primary
   notes: Офіційні правописні норми
 - name: Академічна граматика української мови
-  url: https://inmo.org.ua/
+  url: "https://inmo.org.ua/"
   type: reference
   notes: Фундаментальний граматичний опис
 content_outline:

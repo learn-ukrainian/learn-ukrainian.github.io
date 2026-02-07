@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ліна Костенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ліна_Костенко
+  url: "https://uk.wikipedia.org/wiki/Ліна_Костенко"
   type: primary
   notes: Біографія, творчість, громадська позиція
 - name: Маруся Чурай
-  url: https://uk.wikipedia.org/wiki/Маруся_Чурай_(роман)
+  url: "https://uk.wikipedia.org/wiki/Маруся_Чурай_(роман)"
   type: reference
   notes: Історичний роман у віршах
 - name: Шістдесятництво
-  url: https://uk.wikipedia.org/wiki/Шістдесятники
+  url: "https://uk.wikipedia.org/wiki/Шістдесятники"
   type: reference
   notes: Літературний рух та роль Костенко
 immersion: 100% Ukrainian

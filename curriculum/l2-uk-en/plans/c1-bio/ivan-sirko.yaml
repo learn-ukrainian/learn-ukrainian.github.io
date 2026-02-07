@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Іван Сірко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Сірко
+  url: "https://uk.wikipedia.org/wiki/Іван_Сірко"
   type: primary
   notes: Біографія та походи
 - name: Дмитро Яворницький "Історія запорозьких козаків"
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: reference
   notes: Класичне дослідження
 immersion: 100% Ukrainian

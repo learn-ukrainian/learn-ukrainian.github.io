@@ -75,26 +75,26 @@ vocabulary:
 - ратифікація
 activities:
 - type: critical-analysis
-  focus: 1997 vs. 2010 agreements — what changed
+  focus: "1997 vs. 2010 agreements — what changed"
 - type: critical-analysis
-  focus: Fleet as security threat — how it was used in 2014
+  focus: "Fleet as security threat — how it was used in 2014"
 - type: critical-analysis
-  focus: 2010 Kharkiv — why did Yanukovych agree?
+  focus: "2010 Kharkiv — why did Yanukovych agree?"
 - type: essay-response
   focus: What if Ukraine had not extended the lease?
 - type: essay-response
   focus: Чому Чорноморський флот став 'троянським конем' для України?
 sources:
 - name: Чорноморський флот Росії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Чорноморський_флот_Росії
+  url: "https://uk.wikipedia.org/wiki/Чорноморський_флот_Росії"
   type: reference
   notes: Fleet history
 - name: Угода про базування (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Угода_про_базування_Чорноморського_флоту_Росії_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Угода_про_базування_Чорноморського_флоту_Росії_в_Україні"
   type: reference
   notes: Basing agreements
 - name: Харківські угоди (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Харківські_угоди
+  url: "https://uk.wikipedia.org/wiki/Харківські_угоди"
   type: reference
   notes: 2010 extension
 vocabulary_hints:

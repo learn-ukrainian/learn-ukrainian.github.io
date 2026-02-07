@@ -65,7 +65,7 @@ vocabulary_hints:
   - цифровий банк (digital bank)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати фінансовий документ — визначити ключові терміни
+  focus: "Проаналізувати фінансовий документ — визначити ключові терміни"
   items: 2
 - type: writing-task
   focus: Написати презентацію фінтех-продукту для інвесторів

@@ -2,22 +2,22 @@ module: khudozhniy-styl
 level: c2
 sequence: 6
 version: '2.0'
-title: Художній стиль — Літературна творчість
+title: "Художній стиль — Літературна творчість"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Антологія української літератури
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Classic and contemporary literary examples
 - name: Письменники України — біографії та твори
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: reference
   notes: Author styles and creative techniques
 - name: Ukrainian State Standard 2024 — Literary style
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for artistic expression
 content_outline:

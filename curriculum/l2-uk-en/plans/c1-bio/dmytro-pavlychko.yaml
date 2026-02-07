@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Дмитро Павличко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
+  url: "https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович"
   type: primary
   notes: Biography of the poet, translator, and diplomat
 - name: Національна спілка письменників України
-  url: https://nspu.org.ua/
+  url: "https://nspu.org.ua/"
   type: reference
   notes: Literary biography and works
 immersion: 100% Ukrainian

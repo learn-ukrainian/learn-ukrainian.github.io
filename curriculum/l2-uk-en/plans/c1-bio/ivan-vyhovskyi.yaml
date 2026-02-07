@@ -69,15 +69,15 @@ grammar:
 module_type: biography
 sources:
 - name: Іван Виговський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Іван_Виговський
+  url: "https://uk.wikipedia.org/wiki/Іван_Виговський"
   type: primary
   notes: Біографія та гетьманування
 - name: Гадяцький договір (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
+  url: "https://uk.wikipedia.org/wiki/Гадяцький_договір"
   type: primary
   notes: Зміст та значення угоди
 - name: Конотопська битва (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Конотопська_битва
+  url: "https://uk.wikipedia.org/wiki/Конотопська_битва"
   type: reference
   notes: Військова перемога
 immersion: 100% Ukrainian

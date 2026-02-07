@@ -90,7 +90,7 @@ activity_hints:
   focus: Artifact Analysis (Greek artifacts from Ukrainian museums)
   items: 5-6 images
 - type: comparative-study
-  focus: Olbia vs Chersonesus — differences in founding and governance
+  focus: "Olbia vs Chersonesus — differences in founding and governance"
   output: Comparison table
 focus: history
 pedagogy: seminar
@@ -111,15 +111,15 @@ grammar:
 - Past tense mastery
 sources:
 - name: Античні міста Північного Причорномор'я (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я
+  url: "https://uk.wikipedia.org/wiki/Античні_міста_Північного_Причорномор%27я"
   type: reference
   notes: Overview of Greek colonies
 - name: Ольвія (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ольвія_(місто)
+  url: "https://uk.wikipedia.org/wiki/Ольвія_(місто)"
   type: reference
   notes: History of Olbia
 - name: Херсонес Таврійський
-  url: https://uk.wikipedia.org/wiki/Херсонес_Таврійський
+  url: "https://uk.wikipedia.org/wiki/Херсонес_Таврійський"
   type: reference
   notes: History of Chersonesus
 register: публіцистичний

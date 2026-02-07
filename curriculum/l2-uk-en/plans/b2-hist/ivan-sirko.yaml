@@ -86,12 +86,12 @@ grammar:
 - Вживання прямої мови для цитування історичних джерел
 sources:
 - name: Літопис Самійла Величка
-  url: http://litopys.org.ua/velichko/vel.htm
+  url: "http://litopys.org.ua/velichko/vel.htm"
   type: primary
   notes: Найважливіше джерело про козацьку історію кінця XVII століття
 - name: Дмитро Яворницький, «Іван Дмитрович Сірко, славний кошовий отаман війська
     запорозьких низових козаків»
-  url: https://www.google.com/books/edition/Іван_Дмитрович_Сірко_славний_кошовий/qC4g0AEACAAJ
+  url: "https://www.google.com/books/edition/Іван_Дмитрович_Сірко_славний_кошовий/qC4g0AEACAAJ"
   type: secondary
   notes: Класична біографія Сірка, написана видатним істориком козацтва
 register: публіцистичний

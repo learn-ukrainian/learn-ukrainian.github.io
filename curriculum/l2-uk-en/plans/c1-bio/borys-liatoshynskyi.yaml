@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Борис Лятошинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович
+  url: "https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович"
   type: primary
   notes: Biography of the leading Ukrainian symphonic composer
 - name: Національна музична академія України
-  url: https://knmau.com.ua/
+  url: "https://knmau.com.ua/"
   type: reference
   notes: Archives of the academy where Lyatoshynsky taught
 immersion: 100% Ukrainian

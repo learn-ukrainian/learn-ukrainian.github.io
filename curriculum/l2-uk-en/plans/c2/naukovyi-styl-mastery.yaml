@@ -2,22 +2,22 @@ module: naukovyi-styl-mastery
 level: c2
 sequence: 3
 version: '2.0'
-title: Науковий стиль — Публікаційний рівень
+title: "Науковий стиль — Публікаційний рівень"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: ДСТУ 8302:2015 Бібліографічне посилання
-  url: https://dstu.org.ua/
+  url: "https://dstu.org.ua/"
   type: reference
   notes: Ukrainian citation standard for academic publications
 - name: Наукова комунікація в Україні — НАН
-  url: https://nbuv.gov.ua/
+  url: "https://nbuv.gov.ua/"
   type: primary
   notes: Standards for academic writing in Ukraine
 - name: Ukrainian State Standard 2024 — Academic writing
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for scientific style
 content_outline:

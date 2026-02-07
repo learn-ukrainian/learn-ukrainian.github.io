@@ -90,11 +90,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Prepositions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Spatial preposition + case combinations
 - name: Ukrainian Preposition Reference
-  url: https://uk.wikipedia.org/wiki/Прийменник
+  url: "https://uk.wikipedia.org/wiki/Прийменник"
   type: reference
   notes: Complete preposition system
 immersion: 40-50% Ukrainian

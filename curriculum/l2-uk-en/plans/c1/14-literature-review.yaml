@@ -3,7 +3,7 @@ level: C1
 sequence: 14
 slug: 14-literature-review
 version: '2.0'
-title: Жанр — Огляд літератури
+title: "Жанр — Огляд літератури"
 content_outline:
 - section: Вступ — Що таке огляд літератури?
   words: 400
@@ -97,11 +97,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Методологія наукового дослідження
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Literature review methodology
 - name: Academic Synthesis Writing
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Source synthesis techniques
 immersion: 100% Ukrainian

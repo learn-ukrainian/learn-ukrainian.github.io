@@ -79,7 +79,7 @@ activities:
 - type: reading
   focus: Analyze stylistic features of a battle description
 - type: comparative-study
-  focus: Compare GVL style with PVL style — what's different?
+  focus: "Compare GVL style with PVL style — what's different?"
 - type: reading
   focus: Find parallels with Western European chronicles
 - type: essay-response
@@ -88,15 +88,15 @@ activities:
   focus: Чим Галицько-Волинський літопис відрізняється від Повісті минулих літ?
 sources:
 - name: Галицько-Волинський літопис (текст)
-  url: https://litopys.org.ua/hvlitop/hvl.htm
+  url: "https://litopys.org.ua/hvlitop/hvl.htm"
   type: primary
   notes: Full text
 - name: Лев Данилович
-  url: https://uk.wikipedia.org/wiki/Лев_I_Данилович
+  url: "https://uk.wikipedia.org/wiki/Лев_I_Данилович"
   type: reference
   notes: Danylo's successor
 - name: Середньовічна українська література
-  url: https://uk.wikipedia.org/wiki/Українська_середньовічна_література
+  url: "https://uk.wikipedia.org/wiki/Українська_середньовічна_література"
   type: reference
   notes: Literary context
 vocabulary_hints:

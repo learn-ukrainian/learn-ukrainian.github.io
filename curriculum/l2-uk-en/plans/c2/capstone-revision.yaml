@@ -2,22 +2,22 @@ module: capstone-revision
 level: c2
 sequence: 92
 version: '2.0'
-title: Дипломний проєкт — Редагування
+title: "Дипломний проєкт — Редагування"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Редагування наукового тексту — Практичний посібник
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Guidelines for editing academic texts
 - name: Культура наукової мови
-  url: https://lcorp.ulif.org.ua/
+  url: "https://lcorp.ulif.org.ua/"
   type: reference
   notes: Scientific language culture and norms
 - name: Типові помилки в академічних текстах
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: secondary
   notes: Common errors in Ukrainian academic writing
 content_outline:

@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Соломія Крушельницька (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Крушельницька_Соломія_Амвросіївна
+  url: "https://uk.wikipedia.org/wiki/Крушельницька_Соломія_Амвросіївна"
   type: primary
   notes: Біографія, оперна кар'єра, репертуар
 - name: Львівський національний театр опери та балету
-  url: https://opera.lviv.ua
+  url: "https://opera.lviv.ua"
   type: reference
   notes: Музей Крушельницької
 - name: La Scala Archives
-  url: https://teatroallascala.org
+  url: "https://teatroallascala.org"
   type: reference
   notes: Виступи в Ла Скала
 immersion: 100% Ukrainian

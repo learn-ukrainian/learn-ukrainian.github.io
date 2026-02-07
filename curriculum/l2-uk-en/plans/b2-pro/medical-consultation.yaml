@@ -65,7 +65,7 @@ vocabulary_hints:
   - курс лікування (course of treatment)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати діалог на прийомі — визначити етапи консультації
+  focus: "Проаналізувати діалог на прийомі — визначити етапи консультації"
   items: 1
 - type: role-play
   focus: Провести рольову гру пацієнт-лікар

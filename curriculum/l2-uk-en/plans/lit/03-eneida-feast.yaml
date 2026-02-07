@@ -11,7 +11,7 @@ content_outline:
       - Тіло у бурлескній традиції
       - Їжа, напої, секс, смерть
       - Карнавальна культура (за Бахтіним)
-  - section: Лексикон Шлунку — гастрономічна лексика
+  - section: Словник Шлунку — гастрономічна лексика
     words: 1000
     points:
       - Назви страв (борщ, галушки, ковбаса)
@@ -29,7 +29,7 @@ content_outline:
       - Спуск до пекла (частина III)
       - Поминальний обряд і сміх
       - Грішники та їхні покарання
-  - section: Лексикон Гріха та Покарання
+  - section: Словник Гріха та Покарання
     words: 625
     points:
       - Категорії грішників у "Енеїді"
@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
   - name: Енеїда — повний текст
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+    url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
     type: primary
     notes: Частини II-III для аналізу бенкету та пекла
   - name: Аналіз "Енеїди"
-    url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+    url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
     type: secondary
     notes: Тематичний аналіз
   - name: Народна кухня XVIII ст.
-    url: https://uk.wikipedia.org/wiki/Українська_кухня
+    url: "https://uk.wikipedia.org/wiki/Українська_кухня"
     type: reference
     notes: Етнографічний контекст страв
 immersion: 100% Ukrainian

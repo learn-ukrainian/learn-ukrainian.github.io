@@ -2,7 +2,7 @@ module: c2-1-review
 level: c2
 sequence: 19
 version: '2.0'
-title: Повторення C2.1 — Консолідація стилістики
+title: "Повторення C2.1 — Консолідація стилістики"
 focus: integration
 pedagogy: TTT
 objectives:
@@ -13,11 +13,11 @@ sources:
   type: reference
   notes: Key concepts from modules 01-18
 - name: Stylistics comprehensive review
-  url: https://www.nbuv.gov.ua/
+  url: "https://www.nbuv.gov.ua/"
   type: reference
   notes: Integration of stylistic concepts
 - name: Ukrainian State Standard 2024 — Review methodology
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 consolidation requirements
 content_outline:

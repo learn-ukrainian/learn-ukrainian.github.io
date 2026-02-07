@@ -89,7 +89,7 @@ activity_hints:
   focus: Excerpt from Primary Chronicle about Oleh's campaigns
   source: Provide in module
 - type: comparative-study
-  focus: Oleh vs Ihor — leadership styles and achievements
+  focus: "Oleh vs Ihor — leadership styles and achievements"
   output: Comparison table
 - type: essay-response
   focus: Чи можна вважати Олега засновником Київської Русі?
@@ -111,15 +111,15 @@ grammar:
 - Treaty language
 sources:
 - name: Олег (князь київський) (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
+  url: "https://uk.wikipedia.org/wiki/Олег_(князь_київський)"
   type: reference
   notes: Overview of Prince Oleh
 - name: Ігор Рюрикович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
+  url: "https://uk.wikipedia.org/wiki/Ігор_Рюрикович"
   type: reference
   notes: Overview of Prince Ihor
 - name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
+  url: "https://litopys.org.ua/pvl/pvl.htm"
   type: primary
   notes: Chronicle accounts of early rulers
 register: публіцистичний

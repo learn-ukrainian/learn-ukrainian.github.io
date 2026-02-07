@@ -90,11 +90,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Future Tense
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Future tense formation and aspect usage
 - name: Ukrainian Verb Conjugation - Future
-  url: https://uk.wikipedia.org/wiki/Дієслово
+  url: "https://uk.wikipedia.org/wiki/Дієслово"
   type: reference
   notes: Future tense paradigms
 immersion: 40-50% Ukrainian

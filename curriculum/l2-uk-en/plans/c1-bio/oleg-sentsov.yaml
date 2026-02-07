@@ -85,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олег Сенцов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович
+  url: "https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович"
   type: primary
   notes: Біографія, ув'язнення, творчість
 - name: Free Oleg Sentsov Campaign
-  url: https://www.freesentsov.org
+  url: "https://www.freesentsov.org"
   type: reference
   notes: Матеріали кампанії за звільнення
 - name: European Film Academy
-  url: https://www.europeanfilmacademy.org
+  url: "https://www.europeanfilmacademy.org"
   type: reference
   notes: Нагороди та міжнародне визнання
 immersion: 100% Ukrainian

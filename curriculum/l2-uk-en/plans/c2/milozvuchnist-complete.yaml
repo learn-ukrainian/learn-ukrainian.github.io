@@ -2,22 +2,22 @@ module: milozvuchnist-complete
 level: c2
 sequence: 2
 version: '2.0'
-title: Милозвучність — Повна система евфонії
+title: "Милозвучність — Повна система евфонії"
 focus: phonology
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Пономарів О. Культура слова
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: primary
   notes: Canonical reference for Ukrainian euphony and phonetic harmony
 - name: Ukrainian State Standard 2024 — Phonetic section
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 phonetic requirements
 - name: Караванський С. Практичний словник синонімів української мови
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: reference
   notes: Euphonic variants and stylistic choices
 content_outline:

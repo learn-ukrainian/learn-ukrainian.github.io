@@ -2,22 +2,22 @@ module: reading-professional-texts-ii
 level: c2
 sequence: 50
 version: '2.0'
-title: Читання фахових текстів II — Критичний аналіз
+title: "Читання фахових текстів II — Критичний аналіз"
 focus: grammar
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Вища освіта України — науковий журнал
-  url: https://vnz.org.ua/
+  url: "https://vnz.org.ua/"
   type: reference
   notes: Examples of academic discourse for critical analysis
 - name: Бібліометрика української науки
-  url: https://nbuviap.gov.ua/bpnu/
+  url: "https://nbuviap.gov.ua/bpnu/"
   type: reference
   notes: Metrics and standards for evaluating Ukrainian scholarship
 - name: Наукова думка — видавництво НАН України
-  url: https://naukova-dumka.com.ua/
+  url: "https://naukova-dumka.com.ua/"
   type: reference
   notes: High-quality academic publications across disciplines
 content_outline:

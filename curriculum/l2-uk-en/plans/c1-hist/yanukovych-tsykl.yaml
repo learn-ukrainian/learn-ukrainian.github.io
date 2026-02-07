@@ -78,24 +78,24 @@ activities:
 - type: critical-analysis
   focus: Map Yanukovych through co-optation cycle
 - type: critical-analysis
-  focus: 2010-2014 — how Russia's cycle worked
+  focus: "2010-2014 — how Russia's cycle worked"
 - type: critical-analysis
   focus: Why did the cycle break in 2014?
 - type: comparative-study
-  focus: Yanukovych vs. historical figures — same pattern
+  focus: "Yanukovych vs. historical figures — same pattern"
 - type: essay-response
   focus: Чим Янукович схожий на Хмельницького, Мазепу, Розумовського?
 sources:
 - name: Віктор Янукович (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
+  url: "https://uk.wikipedia.org/wiki/Віктор_Янукович"
   type: reference
   notes: Biography
 - name: Революція гідності (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  url: "https://uk.wikipedia.org/wiki/Революція_гідності"
   type: reference
   notes: 2014 revolution
 - name: Харківські угоди (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Харківські_угоди
+  url: "https://uk.wikipedia.org/wiki/Харківські_угоди"
   type: reference
   notes: 2010 agreements
 vocabulary_hints:

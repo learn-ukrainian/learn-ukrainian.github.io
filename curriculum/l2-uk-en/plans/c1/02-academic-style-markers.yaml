@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian Academic Writing Guidelines
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official standards for academic Ukrainian
 - name: Пономарів О. Стилістика сучасної української мови
-  url: https://library.ua/
+  url: "https://library.ua/"
   type: secondary
   notes: Comprehensive stylistics reference
 immersion: 100% Ukrainian

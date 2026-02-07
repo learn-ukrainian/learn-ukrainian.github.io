@@ -65,7 +65,7 @@ vocabulary_hints:
   - постредагування (post-editing)
 activity_hints:
 - type: document-analysis
-  focus: Порівняти два переклади одного тексту — оцінити якість
+  focus: "Порівняти два переклади одного тексту — оцінити якість"
   items: 2
 - type: writing-task
   focus: Перекласти юридичний документ з англійської на українську

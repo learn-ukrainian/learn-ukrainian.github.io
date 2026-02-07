@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Юрій Кондратюк (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
+  url: "https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович"
   type: primary
   notes: Біографія та теорія польотів
 - name: Траса Кондратюка
-  url: https://space.com.ua/
+  url: "https://space.com.ua/"
   type: reference
   notes: Науковий контекст
 immersion: 100% Ukrainian

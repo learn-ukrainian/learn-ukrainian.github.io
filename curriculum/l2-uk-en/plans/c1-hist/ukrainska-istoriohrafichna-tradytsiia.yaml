@@ -86,19 +86,19 @@ activities:
   focus: Find one work by diaspora historian, summarize main argument
 sources:
 - name: Михайло Грушевський (біографія)
-  url: https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович
+  url: "https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович"
   type: reference
   notes: Key figure, founder of modern Ukrainian historiography
 - name: Історія України-Руси (повний текст)
-  url: https://litopys.org.ua/hrushukr/ihu.htm
+  url: "https://litopys.org.ua/hrushukr/ihu.htm"
   type: primary
   notes: Hrushevsky's magnum opus
 - name: Дмитро Дорошенко
-  url: https://uk.wikipedia.org/wiki/Дорошенко_Дмитро_Іванович
+  url: "https://uk.wikipedia.org/wiki/Дорошенко_Дмитро_Іванович"
   type: reference
   notes: Diaspora historian, popularizer
 - name: Наталія Полонська-Василенко
-  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
+  url: "https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна"
   type: reference
   notes: Key diaspora historian
 vocabulary_hints:

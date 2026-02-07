@@ -62,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Богдан Хмельницький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
   type: primary
   notes: Фундаментальна біографія
 - name: Документи Богдана Хмельницького
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Тексти універсалів та листів
 immersion: 100% Ukrainian

@@ -2,22 +2,22 @@ module: teaching-ukrainian-iii
 level: c2
 sequence: 84
 version: '2.0'
-title: Викладання української мови III — Розробка матеріалів
+title: "Викладання української мови III — Розробка матеріалів"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Принципи створення навчальних матеріалів з мови
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Guidelines for language teaching materials development
 - name: Authentic Materials in Language Teaching
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: secondary
   notes: Use of authentic texts and media
 - name: Tomlinson — Materials Development in Language Teaching
-  url: https://www.cambridge.org/
+  url: "https://www.cambridge.org/"
   type: reference
   notes: Academic framework for materials development
 content_outline:

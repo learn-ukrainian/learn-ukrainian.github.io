@@ -44,11 +44,11 @@ grammar:
 module_type: word-formation
 sources:
 - name: Ukrainian Word Formation - Root Families
-  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  url: "https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові"
   type: reference
   notes: Standards for root-based vocabulary expansion at A2
 - name: Etymological Dictionary of the Ukrainian Language
-  url: https://goroh.pp.ua/
+  url: "https://goroh.pp.ua/"
   type: reference
   notes: Historical context for hod-, pys-, chyt-, bach- roots
 immersion: 65-75% Ukrainian

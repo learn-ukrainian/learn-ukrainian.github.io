@@ -90,15 +90,15 @@ grammar:
 module_type: biography
 sources:
 - name: Ярослав Мудрий (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
+  url: "https://uk.wikipedia.org/wiki/Ярослав_Мудрий"
   type: primary
   notes: Biography, Ruska Pravda, cultural achievements
 - name: Руська правда (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Руська_правда
+  url: "https://uk.wikipedia.org/wiki/Руська_правда"
   type: primary
   notes: Legal code details and significance
 - name: Софійський собор (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)
+  url: "https://uk.wikipedia.org/wiki/Софійський_собор_(Київ)"
   type: reference
   notes: Architectural legacy
 immersion: 100% Ukrainian

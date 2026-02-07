@@ -104,15 +104,15 @@ grammar:
 module_type: biography
 sources:
 - name: Юрій I Львович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
+  url: "https://uk.wikipedia.org/wiki/Юрій_I_Львович"
   type: primary
   notes: Biography, royal title, Galician Metropolitanate
 - name: Галицька митрополія
-  url: https://uk.wikipedia.org/wiki/Галицька_митрополія
+  url: "https://uk.wikipedia.org/wiki/Галицька_митрополія"
   type: primary
   notes: Ecclesiastical organization
 - name: Королівство Русі
-  url: https://uk.wikipedia.org/wiki/Королівство_Русі
+  url: "https://uk.wikipedia.org/wiki/Королівство_Русі"
   type: reference
   notes: Royal tradition context
 immersion: 100% Ukrainian

@@ -84,11 +84,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Липа (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липа_Юрій_Іванович
+  url: "https://uk.wikipedia.org/wiki/Липа_Юрій_Іванович"
   type: primary
   notes: Biography of the geopolitician, poet, and physician
 - name: «Призначення України» (електронна бібліотека)
-  url: https://uk.wikisource.org/wiki/Призначення_України
+  url: "https://uk.wikisource.org/wiki/Призначення_України"
   type: reference
   notes: Full text of Lypa's major geopolitical work
 immersion: 100% Ukrainian

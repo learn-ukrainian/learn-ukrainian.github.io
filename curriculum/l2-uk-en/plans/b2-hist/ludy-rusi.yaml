@@ -71,15 +71,15 @@ grammar:
 - Social and economic vocabulary
 sources:
 - name: Суспільство Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
+  url: "https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі"
   type: reference
   notes: Social structure overview
 - name: Побут населення Київської Русі
-  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
+  url: "https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі"
   type: reference
   notes: Everyday life
 - name: Руська Правда — соціальні норми
-  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  url: "https://litopys.org.ua/oldukr2/oldukr51.htm"
   type: primary
   notes: Legal text on social classes
 immersion: 100% Ukrainian

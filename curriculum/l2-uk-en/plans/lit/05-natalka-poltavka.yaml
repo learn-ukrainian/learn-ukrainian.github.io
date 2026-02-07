@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Наталка Полтавка — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=50
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=50"
   type: primary
   notes: П'єса для детального аналізу
 - name: Аналіз "Наталки Полтавки"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=50
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=50"
   type: secondary
   notes: Літературознавчий аналіз
 - name: Віють вітри — пісня
-  url: https://uk.wikipedia.org/wiki/Віють_вітри
+  url: "https://uk.wikipedia.org/wiki/Віють_вітри"
   type: reference
   notes: Контекст народної пісні
 immersion: 100% Ukrainian

@@ -78,24 +78,24 @@ activities:
 - type: critical-analysis
   focus: Map Mazepa's path through co-optation cycle
 - type: critical-analysis
-  focus: «Traitor» narrative — construction and persistence
+  focus: "«Traitor» narrative — construction and persistence"
 - type: critical-analysis
-  focus: 1708 decision — what were Mazepa's options?
+  focus: "1708 decision — what were Mazepa's options?"
 - type: comparative-study
-  focus: Mazepa vs. Khmelnytsky — different choices, same cycle
+  focus: "Mazepa vs. Khmelnytsky — different choices, same cycle"
 - type: essay-response
-  focus: Хто кого зрадив — Мазепа Петра чи Петро Україну?
+  focus: "Хто кого зрадив — Мазепа Петра чи Петро Україну?"
 sources:
 - name: Іван Мазепа (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
   type: reference
   notes: Biography
 - name: Анафема Мазепі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі
+  url: "https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі"
   type: reference
   notes: Church anathema
 - name: Полтавська битва (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
   type: reference
   notes: Battle of Poltava
 vocabulary_hints:

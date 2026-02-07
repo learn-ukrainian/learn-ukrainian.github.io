@@ -96,11 +96,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Конституція України
-  url: https://zakon.rada.gov.ua/
+  url: "https://zakon.rada.gov.ua/"
   type: primary
   notes: Constitutional framework of Ukraine
 - name: Верховна Рада України
-  url: https://rada.gov.ua/
+  url: "https://rada.gov.ua/"
   type: reference
   notes: Official parliamentary information
 immersion: 100% Ukrainian

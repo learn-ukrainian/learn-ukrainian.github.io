@@ -91,15 +91,15 @@ activities:
   focus: Як Хмельницький виправдовував повстання?
 sources:
 - name: Універсал (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Універсал_(документ)
+  url: "https://uk.wikipedia.org/wiki/Універсал_(документ)"
   type: reference
   notes: Document type
 - name: Богдан Хмельницький
-  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
   type: reference
   notes: Hetman biography
 - name: Універсали Хмельницького (колекція)
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Document collection
 vocabulary_hints:

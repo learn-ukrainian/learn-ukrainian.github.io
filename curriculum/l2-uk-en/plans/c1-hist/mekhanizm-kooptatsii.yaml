@@ -79,7 +79,7 @@ activities:
 - type: critical-analysis
   focus: Build co-optation cycle model
 - type: comparative-study
-  focus: Russian vs. other empires — co-optation methods
+  focus: "Russian vs. other empires — co-optation methods"
 - type: critical-analysis
   focus: How each stage of the cycle works
 - type: critical-analysis
@@ -88,15 +88,15 @@ activities:
   focus: Чому російська імперія використовувала кооптацію, а не асиміляцію?
 sources:
 - name: Кооптація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кооптація
+  url: "https://uk.wikipedia.org/wiki/Кооптація"
   type: reference
   notes: General concept
 - name: Російський імперіалізм (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+  url: "https://uk.wikipedia.org/wiki/Російський_імперіалізм"
   type: reference
   notes: Imperial patterns
 - name: Колоніальна політика (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Колоніальна_політика
+  url: "https://uk.wikipedia.org/wiki/Колоніальна_політика"
   type: reference
   notes: Colonial patterns
 vocabulary_hints:

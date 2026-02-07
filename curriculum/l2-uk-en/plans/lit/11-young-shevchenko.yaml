@@ -88,15 +88,15 @@ grammar:
 module_type: biography
 sources:
 - name: Тарас Шевченко — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1749"
   type: primary
   notes: Офіційна біографія на UkrLib
 - name: Кобзар — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=1"
   type: secondary
   notes: Для контексту ранньої творчості
 - name: Шевченко і Академія мистецтв
-  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко"
   type: reference
   notes: Петербурзький період
 immersion: 100% Ukrainian

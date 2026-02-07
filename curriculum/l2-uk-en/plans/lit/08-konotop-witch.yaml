@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Конотопська відьма — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=254
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=254"
   type: primary
   notes: Повість для детального аналізу
 - name: Аналіз "Конотопської відьми"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=254
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=254"
   type: secondary
   notes: Літературознавчий аналіз
 - name: Козацька старшина XVIII ст.
-  url: https://uk.wikipedia.org/wiki/Козацька_старшина
+  url: "https://uk.wikipedia.org/wiki/Козацька_старшина"
   type: reference
   notes: Історичний контекст
 immersion: 100% Ukrainian

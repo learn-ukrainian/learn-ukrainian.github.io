@@ -87,15 +87,15 @@ activities:
   focus: Яка помилка УНР була найфатальнішою?
 sources:
 - name: Українська Народна Республіка (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
+  url: "https://uk.wikipedia.org/wiki/Українська_Народна_Республіка"
   type: reference
   notes: UNR history
 - name: Українсько-радянська війна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
+  url: "https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)"
   type: reference
   notes: War context
 - name: Центральна Рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+  url: "https://uk.wikipedia.org/wiki/Українська_Центральна_Рада"
   type: reference
   notes: Government
 vocabulary_hints:

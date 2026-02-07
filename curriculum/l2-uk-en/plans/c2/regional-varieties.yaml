@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Атлас української мови
-  url: https://inmo.org.ua/
+  url: "https://inmo.org.ua/"
   type: primary
   notes: Діалектологічний атлас
 - name: Словник українських говорів
-  url: https://lcorp.ulif.org.ua/
+  url: "https://lcorp.ulif.org.ua/"
   type: reference
   notes: Діалектна лексика
 - name: Українська діалектологія
-  url: https://uk.wikipedia.org/wiki/Українські_діалекти
+  url: "https://uk.wikipedia.org/wiki/Українські_діалекти"
   type: reference
   notes: Огляд діалектних груп
 content_outline:

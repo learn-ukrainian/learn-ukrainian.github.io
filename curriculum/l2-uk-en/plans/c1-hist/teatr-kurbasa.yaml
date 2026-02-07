@@ -89,15 +89,15 @@ activities:
   focus: Чому радянська влада знищила авангардний театр?
 sources:
 - name: Лесь Курбас (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Курбас_Лесь
+  url: "https://uk.wikipedia.org/wiki/Курбас_Лесь"
   type: reference
   notes: Biography
 - name: Березіль (театр)
-  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
+  url: "https://uk.wikipedia.org/wiki/Березіль_(театр)"
   type: reference
   notes: Theater history
 - name: Український театральний авангард
-  url: https://uk.wikipedia.org/wiki/Авангардизм
+  url: "https://uk.wikipedia.org/wiki/Авангардизм"
   type: reference
   notes: Avant-garde context
 vocabulary_hints:

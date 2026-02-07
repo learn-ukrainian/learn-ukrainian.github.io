@@ -87,15 +87,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Figurative Language
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official guidance on idiomatic expressions
 - name: Ukrainian Idioms with Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Фразеологізми
+  url: "https://uk.wikipedia.org/wiki/Фразеологізми"
   type: reference
   notes: Common figurative expressions with motion verbs
 - name: Slovnyk.UA - Motion Verb Idioms
-  url: https://slovnyk.ua/
+  url: "https://slovnyk.ua/"
   type: reference
   notes: Dictionary entries with figurative meanings
 immersion: 100% Ukrainian

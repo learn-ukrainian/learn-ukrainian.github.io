@@ -99,11 +99,11 @@ connects_to:
 module_type: skills
 sources:
 - name: Ukrainian CV Standards
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official guidelines for Ukrainian CV format
 - name: Ukrainian State Standard C1 (2024)
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C1 professional writing requirements
 immersion: 100% Ukrainian

@@ -2,22 +2,22 @@ module: creative-writing-prose
 level: c2
 sequence: 37
 version: '2.0'
-title: Творче письмо — проза
+title: "Творче письмо — проза"
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Майстерність прозаїка
-  url: https://uk.wikipedia.org/wiki/Проза
+  url: "https://uk.wikipedia.org/wiki/Проза"
   type: reference
   notes: Prose writing craft
 - name: Сучасна українська проза
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Contemporary Ukrainian prose examples
 - name: Творчі майстерні
-  url: https://uk.wikipedia.org/wiki/Творче_письмо
+  url: "https://uk.wikipedia.org/wiki/Творче_письмо"
   type: reference
   notes: Creative writing workshop tradition
 content_outline:

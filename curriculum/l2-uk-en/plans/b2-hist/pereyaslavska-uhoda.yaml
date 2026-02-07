@@ -87,11 +87,11 @@ grammar:
 - Passive voice in official documents
 sources:
 - name: Treaty of Pereyaslav - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPereyaslavTreatyof1654.htm
+  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPereyaslavTreatyof1654.htm"
   type: reference
   notes: Academic overview
 - name: Breznevi statti
-  url: http://litopys.org.ua/volosh/volosh60.htm
+  url: "http://litopys.org.ua/volosh/volosh60.htm"
   type: primary
   notes: Text of the March Articles
 register: публіцистичний

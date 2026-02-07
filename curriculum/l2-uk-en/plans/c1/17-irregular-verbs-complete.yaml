@@ -3,7 +3,7 @@ level: C1
 sequence: 17
 slug: 17-irregular-verbs-complete
 version: '2.0'
-title: Неправильні дієслова — повний огляд
+title: "Неправильні дієслова — повний огляд"
 content_outline:
 - section: Вступ — Чому дієслова «неправильні»?
   words: 400
@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Морфологія української мови
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: reference
   notes: Complete verb morphology reference
 - name: Ukrainian Verb Conjugation Patterns
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Irregular verb patterns and alternations
 immersion: 100% Ukrainian

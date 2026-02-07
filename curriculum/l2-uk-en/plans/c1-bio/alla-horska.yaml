@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Алла Горська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Горська_Алла_Олександрівна
+  url: "https://uk.wikipedia.org/wiki/Горська_Алла_Олександрівна"
   type: primary
   notes: Biography covering artistic career and dissident activity
 - name: Музей шістдесятництва
-  url: https://60museum.org.ua/
+  url: "https://60museum.org.ua/"
   type: reference
   notes: Archives of Shistdesiatnyky movement
 immersion: 100% Ukrainian

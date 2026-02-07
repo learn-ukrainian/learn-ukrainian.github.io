@@ -45,12 +45,12 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Health and Hygiene
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for medical consultation and describing physical conditions at
     A2
 - name: Medical Ukrainian for Foreigners
-  url: https://uk.wikipedia.org/wiki/Охорона_здоров'я_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Охорона_здоров'я_в_Україні"
   type: reference
   notes: Common terminology and social norms in Ukrainian medical system
 immersion: 40-50% Ukrainian

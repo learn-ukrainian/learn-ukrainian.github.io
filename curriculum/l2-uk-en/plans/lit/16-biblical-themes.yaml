@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Давидові псалми — переспіви
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=40
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=40"
   type: primary
   notes: Біблійні переспіви Шевченка
 - name: Марія — поема
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=42
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=42"
   type: primary
   notes: Поема про Богородицю
 - name: Церковнослов'янізми в українській мові
-  url: https://uk.wikipedia.org/wiki/Церковнослов'янізми
+  url: "https://uk.wikipedia.org/wiki/Церковнослов'янізми"
   type: reference
   notes: Мовний контекст
 immersion: 100% Ukrainian

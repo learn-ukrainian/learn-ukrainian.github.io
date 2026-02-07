@@ -88,19 +88,19 @@ activities:
   focus: Чому саме галичани становили більшість першої хвилі?
 sources:
 - name: Українська діаспора (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  url: "https://uk.wikipedia.org/wiki/Українська_діаспора"
   type: reference
   notes: General overview
 - name: Українці в Канаді (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
+  url: "https://uk.wikipedia.org/wiki/Українці_в_Канаді"
   type: reference
   notes: Canadian settlement
 - name: Українці в США (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українці_в_США
+  url: "https://uk.wikipedia.org/wiki/Українці_в_США"
   type: reference
   notes: American settlement
 - name: Еміграція з України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Еміграція_з_України
+  url: "https://uk.wikipedia.org/wiki/Еміграція_з_України"
   type: reference
   notes: Emigration waves
 vocabulary_hints:

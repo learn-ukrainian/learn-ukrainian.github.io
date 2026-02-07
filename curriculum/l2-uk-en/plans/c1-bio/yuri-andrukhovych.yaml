@@ -85,11 +85,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Андрухович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович
+  url: "https://uk.wikipedia.org/wiki/Андрухович_Юрій_Ігорович"
   type: primary
   notes: Comprehensive biography of the postmodernist writer
 - name: Літературний фестиваль «Meridian Czernowitz»
-  url: https://meridiancz.com/
+  url: "https://meridiancz.com/"
   type: reference
   notes: Literary festival co-founded by Andrukhovych
 immersion: 100% Ukrainian

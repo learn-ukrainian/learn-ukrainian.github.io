@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Сергій Плохій (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
+  url: "https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович"
   type: primary
   notes: Biography, academic career, books
 - name: Harvard Ukrainian Research Institute
-  url: https://huri.harvard.edu/
+  url: "https://huri.harvard.edu/"
   type: reference
   notes: Institute he directs
 - name: Брама Європи
-  url: https://uk.wikipedia.org/wiki/Брама_Європи
+  url: "https://uk.wikipedia.org/wiki/Брама_Європи"
   type: reference
   notes: His major work on Ukrainian history
 immersion: 100% Ukrainian

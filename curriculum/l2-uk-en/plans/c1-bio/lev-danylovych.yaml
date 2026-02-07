@@ -99,15 +99,15 @@ grammar:
 module_type: biography
 sources:
 - name: Лев Данилович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лев_Данилович
+  url: "https://uk.wikipedia.org/wiki/Лев_Данилович"
   type: primary
   notes: Biography, reign, capital transfer to Lviv
 - name: Львів
-  url: https://uk.wikipedia.org/wiki/Історія_Львова
+  url: "https://uk.wikipedia.org/wiki/Історія_Львова"
   type: primary
   notes: History of the city
 - name: Галицько-Волинське князівство
-  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  url: "https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство"
   type: reference
   notes: Political context
 immersion: 100% Ukrainian

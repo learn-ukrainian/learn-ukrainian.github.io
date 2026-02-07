@@ -80,20 +80,20 @@ activities:
 - type: essay-response
   focus: Create diaspora evolution diagram
 - type: comparative-study
-  focus: Three waves — what united, what divided
+  focus: "Three waves — what united, what divided"
 - type: critical-analysis
   focus: What did diaspora do for Ukraine?
 - type: critical-analysis
-  focus: 2022 refugees — new diaspora or different?
+  focus: "2022 refugees — new diaspora or different?"
 - type: essay-response
   focus: Як діаспора вплинула на здобуття незалежності 1991 року?
 sources:
 - name: Українська діаспора (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  url: "https://uk.wikipedia.org/wiki/Українська_діаспора"
   type: reference
   notes: Overview
 - name: Світовий конгрес українців
-  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+  url: "https://uk.wikipedia.org/wiki/Світовий_конгрес_українців"
   type: reference
   notes: Global coordination
 vocabulary_hints:

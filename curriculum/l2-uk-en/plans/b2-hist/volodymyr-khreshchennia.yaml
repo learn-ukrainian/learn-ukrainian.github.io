@@ -94,15 +94,15 @@ grammar:
 - Religious terminology
 sources:
 - name: Володимир Великий (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Великий
+  url: "https://uk.wikipedia.org/wiki/Володимир_Великий"
   type: reference
   notes: Overview of Volodymyr the Great
 - name: Хрещення Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
   type: reference
   notes: Overview of Christianization
 - name: Повість минулих літ — про хрещення
-  url: https://litopys.org.ua/pvl/pvl.htm
+  url: "https://litopys.org.ua/pvl/pvl.htm"
   type: primary
   notes: Chronicle account of baptism
 phase: B2-HIST.1 [Kyivan Rus]

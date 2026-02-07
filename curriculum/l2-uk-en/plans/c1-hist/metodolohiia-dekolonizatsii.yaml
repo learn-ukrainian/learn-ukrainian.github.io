@@ -80,30 +80,30 @@ vocabulary:
 - емансипація
 activities:
 - type: reading
-  focus: Excerpt from Said's Orientalism (translated/summarized) — core concepts
+  focus: "Excerpt from Said's Orientalism (translated/summarized) — core concepts"
 - type: critical-analysis
   focus: Apply decolonial analysis to a Russian text about Ukraine
 - type: critical-analysis
-  focus: Analyze your own assumptions — what colonial stereotypes might you hold?
+  focus: "Analyze your own assumptions — what colonial stereotypes might you hold?"
 - type: essay-response
   focus: Чому Україну не сприймали як колонію?
 - type: reading
   focus: Rewrite a colonial description of an event in decolonial frame
 sources:
 - name: Деколонізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Деколонізація
+  url: "https://uk.wikipedia.org/wiki/Деколонізація"
   type: reference
   notes: General concept
 - name: Постколоніальні студії
-  url: https://uk.wikipedia.org/wiki/Постколоніальні_студії
+  url: "https://uk.wikipedia.org/wiki/Постколоніальні_студії"
   type: reference
   notes: Theoretical framework
 - name: Едвард Саїд — Орієнталізм
-  url: https://uk.wikipedia.org/wiki/Орієнталізм_(книга)
+  url: "https://uk.wikipedia.org/wiki/Орієнталізм_(книга)"
   type: reference
   notes: Foundational postcolonial text
 - name: Тамара Гундорова — Післячорнобильська бібліотека
-  url: https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна
+  url: "https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна"
   type: reference
   notes: Ukrainian postcolonial scholar
 vocabulary_hints:

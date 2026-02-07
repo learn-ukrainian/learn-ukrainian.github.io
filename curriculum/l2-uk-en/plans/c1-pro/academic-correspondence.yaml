@@ -65,7 +65,7 @@ vocabulary_hints:
   - етичне схвалення (ethical approval)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати академічні листи — оцінити тон та структуру
+  focus: "Проаналізувати академічні листи — оцінити тон та структуру"
   items: 2
 - type: writing-task
   focus: Написати cover letter до наукового журналу

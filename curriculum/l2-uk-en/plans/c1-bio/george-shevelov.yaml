@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Шевельов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович
+  url: "https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович"
   type: primary
   notes: Biography, academic career, works
 - name: Encyclopedia of Ukraine - Shevelov
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
+  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm"
   type: reference
   notes: Detailed academic biography
 - name: Історична фонологія української мови
-  url: https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)
+  url: "https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)"
   type: reference
   notes: His magnum opus
 immersion: 100% Ukrainian

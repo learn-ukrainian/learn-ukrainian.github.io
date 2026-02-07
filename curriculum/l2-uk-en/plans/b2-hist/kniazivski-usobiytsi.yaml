@@ -102,15 +102,15 @@ grammar:
 - Political and military terminology
 sources:
 - name: Роздроблення Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі
+  url: "https://uk.wikipedia.org/wiki/Роздроблення_Київської_Русі"
   type: reference
   notes: Overview of fragmentation
 - name: Любецький з'їзд (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Любецький_з%27їзд
+  url: "https://uk.wikipedia.org/wiki/Любецький_з%27їзд"
   type: reference
   notes: Congress that formalized division
 - name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
+  url: "https://litopys.org.ua/pvl/pvl.htm"
   type: primary
   notes: Chronicle accounts
 phase: B2-HIST.1 [Kyivan Rus]

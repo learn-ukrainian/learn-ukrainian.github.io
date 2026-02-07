@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Клавдія Латишева (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна
+  url: "https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна"
   type: primary
   notes: Biography of the mathematician and aviation pioneer
 - name: Київський національний університет
-  url: https://www.univ.kiev.ua/
+  url: "https://www.univ.kiev.ua/"
   type: reference
   notes: University where Latysheva studied and worked
 immersion: 100% Ukrainian

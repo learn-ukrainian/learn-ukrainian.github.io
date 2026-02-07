@@ -81,16 +81,16 @@ activities:
 - type: critical-analysis
   focus: How regions responded to crises
 - type: essay-response
-  focus: Regional Ukraine after victory — what model?
+  focus: "Regional Ukraine after victory — what model?"
 - type: essay-response
   focus: Чи регіональні відмінності загрожують єдності України?
 sources:
 - name: Регіони України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Регіони_України
+  url: "https://uk.wikipedia.org/wiki/Регіони_України"
   type: reference
   notes: Regional overview
 - name: Українська ідентичність (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
+  url: "https://uk.wikipedia.org/wiki/Українська_ідентичність"
   type: reference
   notes: Identity studies
 vocabulary_hints:

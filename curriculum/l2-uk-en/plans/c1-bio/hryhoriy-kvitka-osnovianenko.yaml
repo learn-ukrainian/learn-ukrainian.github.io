@@ -95,23 +95,23 @@ connects_to:
 module_type: biography
 sources:
 - name: Григорій Квітка-Основ'яненко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко
+  url: "https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко"
   type: primary
   notes: Biography, works, literary significance
 - name: Маруся (повість)
-  url: https://uk.wikipedia.org/wiki/Маруся_(повість)
+  url: "https://uk.wikipedia.org/wiki/Маруся_(повість)"
   type: reference
   notes: His most famous sentimental work
 - name: Конотопська відьма
-  url: https://uk.wikipedia.org/wiki/Конотопська_відьма
+  url: "https://uk.wikipedia.org/wiki/Конотопська_відьма"
   type: reference
   notes: His satirical masterpiece
 - name: Слобожанщина (історичний регіон)
-  url: https://uk.wikipedia.org/wiki/Слобожанщина
+  url: "https://uk.wikipedia.org/wiki/Слобожанщина"
   type: reference
   notes: Regional context for his works
 - name: Харківський університет
-  url: https://uk.wikipedia.org/wiki/Харківський_національний_університет
+  url: "https://uk.wikipedia.org/wiki/Харківський_національний_університет"
   type: reference
   notes: Intellectual center of his era
 immersion: 100% Ukrainian

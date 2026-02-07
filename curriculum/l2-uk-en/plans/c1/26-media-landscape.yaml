@@ -98,11 +98,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Інститут масової інформації
-  url: https://imi.org.ua/
+  url: "https://imi.org.ua/"
   type: reference
   notes: Media monitoring and analysis
 - name: StopFake
-  url: https://www.stopfake.org/
+  url: "https://www.stopfake.org/"
   type: secondary
   notes: Fact-checking resources
 immersion: 100% Ukrainian

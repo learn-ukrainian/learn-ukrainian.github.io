@@ -39,11 +39,11 @@ objectives:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Imperative
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Complete imperative mood requirements for A2
 - name: Grammar of Ukrainian Language - Verb Moods
-  url: https://uk.wikipedia.org/wiki/Наказовий_спосіб
+  url: "https://uk.wikipedia.org/wiki/Наказовий_спосіб"
   type: reference
   notes: Detailed rules for all persons in imperative
 immersion: 40-50% Ukrainian

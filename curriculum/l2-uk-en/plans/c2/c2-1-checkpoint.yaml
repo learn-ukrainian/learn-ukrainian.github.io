@@ -2,22 +2,22 @@ module: c2-1-checkpoint
 level: c2
 sequence: 20
 version: '2.0'
-title: Контрольна точка C2.1 — Стилістична майстерність
+title: "Контрольна точка C2.1 — Стилістична майстерність"
 focus: checkpoint
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: C2 assessment rubrics
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official C2 assessment criteria
 - name: CEFR C2 descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: European C2 standards for comparison
 - name: Ukrainian State Standard 2024 — C2 checkpoint
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Formal assessment requirements
 content_outline:

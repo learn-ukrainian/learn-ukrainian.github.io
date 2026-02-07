@@ -65,7 +65,7 @@ vocabulary_hints:
   - адаптаційний період (adaptation period)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати лист-анонс змін — оцінити структуру та тон
+  focus: "Проаналізувати лист-анонс змін — оцінити структуру та тон"
   items: 2
 - type: writing-task
   focus: Написати анонс про реструктуризацію відділу

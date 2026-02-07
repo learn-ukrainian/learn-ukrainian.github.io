@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Михайло Драгоманов (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Михайло_Драгоманов
+  url: "https://uk.wikipedia.org/wiki/Михайло_Драгоманов"
   type: primary
   notes: Біографія, політичні погляди, вплив на культуру
 - name: Федералізм
-  url: https://uk.wikipedia.org/wiki/Федералізм
+  url: "https://uk.wikipedia.org/wiki/Федералізм"
   type: reference
   notes: Політична концепція Драгоманова
 - name: Українофільство
-  url: https://uk.wikipedia.org/wiki/Українофільство
+  url: "https://uk.wikipedia.org/wiki/Українофільство"
   type: reference
   notes: Рух національного пробудження
 immersion: 100% Ukrainian

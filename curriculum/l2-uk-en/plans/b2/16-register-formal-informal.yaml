@@ -103,15 +103,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Address Forms
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Ти/Ви distinction and forms of address
 - name: Етикет українського спілкування
-  url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
+  url: "https://uk.wikipedia.org/wiki/Мовленнєвий_етикет"
   type: secondary
   notes: Speech etiquette in Ukrainian culture
 - name: CEFR B2 Sociolinguistic Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 politeness conventions
 immersion: 100% Ukrainian

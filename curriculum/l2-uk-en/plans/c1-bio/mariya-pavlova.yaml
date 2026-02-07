@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Павлова (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
+  url: "https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова"
   type: primary
   notes: Біографія, наукова діяльність, внесок у палеонтологію
 - name: Палеонтологія
-  url: https://uk.wikipedia.org/wiki/Палеонтологія
+  url: "https://uk.wikipedia.org/wiki/Палеонтологія"
   type: reference
   notes: Наукова галузь та її методи
 - name: Жінки в науці XIX століття
-  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
+  url: "https://uk.wikipedia.org/wiki/Жінки_в_науці"
   type: reference
   notes: Контекст жіночої участі у науці
 immersion: 100% Ukrainian

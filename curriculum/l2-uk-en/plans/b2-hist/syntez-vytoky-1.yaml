@@ -73,7 +73,7 @@ grammar:
 - 'Публіцистичний стиль: аналітична лексика'
 sources:
 - name: Історія України від найдавніших часів до сьогодення
-  url: http://history.org.ua
+  url: "http://history.org.ua"
   type: reference
 register: публіцистичний
 phase: B2-HIST.1 [Origins]

@@ -4,7 +4,7 @@ sequence: 1
 slug: trypillian-civilization
 version: '2.0'
 title: Трипільська цивілізація
-subtitle: Trypillian Civilization — Origins of Ukrainian Land
+subtitle: "Trypillian Civilization — Origins of Ukrainian Land"
 content_outline:
 - section: Вступ
   words: 489
@@ -132,15 +132,15 @@ grammar:
 - Порівняльні структури (більший за, нагадує, на відміну від)
 sources:
 - name: Трипільська культура — Енциклопедія історії України
-  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Trypilska_kultura
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Trypilska_kultura"
   type: secondary
   notes: Академічна енциклопедична стаття про Трипільську культуру
 - name: Відейко М.Ю. Трипільська цивілізація (2002)
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: secondary
   notes: Монографія провідного українського археолога про трипільські протоміста
 - name: Хвойка В.В. Древние обитатели Среднего Приднепровья (1913)
-  url: https://uk.wikipedia.org/wiki/Хвойка_Вікентій_Вячеславович
+  url: "https://uk.wikipedia.org/wiki/Хвойка_Вікентій_Вячеславович"
   type: primary
   notes: Класична праця першовідкривача Трипільської культури (доступна через архіви)
 register: публіцистичний

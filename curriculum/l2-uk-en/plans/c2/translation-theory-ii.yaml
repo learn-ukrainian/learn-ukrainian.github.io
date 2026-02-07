@@ -2,22 +2,22 @@ module: translation-theory-ii
 level: c2
 sequence: 85
 version: '2.0'
-title: Теорія перекладу II — Поглиблений курс
+title: "Теорія перекладу II — Поглиблений курс"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Коптілов — Теорія і практика перекладу
-  url: https://uk.wikipedia.org/wiki/Коптілов_Віктор_Вікторович
+  url: "https://uk.wikipedia.org/wiki/Коптілов_Віктор_Вікторович"
   type: primary
   notes: Classic Ukrainian translation studies textbook
 - name: Venuti — The Translator's Invisibility
-  url: https://www.routledge.com/
+  url: "https://www.routledge.com/"
   type: secondary
   notes: Key concepts of domestication and foreignization
 - name: Nida — Toward a Science of Translating
-  url: https://www.brill.com/
+  url: "https://www.brill.com/"
   type: reference
   notes: Dynamic vs. formal equivalence theory
 content_outline:

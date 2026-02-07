@@ -80,11 +80,11 @@ activities:
   focus: Чи українська культура 'вмирала' і 'відроджувалась'?
 sources:
 - name: Українське національне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українське_національне_відродження
+  url: "https://uk.wikipedia.org/wiki/Українське_національне_відродження"
   type: reference
   notes: National revival overview
 - name: Культурна політика (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурна_політика
+  url: "https://uk.wikipedia.org/wiki/Культурна_політика"
   type: reference
   notes: Cultural policy context
 vocabulary_hints:

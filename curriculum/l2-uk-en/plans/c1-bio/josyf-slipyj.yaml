@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Йосиф Сліпий (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Йосиф_Сліпий
+  url: "https://uk.wikipedia.org/wiki/Йосиф_Сліпий"
   type: primary
   notes: Biography, imprisonment, diaspora leadership
 - name: УГКЦ - Патріарх Йосиф Сліпий
-  url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
+  url: "https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/"
   type: reference
   notes: Official church biography
 - name: Український Католицький Університет
-  url: https://ucu.edu.ua/
+  url: "https://ucu.edu.ua/"
   type: reference
   notes: Institution he founded
 immersion: 100% Ukrainian

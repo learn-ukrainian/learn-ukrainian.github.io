@@ -45,11 +45,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Verbs of Motion
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for prefixed verbs of motion and spatial orientation at A2
 - name: Morphology of Ukrainian Verb - Prefixes
-  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
+  url: "https://uk.wikipedia.org/wiki/Префікси_в_українській_мові"
   type: reference
   notes: Structural rules for V- and VY- prefixes with motion stems
 immersion: 40-50% Ukrainian

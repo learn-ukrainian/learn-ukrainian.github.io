@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Наталія Полонська-Василенко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
+  url: "https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна"
   type: primary
   notes: Біографія, наукова діяльність, еміграція
 - name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
+  url: "https://www.history.org.ua"
   type: reference
   notes: Наукова спадщина та оцінка
 - name: Українська Вільна Академія Наук
-  url: https://uvan.org
+  url: "https://uvan.org"
   type: reference
   notes: Діяльність в еміграції
 immersion: 100% Ukrainian

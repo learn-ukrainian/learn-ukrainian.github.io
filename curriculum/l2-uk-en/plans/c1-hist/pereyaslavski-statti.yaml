@@ -88,15 +88,15 @@ activities:
   focus: Чи був Переяслав 'возз'єднанням' чи 'союзом'?
 sources:
 - name: Переяславська рада (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  url: "https://uk.wikipedia.org/wiki/Переяславська_рада"
   type: reference
   notes: Overview
 - name: Березневі статті
-  url: https://uk.wikipedia.org/wiki/Березневі_статті
+  url: "https://uk.wikipedia.org/wiki/Березневі_статті"
   type: reference
   notes: March Articles (actual agreement)
 - name: Текст статей
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Document text
 vocabulary_hints:

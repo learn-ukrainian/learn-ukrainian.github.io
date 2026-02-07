@@ -65,7 +65,7 @@ vocabulary_hints:
   - маніпуляція (manipulation)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати переговори — визначити тактики сторін
+  focus: "Проаналізувати переговори — визначити тактики сторін"
   items: 1
 - type: role-play
   focus: Провести повні переговори від відкриття до закриття
@@ -80,7 +80,7 @@ activity_hints:
   focus: З'єднати проблему з тактикою вирішення
   items: 8
 - type: case-study
-  focus: Проаналізувати кейс невдалих переговорів — що пішло не так?
+  focus: "Проаналізувати кейс невдалих переговорів — що пішло не так?"
   items: 1
 focus: professional
 pedagogy: ESP

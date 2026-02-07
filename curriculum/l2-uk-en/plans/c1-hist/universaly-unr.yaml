@@ -88,15 +88,15 @@ activities:
   focus: Чому Центральна Рада так повільно йшла до незалежності?
 sources:
 - name: Універсали Центральної Ради (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради
+  url: "https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради"
   type: reference
   notes: Overview of four Universals
 - name: Перший універсал
-  url: https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради
+  url: "https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради"
   type: primary
   notes: First Universal text
 - name: Четвертий універсал
-  url: https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради
+  url: "https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради"
   type: primary
   notes: Fourth Universal text
 vocabulary_hints:

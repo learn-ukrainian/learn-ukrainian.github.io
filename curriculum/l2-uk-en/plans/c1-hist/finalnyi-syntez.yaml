@@ -78,11 +78,11 @@ activities:
   focus: Як C1-HIST змінив ваше розуміння української історії?
 sources:
 - name: Історіографія України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  url: "https://uk.wikipedia.org/wiki/Історіографія_України"
   type: reference
   notes: Ukrainian historiography
 - name: Методологія історії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Методологія_історії
+  url: "https://uk.wikipedia.org/wiki/Методологія_історії"
   type: reference
   notes: Historical methodology
 vocabulary_hints:

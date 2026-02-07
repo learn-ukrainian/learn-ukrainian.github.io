@@ -2,22 +2,22 @@ module: reading-professional-texts-i
 level: c2
 sequence: 49
 version: '2.0'
-title: Читання фахових текстів I — Стратегії розуміння
+title: "Читання фахових текстів I — Стратегії розуміння"
 focus: grammar
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Наукова періодика України — база НБУВ
-  url: https://nbuv.gov.ua/
+  url: "https://nbuv.gov.ua/"
   type: reference
   notes: Database of Ukrainian scientific periodicals for text examples
 - name: Українські наукові журнали — платформа
-  url: https://usj.org.ua/
+  url: "https://usj.org.ua/"
   type: reference
   notes: Open access Ukrainian academic journals across fields
 - name: ДСТУ 3017:2015 — Видання
-  url: https://dnaop.com/
+  url: "https://dnaop.com/"
   type: reference
   notes: Ukrainian standards for academic publication structure
 content_outline:

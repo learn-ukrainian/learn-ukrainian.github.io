@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Теорія літератури — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Теорія_літератури
+  url: "https://uk.wikipedia.org/wiki/Теорія_літератури"
   type: reference
   notes: Overview of literary theory approaches
 - name: Українське літературознавство
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Ukrainian literary criticism tradition
 - name: Сучасні літературознавчі школи
-  url: https://uk.wikipedia.org/wiki/Літературознавство
+  url: "https://uk.wikipedia.org/wiki/Літературознавство"
   type: reference
   notes: Contemporary critical approaches
 content_outline:

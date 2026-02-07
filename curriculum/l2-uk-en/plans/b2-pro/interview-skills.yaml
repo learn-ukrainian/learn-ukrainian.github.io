@@ -67,7 +67,7 @@ vocabulary_hints:
   - контроль розмови (conversation control)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати транскрипт інтерв'ю — визначити техніки
+  focus: "Проаналізувати транскрипт інтерв'ю — визначити техніки"
   items: 2
 - type: role-play
   focus: Дати експертний коментар для медіа (2 хвилини)

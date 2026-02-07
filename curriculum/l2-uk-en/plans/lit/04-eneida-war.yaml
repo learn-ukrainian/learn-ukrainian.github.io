@@ -66,7 +66,7 @@ activity_hints:
   source: UkrLib tid=51
   items: 4+
 - type: essay-response
-  focus: Естетика смішної смерті — етика чи мистецтво?
+  focus: "Естетика смішної смерті — етика чи мистецтво?"
   word_target: 300
   output: Критичне есе
 focus: literature
@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Енеїда — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
   type: primary
   notes: Частини IV-VI для аналізу батальних сцен
 - name: Аналіз "Енеїди"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
   type: secondary
   notes: Військова тематика
 - name: Козацьке військо
-  url: https://uk.wikipedia.org/wiki/Запорозьке_військо
+  url: "https://uk.wikipedia.org/wiki/Запорозьке_військо"
   type: reference
   notes: Історичний контекст озброєння
 immersion: 100% Ukrainian

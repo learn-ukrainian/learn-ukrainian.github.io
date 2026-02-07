@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Софія Окуневська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Окуневська-Морачевська_Софія_Афанасіївна
+  url: "https://uk.wikipedia.org/wiki/Окуневська-Морачевська_Софія_Афанасіївна"
   type: primary
   notes: Біографія, медична кар'єра, громадська діяльність
 - name: Львівський медичний університет
-  url: https://meduniv.lviv.ua
+  url: "https://meduniv.lviv.ua"
   type: reference
   notes: Історія жінок у медицині
 - name: Архів жіночого руху
-  url: https://uma.lvivcenter.org
+  url: "https://uma.lvivcenter.org"
   type: reference
   notes: Жіночий рух на Галичині
 immersion: 100% Ukrainian

@@ -85,11 +85,11 @@ activities:
   focus: Чи була Україна обдурена Будапештським меморандумом?
 sources:
 - name: Будапештський меморандум (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
+  url: "https://uk.wikipedia.org/wiki/Будапештський_меморандум"
   type: reference
   notes: Memorandum text and context
 - name: Ядерне роззброєння України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України
+  url: "https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України"
   type: reference
   notes: Nuclear disarmament
 vocabulary_hints:

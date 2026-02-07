@@ -96,15 +96,15 @@ grammar:
 module_type: biography
 sources:
 - name: Леся Українка (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Леся_Українка
+  url: "https://uk.wikipedia.org/wiki/Леся_Українка"
   type: primary
   notes: Основна біографія, творчість, хвороба
 - name: Драматургія Лесі Українки
-  url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
+  url: "https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки"
   type: reference
   notes: Аналіз драматичних творів
 - name: Родина Косачів
-  url: https://uk.wikipedia.org/wiki/Косачі
+  url: "https://uk.wikipedia.org/wiki/Косачі"
   type: reference
   notes: Літературна родина та виховання
 immersion: 100% Ukrainian

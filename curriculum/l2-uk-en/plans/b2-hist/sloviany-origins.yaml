@@ -96,15 +96,15 @@ grammar:
 - Минулий час у науковому тексті
 sources:
 - name: Слов'яни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слов%27яни
+  url: "https://uk.wikipedia.org/wiki/Слов%27яни"
   type: reference
   notes: Overview of Slavic origins
 - name: Праслов'яни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Праслов%27яни
+  url: "https://uk.wikipedia.org/wiki/Праслов%27яни"
   type: reference
   notes: Proto-Slavic homeland theories
 - name: Повість минулих літ
-  url: https://litopys.org.ua/pvl/pvl.htm
+  url: "https://litopys.org.ua/pvl/pvl.htm"
   type: primary
   notes: Primary Chronicle on Slavic origins
 register: публіцистичний

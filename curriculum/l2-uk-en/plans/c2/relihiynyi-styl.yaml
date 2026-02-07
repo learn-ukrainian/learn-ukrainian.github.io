@@ -2,22 +2,22 @@ module: relihiynyi-styl
 level: c2
 sequence: 8
 version: '2.0'
-title: Релігійний стиль — Сакральна мова
+title: "Релігійний стиль — Сакральна мова"
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Біблія українською мовою (Огієнко)
-  url: https://bible.ua/
+  url: "https://bible.ua/"
   type: primary
   notes: Standard Ukrainian Bible translation by Ivan Ohienko
 - name: Літургійні тексти УПЦ
-  url: https://liturgia.cerkva.info/
+  url: "https://liturgia.cerkva.info/"
   type: reference
   notes: Liturgical texts and prayers in Ukrainian
 - name: Ukrainian State Standard 2024 — Confessional style
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: C2 requirements for understanding religious register
 content_outline:

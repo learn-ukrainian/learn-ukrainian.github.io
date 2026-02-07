@@ -89,11 +89,11 @@ activities:
   focus: Як релігія впливає на українську національну ідентичність сьогодні?
 sources:
 - name: Релігія в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Релігія_в_Україні"
   type: reference
   notes: Overview
 - name: Православна церква України
-  url: https://uk.wikipedia.org/wiki/Православна_церква_України
+  url: "https://uk.wikipedia.org/wiki/Православна_церква_України"
   type: reference
   notes: 2018-19 autocephaly
 vocabulary_hints:

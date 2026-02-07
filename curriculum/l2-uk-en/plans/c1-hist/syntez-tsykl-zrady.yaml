@@ -89,11 +89,11 @@ activities:
   focus: Як Україна може назавжди вийти з циклу кооптації?
 sources:
 - name: Російський імперіалізм (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+  url: "https://uk.wikipedia.org/wiki/Російський_імперіалізм"
   type: reference
   notes: Imperial patterns
 - name: Українсько-російські відносини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українсько-російські_відносини
+  url: "https://uk.wikipedia.org/wiki/Українсько-російські_відносини"
   type: reference
   notes: Bilateral history
 vocabulary_hints:

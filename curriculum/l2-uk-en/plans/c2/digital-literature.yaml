@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Електронна література — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Електронна_література
+  url: "https://uk.wikipedia.org/wiki/Електронна_література"
   type: reference
   notes: Digital/electronic literature concepts
 - name: Українські літературні платформи
-  url: https://litcentr.in.ua/
+  url: "https://litcentr.in.ua/"
   type: primary
   notes: Online literary communities and publications
 - name: Медіалітература
-  url: https://uk.wikipedia.org/wiki/Медіалітература
+  url: "https://uk.wikipedia.org/wiki/Медіалітература"
   type: reference
   notes: Media and literature intersection
 content_outline:

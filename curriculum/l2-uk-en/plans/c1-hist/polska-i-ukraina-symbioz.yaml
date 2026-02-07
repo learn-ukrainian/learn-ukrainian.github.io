@@ -80,15 +80,15 @@ activities:
   focus: Чи Польща була колонізатором України?
 sources:
 - name: Польсько-українські відносини (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  url: "https://uk.wikipedia.org/wiki/Польсько-українські_відносини"
   type: reference
   notes: Relations overview
 - name: Річ Посполита (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Річ_Посполита
+  url: "https://uk.wikipedia.org/wiki/Річ_Посполита"
   type: reference
   notes: Commonwealth period
 - name: Козацько-польські війни (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Козацько-польські_війни
+  url: "https://uk.wikipedia.org/wiki/Козацько-польські_війни"
   type: reference
   notes: Cossack-Polish wars
 vocabulary_hints:

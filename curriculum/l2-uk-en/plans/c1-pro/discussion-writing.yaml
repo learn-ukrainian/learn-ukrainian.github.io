@@ -65,7 +65,7 @@ vocabulary_hints:
   - рекомендації (recommendations)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати розділ дискусії — оцінити інтерпретацію та імплікації
+  focus: "Проаналізувати розділ дискусії — оцінити інтерпретацію та імплікації"
   items: 2
 - type: writing-task
   focus: Написати дискусію за наданими результатами

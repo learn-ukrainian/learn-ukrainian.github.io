@@ -3,7 +3,7 @@ level: B2
 sequence: 10
 slug: 10-checkpoint-passive-voice
 version: '2.0'
-title: Контрольний модуль B2.1a — Система пасивного стану
+title: "Контрольний модуль B2.1a — Система пасивного стану"
 content_outline:
 - section: Вступ — Що ми вивчили
   words: 318
@@ -93,7 +93,7 @@ activity_hints:
   focus: Fix register-inappropriate passive usage
   items: 12+
 - type: essay-response
-  focus: Diagnostic writing — use all 4 passive forms
+  focus: "Diagnostic writing — use all 4 passive forms"
   word_target: 200
   output: Self-evaluate against rubric
 focus: checkpoint
@@ -106,11 +106,11 @@ connects_to:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - B2 Assessment
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: B2 assessment criteria for passive voice
 - name: CEFR B2 Can-Do Statements
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 grammar proficiency descriptors
 - name: B2 Checkpoint Module Template

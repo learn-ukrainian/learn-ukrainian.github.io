@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Симоненко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
+  url: "https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович"
   type: primary
   notes: Основна біографічна інформація
 - name: Літературний музей
-  url: https://litmuseum.org.ua/
+  url: "https://litmuseum.org.ua/"
   type: reference
   notes: Архівні матеріали
 - name: Збірки поезій
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: reference
   notes: Повні тексти творів
 immersion: 100% Ukrainian

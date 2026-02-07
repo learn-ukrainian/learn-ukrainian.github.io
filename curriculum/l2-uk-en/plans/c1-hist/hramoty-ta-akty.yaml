@@ -80,7 +80,7 @@ activities:
 - type: reading
   focus: Mstislav's Charter with glosses
 - type: critical-analysis
-  focus: Apply diplomatic method — analyze formulary
+  focus: "Apply diplomatic method — analyze formulary"
 - type: comparative-study
   focus: Compare Kyivan charter with Western European charter
 - type: reading
@@ -89,15 +89,15 @@ activities:
   focus: Чому документи важливіші за літописи для соціальної історії?
 sources:
 - name: Грамота (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Грамота
+  url: "https://uk.wikipedia.org/wiki/Грамота"
   type: reference
   notes: Document types
 - name: Давньоруські грамоти
-  url: https://uk.wikipedia.org/wiki/Давньоруські_грамоти
+  url: "https://uk.wikipedia.org/wiki/Давньоруські_грамоти"
   type: reference
   notes: Overview of princely documents
 - name: Берестяні грамоти
-  url: https://uk.wikipedia.org/wiki/Берестяні_грамоти
+  url: "https://uk.wikipedia.org/wiki/Берестяні_грамоти"
   type: reference
   notes: Birch bark letters
 vocabulary_hints:

@@ -86,11 +86,11 @@ grammar:
 - Складнопідрядні речення з підрядними причини та наслідку
 sources:
 - name: Гійом Левассер де Боплан, «Опис України»
-  url: http://litopys.org.ua/boplan/bop.htm
+  url: "http://litopys.org.ua/boplan/bop.htm"
   type: primary
   notes: Ключове джерело XVII століття про побут та характер козаків
 - name: 'Ярослав Грицак, «Подолати минуле: глобальна історія України»'
-  url: https://shron1.chtyvo.org.ua/Hrytsak_Yaroslav/Podolaty_mynule_hlobalna_istoriia_Ukrainy.pdf
+  url: "https://shron1.chtyvo.org.ua/Hrytsak_Yaroslav/Podolaty_mynule_hlobalna_istoriia_Ukrainy.pdf"
   type: secondary
   notes: Сучасний синтез історії України з акцентом на глобальних процесах
 register: публіцистичний

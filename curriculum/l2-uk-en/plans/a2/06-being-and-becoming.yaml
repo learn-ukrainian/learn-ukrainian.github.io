@@ -91,11 +91,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Professions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Profession vocabulary and instrumental usage
 - name: Ukrainian Grammar - Predicate Instrumental
-  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  url: "https://uk.wikipedia.org/wiki/Орудний_відмінок"
   type: reference
   notes: Predicate instrumental with бути/стати
 immersion: 40-50% Ukrainian

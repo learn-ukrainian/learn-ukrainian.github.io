@@ -86,15 +86,15 @@ activities:
   focus: Що означає 'поза межами можливого' для Франка?
 sources:
 - name: Іван Франко (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Іван_Франко
+  url: "https://uk.wikipedia.org/wiki/Іван_Франко"
   type: reference
   notes: Biography
 - name: Поза межами можливого
-  url: https://uk.wikisource.org/wiki/Поза_межами_можливого
+  url: "https://uk.wikisource.org/wiki/Поза_межами_можливого"
   type: primary
   notes: Key political essay
 - name: Франко-публіцист
-  url: https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка
+  url: "https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка"
   type: reference
   notes: Publicistic works overview
 vocabulary_hints:

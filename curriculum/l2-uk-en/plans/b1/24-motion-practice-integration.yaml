@@ -94,15 +94,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Motion and Prepositions
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official guidance on preposition-verb combinations
 - name: Ukrainian Motion Verbs
-  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  url: "https://uk.wikipedia.org/wiki/Дієслова_руху"
   type: reference
   notes: Comprehensive motion verb reference
 - name: Ukrainian Prepositions
-  url: https://uk.wikipedia.org/wiki/Прийменник
+  url: "https://uk.wikipedia.org/wiki/Прийменник"
   type: reference
   notes: Preposition usage with motion verbs
 immersion: 100% Ukrainian

@@ -85,15 +85,15 @@ activities:
   focus: Як діаспорні організації виконували функції держави?
 sources:
 - name: Конгрес українців Канади (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Конгрес_українців_Канади
+  url: "https://uk.wikipedia.org/wiki/Конгрес_українців_Канади"
   type: reference
   notes: UCC history
 - name: Український конгресовий комітет Америки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки
+  url: "https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки"
   type: reference
   notes: UCCA history
 - name: Світовий конгрес українців (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+  url: "https://uk.wikipedia.org/wiki/Світовий_конгрес_українців"
   type: reference
   notes: World Congress
 vocabulary_hints:

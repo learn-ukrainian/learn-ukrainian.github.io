@@ -87,10 +87,10 @@ grammar:
 - Вживання дієприкметників у пасивному стані
 sources:
 - name: Повість минулих літ (Нестор)
-  url: https://litopys.org.ua/pvl/pvl01.htm
+  url: "https://litopys.org.ua/pvl/pvl01.htm"
   type: primary
 - name: Про управління імперією (Костянтин Багрянородний)
-  url: http://litopys.org.ua/izborn79/izb79_03.htm
+  url: "http://litopys.org.ua/izborn79/izb79_03.htm"
   type: primary
 register: публіцистичний
 phase: B2-HIST.1 [Origins]

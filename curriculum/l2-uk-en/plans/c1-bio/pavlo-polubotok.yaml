@@ -61,11 +61,11 @@ grammar:
 module_type: biography
 sources:
 - name: Павло Полуботок (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Павло_Полуботок
+  url: "https://uk.wikipedia.org/wiki/Павло_Полуботок"
   type: primary
   notes: Біографія та діяльність
 - name: Малоросійська колегія (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Малоросійська_колегія
+  url: "https://uk.wikipedia.org/wiki/Малоросійська_колегія"
   type: reference
   notes: Контекст імперської політики
 immersion: 100% Ukrainian

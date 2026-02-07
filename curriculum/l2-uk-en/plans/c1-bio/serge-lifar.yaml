@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Серж Лифар (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович
+  url: "https://uk.wikipedia.org/wiki/Лифар_Сергій_Михайлович"
   type: primary
   notes: Біографія, балетна кар'єра, хореографія
 - name: Opéra national de Paris
-  url: https://www.operadeparis.fr
+  url: "https://www.operadeparis.fr"
   type: reference
   notes: Паризька опера та балет
 - name: Archives du XXe siècle
-  url: https://ina.fr
+  url: "https://ina.fr"
   type: reference
   notes: Документальні матеріали
 immersion: 100% Ukrainian

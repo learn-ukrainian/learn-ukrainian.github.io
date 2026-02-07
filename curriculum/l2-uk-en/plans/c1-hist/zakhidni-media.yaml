@@ -76,7 +76,7 @@ vocabulary:
 - московський кореспондент
 activities:
 - type: critical-analysis
-  focus: «Both sides» coverage — examples and analysis
+  focus: "«Both sides» coverage — examples and analysis"
 - type: critical-analysis
   focus: How Kremlin talking points appear in Western media
 - type: critical-analysis
@@ -87,11 +87,11 @@ activities:
   focus: Чи західні медіа об'єктивні щодо України?
 sources:
 - name: Висвітлення України в західних ЗМІ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ
+  url: "https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ"
   type: reference
   notes: Western media coverage
 - name: Російська дезінформація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
+  url: "https://uk.wikipedia.org/wiki/Російська_дезінформація"
   type: reference
   notes: How disinformation spreads
 vocabulary_hints:

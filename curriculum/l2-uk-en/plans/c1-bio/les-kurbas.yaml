@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Лесь Курбас (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Лесь_Курбас
+  url: "https://uk.wikipedia.org/wiki/Лесь_Курбас"
   type: primary
   notes: Основна біографія, театральна діяльність, репресії
 - name: Театр «Березіль»
-  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
+  url: "https://uk.wikipedia.org/wiki/Березіль_(театр)"
   type: reference
   notes: Історія театру та його інноваційні постановки
 - name: Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
   type: reference
   notes: Контекст репресій проти української інтелігенції
 immersion: 100% Ukrainian

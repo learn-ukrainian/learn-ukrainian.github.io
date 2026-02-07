@@ -93,15 +93,15 @@ grammar:
 module_type: biography
 sources:
 - name: Йов Борецький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Йов_Борецький
+  url: "https://uk.wikipedia.org/wiki/Йов_Борецький"
   type: primary
   notes: Biography, revival of Orthodox hierarchy
 - name: Берестейська унія (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Берестейська_унія
+  url: "https://uk.wikipedia.org/wiki/Берестейська_унія"
   type: reference
   notes: Context of religious conflict
 - name: Київська братська школа
-  url: https://uk.wikipedia.org/wiki/Київська_братська_школа
+  url: "https://uk.wikipedia.org/wiki/Київська_братська_школа"
   type: reference
   notes: Educational activities
 immersion: 100% Ukrainian

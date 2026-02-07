@@ -77,7 +77,7 @@ vocabulary:
 - обряд
 activities:
 - type: critical-analysis
-  focus: PVL baptism narrative — separate fact from legend
+  focus: "PVL baptism narrative — separate fact from legend"
 - type: essay-response
   focus: Whose heritage is Kyivan Christianity?
 - type: critical-analysis
@@ -88,15 +88,15 @@ activities:
   focus: Як візантійська традиція сформувала українську ідентичність?
 sources:
 - name: Хрещення Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
   type: reference
   notes: Baptism of Rus
 - name: Візантійський обряд
-  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
+  url: "https://uk.wikipedia.org/wiki/Візантійський_обряд"
   type: reference
   notes: Byzantine rite
 - name: Православ'я в Україні
-  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Православ'я_в_Україні"
   type: reference
   notes: Orthodoxy overview
 vocabulary_hints:

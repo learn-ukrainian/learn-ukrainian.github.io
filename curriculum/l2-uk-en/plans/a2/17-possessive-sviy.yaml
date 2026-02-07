@@ -92,11 +92,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Pronouns
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Reflexive possessive requirements
 - name: Ukrainian Grammar - Possessives
-  url: https://uk.wikipedia.org/wiki/Займенник
+  url: "https://uk.wikipedia.org/wiki/Займенник"
   type: reference
   notes: Declension patterns for possessive pronouns
 immersion: 40-50% Ukrainian

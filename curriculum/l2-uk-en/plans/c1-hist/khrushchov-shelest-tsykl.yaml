@@ -2,7 +2,7 @@ module: khrushchov-shelest-tsykl
 level: c1-hist
 sequence: 86
 version: '1.0'
-title: Хрущов — Шелест — Щербицький
+title: "Хрущов — Шелест — Щербицький"
 focus: history
 pedagogy: seminar
 objectives:
@@ -77,24 +77,24 @@ activities:
 - type: critical-analysis
   focus: Map Shelest's career through co-optation cycle
 - type: comparative-study
-  focus: 1920s vs. 1960s — same trap different packaging
+  focus: "1920s vs. 1960s — same trap different packaging"
 - type: critical-analysis
-  focus: Shcherbytsky's Russification — methods and results
+  focus: "Shcherbytsky's Russification — methods and results"
 - type: essay-response
   focus: What if Shelest stayed in power?
 - type: essay-response
   focus: Чому Шелеста усунули, а Щербицького ні?
 sources:
 - name: Петро Шелест (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Петро_Шелест
+  url: "https://uk.wikipedia.org/wiki/Петро_Шелест"
   type: reference
   notes: Ukrainian leader
 - name: Володимир Щербицький (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
+  url: "https://uk.wikipedia.org/wiki/Володимир_Щербицький"
   type: reference
   notes: Successor
 - name: Десталінізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Десталінізація
+  url: "https://uk.wikipedia.org/wiki/Десталінізація"
   type: reference
   notes: Thaw period
 vocabulary_hints:

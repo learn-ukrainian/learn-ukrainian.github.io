@@ -65,13 +65,13 @@ grammar:
 - Academic register (Renaissance)
 sources:
 - name: Костянтин-Василь Острозький (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
+  url: "https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький"
   type: primary
 - name: Острозька академія
-  url: https://uk.wikipedia.org/wiki/Острозька_академія
+  url: "https://uk.wikipedia.org/wiki/Острозька_академія"
   type: primary
 - name: Острозька Біблія
-  url: https://uk.wikipedia.org/wiki/Острозька_Біблія
+  url: "https://uk.wikipedia.org/wiki/Острозька_Біблія"
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO

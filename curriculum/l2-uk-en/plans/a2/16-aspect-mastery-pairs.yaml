@@ -3,7 +3,7 @@ level: A2
 sequence: 16
 slug: 16-aspect-mastery-pairs
 version: '2.0'
-title: Aspect Mastery — Pairs
+title: "Aspect Mastery — Pairs"
 subtitle: Automating Perfective and Imperfective
 content_outline:
 - section: Introduction / Вступ
@@ -87,11 +87,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Aspect Pairs
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Required aspect pairs for A2 mastery
 - name: Ukrainian Verb Reference
-  url: https://uk.wiktionary.org/
+  url: "https://uk.wiktionary.org/"
   type: reference
   notes: Complete aspect pair listings
 immersion: 40-50% Ukrainian

@@ -2,22 +2,22 @@ module: poetyka-prose-analysis
 level: c2
 sequence: 29
 version: '2.0'
-title: Поетика — аналіз прози
+title: "Поетика — аналіз прози"
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Теорія прози — Вікіпедія
-  url: https://uk.wikipedia.org/wiki/Проза
+  url: "https://uk.wikipedia.org/wiki/Проза"
   type: reference
   notes: Prose theory and genres
 - name: Українська проза — укрліб
-  url: https://ukrlib.com.ua/
+  url: "https://ukrlib.com.ua/"
   type: primary
   notes: Classic and contemporary Ukrainian prose
 - name: Поетика прози — Михайло Бахтін
-  url: https://uk.wikipedia.org/wiki/Михайло_Бахтін
+  url: "https://uk.wikipedia.org/wiki/Михайло_Бахтін"
   type: reference
   notes: Bakhtinian concepts for prose analysis
 content_outline:

@@ -2,22 +2,22 @@ module: teaching-ukrainian-i
 level: c2
 sequence: 82
 version: '2.0'
-title: Викладання української мови I — Педагогічні основи
+title: "Викладання української мови I — Педагогічні основи"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Методика викладання української мови як іноземної
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official methodology for teaching Ukrainian as a foreign language
 - name: Ukrainian State Standard 2024 — Педагогічна компетенція
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Teacher competency requirements and standards
 - name: CEFR Companion Volume — Teacher Training
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: secondary
   notes: European framework for language teacher training
 content_outline:

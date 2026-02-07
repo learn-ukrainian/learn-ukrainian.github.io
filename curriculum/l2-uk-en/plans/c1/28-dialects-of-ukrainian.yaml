@@ -96,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Атлас української мови
-  url: https://r2u.org.ua/
+  url: "https://r2u.org.ua/"
   type: primary
   notes: Dialectological atlas of Ukrainian
 - name: Українська діалектологія
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: reference
   notes: Dialectology textbook
 immersion: 100% Ukrainian

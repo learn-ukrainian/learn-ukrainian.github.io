@@ -86,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Патон (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+  url: "https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович"
   type: primary
   notes: Biography, engineering achievements, institute
 - name: Інститут електрозварювання
-  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
+  url: "https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона"
   type: reference
   notes: Institute he founded
 - name: Міст Патона
-  url: https://uk.wikipedia.org/wiki/Міст_Патона
+  url: "https://uk.wikipedia.org/wiki/Міст_Патона"
   type: reference
   notes: Kyiv bridge named after him
 immersion: 100% Ukrainian

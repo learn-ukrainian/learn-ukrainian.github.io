@@ -83,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Катерина Білокур (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
+  url: "https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна"
   type: primary
   notes: Biography of the self-taught folk artist
 - name: Національний музей українського народного декоративного мистецтва
-  url: https://mundm.kiev.ua/
+  url: "https://mundm.kiev.ua/"
   type: reference
   notes: Major collection of Bilokur's works
 immersion: 100% Ukrainian

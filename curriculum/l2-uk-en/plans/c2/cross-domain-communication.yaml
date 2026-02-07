@@ -9,15 +9,15 @@ objectives:
 - TBD
 sources:
 - name: Науково-популярний журнал "Світогляд"
-  url: https://svitohlyad.org.ua/
+  url: "https://svitohlyad.org.ua/"
   type: reference
   notes: Examples of cross-domain scientific communication
 - name: Українське науково-популярне видання
-  url: https://kunsht.com.ua/
+  url: "https://kunsht.com.ua/"
   type: reference
   notes: Examples of explaining complex topics to general audience
 - name: TED-Ed українською
-  url: https://ed.ted.com/
+  url: "https://ed.ted.com/"
   type: reference
   notes: Educational content explaining specialized topics accessibly
 content_outline:

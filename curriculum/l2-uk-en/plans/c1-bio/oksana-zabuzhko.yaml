@@ -85,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Оксана Забужко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
+  url: "https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна"
   type: primary
   notes: Біографія, літературна діяльність, філософія
 - name: Офіційний сайт Оксани Забужко
-  url: https://zabuzhko.com
+  url: "https://zabuzhko.com"
   type: reference
   notes: Бібліографія та есеїстика
 - name: PEN Ukraine
-  url: https://pen.org.ua
+  url: "https://pen.org.ua"
   type: reference
   notes: Громадська позиція та правозахисна діяльність
 immersion: 100% Ukrainian

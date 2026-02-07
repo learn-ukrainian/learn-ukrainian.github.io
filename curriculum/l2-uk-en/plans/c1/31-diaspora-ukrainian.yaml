@@ -99,11 +99,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Українська діаспора
-  url: https://diasporaua.org/
+  url: "https://diasporaua.org/"
   type: reference
   notes: Diaspora community information
 - name: Heritage Language Studies
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Research on diaspora language
 immersion: 100% Ukrainian

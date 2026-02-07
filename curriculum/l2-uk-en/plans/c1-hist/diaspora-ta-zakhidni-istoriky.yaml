@@ -84,26 +84,26 @@ activities:
 - type: reading
   focus: 'Preface from Subtelny''s «Ukraine: A History»'
 - type: reading
-  focus: Explore HURI website — list 3 current research projects
+  focus: "Explore HURI website — list 3 current research projects"
 - type: comparative-study
   focus: Compare chapter on Khmelnytsky in Subtelny vs. Soviet textbook
 - type: essay-response
   focus: Яку роль відіграла діаспора у збереженні української історичної пам'яті?
 sources:
 - name: Harvard Ukrainian Research Institute (HURI)
-  url: https://huri.harvard.edu/
+  url: "https://huri.harvard.edu/"
   type: reference
   notes: Key Western academic institution
 - name: Омелян Пріцак
-  url: https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович
+  url: "https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович"
   type: reference
   notes: Founder of HURI
 - name: Орест Субтельний
-  url: https://uk.wikipedia.org/wiki/Субтельний_Орест
+  url: "https://uk.wikipedia.org/wiki/Субтельний_Орест"
   type: reference
   notes: Author of most popular English-language history
 - name: 'Ukraine: A History (book info)'
-  url: https://www.utpress.utoronto.ca/9781442609914/ukraine
+  url: "https://www.utpress.utoronto.ca/9781442609914/ukraine"
   type: secondary
   notes: Subtelny's standard text
 vocabulary_hints:

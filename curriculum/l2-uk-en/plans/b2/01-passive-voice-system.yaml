@@ -107,15 +107,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Passive Voice
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official B2 passive voice requirements, all 4 forms
 - name: CEFR B2 Grammar Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 grammar complexity expectations
 - name: Сучасна українська мова - Пономарів
-  url: https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович
+  url: "https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович"
   type: secondary
   notes: Academic reference for passive voice usage and register
 immersion: 100% Ukrainian

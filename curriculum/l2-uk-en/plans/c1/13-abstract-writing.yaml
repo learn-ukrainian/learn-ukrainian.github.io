@@ -3,7 +3,7 @@ level: C1
 sequence: 13
 slug: 13-abstract-writing
 version: '2.0'
-title: Жанр — Анотація та реферат
+title: "Жанр — Анотація та реферат"
 content_outline:
 - section: Вступ — Роль анотації
   words: 400
@@ -98,11 +98,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Вимоги до анотацій наукових статей
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official abstract formatting requirements
 - name: Academic Abstract Writing Guidelines
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: Structure and content of effective abstracts
 immersion: 100% Ukrainian

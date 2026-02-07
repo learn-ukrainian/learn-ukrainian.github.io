@@ -78,20 +78,20 @@ activities:
 - type: critical-analysis
   focus: How "friendship of peoples" ideology worked
 - type: comparative-study
-  focus: Soviet textbooks — how history was rewritten
+  focus: "Soviet textbooks — how history was rewritten"
 - type: critical-analysis
-  focus: What couldn't be discussed — mapping silences
+  focus: "What couldn't be discussed — mapping silences"
 - type: critical-analysis
   focus: Soviet propaganda tropes that survive today
 - type: essay-response
   focus: Чи 'дружба народів' була рівною?
 sources:
 - name: Пропаганда в СРСР (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Пропаганда_в_СРСР
+  url: "https://uk.wikipedia.org/wiki/Пропаганда_в_СРСР"
   type: reference
   notes: Soviet propaganda
 - name: «Дружба народів» (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Дружба_народів_(ідеологема)
+  url: "https://uk.wikipedia.org/wiki/Дружба_народів_(ідеологема)"
   type: reference
   notes: Friendship of peoples ideology
 vocabulary_hints:

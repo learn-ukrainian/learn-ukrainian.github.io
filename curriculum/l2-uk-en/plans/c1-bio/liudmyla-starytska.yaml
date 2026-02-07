@@ -83,17 +83,17 @@ connects_to:
 module_type: biography
 sources:
 - name: Людмила Старицька-Черняхівська (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Людмила_Старицька-Черняхівська
+  url: "https://uk.wikipedia.org/wiki/Людмила_Старицька-Черняхівська"
   type: primary
   notes: Біографія, літературна та громадська діяльність
 - name: Справа СВУ
-  url: https://uk.wikipedia.org/wiki/Справа_Спілки_визволення_України
+  url: "https://uk.wikipedia.org/wiki/Справа_Спілки_визволення_України"
   type: reference
   notes: Сфабрикований процес та репресії
 - name: Михайло Старицький
-  url: https://uk.wikipedia.org/wiki/Михайло_Старицький
+  url: "https://uk.wikipedia.org/wiki/Михайло_Старицький"
   type: reference
-  notes: Батько — класик української літератури
+  notes: "Батько — класик української літератури"
 immersion: 100% Ukrainian
 phase: C1-BIO
 objectives:

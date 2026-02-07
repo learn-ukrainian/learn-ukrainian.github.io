@@ -61,10 +61,10 @@ grammar:
 - Action narrative
 sources:
 - name: Северин Наливайко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
+  url: "https://uk.wikipedia.org/wiki/Северин_Наливайко"
   type: primary
 - name: Повстання Наливайка
-  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
+  url: "https://uk.wikipedia.org/wiki/Повстання_Наливайка"
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO

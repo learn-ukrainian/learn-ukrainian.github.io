@@ -60,11 +60,11 @@ grammar:
 module_type: biography
 sources:
 - name: Михайло Всеволодович (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
+  url: "https://uk.wikipedia.org/wiki/Михайло_Всеволодович"
   type: primary
   notes: Життєпис та канонізація
 - name: Сказання про вбивство в Орді
-  url: http://izbornyk.org.ua/
+  url: "http://izbornyk.org.ua/"
   type: primary
   notes: Оригінальне джерело
 immersion: 100% Ukrainian

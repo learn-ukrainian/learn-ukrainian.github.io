@@ -75,16 +75,16 @@ activities:
 - type: critical-analysis
   focus: How far has economic decolonization gone?
 - type: critical-analysis
-  focus: EU integration — risks and opportunities
+  focus: "EU integration — risks and opportunities"
 - type: essay-response
   focus: Чи завершила Україна економічну деколонізацію?
 sources:
 - name: Економіка України (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Економіка_України
+  url: "https://uk.wikipedia.org/wiki/Економіка_України"
   type: reference
   notes: Economic overview
 - name: Угода про асоціацію (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС
+  url: "https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС"
   type: reference
   notes: EU integration
 vocabulary_hints:

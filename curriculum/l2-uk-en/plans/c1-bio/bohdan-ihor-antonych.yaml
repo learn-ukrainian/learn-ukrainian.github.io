@@ -84,11 +84,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Богдан-Ігор Антонич (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор
+  url: "https://uk.wikipedia.org/wiki/Антонич_Богдан-Ігор"
   type: primary
   notes: Comprehensive biography of the Lemko-born modernist poet
 - name: Антонич у бібліотеці
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=126
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=126"
   type: reference
   notes: Bio and works in Ukrainian digital library
 immersion: 100% Ukrainian

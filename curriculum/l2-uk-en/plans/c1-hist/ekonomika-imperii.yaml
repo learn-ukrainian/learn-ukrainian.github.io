@@ -71,7 +71,7 @@ activities:
 - type: critical-analysis
   focus: Where did Ukrainian grain profits go?
 - type: comparative-study
-  focus: Ukraine vs. other colonies — economic extraction
+  focus: "Ukraine vs. other colonies — economic extraction"
 - type: critical-analysis
   focus: Railways for empire, not for Ukraine
 - type: critical-analysis
@@ -80,15 +80,15 @@ activities:
   focus: Чи була Україна економічною колонією Російської імперії?
 sources:
 - name: Економіка Російської імперії (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Економіка_Російської_імперії
+  url: "https://uk.wikipedia.org/wiki/Економіка_Російської_імперії"
   type: reference
   notes: Imperial economy
 - name: Кріпацтво в Україні (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні"
   type: reference
   notes: Serfdom
 - name: Експорт зерна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Експорт_зерна_з_України
+  url: "https://uk.wikipedia.org/wiki/Експорт_зерна_з_України"
   type: reference
   notes: Grain export
 vocabulary_hints:

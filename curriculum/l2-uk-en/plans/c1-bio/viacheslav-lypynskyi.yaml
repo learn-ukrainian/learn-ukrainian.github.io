@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: В'ячеслав Липинський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
+  url: "https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович"
   type: primary
   notes: Основна біографічна інформація
 - name: Інститут В'ячеслава Липинського
-  url: https://lipynsky.org/
+  url: "https://lipynsky.org/"
   type: reference
   notes: Наукова спадщина та дослідження
 - name: Твори Липинського
-  url: https://diasporiana.org.ua/
+  url: "https://diasporiana.org.ua/"
   type: reference
   notes: Повні тексти праць
 immersion: 100% Ukrainian

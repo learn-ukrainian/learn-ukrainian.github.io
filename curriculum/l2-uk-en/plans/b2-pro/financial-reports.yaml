@@ -64,7 +64,7 @@ vocabulary_hints:
   - ліквідність (liquidity)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати спрощений баланс — визначити структуру активів та пасивів
+  focus: "Проаналізувати спрощений баланс — визначити структуру активів та пасивів"
   items: 1
 - type: reading-comprehension
   focus: Прочитати звіт про прибутки та відповісти на питання

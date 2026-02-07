@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Енеїда — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
   type: primary
   notes: Частина I для детального аналізу
 - name: Аналіз "Енеїди"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
   type: secondary
   notes: Літературознавчий аналіз твору
 - name: Вергілій — Енеїда (оригінал)
-  url: https://uk.wikipedia.org/wiki/Енеїда_(Вергілій)
+  url: "https://uk.wikipedia.org/wiki/Енеїда_(Вергілій)"
   type: reference
   notes: Для порівняння з оригіналом
 immersion: 100% Ukrainian

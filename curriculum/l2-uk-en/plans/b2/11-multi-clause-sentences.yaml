@@ -101,15 +101,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Syntax
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Complex sentence structure requirements for B2
 - name: Сучасна українська літературна мова - Синтаксис
-  url: https://uk.wikipedia.org/wiki/Синтаксис
+  url: "https://uk.wikipedia.org/wiki/Синтаксис"
   type: secondary
   notes: Academic reference for sentence structure
 - name: CEFR B2 Grammar Complexity
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 complex sentence requirements
 immersion: 100% Ukrainian

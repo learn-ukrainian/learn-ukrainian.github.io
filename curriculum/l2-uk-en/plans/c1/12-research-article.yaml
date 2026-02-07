@@ -3,7 +3,7 @@ level: C1
 sequence: 12
 slug: 12-research-article
 version: '2.0'
-title: Жанр — Наукова стаття
+title: "Жанр — Наукова стаття"
 content_outline:
 - section: Вступ — Що таке наукова стаття?
   words: 400
@@ -97,11 +97,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Вимоги до наукових публікацій
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official requirements for Ukrainian academic articles
 - name: IMRaD Structure Guidelines
-  url: https://mova.info/
+  url: "https://mova.info/"
   type: secondary
   notes: International research article structure
 immersion: 100% Ukrainian

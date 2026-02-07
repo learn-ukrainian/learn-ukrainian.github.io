@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Маруся — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=252"
   type: primary
   notes: Повість для детального аналізу
 - name: Аналіз "Марусі"
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=252
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=252"
   type: secondary
   notes: Літературознавчий аналіз
 - name: Біографія Квітки
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1646"
   type: reference
   notes: Авторський контекст
 immersion: 100% Ukrainian

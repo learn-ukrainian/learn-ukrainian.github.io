@@ -50,11 +50,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Advanced Verbs of Motion
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Standards for complex spatial trajectories and prefixed verbs at A2
 - name: Grammar of Ukrainian Language - Verb Prefixes
-  url: https://uk.wikipedia.org/wiki/Префікси_дієслів_руху
+  url: "https://uk.wikipedia.org/wiki/Префікси_дієслів_руху"
   type: reference
   notes: Detailed semantics of spatial prefixes with motion stems
 immersion: 40-50% Ukrainian

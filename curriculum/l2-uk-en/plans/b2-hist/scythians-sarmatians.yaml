@@ -3,7 +3,7 @@ level: B2-HIST
 sequence: 2
 slug: scythians-sarmatians
 version: '2.0'
-title: Скіфи та сармати — Володарі степу
+title: "Скіфи та сармати — Володарі степу"
 subtitle: Scythians and Sarmatians
 content_outline:
 - section: Розминка
@@ -75,7 +75,7 @@ activity_hints:
   focus: Analyze Scythian gold artifacts including the pectoral
   items: 5-6 images
 - type: comparative-study
-  focus: Scythians vs Sarmatians — similarities and differences
+  focus: "Scythians vs Sarmatians — similarities and differences"
   output: Table or diagram
 - type: essay-response
   focus: Як кочівники вплинули на розвиток українських земель?
@@ -98,15 +98,15 @@ grammar:
 - Минулий час у науковому тексті
 sources:
 - name: Скіфи (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Скіфи
+  url: "https://uk.wikipedia.org/wiki/Скіфи"
   type: reference
   notes: Overview of Scythian civilization
 - name: Сармати (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Сармати
+  url: "https://uk.wikipedia.org/wiki/Сармати"
   type: reference
   notes: Overview of Sarmatian peoples
 - name: Геродот про скіфів
-  url: https://litopys.org.ua/
+  url: "https://litopys.org.ua/"
   type: primary
   notes: Ancient Greek descriptions of Scythians
 register: публіцистичний

@@ -65,7 +65,7 @@ vocabulary_hints:
   - науковий дискурс (scholarly discourse)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати огляд літератури — оцінити синтез та критичний аналіз
+  focus: "Проаналізувати огляд літератури — оцінити синтез та критичний аналіз"
   items: 2
 - type: writing-task
   focus: Написати огляд літератури з синтезом 5+ джерел

@@ -90,15 +90,15 @@ grammar:
 module_type: biography
 sources:
 - name: Григорій Квітка-Основ'яненко — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1646"
   type: primary
   notes: Офіційна біографія на UkrLib
 - name: Маруся — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=252"
   type: secondary
   notes: Для контексту творчості
 - name: Слобожанщина — історія
-  url: https://uk.wikipedia.org/wiki/Слобожанщина
+  url: "https://uk.wikipedia.org/wiki/Слобожанщина"
   type: reference
   notes: Регіональний контекст
 immersion: 100% Ukrainian

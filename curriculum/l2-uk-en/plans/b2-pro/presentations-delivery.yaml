@@ -66,7 +66,7 @@ vocabulary_hints:
   - пропоную обговорити це окремо (I suggest discussing this separately)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати відеозапис презентації — оцінити роботу з аудиторією
+  focus: "Проаналізувати відеозапис презентації — оцінити роботу з аудиторією"
   items: 1
 - type: role-play
   focus: Провести міні-презентацію та відповісти на запитання

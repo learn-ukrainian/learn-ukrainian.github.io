@@ -2,22 +2,22 @@ module: capstone-research
 level: c2
 sequence: 90
 version: '2.0'
-title: Дипломний проєкт — Дослідження
+title: "Дипломний проєкт — Дослідження"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Методологія наукових досліджень
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Research methodology standards for Ukrainian academia
 - name: Академічна доброчесність — Рекомендації МОН
-  url: https://naqa.gov.ua/
+  url: "https://naqa.gov.ua/"
   type: reference
   notes: Academic integrity guidelines
 - name: Науковий стиль української мови
-  url: https://lcorp.ulif.org.ua/
+  url: "https://lcorp.ulif.org.ua/"
   type: secondary
   notes: Corpus-based examples of academic Ukrainian
 content_outline:

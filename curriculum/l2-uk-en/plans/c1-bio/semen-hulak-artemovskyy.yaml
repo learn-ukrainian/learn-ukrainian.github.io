@@ -95,15 +95,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Семен Гулак-Артемовський (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський
+  url: "https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський"
   type: primary
   notes: Biography, opera career, composition
 - name: Запорожець за Дунаєм (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм
+  url: "https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм"
   type: primary
   notes: First Ukrainian opera details
 - name: Михайло Глінка
-  url: https://uk.wikipedia.org/wiki/Михайло_Глінка
+  url: "https://uk.wikipedia.org/wiki/Михайло_Глінка"
   type: reference
   notes: Mentorship context
 immersion: 100% Ukrainian

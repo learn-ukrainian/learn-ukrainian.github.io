@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Винничук (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
+  url: "https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович"
   type: primary
   notes: Основна біографічна інформація
 - name: Видавництво Фоліо
-  url: https://folio.com.ua/
+  url: "https://folio.com.ua/"
   type: reference
   notes: Бібліографія
 - name: Літературна критика
-  url: https://litakcent.com/
+  url: "https://litakcent.com/"
   type: reference
   notes: Аналіз творчості
 immersion: 100% Ukrainian

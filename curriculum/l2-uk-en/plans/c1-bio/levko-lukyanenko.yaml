@@ -83,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Левко Лук'яненко (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Левко_Лук%27яненко
+  url: "https://uk.wikipedia.org/wiki/Левко_Лук%27яненко"
   type: primary
   notes: Біографія, дисидентська діяльність, роль у незалежності
 - name: Українська Гельсінська спілка
-  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_спілка
+  url: "https://uk.wikipedia.org/wiki/Українська_Гельсінська_спілка"
   type: reference
   notes: Правозахисний рух та роль Лук'яненка
 - name: Акт проголошення незалежності України
-  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  url: "https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України"
   type: reference
   notes: Історичний контекст та авторство
 immersion: 100% Ukrainian

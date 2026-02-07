@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Петро Болбочан (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
+  url: "https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович"
   type: primary
   notes: Біографія, Кримський похід, трагічна доля
 - name: Інститут історії України НАНУ
-  url: https://www.history.org.ua
+  url: "https://www.history.org.ua"
   type: reference
   notes: Дослідження Української революції
 - name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
+  url: "https://mvbu.org.ua"
   type: reference
   notes: Військова історія УНР
 immersion: 100% Ukrainian

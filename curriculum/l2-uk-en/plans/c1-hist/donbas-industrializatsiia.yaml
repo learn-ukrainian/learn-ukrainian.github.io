@@ -76,26 +76,26 @@ vocabulary:
 - деіндустріалізація
 activities:
 - type: critical-analysis
-  focus: How Donbas was created — not ancient
+  focus: "How Donbas was created — not ancient"
 - type: critical-analysis
   focus: Class vs. national identity in Donbas
 - type: comparative-study
-  focus: Who lives in Donbas — ethnic composition over time
+  focus: "Who lives in Donbas — ethnic composition over time"
 - type: critical-analysis
-  focus: 2014-2022 — why separatism, but also resistance
+  focus: "2014-2022 — why separatism, but also resistance"
 - type: essay-response
   focus: Чи Донбас 'російський'? Деконструкція міфу
 sources:
 - name: Донбас (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Донбас
+  url: "https://uk.wikipedia.org/wiki/Донбас"
   type: reference
   notes: Regional overview
 - name: Індустріалізація Донбасу (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
+  url: "https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу"
   type: reference
   notes: Industrial history
 - name: Джон Юз (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Джон_Юз
+  url: "https://uk.wikipedia.org/wiki/Джон_Юз"
   type: reference
   notes: John Hughes founder
 vocabulary_hints:

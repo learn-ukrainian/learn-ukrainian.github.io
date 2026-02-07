@@ -65,7 +65,7 @@ vocabulary_hints:
   - апеляція (appeal)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати рецензію — оцінити конструктивність та повноту
+  focus: "Проаналізувати рецензію — оцінити конструктивність та повноту"
   items: 2
 - type: writing-task
   focus: Написати рецензію на наданий науковий текст

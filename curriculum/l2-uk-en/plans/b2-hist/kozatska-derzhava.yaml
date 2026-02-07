@@ -78,11 +78,11 @@ grammar:
 - Passive voice in official descriptions
 sources:
 - name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
+  url: "http://litopys.org.ua/hrushrus/iur.htm"
   type: reference
   notes: Analysis of the Hetmanate structure
 - name: The Cossack Myth
-  url: https://history.org.ua
+  url: "https://history.org.ua"
   type: reference
   notes: State-building and identity
 register: публіцистичний

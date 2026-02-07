@@ -38,11 +38,11 @@ objectives:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Preferences
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Communicative requirements for making choices
 - name: Ukrainian Language - Communicative Competence
-  url: https://uk.wikipedia.org/wiki/Комунікативна_компетентність
+  url: "https://uk.wikipedia.org/wiki/Комунікативна_компетентність"
   type: reference
   notes: Expressions for polite refusal and preference
 immersion: 40-50% Ukrainian

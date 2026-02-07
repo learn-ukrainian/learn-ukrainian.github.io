@@ -65,7 +65,7 @@ vocabulary_hints:
   - пакет медичних послуг (package of medical services)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати медичний документ — оцінити структуру та відповідність стандартам
+  focus: "Проаналізувати медичний документ — оцінити структуру та відповідність стандартам"
   items: 2
 - type: writing-task
   focus: Написати презентацію про впровадження нового протоколу

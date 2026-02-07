@@ -103,15 +103,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Medical Communication
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Healthcare communication standards
 - name: Медична термінологія
-  url: https://uk.wikipedia.org/wiki/Медична_термінологія
+  url: "https://uk.wikipedia.org/wiki/Медична_термінологія"
   type: secondary
   notes: Medical terminology in Ukrainian
 - name: CEFR B2 Domain-Specific Language
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 specialized vocabulary requirements
 immersion: 100% Ukrainian

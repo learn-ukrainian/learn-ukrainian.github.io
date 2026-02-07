@@ -71,7 +71,7 @@ activities:
 - type: critical-analysis
   focus: Map cultural survival strategies
 - type: critical-analysis
-  focus: Aesopian language — examples and decoding
+  focus: "Aesopian language — examples and decoding"
 - type: comparative-study
   focus: How samvydav networks functioned
 - type: critical-analysis
@@ -80,11 +80,11 @@ activities:
   focus: Яка стратегія культурного виживання була найефективнішою?
 sources:
 - name: Самвидав (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Самвидав
+  url: "https://uk.wikipedia.org/wiki/Самвидав"
   type: reference
   notes: Samvydav
 - name: Культурний спротив (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культурний_спротив
+  url: "https://uk.wikipedia.org/wiki/Культурний_спротив"
   type: reference
   notes: Cultural resistance
 vocabulary_hints:

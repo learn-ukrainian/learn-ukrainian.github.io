@@ -2,22 +2,22 @@ module: capstone-polish
 level: c2
 sequence: 93
 version: '2.0'
-title: Дипломний проєкт — Фінальне шліфування
+title: "Дипломний проєкт — Фінальне шліфування"
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Вимоги до оформлення наукових робіт (ДСТУ)
-  url: https://dstu-online.com/
+  url: "https://dstu-online.com/"
   type: reference
   notes: Formatting standards for academic papers
 - name: Коректура та верстка наукового тексту
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Proofreading and layout guidelines
 - name: Типографіка українського тексту
-  url: https://uk.wikipedia.org/wiki/Типографіка
+  url: "https://uk.wikipedia.org/wiki/Типографіка"
   type: secondary
   notes: Typography conventions for Ukrainian
 content_outline:

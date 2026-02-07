@@ -86,19 +86,19 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Потебня (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович
+  url: "https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович"
   type: primary
   notes: Biography, linguistic theories, works
 - name: Інститут мовознавства ім. О. О. Потебні
-  url: https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України
+  url: "https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України"
   type: reference
   notes: His legacy in modern linguistics
 - name: Харківська філологічна школа
-  url: https://uk.wikipedia.org/wiki/Харківська_філологічна_школа
+  url: "https://uk.wikipedia.org/wiki/Харківська_філологічна_школа"
   type: reference
   notes: The school he founded
 - name: '"Думка і мова" (праця)'
-  url: https://uk.wikipedia.org/wiki/Думка_і_мова
+  url: "https://uk.wikipedia.org/wiki/Думка_і_мова"
   type: reference
   notes: His seminal work
 immersion: 100% Ukrainian

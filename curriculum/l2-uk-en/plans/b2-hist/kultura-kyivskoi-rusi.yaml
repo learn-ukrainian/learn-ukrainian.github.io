@@ -113,15 +113,15 @@ grammar:
 - Art and culture vocabulary
 sources:
 - name: Культура Київської Русі (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
+  url: "https://uk.wikipedia.org/wiki/Культура_Київської_Русі"
   type: reference
   notes: Comprehensive overview
 - name: Літописання Київської Русі
-  url: https://uk.wikipedia.org/wiki/Літописання_Київської_Русі
+  url: "https://uk.wikipedia.org/wiki/Літописання_Київської_Русі"
   type: reference
   notes: Chronicle tradition
 - name: Слово о полку Ігоревім
-  url: https://litopys.org.ua/slovo/slovo.htm
+  url: "https://litopys.org.ua/slovo/slovo.htm"
   type: primary
   notes: Epic poem text
 immersion: 100% Ukrainian

@@ -84,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Вільгельм Габсбург (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Вільгельм_Габсбург
+  url: "https://uk.wikipedia.org/wiki/Вільгельм_Габсбург"
   type: primary
   notes: Основна біографічна інформація
 - name: Тімоті Снайдер Червоний князь
-  url: https://bookclub.ua/
+  url: "https://bookclub.ua/"
   type: reference
   notes: Біографічне дослідження
 - name: Архіви Січових Стрільців
-  url: https://archives.gov.ua/
+  url: "https://archives.gov.ua/"
   type: reference
   notes: Документи військової служби
 immersion: 100% Ukrainian

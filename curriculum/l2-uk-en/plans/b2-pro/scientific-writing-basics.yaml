@@ -65,7 +65,7 @@ vocabulary_hints:
   - статистично значущий (statistically significant)
 activity_hints:
 - type: document-analysis
-  focus: Проаналізувати анотацію наукової статті — визначити структуру
+  focus: "Проаналізувати анотацію наукової статті — визначити структуру"
   items: 1
 - type: writing-task
   focus: Написати анотацію до наданого тексту

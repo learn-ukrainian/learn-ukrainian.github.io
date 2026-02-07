@@ -3,7 +3,7 @@ level: A2
 sequence: 1
 slug: 01-the-dative-i-pronouns
 version: '2.0'
-title: The Dative I — Pronouns
+title: "The Dative I — Pronouns"
 subtitle: I Like, I Need, and How I Feel
 content_outline:
 - section: Introduction / Вступ
@@ -93,11 +93,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Dative Case
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official dative pronoun paradigm and usage requirements for A2
 - name: CEFR A2 Grammar Descriptors
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: A2 level grammar complexity expectations
 immersion: 40-50% Ukrainian

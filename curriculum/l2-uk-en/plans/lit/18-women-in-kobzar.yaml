@@ -88,15 +88,15 @@ grammar:
 module_type: literature
 sources:
 - name: Катерина — поема
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=6
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=6"
   type: primary
   notes: Рання поема про покритку
 - name: Наймичка — поема
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=30
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=30"
   type: primary
   notes: Зріла поема про матір
 - name: Жіночі образи у Шевченка
-  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=6
+  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=6"
   type: secondary
   notes: Літературознавчий аналіз
 immersion: 100% Ukrainian

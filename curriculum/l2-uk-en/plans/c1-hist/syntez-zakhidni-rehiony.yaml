@@ -85,11 +85,11 @@ activities:
   focus: Чому західні українці 'більш українські'? Чи це міф?
 sources:
 - name: Західна Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Західна_Україна
+  url: "https://uk.wikipedia.org/wiki/Західна_Україна"
   type: reference
   notes: Regional overview
 - name: Галичина (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
+  url: "https://uk.wikipedia.org/wiki/Галичина"
   type: reference
   notes: Galicia summary
 vocabulary_hints:

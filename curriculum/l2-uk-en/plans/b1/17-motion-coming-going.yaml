@@ -78,11 +78,11 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Official prefix meanings with motion verbs
 - name: Ukrainian Verbal Prefixes
-  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  url: "https://uk.wikipedia.org/wiki/Дієслівні_префікси"
   type: reference
   notes: Comprehensive prefix system
 immersion: 100% Ukrainian

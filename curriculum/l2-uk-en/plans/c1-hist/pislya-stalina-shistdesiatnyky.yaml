@@ -69,22 +69,22 @@ vocabulary:
 - «Клуб творчої молоді»
 activities:
 - type: comparative-study
-  focus: Who were the Sixtiers — profiles
+  focus: "Who were the Sixtiers — profiles"
 - type: critical-analysis
-  focus: Sixtiers cultural output — poetry, cinema, art
+  focus: "Sixtiers cultural output — poetry, cinema, art"
 - type: critical-analysis
-  focus: 1965-1972 repressions — timeline
+  focus: "1965-1972 repressions — timeline"
 - type: critical-analysis
   focus: Sixtiers → Ukrainian Helsinki Group → 1991
 - type: essay-response
   focus: Як шістдесятники підготували незалежність?
 sources:
 - name: Шістдесятники (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Шістдесятники
+  url: "https://uk.wikipedia.org/wiki/Шістдесятники"
   type: reference
   notes: Sixtiers overview
 - name: Українське дисидентське рух (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+  url: "https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні"
   type: reference
   notes: Dissident movement
 vocabulary_hints:

@@ -105,15 +105,15 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Word Order
-  url: https://mon.gov.ua/
+  url: "https://mon.gov.ua/"
   type: reference
   notes: Stylistic word order variations at B2
 - name: Сучасна українська літературна мова - Стилістика
-  url: https://uk.wikipedia.org/wiki/Стилістика
+  url: "https://uk.wikipedia.org/wiki/Стилістика"
   type: secondary
   notes: Emphatic constructions in Ukrainian
 - name: CEFR B2 Stylistic Competence
-  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
   type: reference
   notes: B2 style and register awareness
 immersion: 100% Ukrainian

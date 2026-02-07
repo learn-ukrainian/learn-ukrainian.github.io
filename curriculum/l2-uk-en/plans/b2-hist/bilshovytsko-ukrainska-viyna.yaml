@@ -69,7 +69,7 @@ activity_hints:
   source: Архівні документи
   items: 4
 - type: essay-response
-  focus: Чому війна 1917-1921 років — це не «громадянська війна»?
+  focus: "Чому війна 1917-1921 років — це не «громадянська війна»?"
   word_target: 250
 focus: history
 pedagogy: CBI

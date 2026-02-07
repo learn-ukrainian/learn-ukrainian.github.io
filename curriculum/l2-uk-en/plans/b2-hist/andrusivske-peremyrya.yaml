@@ -83,11 +83,11 @@ grammar:
 - Conditional sentences in historical context
 sources:
 - name: Andrusovo Treaty - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CN%5CAndrusovoTreatyof1667.htm
+  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CN%5CAndrusovoTreatyof1667.htm"
   type: reference
   notes: Academic summary
 - name: Text of the Treaty
-  url: http://litopys.org.ua/
+  url: "http://litopys.org.ua/"
   type: primary
   notes: Original articles
 register: публіцистичний
