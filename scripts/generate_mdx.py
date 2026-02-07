@@ -1269,7 +1269,10 @@ import EtymologyTrace from '@site/src/components/EtymologyTrace';
 import GrammarIdentify from '@site/src/components/GrammarIdentify';
 import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
 import DialectComparison from '@site/src/components/DialectComparison';
-import TranslationCritique from '@site/src/components/TranslationCritique';"""
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import ActivityHelp from '@site/src/components/ActivityHelp';"""
 
     # Frontmatter
     frontmatter = f'''---
