@@ -2,14 +2,14 @@
   "module": "01-passive-voice-system",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T22:12:28.458448Z",
+  "last_audit": "2026-02-07T01:06:08.227928Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.629533Z",
-    "meta": "2026-02-06T21:26:00.671533Z",
-    "activities": "2026-02-06T21:26:00.646533Z",
-    "vocabulary": "2026-02-06T21:26:00.677533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.907255Z",
+    "meta": "2026-02-07T01:05:50.503662Z",
+    "activities": "2026-01-14T09:02:56.020174Z",
+    "vocabulary": "2026-01-21T22:54:24.705522Z",
+    "plan": "2026-01-30T12:04:00.853914Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3811/3800 (raw: 4418)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3811/4100 (raw: 4418)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

@@ -2,14 +2,14 @@
   "module": "37-word-formation-adverbs-integration",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:13:10.271107Z",
+  "last_audit": "2026-02-07T01:06:33.432451Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.636533Z",
-    "meta": "2026-02-06T21:26:00.672533Z",
-    "activities": "2026-02-06T21:26:00.653533Z",
-    "vocabulary": "2026-02-06T21:26:00.678533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.920260Z",
+    "meta": "2026-02-07T01:04:21.231718Z",
+    "activities": "2026-02-07T01:04:17.939643Z",
+    "vocabulary": "2026-01-21T22:54:30.081376Z",
+    "plan": "2026-01-30T15:04:49.271844Z"
   },
   "gates": {
     "meta": {

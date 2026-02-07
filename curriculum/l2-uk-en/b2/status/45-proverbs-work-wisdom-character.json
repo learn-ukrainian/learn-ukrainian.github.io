@@ -2,14 +2,14 @@
   "module": "45-proverbs-work-wisdom-character",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:13:18.754957Z",
+  "last_audit": "2026-02-07T01:06:38.349867Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.637533Z",
-    "meta": "2026-02-06T21:26:00.673533Z",
-    "activities": "2026-02-06T21:26:00.655533Z",
-    "vocabulary": "2026-02-06T21:26:00.678533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.923021Z",
+    "meta": "2026-02-07T01:04:21.232817Z",
+    "activities": "2026-02-07T01:04:17.942011Z",
+    "vocabulary": "2026-01-21T22:54:31.099644Z",
+    "plan": "2026-01-30T15:04:49.291977Z"
   },
   "gates": {
     "meta": {

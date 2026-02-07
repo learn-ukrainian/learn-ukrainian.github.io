@@ -2,14 +2,14 @@
   "module": "36-word-formation-adjective-formation",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:13:09.196044Z",
+  "last_audit": "2026-02-07T01:06:32.814133Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.636533Z",
-    "meta": "2026-02-06T21:26:00.672533Z",
-    "activities": "2026-02-06T21:26:00.653533Z",
-    "vocabulary": "2026-02-06T21:26:00.678533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.920090Z",
+    "meta": "2026-02-07T01:04:21.231633Z",
+    "activities": "2026-02-07T01:04:17.939326Z",
+    "vocabulary": "2026-01-21T22:54:29.994784Z",
+    "plan": "2026-01-30T15:04:49.269259Z"
   },
   "gates": {
     "meta": {

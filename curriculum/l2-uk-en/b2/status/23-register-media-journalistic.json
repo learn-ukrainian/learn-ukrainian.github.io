@@ -2,14 +2,14 @@
   "module": "23-register-media-journalistic",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:12:54.906544Z",
+  "last_audit": "2026-02-07T01:06:24.235326Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.634533Z",
-    "meta": "2026-02-06T21:26:00.672533Z",
-    "activities": "2026-02-06T21:26:00.650533Z",
-    "vocabulary": "2026-02-06T21:26:00.678533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.916821Z",
+    "meta": "2026-02-07T01:04:21.228710Z",
+    "activities": "2026-02-07T01:04:17.936984Z",
+    "vocabulary": "2026-01-21T22:54:27.952265Z",
+    "plan": "2026-01-30T15:04:49.234862Z"
   },
   "gates": {
     "meta": {

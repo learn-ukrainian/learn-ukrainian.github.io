@@ -2,14 +2,14 @@
   "module": "19-register-official-legal",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-06T22:12:50.463022Z",
+  "last_audit": "2026-02-07T01:06:21.662559Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:11:57.858519Z",
-    "meta": "2026-02-06T21:26:00.672533Z",
-    "activities": "2026-02-06T21:26:00.650533Z",
-    "vocabulary": "2026-02-06T21:26:00.678533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.916097Z",
+    "meta": "2026-02-07T01:04:21.227662Z",
+    "activities": "2026-02-07T01:04:17.935895Z",
+    "vocabulary": "2026-01-21T22:54:26.981735Z",
+    "plan": "2026-01-29T07:45:40.617125Z"
   },
   "gates": {
     "meta": {

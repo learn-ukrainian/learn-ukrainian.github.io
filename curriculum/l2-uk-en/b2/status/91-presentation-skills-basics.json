@@ -2,14 +2,14 @@
   "module": "91-presentation-skills-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T22:14:05.988553Z",
+  "last_audit": "2026-02-07T01:07:05.462265Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.645533Z",
-    "meta": "2026-02-06T21:26:00.674533Z",
-    "activities": "2026-02-06T21:26:00.664533Z",
-    "vocabulary": "2026-02-06T21:26:00.680533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.931262Z",
+    "meta": "2026-02-07T01:04:21.237418Z",
+    "activities": "2026-02-07T01:04:17.958489Z",
+    "vocabulary": "2026-01-21T22:54:38.652037Z",
+    "plan": "2026-01-30T15:04:49.384938Z"
   },
   "gates": {
     "meta": {

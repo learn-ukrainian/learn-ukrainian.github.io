@@ -2,14 +2,14 @@
   "module": "88-professional-reports-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T22:14:02.641268Z",
+  "last_audit": "2026-02-07T01:07:03.547499Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T21:26:00.644533Z",
-    "meta": "2026-02-06T21:26:00.674533Z",
-    "activities": "2026-02-06T21:26:00.663533Z",
-    "vocabulary": "2026-02-06T21:26:00.680533Z",
-    "plan": null
+    "md": "2026-02-07T01:04:17.930665Z",
+    "meta": "2026-02-07T01:04:21.237078Z",
+    "activities": "2026-02-07T01:04:17.957978Z",
+    "vocabulary": "2026-01-21T22:54:37.817376Z",
+    "plan": "2026-01-30T15:04:49.373918Z"
   },
   "gates": {
     "meta": {

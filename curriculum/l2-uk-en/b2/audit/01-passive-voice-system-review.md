@@ -1,12 +1,12 @@
 # Audit Report: M01 — 01-passive-voice-system.md
-**Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
+**Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4100
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-06 22:12:28
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-07 01:06:08
 
 ## Configuration
 **Type:** B2-grammar
-**Word Target:** 3800 words
+**Word Target:** 4100 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
@@ -43,7 +43,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3811/3800 (raw: 4418)
+- **Words:** ❌ 3811/4100 (raw: 4418)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
