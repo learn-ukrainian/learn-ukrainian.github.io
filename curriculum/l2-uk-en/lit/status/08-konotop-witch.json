@@ -2,12 +2,12 @@
   "module": "08-konotop-witch",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T23:05:29.890248Z",
+  "last_audit": "2026-02-07T23:49:37.875322Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T23:04:24.456932Z",
-    "meta": "2026-02-07T23:03:37.089719Z",
-    "activities": "2026-02-07T23:05:19.838658Z",
+    "md": "2026-02-07T23:24:09.153928Z",
+    "meta": "2026-02-07T23:25:20.634498Z",
+    "activities": "2026-02-07T23:25:02.340891Z",
     "vocabulary": "2026-02-07T23:04:47.289065Z",
     "plan": "2026-02-07T10:06:50.457623Z"
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1338/4500 (raw: 1407) | pedagogy: 5 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4532/4500 (raw: 4865)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "8/3 | density: 5 < 1"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "4 forbidden activity types (use --fix to remove)"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

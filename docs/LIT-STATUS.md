@@ -1,29 +1,29 @@
 # LIT Module Status
 
-**Generated:** 2026-01-30 21:19:46
+**Generated:** 2026-02-07 23:41:17
 **Total Modules:** 30
-**Status:** 0 passing, 30 failing, 0 stubs, 0 errors
+**Status:** 8 passing, 21 failing, 1 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 0/30 (0%)
-- ❌ **Failing:** 30/30
-- 📝 **Stubs:** 0/30
+- ✅ **Passing:** 8/30 (26%)
+- ❌ **Failing:** 21/30
+- 📝 **Stubs:** 1/30
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | introduction-to-kotliarevsky | ❌ FAIL | 3671/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 002 | eneida-part-1 | ❌ FAIL | 3858/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 003 | eneida-feast | ❌ FAIL | 3891/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 004 | eneida-war | ❌ FAIL | 3516/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 005 | natalka-poltavka | ❌ FAIL | 3851/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 006 | kvitka-bio | ❌ FAIL | 3637/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 007 | marusya | ❌ FAIL | 3618/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 008 | konotop-witch | ❌ FAIL | 3630/4000 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: group-sort, match-up, quiz |
-| 009 | ethnography | ❌ FAIL | 4126/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 010 | kvitka-language | ❌ FAIL | 3752/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
+| 001 | introduction-to-kotliarevsky | ✅ PASS | 4618/4500 | - |
+| 002 | eneida-part-1 | ✅ PASS | 4607/4500 | - |
+| 003 | eneida-feast | ✅ PASS | 4699/4500 | - |
+| 004 | eneida-war | ✅ PASS | 4550/4500 | - |
+| 005 | natalka-poltavka | ✅ PASS | 4491/4500 | - |
+| 006 | kvitka-bio | ✅ PASS | 4417/4500 | - |
+| 007 | marusya | ✅ PASS | 5181/4500 | - |
+| 008 | konotop-witch | ✅ PASS | 4532/4500 | - |
+| 009 | ethnography | ❌ FAIL | 4361/3700 | - |
+| 010 | kvitka-language | ❌ FAIL | 2275/4500 | word_count, structure |
 | 011 | young-shevchenko | ❌ FAIL | 4039/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 012 | the-ballads | ❌ FAIL | 3919/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 013 | haidamaky | ❌ FAIL | 4007/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
@@ -34,7 +34,7 @@
 | 018 | women-in-kobzar | ❌ FAIL | 3605/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 019 | shevchenkos-diary | ❌ FAIL | 3441/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 020 | cult-of-shevchenko | ❌ FAIL | 3505/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 021 | panteleimon-kulish | ❌ FAIL | 3476/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
+| 021 | kulish-literary-legacy | 📝 STUB | 0/0 | empty |
 | 022 | black-council-history | ❌ FAIL | 3529/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 023 | black-council-plot | ❌ FAIL | 3773/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
 | 024 | language-question-linguistics | ❌ FAIL | 3411/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
