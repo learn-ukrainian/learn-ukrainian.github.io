@@ -1,45 +1,89 @@
-# Module 69: Синонімія: Дієслова мовлення
+# Audit Report: M69 — 69-synonymy-speaking-verbs.md
+**Level:** B1 | **Module:** M69 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1828
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:46
 
-**Template:** b1-vocab-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:52:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1828 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** cloze, fill-in, match-up
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння дієслів мовлення | 8 | 8 | ✅ |
+| 2 | match-up | Колокації — дієслово + об'єкт | 12 | 8 | ✅ |
+| 3 | match-up | Дієслова та їх переклад | 12 | 8 | ✅ |
+| 4 | group-sort | Реєстр дієслів мовлення | 16 | 12 | ✅ |
+| 5 | cloze | Вибір дієслова з контексту | 12 | 12 | ✅ |
+| 6 | select | Правильні колокації | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання дієслів мовлення | 12 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
+| 11 | translate | Переклад речень | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть дієслова мовлення | 9 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення дієсловами мовлення | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                                      |
-| ------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical groups: Informing -> Arguing -> Clarifying -> Quoting.                                                             |
-| Relevance           | 10/10 | Essential for B1 -> B2 nuance (avoiding repetitive "Він сказав").                                                          |
-| Educational         | 10/10 | Excellent nuance: *говорити* (speak) vs *казати* (say) vs *розповідати* (tell/narrate).                                    |
-| Language            | 10/10 | High-quality synonyms.                                                                                                     |
-| Pedagogy            | 9/10  | Narrative Arc (Information War) is highly relevant context.                                                                |
-| Immersion           | 10/10 | Discussing *russian propaganda* vs *Ukrainian truth* makes the verbs meaningful (e.g., *стверджувати* vs *спростовувати*). |
-| Activities          | 10/10 | Strong matching tasks.                                                                                                     |
-| Richness            | 9/10  | Good depth.                                                                                                                |
-| Humanity            | 9/10  | Engaging.                                                                                                                  |
-| LLM Fingerprint     | 9/10  | Natural.                                                                                                                   |
-| Linguistic Accuracy | 9/10  | Check `нікакий` in vocab.                                                                                                  |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 3/3 (cloze, fill-in, match-up) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 1745/1828 (raw: 2336) (83 short)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 17/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⚠️ 31 < 35 (soft target)
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (vocabulary)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `нікакий`. This is a Russism (никакой). The Ukrainian word is `ніякий`.
-  - *Action:* Change to `ніякий`.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** vocabulary
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 27 | 15 | 100% | 20% | 20.0% |
+| engagement | 17 | 4 | 100% | 15% | 15.0% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 5% | 4.8% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.8%** |
 
-- **Register Awareness:** Teaches `повідомити` (neutral/official) vs `бовкнути` (informal/blurt out) - though mostly focuses on official verbs here, which is appropriate for the "Info War" topic.
-- **Contextual Relevance:** The module frames "speaking verbs" not just as grammatical tools, but as weapons in the information war (`проголошувати`, `спростовувати`, `заявляти`).
-
-## Issues
-
-- **Vocabulary YAML:** `нікакий` -> `ніякий`.
-
-## Recommendation
-
-✅ PASS — Timely and relevant module.
-
-## Action Items
-
-1. **Fix Vocab:** Remove pure Russism `нікакий`.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 38 | Included in Core |
+| **Вступ** | ✅ | 66 | Included in Core |
+| **Читання** | ✅ | 253 | Included in Core |
+| **Діалоги** | ✅ | 317 | Included in Core |
+| **Вживання** | ⚪️ | 305 | Skipped |
+| **Підсумок** | ✅ | 171 | Included in Core |
+| **Лексика** | ⚪️ | 485 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

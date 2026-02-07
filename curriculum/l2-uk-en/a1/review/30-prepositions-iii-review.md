@@ -1,13 +1,70 @@
-## Module 30: Prepositions III - FINAL REPORT
+# Audit Report: M30 — 30-prepositions-iii.md
+**Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 936
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 21:10:07
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 (was 5) | Relevance 5/5 (was 5) | Educational 5/5 (was 5) | Language 5/5 (was 4) | Pedagogy 5/5 (was 5) | Immersion 5/5 (was 4) | Activities 5/5 (was 3) | Richness N/A | Humanity 5/5 (was 5) | LLM Fingerprint 5/5 (was 5) | **Overall 5/5** ⬆️ from 4/5
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 936 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, quiz
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Question Words | 10 | 8 | ✅ |
+| 2 | group-sort | Location vs Direction | 13 | 12 | ✅ |
+| 3 | group-sort | Preposition Usage | 13 | 12 | ✅ |
+| 4 | fill-in | Де чи Куди? (Where or Where to?) | 12 | 8 | ✅ |
+| 5 | fill-in | Choose the Preposition | 12 | 8 | ✅ |
+| 6 | quiz | Location or Direction? | 8 | 8 | ✅ |
+| 7 | quiz | Which Preposition? | 8 | 8 | ✅ |
+| 8 | unjumble | Preposition Sentences | 12 | 6 | ✅ |
+| 9 | true-false | Preposition Rules | 12 | 8 | ✅ |
 
-**Fixes Applied:**
-- ✅ **Category 1 (Structure):** Removed legacy practice sections. Added template-compliant headers.
-- ✅ **Category 2 (Language):** Added IPA for key question words (Де? Куди? Звідки?) and examples. Fixed euphony for 'зі Львова'. Replaced ASCII double quotes with Ukrainian angular quotes «...» in YAML.
-- ✅ **Category 5 (Activities):** Corrected 'з Львова' to 'зі Львова' in activity items.
+**Summary:**
+- Total activities: 9 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, quiz) ✅
+- Low density activities: 0
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/30-prepositions-iii.md`)
+## Gates
+- **Words:** ✅ 1121/936 (raw: 1488)
+- **Activities:** ✅ 9/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 6/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 5/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 38.1% (target 35-55% (M30))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 143 | Included in Core |
+| **Presentation** | ✅ | 17 | Included in Core |
+| **Місце: Де?** | ⚪️ | 53 | Skipped |
+| **Напрямок: Куди?** | ⚪️ | 66 | Skipped |
+| **Походження: Звідки?** | ⚪️ | 50 | Skipped |
+| **Examples in Context** | ✅ | 192 | Included in Core |
+| **Dialogues** | ✅ | 472 | Included in Core |
+| **Practice** | ⚪️ | 30 | Skipped |
+| **Підсумок** | ✅ | 82 | Included in Core |
+| **Need More Practice?** | ⚪️ | 16 | Skipped |

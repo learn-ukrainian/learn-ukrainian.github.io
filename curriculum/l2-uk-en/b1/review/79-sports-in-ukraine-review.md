@@ -1,47 +1,88 @@
-# Module 79: Спорт в Україні
+# Audit Report: M79 — 79-sports-in-ukraine.md
+**Level:** B1 | **Module:** M79 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1400
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 19:05:46
 
-**Template:** b1-cultural-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:14:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-culture
+**Word Target:** 1400 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Український спорт | 12 | 8 | ✅ |
+| 2 | true-false | Факти про український спорт | 12 | 8 | ✅ |
+| 3 | match-up | Спортсмени та їхні досягнення | 12 | 8 | ✅ |
+| 4 | cloze | Спортивна лексика | 12 | 12 | ✅ |
+| 5 | cloze | Український спорт | 15 | 12 | ✅ |
+| 6 | group-sort | Категорії в спорті | 19 | 12 | ✅ |
+| 7 | unjumble | Речення про спорт | 8 | 6 | ✅ |
+| 8 | error-correction | Помилки про спорт | 8 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть спортивні терміни | 10 | 6 | ✅ |
+| 10 | select | Українські спортивні досягнення | 8 | 6 | ✅ |
+| 11 | fill-in | Доповніть речення про спорт | 8 | 8 | ✅ |
+| 12 | reading | Українські спортивні легенди | 3 | 3 | ✅ |
+| 13 | translate | Перекладіть спортивні фрази | 8 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                          |
-| ------------------- | ----- | ------------------------------------------------------------------------------ |
-| Coherence           | 10/10 | Logical structure (Football -> Boxing -> Olympic Sports).                      |
-| Relevance           | 10/10 | High. Sports nationalism is strong (Usyk, National Team).                      |
-| Educational         | 10/10 | Correct sports terminology (`нападник`, `голкіпер`, `ринг`).                   |
-| Language            | 10/10 | Modern usage.                                                                  |
-| Pedagogy            | 10/10 | Narrative Arc (Match of Death) connects sport to history/resistance perfectly. |
-| Immersion           | 10/10 | Usyk/Klitschko and Shevchenko are the faces of Ukraine globally.               |
-| Activities          | 10/10 | Good variety.                                                                  |
-| Richness            | 9/10  | Good depth.                                                                    |
-| Humanity            | 9/10  | Engaging.                                                                      |
-| LLM Fingerprint     | 9/10  | Natural.                                                                       |
-| Linguistic Accuracy | 9/10  | Check `мунди` and capitalization.                                              |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1844/1400 (raw: 2176)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 10/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 86/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (cultural)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `мундир` (uniform) is listed. Correct, but `мунди` in review notes might be typo reference.
-  - *Clarification:* `мундир` is in vocab.
-- **Vocabulary:** Proper nouns lowercased (`лобановський`, `ломаченко`, `усик`, `яна`, `сідней`).
-- **Vocabulary:** `євро-` (Euro 2012) is lowercased `євро-`. Should be `Євро-`.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** cultural
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| cultural | 7 | 5 | 100% | 33% | 33.3% |
+| engagement | 10 | 6 | 100% | 20% | 20.0% |
+| visual | 7 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 30 | - | 100% | 7% | 6.7% |
+| realworld | 4 | - | 100% | 7% | 6.7% |
+| questions | 21 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **99.8%** |
 
-- **Patriotism:** Usyk's quote about "Defending the country" links sport to the current war context.
-- **Legacy:** Shevchenko/Lobanovskyi section respects the legends.
-
-## Issues
-
-- **Vocabulary YAML:** Capitalize proper nouns.
-
-## Recommendation
-
-✅ PASS — Excellent sports module.
-
-## Action Items
-
-1. **Fix Vocab:** Correct capitalization.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 110 | Included in Core |
+| **Історія та культура** | ✅ | 228 | Included in Core |
+| **Сучасність** | ⚪️ | 710 | Skipped |
+| **Практика** | ⚪️ | 123 | Skipped |
+| **Продукція** | ⚪️ | 352 | Skipped |
+| **Підсумок** | ✅ | 211 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

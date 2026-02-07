@@ -11,9 +11,9 @@ items:
   ipa: /ʋitˈatɪsja/
   translation: to greet each other
   pos: verb
-- lemma: дивити
-  ipa: /dɪʋɪtɪ/
-  translation: to look
+- lemma: дивитися
+  ipa: /dɪʋˈɪtɪsʲa/
+  translation: to watch, to look
   pos: verb
 - lemma: збиратися
   ipa: /zbɪrˈatɪsja/
@@ -22,11 +22,6 @@ items:
 - lemma: комедія
   ipa: /kɔmˈɛdija/
   translation: comedy
-  pos: noun
-  gender: f
-- lemma: мита
-  ipa: /mˈɪta/
-  translation: duties, taxes
   pos: noun
   gender: f
 - lemma: мити
@@ -48,10 +43,6 @@ items:
 - lemma: прокинутися
   ipa: /prɔkˈɪnutɪsja/
   translation: to wake up (perfective)
-  pos: verb
-- lemma: сміти
-  ipa: /smˈitɪ/
-  translation: to dare
   pos: verb
 - lemma: сміятися
   ipa: /smiˈjatɪsja/

@@ -1,12 +1,65 @@
-## Module 40: Taking Transport - FINAL REPORT
+# Audit Report: M40 — 40-taking-transport.md
+**Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 15:04:03
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 (was 5) | Relevance 5/5 (was 5) | Educational 5/5 (was 5) | Language 5/5 (was 4) | Pedagogy 5/5 (was 5) | Immersion 5/5 (was 5) | Activities 5/5 (was 5) | Richness N/A | Humanity 5/5 (was 5) | LLM Fingerprint 5/5 (was 5) | **Overall 5/5** ⬆️ from 4/5
+## Configuration
+**Type:** A1
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Transport Vocabulary | 10 | 8 | ✅ |
+| 2 | fill-in | In the Metro | 12 | 8 | ✅ |
+| 3 | quiz | Transport Situations | 12 | 8 | ✅ |
+| 4 | unjumble | Ask for Directions | 12 | 6 | ✅ |
+| 5 | group-sort | Transport Types | 12 | 12 | ✅ |
+| 6 | true-false | Transport Rules | 12 | 8 | ✅ |
+| 7 | quiz | Transport Signs | 10 | 8 | ✅ |
+| 8 | fill-in | Taxi Dialogue | 12 | 8 | ✅ |
 
-**Fixes Applied:**
-- ✅ **Category 1 (Structure):** Removed legacy practice sections. Added template-compliant headers.
-- ✅ **Category 2 (Language):** Added IPA for all transport types, key vocabulary, and useful phrases. Replaced ASCII double quotes with Ukrainian angular quotes «...» in YAML and Markdown. Fixed YAML parsing errors.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/40-taking-transport.md`)
+## Gates
+- **Words:** ✅ 820/750 (raw: 967)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 16/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 43.4% (target 35-55% (M40))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 122 | Included in Core |
+| **Presentation** | ✅ | 114 | Included in Core |
+| **Practice** | ⚪️ | 170 | Skipped |
+| **Narrative: Riding the Metro (Поїздка в метро)** | ✅ | 183 | Included in Core |
+| **Summary** | ✅ | 210 | Included in Core |
+| **Need More Practice?** | ⚪️ | 21 | Skipped |

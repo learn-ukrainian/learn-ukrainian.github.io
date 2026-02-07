@@ -18,11 +18,11 @@ items:
   translation: witcher
   pos: noun
   gender: m
-- lemma: джинса
-  ipa: /dʒɪnsa/
-  translation: jeans, surreptitious advertising
+- lemma: джинси
+  ipa: /dʒˈɪnsɪ/
+  translation: jeans
   pos: noun
-  gender: f
+  gender: m
 - lemma: дніпро
   ipa: /dniprˈɔ/
   translation: Dnipro

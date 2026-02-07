@@ -2,13 +2,13 @@
   "module": "lev-danylovych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:32.216020Z",
+  "last_audit": "2026-02-07T16:37:29.310792Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.285066Z",
-    "meta": "2026-02-06T22:56:22.293329Z",
-    "activities": "2026-01-27T15:34:55.918878Z",
-    "vocabulary": "2026-02-06T22:56:22.353562Z",
+    "md": "2026-02-07T01:04:17.212463Z",
+    "meta": "2026-02-07T15:13:22.006902Z",
+    "activities": "2026-02-07T10:03:51.569143Z",
+    "vocabulary": "2026-02-07T10:03:51.627147Z",
     "plan": null
   },
   "gates": {

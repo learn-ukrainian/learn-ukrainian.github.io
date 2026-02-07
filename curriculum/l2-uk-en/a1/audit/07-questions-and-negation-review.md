@@ -1,12 +1,12 @@
 # Audit Report: M07 — 07-questions-and-negation.md
-**Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
+**Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1131
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:43
+**Generated:** 2026-02-07 22:43:27
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 500 words
+**Word Target:** 1131 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1041/500 (raw: 1455)
+- **Words:** ⚠️ 1041/1131 (raw: 1455) (90 short)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -53,6 +53,9 @@
 - **Immersion:** 🇺🇦 20.1% (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

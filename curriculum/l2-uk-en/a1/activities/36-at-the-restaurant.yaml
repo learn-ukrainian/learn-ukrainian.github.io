@@ -1,4 +1,3 @@
----
 - type: match-up
   title: Vocabulary Match
   instruction: Match the Ukrainian words to their English meanings.
@@ -63,7 +62,7 @@
       options: [є, маю, роблю, хочу]
     - sentence: У мене _____ на ці горіхи.
       answer: алергія
-      options: [алергія, ідея, problem, машина]
+      options: [алергія, ідея, проблема, машина]
 
 - type: group-sort
   title: Taste Categories

@@ -1,8 +1,3 @@
----
-module: 04-this-is-i-am
-level: A1
-version: '2.0'
-activities:
 - type: quiz
   title: Personal Pronouns
   items:
@@ -460,17 +455,17 @@ activities:
     answer: друг
   - scrambled: л і к а р
     answer: лікар
-  - scrambled: s t u d e n t
+  - scrambled: с т у д е н т
     answer: студент
-  - scrambled: u c h y t e l
-    answer: учитель
-  - scrambled: k h l o p e t s
+  - scrambled: в ч и т е л ь
+    answer: вчитель
+  - scrambled: х л о п е ц ь
     answer: хлопець
-  - scrambled: d i v c h y n a
+  - scrambled: д і в ч и н а
     answer: дівчина
-  - scrambled: l i u d y n a
+  - scrambled: л ю д и н а
     answer: людина
-  - scrambled: p o d r u h a
+  - scrambled: п о д р у г а
     answer: подруга
   instruction: Arrange the letters in the correct order.
 - type: quiz

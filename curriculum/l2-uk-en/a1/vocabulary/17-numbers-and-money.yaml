@@ -4,16 +4,16 @@ level: A1
 version: '2.0'
 items:
 - lemma: баріста
-  ipa: /barista/
+  ipa: /baˈrɪsta/
   translation: barista
   pos: noun
   gender: m
-- lemma: вернадський
+- lemma: Вернадський
   ipa: /ʋɛrnˈadsʲkɪj/
   translation: Vernadsky (name)
   pos: noun
   gender: m
-- lemma: володимир
+- lemma: Володимир
   ipa: /ʋɔlɔdˈɪmɪr/
   translation: Volodymyr (name)
   pos: noun
@@ -35,21 +35,22 @@ items:
   translation: cash
   pos: noun
   gender: f
-- lemma: гривий
-  ipa: /ɦrˈɪʋɪj/
-  translation: maned
-  pos: adj
+- lemma: гривня
+  ipa: /ˈɦrɪʋnʲa/
+  translation: hryvnia (currency)
+  pos: noun
+  gender: f
 - lemma: гривна
   ipa: /ɦrˈɪʋna/
   translation: hryvnia
   pos: noun
   gender: f
-- lemma: григорій
+- lemma: Григорій
   ipa: /ɦrɪɦˈɔrij/
   translation: Hryhorii (name)
   pos: noun
   gender: m
-- lemma: грушевський
+- lemma: Грушевський
   ipa: /ɦruʃˈɛʋsʲkɪj/
   translation: Hrushevskyi (name)
   pos: noun
@@ -89,12 +90,12 @@ items:
   translation: kopiika (cent)
   pos: noun
   gender: f
-- lemma: мазепа
+- lemma: Мазепа
   ipa: /mazˈɛpa/
   translation: Mazepa (name)
   pos: noun
   gender: m
-- lemma: михайло
+- lemma: Михайло
   ipa: /mɪxˈajlɔ/
   translation: Mykhailo (name)
   pos: noun
@@ -102,8 +103,7 @@ items:
 - lemma: мудрий
   ipa: /mˈudrɪj/
   translation: wise
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: надцять
   ipa: /nˈadt͡sjatʲ/
   translation: '...teen (suffix)'
@@ -116,17 +116,17 @@ items:
   ipa: /pɔkˈupka/
   translation: purchase
   pos: noun
-- lemma: сковорода
+- lemma: Сковорода
   ipa: /skɔʋɔrɔdˈa/
   translation: Skovoroda (name), frying pan
   pos: noun
   gender: f
-- lemma: франко
+- lemma: Франко
   ipa: /frˈankɔ/
   translation: Franko (name)
   pos: noun
-  gender: n
-- lemma: хмельницький
+  gender: m
+- lemma: Хмельницький
   ipa: /xmɛlʲnˈɪt͡sʲkɪj/
   translation: Khmelnytskyi
   pos: adj
@@ -134,7 +134,7 @@ items:
   ipa: /ʃistdɛsˈjat/
   translation: sixty
   pos: num
-- lemma: ярослав
+- lemma: Ярослав
   ipa: /jarɔslaʋ/
   translation: Yaroslav (name)
   pos: noun

@@ -2,11 +2,11 @@
   "module": "ivan-dziuba",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:40.613763Z",
+  "last_audit": "2026-02-07T16:38:35.277252Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T15:58:38.620547Z",
-    "meta": "2026-02-06T15:48:20.097031Z",
+    "md": "2026-02-07T01:04:17.207453Z",
+    "meta": "2026-02-07T15:13:22.027113Z",
     "activities": null,
     "vocabulary": null,
     "plan": null

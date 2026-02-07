@@ -1,8 +1,8 @@
-# Audit Report: M69 — yevhen-paton.md
-**Level:** C1-BIO | **Module:** M69 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M67 — yevhen-paton.md
+**Level:** C1-BIO | **Module:** M67 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:07
+**Generated:** 2026-02-07 20:47:37
 
 ## Configuration
 **Type:** C1-biography
@@ -33,17 +33,8 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in yevhen-paton.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4148/4000 (raw: 4638)
+- **Words:** ✅ 4290/4000 (raw: 4780)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -53,7 +44,7 @@
 - **Vocab:** ✅ 28/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ❌ 94% < 95% min (biography)
@@ -74,7 +65,7 @@
 | visual | 8 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
+| variety | 0.94 | - | 94% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 9 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **95.0%** |
@@ -83,7 +74,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 91 | Included in Core |
-| **Вступ: Поет сталевих конструкцій** | ✅ | 340 | Included in Core |
+| **Вступ: Поет сталевих конструкцій** | ✅ | 482 | Included in Core |
 | **Витоки: Від Лазурового берега до берегів Дніпра (1870-1904)** | ⚪️ | 650 | Skipped |
 | **Мостобудівний етап: Зшивання простору (1904-1929)** | ⚪️ | 620 | Skipped |
 | **Електрозварювальна революція: Інститут як фортеця (1929-1941)** | ⚪️ | 625 | Skipped |

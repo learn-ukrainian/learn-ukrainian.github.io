@@ -2,13 +2,13 @@
   "module": "semen-hulak-artemovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:49.367651Z",
+  "last_audit": "2026-02-07T16:37:45.155795Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.347451Z",
-    "meta": "2026-02-05T20:58:10.377386Z",
-    "activities": "2026-02-04T22:11:15.607718Z",
-    "vocabulary": "2026-02-04T20:35:40.034515Z",
+    "meta": "2026-02-07T15:13:22.014546Z",
+    "activities": "2026-02-07T10:03:51.594696Z",
+    "vocabulary": "2026-02-07T10:03:51.643257Z",
     "plan": null
   },
   "gates": {

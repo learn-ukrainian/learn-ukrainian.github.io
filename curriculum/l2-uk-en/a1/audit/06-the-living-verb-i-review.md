@@ -1,12 +1,12 @@
 # Audit Report: M06 — 06-the-living-verb-i.md
-**Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
+**Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1210
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:42
+**Generated:** 2026-02-07 22:36:11
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 500 words
+**Word Target:** 1210 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,21 +37,24 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1407/500 (raw: 1721)
+- **Words:** ✅ 1414/1210 (raw: 1728)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 12/1
+- **Vocab:** ✅ 10/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 17.8% (target 15-35% (M06))
+- **Immersion:** 🇺🇦 18.0% (target 15-35% (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -60,6 +63,6 @@
 | **Warm-up** | ✅ | 44 | Included in Core |
 | **Presentation** | ✅ | 642 | Included in Core |
 | **Practice** | ⚪️ | 210 | Skipped |
-| **Cultural Insight** | ✅ | 223 | Included in Core |
+| **Cultural Insight** | ✅ | 230 | Included in Core |
 | **Підсумок** | ✅ | 82 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

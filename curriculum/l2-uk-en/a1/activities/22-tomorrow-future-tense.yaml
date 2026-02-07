@@ -1,8 +1,3 @@
----
-module: 22-tomorrow-future-tense
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Time Expressions
   pairs:

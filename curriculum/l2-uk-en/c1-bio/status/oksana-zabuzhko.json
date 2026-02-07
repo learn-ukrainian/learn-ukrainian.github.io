@@ -2,12 +2,12 @@
   "module": "oksana-zabuzhko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:46.269189Z",
+  "last_audit": "2026-02-07T16:38:41.944672Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.342887Z",
-    "meta": "2026-02-06T22:56:22.297967Z",
-    "activities": "2026-01-27T15:34:56.396621Z",
+    "meta": "2026-02-07T15:13:22.028441Z",
+    "activities": "2026-02-07T10:03:51.583662Z",
     "vocabulary": null,
     "plan": null
   },

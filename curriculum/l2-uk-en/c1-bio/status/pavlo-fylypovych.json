@@ -2,13 +2,13 @@
   "module": "pavlo-fylypovych",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T00:22:17.742470Z",
+  "last_audit": "2026-02-07T16:38:15.585246Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.346274Z",
-    "meta": "2026-02-06T22:56:22.300162Z",
-    "activities": "2026-02-02T12:11:26.772288Z",
-    "vocabulary": "2026-02-02T12:11:26.771919Z",
+    "meta": "2026-02-07T15:13:22.022627Z",
+    "activities": "2026-02-07T10:03:51.575786Z",
+    "vocabulary": "2026-02-07T10:03:51.631031Z",
     "plan": null
   },
   "gates": {

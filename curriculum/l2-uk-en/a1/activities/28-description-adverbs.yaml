@@ -1,8 +1,3 @@
----
-module: 28-description-adverbs
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Adjective → Adverb
   pairs:

@@ -3,7 +3,7 @@ module: 18-food-and-shopping
 level: A1
 version: '2.0'
 items:
-- lemma: атб
+- lemma: АТБ
   ipa: /atb/
   translation: ATB
   pos: noun
@@ -17,7 +17,7 @@ items:
   ipa: /kɔrɔʋˈaj/
   translation: korovai (wedding bread)
   pos: noun
-  gender: f
+  gender: m
 - lemma: курко
   ipa: /kˈurkɔ/
   translation: chicken (diminutive)
@@ -28,7 +28,7 @@ items:
   translation: drink, beverage
   pos: noun
   gender: m
-- lemma: новус
+- lemma: Новус
   ipa: /nɔʋus/
   translation: Novus (supermarket)
   pos: noun
@@ -53,7 +53,7 @@ items:
   translation: supermarket
   pos: noun
   gender: m
-- lemma: сільпо
+- lemma: Сільпо
   ipa: /silʲpˈɔ/
   translation: Silpo (supermarket)
   pos: noun

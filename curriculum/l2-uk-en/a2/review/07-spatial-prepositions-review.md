@@ -1,96 +1,68 @@
-# Module 07: Просторова орієнтація (Spatial Prepositions)
+# Audit Report: M07 — 07-spatial-prepositions.md
+**Level:** A2 | **Module:** M07 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 23:58:32
 
-**Template:** a2-module-template.md | **Compliance:** ✅ MEETS STANDARDS
-**Overall Score:** 9.2/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-31 16:22:00
-**Reviewer:** Claude
-**Tier:** 1 (Beginner)
+## Configuration
+**Type:** A2-grammar
+**Word Target:** 1000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Preposition Meanings | 12 | 8 | ✅ |
+| 2 | fill-in | Choose the Correct Preposition | 12 | 8 | ✅ |
+| 3 | quiz | Motion or Location? | 12 | 8 | ✅ |
+| 4 | true-false | Preposition Rules | 12 | 8 | ✅ |
+| 5 | group-sort | Prepositions by Case | 12 | 12 | ✅ |
+| 6 | unjumble | Preposition Sentences | 10 | 6 | ✅ |
+| 7 | error-correction | Fix the Case | 12 | 6 | ✅ |
+| 8 | cloze | Complete the Story | 12 | 12 | ✅ |
+| 9 | select | Asking for Directions | 6 | 6 | ✅ |
+| 10 | mark-the-words | Find Preposition + Case | 12 | 6 | ✅ |
+| 11 | translate | English to Ukrainian | 6 | 6 | ✅ |
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| **Lesson Quality** | 9/10 | Warm greeting added, clear objectives |
-| Coherence | 9/10 | Logical flow from motion/location to cases |
-| Relevance | 10/10 | Directly addresses spatial orientation goals |
-| Educational | 10/10 | Excellent flowchart, proper case-preposition tables |
-| Language | 10/10 | Correct Ukrainian, fixed euphony issues |
-| Pedagogy | 9/10 | PPP structure with clear progression |
-| Immersion | 9/10 | 43.9% Ukrainian (target 40-50%) |
-| Activities | 9/10 | 11 types, all well-crafted |
-| Richness | 10/10 | Flowchart, tables, cultural context, callouts |
-| Humanity | 9/10 | Warm greeting, objectives, celebration format |
-| LLM Fingerprint | 9/10 | Natural phrasing throughout |
-| Linguistic Accuracy | 10/10 | All grammar correct, proper case tables |
+**Summary:**
+- Total activities: 11 (target: 10-14) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
----
+## Gates
+- **Words:** ✅ 1532/1000 (raw: 1825)
+- **Activities:** ✅ 11/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 4/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 56/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 43.1% (target 40-50% (A2.1))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-## Experience Analysis (Tier 1)
-
-**Arc:** WELCOME ✅ → PREVIEW ✅ → PRESENT ✅ → PRACTICE ✅ → CELEBRATE ✅
-
-### "Would I Continue?" Test
-
-| Question | Result | Notes |
-|----------|--------|-------|
-| Did I feel overwhelmed? | ✅ | Flowchart provides visual anchor |
-| Were instructions clear? | ✅ | Де/Куди/Звідки logic clearly visualized |
-| Did I get quick wins? | ✅ | Clear learning objectives upfront |
-| Was Ukrainian scary? | ✅ | Good English support throughout |
-| Would I come back tomorrow? | ✅ | Engaging content with practical dialogues |
-
-**Score: 5/5 → Lesson Quality 9/10**
-
-### Emotional Safety Beats
-
-| Required | Found | Status |
-|----------|-------|--------|
-| Welcome/orientation | "Привіт! Ready to navigate..." | ✅ Warm greeting |
-| Curiosity trigger | "This is one of the most exciting parts" | ✅ |
-| Quick wins (≥2) | Learning objectives + flowchart | ✅ |
-| Encouragement | Throughout presentation | ✅ |
-| Progress marker | "Вітаємо!" + checkmarks | ✅ Celebration format |
-
----
-
-## Strengths
-
-- **Excellent flowchart** — Mermaid diagram perfectly visualizes Де/Куди/Звідки logic
-- **Complete case-preposition tables** — Proper Ukrainian grammar, not oversimplified
-- **Instrumental endings for all genders** — Including plural with special forms
-- **Outstanding activity variety** — 11 different activity types
-- **Cultural context** — Ukrainian town navigation adds real-world relevance
-- **Fixed euphony** — Proper в/у, з/зі/із usage throughout
-
----
-
-## Issues
-
-None blocking. All previous issues resolved:
-- ✅ Added warm greeting
-- ✅ Added learning objectives ("Що ви навчитеся")
-- ✅ Fixed oversimplified grammar (proper tables now)
-- ✅ Fixed ungrammatical dialogue ("чи є тут банк біля метро?")
-- ✅ Added celebration format in summary
-- ✅ Fixed euphony issues ("зі школи", not "з школи")
-
----
-
-## Recommendation
-
-✅ **PASS** — Score 9.2/10 (threshold 9.0)
-
-Module now meets all Tier 1 warmth requirements with excellent pedagogical content. The flowchart addition significantly improves the learning experience for understanding Ukrainian spatial prepositions.
-
----
-
-## Action Items
-
-All completed:
-1. ✅ Warm greeting added
-2. ✅ Learning objectives added
-3. ✅ Flowchart added for case-preposition visualization
-4. ✅ Grammar tables properly structured (not oversimplified)
-5. ✅ Celebration format in summary
-6. ✅ Euphony fixes applied
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Introduction / Вступ** | ✅ | 244 | Included in Core |
+| **Presentation / Презентація** | ✅ | 652 | Included in Core |
+| **Practice / Практика** | ⚪️ | 267 | Skipped |
+| **Dialogues / Діалоги** | ✅ | 235 | Included in Core |
+| **Summary / Підсумок** | ✅ | 96 | Included in Core |
+| **Need More Practice?** | ⚪️ | 38 | Skipped |

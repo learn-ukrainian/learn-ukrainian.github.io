@@ -77,8 +77,8 @@ Notice: Unlike English, you don't need «do/does» - the question word itself si
 — Як тебе звуть? (Yak tebe zvut?) — What's your name?
 — Мене звуть Марко. (Mene zvut Marko.) — My name is Marko.
 — Звідки ти? (Zvidky ty?) — Where are you from?
-— я з Києва. а ти? (Ya z Kyyeva. A ty?) — I'm from Kyiv. And you?
-— я з Америки. (Ya z Ameryky.) — I'm from America.
+— Я з Києва. А ти? (Ya z Kyyeva. A ty?) — I'm from Kyiv. And you?
+— Я з Америки. (Ya z Ameryky.) — I'm from America.
 
 ### Negation with Не
 
@@ -162,12 +162,12 @@ Imagine you meet someone new at a café in Lviv. Use what you learned to:
 **Model Answer:**
 
 — Привіт! Як тебе звуть? (Hi! What's your name?)
-— Мене звуть Оля. а тебе? (My name is Olya. And yours?)
+— Мене звуть Оля. А тебе? (My name is Olya. And yours?)
 — Марко. Звідки ти? (Marko. Where are you from?)
-— я з Львова. а ти? (I'm from Lviv. And you?)
-— я з Києва. Чи ти читаєш українською? (I'm from Kyiv. Do you read in Ukrainian?)
-— Так! я завжди читаю українською. а ти? (Yes! I always read in Ukrainian. And you?)
-— я часто читаю, але іноді не розумію. (I often read, but sometimes I don't understand.)
+— Я зі Львова. А ти? (I'm from Lviv. And you?)
+— Я з Києва. Чи ти читаєш українською? (I'm from Kyiv. Do you read in Ukrainian?)
+— Так! Я завжди читаю українською. А ти? (Yes! I always read in Ukrainian. And you?)
+— Я часто читаю, але іноді не розумію. (I often read, but sometimes I don't understand.)
 — Нічого! Це нормально. (No problem! That's normal.)
 
 ## Cultural Insight

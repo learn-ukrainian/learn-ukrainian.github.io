@@ -1,17 +1,70 @@
-## Module 20: Checkpoint: Navigation - FINAL REPORT
+# Audit Report: M20 — 20-checkpoint-navigation.md
+**Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** TTT | **Target:** 1073
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 15:07:08
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1-checkpoint
+**Word Target:** 1073 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥10 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz
+**Required Types:** quiz
+**Engagement:** ≥2 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Case Mastery - Accusative | 12 | 8 | ✅ |
+| 2 | fill-in | Case Mastery - Locative | 12 | 8 | ✅ |
+| 3 | fill-in | Case Mastery - Genitive | 12 | 8 | ✅ |
+| 4 | match-up | Possessive Pronouns Agreement | 10 | 8 | ✅ |
+| 5 | quiz | Grammar Knowledge Check | 12 | 8 | ✅ |
+| 6 | true-false | Grammar Rules Review | 12 | 8 | ✅ |
+| 7 | group-sort | Preposition Usage | 12 | 10 | ✅ |
+| 8 | quiz | Building Sentences Order | 12 | 8 | ✅ |
+| 9 | quiz | Real Dialogues Order | 12 | 8 | ✅ |
+| 10 | match-up | City Vocabulary - Navigation | 10 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Removed all Latin transliteration and replaced with IPA in headings and introductory sections.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched `Possessive Pronouns Agreement` and `City Vocabulary - Navigation` to 10 pairs (optimal range).
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 3/3 (fill-in, match-up, quiz) ✅
+- Required types used: 1/1 (quiz) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 1439/1073 (raw: 1741)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 10
+- **Unique_types:** ✅ 5/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 3/2
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 2/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 37.1% (checkpoint - no gate)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/20-checkpoint-navigation.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Overview** | ⚪️ | 142 | Skipped |
+| **Skill 1: Accusative Case** | ⚪️ | 220 | Skipped |
+| **Skill 2: Locative Case** | ⚪️ | 234 | Skipped |
+| **Skill 3: Genitive Case** | ⚪️ | 221 | Skipped |
+| **Skill 4: Possessive Pronouns** | ⚪️ | 182 | Skipped |
+| **Skill 5: Practical Navigation** | ⚪️ | 251 | Skipped |
+| **Integration Challenge** | ⚪️ | 143 | Skipped |
+| **Підсумок** | ✅ | 25 | Included in Core |
+| **Need More Practice?** | ⚪️ | 21 | Skipped |

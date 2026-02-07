@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4400
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:21:30
+**Generated:** 2026-02-07 16:37:27
 
 ## Configuration
 **Type:** C1-biography
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5685/4400 (raw: 5946)
+- **Words:** ✅ 5681/4400 (raw: 5942)
 - **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -63,21 +63,21 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 7 | 4 | 100% | 19% | 19.0% |
 | engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 12 | 3 | 100% | 14% | 14.3% |
+| quotes | 14 | 3 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 149 | Included in Core |
-| **Вступ — Самодержець усієї Русі** | ✅ | 714 | Included in Core |
+| **Intro/Narrative** | ✅ | 141 | Included in Core |
+| **Вступ — Самодержець усієї Русі** | ✅ | 718 | Included in Core |
 | **Життєпис: Від Волині до Галича** | ⚪️ | 1031 | Skipped |
 | **Внесок: Створення Галицько-Волинської держави** | ⚪️ | 1295 | Skipped |
 | **Зовнішня політика та дипломатія глобального масштабу** | ⚪️ | 414 | Skipped |

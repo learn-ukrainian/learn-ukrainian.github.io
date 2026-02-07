@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1019
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 10:46:45
+**Generated:** 2026-02-07 15:52:51
 
 ## Configuration
 **Type:** A1-grammar
@@ -22,7 +22,7 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | True Friends | 12 | 8 | ✅ |
 | 2 | match-up | False Friends Sound | 12 | 8 | ✅ |
-| 3 | group-sort | Letter Types | 18 | 12 | ✅ |
+| 3 | group-sort | Letter Types | 19 | 12 | ✅ |
 | 4 | quiz | Reading Words | 12 | 8 | ✅ |
 | 5 | true-false | Letter Recognition | 12 | 8 | ✅ |
 | 6 | fill-in | Complete the Word | 12 | 8 | ✅ |

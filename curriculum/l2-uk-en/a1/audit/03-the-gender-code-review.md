@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 934
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 15:44:14
+**Generated:** 2026-02-07 16:11:38
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1208/934 (raw: 1423)
+- **Words:** ✅ 1050/934 (raw: 1265)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
-| **Presentation** | ✅ | 384 | Included in Core |
-| **Practice** | ⚪️ | 355 | Skipped |
+| **Presentation** | ✅ | 296 | Included in Core |
+| **Practice** | ⚪️ | 285 | Skipped |
 | **Production** | ➖ | 103 | Excluded Type |
 | **Cultural Insight** | ✅ | 150 | Included in Core |
 | **Підсумок** | ✅ | 96 | Included in Core |

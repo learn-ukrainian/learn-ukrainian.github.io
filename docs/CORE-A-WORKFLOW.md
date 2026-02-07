@@ -45,7 +45,7 @@ Use Core A for any module where the learner still needs English scaffolding:
 
 ### Research Note Template (Core A — Lightweight)
 
-Save to: `curriculum/l2-uk-en/{level}/audit/{slug}-research.md`
+Save to: `curriculum/l2-uk-en/{level}/research/{slug}-research.md`
 
 ```markdown
 # Research: {Module Title}

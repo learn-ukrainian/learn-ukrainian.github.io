@@ -1,8 +1,8 @@
-# Audit Report: M78 — kazimir-malevich.md
-**Level:** C1-BIO | **Module:** M78 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M76 — kazimir-malevich.md
+**Level:** C1-BIO | **Module:** M76 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:12
+**Generated:** 2026-02-07 16:38:07
 
 ## Configuration
 **Type:** C1-biography

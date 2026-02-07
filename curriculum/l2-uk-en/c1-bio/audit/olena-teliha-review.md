@@ -1,8 +1,8 @@
-# Audit Report: M116 — olena-teliha.md
-**Level:** C1-BIO | **Module:** M116 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M115 — olena-teliha.md
+**Level:** C1-BIO | **Module:** M115 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:31
+**Generated:** 2026-02-07 16:38:26
 
 ## Configuration
 **Type:** C1-biography

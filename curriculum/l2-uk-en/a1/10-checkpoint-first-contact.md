@@ -138,7 +138,7 @@ Complete with the correct verb form:
 
 > [!tip] 💡 Quick Tip
 >
-> **Don't drop the pronoun!** Unlike Spanish or Italian, Ukrainian usually keeps the pronoun (Я, Ти) unless the context is super clear. "Читаю" is okay, but "Я читаю" is safer for beginners!
+> **Pronouns are optional!** Ukrainian verb endings already tell you who is acting, so you can drop the pronoun: "Читаю" = "I read." As a beginner, using "Я читаю" is fine too — but notice how native speakers often skip the pronoun!
 
 > 🎬 **Pop Culture Moment**
 >
@@ -282,5 +282,5 @@ Fill in the customer's responses:
 **Missing a skill?**
 
 - Cyrillic Reading → Modules 01-02
-- Verb Conjugation → Modules 05-06
-- Ordering Food → Module 09
+- Verb Conjugation → Modules 06-08
+- Reflexive Verbs → Module 09

@@ -2,14 +2,14 @@
   "module": "13-the-locative-where-things-are",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:46.836955Z",
+  "last_audit": "2026-02-07T21:23:11.003572Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351177Z",
-    "meta": "2026-01-26T21:56:47.917625Z",
-    "activities": "2026-01-16T00:14:24.038538Z",
-    "vocabulary": "2026-01-25T18:00:39.388734Z",
-    "plan": "2026-01-30T12:24:45.185966Z"
+    "md": "2026-02-07T21:22:58.471888Z",
+    "meta": "2026-02-07T10:03:51.768763Z",
+    "activities": "2026-02-07T21:06:32.651790Z",
+    "vocabulary": "2026-02-07T21:23:05.561315Z",
+    "plan": "2026-02-07T10:03:51.072073Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1396/750 (raw: 1716)"
+      "message": "1396/1331 (raw: 1716)"
     },
     "activities": {
       "status": "pass",

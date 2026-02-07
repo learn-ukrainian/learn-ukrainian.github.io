@@ -581,7 +581,7 @@
         },
         "items": {
           "type": "array",
-          "minItems": 10,
+          "minItems": 5,
           "items": {
             "type": "object",
             "required": [
@@ -940,12 +940,16 @@
       "required": [
         "type",
         "title",
-        "prompt"
+        "prompt",
+        "model_answer"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "const": "authorial-intent"
+        },
+        "id": {
+          "type": "string"
         },
         "source_reading": {
           "type": "string",

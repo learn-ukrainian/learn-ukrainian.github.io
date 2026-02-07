@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 936
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:10:07
+**Generated:** 2026-02-07 21:36:58
 
 ## Configuration
 **Type:** A1-grammar
@@ -21,8 +21,8 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Question Words | 10 | 8 | ✅ |
-| 2 | group-sort | Location vs Direction | 13 | 12 | ✅ |
-| 3 | group-sort | Preposition Usage | 13 | 12 | ✅ |
+| 2 | group-sort | Location vs Direction | 12 | 12 | ✅ |
+| 3 | group-sort | Preposition Usage | 12 | 12 | ✅ |
 | 4 | fill-in | Де чи Куди? (Where or Where to?) | 12 | 8 | ✅ |
 | 5 | fill-in | Choose the Preposition | 12 | 8 | ✅ |
 | 6 | quiz | Location or Direction? | 8 | 8 | ✅ |
@@ -53,6 +53,9 @@
 - **Immersion:** 🇺🇦 38.1% (target 35-55% (M30))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

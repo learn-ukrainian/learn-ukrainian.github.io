@@ -22,8 +22,7 @@ items:
 - lemma: громадський
   ipa: /ɦrɔmadsʲkɪj/
   translation: public, social
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: е-квиток
   ipa: /ɛ-kʋɪtˈɔk/
   translation: e-ticket
@@ -33,7 +32,7 @@ items:
   ipa: /zupɪnˈɪtɪ/
   translation: to stop
   pos: verb
-- lemma: оболонь
+- lemma: Оболонь
   ipa: /ɔbɔlˈɔnʲ/
   translation: Obolon (district in Kyiv)
   pos: noun

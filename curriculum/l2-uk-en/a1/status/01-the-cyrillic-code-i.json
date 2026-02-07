@@ -2,13 +2,13 @@
   "module": "01-the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T10:46:46.475536Z",
+  "last_audit": "2026-02-07T15:52:51.224139Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.351124Z",
     "meta": "2026-02-07T10:03:51.777269Z",
-    "activities": "2026-02-07T10:46:19.607185Z",
-    "vocabulary": "2026-02-07T10:03:51.820585Z",
+    "activities": "2026-02-07T15:52:42.176459Z",
+    "vocabulary": "2026-02-07T15:52:46.011973Z",
     "plan": "2026-02-07T10:03:51.073506Z"
   },
   "gates": {

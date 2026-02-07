@@ -502,7 +502,7 @@ Related: volodymyr-khreshchennia, ruska-pravda, sofiya-kyivska, kultura-kyivskoi
 
 ---
 
-# Підсумок
+## Підсумок
 
 Ярослав Мудрий (1019-1054) перетворив Київську Русь на провідну європейську державу. Його головні досягнення:
 

@@ -2,13 +2,13 @@
   "module": "dmytro-bortnyanskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:47.469625Z",
+  "last_audit": "2026-02-07T16:37:43.311540Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.351268Z",
-    "meta": "2026-02-05T20:58:10.260898Z",
-    "activities": "2026-02-04T21:07:57.070938Z",
-    "vocabulary": "2026-02-04T21:59:17.574116Z",
+    "meta": "2026-02-07T15:13:22.013896Z",
+    "activities": "2026-02-07T10:03:51.580247Z",
+    "vocabulary": "2026-02-07T10:03:51.633134Z",
     "plan": null
   },
   "gates": {

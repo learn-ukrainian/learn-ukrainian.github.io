@@ -2,14 +2,14 @@
   "module": "10-checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:06:43.588812Z",
+  "last_audit": "2026-02-07T21:19:51.945121Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T15:06:39.828652Z",
-    "meta": "2026-01-26T21:56:47.911421Z",
-    "activities": "2026-01-16T00:10:14.593020Z",
-    "vocabulary": "2026-01-25T15:44:11.118128Z",
-    "plan": "2026-01-30T12:24:45.176988Z"
+    "md": "2026-02-07T21:17:51.304215Z",
+    "meta": "2026-02-07T10:03:51.769699Z",
+    "activities": "2026-02-07T21:06:32.617892Z",
+    "vocabulary": "2026-02-07T21:17:57.162827Z",
+    "plan": "2026-02-07T10:03:51.072332Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1224/875 (raw: 1488)"
+      "message": "1234/875 (raw: 1498)"
     },
     "activities": {
       "status": "pass",

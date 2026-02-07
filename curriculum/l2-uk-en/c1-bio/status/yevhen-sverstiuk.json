@@ -2,11 +2,11 @@
   "module": "yevhen-sverstiuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:41.073713Z",
+  "last_audit": "2026-02-07T16:38:33.246628Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T15:58:42.073387Z",
-    "meta": "2026-02-06T15:48:33.374130Z",
+    "md": "2026-02-07T01:04:17.309796Z",
+    "meta": "2026-02-07T15:13:22.026709Z",
     "activities": null,
     "vocabulary": null,
     "plan": null

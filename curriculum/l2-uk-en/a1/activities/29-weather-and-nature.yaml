@@ -1,8 +1,3 @@
----
-module: 29-weather-and-nature
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Weather Expressions
   pairs:

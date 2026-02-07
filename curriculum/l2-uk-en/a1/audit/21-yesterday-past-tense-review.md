@@ -1,12 +1,12 @@
 # Audit Report: M21 — 21-yesterday-past-tense.md
-**Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1092
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:51
+**Generated:** 2026-02-07 21:31:58
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1092 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -46,7 +46,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1121/750 (raw: 1612)
+- **Words:** ✅ 1121/1092 (raw: 1612)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -61,6 +61,9 @@
 - **Immersion:** 🇺🇦 35.5% (target 35-55% (M21))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

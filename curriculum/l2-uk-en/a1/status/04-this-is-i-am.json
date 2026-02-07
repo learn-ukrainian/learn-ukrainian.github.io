@@ -2,14 +2,14 @@
   "module": "04-this-is-i-am",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:41.756575Z",
+  "last_audit": "2026-02-07T16:48:25.873687Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351116Z",
-    "meta": "2026-01-26T21:56:47.898848Z",
-    "activities": "2026-01-15T23:43:49.838251Z",
-    "vocabulary": "2026-01-25T18:00:39.371527Z",
-    "plan": "2026-01-30T12:14:03.034046Z"
+    "md": "2026-02-07T16:48:19.664916Z",
+    "meta": "2026-02-07T10:03:51.783813Z",
+    "activities": "2026-02-07T16:46:08.124379Z",
+    "vocabulary": "2026-02-07T16:46:56.009312Z",
+    "plan": "2026-02-07T10:03:51.074758Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1418/300 (raw: 1818)"
+      "message": "1418/1448 (raw: 1818) (30 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

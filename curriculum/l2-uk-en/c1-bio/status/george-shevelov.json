@@ -2,13 +2,13 @@
   "module": "george-shevelov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:33.005458Z",
+  "last_audit": "2026-02-07T16:38:28.240846Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.357303Z",
-    "meta": "2026-02-06T22:56:22.289222Z",
-    "activities": "2026-02-02T11:02:03.981641Z",
-    "vocabulary": "2026-02-02T11:02:03.981442Z",
+    "meta": "2026-02-07T15:13:22.025409Z",
+    "activities": "2026-02-07T10:03:51.583493Z",
+    "vocabulary": "2026-02-07T10:03:51.635363Z",
     "plan": null
   },
   "gates": {

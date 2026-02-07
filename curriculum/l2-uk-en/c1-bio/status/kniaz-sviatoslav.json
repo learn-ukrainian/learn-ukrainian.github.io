@@ -2,13 +2,13 @@
   "module": "kniaz-sviatoslav",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:26.737059Z",
+  "last_audit": "2026-02-07T23:04:47.037642Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.283149Z",
-    "meta": "2026-02-06T22:56:22.291686Z",
-    "activities": "2026-02-06T22:56:22.240294Z",
-    "vocabulary": "2026-02-01T22:57:04.741786Z",
+    "md": "2026-02-07T23:04:40.189263Z",
+    "meta": "2026-02-07T23:02:09.565027Z",
+    "activities": "2026-02-07T10:03:51.587267Z",
+    "vocabulary": "2026-02-07T10:03:51.637705Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5209/4000 (raw: 5776)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4952/5500 (raw: 5513)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,11 @@
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

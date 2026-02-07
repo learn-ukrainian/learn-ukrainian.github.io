@@ -28,9 +28,9 @@ Here's the basic pattern:
 
 | Nominative (Де це?) | Locative (Де ти?) | IPA | English                  |
 | ------------------- | ----------------- | --- | ------------------------ |
-| кімната             | в кімнаті         | /w kʲimˈnɑtʲi/ | I'm in the room          |
-| банк                | в банку           | /w ˈbɑnku/ | I'm in the bank          |
-| місто               | в місті           | /w ˈmisʲtʲi/ | I'm in the city          |
+| кімната             | в кімнаті         | /ʋ kʲimˈnɑtʲi/ | I'm in the room          |
+| банк                | в банку           | /ʋ ˈbɑnku/ | I'm in the bank          |
+| місто               | в місті           | /ʋ ˈmisʲtʲi/ | I'm in the city          |
 | стіл                | на столі          | /nɑ stɔˈlʲi/ | The book is on the table |
 | робота              | на роботі         | /nɑ rɔˈbɔtʲi/ | I'm at work              |
 

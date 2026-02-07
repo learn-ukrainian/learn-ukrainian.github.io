@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 916
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-31 15:30:00
+**Generated:** 2026-02-07 21:39:30
 
 ## Configuration
 **Type:** A1-vocab
@@ -22,8 +22,8 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Family Members | 10 | 8 | ✅ |
 | 2 | match-up | More Family | 10 | 8 | ✅ |
-| 3 | group-sort | Generations | 13 | 12 | ✅ |
-| 4 | group-sort | Gender of Family Terms | 13 | 12 | ✅ |
+| 3 | group-sort | Generations | 12 | 12 | ✅ |
+| 4 | group-sort | Gender of Family Terms | 12 | 12 | ✅ |
 | 5 | fill-in | Моя сім'я (My Family) | 12 | 8 | ✅ |
 | 6 | fill-in | Possessives with Family | 12 | 8 | ✅ |
 | 7 | quiz | Who Is Who? | 8 | 8 | ✅ |
@@ -56,6 +56,9 @@
 - **Immersion:** 🇺🇦 48.4% (target 35-55% (M32))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

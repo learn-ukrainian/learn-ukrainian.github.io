@@ -2,13 +2,13 @@
   "module": "kyrylo-trylovskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:02.539481Z",
+  "last_audit": "2026-02-07T16:37:57.164848Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.284747Z",
-    "meta": "2026-02-06T22:56:22.292770Z",
-    "activities": "2026-02-06T22:56:22.241156Z",
-    "vocabulary": "2026-02-05T22:38:52.389625Z",
+    "md": "2026-02-07T12:06:20.474632Z",
+    "meta": "2026-02-07T15:13:22.017842Z",
+    "activities": "2026-02-07T12:01:00.458806Z",
+    "vocabulary": "2026-02-07T10:03:51.609694Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "5068/4000 (raw: 5496) | pedagogy: 1 violations | richness: 92% < 95% min (biography)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5209/4000 (raw: 5637)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

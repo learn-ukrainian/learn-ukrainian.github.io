@@ -1,8 +1,8 @@
-# Audit Report: M127 — alla-horska.md
-**Level:** C1-BIO | **Module:** M127 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M129 — alla-horska.md
+**Level:** C1-BIO | **Module:** M129 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:37
+**Generated:** 2026-02-07 16:38:33
 
 ## Configuration
 **Type:** C1-biography

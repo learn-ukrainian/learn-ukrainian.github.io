@@ -2,14 +2,14 @@
   "module": "05-my-world-objects",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:42.339396Z",
+  "last_audit": "2026-02-07T19:12:37.022066Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.351114Z",
-    "meta": "2026-01-26T21:56:47.901080Z",
-    "activities": "2026-01-15T23:44:53.008333Z",
-    "vocabulary": "2026-01-25T01:42:20.944660Z",
-    "plan": "2026-01-30T12:14:09.324076Z"
+    "meta": "2026-02-07T10:03:51.784580Z",
+    "activities": "2026-02-07T19:11:58.526664Z",
+    "vocabulary": "2026-02-07T19:12:13.177026Z",
+    "plan": "2026-02-07T10:03:51.075456Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1603/300 (raw: 1840)"
+      "message": "1603/1412 (raw: 1840)"
     },
     "activities": {
       "status": "pass",

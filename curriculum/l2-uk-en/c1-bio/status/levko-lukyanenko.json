@@ -2,12 +2,12 @@
   "module": "levko-lukyanenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:36.506006Z",
+  "last_audit": "2026-02-07T16:38:32.785541Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.361376Z",
-    "meta": "2026-02-06T22:56:22.293472Z",
-    "activities": "2026-01-27T15:34:55.933414Z",
+    "meta": "2026-02-07T15:13:22.026592Z",
+    "activities": "2026-02-07T10:03:51.580016Z",
     "vocabulary": null,
     "plan": null
   },

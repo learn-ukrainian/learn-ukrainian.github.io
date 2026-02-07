@@ -28,6 +28,8 @@ Usage:
 
 import argparse
 import json
+import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -36,6 +38,116 @@ from pathlib import Path
 
 # Database path (same as MCP server uses)
 DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
+PID_DIR = Path(__file__).parent.parent / ".mcp/servers/message-broker/pids"
+
+# Resolve CLI paths at import time (before detached children lose PATH)
+CLAUDE_CLI = shutil.which("claude") or "claude"
+GEMINI_CLI = shutil.which("gemini") or "gemini"
+
+# Snapshot environment for passing to detached children
+_PARENT_ENV = os.environ.copy()
+
+
+def _write_pid_file(agent: str, task_id: str, info: dict, pid: int = None):
+    """Write a PID file for a running agent process."""
+    PID_DIR.mkdir(parents=True, exist_ok=True)
+    pid_file = PID_DIR / f"{agent}-{task_id}.json"
+    pid_data = {
+        "pid": pid or os.getpid(),
+        "agent": agent,
+        "started": datetime.now(timezone.utc).isoformat(),
+        **info,
+    }
+    pid_file.write_text(json.dumps(pid_data, indent=2))
+
+
+def _is_task_locked(agent: str, task_id: str) -> bool:
+    """Check if another process is already working on this task.
+
+    Returns True if locked (another process is alive), False if free.
+    Cleans up stale PID files automatically.
+    Excludes the current process's own PID (prevents self-lock).
+    """
+    if not task_id:
+        return False
+
+    pid_file = PID_DIR / f"{agent}-{task_id}.json"
+    if not pid_file.exists():
+        return False
+
+    try:
+        data = json.loads(pid_file.read_text())
+        pid = data.get("pid", 0)
+        if pid == os.getpid():
+            return False  # It's us — not locked
+        os.kill(pid, 0)  # Signal 0 = check if process exists
+        return True  # Another process is alive — task is locked
+    except (ProcessLookupError, PermissionError):
+        # Process is dead — clean up stale PID file
+        pid_file.unlink(missing_ok=True)
+        return False
+    except Exception:
+        pid_file.unlink(missing_ok=True)
+        return False
+
+
+def _remove_pid_file(agent: str, task_id: str):
+    """Remove PID file when process finishes."""
+    pid_file = PID_DIR / f"{agent}-{task_id}.json"
+    pid_file.unlink(missing_ok=True)
+
+
+def bridge_status():
+    """Show status of all running bridge processes."""
+    if not PID_DIR.exists():
+        print("No PID directory found. No processes tracked yet.")
+        return
+
+    pid_files = list(PID_DIR.glob("*.json"))
+    if not pid_files:
+        print("No bridge processes tracked.")
+        return
+
+    alive = []
+    stale = []
+    for pf in sorted(pid_files):
+        try:
+            data = json.loads(pf.read_text())
+            pid = data.get("pid", 0)
+            # Check if process is still running
+            try:
+                os.kill(pid, 0)  # Signal 0 = check existence
+                alive.append((pf.name, data))
+            except (ProcessLookupError, PermissionError):
+                stale.append((pf.name, data))
+                pf.unlink()  # Clean up stale PID files
+        except Exception:
+            stale.append((pf.name, {}))
+            pf.unlink()
+
+    if alive:
+        print(f"🟢 {len(alive)} running bridge process(es):\n")
+        for name, data in alive:
+            print(f"  {name}")
+            print(f"    PID: {data.get('pid')}")
+            print(f"    Agent: {data.get('agent')}")
+            print(f"    Task: {data.get('task_id')}")
+            print(f"    Model: {data.get('model', 'N/A')}")
+            print(f"    Started: {data.get('started')}")
+            # Show log file tail
+            log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
+            log_file = log_dir / f"{data.get('agent')}-{data.get('task_id')}.log"
+            if log_file.exists():
+                lines = log_file.read_text().strip().split('\n')
+                last_line = lines[-1] if lines else "(empty)"
+                print(f"    Log: {log_file}")
+                print(f"    Last output: {last_line[:100]}")
+            print()
+    else:
+        print("No running bridge processes.")
+
+    if stale:
+        print(f"🔴 Cleaned up {len(stale)} stale PID file(s): {', '.join(n for n, _ in stale)}")
 
 def init_db():
     """Initialize database if needed."""
@@ -270,6 +382,8 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
 def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data: str = None, new_session: bool = False, from_llm: str = "gemini", from_model: str = None, to_model: str = None):
     """Send message to Claude AND invoke Claude to process it. One-step communication.
 
+    Mode auto-detection: request/handoff → async (fire-and-forget), query/response → sync.
+
     Args:
         from_llm: Sender agent family (gemini, claude) - for routing
         from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
@@ -278,7 +392,7 @@ def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data:
     # Step 1: Send the message
     msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm, to_llm="claude", from_model=from_model, to_model=to_model)
 
-    # Step 2: Invoke Claude to process it
+    # Step 2: Invoke Claude to process it (mode auto-detected from message type)
     print(f"\n🚀 Invoking Claude to process message #{msg_id}...")
     process_for_claude(msg_id, new_session)
 
@@ -420,11 +534,24 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview"):
-    """Read message, process with Gemini CLI, send response."""
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False):
+    """Read message, process with Gemini CLI, send response.
+
+    Args:
+        fire_and_forget: If True, launch the bridge ITSELF as a background process
+            running in no-timeout sync mode. The bridge captures stdout and routes
+            the response — Gemini doesn't need to self-report.
+        no_timeout: Internal flag. When True, run sync without timeout.
+            Used by fire-and-forget to re-invoke the bridge as a background process.
+    """
     msg = read_message(message_id)
     if not msg:
         return
+
+    # Auto-detect mode from message type if not explicitly set
+    if not no_timeout and not fire_and_forget and msg['type'] in ('request', 'handoff'):
+        fire_and_forget = True
+        print("ℹ️  Auto-enabled fire-and-forget for request/handoff (long-running task)")
 
     # Prepare prompt for Gemini
     prompt = f"""You are Gemini, participating in a collaboration with Claude.
@@ -447,63 +574,168 @@ If Claude asked for feedback, provide your honest assessment.
 Format your response clearly.
 """
 
-    print(f"\n🤖 Processing with Gemini ({model})...")
+    if fire_and_forget:
+        # ASYNC: Launch the BRIDGE ITSELF as a background process in no-timeout mode.
+        # The bridge still captures stdout and routes the response — Gemini doesn't
+        # need to self-report. This is just sync mode without a timeout, running in bg.
+        task_key = msg['task_id'] or str(message_id)
 
-    try:
-        # Call gemini-cli: -y (yolo/auto-accept), -p (non-interactive prompt)
-        result = subprocess.run(
-            ["gemini", "-m", model, "-y", "-p", prompt],
-            capture_output=True,
-            text=True,
-            timeout=600  # 10 min timeout for long-form content
-        )
-
-        if result.returncode != 0:
-            print(f"❌ Gemini CLI error: {result.stderr}")
+        # LOCK CHECK: Don't launch if another process is already working on this task
+        if _is_task_locked("gemini", task_key):
+            print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
             return
 
-        response = result.stdout.strip()
+        log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = log_dir / f"gemini-{task_key}.log"
 
-        print(f"\n📝 Gemini's response ({len(response)} chars):\n")
-        print(response[:500])
-        if len(response) > 500:
-            print(f"\n... [{len(response) - 500} more characters]")
+        print(f"\n🚀 Launching bridge in background (no timeout)...")
+        print(f"   Log: {log_file}")
+        print(f"   Bridge will capture Gemini's response and route it when done.")
 
-        # Send response with model info
-        send_message(
-            content=response,
-            task_id=msg['task_id'],
-            msg_type="response",
-            from_llm="gemini",
-            to_llm="claude",
-            from_model=model,  # Track which Gemini model responded
-            to_model=None  # Response doesn't target specific model
-        )
+        try:
+            bridge_cmd = [
+                sys.executable, str(Path(__file__)),
+                "process", str(message_id),
+                "--model", model,
+                "--no-timeout"
+            ]
+            lf = open(log_file, "w")
+            proc = subprocess.Popen(
+                bridge_cmd,
+                stdout=lf,
+                stderr=subprocess.STDOUT,
+                cwd=str(Path(__file__).parent.parent),
+                env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
+                start_new_session=True  # Survive parent exit
+            )
+            print(f"   PID: {proc.pid}")
 
-        # Acknowledge original message
-        acknowledge(message_id)
+            # Write PID file for the CHILD process so lock checks work
+            _write_pid_file("gemini", task_key, {
+                "message_id": message_id,
+                "task_id": msg.get('task_id'),
+                "model": model,
+                "mode": "fire-and-forget",
+            }, pid=proc.pid)
 
-    except subprocess.TimeoutExpired:
-        print("❌ Gemini CLI timed out")
-    except FileNotFoundError:
-        print("❌ gemini CLI not found. Is it installed?")
+        except FileNotFoundError:
+            print("❌ Python or bridge script not found")
+    else:
+        # SYNC: Run Gemini with STREAMING output (visible in log in real-time)
+        import time
+        task_key = msg.get('task_id') or str(message_id)
+        timeout_val = None if no_timeout else 300
+        mode_label = "no-timeout" if no_timeout else "sync, 5 min timeout"
+
+        # LOCK CHECK: Don't process if another bridge is already working on this task
+        if _is_task_locked("gemini", task_key):
+            print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
+            return
+
+        print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
+        sys.stdout.flush()
+
+        # Write PID file for status tracking and locking
+        _write_pid_file("gemini", task_key, {
+            "message_id": message_id,
+            "task_id": msg.get('task_id'),
+            "model": model,
+            "mode": mode_label,
+        })
+
+        max_retries = 5
+        base_delay = 30  # seconds — respect the quota, don't hammer
+
+        for attempt in range(max_retries):
+            try:
+                # Stream stdout line-by-line so the log file updates in real-time
+                proc = subprocess.Popen(
+                    [GEMINI_CLI, "-m", model, "-y", "-p", prompt],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    cwd=str(Path(__file__).parent.parent),
+                    env=_PARENT_ENV
+                )
+
+                # Read stdout in real-time, collect for response routing
+                output_lines = []
+                for line in proc.stdout:
+                    print(line, end='')  # Real-time to log file
+                    sys.stdout.flush()
+                    output_lines.append(line)
+
+                # Wait for process to finish, get stderr
+                proc.wait()
+                stderr = proc.stderr.read() if proc.stderr else ""
+
+                if proc.returncode != 0:
+                    # Detect quota/rate limit errors
+                    if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
+                        delay = base_delay * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
+                        if attempt < max_retries - 1:
+                            print(f"\n⏳ Rate limited (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
+                            sys.stdout.flush()
+                            time.sleep(delay)
+                            continue
+                        else:
+                            print(f"\n❌ Rate limited after {max_retries} attempts. Giving up.")
+                            _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
+                            return
+                    print(f"\n❌ Gemini CLI error (exit {proc.returncode}): {stderr[:500]}")
+                    sys.stdout.flush()
+                    # Non-zero exit but has output? Gemini tool calls may cause exit 1.
+                    # If we got substantial output, treat as success.
+                    if not output_lines or len(''.join(output_lines).strip()) < 50:
+                        _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
+                        return
+
+                response = ''.join(output_lines).strip()
+
+                print(f"\n\n{'─' * 40}")
+                print(f"✅ Gemini finished ({len(response)} chars)")
+                sys.stdout.flush()
+
+                # Send response with model info
+                send_message(
+                    content=response,
+                    task_id=msg['task_id'],
+                    msg_type="response",
+                    from_llm="gemini",
+                    to_llm="claude",
+                    from_model=model,
+                    to_model=None
+                )
+
+                # Acknowledge original message
+                acknowledge(message_id)
+                _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
+                break  # Success — exit retry loop
+
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                print("\n❌ Gemini CLI timed out (5 min sync limit)")
+                _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
+                return
+            except FileNotFoundError:
+                print("❌ gemini CLI not found. Is it installed?")
+                _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
+                return
 
 
-def process_for_claude(message_id: int, new_session: bool = False):
+def process_for_claude(message_id: int, new_session: bool = False, fire_and_forget: bool = False, no_timeout: bool = False):
     """Read message addressed to Claude, invoke Claude CLI headlessly, send response back to sender.
 
     Works symmetrically with process_and_respond (Gemini):
-    - Captures Claude's stdout response
-    - Routes response back via send_message()
-    - Handles errors gracefully with error message type
-
-    Session handling:
-    - If task has existing Claude session ID: uses --resume to continue
-    - If no session or new_session=True: creates new session with --session-id
+    - Sync: Captures Claude's stdout, routes response via send_message()
+    - Async (fire-and-forget): Launches the bridge itself as a bg process in no-timeout mode
 
     Args:
         message_id: The message ID to process
         new_session: If True, force a new session even if one exists
+        fire_and_forget: If True, re-launch bridge in background with --no-timeout.
+        no_timeout: Internal flag. When True, run sync without timeout.
     """
     import uuid
 
@@ -534,6 +766,11 @@ def process_for_claude(message_id: int, new_session: bool = False):
         "timestamp": row[7]
     }
 
+    # Auto-detect mode from message type if not explicitly set
+    if not no_timeout and not fire_and_forget and msg['type'] in ('request', 'handoff'):
+        fire_and_forget = True
+        print("ℹ️  Auto-enabled fire-and-forget for request/handoff (long-running task)")
+
     # Check for existing session
     session = get_session(msg['task_id']) if msg['task_id'] else {"claude": None, "gemini": None}
     claude_session_id = session["claude"] if not new_session else None
@@ -542,13 +779,11 @@ def process_for_claude(message_id: int, new_session: bool = False):
     print(f"   From: {msg['from']} → To: {msg['to']}")
     print(f"   Type: {msg['type']}")
     print(f"   Task: {msg['task_id'] or 'N/A'}")
+    print(f"   Mode: {'🚀 async (bridge bg)' if fire_and_forget else '⏳ sync' + (' (no timeout)' if no_timeout else '')}")
     print(f"   Session: {claude_session_id[:8] + '...' if claude_session_id else 'NEW'}")
 
-    # Prepare prompt for Claude - ask for direct response (no MCP tools needed)
-    # The bridge will handle routing the response back
+    # Prepare prompt for Claude
     prompt = f"""You are Claude, receiving a message from {msg['from'].title()} via the message broker.
-
-This message is being processed headlessly by the bridge. Your stdout response will be automatically routed back to the sender.
 
 ---
 Task ID: {msg['task_id'] or 'none'}
@@ -571,91 +806,164 @@ Your response will be automatically sent back to the sender via the message brok
 Do NOT use MCP tools to send your response - just output your response directly.
 """
 
-    print(f"\n🤖 Processing with Claude CLI (headless)...")
+    # Build command with session handling (use resolved path for detached children)
+    cmd = [CLAUDE_CLI, "-p", prompt]
 
-    try:
-        # Build command with session handling
-        cmd = ["claude", "-p", prompt]
+    if claude_session_id:
+        cmd.extend(["--resume", claude_session_id])
+        print(f"   Resuming session: {claude_session_id[:8]}...")
+    elif msg['task_id']:
+        new_id = str(uuid.uuid4())
+        cmd.extend(["--session-id", new_id])
+        set_session(msg['task_id'], "claude", new_id)
+        print(f"   New session: {new_id[:8]}...")
 
-        if claude_session_id:
-            # Resume existing session
-            cmd.extend(["--resume", claude_session_id])
-            print(f"   Resuming session: {claude_session_id[:8]}...")
-        elif msg['task_id']:
-            # Create new session with specific ID for task tracking
-            new_id = str(uuid.uuid4())
-            cmd.extend(["--session-id", new_id])
-            set_session(msg['task_id'], "claude", new_id)
-            print(f"   New session: {new_id[:8]}...")
+    if fire_and_forget:
+        # ASYNC: Launch the BRIDGE ITSELF as a background process in no-timeout mode.
+        task_key = msg['task_id'] or str(message_id)
 
-        # Call claude CLI in print mode (headless)
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=600,  # 10 min timeout
-            cwd=str(Path(__file__).parent.parent)  # Run from project root
-        )
+        # LOCK CHECK: Don't launch if another process is already working on this task
+        if _is_task_locked("claude", task_key):
+            print(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
+            return
 
-        if result.returncode != 0:
-            error_msg = result.stderr.strip() or "Unknown error"
-            print(f"❌ Claude CLI error: {error_msg}")
+        log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = log_dir / f"claude-{task_key}.log"
 
-            # Send error message back to sender
+        print(f"\n🚀 Launching bridge in background (no timeout)...")
+        print(f"   Log: {log_file}")
+        print(f"   Bridge will capture Claude's response and route it when done.")
+
+        try:
+            bridge_cmd = [
+                sys.executable, str(Path(__file__)),
+                "process-claude", str(message_id),
+                "--no-timeout"
+            ]
+            if new_session:
+                bridge_cmd.append("--new-session")
+            lf = open(log_file, "w")
+            proc = subprocess.Popen(
+                bridge_cmd,
+                stdout=lf,
+                stderr=subprocess.STDOUT,
+                cwd=str(Path(__file__).parent.parent),
+                env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
+                start_new_session=True  # Survive parent exit
+            )
+            print(f"   PID: {proc.pid}")
+
+            # Write PID file for the CHILD process so lock checks work
+            _write_pid_file("claude", task_key, {
+                "message_id": message_id,
+                "task_id": msg.get('task_id'),
+                "mode": "fire-and-forget",
+            }, pid=proc.pid)
+
+        except FileNotFoundError:
+            print("❌ Python or bridge script not found")
+    else:
+        # SYNC: Run Claude with STREAMING output (visible in log in real-time)
+        task_key = msg.get('task_id') or str(message_id)
+        timeout_val = None if no_timeout else 300
+        mode_label = "no-timeout" if no_timeout else "sync, 5 min timeout"
+
+        # LOCK CHECK: Don't process if another bridge is already working on this task
+        if _is_task_locked("claude", task_key):
+            print(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
+            return
+
+        print(f"\n🤖 Processing with Claude CLI (headless) [{mode_label}]...")
+        sys.stdout.flush()
+
+        # Write PID file for status tracking and locking
+        _write_pid_file("claude", task_key, {
+            "message_id": message_id,
+            "task_id": msg.get('task_id'),
+            "mode": mode_label,
+        })
+
+        try:
+            # Stream stdout line-by-line so the log file updates in real-time
+            proc = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=str(Path(__file__).parent.parent),
+                env=_PARENT_ENV
+            )
+
+            output_lines = []
+            for line in proc.stdout:
+                print(line, end='')
+                sys.stdout.flush()
+                output_lines.append(line)
+
+            proc.wait()
+            stderr = proc.stderr.read() if proc.stderr else ""
+
+            if proc.returncode != 0:
+                error_msg = stderr.strip() or "Unknown error"
+                print(f"\n❌ Claude CLI error: {error_msg[:500]}")
+                sys.stdout.flush()
+
+                send_message(
+                    content=f"[Bridge Error] Claude CLI failed:\n{error_msg[:500]}",
+                    task_id=msg['task_id'],
+                    msg_type="error",
+                    from_llm="claude",
+                    to_llm=msg['from'],
+                    from_model="claude-bridge-error"
+                )
+                acknowledge(message_id)
+                _remove_pid_file("claude", msg.get('task_id') or str(message_id))
+                return
+
+            response = ''.join(output_lines).strip()
+
+            print(f"\n\n{'─' * 40}")
+            print(f"✅ Claude finished ({len(response)} chars)")
+            sys.stdout.flush()
+
             send_message(
-                content=f"[Bridge Error] Claude CLI failed:\n{error_msg}",
+                content=response,
+                task_id=msg['task_id'],
+                msg_type="response",
+                from_llm="claude",
+                to_llm=msg['from'],
+                from_model=None,
+                to_model=None
+            )
+
+            acknowledge(message_id)
+            _remove_pid_file("claude", msg.get('task_id') or str(message_id))
+
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            print("\n❌ Claude CLI timed out (5 min sync limit)")
+            send_message(
+                content="[Bridge Error] Claude CLI timed out after 5 minutes. Consider using async mode for long tasks.",
                 task_id=msg['task_id'],
                 msg_type="error",
                 from_llm="claude",
-                to_llm=msg['from'],  # Route back to original sender
-                from_model="claude-bridge-error"
+                to_llm=msg['from'],
+                from_model="claude-bridge-timeout"
             )
             acknowledge(message_id)
-            return
-
-        response = result.stdout.strip()
-
-        print(f"\n📝 Claude's response ({len(response)} chars):\n")
-        print(response[:500])
-        if len(response) > 500:
-            print(f"\n... [{len(response) - 500} more characters]")
-
-        # Route response back to sender (symmetric with process_and_respond)
-        send_message(
-            content=response,
-            task_id=msg['task_id'],
-            msg_type="response",
-            from_llm="claude",
-            to_llm=msg['from'],  # Route back to original sender
-            from_model=None,  # Claude's model ID not easily extractable from stdout
-            to_model=None
-        )
-
-        # Acknowledge the original message
-        acknowledge(message_id)
-
-    except subprocess.TimeoutExpired:
-        print("❌ Claude CLI timed out")
-        # Send timeout error back to sender
-        send_message(
-            content="[Bridge Error] Claude CLI timed out after 10 minutes",
-            task_id=msg['task_id'],
-            msg_type="error",
-            from_llm="claude",
-            to_llm=msg['from'],
-            from_model="claude-bridge-timeout"
-        )
-        acknowledge(message_id)
-    except FileNotFoundError:
-        print("❌ claude CLI not found. Is it installed?")
-        send_message(
-            content="[Bridge Error] Claude CLI not found on system",
-            task_id=msg['task_id'],
-            msg_type="error",
-            from_llm="claude",
-            to_llm=msg['from'],
-            from_model="claude-bridge-not-found"
-        )
+            _remove_pid_file("claude", msg.get('task_id') or str(message_id))
+        except FileNotFoundError:
+            print("❌ claude CLI not found. Is it installed?")
+            send_message(
+                content="[Bridge Error] Claude CLI not found on system",
+                task_id=msg['task_id'],
+                msg_type="error",
+                from_llm="claude",
+                to_llm=msg['from'],
+                from_model="claude-bridge-not-found"
+            )
+            _remove_pid_file("claude", msg.get('task_id') or str(message_id))
 
 
 def interactive_mode():
@@ -827,12 +1135,18 @@ def main():
     proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
     proc_parser.add_argument("message_id", type=int, help="Message ID to process")
     proc_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
+    proc_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
+                             help="Run sync without timeout (used internally by fire-and-forget)")
 
     # process-claude (invoke Claude headlessly)
     proc_claude_parser = subparsers.add_parser("process-claude", help="Process message with Claude CLI (headless)")
     proc_claude_parser.add_argument("message_id", type=int, help="Message ID for Claude to process")
     proc_claude_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                     help="Force new session even if one exists for this task")
+    proc_claude_parser.add_argument("--async", dest="fire_and_forget", action="store_true",
+                                    help="Launch Claude in background (no timeout). Auto-enabled for request/handoff types.")
+    proc_claude_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
+                                    help="Run sync without timeout (used internally by fire-and-forget)")
 
     # ask-claude (PREFERRED: send + invoke in one step)
     ask_claude_parser = subparsers.add_parser("ask-claude", help="Send message AND invoke Claude (one-step communication)")
@@ -870,6 +1184,9 @@ def main():
     proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                         help="Force new sessions for each message")
 
+    # status
+    subparsers.add_parser("status", help="Show running bridge processes")
+
     # interactive
     subparsers.add_parser("interactive", help="Interactive mode")
 
@@ -891,9 +1208,9 @@ def main():
     elif args.command == "conversation":
         get_conversation(args.task_id)
     elif args.command == "process":
-        process_and_respond(args.message_id, args.model)
+        process_and_respond(args.message_id, args.model, no_timeout=args.no_timeout)
     elif args.command == "process-claude":
-        process_for_claude(args.message_id, args.new_session)
+        process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
     elif args.command == "ask-claude":
         data = None
         if args.data:
@@ -908,6 +1225,8 @@ def main():
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
         process_all_claude(args.new_session)
+    elif args.command == "status":
+        bridge_status()
     elif args.command == "interactive":
         interactive_mode()
     else:

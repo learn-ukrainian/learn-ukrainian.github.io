@@ -2,13 +2,13 @@
   "module": "marko-vovchok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:27:27.766726Z",
+  "last_audit": "2026-02-07T16:37:47.544064Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T00:27:23.283478Z",
-    "meta": "2026-02-07T00:26:40.598215Z",
-    "activities": "2026-02-04T22:39:19.774410Z",
-    "vocabulary": "2026-02-07T00:26:53.988418Z",
+    "md": "2026-02-07T01:04:17.213513Z",
+    "meta": "2026-02-07T15:13:22.015110Z",
+    "activities": "2026-02-07T10:03:51.571348Z",
+    "vocabulary": "2026-02-07T10:03:51.628547Z",
     "plan": null
   },
   "gates": {

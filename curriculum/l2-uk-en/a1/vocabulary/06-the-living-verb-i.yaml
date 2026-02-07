@@ -3,15 +3,6 @@ module: 06-the-living-verb-i
 level: A1
 version: '2.0'
 items:
-- lemma: ати
-  ipa: /ˈatɪ/
-  translation: to (verb suffix/ending)
-  pos: noun
-- lemma: бережко
-  ipa: /bˈɛrɛʒkɔ/
-  translation: little edge
-  pos: noun
-  gender: m
 - lemma: вечеряти
   ipa: /ʋɛt͡ʃˈɛrjatɪ/
   translation: to have dinner
@@ -38,11 +29,11 @@ items:
   ipa: /ɔbˈidatɪ/
   translation: to have dinner/lunch
   pos: verb
-- lemma: парка
-  ipa: /parka/
-  translation: parka (jacket), steam (diminutive)
+- lemma: парк
+  ipa: /park/
+  translation: park
   pos: noun
-  gender: f
+  gender: m
 - lemma: починати
   ipa: /pɔt͡ʃɪnˈatɪ/
   translation: to start (imperfective)

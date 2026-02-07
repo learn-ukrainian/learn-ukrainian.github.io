@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:06:25
+**Generated:** 2026-02-07 21:17:17
 
 ## Configuration
 **Type:** A1-grammar
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 16/1
+- **Vocab:** ✅ 14/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -52,6 +52,9 @@
 - **Immersion:** 🇺🇦 17.4% (target 15-35% (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

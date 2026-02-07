@@ -1,12 +1,12 @@
 # Audit Report: M13 — 13-the-locative-where-things-are.md
-**Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1331
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:46
+**Generated:** 2026-02-07 21:23:11
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1331 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1396/750 (raw: 1716)
+- **Words:** ✅ 1396/1331 (raw: 1716)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -53,6 +53,9 @@
 - **Immersion:** 🇺🇦 28.3% (target 25-40% (M13))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

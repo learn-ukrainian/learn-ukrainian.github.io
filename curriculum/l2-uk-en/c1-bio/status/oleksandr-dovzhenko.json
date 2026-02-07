@@ -2,13 +2,13 @@
   "module": "oleksandr-dovzhenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:24.203498Z",
+  "last_audit": "2026-02-07T16:38:19.446906Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.342738Z",
-    "meta": "2026-02-06T22:56:22.298929Z",
-    "activities": "2026-02-02T11:02:04.142851Z",
-    "vocabulary": "2026-02-02T11:02:04.142715Z",
+    "meta": "2026-02-07T15:13:22.023402Z",
+    "activities": "2026-02-07T10:03:51.567847Z",
+    "vocabulary": "2026-02-07T10:03:51.626084Z",
     "plan": null
   },
   "gates": {

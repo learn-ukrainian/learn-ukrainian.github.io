@@ -1,45 +1,88 @@
-# Module 90: Граматика в Контексті (Checkpoint)
+# Audit Report: M90 — 90-grammar-in-context.md
+**Level:** B1 | **Module:** M90 | **Phase:** B1.9 | **Pedagogy:** TBL | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 01:09:42
 
-**Template:** b1-checkpoint-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:38:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-skills
+**Word Target:** 1500 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, fill-in, mark-the-words
+**Required Types:** cloze, error-correction, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥15 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Комплексний огляд лексики B1 | 14 | 8 | ✅ |
+| 2 | match-up | Колокації — дієслово + іменник | 14 | 8 | ✅ |
+| 3 | match-up | Синоніми та антоніми | 14 | 8 | ✅ |
+| 4 | group-sort | Групування за доменом | 24 | 12 | ✅ |
+| 5 | cloze | Вибір правильного слова з контексту | 14 | 12 | ✅ |
+| 6 | select | Виберіть ВСІ правильні варіанти | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання лексики B1 | 14 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті про Україну | 15 | 12 | ✅ |
+| 9 | unjumble | Складіть речення з лексикою B1 | 12 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в лексиці та колокаціях | 14 | 6 | ✅ |
+| 11 | translate | Переклад речень з усіх доменів | 10 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть дискурсні маркери в тексті | 7 | 6 | ✅ |
+| 13 | mark-the-words | Знайдіть абстрактні іменники в тексті | 12 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                    |
-| ------------------- | ----- | -------------------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical flow (Abstract Nouns -> Discourse Markers -> Argumentation).                                     |
-| Relevance           | 10/10 | Essential for B1 -> B2 academic writing shift.                                                           |
-| Educational         | 10/10 | Excellent focus on *text cohesion* (`отже`, `по-перше`, `таким чином`).                                  |
-| Language            | 10/10 | Academic register.                                                                                       |
-| Pedagogy            | 9/10  | "Cultural Mosaic" theme allows using complex grammar to describe diversity.                              |
-| Immersion           | 10/10 | Comparing Lviv (Renaissance) vs Chernivtsi (Eclectic) vs Kyiv (Baroque) is a great architectural lesson. |
-| Activities          | 10/10 | Strong variety.                                                                                          |
-| Richness            | 9/10  | Good depth.                                                                                              |
-| Humanity            | 9/10  | Engaging.                                                                                                |
-| LLM Fingerprint     | 9/10  | Natural.                                                                                                 |
-| Linguistic Accuracy | 9/10  | Check `зложитися` in vocab.                                                                              |
+**Summary:**
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 2/3 (cloze, mark-the-words) ✅
+- Required types used: 3/3 (cloze, error-correction, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 2084/1500 (raw: 2617)
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 11/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 25/15
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 97.6% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (skills)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `зложитися`. Rare/dialectal for `скластися` (to composed of/to fold). The context is likely "culture is composed of elements". Standard Ukrainian uses `складатися`. `Зложити` is more "to deposit/lay down".
-  - *Action:* Change to `скластися` / `складатися`.
+## Richness Details
+**Score:** 99% (minimum: 80%)
+**Module Type:** skills
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 21 | 15 | 100% | 26% | 25.5% |
+| engagement | 11 | 5 | 100% | 19% | 19.4% |
+| variety | 0.98 | - | 98% | 12% | 12.0% |
+| cultural | 12 | - | 100% | 12% | 12.2% |
+| realworld | 7 | 3 | 100% | 12% | 12.2% |
+| visual | 9 | 2 | 100% | 6% | 6.1% |
+| paragraph_var | 0.92 | - | 92% | 6% | 5.6% |
+| questions | 19 | 4 | 100% | 6% | 6.1% |
+| **TOTAL** | | | | | **99.3%** |
 
-- **Academic Skills:** This module is the "bridge" to B2/C1. It teaches how to build an *argument*, not just a sentence.
-- **Architectural vocabulary:** `бароко`, `готика` gives students the words to describe what they actually see in Ukrainian cities.
-
-## Issues
-
-- **Vocabulary YAML:** `зложитися` -> `скластися`.
-
-## Recommendation
-
-✅ PASS — Excellent academic bridge module.
-
-## Action Items
-
-1. **Fix Vocab:** Fix `зложитися`.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 36 | Included in Core |
+| **Діагностика** | ✅ | 148 | Included in Core |
+| **Огляд** | ⚪️ | 1072 | Skipped |
+| **Інтеграція** | ⚪️ | 305 | Skipped |
+| **Практика** | ⚪️ | 289 | Skipped |
+| **Підсумок — Граматика як інструмент** | ✅ | 124 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -2,14 +2,14 @@
   "module": "23-what-time-is-it",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:52.698610Z",
+  "last_audit": "2026-02-07T21:32:02.544304Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T12:31:29.530368Z",
-    "meta": "2026-01-26T21:56:47.938391Z",
-    "activities": "2026-01-16T00:30:13.872741Z",
-    "vocabulary": "2026-01-25T16:02:17.489787Z",
-    "plan": "2026-01-30T12:24:45.216116Z"
+    "meta": "2026-02-07T10:03:51.777533Z",
+    "activities": "2026-02-07T21:31:42.204381Z",
+    "vocabulary": "2026-02-07T21:30:57.621676Z",
+    "plan": "2026-02-07T10:05:59.910638Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1073/750 (raw: 1701)"
+      "message": "1073/1064 (raw: 1701)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "13/1"
+      "message": "12/1"
     },
     "naturalness": {
       "status": "pass",

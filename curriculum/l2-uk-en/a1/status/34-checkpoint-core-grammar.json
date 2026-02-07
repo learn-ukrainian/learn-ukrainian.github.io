@@ -2,14 +2,14 @@
   "module": "34-checkpoint-core-grammar",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:13:09.583466Z",
+  "last_audit": "2026-02-07T21:39:33.990366Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T21:13:05.925654Z",
-    "meta": "2026-01-26T21:56:47.973063Z",
-    "activities": "2026-01-16T00:54:54.345432Z",
-    "vocabulary": "2026-01-25T18:00:39.447605Z",
-    "plan": "2026-01-30T12:24:45.256812Z"
+    "meta": "2026-02-07T10:03:51.783904Z",
+    "activities": "2026-02-07T21:06:32.889503Z",
+    "vocabulary": "2026-02-07T21:39:22.688936Z",
+    "plan": "2026-02-07T10:03:51.074939Z"
   },
   "gates": {
     "meta": {
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "131/1"
+      "message": "125/1"
     },
     "naturalness": {
       "status": "pass",

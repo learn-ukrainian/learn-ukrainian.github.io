@@ -2,14 +2,14 @@
   "module": "04-eneida-war",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T10:04:14.702994Z",
+  "last_audit": "2026-02-07T15:10:42.528251Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T10:04:03.788617Z",
     "meta": "2026-02-07T10:03:50.670677Z",
     "activities": "2026-02-07T10:03:50.687364Z",
     "vocabulary": "2026-02-07T10:03:50.695745Z",
-    "plan": "2026-02-07T10:03:50.857897Z"
+    "plan": "2026-02-07T10:06:50.459001Z"
   },
   "gates": {
     "meta": {

@@ -1,4 +1,3 @@
----
 - type: match-up
   title: Holidays and Greetings
   pairs:
@@ -68,7 +67,6 @@
     - День народження
     - Весілля
     - Ювілей
-    - --
   instruction: Розподіліть елементи за групами.
 - type: group-sort
   title: Holiday Activities
@@ -89,7 +87,6 @@
     - листівка
     - цукерки
     - шоколад
-    - --
   instruction: Розподіліть елементи за групами.
 - type: fill-in
   title: Привітання (Greetings)

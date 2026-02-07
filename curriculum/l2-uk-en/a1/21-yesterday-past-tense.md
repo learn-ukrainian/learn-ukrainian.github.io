@@ -26,15 +26,10 @@ Unlike English, where «I worked» and «she worked» look the same, Ukrainian p
 The past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:
 
 | Who | Ending | IPA | Example | IPA |
-
 | --- | ------ | --- | ------- | --- |
-
-| він (he) | -**в** | /w/ | читав | /t͡ʃɪˈtɑw/ |
-
+| він (he) | -**в** | /ʋ/ | читав | /t͡ʃɪˈtɑʋ/ |
 | вона (she) | -**ла** | /lɑ/ | читала | /t͡ʃɪˈtɑlɑ/ |
-
 | воно (it) | -**ло** | /lɔ/ | читало | /t͡ʃɪˈtɑlɔ/ |
-
 | вони (they) | -**ли** | /lɪ/ | читали | /t͡ʃɪˈtɑlɪ/ |
 
 **Key insight:** The ending matches the **gender of the subject**, not the person.
@@ -89,7 +84,7 @@ Let's look at **сміятися** (to laugh):
 
 | Who | Result | IPA |
 | :--- | :--- | --- |
-| **Він** | **сміявся** | /smiˈjɑwsʲɑ/ |
+| **Він** | **сміявся** | /smiˈjɑʋsʲɑ/ |
 | **Вона** | **сміялася** | /smiˈjɑlɑsʲɑ/ |
 | **Воно** | **сміялося** | /smiˈjɑlɔsʲɑ/ |
 | **Вони** | **сміялися** | /smiˈjɑlɪsʲɑ/ |

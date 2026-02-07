@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M33 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:12:55
+**Generated:** 2026-02-07 21:39:31
 
 ## Configuration
 **Type:** A1-culture
@@ -22,8 +22,8 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Holidays and Greetings | 10 | 8 | ✅ |
 | 2 | match-up | Celebration Vocabulary | 10 | 8 | ✅ |
-| 3 | group-sort | Holidays by Season | 13 | 12 | ✅ |
-| 4 | group-sort | Holiday Activities | 13 | 12 | ✅ |
+| 3 | group-sort | Holidays by Season | 12 | 12 | ✅ |
+| 4 | group-sort | Holiday Activities | 12 | 12 | ✅ |
 | 5 | fill-in | Привітання (Greetings) | 12 | 8 | ✅ |
 | 6 | fill-in | Святкування (Celebrating) | 12 | 8 | ✅ |
 | 7 | quiz | Holiday Knowledge | 8 | 8 | ✅ |
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 16/1
+- **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -53,6 +53,9 @@
 - **Immersion:** 🇺🇦 44.1% (target 35-55% (M33))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

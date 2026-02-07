@@ -55,7 +55,7 @@ These verbs form the backbone of your daily narrative. Notice how some are regul
 
 ---
 
-## Dialogues
+## Practice
 
 > [!conversation] Morning Conversation
 >
@@ -137,7 +137,7 @@ These verbs form the backbone of your daily narrative. Notice how some are regul
 
 ---
 
-## Практика
+## Practice 2
 
 ### Вправа 1: Переклад
 

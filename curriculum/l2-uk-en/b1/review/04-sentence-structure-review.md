@@ -1,31 +1,96 @@
-# Module 04: Структура речення
+# Audit Report: M04 — 04-sentence-structure.md
+**Level:** B1 | **Module:** M04 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:09
 
-**Template:** b1-metalanguage-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 21:25:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-bridge
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** fill-in, match-up, quiz, translate
+**Required Types:** fill-in, group-sort, mark-the-words, match-up, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Основні терміни | 11 | 8 | ✅ |
+| 2 | match-up | Види речень та знаки | 11 | 8 | ✅ |
+| 3 | group-sort | Класифікація термінів | 17 | 14 | ✅ |
+| 4 | quiz | Головні члени речення | 8 | 8 | ✅ |
+| 5 | quiz | Другорядні члени речення | 8 | 8 | ✅ |
+| 6 | true-false | Теорія речень | 8 | 8 | ✅ |
+| 7 | true-false | Пунктуація та сполучники | 8 | 8 | ✅ |
+| 8 | fill-in | Визначення термінів | 8 | 8 | ✅ |
+| 9 | fill-in | Розділові знаки | 8 | 8 | ✅ |
+| 10 | select | Ознаки термінів | 6 | 6 | ✅ |
+| 11 | unjumble | Визначення понять | 8 | 6 | ✅ |
+| 12 | error-correction | Знайди помилку | 8 | 6 | ✅ |
+| 13 | mark-the-words | Знайдіть підмет | 6 | 6 | ✅ |
+| 14 | cloze | Синтаксичний розбір | 15 | 14 | ✅ |
 
-| Dimension           | Score | Notes                                                                  |
-| ------------------- | ----- | ---------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical build: Parts → Types → Connectors → Punctuation.               |
-| Relevance           | 10/10 | Essential for understanding complex texts and grammar analysis.        |
-| Educational         | 10/10 | "Master Term" concept (член речення) is very helpful for categorizing. |
-| Language            | 10/10 | Metalanguage definitions are precise.                                  |
-| Pedagogy            | 10/10 | PPP structure. Great visual descriptions (diagrams mentioned).         |
-| Immersion           | 10/10 | 45% immersion - highest yet, appropriate for M04.                      |
-| Activities          | 10/10 | 14 activities, great density. Covers analysis and synthesis.           |
-| Richness            | 10/10 | 98% score. "Pop Culture Moment" on punctuation rules is vital.         |
-| Humanity            | 10/10 | Engaging tone.                                                         |
-| LLM Fingerprint     | 10/10 | Human-like structure.                                                  |
-| Linguistic Accuracy | 10/10 | Correct definitions of syntactic roles.                                |
+**Summary:**
+- Total activities: 14 (target: 12-16) ✅
+- Unique types: 10 (minimum: 5) ✅
+- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
+- Required types used: 5/5 (fill-in, group-sort, mark-the-words, match-up, quiz) ✅
+- Low density activities: 0
 
-## Fixes Applied
+## Gates
+- **Words:** ✅ 3041/3000 (raw: 3897)
+- **Activities:** ✅ 14/12
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 10/5 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 52/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 39.1% (B1.1 Aspect)
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-1.  **Vocabulary**: Rewrote `vocabulary/04-sentence-structure.yaml` to remove hallucinated terms (e.g., "тир" for dash) and replace them with the correct syntax vocabulary (підмет, присудок, etc.).
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Conclusion
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 67 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 25 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 87 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.4%** |
 
-This module provides the structural blueprint for the rest of B1. Understanding "підрядне речення" is a prerequisite for the complex grammar coming in B1.1. The explicit focus on punctuation rules (commas before *що*) answers a very common learner question.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 47 | Included in Core |
+| **Introduction - Understanding Sentence Structure** | ✅ | 322 | Included in Core |
+| **Sentence Parts (Члени речення)** | ⚪️ | 818 | Skipped |
+| **Sentence Types** | ⚪️ | 150 | Skipped |
+| **Clause Types** | ⚪️ | 146 | Skipped |
+| **Conjunctions** | ⚪️ | 100 | Skipped |
+| **Punctuation Terms** | ⚪️ | 156 | Skipped |
+| **Additional Syntax Terms** | ⚪️ | 95 | Skipped |
+| **Practice Analyzing Sentences** | ⚪️ | 324 | Skipped |
+| **Dialogues** | ✅ | 476 | Included in Core |
+| **Summary** | ✅ | 350 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 57 | Skipped |

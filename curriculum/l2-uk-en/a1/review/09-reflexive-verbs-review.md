@@ -1,17 +1,64 @@
-## Module 09: Reflexive Verbs (-ся) - FINAL REPORT
+# Audit Report: M09 — 09-reflexive-verbs.md
+**Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 750
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 15:06:25
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Reflexive Verbs Meanings | 10 | 8 | ✅ |
+| 2 | fill-in | Conjugation Drill (Present Tense) | 12 | 8 | ✅ |
+| 3 | quiz | Find the Mistake | 12 | 8 | ✅ |
+| 4 | fill-in | Dialogue: Morning Routine | 12 | 8 | ✅ |
+| 5 | true-false | Reflexive Concepts | 12 | 8 | ✅ |
+| 6 | match-up | Match Person to Verb | 10 | 8 | ✅ |
+| 7 | quiz | Context Quiz | 12 | 8 | ✅ |
+| 8 | fill-in | Sentence Builder | 12 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Removed Latin phonetic descriptions (e.g., [ts'a]) and enforced IPA standard.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched ALL 8 activities from 8 items to 12 items (or 10 for match-up) to meet density rules.
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 4 (minimum: 4) ✅
+- Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 977/750 (raw: 1134)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 4/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 3/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 16/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 17.4% (target 15-35% (M09))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/09-reflexive-verbs.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 228 | Included in Core |
+| **Presentation** | ✅ | 642 | Included in Core |
+| **Cultural Insight** | ✅ | 45 | Included in Core |
+| **Підсумок** | ✅ | 43 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

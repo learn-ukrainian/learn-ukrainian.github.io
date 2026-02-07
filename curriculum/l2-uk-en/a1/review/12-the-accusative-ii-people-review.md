@@ -1,17 +1,65 @@
-## Module 12: The Accusative II - People - FINAL REPORT
+# Audit Report: M12 — 12-the-accusative-ii-people.md
+**Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 15:03:46
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, group-sort
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | People in Your Life | 10 | 8 | ✅ |
+| 2 | group-sort | Animate vs Inanimate | 12 | 12 | ✅ |
+| 3 | quiz | Accusative Endings | 12 | 8 | ✅ |
+| 4 | true-false | Animate Accusative Rules | 12 | 8 | ✅ |
+| 5 | fill-in | Complete with Animate Accusative | 14 | 8 | ✅ |
+| 6 | fill-in | Sentences in Context | 12 | 8 | ✅ |
+| 7 | quiz | Sentences with Animate Objects | 12 | 8 | ✅ |
+| 8 | quiz | More Complex Sentence Order | 12 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Added IPA to grammar tables and examples, and removed Latin transliteration.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched `People in Your Life` and `More Complex Sentence Order` to meet 12-item/pair density rules (respecting match-up limits).
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, group-sort) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 1342/750 (raw: 1662)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 5/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 4/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 9/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 26.8% (target 25-40% (M12))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/12-the-accusative-ii-people.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 101 | Included in Core |
+| **Presentation** | ✅ | 194 | Included in Core |
+| **Practice** | ⚪️ | 284 | Skipped |
+| **Production** | ➖ | 448 | Excluded Type |
+| **Cultural Insight** | ✅ | 296 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

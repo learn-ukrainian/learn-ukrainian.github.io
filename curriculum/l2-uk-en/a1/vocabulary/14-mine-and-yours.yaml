@@ -23,15 +23,13 @@ items:
   pos: noun
   gender: n
 - lemma: малий
-  ipa: /malˈɛ/
+  ipa: /mɑˈlɪj/
   translation: small
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: тихий
-  ipa: /tˈɪxa/
+  ipa: /ˈtɪxɪj/
   translation: quiet
-  pos: noun
-  gender: f
+  pos: adj
 - lemma: інваріантний
   ipa: /inʋariˈantnɪj/
   translation: invariant

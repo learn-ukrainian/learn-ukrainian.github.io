@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:21:26
+**Generated:** 2026-02-07 22:43:18
 
 ## Configuration
 **Type:** C1-biography
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 6579/5000 (raw: 7233)
+- **Words:** ✅ 6941/5000 (raw: 7321)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -61,13 +61,13 @@
 | primary_sources | 5 | 4 | 100% | 19% | 19.0% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | quotes | 15 | 3 | 100% | 14% | 14.3% |
-| cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.92 | - | 92% | 5% | 4.4% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 3 | 100% | 5% | 4.8% |
+| questions | 23 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
@@ -80,10 +80,8 @@
 | **Внесок: Перша реформаторка Східної Європи** | ⚪️ | 746 | Skipped |
 | **Дипломатія та віра: Місія до Константинополя** | ⚪️ | 641 | Skipped |
 | **Спадщина: Світло після темряви** | ⚪️ | 761 | Skipped |
-| **Порівняльний аналіз: Моделі управління (Ігор та Ольга)** | ✅ | 196 | Included in Core |
+| **Порівняльний аналіз: Моделі управління (Ігор та Ольга)** | ✅ | 256 | Included in Core |
 | **Критичне мислення** | ⚪️ | 220 | Skipped |
-| **Есе** | ⚪️ | 199 | Skipped |
+| **Есе** | ⚪️ | 501 | Skipped |
 | **Зразок відповіді** | ⚪️ | 445 | Skipped |
 | **Підсумок: Засновниця регулярної держави** | ✅ | 286 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **Vocabulary** | ➖ | 0 | Excluded Type |

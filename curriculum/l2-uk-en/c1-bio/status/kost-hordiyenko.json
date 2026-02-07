@@ -2,13 +2,13 @@
   "module": "kost-hordiyenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:44.197215Z",
+  "last_audit": "2026-02-07T16:37:39.188988Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T00:06:59.908467Z",
-    "meta": "2026-02-05T20:58:10.383491Z",
-    "activities": "2026-02-04T17:14:09.625252Z",
-    "vocabulary": "2026-02-04T23:46:14.823874Z",
+    "meta": "2026-02-07T15:13:22.012616Z",
+    "activities": "2026-02-07T10:03:51.597106Z",
+    "vocabulary": "2026-02-07T10:03:51.644183Z",
     "plan": null
   },
   "gates": {

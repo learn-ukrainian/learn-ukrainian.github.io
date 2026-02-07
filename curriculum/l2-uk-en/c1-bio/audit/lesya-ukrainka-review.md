@@ -1,8 +1,8 @@
-# Audit Report: M72 — lesya-ukrainka.md
-**Level:** C1-BIO | **Module:** M72 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+# Audit Report: M70 — lesya-ukrainka.md
+**Level:** C1-BIO | **Module:** M70 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:09
+**Generated:** 2026-02-07 16:38:04
 
 ## Configuration
 **Type:** C1-biography

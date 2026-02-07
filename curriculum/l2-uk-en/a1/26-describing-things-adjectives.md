@@ -20,9 +20,9 @@ Most Ukrainian adjectives use "hard" endings. They are very regular and predicta
 
 | Gender    | Ending  | Example       | IPA      | Meaning     |
 | --------- | ------- | ------------- | -------- | ----------- |
-| Masculine | -**ий** | новий будинок | /nɔˈvɪj/ | new house   |
-| Feminine  | -**а**  | нова книга    | /nɔˈvɑ/  | new book    |
-| Neuter    | -**е**  | нове місто    | /nɔˈvɛ/  | new city    |
+| Masculine | -**ий** | новий будинок | /nɔˈʋɪj/ | new house   |
+| Feminine  | -**а**  | нова книга    | /nɔˈʋɑ/  | new book    |
+| Neuter    | -**е**  | нове місто    | /nɔˈʋɛ/  | new city    |
 | Plural    | -**і**  | нові друзі    | /nɔˈʋi/  | new friends |
 
 ### Soft Stem Adjective Endings

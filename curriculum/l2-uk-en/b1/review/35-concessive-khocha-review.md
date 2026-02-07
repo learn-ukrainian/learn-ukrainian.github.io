@@ -1,44 +1,89 @@
-# Module 35: Допустові речення: хоча, незважаючи на
+# Audit Report: M35 — 35-concessive-khocha.md
+**Level:** B1 | **Module:** M35 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1755
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:26
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 01:35:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1755 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, translate
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Виберіть правильну відповідь | 12 | 8 | ✅ |
+| 2 | match-up | З'єднайте сполучник з функцією | 12 | 8 | ✅ |
+| 3 | fill-in | Доповніть речення правильною формою | 12 | 8 | ✅ |
+| 4 | true-false | Правда чи неправда? | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть конструкції за типами | 20 | 12 | ✅ |
+| 6 | unjumble | Складіть речення з розсипаних слів | 12 | 6 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 12 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 19 | 12 | ✅ |
+| 9 | mark-the-words | Позначте допустові сполучники та підсилювальні слова | 14 | 6 | ✅ |
+| 10 | select | Виберіть усі граматично правильні речення | 6 | 6 | ✅ |
+| 11 | translate | Перекладіть на українську мову | 12 | 6 | ✅ |
+| 12 | fill-in | Вставте правильне слово | 12 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                |
-| ------------------- | ----- | ------------------------------------------------------------------------------------ |
-| Clarity             | 10/10 | Clear distinction between neutral *хоча* and formal *незважаючи на*.                 |
-| Structure           | 10/10 | Well-organized explanation of registers (neutral vs formal).                         |
-| Relevance           | 10/10 | "Although...", "Despite..." are essential for complex argumentation.                 |
-| Language            | 10/10 | References to Shevchenko's "Zapovit" ("І мене... не забудьте") add unexpected depth. |
-| Pedagogy            | 10/10 | Good warning about *незважаючи на* + noun vs *незважаючи на те що* + clause.         |
-| Immersion           | 10/10 | Discusses resilience of Kyiv and Ukrainian diaspora through grammar.                 |
-| Activities          | 10/10 | High density, excellent "Group Sort" for registers.                                  |
-| Richness            | 10/10 | Psychological angle (tolerance for ambiguity) is intellectually stimulating.         |
-| Humanity            | 10/10 | Dialogues about "not giving up" feel motivating.                                     |
-| LLM Fingerprint     | 10/10 | No issues.                                                                           |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, error-correction, fill-in, translate) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 1727/1755 (raw: 2099) (28 short)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 12/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 75/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 96.9% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 95% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`долі` -> `доля`, proper nouns capitalization).
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 44 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| questions | 21 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.9%** |
 
-- **Ukrainian Soul:** The module connects the grammatical concept of "concession" (doing something *despite* obstacles) to the national character trait of resilience (*незламність*). This is brilliant CBI (Content-Based Instruction).
-- **Shevchenko:** Using *Zapovit* to illustrate concessive meaning ("Even though I will be dead, remember me") is a powerful literary connection.
-
-## Issues
-
-- *Fixed:* Vocab errors.
-
-## Recommendation
-
-✅ PASS — Inspiring grammar module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 59 | Included in Core |
+| **Тест: Перевірте себе** | ⚪️ | 105 | Skipped |
+| **Пояснення** | ⚪️ | 728 | Skipped |
+| **Практика** | ⚪️ | 222 | Skipped |
+| **Діалоги** | ✅ | 337 | Included in Core |
+| **Підсумок** | ✅ | 166 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

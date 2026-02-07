@@ -3,10 +3,6 @@ module: 34-checkpoint-core-grammar
 level: A1
 version: '2.0'
 items:
-- lemma: ати
-  ipa: /ˈatɪ/
-  translation: to (verb suffix/ending)
-  pos: noun
 - lemma: багато
   ipa: /baɦˈatɔ/
   translation: many, much
@@ -79,6 +75,7 @@ items:
   ipa: /ʋidmˈinɔk/
   translation: grammatical case
   pos: noun
+  gender: m
 - lemma: вікно
   ipa: /ʋiknˈɔ/
   translation: window
@@ -97,15 +94,11 @@ items:
   translation: hour
   pos: noun
   gender: f
-- lemma: годині
-  ipa: /ɦɔdˈɪni/
-  translation: at ... o'clock
-  pos: noun
 - lemma: голова
   ipa: /ɦɔlɔʋˈa/
   translation: head
   pos: noun
-  gender: m
+  gender: f
 - lemma: горло
   ipa: /ɦˈɔrlɔ/
   translation: throat
@@ -128,6 +121,7 @@ items:
   ipa: /ɦrˈɪʋnja/
   translation: hryvnia (currency)
   pos: noun
+  gender: f
 - lemma: давно
   ipa: /daʋnˈɔ/
   translation: long ago, for a long time
@@ -150,8 +144,8 @@ items:
   ipa: /drˈuɦɪj/
   translation: second
   pos: adj
-- lemma: друзь
-  ipa: /druzʲ/
+- lemma: друзі
+  ipa: /drˈuzʲi/
   translation: friends
   pos: noun
   gender: m
@@ -162,11 +156,6 @@ items:
 - lemma: дієслово
   ipa: /dijɛslˈɔʋɔ/
   translation: verb
-  pos: noun
-  gender: n
-- lemma: живе
-  ipa: /ʒɪʋˈɛ/
-  translation: lives (verb), alive (neuter)
   pos: noun
   gender: n
 - lemma: живий
@@ -192,8 +181,9 @@ items:
   pos: adv
 - lemma: зараза
   ipa: /zarˈaza/
-  translation: infection, now (colloquial)
+  translation: infection
   pos: noun
+  gender: f
 - lemma: застосувати
   ipa: /zastɔsuʋˈatɪ/
   translation: to apply, to use (perfective)
@@ -230,10 +220,6 @@ items:
   ipa: /zustrit͡ʃˈatɪsja/
   translation: to meet each other (imperfective)
   pos: verb
-- lemma: ити
-  ipa: /ɪtɪ/
-  translation: to go (truncated)
-  pos: noun
 - lemma: кава
   ipa: /kˈaʋa/
   translation: coffee
@@ -244,8 +230,8 @@ items:
   translation: cue (billiards), stick
   pos: noun
   gender: m
-- lemma: київ
-  ipa: /kɪˈjiʋ/
+- lemma: Київ
+  ipa: /ˈkɪjɪʋ/
   translation: Kyiv
   pos: noun
   gender: m
@@ -262,11 +248,10 @@ items:
   ipa: /kˈɔʃtuʋatɪ/
   translation: to cost
   pos: verb
-- lemma: красиве
-  ipa: /krasˈɪʋɛ/
-  translation: beautiful (neuter)
-  pos: noun
-  gender: n
+- lemma: красивий
+  ipa: /krasˈɪʋɪj/
+  translation: beautiful
+  pos: adj
 - lemma: ласка
   ipa: /lˈaska/
   translation: kindness, affection, weasel
@@ -277,8 +262,8 @@ items:
   translation: letter, leaf
   pos: noun
   gender: m
-- lemma: львов
-  ipa: /lʲʋɔʋ/
+- lemma: Львів
+  ipa: /lʲʋiʋ/
   translation: Lviv
   pos: noun
   gender: m
@@ -301,7 +286,7 @@ items:
   translation: mother, mom
   pos: noun
   gender: f
-- lemma: марія
+- lemma: Марія
   ipa: /marˈija/
   translation: Mariya (name)
   pos: noun
@@ -353,16 +338,6 @@ items:
   translation: to not have
   pos: verb
 - lemma: новий
-  ipa: /nɔʋˈa/
-  translation: new
-  pos: noun
-  gender: f
-- lemma: нове
-  ipa: /nɔʋˈɛ/
-  translation: new (neuter)
-  pos: noun
-  gender: n
-- lemma: новий
   ipa: /nɔʋˈɪj/
   translation: new
   pos: adj
@@ -385,7 +360,7 @@ items:
   ipa: /ɔɦlˈjanutɪ/
   translation: to inspect, to review (perfective)
   pos: verb
-- lemma: олег
+- lemma: Олег
   ipa: /ɔlˈɛɦ/
   translation: Oleh (name)
   pos: noun
@@ -474,15 +449,16 @@ items:
   ipa: /sɔrˈɔka/
   translation: magpie
   pos: noun
+  gender: f
 - lemma: старий
-  ipa: /starˈɛ/
+  ipa: /stɑˈrɪj/
   translation: old
-  pos: noun
-  gender: n
+  pos: adj
 - lemma: студент
   ipa: /studˈɛnt/
   translation: student
   pos: noun
+  gender: m
 - lemma: стіл
   ipa: /stil/
   translation: table, desk
@@ -499,7 +475,7 @@ items:
 - lemma: тепер
   ipa: /tɛpˈɛr/
   translation: now
-  pos: pron
+  pos: adv
 - lemma: теперішній
   ipa: /tɛpˈɛriʃnij/
   translation: present, current
@@ -527,16 +503,15 @@ items:
   translation: agreement, coordination
   pos: noun
   gender: n
-- lemma: україна
+- lemma: Україна
   ipa: /ukraˈjina/
   translation: Ukraine
   pos: noun
   gender: f
-- lemma: українська
-  ipa: /ukraˈjinsʲka/
-  translation: Ukrainian (adj female)
-  pos: noun
-  gender: f
+- lemma: український
+  ipa: /ukraˈjinsʲkɪj/
+  translation: Ukrainian
+  pos: adj
 - lemma: університет
   ipa: /uniʋɛrsɪtˈɛt/
   translation: university

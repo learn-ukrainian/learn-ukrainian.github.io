@@ -3,11 +3,6 @@ module: 23-what-time-is-it
 level: A1
 version: '2.0'
 items:
-- lemma: вечером
-  ipa: /ʋɛt͡ʃɛrɔm/
-  translation: in the evening (Russian)
-  pos: noun
-  gender: m
 - lemma: відкриватися
   ipa: /ʋidkrɪʋˈatɪsja/
   translation: to open (passive)
@@ -45,14 +40,16 @@ items:
   translation: August
   pos: noun
   gender: m
-- lemma: січний
-  ipa: /sit͡ʃnˈɪj/
-  translation: January (adj)
-  pos: adj
-- lemma: травний
-  ipa: /traʋnˈɪj/
-  translation: digestive
-  pos: adj
+- lemma: січень
+  ipa: /ˈsit͡ʃɛnʲ/
+  translation: January
+  pos: noun
+  gender: m
+- lemma: травень
+  ipa: /ˈtraʋɛnʲ/
+  translation: May
+  pos: noun
+  gender: m
 - lemma: цвісти
   ipa: /t͡sʋistˈɪ/
   translation: to bloom

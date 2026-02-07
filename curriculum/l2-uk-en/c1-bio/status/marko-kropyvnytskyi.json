@@ -2,13 +2,13 @@
   "module": "marko-kropyvnytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:36:57.791424Z",
+  "last_audit": "2026-02-07T16:37:48.697646Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T00:36:52.059047Z",
-    "meta": "2026-02-07T00:36:20.865702Z",
-    "activities": "2026-02-04T23:03:40.070043Z",
-    "vocabulary": "2026-02-07T00:36:29.451091Z",
+    "md": "2026-02-07T01:04:17.213166Z",
+    "meta": "2026-02-07T15:13:22.015362Z",
+    "activities": "2026-02-07T10:03:51.567163Z",
+    "vocabulary": "2026-02-07T10:03:51.618672Z",
     "plan": null
   },
   "gates": {

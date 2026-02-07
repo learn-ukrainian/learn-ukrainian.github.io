@@ -6,7 +6,7 @@ name: review-content-quick
 description: Fast pre-check for obvious quality issues before deep review
 version: '1.0'
 category: quality
-model: sonnet  # Fast, cost-effective
+model: sonnet # Fast, cost-effective
 dependencies: audit_module.sh
 ---
 ```
@@ -43,6 +43,7 @@ curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # Activities
 ### A. Duplication Check
 
 **Scan for repeated content:**
+
 - Same paragraph appearing twice
 - Copy-pasted sections with minor changes
 - Identical examples in different sections
@@ -55,23 +56,27 @@ curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # Activities
 **Common AI fingerprints to catch:**
 
 ❌ **Generic openings:**
+
 - "Welcome to this lesson on..."
 - "In this module, we will explore..."
 - "Let's dive into..."
 - "Now that we've covered..."
 
 ❌ **Filler phrases:**
+
 - "It's important to note that..."
 - "As we've seen..."
 - "Moving forward..."
 - "In conclusion..."
 
 ❌ **Listicle syndrome:**
+
 - Everything in numbered lists
 - No narrative flow
 - Bullet points everywhere
 
 ❌ **Enthusiasm overflow:**
+
 - Excessive exclamation marks!!!
 - "Amazing!", "Fantastic!", "Wonderful!"
 - Patronizing tone
@@ -82,22 +87,23 @@ curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # Activities
 
 **Quick check for auto-fail items:**
 
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| кушать | їсти |
+| ❌ Wrong        | ✅ Correct   |
+| --------------- | ------------ |
+| кушать          | їсти         |
 | приймати участь | брати участь |
-| самий кращий | найкращий |
-| слідуючий | наступний |
-| на протязі | протягом |
-| робити сенс | мати сенс |
-| брати місце | відбуватися |
-| це є | це |
+| самий кращий    | найкращий    |
+| слідуючий       | наступний    |
+| на протязі      | протягом     |
+| робити сенс     | мати сенс    |
+| брати місце     | відбуватися  |
+| це є            | це           |
 
 **Auto-fail if found:** Report and fix.
 
 ### D. Grammar Spot-Check
 
 **Sample 5-10 Ukrainian sentences randomly:**
+
 - Check case agreement
 - Check verb aspects (if aspectual pairs mentioned)
 - Check gender agreement
@@ -108,6 +114,7 @@ curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # Activities
 ### E. Activity Sanity Check
 
 **For each activity type, spot-check 2-3 items:**
+
 - quiz: Is exactly one answer correct?
 - fill-in: Does answer fit grammatically?
 - true-false: Are statements actually true/false?
@@ -122,11 +129,13 @@ curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # Activities
 **Quick skim (don't deep read):**
 
 ### Flow Check
+
 - Does introduction lead into content?
 - Do sections connect logically?
 - Does conclusion tie back to objectives?
 
 ### Consistency Check
+
 - Same terminology throughout?
 - Examples match grammar rules?
 - Difficulty progression makes sense?
@@ -160,8 +169,9 @@ curriculum/l2-uk-en/{level}/activities/{slug}.yaml   # Activities
 ## STEP 5: QUICK REPORT
 
 ### Save Location
+
 ```
-curriculum/l2-uk-en/{level}/audit/{slug}-quick-review.md
+curriculum/l2-uk-en/{level}/review/{slug}-quick-review.md
 ```
 
 ### Report Format
@@ -176,20 +186,21 @@ curriculum/l2-uk-en/{level}/audit/{slug}-quick-review.md
 
 ## Quick Check Results
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| Duplication | ✅/❌ | {any duplicates found?} |
-| AI Patterns | ✅/❌ | {count of patterns, list if >0} |
-| Russianisms | ✅/❌ | {any found?} |
-| Grammar Sample | ✅/❌ | {5-10 sentences checked} |
-| Activities | ✅/❌ | {spot-check results} |
-| Coherence | ✅/❌ | {flow issues?} |
+| Check          | Status | Notes                           |
+| -------------- | ------ | ------------------------------- |
+| Duplication    | ✅/❌  | {any duplicates found?}         |
+| AI Patterns    | ✅/❌  | {count of patterns, list if >0} |
+| Russianisms    | ✅/❌  | {any found?}                    |
+| Grammar Sample | ✅/❌  | {5-10 sentences checked}        |
+| Activities     | ✅/❌  | {spot-check results}            |
+| Coherence      | ✅/❌  | {flow issues?}                  |
 
 ## Issues Found
 
 {If any issues found, list with line numbers}
 
 ### Issue 1: {Type}
+
 **Location:** Line X / Activity Y
 **Problem:** {what's wrong}
 **Fix:** {what to change}
@@ -230,12 +241,14 @@ scripts/audit_module.sh curriculum/l2-uk-en/{level}/{slug}.md
 ## When to Use Quick vs Deep Review
 
 ### Use Quick Review:
+
 - ✅ During content generation (first-pass filter)
 - ✅ Before committing new modules
 - ✅ When resources are limited
 - ✅ To catch obvious issues early
 
 ### Use Deep Review (review-content-v4):
+
 - ✅ Before final publication
 - ✅ After all content for a level is complete
 - ✅ When quality validation is critical

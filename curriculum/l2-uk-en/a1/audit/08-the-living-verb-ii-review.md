@@ -1,12 +1,12 @@
 # Audit Report: M08 — 08-the-living-verb-ii.md
-**Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
+**Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 972
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:43
+**Generated:** 2026-02-07 21:16:27
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 500 words
+**Word Target:** 972 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,14 +37,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 972/500 (raw: 1337)
+- **Words:** ✅ 976/972 (raw: 1341)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 2/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -53,13 +53,16 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
+## MDX VALIDATION
+✅ No issues found
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 94 | Included in Core |
 | **Presentation** | ✅ | 285 | Included in Core |
-| **Practice** | ⚪️ | 261 | Skipped |
+| **Practice** | ⚪️ | 265 | Skipped |
 | **Production** | ➖ | 54 | Excluded Type |
 | **Cultural Insight** | ✅ | 185 | Included in Core |
 | **Підсумок** | ✅ | 74 | Included in Core |

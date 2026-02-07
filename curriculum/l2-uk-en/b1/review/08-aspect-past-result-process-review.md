@@ -1,32 +1,88 @@
-# Module 08: Вид у минулому: результат vs процес
+# Audit Report: M08 — 08-aspect-past-result-process.md
+**Level:** B1 | **Module:** M08 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:11
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 22:04:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 3000 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Процес чи Результат? | 8 | 8 | ✅ |
+| 2 | match-up | Пари Виду | 12 | 8 | ✅ |
+| 3 | true-false | Аналіз Ситуацій | 8 | 8 | ✅ |
+| 4 | group-sort | Сортування Маркерів | 12 | 12 | ✅ |
+| 5 | fill-in | Професійний контекст | 8 | 8 | ✅ |
+| 6 | quiz | Фінальний Тест | 8 | 8 | ✅ |
+| 7 | fill-in | Вибір дієслова | 10 | 8 | ✅ |
+| 8 | cloze | Історія про ремонт | 15 | 12 | ✅ |
 
-| Dimension           | Score | Notes                                                                                   |
-| ------------------- | ----- | --------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical transition from M07 (Frequency) to M08 (Focus/Intent).                          |
-| Relevance           | 10/10 | Essential for B1 proficiency. Distinguishes "doing" from "finishing".                   |
-| Educational         | 10/10 | The Mermaid diagram for decision logic is a great addition.                             |
-| Language            | 10/10 | Natural Ukrainian. "Поки" vs "Нарешті" contrast is perfectly staged.                    |
-| Pedagogy            | 10/10 | Strong TTT. The self-check questions are effective hooks.                               |
-| Immersion           | 10/10 | 98.9% immersion. Very high quality instructional Ukrainian.                             |
-| Activities          | 10/10 | 13 activities with high density. Variety is excellent.                                  |
-| Richness            | 10/10 | 99% score. Toloka, Petrykivka, and Nestor the Chronicler are top-tier cultural anchors. |
-| Humanity            | 10/10 | Encouraging tone ("Myth buster" about aspect being impossible).                         |
-| LLM Fingerprint     | 10/10 | No generic templates. Content feels human-curated.                                      |
-| Linguistic Accuracy | 10/10 | Aspectual pairs used (косив/скосив, малювали/створили) are semantically accurate.       |
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 2/4 (cloze, fill-in) ✅
+- Required types used: 3/3 (cloze, fill-in, quiz) ✅
+- Low density activities: 0
 
-## Fixes Applied
+## Gates
+- **Words:** ✅ 3446/3000 (raw: 4028)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 25/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.1 Aspect))
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-1.  **Metadata**: Adjusted `content_outline` word counts to fix hydration error (total 1800 words matching the exceeded target).
-2.  **Vocabulary**: Purged the overly long `vocabulary/08-aspect-past-result-process.yaml` of hallucinations and non-essential nouns. Replaced with focus markers and core aspectual pairs.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Conclusion
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 67 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 19 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 52 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
-This module reaches the peak of pedagogical excellence for B1 aspect. The integration of high-level history (Nestor) with a low-level grammar point is masterful. The learner is not just learning a rule; they are absorbing Ukrainian values (Toloka).
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вид у минулому: результат і процес** | ⚪️ | 114 | Skipped |
+| **Тест** | ⚪️ | 520 | Skipped |
+| **Пояснення** | ⚪️ | 897 | Skipped |
+| **Контраст** | ⚪️ | 379 | Skipped |
+| **Практика** | ⚪️ | 486 | Skipped |
+| **Діалоги** | ✅ | 637 | Included in Core |
+| **Культурний аспект: Результативність українців** | ✅ | 112 | Included in Core |
+| **Шпаргалка для успіху** | ⚪️ | 47 | Skipped |
+| **Підсумок** | ✅ | 254 | Included in Core |

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M31 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 820
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:10:38
+**Generated:** 2026-02-07 21:39:29
 
 ## Configuration
 **Type:** A1-vocab
@@ -22,8 +22,8 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Body Parts | 10 | 8 | ✅ |
 | 2 | match-up | Health Vocabulary | 10 | 8 | ✅ |
-| 3 | group-sort | Body Parts | 13 | 12 | ✅ |
-| 4 | group-sort | Болить vs Болять | 13 | 12 | ✅ |
+| 3 | group-sort | Body Parts | 12 | 12 | ✅ |
+| 4 | group-sort | Болить vs Болять | 12 | 12 | ✅ |
 | 5 | fill-in | Що болить? (What Hurts?) | 12 | 8 | ✅ |
 | 6 | fill-in | У лікаря (At the Doctor's) | 12 | 8 | ✅ |
 | 7 | quiz | Болить or Болять? | 8 | 8 | ✅ |
@@ -54,6 +54,9 @@
 - **Immersion:** 🇺🇦 37.4% (target 35-55% (M31))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

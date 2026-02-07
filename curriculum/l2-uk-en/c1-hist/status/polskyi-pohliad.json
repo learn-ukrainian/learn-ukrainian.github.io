@@ -2,13 +2,13 @@
   "module": "polskyi-pohliad",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T12:28:57.800974Z",
+  "last_audit": "2026-02-07T11:46:46.026268Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:28:52.492894Z",
-    "meta": "2026-02-06T12:09:31.242227Z",
-    "activities": "2026-02-06T12:28:48.299109Z",
-    "vocabulary": "2026-02-06T11:26:32.253698Z",
+    "md": "2026-02-07T01:04:17.325669Z",
+    "meta": "2026-02-07T10:03:51.936554Z",
+    "activities": "2026-02-07T10:03:51.949918Z",
+    "vocabulary": "2026-02-07T10:03:51.951179Z",
     "plan": null
   },
   "gates": {

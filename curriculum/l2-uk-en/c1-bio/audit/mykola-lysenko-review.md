@@ -1,8 +1,8 @@
-# Audit Report: M47 — mykola-lysenko.md
-**Level:** C1-BIO | **Module:** M47 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4300
+# Audit Report: M46 — mykola-lysenko.md
+**Level:** C1-BIO | **Module:** M46 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:39:45
+**Generated:** 2026-02-07 16:37:49
 
 ## Configuration
 **Type:** C1-biography

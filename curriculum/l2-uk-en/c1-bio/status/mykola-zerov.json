@@ -2,13 +2,13 @@
   "module": "mykola-zerov",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T00:22:17.285485Z",
+  "last_audit": "2026-02-07T16:38:14.678166Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.346222Z",
-    "meta": "2026-02-06T22:56:22.297198Z",
-    "activities": "2026-02-02T12:11:26.743254Z",
-    "vocabulary": "2026-02-02T12:11:26.743092Z",
+    "meta": "2026-02-07T15:13:22.022421Z",
+    "activities": "2026-02-07T10:03:51.579857Z",
+    "vocabulary": "2026-02-07T10:03:51.632794Z",
     "plan": null
   },
   "gates": {

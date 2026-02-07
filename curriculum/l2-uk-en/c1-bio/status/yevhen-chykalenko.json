@@ -2,13 +2,13 @@
   "module": "yevhen-chykalenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:00.126365Z",
+  "last_audit": "2026-02-07T16:37:54.135297Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.355441Z",
-    "meta": "2026-02-06T22:56:22.306104Z",
-    "activities": "2026-02-06T22:56:22.242841Z",
-    "vocabulary": "2026-02-06T22:56:22.354438Z",
+    "md": "2026-02-07T12:00:34.215892Z",
+    "meta": "2026-02-07T15:13:22.016747Z",
+    "activities": "2026-02-07T11:59:34.001590Z",
+    "vocabulary": "2026-02-07T10:03:51.631981Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4995/4000 (raw: 5427) | engagement: 4/5 | pedagogy: 1 violations | richness: 94% < 95% min (biography)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5291/4000 (raw: 5723)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

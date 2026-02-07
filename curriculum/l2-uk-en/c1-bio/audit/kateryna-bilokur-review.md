@@ -1,8 +1,8 @@
-# Audit Report: M112 — kateryna-bilokur.md
-**Level:** C1-BIO | **Module:** M112 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M110 — kateryna-bilokur.md
+**Level:** C1-BIO | **Module:** M110 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:29
+**Generated:** 2026-02-07 16:38:24
 
 ## Configuration
 **Type:** C1-biography

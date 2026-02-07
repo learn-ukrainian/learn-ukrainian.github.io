@@ -2,13 +2,13 @@
   "module": "hryhoriy-skovoroda",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:46.205399Z",
+  "last_audit": "2026-02-07T16:37:42.139162Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.351203Z",
-    "meta": "2026-02-07T00:08:50.150212Z",
-    "activities": "2026-02-07T00:09:11.242076Z",
-    "vocabulary": "2026-02-04T17:29:39.539886Z",
+    "meta": "2026-02-07T15:13:22.013561Z",
+    "activities": "2026-02-07T10:03:51.586020Z",
+    "vocabulary": "2026-02-07T10:03:51.636548Z",
     "plan": null
   },
   "gates": {

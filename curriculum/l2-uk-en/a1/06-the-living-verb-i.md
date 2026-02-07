@@ -106,9 +106,9 @@ This is why **працювати** becomes **працюю** (not «працюв�
 
 - Я **пишу** лист. (I write a letter.) — /ˈpɪʃu lɪst/
 - Ти **працюєш** тут? (Do you work here?) — /prɑˈt͡sʲujeʃ tut/
-- Вона **гуляє** в парк. (She walks to the park.) — /ɦuˈlʲɑje w pɑrk/
+- Вона **гуляє** в парку. (She strolls in the park.) — /ɦuˈlʲɑje ʋ ˈparku/
 - Ми **граємо**. (We play.) — /ˈɦrɑjemɔ/
-- Ви **співаєте**. (You sing.) — /spiˈwɑjete/
+- Ви **співаєте**. (You sing.) — /spiˈʋɑjete/
 - Вони **думають**. (They think.) — /ˈdumɑjutʲ/
 - Я **розумію** українську. (I understand Ukrainian.) — /rozuˈmiju ukrɑˈjinʲsʲku/
 - Ти **слухаєш** музику. (You listen to music.) — /ˈsluxɑjeʃ ˈmuzɪku/
@@ -133,15 +133,15 @@ Here's how these verbs show up in real Ukrainian life:
 
 **Вечір (Evening):**
 
-- Ви **вечеряєте** вдома? (Do you have dinner at home?) — /weˈt͡ʃerʲɑjete ˈwdɔmɑ/
-- Вони **відпочивають**. (They rest.) — /widpɔˈt͡ʃɪwɑjutʲ/
+- Ви **вечеряєте** вдома? (Do you have dinner at home?) — /ʋeˈt͡ʃerʲɑjete ˈʋdɔmɑ/
+- Вони **відпочивають**. (They rest.) — /ʋidpɔˈt͡ʃɪʋɑjutʲ/
 
 **Вільний час (Free Time):**
 
 - Я **читаю** книгу. (I read a book.) — /t͡ʃɪˈtɑju ˈknɪɦu/
 - Ти **граєш**. (You play.) — /ˈɦrɑjeʃ/
 - Він **малює** картину. (He paints a picture.) — /mɑˈlʲuje kɑrˈtɪnu/
-- Вона **співає**. (She sings.) — /spiˈwɑje/
+- Вона **співає**. (She sings.) — /spiˈʋɑje/
 
 > 🌍 **Real World**
 >
@@ -174,7 +174,7 @@ Here's how these verbs show up in real Ukrainian life:
 
 — Ти **працюєш** сьогодні? (Do you work today?)
 — Ні, я **відпочиваю**. **Слухаю** музику. (No, I rest. I listen to music.)
-— А я **гуляю** в парк! (And I walk to the park!)
+— А я **гуляю** в парку! (And I walk in the park!)
 — Я теж **люблю** парк. (I also love the park.)
 
 **Translation:**
@@ -205,7 +205,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 
 > 🎭 **Folklore Corner**
 >
-> In Ukrainian folk songs (пісні), **First Conjugation** verbs appear constantly because they describe daily life: **співати** (to sing), **танцювати** (to dance), **гуляти** (to stroll). The famous folk song «Гуляла дівчина бережком» (A girl walked by the riverbank) uses the past tense of **гуляти** — but you now know the root! You're learning the verbs that built Ukrainian culture.
+> In Ukrainian folk songs (пісні), **First Conjugation** verbs appear constantly because they describe daily life: **співати** (to sing), **танцювати** (to dance), **гуляти** (to stroll). The folk song «Ой ходила дівчина бережком» (A girl walked by the riverbank), collected in the songbook *Пісні маминого серця* (2006), uses First Conjugation verbs like **гуляє** in its verses. You're learning the very verb patterns that built Ukrainian folk expression.
 
 ---
 
@@ -214,7 +214,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 Я **снідаю**. (I have breakfast.)
 Потім я **працюю**. (Then I work.)
 Я **обідаю**. (I have lunch.)
-Я **гуляю** в парк. (I walk to the park.)
+Я **гуляю** в парку. (I walk in the park.)
 Я **читаю** книгу. (I read a book.)
 Я **слухаю** музику. (I listen to music.)
 Я **думаю**. (I think.)

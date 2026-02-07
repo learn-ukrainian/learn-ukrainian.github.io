@@ -1,12 +1,12 @@
 # Audit Report: M37 — 37-at-the-market.md
-**Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 793
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:04:01
+**Generated:** 2026-02-07 21:46:05
 
 ## Configuration
 **Type:** A1
-**Word Target:** 750 words
+**Word Target:** 793 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 812/750 (raw: 1024)
+- **Words:** ✅ 812/793 (raw: 1024)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -52,6 +52,9 @@
 - **Immersion:** 🇺🇦 49.4% (target 35-55% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -2,14 +2,14 @@
   "module": "15-around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:03:48.067610Z",
+  "last_audit": "2026-02-07T21:25:59.921647Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.351148Z",
-    "meta": "2026-01-26T21:56:47.921835Z",
-    "activities": "2026-01-16T00:16:38.972828Z",
-    "vocabulary": "2026-01-25T18:00:39.397204Z",
-    "plan": "2026-01-30T12:24:45.191622Z"
+    "meta": "2026-02-07T10:03:51.778213Z",
+    "activities": "2026-02-07T21:06:32.673508Z",
+    "vocabulary": "2026-02-07T21:25:23.917494Z",
+    "plan": "2026-02-07T10:03:51.074018Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1839/750 (raw: 1983)"
+      "message": "1839/1602 (raw: 1983)"
     },
     "activities": {
       "status": "pass",

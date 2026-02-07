@@ -1,77 +1,123 @@
----
-vocabulary:
-- word: митрополит
-  ipa: "[mɪtrɔpɔˈlɪt]"
+items:
+- lemma: митрополит
+  ipa: /mɪtrɔpɔˈlɪt/
   translation: metropolitan
-- word: аристократія
-  ipa: "[ɑrɪstɔˈkrɑt⁽ʲ⁾ijɑ]"
-  translation: aristocracy
-- word: чернецтво
-  ipa: "[t͡ʃɛrˈnɛt͡stʷɔ]"
-  translation: monasticism
-- word: інтронізація
-  ipa: "[intrɔn⁽ʲ⁾izɑˈt͡s⁽ʲ⁾ijɑ]"
-  translation: enthronement / installation
-- word: пастирське послання
-  ipa: "[ˈpɑstɪrsʲkɛ pɔˈslɑnʲnʲɑ]"
-  translation: pastoral letter
-- word: меценат
-  ipa: "[mɛt͡sɛˈnɑt]"
-  translation: patron of arts / philanthropist
-- word: праведник
-  ipa: "[ˈprɑwɛdnɪk]"
-  translation: righteous person
-- word: беатифікація
-  ipa: "[bɛɑtɪf⁽ʲ⁾ikɑˈt͡s⁽ʲ⁾ijɑ]"
-  translation: beatification
-- word: екуменізм
-  ipa: "[ɛkumɛˈn⁽ʲ⁾izm]"
-  translation: ecumenism
-- word: агентність
-  ipa: "[ɑˈɦɛntn⁽ʲ⁾istʲ]"
-  translation: agency
-- word: суб'єктність
-  ipa: "[subˈjɛktn⁽ʲ⁾istʲ]"
-  translation: subjectivity
-- word: деколонізація
-  ipa: "[dɛkɔlɔniˈzɑt͡s⁽ʲ⁾ijɑ]"
-  translation: decolonization
-- word: інституція
-  ipa: "[instɪˈtut͡s⁽ʲ⁾ijɑ]"
-  translation: institution
-- word: Голокост
-  ipa: "[ɦɔlɔˈkɔst]"
-  translation: Holocaust
-- word: пацифікація
-  ipa: "[pɑt͡sɪf⁽ʲ⁾ikɑˈt͡s⁽ʲ⁾ijɑ]"
-  translation: pacification
-- word: етичний імператив
-  ipa: "[ɛˈtɪt͡ʃnɪi̯ impɛrɑˈtɪu̯]"
-  translation: ethical imperative
-- word: ієрарх
-  ipa: "[ijɛˈrɑrx]"
-  translation: hierarch
-- word: монастир
-  ipa: "[mɔnɑˈstɪr]"
+  pos: noun
+  gender: m
+- lemma: греко-католицький
+  ipa: /ˈɦrɛkɔ kɑˈtɔlɪt͡sʲkɪi̯/
+  translation: Greek Catholic
+  pos: adj
+- lemma: пастир
+  ipa: /ˈpɑstɪr/
+  translation: shepherd / pastor
+  pos: noun
+  gender: m
+- lemma: праведник
+  ipa: /ˈprɑwɛdnɪk/
+  translation: righteous one
+  pos: noun
+  gender: m
+- lemma: монастир
+  ipa: /mɔnɑˈstɪr/
   translation: monastery
-- word: богословська академія
-  ipa: "[bɔɦɔˈslɔu̯sʲkɑ ɑkɑˈdɛm⁽ʲ⁾ijɑ]"
+  pos: noun
+  gender: m
+- lemma: богословська академія
+  ipa: /bɔɦɔˈslɔu̯sʲkɑ ɑkɑˈdɛm⁽ʲ⁾ijɑ/
   translation: theological academy
-- word: преподобний
-  ipa: "[prɛpɔˈdɔbnɪi̯]"
+  pos: noun
+  gender: f
+- lemma: рятувати
+  ipa: /rʲɑtuˈwɑtɪ/
+  translation: to rescue / to save
+  pos: verb
+  aspect: impf
+- lemma: переховувати
+  ipa: /pɛrɛˈxɔwuwɑtɪ/
+  translation: to hide / to shelter
+  pos: verb
+  aspect: impf
+- lemma: духовний лідер
+  ipa: /duˈxɔunɪi̯ ˈl⁽ʲ⁾idɛr/
+  translation: spiritual leader
+  pos: noun
+  gender: m
+- lemma: преподобний
+  ipa: /prɛpɔˈdɔbnɪi/
   translation: venerable
-- word: камертон
-  ipa: "[kɑmɛrˈtɔn]"
-  translation: tuning fork (metaphor)
-- word: прозелітизм
-  ipa: "[prɔzɛl⁽ʲ⁾iˈtɪzm]"
-  translation: proselytism
-- word: духовний провідник
-  ipa: "[duˈxɔu̯nɪi̯ prɔw⁽ʲ⁾idˈnɪk]"
-  translation: spiritual guide
-- word: національне відродження
-  ipa: "[nɑt͡s⁽ʲ⁾ioˈnɑlʲnɛ w⁽ʲ⁾idˈrɔd͡ʒːɛnʲnʲɑ]"
-  translation: national revival
-- word: заповіт
-  ipa: "[zɑpɔˈw⁽ʲ⁾it]"
+  pos: adj
+- lemma: аристократ
+  ipa: /ɑrɪstɔˈkrɑt/
+  translation: aristocrat
+  pos: noun
+  gender: m
+- lemma: єпархія
+  ipa: /ɛˈpɑrx⁽ʲ⁾ijɑ/
+  translation: eparchy
+  pos: noun
+  gender: f
+- lemma: ієрарх
+  ipa: /ijɛˈrɑrx/
+  translation: hierarch
+  pos: noun
+  gender: m
+- lemma: беатифікація
+  ipa: /bɛɑtɪf⁽ʲ⁾ikɑˈt͡s⁽ʲ⁾ijɑ/
+  translation: beatification
+  pos: noun
+  gender: f
+- lemma: екуменізм
+  ipa: /ɛkumɛˈn⁽ʲ⁾izm/
+  translation: ecumenism
+  pos: noun
+  gender: m
+- lemma: деколонізація
+  ipa: /dɛkɔlɔniˈzɑt͡s⁽ʲ⁾ijɑ/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subˈjɛktn⁽ʲ⁾istʲ/
+  translation: agency
+  pos: noun
+  gender: f
+- lemma: меценатство
+  ipa: /mɛt͡sɛˈnɑt͡stwɔ/
+  translation: philanthropy
+  pos: noun
+  gender: n
+- lemma: пастирське послання
+  ipa: /ˈpɑstɪrsʲkɛ pɔˈslɑnʲnʲɑ/
+  translation: pastoral letter
+  pos: noun
+  gender: n
+- lemma: не убий
+  ipa: /nɛ uˈbɪi̯/
+  translation: thou shalt not kill
+  pos: phrase
+- lemma: канонізація
+  ipa: /kɑnɔniˈzɑt͡s⁽ʲ⁾ijɑ/
+  translation: canonization
+  pos: noun
+  gender: f
+- lemma: пророцтво
+  ipa: /prɔˈrɔt͡stwɔ/
+  translation: prophecy
+  pos: noun
+  gender: n
+- lemma: заповіт
+  ipa: /zɑpɔˈw⁽ʲ⁾it/
   translation: testament / legacy
+  pos: noun
+  gender: m
+- lemma: моральний камертон
+  ipa: /mɔˈrɑlʲnɪi̯ kɑmɛrˈtɔn/
+  translation: moral standard
+  pos: noun
+  gender: m
+- lemma: катакомбна церква
+  ipa: /kɑtɑˈkɔmbnɑ ˈt͡sɛrkwɑ/
+  translation: catacomb church
+  pos: noun
+  gender: f

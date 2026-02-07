@@ -2,13 +2,13 @@
   "module": "ukrainska-istoriohrafichna-tradytsiia",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T13:54:35.935669Z",
+  "last_audit": "2026-02-07T11:46:44.636251Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T13:54:26.784203Z",
-    "meta": "2026-02-06T12:51:06.504899Z",
-    "activities": "2026-02-06T13:41:06.053436Z",
-    "vocabulary": "2026-02-05T23:33:36.447906Z",
+    "md": "2026-02-07T01:04:17.329418Z",
+    "meta": "2026-02-07T10:03:51.947496Z",
+    "activities": "2026-02-07T10:03:51.950821Z",
+    "vocabulary": "2026-02-07T10:03:51.952191Z",
     "plan": null
   },
   "gates": {

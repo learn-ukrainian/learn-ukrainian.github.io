@@ -2,13 +2,13 @@
   "module": "yevhen-konovalets",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:20.759747Z",
+  "last_audit": "2026-02-07T16:38:16.041836Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349068Z",
-    "meta": "2026-02-06T22:56:22.306250Z",
-    "activities": "2026-02-02T11:02:04.285065Z",
-    "vocabulary": "2026-02-02T11:02:04.284894Z",
+    "meta": "2026-02-07T15:13:22.022733Z",
+    "activities": "2026-02-07T10:03:51.569367Z",
+    "vocabulary": "2026-02-07T10:03:51.627323Z",
     "plan": null
   },
   "gates": {

@@ -2,13 +2,13 @@
   "module": "severyn-nalyvaiko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:35.791393Z",
+  "last_audit": "2026-02-07T16:37:33.359756Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.346152Z",
-    "meta": "2026-02-06T22:56:22.302531Z",
-    "activities": "2026-01-19T22:57:29.360649Z",
-    "vocabulary": "2026-02-04T11:49:22.381977Z",
+    "meta": "2026-02-07T15:13:22.009396Z",
+    "activities": "2026-02-07T10:03:51.581361Z",
+    "vocabulary": "2026-02-07T10:03:51.633770Z",
     "plan": null
   },
   "gates": {

@@ -2,13 +2,13 @@
   "module": "yuriy-lvovych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:32.792601Z",
+  "last_audit": "2026-02-07T16:37:29.873552Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.355857Z",
-    "meta": "2026-02-06T22:56:22.307362Z",
-    "activities": "2026-01-27T15:34:57.102422Z",
-    "vocabulary": "2026-02-03T23:13:36.759115Z",
+    "meta": "2026-02-07T15:13:22.007284Z",
+    "activities": "2026-02-07T10:03:51.566581Z",
+    "vocabulary": "2026-02-07T10:03:51.618290Z",
     "plan": null
   },
   "gates": {

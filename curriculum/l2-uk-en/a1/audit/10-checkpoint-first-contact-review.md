@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 875
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:06:43
+**Generated:** 2026-02-07 21:19:51
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1224/875 (raw: 1488)
+- **Words:** ✅ 1234/875 (raw: 1498)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 7/4 types
@@ -52,9 +52,12 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.0% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 25.7% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -63,7 +66,7 @@
 | **Overview** | ⚪️ | 158 | Skipped |
 | **Skill 1: Reading Cyrillic** | ⚪️ | 0 | Skipped (using YAML) |
 | **Skill 2: Identifying Gender** | ⚪️ | 162 | Skipped |
-| **Skill 3: Conjugating Verbs** | ⚪️ | 266 | Skipped |
+| **Skill 3: Conjugating Verbs** | ⚪️ | 276 | Skipped |
 | **Skill 4: Asking Questions** | ⚪️ | 185 | Skipped |
 | **Skill 5: Ordering Food** | ⚪️ | 191 | Skipped |
 | **Integration Challenge** | ⚪️ | 123 | Skipped |

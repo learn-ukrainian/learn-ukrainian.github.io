@@ -1,47 +1,89 @@
-# Module 76: Українська музика сьогодні
+# Audit Report: M76 — 76-ukrainian-music-today.md
+**Level:** B1 | **Module:** M76 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1400
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 19:05:38
 
-**Template:** b1-cultural-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:08:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-culture
+**Word Target:** 1400 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння українського музичного контексту | 10 | 8 | ✅ |
+| 2 | true-false | Факти про українську музику | 12 | 8 | ✅ |
+| 3 | match-up | Виконавці та їхні характеристики | 12 | 8 | ✅ |
+| 4 | match-up | Музична лексика — переклад | 12 | 8 | ✅ |
+| 5 | cloze | Музична лексика в контексті | 14 | 12 | ✅ |
+| 6 | group-sort | Категоризація музики | 15 | 12 | ✅ |
+| 7 | select | Виберіть правильні відповіді | 8 | 6 | ✅ |
+| 8 | cloze | Текст про українську музику | 14 | 12 | ✅ |
+| 9 | unjumble | Складіть речення про музику | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в реченнях про музику | 8 | 6 | ✅ |
+| 11 | translate | Переклад музичних фраз | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть музичну лексику | 10 | 6 | ✅ |
+| 13 | reading | Українська музика сьогодні | 3 | 3 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                     |
-| ------------------- | ----- | --------------------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical structure: Eurovision -> Rock/Pop -> Indie/Rap.                                                   |
-| Relevance           | 10/10 | Essential. Ukrainian music is a major soft power export (Kalush, Go_A).                                   |
-| Educational         | 10/10 | Good genre balance.                                                                                       |
-| Language            | 10/10 | Modern music terminology.                                                                                 |
-| Pedagogy            | 10/10 | Narrative Arc (Eurovision victories) explains *why* the world is listening to Ukraine.                    |
-| Immersion           | 10/10 | Mentioning specific artists (Skryabin, Okean Elzy, Jamala, Alyona Alyona) gives students a real playlist. |
-| Activities          | 10/10 | Good variety.                                                                                             |
-| Richness            | 9/10  | Good depth.                                                                                               |
-| Humanity            | 9/10  | Engaging.                                                                                                 |
-| LLM Fingerprint     | 9/10  | Natural.                                                                                                  |
-| Linguistic Accuracy | 9/10  | Check `інд` in vocab.                                                                                     |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/4 (match-up, quiz, reading) ✅
+- Required types used: 3/3 (match-up, quiz, reading) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1730/1400 (raw: 2127)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 44/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 94.7% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 98% (cultural)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `інд` (indi?). Probably truncated `інді` (indie music) or `Індія`.
-  - *Action:* Change to `інді`.
-- **Vocabulary:** Proper nouns lowercased (`джамала`, `скрябін`, `псюк`, `відоплясов`, `руслан`).
-- **Vocabulary:** `Вопл` (Scream) is listed as feminine gender (`f`). It is masculine (`ой лемент`, `ой крик`, `вопль`). `Воплі Відоплясова` is the band name.
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| cultural | 11 | 5 | 100% | 33% | 33.3% |
+| engagement | 9 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 0.80 | - | 80% | 7% | 5.3% |
+| examples | 24 | - | 100% | 7% | 6.7% |
+| realworld | 5 | - | 100% | 7% | 6.7% |
+| questions | 36 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.5%** |
 
-- **Cultural Currency:** Acknowledges the "Rap Revolution" (Kalush, Alyona Alyona) which makes the curriculum feel cutting-edge, not stuck in the 19th century.
-- **Folklore Fusion:** Explains "Electro-folk" (`Go_A`, `Onuka`) which bridges appropriate traditional vocabulary (`сопілка`, `бандура`) with modern context.
-
-## Issues
-
-- **Vocabulary YAML:** `інд` -> `інді`. Capitalize artists (`Джамала`, `Скрябін`, `Руслана`). Fix gender of `вопль` (m).
-
-## Recommendation
-
-✅ PASS — Excellent pop-culture module.
-
-## Action Items
-
-1. **Fix Vocab:** Capitalize names. Fix `інд`.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 45 | Included in Core |
+| **Вступ — Музика як ідентичність** | ✅ | 133 | Included in Core |
+| **Історія та культура** | ✅ | 469 | Included in Core |
+| **Сучасність** | ⚪️ | 183 | Skipped |
+| **Практика** | ⚪️ | 298 | Skipped |
+| **Продукція** | ⚪️ | 347 | Skipped |
+| **Підсумок** | ✅ | 145 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

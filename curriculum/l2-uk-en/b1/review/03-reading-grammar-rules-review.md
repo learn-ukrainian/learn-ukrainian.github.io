@@ -1,31 +1,95 @@
-# Module 03: Читаємо граматичні правила
+# Audit Report: M03 — 03-reading-grammar-rules.md
+**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:08
 
-**Template:** b1-metalanguage-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 21:15:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-bridge
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** fill-in, match-up, quiz, translate
+**Required Types:** cloze, group-sort, mark-the-words, match-up, quiz, true-false
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Лінгвістичні терміни | 12 | 8 | ✅ |
+| 2 | match-up | Інструкції для вправ | 10 | 8 | ✅ |
+| 3 | group-sort | Категорії слів | 16 | 14 | ✅ |
+| 4 | quiz | Розуміння граматичних пояснень | 8 | 8 | ✅ |
+| 5 | true-false | Граматичні факти | 8 | 8 | ✅ |
+| 6 | fill-in | Заповніть пропуски | 12 | 8 | ✅ |
+| 7 | select | Сигнальні слова | 8 | 6 | ✅ |
+| 8 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 9 | cloze | Граматичне правило | 16 | 14 | ✅ |
+| 10 | error-correction | Виправлення помилок | 8 | 6 | ✅ |
+| 11 | mark-the-words | Знайдіть інструкції | 8 | 6 | ✅ |
+| 12 | translate | Переклад фраз | 8 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                           |
-| ------------------- | ----- | ------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Well-structured progression: Patterns → Instructions → Word Parts → Style.      |
-| Relevance           | 10/10 | Directly enables independent learning from Ukrainian resources. High utility.   |
-| Educational         | 10/10 | Explains *how* to learn, not just *what*. Metacognitive value is high.          |
-| Language            | 10/10 | Natural formatting of grammar explanations.                                     |
-| Pedagogy            | 10/10 | PPP structure works well here. "Action Instructions" section is very practical. |
-| Immersion           | 10/10 | 36% immersion is appropriate. Uses English to explain metalanguage.             |
-| Activities          | 10/10 | 12 activities, excellent density (some with 16 items!). Covers all concepts.    |
-| Richness            | 10/10 | 99% score. Includes "Real World: Linguistics" and "Gamer's Corner".             |
-| Humanity            | 10/10 | Helpful, empowering tone.                                                       |
-| LLM Fingerprint     | 10/10 | Content feels curated and specific to the learner's needs.                      |
-| Linguistic Accuracy | 10/10 | All metalanguage terms defined correctly.                                       |
+**Summary:**
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 12 (minimum: 5) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
+- Required types used: 6/6 (cloze, group-sort, mark-the-words, match-up, quiz, true-false) ✅
+- Low density activities: 0
 
-## Fixes Applied
+## Gates
+- **Words:** ✅ 3064/3000 (raw: 3837)
+- **Activities:** ✅ 12/12
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/5 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 11/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 88/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 35.9% (B1.1 Aspect)
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-1.  **Vocabulary**: Rewrote `vocabulary/03-reading-grammar-rules.yaml` to remove hallucinated entries (e.g., "оки", "да'") and replace them with the actual instruction verbs and analytical terms taught in the module.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Conclusion
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 88 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 21 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.4%** |
 
-This module is a powerhouse for learner autonomy. By teaching the "language of instructions" and "grammar patterns," it unlocks the entire universe of native Ukrainian resources. The inclusion of register (colloquial vs literary) and analytical terms (context, marker) elevates it beyond simple vocabulary lists.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 58 | Included in Core |
+| **Introduction - Reading Grammar in Ukrainian** | ⚪️ | 0 | Skipped (using YAML) |
+| **Grammar Explanation Patterns** | ✅ | 279 | Included in Core |
+| **Instruction Words** | ⚪️ | 234 | Skipped |
+| **Comparison Patterns** | ✅ | 128 | Included in Core |
+| **Word Formation Terms** | ⚪️ | 207 | Skipped |
+| **Activity Instruction Verbs** | ➖ | 258 | Excluded Type |
+| **Analytical Terms** | ⚪️ | 230 | Skipped |
+| **Style and Register Terminology** | ⚪️ | 230 | Skipped |
+| **Practice** | ⚪️ | 408 | Skipped |
+| **Dialogues** | ✅ | 444 | Included in Core |
+| **Summary** | ✅ | 361 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 43 | Skipped |

@@ -23,13 +23,13 @@ items:
   translation: Englishman
   pos: noun
   gender: m
-- lemma: анна
-  ipa: /ˈanna/
+- lemma: Анна
+  ipa: /ˈɑnːɑ/
   translation: Anna (name)
   pos: noun
   gender: f
 - lemma: дівчина
-  ipa: /dˈiʋt͡ʃɪna/
+  ipa: /dʲiʋˈt͡ʃɪnɑ/
   translation: girl, young woman
   pos: noun
   gender: f
@@ -52,22 +52,22 @@ items:
   ipa: /lˈikɪ/
   translation: medicine
   pos: noun
-- lemma: михайлович
-  ipa: /mɪxˈajlɔʋɪt͡ʃ/
+- lemma: Михайлович
+  ipa: /mɪxˈɑjlɔʋɪt͡ʃ/
   translation: Mykhailovych (patronymic)
   pos: noun
-  gender: f
+  gender: m
 - lemma: нульовий
   ipa: /nulʲɔʋˈɪj/
   translation: zero (adj)
   pos: adj
-- lemma: ольга
-  ipa: /ˈɔlʲɦa/
+- lemma: Ольга
+  ipa: /ˈɔlʲɦɑ/
   translation: Olha (name)
   pos: noun
   gender: f
-- lemma: петрівна
-  ipa: /pɛtrˈiʋna/
+- lemma: Петрівна
+  ipa: /pɛtrˈiʋnɑ/
   translation: Petrivna (patronymic)
   pos: noun
   gender: f
@@ -76,9 +76,9 @@ items:
   translation: professor (female)
   pos: noun
   gender: f
-- lemma: софія
-  ipa: /sɔfˈija/
-  translation: Sofia (name)
+- lemma: Софія
+  ipa: /sɔˈfijɑ/
+  translation: Sofiya (name)
   pos: noun
   gender: f
 - lemma: українка
@@ -91,16 +91,16 @@ items:
   translation: boy, boyfriend
   pos: noun
   gender: m
-- lemma: іван
-  ipa: /iʋˈan/
+- lemma: Іван
+  ipa: /iʋˈɑn/
   translation: Ivan (name)
   pos: noun
   gender: m
-- lemma: ґрут
-  ipa: /grut/
+- lemma: Ґрут
+  ipa: /ɡrut/
   translation: Groot (character)
   pos: noun
-  gender: f
+  gender: m
 - lemma: студент
   ipa: /studˈent/
   translation: student (male)

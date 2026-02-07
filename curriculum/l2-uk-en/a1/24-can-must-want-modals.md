@@ -8,7 +8,7 @@
 
 ---
 
-## Grammar
+## Presentation
 
 ### Expressing Ability: могти vs вміти
 
@@ -37,16 +37,18 @@
 
 | Person | вміти | IPA | Example |
 | --- | --- | --- | --- |
-| я | вмію | /ˈvmijʊ/ | Я вмію готувати. (I know how to cook.) |
-| ти | вмієш | /ˈvmijɛʃ/ | Ти вмієш танцювати? (Do you know how to dance?) |
-| він/вона | вміє | /ˈvmijɛ/ | Вона вміє малювати. (She knows how to draw.) |
-| ми | вміємо | /ˈvmijɛmɔ/ | Ми вміємо плавати. (We know how to swim.) |
-| ви | вмієте | /ˈvmijɛtɛ/ | Ви вмієте водити? (Do you know how to drive?) |
-| вони | вміють | /ˈvmijutʲ/ | Вони вміють грати на гітарі. (They know how to play guitar.) |
+| я | вмію | /ˈʋmijʊ/ | Я вмію готувати. (I know how to cook.) |
+| ти | вмієш | /ˈʋmijɛʃ/ | Ти вмієш танцювати? (Do you know how to dance?) |
+| він/вона | вміє | /ˈʋmijɛ/ | Вона вміє малювати. (She knows how to draw.) |
+| ми | вміємо | /ˈʋmijɛmɔ/ | Ми вміємо плавати. (We know how to swim.) |
+| ви | вмієте | /ˈʋmijɛtɛ/ | Ви вмієте водити? (Do you know how to drive?) |
+| вони | вміють | /ˈʋmijutʲ/ | Вони вміють грати на гітарі. (They know how to play guitar.) |
 
 ---
 
-## Expressing Obligation: повинен, треба, мусити
+## Presentation 2
+
+### Expressing Obligation: повинен, треба, мусити
 
 > [!observe] Pattern Discovery
 >
@@ -86,7 +88,9 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Expressing Permission: можна / не можна
+## Presentation 3
+
+### Expressing Permission: можна / не можна
 
 > [!observe] Pattern Discovery
 >
@@ -105,7 +109,9 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Recommendations and Advice
+## Presentation 4
+
+### Recommendations and Advice
 
 | Word  | Meaning          | Example                                                         |
 | ----- | ---------------- | --------------------------------------------------------------- |
@@ -114,7 +120,9 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Trying and Succeeding
+## Presentation 5
+
+### Trying and Succeeding
 
 | Verb       | Meaning             | Example                                                |
 | ---------- | ------------------- | ------------------------------------------------------ |
@@ -126,7 +134,9 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Modal Adjectives
+## Presentation 6
+
+### Modal Adjectives
 
 | Adjective          | Meaning        | Example                                                          |
 | ------------------ | -------------- | ---------------------------------------------------------------- |
@@ -138,7 +148,9 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Examples in Context
+## Presentation 7
+
+### Examples in Context
 
 > [!example] Ability
 >
@@ -175,7 +187,9 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Dialogues
+## Practice
+
+### Dialogues
 
 > [!conversation] Asking for Permission
 >
@@ -239,7 +253,7 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Практика
+## Practice 2
 
 ### Вправа 1: Переклад
 

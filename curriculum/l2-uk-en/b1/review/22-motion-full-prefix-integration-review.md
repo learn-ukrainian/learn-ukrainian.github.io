@@ -1,45 +1,89 @@
-# Module 22: Рух: інтеграція префіксів
+# Audit Report: M22 — 22-motion-full-prefix-integration.md
+**Level:** B1 | **Module:** M22 | **Phase:** B1.3 | **Pedagogy:** TTT | **Target:** 1800
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:19
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:35:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1800 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, fill-in, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Логіка префіксів | 8 | 8 | ✅ |
+| 2 | match-up | Префікси та їхні значення | 12 | 8 | ✅ |
+| 3 | fill-in | Доповніть речення | 8 | 8 | ✅ |
+| 4 | true-false | Правила префіксів | 12 | 8 | ✅ |
+| 5 | group-sort | Просторове чи переносне? | 16 | 12 | ✅ |
+| 6 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 6 | 6 | ✅ |
+| 8 | cloze | Подорож Києвом | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова руху | 9 | 6 | ✅ |
+| 10 | select | Можливі значення | 6 | 6 | ✅ |
+| 11 | translate | Перекладіть українською | 8 | 6 | ✅ |
+| 12 | quiz | Функції префіксів | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                      |
-| ------------------- | ----- | ---------------------------------------------------------- |
-| Clarity             | 10/10 | "Magic Equation" approach clarifies a complex topic.       |
-| Structure           | 10/10 | Logical grouping of prefixes.                              |
-| Relevance           | 10/10 | Critical for navigating Ukraine (transport, directions).   |
-| Language            | 10/10 | Natural dialogues. Excellent use of "Skrypnykivka" note.   |
-| Pedagogy            | 10/10 | "LEGO system" analogy is perfect for debunking difficulty. |
-| Immersion           | 10/10 | Kyiv metro/train station examples are authentic.           |
-| Activities          | 10/10 | High density, good error correction exercises.             |
-| Richness            | 10/10 | "Ocean Elzy" pop-culture reference fits well.              |
-| Humanity            | 10/10 | Encouraging tone ("Optimism is our national trait").       |
-| LLM Fingerprint     | 10/10 | No issues.                                                 |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                      |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1813/1800 (raw: 1920)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 70/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Verb conjugation typo in text (`з'їздижу` -> `з'їжджу`).
-- *Fixed:* Vocabulary extraction errors (garbage `зв`, prefix-only lemmas, capitalization).
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 60 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 11 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 7 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 5 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 35 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.9%** |
 
-- **Authentic Context:** Using real train announcements ("Kyiv-Truskavets") anchors the grammar in reality.
-- **Mental Models:** Explaining prefixes as "LEGO" and giving an "Algorithm" for choice reduces cognitive load significantly.
-
-## Issues
-
-- *Fixed:* Minor typo in dialogue.
-
-## Recommendation
-
-✅ PASS — Excellent integration module.
-
-## Action Items
-
-1. Fixed text typo and vocabulary issues — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 63 | Included in Core |
+| **Тест** | ⚪️ | 139 | Skipped |
+| **Пояснення** | ⚪️ | 804 | Skipped |
+| **Практика** | ⚪️ | 306 | Skipped |
+| **Діалоги** | ✅ | 239 | Included in Core |
+| **Підсумок** | ✅ | 152 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

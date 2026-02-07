@@ -1,44 +1,89 @@
-# Module 32: Нереальні умови: якби...
+# Audit Report: M32 — 32-conditionals-unreal-yakby.md
+**Level:** B1 | **Module:** M32 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1767
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:25
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 01:15:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1767 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Виберіть правильну відповідь | 12 | 8 | ✅ |
+| 2 | match-up | З'єднайте умову з наслідком | 12 | 8 | ✅ |
+| 3 | cloze | Доповніть речення правильною формою | 12 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда? | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть речення за категоріями | 16 | 12 | ✅ |
+| 6 | unjumble | Складіть речення з розсипаних слів | 12 | 6 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 12 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Позначте частку «б» або «би» та сполучник «якби» | 14 | 6 | ✅ |
+| 10 | select | Виберіть усі граматично правильні речення | 12 | 6 | ✅ |
+| 11 | translate | Перекладіть на українську мову | 12 | 6 | ✅ |
+| 12 | fill-in | Вставте правильне слово | 12 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                                 |
-| ------------------- | ----- | --------------------------------------------------------------------------------------------------------------------- |
-| Clarity             | 10/10 | The parallel with English Second/Third Conditional is excellent, clarifying that Ukrainian form is the same for both. |
-| Structure           | 10/10 | Logical progression from forms to meaning (regret, hypothesis).                                                       |
-| Relevance           | 10/10 | "If I were rich...", "If you had told me..." — very high frequency.                                                   |
-| Language            | 10/10 | "Кайдашева сім'я" and "Захар Беркут" references are culturally deep.                                                  |
-| Pedagogy            | 10/10 | Good explanation of *б* vs *би*.                                                                                      |
-| Immersion           | 10/10 | Folk song "Якби я мала криленята" captures the Ukrainian soul.                                                        |
-| Activities          | 10/10 | High density.                                                                                                         |
-| Richness            | 10/10 | Gaming references (*Witcher 3*, *S.T.A.L.K.E.R.*) make grammar relatable to modern users.                             |
-| Humanity            | 10/10 | Dialogues about life choices and regrets feel very human.                                                             |
-| LLM Fingerprint     | 10/10 | No issues.                                                                                                            |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                                                 |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 1725/1767 (raw: 2131) (42 short)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 47/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 95.4% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 95% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`зраза` -> `зразу`, `жалити` -> `жаліти`, proper nouns capitalization).
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 33 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 16 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| questions | 23 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.7%** |
 
-- **Gaming Pop Culture:** Explaining conditionals via RPG choices ("If Geralt hadn't gone there...") is a brilliant pedagogical hook for the target audience.
-- **Cultural Wisdom:** "Якби знав, де впаду, то соломки б підстелив" (implied context of regret).
-
-## Issues
-
-- *Fixed:* Semantic errors in vocabulary extraction.
-
-## Recommendation
-
-✅ PASS — Excellent grammar module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 48 | Included in Core |
+| **Тест: Перевірте себе** | ⚪️ | 122 | Skipped |
+| **Пояснення** | ⚪️ | 676 | Skipped |
+| **Практика** | ⚪️ | 248 | Skipped |
+| **Діалоги** | ✅ | 362 | Included in Core |
+| **Підсумок** | ✅ | 159 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

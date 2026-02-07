@@ -1,8 +1,3 @@
----
-module: 06-the-living-verb-i
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Infinitive to English
   instruction: Match Ukrainian infinitives with their English translations
@@ -32,7 +27,7 @@ activities:
   items:
   - question: Which form means "I read"?
     options:
-    - text: читаю
+    - text: читає
       correct: false
     - text: читаю
       correct: true
@@ -308,7 +303,7 @@ activities:
     correct: true
     explanation: Correct! All three end in -ати and mean breakfast, lunch, dinner.
   - statement: The stem of «грати» is «гра-».
-    correct: false
+    correct: true
     explanation: Correct! грати → граю, граєш, грає. The stem is «гра-».
   - statement: «Співати» means "to sing".
     correct: true

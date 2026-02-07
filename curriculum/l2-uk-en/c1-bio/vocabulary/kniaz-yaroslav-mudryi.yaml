@@ -1,6 +1,6 @@
 ---
 items:
-  - lemma: законодавець
+  - lemma: законодаввець
     ipa: /zɐkonodɑˈʋet͡sʲ/
     translation: lawgiver
     pos: noun
@@ -79,7 +79,7 @@ items:
     gender: m
     note: намісник князя у місті
   - lemma: віче
-    ipa: /ˈʋit͡ʃe/
+    ipa: /vʲit͡ʃe/
     translation: assembly / viche
     pos: noun
     gender: n
@@ -120,12 +120,6 @@ items:
     pos: noun
     gender: m
     note: історичний твір з погодовим записом подій
-  - lemma: скрипторій
-    ipa: /skrɪpˈtɔrʲij/
-    translation: scriptorium
-    pos: noun
-    gender: m
-    note: майстерня з переписування книг
   - lemma: реформатор
     ipa: /reformˈɑtor/
     translation: reformer
@@ -150,3 +144,45 @@ items:
     pos: noun
     gender: m
     note: повна незалежність держави
+  - lemma: агентність
+    ipa: /ɐˈɦɛntnʲistʲ/
+    translation: agency
+    pos: noun
+    gender: f
+    note: здатність діяти самостійно
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnʲistʲ/
+    translation: subjectivity / agency
+    pos: noun
+    gender: f
+    note: статус самостійного гравця в історії
+  - lemma: плінфа
+    ipa: /ˈplʲinfɐ/
+    translation: plinthite
+    pos: noun
+    gender: f
+    note: тонка широка цегла давньоруського будівництва
+  - lemma: Оранта
+    ipa: /oˈrɑntɐ/
+    translation: Orans
+    pos: noun
+    gender: f
+    note: тип зображення Богородиці з піднятими руками
+  - lemma: лествиця
+    ipa: /ˈlɛstʋɪt͡sʲɐ/
+    translation: ladder system
+    pos: noun
+    gender: f
+    note: порядок успадкування влади від брата до брата
+  - lemma: деколонізація
+    ipa: /dekolonʲizˈɑt͡sʲijɐ/
+    translation: decolonization
+    pos: noun
+    gender: f
+    note: процес звільнення від імперського впливу
+  - lemma: рецепція
+    ipa: /ret͡sɛpt͡sʲijɐ/
+    translation: reception
+    pos: noun
+    gender: f
+    note: запозичення та адаптація ідей або правових норм

@@ -1,47 +1,91 @@
-# Module 50: Інтегрована мовна лабораторія
+# Audit Report: M50 — 50-integrated-grammar-lab.md
+**Level:** B1 | **Module:** M50 | **Phase:** B1.4b | **Pedagogy:** TTT | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:35
 
-**Template:** b1-integration-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:00:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Стилістичний аналіз | 8 | 8 | ✅ |
+| 2 | match-up | Стиль і конструкція | 12 | 8 | ✅ |
+| 3 | fill-in | Виберіть відповідний стиль | 8 | 8 | ✅ |
+| 4 | true-false | Стилістичні правила | 8 | 8 | ✅ |
+| 5 | group-sort | Класифікація за стилем | 21 | 12 | ✅ |
+| 6 | unjumble | Побудуйте стилістично правильне речення | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте стилістичні помилки | 6 | 6 | ✅ |
+| 8 | cloze | Редагування звіту | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть маркери стилю | 13 | 6 | ✅ |
+| 10 | select | Відповідність стилю | 6 | 6 | ✅ |
+| 11 | translate | Перекладіть з дотриманням стилю | 6 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                                 |
-| ------------------- | ----- | ------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Excellent synthesis of the entire B1.4 phase.                                         |
-| Relevance           | 10/10 | Connects grammar to register (Formal vs Informal).                                    |
-| Educational         | 10/10 | Scenarios (News vs Cafe) effectively demonstrate *why* we have these different forms. |
-| Language            | 9/10  | Generally excellent; one potential vocab question.                                    |
-| Pedagogy            | 10/10 | Task-based learning (creating a City Park project).                                   |
-| Immersion           | 10/10 | The "Public Hearing" vs "Gossip" dichotomy is very authentic.                         |
-| Activities          | 10/10 | Transformation tasks are high value.                                                  |
-| Richness            | 10/10 | Very detailed scenarios.                                                              |
-| Humanity            | 10/10 | Engaging.                                                                             |
-| LLM Fingerprint     | 10/10 | Natural.                                                                              |
-| Linguistic Accuracy | 9/10  | Check `чаєчка`.                                                                       |
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (cloze, error-correction, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1743/1500 (raw: 2365)
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 12/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 89/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.7% (target 85-100% (B1.5-6 Vocab))
+- **Richness:** ✅ 96% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `чаєчка` (in vocab list).
-  - If "seagull": Correct.
-  - If "tea" (diminutive): Incorrect (should be `чайок` or `чайочок`). `Чай` is masculine. `Чаєчка` implies feminine base `чайка`.
-  - *Action:* Verify in context. If tea, replace.
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 38 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 18 | 4 | 100% | 15% | 15.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 21 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.2%** |
 
-- **Register Awareness:** This is the strongest feature. It explicitly teaches that Participles = Formal/News, and Diminutives = Informal/Cafe. This pragmatic distinction is gold for learners.
-- **Scenario:** The "Urban Planning" scenario allows for both technical specs (passive) and community opinion (active/emotional).
-
-## Issues
-
-- None major.
-
-## Recommendation
-
-✅ PASS — Perfect capstone for the phase.
-
-## Action Items
-
-1. **Verify Vocab:** Check `чаєчка` usage.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 52 | Included in Core |
+| **Вступний тест** | ✅ | 215 | Included in Core |
+| **Пояснення** | ⚪️ | 142 | Skipped |
+| **Сценарій 1: Офіційний звіт** | ⚪️ | 150 | Skipped |
+| **Сценарій 2: Сімейна розмова** | ✅ | 234 | Included in Core |
+| **Сценарій 3: Новини** | ⚪️ | 148 | Skipped |
+| **Практика: Редагування стилю** | ⚪️ | 252 | Skipped |
+| **Діалоги** | ✅ | 271 | Included in Core |
+| **Підсумок** | ✅ | 169 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -1,82 +1,86 @@
-# Review: Радянська історіографія: Деформації
+# Audit Report: M04 — radyanska-istoriohrafiia.md
+**Level:** C1-HIST | **Module:** M04 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 11:46:45
 
-**Level:** c1-hist | **Module:** 04
-**Overall Score:** 9.2/10
-**Status:** ✅ PASS
-**Reviewed:** 2026-02-05
+## Configuration
+**Type:** C1-history
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥3 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** essay-response, reading, true-false
+**Engagement:** ≥6 callouts
+**Immersion:** 95-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз 'Тез 1954 року' | 1 | 1 | ✅ |
+| 2 | critical-analysis | Деконструкція ідеологічних кліше | 1 | 1 | ✅ |
+| 3 | comparative-study | Офіційна наука vs Самвидав | 1 | 1 | ✅ |
+| 4 | true-false | Перевірка фактів: Радянські деформації | 12 | 5 | ✅ |
+| 5 | essay-response | Есе: Радянська історіографія як інструмент деформації | 1 | 1 | ✅ |
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| Experience Quality | 10/10 | Exceptional seminar experience. Vivid opening (1933 Kharkiv), compelling narrative arc, memorable closing. Passes all 5 "Would I Stay?" criteria and 8/8 A+ checklist. |
-| Coherence | 9/10 | Excellent logical flow: forbidden → mandatory → mechanisms → resistance → legacy. Minor redundancy found and fixed (duplicate statistic). |
-| Relevance | 10/10 | Perfectly aligned with module objectives. Covers all 7 planned sections thoroughly. |
-| Educational | 9/10 | Clear analytical framework. Students learn to deconstruct propaganda through concrete examples. Activities reinforce critical thinking. |
-| Language | 9/10 | Native-quality Ukrainian throughout. No Russianisms or calques detected. One minor inconsistency (НКВС/НКВД) fixed. Stylistically rich and varied. |
-| Pedagogy | 9/10 | CBI seminar approach executed excellently. Primary source analysis, comparative study, essay writing — all appropriate for C1-HIST. |
-| Immersion | 10/10 | 99.1% Ukrainian immersion. Only English: proper nouns (New York Times, Harvard, Belle Epoque). Appropriate for history track. |
-| Activities | 9/10 | 5 activities (reading, 2x critical-analysis, comparative-study, essay-response). All questions are analytical, model answers substantive. Reading uses authentic primary source. |
-| Richness | 10/10 | Named figures with dates (Yavorsky, Hrushevsky, Ohloblyn, Pritsak, Braichevsky, UHG members). Specific numbers (198,918 sentenced, 168 censors, 51,000 renamed, 550 years). 8 engagement callouts. |
-| Humanity | 9/10 | Strong teacher voice throughout. Direct address ("уявіть ситуацію"), rhetorical questions, "why this matters" connections to present. Genuine emotional engagement. |
-| LLM Fingerprint | 8/10 | Authentic narrative voice, no "it is important to note" patterns. Some sentences tend toward long academic constructions but within C1 register norms. No AI slop detected. |
-| Linguistic Accuracy | 9/10 | All historical claims verified. Dates accurate. 3 IPA stress errors in vocabulary found and fixed. One potentially incorrect name (Проник→Сверстюк) fixed. |
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
+- Low density activities: 0
 
-**Overall = (10×1.5 + 9×1.0 + 10×1.0 + 9×1.2 + 9×1.1 + 9×1.2 + 10×0.8 + 9×1.3 + 10×0.9 + 9×0.8 + 8×1.1 + 9×1.5) / 13.4 = 9.2/10**
+## Gates
+- **Words:** ✅ 4778/4000 (raw: 5021)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 6/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⚠️ 15 < 25 (soft target)
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.2% (target 95-100% (history))
+- **Richness:** ✅ 99% (history)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-## Issues Found and Fixed
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
 
-### Issue 1: Duplicate Statistic
-**Location:** Lines 22 and 51
-**Original:** Both lines contained "З 259 українських письменників, що друкувалися у 1930 році, після 1938 року залишилися лише 36..."
-**Problem:** Same statistic appeared in both Вступ and Розстріляне відродження sections
-**Fix:** Removed from Вступ (line 22), kept more detailed version in Розстріляне відродження (line 51 with 13.9% detail)
-**Status:** ✅ Fixed
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
-### Issue 2: Incorrect Name — "Є. Проник"
-**Location:** Line 161
-**Original:** "Київ (І. Світличний, В. Чорновіл, Є. Проник)"
-**Problem:** "Є. Проник" is not a recognized Kyiv shistdesyatnyk. The standard name is Євген Сверстюк.
-**Fix:** Changed to "Є. Сверстюк"
-**Status:** ✅ Fixed
-
-### Issue 3: НКВД/НКВС Inconsistency
-**Location:** Line 56 (НКВС) vs lines 43, 45 (НКВД)
-**Original:** "Офіційний рапорт НКВС від 4 липня 1944 року"
-**Problem:** Inconsistent abbreviation. НКВД is standard in Ukrainian scholarly texts.
-**Fix:** Changed НКВС → НКВД
-**Status:** ✅ Fixed
-
-### Issue 4: IPA Stress Error — деформація
-**Location:** Vocabulary, term 9
-**Original:** /deformɑˈt͡sʲijɑ/
-**Problem:** Stress on ЦІ instead of МА. Ukrainian stress: де-фор-МА-ці-я
-**Fix:** /deforˈmɑt͡sʲijɑ/
-**Status:** ✅ Fixed
-
-### Issue 5: IPA Stress Error — контрнаратив
-**Location:** Vocabulary, term 12
-**Original:** /kontrˈnɑrɑtɪu/
-**Problem:** Stress on НА instead of ТИВ. Also, final в should be /w/.
-**Fix:** /kontrnarɑˈtɪw/
-**Status:** ✅ Fixed
-
-### Issue 6: IPA Missing Consonant — правда
-**Location:** Vocabulary, term 13 (історична правда)
-**Original:** /ˈprɑudɑ/
-**Problem:** Missing /d/ from "правда" and /w/ for в. Should be /ˈprɑwdɑ/.
-**Fix:** /ˈprɑwdɑ/
-**Status:** ✅ Fixed
-
-## Verification Summary
-
-- Lines read: 217
-- Activity items checked: 5 (reading, 2x critical-analysis, comparative-study, essay-response)
-- Ukrainian sentences verified: ~180
-- Vocabulary IPA entries checked: 15
-- Issues found: 6
-- Issues fixed: 6
-
-## Recommendation
-
-✅ **PASS** — Exceptional seminar module. Vivid opening creates immediate engagement. Narrative arc is compelling throughout: from forbidden topics to mandatory narratives to control mechanisms to resistance to modern relevance. Primary sources (1954 Theses) are woven into both content and activities. Decolonization perspective is integrated throughout, not isolated. The connection between Soviet historiographical myths and current Russian propaganda is powerful and pedagogically valuable. All 6 issues found were minor (redundancy, one name, abbreviation consistency, 3 IPA errors) and have been fixed. No Russianisms, no calques, no AI patterns detected. Native-quality Ukrainian with stylistic variety.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Радянська історіографія: Деформації** | ⚪️ | 65 | Skipped |
+| **🎯 Чому це важливо?** | ⚪️ | 155 | Skipped |
+| **Вступ — Історія на службі партії** | ✅ | 714 | Included in Core |
+| **Заборонені теми** | ⚪️ | 936 | Skipped |
+| **Обов'язкові наративи** | ⚪️ | 760 | Skipped |
+| **Тези 1954 року — аналіз документа** | ✅ | 703 | Included in Core |
+| **Механізми контролю** | ⚪️ | 406 | Skipped |
+| **Опір і альтернативи** | ⚪️ | 504 | Skipped |
+| **Підсумок** | ✅ | 312 | Included in Core |
+| **Словник модуля** | ⚪️ | 223 | Skipped |
+| **Термінологічне мапування (Soviet Newspeak)** | ⚪️ | 0 | Skipped |

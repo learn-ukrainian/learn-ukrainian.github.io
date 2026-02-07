@@ -4,7 +4,7 @@ level: A1
 version: '2.0'
 items:
 - lemma: блюдо
-  ipa: /blˈjudɔ/
+  ipa: /ˈblʲudɔ/
   translation: dish
   pos: noun
   gender: n
@@ -22,11 +22,10 @@ items:
   translation: living room
   pos: noun
   gender: f
-- lemma: гарне
-  ipa: /ɦˈarnɛ/
-  translation: good, beautiful (neuter)
-  pos: noun
-  gender: n
+- lemma: гарний
+  ipa: /ˈɦarnɪj/
+  translation: good, beautiful
+  pos: adj
 - lemma: годинник
   ipa: /ɦɔdˈɪnnɪk/
   translation: clock, watch
@@ -38,7 +37,7 @@ items:
   pos: noun
   gender: n
 - lemma: заходити
-  ipa: /zaxɔdɪtɪ/
+  ipa: /zaxɔˈdɪtɪ/
   translation: to enter, to visit
   pos: verb
 - lemma: квартира
@@ -76,14 +75,15 @@ items:
   pos: noun
   gender: m
 - lemma: мікрохвильовка
-  ipa: /mikrɔxʋɪlʲɔʋka/
+  ipa: /mikrɔxʋɪlʲˈɔʋka/
   translation: microwave
   pos: noun
   gender: f
 - lemma: ніж
   ipa: /niʒ/
-  translation: knife, than
-  pos: conj
+  translation: knife
+  pos: noun
+  gender: m
 - lemma: праска
   ipa: /prˈaska/
   translation: iron (for clothes)
@@ -105,10 +105,9 @@ items:
   pos: noun
   gender: f
 - lemma: старий
-  ipa: /starˈɪj/
+  ipa: /staˈrɪj/
   translation: old
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: сумка
   ipa: /sˈumka/
   translation: bag, handbag

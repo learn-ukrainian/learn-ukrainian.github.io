@@ -2,13 +2,13 @@
   "module": "anatol-petrytskyi",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T00:22:25.116357Z",
+  "last_audit": "2026-02-07T16:38:19.902818Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.344626Z",
-    "meta": "2026-02-06T22:56:22.287274Z",
-    "activities": "2026-02-02T12:11:26.863372Z",
-    "vocabulary": "2026-02-02T12:11:26.863210Z",
+    "meta": "2026-02-07T15:13:22.023497Z",
+    "activities": "2026-02-07T10:03:51.574263Z",
+    "vocabulary": "2026-02-07T10:03:51.629968Z",
     "plan": null
   },
   "gates": {

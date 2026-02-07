@@ -2,13 +2,13 @@
   "module": "hanna-barvinok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:26:07.377610Z",
+  "last_audit": "2026-02-07T16:37:46.942976Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T00:26:02.765283Z",
-    "meta": "2026-02-07T00:25:31.115561Z",
-    "activities": "2026-01-29T23:10:44.920786Z",
-    "vocabulary": "2026-02-07T00:25:54.229173Z",
+    "md": "2026-02-07T01:04:17.207232Z",
+    "meta": "2026-02-07T15:13:22.014973Z",
+    "activities": "2026-02-07T10:03:51.600406Z",
+    "vocabulary": "2026-02-07T10:03:51.644750Z",
     "plan": null
   },
   "gates": {

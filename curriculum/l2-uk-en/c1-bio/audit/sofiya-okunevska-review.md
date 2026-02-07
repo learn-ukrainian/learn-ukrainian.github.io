@@ -1,8 +1,8 @@
-# Audit Report: M64 — sofiya-okunevska.md
-**Level:** C1-BIO | **Module:** M64 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M62 — sofiya-okunevska.md
+**Level:** C1-BIO | **Module:** M62 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:04
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 16:37:59
 
 ## Configuration
 **Type:** C1-biography
@@ -33,51 +33,42 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in sofiya-okunevska.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4340/4000 (raw: 4698)
+- **Words:** ✅ 4624/4000 (raw: 4982)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 9 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 13 | 3 | 100% | 14% | 14.3% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| quotes | 14 | 3 | 100% | 14% | 14.3% |
 | cultural | 6 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.96 | - | 96% | 5% | 4.6% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.4%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -86,11 +77,11 @@
 | **Вступ: Перша серед перших** | ✅ | 415 | Included in Core |
 | **Юність у Галичині та політична матура (1865-1887)** | ⚪️ | 704 | Skipped |
 | **Цюрихська епопея: Науковий авангард (1887-1896)** | ⚪️ | 768 | Skipped |
-| **Медична практика та «Народна лічниця» (1896-1914)** | ⚪️ | 688 | Skipped |
+| **Медична практика та «Народна лічниця» (1896-1914)** | ⚪️ | 803 | Skipped |
 | **Жіноче сестринство та громадський спротив** | ⚪️ | 811 | Skipped |
 | **Критичне мислення** | ⚪️ | 193 | Skipped |
 | **Есе** | ⚪️ | 88 | Skipped |
 | **Зразок відповіді** | ⚪️ | 394 | Skipped |
-| **Підсумок: Медицина як інструмент емансипації** | ✅ | 159 | Included in Core |
+| **Підсумок: Медицина як інструмент емансипації** | ✅ | 328 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

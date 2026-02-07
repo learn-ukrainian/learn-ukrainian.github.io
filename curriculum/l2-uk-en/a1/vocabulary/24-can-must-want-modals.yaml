@@ -9,13 +9,8 @@ items:
   pos: adj
 - lemma: необхідно
   ipa: /nɛɔbxˈidnɔ/
-  translation: necessary!
+  translation: necessary
   pos: adv
-- lemma: нирата
-  ipa: /nɪrata/
-  translation: diving (rare/dialect)
-  pos: noun
-  gender: f
 - lemma: палити
   ipa: /palˈɪtɪ/
   translation: to burn, to smoke
@@ -39,7 +34,6 @@ items:
   translation: to photograph
   pos: verb
 - lemma: холодний
-  ipa: /xɔlˈɔdna/
+  ipa: /xɔlˈɔdnɪj/
   translation: cold
-  pos: noun
-  gender: f
+  pos: adj

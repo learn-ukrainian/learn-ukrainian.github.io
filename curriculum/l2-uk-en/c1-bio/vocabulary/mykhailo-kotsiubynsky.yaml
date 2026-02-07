@@ -1,0 +1,143 @@
+items:
+- lemma: імпресіонізм
+  ipa: /impresioˈnizm/
+  translation: Impressionism
+  pos: noun
+  gender: m
+  note: художня течія, що фіксує миттєві враження
+- lemma: сонцепоклонник
+  ipa: /sɔnt͡sɛpɔˈklɔnnɪk/
+  translation: sun-worshipper
+  pos: noun
+  gender: m
+  note: прізвисько Коцюбинського
+- lemma: психологізм
+  ipa: /psɪxɔlɔˈɦizm/
+  translation: psychologism
+  pos: noun
+  gender: m
+  note: зосередженість на внутрішньому світі героїв
+- lemma: екзотика
+  ipa: /ɛkˈzɔtɪkɑ/
+  translation: exotica
+  pos: noun
+  gender: f
+  note: незвичні, чужоземні елементи
+- lemma: асиміляція
+  ipa: /asɪmɪˈlʲat͡s⁽ʲ⁾ijɑ/
+  translation: assimilation
+  pos: noun
+  gender: f
+  note: процес злиття з іншою культурою
+- lemma: деколонізація
+  ipa: /dɛkɔlɔniˈzat͡s⁽ʲ⁾ijɑ/
+  translation: decolonization
+  pos: noun
+  gender: f
+  note: звільнення від колоніального впливу
+- lemma: суб'єктність
+  ipa: /subˈjɛktn⁽ʲ⁾istʲ/
+  translation: subjectivity / agency
+  pos: noun
+  gender: f
+  note: здатність бути активним діячем
+- lemma: філоксерна комісія
+  ipa: /fɪlɔkˈsɛrnɑ kɔˈm⁽ʲ⁾is⁽ʲ⁾ijɑ/
+  translation: phylloxera commission
+  pos: noun
+  gender: f
+  note: організація, де працював Коцюбинський
+- lemma: архаїка
+  ipa: /ɑrˈxɑj⁽ʲ⁾ikɑ/
+  translation: archaic elements
+  pos: noun
+  gender: f
+  note: давні пласти культури
+- lemma: потік свідомості
+  ipa: /pɔˈtʲik s⁽ʲ⁾wiˈdɔmɔs⁽ʲ⁾t⁽ʲ⁾i/
+  translation: stream of consciousness
+  pos: phrase
+  note: техніка відтворення думок героя
+- lemma: віталізм
+  ipa: /w⁽ʲ⁾itɑˈl⁽ʲ⁾izm/
+  translation: vitalism
+  pos: noun
+  gender: m
+  note: філософія життєвої сили
+- lemma: емпатія
+  ipa: /ɛmˈpɑt⁽ʲ⁾ijɑ/
+  translation: empathy
+  pos: noun
+  gender: f
+  note: здатність до співпереживання
+- lemma: етнографія
+  ipa: /ɛtnɔˈɦrɑf⁽ʲ⁾ijɑ/
+  translation: ethnography
+  pos: noun
+  gender: f
+  note: опис побуту та культури народів
+- lemma: модернізм
+  ipa: /mɔdɛrˈn⁽ʲ⁾izm/
+  translation: modernism
+  pos: noun
+  gender: m
+  note: мистецький напрям поч. ХХ ст.
+- lemma: художня палітра
+  ipa: /xuˈdɔʒnʲɑ pɑˈl⁽ʲ⁾itrɑ/
+  translation: artistic palette
+  pos: phrase
+  note: сукупність засобів виразності митця
+- lemma: інакомовлення
+  ipa: /inɑkɔˈmɔu̯lɛnʲnʲɑ/
+  translation: allegory / Esopian language
+  pos: noun
+  gender: n
+  note: висловлювання з прихованим змістом
+- lemma: пейзажний психологізм
+  ipa: /pɛi̯ˈzɑʒnɪj psɪxɔlɔˈɦizm/
+  translation: landscape psychologism
+  pos: phrase
+  note: передача настрою через опис природи
+- lemma: естетична революція
+  ipa: /ɛstɛˈtɪt͡ʃnɑ rɛwɔˈlʲut͡s⁽ʲ⁾ijɑ/
+  translation: aesthetic revolution
+  pos: phrase
+  note: корінна зміна мистецьких поглядів
+- lemma: інтелектуальна свобода
+  ipa: /intɛlɛktuˈɑlʲnɑ swɔˈbɔdɑ/
+  translation: intellectual freedom
+  pos: phrase
+  note: право на вільну думку
+- lemma: національна ідентичність
+  ipa: /nat͡s⁽ʲ⁾iɔˈnɑlʲnɑ idɛnˈtɪt͡ʃn⁽ʲ⁾istʲ/
+  translation: national identity
+  pos: phrase
+  note: усвідомлення приналежності до нації
+- lemma: ніщота
+  ipa: /n⁽ʲ⁾iˈʃt͡ʃɔtɑ/
+  translation: nothingness / nullity
+  pos: noun
+  gender: f
+  note: слово, вигадане Коцюбинським
+- lemma: мерехтливий
+  ipa: /mɛrɛxˈtlɪwɪj/
+  translation: shimmering / flickering
+  pos: adj
+  note: той, що постійно змінюється
+- lemma: вітальна енергія
+  ipa: /w⁽ʲ⁾iˈtɑlʲnɑ ɛˈnɛrɦ⁽ʲ⁾ijɑ/
+  translation: vital energy
+  pos: phrase
+  note: енергія життя
+- lemma: орієнталізм
+  ipa: /ɔr⁽ʲ⁾iɛntɑˈl⁽ʲ⁾izm/
+  translation: orientalism
+  pos: noun
+  gender: m
+  note: використання східних мотивів у мистецтві
+- lemma: синтез
+  ipa: /ˈsɪntɛz/
+  translation: synthesis
+  pos: noun
+  gender: m
+  note: поєднання різних елементів у ціле

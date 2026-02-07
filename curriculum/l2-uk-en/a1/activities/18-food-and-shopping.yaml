@@ -1,8 +1,3 @@
----
-module: 18-food-and-shopping
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Food & Drinks Vocabulary
   pairs:

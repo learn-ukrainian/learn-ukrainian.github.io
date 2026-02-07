@@ -1,8 +1,8 @@
-# Audit Report: M55 — ivan-franko.md
-**Level:** C1-BIO | **Module:** M55 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+# Audit Report: M52 — ivan-franko.md
+**Level:** C1-BIO | **Module:** M52 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:21:59
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 16:37:53
 
 ## Configuration
 **Type:** C1-biography
@@ -33,15 +33,6 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in ivan-franko.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 5333/4300 (raw: 5755)
 - **Activities:** ✅ 5/3
@@ -53,7 +44,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)

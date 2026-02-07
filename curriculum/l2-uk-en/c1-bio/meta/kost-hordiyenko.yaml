@@ -3,7 +3,7 @@ module: c1-bio-030
 level: C1-BIO
 slug: kost-hordiyenko
 version: '2.0'
-id: c1-bio-030
+id: c1-bio-028
 title: "Кость Гордієнко: Запорозький кошовий"
 naturalness:
   score: 10

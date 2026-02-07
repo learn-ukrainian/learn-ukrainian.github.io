@@ -2,35 +2,35 @@
   "module": "vasyl-stefanyk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:58.248718Z",
+  "last_audit": "2026-02-07T17:13:22.988452Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T15:58:21.424588Z",
-    "meta": "2026-02-06T15:47:24.431093Z",
-    "activities": null,
-    "vocabulary": null,
+    "md": "2026-02-07T17:13:18.194925Z",
+    "meta": "2026-02-07T17:07:09.526683Z",
+    "activities": "2026-02-07T17:08:42.046858Z",
+    "vocabulary": "2026-02-07T12:46:49.184152Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Activities' header OR activities sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
-      "violations": 5,
-      "message": "0/3700 (raw: 79) | engagement: 0/5 | pedagogy: 3 violations | immersion: 0.0% LOW (target 95-100% (biography)) | richness: 8% < 95% min (biography) - REWRITE needed"
+      "violations": 2,
+      "message": "5502/4500 (raw: 5881) | pedagogy: 17 violations | richness: 94% < 95% min (biography)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
       "status": "info",
@@ -40,12 +40,8 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Activities' header OR activities sidecar",
-      "Missing required activity types: essay-response, reading"
-    ],
-    "pass_count": 0,
-    "fail_count": 3
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

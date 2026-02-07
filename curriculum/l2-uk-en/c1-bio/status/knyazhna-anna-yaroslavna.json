@@ -2,13 +2,13 @@
   "module": "knyazhna-anna-yaroslavna",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:28.635124Z",
+  "last_audit": "2026-02-07T16:37:25.800942Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.284421Z",
-    "meta": "2026-02-06T22:56:22.292338Z",
-    "activities": "2026-02-06T22:56:22.240938Z",
-    "vocabulary": "2026-02-06T22:56:22.352917Z",
+    "md": "2026-02-07T01:04:17.211997Z",
+    "meta": "2026-02-07T15:13:22.004480Z",
+    "activities": "2026-02-07T10:03:51.598394Z",
+    "vocabulary": "2026-02-07T10:03:51.644538Z",
     "plan": null
   },
   "gates": {

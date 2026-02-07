@@ -121,7 +121,7 @@ See how gender flows naturally in conversation? You're not translating — you'r
 >
 > Almost **all food words ending in -о or -е are neuter**: молоко (milk), яйце (egg), яблуко (apple), м'ясо (meat), вино (wine).
 >
-> Exception: Овочі (vegetables, plural only), фрукти (fruits, plural only).
+> Watch out: **овоч** (vegetable) and **фрукт** (fruit) are masculine — they end in consonants!
 
 ## Production
 

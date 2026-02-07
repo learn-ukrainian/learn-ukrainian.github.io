@@ -43,7 +43,7 @@ These possessives follow the same pattern as adjectives you learned in Module 03
 | **my**               | мій       | моя      | моє    | мої    | /mij/, /mɔˈjɑ/, /mɔˈjɛ/, /mɔˈji/ |
 | **your (sg)**        | твій      | твоя     | твоє   | твої   | /tvij/, /tvɔˈjɑ/, /tvɔˈjɛ/, /tvɔˈji/ |
 | **our**              | наш       | наша     | наше   | наші   | /nɑʃ/, /ˈnɑʃɑ/, /ˈnɑʃɛ/, /ˈnɑʃi/ |
-| **your (pl/formal)** | ваш       | ваша     | ваше   | ваші   | /vɑʃ/, /ˈvɑʃɑ/, /ˈvɑʃɛ/, /ˈvɑʃi/ |
+| **your (pl/formal)** | ваш       | ваша     | ваше   | ваші   | /ʋɑʃ/, /ˈʋɑʃɑ/, /ˈʋɑʃɛ/, /ˈʋɑʃi/ |
 | **their**            | їхній     | їхня     | їхнє   | їхні   | /ˈjixnʲij/, /ˈjixnʲɑ/, /ˈjixnʲɛ/, /ˈjixnʲi/ |
 
 **Examples:**
@@ -258,7 +258,7 @@ In traditional Ukrainian culture, there's a strong distinction between **осо�
 >
 > - «**Моя** мила» (my beloved) — personal affection
 > - «**Наша** Україна» (our Ukraine) — national pride
-> - «**Твої** очі\*\* (your eyes) — poetic imagery
+> - «**Твої** очі» (your eyes) — poetic imagery
 >
 > Possessives aren't just grammar — they're identity!
 

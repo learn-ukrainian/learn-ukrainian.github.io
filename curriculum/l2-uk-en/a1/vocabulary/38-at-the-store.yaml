@@ -3,7 +3,7 @@ module: 38-at-the-store
 level: A1
 version: '2.0'
 items:
-- lemma: ашан
+- lemma: Ашан
   ipa: /aʃan/
   translation: Auchan
   pos: noun

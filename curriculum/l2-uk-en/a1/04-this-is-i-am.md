@@ -28,12 +28,12 @@ Ukrainian has the same number of pronouns as English, but with one important spl
 | ------- | ------- | ------------------------------- | ------------------------------------------------------------ |
 | я       | /jɑ/    | I                               | Always singular, always lowercase (except at sentence start) |
 | ти      | /tɪ/    | you (singular informal)         | Friends, family, children, pets                              |
-| він     | /win/   | he                              | Masculine people, masculine nouns                            |
-| вона    | /wɔˈnɑ/ | she                             | Feminine people, feminine nouns                              |
-| воно    | /wɔˈnɔ/ | it                              | Neuter nouns, rarely for people                              |
+| він     | /ʋin/   | he                              | Masculine people, masculine nouns                            |
+| вона    | /ʋɔˈnɑ/ | she                             | Feminine people, feminine nouns                              |
+| воно    | /ʋɔˈnɔ/ | it                              | Neuter nouns, rarely for people                              |
 | ми      | /mɪ/    | we                              | Plural first person                                          |
-| ви      | /vɪ/    | you (plural OR formal singular) | Multiple people OR one person (formal/respectful)            |
-| вони    | /wɔˈnɪ/ | they                            | Plural third person (all genders)                            |
+| ви      | /ʋɪ/    | you (plural OR formal singular) | Multiple people OR one person (formal/respectful)            |
+| вони    | /ʋɔˈnɪ/ | they                            | Plural third person (all genders)                            |
 
 **The Ви vs Ти Choice**
 
@@ -163,10 +163,10 @@ Beyond nationalities and professions, here are key people words:
 | Ukrainian | IPA         | English         | Gender      |
 | --------- | ----------- | --------------- | ----------- |
 | людина    | /lʲuˈdɪnɑ/  | person, human   | f (for all) |
-| чоловік   | /t͡ʃɔlɔˈwik/ | man             | m           |
+| чоловік   | /t͡ʃɔlɔˈʋik/ | man             | m           |
 | жінка     | /ˈʒinkɑ/    | woman           | f           |
 | хлопець   | /ˈxlɔpet͡sʲ/ | boy, guy        | m           |
-| дівчина   | /diwˈt͡ʃɪnɑ/ | girl            | f           |
+| дівчина   | /dʲiʋˈt͡ʃɪnɑ/ | girl            | f           |
 | друг      | /druh/      | friend (male)   | m           |
 | подруга   | /pɔˈdruhɑ/  | friend (female) | f           |
 

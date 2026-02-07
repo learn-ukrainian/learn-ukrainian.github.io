@@ -2,13 +2,13 @@
   "module": "pavlo-polubotok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:43.566779Z",
+  "last_audit": "2026-02-07T16:37:40.362282Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T23:43:58.208936Z",
-    "meta": "2026-02-05T20:58:10.301340Z",
-    "activities": "2026-02-05T11:54:25.332481Z",
-    "vocabulary": "2026-02-04T23:38:13.253395Z",
+    "meta": "2026-02-07T15:13:22.012901Z",
+    "activities": "2026-02-07T10:03:51.583893Z",
+    "vocabulary": "2026-02-07T10:03:51.635602Z",
     "plan": null
   },
   "gates": {

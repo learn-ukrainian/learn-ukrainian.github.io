@@ -36,16 +36,19 @@ Parse arguments: $ARGUMENTS
 ### Step 1: Resolve Module Path
 
 **For core levels (a1, a2, b1, b2, c1, c2):**
+
 ```bash
 slug=$(ls curriculum/l2-uk-en/${level}/${num}-*.md 2>/dev/null | head -1 | xargs basename -s .md)
 ```
 
 **For tracks (b2-hist, c1-bio, c1-hist, lit):**
+
 ```bash
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
 ```
 
 **Set file paths:**
+
 ```
 md_file=curriculum/l2-uk-en/${level}/${slug}.md
 plan_file=curriculum/l2-uk-en/plans/${level}/${slug}.yaml   # IMMUTABLE - source of truth
@@ -56,6 +59,7 @@ status_file=curriculum/l2-uk-en/${level}/status/${slug}.json # AUTO-GENERATED - 
 ```
 
 > **Architecture Note (v2.0):**
+>
 > - **Plan** (`plans/`): Immutable source of truth - content_outline, word_target, objectives
 > - **Meta** (`meta/`): Mutable build config - naturalness, version, build timestamps
 > - **Status** (`status/`): Auto-generated audit cache - gates, violations, last_audit
@@ -63,6 +67,7 @@ status_file=curriculum/l2-uk-en/${level}/status/${slug}.json # AUTO-GENERATED - 
 ### Step 2: Run Initial Audit
 
 > **📋 QUICK REFERENCES (read BEFORE fixing activities):**
+>
 > - Activity schemas: `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
 > - Activity YAML reference: `docs/ACTIVITY-YAML-REFERENCE.md`
 
@@ -83,21 +88,22 @@ If schema errors exist, fix those first (see quick-ref for exact field names).
 The `--fix` flag auto-fixes common YAML schema issues.
 
 Read the audit review file:
+
 ```
-curriculum/l2-uk-en/${level}/audit/${slug}-review.md
+curriculum/l2-uk-en/${level}/review/${slug}-review.md
 ```
 
 ### Step 3: Categorize Violations
 
 Group violations by component:
 
-| Category | Violations | Fix With |
-|----------|-----------|----------|
-| **Meta** | MISSING_META_YAML, INVALID_META_YAML, INVALID_ACTIVITY_TYPE, word target mismatch | Fix meta.yaml directly |
-| **Lesson** | OUTLINE_MISMATCH, word count, engagement boxes, immersion | Fix markdown directly |
-| **Activities** | Schema errors, item counts, mirroring, activity_hints coverage | Fix activities.yaml or regenerate |
-| **Vocab** | Missing IPA, wrong POS, duplicates | Fix vocabulary.yaml |
-| **Naturalness** | Score < 8, robotic text, template repetition | Fix affected content |
+| Category        | Violations                                                                        | Fix With                          |
+| --------------- | --------------------------------------------------------------------------------- | --------------------------------- |
+| **Meta**        | MISSING_META_YAML, INVALID_META_YAML, INVALID_ACTIVITY_TYPE, word target mismatch | Fix meta.yaml directly            |
+| **Lesson**      | OUTLINE_MISMATCH, word count, engagement boxes, immersion                         | Fix markdown directly             |
+| **Activities**  | Schema errors, item counts, mirroring, activity_hints coverage                    | Fix activities.yaml or regenerate |
+| **Vocab**       | Missing IPA, wrong POS, duplicates                                                | Fix vocabulary.yaml               |
+| **Naturalness** | Score < 8, robotic text, template repetition                                      | Fix affected content              |
 
 ### Step 4: Smart Batching Fix Loop
 
@@ -117,7 +123,7 @@ while violations_exist:
     - ${vocab_file}    (vocabulary.yaml)
 
     Read audit review file:
-    - curriculum/l2-uk-en/${level}/audit/${slug}-review.md
+    - curriculum/l2-uk-en/${level}/review/${slug}-review.md
 
     Count and categorize ALL violations:
 
@@ -191,6 +197,7 @@ end while
 **Use when:** Total violations ≤ 5
 
 **Process:**
+
 ```
 Apply ALL fixes in ONE response:
 
@@ -252,6 +259,7 @@ Audit once: .venv/bin/python scripts/audit_module.py ${md_file}
 **Use when:** Total violations 6-15
 
 **Process:**
+
 ```
 Round 1: FIX META (if M > 0)
   Read: claude_extensions/phases/module-meta-qa.md
@@ -295,6 +303,7 @@ Round 4: FIX LESSON + NATURALNESS (if L > 0 or N > 0)
 ```
 
 **Why:**
+
 - Respects dependency chain (meta → vocab → activities → lesson)
 - Each component audited independently
 - Easier to debug which fix caused new issues
@@ -309,6 +318,7 @@ Round 4: FIX LESSON + NATURALNESS (if L > 0 or N > 0)
 **Use when:** Total violations > 15
 
 **Process:**
+
 ```
 Round 1: FIX BLOCKING ISSUES
   Identify BLOCKING violations:
@@ -361,6 +371,7 @@ Round 3: FIX MINOR ISSUES
 ```
 
 **Why:**
+
 - Get unblocked fast (blocking → major → minor)
 - Group similar fixes together
 - High violation count = likely structural issues
@@ -372,14 +383,14 @@ Round 3: FIX MINOR ISSUES
 
 ### Step 5: Benefits of Smart Batching
 
-| Aspect | Pure Batch (old) | Smart Batching (new) | One-by-One |
-|--------|------------------|----------------------|------------|
-| **Speed** | 1 audit | 2-4 audits | N audits |
-| **Debuggability** | Hard | Easy | Easy |
-| **Context load** | High | Medium | Low |
-| **Risk of regression** | High | Low | Very low |
-| **Dependency handling** | Manual | Automatic | Manual |
-| **Best for violations** | ≤5 | 6-15 | N/A |
+| Aspect                  | Pure Batch (old) | Smart Batching (new) | One-by-One |
+| ----------------------- | ---------------- | -------------------- | ---------- |
+| **Speed**               | 1 audit          | 2-4 audits           | N audits   |
+| **Debuggability**       | Hard             | Easy                 | Easy       |
+| **Context load**        | High             | Medium               | Low        |
+| **Risk of regression**  | High             | Low                  | Very low   |
+| **Dependency handling** | Manual           | Automatic            | Manual     |
+| **Best for violations** | ≤5               | 6-15                 | N/A        |
 
 ### Step 6: Validation Complete + MDX Generation
 
@@ -395,6 +406,7 @@ When ALL audit gates show ✅:
 This generates: `docusaurus/docs/${level}/${slug}.mdx`
 
 **Verify the MDX was created:**
+
 ```bash
 ls -la docusaurus/docs/${level}/${slug}.mdx
 ```
@@ -404,27 +416,32 @@ ls -la docusaurus/docs/${level}/${slug}.mdx
 ## Quick Reference: Common Fixes
 
 ### Meta Fixes
+
 ```yaml
 # Invalid activity type → replace with valid
 activity_hints:
-  - type: fill-in  # NOT transform, conjugation, etc.
+  - type: fill-in # NOT transform, conjugation, etc.
 
 # Word target mismatch → update to match content
-word_target: 3500  # Must match actual section sums ±10%
+word_target: 3500 # Must match actual section sums ±10%
 ```
 
 **IMPORTANT: Section word counts are flexible guidance**
+
 - Total word count MUST be ≥ word_target
 - Individual sections: ±10% tolerance
 - You can redistribute words between sections
 - Example: Section over by 600? Move content to sections under target
 
 ### Lesson Fixes
+
 ```markdown
 # CRITICAL: No frontmatter in .md files (metadata lives in meta.yaml)
+
 # File should START with <!-- SCOPE or # Title
 
 # Missing SCOPE comment → add at start
+
 <!-- SCOPE
 Covers: ...
 Not covered: ...
@@ -432,21 +449,24 @@ Related: ...
 -->
 
 # Missing engagement box → add callout
+
 > 💡 **Чому це важливо?**
 > Explanation here...
 
 # Low word count → expand sections OR redistribute from over-sections
+
 # Low immersion → reduce English, increase Ukrainian
 ```
 
 **For section word count issues, see:** `docs/SUBSECTION-FLEXIBILITY-GUIDE.md`
 
 ### Activity Fixes
+
 ```yaml
 # Schema error: missing options
 - sentence: Text with [___] blank.
   answer: correct
-  options: [correct, wrong1, wrong2, wrong3]  # Must be 4
+  options: [correct, wrong1, wrong2, wrong3] # Must be 4
 
 # Too few items → add more
 # Mirroring → rephrase to differ from lesson text
@@ -455,6 +475,7 @@ Related: ...
 ### Naturalness Fixes (Agent Evaluated)
 
 > **🤖 Your responsibility:** Evaluate naturalness yourself, then update meta.yaml:
+>
 > ```yaml
 > naturalness:
 >   score: 9
@@ -500,12 +521,14 @@ MODULE APPROVED
 ```
 
 **CRITICAL:** The MDX generation step is MANDATORY. Do not output "MODULE APPROVED" until you have:
+
 1. Run the MDX generation command
 2. Verified the MDX file exists
 
 **THERE IS NO FAILURE OUTPUT.**
 
 Keep iterating until complete. If truly stuck after 5+ attempts on same issue:
+
 - Try different approach
 - Check if issue is in documentation/tooling
 - Only then ask user for guidance
@@ -514,12 +537,12 @@ Keep iterating until complete. If truly stuck after 5+ attempts on same issue:
 
 ## Related Commands
 
-| Command | Purpose |
-|---------|---------|
-| `/module-meta-qa` | Validate meta.yaml only |
-| `/module-lesson-qa` | Validate lesson only |
-| `/module-act-qa` | Validate activities only |
-| `/module-vocab-qa` | Validate vocabulary only |
-| `/meta-fix` | Fix invalid activity types in meta |
-| `/module-sync` | Sync meta to existing markdown |
-| `/module-stage-4` | Full Stage 4 review (same as this) |
+| Command             | Purpose                            |
+| ------------------- | ---------------------------------- |
+| `/module-meta-qa`   | Validate meta.yaml only            |
+| `/module-lesson-qa` | Validate lesson only               |
+| `/module-act-qa`    | Validate activities only           |
+| `/module-vocab-qa`  | Validate vocabulary only           |
+| `/meta-fix`         | Fix invalid activity types in meta |
+| `/module-sync`      | Sync meta to existing markdown     |
+| `/module-stage-4`   | Full Stage 4 review (same as this) |

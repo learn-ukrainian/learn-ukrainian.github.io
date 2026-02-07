@@ -2,13 +2,13 @@
   "module": "oleksander-potebnya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:40:06.285250Z",
+  "last_audit": "2026-02-07T16:37:54.730212Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T00:28:26.771818Z",
-    "meta": "2026-02-07T00:27:58.624866Z",
-    "activities": "2026-02-04T22:48:08.411319Z",
-    "vocabulary": "2026-02-07T00:28:21.419344Z",
+    "md": "2026-02-07T01:04:17.241613Z",
+    "meta": "2026-02-07T15:13:22.016877Z",
+    "activities": "2026-02-07T10:03:51.599159Z",
+    "vocabulary": "2026-02-07T10:03:51.644659Z",
     "plan": null
   },
   "gates": {

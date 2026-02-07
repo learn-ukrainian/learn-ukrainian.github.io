@@ -1,32 +1,91 @@
-# Module 10: Вид у запереченні
+# Audit Report: M10 — 10-aspect-negation.md
+**Level:** B1 | **Module:** M10 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:12
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 22:20:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 3000 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Ще не + Доконаний вид | 10 | 8 | ✅ |
+| 2 | fill-in | Попередження (не + ДВ) | 10 | 8 | ✅ |
+| 3 | quiz | Заперечення і вид | 14 | 8 | ✅ |
+| 4 | match-up | Переклад заперечень | 12 | 8 | ✅ |
+| 5 | cloze | Заперечні форми дієслів | 14 | 12 | ✅ |
+| 6 | true-false | Правда чи неправда про заперечення | 8 | 8 | ✅ |
+| 7 | group-sort | Типи заперечень | 18 | 12 | ✅ |
+| 8 | unjumble | Речення із запереченням | 8 | 6 | ✅ |
+| 9 | error-correction | Виправлення помилок заперечення | 8 | 6 | ✅ |
+| 10 | cloze | Заперечення у контексті | 14 | 12 | ✅ |
+| 11 | mark-the-words | Заперечні слова та частки | 9 | 6 | ✅ |
+| 12 | select | Множинний вибір — заперечення | 6 | 6 | ✅ |
+| 13 | translate | Переклад — заперечення | 6 | 6 | ✅ |
+| 14 | group-sort | Класифікація заперечень | 19 | 12 | ✅ |
 
-| Dimension           | Score | Notes                                                                                        |
-| ------------------- | ----- | -------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Excellent breakdown of the three "Types" of negation from the start.                         |
-| Relevance           | 10/10 | High. Negation aspect is a consistent source of errors for intermediate learners.            |
-| Educational         | 10/10 | The distinction between "General Prohibition" and "Specific Warning" is very well explained. |
-| Language            | 10/10 | Natural and idiomatic. Use of "Deruny" and "Kobzar" adds authentic flavor.                   |
-| Pedagogy            | 10/10 | Logical algorithm provided to help learners make the right choice.                           |
-| Immersion           | 10/10 | 99.2% immersion. Maintains the standard set in M06.                                          |
-| Activities          | 10/10 | 14 activities, covering all targeted grammar points.                                         |
-| Richness            | 10/10 | 95% score. Good situational variety (Library, Bookstore, Doctor, Dinner).                    |
-| Humanity            | 10/10 | Practical and empathetic ("Don't worry," "I've never been lost").                            |
-| LLM Fingerprint     | 10/10 | Clean structure, no repetitive AI transition phrases.                                        |
-| Linguistic Accuracy | 10/10 | Correct usage of Genitive case in negation, a subtle but vital detail correctly handled.     |
+**Summary:**
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
-## Fixes Applied
+## Gates
+- **Words:** ✅ 3529/3000 (raw: 3582)
+- **Activities:** ✅ 14/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 6/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 73/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.5% (target 85-100% (B1.1 Aspect))
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-1.  **Metadata**: Corrected hydration errors by redistributing word counts in `content_outline` to match the actual text density (Dialogue and Summary were significantly longer than projected).
-2.  **Vocabulary**: Cleaned up `vocabulary/10-aspect-negation.yaml` to remove typos and hallucinations, focusing on the negation markers and contrastive aspect pairs.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Conclusion
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 62 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 33 | 4 | 100% | 15% | 15.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 39 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.5%** |
 
-This module completes the "Aspect & Tense" phase of B1.1 with high precision. It tackles one of the most counter-intuitive parts of the aspect system (the shift to imperfective in negation) with clear, actionable rules. The dialogues are particularly strong in this module, feeling like real-life interactions.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вид у запереченні** | ⚪️ | 153 | Skipped |
+| **Тест** | ⚪️ | 350 | Skipped |
+| **Пояснення** | ⚪️ | 620 | Skipped |
+| **Практика** | ⚪️ | 558 | Skipped |
+| **Діалоги** | ✅ | 1354 | Included in Core |
+| **Підсумок** | ✅ | 494 | Included in Core |

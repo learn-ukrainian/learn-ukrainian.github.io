@@ -1,8 +1,8 @@
-# Audit Report: M125 — mykola-pohribnyi.md
-**Level:** C1-BIO | **Module:** M125 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M126 — mykola-pohribnyi.md
+**Level:** C1-BIO | **Module:** M126 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:35
+**Generated:** 2026-02-07 16:38:32
 
 ## Configuration
 **Type:** C1-biography

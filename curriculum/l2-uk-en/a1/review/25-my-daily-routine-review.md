@@ -1,17 +1,65 @@
-## Module 25: My Daily Routine - FINAL REPORT
+# Audit Report: M25 — 25-my-daily-routine.md
+**Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 15:29:35
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up, unjumble
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Daily Actions | 10 | 8 | ✅ |
+| 2 | group-sort | When Do We Do This? | 12 | 12 | ✅ |
+| 3 | fill-in | Reflexive Verb Forms | 12 | 8 | ✅ |
+| 4 | fill-in | Sequence Words | 12 | 8 | ✅ |
+| 5 | quiz | Daily Routine | 12 | 8 | ✅ |
+| 6 | quiz | Reflexive Understanding | 12 | 8 | ✅ |
+| 7 | unjumble | Daily Routine | 12 | 6 | ✅ |
+| 8 | true-false | Daily Routine Facts | 12 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Added IPA to reflexive conjugation and intro sections, and removed Latin transliteration clues.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched ALL 8 activities to meet 12-item/pair density rules (respecting match-up limits).
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, unjumble) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 934/750 (raw: 1079)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 3/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 6/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 37.0% (target 35-55% (M25))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/25-my-daily-routine.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 213 | Included in Core |
+| **Presentation** | ✅ | 215 | Included in Core |
+| **Dialogues** | ✅ | 400 | Included in Core |
+| **Практика** | ⚪️ | 20 | Skipped |
+| **Підсумок** | ✅ | 67 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

@@ -52,8 +52,3 @@ items:
   translation: patience
   pos: noun
   gender: n
-- lemma: шей
-  ipa: /ʃɛj/
-  translation: necks
-  pos: noun
-  gender: m

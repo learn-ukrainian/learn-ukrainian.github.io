@@ -1,8 +1,3 @@
----
-module: 09-reflexive-verbs
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Reflexive Verbs Meanings
   pairs:
@@ -84,7 +79,7 @@ activities:
     options:
     - називаємось
     - називаюсь
-    - називаются
+    - називаються
     - ми
   - sentence: Я ___ в дзеркало.
     answer: дивлюсь
@@ -133,7 +128,7 @@ activities:
     options:
     - text: Я дивлюсь
       correct: true
-    - text: Я дивлюсь
+    - text: Я дивишся
       correct: false
     - text: Я дивився
       correct: false

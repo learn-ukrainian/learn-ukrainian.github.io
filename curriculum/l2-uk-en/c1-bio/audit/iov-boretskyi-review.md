@@ -1,8 +1,8 @@
-# Audit Report: M18 — iov-boretskyi.md
-**Level:** C1-BIO | **Module:** M18 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M17 — iov-boretskyi.md
+**Level:** C1-BIO | **Module:** M17 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:21:36
+**Generated:** 2026-02-07 16:37:32
 
 ## Configuration
 **Type:** C1-biography

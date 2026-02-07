@@ -1,8 +1,8 @@
 # Audit Report: M07 — 07-marusya.md
 **Level:** LIT | **Module:** M07 | **Phase:** LIT.2 | **Pedagogy:** literature | **Target:** 4500
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:16:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 15:14:55
 
 ## Configuration
 **Type:** LIT-literature
@@ -20,37 +20,33 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | essay-response | Есе-Роздум: Пасивність Марусі | 1 | 1 | ✅ |
-| 2 | essay-response | Дискусія: Синдром розбитого серця | 1 | 1 | ✅ |
-| 3 | reading | Читальна Зала: Занурення в Сентименталізм | 3 | 1 | ✅ |
-| 4 | critical-analysis | Аналіз Тексту: Пейзаж як Душа | 1 | 1 | ✅ |
+| 1 | reading | Первинне джерело: Ключові епізоди «Марусі» | 5 | 1 | ✅ |
+| 2 | essay-response | Есе: Чому Квітка вбив своїх героїв? | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Пасивність Марусі — чеснота чи вада? | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз тексту: Пейзаж як дзеркало душі | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняльний аналіз: Маруся vs Наталка | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 3 (minimum: 2) ✅
-- Priority types used: 3/4 (critical-analysis, essay-response, reading) ✅
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
-
 ## Gates
-- **Words:** ❌ 3618/4500 (raw: 3992)
-- **Activities:** ✅ 4/3
+- **Words:** ✅ 5181/4500 (raw: 5380)
+- **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 3/2 types
+- **Unique_types:** ✅ 4/2 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/4
+- **Engagement:** ✅ 9/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 0/0
-- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
+- **Vocab:** ✅ 31/0
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (literature))
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.8% (target 95-100% (literature))
 - **Richness:** ✅ 99% (literature)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -63,40 +59,24 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
-| literary_citations | 5 | 5 | 100% | 17% | 17.4% |
-| engagement | 7 | 4 | 100% | 13% | 13.0% |
-| historical_context | 22 | 3 | 100% | 13% | 13.0% |
+| literary_citations | 15 | 5 | 100% | 17% | 17.4% |
+| engagement | 9 | 4 | 100% | 13% | 13.0% |
+| historical_context | 26 | 3 | 100% | 13% | 13.0% |
 | essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 6 | 3 | 100% | 9% | 8.7% |
-| variety | 0.97 | - | 97% | 4% | 4.2% |
+| resources | 10 | 3 | 100% | 9% | 8.7% |
+| variety | 0.96 | - | 96% | 4% | 4.2% |
 | cultural | 12 | - | 100% | 4% | 4.3% |
-| visual | 8 | 1 | 100% | 4% | 4.3% |
+| visual | 11 | 1 | 100% | 4% | 4.3% |
 | paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 48 | Included in Core |
-| **Summary** | ✅ | 49 | Included in Core |
-| **Частина I: Народження Сентименталізму** | ✅ | 368 | Included in Core |
-| **Частина II: Сюжет і Структура** | ✅ | 381 | Included in Core |
-| **Частина III: Образ Марусі: Між Святою і Лялькою** | ✅ | 249 | Included in Core |
-| **Частина IV: Чоловічі Образи** | ✅ | 214 | Included in Core |
-| **Частина V: Етнографія Смерті і Життя: Мистецтво вмирання** | ✅ | 272 | Included in Core |
-| **Частина VI: Мова Повісті: Солодка Симфонія** | ✅ | 244 | Included in Core |
-| **Частина VII: Європейський Тріумф** | ✅ | 174 | Included in Core |
-| **Частина VIII: Маруся vs Наталка Полтавка: Дві Душі** | ✅ | 80 | Included in Core |
-| **Частина IX: Філософія Туги: Український Зензухт** | ✅ | 115 | Included in Core |
-| **Частина X: Вплив на Шевченка і Літературу** | ✅ | 139 | Included in Core |
-| **Частина XI: Природа як Храм** | ✅ | 95 | Included in Core |
-| **Частина XII: Соціальний Аспект: Утопія Багатого Села** | ✅ | 105 | Included in Core |
-| **Частина XIII: Квітка проти Гоголя** | ✅ | 95 | Included in Core |
-| **Частина XIV: Сльози як Очищення (Катарсис)** | ✅ | 92 | Included in Core |
-| **Частина XV: Актуальність Сьогодні** | ✅ | 115 | Included in Core |
-| **Частина XVI: Символіка Речей: Скриня і Хустка** | ✅ | 158 | Included in Core |
-| **Частина XVII: Епілог: Чому Василь не Боровся?** | ✅ | 82 | Included in Core |
-| **Частина XVIII: Феномен Оповідача: Грицько Основ'яненко 👤** | ✅ | 77 | Included in Core |
-| **🏛️ Читальна Зала** | ⚪️ | 122 | Skipped |
-| **✍️ Аналітичний Практикум** | ⚪️ | 260 | Skipped |
-| **Додаткове Завдання (Дискусія)** | ⚪️ | 84 | Skipped |
+| **Intro/Narrative** | ✅ | 97 | Included in Core |
+| **Вступ — Твір, що емансипував українську мову** | ✅ | 675 | Included in Core |
+| **Сюжет і структура повісті** | ⚪️ | 969 | Skipped |
+| **Маруся vs Наталка — два полюси** | ⚪️ | 973 | Skipped |
+| **Етнографія як мистецтво** | ⚪️ | 944 | Skipped |
+| **Мовні засоби катарсису** | ⚪️ | 894 | Skipped |
+| **Підсумок — Квітка vs Гоголь** | ✅ | 629 | Included in Core |

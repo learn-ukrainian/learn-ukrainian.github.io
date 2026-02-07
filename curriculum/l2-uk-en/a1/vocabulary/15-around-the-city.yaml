@@ -23,7 +23,7 @@ items:
   translation: exit, output, solution
   pos: noun
   gender: m
-- lemma: дорошенко
+- lemma: Дорошенко
   ipa: /dɔrɔʃˈɛnkɔ/
   translation: Doroshenko (name)
   pos: noun
@@ -33,10 +33,9 @@ items:
   translation: to reach, to get to
   pos: verb
 - lemma: зелений
-  ipa: /zɛlˈɛna/
+  ipa: /zɛlˈɛnɪj/
   translation: green
-  pos: noun
-  gender: f
+  pos: adj
 - lemma: киянин
   ipa: /kɪˈjanɪn/
   translation: Kyivan (male inhabitant)
@@ -113,8 +112,7 @@ items:
 - lemma: нема
   ipa: /nɛmˈa/
   translation: there is no, absent
-  pos: noun
-  gender: f
+  pos: adv
 - lemma: обожнювати
   ipa: /ɔbˈɔʒnjuʋatɪ/
   translation: to adore
@@ -187,18 +185,16 @@ items:
   pos: adj
 - lemma: центральне
   ipa: /t͡sɛntrˈalʲnɛ/
-  translation: central
-  pos: noun
-  gender: n
+  translation: central (neuter)
+  pos: adj
 - lemma: центральний
   ipa: /t͡sɛntrˈalʲnɪj/
   translation: central
   pos: adj
-- lemma: червона
-  ipa: /t͡ʃɛrʋˈɔna/
-  translation: red (female)
-  pos: noun
-  gender: f
+- lemma: червоний
+  ipa: /t͡ʃɛrʋˈɔnɪj/
+  translation: red
+  pos: adj
 - lemma: щоранку
   ipa: /ʃt͡ʃɔrˈanku/
   translation: every morning

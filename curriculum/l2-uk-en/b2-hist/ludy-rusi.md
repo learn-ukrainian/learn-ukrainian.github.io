@@ -272,7 +272,7 @@ Related: kultura-kyivskoi-rusi, yaroslav-mudryi, volodymyr-velykyi, boiare-i-shl
 
 ---
 
-# Підсумок
+## Підсумок
 
 Ми переконалися, що Київська Русь була розвиненою європейською цивілізацією, а не диким краєм.
 

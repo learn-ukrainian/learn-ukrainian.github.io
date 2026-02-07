@@ -3,24 +3,11 @@ module: 08-the-living-verb-ii
 level: A1
 version: '2.0'
 items:
-- lemma: ити
-  ipa: /ɪtɪ/
-  translation: to go (truncated)
-  pos: noun
-- lemma: катя
-  ipa: /katˈja/
+- lemma: Катя
+  ipa: /ˈkatʲa/
   translation: Katya (name)
   pos: noun
   gender: f
-- lemma: люба
-  ipa: /ljubˈa/
-  translation: Lyuba (name)
-  pos: noun
-- lemma: любя
-  ipa: /ljubja/
-  translation: loving
-  pos: noun
-  gender: n
 - lemma: іти
   ipa: /itˈɪ/
   translation: to go, to walk

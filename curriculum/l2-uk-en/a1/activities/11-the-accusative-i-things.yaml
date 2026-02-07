@@ -1,8 +1,3 @@
----
-module: 11-the-accusative-i-things
-level: A1
-version: '2.0'
-activities:
 - type: quiz
   title: Accusative Recognition
   items:

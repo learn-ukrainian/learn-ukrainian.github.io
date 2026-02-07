@@ -1,12 +1,12 @@
 # Audit Report: M35 — 35-at-the-cafe-practical.md
-**Level:** A1 | **Module:** M35 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M35 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 825
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:04:00
+**Generated:** 2026-02-07 21:45:48
 
 ## Configuration
 **Type:** A1
-**Word Target:** 750 words
+**Word Target:** 825 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 908/750 (raw: 1210)
+- **Words:** ✅ 908/825 (raw: 1210)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -52,6 +52,9 @@
 - **Immersion:** 🇺🇦 37.9% (target 35-55% (M35))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,12 +1,12 @@
-# Audit Report: M58 — borys-hrinchenko.md
-**Level:** C1-BIO | **Module:** M58 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:01
+# Audit Report: M55 — borys-hrinchenko.md
+**Level:** C1-BIO | **Module:** M55 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4800
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 16:53:22
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4800 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -33,60 +33,53 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/borys-hrinchenko-research.md
-  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 4235/4000 (raw: 4274)
+- **Words:** ✅ 5236/4800 (raw: 5297)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.4% (target 95-100% (biography))
-- **Richness:** ✅ 95% (biography)
+- **Immersion:** 🇺🇦 99.3% (target 95-100% (biography))
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 2 | 3 | 67% | 14% | 9.6% |
-| cultural | 11 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 11 | 4 | 100% | 19% | 19.0% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| quotes | 15 | 3 | 100% | 14% | 14.3% |
+| cultural | 7 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.2%** |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ — Вартовий українського слова** | ✅ | 352 | Included in Core |
-| **Дитинство та юність (1863-1881)** | ⚪️ | 822 | Skipped |
-| **Педагогічна робота (1881-1893)** | ⚪️ | 858 | Skipped |
-| **Літературна діяльність (1880-ті–1900-ті)** | ⚪️ | 599 | Skipped |
-| **Створення Словника (1907-1909)** | ⚪️ | 775 | Skipped |
-| **Спадщина — Каменяр словникарства** | ⚪️ | 569 | Skipped |
-| **Summary** | ✅ | 260 | Included in Core |
+| **Вступ — Вартовий українського слова** | ✅ | 767 | Included in Core |
+| **Дитинство та юність (1863-1881)** | ⚪️ | 1041 | Skipped |
+| **Педагогічна робота (1881-1893)** | ⚪️ | 763 | Skipped |
+| **Літературна діяльність (1880-ті–1900-ті)** | ⚪️ | 890 | Skipped |
+| **Створення Словника (1907-1909)** | ⚪️ | 665 | Skipped |
+| **Спадщина — Каменяр словникарства** | ⚪️ | 762 | Skipped |
+| **Підсумок: Сила слова та віра в працю** | ✅ | 348 | Included in Core |
+| **Activities** | ➖ | 6 | Excluded Type |
+| **Словник** | ⚪️ | 6 | Skipped |

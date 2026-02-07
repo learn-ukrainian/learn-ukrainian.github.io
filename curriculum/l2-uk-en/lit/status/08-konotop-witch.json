@@ -2,35 +2,35 @@
   "module": "08-konotop-witch",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-26T22:57:40.723070Z",
+  "last_audit": "2026-02-07T23:05:29.890248Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-18T20:57:43.996974Z",
-    "meta": "2026-01-26T17:21:21.799254Z",
-    "activities": "2026-01-18T20:57:41.859381Z",
-    "vocabulary": null,
-    "plan": "2026-01-26T17:21:21.798947Z"
+    "md": "2026-02-07T23:04:24.456932Z",
+    "meta": "2026-02-07T23:03:37.089719Z",
+    "activities": "2026-02-07T23:05:19.838658Z",
+    "vocabulary": "2026-02-07T23:04:47.289065Z",
+    "plan": "2026-02-07T10:06:50.457623Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "3630/4000 (raw: 4299) | pedagogy: 2 violations"
+      "message": "1338/4500 (raw: 1407) | pedagogy: 5 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4/3"
+      "status": "fail",
+      "violations": 1,
+      "message": "8/3 | density: 5 < 1"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "25/0"
     },
     "naturalness": {
       "status": "pass",
@@ -42,8 +42,7 @@
     "status": "fail",
     "blocking_issues": [
       "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: group-sort, match-up, quiz"
+      "4 forbidden activity types (use --fix to remove)"
     ],
     "pass_count": 3,
     "fail_count": 2

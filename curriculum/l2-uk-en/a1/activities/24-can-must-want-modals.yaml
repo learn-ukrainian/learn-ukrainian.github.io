@@ -1,8 +1,3 @@
----
-module: 24-can-must-want-modals
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Modal Meanings
   pairs:
@@ -363,7 +358,7 @@ activities:
       correct: false
     - text: Should I leave?
       correct: false
-  - question: What isaccurately the English meaning of «Тут заборонено палити»?
+  - question: What is the English meaning of «Тут заборонено палити»?
     options:
     - text: Smoking is forbidden here.
       correct: true
@@ -383,7 +378,7 @@ activities:
       correct: false
     - text: I know how to work.
       correct: false
-  - question: What doesaccurately the phrase «Варто подивитися цей фільм» mean?
+  - question: What does the phrase «Варто подивитися цей фільм» mean?
     options:
     - text: This movie is worth watching.
       correct: true

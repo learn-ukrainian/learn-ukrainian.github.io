@@ -2,13 +2,13 @@
   "module": "shcho-take-istoriohrafiia",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T13:15:45.418738Z",
+  "last_audit": "2026-02-07T11:46:43.989274Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T12:50:08.357865Z",
-    "meta": "2026-02-06T12:50:18.953447Z",
-    "activities": "2026-02-06T12:50:40.903730Z",
-    "vocabulary": "2026-01-27T12:15:54.746743Z",
+    "md": "2026-02-07T01:04:17.328655Z",
+    "meta": "2026-02-07T10:03:51.944487Z",
+    "activities": "2026-02-07T10:03:51.950462Z",
+    "vocabulary": "2026-02-07T10:03:51.952072Z",
     "plan": null
   },
   "gates": {

@@ -2,50 +2,46 @@
   "module": "kateryna-yushchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:35.453858Z",
+  "last_audit": "2026-02-07T16:38:31.673940Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.366242Z",
-    "meta": "2026-02-06T22:56:22.291132Z",
-    "activities": "2026-01-27T15:34:55.711556Z",
-    "vocabulary": null,
+    "md": "2026-02-07T12:11:03.889749Z",
+    "meta": "2026-02-07T15:13:22.026353Z",
+    "activities": "2026-02-07T11:56:05.137434Z",
+    "vocabulary": "2026-02-07T11:55:37.575861Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2030/4000 (raw: 2304) | pedagogy: 1 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "4574/4650 (raw: 4688) (76 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "9/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "30/24"
     },
     "naturalness": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "1/10 (PENDING \u2014 awaiting review)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 1,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

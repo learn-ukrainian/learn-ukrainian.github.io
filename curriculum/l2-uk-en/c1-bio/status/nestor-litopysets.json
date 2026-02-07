@@ -2,13 +2,13 @@
   "module": "nestor-litopysets",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:29.793571Z",
+  "last_audit": "2026-02-07T16:37:26.973299Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.309664Z",
-    "meta": "2026-02-06T22:56:22.297826Z",
-    "activities": "2026-02-03T22:19:06.802845Z",
-    "vocabulary": "2026-02-03T23:04:54.546670Z",
+    "md": "2026-02-07T11:13:06.132601Z",
+    "meta": "2026-02-07T15:13:22.005750Z",
+    "activities": "2026-02-07T11:06:37.412015Z",
+    "vocabulary": "2026-02-07T11:10:15.904862Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4367/4000 (raw: 4577)"
+      "message": "4610/4000 (raw: 4820)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/24"
+      "message": "28/24"
     },
     "naturalness": {
       "status": "pass",

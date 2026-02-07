@@ -1,8 +1,8 @@
-# Audit Report: M93 — klavdiya-latysheva.md
-**Level:** C1-BIO | **Module:** M93 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M88 — klavdiya-latysheva.md
+**Level:** C1-BIO | **Module:** M88 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:20
+**Generated:** 2026-02-07 16:38:13
 
 ## Configuration
 **Type:** C1-biography

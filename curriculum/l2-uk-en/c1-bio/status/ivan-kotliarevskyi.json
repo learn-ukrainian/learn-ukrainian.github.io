@@ -2,13 +2,13 @@
   "module": "ivan-kotliarevskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:48.101610Z",
+  "last_audit": "2026-02-07T16:37:43.929803Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.359650Z",
-    "meta": "2026-02-05T20:58:10.317716Z",
-    "activities": "2026-02-04T22:02:05.778690Z",
-    "vocabulary": "2026-02-04T20:35:21.987781Z",
+    "meta": "2026-02-07T15:13:22.014247Z",
+    "activities": "2026-02-07T10:03:51.587072Z",
+    "vocabulary": "2026-02-07T10:03:51.637189Z",
     "plan": null
   },
   "gates": {

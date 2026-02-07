@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M22 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1082
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:13:04
+**Generated:** 2026-02-07 21:32:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 6/1
+- **Vocab:** ✅ 5/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -53,17 +53,20 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
+## MDX VALIDATION
+✅ No issues found
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 30 | Included in Core |
 | **Presentation** | ✅ | 169 | Included in Core |
-| **Presentatіon: Plans and Intentions** | ⚪️ | 163 | Skipped |
-| **Presentatіon: Time Expressions** | ⚪️ | 38 | Skipped |
-| **Presentatіon: Useful Adverbs** | ⚪️ | 82 | Skipped |
-| **Presentatіon: Examples in Context** | ✅ | 240 | Included in Core |
-| **Presentatіon: Dialogues** | ✅ | 339 | Included in Core |
+| **Presentation: Plans and Intentions** | ✅ | 163 | Included in Core |
+| **Presentation: Time Expressions** | ✅ | 38 | Included in Core |
+| **Presentation: Useful Adverbs** | ✅ | 82 | Included in Core |
+| **Presentation: Examples in Context** | ✅ | 240 | Included in Core |
+| **Presentation: Dialogues** | ✅ | 339 | Included in Core |
 | **Practice** | ⚪️ | 21 | Skipped |
 | **Підсумок** | ✅ | 116 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

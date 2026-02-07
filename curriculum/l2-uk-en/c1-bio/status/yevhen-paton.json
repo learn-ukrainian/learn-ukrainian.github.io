@@ -2,13 +2,13 @@
   "module": "yevhen-paton",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:07.779307Z",
+  "last_audit": "2026-02-07T20:47:37.130678Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.355679Z",
-    "meta": "2026-02-06T22:56:22.306417Z",
-    "activities": "2026-02-06T22:56:22.243019Z",
-    "vocabulary": "2026-02-06T22:56:22.354590Z",
+    "md": "2026-02-07T20:43:50.097638Z",
+    "meta": "2026-02-07T15:13:22.019517Z",
+    "activities": "2026-02-07T20:43:23.288753Z",
+    "vocabulary": "2026-02-07T10:03:51.641565Z",
     "plan": null
   },
   "gates": {
@@ -19,8 +19,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "4148/4000 (raw: 4638) | pedagogy: 1 violations | richness: 94% < 95% min (biography)"
+      "violations": 1,
+      "message": "4290/4000 (raw: 4780) | richness: 94% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
@@ -40,9 +40,7 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors"
-    ],
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 1
   }

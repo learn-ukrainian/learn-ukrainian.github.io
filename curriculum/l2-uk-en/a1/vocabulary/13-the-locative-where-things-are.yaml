@@ -8,7 +8,7 @@ items:
   translation: balcony
   pos: noun
   gender: m
-- lemma: волинь
+- lemma: Волинь
   ipa: /ʋɔlˈɪnʲ/
   translation: Volyn
   pos: noun
@@ -18,21 +18,21 @@ items:
   translation: screen
   pos: noun
   gender: m
-- lemma: кавказ
+- lemma: Кавказ
   ipa: /kaʋkˈaz/
   translation: Caucasus
   pos: noun
   gender: m
-- lemma: києв
-  ipa: /kɪjɛʋ/
+- lemma: Київ
+  ipa: /ˈkɪjɪʋ/
   translation: Kyiv
   pos: noun
   gender: m
-- lemma: музе
-  ipa: /muzɛ/
-  translation: museum (locative)
+- lemma: музей
+  ipa: /muzˈɛj/
+  translation: museum
   pos: noun
-  gender: f
+  gender: m
 - lemma: площа
   ipa: /plˈɔʃt͡ʃa/
   translation: square (city), area

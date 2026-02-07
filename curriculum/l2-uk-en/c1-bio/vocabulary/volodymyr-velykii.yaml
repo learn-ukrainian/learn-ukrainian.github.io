@@ -148,3 +148,51 @@ items:
     pos: noun
     gender: f
     note: давньоруська епічна пісня
+  - lemma: ойкумена
+    ipa: /ojkuˈmɛnɐ/
+    translation: ecumene / inhabited world
+    pos: noun
+    gender: f
+    note: відомий цивілізований світ
+  - lemma: суб'єктність
+    ipa: /subjɛkˈtɪwnʲisʲtʲ/
+    translation: agency / subjectivity
+    pos: noun
+    gender: f
+    note: здатність діяти як самостійний гравець
+  - lemma: деколонізація
+    ipa: /dekoloɲiˈzɑt͡sʲijɐ/
+    translation: decolonization
+    pos: noun
+    gender: f
+    note: звільнення від імперських наративів
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦlʲisʲtʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+    note: безперервність історичного процесу
+  - lemma: візіонер
+    ipa: /ʋʲizʲioˈnɛr/
+    translation: visionary
+    pos: noun
+    gender: m
+    note: людина з далекоглядним баченням
+  - lemma: прагматизм
+    ipa: /prɐɦmɐˈtɪzm/
+    translation: pragmatism
+    pos: noun
+    gender: m
+    note: практичний підхід до політики
+  - lemma: амбівалентність
+    ipa: /ɐmbʲiʋɐˈlɛntnʲisʲtʲ/
+    translation: ambivalence
+    pos: noun
+    gender: f
+    note: подвійність сприйняття постаті
+  - lemma: легітимізація
+    ipa: /leɦʲitɪmʲiˈzɑt͡sʲijɐ/
+    translation: legitimization
+    pos: noun
+    gender: f
+    note: надання законності владі

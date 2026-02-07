@@ -7,7 +7,7 @@ items:
   ipa: /ʋɔzˈɪtɪ/
   translation: to transport, to carry
   pos: verb
-- lemma: данило
+- lemma: Данило
   ipa: /danˈɪlɔ/
   translation: Danylo (name)
   pos: noun
@@ -26,12 +26,13 @@ items:
   ipa: /pasaʒˈɪr/
   translation: passenger
   pos: noun
+  gender: m
 - lemma: привітний
   ipa: /prɪʋˈitnɪj/
   translation: friendly, welcoming
   pos: adj
 - lemma: спізнюватися
-  ipa: /spˈiznjuʋatɪsja/
+  ipa: /spʲiznʲuˈʋatɪsʲa/
   translation: to be late (imperfective)
   pos: verb
 - lemma: сусідка

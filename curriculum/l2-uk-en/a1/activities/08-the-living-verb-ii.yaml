@@ -1,8 +1,3 @@
----
-module: 08-the-living-verb-ii
-level: A1
-version: '2.0'
-activities:
 - type: quiz
   title: Second Conjugation or First Conjugation?
   items:
@@ -221,7 +216,7 @@ activities:
     options:
     - люблю
     - любиш
-    - любит
+    - любить
     - люблять
   - sentence: Ти ___ вправу?
     answer: робиш
@@ -448,7 +443,7 @@ activities:
       correct: true
     - text: говориш
       correct: false
-    - text: говорит
+    - text: говорить
       correct: false
     - text: говорять
       correct: false

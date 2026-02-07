@@ -13,11 +13,11 @@ items:
   translation: house, building
   pos: noun
   gender: m
-- lemma: вина
-  ipa: /ʋɪna/
-  translation: guilt, fault
+- lemma: вино
+  ipa: /vɪˈnɔ/
+  translation: wine
   pos: noun
-  gender: f
+  gender: n
 - lemma: вода
   ipa: /ʋɔdˈa/
   translation: water
@@ -98,7 +98,7 @@ items:
   pos: noun
   gender: m
 - lemma: прип'ять
-  ipa: /prɪpjatʲ/
+  ipa: /prɪˈpjatʲ/
   translation: Pripyat
   pos: noun
   gender: f
@@ -152,8 +152,8 @@ items:
   translation: wall
   pos: noun
   gender: f
-- lemma: таня
-  ipa: /tˈanja/
+- lemma: Таня
+  ipa: /ˈtanja/
   translation: Tanya (name)
   pos: noun
   gender: f
@@ -161,6 +161,7 @@ items:
   ipa: /frukt/
   translation: fruit
   pos: noun
+  gender: m
 - lemma: хліб
   ipa: /xlib/
   translation: bread

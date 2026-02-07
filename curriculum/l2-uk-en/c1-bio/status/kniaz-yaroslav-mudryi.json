@@ -2,13 +2,13 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:27.988999Z",
+  "last_audit": "2026-02-07T22:39:40.387431Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.283496Z",
-    "meta": "2026-02-06T22:56:22.291937Z",
-    "activities": "2026-02-06T22:56:22.240523Z",
-    "vocabulary": "2026-01-29T21:10:02.298804Z",
+    "md": "2026-02-07T22:38:40.512323Z",
+    "meta": "2026-02-07T21:12:55.278628Z",
+    "activities": "2026-02-07T21:54:23.740109Z",
+    "vocabulary": "2026-02-07T21:41:13.351034Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5002/4300 (raw: 5610)"
+      "message": "5669/5000 (raw: 6189)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "7/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/24"
+      "message": "31/24"
     },
     "naturalness": {
       "status": "pass",

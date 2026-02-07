@@ -2,13 +2,13 @@
   "module": "olena-pchilka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:56.128156Z",
+  "last_audit": "2026-02-07T16:37:51.138050Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T17:00:17.078721Z",
-    "meta": "2026-02-06T22:56:22.299562Z",
-    "activities": "2026-02-04T21:44:37.980299Z",
-    "vocabulary": "2026-02-05T16:50:23.979757Z",
+    "meta": "2026-02-07T15:13:22.016177Z",
+    "activities": "2026-02-07T10:03:51.557655Z",
+    "vocabulary": "2026-02-07T10:03:51.610106Z",
     "plan": null
   },
   "gates": {

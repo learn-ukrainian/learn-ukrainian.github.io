@@ -1,47 +1,89 @@
-# Module 11: Вид у наказовому способі
+# Audit Report: M11 — 11-aspect-in-imperatives.md
+**Level:** B1 | **Module:** M11 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:13
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.8/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 21:55:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 3000 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вибір виду в наказовому способі | 8 | 8 | ✅ |
+| 2 | match-up | З'єднайте наказ і ситуацію | 12 | 8 | ✅ |
+| 3 | group-sort | НДВ чи ДВ? | 16 | 12 | ✅ |
+| 4 | fill-in | Оберіть правильну форму | 12 | 8 | ✅ |
+| 5 | true-false | Правда чи ні? | 12 | 8 | ✅ |
+| 6 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 7 | cloze | Вибір виду в діалогах | 12 | 12 | ✅ |
+| 8 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть накази | 10 | 6 | ✅ |
+| 10 | select | Оберіть правильні варіанти | 6 | 6 | ✅ |
+| 11 | translate | Переклад наказів | 8 | 6 | ✅ |
+| 12 | group-sort | Ввічливість | 12 | 12 | ✅ |
 
-| Dimension           | Score | Notes                                                            |
-| ------------------- | ----- | ---------------------------------------------------------------- |
-| Coherence           | 10/10 | Excellent flow from concept to examples to practice.             |
-| Relevance           | 10/10 | Critical topic for B1 (politeness vs instruction).               |
-| Educational         | 10/10 | Clear distinction between Invitation (IPF) and Instruction (PF). |
-| Language            | 10/10 | Natural Ukrainian, corrected negation rules.                     |
-| Pedagogy            | 10/10 | Good scaffolding, clear examples.                                |
-| Immersion           | 9/10  | Good use of Ukrainian meta-language in examples.                 |
-| Activities          | 10/10 | Excellent variety (12+ items), culturally relevant.              |
-| Richness            | 10/10 | Includes Lviv coffee culture and Besarabsky market boxes.        |
-| Humanity            | 10/10 | Warm, encouraging tone ("Не хвилюйтеся").                        |
-| LLM Fingerprint     | 9/10  | Dialogues feel authentic, not stiff.                             |
-| Linguistic Accuracy | 10/10 | Applied fixes to Negation section (Prohibition=IPF).             |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 4046/3000 (raw: 4109)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 122/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.2 Motion))
+- **Richness:** ✅ 96% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* "Заборона конкретної дії (ДВ)" was incorrect. Rewrote section to explain that Prohibition is almost always IPF ("Не роби"), while PF is used for Warnings ("Не зроби").
-- *Fixed:* Vocabulary typos (`понеділко` -> `понеділок`, `віко` -> `вікно`).
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 48 | 24 | 100% | 20% | 20.0% |
+| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| dialogues | 31 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 27 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.4%** |
 
-- **Cultural Context:** The examples use real-world scenarios like the Besarabsky market and Lviv coffee culture to explain grammar nuances.
-- **Clear Rules:** The "Invitation vs Instruction" framework is very intuitive for learners.
-- **Activity Depth:** Activities are well-calibrated and test the nuances (warning vs prohibition).
-
-## Issues
-
-- None remaining after fixes.
-
-## Recommendation
-
-✅ PASS — Excellent grammar module with strong cultural integration.
-
-## Action Items
-
-1. Applied linguistic fixes to Markdown content — ✅ APPLIED
-2. Fixed vocabulary typos — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вид у наказовому способі** | ⚪️ | 175 | Skipped |
+| **Тест** | ⚪️ | 347 | Skipped |
+| **Пояснення** | ⚪️ | 1222 | Skipped |
+| **Практика** | ⚪️ | 758 | Skipped |
+| **Діалоги** | ✅ | 958 | Included in Core |
+| **Підсумок** | ✅ | 586 | Included in Core |

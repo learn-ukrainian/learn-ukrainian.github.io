@@ -1,47 +1,89 @@
-# Module 67: Подорожі та Географія
+# Audit Report: M67 — 67-travel-geography.md
+**Level:** B1 | **Module:** M67 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1700
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:45
 
-**Template:** b1-vocab-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:48:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1700 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння лексики подорожей | 8 | 8 | ✅ |
+| 2 | match-up | Колокації — іменник + дієслово | 12 | 8 | ✅ |
+| 3 | match-up | Переклад географічних термінів | 12 | 8 | ✅ |
+| 4 | group-sort | Групування за категорією | 18 | 12 | ✅ |
+| 5 | cloze | Вибір слова з контексту | 12 | 12 | ✅ |
+| 6 | select | Правильні колокації | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання лексики подорожей | 12 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 15 | 12 | ✅ |
+| 9 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
+| 11 | translate | Переклад речень | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть лексику подорожей | 15 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення лексикою подорожей | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                |
-| ------------------- | ----- | -------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical structure (Preparation -> Transit -> Geography).             |
-| Relevance           | 10/10 | Essential for travel.                                                |
-| Educational         | 10/10 | Good distinction between *подорож* (trip) and *мандрівка* (journey). |
-| Language            | 10/10 | Modern travel terms (low-cost, biometric passport).                  |
-| Pedagogy            | 10/10 | "Seven Wonders of Ukraine" is a classic cultural anchor.             |
-| Immersion           | 10/10 | Teaches specific geography (Kherson plains vs Carpathian mountains). |
-| Activities          | 10/10 | Good variety.                                                        |
-| Richness            | 9/10  | Good depth.                                                          |
-| Humanity            | 9/10  | Engaging.                                                            |
-| LLM Fingerprint     | 9/10  | Natural.                                                             |
-| Linguistic Accuracy | 9/10  | Check `потяга` and `причорноморʼь` in vocab.                         |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1736/1700 (raw: 2488)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 13/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 47/35
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (vocabulary)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `потяга` (f) in list. Should be `потяг` (m). `Потяга` is the genitive form of `потяг`.
-- **Vocabulary:** `причорноморʼь` (verb?!) in list. Should be `Причорномор'я` (noun, n, capitalized).
-- **Vocabulary:** `Київ-Львів` is listed as a noun. It's a proper noun phrase (route).
-- **Vocabulary:** `Росія` is lowercased `росія`. Geography terms should be capitalized.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** vocabulary
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 24 | 15 | 100% | 20% | 20.0% |
+| engagement | 13 | 4 | 100% | 15% | 15.0% |
+| cultural | 12 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 10% | 10.0% |
+| register_notes | 14 | 5 | 100% | 10% | 10.0% |
+| variety | 0.98 | - | 98% | 5% | 4.9% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.9%** |
 
-- **Railway Culture:** Explicitly mentions `купе`, `плацкарт`, `постільна білизна` — unique and essential aspects of traveling by Ukrzaliznytsia.
-- **Biometric Passport:** Mentions the `біометричний паспорт` and visa-free regime, which is a point of national pride and practical reality.
-
-## Issues
-
-- **Vocabulary YAML:** `потяга` -> `потяг`, `причорноморʼь` -> `Причорномор'я`, `росія` -> `Росія`, `київ-львів` -> `Київ — Львів`.
-
-## Recommendation
-
-✅ PASS — Excellent travel module.
-
-## Action Items
-
-1. **Fix Vocab:** Correct gender/form of `потяг`, fix `Причорномор'я`.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 56 | Included in Core |
+| **Вступ** | ✅ | 107 | Included in Core |
+| **Вживання** | ⚪️ | 216 | Skipped |
+| **Читання** | ✅ | 445 | Included in Core |
+| **Діалоги** | ✅ | 200 | Included in Core |
+| **Підсумок** | ✅ | 162 | Included in Core |
+| **Лексика** | ⚪️ | 440 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

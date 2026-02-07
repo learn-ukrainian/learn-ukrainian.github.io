@@ -2,13 +2,13 @@
   "module": "mykhailo-boichuk",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T00:22:14.710486Z",
+  "last_audit": "2026-02-07T16:38:09.535289Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.358368Z",
-    "meta": "2026-02-06T22:56:22.295281Z",
-    "activities": "2026-02-02T12:11:26.716455Z",
-    "vocabulary": "2026-02-02T12:11:26.716265Z",
+    "meta": "2026-02-07T15:13:22.021335Z",
+    "activities": "2026-02-07T10:03:51.586604Z",
+    "vocabulary": "2026-02-07T10:03:51.636847Z",
     "plan": null
   },
   "gates": {

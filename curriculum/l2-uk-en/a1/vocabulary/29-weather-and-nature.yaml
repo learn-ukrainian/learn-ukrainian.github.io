@@ -7,6 +7,7 @@ items:
   ipa: /kʋˈitka/
   translation: flower
   pos: noun
+  gender: f
 - lemma: клімат
   ipa: /klˈimat/
   translation: climate
@@ -45,8 +46,7 @@ items:
 - lemma: рудий
   ipa: /rudˈɪj/
   translation: red-haired, ginger
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: світязь
   ipa: /sʋitjazʲ/
   translation: Svitiaz (lake)
@@ -60,8 +60,7 @@ items:
   ipa: /xmˈarnɔ/
   translation: cloudy (it is cloudy)
   pos: adv
-- lemma: чорне
-  ipa: /t͡ʃˈɔrnɛ/
-  translation: black (neuter)
-  pos: noun
-  gender: n
+- lemma: чорний
+  ipa: /t͡ʃˈɔrnɪj/
+  translation: black
+  pos: adj

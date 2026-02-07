@@ -2,13 +2,13 @@
   "module": "hryhoriy-kvitka-osnovianenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:48.735693Z",
+  "last_audit": "2026-02-07T16:37:44.542429Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349818Z",
-    "meta": "2026-02-05T20:58:10.093605Z",
-    "activities": "2026-02-04T22:04:54.030100Z",
-    "vocabulary": "2026-02-04T20:35:28.957639Z",
+    "meta": "2026-02-07T15:13:22.014437Z",
+    "activities": "2026-02-07T10:03:51.561524Z",
+    "vocabulary": "2026-02-07T10:03:51.614066Z",
     "plan": null
   },
   "gates": {

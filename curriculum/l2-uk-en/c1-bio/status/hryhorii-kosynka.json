@@ -2,13 +2,13 @@
   "module": "hryhorii-kosynka",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T00:22:29.119164Z",
+  "last_audit": "2026-02-07T16:38:23.902910Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349148Z",
-    "meta": "2026-02-06T22:56:22.289762Z",
-    "activities": "2026-02-02T12:11:26.993202Z",
-    "vocabulary": "2026-02-02T12:11:26.993054Z",
+    "meta": "2026-02-07T15:13:22.024323Z",
+    "activities": "2026-02-07T10:03:51.600940Z",
+    "vocabulary": "2026-02-07T10:03:51.644837Z",
     "plan": null
   },
   "gates": {

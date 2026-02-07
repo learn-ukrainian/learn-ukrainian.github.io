@@ -1,0 +1,143 @@
+items:
+- lemma: експресіонізм
+  ipa: /ɛksprɛs⁽ʲ⁾iɔˈnizm/
+  translation: expressionism
+  pos: noun
+  gender: m
+  note: художній напрям, що акцентує на вираженні емоцій
+- lemma: новела
+  ipa: /nɔˈwɛlɑ/
+  translation: novella / short story
+  pos: noun
+  gender: f
+  note: жанр, у якому працював Стефаник
+- lemma: лаконізм
+  ipa: /lɑkɔˈnizm/
+  translation: laconism / brevity
+  pos: noun
+  gender: m
+  note: стислість та чіткість висловлювання
+- lemma: катарсис
+  ipa: /kɑˈtɑrsɪs/
+  translation: catharsis
+  pos: noun
+  gender: m
+  note: духовне очищення через співпереживання трагедії
+- lemma: еміграція
+  ipa: /ɛm⁽ʲ⁾iˈɦrɑt͡s⁽ʲ⁾ijɑ/
+  translation: emigration
+  pos: noun
+  gender: f
+  note: тема новели «Камінний хрест»
+- lemma: суб'єктність
+  ipa: /subˈjɛktn⁽ʲ⁾istʲ/
+  translation: agency / subjecthood
+  pos: noun
+  gender: f
+  note: здатність людини бути творцем власної долі
+- lemma: трагізм
+  ipa: /trɑˈɦizm/
+  translation: tragedism / tragicality
+  pos: noun
+  gender: m
+  note: напруженість, сповнена страждань
+- lemma: деколонізація
+  ipa: /dɛkɔlɔniˈzɑt͡s⁽ʲ⁾ijɑ/
+  translation: decolonization
+  pos: noun
+  gender: f
+  note: звільнення від імперських стереотипів
+- lemma: архаїка
+  ipa: /ɑrˈxɑj⁽ʲ⁾ikɑ/
+  translation: archaics / archaic elements
+  pos: noun
+  gender: f
+  note: давні пласти культури
+- lemma: злука
+  ipa: /ˈzlukɑ/
+  translation: unification / Act of Union
+  pos: noun
+  gender: f
+  note: Акт Злуки УНР та ЗУНР (1919)
+- lemma: екзистенційний
+  ipa: /ɛkzɪstɛnt͡s⁽ʲ⁾ijˈnɪj/
+  translation: existential
+  pos: adj
+  note: той, що стосується основ буття людини
+- lemma: покутська трійця
+  ipa: /pɔˈkut͡sʲkɑ ˈtrijt͡sʲɑ/
+  translation: Pokuttya Trinity
+  pos: phrase
+  note: літературне угруповання (Стефаник, Мартович, Черемшина)
+- lemma: радикал
+  ipa: /rɑdɪˈkɑl/
+  translation: radical
+  pos: noun
+  gender: m
+  note: прихильник корінних змін; член партії
+- lemma: ЗУНР
+  ipa: /zɛ u ɛn ɛr/
+  translation: West Ukrainian People's Republic
+  pos: noun
+  gender: f
+  note: держава, у будівництві якої брав участь Стефаник
+- lemma: метафізичний
+  ipa: /mɛtɑf⁽ʲ⁾iˈzɪt͡ʃnɪj/
+  translation: metaphysical
+  pos: adj
+  note: той, що виходить за межі фізичного світу
+- lemma: лапідарний
+  ipa: /lɑp⁽ʲ⁾iˈdɑrnɪj/
+  translation: lapidary / terse
+  pos: adj
+  note: стислий, як напис на камені
+- lemma: відчуження
+  ipa: /w⁽ʲ⁾idˈt͡ʃuʒɛnʲnʲɑ/
+  translation: alienation
+  pos: noun
+  gender: n
+  note: стан відірваності від світу чи самого себе
+- lemma: синтаксис
+  ipa: /ˈsɪntɑksɪs/
+  translation: syntax
+  pos: noun
+  gender: m
+  note: будова речень
+- lemma: драматизм
+  ipa: /drɑmɑˈtɪzm/
+  translation: dramatism
+  pos: noun
+  gender: m
+  note: напруженість подій чи почуттів
+- lemma: національне відродження
+  ipa: /nɑt͡s⁽ʲ⁾iɔˈnɑlʲnɛ w⁽ʲ⁾idˈrɔd͡ʒːɛnʲnʲɑ/
+  translation: national revival
+  pos: phrase
+  note: процес піднесення культури та свідомості нації
+- lemma: громадянська мужність
+  ipa: /ɦrɔmɑˈdʲɑnsʲkɑ ˈmuʒn⁽ʲ⁾istʲ/
+  translation: civic courage
+  pos: phrase
+  note: готовність обстоювати правду попри небезпеку
+- lemma: покутський діалект
+  ipa: /pɔˈkut͡sʲkɪj d⁽ʲ⁾iɑˈlɛkt/
+  translation: Pokuttya dialect
+  pos: phrase
+  note: особливості мовлення рідного краю Стефаника
+- lemma: внутрішній монолог
+  ipa: /ˈwnutr⁽ʲ⁾iʃn⁽ʲ⁾ij mɔnɔˈlɔɦ/
+  translation: interior monologue
+  pos: phrase
+  note: техніка передачі думок персонажа
+- lemma: естетика
+  ipa: /ɛsˈtɛtɪkɑ/
+  translation: aesthetics
+  pos: noun
+  gender: f
+  note: вчення про красу та мистецтво
+- lemma: сповідь
+  ipa: /ˈspɔw⁽ʲ⁾idʲ/
+  translation: confession
+  pos: noun
+  gender: f
+  note: щире висловлювання своїх думок чи гріхів

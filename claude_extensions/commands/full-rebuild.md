@@ -227,8 +227,11 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 
 ## Phase 5: Review-Content-v4 (Deep Quality & Scoring)
 
-> **Run review at TOP LEVEL, not as a subagent.**
-> Subagents lack schema context and suggest invalid fixes. Run `/review-content-v4 {track} {num}` directly.
+> **Review context requirements:**
+> Generic subagents lack schema context and suggest invalid fixes.
+> **Exception:** The **Curriculum Maintainer** subagent (`subagent_type: "Curriculum Maintainer"`)
+> is authorized for full-rebuild workflows — it dynamically loads review prompts, tier files,
+> and schemas before reviewing. See `.claude/agents/curriculum-maintainer.md` for details.
 
 - **Linguistic Sophistication**: Verify the Ukrainian register (e.g., Academic for C1). Check for high-level connectors and specialized terminology.
 - **IPA Stress Verification**: Check every IPA transcription in vocabulary for correct stress placement.

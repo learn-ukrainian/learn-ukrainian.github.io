@@ -1,17 +1,69 @@
-## Module 14: Mine and Yours - FINAL REPORT
+# Audit Report: M14 — 14-mine-and-yours.md
+**Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1307
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-31 15:30:30
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 1307 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up, quiz, true-false
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Possessive Forms | 10 | 8 | ✅ |
+| 2 | group-sort | Gender Agreement | 12 | 12 | ✅ |
+| 3 | quiz | Choose the Correct Possessive | 12 | 8 | ✅ |
+| 4 | true-false | Possessive Rules | 12 | 8 | ✅ |
+| 5 | fill-in | Complete with Possessives | 15 | 8 | ✅ |
+| 6 | quiz | Possessive Sentence Order | 15 | 8 | ✅ |
+| 7 | group-sort | Invariant vs Variable | 12 | 12 | ✅ |
+| 8 | quiz | Cultural Context | 12 | 8 | ✅ |
+| 9 | quiz | Свій vs Його/Її (Reflexive Possessive) | 8 | 8 | ✅ |
+| 10 | true-false | Свій — Key Concepts | 8 | 8 | ✅ |
+| 11 | fill-in | Свій in Context | 8 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Added IPA to all grammar tables and key terms, and removed Latin transliteration.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched `Possessive Forms` to 10 pairs (optimal range).
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 1430/1307 (raw: 1786)
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 5/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 10/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 7/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 29.6% (target 25-40% (M14))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/14-mine-and-yours.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 105 | Included in Core |
+| **Presentation** | ✅ | 562 | Included in Core |
+| **Practice** | ⚪️ | 226 | Skipped |
+| **Production** | ➖ | 212 | Excluded Type |
+| **Cultural Insight** | ✅ | 207 | Included in Core |
+| **Підсумок** | ✅ | 99 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

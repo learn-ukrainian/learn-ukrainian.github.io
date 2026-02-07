@@ -1,8 +1,8 @@
-# Audit Report: M75 — oleksandr-hrekiv.md
-**Level:** C1-BIO | **Module:** M75 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M74 — oleksandr-hrekiv.md
+**Level:** C1-BIO | **Module:** M74 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:11
+**Generated:** 2026-02-07 16:38:06
 
 ## Configuration
 **Type:** C1-biography

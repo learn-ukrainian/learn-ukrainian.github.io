@@ -1,46 +1,88 @@
-# Module 43: Дієприслівники доконаного виду
+# Audit Report: M43 — 43-adverbial-participles-perfective.md
+**Level:** B1 | **Module:** M43 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 1626
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:31
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.0/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 22:45:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1626 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, fill-in, match-up
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Теоретичні знання про дієприслівники доконаного виду | 8 | 8 | ✅ |
+| 2 | match-up | Інфінітив та відповідний дієприслівник ДВ | 14 | 8 | ✅ |
+| 3 | fill-in | Утворення дієприслівників доконаного виду | 14 | 8 | ✅ |
+| 4 | true-false | Правила вживання дієприслівників ДВ | 14 | 8 | ✅ |
+| 5 | group-sort | НДВ проти ДВ дієприслівників | 18 | 12 | ✅ |
+| 6 | unjumble | Побудова речень з дієприслівниками ДВ | 8 | 6 | ✅ |
+| 7 | error-correction | Виправлення помилок у дієприслівникових конструкціях ДВ | 8 | 6 | ✅ |
+| 8 | cloze | Дієприслівники ДВ в контексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть дієприслівники доконаного виду | 8 | 6 | ✅ |
+| 10 | select | Вибір між НДВ та ДВ дієприслівниками | 6 | 6 | ✅ |
+| 11 | translate | Переклад речень з дієприслівниками ДВ | 8 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                                |
-| ------------------- | ----- | ------------------------------------------------------------------------------------ |
-| Coherence           | 10/10 | Clear progression from Module 42. Excellent contrast (Simultaneity vs Sequence).     |
-| Relevance           | 10/10 | Critical grammar for B1 narrative skills.                                            |
-| Educational         | 10/10 | The "Past Masculine + -ши" rule is an excellent, practical heuristic.                |
-| Language            | 10/10 | Examples are natural and grammatically correct.                                      |
-| Pedagogy            | 10/10 | Focus on "Result -> Next Action" logic is perfect.                                   |
-| Immersion           | 9/10  | High.                                                                                |
-| Activities          | 10/10 | Activities correctly reinforce the sequence of events key to perfective participles. |
-| Richness            | 8/10  | Good engagement.                                                                     |
-| Humanity            | 9/10  | Supportive tone.                                                                     |
-| LLM Fingerprint     | 9/10  | Natural phrasing.                                                                    |
-| Linguistic Accuracy | 6/10  | Content 10/10, but Vocabulary YAML contains significant garbage tokens.              |
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (cloze, fill-in, match-up) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 1577/1626 (raw: 1990) (49 short)
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 8/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 49/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary File Garbage:** The `vocabulary/43-adverbial-participles-perfective.yaml` file contains broken tokens/hallucinations: `прийш-`, `прийшвши`, `прийшів` (non-existent), `прийшівши`, `прочита-`, `піш-`, `пішвши`, `овши`.
-- **Note:** The module *content* correctly teaches `прийшовши` and `пішовши`. The garbage is only in the YAML dataset.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 37 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 9 | 4 | 100% | 15% | 15.0% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 33 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.3%** |
 
-- **Heuristic Quality:** Teaching the formation via the masculine past tense (`зробив` + `ши` -> `зробивши`) is highly effective and linguistically robust for learners.
-- **Concept Clarity:** Clearly distinguishes proper usage: Perfective Participle = Finished action *before* the main verb.
-- **Error Prevention:** Addresses common mismatch errors (subjects must differ? No, subjects must be the *same*, but time is different).
-
-## Issues
-
-- **Vocabulary YAML Quality:** Dirty dataset requirements cleanup.
-
-## Recommendation
-
-✅ PASS — Excellent instructional content. Data hygiene required for YAML.
-
-## Action Items
-
-1. **Cleanup Vocab YAML:** Remove all broken stems and non-words (`прийш-`, `піш-`, `овши`, etc.).
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 75 | Included in Core |
+| **Вступ** | ✅ | 150 | Included in Core |
+| **Теоретичне пояснення** | ⚪️ | 503 | Skipped |
+| **Практика** | ⚪️ | 374 | Skipped |
+| **Діалоги** | ✅ | 215 | Included in Core |
+| **Підсумок** | ✅ | 150 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

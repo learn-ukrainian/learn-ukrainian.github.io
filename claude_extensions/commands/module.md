@@ -17,6 +17,7 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 > - **Two agents = faster solutions** - use collaboration for research, fact-checking, Ukrainian validation
 >
 > **How to ask for help:**
+>
 > ```bash
 > # Quick way (sends + invokes):
 > .venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your question here" --task-id module-help
@@ -93,6 +94,7 @@ Parse arguments: $ARGUMENTS
 > Before generating content, read `docs/RESEARCH-FIRST-WORKFLOW.md`
 >
 > These tracks require **Phase 0: Deep Research** before writing:
+>
 > 1. **Run /research {topic}** → Uses Ukrainian sources only
 > 2. Create outline from research notes
 > 3. Write with notes → 4. Activities (4-9 only!)
@@ -106,6 +108,7 @@ Parse arguments: $ARGUMENTS
 > **📋 Plan vs Template Conflicts:**
 >
 > When plan `content_outline` differs from template required sections:
+>
 > - **Plan sections take precedence** - use plan section names exactly
 > - Template is guidance, not strict requirements
 > - Ensure content COVERS template topics (under plan section names)
@@ -114,9 +117,9 @@ Parse arguments: $ARGUMENTS
 
 **Quick Reference - File Naming:**
 
-| Level Type | Example | File Path |
-|------------|---------|-----------|
-| Core (a1, a2, b1, b2, c1, c2) | `/module a1 5` | `curriculum/l2-uk-en/a1/05-daily-routine.md` |
+| Level Type                    | Example              | File Path                                         |
+| ----------------------------- | -------------------- | ------------------------------------------------- |
+| Core (a1, a2, b1, b2, c1, c2) | `/module a1 5`       | `curriculum/l2-uk-en/a1/05-daily-routine.md`      |
 | Track (b2-hist, c1-bio, etc.) | `/module b2-hist 41` | `curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md` |
 
 **Tracks use slug-only filenames (no number prefix). Always resolve via curriculum.yaml.**
@@ -144,6 +147,7 @@ Extract:
 ```
 
 **What it catches early:**
+
 - ❌ Missing plan file
 - ❌ Missing meta file
 - ❌ Module number mismatch between plan and meta
@@ -157,6 +161,7 @@ Extract:
 **For seminar tracks ONLY (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
 
 **SMART ENFORCEMENT**: Research is required only for:
+
 1. **New modules** - No .md file exists yet
 2. **Explicit rewrite** - Using `--from=lesson` flag
 3. **Word count failures** - Module under target needs expansion
@@ -254,17 +259,18 @@ fi
 
 **Research Gate Decision Table:**
 
-| Scenario | Content Exists | Word Count | Research | Action |
-|----------|---------------|------------|----------|--------|
-| New module | No | - | Missing | ⛔ BLOCK |
-| New module | No | - | Exists | ✅ PASS |
-| Existing, passing | Yes | ≥95% target | - | ✅ SKIP gate |
-| Existing, under target | Yes | <95% target | Missing | ⛔ BLOCK (needs expansion) |
-| Existing, under target | Yes | <95% target | Exists | ✅ PASS |
-| --no-research flag | - | - | - | ⚠️ WARN, proceed |
-| Core levels | - | - | - | ✅ SKIP (not seminar) |
+| Scenario               | Content Exists | Word Count  | Research | Action                     |
+| ---------------------- | -------------- | ----------- | -------- | -------------------------- |
+| New module             | No             | -           | Missing  | ⛔ BLOCK                   |
+| New module             | No             | -           | Exists   | ✅ PASS                    |
+| Existing, passing      | Yes            | ≥95% target | -        | ✅ SKIP gate               |
+| Existing, under target | Yes            | <95% target | Missing  | ⛔ BLOCK (needs expansion) |
+| Existing, under target | Yes            | <95% target | Exists   | ✅ PASS                    |
+| --no-research flag     | -              | -           | -        | ⚠️ WARN, proceed           |
+| Core levels            | -              | -           | -        | ✅ SKIP (not seminar)      |
 
 **Why smart enforcement:**
+
 - Don't block work on modules that already have good content
 - DO require research for new content (prevents thin writing)
 - DO require research before expansion (ensures quality additions)
@@ -273,6 +279,7 @@ fi
 ### Step 2: Resolve Module Slug
 
 > **⚠️ CRITICAL: Track files have NO numbered prefix!**
+>
 > - Core levels: `01-slug.md`, `02-slug.md` (numbered)
 > - Tracks (b2-hist, c1-bio, etc.): `slug.md` (NO number prefix)
 >
@@ -329,10 +336,10 @@ fi
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
 ```
 
-| Files | Audit | True State |
-|-------|-------|------------|
+| Files       | Audit   | True State                    |
+| ----------- | ------- | ----------------------------- |
 | FILES_EXIST | ❌ FAIL | `NEEDS_FIX` → Run /module-fix |
-| FILES_EXIST | ✅ PASS | `DEPLOYED` |
+| FILES_EXIST | ✅ PASS | `DEPLOYED`                    |
 
 ### Step 4: Determine Start Phase
 
@@ -343,9 +350,10 @@ fi
 > For incomplete content, use `--from=lesson` to regenerate.
 
 Special flow (preserves `.md`, rebuilds everything else):
+
 1. Phase 2 (Meta QA)
-2. Phase 4 (Lesson QA) - *Skips Phase 3 generation*
-3. Phase 5 (Activities Gen) - *Regenerates activities*
+2. Phase 4 (Lesson QA) - _Skips Phase 3 generation_
+3. Phase 5 (Activities Gen) - _Regenerates activities_
 4. Phase 6 (Activities QA)
 5. Phase 7 (Integrate)
 
@@ -403,6 +411,7 @@ fi
 ```
 
 **Use research notes for:**
+
 - Specific dates, names, locations (don't guess!)
 - Primary source quotes (include at least 1)
 - Decolonization talking points
@@ -412,15 +421,14 @@ fi
 **⚠️ CRITICAL FOR PHASE 5 (Activities) - ALL Tracks:**
 
 > **SCHEMA-FIRST: Read the activity schema BEFORE writing activities.**
+>
 > ```bash
 > Read: schemas/activities-{level}.schema.json
 > ```
+>
 > Note which fields each activity type supports. `additionalProperties: false` means
 > unlisted fields cause audit failure. Only `reading` type has `id` field in seminar tracks.
-> `essay-response` rubric: `criteria`/`description`/`points` (NOT `criterion`/`weight`).
-2. Execute phase
-3. If QA phase FAILS → stop and report
-4. If QA phase PASSES → continue to next phase
+> `essay-response` rubric: `criteria`/`description`/`points` (NOT `criterion`/`weight`). 2. Execute phase 3. If QA phase FAILS → stop and report 4. If QA phase PASSES → continue to next phase
 
 **Phase 7 (integrate) creates skeleton vocab automatically.**
 
@@ -431,6 +439,7 @@ fi
 **CRITICAL:** Use **batch-fix-within-module** pattern (see NON-NEGOTIABLE-RULES.md #8).
 
 > **📋 QUICK REFERENCES (read BEFORE writing):**
+>
 > - Activity schemas: `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
 > - Activity YAML reference: `docs/ACTIVITY-YAML-REFERENCE.md`
 >
@@ -438,7 +447,7 @@ fi
 
 **NEVER use iterative fix-audit cycles. Instead:**
 
-```
+````
 WHILE true:
 
   # ========================================
@@ -470,7 +479,7 @@ WHILE true:
      - curriculum/l2-uk-en/${level}/vocabulary/${slug}.yaml
 
      Read audit review:
-     - curriculum/l2-uk-en/${level}/audit/${slug}-review.md
+     - curriculum/l2-uk-en/${level}/review/${slug}-review.md
 
      Identify ALL violations across ALL components:
 
@@ -553,10 +562,11 @@ END WHILE
 ```bash
 .venv/bin/python scripts/generate_mdx.py l2-uk-en ${level} ${num}
 # Example: .venv/bin/python scripts/generate_mdx.py l2-uk-en a2 23
-```
+````
 
 This ensures the MDX is always up-to-date with the fixed content.
 Module is NOT complete until MDX is generated.
+
 ```
 
 **Why This Works:**
@@ -573,25 +583,29 @@ Module is NOT complete until MDX is generated.
 **Only reached after audit passes:**
 
 ```
+
 MODULE DEPLOYED: {level}/{slug} ✅
 
 Audit: PASS
-  - Words: {actual}/{target} ✅
-  - Activities: {count} ✅
-  - Naturalness: {score}/10 ✅
+
+- Words: {actual}/{target} ✅
+- Activities: {count} ✅
+- Naturalness: {score}/10 ✅
 
 Files generated:
-  - meta/{slug}.yaml
-  - {slug}.md
-  - activities/{slug}.yaml
-  - vocabulary/{slug}.yaml (skeleton)
-  - docusaurus/docs/{level}/{mdx_filename}
+
+- meta/{slug}.yaml
+- {slug}.md
+- activities/{slug}.yaml
+- vocabulary/{slug}.yaml (skeleton)
+- docusaurus/docs/{level}/{mdx_filename}
 
 Preview: http://localhost:3000/docs/{level}/{slug_or_module_num}
 
 Note: Vocabulary table is empty. Run /module-vocab-enrich {level}
-      after all modules are content-complete.
-```
+after all modules are content-complete.
+
+````
 
 ---
 
@@ -607,9 +621,10 @@ When input is a range (e.g., `/module b2-hist 1-5`):
 
 # Run batch audit to categorize modules
 /batch-fix {level} {range} --dry-run
-```
+````
 
 This categorizes modules into:
+
 - **PASSED**: Skip (already done)
 - **FIXABLE**: Auto-fix schema/format issues
 - **NEEDS EXPANSION**: Require individual /research + /expand (word count issues)
@@ -700,6 +715,7 @@ fi
 ```
 
 **Parallel research pattern (for blocked modules):**
+
 ```bash
 # Send batch research requests to Gemini
 for slug in needs_research; do
@@ -714,6 +730,7 @@ done
 ### Step 1: Auto-Fix Fixable Issues
 
 Use `/batch-fix` for non-content issues:
+
 ```bash
 /batch-fix {level} {range}
 ```
@@ -724,6 +741,7 @@ This fixes: YAML schema, activity types, lint issues, callouts.
 ### Step 2: Expand Under-Target Modules
 
 For each module flagged as NEEDS EXPANSION:
+
 ```bash
 /research {topic}        # Gather Ukrainian sources
 /expand {module_path}    # Expand content using research

@@ -1,100 +1,83 @@
-# Module 4: Слов'яни на українських землях: Витоки державності
+# Audit Report: M04 — sloviany-origins.md
+**Level:** B2-HIST | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 11:39:38
 
-**Template:** b2-history-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.0/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-27 09:15:42
-**Reviewer:** Claude
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Анти: Перші українці? | 3 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз антського суспільства | 1 | 1 | ✅ |
+| 3 | reading | Слов'янські боги | 3 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз язичницького світогляду | 1 | 1 | ✅ |
+| 5 | essay-response | Демократична традиція | 1 | 1 | ✅ |
+| 6 | comparative-study | Влада народу і Влада царя | 1 | 1 | ✅ |
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| Coherence | 9/10 | Excellent narrative flow from etymology through politics to society |
-| Relevance | 10/10 | Laser-focused on Slavic origins, Antes, decolonization |
-| Educational | 9/10 | Strong "aha" moments; vivid examples (toloka, mead, napivzemlianka) |
-| Language | 9/10 | Native-level Ukrainian; euphony respected; no Russianisms detected |
-| Pedagogy | 9/10 | CBI model executed well; primary sources properly analyzed |
-| Immersion | 10/10 | 98.7% Ukrainian (target 90-100% for history) |
-| Activities | 9/10 | 6 activities; reading + essay + critical-analysis present |
-| Richness | 10/10 | 97% richness score; 10 primary sources; 16 timeline markers |
-| Humanity | 9/10 | Strong direct address; teacher voice present throughout |
-| LLM Fingerprint | 9/10 | Minimal AI patterns; authentic historical narrative voice |
-| Linguistic Accuracy | 9/10 | Historical claims verified; proper terminology |
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 4 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Check
+## Gates
+- **Words:** ✅ 5563/4000 (raw: 5684)
+- **Activities:** ✅ 6/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 4/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 17/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 35/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-### Historical Claims Verified
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
 
-1. **Zarubynets culture (II BC - II AD)** → ✅ Correct periodization
-2. **Kyiv culture (II-IV AD)** → ✅ Correct
-3. **Antes union (IV-VII AD)** → ✅ Correct
-4. **Prince Bozh and 70 elders killed by Vinitharius** → ✅ Attested in Jordanes
-5. **Ambassador Mezamir killed by Avars** → ✅ Attested in Menander Protector
-6. **602 AD last mention of Antes** → ✅ Correct (Theophylact Simocatta)
-7. **Procopius on Slavic democracy** → ✅ Authentic quote from "Wars"
-8. **Mauricius Strategikon on Slavs** → ✅ Authentic quote
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 17 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 12 | 4 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 13 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
-### Minor Issue
-
-- Line 68: **"віча"** has gender marked as "f" in vocabulary, but **віче** is neuter (n). This is a vocabulary YAML error, not a content error.
-
-## Strengths
-
-1. **Decolonization narrative is exemplary** — The section on "норманізм" demolition is pedagogically powerful and well-sourced
-2. **Primary sources integrated beautifully** — Procopius, Mauricius, Jordanes, Theophylact all used with proper citations
-3. **Cultural depth exceptional** — From toloka to bortnyctvo to trizna, genuine Ukrainian cultural continuity demonstrated
-4. **Emotional engagement high** — References to modern volunteers, Maidan, current war create powerful connections
-5. **Narrative arc compelling** — Moves from etymology through politics to spirituality to daily life seamlessly
-
-## Issues
-
-### Minor Issues (Non-blocking)
-
-1. **Duplicate paragraph start (line 42-44):** "Географічний ландшафт відіграв вирішальну роль..." appears twice in succession. This is a copy-paste artifact.
-
-2. **Колокації sections (lines 36-41, 64-69):** These inline collocation lists are an outdated format not used in current B2-HIST modules. They break narrative flow.
-
-3. **Vocabulary YAML error:** `віча` marked as feminine (f) should be `віче` neuter (n).
-
-### Suggestions (Non-blocking)
-
-1. The module is 5598 words (target 4000) — substantially over. This is acceptable for foundational module but worth noting.
-
-2. Some engagement boxes could be more concise — the eco-architecture comparison (line 46-48) feels slightly forced.
-
-## Examples
-
-> **Strong:** "Слов'яни називали сусідів «німцями» — від слова «німий». Німцем для давнього анта чи склавина був кожний чужинець, чия мова була незрозумілим лопотінням..."
-> — *Excellent etymological insight that engages learner curiosity*
-
-> **Strong:** "Авари вбили Мезамира саме за його «зарозумілі слова», тобто за відмову визнати їхню зверхність."
-> — *Powerful narrative moment connecting ancient dignity to modern resistance*
-
-> **Weak:** "Давня слов'янська напівземлянка сьогодні надихає еко-архітекторів на створення енергоефективних «пасивних будинків»."
-> — *Slightly forced modern parallel; the 7th-grade textbook content about the actual napivzemlianka is more valuable*
-
-## Recommendation
-
-✅ **PASS** — This is an exemplary B2-HIST module with strong narrative, authentic sources, and effective decolonization framing. Minor formatting artifacts from previous edits don't affect learning quality.
-
-## Action Items
-
-1. ✅ **APPLIED:** Remove duplicate paragraph (line 42/44) — Kept one instance
-2. ✅ **APPLIED:** Remove Колокації sections (lines 36-41, 64-69) — Outdated format removed
-3. ✅ **APPLIED:** Fix vocabulary YAML: `віча` → `віче` with gender `n`
-4. ✅ **APPLIED:** napivzemlianka content merged (from earlier session)
-
-**All fixes applied. Audit passed: 5563/4000 words, 99.7% immersion, 10/10 naturalness.**
-
----
-
-## Audit Gate Summary
-
-| Gate | Status | Value |
-|------|--------|-------|
-| Words | ✅ | 5598/4000 |
-| Activities | ✅ | 6/3 |
-| Vocabulary | ✅ | 35/20 |
-| Naturalness | ✅ | 10/10 |
-| Structure | ✅ | Valid |
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Слов'яни на українських землях: Витоки державності** | ⚪️ | 99 | Skipped |
+| **Вступ** | ✅ | 593 | Included in Core |
+| **Читання** | ✅ | 3143 | Included in Core |
+| **Первинні джерела** | ✅ | 666 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 533 | Included in Core |
+| **Підсумок** | ✅ | 307 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 222 | Skipped |

@@ -2,13 +2,13 @@
   "module": "serhii-plokhy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:44.683716Z",
+  "last_audit": "2026-02-07T16:38:40.406757Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.342399Z",
-    "meta": "2026-02-06T22:56:22.301847Z",
-    "activities": "2026-02-02T11:02:04.223829Z",
-    "vocabulary": "2026-02-02T11:02:04.223679Z",
+    "meta": "2026-02-07T15:13:22.028143Z",
+    "activities": "2026-02-07T10:03:51.562800Z",
+    "vocabulary": "2026-02-07T10:03:51.615651Z",
     "plan": null
   },
   "gates": {

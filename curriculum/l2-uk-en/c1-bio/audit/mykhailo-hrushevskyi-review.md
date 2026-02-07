@@ -1,12 +1,12 @@
-# Audit Report: M66 — mykhailo-hrushevskyi.md
-**Level:** C1-BIO | **Module:** M66 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M63 — mykhailo-hrushevskyi.md
+**Level:** C1-BIO | **Module:** M63 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4450
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 17:24:13
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4450 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -33,65 +33,56 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in mykhailo-hrushevskyi.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 3468/4000 (raw: 3919)
+- **Words:** ✅ 4546/4450 (raw: 4997)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 28/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
+- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
+- **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 14 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
+| engagement | 4 | 6 | 67% | 14% | 9.6% |
 | quotes | 15 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 105 | Included in Core |
-| **Вступ: Людина, що написала Україну** | ✅ | 367 | Included in Core |
-| **Становлення: Спадкоємець Антоновича (1866-1894)** | ⚪️ | 460 | Skipped |
-| **Львівська лабораторія: «Історія України-Руси» (1894-1914)** | ⚪️ | 611 | Skipped |
-| **Президентство та революція (1917-1918)** | ⚪️ | 613 | Skipped |
-| **Трагедія повернення та радянський зашморг (1919-1934)** | ⚪️ | 591 | Skipped |
-| **Порівняльний аналіз: Грушевський та Петлюра** | ✅ | 92 | Included in Core |
+| **Вступ: Людина, що написала Україну** | ✅ | 424 | Included in Core |
+| **Становлення: Спадкоємець Антоновича (1866-1894)** | ⚪️ | 613 | Skipped |
+| **Львівська лабораторія: «Історія України-Руси» (1894-1914)** | ⚪️ | 745 | Skipped |
+| **Президентство та революція (1917-1918)** | ⚪️ | 856 | Skipped |
+| **Трагедія повернення та радянський зашморг (1919-1934)** | ⚪️ | 783 | Skipped |
+| **Порівняльний аналіз: Грушевський та Петлюра** | ✅ | 79 | Included in Core |
 | **Критичне мислення** | ⚪️ | 124 | Skipped |
 | **Есе** | ⚪️ | 69 | Skipped |
 | **Зразок відповіді** | ⚪️ | 328 | Skipped |
-| **Підсумок: Символ соборної інтелектуальної волі** | ✅ | 108 | Included in Core |
+| **Підсумок: Символ соборної інтелектуальної волі** | ✅ | 420 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

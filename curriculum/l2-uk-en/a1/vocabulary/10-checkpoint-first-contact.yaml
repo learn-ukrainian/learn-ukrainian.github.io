@@ -19,8 +19,7 @@ items:
 - lemma: зелений
   ipa: /zɛlˈɛnɪj/
   translation: green
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: латте
   ipa: /lattɛ/
   translation: latte
@@ -29,10 +28,8 @@ items:
 - lemma: смачне
   ipa: /smat͡ʃnˈɛ/
   translation: tasty (neuter)
-  pos: noun
-  gender: n
+  pos: adj
 - lemma: чорний
   ipa: /t͡ʃˈɔrnɪj/
   translation: black
-  pos: noun
-  gender: m
+  pos: adj

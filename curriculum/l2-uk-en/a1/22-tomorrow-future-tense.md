@@ -71,7 +71,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Presentatіon: Plans and Intentions
+## Presentation: Plans and Intentions
 
 > [!tip] Levels of Certainty
 >
@@ -109,7 +109,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Presentatіon: Time Expressions
+## Presentation: Time Expressions
 
 > [!observe] Pattern Discovery
 >
@@ -137,7 +137,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Presentatіon: Useful Adverbs
+## Presentation: Useful Adverbs
 
 **вже** (already) — something happened or will happen sooner than expected:
 
@@ -156,7 +156,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Presentatіon: Examples in Context
+## Presentation: Examples in Context
 
 > [!example] Making Plans
 >
@@ -186,7 +186,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-## Presentatіon: Dialogues
+## Presentation: Dialogues
 
 > [!conversation] Planning the Weekend
 >

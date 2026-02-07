@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M34 | **Phase:** A1.3 | **Pedagogy:** TTT | **Target:** 962
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 21:13:09
+**Generated:** 2026-02-07 21:39:33
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -48,7 +48,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 131/1
+- **Vocab:** ✅ 125/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -56,6 +56,9 @@
 - **Immersion:** 🇺🇦 41.5% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

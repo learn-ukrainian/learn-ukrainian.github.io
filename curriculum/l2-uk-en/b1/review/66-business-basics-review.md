@@ -1,46 +1,89 @@
-# Module 66: Основи бізнесу
+# Audit Report: M66 — 66-business-basics.md
+**Level:** B1 | **Module:** M66 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 1600
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:44
 
-**Template:** b1-vocab-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:46:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-vocab
+**Word Target:** 1600 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** mark-the-words, match-up, quiz, translate
+**Required Types:** cloze, fill-in, match-up
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥35 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння бізнес-термінів | 8 | 8 | ✅ |
+| 2 | match-up | Колокації — іменник + дієслово | 12 | 8 | ✅ |
+| 3 | match-up | Бізнес-терміни та переклад | 12 | 8 | ✅ |
+| 4 | group-sort | Групування за категорією | 15 | 12 | ✅ |
+| 5 | cloze | Вибір слова з контексту | 12 | 12 | ✅ |
+| 6 | select | Правильні колокації | 8 | 6 | ✅ |
+| 7 | true-false | Правила використання бізнес-термінів | 12 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки в колокаціях | 8 | 6 | ✅ |
+| 11 | translate | Переклад ділових фраз | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть бізнес-терміни | 11 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення бізнес-лексикою | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                               |
-| ------------------- | ----- | --------------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical structure (Freelance -> Startup -> Corporation).                                            |
-| Relevance           | 10/10 | Essential for B1 Business track.                                                                    |
-| Educational         | 10/10 | Excellent nuance: *зарплата* (salary) vs *дохід* (income).                                          |
-| Language            | 10/10 | Standard business terminology.                                                                      |
-| Pedagogy            | 10/10 | The Tereshchenko Family narrative is perfect for contrasting "Oligarchs" vs "Patrons" (*меценати*). |
-| Immersion           | 10/10 | Authentic history of Ukrainian entrepreneurship.                                                    |
-| Activities          | 10/10 | Good variety.                                                                                       |
-| Richness            | 9/10  | Good depth.                                                                                         |
-| Humanity            | 9/10  | Engaging.                                                                                           |
-| LLM Fingerprint     | 9/10  | Natural.                                                                                            |
-| Linguistic Accuracy | 9/10  | Check `іт-` in vocab.                                                                               |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 3/3 (cloze, fill-in, match-up) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1755/1600 (raw: 2382)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 12/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 74/35
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.1% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (vocabulary)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `іт-` (in list). Seems truncated or phoneticized. Should be `ІТ` (all caps, Ukrainian I).
-- **Vocabulary:** `ФОП` is lowercased `фоп`. Should be capitalized.
-- **Vocabulary:** `плат` (in list). Probably `заробітна плата` or `плата`. `Плат` is archaic/dialect (cloth).
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** vocabulary
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 19 | 15 | 100% | 20% | 20.0% |
+| engagement | 12 | 4 | 100% | 15% | 15.0% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.97 | - | 97% | 5% | 4.9% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.8%** |
 
-- **Entity Forms:** Explains `ФОП` (FOP) which is crucial for anyone doing business in Ukraine.
-- **Philanthropy:** Highlighting the Tereshchenkos as the "good billionaires" of the 19th century creates a positive role model for wealth, countering the modern negative "oligarch" stereotype.
-
-## Issues
-
-- **Vocabulary YAML:** `іт-` -> `ІТ`, `фоп` -> `ФОП`, `плат` -> Check context.
-
-## Recommendation
-
-✅ PASS — Strong business module.
-
-## Action Items
-
-1. **Fix Vocab:** Capitalize acronyms. Fix `плат`.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 51 | Included in Core |
+| **Вступ** | ✅ | 83 | Included in Core |
+| **Вживання** | ⚪️ | 213 | Skipped |
+| **Читання** | ✅ | 261 | Included in Core |
+| **Діалоги** | ✅ | 298 | Included in Core |
+| **Підсумок** | ✅ | 174 | Included in Core |
+| **Лексика** | ⚪️ | 565 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

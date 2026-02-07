@@ -1,48 +1,90 @@
-# Module 75: Регіони: Центр
+# Audit Report: M75 — 75-regions-center.md
+**Level:** B1 | **Module:** M75 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1494
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:49
 
-**Template:** b1-cultural-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:06:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-culture
+**Word Target:** 1494 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння Центральної України | 10 | 8 | ✅ |
+| 2 | match-up | Регіони та їхні характеристики | 12 | 8 | ✅ |
+| 3 | match-up | Українська лексика — переклад | 12 | 8 | ✅ |
+| 4 | cloze | Заповніть пропуски | 12 | 12 | ✅ |
+| 5 | true-false | Факти про Центральну Україну | 12 | 8 | ✅ |
+| 6 | group-sort | Категоризація понять | 18 | 12 | ✅ |
+| 7 | cloze | Заповніть текст про Центральну Україну | 17 | 12 | ✅ |
+| 8 | unjumble | Складіть речення про Центральну Україну | 8 | 6 | ✅ |
+| 9 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 10 | select | Виберіть усі правильні відповіді | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть географічні та культурні терміни | 16 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення про Центральну Україну | 8 | 8 | ✅ |
+| 14 | reading | Київ та козацька спадщина | 3 | 3 | ✅ |
 
-| Dimension           | Score | Notes                                                                       |
-| ------------------- | ----- | --------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical structure: Kyiv -> Cossack Lands -> Literature.                     |
-| Relevance           | 10/10 | Core identity. This is the "Heartland".                                     |
-| Educational         | 10/10 | Explains why "literary Ukrainian" is based on the Poltava dialect.          |
-| Language            | 10/10 | Standard Ukrainian.                                                         |
-| Pedagogy            | 10/10 | The Shevchenko & Gogol narrative effectively covers the "Heart of Ukraine". |
-| Immersion           | 10/10 | Atmospheric.                                                                |
-| Activities          | 10/10 | Good variety.                                                               |
-| Richness            | 9/10  | Good depth.                                                                 |
-| Humanity            | 9/10  | Engaging.                                                                   |
-| LLM Fingerprint     | 9/10  | Natural.                                                                    |
-| Linguistic Accuracy | 9/10  | Check `волити` in vocab.                                                    |
+**Summary:**
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1793/1494 (raw: 1888)
+- **Activities:** ✅ 14/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 10/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 30/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 97% (cultural)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `волити` (to wish/prefer). Archaic/poetic. Standard is `хотіти`, `бажати`. Is this intended for the literary context (Shevchenko)?
-  - *Investigation:* Acceptable in context of 19th-century literature.
-- **Vocabulary:** Capitalization issues (`канів`, `черкас`, `гоголь`, `диканька`).
-- **Vocabulary:** `Черкас` is listed as singular. Usually referred to as *Черкаси* (plural name). `Черкас` would be the genitive plural or a singular archaic demonym (a Circassian).
-  - *Action:* Change to `Черкаси`.
+## Richness Details
+**Score:** 97% (minimum: 95%)
+**Module Type:** cultural
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| cultural | 17 | 5 | 100% | 33% | 33.3% |
+| engagement | 12 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.68 | - | 68% | 7% | 4.5% |
+| examples | 23 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 35 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **97.7%** |
 
-- **Language History:** Explains that modern standard Ukrainian is based on the dialects of Poltava/Cherkasy (`Котляревський`), which gives students confidence that they are learning the "central" standard.
-- **Cossack Roots:** Connecting "democracy" to the "Sich" reinforces the political vocabulary from M60.
-
-## Issues
-
-- **Vocabulary YAML:** Capitalize proper nouns. `Черкас` -> `Черкаси`.
-
-## Recommendation
-
-✅ PASS — Excellent geography/history module.
-
-## Action Items
-
-1. **Fix Vocab:** Capitalize proper nouns. Fix `Черкаси`.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 40 | Included in Core |
+| **Вступ — Центр: Серце України** | ✅ | 138 | Included in Core |
+| **Сучасність** | ⚪️ | 208 | Skipped |
+| **Історія та культура** | ✅ | 674 | Included in Core |
+| **Практика** | ⚪️ | 151 | Skipped |
+| **Продукція** | ⚪️ | 310 | Skipped |
+| **Підсумок — Звідси все починалось** | ✅ | 162 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

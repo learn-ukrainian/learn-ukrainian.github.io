@@ -1,44 +1,88 @@
-# Module 38: Інтеграція складних речень
+# Audit Report: M38 — 38-complex-sentence-integration.md
+**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1576
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:28
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 01:50:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1576 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Типи речень | 14 | 8 | ✅ |
+| 2 | match-up | Типи підрядних речень та їхні функції | 12 | 8 | ✅ |
+| 3 | fill-in | Сполучники в складних реченнях | 14 | 8 | ✅ |
+| 4 | true-false | Структура складних речень | 14 | 8 | ✅ |
+| 5 | group-sort | Класифікація сполучників | 18 | 12 | ✅ |
+| 6 | unjumble | Складання складних речень | 6 | 6 | ✅ |
+| 7 | error-correction | Виправлення помилок у складних реченнях | 6 | 6 | ✅ |
+| 8 | cloze | Візит до друга | 15 | 12 | ✅ |
+| 9 | mark-the-words | Позначте підрядні сполучники | 9 | 6 | ✅ |
+| 10 | select | Граматично правильні складні речення | 6 | 6 | ✅ |
+| 11 | translate | Переклад складних речень | 6 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                                     |
-| ------------------- | ----- | ----------------------------------------------------------------------------------------- |
-| Clarity             | 10/10 | Deconstructs complex syntax into manageable "levels" (2-level, 3-level).                  |
-| Structure           | 10/10 | Logical progression: Coordination -> Subordination -> Combination.                        |
-| Relevance           | 10/10 | "Grammar Integration" is the capstone skill for B1 fluency.                               |
-| Language            | 10/10 | References to Lina Kostenko and Ivan Franko justify learning complex syntax.              |
-| Pedagogy            | 10/10 | Step-by-step "algorithm" for building complex sentences is brilliant.                     |
-| Immersion           | 10/10 | Example of official/bureaucratic language vs spoken style is very practical.              |
-| Activities          | 10/10 | Unjumble and Error Correction exercises are challenging but fair.                         |
-| Richness            | 10/10 | Connects syntax complexity to "Ukrainian Identity" (architectural structures of thought). |
-| Humanity            | 10/10 | Dialogues about "visiting friends" and "summer plans" feel natural.                       |
-| LLM Fingerprint     | 10/10 | No issues.                                                                                |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                     |
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1581/1576 (raw: 1872)
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 8/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 45/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 96% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`вересна` -> `вересень`, proper nouns capitalization).
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 40 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 13 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.3%** |
 
-- **Architecture of Thought:** The module beautifully frames complex syntax not as "hard grammar" but as a tool for building "architectural structures of ideas", comparing Ukrainian richness to English simplicity.
-- **Levels of Dependency:** The parsing of 2-level and 3-level dependency chains is logically satisfying.
-
-## Issues
-
-- *Fixed:* Vocab errors.
-
-## Recommendation
-
-✅ PASS — Outstanding synthesis module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 58 | Included in Core |
+| **Тест** | ⚪️ | 189 | Skipped |
+| **Пояснення** | ⚪️ | 643 | Skipped |
+| **Практика** | ⚪️ | 183 | Skipped |
+| **Діалоги** | ✅ | 240 | Included in Core |
+| **Підсумок** | ✅ | 158 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

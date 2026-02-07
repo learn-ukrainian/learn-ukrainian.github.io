@@ -3,11 +3,10 @@ module: 20-checkpoint-navigation
 level: A1
 version: '2.0'
 items:
-- lemma: красиве
-  ipa: /krasˈɪʋɛ/
-  translation: beautiful (neuter)
-  pos: noun
-  gender: n
+- lemma: красивий
+  ipa: /krasˈɪʋɪj/
+  translation: beautiful
+  pos: adj
 - lemma: праворуч
   ipa: /praʋˈɔrut͡ʃ/
   translation: on the right, to the right

@@ -1,44 +1,89 @@
-# Module 24: Дієслова руху: живі маршрути та навігація
+# Audit Report: M24 — 24-motion-practice-integration.md
+**Level:** B1 | **Module:** M24 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 2433
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:20
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:55:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 2433 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Деталі навігації | 8 | 8 | ✅ |
+| 2 | match-up | Префікс та Прийменник | 12 | 8 | ✅ |
+| 3 | true-false | Культурні нюанси та логіка | 12 | 8 | ✅ |
+| 4 | fill-in | Життя в русі | 12 | 8 | ✅ |
+| 5 | unjumble | Складіть маршрут | 6 | 6 | ✅ |
+| 6 | group-sort | Вставте прийменник | 23 | 12 | ✅ |
+| 7 | cloze | Лист із відпустки | 17 | 12 | ✅ |
+| 8 | error-correction | Типові помилки | 6 | 6 | ✅ |
+| 9 | mark-the-words | Ідіоми в тексті | 7 | 6 | ✅ |
+| 10 | select | Синоніми руху | 6 | 6 | ✅ |
+| 11 | translate | Навігація в місті | 6 | 6 | ✅ |
+| 12 | quiz | Транспорт і Культура | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                  |
-| ------------------- | ----- | ------------------------------------------------------ |
-| Clarity             | 10/10 | The Prefix-Preposition matrix is excellent.            |
-| Structure           | 10/10 | Moves from grammar to practical navigation well.       |
-| Relevance           | 10/10 | Navigation skills are crucial.                         |
-| Language            | 10/10 | Authentic phrases ("об'їхати затори", "глухий кут").   |
-| Pedagogy            | 10/10 | "Triad for the capital" (в/в/з) is a great mnemonic.   |
-| Immersion           | 10/10 | Cultural notes on driving etiquette and "marshrutkas". |
-| Activities          | 10/10 | "Kyiv Odyssey" text is engaging.                       |
-| Richness            | 10/10 | "Chumatskyi Shliakh" history bite is beautiful.        |
-| Humanity            | 10/10 | Focus on politeness levels in street communication.    |
-| LLM Fingerprint     | 10/10 | No issues.                                             |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                  |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (cloze, fill-in, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 2346/2433 (raw: 2598) (87 short)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 8/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 45/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`лізима` -> `лізти`, `заходжий` removed, `Одіссея` capitalized).
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 48 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 9 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.4%** |
 
-- **Practicality:** The detailed breakdown of how to ask for directions with levels of politeness is exactly what a learner needs in Ukraine.
-- **Cultural nuance:** Explaining `траса` vs `автострада` vs `бруківка` shows deep understanding of Ukrainian reality.
-
-## Issues
-
-- *Fixed:* Minor vocabulary artifacts.
-
-## Recommendation
-
-✅ PASS — Essential practical module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 70 | Included in Core |
+| **Тест** | ⚪️ | 127 | Skipped |
+| **Пояснення** | ⚪️ | 1352 | Skipped |
+| **Практика** | ⚪️ | 92 | Skipped |
+| **Діалоги** | ✅ | 168 | Included in Core |
+| **Підсумок** | ✅ | 73 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 464 | Skipped |

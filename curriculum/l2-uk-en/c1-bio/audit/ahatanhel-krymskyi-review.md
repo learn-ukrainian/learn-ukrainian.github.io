@@ -1,8 +1,8 @@
-# Audit Report: M71 — ahatanhel-krymskyi.md
-**Level:** C1-BIO | **Module:** M71 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M69 — ahatanhel-krymskyi.md
+**Level:** C1-BIO | **Module:** M69 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 1/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:08
+**Generated:** 2026-02-07 16:38:03
 
 ## Configuration
 **Type:** C1-biography

@@ -1,17 +1,64 @@
-## Module 27: Colors & Clothing - FINAL REPORT
+# Audit Report: M27 — 27-colors-and-clothing.md
+**Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 21:03:00
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1-vocab
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Колір і одяг | 10 | 8 | ✅ |
+| 2 | group-sort | Clothing by Gender | 12 | 12 | ✅ |
+| 3 | fill-in | Узгодження кольорів (Color Agreement) | 12 | 8 | ✅ |
+| 4 | fill-in | Опис одягу (Describing Outfits) | 12 | 8 | ✅ |
+| 5 | quiz | Що це? (What Is It?) | 12 | 8 | ✅ |
+| 6 | quiz | Який колір? (What Color?) | 12 | 8 | ✅ |
+| 7 | unjumble | Опис одягу | 12 | 6 | ✅ |
+| 8 | true-false | Color Rules | 12 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Added IPA to color and pluralia tantum tables, and removed Latin transliteration hints.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched `Color Agreement`, `Describing Outfits`, `What Is It?`, `What Color?`, and `Build Descriptive Sentences` to meet 12-item/pair density rules (respecting match-up limits).
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 1158/750 (raw: 1301)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 4/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 28/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 50.2% (target 35-55% (M27))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/27-colors-and-clothing.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 170 | Included in Core |
+| **Presentation** | ✅ | 425 | Included in Core |
+| **Practice** | ⚪️ | 509 | Skipped |
+| **Підсумок** | ✅ | 38 | Included in Core |
+| **Need More Practice?** | ⚪️ | 16 | Skipped |

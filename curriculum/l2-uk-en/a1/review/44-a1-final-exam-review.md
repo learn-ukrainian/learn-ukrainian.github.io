@@ -1,12 +1,65 @@
-## Module 44: A1 Final Exam - FINAL REPORT
+# Audit Report: M44 — 44-a1-final-exam.md
+**Level:** A1 | **Module:** M44 | **Phase:** A1.4 | **Pedagogy:** TTT | **Target:** 750
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 21:18:46
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 (was 5) | Relevance 5/5 (was 5) | Educational 5/5 (was 5) | Language 5/5 (was 4) | Pedagogy 5/5 (was 5) | Immersion 5/5 (was 5) | Activities 5/5 (was 5) | Richness N/A | Humanity 5/5 (was 5) | LLM Fingerprint 5/5 (was 5) | **Overall 5/5** ⬆️ from 4/5
+## Configuration
+**Type:** A1
+**Word Target:** 750 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, quiz
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Grammar Challenge | 12 | 8 | ✅ |
+| 2 | match-up | Vocabulary Master | 10 | 8 | ✅ |
+| 3 | fill-in | Dialogue Completion | 12 | 8 | ✅ |
+| 4 | true-false | Cultural Knowledge | 12 | 8 | ✅ |
+| 5 | unjumble | Sentence Structure | 12 | 6 | ✅ |
+| 6 | group-sort | Gender Sort | 18 | 12 | ✅ |
+| 7 | quiz | Reading Comprehension | 8 | 8 | ✅ |
+| 8 | quiz | Situational Reaction | 8 | 8 | ✅ |
 
-**Fixes Applied:**
-- ✅ **Category 1 (Structure):** Removed legacy practice sections. Added template-compliant headers.
-- ✅ **Category 2 (Language):** Added IPA for exam-related vocabulary and practical skills. Replaced ASCII double quotes with Ukrainian angular quotes «...» in YAML and Markdown. Fixed YAML parsing errors.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, quiz) ✅
+- Low density activities: 0
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/44-a1-final-exam.md`)
+## Gates
+- **Words:** ✅ 1075/750 (raw: 1137)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 4/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 6/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 42.3% (target 35-55% (M44))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 176 | Included in Core |
+| **Presentation** | ✅ | 312 | Included in Core |
+| **Comprehensive Test** | ⚪️ | 158 | Skipped |
+| **Practice** | ⚪️ | 249 | Skipped |
+| **Summary** | ✅ | 155 | Included in Core |
+| **Need More Practice?** | ⚪️ | 25 | Skipped |

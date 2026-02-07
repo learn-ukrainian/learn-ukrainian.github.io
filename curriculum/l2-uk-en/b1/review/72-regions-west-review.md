@@ -1,47 +1,90 @@
-# Module 72: Регіони: Захід
+# Audit Report: M72 — 72-regions-west.md
+**Level:** B1 | **Module:** M72 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1530
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:48
 
-**Template:** b1-cultural-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:00:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-culture
+**Word Target:** 1530 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння Західної України | 10 | 8 | ✅ |
+| 2 | match-up | Регіони та їхні характеристики | 12 | 8 | ✅ |
+| 3 | match-up | Українська лексика — переклад | 12 | 8 | ✅ |
+| 4 | cloze | Заповніть пропуски | 12 | 12 | ✅ |
+| 5 | true-false | Факти про Західну Україну | 12 | 8 | ✅ |
+| 6 | group-sort | Категоризація понять | 17 | 12 | ✅ |
+| 7 | cloze | Заповніть текст про Західну Україну | 14 | 12 | ✅ |
+| 8 | unjumble | Складіть речення про Західну Україну | 8 | 6 | ✅ |
+| 9 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 10 | select | Виберіть усі правильні відповіді | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | mark-the-words | Знайдіть географічні та культурні терміни | 12 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення про Західну Україну | 8 | 8 | ✅ |
+| 14 | reading | Львів: культурна столиця | 3 | 3 | ✅ |
 
-| Dimension           | Score | Notes                                                                 |
-| ------------------- | ----- | --------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical tour: Lviv -> Carpathians -> Castles.                         |
-| Relevance           | 10/10 | High. Lviv is the #1 tourist destination in Ukraine.                  |
-| Educational         | 10/10 | Explains *Galychna* vs *Volyn* vs *Transcarpathia* distinctions well. |
-| Language            | 10/10 | Rich cultural vocabulary (`бануш`, `трембіта`).                       |
-| Pedagogy            | 10/10 | Narrative Arc (Hutsul traditions) is magical.                         |
-| Immersion           | 10/10 | Lviv Coffee mining legend + Carpathian molfars = Peak atmosphere.     |
-| Activities          | 10/10 | Good variety.                                                         |
-| Richness            | 9/10  | Good depth.                                                           |
-| Humanity            | 9/10  | Engaging.                                                             |
-| LLM Fingerprint     | 9/10  | Natural.                                                              |
-| Linguistic Accuracy | 9/10  | Check `п'єрникнути` in vocab.                                         |
+**Summary:**
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1795/1530 (raw: 1897)
+- **Activities:** ✅ 14/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 10/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 28/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 97% (cultural)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `п'єрникнути`. This looks like a hallucination or a very obscure dialect word. `Пряник` is gingerbread. `П'єр` is a name. `Никнути` is to fade.
-  - *Investigation:* Maybe meant *переникнути* (permeate)? Or related to *piernik* (Polish for gingerbread)?
-  - *Action:* Remove.
+## Richness Details
+**Score:** 97% (minimum: 95%)
+**Module Type:** cultural
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| cultural | 12 | 5 | 100% | 33% | 33.3% |
+| engagement | 12 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 0.69 | - | 69% | 7% | 4.6% |
+| examples | 22 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 37 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **97.8%** |
 
-- **Dialect Awareness:** Acknowledges the "Polish/Austrian influence" on Western Ukrainian vocabulary (`філіжанка`, `коліжанка`, `пляцок`) without confusing the learner - frames it as "local flavor".
-- **Castles:** Highlights the "Golden Horseshoe" (`Золота підкова`), a key cultural route.
-
-## Issues
-
-- **Vocabulary YAML:** `п'єрникнути` -> remove.
-- **Vocabulary:** `Луцьк`, `Івано-Франківщина` - capitalization check (seems lowercase in list).
-
-## Recommendation
-
-✅ PASS — Atmospheric travel module.
-
-## Action Items
-
-1. **Fix Vocab:** Remove `п'єрникнути`. Capitalize proper nouns.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 40 | Included in Core |
+| **Вступ — Захід як вікно в Європу** | ✅ | 115 | Included in Core |
+| **Сучасність** | ⚪️ | 211 | Skipped |
+| **Історія та культура** | ✅ | 684 | Included in Core |
+| **Практика** | ⚪️ | 139 | Skipped |
+| **Продукція та бренди Заходу** | ⚪️ | 340 | Skipped |
+| **Підсумок — Захід у серці України** | ✅ | 156 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

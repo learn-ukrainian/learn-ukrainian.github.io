@@ -1,46 +1,90 @@
-# Module 73: Регіони: Схід
+# Audit Report: M73 — 73-regions-east.md
+**Level:** B1 | **Module:** M73 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1552
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:48
 
-**Template:** b1-cultural-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:02:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-culture
+**Word Target:** 1552 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння Східної України | 10 | 8 | ✅ |
+| 2 | match-up | Регіони та їхні характеристики | 12 | 8 | ✅ |
+| 3 | match-up | Українська лексика — переклад | 12 | 8 | ✅ |
+| 4 | cloze | Заповніть пропуски | 12 | 12 | ✅ |
+| 5 | true-false | Правда чи хибність | 12 | 8 | ✅ |
+| 6 | group-sort | Категоризація понять Сходу | 16 | 12 | ✅ |
+| 7 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 8 | cloze | Історія Східної України | 14 | 12 | ✅ |
+| 9 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 10 | mark-the-words | Знайдіть слова, пов'язані з промисловістю | 8 | 6 | ✅ |
+| 11 | select | Оберіть усі правильні відповіді | 8 | 6 | ✅ |
+| 12 | translate | Перекладіть | 8 | 6 | ✅ |
+| 13 | fill-in | Доповніть речення про Східну Україну | 8 | 8 | ✅ |
+| 14 | reading | Харків: академічна столиця | 3 | 3 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                                        |
-| ------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical flow: Kharkiv (Science) -> Donbas (Industry) -> Identity.                                                            |
-| Relevance           | 10/10 | Essential for understanding the war and Ukrainian identity.                                                                  |
-| Educational         | 10/10 | Tackles the "Surzhyk" reality head-on.                                                                                       |
-| Language            | 10/10 | Authentic industrial vocabulary (`шахта`, `металургія`).                                                                     |
-| Pedagogy            | 10/10 | Highlighting Kharkiv as a *university/science* city (Karazin, Landau) counters the "pro-Russian/industrial only" stereotype. |
-| Immersion           | 10/10 | Mentions *Serhiy Zhadan* (writer from Luhansk/Kharkiv) implicitly through the "Ukrainian Voice of the East" theme.           |
-| Activities          | 10/10 | Good variety.                                                                                                                |
-| Richness            | 9/10  | Good depth.                                                                                                                  |
-| Humanity            | 9/10  | Engaging.                                                                                                                    |
-| LLM Fingerprint     | 9/10  | Natural.                                                                                                                     |
-| Linguistic Accuracy | 9/10  | Check `Квітка-Основ'яненко` casing.                                                                                          |
+**Summary:**
+- Total activities: 14 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1891/1552 (raw: 1985)
+- **Activities:** ✅ 14/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 12/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 38/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 98% (cultural)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- **Vocabulary:** `Квітка-Основ'яненко` is lowercased `квітка-основ'яненко`.
-- **Vocabulary:** `Ландау` (Lev Landau) is lowercased `ландау`.
-- **Vocabulary:** `фк` (Football Club) is lowercased. Should be `ФК`.
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| cultural | 8 | 5 | 100% | 33% | 33.3% |
+| engagement | 14 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.78 | - | 78% | 7% | 5.2% |
+| examples | 22 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 37 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.3%** |
 
-- **Identity Nuance:** The module handles the sensitive topic of Eastern Ukrainian identity perfectly, emphasizing that "Russian-speaking" does not mean "pro-Russian", and highlighting the strong Ukrainian cultural roots (Kvitka-Osnovianenko) in Kharkiv.
-- **Industry:** Effectively teaches the industrial vocabulary (`вугілля`, `сталь`) which is crucial for reading economic news about the region.
-
-## Issues
-
-- **Vocabulary YAML:** Capitalize proper nouns (`Ландау`, `Квітка`, `ФК`, `Маріуполь`, `Луганськ`).
-
-## Recommendation
-
-✅ PASS — Important geopolitical/cultural module.
-
-## Action Items
-
-1. **Fix Vocab:** Capitalize proper nouns.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 67 | Included in Core |
+| **Вступ — Схід: Промислове серце** | ✅ | 127 | Included in Core |
+| **Сучасність** | ⚪️ | 172 | Skipped |
+| **Історія та культура** | ✅ | 687 | Included in Core |
+| **Практика** | ⚪️ | 190 | Skipped |
+| **Продукція** | ⚪️ | 362 | Skipped |
+| **Підсумок — Схід це Україна** | ✅ | 176 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -2,14 +2,14 @@
   "module": "37-at-the-market",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:04:01.343044Z",
+  "last_audit": "2026-02-07T21:46:05.501977Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-16T00:59:46.536260Z",
-    "meta": "2026-01-26T21:56:47.979789Z",
-    "activities": "2026-01-16T00:59:38.115117Z",
-    "vocabulary": "2026-01-25T01:42:20.857714Z",
-    "plan": "2026-01-30T12:24:45.265623Z"
+    "meta": "2026-02-07T10:03:51.776940Z",
+    "activities": "2026-02-07T21:06:32.925252Z",
+    "vocabulary": "2026-02-07T10:03:51.819366Z",
+    "plan": "2026-02-07T10:05:59.909765Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "812/750 (raw: 1024)"
+      "message": "812/793 (raw: 1024)"
     },
     "activities": {
       "status": "pass",

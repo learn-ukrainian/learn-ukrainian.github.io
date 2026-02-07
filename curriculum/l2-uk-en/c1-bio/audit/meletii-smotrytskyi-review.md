@@ -1,8 +1,8 @@
-# Audit Report: M19 — meletii-smotrytskyi.md
-**Level:** C1-BIO | **Module:** M19 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4300
+# Audit Report: M20 — meletii-smotrytskyi.md
+**Level:** C1-BIO | **Module:** M20 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 00:21:37
+**Generated:** 2026-02-07 16:37:34
 
 ## Configuration
 **Type:** C1-biography
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
 **Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
+**Required Types:** critical-analysis, reading
 **Engagement:** ≥5 callouts
 **Immersion:** 95-100%
 **Vocab Target:** ≥24 words
@@ -31,7 +31,7 @@
 - Total activities: 6 (target: 3-9) ✅
 - Unique types: 5 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (critical-analysis, reading) ✅
 - Low density activities: 0
 
 ## Gates

@@ -1,8 +1,8 @@
-# Audit Report: M133 — oles-honchar.md
-**Level:** C1-BIO | **Module:** M133 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3600
+# Audit Report: M123 — oles-honchar.md
+**Level:** C1-BIO | **Module:** M123 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3600
 **Naturalness:** 0/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:40
+**Generated:** 2026-02-07 16:38:30
 
 ## Configuration
 **Type:** C1-biography
@@ -24,7 +24,7 @@
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 133 has 0.0% immersion (target: 90.0%+)
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 123 has 0.0% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## Recommendation

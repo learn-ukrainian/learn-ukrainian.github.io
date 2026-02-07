@@ -3,7 +3,7 @@ module: 39-buying-tickets
 level: A1
 version: '2.0'
 items:
-- lemma: укрзалізниця
+- lemma: Укрзалізниця
   ipa: /ukrzaliznˈɪt͡sja/
   translation: Ukrzaliznytsia (railways)
   pos: noun

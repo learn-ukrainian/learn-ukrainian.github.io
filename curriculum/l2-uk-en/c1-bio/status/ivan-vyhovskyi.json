@@ -2,13 +2,13 @@
   "module": "ivan-vyhovskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:40.188622Z",
+  "last_audit": "2026-02-07T16:37:36.874598Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T11:38:19.984567Z",
-    "meta": "2026-02-05T20:58:10.103665Z",
-    "activities": "2026-02-05T00:20:32.172720Z",
-    "vocabulary": "2026-02-04T13:38:54.196469Z",
+    "meta": "2026-02-07T15:13:22.011569Z",
+    "activities": "2026-02-07T10:03:51.562561Z",
+    "vocabulary": "2026-02-07T10:03:51.615524Z",
     "plan": null
   },
   "gates": {

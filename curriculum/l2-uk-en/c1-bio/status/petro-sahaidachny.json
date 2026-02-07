@@ -2,13 +2,13 @@
   "module": "petro-sahaidachny",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:37.630402Z",
+  "last_audit": "2026-02-07T16:37:33.933153Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.345591Z",
-    "meta": "2026-02-06T22:56:22.300761Z",
-    "activities": "2026-01-19T22:57:29.397617Z",
-    "vocabulary": "2026-02-04T12:19:59.914739Z",
+    "meta": "2026-02-07T15:13:22.009622Z",
+    "activities": "2026-02-07T10:03:51.587651Z",
+    "vocabulary": "2026-02-07T10:03:51.638223Z",
     "plan": null
   },
   "gates": {

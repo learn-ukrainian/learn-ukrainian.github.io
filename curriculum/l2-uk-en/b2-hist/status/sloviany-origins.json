@@ -2,13 +2,13 @@
   "module": "sloviany-origins",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:01.823264Z",
+  "last_audit": "2026-02-07T11:39:38.713970Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T11:00:20.099926Z",
-    "meta": "2026-01-29T07:38:18.604054Z",
-    "activities": "2026-01-22T15:08:35.248522Z",
-    "vocabulary": "2026-01-27T15:50:11.295498Z",
+    "md": "2026-02-07T11:38:26.473300Z",
+    "meta": "2026-02-07T10:03:51.231825Z",
+    "activities": "2026-02-07T10:03:51.308772Z",
+    "vocabulary": "2026-02-07T10:03:51.367306Z",
     "plan": null
   },
   "gates": {

@@ -10,17 +10,16 @@ items:
 - lemma: вау
   ipa: /ʋˈau/
   translation: wow
-  pos: noun
+  pos: intj
 - lemma: жила
   ipa: /ʒɪlˈa/
-  translation: lived (verb female), vein
+  translation: vein
   pos: noun
   gender: f
 - lemma: молодий
   ipa: /mɔlɔdˈɪj/
   translation: young
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: недавно
   ipa: /nɛdˈaʋnɔ/
   translation: recently

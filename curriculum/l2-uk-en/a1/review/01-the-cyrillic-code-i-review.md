@@ -1,149 +1,96 @@
-# Module 1: The Cyrillic Code I
+# Review: The Cyrillic Code I
 
-**Template:** a1-module-template.md | **Compliance:** ✅ PASS
+**Level:** A1 | **Module:** 01
 **Overall Score:** 9.5/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-27 09:35:22
-**Reviewer:** Claude
-**Tier:** 1 (Beginner)
+**Status:** PASS
+**Reviewed:** 2026-02-07
+**Review Prompt:** review-content-core-a v1.0
 
 ## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| **Lesson Quality** | 10/10 | Exceptional — feels like a caring, enthusiastic tutor |
-| Coherence | 10/10 | Perfect logical flow: True Friends → False Friends → New Letters |
-| Relevance | 10/10 | Laser-focused on first alphabet module goals |
-| Educational | 10/10 | Clear "code-breaking" metaphor, immediate application |
-| Language | 9/10 | Ukrainian examples correct; English accessible and warm |
-| Pedagogy | 10/10 | PPP executed perfectly; small chunks, frequent practice |
-| Immersion | 10/10 | 7.1% Ukrainian (target 5-15% for M01) — perfect scaffolding |
-| Activities | 9/10 | 8 activities, 102 items total, excellent variety |
-| Richness | 9/10 | Cultural insights, myth busters, pop culture references |
-| Humanity | 10/10 | Warm throughout, direct address, encouragement |
-| LLM Fingerprint | 9/10 | Natural voice, no AI clichés detected |
-| Linguistic Accuracy | 10/10 | All letter-sound mappings correct, IPA accurate |
+| Lesson Quality | 10/10 | Exceptional — feels like a caring, enthusiastic tutor. Perfect "Would I Continue?" 5/5. |
+| Coherence | 10/10 | Logical flow: True Friends → False Friends → New Letters. Each builds on the previous. |
+| Relevance | 10/10 | Perfectly aligned with plan outline. All 5 sections present. |
+| Educational | 9/10 | Clear explanations, excellent use of cognates as entry point. Could add one more guided example before Production. |
+| Language | 10/10 | English is warm, B1-readable, uses contractions naturally. Ukrainian is minimal and correct (appropriate for M01). |
+| Pedagogy | 10/10 | PPP executed perfectly. Present (letter tables) → Practice (international words, mini-dialogues) → Produce (decode words with IPA). |
+| L1/L2 Balance | 10/10 | 7.1% Ukrainian immersion — within 5-15% target for M01. Perfect scaffolding. |
+| Activities | 9/10 | 8 activities, 6 types, all schema-valid. Minor fix needed on quiz distractor (applied). Group-sort was missing Т (fixed). |
+| Richness | 9/10 | 4 engagement callouts (Did You Know, Myth Buster, Pop Culture Moment, Real World). S.T.A.L.K.E.R. reference is a great cultural hook. |
+| Beginner Safety | 10/10 | All 5 emotional beats present. Excellent quick wins. "You already know a third of it" is reassuring from the start. |
+| LLM Fingerprint | 9/10 | Natural tutor voice throughout. "You're about to crack a code" — engaging, not generic. No AI patterns detected. |
+| Linguistic Accuracy | 10/10 | State Standard §4.1.1 compliance confirmed. All letter-sound correspondences accurate. IPA verified (10 transcriptions in Production). |
 
----
+## L1/L2 Balance Analysis
 
-## Experience Analysis (Tier 1)
+- **Target immersion:** 5-15% Ukrainian (M01)
+- **Actual immersion:** ~7.1% Ukrainian
+- **Assessment:** On target. English predominates appropriately for the very first module. Ukrainian appears in letter tables, example words, and two mini-dialogues — all with transliteration.
 
-### The "Would I Continue?" Test
+## IPA Verification
 
-| Question | Result | Evidence |
-|----------|--------|----------|
-| Did I feel overwhelmed? | ✅ PASS | Pacing comfortable — 7 letters, then 6, then 6 |
-| Were instructions clear? | ✅ PASS | "Think of learning Cyrillic like learning to read again" |
-| Did I get quick wins? | ✅ PASS | Can read "метро" by paragraph 3, "банк" by paragraph 5 |
-| Was Ukrainian scary? | ✅ PASS | Introduced with familiar international words |
-| Would I come back tomorrow? | ✅ PASS | Ends with "You can now read 35 words!" |
+- Transcriptions checked: 10 (Production section) + 31 (vocabulary file)
+- Errors found: 1 (підсумок missing stress mark — fixed)
+- All corrected: Yes
 
-**Score: 5/5 → Lesson Quality 10/10**
+## State Standard Check
 
-### Lesson Arc
+- Grammar point: Ukrainian alphabet, letter-sound correspondence
+- Standard reference: §4.1.1 (Український алфавіт. Друковані та писані літери), §4.1.4 (Голосні та приголосні звуки)
+- Compliance: Fully compliant. Module teaches printed letters (друковані літери) with sound values.
 
-**Arc:** WELCOME ✅ → PREVIEW ✅ → PRESENT ✅ → PRACTICE ✅ → CELEBRATE ✅
+## Beginner Safety Audit
 
-| Element | Status | Evidence |
-|---------|--------|----------|
-| **WELCOME** | ✅ | "You're about to crack a code that 45 million people use every day" |
-| **PREVIEW** | ✅ | "By the end of this module, you'll be reading real Ukrainian words" |
-| **PRESENT** | ✅ | Three clear tables: True Friends, False Friends, New Letters |
-| **PRACTICE** | ✅ | Mini-dialogues, reading exercises, 8 activities |
-| **CELEBRATE** | ✅ | "You can now read 35 international words in Ukrainian" |
+"Would I Continue?" Test:
+- Overwhelmed? Pass — pacing is comfortable, starts with familiar ground
+- Instructions clear? Pass — every section explains its purpose
+- Quick wins? Pass — True Friends give immediate "I can read this!" moments
+- Ukrainian scary? Pass — introduced through international cognates
+- Come back tomorrow? Pass — ends with celebration of progress
+- **Result:** 5/5
 
-### Emotional Safety Mapping
+Emotional beats found: 6+
+- Welcome: Yes ("You're about to crack a code...")
+- Curiosity: Yes ("That's where things get interesting")
+- Quick wins: 3+ (True Friends, "You can read it right now", "Football!", "You can decode...")
+- Encouragement: 2+ ("it only takes a few hours", "And now you can read them!")
+- Progress marker: Yes ("Today you learned 19 letters. That's more than half the alphabet!")
 
-**Beats:** 😊 Welcomed ✅ → 🤔 Curious ✅ → 💪 Small win ✅ → 😊 Encouraged ✅ → 🎯 Progress visible ✅
+## Issues Found and Fixed
 
-| Moment Type | Count | Examples |
-|-------------|-------|----------|
-| Welcome/orientation | 2 | Opening hook, "Let's start with the letters you already know" |
-| Curiosity trigger | 3 | "Did You Know?" boxes, S.T.A.L.K.E.R. reference |
-| Quick wins | 5+ | метро, банк, радіо, кава — all readable immediately |
-| Encouragement | 3 | "These are your True Friends", "you can read it right now" |
-| Progress marker | 2 | "19 letters — more than half!", summary with 35 words |
+### Issue 1: Missing Т in Group-Sort Activity
+**Location:** Activity 3 (Letter Types), True Friends group
+**Original:** Group had only 6 items (А, О, Е, І, К, М) — missing Т
+**Problem:** Module teaches 7 True Friends but activity only tested 6
+**Fix:** Added Т to True Friends group
+**Status:** Fixed
 
-### Pacing Analysis
+### Issue 2: Ambiguous Quiz Distractor
+**Location:** Activity 4 (Reading Words), Item 6 (футбол)
+**Original:** Options included both "futbol (football)" and "futbol" — nearly identical
+**Problem:** Two options look the same, confusing learners
+**Fix:** Replaced "futbol" with "futball" (common English misspelling), "футбол" with "phutbol" (Ф misread)
+**Status:** Fixed
 
-| Metric | Value | Standard | Status |
-|--------|-------|----------|--------|
-| New words per section | 5-7 | ≤5-7 | ✅ |
-| Concepts before practice | 1-2 | ≤2 | ✅ |
-| English support | Present | Required | ✅ |
-| Visual aids | 5 tables | Required | ✅ |
+### Issue 3: Vocabulary IPA Missing Stress
+**Location:** vocabulary/01-the-cyrillic-code-i.yaml, item "підсумок"
+**Original:** /pidsumɔk/ (no stress mark)
+**Problem:** Missing stress mark on second syllable
+**Fix:** /pidˈsumɔk/
+**Status:** Fixed
 
----
+## Verification Summary
 
-## Weak Moments & Rewrites
-
-### Weak Moment 1: MINOR — Quiz distractor quality
-
-**Location:** Activities YAML, line 151-157
-**Original:**
-```yaml
-- question: How do you pronounce **футбол**?
-  options:
-  - text: futbol (football)
-    correct: true
-  - text: футбол
-    correct: false
-```
-
-**Problem:** Using Cyrillic as a distractor is confusing — the question asks for pronunciation, showing Cyrillic doesn't help distinguish.
-
-**Status:** Minor issue, not blocking. Distractors generally good across activities.
-
----
-
-## Linguistic Accuracy Issues
-
-None detected. All letter-sound mappings verified:
-- True Friends (А, Е, І, О, К, М, Т) — correct IPA
-- False Friends (В=/v/, Н=/n/, Р=/r/, С=/s/, У=/u/, Х=/x/) — correct
-- New Letters (Б=/b/, Д=/d/, З=/z/, Л=/l/, П=/p/, Ф=/f/) — correct
-
----
-
-## Strengths
-
-1. **Brilliant metaphor:** "Cracking a code" makes Cyrillic feel exciting, not intimidating
-2. **Perfect pacing:** Three groups of 6-7 letters each, with practice after each group
-3. **Cultural richness:** Myth Buster on Ukrainian vs Russian, Cyrillic origins, S.T.A.L.K.E.R. game reference
-4. **Immediate payoff:** Learner can read 35+ words by end of module
-5. **Warm teacher voice:** Encouraging throughout, celebrates progress, anticipates confusion
-
----
-
-## Issues
-
-### Minor (Non-blocking)
-
-1. **Quiz distractor (line 151):** Cyrillic as pronunciation answer option is confusing
-2. **Summary section title:** Uses "# Підсумок" (H1 in Ukrainian) — slightly inconsistent with English module
-
----
+- Lines read: 155 (full .md)
+- Activity items checked: 103 (8 activities)
+- Ukrainian sentences verified: 4 (appropriate for M01)
+- English sentences verified: ~60
+- IPA transcriptions verified: 41
+- Issues found: 3
+- Issues fixed: 3
 
 ## Recommendation
 
-✅ **PASS** — This is an exemplary A1 module that perfectly executes the Tier 1 beginner experience. Warm, encouraging, well-paced, with immediate payoff. The "code-cracking" metaphor turns alphabet learning into an adventure.
-
----
-
-## Action Items
-
-1. Quiz distractor (футбол question) — ⏳ MANUAL (optional polish)
-2. All other checks — ✅ No action needed
-
----
-
-## Audit Gate Summary
-
-| Gate | Status | Value |
-|------|--------|-------|
-| Words | ✅ | 958/300 |
-| Activities | ✅ | 8/8 |
-| Vocabulary | ✅ | 31/1 |
-| Naturalness | ✅ | 10/10 |
-| Structure | ✅ | Valid |
-| Immersion | ✅ | 7.1% (target 5-15%) |
+**PASS** — Exceptional first module. Warm, encouraging, well-paced introduction to Cyrillic. The True Friends → False Friends → New Letters progression is pedagogically sound. Engagement callouts (especially the S.T.A.L.K.E.R. reference and Myth Buster) provide cultural depth without overwhelming beginners. Three minor fixes applied (missing letter in group-sort, ambiguous quiz distractor, vocabulary IPA stress mark). All gates pass.

@@ -1,32 +1,89 @@
-# Module 06: Вид дієслова: повна система
+# Audit Report: M06 — 06-aspect-complete-system.md
+**Level:** B1 | **Module:** M06 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:10
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 21:50:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 3000 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** fill-in, group-sort, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Аспектуальні пари | 14 | 8 | ✅ |
+| 2 | group-sort | Процес чи результат? | 16 | 12 | ✅ |
+| 3 | mark-the-words | Знайдіть дієслова доконаного виду | 9 | 6 | ✅ |
+| 4 | quiz | Функції виду | 8 | 8 | ✅ |
+| 5 | true-false | Правила використання виду | 12 | 8 | ✅ |
+| 6 | fill-in | Оберіть правильний вид | 14 | 8 | ✅ |
+| 7 | select | Маркери виду | 8 | 6 | ✅ |
+| 8 | unjumble | Порядок слів у реченнях з видом | 8 | 6 | ✅ |
+| 9 | cloze | Розповідь про вчорашній день | 19 | 12 | ✅ |
+| 10 | error-correction | Виправте видові помилки | 8 | 6 | ✅ |
+| 11 | translate | Переклад з акцентом на вид | 8 | 6 | ✅ |
+| 12 | select | Контекстуальний вибір | 8 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                      |
-| ------------------- | ----- | ---------------------------------------------------------------------------------------------------------- |
-| Coherence           | 10/10 | Logical flow from "Why it matters" to "Algorithm" to "Contexts".                                           |
-| Relevance           | 10/10 | The cornerstone of B1 grammar. Absolutely essential.                                                       |
-| Educational         | 10/10 | The "Algorithm" (4 questions to ask yourself) is a fantastic tool for learners.                            |
-| Language            | 10/10 | Native usage. "Нарешті зробив" vs "довго робив" distinction is clear.                                      |
-| Pedagogy            | 10/10 | TTT structure is evident. Uses contrasting pairs effectively.                                              |
-| Immersion           | 10/10 | 99% immersion! This is the first full immersion module and it works because of clear cognates and context. |
-| Activities          | 10/10 | 12 activities covering identification, selection, and production.                                          |
-| Richness            | 10/10 | 96% score. Includes "Shadows of Forgotten Ancestors" cultural reference.                                   |
-| Humanity            | 10/10 | Encouraging tone ("Don't translate literally").                                                            |
-| LLM Fingerprint     | 10/10 | No "In conclusion" clichés. Narrative voice is strong.                                                     |
-| Linguistic Accuracy | 10/10 | Correct aspectual pairs and function explanations.                                                         |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
 
-## Fixes Applied
+## Gates
+- **Words:** ✅ 3213/3000 (raw: 3608)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 11/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 122/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.1 Aspect))
+- **Richness:** ✅ 98% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-1.  **Vocabulary**: Rewrote `vocabulary/06-aspect-complete-system.yaml` to remove hallucinated random words (e.g., "беркут", "динамік") and replace them with the actual aspectual pairs taught in the module (читати/прочитати, робити/зробити).
-2.  **Metadata**: Adjusted `content_outline` word counts to fix hydration error (total 1500 words).
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** grammar
 
-## Conclusion
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 39 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.84 | - | 84% | 5% | 4.2% |
+| questions | 97 | 5 | 100% | 5% | 5.0% |
+| proverbs | 3 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.8%** |
 
-This module successfully transitions the learner into full Ukrainian immersion. The explanations are simple enough to be understood in the target language (Metalanguage from M05 pays off). The cultural references (Parajanov, Shevchenko) add depth without overwhelming the grammar focus.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 41 | Included in Core |
+| **Розминка** | ⚪️ | 264 | Skipped |
+| **Граматика** | ⚪️ | 480 | Skipped |
+| **Практика** | ⚪️ | 1617 | Skipped |
+| **Діалоги** | ✅ | 581 | Included in Core |
+| **Підсумок** | ✅ | 165 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 65 | Skipped |

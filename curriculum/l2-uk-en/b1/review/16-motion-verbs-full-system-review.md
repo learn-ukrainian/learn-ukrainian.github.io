@@ -1,45 +1,89 @@
-# Module 16: Дієслова руху: повна система
+# Audit Report: M16 — 16-motion-verbs-full-system.md
+**Level:** B1 | **Module:** M16 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:16
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 22:35:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 2000 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** fill-in, group-sort, match-up, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Односпрямовані чи різноспрямовані дієслова? | 14 | 8 | ✅ |
+| 2 | match-up | Пари дієслів руху | 14 | 8 | ✅ |
+| 3 | cloze | Оберіть правильне дієслово | 14 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда? | 14 | 8 | ✅ |
+| 5 | group-sort | Типи руху | 28 | 12 | ✅ |
+| 6 | unjumble | Розставте слова в правильному порядку | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 8 | cloze | Дієслова руху в контексті | 16 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова руху | 9 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні варіанти | 7 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | fill-in | Доповніть речення | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                            |
-| ------------------- | ----- | ---------------------------------------------------------------- |
-| Clarity             | 10/10 | Excellent breakdown of the 14 pairs.                             |
-| Structure           | 10/10 | Unidirectional vs Multidirectional logic is explained perfectly. |
-| Relevance           | 10/10 | Fundamental for B1 proficiency.                                  |
-| Language            | 10/10 | Natural usage examples.                                          |
-| Pedagogy            | 10/10 | The step-by-step algorithm for choosing verbs is a great tool.   |
-| Immersion           | 10/10 | Carpathians, Kyiv, Shadows of Forgotten Ancestors references.    |
-| Activities          | 10/10 | Massive volume and variety.                                      |
-| Richness            | 10/10 | Etymology of "котити" and cultural notes on "гнати".             |
-| Humanity            | 10/10 | Engaging dialogues about real life (hiking, kids, pets).         |
-| LLM Fingerprint     | 10/10 | No issues.                                                       |
-| Linguistic Accuracy | 10/10 | Correct classification of motion types.                          |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 2064/2000 (raw: 2832)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 10/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 115/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 97.3% (target 85-100% (B1.2 Motion))
+- **Richness:** ✅ 96% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- None.
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 50 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 20 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 51 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.3%** |
 
-- **Systematic Approach:** Presenting all 14 pairs at once but grouping them logically helps learners see the big picture.
-- **Decision Algorithm:** The "3-step check" (Type -> Direction/Frequency -> Context) is a practical tool for learners.
-- **Cultural Depth:** Connecting "гнати" to "самогон" and "котити" to "котяча м'ята" adds catchy hooks for memory.
-
-## Issues
-
-- *Fixed:* Vocabulary extraction errors (`кача` -> `качати`, `басейний` -> `басейн`, `мішка` -> `мішок`, etc.).
-
-## Recommendation
-
-✅ PASS — The definitive guide to Ukrainian motion verbs.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 54 | Included in Core |
+| **Вступ** | ✅ | 331 | Included in Core |
+| **Пояснення** | ⚪️ | 216 | Skipped |
+| **Практика** | ⚪️ | 869 | Skipped |
+| **Діалоги** | ✅ | 308 | Included in Core |
+| **Підсумок** | ✅ | 176 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

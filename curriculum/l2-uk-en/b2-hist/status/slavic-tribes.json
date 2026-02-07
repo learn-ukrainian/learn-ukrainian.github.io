@@ -2,13 +2,13 @@
   "module": "slavic-tribes",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:02.412158Z",
+  "last_audit": "2026-02-07T11:39:39.463608Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347166Z",
-    "meta": "2026-01-29T07:38:18.605004Z",
-    "activities": "2026-01-27T15:34:54.800415Z",
-    "vocabulary": "2026-01-27T15:50:11.487480Z",
+    "md": "2026-02-07T11:38:26.467928Z",
+    "meta": "2026-02-07T10:03:51.226050Z",
+    "activities": "2026-02-07T10:03:51.291004Z",
+    "vocabulary": "2026-02-07T10:03:51.356818Z",
     "plan": null
   },
   "gates": {

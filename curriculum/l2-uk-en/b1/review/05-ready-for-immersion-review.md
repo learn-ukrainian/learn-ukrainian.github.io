@@ -1,32 +1,107 @@
-# Module 05: Готові до занурення
+# Audit Report: M05 — 05-ready-for-immersion.md
+**Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 3000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:09
 
-**Template:** b1-metalanguage-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 21:35:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-bridge
+**Word Target:** 3000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥5 types required
+**Priority Types:** fill-in, match-up, quiz, translate
+**Required Types:** cloze, match-up, quiz
+**Engagement:** ≥4 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Комплексний тест — Частини мови | 14 | 8 | ✅ |
+| 2 | quiz | Комплексний тест — Відмінки | 14 | 8 | ✅ |
+| 3 | quiz | Комплексний тест — Вид і час | 14 | 8 | ✅ |
+| 4 | quiz | Комплексний тест — Речення | 14 | 8 | ✅ |
+| 5 | quiz | Комплексний тест — Заперечення | 8 | 8 | ✅ |
+| 6 | quiz | Комплексний тест — Форми дієслова | 8 | 8 | ✅ |
+| 7 | quiz | Комплексний тест — Інструкції вправ | 8 | 8 | ✅ |
+| 8 | quiz | Комплексний тест — Аналітичні терміни | 8 | 8 | ✅ |
+| 9 | quiz | Комплексний тест — Стиль і регістр | 8 | 8 | ✅ |
+| 10 | match-up | Комплексний огляд — Частини мови | 11 | 8 | ✅ |
+| 11 | match-up | Комплексний огляд — Відмінки і речення | 11 | 8 | ✅ |
+| 12 | fill-in | Комплексний тест | 14 | 8 | ✅ |
+| 13 | fill-in | Нові терміни з М02 і М03 | 12 | 8 | ✅ |
+| 14 | fill-in | Граматичні категорії | 14 | 8 | ✅ |
+| 15 | true-false | Комплексна перевірка | 14 | 8 | ✅ |
+| 16 | group-sort | Комплексне сортування | 16 | 14 | ✅ |
+| 17 | unjumble | Комплексні пояснення | 14 | 6 | ✅ |
+| 18 | unjumble | Граматичні визначення | 6 | 6 | ✅ |
+| 19 | error-correction | Виправлення термінів | 8 | 6 | ✅ |
+| 20 | error-correction | Виправлення помилок | 14 | 6 | ✅ |
+| 21 | cloze | Підсумковий текст | 14 | 14 | ✅ |
+| 22 | mark-the-words | Фінальний тест | 13 | 6 | ✅ |
+| 23 | select | Фінальний множинний вибір | 14 | 6 | ✅ |
+| 24 | translate | Фінальний переклад | 14 | 6 | ✅ |
+| 25 | quiz | Читання граматичного тексту: Частина 1 | 8 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                      |
-| ------------------- | ----- | ------------------------------------------------------------------------------------------ |
-| Coherence           | 10/10 | Excellent summary of M01-M04. Tests all concepts.                                          |
-| Relevance           | 10/10 | The final gate before immersion. Very motivating.                                          |
-| Educational         | 10/10 | Diagnostic assessment is challenging but fair. "The Real Test" (table reading) is perfect. |
-| Language            | 10/10 | Good balance of Ukrainian immersion and English explanation where needed.                  |
-| Pedagogy            | 10/10 | TTT structure works well for a checkpoint.                                                 |
-| Immersion           | 10/10 | 53% immersion. High standard for "ready for immersion" theme.                              |
-| Activities          | 10/10 | 25 activities! Massive assessment bank.                                                    |
-| Richness            | 10/10 | 96% score. Authentic examples used throughout.                                             |
-| Humanity            | 10/10 | "You are ready" message is encouraging.                                                    |
-| LLM Fingerprint     | 10/10 | Content feels custom-built.                                                                |
-| Linguistic Accuracy | 10/10 | All terms defined correctly.                                                               |
+**Summary:**
+- Total activities: 25 (target: 12-16) ❌
+- Unique types: 11 (minimum: 5) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
+- Required types used: 3/3 (cloze, match-up, quiz) ✅
+- Low density activities: 0
 
-## Fixes Applied
+## Gates
+- **Words:** ✅ 3410/3000 (raw: 3916)
+- **Activities:** ✅ 25/12
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/5 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 42/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 43.7% (B1.1 Aspect)
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-1.  **Metadata**: Added `Practice` section to `content_outline` and increased word budget to 1700 to resolve hydration error.
-2.  **Vocabulary**: Rewrote `vocabulary/05-ready-for-immersion.yaml` to include high-level linguistic terms (morphology, phonetics, immersion) instead of random nouns.
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Conclusion
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 59 | 24 | 100% | 20% | 20.0% |
+| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| dialogues | 33 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 73 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.6%** |
 
-This module serves as the perfect capstone for the "Bridge" phase. It aggregates all the metalanguage skills taught in M01-M04 and puts them to the test. The "Pop Culture Moment" about "Servant of the People" adds a nice cultural touch. The learner should feel confident moving to M06.
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 80 | Included in Core |
+| **Presentation** | ✅ | 202 | Included in Core |
+| **Diagnostic Assessment** | ✅ | 337 | Included in Core |
+| **Parts of Speech Review (Частини мови)** | ✅ | 114 | Included in Core |
+| **Verb Terminology Review (Дієслова)** | ✅ | 81 | Included in Core |
+| **Grammar Explanation Patterns (Шаблони пояснень)** | ✅ | 102 | Included in Core |
+| **Sentence Structure Review (Синтаксис)** | ✅ | 366 | Included in Core |
+| **Full Grammar Explanation Comprehension** | ⚪️ | 453 | Skipped |
+| **Practice** | ⚪️ | 548 | Skipped |
+| **Mini-Dialogues** | ✅ | 542 | Included in Core |
+| **Summary** | ✅ | 308 | Included in Core |
+| **Need More Practice?** | ⚪️ | 277 | Skipped |

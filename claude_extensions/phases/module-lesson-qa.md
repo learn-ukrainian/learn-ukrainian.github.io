@@ -3,6 +3,7 @@
 Validate lesson content before locking.
 
 > **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
+>
 > - **Plan** (`plans/{level}/{slug}.yaml`): content_outline, word_target, objectives, vocabulary_hints
 > - **Meta** (`{level}/meta/{slug}.yaml`): naturalness score, build timestamps
 
@@ -114,15 +115,18 @@ All these MUST exist:
 > See: `docs/SUBSECTION-FLEXIBILITY-GUIDE.md`
 >
 > **Quick examples:**
+>
 > - Section A: 1200/600 (+600 over) + Section B: 400/600 (-200 under) = Redistribute 200 words from A to B
 > - Total: 3500/4000 (under) = Must expand with new content (can't just redistribute)
 > - Total: 4100/4000 (over) + some sections under = Redistribute only (no expansion needed)
 
 **Priority hierarchy:**
+
 1. **Total word count** ≥ word_target (MOST IMPORTANT)
 2. Individual sections within ±10% tolerance (flexible guidance)
 
 **Section word counts are FLEXIBLE:**
+
 - You can redistribute words between sections
 - One section can be 20% over if another is 5% under
 - As long as total ≥ word_target and no section >10% under
@@ -161,11 +165,13 @@ All these MUST exist:
 **Fix strategy for section mismatches:**
 
 If total is met but some sections are >10% under:
+
 - **Option A:** Expand under-target sections with new content
 - **Option B:** Redistribute content from over-target sections
 - **Option C:** Combination of both
 
 Example:
+
 ```
 Section A: 1200 / 600 (+600 words over)
 Section B: 400 / 600 (-200 words under)
@@ -766,7 +772,7 @@ You are the last line of defense. Be aggressive in finding errors.
 
 ### Logging Format
 
-**Create file:** `curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md`
+**Create file:** `curriculum/l2-uk-en/{level}/review/{slug}-llm-review.md`
 
 **Template:**
 
@@ -1018,7 +1024,7 @@ LESSON-QA: PASS
   ✓ Naturalness: {score}/10 - PASS (meta updated)
 
 META UPDATED: naturalness.score = {score}, naturalness.status = PASS
-VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
+VALIDATION LOG: curriculum/l2-uk-en/{level}/review/{slug}-llm-review.md
 
 LESSON LOCKED. Proceed to: /module-act {level} {module_num}
 
@@ -1036,7 +1042,7 @@ Violations:
 2. [CHECK_NAME]: {specific issue}
    ...
 
-VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
+VALIDATION LOG: curriculum/l2-uk-en/{level}/review/{slug}-llm-review.md
 See detailed log for evidence and fix recommendations.
 
 Apply {MINOR/MAJOR} fix strategy.
@@ -1161,7 +1167,7 @@ LESSON-QA: PASS
   ✓ Naturalness: 9/10 - PASS (meta updated)
 
 META UPDATED: naturalness.score = 9, naturalness.status = PASS
-VALIDATION LOG: curriculum/l2-uk-en/b2-hist/audit/trypillian-civilization-llm-review.md
+VALIDATION LOG: curriculum/l2-uk-en/b2-hist/review/trypillian-civilization-llm-review.md
 
 LESSON LOCKED. Proceed to: /module-act b2-hist 1
 
@@ -1182,7 +1188,7 @@ Violations:
 2. Content outline coverage: Section "Читання" 1200/2000 words (60%) - below 90% tolerance
 3. Example sentences: 15 (minimum: 24 for B2)
 
-VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
+VALIDATION LOG: curriculum/l2-uk-en/{level}/review/{slug}-llm-review.md
 See detailed log for evidence and fix recommendations.
 
 Apply MINOR fix strategy.
@@ -1203,7 +1209,7 @@ Violations:
 
 1. Naturalness Check: 6/10 (threshold: 8/10 for B1+) - Multiple red flags: template repetition, missing discourse markers, robotic transitions
 
-VALIDATION LOG: curriculum/l2-uk-en/{level}/audit/{slug}-llm-review.md
+VALIDATION LOG: curriculum/l2-uk-en/{level}/review/{slug}-llm-review.md
 
 Apply MAJOR fix strategy.
 Fix {slug}.md and re-run: /module-lesson-qa {level} {module_num}

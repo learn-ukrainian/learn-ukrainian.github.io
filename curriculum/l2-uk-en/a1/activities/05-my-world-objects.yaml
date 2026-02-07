@@ -1,13 +1,6 @@
----
-module: 05-my-world-objects
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Demonstratives and Gender
   pairs:
-  - left: Demonstrative
-    right: Gender
   - left: цей
     right: masculine singular
   - left: ця
@@ -402,13 +395,13 @@ activities:
 - type: fill-in
   title: Complete the Dialogue
   items:
-  - sentence: — Що ___? — ___ ніж.
-    answer: це | Це
+  - sentence: — Що це? — ___ ніж.
+    answer: Це
     options:
-    - це, Це
-    - той, Той
-    - ця, Ця
-    - ці, Ці
+    - Це
+    - Цей
+    - Ця
+    - Ці
   - sentence: — ___ чашка твоя? — Так, моя.
     answer: Ця
     options:

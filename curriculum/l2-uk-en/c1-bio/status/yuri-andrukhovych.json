@@ -2,11 +2,11 @@
   "module": "yuri-andrukhovych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:50.325147Z",
+  "last_audit": "2026-02-07T16:38:42.913122Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T15:58:46.768631Z",
-    "meta": "2026-02-06T15:48:48.773833Z",
+    "md": "2026-02-07T01:04:17.310144Z",
+    "meta": "2026-02-07T15:13:22.028672Z",
     "activities": null,
     "vocabulary": null,
     "plan": null

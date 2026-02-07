@@ -2,13 +2,13 @@
   "module": "panteleimon-kulish",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:50.638811Z",
+  "last_audit": "2026-02-07T16:37:46.347271Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.345438Z",
-    "meta": "2026-02-05T20:58:10.326126Z",
-    "activities": "2026-02-04T22:17:27.397046Z",
-    "vocabulary": "2026-02-04T22:17:47.932993Z",
+    "meta": "2026-02-07T15:13:22.014846Z",
+    "activities": "2026-02-07T10:03:51.588135Z",
+    "vocabulary": "2026-02-07T10:03:51.638619Z",
     "plan": null
   },
   "gates": {

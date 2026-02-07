@@ -1,14 +1,14 @@
 ---
-id: c1-bio-056
+id: c1-bio-055
 slug: borys-hrinchenko
 naturalness:
   status: PASS
-  score: 9
-  timestamp: 2026-02-05T09:30:00Z
+  score: 10
+  timestamp: 2026-02-07T16:45:00Z
 transliteration: none
 content_outline:
 - section: Вступ — Вартовий українського слова
-  words: 400
+  words: 600
   points:
   - Автор першого повного словника української мови
   - Письменник, педагог, просвітитель
@@ -28,7 +28,7 @@ content_outline:
   - Написання підручників для народу
   - Конфлікти з царською владою
 - section: Літературна діяльність (1880-ті–1900-ті)
-  words: 700
+  words: 1000
   points:
   - Оповідання та повісті
   - Тема простого народу
@@ -42,10 +42,13 @@ content_outline:
   - Чотири томи та їхній зміст
   - Значення для стандартизації мови
 - section: Спадщина — Каменяр словникарства
-  words: 700
+  words: 1000
   points:
   - Останні роки та смерть (1910)
   - Вплив на українську лексикографію
   - Словник Грінченка в сучасній Україні
   - Вшанування памяті
-word_target: 4000
+word_target: 4800
+vital_status: deceased
+build:
+  last_modified: '2026-02-07T16:45:00Z'

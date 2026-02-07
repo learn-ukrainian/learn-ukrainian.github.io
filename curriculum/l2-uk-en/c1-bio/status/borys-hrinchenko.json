@@ -2,13 +2,13 @@
   "module": "borys-hrinchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:01.323060Z",
+  "last_audit": "2026-02-07T16:53:22.898110Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T23:05:05.227423Z",
-    "meta": "2026-02-06T22:56:22.287945Z",
-    "activities": "2026-02-04T22:57:31.329500Z",
-    "vocabulary": "2026-02-05T00:20:06.087101Z",
+    "md": "2026-02-07T16:53:18.194504Z",
+    "meta": "2026-02-07T16:31:03.038278Z",
+    "activities": "2026-02-07T16:48:00.597756Z",
+    "vocabulary": "2026-02-07T15:31:52.109162Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4235/4000 (raw: 4274) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5236/4800 (raw: 5297)"
     },
     "activities": {
       "status": "pass",
@@ -28,20 +28,20 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "15 < 24 (soft target)"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

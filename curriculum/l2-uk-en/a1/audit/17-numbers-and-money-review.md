@@ -1,12 +1,12 @@
 # Audit Report: M17 — 17-numbers-and-money.md
-**Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
+**Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1091
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:03:49
+**Generated:** 2026-02-07 21:26:04
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 750 words
+**Word Target:** 1091 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -38,12 +38,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1133/750 (raw: 1485)
+- **Words:** ✅ 1133/1091 (raw: 1485)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
@@ -53,6 +53,9 @@
 - **Immersion:** 🇺🇦 29.9% (target 25-40% (M17))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

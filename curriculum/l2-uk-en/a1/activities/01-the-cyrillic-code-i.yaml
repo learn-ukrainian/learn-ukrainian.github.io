@@ -65,6 +65,7 @@
     - І
     - К
     - М
+    - Т
   - name: False Friends
     items:
     - В
@@ -144,11 +145,11 @@
     options:
     - text: futbol (football)
       correct: true
-    - text: футбол
+    - text: phutbol
       correct: false
     - text: footbol
       correct: false
-    - text: futbol
+    - text: futball
       correct: false
     explanation: Ф = F, У = U, Т = T, Б = B, О = O, Л = L
   - question: What letter is **Р** equivalent to in English sound?

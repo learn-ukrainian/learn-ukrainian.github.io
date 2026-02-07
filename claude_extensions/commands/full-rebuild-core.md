@@ -90,7 +90,7 @@ File paths:
 
 ```
 plan:       curriculum/l2-uk-en/plans/{level}/{slug}.yaml
-research:   curriculum/l2-uk-en/{level}/audit/{slug}-research.md
+research:   curriculum/l2-uk-en/{level}/research/{slug}-research.md
 meta:       curriculum/l2-uk-en/{level}/meta/{slug}.yaml  (may use numbered prefix)
 content:    curriculum/l2-uk-en/{level}/{num_padded}-{slug}.md
 activities: curriculum/l2-uk-en/{level}/activities/{slug}.yaml
@@ -106,7 +106,7 @@ Check which phases are already complete. **Unless `--from` is specified, auto-de
 
 | Check | Condition | Phase to skip |
 |-------|-----------|---------------|
-| Research file exists? | `audit/{slug}-research.md` exists with State Standard §ref | Skip Phase 0 |
+| Research file exists? | `research/{slug}-research.md` exists with State Standard §ref | Skip Phase 0 |
 | Module audit passes? | Run `scripts/audit_module.sh`, exit code 0 | Skip Phase 1 |
 | Content aligned with research? | All research hooks/facts present in `.md` | Skip Phase 1.5 |
 
@@ -120,7 +120,7 @@ Check which phases are already complete. **Unless `--from` is specified, auto-de
 ```
 📋 /full-rebuild-core {level} {num} — State Detection ({workflow_name})
 
-  Phase 0 (Research):   ✅ DONE — audit/{slug}-research.md (§2.1.3)
+  Phase 0 (Research):   ✅ DONE — research/{slug}-research.md (§2.1.3)
   Phase 1 (Build):      ⏳ PENDING — audit fails (word count)
   Phase 1.5 (Align):    ⏳ PENDING — depends on research + build
   Phase 2 (Review):     🔄 ALWAYS — runs latest review prompt
@@ -158,7 +158,7 @@ Follow template from `docs/CORE-B-WORKFLOW.md`:
 4. **PRO tracks**: Domain-specific vocabulary from professional glossaries
 5. **C2**: Stylistic/dialectal features from academic sources
 
-**Save to:** `curriculum/l2-uk-en/{level}/audit/{slug}-research.md`
+**Save to:** `curriculum/l2-uk-en/{level}/research/{slug}-research.md`
 
 **Completion gate:** Research file must exist with State Standard §reference before Phase 1.
 
@@ -252,8 +252,11 @@ scripts/audit_module.sh curriculum/l2-uk-en/{level}/{num_padded}-{slug}.md
 > review exists with PASS status. Review prompts evolve and improve over time —
 > we always want the current version evaluating the content.
 
-> **Run review at TOP LEVEL, not as a subagent.**
-> (Same rule as `/full-rebuild` — subagents lack schema context)
+> **Review context requirements:**
+> Generic subagents lack schema context and suggest invalid fixes.
+> **Exception:** The **Curriculum Maintainer** subagent (`subagent_type: "Curriculum Maintainer"`)
+> is authorized for full-rebuild workflows — it dynamically loads review prompts, tier files,
+> and schemas before reviewing. See `.claude/agents/curriculum-maintainer.md` for details.
 
 **Auto-select review prompt based on workflow:**
 

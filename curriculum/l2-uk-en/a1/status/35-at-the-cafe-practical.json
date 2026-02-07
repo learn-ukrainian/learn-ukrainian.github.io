@@ -2,14 +2,14 @@
   "module": "35-at-the-cafe-practical",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T15:04:00.180813Z",
+  "last_audit": "2026-02-07T21:45:48.016476Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T19:58:06.639732Z",
-    "meta": "2026-01-26T21:56:47.975134Z",
-    "activities": "2026-01-15T17:28:22.852336Z",
-    "vocabulary": "2026-01-25T19:58:04.508736Z",
-    "plan": "2026-01-30T12:24:45.259623Z"
+    "meta": "2026-02-07T10:03:51.784261Z",
+    "activities": "2026-02-07T21:06:32.900831Z",
+    "vocabulary": "2026-02-07T21:45:42.135930Z",
+    "plan": "2026-02-07T10:05:59.914373Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "908/750 (raw: 1210)"
+      "message": "908/825 (raw: 1210)"
     },
     "activities": {
       "status": "pass",

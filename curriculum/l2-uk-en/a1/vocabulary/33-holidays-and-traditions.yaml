@@ -26,11 +26,6 @@ items:
   translation: kutia (traditional Christmas dish)
   pos: noun
   gender: f
-- lemma: любів
-  ipa: /ljubiʋ/
-  translation: liked
-  pos: noun
-  gender: m
 - lemma: многий
   ipa: /mnˈɔɦɪj/
   translation: many (archaic/poetic)
@@ -62,6 +57,7 @@ items:
   ipa: /prɪʋitˈannja/
   translation: greeting, congratulation
   pos: noun
+  gender: n
 - lemma: святвечір
   ipa: /sʋjatʋˈɛt͡ʃir/
   translation: Christmas Eve

@@ -1,17 +1,66 @@
-## Module 08: The Living Verb II - FINAL REPORT
+# Audit Report: M08 — 08-the-living-verb-ii.md
+**Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 500
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-30 15:03:43
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | Richness 5/5 | Humanity 5/5 | LLM Fingerprint 5/5 | **Overall 5/5**
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, group-sort
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Second Conjugation or First Conjugation? | 12 | 8 | ✅ |
+| 2 | match-up | Verbs and Actions | 10 | 8 | ✅ |
+| 3 | fill-in | Conjugate the Verb | 12 | 8 | ✅ |
+| 4 | anagram | Build the Verb | 12 | 8 | ✅ |
+| 5 | true-false | Grammar Rules | 12 | 8 | ✅ |
+| 6 | group-sort | Verb Types | 12 | 12 | ✅ |
+| 7 | fill-in | Complete the Dialogue | 13 | 8 | ✅ |
+| 8 | quiz | Choose the Right Verb | 12 | 8 | ✅ |
 
-**Fixes Applied:** 4 changes
-- ✅ Category 2 (Language): Removed all Latin transliteration from Markdown text and tables, enforcing the IPA-only mandate.
-- ✅ Category 5 (Activities): Translated all activity instructions to English.
-- ✅ Category 5 (Activities): Enriched `Verbs and Actions` to 10 items (optimal match-up range) to meet density rules.
-- ✅ Category 1 (Structure): Updated `meta` sidecar to `transliteration: none` and `phonetics: ipa`.
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, group-sort) ✅
+- Low density activities: 0
 
-**Remaining Issues (if any):**
-- None.
+## Gates
+- **Words:** ✅ 972/500 (raw: 1337)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 5/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 21.9% (target 15-35% (M08))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/08-the-living-verb-ii.md`)
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 94 | Included in Core |
+| **Presentation** | ✅ | 285 | Included in Core |
+| **Practice** | ⚪️ | 261 | Skipped |
+| **Production** | ➖ | 54 | Excluded Type |
+| **Cultural Insight** | ✅ | 185 | Included in Core |
+| **Підсумок** | ✅ | 74 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

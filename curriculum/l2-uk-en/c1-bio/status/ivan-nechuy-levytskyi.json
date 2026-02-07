@@ -2,13 +2,13 @@
   "module": "ivan-nechuy-levytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:35:55.486578Z",
+  "last_audit": "2026-02-07T16:37:48.124605Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T00:35:49.275871Z",
-    "meta": "2026-02-07T00:35:34.588076Z",
-    "activities": "2026-02-04T22:58:09.912676Z",
-    "vocabulary": "2026-02-07T00:35:43.965790Z",
+    "md": "2026-02-07T01:04:17.209471Z",
+    "meta": "2026-02-07T15:13:22.015241Z",
+    "activities": "2026-02-07T10:03:51.592263Z",
+    "vocabulary": "2026-02-07T10:03:51.642435Z",
     "plan": null
   },
   "gates": {

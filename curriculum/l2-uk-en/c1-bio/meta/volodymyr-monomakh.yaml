@@ -1,59 +1,82 @@
-# Module Metadata: volodymyr-monomakh
+id: c1-bio-006
+module: c1-bio-006
+level: C1-BIO
 slug: volodymyr-monomakh
-title: "Володимир Мономах: Філософ на троні та будівничий коаліцій"
+version: '2.0'
+phase: C1-BIO
+focus: biography
+pedagogy: immersion
+title: 'Володимир Мономах: Філософ на троні та будівничий коаліцій'
 word_target: 4300
+actual_word_count: 5289
+status: DRAFT
 naturalness:
   status: PASS
-  checked_by: gemini
-  date: "2026-02-07"
+  score: 10
 content_outline:
 - section: "Вступ: Моральна криза та Любецький з’їзд"
-  words: 700
+  words: 674
+  points:
+  - Мономах як ідеал руського князя
+  - Успіхи у боротьбі з половцями
+  - Зупинення процесу розпаду держави
 - section: "Життєпис: Шлях від Переяслава до Києва"
-  words: 800
+  words: 842
+  points:
+  - Походження та ранні роки
+  - Любецький з'їзд 1097 р.
+  - Шлях до київського престолу
+  - Правління в Києві (1113–1125)
 - section: "Битва на Сальниці: Тріумф коаліційної стратегії"
-  words: 900
+  words: 658
+  points:
+  - Феодальна роздробленість
+  - Половецька загроза
+  - Тактика Сальниці
 - section: "«Повчання дітям»: Перший політичний маніфест Русі"
-  words: 900
+  words: 895
+  points:
+  - '"Повчання дітям" як етичний кодекс'
+  - Реформування законодавства ("Статут")
 - section: "Деколонізація: Київський центр vs московські міфи"
-  words: 600
-- section: "Спадщина та уроки для сучасності"
+  words: 713
+  points:
+  - Зміцнення династичних зв'язків
+  - Гіта Вессекська
+  - Шапка Мономаха міф
+- section: "Мономах та інтелектуальне середовище: Лавра, Сильвестр та Нестор"
   words: 400
-status: draft
-last_updated: "2026-02-07"
-version: "2.0"
-level: "C1"
-id: "c1-bio-006"
-tags:
-  - biography
-  - era: pre-modern
-  - domain: politics
-  - domain: military
-  - philosophy
-  - middle-ages
+  points:
+  - Редакції ПМЛ
+  - Культурне будівництво
+- section: "Спадщина та уроки для сучасності"
+  words: 356
+  points:
+  - Образ Мономаха в літописах
+  - Сучасна актуальність
+- section: "Підсумок"
+  words: 234
+  points:
+  - Значення правління для історії України
+- section: "Додаток: Ключові терміни та поняття епохи Мономаха (для C1 аналізу)"
+  words: 161
+  points:
+  - Глосарій епохи
+sources:
+- name: Володимир Мономах (Wikipedia UA)
+  url: "https://uk.wikipedia.org/wiki/Володимир_Мономах"
+  type: primary
+- name: '"Повчання" Володимира Мономаха'
+  url: "http://izbornyk.org.ua/"
+  type: primary
 vocabulary_hints:
-  vocab-1: міжусобиці
-  vocab-2: коаліція
-  vocab-3: повчання
-  vocab-4: отчина
-  vocab-5: лихварство
-  vocab-6: закуп
-  vocab-7: смерд
-  vocab-8: статут
-  vocab-9: каяття
-  vocab-10: християнська етика
+  required:
+  - удільна роздробленість
+  - половці
+  - статут
 activity_hints:
 - type: reading
-  focus: "Любецький з'їзд"
+  focus: 'Аналіз "Повчання дітям"'
 - type: critical-analysis
-  focus: "Осліплення Василька"
-- type: comparative-study
-  focus: "Мономах vs Макіавеллі"
-- type: authorial-intent
-  focus: "Староукраїнська мова Повчання"
-- type: essay-response
-  focus: "Етика правління"
-- type: true-false
-  focus: "Шапка Мономаха"
-- type: reading
-  focus: "Лист до Олега Святославича"
+  focus: Причини київського повстання 1113 р.
+last_updated: 2026-02-07

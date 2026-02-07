@@ -2,13 +2,13 @@
   "module": "kostiantyn-ostrozky-elder",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:33.384117Z",
+  "last_audit": "2026-02-07T16:37:30.456198Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.359484Z",
-    "meta": "2026-02-06T22:56:22.292495Z",
-    "activities": "2026-01-27T15:34:55.824804Z",
-    "vocabulary": "2026-02-06T22:56:22.353396Z",
+    "meta": "2026-02-07T15:13:22.007893Z",
+    "activities": "2026-02-07T10:03:51.575271Z",
+    "vocabulary": "2026-02-07T10:03:51.630884Z",
     "plan": null
   },
   "gates": {

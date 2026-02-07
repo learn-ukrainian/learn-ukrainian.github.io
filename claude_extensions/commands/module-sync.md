@@ -55,11 +55,13 @@ Parse arguments: {level} {num}
 ### Step 1: Resolve Module Slug
 
 **For tracks (b2-hist, c1-bio, c1-hist, lit):**
+
 ```bash
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
 ```
 
 **For core levels:**
+
 ```bash
 slug=$(ls curriculum/l2-uk-en/${level}/*${num}-*.md 2>/dev/null | head -1 | xargs basename -s .md)
 ```
@@ -67,6 +69,7 @@ slug=$(ls curriculum/l2-uk-en/${level}/*${num}-*.md 2>/dev/null | head -1 | xarg
 ### Step 2: Verify Files Exist
 
 Check required files:
+
 ```bash
 md_file=curriculum/l2-uk-en/${level}/${slug}.md
 meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
@@ -90,6 +93,7 @@ act_file=curriculum/l2-uk-en/${level}/activities/${slug}.yaml
 ```
 
 **Build actual structure:**
+
 - Extract all H2 headers as section names
 - Count actual words per section
 - Sum for total word count
@@ -112,6 +116,7 @@ meta_file=curriculum/l2-uk-en/${level}/meta/${slug}.yaml
 ### Step 5: Run Audit
 
 > **📋 QUICK REFERENCES (read BEFORE fixing activities):**
+>
 > - Activity schemas: `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`
 > - Activity YAML reference: `docs/ACTIVITY-YAML-REFERENCE.md`
 
@@ -136,11 +141,13 @@ If schema errors exist, note them for fixing in Step 7.
 **After syncing meta, remaining violations are typically:**
 
 **Activity violations:**
+
 - Schema errors → Fix YAML syntax
 - Mirroring → Rephrase activities
 - Too few items → Add more items
 
 **Content violations (if any):**
+
 - Grammar errors → Fix in markdown
 - Missing engagement boxes → Add callouts
 
@@ -171,7 +178,7 @@ while true:
      .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/${level}/${slug}.md
 
   2. Read review file:
-     curriculum/l2-uk-en/${level}/audit/${slug}-review.md
+     curriculum/l2-uk-en/${level}/review/${slug}-review.md
 
   3. If ALL gates ✅ → break loop, go to Step 9
 
@@ -244,6 +251,7 @@ end while
 ```
 
 **NO STOPPING UNTIL COMPLETE:**
+
 - ❌ Do NOT stop at 80% and report
 - ❌ Do NOT ask "should I continue?"
 - ❌ Do NOT say "markdown needs manual fixes"
@@ -252,12 +260,14 @@ end while
 - ✅ Only ask user if truly impossible (external dependency)
 
 **Success criteria:**
+
 - ✅ All audit gates green
 - ✅ No violations remain
 - ✅ Meta.yaml reflects markdown reality
 - ✅ Activities validated
 
 **Why This Works:**
+
 1. **Efficiency:** One comprehensive read + one atomic fix + one audit = O(3) instead of O(3N)
 2. **Coherence:** Meta sync + activity fixes + minimal markdown edits applied together
 3. **Consistency:** No intermediate states where components misaligned
@@ -294,7 +304,7 @@ Final metrics:
   - Immersion: {percentage}%
 
 Deployed: docusaurus/docs/{level}/module-{num}.mdx
-Audit report: curriculum/l2-uk-en/{level}/audit/{slug}-review.md
+Audit report: curriculum/l2-uk-en/{level}/review/{slug}-review.md
 ```
 
 **Note:** There is NO "failure" output - you work until success.
@@ -303,15 +313,16 @@ Audit report: curriculum/l2-uk-en/{level}/audit/{slug}-review.md
 
 ## Difference from /module and /module --refresh
 
-| Feature | /module | /module --refresh | /module-sync |
-|---------|---------|-------------------|--------------|
-| Markdown | Generates new | **Preserves** | **Preserves** |
-| Meta | Creates via architect | Regenerates via architect | **Updates from markdown** |
-| Approach | Plan → Generate | Plan → Validate | Extract → Sync |
-| Activities | Generates new | Regenerates | Validates + fixes |
-| Use when | New module | Rehydrate outline properly | Sync meta to reality |
+| Feature    | /module               | /module --refresh          | /module-sync              |
+| ---------- | --------------------- | -------------------------- | ------------------------- |
+| Markdown   | Generates new         | **Preserves**              | **Preserves**             |
+| Meta       | Creates via architect | Regenerates via architect  | **Updates from markdown** |
+| Approach   | Plan → Generate       | Plan → Validate            | Extract → Sync            |
+| Activities | Generates new         | Regenerates                | Validates + fixes         |
+| Use when   | New module            | Rehydrate outline properly | Sync meta to reality      |
 
 **Key difference:**
+
 - `--refresh`: Uses **architect skill** to create proper hydrated outline (plan-driven)
 - `--sync`: **Extracts from markdown** to update meta (reality-driven)
 

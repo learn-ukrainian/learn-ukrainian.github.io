@@ -1,44 +1,91 @@
-# Module 26: Підрядні означальні: який
+# Audit Report: M26 — 26-relative-clauses-yakyi.md
+**Level:** B1 | **Module:** M26 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1599
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:21
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:15:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1599 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** error-correction, fill-in, translate, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Форми який у різних відмінках | 14 | 8 | ✅ |
+| 2 | match-up | Антецедент і форма який | 13 | 8 | ✅ |
+| 3 | cloze | Оберіть правильну форму який | 14 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда про який | 14 | 8 | ✅ |
+| 5 | group-sort | Відмінки форми який | 20 | 12 | ✅ |
+| 6 | unjumble | Розставте слова в правильному порядку | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки у формі який | 8 | 6 | ✅ |
+| 8 | cloze | Який у контексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть форми який | 13 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | quiz | Контекст і Культура | 8 | 8 | ✅ |
+| 13 | fill-in | Доповніть речення формою який | 12 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                 |
-| ------------------- | ----- | ----------------------------------------------------------------------------------------------------- |
-| Clarity             | 10/10 | The distinction between antecedent (gender/number) and role (case) explains tricky grammar perfectly. |
-| Structure           | 10/10 | Logical flow from Nominative to Locative.                                                             |
-| Relevance           | 10/10 | Essential for complex sentence building.                                                              |
-| Language            | 10/10 | Examples are natural and varied.                                                                      |
-| Pedagogy            | 10/10 | "Common Mistakes" section targets exactly where learners struggle.                                    |
-| Immersion           | 10/10 | References to "Servant of the People" and "Shadows of Forgotten Ancestors".                           |
-| Activities          | 10/10 | High density.                                                                                         |
-| Richness            | 10/10 | Cultural moments add depth.                                                                           |
-| Humanity            | 10/10 | Encouraging tone.                                                                                     |
-| LLM Fingerprint     | 10/10 | No issues.                                                                                            |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                                 |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (error-correction, fill-in, translate, unjumble) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 1573/1599 (raw: 1948) (26 short)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 14/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 70/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.7% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 95% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`рол` -> `роль` context, removed; `механік` -> `механіка` context, removed). Capitalized `Настя`.
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 52 | 24 | 100% | 20% | 20.0% |
+| engagement | 14 | 5 | 100% | 15% | 15.0% |
+| dialogues | 11 | 4 | 100% | 15% | 15.0% |
+| variety | 0.94 | - | 94% | 10% | 9.4% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.8%** |
 
-- **Clear Rules:** The rule "Gender/Number from Antecedent, Case from Subordinate Clause" is repeated effectively.
-- **Contextual examples:** The gaming tips and news examples show the versatility of *який*.
-
-## Issues
-
-- *Fixed:* Minor vocabulary artifacts.
-
-## Recommendation
-
-✅ PASS — Excellent grammar module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 49 | Included in Core |
+| **Тест** | ⚪️ | 144 | Skipped |
+| **Теорія** | ⚪️ | 93 | Skipped |
+| **Поглиблення** | ⚪️ | 618 | Skipped |
+| **Практика** | ⚪️ | 5 | Skipped |
+| **Діалоги** | ✅ | 203 | Included in Core |
+| **Підсумок** | ✅ | 351 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

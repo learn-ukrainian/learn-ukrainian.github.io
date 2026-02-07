@@ -2,13 +2,13 @@
   "module": "ivan-puliui",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:55.525128Z",
+  "last_audit": "2026-02-07T16:37:50.541381Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T11:38:59.981703Z",
-    "meta": "2026-02-05T20:58:10.128703Z",
-    "activities": "2026-02-05T16:45:34.965617Z",
-    "vocabulary": "2026-02-05T11:34:52.325602Z",
+    "md": "2026-02-07T11:28:46.525966Z",
+    "meta": "2026-02-07T15:13:22.015859Z",
+    "activities": "2026-02-07T11:44:57.655951Z",
+    "vocabulary": "2026-02-07T11:16:08.521334Z",
     "plan": null
   },
   "gates": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5550/4300 (raw: 5779)"
+      "message": "5218/5000 (raw: 5312)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "9/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "24/24"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "pass",

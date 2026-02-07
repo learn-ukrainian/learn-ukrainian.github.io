@@ -1,8 +1,3 @@
----
-module: 14-mine-and-yours
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Possessive Forms
   pairs:
@@ -206,9 +201,9 @@ activities:
   - statement: «Твій» is the informal form of "your".
     correct: true
     explanation: Correct! Use твій with friends, family, children. Use ваш for formal/plural.
-  - statement: «Наш» is masculine.
-    correct: false
-    explanation: Incorrect! наш is masculine. Feminine = наша, neuter = наше, plural
+  - statement: «Наш» is the masculine form of the possessive "our".
+    correct: true
+    explanation: Correct! наш is masculine. Feminine = наша, neuter = наше, plural
       = наші.
   - statement: Possessive pronouns agree with the noun's gender and number.
     correct: true

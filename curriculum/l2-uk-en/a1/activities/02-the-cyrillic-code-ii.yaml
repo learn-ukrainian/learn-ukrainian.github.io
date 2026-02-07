@@ -1,36 +1,31 @@
----
-module: 02-the-cyrillic-code-ii
-level: A1
-version: '2.0'
-activities:
 - type: match-up
   title: Letter Sounds
   pairs:
-  - left: '- Г'
+  - left: Г
     right: h (like "ahead")
-  - left: '- Ґ'
+  - left: Ґ
     right: g (like "go")
-  - left: '- Ж'
+  - left: Ж
     right: zh (like "pleasure")
-  - left: '- Ш'
+  - left: Ш
     right: sh (like "shop")
-  - left: '- Щ'
+  - left: Щ
     right: shch (like "borshch")
-  - left: '- Ч'
+  - left: Ч
     right: ch (like "church")
-  - left: '- Ц'
+  - left: Ц
     right: ts (like "cats")
-  - left: '- Є'
+  - left: Є
     right: ye (like "yes")
-  - left: '- Ї'
+  - left: Ї
     right: yi (like "yeet")
-  - left: '- Ю'
+  - left: Ю
     right: yu (like "you")
-  - left: '- Я'
+  - left: Я
     right: ya (like "yacht")
-  - left: '- Ь'
+  - left: Ь
     right: soft sign
-  instruction: Match the corresponding elements.
+  instruction: Match each Ukrainian letter with its sound.
 - type: quiz
   title: Alphabet Knowledge
   items:
@@ -222,91 +217,91 @@ activities:
 - type: fill-in
   title: Complete the Greetings
   items:
-  - sentence: ___
+  - sentence: "___ ! Як справи?"
     answer: Привіт
     options:
     - Привіт
     - Дякую
     - Добре
     - Так
-  - sentence: ___
-    answer: Дякую
+  - sentence: "Добре, ___ !"
+    answer: дякую
     options:
-    - Дякую
-    - Будь ласка
-    - До побачення
-    - Привіт
-  - sentence: ___
-    answer: Будь ласка
+    - дякую
+    - будь ласка
+    - до побачення
+    - привіт
+  - sentence: "Борщ, ___ ."
+    answer: будь ласка
     options:
-    - Будь ласка
-    - Дякую
-    - Вибачте
-    - Так
-  - sentence: ___
+    - будь ласка
+    - дякую
+    - вибачте
+    - так
+  - sentence: "___ !"
     answer: До побачення
     options:
     - До побачення
     - Привіт
     - Дякую
     - Ні
-  - sentence: ___
+  - sentence: "___ , де метро?"
     answer: Вибачте
     options:
     - Вибачте
     - Будь ласка
     - Дякую
     - Добре
-  - sentence: ___
+  - sentence: "Це метро? — ___ ."
     answer: Так
     options:
     - Так
     - Ні
     - Що
     - Як
-  - sentence: ___
+  - sentence: "Цукор? — ___ , дякую."
     answer: Ні
     options:
     - Ні
     - Так
     - Де
     - Хто
-  - sentence: ___
+  - sentence: "Як справи? — ___ !"
     answer: Добре
     options:
     - Добре
     - Дякую
     - Так
     - Ні
-  - sentence: ___
+  - sentence: "___ це?"
     answer: Що
     options:
     - Що
     - Як
     - Де
     - Хто
-  - sentence: ___
+  - sentence: "___ справи?"
     answer: Як
     options:
     - Як
     - Що
     - Де
     - Хто
-  - sentence: ___
+  - sentence: "___ метро?"
     answer: Де
     options:
     - Де
     - Що
     - Як
     - Хто
-  - sentence: ___
+  - sentence: "___ це?"
     answer: Хто
     options:
     - Хто
     - Що
     - Як
     - Де
-  - sentence: ___
+  - sentence: "___ !"
     answer: Ласкаво просимо
     options:
     - Ласкаво просимо
@@ -331,8 +326,7 @@ activities:
     explanation: Correct! Щ is the distinctive "shch" blend.
   - statement: The soft sign Ь makes a "y" sound.
     correct: false
-    explanation: Incorrect! Ь has no sound of its own; it softens the consonant before
-      it.
+    explanation: Incorrect! Ь has no sound of its own; it softens the consonant before it.
   - statement: 'There are four iotated vowels in Ukrainian: Є, Ї, Ю, Я.'
     correct: true
     explanation: Correct! These all have a built-in "y" sound.
@@ -358,59 +352,59 @@ activities:
 - type: match-up
   title: Ukrainian Cities & Countries
   pairs:
-  - left: '- Київ'
+  - left: Київ
     right: Kyiv
-  - left: '- Львів'
+  - left: Львів
     right: Lviv
-  - left: '- Одеса'
+  - left: Одеса
     right: Odesa
-  - left: '- Харків'
+  - left: Харків
     right: Kharkiv
-  - left: '- Дніпро'
+  - left: Дніпро
     right: Dnipro
-  - left: '- Україна'
+  - left: Україна
     right: Ukraine
-  - left: '- Лондон'
+  - left: Лондон
     right: London
-  - left: '- Європа'
+  - left: Європа
     right: Europe
-  - left: '- Польща'
+  - left: Польща
     right: Poland
-  - left: '- Канада'
+  - left: Канада
     right: Canada
-  - left: '- Америка'
+  - left: Америка
     right: America
-  - left: '- Італія'
+  - left: Італія
     right: Italy
-  instruction: Match the corresponding elements.
+  instruction: Match each Ukrainian name with its English equivalent.
 - type: match-up
   title: Food Vocabulary
   pairs:
-  - left: '- борщ'
+  - left: борщ
     right: borscht
-  - left: '- йогурт'
+  - left: йогурт
     right: yogurt
-  - left: '- желе'
+  - left: желе
     right: jelly
-  - left: '- майонез'
+  - left: майонез
     right: mayonnaise
-  - left: '- шоколад'
+  - left: шоколад
     right: chocolate
-  - left: '- цукор'
+  - left: цукор
     right: sugar
-  - left: '- буква'
+  - left: буква
     right: letter
-  - left: '- слово'
+  - left: слово
     right: word
-  - left: '- піца'
+  - left: піца
     right: pizza
-  - left: '- банан'
+  - left: банан
     right: banana
-  - left: '- суп'
+  - left: суп
     right: soup
-  - left: '- салат'
+  - left: салат
     right: salad
-  instruction: Match the corresponding elements.
+  instruction: Match each Ukrainian word with its English meaning.
 - type: group-sort
   title: Print vs Italic Confusion
   groups:

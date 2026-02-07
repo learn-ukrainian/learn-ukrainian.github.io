@@ -1,45 +1,90 @@
-# Module 19: Рух: початок і повернення
+# Audit Report: M19 — 19-motion-starting-returning.md
+**Level:** B1 | **Module:** M19 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 1800
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:17
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-24 23:05:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1800 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, fill-in, quiz
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Префікси по-, за-, роз- — вибір значення | 8 | 8 | ✅ |
+| 2 | match-up | Дієслова руху — українська-англійська | 13 | 8 | ✅ |
+| 3 | fill-in | Вибір префікса в реченнях | 12 | 8 | ✅ |
+| 4 | true-false | Правильність використання префіксів | 10 | 8 | ✅ |
+| 5 | group-sort | Сортування дієслів за префіксами | 16 | 12 | ✅ |
+| 6 | unjumble | Відновлення порядку слів у реченнях | 8 | 6 | ✅ |
+| 7 | error-correction | Виправлення помилок у використанні префіксів | 6 | 6 | ✅ |
+| 8 | cloze | Історія про родинну зустріч | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова з префіксами | 6 | 6 | ✅ |
+| 10 | select | Множинний вибір — які речення правильні? | 6 | 6 | ✅ |
+| 11 | translate | Переклад з англійської на українську | 8 | 6 | ✅ |
+| 12 | match-up | Префікси та їхні значення | 12 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                |
-| ------------------- | ----- | -------------------------------------------------------------------- |
-| Clarity             | 10/10 | Clear distinction between Po- (start), Za- (visit), Roz- (disperse). |
-| Structure           | 10/10 | Logical progression.                                                 |
-| Relevance           | 10/10 | High. "Зайти на каву" is a key cultural phrase.                      |
-| Language            | 10/10 | Natural examples.                                                    |
-| Pedagogy            | 10/10 | Good use of "Pop Culture" notes.                                     |
-| Immersion           | 10/10 | Mention of Ukrainian geography (Lviv, Odesa, Crimea).                |
-| Activities          | 10/10 | Extensive practice.                                                  |
-| Richness            | 10/10 | Etymological notes on "роз-" and "розлучитися".                      |
-| Humanity            | 10/10 | Dialogues feel warm and authentic.                                   |
-| LLM Fingerprint     | 10/10 | No issues.                                                           |
-| Linguistic Accuracy | 10/10 | Correct usage.                                                       |
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (cloze, fill-in, quiz) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ⚠️ 1720/1800 (raw: 2122) (80 short)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 97/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.2 Motion))
+- **Richness:** ✅ 96% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (Russian words `поехала`, `развестися` extracted from explanation text; `босс` typo).
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 44 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 14 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 12 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 25 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.4%** |
 
-- **Cultural Context:** Explaining that "Я зайду" implies a short visit (15-20 mins) is very helpful cultural decoding.
-- **Geography:** Using the "Geography of Motion" section to teach cities alongside prefixes is efficient.
-- **Visuals:** The "Disperse" vs "Start" distinction is made very clear.
-
-## Issues
-
-- *Fixed:* Vocabulary extraction errors.
-
-## Recommendation
-
-✅ PASS — Excellent cultural integration.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 52 | Included in Core |
+| **Діагностика** | ✅ | 123 | Included in Core |
+| **Пояснення** | ⚪️ | 512 | Skipped |
+| **Поглиблення** | ⚪️ | 441 | Skipped |
+| **Практика** | ⚪️ | 110 | Skipped |
+| **Діалоги** | ✅ | 218 | Included in Core |
+| **Підсумок** | ✅ | 154 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

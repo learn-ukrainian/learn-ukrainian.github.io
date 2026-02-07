@@ -1,8 +1,8 @@
-# Audit Report: M87 — mykola-zerov.md
-**Level:** C1-BIO | **Module:** M87 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
+# Audit Report: M90 — mykola-zerov.md
+**Level:** C1-BIO | **Module:** M90 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 0/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 00:22:17
+**Generated:** 2026-02-07 16:38:14
 
 ## Configuration
 **Type:** C1-biography
@@ -28,7 +28,7 @@
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 87 has 4.3% immersion (target: 90.0%+)
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 90 has 4.3% immersion (target: 90.0%+)
   - FIX: Add more Ukrainian content to reach 90.0%+ immersion
 
 ## Recommendation

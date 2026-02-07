@@ -1,44 +1,88 @@
-# Module 37: Часові речення
+# Audit Report: M37 — 37-temporal-clauses.md
+**Level:** B1 | **Module:** M37 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 1500
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:28
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 01:45:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1500 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Часові сполучники | 8 | 8 | ✅ |
+| 2 | match-up | Сполучник та його функція | 12 | 8 | ✅ |
+| 3 | fill-in | Доповніть речення правильним сполучником | 12 | 8 | ✅ |
+| 4 | true-false | Правда чи неправда? | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть сполучники за типом часових відношень | 14 | 12 | ✅ |
+| 6 | unjumble | Складіть речення з розсипаних слів | 8 | 6 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 8 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Позначте часові сполучники | 8 | 6 | ✅ |
+| 10 | select | Виберіть усі граматично правильні речення | 6 | 6 | ✅ |
+| 11 | translate | Перекладіть на українську мову | 8 | 6 | ✅ |
 
-| Dimension           | Score | Notes                                                                         |
-| ------------------- | ----- | ----------------------------------------------------------------------------- |
-| Clarity             | 10/10 | Crystal clear differentiation between Simultaneity, Sequence, and Precedence. |
-| Structure           | 10/10 | Logical flow from *коли* (simple) to *поки не* (complex).                     |
-| Relevance           | 10/10 | Telling stories requires these "chronological maps".                          |
-| Language            | 10/10 | Etymology of *щойно* (*що* + *ойно*) is fascinating for learners.             |
-| Pedagogy            | 10/10 | Crucial warning about *поки не* requiring negation.                           |
-| Immersion           | 10/10 | Folk song references ("Поки сонце зійде...") ground grammar in culture.       |
-| Activities          | 10/10 | High density, excellent dialogue simulations.                                 |
-| Richness            | 10/10 | Comparisons with Russian (lack of *щойно*) boost learner confidence.          |
-| Humanity            | 10/10 | Grandparent dialogue ("When I was young...") adds emotional resonance.        |
-| LLM Fingerprint     | 10/10 | No issues.                                                                    |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                         |
+**Summary:**
+- Total activities: 11 (target: 8-12) ✅
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1573/1500 (raw: 2077)
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 26/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 95% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`док` -> `доки`, gerund forms).
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 36 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 13 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 3 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.7%** |
 
-- **Cultural Dept:** Explaining *щойно* as a unique Ukrainian feature (immediate past) that Russian lacks a single word for (*только что*) is a great confidence booster.
-- **Common Mistakes:** The *поки* vs *поки не* distinction is explained perfectly.
-
-## Issues
-
-- *Fixed:* Vocab errors.
-
-## Recommendation
-
-✅ PASS — Excellent grammar module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 61 | Included in Core |
+| **Тест** | ⚪️ | 154 | Skipped |
+| **Пояснення** | ⚪️ | 632 | Skipped |
+| **Практика** | ⚪️ | 216 | Skipped |
+| **Діалоги** | ✅ | 225 | Included in Core |
+| **Підсумок** | ✅ | 175 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

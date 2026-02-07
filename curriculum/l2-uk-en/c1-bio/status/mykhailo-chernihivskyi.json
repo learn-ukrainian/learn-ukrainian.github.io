@@ -2,13 +2,13 @@
   "module": "mykhailo-chernihivskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:31.056218Z",
+  "last_audit": "2026-02-07T16:37:28.190180Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.307839Z",
-    "meta": "2026-02-06T22:56:22.295420Z",
-    "activities": "2026-01-19T17:51:25.271733Z",
-    "vocabulary": "2026-02-05T00:27:34.059284Z",
+    "md": "2026-02-07T11:56:27.887674Z",
+    "meta": "2026-02-07T15:13:22.006260Z",
+    "activities": "2026-02-07T10:03:51.608524Z",
+    "vocabulary": "2026-02-07T10:03:51.647286Z",
     "plan": null
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5475/4800 (raw: 5548)"
+      "message": "5865/4800 (raw: 5947)"
     },
     "activities": {
       "status": "pass",

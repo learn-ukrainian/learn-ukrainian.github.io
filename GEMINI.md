@@ -327,7 +327,7 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 - **PRESERVE task_id when responding** - When you reply to a message, use the SAME task_id from the incoming message. Don't create your own task_id. Example: if Claude's message has `task_id: tooling-feedback`, your response MUST use `--task-id tooling-feedback`
 - **Symmetric Response Routing**: `process_for_claude` now routes responses back via `send_message()` (matching the Gemini-side workflow).
 - **Error Handling**: If the Claude CLI crashes or times out, an `error` type message will be received instead of silence.
-- **Agent Watcher Daemon (Auto-Trigger)**: Polls `messages.db` and auto-triggers agents. Includes loop prevention (max 10 turns/task).
+- **Agent Watcher Daemon (Auto-Trigger)**: Polls `messages.db` and auto-triggers agents. Includes loop prevention (max 8 turns/task). When limit is hit, a stuck report is saved to `{track}/stuck/{slug}.md`.
     ```bash
     # Check status
     .venv/bin/python scripts/agent_watcher.py --status
@@ -337,6 +337,58 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
     .venv/bin/python scripts/agent_watcher.py --stop
     ```
 - **Documentation**: See `docs/SCRIPTS.md` (Inter-Agent Communication section) for full technical reference.
+
+## Claude Review Protocol (MANDATORY)
+
+**After completing any module rebuild, you MUST request a Claude review.**
+
+### How to Request Review
+
+Send a SHORT message with ONLY the track and slug:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude "REVIEW_REQUEST: c1-bio volodymyr-velykii" --task-id review-volodymyr-velykii
+```
+
+**DO NOT:**
+- Send content in the message body
+- Send the full module text
+- Send audit results
+- Include long descriptions of what you did
+
+Claude will read the files himself from disk.
+
+### What Happens Next
+
+1. Claude reads the module files (`.md`, `activities/`, `vocabulary/`, `meta/`)
+2. Claude runs deep review (v4 protocol)
+3. Claude saves full report to `review/{slug}-review.md`
+4. Claude sends back a SHORT result:
+
+```
+REVIEW_RESULT: c1-bio volodymyr-velykii
+Score: 9.2/10 PASS
+Issues: 1 Russicism (line 119), 2 minor
+Action: Fix Russicism, then PASS. Full report: review/volodymyr-velykii-review.md
+```
+
+### On FAIL
+
+1. Read the review file: `review/{slug}-review.md`
+2. Fix all issues marked "REQUIRES FIX"
+3. Re-run audit: `scripts/audit_module.sh {path}`
+4. Request review again (max 2 rounds total)
+
+### On PASS
+
+1. Generate MDX
+2. Move to next module
+
+### Hard Limits
+
+- **Max 2 review rounds per module.** If still failing after 2 rounds, stop and flag for human.
+- **Never ask Claude to write content for you.** Claude reviews, you write.
+- **Never send content through messages.** Only file paths.
 
 ## GitHub Issues Task Workflow (NEW)
 
@@ -417,11 +469,11 @@ MANDATORY for `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`.
 ### Workflow
 1. **Research topic** using ONLY Ukrainian sources (uk.wikipedia.org, esu.com.ua, history.org.ua, litopys.org.ua).
 2. **Prohibited**: Russian-language sources (`ru.wikipedia.org`) and `*.ru` domains are STRICTLY FORBIDDEN.
-3. **Notes**: Save structured notes to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`.
+3. **Notes**: Save structured notes to `curriculum/l2-uk-en/{track}/research/{slug}-research.md`.
 
 ### Research Notes Template
 
-Save to `curriculum/l2-uk-en/{track}/audit/{slug}-research.md`:
+Save to `curriculum/l2-uk-en/{track}/research/{slug}-research.md`:
 
 ```markdown
 # Research Notes: {Topic}

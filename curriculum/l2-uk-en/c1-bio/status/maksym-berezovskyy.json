@@ -2,13 +2,13 @@
   "module": "maksym-berezovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:21:46.855847Z",
+  "last_audit": "2026-02-07T16:37:42.722132Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T00:18:59.201949Z",
-    "meta": "2026-02-06T22:56:22.293969Z",
-    "activities": "2026-02-04T17:39:59.620509Z",
-    "vocabulary": "2026-02-04T17:38:15.625347Z",
+    "meta": "2026-02-07T15:13:22.013776Z",
+    "activities": "2026-02-07T10:03:51.564147Z",
+    "vocabulary": "2026-02-07T10:03:51.616988Z",
     "plan": null
   },
   "gates": {

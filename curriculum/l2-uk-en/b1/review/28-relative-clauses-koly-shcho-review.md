@@ -1,44 +1,91 @@
-# Module 28: Підрядні означальні: коли, що
+# Audit Report: M28 — 28-relative-clauses-koly-shcho.md
+**Level:** B1 | **Module:** M28 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 2000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:23
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:35:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 2000 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** error-correction, fill-in, translate, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Коли чи що? | 14 | 8 | ✅ |
+| 2 | match-up | Антецеденти та сполучники | 13 | 8 | ✅ |
+| 3 | cloze | Оберіть правильний сполучник | 14 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда? | 14 | 8 | ✅ |
+| 5 | group-sort | Типи антецедентів | 20 | 12 | ✅ |
+| 6 | unjumble | Розставте слова в правильному порядку | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 8 | cloze | Коли та що у контексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть сполучники коли та що | 22 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | quiz | Культура та Контекст | 8 | 8 | ✅ |
+| 13 | fill-in | Доповніть речення сполучником | 12 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                                    |
-| ------------------- | ----- | -------------------------------------------------------------------------------------------------------- |
-| Clarity             | 10/10 | The distinction between *relative clause* vs *conjunction* uses of **що** is handled exceptionally well. |
-| Structure           | 10/10 | Clear sections for Time vs Abstract concepts.                                                            |
-| Relevance           | 10/10 | Essential for B1 fluency.                                                                                |
-| Language            | 10/10 | Used Shevchenko's *Zapovit* effectively.                                                                 |
-| Pedagogy            | 10/10 | "Tip" boxes clarify the tricky difference between *коли* and *в який*.                                   |
-| Immersion           | 10/10 | Bessarabsky Market and Ostroh Academy contexts.                                                          |
-| Activities          | 10/10 | High density.                                                                                            |
-| Richness            | 10/10 | Cultural references are deep.                                                                            |
-| Humanity            | 10/10 | Dialogues are emotionally resonant.                                                                      |
-| LLM Fingerprint     | 10/10 | No issues.                                                                                               |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                                    |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (error-correction, fill-in, translate, unjumble) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 2037/2000 (raw: 2589)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 16/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 83/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (`кругла`, `необхідне`, capitalization of proper nouns).
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 34 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 11 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 6 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 20 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.7%** |
 
-- **Abstract Concepts:** The explanation of **що** with abstract antecedents (*те, все, нічого, щось*) is crystal clear.
-- **Cultural Depth:** Connecting grammar to Shevchenko's poetry elevates the module significantly.
-
-## Issues
-
-- *Fixed:* Minor vocab cleanup.
-
-## Recommendation
-
-✅ PASS — Excellent grammar module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 50 | Included in Core |
+| **Тест** | ⚪️ | 197 | Skipped |
+| **Теорія (Аналіз)** | ✅ | 293 | Included in Core |
+| **Поглиблення** | ⚪️ | 901 | Skipped |
+| **Практика** | ⚪️ | 32 | Skipped |
+| **Діалоги** | ✅ | 214 | Included in Core |
+| **Підсумок** | ✅ | 240 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

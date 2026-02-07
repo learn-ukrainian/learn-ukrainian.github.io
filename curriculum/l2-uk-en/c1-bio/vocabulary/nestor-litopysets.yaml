@@ -1,126 +1,144 @@
----
-- word: літописець
+module: nestor-litopysets
+level: C1-BIO
+version: '2.0'
+items:
+- lemma: літописець
+  ipa: /lʲitɔˈpɪsɛt͡sʲ/
   translation: chronicler
-  ipa: lʲitoˈpɪset͡sʲ
-  definition: Авторові літопису, особа, що записує історичні події за роками.
-  usage: "Нестор Літописець вважається батьком української історіографії."
-- word: історіографія
+  pos: noun
+  usage: Автор літопису, особа, що записує події.
+- lemma: історіографія
+  ipa: /istɔrʲiɔˈɦrɑfʲijɐ/
   translation: historiography
-  ipa: istorioˈɦrafija
-  definition: Сукупність досліджень з історії певної країни або періоду.
-  usage: "Його праця стала основою для всієї подальшої української історіографії."
-- word: легітимізувати
+  pos: noun
+  usage: Сукупність досліджень з історії.
+- lemma: легітимізувати
+  ipa: /lɛɦʲitɪmʲiˈzuʋɐtɪ/
   translation: to legitimize
-  ipa: leɦitɪmiˈzuvatɪ
-  definition: Надавати чому-небудь законної сили, визнавати правомірним.
-  usage: "Літопис легітимізував київську державу на рівні з біблійними цивілізаціями."
-- word: агіографія
+  pos: verb
+  usage: Надавати чому-небудь законної сили.
+- lemma: агіографія
+  ipa: /ɐɦʲiɔˈɦrɑfʲijɐ/
   translation: hagiography
-  ipa: aɦioˈɦrafija
-  definition: Жанр літератури, що описує життя святих.
-  usage: "Нестор був неперевершеним майстром агіографічного жанру."
-- word: чернець
+  pos: noun
+  usage: Жанр літератури про життя святих.
+- lemma: чернець
+  ipa: /t͡ʃɛrˈnɛt͡sʲ/
   translation: monk
-  ipa: t͡ʃɛrˈnɛt͡sʲ
-  definition: Особа, що прийняла чернечу обітницю і живе в монастирі.
-  usage: "Нестор провів понад сорок років як чернець Києво-Печерської лаври."
-- word: скрипторій
+  pos: noun
+  usage: Особа, що прийняла чернечу обітницю.
+- lemma: скрипторій
+  ipa: /skrɪpˈtɔrʲij/
   translation: scriptorium
-  ipa: skrɪpˈtɔrʲij
-  definition: Майстерня в монастирі для переписування книг.
-  usage: "У монастирському скрипторії Нестор опановував мистецтво каліграфії."
-- word: аскеза
+  pos: noun
+  usage: Майстерня для переписування книг.
+- lemma: аскеза
+  ipa: /ɐsˈkɛzɐ/
   translation: asceticism
-  ipa: asˈkɛza
-  definition: Суворий спосіб життя з відмовою від життєвих благ заради духовності.
-  usage: "Духовне зростання Нестора супроводжувалося суворою аскезою."
-- word: ієродиякон
+  pos: noun
+  usage: Суворий спосіб життя заради духовності.
+- lemma: ієродиякон
+  ipa: /ijɛrɔˈdɪjɐkɔn/
   translation: hierodeacon
-  ipa: ijeɾodɪˈakɔn
-  definition: Чернець у сані диякона.
-  usage: "Згодом Нестор був висвячений у сан ієродиякона."
-- word: пергамент
+  pos: noun
+  usage: Чернець у сані диякона.
+- lemma: пергамент
+  ipa: /pɛrˈɦɑmɛnt/
   translation: parchment
-  ipa: perˈɦament
-  definition: Спеціально оброблена шкіра тварин для письма.
-  usage: "Написання літопису на пергаменті вимагало неймовірної витривалості."
-- word: провіденціалізм
+  pos: noun
+  usage: Спеціально оброблена шкіра для письма.
+- lemma: провіденціалізм
+  ipa: /prɔʋʲidɛnt͡sʲiɐˈlʲizm/
   translation: providentialism
-  ipa: prowident͡siaˈlizm
-  definition: Погляд на історію як на втілення Божої волі.
-  usage: "Метод Нестора — це синтез провіденціалізму та історичного прагматизму."
-- word: автохтонний
+  pos: noun
+  usage: Погляд на історію як на волю Бога.
+- lemma: автохтонний
+  ipa: /ɐu̯tɔxˈtɔnnɪj/
   translation: autochthonous / indigenous
-  ipa: awtɔxˈtɔnnɪj
-  definition: Корінний, той, що виник на даній території.
-  usage: "Нестор доводив, що слов'яни є автохтонним населенням Європи."
-- word: усобиця
+  pos: adj
+  usage: Корінний, місцевого походження.
+- lemma: усобиця
+  ipa: /uˈsɔbɪt͡sʲɐ/
   translation: internal strife / feuds
-  ipa: uˈsɔbɪt͡sʲa
-  definition: Внутрішня боротьба, розбрат між князями в одній державі.
-  usage: "Нестор послідовно засуджував князівські усобиці."
-- word: хронологія
+  pos: noun
+  usage: Внутрішня боротьба між князями.
+- lemma: хронологія
+  ipa: /xrɔnɔˈlɔɦʲijɐ/
   translation: chronology
-  ipa: xrɔnɔˈlɔɦija
-  definition: Послідовність подій у часі.
-  usage: "Він намагався встановити точну хронологію подій Київської Русі."
-- word: канонізувати
+  pos: noun
+  usage: Послідовність подій у часі.
+- lemma: канонізувати
+  ipa: /kɐnɔnʲiˈzuʋɐtɪ/
   translation: to canonize
-  ipa: kanɔniˈzuvatɪ
-  definition: Прираховувати до сонму святих у церкві.
-  usage: "Православна церква канонізувала Нестора як преподобного."
-- word: деколонізація
+  pos: verb
+  usage: Прираховувати до сонму святих.
+- lemma: деколонізація
+  ipa: /dɛkɔlɔnʲizˈɑt͡sʲijɐ/
   translation: decolonization
-  ipa: dekɔlɔniˈzat͡sija
-  definition: Процес звільнення від колоніального впливу та повернення суб'єктності.
-  usage: "Сьогодні триває деколонізація образу Нестора Літописця."
-- word: тяглість
+  pos: noun
+  usage: Звільнення від колоніального впливу.
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲistʲ/
   translation: continuity
-  ipa: ˈtʲaɦlistʲ
-  definition: Безперервність розвитку певного явища протягом тривалого часу.
-  usage: "Постать Нестора свідчить про тяглість нашої державної традиції."
-- word: ідентичність
+  pos: noun
+  usage: Безперервність розвитку певного явища.
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
   translation: identity
-  ipa: idenˈtɪt͡ʃnistʲ
-  definition: Усвідомлення людиною своєї належності до певної групи чи нації.
-  usage: "Нестор сформулював наратив, який став основою української ідентичності."
-- word: києвоцентризм
+  pos: noun
+  usage: Усвідомлення належності до групи.
+- lemma: києвоцентризм
+  ipa: /kɪjɛʋɔt͡sɛnˈtrɪzm/
   translation: Kyivo-centrism
-  ipa: kɪjɛwɔt͡sɛnˈtrɪzm
-  definition: Концепція, що розглядає Київ як головний духовний та політичний центр.
-  usage: "Нестор заклав ідею києвоцентризму в основу свого літопису."
-- word: агіограф
+  pos: noun
+  usage: Концепція Києва як головного центру.
+- lemma: агіограф
+  ipa: /ɐɦʲiˈɔɦrɐf/
   translation: hagiographer
-  ipa: aɦiˈɔɦraf
-  definition: Автор житій святих.
-  usage: "Нестор був першим видатним агіографом нашої землі."
-- word: каганець
+  pos: noun
+  usage: Автор житій святих.
+- lemma: каганець
+  ipa: /kɐˈɦɑnɛt͡sʲ/
   translation: oil lamp
-  ipa: kaˈɦanɛt͡sʲ
-  definition: Невелика лампа, що світить за допомогою жиру чи олії.
-  usage: "Нестор писав літопис при слабкому світлі каганця."
-- word: звід
+  pos: noun
+  usage: Невелика лампа на жирі чи олії.
+- lemma: звід
+  ipa: /zʋʲid/
   translation: codex / collection
-  ipa: zwid
-  definition: Зібрання, сукупність текстів або законів.
-  usage: "«Повість минулих літ» — це монументальний літописний звід."
-- word: етногенез
+  pos: noun
+  usage: Зібрання, сукупність текстів.
+- lemma: етногенез
+  ipa: /ɛtnɔˈɦɛnɛz/
   translation: ethnogenesis
-  ipa: ɛtnɔˈɦɛnɛz
-  definition: Процес виникнення та формування народу.
-  usage: "Нестор намагався осмислити етногенез слов'янських племен."
-- word: патріарх
+  pos: noun
+  usage: Процес формування народу.
+- lemma: патріарх
+  ipa: /pɐtrʲiˈɑrx/
   translation: patriarch
-  ipa: patriˈarx
-  definition: Старійшина, засновник або видатна постать у певній галузі.
-  usage: "Нестора часто називають патріархом нашої історії."
-- word: мощі
+  pos: noun
+  usage: Засновник або видатна постать у галузі.
+- lemma: мощі
+  ipa: /ˈmɔʃt͡ʃʲi/
   translation: relics (sacred)
-  ipa: mɔˈʃt͡ʃi
-  definition: Тіло святого, що залишилося нетлінним після смерті.
-  usage: "Його мощі спочивають у Ближніх печерах Києво-Печерської лаври."
-- word: палеограф
+  pos: noun
+  usage: Тіло святого, що залишилося нетлінним.
+- lemma: палеограф
+  ipa: /pɐlɛˈɔɦrɐf/
   translation: paleographer
-  ipa: paleɔˈɦraf
-  definition: Фахівець з вивчення давніх рукописів та систем письма.
-  usage: "Сучасні палеографи продовжують вивчати техніку письма Нестора."
+  pos: noun
+  usage: Фахівець з вивчення давніх рукописів.
+- lemma: суб'єктність
+  ipa: /subjɛkˈtɪu̯nʲistʲ/
+  translation: subjectivity / agency
+  pos: noun
+  usage: Здатність діяти самостійно і свідомо.
+- lemma: наратив
+  ipa: /nɐrɐˈtɪu̯/
+  translation: narrative
+  pos: noun
+  usage: Оповідь, спосіб представлення історії.
+- lemma: сакральний
+  ipa: /sɐˈkrɑlʲnɪj/
+  translation: sacred / sacral
+  pos: adj
+  usage: Пов'язаний з релігійним культом, священний.

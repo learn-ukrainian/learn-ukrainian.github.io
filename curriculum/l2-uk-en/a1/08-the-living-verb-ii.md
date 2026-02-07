@@ -2,7 +2,7 @@
 
 ## Warm-up
 
-You've already learned **First Conjugation** verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** /ˈɦɔvɔrɪtɪ/ «to speak» and **робити** /ˈrɔbɪtɪ/ «to do»? These belong to the **Second Conjugation** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
+You've already learned **First Conjugation** verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** /ɦɔvɔˈrɪtɪ/ «to speak» and **робити** /rɔˈbɪtɪ/ «to do»? These belong to the **Second Conjugation** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
 
 > [!tip] **Aspect Check**
 > Like the verbs from Module 06, these are **imperfective verbs** (недоконаний вид). They describe actions in progress or habits. You are building the foundation of «how» and «when» things happen in Ukrainian!
@@ -21,7 +21,7 @@ The **Second Conjugation** (Ukrainian: **друга дієвідміна**) verb
 | 2nd (you)         | **-иш**         | **-ите**            |
 | 3rd (he/she/they) | **-ить**        | **-ять** / **-ать** |
 
-**Example: говорити /ˈɦɔvɔrɪtɪ/ — to speak**
+**Example: говорити /ɦɔvɔˈrɪtɪ/ — to speak**
 
 | Person   | Ukrainian | IPA | English               |
 | -------- | --------- | --- | --------------------- |
@@ -159,13 +159,13 @@ This is called **consonant mutation** — certain letters change before the **-�
 You'll pick up these patterns naturally as you practice! Don't worry about memorizing the table; just notice the «extra» letters when you see them.
 
 > [!context] **Reflexive Verbs Preview**
-> Some verbs end in **-ся** or **-сь**. This usually means the action is directed back at the speaker (like «I wash *myself*»). You'll learn the full pattern in Module 25, but for now, just notice them when they appear!
+> Some verbs end in **-ся** or **-сь**. This usually means the action is directed back at the speaker (like «I wash *myself*»). You'll learn the full pattern in Module 09, but for now, just notice them when they appear!
 
 > [!warning] **Common Mistake**
-Don't confuse **First Conjugation** and **Second Conjugation** endings! First Conjugation uses **-аю/-ають**, Second Conjugation uses **-ю/-ять**. Compare:
-
-- **читати** (First Conjugation): читаЮ, читаЄш, читаЄ, читаЮТЬ
-- **говорити** (Second Conjugation): говорЮ, говорИШ, говорИТЬ, говорЯТЬ
+> Don't confuse **First Conjugation** and **Second Conjugation** endings! First Conjugation uses **-аю/-ають**, Second Conjugation uses **-ю/-ять**. Compare:
+>
+> - **читати** (First Conjugation): читаЮ, читаЄш, читаЄ, читаЮТЬ
+> - **говорити** (Second Conjugation): говорЮ, говорИШ, говорИТЬ, говорЯТЬ
 >
 > The vowels are different!
 

@@ -2,13 +2,13 @@
   "module": "borys-paton",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:34.464828Z",
+  "last_audit": "2026-02-07T16:38:30.138155Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.351278Z",
-    "meta": "2026-02-06T22:56:22.288272Z",
-    "activities": "2026-02-02T11:02:03.957458Z",
-    "vocabulary": "2026-02-02T11:02:03.957284Z",
+    "meta": "2026-02-07T15:13:22.025813Z",
+    "activities": "2026-02-07T10:03:51.584570Z",
+    "vocabulary": "2026-02-07T10:03:51.636094Z",
     "plan": null
   },
   "gates": {

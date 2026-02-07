@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-01-30 15:29:35
+**Generated:** 2026-02-07 21:35:15
 
 ## Configuration
 **Type:** A1
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 934/750 (raw: 1079)
+- **Words:** ✅ 934/750 (raw: 1080)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -53,13 +53,16 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
+## MDX VALIDATION
+✅ No issues found
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 213 | Included in Core |
 | **Presentation** | ✅ | 215 | Included in Core |
-| **Dialogues** | ✅ | 400 | Included in Core |
-| **Практика** | ⚪️ | 20 | Skipped |
+| **Practice** | ⚪️ | 400 | Skipped |
+| **Practice 2** | ⚪️ | 20 | Skipped |
 | **Підсумок** | ✅ | 67 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

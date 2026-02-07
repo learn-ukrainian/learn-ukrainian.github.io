@@ -2,11 +2,11 @@
   "module": "oles-honchar",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:40.150472Z",
+  "last_audit": "2026-02-07T16:38:30.592830Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T15:58:34.431535Z",
-    "meta": "2026-02-06T15:48:05.643331Z",
+    "md": "2026-02-07T01:04:17.241829Z",
+    "meta": "2026-02-07T15:13:22.025940Z",
     "activities": null,
     "vocabulary": null,
     "plan": null

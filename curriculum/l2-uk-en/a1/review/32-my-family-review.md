@@ -1,12 +1,69 @@
-## Module 32: My Family - FINAL REPORT
+# Audit Report: M32 — 32-my-family.md
+**Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 916
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-01-31 15:30:00
 
-**FINAL SCORES (after fixes):**
-Coherence 5/5 (was 5) | Relevance 5/5 (was 5) | Educational 5/5 (was 5) | Language 5/5 (was 4) | Pedagogy 5/5 (was 5) | Immersion 5/5 (was 4) | Activities 5/5 (was 3) | Richness N/A | Humanity 5/5 (was 5) | LLM Fingerprint 5/5 (was 5) | **Overall 5/5** ⬆️ from 4/5
+## Configuration
+**Type:** A1-vocab
+**Word Target:** 916 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
 
-**Status:** ✅ 10/10 ACHIEVED
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Family Members | 10 | 8 | ✅ |
+| 2 | match-up | More Family | 10 | 8 | ✅ |
+| 3 | group-sort | Generations | 13 | 12 | ✅ |
+| 4 | group-sort | Gender of Family Terms | 13 | 12 | ✅ |
+| 5 | fill-in | Моя сім'я (My Family) | 12 | 8 | ✅ |
+| 6 | fill-in | Possessives with Family | 12 | 8 | ✅ |
+| 7 | quiz | Who Is Who? | 8 | 8 | ✅ |
+| 8 | quiz | Marital Status | 8 | 8 | ✅ |
+| 9 | unjumble | Family Sentences | 12 | 6 | ✅ |
+| 10 | true-false | Family Facts | 12 | 8 | ✅ |
+| 11 | match-up | Vocative Forms (Кличний відмінок) | 10 | 8 | ✅ |
+| 12 | fill-in | Calling Family Members | 8 | 8 | ✅ |
 
-**Fixes Applied:**
-- ✅ **Category 1 (Structure):** Removed legacy practice sections. Added template-compliant headers.
-- ✅ **Category 2 (Language):** Added IPA for family terms, possessives, age descriptors, marital status, and vocative forms. Replaced ASCII double quotes with Ukrainian angular quotes «...» in YAML.
+**Summary:**
+- Total activities: 12 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
 
-**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/32-my-family.md`)
+## Gates
+- **Words:** ✅ 958/916 (raw: 1405)
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 11/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 48.4% (target 35-55% (M32))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 108 | Included in Core |
+| **Presentation** | ✅ | 342 | Included in Core |
+| **Діалоги (Dialogues)** | ✅ | 373 | Included in Core |
+| **Practice** | ⚪️ | 59 | Skipped |
+| **Підсумок (Summary)** | ✅ | 58 | Included in Core |
+| **Need More Practice?** | ⚪️ | 18 | Skipped |

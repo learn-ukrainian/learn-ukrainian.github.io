@@ -2,13 +2,13 @@
   "module": "liudmyla-starytska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T00:22:07.190399Z",
+  "last_audit": "2026-02-07T16:38:01.471339Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-06T22:56:22.285805Z",
-    "meta": "2026-02-06T22:56:22.293711Z",
-    "activities": "2026-02-06T22:56:22.241351Z",
-    "vocabulary": "2026-02-05T23:30:31.882266Z",
+    "md": "2026-02-07T16:12:13.082795Z",
+    "meta": "2026-02-07T16:29:21.591690Z",
+    "activities": "2026-02-07T16:08:01.362414Z",
+    "vocabulary": "2026-02-07T10:03:51.645733Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5452/4000 (raw: 5995) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5077/5000 (raw: 5597)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

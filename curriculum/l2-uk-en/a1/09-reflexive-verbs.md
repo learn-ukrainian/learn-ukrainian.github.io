@@ -129,7 +129,7 @@ This is a standard Second Conjugation verb, but it features a **consonant mutati
 
 ### The «Smile» Culture
 
-In some cultures, smiling at strangers is normal. in Ukraine, a smile (**усмішка**) is often reserved for friends and genuine moments. If a stranger doesn't smile at you on the street, it's not rudeness—it's neutrality. But when Ukrainians **сміються** (laugh) with you, it's 100% sincere!
+In some cultures, smiling at strangers is normal. In Ukraine, a smile (**усмішка**) is often reserved for friends and genuine moments. If a stranger doesn't smile at you on the street, it's not rudeness—it's neutrality. But when Ukrainians **сміються** (laugh) with you, it's 100% sincere!
 
 # Підсумок
 

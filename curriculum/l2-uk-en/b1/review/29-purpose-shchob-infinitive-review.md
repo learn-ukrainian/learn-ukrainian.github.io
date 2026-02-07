@@ -1,44 +1,90 @@
-# Module 29: Підрядні речення мети: щоб + інфінітив
+# Audit Report: M29 — 29-purpose-shchob-infinitive.md
+**Level:** B1 | **Module:** M29 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 1645
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 17:52:23
 
-**Template:** b1-grammar-module-template.md | **Compliance:** ✅ PASS
-**Overall Score:** 10/10
-**Status:** ✅ PASS
-**Generated:** 2026-01-25 00:45:00
-**Reviewer:** Gemini
+## Configuration
+**Type:** B1-grammar
+**Word Target:** 1645 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** error-correction, fill-in, translate, unjumble
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
 
-## Scores Breakdown
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Конструкція щоб + інфінітив | 14 | 8 | ✅ |
+| 2 | match-up | Головне речення і мета | 13 | 8 | ✅ |
+| 3 | cloze | Оберіть правильну форму | 14 | 12 | ✅ |
+| 4 | true-false | Правда чи неправда? | 14 | 8 | ✅ |
+| 5 | group-sort | Типи виразів мети | 15 | 12 | ✅ |
+| 6 | unjumble | Розставте слова в правильному порядку | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 8 | cloze | Щоб плюс інфінітив у контексті | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть інфінітиви мети | 15 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 11 | translate | Перекладіть речення | 8 | 6 | ✅ |
+| 12 | quiz | Мета і Культура | 8 | 8 | ✅ |
+| 13 | fill-in | Доповніть речення інфінітивом | 12 | 8 | ✅ |
 
-| Dimension           | Score | Notes                                                                                              |
-| ------------------- | ----- | -------------------------------------------------------------------------------------------------- |
-| Clarity             | 10/10 | The "same subject" rule is the cornerstone here, and it's explained perfectly.                     |
-| Structure           | 10/10 | Logical flow from simple to complex/stylistic variants.                                            |
-| Relevance           | 10/10 | High. This is one of the most common structures.                                                   |
-| Language            | 10/10 | "Cyborgs" quote is powerful.                                                                       |
-| Pedagogy            | 10/10 | Good distinction between Perfective (one time) and Imperfective (regular) infinitives after *щоб*. |
-| Immersion           | 10/10 | References to Carpathians, Lviv coffee culture, and Shevchenko ("Учітеся...").                     |
-| Activities          | 10/10 | Very high density.                                                                                 |
-| Richness            | 10/10 | Stylistic alternatives (*для того щоб*, *з метою*) add depth.                                      |
-| Humanity            | 10/10 | The dialogues feel genuine.                                                                        |
-| LLM Fingerprint     | 10/10 | No issues.                                                                                         |
-| Linguistic Accuracy | 10/10 | Accurate after fixes.                                                                              |
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 4/4 (error-correction, fill-in, translate, unjumble) ✅
+- Low density activities: 0
 
-## Linguistic Accuracy Issues
+## Gates
+- **Words:** ✅ 1676/1645 (raw: 1950)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 13/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 69/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.7% (target 85-100% (B1.3-4 Complex))
+- **Richness:** ✅ 98% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
 
-- *Fixed:* Vocabulary extraction errors (removed meta-talk `шоб`, `щоб-речення` and compounds).
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** grammar
 
-## Strengths
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 58 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 11 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 4 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.82 | - | 82% | 5% | 4.1% |
+| questions | 20 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.3%** |
 
-- **Stylistic Range:** Showing *для того щоб* vs *щоб* vs *заради* helps students move beyond basic speech.
-- **Pronunciation Tip:** The note about colloquial "шоб" is a great touch of realism.
-
-## Issues
-
-- *Fixed:* Minor vocab cleanup.
-
-## Recommendation
-
-✅ PASS — Excellent grammar module.
-
-## Action Items
-
-1. Fixed vocabulary extraction errors — ✅ APPLIED
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 50 | Included in Core |
+| **Тест** | ⚪️ | 143 | Skipped |
+| **Граматика** | ⚪️ | 222 | Skipped |
+| **Поглиблення** | ⚪️ | 751 | Skipped |
+| **Практика** | ⚪️ | 190 | Skipped |
+| **Підсумок** | ✅ | 210 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
