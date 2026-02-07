@@ -687,8 +687,8 @@ class ActivityParser:
         return AuthorialIntentActivity(
             title=data.get('title', ''),
             source_reading=data.get('source_reading', ''),  # Issue #425
-            excerpt=data.get('excerpt', ''),
-            questions=data.get('questions', []),
+            excerpt=data.get('text_excerpt', ''),
+            questions=[data.get('prompt', '')] if data.get('prompt') else [],
             model_answer=data.get('model_answer', '')
         )
 

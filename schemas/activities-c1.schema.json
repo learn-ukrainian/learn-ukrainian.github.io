@@ -895,7 +895,7 @@
       "description": "Reading comprehension with authentic academic/professional resources. Supports two formats: inline text (source + text) or external resource (resource + tasks).",
       "oneOf": [
         {
-          "required": ["type", "title", "source", "text"],
+          "required": ["type", "title", "source", "text", "tasks"],
           "additionalProperties": false,
           "properties": {
             "type": { "const": "reading" },
@@ -903,6 +903,11 @@
             "title": { "type": "string", "minLength": 1 },
             "source": { "type": "string", "description": "Source attribution (e.g., 'Повість минулих літ')" },
             "text": { "type": "string", "minLength": 1, "description": "Inline primary source text for reading" },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            },
             "instruction": { "type": "string", "description": "Additional instructions for the learner" }
           }
         },
