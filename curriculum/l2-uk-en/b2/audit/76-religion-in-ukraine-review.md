@@ -1,8 +1,8 @@
 # Audit Report: M76 — 76-religion-in-ukraine.md
 **Level:** B2 | **Module:** M76 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:16
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:50
 
 ## Configuration
 **Type:** B2-culture
@@ -20,8 +20,8 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Релігійне різноманіття України | 8 | 8 | ✅ |
-| 2 | true-false | Міжконфесійний мир та традиції | 8 | 8 | ✅ |
+| 1 | quiz | Релігійне різноманіття України | 10 | 8 | ✅ |
+| 2 | true-false | Міжконфесійний мир та традиції | 10 | 8 | ✅ |
 | 3 | fill-in | Словник духовності | 10 | 8 | ✅ |
 | 4 | unjumble | Духовні концепції | 8 | 6 | ✅ |
 | 5 | group-sort | Релігійні свята та символи | 18 | 14 | ✅ |
@@ -29,32 +29,24 @@
 | 7 | cloze | Планування поїздки до Почаєва | 16 | 14 | ✅ |
 | 8 | error-correction | Релігійні вітання (корекція) | 8 | 6 | ✅ |
 | 9 | translate | Релігійні терміни англійською | 8 | 6 | ✅ |
-| 10 | select | Архітектура та символіка | 6 | 6 | ✅ |
+| 10 | select | Архітектура та символіка | 8 | 6 | ✅ |
 | 11 | cloze | Міжконфесійна злагода | 15 | 14 | ✅ |
 | 12 | translate | Пасивні конструкції в духовному тексті | 8 | 6 | ✅ |
-| 13 | quiz | Аналіз стилів у релігійному контексті | 8 | 8 | ✅ |
+| 13 | quiz | Аналіз стилів у релігійному контексті | 10 | 8 | ✅ |
 | 14 | match-up | Сталі вирази та дієслівні сполуки | 12 | 8 | ✅ |
 | 15 | essay-response | Релігійна толерантність | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Релігія в Україні | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
+- Total activities: 16 (target: 10-14) ❌
 - Unique types: 13 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 76-religion-in-ukraine.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 3032/2000 (raw: 3125)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 3030/2000 (raw: 3109)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
@@ -63,8 +55,8 @@
 - **Vocab:** ✅ 47/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⚠️ Too many activities: 15 (target 10-14)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⚠️ Too many activities: 16 (target 10-14)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (culture))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -84,18 +76,16 @@
 | paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
 | examples | 21 | - | 100% | 7% | 6.7% |
 | realworld | 2 | - | 100% | 7% | 6.7% |
-| questions | 10 | 4 | 100% | 7% | 6.7% |
+| questions | 9 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Вступ: Багатоконфесійна мозаїка України** | ✅ | 700 | Included in Core |
-| **Теорія: Релігія та боротьба за суб’єктність** | ⚪️ | 322 | Skipped |
-| **Духовні центри та архітектурна спадщина** | ⚪️ | 779 | Skipped |
-| **Міжконфесійний мир та Рада церков** | ⚪️ | 336 | Skipped |
-| **Reading Practice: Духовний фундамент нації** | ⚪️ | 0 | Skipped (using YAML) |
-| **✍️ Аналіз тексту** | ✅ | 195 | Included in Core |
-| **Підсумок** | ✅ | 58 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Релігійний ландшафт України** | ⚪️ | 700 | Skipped |
+| **Православні церкви в Україні** | ⚪️ | 322 | Skipped |
+| **Інші конфесії** | ⚪️ | 779 | Skipped |
+| **Релігійні свята та традиції** | ⚪️ | 336 | Skipped |
+| **Міжконфесійний діалог** | ✅ | 472 | Included in Core |
+| **Підсумок та практика** | ✅ | 361 | Included in Core |

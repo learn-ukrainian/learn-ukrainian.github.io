@@ -1,6 +1,7 @@
 module: b2-47
 level: B2
 slug: 47-set-expressions-i-body-animals
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9
@@ -16,7 +17,6 @@ tags:
 - animals
 vocabulary_count: 35
 vocab_count: 111
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-47

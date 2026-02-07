@@ -1,8 +1,8 @@
 # Audit Report: M58 — 58-synonyms-quality.md
 **Level:** B2 | **Module:** M58 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:55
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:31
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -21,87 +21,70 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть відповідність (Якість) | 12 | 8 | ✅ |
-| 2 | quiz | Оберіть точну оцінку | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть точну оцінку | 10 | 8 | ✅ |
 | 3 | group-sort | Градація оцінки | 18 | 14 | ✅ |
 | 4 | unjumble | Складіть оцінне речення | 8 | 6 | ✅ |
 | 5 | cloze | Відгук про поїздку | 19 | 14 | ✅ |
 | 6 | fill-in | Оберіть критерій | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте оцінку | 8 | 6 | ✅ |
 | 8 | translate | Переклад якості | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси оцінки | 8 | 8 | ✅ |
-| 10 | select | Всі відтінки досконалості | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси оцінки | 10 | 8 | ✅ |
+| 10 | select | Всі відтінки досконалості | 8 | 6 | ✅ |
 | 11 | match-up | Регістри та Оцінки | 12 | 8 | ✅ |
 | 12 | match-up | Антоніми якості | 12 | 8 | ✅ |
-| 13 | quiz | Метафорична якість | 8 | 8 | ✅ |
+| 13 | quiz | Метафорична якість | 10 | 8 | ✅ |
 | 14 | essay-response | Творче завдання: Мистецтво оцінки | 1 | 1 | ✅ |
-| 15 | select | Соціальна оцінка | 6 | 6 | ✅ |
+| 15 | select | Соціальна оцінка | 8 | 6 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Якість та Оцінка | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 58-synonyms-quality.yaml: Schema validation error at key '14': {'type': 'select', 'title': 'Соціальна оцінка', 'instruction': 'Оберіть слова, які описують соціальну значущість явища або людини.', 'items': [{'question': 'Яка лексика вказує на вагу в суспільстві?', 'options': [{'text': 'впливовий', 'correct': True}, {'text': 'авторитетний', 'correct': True}, {'text': 'незначний', 'correct': True}, {'text': 'пересічний', 'correct': True}, {'text': 'видатний', 'correct': True}, {'text': "дріб'язковий", 'correct': True}]}, {'question': "Оберіть синоніми до слова 'відомий':", 'options': [{'text': 'знаменитий', 'correct': True}, {'text': 'публічний', 'correct': True}, {'text': 'популярний', 'correct': True}, {'text': 'таємний', 'correct': False}]}, {'question': 'Які слова описують професійне визнання?', 'options': [{'text': 'кваліфікований', 'correct': True}, {'text': 'досвідчений', 'correct': True}, {'text': 'дилетантський', 'correct': False}, {'text': 'майстерний', 'correct': True}]}, {'question': "Оберіть антоніми до слова 'видатний':", 'options': [{'text': 'пересічний', 'correct': True}, {'text': 'непомітний', 'correct': True}, {'text': 'геніальний', 'correct': False}, {'text': 'звичайний', 'correct': True}]}, {'question': 'Слова для опису етичної якості лідера:', 'options': [{'text': 'справедливий', 'correct': True}, {'text': 'чесний', 'correct': True}, {'text': 'корумпований', 'correct': False}, {'text': 'відповідальний', 'correct': True}]}, {'question': 'Які терміни вказують на високий стандарт якості?', 'options': [{'text': 'еталонний', 'correct': True}, {'text': 'взірцевий', 'correct': True}, {'text': 'посередній', 'correct': False}, {'text': 'зразковий', 'correct': True}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1777/2000 (raw: 1981)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2055/2000 (raw: 2324)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 3 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 9 | 4 | 100% | 25% | 25.0% |
+| engagement | 10 | 4 | 100% | 25% | 25.0% |
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 9 | - | 100% | 17% | 16.7% |
-| visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.89 | - | 89% | 8% | 7.4% |
-| examples | 53 | - | 100% | 8% | 8.3% |
+| visual | 6 | 3 | 100% | 8% | 8.3% |
+| paragraph_var | 0.96 | - | 96% | 8% | 8.0% |
+| examples | 62 | - | 100% | 8% | 8.3% |
 | realworld | 10 | - | 100% | 8% | 8.3% |
-| questions | 5 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.9%** |
+| questions | 6 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 71 | Included in Core |
-| **Вступ** | ✅ | 126 | Included in Core |
-| **Фразеологізми та синоніми: Світло позитиву** | ⚪️ | 254 | Skipped |
-| **Частина 2: Тіні негативу — Від «поганого» до «жахливого»** | ✅ | 219 | Included in Core |
-| **Частина 3: Критерії та Стандарти оцінки** | ✅ | 98 | Included in Core |
-| **Частина 4: Якість у дзеркалі української літератури** | ✅ | 102 | Included in Core |
-| **Вживання у контексті** | ✅ | 109 | Included in Core |
-| **Психологія та емоційний інтелект** | ⚪️ | 333 | Skipped |
-| **Частина 7: Динаміка змінної якості у глобальному світі** | ✅ | 129 | Included in Core |
-| **Частина 8: Репутація та соціальна оцінка** | ✅ | 96 | Included in Core |
-| **Частина 9: Самооцінка та внутрішній стандарт** | ✅ | 78 | Included in Core |
-| **Підсумок** | ✅ | 52 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Добре чи погано?** | ⚪️ | 380 | Skipped |
+| **Good** | ⚪️ | 537 | Skipped |
+| **Bad** | ⚪️ | 571 | Skipped |
+| **Практика — оцінювання в тексті** | ✅ | 482 | Included in Core |
+| **Підсумок** | ✅ | 14 | Included in Core |

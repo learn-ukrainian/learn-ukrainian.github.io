@@ -1,8 +1,8 @@
 # Audit Report: M11 — 11-multi-clause-sentences.md
 **Level:** B2 | **Module:** M11 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:46
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:41
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,39 +42,23 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (71% overlap): "Складнопідрядне з послідовним підпорядкуванням (2 підрядних: умовне, з'ясувальне)
-5.". Shares significant keywords with sentence at index 76.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Книга, яку я читаю, написана автором, якого я поважаю.". Shares significant keywords with sentence at index 79.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Хоча було пізно, ми продовжували працювати і досягли мети.". Shares significant keywords with sentence at index 80.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
-- **Words:** ❌ 2123/3800 (raw: 2530)
+- **Words:** ✅ 5315/3800 (raw: 5690)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 6 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -83,27 +67,26 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 69 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 32 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.6%** |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
+| visual | 14 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
+| questions | 20 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
-| **Вступ** | ✅ | 158 | Included in Core |
-| **Пояснення** | ⚪️ | 1038 | Skipped |
-| **Трансформації** | ⚪️ | 308 | Skipped |
-| **Діалоги** | ✅ | 333 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 61 | Skipped |
-| **Самооцінка** | ⚪️ | 65 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Багатоскладні речення** | ✅ | 662 | Included in Core |
+| **Складносурядні речення** | ⚪️ | 1038 | Skipped |
+| **Складнопідрядні речення з кількома підрядними** | ⚪️ | 333 | Skipped |
+| **Складнопідрядні речення з одним підрядним** | ⚪️ | 696 | Skipped |
+| **Вкладені підрядні речення** | ⚪️ | 61 | Skipped |
+| **Пунктуація у багатоскладних реченнях** | ⚪️ | 714 | Skipped |
+| **Практика і підсумок** | ✅ | 326 | Included in Core |

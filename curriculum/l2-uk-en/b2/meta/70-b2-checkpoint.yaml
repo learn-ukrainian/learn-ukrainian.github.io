@@ -1,6 +1,7 @@
 module: b2-70
 level: B2
 slug: 70-b2-checkpoint
+focus: checkpoint
 version: '1.0'
 naturalness:
   score: 9
@@ -16,7 +17,6 @@ tags:
 - idioms
 vocabulary_count: 20
 vocab_count: 26
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-70

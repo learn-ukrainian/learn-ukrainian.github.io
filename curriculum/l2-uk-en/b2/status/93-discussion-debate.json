@@ -2,14 +2,14 @@
   "module": "93-discussion-debate",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:58.902227Z",
+  "last_audit": "2026-02-06T22:14:08.165936Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T10:46:24.786227Z",
-    "meta": "2026-01-29T07:39:04.745838Z",
-    "activities": "2026-01-21T11:05:20.959257Z",
-    "vocabulary": "2026-01-21T22:54:39.138269Z",
-    "plan": "2026-01-30T15:04:49.390834Z"
+    "md": "2026-02-06T21:26:00.645533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.666533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4228/2000 (raw: 4400)"
+      "message": "4237/2000 (raw: 4360)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/14"
+      "message": "16/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

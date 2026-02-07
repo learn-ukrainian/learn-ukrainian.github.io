@@ -1,8 +1,8 @@
 # Audit Report: M66 — 66-synonyms-abstract.md
 **Level:** B2 | **Module:** M66 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:47
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:39
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -21,59 +21,49 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть точне поняття | 12 | 8 | ✅ |
-| 2 | quiz | Світ ідей | 8 | 8 | ✅ |
+| 2 | quiz | Світ ідей | 10 | 8 | ✅ |
 | 3 | group-sort | Рівні абстракції | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть інтелектуальну фразу | 8 | 6 | ✅ |
 | 5 | cloze | Лабіринт думок | 16 | 14 | ✅ |
 | 6 | fill-in | Відтінки абстракції | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте думку | 8 | 6 | ✅ |
 | 8 | translate | Переклад абстракцій | 8 | 6 | ✅ |
-| 9 | true-false | Правда про ідеї | 8 | 8 | ✅ |
-| 10 | select | Всі форми інтелекту | 6 | 6 | ✅ |
+| 9 | true-false | Правда про ідеї | 10 | 8 | ✅ |
+| 10 | select | Всі форми інтелекту | 8 | 6 | ✅ |
 | 11 | match-up | Регістри та Поняття | 12 | 8 | ✅ |
 | 12 | match-up | Думка та Наслідок | 12 | 8 | ✅ |
-| 13 | quiz | Абстракції в культурі | 8 | 8 | ✅ |
-| 14 | select | Стратегічні Поняття | 6 | 6 | ✅ |
+| 13 | quiz | Абстракції в культурі | 10 | 8 | ✅ |
+| 14 | select | Стратегічні Поняття | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Світ моїх ідей | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Абстрактні Поняття та Ідеї | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Стратегічні Поняття', 'instruction': 'Оберіть усі слова про високі ідеали (6 елементів).', 'items': [{'question': 'Які терміни описують цінності (Оберіть 6):', 'options': [{'text': 'свобода', 'correct': True}, {'text': 'справедливість', 'correct': True}, {'text': 'гідність', 'correct': True}, {'text': 'істина', 'correct': True}, {'text': 'честь', 'correct': True}, {'text': 'гуманізм', 'correct': True}]}, {'question': 'Які слова описують духовний розвиток?', 'options': [{'text': 'просвітлення', 'correct': True}, {'text': 'самовдосконалення', 'correct': True}, {'text': 'пізнання', 'correct': True}, {'text': 'застій', 'correct': False}]}, {'question': "Оберіть характеристики 'наукового' підходу:", 'options': [{'text': "об'єктивність", 'correct': True}, {'text': 'доказовість', 'correct': True}, {'text': 'системність', 'correct': True}, {'text': 'чутки', 'correct': False}]}, {'question': "Які слова вказують на 'візію' майбутнього?", 'options': [{'text': 'перспектива', 'correct': True}, {'text': 'прогноз', 'correct': True}, {'text': 'проєкт', 'correct': True}, {'text': 'минуле', 'correct': False}]}, {'question': "Оберіть терміни для опису 'істини':", 'options': [{'text': "об'єктивна", 'correct': True}, {'text': 'незаперечна', 'correct': True}, {'text': 'абсолютна', 'correct': True}, {'text': 'хибна', 'correct': False}]}, {'question': "Які слова описують 'національний' вимір?", 'options': [{'text': 'ідентичність', 'correct': True}, {'text': 'свідомість', 'correct': True}, {'text': 'патріотизм', 'correct': True}, {'text': 'байдужість', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2930/2000 (raw: 3162)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2945/2000 (raw: 3036)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ✅ 97% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 97% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -83,34 +73,18 @@
 | variety | 0.95 | - | 95% | 17% | 15.8% |
 | cultural | 3 | - | 100% | 17% | 16.7% |
 | visual | 11 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.89 | - | 89% | 8% | 7.4% |
-| examples | 73 | - | 100% | 8% | 8.3% |
+| paragraph_var | 0.85 | - | 85% | 8% | 7.1% |
+| examples | 72 | - | 100% | 8% | 8.3% |
 | realworld | 8 | - | 100% | 8% | 8.3% |
 | questions | 15 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.2%** |
+| **TOTAL** | | | | | **97.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 74 | Included in Core |
-| **Вступ: Лабіринти української думки** | ✅ | 95 | Included in Core |
-| **Частина 1: Світ Думки — Від «здогаду» до «переконання»** | ✅ | 171 | Included in Core |
-| **Частина 2: Архітектура Теорії — Від «поняття» до «концепції»** | ✅ | 182 | Included in Core |
-| **Частина 3: Логіка Аргументації — Від «підстави» до «висновку»** | ✅ | 121 | Included in Core |
-| **Частина 5: Фразеологізми про ідеї та мислення** | ✅ | 225 | Included in Core |
-| **Вживання у контексті** | ✅ | 181 | Included in Core |
-| **Частина 6: Етика ідей та Інтелектуальна Відповідальність** | ✅ | 115 | Included in Core |
-| **Частина 7: Абстрактні Поняття у Державотворенні** | ✅ | 143 | Included in Core |
-| **Частина 8: Формування ідей у цифрову епоху** | ✅ | 97 | Included in Core |
-| **Частина 9: Психологія Сприйняття та Уявлення про світ** | ✅ | 139 | Included in Core |
-| **Частина 10: Логічна Стрункість Аргументації та доказовість** | ✅ | 92 | Included in Core |
-| **Частина 11: Концепція Свободи в Українській Думці** | ✅ | 96 | Included in Core |
-| **Частина 12: Логіка Наукового Пізнання та Відкриттів** | ✅ | 116 | Included in Core |
-| **Частина 13: Формування Культури Дискусії** | ✅ | 79 | Included in Core |
-| **Частина 11: Глибоке коріння української філософської думки** | ✅ | 174 | Included in Core |
-| **Частина 12: Абстрактні Поняття в епоху Штучного Інтелекту** | ✅ | 126 | Included in Core |
-| **Частина 13: Психологія ідей та їхній вплив на вчинки** | ✅ | 236 | Included in Core |
-| **Частина 14: Інтелектуальна Стійкість у Світі Фейків** | ✅ | 161 | Included in Core |
-| **Частина 15: Філософія Серця та Сучасні Цінності** | ✅ | 144 | Included in Core |
-| **Підсумок** | ✅ | 53 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Думка чи ідея?** | ⚪️ | 794 | Skipped |
+| **Thought/Idea** | ⚪️ | 675 | Skipped |
+| **Concept/Notion** | ✅ | 557 | Included in Core |
+| **Практика — абстрактна лексика** | ⚪️ | 831 | Skipped |
+| **Підсумок** | ✅ | 14 | Included in Core |

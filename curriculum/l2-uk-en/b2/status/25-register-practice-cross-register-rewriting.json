@@ -2,14 +2,14 @@
   "module": "25-register-practice-cross-register-rewriting",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:47.901482Z",
+  "last_audit": "2026-02-06T22:12:57.080580Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352003Z",
-    "meta": "2026-01-29T07:39:04.689498Z",
-    "activities": "2026-01-11T22:51:46.920999Z",
-    "vocabulary": "2026-01-21T22:54:28.287152Z",
-    "plan": "2026-01-30T15:04:49.239893Z"
+    "md": "2026-02-06T21:26:00.634533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.651533Z",
+    "vocabulary": "2026-02-06T21:26:00.678533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2783/2000 (raw: 3134)"
+      "message": "2836/2000 (raw: 3179)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/15"
+      "message": "16/15"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 5,
     "fail_count": 0
   }

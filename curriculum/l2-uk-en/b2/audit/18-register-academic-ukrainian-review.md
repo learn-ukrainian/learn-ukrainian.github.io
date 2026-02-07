@@ -1,8 +1,8 @@
 # Audit Report: M18 — 18-register-academic-ukrainian.md
 **Level:** B2 | **Module:** M18 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:51
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:49
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,42 +34,32 @@
 | 12 | fill-in | Хеджування та обережні твердження | 16 | 8 | ✅ |
 | 13 | quiz | Структура наукового тексту | 16 | 8 | ✅ |
 | 14 | essay-response | Анотація статті | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Науковий стиль української мови | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (error-correction, essay-response, fill-in, match-up, quiz) ❌
+- Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (83% overlap): "Результати дослідження вказують на потенційний негативний вплив соціальних мереж на комунікативну по...". Shares significant keywords with sentence at index 62.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2069/3800 (raw: 2905)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 4074/3800 (raw: 4419)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 7 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -78,25 +68,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 7 | 2 | 100% | 25% | 25.0% |
-| model_answers | 93 | 3 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 15 | 4 | 100% | 10% | 10.0% |
-| variety | 0.97 | - | 97% | 5% | 4.9% |
-| cultural | 4 | - | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.8%** |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| register_analysis | 13 | 5 | 100% | 15% | 15.0% |
+| visual | 12 | 4 | 100% | 10% | 10.0% |
+| variety | 0.93 | - | 93% | 5% | 4.7% |
+| cultural | 3 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 57 | Included in Core |
-| **Вступ** | ✅ | 214 | Included in Core |
-| **Пояснення** | ⚪️ | 711 | Skipped |
-| **Трансформації** | ⚪️ | 332 | Skipped |
-| **Діалоги** | ✅ | 495 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 74 | Skipped |
-| **Самооцінка** | ⚪️ | 76 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Науковий стиль** | ✅ | 694 | Included in Core |
+| **Лексичні особливості** | ⚪️ | 746 | Skipped |
+| **Граматичні особливості** | ⚪️ | 935 | Skipped |
+| **Мовне хеджування** | ⚪️ | 615 | Skipped |
+| **Цитування та посилання** | ⚪️ | 293 | Skipped |
+| **Структура наукового тексту** | ✅ | 510 | Included in Core |
+| **Практика і підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 114 | Included in Core |

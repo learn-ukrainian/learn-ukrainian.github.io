@@ -2,14 +2,14 @@
   "module": "88-professional-reports-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:18.562556Z",
+  "last_audit": "2026-02-06T22:14:02.641268Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T13:28:19.471478Z",
-    "meta": "2026-01-29T07:39:04.742755Z",
-    "activities": "2026-01-21T10:46:24.787298Z",
-    "vocabulary": "2026-01-21T22:54:37.817376Z",
-    "plan": "2026-01-30T15:04:49.373918Z"
+    "md": "2026-02-06T21:26:00.644533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.663533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3799/1750 (raw: 4311)"
+      "message": "3793/1750 (raw: 4301)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/14"
+      "message": "16/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,10 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Missing required activity types: essay-response, reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

@@ -2,14 +2,14 @@
   "module": "21-register-technical-scientific",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:07.369875Z",
+  "last_audit": "2026-02-06T22:12:52.699324Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:07:40.016301Z",
-    "meta": "2026-01-29T07:39:04.686582Z",
-    "activities": "2026-01-11T23:20:02.155465Z",
-    "vocabulary": "2026-01-21T22:54:27.620201Z",
-    "plan": "2026-01-30T15:04:49.229582Z"
+    "md": "2026-02-06T21:26:00.633533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.650533Z",
+    "vocabulary": "2026-02-06T21:26:00.678533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1858/2000 (raw: 2220)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2073/2000 (raw: 2437)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

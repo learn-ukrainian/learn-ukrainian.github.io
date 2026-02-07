@@ -1,6 +1,7 @@
 module: b2-50
 level: B2
 slug: 50-idioms-body-hands-legs
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9
@@ -14,7 +15,6 @@ tags:
 - body-parts
 vocabulary_count: 35
 vocab_count: 64
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-50

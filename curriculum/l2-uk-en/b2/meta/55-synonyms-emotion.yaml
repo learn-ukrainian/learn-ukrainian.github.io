@@ -1,6 +1,7 @@
 module: b2-55
 level: B2
 slug: 55-synonyms-emotion
+focus: phraseology
 version: '2.0'
 naturalness:
   score: 9
@@ -14,7 +15,16 @@ tags:
 - feelings
 vocabulary_focus: null
 vocabulary_count: 38
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-55
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

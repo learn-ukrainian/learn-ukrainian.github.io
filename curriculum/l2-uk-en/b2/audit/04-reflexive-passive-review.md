@@ -1,8 +1,8 @@
 # Audit Report: M04 — 04-reflexive-passive.md
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:19
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:32
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,22 +43,22 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1962/3800 (raw: 2467)
+- **Words:** ✅ 3824/3800 (raw: 4549)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 10 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -67,25 +67,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 59 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| dialogues | 15 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 40 | 5 | 100% | 5% | 5.0% |
+| questions | 41 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **99.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 55 | Included in Core |
-| **Вступ** | ✅ | 260 | Included in Core |
-| **Пояснення** | ⚪️ | 780 | Skipped |
-| **Трансформації** | ⚪️ | 237 | Skipped |
-| **Діалоги** | ✅ | 284 | Included in Core |
-| **Підсумок** | ✅ | 236 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Зворотний пасив** | ✅ | 624 | Included in Core |
+| **Утворення зворотного пасиву** | ⚪️ | 966 | Skipped |
+| **Акцент на процесі** | ⚪️ | 372 | Skipped |
+| **Вираження агента** | ⚪️ | 604 | Skipped |
+| **Контексти вживання** | ✅ | 347 | Included in Core |
+| **Порівняння форм пасиву** | ⚪️ | 471 | Skipped |
+| **Практика і підсумок** | ✅ | 246 | Included in Core |
+| **Підсумок** | ✅ | 139 | Included in Core |

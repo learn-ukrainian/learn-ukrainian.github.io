@@ -1,8 +1,8 @@
 # Audit Report: M92 — 92-presentation-skills-advanced.md
 **Level:** B2 | **Module:** M92 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:13
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:14:07
 
 ## Configuration
 **Type:** B2-skills
@@ -34,19 +34,20 @@
 | 12 | unjumble | Складіть речення про техніки презентації | 12 | 6 | ✅ |
 | 13 | match-up | З'єднайте терміни з їх визначеннями | 16 | 8 | ✅ |
 | 14 | true-false | Правда чи неправда про адаптацію презентації | 16 | 8 | ✅ |
+| 15 | reading | Текст для аналізу: Презентації: Поглиблено | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 14-18) ✅
-- Unique types: 11 (minimum: 5) ✅
+- Total activities: 15 (target: 14-18) ✅
+- Unique types: 12 (minimum: 5) ✅
 - Priority types used: 3/4 (cloze, fill-in, quiz) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3939/2000 (raw: 4088)
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 3951/2000 (raw: 4083)
+- **Activities:** ✅ 15/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
@@ -54,7 +55,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (14 activities)
+- **Content_heavy:** ✅ Content-heavy OK (15 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (skills))
 - **Richness:** ✅ 90% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -73,20 +74,18 @@
 | cultural | 2 | - | 100% | 12% | 12.2% |
 | realworld | 10 | 3 | 100% | 12% | 12.2% |
 | visual | 0 | 2 | 0% | 6% | 0.0% |
-| paragraph_var | 0.58 | - | 58% | 6% | 3.6% |
-| questions | 48 | 4 | 100% | 6% | 6.1% |
+| paragraph_var | 0.57 | - | 57% | 6% | 3.5% |
+| questions | 47 | 4 | 100% | 6% | 6.1% |
 | **TOTAL** | | | | | **90.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 59 | Included in Core |
-| **Вступ: Від базових навичок до майстерності** | ✅ | 117 | Included in Core |
-| **Робота з питаннями та відповідями** | ⚪️ | 472 | Skipped |
-| **Адаптація до різних аудиторій** | ⚪️ | 444 | Skipped |
-| **Сторітелінг та переконливі техніки** | ⚪️ | 563 | Skipped |
-| **Поглиблені принципи візуального дизайну** | ⚪️ | 511 | Skipped |
-| **Віртуальні презентації: нова реальність** | ⚪️ | 591 | Skipped |
-| **Практичні кейси та самоаналіз** | ✅ | 962 | Included in Core |
-| **Підсумок** | ✅ | 194 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 26 | Skipped |
+| **Розминка — Від базових до професійних навичок** | ⚪️ | 117 | Skipped |
+| **Адаптація до аудиторії** | ⚪️ | 472 | Skipped |
+| **Storytelling та переконання** | ✅ | 1007 | Included in Core |
+| **Робота з Q&A** | ⚪️ | 511 | Skipped |
+| **Віртуальні презентації** | ⚪️ | 591 | Skipped |
+| **Практика** | ⚪️ | 1182 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

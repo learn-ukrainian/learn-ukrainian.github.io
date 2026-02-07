@@ -1,8 +1,8 @@
 # Audit Report: M38 — 38-one-member-sentences.md
 **Level:** B2 | **Module:** M38 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:11
 
 ## Configuration
 **Type:** B2-grammar
@@ -31,37 +31,30 @@
 | 9 | quiz | Стилістичні функції односкладних речень | 14 | 8 | ✅ |
 | 10 | fill-in | Трансформуйте двоскладне речення в односкладне | 16 | 8 | ✅ |
 | 11 | essay-response | Мистецтво лаконічності: Сила односкладних речень | 1 | 1 | ✅ |
+| 12 | reading | Текст для аналізу: Односкладні речення | 3 | 3 | ✅ |
+| 13 | true-false | Правда чи хибність: Односкладні речення | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 11 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
+- Total activities: 13 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (error-correction, fill-in, unjumble) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'знайдіть речення,...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ⚠️ 1956/2000 (raw: 2526) (44 short)
-- **Activities:** ✅ 11/10
+- **Words:** ✅ 2320/2000 (raw: 2916)
+- **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 14/6
+- **Engagement:** ✅ 16/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 12 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -74,28 +67,25 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 15 | 5 | 100% | 15% | 15.0% |
-| dialogues | 24 | 4 | 100% | 15% | 15.0% |
-| variety | 0.90 | - | 90% | 10% | 9.0% |
+| engagement | 17 | 5 | 100% | 15% | 15.0% |
+| dialogues | 25 | 4 | 100% | 15% | 15.0% |
+| variety | 0.89 | - | 89% | 10% | 8.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 7 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.4%** |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
+| questions | 23 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Вступ: Прочитайте текст** | ✅ | 133 | Included in Core |
-| **Пояснення** | ⚪️ | 694 | Skipped |
-| **Трансформації** | ⚪️ | 246 | Skipped |
-| **Практика** | ⚪️ | 224 | Skipped |
-| **Діалоги** | ✅ | 331 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 83 | Skipped |
-| **Стилістичні функції** | ⚪️ | 20 | Skipped |
-| **Самооцінка** | ⚪️ | 66 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Речення без підмета** | ⚪️ | 204 | Skipped |
+| **Означено-особові** | ⚪️ | 940 | Skipped |
+| **Неозначено-особові** | ⚪️ | 344 | Skipped |
+| **Безособові** | ⚪️ | 414 | Skipped |
+| **Номінативні** | ⚪️ | 154 | Skipped |
+| **Практика — односкладні речення** | ⚪️ | 203 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

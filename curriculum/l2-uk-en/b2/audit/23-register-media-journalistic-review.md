@@ -1,8 +1,8 @@
 # Audit Report: M23 — 23-register-media-journalistic.md
 **Level:** B2 | **Module:** M23 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:54
 
 ## Configuration
 **Type:** B2-grammar
@@ -35,19 +35,20 @@
 | 13 | fill-in | Структура новинного тексту | 16 | 8 | ✅ |
 | 14 | match-up | Журналістська термінологія | 16 | 8 | ✅ |
 | 15 | essay-response | Аналіз медійного тексту | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Медійний та журналістський регістр | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2086/2000 (raw: 2578)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2175/2000 (raw: 2658)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
@@ -56,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -75,8 +76,8 @@
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 4 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| questions | 47 | 5 | 100% | 5% | 5.0% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| questions | 46 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.5%** |
 
@@ -84,13 +85,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 63 | Included in Core |
-| **Тест: Прочитайте новинні тексти** | ✅ | 240 | Included in Core |
-| **Пояснення** | ⚪️ | 831 | Skipped |
-| **Трансформації** | ⚪️ | 273 | Skipped |
-| **Діалоги** | ✅ | 422 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 78 | Skipped |
-| **Самоперевірка** | ⚪️ | 51 | Skipped |
-| **Наступні кроки** | ⚪️ | 18 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Публіцистичний стиль** | ⚪️ | 142 | Skipped |
+| **Структура новинного тексту** | ✅ | 1069 | Included in Core |
+| **Мова заголовків** | ⚪️ | 695 | Skipped |
+| **Маркери упередженості** | ⚪️ | 129 | Skipped |
+| **Практика** | ⚪️ | 128 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

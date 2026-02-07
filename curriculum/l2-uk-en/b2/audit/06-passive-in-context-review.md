@@ -1,8 +1,8 @@
 # Audit Report: M06 — 06-passive-in-context.md
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:48
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:34
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,32 +43,23 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2114/3800 (raw: 2518)
+- **Words:** ✅ 5781/3800 (raw: 6330)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -77,25 +68,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 70 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
-| variety | 0.93 | - | 93% | 10% | 9.3% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
-| questions | 48 | 5 | 100% | 5% | 5.0% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
+| cultural | 9 | 3 | 100% | 10% | 10.0% |
+| realworld | 20 | 3 | 100% | 10% | 10.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 56 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.1%** |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 54 | Included in Core |
-| **Тест: Прочитайте тексти** | ✅ | 337 | Included in Core |
-| **Пояснення** | ⚪️ | 836 | Skipped |
-| **Трансформації** | ⚪️ | 349 | Skipped |
-| **Діалоги** | ✅ | 308 | Included in Core |
-| **Підсумок** | ✅ | 120 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Регістр і пасив** | ✅ | 1068 | Included in Core |
+| **Таблиця регістрів і форм пасиву** | ⚪️ | 1251 | Skipped |
+| **Практичні сценарії — Юридичний контекст** | ✅ | 610 | Included in Core |
+| **Практичні сценарії — Науковий контекст** | ✅ | 712 | Included in Core |
+| **Практичні сценарії — Літературний та журналістичний контекст** | ✅ | 316 | Included in Core |
+| **Практичні сценарії — Розмовний контекст** | ✅ | 772 | Included in Core |
+| **Інтегрована практика** | ⚪️ | 236 | Skipped |
+| **Підсумок модуля** | ✅ | 762 | Included in Core |

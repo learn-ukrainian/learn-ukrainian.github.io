@@ -1,8 +1,8 @@
 # Audit Report: M37 — 37-word-formation-adverbs-integration.md
 **Level:** B2 | **Module:** M37 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:12
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:10
 
 ## Configuration
 **Type:** B2-grammar
@@ -33,19 +33,20 @@
 | 11 | fill-in | Утворіть демінутиви та аугментативи | 16 | 8 | ✅ |
 | 12 | quiz | Комплексна перевірка знань зі словотворення | 16 | 8 | ✅ |
 | 13 | essay-response | Емоційне забарвлення мови: Сила суфіксів | 1 | 1 | ✅ |
+| 14 | reading | Текст для аналізу: Словотворення: прислівники та інтеграція | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2042/2000 (raw: 2842)
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2059/2000 (raw: 2856)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
@@ -68,13 +69,13 @@
 |--------|-------|--------|-------|--------|--------------|
 | examples | 78 | 24 | 100% | 20% | 20.0% |
 | engagement | 16 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
+| dialogues | 17 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 16 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.78 | - | 78% | 5% | 3.9% |
-| questions | 33 | 5 | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 5 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.1%** |
 
@@ -82,12 +83,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 211 | Included in Core |
-| **Пояснення** | ⚪️ | 948 | Skipped |
-| **Трансформації** | ⚪️ | 185 | Skipped |
-| **Практика** | ⚪️ | 182 | Skipped |
-| **Діалоги** | ✅ | 152 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 99 | Skipped |
-| **Самооцінка** | ⚪️ | 88 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Від прикметника до прислівника** | ⚪️ | 1164 | Skipped |
+| **Adverbs from Adjectives** | ⚪️ | 367 | Skipped |
+| **Diminutives and Augmentatives** | ⚪️ | 251 | Skipped |
+| **Практика — інтеграція словотвору** | ⚪️ | 198 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

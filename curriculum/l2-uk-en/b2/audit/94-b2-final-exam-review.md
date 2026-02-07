@@ -1,8 +1,8 @@
 # Audit Report: M94 — 94-b2-final-exam.md
 **Level:** B2 | **Module:** M94 | **Phase:** B2.4 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:08
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:14:09
 
 ## Configuration
 **Type:** B2-checkpoint
@@ -38,36 +38,28 @@
 | 16 | quiz | Підсумкова перевірка комунікаційних навичок | 13 | 8 | ✅ |
 | 17 | essay-response | Написання професійного листа електронною поштою | 1 | 1 | ✅ |
 | 18 | comparative-study | Порівняльний аналіз медіатекстів на одну тему | 1 | 1 | ✅ |
+| 19 | reading | Текст для аналізу: B2 Підсумковий іспит | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 18 (target: 15-19) ✅
-- Unique types: 13 (minimum: 4) ✅
+- Total activities: 19 (target: 15-19) ✅
+- Unique types: 14 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, quiz) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "- ☐ Чи використовуєте конкретні цифри та факти замість загальних фраз?". Shares significant keywords with sentence at index 42.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2566/2000 (raw: 2756)
-- **Activities:** ✅ 18/15
+- **Words:** ✅ 2605/2000 (raw: 2795)
+- **Activities:** ✅ 19/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 13/4 types
+- **Unique_types:** ✅ 14/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 10 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (18 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (19 activities)
 - **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
 - **Richness:** ✅ 99% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -80,26 +72,23 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 13 | 8 | 100% | 25% | 25.0% |
-| review_sections | 24 | 3 | 100% | 20% | 20.0% |
-| variety | 0.95 | - | 95% | 15% | 14.2% |
+| activity_types | 14 | 8 | 100% | 25% | 25.0% |
+| review_sections | 25 | 3 | 100% | 20% | 20.0% |
+| variety | 0.96 | - | 96% | 15% | 14.4% |
 | engagement | 3 | 3 | 100% | 10% | 10.0% |
 | cultural | 1 | - | 100% | 10% | 10.0% |
 | visual | 7 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **99.2%** |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд** | ⚪️ | 84 | Skipped |
-| **Навички** | ⚪️ | 14 | Skipped |
-| **Навичка 1: Ділова пошта** | ⚪️ | 474 | Skipped |
-| **Навичка 2: Професійні звіти** | ⚪️ | 434 | Skipped |
-| **Навичка 3: Аналіз медіа** | ✅ | 317 | Included in Core |
-| **Навичка 4: Презентації** | ⚪️ | 544 | Skipped |
-| **Навичка 5: Дискусії та дебати** | ⚪️ | 452 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 117 | Skipped |
-| **Підсумок** | ✅ | 36 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 94 | Skipped |
+| **Огляд — Фінальний іспит B2** | ⚪️ | 84 | Skipped |
+| **Навичка 1: Ключові знання модуля** | ⚪️ | 38 | Skipped |
+| **Частина 1: Читання** | ✅ | 488 | Included in Core |
+| **Частина 2: Письмо** | ✅ | 434 | Included in Core |
+| **Частина 3: Слухання** | ✅ | 862 | Included in Core |
+| **Частина 4: Говоріння** | ✅ | 452 | Included in Core |
+| **Підсумок та результати** | ✅ | 247 | Included in Core |

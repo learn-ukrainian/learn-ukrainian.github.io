@@ -1,8 +1,8 @@
 # Audit Report: M39 — 39-register-religious-epistolary.md
 **Level:** B2 | **Module:** M39 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:59
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:12
 
 ## Configuration
 **Type:** B2-grammar
@@ -33,19 +33,20 @@
 | 11 | translate | Оберіть правильний переклад | 8 | 6 | ✅ |
 | 12 | quiz | Практичні ситуації листування | 10 | 8 | ✅ |
 | 13 | essay-response | Мистецтво вибору регістра: Від офіційного до сакрального | 1 | 1 | ✅ |
+| 14 | reading | Текст для аналізу: Регістр — Релігійний та епістолярний стилі | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2137/2000 (raw: 2610)
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2149/2000 (raw: 2612)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
@@ -74,7 +75,7 @@
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.89 | - | 89% | 5% | 4.5% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.2%** |
 
@@ -82,14 +83,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Вступ: Прочитайте тексти** | ✅ | 192 | Included in Core |
-| **Пояснення** | ⚪️ | 315 | Skipped |
-| **Епістолярний стиль (Стиль листування)** | ⚪️ | 563 | Skipped |
-| **Діалоги** | ✅ | 275 | Included in Core |
-| **Трансформації** | ⚪️ | 144 | Skipped |
-| **Практика** | ⚪️ | 298 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 97 | Skipped |
-| **Самоперевірка** | ⚪️ | 53 | Skipped |
-| **Наступні кроки** | ⚪️ | 30 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Два спеціальні регістри** | ⚪️ | 507 | Skipped |
+| **Religious Style (Релігійний стиль)** | ⚪️ | 982 | Skipped |
+| **Сучасні правила листування** | ⚪️ | 395 | Skipped |
+| **Практика — написання листів** | ⚪️ | 193 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

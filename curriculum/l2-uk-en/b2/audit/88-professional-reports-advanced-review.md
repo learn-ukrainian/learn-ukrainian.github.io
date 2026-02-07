@@ -1,8 +1,8 @@
 # Audit Report: M88 — 88-professional-reports-advanced.md
 **Level:** B2 | **Module:** M88 | **Phase:** B2.4 | **Pedagogy:** CBI | **Target:** 1750
 **Naturalness:** 8/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:18
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:14:02
 
 ## Configuration
 **Type:** B2-skills
@@ -34,19 +34,21 @@
 | 12 | quiz | Критична оцінка та методологія | 10 | 8 | ✅ |
 | 13 | fill-in | Презентаційні навички та адаптація | 14 | 8 | ✅ |
 | 14 | group-sort | Категоризація візуалізацій та методів аналізу | 16 | 14 | ✅ |
+| 15 | reading | Текст для аналізу: Професійні звіти: Поглиблення | 3 | 3 | ✅ |
+| 16 | essay-response | Письмова відповідь: Професійні звіти: Поглиблення | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 14-18) ✅
-- Unique types: 11 (minimum: 5) ✅
+- Total activities: 16 (target: 14-18) ✅
+- Unique types: 13 (minimum: 5) ✅
 - Priority types used: 4/4 (cloze, fill-in, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3799/1750 (raw: 4311)
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 3793/1750 (raw: 4301)
+- **Activities:** ✅ 16/14
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Unique_types:** ✅ 13/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
@@ -54,8 +56,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (14 activities)
-- **Immersion:** 🇺🇦 96.1% (target 90-100% (skills))
+- **Content_heavy:** ✅ Content-heavy OK (16 activities)
+- **Immersion:** 🇺🇦 96.3% (target 90-100% (skills))
 - **Richness:** ✅ 99% (skills)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 8/10 (High)
@@ -74,17 +76,15 @@
 | realworld | 20 | 3 | 100% | 12% | 12.2% |
 | visual | 5 | 2 | 100% | 6% | 6.1% |
 | paragraph_var | 1.00 | - | 100% | 6% | 6.1% |
-| questions | 23 | 4 | 100% | 6% | 6.1% |
+| questions | 22 | 4 | 100% | 6% | 6.1% |
 | **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 100 | Included in Core |
-| **Професійні звіти: Поглиблення** | ⚪️ | 74 | Skipped |
+| **Intro/Narrative** | ✅ | 174 | Included in Core |
 | **Вступ** | ✅ | 384 | Included in Core |
-| **Імерсивна розповідь** | ⚪️ | 1560 | Skipped |
+| **Імерсивна розповідь** | ⚪️ | 1554 | Skipped |
 | **Аналіз** | ✅ | 1079 | Included in Core |
-| **Граматика** | ⚪️ | 396 | Skipped |
-| **Підсумок** | ✅ | 166 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 40 | Skipped |
+| **Граматика** | ⚪️ | 562 | Skipped |
+| **Підсумок** | ✅ | 40 | Included in Core |

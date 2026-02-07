@@ -2,14 +2,14 @@
   "module": "43-correlative-constructions",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:52.828450Z",
+  "last_audit": "2026-02-06T22:13:16.663282Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351916Z",
-    "meta": "2026-01-29T07:39:04.706563Z",
-    "activities": "2026-01-11T23:55:23.899973Z",
-    "vocabulary": "2026-01-21T22:54:30.692799Z",
-    "plan": "2026-01-30T15:04:49.287056Z"
+    "md": "2026-02-06T21:26:00.637533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.655533Z",
+    "vocabulary": "2026-02-06T21:26:00.678533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1894/2000 (raw: 2636) | pedagogy: 1 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "1914/2000 (raw: 2649) (86 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10"
+      "message": "11/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

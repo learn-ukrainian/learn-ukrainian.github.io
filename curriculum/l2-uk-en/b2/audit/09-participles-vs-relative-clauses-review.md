@@ -1,8 +1,8 @@
 # Audit Report: M09 — 09-participles-vs-relative-clauses.md
 **Level:** B2 | **Module:** M09 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:08
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:38
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,32 +42,23 @@
 - Required types used: 6/6 (error-correction, essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2481/3800 (raw: 3029)
+- **Words:** ⚠️ 3724/3800 (raw: 4617) (76 short)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/6
+- **Engagement:** ✅ 17/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -76,15 +67,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 89 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 16 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 14 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
+| questions | 31 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
 
@@ -92,12 +83,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 5 | Included in Core |
-| **Вступ** | ✅ | 239 | Included in Core |
-| **Пояснення** | ⚪️ | 971 | Skipped |
-| **Практика** | ⚪️ | 251 | Skipped |
-| **Трансформації** | ⚪️ | 383 | Skipped |
-| **Діалоги** | ✅ | 352 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 110 | Skipped |
-| **Самоперевірка** | ⚪️ | 60 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Два способи вираження ознаки за дією** | ✅ | 346 | Included in Core |
+| **Порівняльна таблиця форм** | ⚪️ | 981 | Skipped |
+| **Стилістичний вплив** | ⚪️ | 473 | Skipped |
+| **Коли обирати дієприкметники** | ⚪️ | 477 | Skipped |
+| **Коли обирати підрядні речення** | ⚪️ | 515 | Skipped |
+| **Трансформаційні вправи** | ⚪️ | 679 | Skipped |
+| **Практика і підсумок** | ✅ | 236 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

@@ -2,14 +2,14 @@
   "module": "37-word-formation-adverbs-integration",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:12.095293Z",
+  "last_audit": "2026-02-06T22:13:10.271107Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351884Z",
-    "meta": "2026-01-29T07:39:04.702501Z",
-    "activities": "2026-01-11T22:51:47.528640Z",
-    "vocabulary": "2026-01-21T22:54:30.081376Z",
-    "plan": "2026-01-30T15:04:49.271844Z"
+    "md": "2026-02-06T21:26:00.636533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.653533Z",
+    "vocabulary": "2026-02-06T21:26:00.678533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2042/2000 (raw: 2842)"
+      "message": "2059/2000 (raw: 2856)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "13/10"
+      "message": "14/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "3 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

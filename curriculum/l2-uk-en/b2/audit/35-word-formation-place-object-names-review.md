@@ -1,8 +1,8 @@
 # Audit Report: M35 — 35-word-formation-place-object-names.md
 **Level:** B2 | **Module:** M35 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:01
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:07
 
 ## Configuration
 **Type:** B2-grammar
@@ -33,70 +33,59 @@
 | 11 | fill-in | Оберіть правильну форму відмінка | 16 | 8 | ✅ |
 | 12 | quiz | Комплексна перевірка знань | 16 | 8 | ✅ |
 | 13 | essay-response | Мій ідеальний район: Простір для життя | 1 | 1 | ✅ |
+| 14 | reading | Словотвір у тексті: аналіз | 6 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "Археологи знайшли тут сховище для зерна та залишки укріплень.". Shares significant keywords with sentence at index 14.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2332/2000 (raw: 2742)
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2890/2000 (raw: 3560)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (target 90-100% (grammar))
-- **Richness:** ✅ 98% (grammar)
+- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 61 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 20 | 4 | 100% | 15% | 15.0% |
+| examples | 71 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| dialogues | 21 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
-| questions | 43 | 5 | 100% | 5% | 5.0% |
-| proverbs | 6 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.8%** |
+| cultural | 8 | 3 | 100% | 10% | 10.0% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| questions | 57 | 5 | 100% | 5% | 5.0% |
+| proverbs | 7 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ: Прочитайте текст** | ✅ | 244 | Included in Core |
-| **Пояснення** | ⚪️ | 982 | Skipped |
-| **Трансформації** | ⚪️ | 245 | Skipped |
-| **Практика** | ⚪️ | 229 | Skipped |
-| **Діалоги** | ✅ | 308 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 73 | Skipped |
-| **Самооцінка** | ⚪️ | 74 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Як утворюються назви місць** | ⚪️ | 305 | Skipped |
+| **Suffix -ня** | ⚪️ | 1245 | Skipped |
+| **Suffix -ище (place/area)** | ⚪️ | 229 | Skipped |
+| **Suffix -арня (workshop/establishment)** | ⚪️ | 536 | Skipped |
+| **Практика — утворення назв місць** | ⚪️ | 496 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

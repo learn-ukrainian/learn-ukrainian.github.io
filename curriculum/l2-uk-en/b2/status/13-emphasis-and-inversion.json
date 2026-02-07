@@ -2,14 +2,14 @@
   "module": "13-emphasis-and-inversion",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:48.722824Z",
+  "last_audit": "2026-02-06T22:12:43.447688Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351754Z",
-    "meta": "2026-01-29T07:39:04.682383Z",
-    "activities": "2026-01-11T23:20:02.171092Z",
-    "vocabulary": "2026-01-21T22:54:26.243387Z",
-    "plan": "2026-01-29T07:45:40.590389Z"
+    "md": "2026-02-06T21:26:00.632533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.648533Z",
+    "vocabulary": "2026-02-06T21:26:00.677533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2596/3800 (raw: 3121) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3969/3800 (raw: 4497)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -33,18 +33,15 @@
       "message": "11 < 25 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

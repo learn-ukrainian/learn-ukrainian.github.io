@@ -1,8 +1,8 @@
 # Audit Report: M62 — 62-synonyms-place.md
 **Level:** B2 | **Module:** M62 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:52
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:35
 
 ## Configuration
 **Type:** B2-vocab
@@ -11,7 +11,7 @@
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥4 types required
 **Priority Types:** mark-the-words, match-up, quiz, translate
-**Required Types:** fill-in-the-blank, reading, true-false
+**Required Types:** fill-in, reading, true-false
 **Engagement:** ≥6 callouts
 **Immersion:** 90-100%
 **Vocab Target:** ≥35 words
@@ -21,53 +21,41 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть місце | 12 | 8 | ✅ |
-| 2 | quiz | Орієнтування у просторі | 8 | 8 | ✅ |
+| 2 | quiz | Орієнтування у просторі | 10 | 8 | ✅ |
 | 3 | group-sort | Статика чи Напрямок? | 20 | 14 | ✅ |
 | 4 | unjumble | Складіть просторове речення | 8 | 6 | ✅ |
 | 5 | cloze | Шлях мандрівника | 23 | 14 | ✅ |
 | 6 | fill-in | Оберіть масштаб простору | 10 | 8 | ✅ |
 | 7 | error-correction | Виправте місце | 8 | 6 | ✅ |
 | 8 | translate | Переклад простору | 8 | 6 | ✅ |
-| 9 | true-false | Нюанси локацій | 8 | 8 | ✅ |
-| 10 | select | Всі форми вказівки | 6 | 6 | ✅ |
+| 9 | true-false | Нюанси локацій | 10 | 8 | ✅ |
+| 10 | select | Всі форми вказівки | 8 | 6 | ✅ |
 | 11 | match-up | Простір та Об'єкти | 12 | 8 | ✅ |
 | 12 | match-up | Антоніми простору | 12 | 8 | ✅ |
-| 13 | quiz | Простір пам'яті | 8 | 8 | ✅ |
-| 14 | select | Типи територій | 6 | 6 | ✅ |
+| 13 | quiz | Простір пам'яті | 10 | 8 | ✅ |
+| 14 | select | Типи територій | 8 | 6 | ✅ |
 | 15 | essay-response | Творче завдання: Мій простір | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Синоніми: Місце та Простір | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
 - Priority types used: 3/4 (match-up, quiz, translate) ✅
-- Required types used: 1/3 (true-false) ❌
+- Required types used: 3/3 (fill-in, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity types in activity_hints: ['fill-in-the-blank']. Valid types: ['match-up', 'fill-in', 'quiz', 'true-false', 'group-sort', 'unjumble', 'error-correction', 'anagram', 'select', 'translate', 'cloze', 'mark-the-words', 'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent']
-  - FIX: Replace invalid types with valid ones from: match-up, fill-in, quiz, true-false, group-sort, unjumble, error-correction, anagram, select, translate, cloze, mark-the-words, reading, essay-response, critical-analysis, comparative-study, authorial-intent
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'ми бачимо,...'.
-  - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 62-synonyms-place.yaml: Schema validation error at key '13': {'type': 'select', 'title': 'Типи територій', 'instruction': 'Оберіть усі слова, що описують масштабні території (6 елементів).', 'items': [{'question': 'Які терміни вказують на великі простори? (Оберіть 6)', 'options': [{'text': 'область', 'correct': True}, {'text': 'територія', 'correct': True}, {'text': 'регіон', 'correct': True}, {'text': 'зона', 'correct': True}, {'text': 'район', 'correct': True}, {'text': 'країна', 'correct': True}]}, {'question': "Оберіть синоніми до слова 'місце':", 'options': [{'text': 'локація', 'correct': True}, {'text': 'точка', 'correct': True}, {'text': 'осередок', 'correct': True}, {'text': 'мить', 'correct': False}]}, {'question': "Які слова позначають 'кордони':", 'options': [{'text': 'межа', 'correct': True}, {'text': 'край', 'correct': True}, {'text': 'кордон', 'correct': True}, {'text': 'центр', 'correct': False}]}, {'question': 'Оберіть слова для опису міського простору:', 'options': [{'text': 'квартал', 'correct': True}, {'text': 'площа', 'correct': True}, {'text': 'майдан', 'correct': True}, {'text': 'ліс', 'correct': False}]}, {'question': "Які слова вказують на 'віддаленість':", 'options': [{'text': 'далеко', 'correct': True}, {'text': 'вдалині', 'correct': True}, {'text': 'на обрії', 'correct': True}, {'text': 'поруч', 'correct': False}]}, {'question': "Оберіть назви 'водних просторів':", 'options': [{'text': 'акваторія', 'correct': True}, {'text': 'плесо', 'correct': True}, {'text': 'гладь', 'correct': True}, {'text': 'гора', 'correct': False}]}]} is not valid under any of the given schemas
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 3 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2115/2000 (raw: 2329)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2119/2000 (raw: 2204)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 15 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (vocab))
 - **Richness:** ✅ 97% (phraseology)
@@ -82,10 +70,10 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 8 | 4 | 100% | 25% | 25.0% |
-| variety | 0.95 | - | 95% | 17% | 15.8% |
+| variety | 0.96 | - | 96% | 17% | 16.0% |
 | cultural | 4 | - | 100% | 17% | 16.7% |
 | visual | 5 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.79 | - | 79% | 8% | 6.6% |
+| paragraph_var | 0.77 | - | 77% | 8% | 6.4% |
 | examples | 53 | - | 100% | 8% | 8.3% |
 | realworld | 4 | - | 100% | 8% | 8.3% |
 | questions | 15 | - | 100% | 8% | 8.3% |
@@ -95,22 +83,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 87 | Included in Core |
-| **Вступ: Карта українського простору** | ✅ | 97 | Included in Core |
-| **Частина 1: Тут і Там — Магія вказівки** | ✅ | 153 | Included in Core |
-| **Частина 2: Відстань та Близькість** | ✅ | 79 | Included in Core |
-| **Частина 3: Простір та Локації — Від точки до території** | ✅ | 106 | Included in Core |
-| **Частина 4: Простір в українській культурі — Шацькі озера** | ✅ | 65 | Included in Core |
-| **Частина 5: Фразеологізми про простір** | ✅ | 244 | Included in Core |
-| **Вживання у контексті** | ✅ | 155 | Included in Core |
-| **Частина 6: Напрямок руху — Від «сюди» до «кудись»** | ✅ | 63 | Included in Core |
-| **Частина 7: Простір у цифрову епоху** | ✅ | 71 | Included in Core |
-| **Частина 8: Концепція дому в українському світогляді** | ✅ | 100 | Included in Core |
-| **Частина 9: Ландшафт як доля — Гори, Степ та Море** | ✅ | 91 | Included in Core |
-| **Частина 10: Простір майбутнього — Урбаністика та Екологія** | ✅ | 98 | Included in Core |
-| **Частина 11: Простір пам'яті та меморіальна лексика** | ✅ | 208 | Included in Core |
-| **Частина 12: Простір у художній візії та мистецтві** | ✅ | 81 | Included in Core |
-| **Частина 13: Геометрія українського міста: Від майдану до дворика** | ✅ | 81 | Included in Core |
-| **Частина 14: Психологія рідного місця: Дім та Оселя** | ✅ | 96 | Included in Core |
-| **Частина 15: Простір як виклик та можливість** | ✅ | 82 | Included in Core |
-| **Підсумок** | ✅ | 48 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Де і куди?** | ⚪️ | 435 | Skipped |
+| **Here** | ⚪️ | 598 | Skipped |
+| **There** | ⚪️ | 497 | Skipped |
+| **Практика — просторовий опис** | ⚪️ | 490 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

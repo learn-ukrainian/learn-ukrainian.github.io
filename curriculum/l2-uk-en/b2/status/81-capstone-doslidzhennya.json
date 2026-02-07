@@ -2,35 +2,35 @@
   "module": "81-capstone-doslidzhennya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:05.846970Z",
+  "last_audit": "2026-02-06T22:13:54.969260Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352107Z",
-    "meta": "2026-01-29T07:39:04.732283Z",
-    "activities": "2026-01-13T10:33:35.306758Z",
-    "vocabulary": null,
-    "plan": "2026-01-30T15:04:49.348964Z"
+    "md": "2026-02-06T21:26:00.643533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.661533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2147/2000 (raw: 2315) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2159/2000 (raw: 2296)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/3"
+      "message": "14/14"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "5 < 20 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -39,14 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "11 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading, true-false"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

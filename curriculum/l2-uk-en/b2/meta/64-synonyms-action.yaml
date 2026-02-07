@@ -1,6 +1,7 @@
 module: b2-64
 level: B2
 slug: 64-synonyms-action
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9
@@ -13,7 +14,16 @@ tags:
 - action
 vocabulary_count: 35
 vocab_count: 67
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-64
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

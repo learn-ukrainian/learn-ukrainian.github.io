@@ -2,14 +2,14 @@
   "module": "46-proverbs-nature-time-caution",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:00.479756Z",
+  "last_audit": "2026-02-06T22:13:19.793873Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351916Z",
-    "meta": "2026-01-29T07:39:04.708582Z",
-    "activities": "2026-01-12T00:27:06.602694Z",
-    "vocabulary": "2026-01-21T22:54:31.311872Z",
-    "plan": "2026-01-30T15:04:49.294470Z"
+    "md": "2026-02-06T21:26:00.637533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.655533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2877/2000 (raw: 3288) | pedagogy: 6 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2887/2000 (raw: 3287)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

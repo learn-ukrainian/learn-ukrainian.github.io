@@ -1,8 +1,8 @@
 # Audit Report: M48 — 48-set-expressions-ii-objects-abstract.md
 **Level:** B2 | **Module:** M48 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:55
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:21
 
 ## Configuration
 **Type:** B2-vocab
@@ -33,19 +33,20 @@
 | 11 | essay-response | Символіка побутових предметів | 1 | 1 | ✅ |
 | 12 | match-up | Предмети та їхня символіка | 16 | 8 | ✅ |
 | 13 | fill-in | Завершіть діалог фразеологізмами | 16 | 8 | ✅ |
+| 14 | reading | Текст для аналізу: Сталі вирази II: Предмети та абстракції | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1975/2000 (raw: 2404) (25 short)
-- **Activities:** ✅ 13/10
+- **Words:** ✅ 2071/2000 (raw: 2491)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
@@ -70,22 +71,18 @@
 | variety | 0.85 | - | 85% | 17% | 14.2% |
 | cultural | 8 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.70 | - | 70% | 8% | 5.8% |
+| paragraph_var | 0.76 | - | 76% | 8% | 6.3% |
 | examples | 42 | - | 100% | 8% | 8.3% |
 | realworld | 4 | - | 100% | 8% | 8.3% |
-| questions | 8 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **95.0%** |
+| questions | 7 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **95.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 51 | Included in Core |
-| **Вступ** | ✅ | 128 | Included in Core |
-| **Фразеологізми** | ⚪️ | 1136 | Skipped |
-| **Вживання у контексті** | ✅ | 173 | Included in Core |
-| **Тематична класифікація виразів** | ⚪️ | 0 | Skipped |
-| **Міні-діалоги для практики** | ✅ | 71 | Included in Core |
-| **Символіка предметів в українській культурі** | ✅ | 118 | Included in Core |
-| **Порівняння з англійськими еквівалентами** | ⚪️ | 37 | Skipped |
-| **Підсумок** | ✅ | 151 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Предмети як символи** | ⚪️ | 1264 | Skipped |
+| **Сталі вирази з предметами** | ⚪️ | 173 | Skipped |
+| **Сталі вирази з абстракціями** | ⚪️ | 273 | Skipped |
+| **Практика — вирази в мовленні** | ⚪️ | 298 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

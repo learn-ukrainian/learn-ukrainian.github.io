@@ -1,6 +1,7 @@
 module: b2-46
 level: B2
 slug: 46-proverbs-nature-time-caution
+focus: phraseology
 version: '1.0'
 naturalness:
   score: 9
@@ -16,7 +17,6 @@ tags:
 - planning
 vocabulary_count: 36
 vocab_count: 124
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-46

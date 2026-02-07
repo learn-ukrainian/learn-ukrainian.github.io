@@ -2,14 +2,14 @@
   "module": "70-b2-checkpoint",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:07.714118Z",
+  "last_audit": "2026-02-06T22:13:43.878292Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352194Z",
-    "meta": "2026-01-29T07:39:04.725453Z",
-    "activities": "2026-01-12T11:50:57.495409Z",
-    "vocabulary": "2026-01-21T22:54:34.286174Z",
-    "plan": "2026-01-30T15:04:49.318262Z"
+    "md": "2026-02-06T21:26:00.641533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.659533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1835/2000 (raw: 2021) | pedagogy: 1 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "1965/2000 (raw: 2118) (35 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/15"
+      "message": "17/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

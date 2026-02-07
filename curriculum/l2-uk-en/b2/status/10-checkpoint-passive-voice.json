@@ -2,14 +2,14 @@
   "module": "10-checkpoint-passive-voice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:00.079038Z",
+  "last_audit": "2026-02-06T22:12:39.757357Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351736Z",
-    "meta": "2026-01-29T07:39:04.681021Z",
-    "activities": "2026-01-14T11:05:21.300544Z",
-    "vocabulary": "2026-01-21T22:54:25.928953Z",
-    "plan": "2026-01-29T07:45:40.576719Z"
+    "md": "2026-02-06T22:08:51.647588Z",
+    "meta": "2026-02-06T21:26:00.671533Z",
+    "activities": "2026-02-06T21:26:00.648533Z",
+    "vocabulary": "2026-02-06T21:26:00.677533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1717/3500 (raw: 1921) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5656/3500 (raw: 6874)"
     },
     "activities": {
       "status": "pass",
@@ -33,17 +33,15 @@
       "message": "2 < 10 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "7 Outline Compliance Errors"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

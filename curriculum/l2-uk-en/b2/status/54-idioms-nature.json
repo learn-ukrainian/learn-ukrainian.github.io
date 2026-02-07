@@ -2,14 +2,14 @@
   "module": "54-idioms-nature",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:46.416190Z",
+  "last_audit": "2026-02-06T22:13:27.782340Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351939Z",
-    "meta": "2026-01-29T07:39:04.714170Z",
-    "activities": "2026-01-11T23:46:13.966280Z",
-    "vocabulary": "2026-01-21T22:54:32.515660Z",
-    "plan": "2026-01-30T15:05:14.164508Z"
+    "md": "2026-02-06T21:26:00.638533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.657533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1915/2000 (raw: 2059) (85 short) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2044/2000 (raw: 2151)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: fill-in-the-blank, reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

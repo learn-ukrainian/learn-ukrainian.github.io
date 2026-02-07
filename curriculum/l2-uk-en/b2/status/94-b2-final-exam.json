@@ -2,14 +2,14 @@
   "module": "94-b2-final-exam",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:08.510846Z",
+  "last_audit": "2026-02-06T22:14:09.221480Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T12:42:37.540627Z",
-    "meta": "2026-01-29T07:39:04.746535Z",
-    "activities": "2026-01-21T12:41:29.585128Z",
-    "vocabulary": "2026-01-21T22:54:39.301696Z",
-    "plan": "2026-01-30T15:04:49.393763Z"
+    "md": "2026-02-06T21:26:00.645533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.666533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2566/2000 (raw: 2756) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2605/2000 (raw: 2795)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "18/15"
+      "message": "19/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

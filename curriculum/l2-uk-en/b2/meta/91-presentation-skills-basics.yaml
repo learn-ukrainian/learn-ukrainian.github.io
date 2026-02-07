@@ -7,11 +7,11 @@ naturalness:
   score: 8
   status: PASS
 duration: 90
+focus: skills
 transliteration: none
 tags:
 - communication
 - presentation
 - professional-skills
-word_target: 2000
 build:
   last_modified: '2026-01-26'

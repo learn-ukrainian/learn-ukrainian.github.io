@@ -1,8 +1,8 @@
 # Audit Report: M16 — 16-register-formal-informal.md
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:46
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:46
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,74 +42,49 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (75% overlap): "**Формальний варіант (зразок відповіді):**
-
-Шановна пані Оксано!". Shares significant keywords with sentence at index 62.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2338/3800 (raw: 3025)
+- **Words:** ⚠️ 3723/3800 (raw: 4867) (77 short)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 16/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 4 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
-- **Richness:** ❌ 74% < 95% min (style)
+- **Immersion:** 🇺🇦 99.9% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 0 | 2 | 0% | 25% | 0.0% |
+| exemplar_texts | 12 | 2 | 100% | 25% | 25.0% |
 | model_answers | 100 | 3 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| engagement | 17 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 9 | 4 | 100% | 10% | 10.0% |
-| variety | 0.89 | - | 89% | 5% | 4.5% |
+| visual | 24 | 4 | 100% | 10% | 10.0% |
+| variety | 0.91 | - | 91% | 5% | 4.6% |
 | cultural | 2 | - | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **74.5%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_EXEMPLAR_TEXTS**
-  - FIX:
-    Add 2+ exemplar text excerpts. Use this format:
-    
-    **Зразок [style type]:**
-    
-    > «[Extended quote showing the style, 50+ words]»
-    > — *[Source]*
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 67 | Included in Core |
-| **Вступ** | ✅ | 152 | Included in Core |
-| **Пояснення** | ⚪️ | 728 | Skipped |
-| **Практика** | ⚪️ | 357 | Skipped |
-| **Трансформації** | ⚪️ | 333 | Skipped |
-| **Діалоги** | ✅ | 417 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 94 | Skipped |
-| **Самооцінка** | ⚪️ | 80 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Формальність у спілкуванні** | ✅ | 370 | Included in Core |
+| **Ти/Ви-розрізнення** | ⚪️ | 739 | Skipped |
+| **Форми звертання** | ⚪️ | 588 | Skipped |
+| **Формальні/неформальні лексичні пари** | ⚪️ | 516 | Skipped |
+| **Трансформація регістру** | ⚪️ | 644 | Skipped |
+| **Соціальні ситуації** | ⚪️ | 468 | Skipped |
+| **Практика і підсумок** | ✅ | 331 | Included in Core |

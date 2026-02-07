@@ -2,14 +2,14 @@
   "module": "59-synonyms-communication",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:47.521924Z",
+  "last_audit": "2026-02-06T22:13:32.807852Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352005Z",
-    "meta": "2026-01-29T07:39:04.718390Z",
-    "activities": "2026-01-12T00:00:04.661779Z",
-    "vocabulary": "2026-01-21T22:54:32.934833Z",
-    "plan": "2026-01-30T15:05:14.176149Z"
+    "md": "2026-02-06T21:26:00.639533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.658533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1756/2000 (raw: 1921) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2124/2000 (raw: 2313)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/10"
+      "message": "16/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "Missing required activity types: fill-in-the-blank, reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

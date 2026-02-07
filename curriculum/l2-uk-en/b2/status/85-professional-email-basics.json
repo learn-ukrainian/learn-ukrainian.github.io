@@ -2,14 +2,14 @@
   "module": "85-professional-email-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:02.442238Z",
+  "last_audit": "2026-02-06T22:13:59.199521Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-20T09:51:25.659663Z",
-    "meta": "2026-01-29T07:39:04.740821Z",
-    "activities": "2026-01-20T14:39:40.432272Z",
-    "vocabulary": "2026-01-21T22:54:36.899354Z",
-    "plan": "2026-01-30T15:04:49.359746Z"
+    "md": "2026-02-06T21:26:00.643533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.662533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1727/2000 (raw: 1840)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2174/2000 (raw: 2296)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/14"
+      "message": "17/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -33,18 +33,15 @@
       "message": "3 < 20 (soft target)"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

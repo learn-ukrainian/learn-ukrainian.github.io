@@ -2,14 +2,14 @@
   "module": "74-mystetstvo-i-literatura",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:52.116095Z",
+  "last_audit": "2026-02-06T22:13:47.888093Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T22:24:26.913486Z",
-    "meta": "2026-01-29T07:39:04.727902Z",
-    "activities": "2026-01-12T22:25:29.521273Z",
-    "vocabulary": "2026-01-21T22:54:35.231670Z",
-    "plan": "2026-01-30T15:04:49.329387Z"
+    "md": "2026-02-06T21:26:00.641533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.660533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2002/2000 (raw: 2270) | pedagogy: 2 violations | richness: 91% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2432/2000 (raw: 2694)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "11/3"
+      "message": "12/10"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "16 < 20 (soft target)"
+      "message": "16 < 35 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "8 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

@@ -1,8 +1,8 @@
 # Audit Report: M17 — 17-register-business-ukrainian.md
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:16
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:48
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,42 +34,32 @@
 | 12 | fill-in | Заповніть фрази переговорів | 16 | 8 | ✅ |
 | 13 | quiz | Комплексна перевірка знань з ділової комунікації | 16 | 8 | ✅ |
 | 14 | essay-response | Діловий лист | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Ділова українська мова | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 4/5 (error-correction, essay-response, fill-in, match-up) ❌
+- Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (88% overlap): "Просимо надати нам можливість провести безкоштовну презентацію для Вашої команди.". Shares significant keywords with sentence at index 9.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2164/3800 (raw: 2968)
-- **Activities:** ✅ 14/10
+- **Words:** ⚠️ 3738/3800 (raw: 4833) (62 short)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.2% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -78,26 +68,25 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 5 | 2 | 100% | 25% | 25.0% |
-| model_answers | 98 | 3 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 24 | 4 | 100% | 10% | 10.0% |
-| variety | 0.92 | - | 92% | 5% | 4.6% |
-| cultural | 4 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
+| visual | 31 | 4 | 100% | 10% | 10.0% |
+| variety | 0.94 | - | 94% | 5% | 4.7% |
+| cultural | 5 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 61 | Included in Core |
-| **Вступи** | ✅ | 227 | Included in Core |
-| **Пояснення** | ⚪️ | 840 | Skipped |
-| **Трансформації** | ⚪️ | 123 | Skipped |
-| **Практика** | ⚪️ | 176 | Skipped |
-| **Діалоги** | ✅ | 465 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 89 | Skipped |
-| **Самооцінка** | ⚪️ | 73 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Ділове спілкування** | ✅ | 659 | Included in Core |
+| **Ділове листування** | ⚪️ | 875 | Skipped |
+| **Електронне листування** | ⚪️ | 361 | Skipped |
+| **Переговори та зустрічі** | ⚪️ | 422 | Skipped |
+| **Корпоративна комунікація** | ⚪️ | 715 | Skipped |
+| **Типові помилки та русизми** | ✅ | 324 | Included in Core |
+| **Практика і підсумок** | ✅ | 183 | Included in Core |
+| **Підсумок** | ✅ | 138 | Included in Core |

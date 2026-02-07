@@ -2,14 +2,14 @@
   "module": "26-politics-government-vocabulary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:08.892515Z",
+  "last_audit": "2026-02-06T22:12:58.164465Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351825Z",
-    "meta": "2026-01-29T07:39:04.690256Z",
-    "activities": "2026-01-11T22:51:46.975015Z",
-    "vocabulary": "2026-01-21T22:54:28.403923Z",
-    "plan": "2026-01-30T15:04:49.242311Z"
+    "md": "2026-02-06T21:26:00.634533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.651533Z",
+    "vocabulary": "2026-02-06T21:26:00.678533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1891/2000 (raw: 2251)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2192/2000 (raw: 2604)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

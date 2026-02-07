@@ -2,14 +2,14 @@
   "module": "71-medytsyna-pohlybleno",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:54.404313Z",
+  "last_audit": "2026-02-06T22:13:44.907330Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352073Z",
-    "meta": "2026-01-29T07:39:04.726066Z",
-    "activities": "2026-01-12T22:17:21.510191Z",
-    "vocabulary": "2026-01-21T22:54:34.518317Z",
-    "plan": "2026-01-30T15:04:49.320964Z"
+    "md": "2026-02-06T21:26:00.641533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.660533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2314/2000 (raw: 2649) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2486/2000 (raw: 2815)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "16/10"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "17 < 20 (soft target)"
+      "message": "17 < 35 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "4 Outline Compliance Errors",
-      "12 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

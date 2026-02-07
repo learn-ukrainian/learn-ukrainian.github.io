@@ -2,14 +2,14 @@
   "module": "86-professional-email-advanced",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:59.699176Z",
+  "last_audit": "2026-02-06T22:14:00.287610Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-20T16:01:02.037166Z",
-    "meta": "2026-01-29T07:39:04.741592Z",
-    "activities": "2026-01-20T16:02:59.104806Z",
-    "vocabulary": "2026-01-21T22:54:37.165516Z",
-    "plan": "2026-01-30T15:04:49.363437Z"
+    "md": "2026-02-06T21:26:00.643533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.663533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4154/1750 (raw: 4236) | engagement: 4/5 | pedagogy: 2 violations | richness: 75% < 95% min (content)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4272/1750 (raw: 4356)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "13/3 | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "15/14"
     },
     "vocabulary": {
       "status": "pass",
@@ -33,18 +33,15 @@
       "message": "20/20"
     },
     "naturalness": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/10 (PENDING) - Naturalness check required"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "12 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: essay-response, reading"
-    ],
-    "pass_count": 2,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -1,8 +1,8 @@
 # Audit Report: M49 — 49-idioms-body-head-face.md
 **Level:** B2 | **Module:** M49 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:06
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:22
 
 ## Configuration
 **Type:** B2-vocab
@@ -32,19 +32,21 @@
 | 10 | essay-response | Антропоцентризм фразеології | 1 | 1 | ✅ |
 | 11 | match-up | Англійські еквіваленти фразеологізмів | 12 | 8 | ✅ |
 | 12 | fill-in | Вставте фразеологізм у контекст | 16 | 8 | ✅ |
+| 13 | reading | Текст для аналізу: Соматичні фразеологізми: Голова та обличчя | 3 | 3 | ✅ |
+| 14 | true-false | Правда чи хибність: Соматичні фразеологізми: Голова та обличчя | 10 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 10-14) ✅
-- Unique types: 11 (minimum: 4) ✅
+- Total activities: 14 (target: 10-14) ✅
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 1/3 (essay-response) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2147/2000 (raw: 2510)
-- **Activities:** ✅ 12/10
+- **Words:** ✅ 2163/2000 (raw: 2520)
+- **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
@@ -54,37 +56,33 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 90-100% (vocab))
-- **Richness:** ✅ 97% (phraseology)
+- **Richness:** ✅ 96% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | engagement | 10 | 4 | 100% | 25% | 25.0% |
-| variety | 0.92 | - | 92% | 17% | 15.3% |
+| variety | 0.93 | - | 93% | 17% | 15.5% |
 | cultural | 6 | - | 100% | 17% | 16.7% |
 | visual | 4 | 3 | 100% | 8% | 8.3% |
 | paragraph_var | 0.79 | - | 79% | 8% | 6.6% |
 | examples | 49 | - | 100% | 8% | 8.3% |
 | realworld | 6 | - | 100% | 8% | 8.3% |
-| questions | 15 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **96.9%** |
+| questions | 14 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **97.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |
-| **Вступ** | ✅ | 177 | Included in Core |
-| **Фразеологізми** | ⚪️ | 1193 | Skipped |
-| **Вживання у контексті** | ✅ | 263 | Included in Core |
-| **Тематична класифікація** | ⚪️ | 0 | Skipped |
-| **Порівняння з англійськими еквівалентами** | ⚪️ | 41 | Skipped |
-| **Помилки у вживанні** | ✅ | 78 | Included in Core |
-| **Міні-діалоги для практики** | ✅ | 111 | Included in Core |
-| **Підсумок** | ✅ | 102 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Голова як центр мислення** | ⚪️ | 1370 | Skipped |
+| **Фразеологізми з "голова"** | ⚪️ | 263 | Skipped |
+| **Фразеологізми з частинами обличчя** | ✅ | 119 | Included in Core |
+| **Практика — ідіоми в діалозі** | ⚪️ | 327 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

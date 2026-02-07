@@ -2,14 +2,14 @@
   "module": "91-presentation-skills-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:14.441148Z",
+  "last_audit": "2026-02-06T22:14:05.988553Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-21T10:46:24.785803Z",
-    "meta": "2026-01-29T07:39:04.744469Z",
-    "activities": "2026-01-21T10:46:24.788262Z",
-    "vocabulary": "2026-01-21T22:54:38.652037Z",
-    "plan": "2026-01-30T15:04:49.384938Z"
+    "md": "2026-02-06T21:26:00.645533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.664533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2282/2000 (raw: 2343)"
+      "message": "2294/2000 (raw: 2372)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/14"
+      "message": "16/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,11 +39,8 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0
   }

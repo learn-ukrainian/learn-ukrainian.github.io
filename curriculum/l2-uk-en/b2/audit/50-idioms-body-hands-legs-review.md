@@ -1,8 +1,8 @@
 # Audit Report: M50 — 50-idioms-body-hands-legs.md
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:49
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:13:23
 
 ## Configuration
 **Type:** B2-vocab
@@ -35,19 +35,20 @@
 | 13 | match-up | Синоніми та антоніми | 16 | 8 | ✅ |
 | 14 | fill-in | Заповніть діалог фразеологізмами | 10 | 8 | ✅ |
 | 15 | essay-response | Мій шлях до майстерності | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Соматичні фразеологізми: Руки та ноги | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1867/2000 (raw: 2276)
-- **Activities:** ✅ 15/10
+- **Words:** ⚠️ 1979/2000 (raw: 2378) (21 short)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
@@ -57,12 +58,12 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (vocab))
-- **Richness:** ✅ 98% (phraseology)
+- **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** phraseology
 
 ### Score Breakdown
@@ -72,24 +73,18 @@
 | variety | 0.99 | - | 99% | 17% | 16.5% |
 | cultural | 2 | - | 100% | 17% | 16.7% |
 | visual | 6 | 3 | 100% | 8% | 8.3% |
-| paragraph_var | 0.84 | - | 84% | 8% | 7.0% |
+| paragraph_var | 0.91 | - | 91% | 8% | 7.6% |
 | examples | 57 | - | 100% | 8% | 8.3% |
 | realworld | 1 | - | 100% | 8% | 8.3% |
-| questions | 18 | - | 100% | 8% | 8.3% |
-| **TOTAL** | | | | | **98.5%** |
+| questions | 17 | - | 100% | 8% | 8.3% |
+| **TOTAL** | | | | | **99.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 56 | Included in Core |
-| **Контекст** | ✅ | 41 | Included in Core |
-| **Фразеологізми** | ⚪️ | 326 | Skipped |
-| **Культурний код: Тіло як дзеркало душі** | ✅ | 209 | Included in Core |
-| **Вживання у контексті** | ✅ | 462 | Included in Core |
-| **Помилки у вживанні** | ✅ | 170 | Included in Core |
-| **Етимологія та символізм соматизмів** | ⚪️ | 167 | Skipped |
-| **Тематична класифікація** | ⚪️ | 0 | Skipped |
-| **Порівняння з іншими мовами** | ⚪️ | 112 | Skipped |
-| **Міні-діалоги для практики** | ✅ | 113 | Included in Core |
-| **Підсумок** | ✅ | 101 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Руки та ноги в мовленні** | ⚪️ | 367 | Skipped |
+| **Фразеологізми з "рука"** | ⚪️ | 841 | Skipped |
+| **Фразеологізми з "нога"** | ⚪️ | 167 | Skipped |
+| **Практика — вирази в розповіді** | ⚪️ | 534 | Skipped |
+| **Підсумок** | ✅ | 14 | Included in Core |

@@ -2,14 +2,14 @@
   "module": "73-nauka-i-doslidzhennia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:56.216358Z",
+  "last_audit": "2026-02-06T22:13:46.924211Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T22:22:47.833581Z",
-    "meta": "2026-01-29T07:39:04.727291Z",
-    "activities": "2026-01-12T22:23:08.352355Z",
-    "vocabulary": "2026-01-21T22:54:34.994421Z",
-    "plan": "2026-01-30T15:04:49.326759Z"
+    "md": "2026-02-06T21:26:00.641533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.660533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1946/2000 (raw: 2227) (54 short) | pedagogy: 2 violations | richness: 84% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2260/2000 (raw: 2537)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "15/10"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "21/20"
+      "message": "21 < 35 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "11 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

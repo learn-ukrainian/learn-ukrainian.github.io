@@ -1,8 +1,8 @@
 # Audit Report: M15 — 15-register-introduction.md
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:11
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:45
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,72 +34,59 @@
 | 12 | quiz | Аналіз текстів за стилями | 16 | 8 | ✅ |
 | 13 | fill-in | Стильові маркери в контексті | 16 | 8 | ✅ |
 | 14 | essay-response | Мовні стилі | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Функціональні стилі мови | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (essay-response, fill-in, group-sort, match-up, quiz) ❌
+- Required types used: 6/6 (essay-response, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 3120/3800 (raw: 3931)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 4025/3800 (raw: 4838)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/6
+- **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 14 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.4% (target 90-100% (grammar))
-- **Richness:** ❌ 74% < 95% min (style)
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 74% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| exemplar_texts | 0 | 2 | 0% | 25% | 0.0% |
-| model_answers | 82 | 3 | 100% | 20% | 20.0% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
+| exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
+| model_answers | 100 | 3 | 100% | 20% | 20.0% |
+| engagement | 15 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 14 | 4 | 100% | 10% | 10.0% |
+| visual | 16 | 4 | 100% | 10% | 10.0% |
 | variety | 0.97 | - | 97% | 5% | 4.9% |
-| cultural | 3 | - | 100% | 5% | 5.0% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
-| **TOTAL** | | | | | **74.5%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_EXEMPLAR_TEXTS**
-  - FIX:
-    Add 2+ exemplar text excerpts. Use this format:
-    
-    **Зразок [style type]:**
-    
-    > «[Extended quote showing the style, 50+ words]»
-    > — *[Source]*
+| cultural | 4 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 68 | Included in Core |
-| **Вступи** | ✅ | 303 | Included in Core |
-| **Пояснення** | ⚪️ | 678 | Skipped |
-| **Милозвучність** | ⚪️ | 221 | Skipped |
-| **Як визначити стиль?** | ⚪️ | 126 | Skipped |
-| **Практика** | ⚪️ | 314 | Skipped |
-| **Діалоги** | ✅ | 425 | Included in Core |
-| **Трансформації** | ⚪️ | 719 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 70 | Skipped |
-| **Самоперевірка** | ⚪️ | 58 | Skipped |
-| **Наступні кроки** | ⚪️ | 28 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Що таке функціональний стиль?** | ✅ | 388 | Included in Core |
+| **Розмовний стиль** | ⚪️ | 907 | Skipped |
+| **Художній стиль** | ⚪️ | 431 | Skipped |
+| **Науковий стиль** | ⚪️ | 739 | Skipped |
+| **Офіційно-діловий стиль** | ⚪️ | 719 | Skipped |
+| **Публіцистичний стиль** | ⚪️ | 396 | Skipped |
+| **Практика і підсумок** | ✅ | 347 | Included in Core |
+| **Підсумок** | ✅ | 30 | Included in Core |

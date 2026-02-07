@@ -1,6 +1,7 @@
 module: b2-93
 level: B2
 slug: 93-discussion-debate
+focus: skills
 version: '2.0'
 naturalness:
   score: 8
@@ -14,7 +15,6 @@ tags:
 - debate
 - argumentation
 vocabulary_count: 30
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-93

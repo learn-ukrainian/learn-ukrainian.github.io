@@ -1,8 +1,8 @@
 # Audit Report: M24 — 24-register-colloquial-style.md
 **Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:21
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:56
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,35 +34,27 @@
 | 12 | fill-in | Вигуки в контексті | 16 | 8 | ✅ |
 | 13 | quiz | Контекстуальний вибір регістру | 16 | 8 | ✅ |
 | 14 | essay-response | Аналіз стилю спілкування | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Розмовний стиль | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1869/2000 (raw: 2741)
-- **Activities:** ✅ 14/10
+- **Words:** ⚠️ 1964/2000 (raw: 2839) (36 short)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 11 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
@@ -84,7 +76,7 @@
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 41 | 5 | 100% | 5% | 5.0% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.4%** |
 
@@ -92,12 +84,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Вступ** | ✅ | 68 | Included in Core |
-| **Тест: Прочитайте тексти** | ✅ | 112 | Included in Core |
-| **Пояснення** | ⚪️ | 676 | Skipped |
-| **Трансформації** | ⚪️ | 308 | Skipped |
-| **Діалоги** | ✅ | 430 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 84 | Skipped |
-| **Самооцінка** | ⚪️ | 81 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Розмовний стиль** | ⚪️ | 68 | Skipped |
+| **Скорочення та сленг** | ⚪️ | 798 | Skipped |
+| **Частки та наповнювачі** | ⚪️ | 308 | Skipped |
+| **Синтаксичні особливості** | ⚪️ | 514 | Skipped |
+| **Практика** | ⚪️ | 264 | Skipped |
+| **Підсумок** | ✅ | 12 | Included in Core |

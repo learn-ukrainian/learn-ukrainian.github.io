@@ -4,8 +4,8 @@ slug: 02-past-passive-participles
 version: '1.0'
 id: b2-02
 naturalness:
-  score: 1
-  status: PENDING
-word_target: 3800
+  score: 8
+  status: PASS
+transliteration: none
 build:
   last_modified: '2026-01-26'

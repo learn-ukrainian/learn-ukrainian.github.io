@@ -2,14 +2,14 @@
   "module": "80-analiz-tekstu",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:54.755171Z",
+  "last_audit": "2026-02-06T22:13:54.013770Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352107Z",
-    "meta": "2026-01-29T07:39:04.731661Z",
-    "activities": "2026-01-13T10:25:08.915051Z",
-    "vocabulary": "2026-01-21T22:54:36.457211Z",
-    "plan": "2026-01-30T15:04:49.346370Z"
+    "md": "2026-02-06T21:26:00.642533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.661533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2147/2000 (raw: 2324) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2257/2000 (raw: 2406)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/14"
+      "message": "17/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Critical Template Violations",
-      "6 Outline Compliance Errors",
-      "Missing required activity types: reading, true-false"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

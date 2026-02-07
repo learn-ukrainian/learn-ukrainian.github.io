@@ -1,8 +1,8 @@
 # Audit Report: M07 — 07-active-participles-present.md
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:09
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:36
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,73 +34,61 @@
 | 12 | cloze | Відмінювання дієприкметників | 16 | 14 | ✅ |
 | 13 | quiz | Оберіть правильну трансформацію | 16 | 8 | ✅ |
 | 14 | essay-response | Літературний портрет | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Активні дієприкметники теперішнього часу (-учий/-ючий) | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/6 (error-correction, fill-in, group-sort, match-up, quiz) ❌
+- Required types used: 6/6 (error-correction, fill-in, group-sort, match-up, quiz, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "→ Студент, який вивчає українську мову, живе у Києві.". Shares significant keywords with sentence at index 110.
-  - FIX: Remove redundant paragraphs. Ensure each section adds new unique value.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 07-active-participles-present.yaml: Duplicate key 'instruction' at line 759 (first defined at line 758)
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 2272/3800 (raw: 3014)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 3873/3800 (raw: 4709)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 90-100% (grammar))
-- **Richness:** ✅ 99% (grammar)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 100 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 33 | 5 | 100% | 5% | 5.0% |
+| variety | 0.95 | - | 95% | 10% | 9.5% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 13 | 3 | 100% | 10% | 10.0% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.2%** |
+| **TOTAL** | | | | | **96.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 129 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 151 | Included in Core |
-| **Пояснення** | ⚪️ | 628 | Skipped |
-| **Практика** | ⚪️ | 178 | Skipped |
-| **Діалоги** | ✅ | 251 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 98 | Included in Core |
-| **Культурний контекст** | ✅ | 115 | Included in Core |
-| **Типові помилки та як їх уникнути** | ✅ | 114 | Included in Core |
-| **Трансформації** | ⚪️ | 419 | Skipped |
-| **Підсумок** | ✅ | 79 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 227 | Included in Core |
+| **Вступ — Активні дієприкметники** | ✅ | 420 | Included in Core |
+| **Утворення дієприкметників на -учий/-ючий** | ⚪️ | 626 | Skipped |
+| **Стилістична специфіка** | ⚪️ | 469 | Skipped |
+| **Еквівалентні підрядні речення** | ⚪️ | 598 | Skipped |
+| **Контексти вживання** | ✅ | 645 | Included in Core |
+| **Підсумок і практика** | ✅ | 603 | Included in Core |
+| **Лексикалізовані форми** | ⚪️ | 114 | Skipped |
+| **Підсумок** | ✅ | 171 | Included in Core |

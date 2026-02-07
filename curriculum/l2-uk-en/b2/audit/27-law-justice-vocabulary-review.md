@@ -1,8 +1,8 @@
 # Audit Report: M27 — 27-law-justice-vocabulary.md
 **Level:** B2 | **Module:** M27 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:12
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:59
 
 ## Configuration
 **Type:** B2-grammar
@@ -35,19 +35,20 @@
 | 13 | select | Права підозрюваного | 16 | 6 | ✅ |
 | 14 | translate | Юридичні колокації | 16 | 6 | ✅ |
 | 15 | essay-response | Юридичний аналіз справи | 1 | 1 | ✅ |
+| 16 | reading | Текст для аналізу: Право та юстиція | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 15 (target: 10-14) ❌
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 16 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2437/2000 (raw: 2713)
-- **Activities:** ✅ 15/10
+- **Words:** ✅ 2448/2000 (raw: 2707)
+- **Activities:** ✅ 16/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
@@ -76,7 +77,7 @@
 | realworld | 11 | 3 | 100% | 10% | 10.0% |
 | visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 21 | 5 | 100% | 5% | 5.0% |
+| questions | 20 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
@@ -84,15 +85,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 53 | Included in Core |
-| **Вступ** | ✅ | 365 | Included in Core |
-| **Наратив: Цивільна справа** | ⚪️ | 304 | Skipped |
-| **Наратив: Кримінальна справа** | ⚪️ | 877 | Skipped |
-| **Пояснення** | ⚪️ | 84 | Skipped |
-| **Трансформації** | ⚪️ | 84 | Skipped |
-| **Практика: Аналіз судового прецеденту** | ✅ | 241 | Included in Core |
-| **Практика: Юридична допомога в Україні** | ⚪️ | 166 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 64 | Skipped |
-| **Самоперевірка** | ⚪️ | 55 | Skipped |
-| **Наступні кроки** | ⚪️ | 34 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Судова система України** | ⚪️ | 669 | Skipped |
+| **Учасники судового процесу** | ⚪️ | 960 | Skipped |
+| **Види правопорушень** | ⚪️ | 325 | Skipped |
+| **Судовий процес** | ⚪️ | 230 | Skipped |
+| **Практика — юридичний текст** | ✅ | 199 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

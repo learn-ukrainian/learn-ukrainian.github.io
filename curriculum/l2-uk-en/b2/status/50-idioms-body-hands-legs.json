@@ -2,14 +2,14 @@
   "module": "50-idioms-body-hands-legs",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:17:49.797261Z",
+  "last_audit": "2026-02-06T22:13:23.887494Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351963Z",
-    "meta": "2026-01-29T07:39:04.711261Z",
-    "activities": "2026-01-11T23:20:02.151146Z",
-    "vocabulary": "2026-01-21T22:54:32.004989Z",
-    "plan": "2026-01-30T15:04:49.306080Z"
+    "md": "2026-02-06T21:26:00.638533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.656533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1867/2000 (raw: 2276)"
+      "status": "warn",
+      "violations": 0,
+      "message": "1979/2000 (raw: 2378) (21 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/10"
+      "message": "16/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

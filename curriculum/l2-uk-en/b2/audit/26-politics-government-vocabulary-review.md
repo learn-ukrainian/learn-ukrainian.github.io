@@ -1,8 +1,8 @@
 # Audit Report: M26 — 26-politics-government-vocabulary.md
 **Level:** B2 | **Module:** M26 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 2000
 **Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:18:08
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:58
 
 ## Configuration
 **Type:** B2-grammar
@@ -34,19 +34,20 @@
 | 12 | fill-in | Дипломатична лексика | 16 | 8 | ✅ |
 | 13 | quiz | Інтеграційний тест | 16 | 8 | ✅ |
 | 14 | essay-response | Політичний аналіз | 1 | 1 | ✅ |
+| 15 | reading | Текст для аналізу: Політика та державне управління | 3 | 3 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 10-14) ✅
-- Unique types: 12 (minimum: 4) ✅
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 13 (minimum: 4) ✅
 - Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 2/3 (essay-response, true-false) ❌
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 1891/2000 (raw: 2251)
-- **Activities:** ✅ 14/10
+- **Words:** ✅ 2192/2000 (raw: 2604)
+- **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 13/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
@@ -55,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -67,15 +68,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 63 | 24 | 100% | 20% | 20.0% |
+| examples | 67 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
+| questions | 32 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.5%** |
 
@@ -83,12 +84,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 75 | Included in Core |
-| **Вступ** | ✅ | 411 | Included in Core |
-| **Наратив: Парламентська сесія** | ⚪️ | 602 | Skipped |
-| **Пояснення** | ⚪️ | 176 | Skipped |
-| **Трансформації** | ⚪️ | 335 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ми вивчили** | ⚪️ | 78 | Skipped |
-| **Самоперевірка** | ⚪️ | 55 | Skipped |
-| **Наступні кроки** | ⚪️ | 49 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Розминка — Політична система України** | ⚪️ | 411 | Skipped |
+| **Органи влади** | ⚪️ | 778 | Skipped |
+| **Виборчий процес** | ⚪️ | 437 | Skipped |
+| **Політичні поняття** | ⚪️ | 232 | Skipped |
+| **Практика — читання політичних новин** | ✅ | 247 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

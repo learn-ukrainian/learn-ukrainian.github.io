@@ -7,6 +7,7 @@ naturalness:
   score: 8
   status: PASS
 duration: 180
+focus: checkpoint
 transliteration: none
 tags:
 - checkpoint
@@ -14,6 +15,5 @@ tags:
 - integration
 - communication-skills
 vocabulary_count: 45
-word_target: 2000
 build:
   last_modified: '2026-01-26'

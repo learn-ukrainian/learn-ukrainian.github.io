@@ -2,14 +2,14 @@
   "module": "72-tekhnolohii-ta-shi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:10.562582Z",
+  "last_audit": "2026-02-06T22:13:45.908936Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-12T22:19:34.136087Z",
-    "meta": "2026-01-29T07:39:04.726678Z",
-    "activities": "2026-01-12T22:21:12.653572Z",
-    "vocabulary": "2026-01-21T22:54:34.752898Z",
-    "plan": "2026-01-30T15:04:49.324021Z"
+    "md": "2026-02-06T21:26:00.641533Z",
+    "meta": "2026-02-06T21:26:00.673533Z",
+    "activities": "2026-02-06T21:26:00.660533Z",
+    "vocabulary": "2026-02-06T21:26:00.679533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "1787/2000 (raw: 2364) | pedagogy: 2 violations | richness: 90% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "2041/2000 (raw: 2616)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/3"
+      "message": "15/10"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "20/20"
+      "message": "20 < 35 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "11 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

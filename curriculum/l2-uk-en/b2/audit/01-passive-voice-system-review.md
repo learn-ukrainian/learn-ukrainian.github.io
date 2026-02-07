@@ -1,8 +1,8 @@
 # Audit Report: M01 — 01-passive-voice-system.md
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-01 19:28:33
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:28
 
 ## Configuration
 **Type:** B2-grammar
@@ -42,61 +42,52 @@
 - Required types used: 5/5 (essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✅ правильно:...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1943/3800 (raw: 2337)
+- **Words:** ✅ 3811/3800 (raw: 4418)
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 5 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
-- **Richness:** ✅ 95% (grammar)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 99 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 19 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.87 | - | 87% | 5% | 4.4% |
-| questions | 29 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.4%** |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 8 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 18 | 3 | 100% | 10% | 10.0% |
+| visual | 13 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 25 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Тест: Прочитайте текст** | ✅ | 153 | Included in Core |
-| **Пояснення** | ⚪️ | 916 | Skipped |
-| **Трансформації** | ⚪️ | 247 | Skipped |
-| **Діалоги** | ✅ | 316 | Included in Core |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Ключові моменти** | ⚪️ | 67 | Skipped |
-| **Самооцінка** | ⚪️ | 71 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Intro/Narrative** | ✅ | 82 | Included in Core |
+| **Вступ — Що таке пасивний стан?** | ✅ | 469 | Included in Core |
+| **Практикум: Трансформаційна таблиця** | ⚪️ | 125 | Skipped |
+| **Форма 1 — Дієприкметники на -ний/-тий** | ⚪️ | 638 | Skipped |
+| **Форма 2 — Безособові конструкції на -но/-то** | ⚪️ | 672 | Skipped |
+| **Форма 3 — Зворотний пасив із -ся** | ⚪️ | 587 | Skipped |
+| **Форма 4 — Третя особа множини** | ⚪️ | 596 | Skipped |
+| **Вибір форми пасиву за контекстом** | ✅ | 425 | Included in Core |
+| **Підсумок і практика** | ✅ | 217 | Included in Core |

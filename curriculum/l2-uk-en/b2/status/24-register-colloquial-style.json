@@ -2,14 +2,14 @@
   "module": "24-register-colloquial-style",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:18:21.319214Z",
+  "last_audit": "2026-02-06T22:12:56.009988Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-11T21:19:52.643243Z",
-    "meta": "2026-01-29T07:39:04.688817Z",
-    "activities": "2026-01-11T23:20:02.142144Z",
-    "vocabulary": "2026-01-21T22:54:28.108473Z",
-    "plan": "2026-01-30T15:04:49.237430Z"
+    "md": "2026-02-06T21:26:00.634533Z",
+    "meta": "2026-02-06T21:26:00.672533Z",
+    "activities": "2026-02-06T21:26:00.651533Z",
+    "vocabulary": "2026-02-06T21:26:00.678533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1869/2000 (raw: 2741) | pedagogy: 1 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "1964/2000 (raw: 2839) (36 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "14/10"
+      "message": "15/10"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Missing required activity types: reading"
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1
+    "fail_count": 0
   }
 }

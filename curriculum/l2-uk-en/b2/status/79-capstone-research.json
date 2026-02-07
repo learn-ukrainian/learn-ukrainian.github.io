@@ -2,14 +2,14 @@
   "module": "79-capstone-research",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:03.186034Z",
+  "last_audit": "2026-02-06T22:13:53.025209Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352106Z",
-    "meta": "2026-01-29T07:39:04.731048Z",
-    "activities": "2026-01-13T10:22:25.053109Z",
-    "vocabulary": "2026-01-21T22:54:36.400798Z",
-    "plan": "2026-01-30T15:04:49.342605Z"
+    "md": "2026-02-06T21:26:00.642533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.661533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1791/2000 (raw: 1968) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2175/2000 (raw: 2335)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/15"
+      "message": "17/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Missing required activity types: essay-response, reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

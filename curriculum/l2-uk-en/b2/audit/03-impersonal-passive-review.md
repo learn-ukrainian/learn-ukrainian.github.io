@@ -1,8 +1,8 @@
 # Audit Report: M03 — 03-impersonal-passive.md
 **Level:** B2 | **Module:** M03 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 3800
-**Naturalness:** 1/10 (PENDING)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-01-30 21:17:53
+**Naturalness:** 8/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-06 22:12:31
 
 ## Configuration
 **Type:** B2-grammar
@@ -43,34 +43,23 @@
 - Required types used: 5/5 (error-correction, essay-response, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with '✓ |...'.
-  - FIX: Vary sentence structure.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 03-impersonal-passive.yaml: Schema validation error at key 'min_words': 100 is less than the minimum of 150
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1925/3800 (raw: 2579)
+- **Words:** ⚠️ 3733/3800 (raw: 4778) (67 short)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/6
+- **Engagement:** ✅ 16/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 8 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.3% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.6% (target 90-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ 1/10 (PENDING) - Naturalness check required
+- **Naturalness:** ✅ 8/10 (High)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -79,31 +68,27 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 58 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 82 | 24 | 100% | 20% | 20.0% |
+| engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 17 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.88 | - | 88% | 5% | 4.4% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.9%** |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 9 | 3 | 100% | 10% | 10.0% |
+| visual | 21 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.89 | - | 89% | 5% | 4.5% |
+| questions | 26 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 45 | Included in Core |
-| **Вступ** | ✅ | 162 | Included in Core |
-| **Пояснення** | ⚪️ | 458 | Skipped |
-| **Регістрова варіація** | ⚪️ | 466 | Skipped |
-| **Як обрати?** | ⚪️ | 85 | Skipped |
-| **Типові помилки** | ✅ | 144 | Included in Core |
-| **Діалоги** | ✅ | 194 | Included in Core |
-| **Трансформації** | ⚪️ | 182 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
-| **Що ви вивчили** | ⚪️ | 34 | Skipped |
-| **Самоперевірка** | ⚪️ | 45 | Skipped |
-| **Зв'язок з попередніми модулями** | ⚪️ | 0 | Skipped |
-| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |
+| **Вступ — Безособовість в українській мові** | ✅ | 640 | Included in Core |
+| **Утворення форм на -но/-то** | ⚪️ | 1041 | Skipped |
+| **Синтаксичні особливості** | ⚪️ | 353 | Skipped |
+| **Контексти вживання** | ✅ | 553 | Included in Core |
+| **Регістрова специфіка** | ⚪️ | 455 | Skipped |
+| **Типові помилки** | ✅ | 440 | Included in Core |
+| **Практика і підсумок** | ✅ | 194 | Included in Core |
+| **Підсумок** | ✅ | 12 | Included in Core |

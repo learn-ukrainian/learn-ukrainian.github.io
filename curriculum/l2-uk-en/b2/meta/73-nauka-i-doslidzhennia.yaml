@@ -1,6 +1,7 @@
 module: b2-73
 level: B2
 slug: 73-nauka-i-doslidzhennia
+focus: vocab
 version: '2.0'
 naturalness:
   score: 9
@@ -13,7 +14,6 @@ tags:
 - research
 - academic
 vocabulary_count: 25
-word_target: 2000
 build:
   last_modified: '2026-01-26'
 id: b2-73

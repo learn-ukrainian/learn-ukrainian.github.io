@@ -1,6 +1,7 @@
 module: b2-78
 level: B2
 slug: 78-text-analysis
+focus: skills
 version: '2.0'
 id: b2-78
 naturalness:
@@ -12,6 +13,5 @@ tags:
 - skills
 - analysis
 - reading
-word_target: 2000
 build:
   last_modified: '2026-01-26'

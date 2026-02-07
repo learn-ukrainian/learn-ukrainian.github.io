@@ -2,14 +2,14 @@
   "module": "84-checkpoint-register-synthesis",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:17:57.359654Z",
+  "last_audit": "2026-02-06T22:13:58.053050Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352153Z",
-    "meta": "2026-01-29T07:39:04.739869Z",
-    "activities": "2026-01-13T11:07:01.633087Z",
-    "vocabulary": "2026-01-21T22:54:36.827637Z",
-    "plan": "2026-01-30T15:04:49.356984Z"
+    "md": "2026-02-06T21:26:00.643533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.662533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1798/2000 (raw: 1982) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "2159/2000 (raw: 2336)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "21/15"
+      "message": "23/15"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "7 Outline Compliance Errors",
-      "Missing required activity types: true-false"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

@@ -2,14 +2,14 @@
   "module": "82-capstone-prezentatsiya",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:18:00.834676Z",
+  "last_audit": "2026-02-06T22:13:55.938239Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.352133Z",
-    "meta": "2026-01-29T07:39:04.734743Z",
-    "activities": "2026-01-13T10:53:47.368130Z",
-    "vocabulary": "2026-01-21T22:54:36.672032Z",
-    "plan": "2026-01-30T15:04:49.351671Z"
+    "md": "2026-02-06T21:26:00.643533Z",
+    "meta": "2026-02-06T21:26:00.674533Z",
+    "activities": "2026-02-06T21:26:00.662533Z",
+    "vocabulary": "2026-02-06T21:26:00.680533Z",
+    "plan": null
   },
   "gates": {
     "meta": {
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "1868/2000 (raw: 1964) | pedagogy: 2 violations | richness: 70% < 95% min (grammar) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "2147/2000 (raw: 2215)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/3"
+      "message": "16/14"
     },
     "vocabulary": {
       "status": "warn",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "12 forbidden activity types (use --fix to remove)",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }
