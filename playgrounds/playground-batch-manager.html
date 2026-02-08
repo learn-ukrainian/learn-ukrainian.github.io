@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batch Manager - Orchestration & Operations</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .api-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+
+    .api-status.connected .api-dot { background: #10b981; }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge.running { background: #1d4ed8; color: #dbeafe; }
+    .badge.complete { background: #166534; color: #bbf7d0; }
+    .badge.failed { background: #991b1b; color: #fecaca; }
+    .badge.pending { background: #854d0e; color: #fef08a; }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px 12px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 14px;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .range-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-primary:hover { background: #2563eb; }
+
+    .btn-secondary {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .btn-secondary:hover { background: #475569; }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-danger:hover { background: #b91c1c; }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .task-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .task-item {
+      padding: 12px;
+      background: #0f172a;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #1e293b;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .task-title {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: ui-monospace, monospace;
+    }
+
+    .task-meta {
+      font-size: 11px;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
+    }
+
+    .task-progress {
+      background: #1e293b;
+      border-radius: 4px;
+      height: 6px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .task-progress-bar {
+      height: 100%;
+      background: #3b82f6;
+      transition: width 0.3s;
+    }
+
+    .task-progress-bar.complete { background: #10b981; }
+    .task-progress-bar.failed { background: #ef4444; }
+
+    .task-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .task-btn {
+      padding: 4px 12px;
+      font-size: 11px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .task-btn:hover { background: #475569; }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .result-cell {
+      padding: 8px 4px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      font-family: ui-monospace, monospace;
+    }
+
+    .result-cell.pass { background: #166534; color: #bbf7d0; }
+    .result-cell.fail { background: #991b1b; color: #fecaca; }
+    .result-cell.pending { background: #854d0e; color: #fef08a; }
+
+    .logs-panel {
+      grid-column: 1 / -1;
+      max-height: 300px;
+    }
+
+    .logs-output {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      max-height: 220px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .log-line {
+      margin-bottom: 4px;
+    }
+
+    .log-line.info { color: #94a3b8; }
+    .log-line.success { color: #10b981; }
+    .log-line.error { color: #f43f5e; }
+    .log-line.warn { color: #f59e0b; }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+    }
+
+    .copy-prompt {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .copy-btn-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .copy-btn {
+      padding: 6px 12px;
+      font-size: 11px;
+      background: #334155;
+      border: none;
+      border-radius: 6px;
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: #475569; }
+    .copy-btn.copied { background: #10b981; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">← Back to Playgrounds</a>
+
+  <div class="header">
+    <h1>Batch Manager</h1>
+    <div class="api-status" id="api-status">
+      <div class="api-dot"></div>
+      <span id="api-status-text">Connecting...</span>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Batch Launcher -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Launch Batch Operation</h2>
+      </div>
+
+      <div class="form-group">
+        <label>Operation Type</label>
+        <select id="operation-type">
+          <option value="fix-review">Fix + Review (A1/A2/B1/B2/C1/C2)</option>
+          <option value="research">Research (Seminar: B2-HIST, C1-BIO, etc.)</option>
+          <option value="orchestrate">Orchestrated Rebuild (Full Pipeline)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Track/Level</label>
+        <select id="track">
+          <option value="a1">A1 (44 modules)</option>
+          <option value="a2">A2 (70 modules)</option>
+          <option value="b1">B1 (92 modules)</option>
+          <option value="b2">B2 (94 modules)</option>
+          <option value="c1">C1 (106 modules)</option>
+          <option value="c2">C2 (100 modules)</option>
+          <option value="b2-hist">B2-HIST (140 modules)</option>
+          <option value="c1-bio">C1-BIO (128 modules)</option>
+          <option value="c1-hist">C1-HIST (60 modules)</option>
+          <option value="lit">LIT (30 modules)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Module Range</label>
+        <div class="range-inputs">
+          <input type="number" id="start-num" placeholder="Start" min="1" value="1">
+          <input type="number" id="end-num" placeholder="End" min="1" value="10">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Model (for Review/Orchestrate)</label>
+        <select id="model">
+          <option value="gemini-3-pro-preview">Gemini 3 Pro (slower, better)</option>
+          <option value="gemini-3-flash-preview">Gemini 3 Flash (faster)</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="launch-btn" onclick="launchBatch()">
+        Launch Batch
+      </button>
+    </div>
+
+    <!-- Active Tasks -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Active Tasks</h2>
+        <span class="badge running" id="active-count">0 running</span>
+      </div>
+      <div class="task-list" id="task-list">
+        <div class="empty-state">No active tasks</div>
+      </div>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Recent Results</h2>
+        <button class="btn-secondary task-btn" onclick="refreshResults()">Refresh</button>
+      </div>
+      <div id="results-container">
+        <div class="empty-state">Launch a batch to see results</div>
+      </div>
+    </div>
+
+    <!-- Logs -->
+    <div class="panel logs-panel">
+      <div class="panel-header">
+        <h2>Live Logs</h2>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary task-btn" onclick="clearLogs()">Clear</button>
+          <button class="btn-secondary task-btn" onclick="toggleAutoscroll()">
+            <span id="autoscroll-text">Auto-scroll: ON</span>
+          </button>
+        </div>
+      </div>
+      <div class="logs-output" id="logs-output">
+        <div class="log-line info">Ready. Launch a batch operation to begin.</div>
+      </div>
+    </div>
+
+    <!-- Copy Prompt -->
+    <div class="panel" style="grid-column: 1 / -1;">
+      <div class="panel-header">
+        <h2>Generated CLI Command</h2>
+      </div>
+      <div class="copy-prompt" id="copy-prompt">
+# Launch a batch operation to generate CLI command
+      </div>
+      <div class="copy-btn-wrapper">
+        <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy Command</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8001/api';
+    const WS_URL = 'ws://localhost:8001/ws';
+
+    let state = {
+      apiConnected: false,
+      tasks: [],
+      logs: [],
+      autoscroll: true,
+      ws: null
+    };
+
+    // API Functions
+    async function fetchAPI(endpoint, options = {}) {
+      try {
+        const response = await fetch(`${API_BASE}${endpoint}`, options);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        logError(`API Error: ${error.message}`);
+        return null;
+      }
+    }
+
+    async function checkAPI() {
+      const data = await fetchAPI('/health');
+      updateAPIStatus(!!data);
+    }
+
+    function updateAPIStatus(connected) {
+      state.apiConnected = connected;
+      const statusEl = document.getElementById('api-status');
+      const textEl = document.getElementById('api-status-text');
+
+      if (connected) {
+        statusEl.classList.add('connected');
+        textEl.textContent = 'API Connected';
+      } else {
+        statusEl.classList.remove('connected');
+        textEl.textContent = 'API Offline (CLI Mode)';
+      }
+    }
+
+    // Batch Launch
+    async function launchBatch() {
+      const operation = document.getElementById('operation-type').value;
+      const track = document.getElementById('track').value;
+      const startNum = parseInt(document.getElementById('start-num').value);
+      const endNum = parseInt(document.getElementById('end-num').value);
+      const model = document.getElementById('model').value;
+
+      if (!startNum || !endNum || startNum > endNum) {
+        logError('Invalid module range');
+        return;
+      }
+
+      const taskId = `${operation}-${track}-${startNum}-${endNum}-${Date.now()}`;
+
+      logInfo(`Launching ${operation} for ${track} M${startNum}-M${endNum}...`);
+
+      // Generate CLI command
+      let command = '';
+      if (operation === 'fix-review') {
+        command = `.venv/bin/python scripts/batch_fix_review.py ${track} ${startNum} ${endNum} --model ${model}`;
+      } else if (operation === 'research') {
+        command = `.venv/bin/python scripts/batch_research.py ${track} ${startNum} ${endNum}`;
+      } else if (operation === 'orchestrate') {
+        command = `# For each module ${startNum}-${endNum}:\n/orchestrate-rebuild ${track} {num}`;
+      }
+
+      document.getElementById('copy-prompt').textContent = command;
+
+      // Try API launch first
+      if (state.apiConnected) {
+        const result = await fetchAPI('/batch/launch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            operation,
+            track,
+            start_num: startNum,
+            end_num: endNum,
+            model
+          })
+        });
+
+        if (result) {
+          addTask({
+            id: result.task_id,
+            operation,
+            track,
+            range: `M${startNum}-M${endNum}`,
+            status: 'running',
+            progress: 0,
+            total: endNum - startNum + 1,
+            results: []
+          });
+          logSuccess(`Task ${result.task_id} launched via API`);
+        }
+      } else {
+        // CLI fallback mode
+        logWarn('API offline - copy command below and run in terminal');
+        addTask({
+          id: taskId,
+          operation,
+          track,
+          range: `M${startNum}-M${endNum}`,
+          status: 'pending',
+          progress: 0,
+          total: endNum - startNum + 1,
+          results: [],
+          cliOnly: true
+        });
+      }
+    }
+
+    // Task Management
+    function addTask(task) {
+      state.tasks.unshift(task);
+      if (state.tasks.length > 10) state.tasks.pop();
+      renderTasks();
+      updateActiveCount();
+    }
+
+    function updateTask(taskId, updates) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (task) {
+        Object.assign(task, updates);
+        renderTasks();
+        updateActiveCount();
+      }
+    }
+
+    function renderTasks() {
+      const container = document.getElementById('task-list');
+
+      if (state.tasks.length === 0) {
+        container.innerHTML = '<div class="empty-state">No active tasks</div>';
+        return;
+      }
+
+      container.innerHTML = state.tasks.map(task => `
+        <div class="task-item">
+          <div class="task-header">
+            <span class="task-title">${task.track} ${task.range}</span>
+            <span class="badge ${task.status}">${task.status}</span>
+          </div>
+          <div class="task-meta">
+            ${task.operation} · ${task.progress}/${task.total} modules
+            ${task.cliOnly ? ' · CLI mode' : ''}
+          </div>
+          <div class="task-progress">
+            <div class="task-progress-bar ${task.status}"
+                 style="width: ${(task.progress / task.total * 100)}%"></div>
+          </div>
+          ${task.results.length > 0 ? `
+            <div class="results-grid">
+              ${task.results.map(r => `
+                <div class="result-cell ${r.status}" title="${r.module}: ${r.score || 'N/A'}/10">
+                  ${r.num}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          <div class="task-actions">
+            ${task.status === 'running' ? `
+              <button class="task-btn" onclick="pauseTask('${task.id}')">Pause</button>
+              <button class="task-btn" onclick="stopTask('${task.id}')">Stop</button>
+            ` : ''}
+            ${task.status === 'failed' ? `
+              <button class="task-btn" onclick="retryTask('${task.id}')">Retry</button>
+            ` : ''}
+            <button class="task-btn" onclick="viewTaskDetails('${task.id}')">Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateActiveCount() {
+      const running = state.tasks.filter(t => t.status === 'running').length;
+      document.getElementById('active-count').textContent = `${running} running`;
+    }
+
+    // Task Actions
+    async function pauseTask(taskId) {
+      logWarn(`Pause not yet implemented for ${taskId}`);
+    }
+
+    async function stopTask(taskId) {
+      if (state.apiConnected) {
+        await fetchAPI(`/batch/stop/${taskId}`, { method: 'POST' });
+      }
+      updateTask(taskId, { status: 'stopped' });
+      logWarn(`Task ${taskId} stopped`);
+    }
+
+    async function retryTask(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (task) {
+        updateTask(taskId, { status: 'running', progress: 0, results: [] });
+        logInfo(`Retrying task ${taskId}...`);
+      }
+    }
+
+    async function viewTaskDetails(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (task) {
+        logInfo(`Task: ${task.id}`);
+        logInfo(`Status: ${task.status} (${task.progress}/${task.total})`);
+        logInfo(`Results: ${task.results.filter(r => r.status === 'pass').length} pass, ${task.results.filter(r => r.status === 'fail').length} fail`);
+      }
+    }
+
+    // Results
+    async function refreshResults() {
+      if (state.apiConnected) {
+        const data = await fetchAPI('/batch/recent');
+        if (data) {
+          renderResults(data.results);
+        }
+      } else {
+        logWarn('API offline - results only available via CLI');
+      }
+    }
+
+    function renderResults(results) {
+      const container = document.getElementById('results-container');
+      // TODO: Render results grid
+      logInfo(`Loaded ${results.length} recent results`);
+    }
+
+    // Logging
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      state.logs.push({ timestamp, message, type });
+      if (state.logs.length > 100) state.logs.shift();
+      renderLogs();
+    }
+
+    function logInfo(msg) { log(msg, 'info'); }
+    function logSuccess(msg) { log(msg, 'success'); }
+    function logError(msg) { log(msg, 'error'); }
+    function logWarn(msg) { log(msg, 'warn'); }
+
+    function renderLogs() {
+      const container = document.getElementById('logs-output');
+      container.innerHTML = state.logs.map(log =>
+        `<div class="log-line ${log.type}">[${log.timestamp}] ${log.message}</div>`
+      ).join('');
+
+      if (state.autoscroll) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+
+    function clearLogs() {
+      state.logs = [];
+      renderLogs();
+      logInfo('Logs cleared');
+    }
+
+    function toggleAutoscroll() {
+      state.autoscroll = !state.autoscroll;
+      document.getElementById('autoscroll-text').textContent =
+        `Auto-scroll: ${state.autoscroll ? 'ON' : 'OFF'}`;
+    }
+
+    // Copy Prompt
+    function copyPrompt() {
+      const text = document.getElementById('copy-prompt').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy Command';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // WebSocket (if API available)
+    function connectWebSocket() {
+      if (!state.apiConnected) return;
+
+      const ws = new WebSocket(WS_URL);
+
+      ws.onopen = () => {
+        logSuccess('WebSocket connected');
+        state.ws = ws;
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        handleWSMessage(data);
+      };
+
+      ws.onerror = () => {
+        logWarn('WebSocket error - falling back to polling');
+      };
+
+      ws.onclose = () => {
+        state.ws = null;
+        setTimeout(connectWebSocket, 5000);
+      };
+    }
+
+    function handleWSMessage(data) {
+      if (data.type === 'task_update') {
+        updateTask(data.task_id, {
+          progress: data.progress,
+          status: data.status,
+          results: data.results || []
+        });
+      } else if (data.type === 'log') {
+        log(data.message, data.level);
+      }
+    }
+
+    // Init
+    async function init() {
+      await checkAPI();
+      if (state.apiConnected) {
+        connectWebSocket();
+      }
+      setInterval(checkAPI, 10000);
+    }
+
+    init();
+  </script>
+</body>
+</html>

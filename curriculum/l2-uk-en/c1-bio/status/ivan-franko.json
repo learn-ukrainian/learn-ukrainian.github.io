@@ -2,12 +2,12 @@
   "module": "ivan-franko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:48.710462Z",
+  "last_audit": "2026-02-09T00:44:15.198078Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T01:04:17.207829Z",
-    "meta": "2026-02-07T15:13:22.016637Z",
-    "activities": "2026-02-07T11:59:12.322274Z",
+    "md": "2026-02-09T00:44:08.812937Z",
+    "meta": "2026-02-09T00:38:15.430159Z",
+    "activities": "2026-02-09T00:43:28.148438Z",
     "vocabulary": "2026-02-07T10:03:51.641105Z",
     "plan": null
   },
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5333/4300 (raw: 5755)"
+      "message": "4630/4300 (raw: 4742)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "8/3"
     },
     "vocabulary": {
       "status": "pass",
