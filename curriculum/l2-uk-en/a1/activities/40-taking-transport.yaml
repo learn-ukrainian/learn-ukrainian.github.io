@@ -1,6 +1,6 @@
 - type: match-up
   title: Transport Vocabulary
-  instruction: Match the transport modes to their English meanings.
+  instruction: Match the words to their English meanings.
   pairs:
     - left: метро
       right: metro / subway
@@ -16,12 +16,12 @@
       right: minibus (marshrutka)
     - left: поїзд
       right: train
-    - left: літак
-      right: plane
-    - left: велосипед
-      right: bicycle
-    - left: самокат
-      right: scooter
+    - left: вхід
+      right: entrance
+    - left: пересадка
+      right: transfer
+    - left: вихід
+      right: exit
 
 - type: fill-in
   title: In the Metro
@@ -198,7 +198,7 @@
     - words: ["Де", "знаходиться", "станція", "метро", "?"]
       answer: «Де знаходиться станція метро?»
     - words: ["Зупиніть", "на", "зупинці", "будь", "ласка"]
-      answer: «Зупиніть на зупинці будь ласка.»
+      answer: «Зупиніть на зупинці, будь ласка.»
     - words: ["Скільки", "коштує", "проїзд", "у", "метро", "?"]
       answer: «Скільки коштує проїзд у метро?»
     - words: ["Яка", "це", "буде", "зупинка", "?"]
@@ -208,9 +208,9 @@
     - words: ["Ви", "виходите", "на", "наступній", "?"]
       answer: «Ви виходите на наступній?»
     - words: ["Передайте", "будь", "ласка", "за", "одного"]
-      answer: «Передайте будь ласка за одного.»
+      answer: «Передайте, будь ласка, за одного.»
     - words: ["Обережно", "двері", "зачиняються"]
-      answer: «Обережно двері зачиняються.»
+      answer: «Обережно, двері зачиняються.»
     - words: ["Наступна", "станція", "Майдан", "Незалежності"]
       answer: «Наступна станція Майдан Незалежності.»
     - words: ["Це", "місце", "вільне", "?"]
@@ -371,7 +371,7 @@
     - sentence: '«Ви: На _____ Франка, п''ять.»'
       answer: вулицю
       options: [вулицю, площу, парк, місто]
-    - sentence: '«Водій: Добре. _____ seatbelt, будь ласка.»'
+    - sentence: '«Водій: Добре. _____, будь ласка.»'
       answer: Пристібніться
       options: [Пристібніться, Вийдіть, Зайдіть, Сядьте]
     - sentence: '«Ви: Скільки _____ їхати?»'

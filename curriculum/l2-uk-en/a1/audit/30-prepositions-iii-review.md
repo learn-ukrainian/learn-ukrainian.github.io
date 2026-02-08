@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 936
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:36:58
+**Generated:** 2026-02-08 23:34:17
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,24 +38,21 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1121/936 (raw: 1488)
+- **Words:** ✅ 1154/936 (raw: 1528)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 14/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.1% (target 35-55% (M30))
+- **Immersion:** 🇺🇦 37.6% (target 35-55% (M30))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -66,8 +63,10 @@
 | **Місце: Де?** | ⚪️ | 53 | Skipped |
 | **Напрямок: Куди?** | ⚪️ | 66 | Skipped |
 | **Походження: Звідки?** | ⚪️ | 50 | Skipped |
-| **Examples in Context** | ✅ | 192 | Included in Core |
+| **Presentation 2: Common Pairs** | ✅ | 0 | Included in Core |
+| **Presentation 3: In the City** | ✅ | 192 | Included in Core |
 | **Dialogues** | ✅ | 472 | Included in Core |
-| **Practice** | ⚪️ | 30 | Skipped |
+| **Practice 1** | ⚪️ | 30 | Skipped |
+| **Practice 2: Translation** | ⚪️ | 33 | Skipped |
 | **Підсумок** | ✅ | 82 | Included in Core |
 | **Need More Practice?** | ⚪️ | 16 | Skipped |

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1092
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:31:58
+**Generated:** 2026-02-08 22:42:59
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -46,14 +46,14 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1121/1092 (raw: 1612)
+- **Words:** ✅ 1134/1092 (raw: 1730)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 8/1
+- **Vocab:** ✅ 12/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -62,15 +62,11 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 183 | Included in Core |
-| **Presentation** | ✅ | 774 | Included in Core |
-| **Практика** | ⚪️ | 24 | Skipped |
-| **Підсумок** | ✅ | 121 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **Warm-up** | ✅ | 187 | Included in Core |
+| **Presentation** | ✅ | 827 | Included in Core |
+| **Практика** | ⚪️ | 42 | Skipped |
+| **Підсумок** | ✅ | 78 | Included in Core |

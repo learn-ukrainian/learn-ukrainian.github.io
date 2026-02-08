@@ -35,7 +35,7 @@ Memorize these complete phrases! You'll learn the grammar behind them in Level A
 | Новий рік       | З Новим роком!     | /z ˈnɔvɪm ˈrɔkɔm/  | Happy New Year!                  |
 | Різдво          | З Різдвом!         | /z rizˈdvɔm/       | Merry Christmas!                 |
 | Великдень       | З Великоднем!      | /z vɛˈlɪkdɛnʲɛm/   | Happy Easter!                    |
-| День народження | З Днем народження! | /z dɛnʲ nɑrɔˈdʒɛnnʲɑ/ | Happy Birthday!                  |
+| День народження | З Днем народження! | /z dnɛm nɑrɔˈdʒɛnnʲɑ/ | Happy Birthday!                  |
 | Весілля         | З весіллям!        | /z vɛˈsʲilʲlʲɑm/   | Congratulations on your wedding! |
 | 8 березня       | З восьмим березня! | /z ˈvɔsʲmɪm ˈbɛrɛznʲɑ/ | Happy Women's Day!               |
 

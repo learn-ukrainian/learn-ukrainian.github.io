@@ -2,13 +2,13 @@
   "module": "syntez-nezalezhnist",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:16.291176Z",
+  "last_audit": "2026-02-08T00:05:12.828421Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T11:02:20.168276Z",
-    "meta": "2026-01-29T07:38:18.736507Z",
-    "activities": "2026-01-31T16:03:46.940192Z",
-    "vocabulary": "2026-01-31T16:03:48.996159Z",
+    "md": "2026-02-07T11:38:26.503446Z",
+    "meta": "2026-02-07T10:03:51.226665Z",
+    "activities": "2026-02-07T10:03:51.292732Z",
+    "vocabulary": "2026-02-07T10:03:51.357658Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4368/4000 (raw: 4505)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4368/4000 (raw: 4505) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

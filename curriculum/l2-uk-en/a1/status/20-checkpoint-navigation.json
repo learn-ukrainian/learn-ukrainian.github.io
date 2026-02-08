@@ -2,13 +2,13 @@
   "module": "20-checkpoint-navigation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:28:45.167054Z",
+  "last_audit": "2026-02-08T22:55:47.505603Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T15:07:04.316946Z",
+    "md": "2026-02-08T22:55:46.967780Z",
     "meta": "2026-02-07T10:03:51.784683Z",
-    "activities": "2026-02-07T21:06:32.727169Z",
-    "vocabulary": "2026-02-07T21:26:45.689884Z",
+    "activities": "2026-02-08T22:55:46.968073Z",
+    "vocabulary": "2026-02-08T22:52:26.572446Z",
     "plan": "2026-02-07T10:03:51.075566Z"
   },
   "gates": {
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "2/1"
+      "message": "3/1"
     },
     "naturalness": {
       "status": "pass",

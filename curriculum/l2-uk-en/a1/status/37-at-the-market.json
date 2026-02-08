@@ -2,13 +2,13 @@
   "module": "37-at-the-market",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:46:05.501977Z",
+  "last_audit": "2026-02-09T00:17:04.258367Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-16T00:59:46.536260Z",
     "meta": "2026-02-07T10:03:51.776940Z",
     "activities": "2026-02-07T21:06:32.925252Z",
-    "vocabulary": "2026-02-07T10:03:51.819366Z",
+    "vocabulary": "2026-02-09T00:03:40.584017Z",
     "plan": "2026-02-07T10:05:59.909765Z"
   },
   "gates": {
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "5/1"
+      "message": "31/1"
     },
     "naturalness": {
       "status": "pass",

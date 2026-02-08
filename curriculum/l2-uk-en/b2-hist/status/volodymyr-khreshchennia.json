@@ -2,13 +2,13 @@
   "module": "volodymyr-khreshchennia",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-03T22:54:05.909545Z",
+  "last_audit": "2026-02-08T21:59:40.627781Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T10:36:49.507312Z",
-    "meta": "2026-01-29T07:38:18.610028Z",
-    "activities": "2026-01-27T15:34:55.142690Z",
-    "vocabulary": "2026-01-26T23:26:51.950263Z",
+    "md": "2026-02-07T11:38:26.552011Z",
+    "meta": "2026-02-07T10:03:51.232542Z",
+    "activities": "2026-02-07T10:03:51.309103Z",
+    "vocabulary": "2026-02-07T10:03:51.367562Z",
     "plan": null
   },
   "gates": {

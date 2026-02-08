@@ -999,6 +999,56 @@ def calculate_paragraph_variety(content: str) -> float:
         return 0.5
 
 
+def count_external_yaml_resources(file_path: Union[Path, str]) -> int:
+    """Count resources defined in docs/resources/external_resources.yaml."""
+    if not file_path:
+        return 0
+    
+    if isinstance(file_path, str):
+        file_path = Path(file_path)
+    
+    try:
+        # Find project root from script location
+        script_path = Path(__file__).resolve()
+        project_root = script_path.parent.parent
+        resource_yaml_path = project_root / 'docs' / 'resources' / 'external_resources.yaml'
+        
+        if not resource_yaml_path.exists():
+            return 0
+            
+        with open(resource_yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+            
+        if not data or 'resources' not in data:
+            return 0
+            
+        slug = file_path.stem
+        # Also try removing numeric prefix for lookup
+        clean_slug = re.sub(r'^\d+-', '', slug) if slug else slug
+        
+        resources = data['resources']
+        count = 0
+        
+        # Check entries for slug
+        # print(f"DEBUG_RICHNESS: Checking slug {slug} in external_resources.yaml")
+        for key in [slug, clean_slug]:
+            if key and key in resources:
+                # print(f"DEBUG_RICHNESS: Found {key} in resources")
+                module_res = resources[key]
+                if module_res and isinstance(module_res, dict):
+                    for cat_list in module_res.values():
+                        if isinstance(cat_list, list):
+                            count += len(cat_list)
+                # If we found resources for one variant, stop (avoid double counting)
+                if count > 0:
+                    break
+        
+        # print(f"DEBUG_RICHNESS: Final external count for {slug}: {count}")
+        return count
+    except Exception:
+        # print(f"DEBUG_RICHNESS: Error in count_external_yaml_resources: {e}")
+        return 0
+
 def calculate_richness_score(content: str, level: str, file_path: Path = None, yaml_activity_types: set = None) -> dict:
     """Calculate richness score and components based on module type.
 
@@ -1072,7 +1122,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
             'literary_citations': count_quotes(prose),
             'historical_context': count_timeline_markers(prose),
             'essays': count_essays(prose),
-            'resources': count_resources(prose),
+            'resources': count_resources(prose) + count_external_yaml_resources(file_path),
         })
     elif module_type == 'checkpoint':
         # Use YAML activity types if provided (Preferred for YAML-First architecture)
@@ -1201,7 +1251,7 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
             flags.append('NO_ANALYSIS')
         if count_quotes(prose) < 3:
             flags.append('NO_LITERARY_CITATIONS')
-        if count_resources(prose) < 2:
+        if count_resources(prose) + count_external_yaml_resources(file_path) < 2:
             flags.append('NO_RESOURCES')
 
     elif module_type == 'style':

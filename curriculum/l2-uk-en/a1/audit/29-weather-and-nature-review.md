@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M29 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 869
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:36:57
+**Generated:** 2026-02-09 00:10:32
 
 ## Configuration
 **Type:** A1-vocab
@@ -23,11 +23,11 @@
 | 1 | match-up | Weather Expressions | 10 | 8 | ✅ |
 | 2 | match-up | Nature Vocabulary | 10 | 8 | ✅ |
 | 3 | group-sort | Seasons | 12 | 12 | ✅ |
-| 4 | group-sort | Animals vs Plants | 12 | 12 | ✅ |
+| 4 | group-sort | Animals vs Plants | 13 | 12 | ✅ |
 | 5 | fill-in | Яка погода? (What's the Weather?) | 12 | 8 | ✅ |
 | 6 | fill-in | Природа і тварини (Nature and Animals) | 12 | 8 | ✅ |
-| 7 | quiz | What Season? | 12 | 8 | ✅ |
-| 8 | quiz | Animal or Plant? | 12 | 8 | ✅ |
+| 7 | quiz | What Season? | 10 | 8 | ✅ |
+| 8 | quiz | Animal or Plant? | 8 | 8 | ✅ |
 | 9 | unjumble | Weather Sentences | 12 | 6 | ✅ |
 | 10 | true-false | Weather and Nature Facts | 12 | 8 | ✅ |
 
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/1
+- **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -54,9 +54,6 @@
 - **Immersion:** 🇺🇦 40.5% (target 35-55% (M29))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

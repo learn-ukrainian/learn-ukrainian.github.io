@@ -3,25 +3,65 @@ module: 24-can-must-want-modals
 level: A1
 version: '2.0'
 items:
+- lemma: могти
+  ipa: /ˈmɔɦtɪ/
+  translation: can, to be able (physical)
+  pos: verb
+- lemma: вміти
+  ipa: /ˈʋmʲitɪ/
+  translation: to know how to (skill)
+  pos: verb
+- lemma: хотіти
+  ipa: /xɔˈtʲitɪ/
+  translation: to want
+  pos: verb
+- lemma: мусити
+  ipa: /ˈmusɪtɪ/
+  translation: must, to have to
+  pos: verb
+- lemma: треба
+  ipa: /ˈtrɛbɑ/
+  translation: must, need to (impersonal)
+  pos: adv
+- lemma: потрібно
+  ipa: /pɔˈtrʲibnɔ/
+  translation: necessary, need to
+  pos: adv
+- lemma: можна
+  ipa: /ˈmɔʒnɑ/
+  translation: can, may, allowed
+  pos: adv
+- lemma: не можна
+  ipa: /nɛ ˈmɔʒnɑ/
+  translation: must not, not allowed
+  pos: adv
+- lemma: варто
+  ipa: /ˈʋɑrtɔ/
+  translation: worth, advisable
+  pos: adv
+- lemma: слід
+  ipa: /slʲid/
+  translation: should, ought
+  pos: adv
 - lemma: здатний
-  ipa: /zdˈatnɪj/
+  ipa: /ˈzdɑtnɪj/
   translation: capable
   pos: adj
 - lemma: необхідно
-  ipa: /nɛɔbxˈidnɔ/
-  translation: necessary
+  ipa: /nɛɔbˈxʲidnɔ/
+  translation: necessary, essential
   pos: adv
 - lemma: палити
-  ipa: /palˈɪtɪ/
-  translation: to burn, to smoke
+  ipa: /pɑˈlɪtɪ/
+  translation: to smoke, to burn
   pos: verb
 - lemma: проект
-  ipa: /prɔɛkt/
+  ipa: /prɔˈɛkt/
   translation: project
   pos: noun
   gender: m
 - lemma: піаніно
-  ipa: /pianˈinɔ/
+  ipa: /pʲiɑˈnʲinɔ/
   translation: piano
   pos: noun
   gender: n
@@ -30,10 +70,10 @@ items:
   translation: nightingale (adj), melodic
   pos: adj
 - lemma: фотографувати
-  ipa: /fɔtɔɦrafuʋˈatɪ/
+  ipa: /fɔtɔɦrɑfʊˈʋɑtɪ/
   translation: to photograph
   pos: verb
 - lemma: холодний
-  ipa: /xɔlˈɔdnɪj/
+  ipa: /xɔˈlɔdnɪj/
   translation: cold
   pos: adj

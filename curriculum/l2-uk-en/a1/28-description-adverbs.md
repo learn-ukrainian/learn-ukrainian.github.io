@@ -76,7 +76,7 @@
 | ------- | ---------- | -------------------------------------------------------------- |
 | дуже    | very       | Він **дуже** гарно малює. (He draws very beautifully.)         |
 | занадто | too (much) | Це **занадто** дорого. (This is too expensive.)                |
-| трохи   | a little   | Вона **трохи** втомилась. (She got a little tired.)            |
+| трохи   | a little   | Вона **трохи** сумна. (She is a little sad.)                   |
 | зовсім  | completely | Він **зовсім** не розуміє. (He completely doesn't understand.) |
 
 ---

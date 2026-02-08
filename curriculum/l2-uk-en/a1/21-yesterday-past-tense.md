@@ -2,7 +2,7 @@
 
 ## Warm-up
 
-What did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.
+Що ви робили вчора? What did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.
 
 Unlike English, where «I worked» and «she worked» look the same, Ukrainian past tense changes based on **gender**, not person. «I worked» is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!
 
@@ -32,37 +32,37 @@ The past tense in Ukrainian is beautifully simple. You take the infinitive (like
 | воно (it) | -**ло** | /lɔ/ | читало | /t͡ʃɪˈtɑlɔ/ |
 | вони (they) | -**ли** | /lɪ/ | читали | /t͡ʃɪˈtɑlɪ/ |
 
-**Key insight:** The ending matches the **gender of the subject**, not the person.
+**Key insight:** The ending matches the **gender of the subject**, not the person. Це дуже важливо!
 
- So «I read» is:
+ So «я читав/читала» means «I read»:
 
 - Я читав (if you're male)
 - Я читала (if you're female)
 
-### Formation Step by Step
+### Formation Step by Step (Як утворити минулий час)
 
-**Step 1:** Take the infinitive
+**Крок 1 (Step 1):** Take the infinitive
 
 - читати (to read)
 - працювати (to work)
 - говорити (to speak)
 
-**Step 2:** Remove -ти
+**Крок 2 (Step 2):** Remove -ти
 
 - чита-
 - працюва-
 - говори-
 
-**Step 3:** Add gender ending
+**Крок 3 (Step 3):** Add gender ending (додайте закінчення роду)
 
 - читав / читала / читало / читали
 - працював / працювала / працювало / працювали
 - говорив / говорила / говорило / говорили
 
-### The Magic Return of -ва-
+### The Magic Return of -ва- (Повернення -ва-)
 
 Remember how verbs like **працювати** lost their **-ва-** in the present tense (я працюю)?
-Good news: In the past tense, the **-ва-** comes back!
+Гарна новина! In the past tense, the **-ва-** comes back!
 
 The past tense is built from the **infinitive** (dictionary form), so the **-ва-** stays right there.
 
@@ -72,9 +72,9 @@ The past tense is built from the **infinitive** (dictionary form), so the **-в�
 | **танцювати** | я танцюю | я танцю**ва**в |
 | **подорожувати** | я подорожую | я подорожу**ва**в |
 
-**Rule:** Present tense = drop -ва-. Past tense = keep -ва-.
+**Правило (Rule):** Present tense = drop -ва-. Минулий час = keep -ва-.
 
-### Reflexive Verbs in the Past (-ся)
+### Reflexive Verbs in the Past (Зворотні дієслова в минулому часі)
 
 Reflexive verbs (Module 09) follow the same gender rules, but you keep the **-ся** at the end.
 
@@ -99,9 +99,9 @@ Let's look at **сміятися** (to laugh):
 >
 > The verb changes based on who is speaking, not what tense it is!
 
-### Time Expressions for the Past
+### Time Expressions for the Past (Вирази часу)
 
-When did it happen? Use these words:
+Коли це було? When did it happen? Use these words:
 
 | Ukrainian | IPA | English |
 | --------- | --- | ------- |
@@ -119,7 +119,7 @@ When did it happen? Use these words:
 >
 > In the famous Ukrainian song «Червона рута» (Red Rue), the singer reminisces about finding a magical flower: «Я знайшов її колись...» (I found it once...). Past tense + колись = perfect for nostalgic stories!
 
-### Key Verbs in Past Tense
+### Key Verbs in Past Tense (Основні дієслова)
 
 Here are essential verbs you'll use often:
 
@@ -137,6 +137,8 @@ Here are essential verbs you'll use often:
 | працювати   | працював   | працювала   | працювали   | was working   |
 | відпочивати | відпочивав | відпочивала | відпочивали | was resting   |
 | чекати      | чекав      | чекала      | чекали      | was waiting   |
+| ходити      | ходив      | ходила      | ходили      | was walking   |
+| спати       | спав       | спала       | спали       | was sleeping  |
 
 > [!warning] **Watch Out!**
 >
@@ -147,7 +149,19 @@ Here are essential verbs you'll use often:
 >
 > The stem changes, but the endings stay regular!
 
-### Example Sentences
+### Special Case: The Verb "To Go" (Неправильне дієслово «йти»)
+
+The verb **йти** (to go, uni-directional) and its cousins are irregular in the past tense. They don't use the infinitive stem at all!
+
+| Infinitive | Masc | Fem | Plural | Meaning |
+| :--- | :--- | :--- | :--- | :--- |
+| **йти** | **йшов** | **йшла** | **йшли** | was going / walking |
+| **піти** | **пішов** | **пішла** | **пішли** | went (perfective) |
+| **прийти** | **прийшов** | **прийшла** | **прийшли** | came / arrived |
+
+Note how they all share the -шов / -шла / -шли pattern.
+
+### Example Sentences (Приклади)
 
 1. **Вчора я працював.**
    Yesterday I worked. (male speaker)
@@ -252,13 +266,13 @@ Translation:
 
 ## Практика
 
-### Вправа 1: Переклад
+### Вправа 1: Переклад (Translation)
 
-Перекладіть речення на українську мову.
+Перекладіть речення на українську мову (Translate into Ukrainian):
 
-1. I was in the office yesterday.
-2. She was reading a book.
-3. They were working last week.
+1. I was in the office yesterday. → Вчора я був/була в офісі.
+2. She was reading a book. → Вона читала книгу.
+3. They were working last week. → Минулого тижня вони працювали.
 
 ---
 
@@ -271,29 +285,11 @@ Translation:
 1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли
    - читати → читав / читала / читало / читали
 
-2. **Рід (Gender agreement):** Закінчення відповідає роду
+2. **Gender agreement:** Закінчення відповідає
    - Він працював. (He worked.)
    - Вона працювала. (She worked.)
    - Вони працювали. (They worked.)
 
 3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись
 
-**Неправильні дієслова (Irregular verbs):**
-
-- піти → пішов/пішла
-- прийти → прийшов/прийшла
-
 Наступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!
-
----
-
-Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова «вчора» та «давно». Це була гарна робота (This was good work).
-
----
-
-## Need More Practice?
-
-> [!resources] External Review
->
-> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

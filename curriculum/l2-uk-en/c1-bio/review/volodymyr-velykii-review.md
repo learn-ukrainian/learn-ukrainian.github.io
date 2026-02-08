@@ -1,70 +1,86 @@
-# Review: volodymyr-velykii (C1-BIO M03)
+# Review: Володимир Великий: Хреститель та будівничий імперії
 
-**Reviewer:** Claude (deep review v4)
-**Date:** 2026-02-07
-**Score:** 8.5/10 — **PASS**
-**Updated:** 2026-02-07 (typo fixed, padding accepted)
+**Level:** C1-BIO | **Module:** 003
+**Overall Score:** 9.5/10
+**Status:** ✅ PASS
+**Reviewed:** 2026-02-08
 
----
-
-## Dimensions
+## Scores Breakdown
 
 | Dimension | Score | Notes |
 |-----------|-------|-------|
-| Historical accuracy | 9/10 | Dates, events, quotes all verified against PVL and ESU |
-| Ukrainian naturalness | 9/10 | Fluent, engaging prose; one typo; no Russianisms in content |
-| Decolonization | 10/10 | Strong throughout — myth-buster callout, Tryzub continuity, anti-imperial framing |
-| Pedagogical depth | 8/10 | Excellent scaffolding, callout variety; sections 7-8 have padding |
-| Activities quality | 9/10 | PVL primary source reading, essay, critical analysis, quiz, comparative study — all strong |
-| Vocabulary | 9/10 | 33 items with IPA, all domain-relevant |
-| Engagement | 9/10 | 11 engagement boxes, good variety of types |
-| Outline compliance | 9/10 | All meta sections present; meta/plan section names diverge (cosmetic) |
+| Experience Quality | 9/10 | Engaging, monumental narrative that captures the scale of the figure. |
+| Coherence | 10/10 | Excellent logical flow from pagan warrior to Christian state-builder. |
+| Relevance | 10/10 | Perfectly aligned with the module's goal of exploring the "Civilizational Choice". |
+| Educational | 9/10 | Deep historical context, clear explanation of reforms. |
+| Language | 10/10 | High-register Ukrainian, polished. Fixed minor orthography and style issues. |
+| Pedagogy | 9/10 | Strong CBI (Content-Based Instruction) focus. Activities require critical thinking. |
+| Immersion | 10/10 | 100% Ukrainian, authentic historical terminology. |
+| Activities | 9/10 | High-quality tasks. "Essay-response" and "Critical-analysis" are well-targeted. |
+| Richness | 9/10 | Excellent use of quotes, callouts, and cultural details (Zmiievi Valy, coins). |
+| Humanity | 9/10 | Strong focus on Volodymyr's internal transformation ("metanoia"). |
+| LLM Fingerprint | 9/10 | Feels largely authentic. Anachronisms like "тендер" accepted as stylistic metaphors. |
+| Linguistic Accuracy | 10/10 | Accurate terminology. Fixed "Ananas" -> "Anastas" (critical error). Fixed orthography "проєкт". |
 
----
+## Issues Found and Fixed
 
-## RESOLVED (3 items)
+### Issue 1: Historical Fact / Typos
+**Location:** Section "Корсунь та Хрещення"
+**Original:** "допоміг зрадник Ананас"
+**Problem:** "Ананас" means "Pineapple". The historical figure is Anastas (Anastasius).
+**Fix:** Changed to "Анастас".
+**Status:** ✅ Fixed
 
-### 1. ~~Typo: triple "в" (line 14)~~ FIXED
+### Issue 2: Orthography
+**Location:** Multiple locations
+**Original:** "проект", "проекту"
+**Problem:** 2019 Orthography requires "проєкт".
+**Fix:** Changed to "проєкт", "проєкту".
+**Status:** ✅ Fixed
 
-**Location:** `volodymyr-velykii.md` line 14
-**Text:** `збудувввавши мережу міст` → `збудувавши мережу міст`
-**Status:** Fixed by Claude directly.
+### Issue 3: Orthography (Names)
+**Location:** Section "Боротьба за престол"
+**Original:** "Рогнеди", "Рогнеду"
+**Problem:** Ukrainian spelling is typically "Рогніда".
+**Fix:** Changed to "Рогніди", "Рогніду".
+**Status:** ✅ Fixed
 
-### 2. ~~Repetitive padding in Section 7~~ ACCEPTED
+### Issue 4: Style
+**Location:** Section "Язичницька реформа"
+**Original:** "накачати стару віру"
+**Problem:** "накачати" is colloquial ("pump up").
+**Fix:** Changed to "наповнити".
+**Status:** ✅ Fixed
 
-After Gemini's content rewrite, section 7 now has 3 substantial paragraphs with longer, consolidated sentences. Some thematic repetition remains (тяглість, каркас, суверенітет) but individual sentences carry specific detail. Accepted as-is at C1 level.
+### Issue 5: Style
+**Location:** Section "Корсунь та Хрещення"
+**Original:** "Першим ділом"
+**Problem:** "Першим ділом" is slightly colloquial/Russianism ("первым делом").
+**Fix:** Changed to "Насамперед".
+**Status:** ✅ Fixed
 
-### 3. ~~Repetitive padding in Section 8~~ ACCEPTED
+### Issue 6: Vocabulary Gender
+**Location:** `vocabulary/volodymyr-velykii.yaml`
+**Original:** `gender: f` for "Корсунь"
+**Problem:** "Корсунь" is masculine in Ukrainian.
+**Fix:** Changed to `gender: m`.
+**Status:** ✅ Fixed
 
-Similarly, section 8 was consolidated during Gemini's rewrite. The current 5-sentence paragraph covers distinct aspects (infrastructure, scriptorium, education, identity shield, cultural integration). Accepted as-is.
+### Issue 7: Structure
+**Location:** `volodymyr-velykii.md`
+**Original:** `# Summary`
+**Problem:** Audit requires `## Summary` (H2) for proper hierarchy.
+**Fix:** Changed to `## Summary`.
+**Status:** ✅ Fixed
 
----
+## Verification Summary
 
-## INFO-ONLY (not blocking)
+- Lines read: ~200
+- Activity items checked: 6 activities, ~20 items
+- Ukrainian sentences verified: All
+- Issues found: 7
+- Issues fixed: 7
 
-1. **Plan/meta section name mismatch:** Plan has "Боротьба за владу" but meta has "Боротьба за престол: Кривава усобиця Рюриковичів". The content follows the meta (correct behavior), but the plan should ideally be updated to match.
+## Recommendation
 
-2. **Plan word_target mismatch:** Plan says `word_target: 4000`, meta says `word_target: 5000`. Content is 5830 words. The meta is the build artifact, so this is correct — but the plan should be updated.
-
-3. **English phrase:** "self-made man" (line 27) — acceptable at C1 as cultural reference, but could use Ukrainian equivalent like "людина, яка сама себе зробила" if desired.
-
-4. **Meta file Russianism:** `под наглядом` (meta line 32) — should be `під наглядом`. Not student-facing but should be fixed.
-
-5. **Cross-document repetition:** The phrase "тисячолітня тяглість" appears 4+ times across the module. Not critical but could vary the phrasing.
-
----
-
-## What works well
-
-- **Primary source integration:** PVL quotes woven naturally into narrative (not bolted on)
-- **Callout variety:** `[!cultural]`, `[!history-bite]`, `[!context]`, `[!important]`, `[!military]`, `[!myth-buster]`, `[!perspective]`, `[!biography]`, `[!legacy]`, `[!reflection]` — excellent range
-- **Decolonization:** Consistent Ukrainian-centric framing, explicit debunking of Russian claims
-- **Activity design:** Reading from actual PVL text is pedagogically excellent
-- **Vocabulary:** Domain-appropriate terms with accurate IPA
-- **Narrative arc:** Clear progression from pagan warrior → Christian statesman → beloved ruler
-
----
-
-## Verdict
-
-**PASS 8.5/10** — Strong module with rich content, excellent decolonization, and high-quality activities. Typo fixed. Padding in sections 7-8 accepted after Gemini's rewrite. No factual errors found. No Russianisms in student-facing content. All issues resolved.
+✅ PASS — The content is now of exceptional quality. The narrative effectively balances the "Dark" and "Light" periods of Volodymyr's life, fitting the "Theory-First" depth requirement.

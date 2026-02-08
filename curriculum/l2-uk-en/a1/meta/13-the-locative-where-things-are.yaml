@@ -7,11 +7,32 @@ id: a1-13
 naturalness:
   score: 10
   status: PASS
-  justification: Clear location expressions
+  justification: Needs full rebuild
 duration: 60
-transliteration: none
+transliteration: vocab-only
+tags:
+- grammar
+- navigation
+- locations
+grammar:
+- Locative case endings
+- Prepositions в/у and на
+objectives:
+- Learner can ask and answer 'Where is X?' using locative case
+- Learner can distinguish between в/у and на prepositions
+- Learner can describe locations of people and objects
+- Learner can name common places in Ukrainian
+phase: "A1.2 [Navigation]"
+pedagogy: PPP
 word_target: 1331
-build:
-  last_modified: '2026-01-26'
+content_outline:
+- section: Warm-up
+  words: 159
+- section: Presentation
+  words: 593
+- section: Practice
+  words: 365
+- section: Production
+  words: 214
 title: 'The Locative: Where Things Are'
 subtitle: Finding Your Way Around Ukrainian Spaces

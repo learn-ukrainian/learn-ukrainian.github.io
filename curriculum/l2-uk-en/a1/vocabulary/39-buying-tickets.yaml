@@ -1,4 +1,3 @@
----
 module: 39-buying-tickets
 level: A1
 version: '2.0'
@@ -8,3 +7,80 @@ items:
   translation: Ukrzaliznytsia (railways)
   pos: noun
   gender: f
+- lemma: квиток
+  ipa: /kvɪˈtɔk/
+  translation: ticket
+  pos: noun
+  gender: m
+- lemma: поїзд
+  ipa: /ˈpɔjizd/
+  translation: train
+  pos: noun
+  gender: m
+- lemma: автобус
+  ipa: /ɑu̯ˈtɔbʊs/
+  translation: bus
+  pos: noun
+  gender: m
+- lemma: вокзал
+  ipa: /vɔkˈzɑl/
+  translation: train station
+  pos: noun
+  gender: m
+- lemma: каса
+  ipa: /ˈkɑsɑ/
+  translation: ticket office
+  pos: noun
+  gender: f
+- lemma: розклад
+  ipa: /ˈrɔzklɑd/
+  translation: schedule
+  pos: noun
+  gender: m
+- lemma: відправлення
+  ipa: /vʲidˈprɑwlɛnnʲɑ/
+  translation: departure
+  pos: noun
+  gender: n
+- lemma: прибуття
+  ipa: /prɪˈbuttʲɑ/
+  translation: arrival
+  pos: noun
+  gender: n
+- lemma: платформа
+  ipa: /plɑtˈfɔrmɑ/
+  translation: platform
+  pos: noun
+  gender: f
+- lemma: місце
+  ipa: /ˈmʲisʲt͡sɛ/
+  translation: seat
+  pos: noun
+  gender: n
+- lemma: вагон
+  ipa: /vɑˈɦɔn/
+  translation: carriage
+  pos: noun
+  gender: m
+- lemma: туди й назад
+  ipa: /tʊˈdɪ j nɑˈzɑd/
+  translation: round trip
+  pos: phrase
+- lemma: біля вікна
+  ipa: /ˈbilʲɑ vʲiˈknɑ/
+  translation: window seat
+  pos: phrase
+- lemma: біля проходу
+  ipa: /ˈbilʲɑ prɔˈxɔdʊ/
+  translation: aisle seat
+  pos: phrase
+- lemma: купе
+  ipa: /kʊˈpɛ/
+  translation: compartment
+  pos: noun
+  gender: n
+- lemma: плацкарт
+  ipa: /plɑt͡sˈkɑrt/
+  translation: open sleeper
+  pos: noun
+  gender: m

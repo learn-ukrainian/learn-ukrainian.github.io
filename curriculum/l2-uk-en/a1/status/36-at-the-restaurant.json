@@ -2,12 +2,12 @@
   "module": "36-at-the-restaurant",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:45:49.423284Z",
+  "last_audit": "2026-02-09T00:08:35.626257Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-16T00:58:22.253623Z",
+    "md": "2026-02-09T00:08:20.565049Z",
     "meta": "2026-02-07T10:03:51.776390Z",
-    "activities": "2026-02-07T21:44:21.462690Z",
+    "activities": "2026-02-09T00:01:44.796297Z",
     "vocabulary": "2026-02-07T10:03:51.818077Z",
     "plan": "2026-02-07T10:05:59.908323Z"
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "808/750 (raw: 1037)"
+      "message": "1117/750 (raw: 1348)"
     },
     "activities": {
       "status": "pass",

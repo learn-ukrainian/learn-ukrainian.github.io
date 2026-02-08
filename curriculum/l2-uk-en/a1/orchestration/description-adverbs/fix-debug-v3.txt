@@ -1,0 +1,101 @@
+=== RAW OUTPUT (4079 chars) ===
+✅ Message sent to Gemini (ID: 1131)
+✓ Message 1131 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #1131...
+📨 Message #1131
+   From: claude → To: gemini
+   Type: query
+   Task: fix-description-adverbs-v3
+   Time: 2026-02-08T22:17:41.121267+00:00
+
+============================================================
+
+Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/description-adverbs/fix-prompt.md. Return your output as text. IMPORTANT: Put fixed files between delimiter lines like ===CONTENT_START=== and ===CONTENT_END=== on their own lines, NOT inside code blocks.
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-pro-preview"}
+
+🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
+I will read the instruction file to understand the task requirements.
+I will read the review file, current content, activities, vocabulary, and plan files to identify and apply the necessary fixes.
+===CONTENT_START===
+# Description: Adverbs
+
+## Warm-up
+
+> 💡 **Як він це робить? (How Does He Do It?)**
+>
+> You learned adjectives describe THINGS (гарний дім — a beautiful house). But how do we describe ACTIONS?
+> — Він **гарно** малює. (He draws **beautifully**.)
+> — Вона **швидко** бігає. (She runs **fast**.)
+>
+> These are **adverbs** — they describe HOW someone does something! Imagine you are watching a sports game or a concert. You want to say how the athletes run or how the musicians play. Are they fast? Are they loud? Or are they slow and quiet? Adverbs give us these important details. In this lesson, we will learn how to turn our familiar adjectives into powerful adverbs. It is very simple and logical in Ukrainian! Привіт! Сьогодні ми вивчаємо прислівники. Ці слова відповідають на питання «Як?». Наприклад: добре, швидко, тихо. Ви хочете вчити ці слова? Поїхали! (Today we study adver
+...
+. Do you want to learn these words? Let's go!)
+
+---
+
+## Presentation
+
+### How to Form Adverbs
+
+> [!observe] Спостереження (Pattern Discovery)
+>
+> Look at these pairs:
+>
+> - **гарний** хлопець (handsome boy) → Він **гарно** танцює. (He dances beautifully.)
+> - **швидкий** потяг (fast train) → Він **швидко** їздить. (He rides fast.)
+> - **тихий** голос (quiet voice) → Вона **тихо** говорить. (She speaks quietly.)
+>
+> Adjectives describe NOUNS. Adverbs describe VERBS.
+> Formula: Take the adjective stem + add **-о** (or **-е** for soft stems)
+
+### The Formula
+
+| Adjective (m) | Meaning | Adverb | IPA | Meaning |
+| --- | --- | --- | --- | --- |
+| гарний | beautiful | гарно | /ˈɦɑrnɔ/ | beautifully |
+| швидкий | fast | швидко | /ˈʃvɪdkɔ/ | fast, quickly |
+| повільний | slow | повільно | /pɔˈvilʲnɔ/ | slowly |
+| тихий | quiet | тихо | /ˈtɪxɔ/ | quietly |
+| голосний | loud | голосно | /ˈɦɔlɔsnɔ/ | loudly |
+
+### Irregular Adverbs
+
+| Adjective | Adverb | IPA | Meaning |
+| --------- | ------ | --- | ------- |
+| хороший | **добре** | /ˈdɔbrɛ/ | well |
+| поганий | **погано** | /ˈpɔhɑnɔ/ | badly |
+
+---
+
+### Frequency Adverbs: How Often?
+
+> [!observe] Шкала частотності (Frequency Scale)
+>
+> From ALWAYS to NEVER:
+>
+> **завжди** /zɑvˈʒdɪ/ → **часто** /ˈt͡ʃɑstɔ/ → **зазвичай** /zɑzʋɪˈt͡ʃɑj/ → **іноді** /ˈinɔdi/ → **рідко** /ˈridkɔ/ → **ніколи** /ˈnʲikɔlɪ/
+
+### Examples
+
+- Я **завжди** снідаю. (I always eat breakfast.)
+- Він **часто** читає. (He often reads.)
+- Вона **зазвичай** працює вдома. (She usually works at home.)
+- Ми **іноді** гуляємо в парку. (We sometimes walk in the park.)
+- Вони **рідко** дивляться телевізор. (They rarely watch TV.)
+- Я **ніколи не** курю. (I never smoke.)
+
+> 💡 **Ніколи + не!**
+>
+> With «ніколи» (never), you MUST use «не» before the verb. It's a double negative, but it's grammatically correct!
+> — Я **ніколи не** запіз
+
+
+────────────────────────────────────────
+✅ Gemini finished (3040 chars)
+✅ Message sent to Claude (ID: 1133)
+✓ Message 1131 acknowledged

@@ -1,50 +1,47 @@
 {
   "module": "22-black-council-history",
   "level": "LIT",
-  "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:16:20.760659Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-08T22:28:03.176520Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349681Z",
-    "meta": "2026-01-29T07:39:04.971220Z",
-    "activities": "2026-01-27T15:34:57.190590Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.591469Z"
+    "md": "2026-02-08T22:23:34.857084Z",
+    "meta": "2026-02-08T22:21:03.862497Z",
+    "activities": "2026-02-08T22:27:59.512894Z",
+    "vocabulary": "2026-02-08T22:16:51.611342Z",
+    "plan": "2026-02-07T10:06:50.460918Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3529/4500 (raw: 3874)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4664/4500 (raw: 4813)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "20/0"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

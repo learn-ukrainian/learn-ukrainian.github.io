@@ -2,7 +2,7 @@
   "module": "kateryna-yushchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T16:38:31.673940Z",
+  "last_audit": "2026-02-08T23:14:28.385982Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T12:11:03.889749Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "4574/4650 (raw: 4688) (76 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4574/4650 (raw: 4688) (76 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

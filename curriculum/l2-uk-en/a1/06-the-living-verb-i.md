@@ -73,6 +73,7 @@ These verbs keep their stem exactly as it appears in the infinitive (minus -ти
 | співати    | співа-  | співаю   | to sing         |
 | думати     | дума-   | думаю    | to think        |
 | слухати    | слуха-  | слухаю   | to listen       |
+| питати     | пита-   | питаю    | to ask          |
 | розуміти   | розумі- | розумію  | to understand   |
 
 #### 2. The працювати Type (-ва- Dropping Rule)
@@ -101,6 +102,10 @@ This is why **працювати** becomes **працюю** (not «працюв�
 
 > [!important] **Consonant Mutation**
 > Some verbs like **писати** (to write) change their final consonant: **писати** → **пишу** (not «писаю»). Don't worry about the rules yet; just memorize the «я пишу» form for now!
+
+> [!note] **Grammar Sneak Peek: The Object Changes**
+>
+> You might notice **книга** becomes **книгу** and **музика** becomes **музику** in some examples below. This happens when an action is done *to* something. Don't worry about the rules yet — just treat them as fixed phrases for now! We'll cover this properly in Module 11.
 
 **Let's see them in action:**
 
@@ -175,13 +180,13 @@ Here's how these verbs show up in real Ukrainian life:
 — Ти **працюєш** сьогодні? (Do you work today?)
 — Ні, я **відпочиваю**. **Слухаю** музику. (No, I rest. I listen to music.)
 — А я **гуляю** в парку! (And I walk in the park!)
-— Я теж **люблю** парк. (I also love the park.)
+— Я теж **гуляю** там. (I also walk there.)
 
 **Translation:**
 — Do you work today?
 — No, I rest. I listen to music.
 — And I walk to the park!
-— I also love the park.
+— I also walk there.
 
 > ⚡ **Pro Tip**
 >
@@ -193,7 +198,7 @@ Here's how these verbs show up in real Ukrainian life:
 
 ### Verbs and Ukrainian Soul
 
-Ukrainians love action verbs. They reflect the culture's emphasis on **doing**, not just being. People in Ukraine ask: «Ти робиш?» (Do you work?), «Ти читаєш?» (Do you read?).
+Ukrainians love action verbs. They reflect the culture's emphasis on **doing**, not just being. People in Ukraine ask: «Що ти робиш?» (What do you do?), «Ти читаєш?» (Do you read?).
 
 Life is measured in verbs. What you **do** defines who you are.
 

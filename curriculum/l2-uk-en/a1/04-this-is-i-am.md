@@ -123,11 +123,15 @@ When talking about people, Ukrainian distinguishes **masculine** and **feminine*
 | студент     | студентка  | student        |
 | професор    | професорка | professor      |
 | лікар       | лікарка    | doctor         |
+| інженер     | інженерка  | engineer       |
+| менеджер    | менеджерка | manager        |
 
 **Pattern:** Most feminine forms add **-ка** to the masculine stem.
 
 **Usage:**
 
+- Він інженер, вона інженерка. (He's an engineer, she's an engineer.)
+- Я менеджер. (I'm a manager.)
 - Він американець. (He's American.)
 - Вона американка. (She's American.)
 - Я студент. (I'm a student—said by a male.)
@@ -259,11 +263,11 @@ Ukrainians take names seriously. When introducing yourself, use your first name 
 - Анна Петрівна (Anna, daughter of Petro)
 - Іван Михайлович (Ivan, son of Mykhailo)
 
-In modern Ukraine, patronymics are used less by young people in casual settings, but they're still standard in official documents and formal contexts.
+In modern Ukraine, patronymics are used less by young people in casual settings, but they're still standard in official documents and formal contexts. Using someone's first name and patronymic (like «Анна Петрівна») is the highest form of respect.
 
 **National Pride**
 
-Saying «Я українець» or «Я українка» isn't just a statement of nationality—it's an identity many Ukrainians hold with deep pride, especially after centuries of imperial suppression. Ukrainian identity was illegal to express openly during Soviet times. Today, speaking Ukrainian and affirming «Я українець/українка» is a quiet act of cultural resistance and reclamation.
+Saying «Я українець» or «Я українка» isn't just a statement of nationality—it's an identity many Ukrainians hold with deep pride, especially after centuries of imperial suppression. Ukrainian identity was illegal to express openly during Soviet times. Today, speaking Ukrainian and affirming «Я українець/українка» is a quiet act of cultural resistance and reclamation. It signifies a connection to a land that has fought for its right to exist for generations.
 
 > 🔍 **Myth Buster**
 >

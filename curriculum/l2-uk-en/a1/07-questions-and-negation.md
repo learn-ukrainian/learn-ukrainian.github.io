@@ -57,7 +57,7 @@ Ukrainian has question words (like English «what, who, where») that replace th
 | **хто**      | /xtɔ/      | who              | Хто працює? (Who works?)               |
 | **де**       | /dɛ/       | where (location) | Де ти? (Where are you?)                |
 | **куди**     | /ˈkudɪ/    | where (to)       | Куди ти йдеш? (Where are you going?)   |
-| **звідки**   | /ˈzʲʋidkɪ/ | where from       | Звідки ти? (Where are you from?)       |
+| **звідки**   | /ˈzʋidkɪ/  | where from       | Звідки ти? (Where are you from?)       |
 | **коли**     | /kɔˈlɪ/    | when             | Коли ти працюєш? (When do you work?)   |
 | **чому**     | /t͡ʃɔˈmu/   | why              | Чому ти читаєш? (Why do you read?)     |
 | **як**       | /jɑk/      | how              | Як ти? (How are you?)                  |
@@ -103,7 +103,16 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 
 > 🌍 **Real World**
 >
-> Ukrainians are very direct with negation. If you ask «Чи ти знаєш?», a simple «Ні, не знаю» is perfectly polite. No need to soften it with «I'm afraid I don't...» like in English!
+> Ukrainians are very direct with negation. If you ask «Чи ти знаєш?», a simple «Ні, не знаю» is perfectly polite. No need to soften it with «I'm afraid I don't...» like in English! You can also say «На жаль, не знаю» (Unfortunately, I don't know) if you want to be extra polite.
+
+**Negative questions:**
+
+You can combine **чи** and **не** to ask negative questions — just like English «Don't you...?»:
+
+- Чи ти не читаєш? = Don't you read?
+- Чи вона не працює? = Doesn't she work?
+
+This structure expresses mild surprise that something is not the case.
 
 **Mini-Dialogue 3: Misunderstandings**
 
@@ -122,19 +131,19 @@ When talking about how often you do things, Ukrainian uses these adverbs:
 | **часто**     | /ˈt͡ʃɑstɔ/    | often     | Вона часто працює. (She often works.)                        |
 | **іноді**     | /iˈnɔdi/     | sometimes | Ми іноді говоримо. (We sometimes talk.)                      |
 | **рідко**     | /ˈridkɔ/     | rarely    | Він рідко пише. (He rarely writes.)                          |
-| **ніколи**    | /nʲiˈkɔlɪ/   | never     | Я ніколи не п'ю каву. (I never drink coffee.)                |
-| **звичайно**  | /zvɪˈt͡ʃɑjnɔ/ | usually   | Я звичайно снідаю вдома. (I usually have breakfast at home.) |
+| **ніколи**    | /nʲiˈkɔlɪ/   | never     | Я ніколи не читаю це. (I never read this.)                   |
+| **зазвичай**  | /zɑzʋɪˈt͡ʃɑj/ | usually   | Я зазвичай читаю вдома. (I usually read at home.)            |
 
 **Important:** **Ніколи** (never) is already negative, but Ukrainian uses **double negation** - you still add **не**!
 
-- Я **ніколи не** п'ю каву. (I never drink coffee.) ✅
-- Я ніколи п'ю каву. ❌ (Wrong - missing не!)
+- Я **ніколи не** читаю це. (I never read this.) ✅
+- Я ніколи читаю це. ❌ (Wrong - missing не!)
 
 This is called **double negation** and it's mandatory in Ukrainian.
 
 > 💡 **Did You Know?**
 >
-> Ukrainian loves double negation! «Я нічого не знаю» (I nothing don't know = I don't know anything) feels natural to Ukrainians. This pattern comes from older Slavic languages and makes negation extra clear.
+> Ukrainian loves double negation! «Я нічого не знаю» (I nothing don't know = I don't know anything) feels natural to Ukrainians. This pattern comes from older Slavic languages and makes negation extra clear. So remember: «ніколи» needs «не», «нічого» needs «не», «ніхто» needs «не»!
 
 ## Practice
 
@@ -143,9 +152,15 @@ Now you know:
 - ✅ How to ask yes/no questions with **чи**
 - ✅ Question words (що, хто, де, куди, коли, чому, як, скільки)
 - ✅ How to say no with **не**
-- ✅ Frequency adverbs (завжди, часто, іноді, рідко, ніколи, звичайно)
+- ✅ Frequency adverbs (завжди, часто, іноді, рідко, ніколи, зазвичай)
 
-Let's practice!
+**Try these yourself** — form the Ukrainian question, then check:
+
+1. Ask: «Do you work?» → Чи ти працюєш?
+2. Ask: «Where are you from?» → Звідки ти?
+3. Say: «I don't understand.» → Я не розумію.
+
+Got them? Great — now let's put it all together!
 
 ## Production
 
@@ -210,7 +225,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 
 **Frequency:**
 
-- завжди (always), часто (often), звичайно (usually)
+- завжди (always), часто (often), зазвичай (usually)
 - іноді (sometimes), рідко (rarely), ніколи (never)
 
 ---

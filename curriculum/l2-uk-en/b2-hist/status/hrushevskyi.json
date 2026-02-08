@@ -2,13 +2,13 @@
   "module": "hrushevskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:50.442550Z",
+  "last_audit": "2026-02-08T00:04:47.028882Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:24:59.655622Z",
-    "meta": "2026-01-30T23:09:16.376493Z",
-    "activities": "2026-01-27T23:54:26.365542Z",
-    "vocabulary": "2026-01-30T23:11:24.092835Z",
+    "md": "2026-02-07T11:38:26.252758Z",
+    "meta": "2026-02-07T10:03:51.227863Z",
+    "activities": "2026-02-07T10:03:51.296452Z",
+    "vocabulary": "2026-02-07T10:03:51.359756Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4264/4000 (raw: 4355)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4264/4000 (raw: 4355) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

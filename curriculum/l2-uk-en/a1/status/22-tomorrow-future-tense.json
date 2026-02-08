@@ -2,13 +2,13 @@
   "module": "22-tomorrow-future-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:32:00.743096Z",
+  "last_audit": "2026-02-08T22:38:54.049747Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T21:31:28.924222Z",
+    "md": "2026-02-08T22:37:03.619218Z",
     "meta": "2026-02-07T10:03:51.783240Z",
-    "activities": "2026-02-07T21:06:32.749796Z",
-    "vocabulary": "2026-02-07T21:30:52.022621Z",
+    "activities": "2026-02-08T22:38:45.447960Z",
+    "vocabulary": "2026-02-08T22:37:03.619359Z",
     "plan": "2026-02-07T10:05:59.911953Z"
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1217/1082 (raw: 1742)"
+      "message": "1280/1082 (raw: 1814)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "5/1"
+      "message": "23/1"
     },
     "naturalness": {
       "status": "pass",

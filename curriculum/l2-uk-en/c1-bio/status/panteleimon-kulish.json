@@ -2,7 +2,7 @@
   "module": "panteleimon-kulish",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T16:37:46.347271Z",
+  "last_audit": "2026-02-08T23:13:41.315963Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.345438Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4958/4000 (raw: 5081)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4958/4000 (raw: 5081) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

@@ -2,13 +2,13 @@
   "module": "12-the-accusative-ii-people",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:22:24.661155Z",
+  "last_audit": "2026-02-08T22:02:32.810856Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T21:22:13.241544Z",
-    "meta": "2026-02-07T10:03:51.784480Z",
-    "activities": "2026-02-07T21:22:05.578934Z",
-    "vocabulary": "2026-02-07T21:22:20.028031Z",
+    "md": "2026-02-08T22:02:32.240281Z",
+    "meta": "2026-02-08T17:38:32.532999Z",
+    "activities": "2026-02-08T22:02:32.240403Z",
+    "vocabulary": "2026-02-08T21:58:46.292725Z",
     "plan": "2026-02-07T10:03:51.075372Z"
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1342/1374 (raw: 1662) (32 short)"
+      "message": "1479/1374 (raw: 1893)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "9/1"
+      "message": "27/1"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

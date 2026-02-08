@@ -86,7 +86,7 @@
       correct: true
     - text: тату
       correct: false
-    - text: тата (again)
+    - text: таті
       correct: false
     explanation: Animate masculine -о → -а
   - question: Which form is correct for "I see an uncle"?
@@ -222,7 +222,7 @@
 - type: fill-in
   title: Complete with Animate Accusative
   items:
-  - sentence: Я бачу ___ у магазині.
+  - sentence: Я бачу ___ там.
     answer: колегу
     options:
     - колега
@@ -285,7 +285,7 @@
     - офіціанта
     - офіціанту
     - офіціанті
-  - sentence: Він бачить ___ на вулиці.
+  - sentence: Він бачить ___ там.
     answer: пасажира
     options:
     - пасажир
@@ -324,28 +324,28 @@
 - type: fill-in
   title: Sentences in Context
   items:
-  - sentence: У кав'ярні я бачу ___.
+  - sentence: Я бачу ___.
     answer: офіціанта
     options:
     - офіціант
     - офіціанта
     - офіціанту
     - офіціанті
-  - sentence: Вона знає мого ___ з університету.
+  - sentence: Вона знає мого ___.
     answer: друга
     options:
     - друг
     - друга
     - другу
     - другові
-  - sentence: Ми чекаємо ___ біля школи.
+  - sentence: Ми чекаємо ___.
     answer: вчителя
     options:
     - вчитель
     - вчителя
     - вчителю
     - вчителеві
-  - sentence: Ти бачиш ___ на зупинці?
+  - sentence: Ти бачиш ___?
     answer: водія
     options:
     - водій
@@ -366,7 +366,7 @@
     - колегу
     - колеги
     - колезі
-  - sentence: Вона бачить ___ у магазині.
+  - sentence: Вона бачить ___ там.
     answer: продавця
     options:
     - продавець
@@ -387,7 +387,7 @@
     - подругу
     - подруги
     - подрузі
-  - sentence: Він бачить ___ біля метро.
+  - sentence: Він бачить ___ там.
     answer: пасажира
     options:
     - пасажир
@@ -412,17 +412,17 @@
 - type: quiz
   title: Sentences with Animate Objects
   items:
-  - question: 'Correct sentence order for: "I see the student..."'
+  - question: 'Correct sentence order for: "I see the student there"'
     options:
-    - text: Я бачу студента у бібліотеці
+    - text: Я бачу студента там
       correct: true
-    - text: бачу Я студента у бібліотеці
+    - text: бачу Я студента там
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Я бачу студент там
       correct: false
-    explanation: 'Correct: Я бачу студента у бібліотеці'
+    explanation: 'Correct: Я бачу студента там'
   - question: 'Correct sentence order for: "She knows my friend well."'
     options:
     - text: Вона добре знає мого друга
@@ -431,21 +431,21 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Вона добре знає мій друг
       correct: false
     explanation: 'Correct: Вона добре знає мого друга'
-  - question: 'Correct sentence order for: "We''re waiting for the..."'
+  - question: 'Correct sentence order for: "We''re waiting for the doctor"'
     options:
-    - text: Ми чекаємо лікаря у лікарні
+    - text: Ми чекаємо лікаря
       correct: true
-    - text: чекаємо Ми лікаря у лікарні
+    - text: чекаємо Ми лікаря
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ми чекаємо лікар
       correct: false
-    explanation: 'Correct: Ми чекаємо лікаря у лікарні'
-  - question: 'Correct sentence order for: "Do you see the..."'
+    explanation: 'Correct: Ми чекаємо лікаря'
+  - question: 'Correct sentence order for: "Do you see the waiter there"'
     options:
     - text: Ти бачиш офіціанта там
       correct: true
@@ -453,7 +453,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ти бачиш офіціант там
       correct: false
     explanation: 'Correct: Ти бачиш офіціанта там'
   - question: 'Correct sentence order for: "He loves his teacher."'
@@ -464,7 +464,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Він любить своя вчителька
       correct: false
     explanation: 'Correct: Він любить свою вчительку'
   - question: 'Correct sentence order for: "I''m looking for our driver."'
@@ -475,7 +475,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Я шукаю наш водій
       correct: false
     explanation: 'Correct: Я шукаю нашого водія'
   - question: 'Correct sentence order for: "We know this director."'
@@ -486,10 +486,10 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ми знаємо цей директор
       correct: false
     explanation: 'Correct: Ми знаємо цього директора'
-  - question: 'Correct sentence order for: "She sees the neighbor..."'
+  - question: 'Correct sentence order for: "She sees the neighbor every morning"'
     options:
     - text: Вона бачить сусіда кожного ранку
       correct: true
@@ -497,10 +497,10 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Вона бачить сусід кожного ранку
       correct: false
     explanation: 'Correct: Вона бачить сусіда кожного ранку'
-  - question: 'Correct sentence order for: "Are you waiting for..."'
+  - question: 'Correct sentence order for: "Are you waiting for your friend"'
     options:
     - text: Ти чекаєш свою подругу
       correct: true
@@ -508,7 +508,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ти чекаєш своя подруга
       correct: false
     explanation: 'Correct: Ти чекаєш свою подругу'
   - question: 'Correct sentence order for: "I love my colleague."'
@@ -519,36 +519,36 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Я люблю мій колега
       correct: false
     explanation: 'Correct: Я люблю мого колегу'
-  - question: 'Correct sentence order for: "We see the passenger..."'
+  - question: 'Correct sentence order for: "We see the passenger there"'
     options:
-    - text: Ми бачимо пасажира біля метро
+    - text: Ми бачимо пасажира там
       correct: true
-    - text: бачимо Ми пасажира біля метро
+    - text: бачимо Ми пасажира там
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ми бачимо пасажир там
       correct: false
-    explanation: 'Correct: Ми бачимо пасажира біля метро'
-  - question: 'Correct sentence order for: "He knows this student..."'
+    explanation: 'Correct: Ми бачимо пасажира там'
+  - question: 'Correct sentence order for: "He knows this student"'
     options:
-    - text: Він знає цю студентку з школи
+    - text: Він знає цю студентку
       correct: true
-    - text: знає Він цю студентку з школи
+    - text: знає Він цю студентку
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Він знає ця студентка
       correct: false
-    explanation: 'Correct: Він знає цю студентку з школи'
+    explanation: 'Correct: Він знає цю студентку'
   instruction: Choose the correct answer.
 - type: quiz
   title: More Complex Sentence Order
   items:
-  - question: 'Correct sentence order for: "I see my friend..."'
+  - question: 'Correct sentence order for: "I see my friend and his girlfriend"'
     options:
     - text: Я бачу мого друга та його подругу
       correct: true
@@ -556,32 +556,32 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Я бачу мій друг та його подругу
       correct: false
     explanation: 'Correct: Я бачу мого друга та його подругу'
-  - question: 'Correct sentence order for: "We''re waiting for our..."'
+  - question: 'Correct sentence order for: "We''re waiting for our teacher"'
     options:
-    - text: Ми чекаємо нашого вчителя біля університету
+    - text: Ми чекаємо нашого вчителя
       correct: true
-    - text: чекаємо Ми нашого вчителя біля університету
+    - text: чекаємо Ми нашого вчителя
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ми чекаємо наш вчитель
       correct: false
-    explanation: 'Correct: Ми чекаємо нашого вчителя біля університету'
-  - question: 'Correct sentence order for: "She knows this..."'
+    explanation: 'Correct: Ми чекаємо нашого вчителя'
+  - question: 'Correct sentence order for: "She knows this student"'
     options:
-    - text: Вона знає цього студента у групі
+    - text: Вона знає цього студента
       correct: true
-    - text: знає Вона цього студента у групі
+    - text: знає Вона цього студента
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Вона знає цей студент
       correct: false
-    explanation: 'Correct: Вона знає цього студента у групі'
-  - question: 'Correct sentence order for: "Do you see that..."'
+    explanation: 'Correct: Вона знає цього студента'
+  - question: 'Correct sentence order for: "Do you see that doctor there"'
     options:
     - text: Ти бачиш того лікаря там
       correct: true
@@ -589,7 +589,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ти бачиш той лікар там
       correct: false
     explanation: 'Correct: Ти бачиш того лікаря там'
   - question: 'Correct sentence order for: "He really loves his neighbor."'
@@ -600,10 +600,10 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Він дуже любить своя сусідка
       correct: false
     explanation: 'Correct: Він дуже любить свою сусідку'
-  - question: 'Correct sentence order for: "I''m looking for our..."'
+  - question: 'Correct sentence order for: "I''m looking for our director and manager"'
     options:
     - text: Я шукаю нашого директора і менеджера
       correct: true
@@ -611,7 +611,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Я шукаю наш директор і менеджер
       correct: false
     explanation: 'Correct: Я шукаю нашого директора і менеджера'
   - question: 'Correct sentence order for: "We know this driver well."'
@@ -622,10 +622,10 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ми добре знаємо цей водій
       correct: false
     explanation: 'Correct: Ми добре знаємо цього водія'
-  - question: 'Correct sentence order for: "She sees the waiter..."'
+  - question: 'Correct sentence order for: "She sees the waiter and waitress"'
     options:
     - text: Вона бачить офіціанта та офіціантку
       correct: true
@@ -633,7 +633,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Вона бачить офіціант та офіціантку
       correct: false
     explanation: 'Correct: Вона бачить офіціанта та офіціантку'
   - question: 'Correct sentence order for: "I see our friendly neighbor."'
@@ -644,7 +644,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Я бачу наш привітний сусід
       correct: false
     explanation: 'Correct: Я бачу нашого привітного сусіда'
   - question: 'Correct sentence order for: "She knows this new teacher."'
@@ -655,7 +655,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Вона знає ця нова вчителька
       correct: false
     explanation: 'Correct: Вона знає цю нову вчительку'
   - question: 'Correct sentence order for: "We wait for our director there."'
@@ -666,7 +666,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ми чекаємо наш директор там
       correct: false
     explanation: 'Correct: Ми чекаємо нашого директора там'
   - question: 'Correct sentence order for: "Do you see that waiter here?"'
@@ -677,7 +677,7 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
-    - text: вони
+    - text: Ти бачиш той офіціант тут?
       correct: false
     explanation: 'Correct: Ти бачиш того офіціанта тут?'
   instruction: Choose the correct answer.

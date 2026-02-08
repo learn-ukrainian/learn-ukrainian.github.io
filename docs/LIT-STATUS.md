@@ -1,13 +1,13 @@
 # LIT Module Status
 
-**Generated:** 2026-02-07 23:41:17
+**Generated:** 2026-02-08 00:05:19
 **Total Modules:** 30
-**Status:** 8 passing, 21 failing, 1 stubs, 0 errors
+**Status:** 10 passing, 19 failing, 1 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 8/30 (26%)
-- ❌ **Failing:** 21/30
+- ✅ **Passing:** 10/30 (33%)
+- ❌ **Failing:** 19/30
 - 📝 **Stubs:** 1/30
 
 ## Module Details
@@ -22,9 +22,9 @@
 | 006 | kvitka-bio | ✅ PASS | 4417/4500 | - |
 | 007 | marusya | ✅ PASS | 5181/4500 | - |
 | 008 | konotop-witch | ✅ PASS | 4532/4500 | - |
-| 009 | ethnography | ❌ FAIL | 4361/3700 | - |
-| 010 | kvitka-language | ❌ FAIL | 2275/4500 | word_count, structure |
-| 011 | young-shevchenko | ❌ FAIL | 4039/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
+| 009 | ethnography | ✅ PASS | 4496/3700 | - |
+| 010 | kvitka-language | ✅ PASS | 4406/4500 | - |
+| 011 | young-shevchenko | ❌ FAIL | 3405/4500 | 4 Outline Compliance Errors |
 | 012 | the-ballads | ❌ FAIL | 3919/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 013 | haidamaky | ❌ FAIL | 4007/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
 | 014 | son | ❌ FAIL | 3543/4500 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |

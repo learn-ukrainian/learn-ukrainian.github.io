@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M22 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1082
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:32:00
+**Generated:** 2026-02-08 22:38:54
 
 ## Configuration
 **Type:** A1-grammar
@@ -21,7 +21,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Time Expressions | 10 | 8 | ✅ |
-| 2 | group-sort | Levels of Certainty | 12 | 12 | ✅ |
+| 2 | group-sort | Levels of Certainty | 13 | 12 | ✅ |
 | 3 | fill-in | Future Tense Forms | 12 | 8 | ✅ |
 | 4 | fill-in | Planning Expressions | 12 | 8 | ✅ |
 | 5 | quiz | буду Conjugation | 12 | 8 | ✅ |
@@ -37,24 +37,21 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1217/1082 (raw: 1742)
+- **Words:** ✅ 1280/1082 (raw: 1814)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.4% (target 35-55% (M22))
+- **Immersion:** 🇺🇦 39.2% (target 35-55% (M22))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -62,11 +59,12 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 30 | Included in Core |
 | **Presentation** | ✅ | 169 | Included in Core |
-| **Presentation: Plans and Intentions** | ✅ | 163 | Included in Core |
+| **Presentation: Plans and Intentions** | ✅ | 166 | Included in Core |
 | **Presentation: Time Expressions** | ✅ | 38 | Included in Core |
-| **Presentation: Useful Adverbs** | ✅ | 82 | Included in Core |
-| **Presentation: Examples in Context** | ✅ | 240 | Included in Core |
-| **Presentation: Dialogues** | ✅ | 339 | Included in Core |
+| **Presentation: Useful Adverbs** | ✅ | 98 | Included in Core |
+| **Presentation: Examples in Context** | ✅ | 244 | Included in Core |
+| **Presentation: Dialogues** | ✅ | 345 | Included in Core |
 | **Practice** | ⚪️ | 21 | Skipped |
-| **Підсумок** | ✅ | 116 | Included in Core |
+| **Practice 2** | ⚪️ | 33 | Skipped |
+| **Підсумок** | ✅ | 117 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

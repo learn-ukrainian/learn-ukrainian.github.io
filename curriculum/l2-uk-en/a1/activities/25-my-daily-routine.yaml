@@ -75,7 +75,7 @@
     - прокидаюся
     - прокидається
     - прокидаємося
-  - sentence: Батьки ___ з роботи додому звичайно о шостій вечора.
+  - sentence: Батьки повертаються з роботи додому зазвичай о шостій вечора.
     answer: повертаються
     options:
     - повертаються
@@ -195,7 +195,7 @@
     answer: часто
     options:
     - часто
-    - рідко
+    - завтра
     - ніколи
     - спочатку
   - sentence: Він ___ обідає в кафе.
@@ -376,16 +376,6 @@
     - text: I undress
       correct: false
     - text: I buy clothes
-      correct: false
-  - question: When exactly do we use "-сь" instead of "-ся"?
-    options:
-    - text: After vowels (я вмиваюсь)
-      correct: true
-    - text: After consonants
-      correct: false
-    - text: In past tense
-      correct: false
-    - text: In future tense
       correct: false
   - question: Which verb listed below is NOT a reflexive verb?
     options:

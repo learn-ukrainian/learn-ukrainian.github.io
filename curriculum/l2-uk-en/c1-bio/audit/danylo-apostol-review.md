@@ -1,8 +1,8 @@
 # Audit Report: M29 — danylo-apostol.md
 **Level:** C1-BIO | **Module:** M29 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:39
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-08 23:13:34
 
 ## Configuration
 **Type:** C1-biography
@@ -33,6 +33,15 @@
 - Required types used: 2/2 (critical-analysis, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/danylo-apostol-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4327/4300 (raw: 4398)
 - **Activities:** ✅ 5/3
@@ -44,7 +53,7 @@
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

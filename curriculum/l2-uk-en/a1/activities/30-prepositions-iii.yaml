@@ -223,8 +223,8 @@
     options:
     - до
     - в
-    - з
     - на
+    - через
   - sentence: Я ___ школі.
     answer: в
     options:
@@ -381,7 +381,7 @@
     options:
     - text: в школі
       correct: false
-    - text: з школи
+    - text: зі школи
       correct: true
     - text: до школи
       correct: false
@@ -415,8 +415,7 @@
     - ти
     - де
     - зараз
-    - є
-    answer: Де ти зараз є
+    answer: Де ти зараз
   - words:
     - йду
     - я
@@ -456,9 +455,8 @@
   - words:
     - вдома
     - вона
-    - є
     - зараз
-    answer: Вона зараз є вдома
+    answer: Вона зараз вдома
   - words:
     - прямо
     - потім

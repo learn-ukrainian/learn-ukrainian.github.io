@@ -2,13 +2,13 @@
   "module": "hromady",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:48.151706Z",
+  "last_audit": "2026-02-08T00:04:44.723277Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:57:09.025941Z",
-    "meta": "2026-01-30T22:56:08.102722Z",
-    "activities": "2026-01-30T22:59:34.662537Z",
-    "vocabulary": "2026-01-28T11:23:40.364346Z",
+    "md": "2026-02-07T11:38:26.249636Z",
+    "meta": "2026-02-07T10:03:51.224602Z",
+    "activities": "2026-02-07T10:03:51.287245Z",
+    "vocabulary": "2026-02-07T10:03:51.354508Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4438/4000 (raw: 4563)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4438/4000 (raw: 4563) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

@@ -1,12 +1,12 @@
 # Audit Report: M06 — volodymyr-monomakh.md
-**Level:** C1-BIO | **Module:** M06 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4300
+**Level:** C1-BIO | **Module:** M06 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:26
+**Generated:** 2026-02-08 23:13:19
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4300 words
+**Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -26,8 +26,8 @@
 | 4 | essay-response | Есе: Образ філософа на престолі | 1 | 1 | ✅ |
 | 5 | comparative-study | Порівняльне дослідження: Мономах та Марк Аврелій | 1 | 1 | ✅ |
 | 6 | critical-analysis | Юридичний аналіз Статуту | 1 | 1 | ✅ |
-| 7 | select | Вибір контексту: Русь XI-XII ст. | 10 | 5 | ✅ |
-| 8 | true-false | Деколонізація: Факти vs Міфи | 10 | 5 | ✅ |
+| 7 | select | Вибір контексту: Русь XI-XII ст. | 12 | 5 | ✅ |
+| 8 | true-false | Деколонізація: Факти vs Міфи | 12 | 5 | ✅ |
 | 9 | reading | Постанова Любецького з'їзду | 3 | 1 | ✅ |
 
 **Summary:**
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5168/4300 (raw: 5289)
+- **Words:** ✅ 5173/5000 (raw: 5294)
 - **Activities:** ✅ 9/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/3 types
@@ -79,8 +79,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 76 | Included in Core |
 | **Вступ: Моральна криза та Любецький з’їзд** | ✅ | 686 | Included in Core |
-| **Життєпис: Шлях від Переяслава до Києва** | ⚪️ | 858 | Skipped |
-| **Битва на Сальниці: Тріумф коаліційної стратегії** | ⚪️ | 659 | Skipped |
+| **Життєпис: Шлях від Переяслава до Києва** | ⚪️ | 861 | Skipped |
+| **Битва на Сальниці: Тріумф коаліційної стратегії** | ⚪️ | 661 | Skipped |
 | **«Повчання дітям»: Перший політичний маніфест Русі** | ⚪️ | 931 | Skipped |
 | **Деколонізація: Київський центр vs московські міфи** | ⚪️ | 718 | Skipped |
 | **Мономах та інтелектуальне середовище: Лавра, Сильвестр та Нестор** | ⚪️ | 451 | Skipped |

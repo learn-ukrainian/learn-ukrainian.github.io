@@ -4,29 +4,45 @@ level: A1
 version: '2.0'
 items:
 - lemma: вечеряти
-  ipa: /ʋɛt͡ʃˈɛrjatɪ/
+  ipa: /ʋɛt͡ʃɛˈrʲatɪ/
   translation: to have dinner
   pos: verb
 - lemma: вільний
-  ipa: /ʋˈilʲnɪj/
+  ipa: /ˈʋilʲnɪj/
   translation: free
   pos: adj
+- lemma: грати
+  ipa: /ˈɦrɑtɪ/
+  translation: to play
+  pos: verb
+- lemma: гуляти
+  ipa: /ɦuˈlʲɑtɪ/
+  translation: to walk, to stroll
+  pos: verb
+- lemma: думати
+  ipa: /ˈdumɑtɪ/
+  translation: to think
+  pos: verb
+- lemma: знати
+  ipa: /ˈznɑtɪ/
+  translation: to know
+  pos: verb
 - lemma: картина
-  ipa: /kartˈɪna/
+  ipa: /karˈtɪna/
   translation: picture, painting
   pos: noun
   gender: f
 - lemma: малювати
-  ipa: /maljuʋˈatɪ/
+  ipa: /malʲuˈʋatɪ/
   translation: to draw, to paint
   pos: verb
 - lemma: момент
-  ipa: /mɔmˈɛnt/
+  ipa: /mɔˈmɛnt/
   translation: moment
   pos: noun
   gender: m
 - lemma: обідати
-  ipa: /ɔbˈidatɪ/
+  ipa: /ɔˈbidatɪ/
   translation: to have dinner/lunch
   pos: verb
 - lemma: парк
@@ -34,16 +50,44 @@ items:
   translation: park
   pos: noun
   gender: m
+- lemma: писати
+  ipa: /pɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+- lemma: питати
+  ipa: /pɪˈtɑtɪ/
+  translation: to ask
+  pos: verb
 - lemma: починати
   ipa: /pɔt͡ʃɪnˈatɪ/
   translation: to start (imperfective)
+  pos: verb
+- lemma: працювати
+  ipa: /prɑt͡sʲuˈʋɑtɪ/
+  translation: to work
+  pos: verb
+- lemma: розуміти
+  ipa: /rɔzuˈmitɪ/
+  translation: to understand
   pos: verb
 - lemma: рух
   ipa: /rux/
   translation: movement, motion
   pos: noun
   gender: m
+- lemma: слухати
+  ipa: /ˈsluxɑtɪ/
+  translation: to listen
+  pos: verb
 - lemma: співати
   ipa: /spiʋˈatɪ/
   translation: to sing
+  pos: verb
+- lemma: чекати
+  ipa: /t͡ʃeˈkɑtɪ/
+  translation: to wait
+  pos: verb
+- lemma: читати
+  ipa: /t͡ʃɪˈtɑtɪ/
+  translation: to read
   pos: verb

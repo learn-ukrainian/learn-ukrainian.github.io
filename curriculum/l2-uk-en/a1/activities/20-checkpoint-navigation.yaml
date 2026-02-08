@@ -30,12 +30,12 @@
     - кави
     - каві
   - sentence: Він знає ___ добре.
-    answer: цього лікаря
+    answer: твого брата
     options:
-    - цей лікар
-    - цього лікаря
-    - цьому лікарю
-    - цим лікарем
+    - твій брат
+    - твого брата
+    - твоєму брату
+    - твоїм братом
   - sentence: Вони слухають ___.
     answer: музику
     options:
@@ -79,12 +79,12 @@
     - вікну
     - вікні
   - sentence: Я знаю ___ добре.
-    answer: цю дівчину
+    answer: твою сестру
     options:
-    - ця дівчина
-    - цю дівчину
-    - цієї дівчини
-    - цій дівчині
+    - твоя сестра
+    - твою сестру
+    - твоєї сестри
+    - твоїй сестрі
   instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Case Mastery - Locative
@@ -104,9 +104,9 @@
     - у
     - біля
   - sentence: Студенти ___ бібліотеці.
-    answer: у
+    answer: в
     options:
-    - у
+    - в
     - на
     - біля
     - до
@@ -118,7 +118,7 @@
     - у
     - біля
   - sentence: Діти ___ парку.
-    answer: у
+    answer: в
     options:
     - у
     - на
@@ -665,17 +665,17 @@
     - text: вони
       correct: false
     explanation: 'Correct: Так, звичайно. Ось, будь ласка.'
-  - question: 'Identify the correct order: "I''ll take borsch and varenyky."'
+  - question: 'Identify the correct order: "I want borsch and varenyky."'
     options:
-    - text: Я візьму борщ і вареники.
+    - text: Я хочу борщ і вареники.
       correct: true
-    - text: візьму Я борщ і вареники.
+    - text: хочу Я борщ і вареники.
       correct: false
     - text: Incorrect order for this sentence
       correct: false
     - text: вони
       correct: false
-    explanation: 'Correct: Я візьму борщ і вареники.'
+    explanation: 'Correct: Я хочу борщ і вареники.'
   - question: 'Identify the correct order: "Can I have the..."'
     options:
     - text: Можна рахунок, будь ласка?

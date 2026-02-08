@@ -12,6 +12,16 @@ items:
   ipa: /bɛzkɔntˈaktnɔ/
   translation: contactlessly
   pos: adv
+- lemma: ваги
+  ipa: /vɑˈɦɪ/
+  translation: scales
+  pos: noun
+  gender: p
+- lemma: відділ
+  ipa: /vʲidʲ:il/
+  translation: department, section
+  pos: noun
+  gender: m
 - lemma: еко-сумка
   ipa: /ɛkɔ-sˈumka/
   translation: eco-bag
@@ -31,3 +41,8 @@ items:
   translation: PIN code
   pos: noun
   gender: m
+- lemma: ціна
+  ipa: /t͡sʲiˈnɑ/
+  translation: price
+  pos: noun
+  gender: f

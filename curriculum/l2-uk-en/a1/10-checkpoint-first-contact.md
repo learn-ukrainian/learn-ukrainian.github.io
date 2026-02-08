@@ -15,7 +15,7 @@ Take your time with the exercises. If you find a particular skill difficult, don
 
 ---
 
-## Skill 1: Reading Cyrillic
+## Skill 1: Читання кирилиці
 
 **Can you read Ukrainian text without transliteration?**
 
@@ -51,7 +51,7 @@ Read each word, then match it to the English meaning in your head:
 
 ---
 
-## Skill 2: Identifying Gender
+## Skill 2: Визначення роду
 
 **Can you determine noun gender by looking at the ending?**
 
@@ -85,6 +85,10 @@ Look at each word. What gender is it?
 > 4. feminine
 > 5. neuter
 
+> [!note] Watch Out!
+>
+> Some masculine words end in **-о** or **-а** because they refer to men: **тато** (dad), **дядько** (uncle), **Микола** (Mykola). These are masculine!
+
 ### Self-Check
 
 - Do you check the **ending** first?
@@ -93,7 +97,7 @@ Look at each word. What gender is it?
 
 ---
 
-## Skill 3: Conjugating Verbs
+## Skill 3: Дієвідміна
 
 **Can you conjugate First Conjugation and Second Conjugation verbs in present tense?**
 
@@ -101,8 +105,8 @@ Look at each word. What gender is it?
 
 **First Conjugation (читати - to read):**
 
-> Я **читаю** книгу. Ти **читаєш** газету. Він **читає** журнал.
-> *(I read a book. You read a newspaper. He reads a magazine.)*
+> Я **читаю** текст. Ти **читаєш** журнал. Він **читає** меню.
+> *(I read a text. You read a magazine. He reads a menu.)*
 
 **Second Conjugation (говорити - to speak):**
 
@@ -118,23 +122,23 @@ Look at each word. What gender is it?
 
 Complete with the correct verb form:
 
-1. Я **\_** (читати) книгу. → Я **\_**
+1. Я **\_** (читати) текст. → Я **\_**
 2. Вона **\_** (говорити) українською. → Вона **\_**
-3. Ми **\_** (писати) листа. → Ми **\_**
-4. Вони **\_** (робити) домашнє завдання. → Вони **\_**
+3. Ми **\_** (слухати) радіо. → Ми **\_**
+4. Вони **\_** (знати) відповідь. → Вони **\_**
 
 > [!solution] Перевірити (Check)
 >
 > 1. читаю (First Conjugation, я → -ю)
 > 2. говорить (Second Conjugation, вона → -ить)
-> 3. пишемо (First Conjugation, ми → -емо)
-> 4. роблять (Second Conjugation, вони → -ять)
+> 3. слухаємо (First Conjugation, ми → -ємо)
+> 4. знають (First Conjugation, вони → -ють)
 
 ### Self-Check
 
 - Do you know which class a verb belongs to? (-ати vs -ити)
 - Can you conjugate for all persons? (я, ти, він/вона, ми, ви, вони)
-- Do irregular verbs like **їсти** and **пити** trip you up?
+- Do you notice how regular verbs follow these simple patterns?
 
 > [!tip] 💡 Quick Tip
 >
@@ -146,7 +150,7 @@ Complete with the correct verb form:
 
 ---
 
-## Skill 4: Asking Questions
+## Skill 4: Питальні речення
 
 **Can you form questions using question words?**
 
@@ -165,6 +169,8 @@ Complete with the correct verb form:
 - **Як** /jɑk/ = how
 - **Коли** /kɔˈlɪ/ = when
 - **Чому** /t͡ʃɔˈmu/ = why
+- **Куди** /kuˈdɪ/ = where to
+- **Скільки** /ˈskilʲkɪ/ = how much / how many
 
 ### Practice: Match Question to Answer
 
@@ -190,7 +196,7 @@ Which question word fits?
 
 ---
 
-## Skill 5: Ordering Food
+## Skill 5: Замовлення їжі
 
 **Can you navigate a Ukrainian кафе?**
 
@@ -241,11 +247,11 @@ Fill in the customer's responses:
 
 ---
 
-## Integration Challenge
+## Integration Task
 
 **Read this text, then answer the questions.**
 
-> Привіт! Я Марко. Я студент. Я живу в Києві. Це моя кімната. Тут є стіл, книга і кава. Я читаю книгу українською. Я люблю українську каву! А ти? Що ти любиш?
+> Привіт! Я Марко. Я студент. Я живу в Києві. Це моя кімната. Тут є стіл, книга і кава. Я читаю текст українською. Я люблю український борщ! А ти? Що ти любиш?
 
 **Questions:**
 

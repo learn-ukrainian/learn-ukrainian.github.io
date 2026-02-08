@@ -3,27 +3,150 @@ module: 37-at-the-market
 level: A1
 version: '2.0'
 items:
-- lemma: міра
-  ipa: /mˈira/
-  translation: measure
-  pos: noun
-  gender: f
-- lemma: привоз
-  ipa: /prɪʋɔz/
-  translation: delivery, supply
+- lemma: ринок
+  ipa: /ˈrɪnɔk/
+  translation: market
   pos: noun
   gender: m
-- lemma: півкілограма
-  ipa: /piʋkilɔɦrama/
-  translation: half a kilogram
+- lemma: базар
+  ipa: /bɑˈzɑr/
+  translation: bazaar, market
   pos: noun
-- lemma: свіжість
-  ipa: /sʋˈiʒistʲ/
-  translation: freshness
+  gender: m
+- lemma: продавець
+  ipa: /prɔdɑˈvɛt͡sʲ/
+  translation: seller
+  pos: noun
+  gender: m
+- lemma: скільки коштує
+  ipa: /ˈskʲilʲkɪ ˈkɔʃtʊjɛ/
+  translation: how much does it cost
+  pos: phrase
+- lemma: ціна
+  ipa: /t͡sʲiˈnɑ/
+  translation: price
   pos: noun
   gender: f
+- lemma: свіжий
+  ipa: /ˈsʋʲiʒɪj/
+  translation: fresh
+  pos: adj
+- lemma: домашній
+  ipa: /dɔˈmɑʃnʲij/
+  translation: home-grown, homemade
+  pos: adj
+- lemma: спробувати
+  ipa: /ˈsprɔbʊʋɑtɪ/
+  translation: to try, to taste
+  pos: verb
+- lemma: кілограм
+  ipa: /kʲilɔˈɦrɑm/
+  translation: kilogram
+  pos: noun
+  gender: m
+- lemma: грам
+  ipa: /ɦrɑm/
+  translation: gram
+  pos: noun
+  gender: m
 - lemma: штука
-  ipa: /ʃtˈuka/
-  translation: thing, piece, trick
+  ipa: /ˈʃtukɑ/
+  translation: piece, item
   pos: noun
   gender: f
+- lemma: літр
+  ipa: /ˈlʲitr/
+  translation: liter
+  pos: noun
+  gender: m
+- lemma: помідор
+  ipa: /pɔmʲiˈdɔr/
+  translation: tomato
+  pos: noun
+  gender: m
+- lemma: огірок
+  ipa: /ɔɦiˈrɔk/
+  translation: cucumber
+  pos: noun
+  gender: m
+- lemma: картопля
+  ipa: /kɑrˈtɔplʲɑ/
+  translation: potato
+  pos: noun
+  gender: f
+- lemma: капуста
+  ipa: /kɑˈpustɑ/
+  translation: cabbage
+  pos: noun
+  gender: f
+- lemma: морква
+  ipa: /ˈmɔrkvɑ/
+  translation: carrot
+  pos: noun
+  gender: f
+- lemma: цибуля
+  ipa: /t͡sɪˈbulʲɑ/
+  translation: onion
+  pos: noun
+  gender: f
+- lemma: яблуко
+  ipa: /ˈjɑblʊkɔ/
+  translation: apple
+  pos: noun
+  gender: n
+- lemma: слива
+  ipa: /ˈslɪʋɑ/
+  translation: plum
+  pos: noun
+  gender: f
+- lemma: кавун
+  ipa: /kɑˈvun/
+  translation: watermelon
+  pos: noun
+  gender: m
+- lemma: сир
+  ipa: /sɪr/
+  translation: cheese (cottage/homemade)
+  pos: noun
+  gender: m
+- lemma: мед
+  ipa: /mɛd/
+  translation: honey
+  pos: noun
+  gender: m
+- lemma: стиглий
+  ipa: /ˈstɪɦlɪj/
+  translation: ripe
+  pos: adj
+- lemma: солодкий
+  ipa: /sɔˈlɔdkɪj/
+  translation: sweet
+  pos: adj
+- lemma: кислий
+  ipa: /ˈkɪslɪj/
+  translation: sour
+  pos: adj
+- lemma: смачний
+  ipa: /smɑt͡ʃˈnɪj/
+  translation: tasty
+  pos: adj
+- lemma: овочі
+  ipa: /ˈɔʋɔt͡ʃi/
+  translation: vegetables
+  pos: noun
+  gender: pl
+- lemma: фрукти
+  ipa: /ˈfrʊktɪ/
+  translation: fruits
+  pos: noun
+  gender: pl
+- lemma: решта
+  ipa: /ˈrɛʃtɑ/
+  translation: change, rest
+  pos: noun
+  gender: f
+- lemma: пакет
+  ipa: /pɑˈkɛt/
+  translation: bag
+  pos: noun
+  gender: m

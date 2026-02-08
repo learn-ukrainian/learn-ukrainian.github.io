@@ -1,0 +1,120 @@
+- word: братство
+  ipa: "[\u02c8br\u0251tstw\u0254]"
+  translation: brotherhood
+- word: таємне товариство
+  ipa: "[t\u0251\u02c8j\u025bmne t\u0254w\u0251\u02c8r\u026astw\u0254]"
+  translation: secret society
+- word: федерація
+  ipa: "[fede\u02c8r\u0251t\u0361s\u02b2ij\u0251]"
+  translation: federation
+- word: месіанізм
+  ipa: "[mes\u02b2i\u02c8\u0251n\u02b2izm]"
+  translation: messianism
+- word: ідеолог
+  ipa: "[ide\u02c8\u0254l\u0254ɦ]"
+  translation: ideologist
+- word: програма
+  ipa: "[pr\u0254\u02c8ɦr\u0251m\u0251]"
+  translation: program
+- word: донос
+  ipa: "[d\u0254\u02c8n\u0254s]"
+  translation: denunciation
+- word: арешт
+  ipa: "[\u0251\u02c8r\u025b\u0283t]"
+  translation: arrest
+- word: кріпацтво
+  ipa: "[kr\u02b2i\u02c8p\u0251t\u0361stw\u0254]"
+  translation: serfdom
+- word: рівність
+  ipa: "[\u02c8r\u02b2iu\u032fn\u02b2is\u02b2t\u02b2]"
+  translation: equality
+- word: маніфест
+  ipa: "[m\u0251n\u02b2i\u02c8f\u025bst]"
+  translation: manifesto
+- word: утопія
+  ipa: "[u\u02c8t\u0254p\u02b2ij\u0251]"
+  translation: utopia
+- word: панславізм
+  ipa: "[p\u0251nsl\u0251\u02c8v\u02b2izm]"
+  translation: Pan-Slavism
+- word: репресії
+  ipa: "[re\u02c8pr\u025bs\u02b2iji]"
+  translation: repressions
+- word: заслання
+  ipa: "[z\u0251\u02c8sl\u0251n\u02b2\u02d0\u0251]"
+  translation: exile
+- word: самодержавство
+  ipa: "[s\u0251m\u0254de\u02c8r\u0292\u0251wstw\u0254]"
+  translation: autocracy
+- word: абсолютизм
+  ipa: "[\u0251bs\u0254l\u02b2u\u02c8t\u026azm]"
+  translation: absolutism
+- word: Весна народів
+  ipa: "[ve\u02c8sn\u0251 n\u0251\u02c8r\u0254d\u02b2iu\u032f]"
+  translation: Spring of Nations
+- word: похмуре семиліття
+  ipa: "[p\u0254\u02c8xmure sem\u026a\u02c8l\u02b2it\u02b2\u02d0\u0251]"
+  translation: gloomy seven years (reactionary period)
+- word: воскресіння
+  ipa: "[w\u0254skre\u02c8s\u02b2in\u02b2\u02d0\u0251]"
+  translation: resurrection
+- word: пророк
+  ipa: "[pr\u0254\u02c8r\u0254k]"
+  translation: prophet
+- word: мученик
+  ipa: "[\u02c8mut\u0361\u0283en\u026ak]"
+  translation: martyr
+- word: сакральність
+  ipa: "[s\u0251\u02c8kr\u0251l\u02b2n\u02b2is\u02b2t\u02b2]"
+  translation: sacredness
+- word: жандарм
+  ipa: "[\u0292\u0251n\u02c8d\u0251rm]"
+  translation: gendarme
+- word: каземат
+  ipa: "[k\u0251ze\u02c8m\u0251t]"
+  translation: casemate (prison cell)
+- word: слідство
+  ipa: "[\u02c8s\u02b2l\u02b2idstw\u0254]"
+  translation: investigation
+- word: вирок
+  ipa: "[\u02c8w\u026ar\u0254k]"
+  translation: sentence/verdict
+- word: помазаник
+  ipa: "[p\u0254\u02c8m\u0251z\u0251n\u026ak]"
+  translation: anointed one
+- word: десакралізація
+  ipa: "[des\u0251kr\u0251l\u02b2i\u02c8z\u0251t\u0361s\u02b2ij\u0251]"
+  translation: desacralization
+- word: піррова перемога
+  ipa: "[\u02c8p\u02b2ir\u0254w\u0251 perete\u02c8m\u0254ɦ\u0251]"
+  translation: Pyrrhic victory
+- word: спадщина
+  ipa: "[\u02c8sp\u0251d\u0361\u0283t\u0361\u0283\u026an\u0251]"
+  translation: legacy/heritage
+- word: вільнодумство
+  ipa: "[v\u02b2il\u02b2n\u0254\u02c8dumstw\u0254]"
+  translation: freethinking
+- word: цензура
+  ipa: "[t\u0361sen\u02c8zur\u0251]"
+  translation: censorship
+- word: еліта
+  ipa: "[e\u02c8l\u02b2it\u0251]"
+  translation: elite
+- word: інтелектуал
+  ipa: "[\u026antel\u025bktu\u02c8\u0251l]"
+  translation: intellectual
+- word: просвіта
+  ipa: "[pr\u0254\u02c8sv\u02b2it\u0251]"
+  translation: enlightenment/education
+- word: конфедерація
+  ipa: "[k\u0254nfede\u02c8r\u0251t\u0361s\u02b2ij\u0251]"
+  translation: confederation
+- word: суверенітет
+  ipa: "[suv\u025bxre\u02c8n\u02b2itet]"
+  translation: sovereignty
+- word: провідна роль
+  ipa: "[pr\u0254v\u02b2i\u02c8dn\u0251 r\u0254l\u02b2]"
+  translation: leading role
+- word: шляхетство
+  ipa: "[\u0283l\u02b2\u0251\u02c8x\u025btstw\u0254]"
+  translation: nobility (szlachta)

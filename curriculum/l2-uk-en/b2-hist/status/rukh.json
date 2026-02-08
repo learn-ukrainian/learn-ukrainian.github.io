@@ -2,13 +2,13 @@
   "module": "rukh",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:10.233639Z",
+  "last_audit": "2026-02-08T00:05:06.738548Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-03T18:31:26.140805Z",
-    "meta": "2026-02-03T18:31:28.312290Z",
-    "activities": "2026-01-31T16:30:37.921319Z",
-    "vocabulary": "2026-01-31T16:29:24.532671Z",
+    "md": "2026-02-07T11:38:26.442868Z",
+    "meta": "2026-02-07T10:03:51.227342Z",
+    "activities": "2026-02-07T10:03:51.294611Z",
+    "vocabulary": "2026-02-07T10:03:51.358628Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4659/4000 (raw: 4741)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4659/4000 (raw: 4741) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

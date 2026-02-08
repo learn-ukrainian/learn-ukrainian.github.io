@@ -161,84 +161,84 @@
 - type: fill-in
   title: Complete Questions
   items:
-  - sentence: ___ ти читаєш?
+  - sentence: ___ ти читаєш? (What)
     answer: Що
     options:
     - Що
     - Хто
     - Де
     - Коли
-  - sentence: ___ ти?
+  - sentence: ___ ти? (Where)
     answer: Де
     options:
     - Де
     - Куди
     - Звідки
     - Коли
-  - sentence: ___ ти працюєш?
+  - sentence: ___ ти працюєш? (When)
     answer: Коли
     options:
     - Коли
     - Де
     - Що
     - Як
-  - sentence: ___ ти?
+  - sentence: ___ ти? (How)
     answer: Як
     options:
     - Як
     - Що
     - Хто
     - Де
-  - sentence: ___ працює?
+  - sentence: ___ працює? (Who)
     answer: Хто
     options:
     - Хто
     - Що
     - Де
     - Коли
-  - sentence: ___ ти йдеш?
+  - sentence: ___ ти йдеш? (Where to)
     answer: Куди
     options:
     - Куди
     - Де
     - Звідки
     - Що
-  - sentence: ___ ти вивчаєш українську?
+  - sentence: ___ ти вивчаєш українську? (Why)
     answer: Чому
     options:
     - Чому
     - Що
     - Як
     - Коли
-  - sentence: ___ ти?
+  - sentence: ___ ти? (Where from)
     answer: Звідки
     options:
     - Звідки
     - Де
     - Куди
     - Хто
-  - sentence: ___ це коштує?
+  - sentence: ___ це коштує? (How much)
     answer: Скільки
     options:
     - Скільки
     - Що
     - Як
     - Коли
-  - sentence: ___ ти знаєш?
+  - sentence: ___ ти знаєш? (Do you...?)
     answer: Чи
     options:
     - Чи
     - Що
     - Хто
     - Де
-  - sentence: ___ тебе звуть?
+  - sentence: ___ тебе звуть? (What is your name?)
     answer: Як
     options:
     - Як
     - Що
     - Хто
     - Де
-  - sentence: ___ ти говориш?
+  - sentence: ___ ти говориш? (What)
     answer: Що
     options:
     - Що
@@ -272,7 +272,7 @@
     explanation: Correct! Звідки ти? = Where are you from?
   - statement: Ukrainian uses double negation with words like «ніколи» (never).
     correct: true
-    explanation: Correct! «Я ніколи не п'ю каву» = I never drink coffee
+    explanation: Correct! «Я ніколи не читаю це» = I never read this
   - statement: «Що» can only mean "what", never "that".
     correct: false
     explanation: Incorrect! «Що» means both "what" (question) and "that", depending
@@ -295,21 +295,21 @@
   - name: Always/Usually
     items:
     - завжди
-    - звичайно
+    - зазвичай
     - часто
-    - щодня
-    - щоранку
   - name: Sometimes/Rarely
     items:
     - іноді
     - рідко
     - не завжди
     - не часто
+    - іноді читаю
   - name: Never
     items:
     - ніколи не читаю
     - ніколи не пишу
-    - ніколи не сплю
+    - ніколи не граю
+    - ніколи не співаю
   instruction: Distribute the elements into groups.
 - type: fill-in
   title: Add Negation
@@ -321,7 +321,7 @@
     - ні
     - ніколи
     - чи
-  - sentence: Вона ___ працює сьогодні.
+  - sentence: Вона ___ працює тут.
     answer: не
     options:
     - не
@@ -342,7 +342,7 @@
     - ні
     - ніколи
     - де
-  - sentence: Я ___ ___ п'ю каву.
+  - sentence: Я ___ ___ слухаю музику.
     answer: ніколи не
     options:
     - ніколи не
@@ -363,7 +363,7 @@
     - ні
     - що
     - як
-  - sentence: Я ___ хочу чаю.
+  - sentence: Я ___ знаю це.
     answer: не
     options:
     - не
@@ -384,7 +384,7 @@
     - ні
     - ніколи
     - що
-  - sentence: Ми ___ ___ їмо м'ясо.
+  - sentence: Ми ___ ___ читаємо.
     answer: ніколи не
     options:
     - ніколи не
@@ -414,10 +414,8 @@
     answer: звідки
   - scrambled: с к і л ь к и
     answer: скільки
-  - scrambled: п и т а н н я
-    answer: питання
-  - scrambled: в і д п о в і д ь
-    answer: відповідь
+  - scrambled: з а з в и ч а й
+    answer: зазвичай
   - scrambled: з а в ж д и
     answer: завжди
   - scrambled: ч а с т о
@@ -430,30 +428,22 @@
 - type: anagram
   title: Frequency Words
   items:
-  - scrambled: р і д к о
-    answer: рідко
-  - scrambled: з в и ч а й н о
-    answer: звичайно
-  - scrambled: с ь о г о д н і
-    answer: сьогодні
-  - scrambled: з а в т р а
-    answer: завтра
-  - scrambled: в ч о р а
-    answer: вчора
-  - scrambled: щ о р а н к у
-    answer: щоранку
-  - scrambled: щ о д н я
-    answer: щодня
-  - scrambled: п р а в д а
-    answer: правда
   - scrambled: з а в ж д и
     answer: завжди
   - scrambled: ч а с т о
     answer: часто
   - scrambled: і н о д і
     answer: іноді
+  - scrambled: р і д к о
+    answer: рідко
   - scrambled: н і к о л и
     answer: ніколи
+  - scrambled: з а з в и ч а й
+    answer: зазвичай
+  - scrambled: н о р м а л ь н о
+    answer: нормально
+  - scrambled: п р а в д а
+    answer: правда
   instruction: Arrange the letters in the correct order.
 - type: quiz
   title: Negative Sentence Order
@@ -491,17 +481,17 @@
     - text: Ми знаємо не
       correct: false
     explanation: 'Correct order: Ми не знаємо'
-  - question: 'Identify the correct word order for the sentence: "I never drink coffee."'
+  - question: 'Identify the correct word order for the sentence: "I never play."'
     options:
-    - text: Я ніколи не п'ю каву
+    - text: Я ніколи не граю
       correct: true
-    - text: ніколи Я не п'ю каву
+    - text: ніколи Я не граю
       correct: false
-    - text: каву Я ніколи не п'ю
+    - text: граю Я ніколи не
       correct: false
-    - text: Я не ніколи п'ю каву
+    - text: Я не ніколи граю
       correct: false
-    explanation: 'Correct order: Я ніколи не п''ю каву'
+    explanation: 'Correct order: Я ніколи не граю'
   - question: 'Identify the correct word order for the sentence: "He doesn''t speak
       Ukrainian."'
     options:
@@ -547,17 +537,17 @@
     - text: Ти пишеш не
       correct: false
     explanation: 'Correct order: Ти не пишеш'
-  - question: 'Identify the correct word order for the sentence: "We never eat meat."'
+  - question: 'Identify the correct word order for the sentence: "We never read."'
     options:
-    - text: Ми ніколи не їмо м'ясо
+    - text: Ми ніколи не читаємо
       correct: true
-    - text: ніколи Ми не їмо м'ясо
+    - text: ніколи Ми не читаємо
       correct: false
-    - text: м'ясо Ми ніколи не їмо
+    - text: читаємо Ми ніколи не
       correct: false
-    - text: Ми не ніколи їмо м'ясо
+    - text: Ми не ніколи читаємо
       correct: false
-    explanation: 'Correct order: Ми ніколи не їмо м''ясо'
+    explanation: 'Correct order: Ми ніколи не читаємо'
   - question: 'Identify the correct word order for the sentence: "They don''t listen
       to music."'
     options:
@@ -570,26 +560,26 @@
     - text: Вони слухають не музику
       correct: false
     explanation: 'Correct order: Вони не слухають музику'
-  - question: 'Identify the correct word order for the sentence: "I don''t work today."'
+  - question: 'Identify the correct word order for the sentence: "I don''t work here."'
     options:
-    - text: Я не працюю сьогодні
+    - text: Я не працюю тут
       correct: true
-    - text: не Я працюю сьогодні
+    - text: не Я працюю тут
       correct: false
-    - text: сьогодні Я не працюю
+    - text: тут Я не працюю
       correct: false
-    - text: Я працюю не сьогодні
+    - text: Я працюю не тут
       correct: false
-    explanation: 'Correct order: Я не працюю сьогодні'
-  - question: 'Identify the correct word order for the sentence: "I don''t want tea."'
+    explanation: 'Correct order: Я не працюю тут'
+  - question: 'Identify the correct word order for the sentence: "I don''t sing."'
     options:
-    - text: Я не хочу чаю
+    - text: Я не співаю
       correct: true
-    - text: не Я хочу чаю
+    - text: не Я співаю
       correct: false
-    - text: чаю Я не хочу
+    - text: співаю Я не
       correct: false
-    - text: Я хочу не чаю
+    - text: Я співаю не
       correct: false
-    explanation: 'Correct order: Я не хочу чаю'
+    explanation: 'Correct order: Я не співаю'
   instruction: Choose the correct answer.

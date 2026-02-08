@@ -2,11 +2,11 @@
   "module": "10-kvitka-language",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T23:50:00.423033Z",
+  "last_audit": "2026-02-08T20:05:47.582393Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T23:49:14.098947Z",
-    "meta": "2026-02-07T23:39:29.402776Z",
+    "meta": "2026-02-08T20:05:38.845519Z",
     "activities": "2026-02-07T23:44:52.752857Z",
     "vocabulary": "2026-02-07T23:42:54.801601Z",
     "plan": "2026-02-07T10:06:50.459334Z"

@@ -1,4 +1,3 @@
----
 module: son
 level: LIT
 slug: son
@@ -6,42 +5,42 @@ version: '2.0'
 title: 'Політична Сатира: Сон'
 subtitle: 'LIT-014: Сміхове руйнування влади'
 content_outline:
-- section: "Вступ — Найсміливіший маніфест XIX століття"
-  words: 625
+- section: Вступ Політична сатира та жанр комедії
+  words: 529
   points:
-  - Історія написання (1844)
-  - Чому "Сон" — це революція
-  - Доля твору і автора
-- section: Структура подорожі
-  words: 875
+  - Політична сатира
+  - Жанр комедії
+- section: Частина Сюжетна подорож Від України до Петербурга
+  words: 882
   points:
-  - Україна — пейзаж поневолення
-  - Сибір — пекло на землі
-  - Петербург — театр абсурду
-- section: Сатира на царя
-  words: 1000
+  - Україна
+  - Сибір
+  - Петербург
+- section: Частина Імперський гротеск Сцена у палаці
+  words: 794
   points:
-  - Образ «ведмедя» (Миколи I)
-  - 'Сцена балу: гротеск і карикатура'
-  - «Сміхове руйнування» авторитету
-- section: Техніка гротеску
-  words: 875
+  - Гротеск
+  - Мордобиття
+- section: Частина Цар і Цариця Образи тиранів
+  words: 882
   points:
-  - Що таке гротеск і іронія
-  - Контраст і парадокс
-  - Сон як форма критики
-- section: Наслідки для Шевченка
-  words: 625
+  - Микола I
+  - Цариця
+- section: Частина Фінал Пробудження та сенс
+  words: 529
   points:
-  - Арешт і заслання
-  - '"Сон" у справі Кирило-Мефодіївського братства'
-  - Ціна правди
-- section: "Підсумок — Сатира як зброя"
-  words: 500
+  - Пробудження
+  - Сенс
+- section: Частина Історичний контекст Братство
+  words: 441
   points:
-  - Роль сатири в десакралізації влади
-  - Шевченко vs імперія
-  - Актуальність твору сьогодні
+  - Братство
+  - 1844 рік
+- section: Частина Рецепція та наслідки Арешт
+  words: 443
+  points:
+  - Арешт
+  - Значення
 word_target: 4500
 vocabulary_hints:
   required:
@@ -63,7 +62,7 @@ vocabulary_hints:
   - критика (criticism)
 activity_hints:
 - type: reading
-  focus: "Повний текст поеми \"Сон\""
+  focus: Повний текст поеми "Сон"
   source: UkrLib tid=18
   items: '1'
 - type: essay-response
@@ -88,16 +87,16 @@ grammar:
 - Political rhetoric
 module_type: literature
 sources:
-- name: "Сон — повний текст"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=18"
+- name: Сон — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
   type: primary
   notes: Поема для детального аналізу
-- name: "Аналіз \"Сну\""
-  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=18"
+- name: Аналіз "Сну"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
   type: secondary
   notes: Літературознавчий аналіз
-- name: "Російська імперія — контекст"
-  url: "https://uk.wikipedia.org/wiki/Російська_імперія"
+- name: Російська імперія — контекст
+  url: https://uk.wikipedia.org/wiki/Російська_імперія
   type: reference
   notes: Політичний контекст 1844 року
 immersion: 100% Ukrainian

@@ -83,7 +83,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-### Location vs Direction Pairs
+## Presentation 2: Common Pairs
 
 | Location (Де?)               | Direction (Куди?)                     |
 | ---------------------------- | ------------------------------------- |
@@ -93,7 +93,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-## Examples in Context
+## Presentation 3: In the City
 
 > [!example] Де vs Куди (Location vs Direction)
 >
@@ -204,7 +204,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-## Practice
+## Practice 1
 
 ### Мій шлях додому
 
@@ -212,6 +212,15 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 > [!model-answer]
 > Сьогодні я йду **з роботи** **в магазин**. Потім я йду **додому**. Мій будинок **близько**. Я вже **вдома**.
+
+## Practice 2: Translation
+
+Перекладіть речення українською мовою. (Translate the sentences into Ukrainian.)
+
+1. I am from Ukraine.
+2. She is going to the park.
+3. The bank is on the left.
+4. Where are you going?
 
 # Підсумок
 

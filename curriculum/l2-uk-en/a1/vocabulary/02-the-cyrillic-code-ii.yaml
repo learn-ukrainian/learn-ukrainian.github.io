@@ -1,4 +1,3 @@
----
 module: 02-the-cyrillic-code-ii
 level: A1
 version: '2.0'
@@ -57,11 +56,6 @@ items:
   translation: mayonnaise
   pos: noun
   gender: m
-- lemma: мама
-  ipa: /mˈama/
-  translation: mother, mom
-  pos: noun
-  gender: f
 - lemma: побачення
   ipa: /pɔbˈat͡ʃɛnnja/
   translation: date, meeting
@@ -99,4 +93,78 @@ items:
 - lemma: їсти
   ipa: /ˈjistɪ/
   translation: to eat
+  pos: verb
+- lemma: центр
+  ipa: /t͡sɛntr/
+  translation: center
+  pos: noun
+  gender: m
+- lemma: чай
+  ipa: /t͡ʃaj/
+  translation: tea
+  pos: noun
+  gender: m
+- lemma: школа
+  ipa: /ʃkˈɔla/
+  translation: school
+  pos: noun
+  gender: f
+- lemma: гарний
+  ipa: /ɦˈarnɪj/
+  translation: beautiful, good
+  pos: adj
+- lemma: жити
+  ipa: /ʒˈɪtɪ/
+  translation: to live
+  pos: verb
+- lemma: день
+  ipa: /dɛnʲ/
+  translation: day
+  pos: noun
+  gender: m
+- lemma: яблуко
+  ipa: /ˈjablukɔ/
+  translation: apple
+  pos: noun
+  gender: n
+- lemma: дякувати
+  ipa: /djakuʋatɪ/
+  translation: to thank
+  pos: verb
+- lemma: привіт
+  ipa: /prɪʋˈit/
+  translation: hello, hi
+  pos: noun
+  gender: m
+- lemma: так
+  ipa: /tak/
+  translation: yes
+  pos: conj
+- lemma: ні
+  ipa: /ni/
+  translation: no
+  pos: part
+- lemma: добре
+  ipa: /dˈɔbrɛ/
+  translation: good, well
+  pos: adv
+- lemma: хто
+  ipa: /xtɔ/
+  translation: who
+  pos: pron
+- lemma: що
+  ipa: /ʃt͡ʃɔ/
+  translation: what
+  pos: pron
+- lemma: як
+  ipa: /jak/
+  translation: how
+  pos: adv
+- lemma: де
+  ipa: /dɛ/
+  translation: where
+  pos: adv
+- lemma: вибачити
+  ipa: /ʋˈɪbat͡ʃɪtɪ/
+  translation: to excuse, to forgive
   pos: verb

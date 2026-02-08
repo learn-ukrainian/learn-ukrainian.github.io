@@ -1,6 +1,6 @@
 # C2 Module Status
 
-**Generated:** 2026-01-30 21:19:46
+**Generated:** 2026-02-08 00:03:59
 **Total Modules:** 100
 **Status:** 0 passing, 0 failing, 0 stubs, 100 errors
 
@@ -102,9 +102,9 @@
 | 085 | translation-theory-ii | ⚠️ MISSING | 0/0 | no_file |
 | 086 | translation-practice-i | ⚠️ MISSING | 0/0 | no_file |
 | 087 | translation-practice-ii | ⚠️ MISSING | 0/0 | no_file |
-| 088 | interpretation-basics | ⚠️ MISSING | 0/0 | no_file |
+| 088 | interpretation-advanced | ⚠️ MISSING | 0/0 | no_file |
 | 089 | capstone-topic-selection | ⚠️ MISSING | 0/0 | no_file |
-| 090 | capstone-research | ⚠️ MISSING | 0/0 | no_file |
+| 090 | capstone-research-project | ⚠️ MISSING | 0/0 | no_file |
 | 091 | capstone-drafting | ⚠️ MISSING | 0/0 | no_file |
 | 092 | capstone-revision | ⚠️ MISSING | 0/0 | no_file |
 | 093 | capstone-polish | ⚠️ MISSING | 0/0 | no_file |

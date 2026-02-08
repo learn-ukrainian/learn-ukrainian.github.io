@@ -33,6 +33,11 @@ items:
   translation: video
   pos: noun
   gender: n
+- lemma: ваза
+  ipa: /vˈaza/
+  translation: vase
+  pos: noun
+  gender: f
 - lemma: віза
   ipa: /ʋˈiza/
   translation: visa
@@ -58,6 +63,16 @@ items:
   translation: cafe
   pos: noun
   gender: n
+- lemma: доктор
+  ipa: /dˈɔktɔr/
+  translation: doctor
+  pos: noun
+  gender: m
+- lemma: кіт
+  ipa: /kit/
+  translation: cat
+  pos: noun
+  gender: m
 - lemma: київ
   ipa: /kɪˈjiʋ/
   translation: Kyiv
@@ -73,6 +88,21 @@ items:
   translation: lemon
   pos: noun
   gender: m
+- lemma: лото
+  ipa: /lˈɔtɔ/
+  translation: lotto
+  pos: noun
+  gender: n
+- lemma: мама
+  ipa: /mˈama/
+  translation: mom, mama
+  pos: noun
+  gender: f
+- lemma: маска
+  ipa: /mˈaska/
+  translation: mask
+  pos: noun
+  gender: f
 - lemma: метро
   ipa: /mɛtrˈɔ/
   translation: metro, subway
@@ -138,6 +168,21 @@ items:
   translation: taxi
   pos: noun
   gender: n
+- lemma: такт
+  ipa: /takt/
+  translation: tact
+  pos: noun
+  gender: m
+- lemma: тато
+  ipa: /tˈatɔ/
+  translation: dad
+  pos: noun
+  gender: m
+- lemma: тост
+  ipa: /tɔst/
+  translation: toast
+  pos: noun
+  gender: m
 - lemma: телефон
   ipa: /tɛlɛfˈɔn/
   translation: telephone
@@ -151,6 +196,11 @@ items:
 - lemma: футбол
   ipa: /futbˈɔl/
   translation: football, soccer
+  pos: noun
+  gender: m
+- lemma: хор
+  ipa: /xɔr/
+  translation: choir, chorus
   pos: noun
   gender: m
 - lemma: інтернет

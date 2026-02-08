@@ -2,13 +2,13 @@
   "module": "ukraine-90s",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:11.461885Z",
+  "last_audit": "2026-02-08T00:05:07.936857Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T11:01:14.501300Z",
-    "meta": "2026-01-29T07:38:18.730582Z",
-    "activities": "2026-01-31T20:29:25.600153Z",
-    "vocabulary": "2026-01-31T15:29:30.779873Z",
+    "md": "2026-02-07T11:38:26.528834Z",
+    "meta": "2026-02-07T10:03:51.224367Z",
+    "activities": "2026-02-07T10:03:51.285289Z",
+    "vocabulary": "2026-02-07T10:03:51.353710Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4946/4000 (raw: 5030)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4946/4000 (raw: 5030) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

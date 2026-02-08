@@ -1,27 +1,27 @@
 - type: match-up
   title: Колір і одяг
   pairs:
-  - left: біла
-    right: сорочка
-  - left: чорний
-    right: светр
-  - left: сині
-    right: джинси
-  - left: червона
-    right: сукня
-  - left: зелене
-    right: пальто
-  - left: жовта
-    right: футболка
-  - left: білі
-    right: кросівки
-  - left: чорні
-    right: штани
-  - left: синя
-    right: куртка
-  - left: сіра
-    right: спідниця
-  instruction: Match the colors with the clothing items.
+  - left: біла сорочка
+    right: white shirt
+  - left: чорний светр
+    right: black sweater
+  - left: сині джинси
+    right: blue jeans
+  - left: червоне плаття
+    right: red dress
+  - left: зелене пальто
+    right: green coat
+  - left: жовта футболка
+    right: yellow t-shirt
+  - left: білі кросівки
+    right: white sneakers
+  - left: чорні штани
+    right: black pants
+  - left: синя куртка
+    right: blue jacket
+  - left: сіра спідниця
+    right: gray skirt
+  instruction: Match the Ukrainian phrases with their English translations.
 - type: group-sort
   title: Clothing by Gender
   groups:
@@ -37,12 +37,12 @@
     - футболка
     - куртка
     - спідниця
-    - сукня
   - name: Neuter or Plural (Воно/Вони)
     items:
     - пальто
     - штани
     - джинси
+    - плаття
   instruction: Distribute the elements into groups.
 - type: fill-in
   title: Узгодження кольорів (Color Agreement)
@@ -68,12 +68,12 @@
     - синій
     - синя
     - сині
-  - sentence: У неї ___ сукня.
-    answer: червона
+  - sentence: У неї ___ плаття.
+    answer: червоне
     options:
-    - червона
-    - червоний
     - червоне
+    - червоний
+    - червона
     - червоні
   - sentence: Мої джинси ___.
     answer: сині
@@ -198,13 +198,13 @@
     - гарний
     - красивий
     - гарні
-  - sentence: Вона сьогодні в ___ сукні.
-    answer: червоній
+  - sentence: У неї сьогодні ___ плаття.
+    answer: червоне
     options:
-    - червоній
+    - червоне
     - червона
-    - червону
-    - червоним
+    - червоний
+    - червоні
   - sentence: Я люблю цей ___ колір.
     answer: синій
     options:
@@ -253,7 +253,7 @@
       correct: false
     - text: Green coat
       correct: false
-  - question: How is «Червона сукня» translated into English?
+  - question: How is «Червоне плаття» translated into English?
     options:
     - text: Red dress
       correct: true
@@ -427,7 +427,7 @@
       correct: false
     - text: Біла
       correct: false
-  - question: What color is a pink pig?
+  - question: What color is a flamingo?
     options:
     - text: Рожевий
       correct: true
@@ -447,7 +447,7 @@
       correct: false
     - text: Зелений
       correct: false
-  - question: What color is accurately associated with a gray mouse?
+  - question: What color is a gray wolf?
     options:
     - text: Сірий
       correct: true
@@ -487,10 +487,10 @@
     - нові
     answer: Нові сині штани
   - words:
-    - червона
-    - гарна
-    - сукня
-    answer: Гарна червона сукня
+    - червоне
+    - гарне
+    - плаття
+    answer: Гарне червоне плаття
   - words:
     - білі
     - кросівки
@@ -557,9 +557,8 @@
     explanation: Incorrect! it's neuter
   - statement: Colors are adjectives and must agree with nouns.
     correct: true
-  - statement: «Сукня» is neuter.
-    correct: false
-    explanation: Incorrect! it's feminine
+  - statement: «Плаття» is neuter.
+    correct: true
   - statement: «Світлий» means "light".
     correct: true
   - statement: «Темна» is the masculine form.

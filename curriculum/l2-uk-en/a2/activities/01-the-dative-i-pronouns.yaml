@@ -1,4 +1,3 @@
----
 - type: match-up
   title: Nominative to Dative
   pairs:
@@ -20,7 +19,7 @@
     right: їм
   - left: воно
     right: йому
-  - left: подобатися (до кого?)
+  - left: подобатися (кому?)
     right: мені подобається
   - left: потрібно (кому?)
     right: тобі потрібно

@@ -214,7 +214,7 @@
     - Він
     - Ми
     - Вони
-  - sentence: ___ людина.
+  - sentence: ___ жінка.
     answer: Вона
     options:
     - Він
@@ -293,8 +293,8 @@
     - Talking to your classmate
     - Talking to your pet dog
     - Talking to a child
-    - Talking to God
-    - Talking to yourself in a mirror
+    - Talking to your cat
+    - Talking to your best friend
   - name: Use Ви (Formal)
     items:
     - Talking to your professor

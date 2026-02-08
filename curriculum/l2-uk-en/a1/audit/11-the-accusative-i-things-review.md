@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M11 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 855
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:21:31
+**Generated:** 2026-02-08 22:04:40
 
 ## Configuration
 **Type:** A1-grammar
@@ -27,8 +27,8 @@
 | 5 | group-sort | Gender and Accusative Changes | 12 | 12 | ✅ |
 | 6 | fill-in | Complete the Sentences | 12 | 8 | ✅ |
 | 7 | quiz | Word Order Practice | 12 | 8 | ✅ |
-| 8 | match-up | Verb + Object Pairs | 10 | 8 | ✅ |
-| 9 | quiz | Longer Sentence Order | 12 | 8 | ✅ |
+| 8 | match-up | Verb + Object Pairs | 9 | 8 | ✅ |
+| 9 | quiz | Contextual Usage | 12 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 9 (target: 8-12) ✅
@@ -38,33 +38,30 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 921/855 (raw: 1203)
+- **Words:** ✅ 1004/855 (raw: 1314)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 4/1
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 27.5% (target 25-40% (M11))
+- **Immersion:** 🇺🇦 25.1% (target 25-40% (M11))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 57 | Included in Core |
-| **Presentation** | ✅ | 523 | Included in Core |
+| **Presentation** | ✅ | 592 | Included in Core |
 | **Practice** | ⚪️ | 116 | Skipped |
 | **Production** | ➖ | 75 | Excluded Type |
-| **Cultural Insight** | ✅ | 63 | Included in Core |
+| **Cultural Insight** | ✅ | 77 | Included in Core |
 | **Підсумок** | ✅ | 68 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

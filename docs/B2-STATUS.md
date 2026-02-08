@@ -1,113 +1,113 @@
 # B2 Module Status
 
-**Generated:** 2026-02-01 19:28:24
+**Generated:** 2026-02-08 00:03:59
 **Total Modules:** 94
-**Status:** 0 passing, 94 failing, 0 stubs, 0 errors
+**Status:** 93 passing, 1 failing, 0 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 0/94 (0%)
-- ❌ **Failing:** 94/94
+- ✅ **Passing:** 93/94 (98%)
+- ❌ **Failing:** 1/94
 - 📝 **Stubs:** 0/94
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-passive-voice-system | ❌ FAIL | 1943/3800 | 7 Outline Compliance Errors |
-| 002 | 02-past-passive-participles | ❌ FAIL | 2124/3800 | 7 Outline Compliance Errors |
-| 003 | 03-impersonal-passive | ❌ FAIL | 1925/3800 | 6 Outline Compliance Errors |
-| 004 | 04-reflexive-passive | ❌ FAIL | 1962/3800 | 7 Outline Compliance Errors |
-| 005 | 05-third-person-plural-passive | ❌ FAIL | 1904/3800 | 7 Outline Compliance Errors |
-| 006 | 06-passive-in-context | ❌ FAIL | 2114/3800 | 7 Outline Compliance Errors |
-| 007 | 07-active-participles-present | ❌ FAIL | 2272/3800 | 7 Outline Compliance Errors, Missing required activity types: reading |
-| 008 | 08-active-participles-past | ❌ FAIL | 2145/3800 | 7 Outline Compliance Errors |
-| 009 | 09-participles-vs-relative-clauses | ❌ FAIL | 2481/3800 | 6 Outline Compliance Errors |
-| 010 | 10-checkpoint-passive-voice | ❌ FAIL | 1717/3500 | 7 Outline Compliance Errors |
-| 011 | 11-multi-clause-sentences | ❌ FAIL | 2123/3800 | 7 Outline Compliance Errors |
-| 012 | 12-parenthetical-expressions | ❌ FAIL | 2236/3800 | 7 Outline Compliance Errors |
-| 013 | 13-emphasis-and-inversion | ❌ FAIL | 2596/3800 | 6 Outline Compliance Errors, Missing required activity types: reading |
-| 014 | 14-stylistic-connectors | ❌ FAIL | 2451/3800 | 6 Outline Compliance Errors |
-| 015 | 15-register-introduction | ❌ FAIL | 3120/3800 | 7 Outline Compliance Errors, Missing required activity types: reading |
-| 016 | 16-register-formal-informal | ❌ FAIL | 2338/3800 | 6 Outline Compliance Errors |
-| 017 | 17-register-business-ukrainian | ❌ FAIL | 2164/3800 | 7 Outline Compliance Errors, Missing required activity types: reading |
-| 018 | 18-register-academic-ukrainian | ❌ FAIL | 2069/3800 | 7 Outline Compliance Errors, Missing required activity types: reading |
-| 019 | 19-register-official-legal | ❌ FAIL | 1931/3800 | 7 Outline Compliance Errors, Missing required activity types: reading |
-| 020 | 20-register-medical-ukrainian | ❌ FAIL | 2785/3800 | 6 Outline Compliance Errors, Missing required activity types: reading |
-| 021 | 21-register-technical-scientific | ❌ FAIL | 1858/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 022 | 22-register-literary-ukrainian | ❌ FAIL | 2199/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 023 | 23-register-media-journalistic | ❌ FAIL | 2086/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 024 | 24-register-colloquial-style | ❌ FAIL | 1869/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 025 | 25-register-practice-cross-register-rewriting | ❌ FAIL | 2783/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 026 | 26-politics-government-vocabulary | ❌ FAIL | 1891/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 027 | 27-law-justice-vocabulary | ❌ FAIL | 2437/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 028 | 28-economics-business-vocabulary | ❌ FAIL | 1750/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 029 | 29-b21-integration-practice | ❌ FAIL | 1850/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 030 | 30-b21-checkpoint | ❌ FAIL | 2130/2000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 031 | 31-numeral-declension-time-dates | ❌ FAIL | 1837/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 032 | 32-numeral-declension-compound-numbers | ❌ FAIL | 2113/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 033 | 33-word-formation-person-suffixes | ❌ FAIL | 1975/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 034 | 34-word-formation-abstract-nouns | ❌ FAIL | 2153/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 035 | 35-word-formation-place-object-names | ❌ FAIL | 2332/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 036 | 36-word-formation-adjective-formation | ❌ FAIL | 2101/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 037 | 37-word-formation-adverbs-integration | ❌ FAIL | 2042/2000 | 3 Outline Compliance Errors, Missing required activity types: reading |
-| 038 | 38-one-member-sentences | ❌ FAIL | 1956/2000 | 6 Outline Compliance Errors, Missing required activity types: reading, true-false |
-| 039 | 39-register-religious-epistolary | ❌ FAIL | 2137/2000 | 3 Outline Compliance Errors, Missing required activity types: reading |
-| 040 | 40-b21c-checkpoint | ❌ FAIL | 2355/2000 | 5 Outline Compliance Errors, Missing required activity types: reading, true-false |
-| 041 | 41-aspect-nuances-secondary-imperfectivization | ❌ FAIL | 1926/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 042 | 42-aspect-nuances-imperative-infinitive | ❌ FAIL | 2303/2000 | 2 Outline Compliance Errors, Missing required activity types: reading |
-| 043 | 43-correlative-constructions | ❌ FAIL | 1894/2000 | 3 Outline Compliance Errors, Missing required activity types: reading |
-| 044 | 44-complex-syntax-ellipsis-parcelling | ❌ FAIL | 2154/2000 | 3 Outline Compliance Errors, Missing required activity types: reading |
-| 045 | 45-proverbs-work-wisdom-character | ❌ FAIL | 2089/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
-| 046 | 46-proverbs-nature-time-caution | ❌ FAIL | 2877/2000 | 2 Outline Compliance Errors, Missing required activity types: reading |
-| 047 | 47-set-expressions-i-body-animals | ❌ FAIL | 2121/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 048 | 48-set-expressions-ii-objects-abstract | ❌ FAIL | 1975/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 049 | 49-idioms-body-head-face | ❌ FAIL | 2147/2000 | 3 Outline Compliance Errors, Missing required activity types: reading, true-false |
-| 050 | 50-idioms-body-hands-legs | ❌ FAIL | 1867/2000 | 2 Outline Compliance Errors, Missing required activity types: reading |
-| 051 | 51-idioms-body | ❌ FAIL | 1977/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 052 | 52-idioms-animals-i | ❌ FAIL | 1950/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 053 | 53-idioms-animals-ii | ❌ FAIL | 1982/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 054 | 54-idioms-nature | ❌ FAIL | 1915/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 055 | 55-synonyms-emotion | ❌ FAIL | 1828/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 056 | 56-synonyms-size | ❌ FAIL | 1835/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 057 | 57-synonyms-movement | ❌ FAIL | 1814/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 058 | 58-synonyms-quality | ❌ FAIL | 1777/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 059 | 59-synonyms-communication | ❌ FAIL | 1756/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 060 | 60-synonyms-character | ❌ FAIL | 2671/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 061 | 61-synonyms-time | ❌ FAIL | 2176/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 062 | 62-synonyms-place | ❌ FAIL | 2115/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 063 | 63-synonyms-quantity | ❌ FAIL | 1784/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 064 | 64-synonyms-action | ❌ FAIL | 2180/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 065 | 65-synonyms-state | ❌ FAIL | 2047/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 066 | 66-synonyms-abstract | ❌ FAIL | 2930/2000 | 4 Outline Compliance Errors, Missing required activity types: fill-in-the-blank, reading |
-| 067 | 67-advanced-conjunctions-i | ❌ FAIL | 2262/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 068 | 68-advanced-conjunctions-ii | ❌ FAIL | 2165/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 069 | 69-integration-practice | ❌ FAIL | 2011/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 070 | 70-b2-checkpoint | ❌ FAIL | 1835/2000 | 4 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 071 | 71-medytsyna-pohlybleno | ❌ FAIL | 2314/2000 | 4 Outline Compliance Errors, 12 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 072 | 72-tekhnolohii-ta-shi | ❌ FAIL | 1787/2000 | 5 Outline Compliance Errors, 11 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 073 | 73-nauka-i-doslidzhennia | ❌ FAIL | 1946/2000 | 6 Outline Compliance Errors, 11 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 074 | 74-mystetstvo-i-literatura | ❌ FAIL | 2002/2000 | 5 Outline Compliance Errors, 8 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 075 | 75-modern-diaspora | ❌ FAIL | 2867/2000 | 4 Outline Compliance Errors |
-| 076 | 76-religion-in-ukraine | ❌ FAIL | 3032/2000 | 4 Outline Compliance Errors |
-| 077 | 77-academic-writing | ❌ FAIL | 2848/2000 | 1 Critical Template Violations, 5 Outline Compliance Errors |
-| 078 | 78-text-analysis | ❌ FAIL | 2441/2000 | 1 Critical Template Violations, 5 Outline Compliance Errors |
-| 079 | 79-capstone-research | ❌ FAIL | 1791/2000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 080 | 80-analiz-tekstu | ❌ FAIL | 2147/2000 | 1 Critical Template Violations, 6 Outline Compliance Errors, Missing required activity types: reading, true-false |
-| 081 | 81-capstone-doslidzhennya | ❌ FAIL | 2147/2000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 11 forbidden activity types (use --fix to remove), Missing required activity types: reading, true-false |
-| 082 | 82-capstone-prezentatsiya | ❌ FAIL | 1868/2000 | 6 Outline Compliance Errors, 12 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 083 | 83-b2-pidsumkovyy-ohlyad | ❌ FAIL | 1802/2000 | 6 Outline Compliance Errors, Missing required activity types: reading |
-| 084 | 84-checkpoint-register-synthesis | ❌ FAIL | 1798/2000 | 7 Outline Compliance Errors, Missing required activity types: true-false |
-| 085 | 85-professional-email-basics | ❌ FAIL | 1727/2000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 086 | 86-professional-email-advanced | ❌ FAIL | 4154/1750 | 12 forbidden activity types (use --fix to remove), Missing required activity types: essay-response, reading |
-| 087 | 87-professional-reports-basics | ❌ FAIL | 4554/1750 | Missing required activity types: essay-response, reading |
-| 088 | 88-professional-reports-advanced | ❌ FAIL | 3799/1750 | Missing required activity types: essay-response, reading |
-| 089 | 89-news-analysis-basics | ❌ FAIL | 4258/1750 | Missing required activity types: essay-response, reading |
-| 090 | 90-news-analysis-advanced | ❌ FAIL | 4057/2000 | 5 Outline Compliance Errors, 11 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 091 | 91-presentation-skills-basics | ❌ FAIL | 2282/2000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 092 | 92-presentation-skills-advanced | ❌ FAIL | 3939/2000 | 4 Outline Compliance Errors, Missing required activity types: reading |
-| 093 | 93-discussion-debate | ❌ FAIL | 4228/2000 | 5 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 094 | 94-b2-final-exam | ❌ FAIL | 2566/2000 | 5 Outline Compliance Errors, Missing required activity types: reading |
+| 001 | 01-passive-voice-system | ❌ FAIL | 3811/4100 | - |
+| 002 | 02-past-passive-participles | ✅ PASS | 5177/3800 | - |
+| 003 | 03-impersonal-passive | ✅ PASS | 3733/3800 | - |
+| 004 | 04-reflexive-passive | ✅ PASS | 3824/3800 | - |
+| 005 | 05-third-person-plural-passive | ✅ PASS | 3976/3800 | - |
+| 006 | 06-passive-in-context | ✅ PASS | 5781/3800 | - |
+| 007 | 07-active-participles-present | ✅ PASS | 3873/3800 | - |
+| 008 | 08-active-participles-past | ✅ PASS | 3809/3800 | - |
+| 009 | 09-participles-vs-relative-clauses | ✅ PASS | 3724/3800 | - |
+| 010 | 10-checkpoint-passive-voice | ✅ PASS | 5656/3500 | - |
+| 011 | 11-multi-clause-sentences | ✅ PASS | 5315/3800 | - |
+| 012 | 12-parenthetical-expressions | ✅ PASS | 3994/3800 | - |
+| 013 | 13-emphasis-and-inversion | ✅ PASS | 3969/3800 | - |
+| 014 | 14-stylistic-connectors | ✅ PASS | 3781/3800 | - |
+| 015 | 15-register-introduction | ✅ PASS | 4025/3800 | - |
+| 016 | 16-register-formal-informal | ✅ PASS | 3723/3800 | - |
+| 017 | 17-register-business-ukrainian | ✅ PASS | 3738/3800 | - |
+| 018 | 18-register-academic-ukrainian | ✅ PASS | 4074/3800 | - |
+| 019 | 19-register-official-legal | ✅ PASS | 4336/3800 | - |
+| 020 | 20-register-medical-ukrainian | ✅ PASS | 4117/3800 | - |
+| 021 | 21-register-technical-scientific | ✅ PASS | 2073/2000 | - |
+| 022 | 22-register-literary-ukrainian | ✅ PASS | 2211/2000 | - |
+| 023 | 23-register-media-journalistic | ✅ PASS | 2175/2000 | - |
+| 024 | 24-register-colloquial-style | ✅ PASS | 1964/2000 | - |
+| 025 | 25-register-practice-cross-register-rewriting | ✅ PASS | 2836/2000 | - |
+| 026 | 26-politics-government-vocabulary | ✅ PASS | 2192/2000 | - |
+| 027 | 27-law-justice-vocabulary | ✅ PASS | 2448/2000 | - |
+| 028 | 28-economics-business-vocabulary | ✅ PASS | 2239/2000 | - |
+| 029 | 29-b21-integration-practice | ✅ PASS | 2194/2000 | - |
+| 030 | 30-b21-checkpoint | ✅ PASS | 2454/2000 | - |
+| 031 | 31-numeral-declension-time-dates | ✅ PASS | 2271/2000 | - |
+| 032 | 32-numeral-declension-compound-numbers | ✅ PASS | 2213/2000 | - |
+| 033 | 33-word-formation-person-suffixes | ✅ PASS | 2505/2000 | - |
+| 034 | 34-word-formation-abstract-nouns | ✅ PASS | 2702/2000 | - |
+| 035 | 35-word-formation-place-object-names | ✅ PASS | 2890/2000 | - |
+| 036 | 36-word-formation-adjective-formation | ✅ PASS | 3049/2000 | - |
+| 037 | 37-word-formation-adverbs-integration | ✅ PASS | 2059/2000 | - |
+| 038 | 38-one-member-sentences | ✅ PASS | 2320/2000 | - |
+| 039 | 39-register-religious-epistolary | ✅ PASS | 2149/2000 | - |
+| 040 | 40-b21c-checkpoint | ✅ PASS | 2393/2000 | - |
+| 041 | 41-aspect-nuances-secondary-imperfectivization | ✅ PASS | 2054/2000 | - |
+| 042 | 42-aspect-nuances-imperative-infinitive | ✅ PASS | 2321/2000 | - |
+| 043 | 43-correlative-constructions | ✅ PASS | 1914/2000 | - |
+| 044 | 44-complex-syntax-ellipsis-parcelling | ✅ PASS | 2169/2000 | - |
+| 045 | 45-proverbs-work-wisdom-character | ✅ PASS | 2103/2000 | - |
+| 046 | 46-proverbs-nature-time-caution | ✅ PASS | 2887/2000 | - |
+| 047 | 47-set-expressions-i-body-animals | ✅ PASS | 2133/2000 | - |
+| 048 | 48-set-expressions-ii-objects-abstract | ✅ PASS | 2071/2000 | - |
+| 049 | 49-idioms-body-head-face | ✅ PASS | 2163/2000 | - |
+| 050 | 50-idioms-body-hands-legs | ✅ PASS | 1979/2000 | - |
+| 051 | 51-idioms-body | ✅ PASS | 1989/2000 | - |
+| 052 | 52-idioms-animals-i | ✅ PASS | 1962/2000 | - |
+| 053 | 53-idioms-animals-ii | ✅ PASS | 1997/2000 | - |
+| 054 | 54-idioms-nature | ✅ PASS | 2044/2000 | - |
+| 055 | 55-synonyms-emotion | ✅ PASS | 2075/2000 | - |
+| 056 | 56-synonyms-size | ✅ PASS | 2343/2000 | - |
+| 057 | 57-synonyms-movement | ✅ PASS | 2281/2000 | - |
+| 058 | 58-synonyms-quality | ✅ PASS | 2055/2000 | - |
+| 059 | 59-synonyms-communication | ✅ PASS | 2124/2000 | - |
+| 060 | 60-synonyms-character | ✅ PASS | 2686/2000 | - |
+| 061 | 61-synonyms-time | ✅ PASS | 2191/2000 | - |
+| 062 | 62-synonyms-place | ✅ PASS | 2119/2000 | - |
+| 063 | 63-synonyms-quantity | ✅ PASS | 2166/2000 | - |
+| 064 | 64-synonyms-action | ✅ PASS | 2192/2000 | - |
+| 065 | 65-synonyms-state | ✅ PASS | 2119/2000 | - |
+| 066 | 66-synonyms-abstract | ✅ PASS | 2945/2000 | - |
+| 067 | 67-advanced-conjunctions-i | ✅ PASS | 2274/2000 | - |
+| 068 | 68-advanced-conjunctions-ii | ✅ PASS | 2177/2000 | - |
+| 069 | 69-integration-practice | ✅ PASS | 2027/2000 | - |
+| 070 | 70-b2-checkpoint | ✅ PASS | 1965/2000 | - |
+| 071 | 71-medytsyna-pohlybleno | ✅ PASS | 2486/2000 | - |
+| 072 | 72-tekhnolohii-ta-shi | ✅ PASS | 2041/2000 | - |
+| 073 | 73-nauka-i-doslidzhennia | ✅ PASS | 2260/2000 | - |
+| 074 | 74-mystetstvo-i-literatura | ✅ PASS | 2432/2000 | - |
+| 075 | 75-modern-diaspora | ✅ PASS | 2915/2000 | - |
+| 076 | 76-religion-in-ukraine | ✅ PASS | 3030/2000 | - |
+| 077 | 77-academic-writing | ✅ PASS | 2841/2000 | - |
+| 078 | 78-text-analysis | ✅ PASS | 2437/2000 | - |
+| 079 | 79-capstone-research | ✅ PASS | 2175/2000 | - |
+| 080 | 80-analiz-tekstu | ✅ PASS | 2257/2000 | - |
+| 081 | 81-capstone-doslidzhennya | ✅ PASS | 2159/2000 | - |
+| 082 | 82-capstone-prezentatsiya | ✅ PASS | 2147/2000 | - |
+| 083 | 83-b2-pidsumkovyy-ohlyad | ✅ PASS | 2211/2000 | - |
+| 084 | 84-checkpoint-register-synthesis | ✅ PASS | 2159/2000 | - |
+| 085 | 85-professional-email-basics | ✅ PASS | 2174/2000 | - |
+| 086 | 86-professional-email-advanced | ✅ PASS | 4272/1750 | - |
+| 087 | 87-professional-reports-basics | ✅ PASS | 4554/1750 | - |
+| 088 | 88-professional-reports-advanced | ✅ PASS | 3793/1750 | - |
+| 089 | 89-news-analysis-basics | ✅ PASS | 4258/1750 | - |
+| 090 | 90-news-analysis-advanced | ✅ PASS | 4088/2000 | - |
+| 091 | 91-presentation-skills-basics | ✅ PASS | 2294/2000 | - |
+| 092 | 92-presentation-skills-advanced | ✅ PASS | 3951/2000 | - |
+| 093 | 93-discussion-debate | ✅ PASS | 4237/2000 | - |
+| 094 | 94-b2-final-exam | ✅ PASS | 2605/2000 | - |
 
 ---
 

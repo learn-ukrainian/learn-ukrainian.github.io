@@ -3,10 +3,10 @@
   items:
   - question: What is the accusative form of «книга»?
     options:
-    - text: книга
-      correct: false
     - text: книгу
       correct: true
+    - text: книга
+      correct: false
     - text: книги
       correct: false
     - text: книзі
@@ -23,7 +23,7 @@
     - text: паспортом
       correct: false
     explanation: Masculine inanimate stays the same
-  - question: Which verb requires accusative case?
+  - question: Which verb requires the accusative case?
     options:
     - text: бачити
       correct: true
@@ -33,24 +33,24 @@
       correct: false
     - text: спати
       correct: false
-    explanation: 'бачити needs an object: Я бачу книгу'
+    explanation: "«бачити» needs an object: Я бачу книгу"
   - question: What is the accusative form of «вікно»?
     options:
+    - text: вікно
+      correct: true
     - text: вікна
       correct: false
     - text: вікні
       correct: false
-    - text: вікно
-      correct: true
     - text: вікном
       correct: false
-    explanation: Neuter stays the same
+    explanation: Neuter inanimate stays the same
   - question: 'Complete the sentence: «Я читаю ___»'
     options:
-    - text: газета
-      correct: false
     - text: газету
       correct: true
+    - text: газета
+      correct: false
     - text: газети
       correct: false
     - text: газеті
@@ -58,10 +58,10 @@
     explanation: Feminine -а → -у
   - question: 'Complete: «Він бере ___» (suitcase)'
     options:
-    - text: валіза
-      correct: false
     - text: валізу
       correct: true
+    - text: валіза
+      correct: false
     - text: валізи
       correct: false
     - text: валізі
@@ -69,12 +69,12 @@
     explanation: Feminine -а → -у
   - question: What is the accusative form of «море»?
     options:
+    - text: море
+      correct: true
     - text: моря
       correct: false
     - text: морю
       correct: false
-    - text: море
-      correct: true
     - text: морі
       correct: false
     explanation: Neuter -е stays the same
@@ -91,10 +91,10 @@
     explanation: Masculine inanimate stays the same
   - question: What is the accusative form of «сумка»?
     options:
-    - text: сумка
-      correct: false
     - text: сумку
       correct: true
+    - text: сумка
+      correct: false
     - text: сумки
       correct: false
     - text: сумці
@@ -113,26 +113,26 @@
     explanation: Masculine inanimate stays the same
   - question: What is the accusative form of «коробка»?
     options:
-    - text: коробка
-      correct: false
     - text: коробку
       correct: true
+    - text: коробка
+      correct: false
     - text: коробки
       correct: false
     - text: коробці
       correct: false
     explanation: Feminine -а → -у
-  - question: 'Complete: «Я відкриваю ___» (window)'
+  - question: 'Complete: «Я бачу ___» (sea)'
     options:
-    - text: вікна
-      correct: false
-    - text: вікно
+    - text: море
       correct: true
-    - text: вікні
+    - text: моря
       correct: false
-    - text: вікном
+    - text: морю
       correct: false
-    explanation: Neuter stays the same
+    - text: морі
+      correct: false
+    explanation: Neuter -е stays the same
   instruction: Choose the correct answer.
 - type: match-up
   title: Vocabulary Practice
@@ -147,17 +147,17 @@
     right: to give
   - left: мати
     right: to have
-  - left: нести
-    right: to carry
+  - left: читати
+    right: to read
+  - left: хотіти
+    right: to want
+  - left: купувати
+    right: to buy
   - left: відкривати
     right: to open
-  - left: закривати
-    right: to close
-  - left: показувати
-    right: to show
   - left: знаходити
     right: to find
-  instruction: Match the corresponding elements.
+  instruction: Match the Ukrainian verbs with their English meanings.
 - type: fill-in
   title: Transform to Accusative
   items:
@@ -179,8 +179,8 @@
     answer: паспорт
     options:
     - паспорт
-    - паспорта
-    - паспорту
+    - passports
+    - паспорті
     - паспортом
   - sentence: Він бере ___.
     answer: валізу
@@ -200,7 +200,7 @@
     answer: квиток
     options:
     - квиток
-    - квитка
+    - квитки
     - квитку
     - квитком
   - sentence: Вона дає ___.
@@ -221,7 +221,7 @@
     answer: документ
     options:
     - документ
-    - документа
+    - документи
     - документу
     - документом
   - sentence: Я відправляю ___.
@@ -235,7 +235,7 @@
     answer: журнал
     options:
     - журнал
-    - журнала
+    - журнали
     - журналу
     - журналом
   - sentence: Вона відкриває ___.
@@ -249,42 +249,42 @@
 - type: true-false
   title: Grammar Rules
   items:
-  - statement: Feminine nouns ending in -а change to -у in accusative.
+  - statement: Feminine nouns ending in -а change to -у in the accusative.
     correct: true
-    explanation: Correct! книга → книгу
-  - statement: Masculine inanimate nouns change in accusative.
+    explanation: 'Correct! книга → книгу'
+  - statement: Masculine inanimate nouns change their ending in the accusative.
     correct: false
     explanation: 'Incorrect! They stay the same: паспорт → паспорт'
-  - statement: The verb «бачити» takes accusative case.
+  - statement: The verb «бачити» takes the accusative case for its object.
     correct: true
-    explanation: Correct! Я бачу книгу (I see a book)
-  - statement: Neuter nouns change their endings in accusative.
-    correct: false
-    explanation: 'Incorrect! They stay the same: вікно → вікно'
-  - statement: Accusative answers the question «Що?» (What?)
+    explanation: 'Correct! Я бачу книгу (I see a book)'
+  - statement: Neuter nouns ending in -о stay the same in the accusative.
     correct: true
-    explanation: Correct! It marks the direct object
+    explanation: 'Correct! вікно → вікно'
+  - statement: The accusative case marks the direct object of a sentence.
+    correct: true
+    explanation: 'Correct! It is the object receiving the action.'
   - statement: The accusative form of «газета» is «газети».
     correct: false
-    explanation: Incorrect! газета → газету
-  - statement: The verb «мати» requires accusative.
+    explanation: 'Incorrect! газета → газету'
+  - statement: The verb «мати» (to have) requires the accusative case.
     correct: true
-    explanation: Correct! Я маю книгу
-  - statement: Masculine nouns ending in consonants add -а in accusative.
-    correct: false
-    explanation: Incorrect! Inanimate masculines don't change
-  - statement: Feminine -я nouns change to -ю in accusative.
+    explanation: 'Correct! Я маю книгу'
+  - statement: Feminine nouns ending in -а/-я change their ending in the accusative.
     correct: true
-    explanation: Correct! земля → землю
-  - statement: The accusative of «вікно» is «вікна».
-    correct: false
-    explanation: 'Incorrect! Neuter stays same: вікно'
-  - statement: «Брати» uses accusative for the object.
+    explanation: 'Correct! -а changes to -у, and -я changes to -ю. Feminine nouns ending in a consonant do not change.'
+  - statement: Feminine -я nouns change to -ю in the accusative.
     correct: true
-    explanation: Correct! Він бере сумку
-  - statement: All Ukrainian nouns change in accusative.
+    explanation: 'Correct! земля → землю'
+  - statement: The accusative of «море» is «моря».
     correct: false
-    explanation: Incorrect! Only feminine -а/-я change
+    explanation: 'Incorrect! Neuter stays the same: море → море'
+  - statement: «Брати» uses the accusative for the object being taken.
+    correct: true
+    explanation: 'Correct! Він бере сумку'
+  - statement: Masculine inanimate and neuter nouns have the same form in nominative and accusative.
+    correct: true
+    explanation: 'Correct! Only feminine -а/-я nouns change for inanimate objects.'
   instruction: Determine if the statement is true.
 - type: group-sort
   title: Gender and Accusative Changes
@@ -305,7 +305,7 @@
     - документ → документ
     - вікно → вікно
     - море → море
-  instruction: Distribute the elements into groups.
+  instruction: Distribute the elements into groups based on whether they change form.
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -365,27 +365,27 @@
     - чуєш
     - чує
     - чуємо
-  - sentence: Вона ___ двері.
-    answer: закриває
+  - sentence: Вона ___ книгу.
+    answer: шукає
     options:
-    - закриваю
-    - закриваєш
-    - закриває
-    - закривають
-  - sentence: Ми ___ сумку.
-    answer: несемо
+    - шукаю
+    - шукаєш
+    - шукає
+    - шукають
+  - sentence: Ми ___ каву.
+    answer: хочемо
     options:
-    - несу
-    - несеш
-    - несе
-    - несемо
-  - sentence: Він ___ світло.
-    answer: вмикає
+    - хочу
+    - хочеш
+    - хоче
+    - хочемо
+  - sentence: Він ___ журнал.
+    answer: купує
     options:
-    - вмикаю
-    - вмикаєш
-    - вмикає
-    - вмикають
+    - купую
+    - купуєш
+    - купує
+    - купують
   - sentence: Я ___ документ.
     answer: беру
     options:
@@ -393,143 +393,143 @@
     - береш
     - бере
     - беремо
-  instruction: Choose the correct word to fill in the blank.
+  instruction: Choose the correct verb form for the sentence.
 - type: quiz
   title: Word Order Practice
   items:
-  - question: 'Correct sentence order for: "I see the bus."'
+  - question: 'What is the correct order for: "I see the bus."'
     options:
     - text: Я бачу автобус
       correct: true
     - text: бачу Я автобус
       correct: false
-    - text: Incorrect order for this sentence
+    - text: автобус Я бачу
       correct: false
-    - text: вони
+    - text: Я автобусу бачу
       correct: false
-    explanation: 'Correct: Я бачу автобус'
-  - question: 'Correct sentence order for: "She reads a newspaper."'
+    explanation: 'Standard SVO order: Я (subject) бачу (verb) автобус (object).'
+  - question: 'What is the correct order for: "She reads a newspaper."'
     options:
     - text: Вона читає газету
       correct: true
-    - text: читає Вона газету
+    - text: Вона читаю газету
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Вона газета читає
       correct: false
-    - text: вони
+    - text: Вона читає газета
       correct: false
-    explanation: 'Correct: Вона читає газету'
-  - question: 'Correct sentence order for: "Do you have a passport?"'
+    explanation: 'Standard SVO: Вона (subject) читає (verb) газету (accusative object).'
+  - question: 'What is the correct order for: "Do you have a passport?"'
     options:
-    - text: Ти маєш паспорт
+    - text: Ти маєш паспорт?
       correct: true
-    - text: маєш Ти паспорт
+    - text: Маєш Ти паспорт?
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Ти маєш паспорта?
       correct: false
-    - text: вони
+    - text: Маєш ти паспортом?
       correct: false
-    explanation: 'Correct: Ти маєш паспорт'
-  - question: 'Correct sentence order for: "We take a suitcase."'
+    explanation: 'Correct: Ти маєш паспорт?'
+  - question: 'What is the correct order for: "We take a suitcase."'
     options:
     - text: Ми беремо валізу
       correct: true
-    - text: беремо Ми валізу
+    - text: Ми брати валізу
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Ми беремо валіза
       correct: false
-    - text: вони
+    - text: беремо Ми валіза
       correct: false
     explanation: 'Correct: Ми беремо валізу'
-  - question: 'Correct sentence order for: "He opens the window."'
+  - question: 'What is the correct order for: "He opens the window."'
     options:
     - text: Він відкриває вікно
       correct: true
+    - text: Він відкрити вікно
+      correct: false
+    - text: Він вікно відкриваю
+      correct: false
     - text: відкриває Він вікно
       correct: false
-    - text: Incorrect order for this sentence
-      correct: false
-    - text: вони
-      correct: false
     explanation: 'Correct: Він відкриває вікно'
-  - question: 'Correct sentence order for: "They give a gift."'
+  - question: 'What is the correct order for: "They give a gift."'
     options:
     - text: Вони дають подарунок
       correct: true
-    - text: дають Вони подарунок
+    - text: Вони давати подарунок
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Вони подарунок дає
       correct: false
-    - text: вони
+    - text: подарунок Вони дають
       correct: false
     explanation: 'Correct: Вони дають подарунок'
-  - question: 'Correct sentence order for: "I show the ticket."'
+  - question: 'What is the correct order for: "I show the ticket."'
     options:
     - text: Я показую квиток
       correct: true
+    - text: Я показувати квиток
+      correct: false
+    - text: Я квиток показує
+      correct: false
     - text: показую Я квиток
       correct: false
-    - text: Incorrect order for this sentence
-      correct: false
-    - text: вони
-      correct: false
     explanation: 'Correct: Я показую квиток'
-  - question: 'Correct sentence order for: "Do you hear music?"'
+  - question: 'What is the correct order for: "Do you hear music?"'
     options:
-    - text: Ти чуєш музику
+    - text: Ти чуєш музику?
       correct: true
-    - text: чуєш Ти музику
+    - text: Ти чути музика?
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Чуєш Ти музику?
       correct: false
-    - text: вони
+    - text: Ти музику чую?
       correct: false
-    explanation: 'Correct: Ти чуєш музику'
-  - question: 'Correct sentence order for: "She closes the door."'
+    explanation: 'Correct: Ти чуєш музику?'
+  - question: 'What is the correct order for: "She closes the door."'
     options:
     - text: Вона закриває двері
       correct: true
+    - text: Вона закривати двері
+      correct: false
+    - text: Вона двері закриваю
+      correct: false
     - text: закриває Вона двері
       correct: false
-    - text: Incorrect order for this sentence
-      correct: false
-    - text: вони
-      correct: false
     explanation: 'Correct: Вона закриває двері'
-  - question: 'Correct sentence order for: "We carry a bag."'
+  - question: 'What is the correct order for: "We carry a bag."'
     options:
     - text: Ми несемо сумку
       correct: true
+    - text: Ми нести сумка
+      correct: false
+    - text: Ми сумку нести
+      correct: false
     - text: несемо Ми сумку
       correct: false
-    - text: Incorrect order for this sentence
-      correct: false
-    - text: вони
-      correct: false
     explanation: 'Correct: Ми несемо сумку'
-  - question: 'Correct sentence order for: "I read an interesting magazine."'
+  - question: 'What is the correct order for: "I read an interesting magazine."'
     options:
     - text: Я читаю цікавий журнал
       correct: true
+    - text: Я читати цікавий журнал
+      correct: false
+    - text: Я журнал цікавий читаю
+      correct: false
     - text: читаю Я цікавий журнал
       correct: false
-    - text: Incorrect order for this sentence
-      correct: false
-    - text: вони
-      correct: false
     explanation: 'Correct: Я читаю цікавий журнал'
-  - question: 'Correct sentence order for: "We send the parcel today."'
+  - question: 'What is the correct order for: "We send the parcel today."'
     options:
     - text: Ми відправляємо посилку сьогодні
       correct: true
+    - text: Ми відправляти посилка сьогодні
+      correct: false
+    - text: Ми сьогодні посилка відправляти
+      correct: false
     - text: відправляємо Ми посилку сьогодні
       correct: false
-    - text: Incorrect order for this sentence
-      correct: false
-    - text: вони
-      correct: false
     explanation: 'Correct: Ми відправляємо посилку сьогодні'
-  instruction: Choose the correct answer.
+  instruction: Select the correctly ordered Ukrainian sentence.
 - type: match-up
   title: Verb + Object Pairs
   pairs:
@@ -547,146 +547,144 @@
     right: квиток
   - left: давати
     right: подарунок
-  - left: нести
-    right: сумку
+  - left: чути
+    right: музику
   - left: бачити
     right: автобус
-  - left: малювати
-    right: картину
-  instruction: Match the corresponding elements.
+  instruction: Match the verbs with their appropriate direct objects.
 - type: quiz
-  title: Longer Sentence Order
+  title: Contextual Usage
   items:
-  - question: 'Correct sentence order for: "I read an interesting..."'
+  - question: 'You want to send a parcel: «Я хочу відправити ___»'
     options:
-    - text: Я читаю цікаву газету щоранку
+    - text: посилку
       correct: true
-    - text: читаю Я цікаву газету щоранку
+    - text: посилка
       correct: false
-    - text: Incorrect order for this sentence
+    - text: посилки
       correct: false
-    - text: вони
+    - text: посилці
       correct: false
-    explanation: 'Correct: Я читаю цікаву газету щоранку'
-  - question: 'Correct sentence order for: "She takes a big..."'
+    explanation: 'посилка (f) → посилку in accusative.'
+  - question: 'The clerk asks for your passport: «Покажіть ___, будь ласка»'
     options:
-    - text: Вона бере велику валізу і сумку
+    - text: паспорт
       correct: true
-    - text: бере Вона велику валізу і сумку
+    - text: паспорта
       correct: false
-    - text: Incorrect order for this sentence
+    - text: паспорту
       correct: false
-    - text: вони
+    - text: паспортом
       correct: false
-    explanation: 'Correct: Вона бере велику валізу і сумку'
-  - question: 'Correct sentence order for: "Do you have a..."'
+    explanation: 'паспорт (m) stays the same.'
+  - question: 'You are at the airport: «Я маю ___»'
     options:
-    - text: Ти маєш український паспорт
+    - text: квиток
       correct: true
-    - text: маєш Ти український паспорт
+    - text: квитка
       correct: false
-    - text: Incorrect order for this sentence
+    - text: квитку
       correct: false
-    - text: вони
+    - text: квитком
       correct: false
-    explanation: 'Correct: Ти маєш український паспорт'
-  - question: 'Correct sentence order for: "I take a big..."'
+    explanation: 'квиток (m) stays the same.'
+  - question: 'You see the sea: «Я бачу ___»'
     options:
-    - text: Я беру велику чорну сумку
+    - text: море
       correct: true
-    - text: беру Я велику чорну сумку
+    - text: моря
       correct: false
-    - text: Incorrect order for this sentence
+    - text: морю
       correct: false
-    - text: вони
+    - text: морі
       correct: false
-    explanation: 'Correct: Я беру велику чорну сумку'
-  - question: 'Correct sentence order for: "We open the window..."'
+    explanation: 'море (n) stays the same.'
+  - question: 'You take a suitcase: «Я беру ___»'
     options:
-    - text: Ми відкриваємо вікно в кімнаті
+    - text: валізу
       correct: true
-    - text: відкриваємо Ми вікно в кімнаті
+    - text: валіза
       correct: false
-    - text: Incorrect order for this sentence
+    - text: валізи
       correct: false
-    - text: вони
+    - text: валізі
       correct: false
-    explanation: 'Correct: Ми відкриваємо вікно в кімнаті'
-  - question: 'Correct sentence order for: "We carry a big..."'
+    explanation: 'валіза (f) → валізу.'
+  - question: 'You give a gift: «Я даю ___»'
     options:
-    - text: Ми несемо велику важку валізу
+    - text: подарунок
       correct: true
-    - text: несемо Ми велику важку валізу
+    - text: подарунку
       correct: false
-    - text: Incorrect order for this sentence
+    - text: подарунка
       correct: false
-    - text: вони
+    - text: подарунком
       correct: false
-    explanation: 'Correct: Ми несемо велику важку валізу'
-  - question: 'Correct sentence order for: "She reads a Ukrainian..."'
+    explanation: 'подарунок (m) stays the same.'
+  - question: 'You want some coffee: «Я хочу ___»'
     options:
-    - text: Вона щодня читає українську газету
+    - text: каву
       correct: true
-    - text: щодня Вона читає українську газету
+    - text: кава
       correct: false
-    - text: Incorrect order for this sentence
+    - text: кави
       correct: false
-    - text: вони
+    - text: каві
       correct: false
-    explanation: 'Correct: Вона щодня читає українську газету'
-  - question: 'Correct sentence order for: "She sends a parcel..."'
+    explanation: 'кава (f) → каву.'
+  - question: 'You buy a magazine: «Я купую ___»'
     options:
-    - text: Вона відправляє посилку у Київ
+    - text: журнал
       correct: true
-    - text: відправляє Вона посилку у Київ
+    - text: журнала
       correct: false
-    - text: Incorrect order for this sentence
+    - text: журналу
       correct: false
-    - text: вони
+    - text: журналом
       correct: false
-    explanation: 'Correct: Вона відправляє посилку у Київ'
-  - question: 'Correct sentence order for: "I have a new..."'
+    explanation: 'журнал (m) stays the same.'
+  - question: 'You look for a box: «Я шукаю ___»'
     options:
-    - text: Я маю новий український квиток
+    - text: коробку
       correct: true
-    - text: маю Я новий український квиток
+    - text: коробка
       correct: false
-    - text: Incorrect order for this sentence
+    - text: коробки
       correct: false
-    - text: вони
+    - text: коробці
       correct: false
-    explanation: 'Correct: Я маю новий український квиток'
-  - question: 'Correct sentence order for: "He carefully opens the..."'
+    explanation: 'коробка (f) → коробку.'
+  - question: 'You hear music: «Я чую ___»'
     options:
-    - text: Він обережно відкриває велику коробку
+    - text: музику
       correct: true
-    - text: обережно Він відкриває велику коробку
+    - text: музика
       correct: false
-    - text: Incorrect order for this sentence
+    - text: музики
       correct: false
-    - text: вони
+    - text: музиці
       correct: false
-    explanation: 'Correct: Він обережно відкриває велику коробку'
-  - question: 'Correct sentence order for: "I see my new passport."'
+    explanation: 'музика (f) → музику.'
+  - question: 'You show a document: «Я показую ___»'
     options:
-    - text: Я бачу свій новий паспорт
+    - text: документ
       correct: true
-    - text: бачу Я свій новий паспорт
+    - text: документа
       correct: false
-    - text: Incorrect order for this sentence
+    - text: документу
       correct: false
-    - text: вони
+    - text: документом
       correct: false
-    explanation: 'Correct: Я бачу свій новий паспорт'
-  - question: 'Correct sentence order for: "I see a big white window."'
+    explanation: 'документ (m) stays the same.'
+  - question: 'You open the letter: «Я відкриваю ___»'
     options:
-    - text: Я бачу велике біле вікно
+    - text: лист
       correct: true
-    - text: бачу Я велике біле вікно
+    - text: листа
       correct: false
-    - text: Incorrect order for this sentence
+    - text: листу
       correct: false
-    - text: вони
+    - text: листом
       correct: false
-    explanation: 'Correct: Я бачу велике біле вікно'
-  instruction: Choose the correct answer.
+    explanation: 'лист (m) stays the same.'
+  instruction: Choose the correct word for the given situation.

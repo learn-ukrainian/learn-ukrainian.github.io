@@ -2,13 +2,13 @@
   "module": "deportatsii-ukraintsiv",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:04.246595Z",
+  "last_audit": "2026-02-08T00:05:00.812495Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T00:13:42.244009Z",
-    "meta": "2026-01-29T07:38:18.723039Z",
-    "activities": "2026-01-28T23:46:24.931220Z",
-    "vocabulary": "2026-01-28T23:48:31.228220Z",
+    "md": "2026-02-07T11:38:26.197910Z",
+    "meta": "2026-02-07T10:03:51.218796Z",
+    "activities": "2026-02-07T10:03:51.279286Z",
+    "vocabulary": "2026-02-07T10:03:51.349124Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4632/4000 (raw: 4717)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4632/4000 (raw: 4717) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

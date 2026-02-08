@@ -2,13 +2,13 @@
   "module": "danylo-apostol",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:40.522501Z",
+  "last_audit": "2026-02-08T00:04:36.927121Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-03T14:03:30.839805Z",
-    "meta": "2026-01-30T22:16:56.525343Z",
-    "activities": "2026-01-27T20:57:20.246099Z",
-    "vocabulary": "2026-01-27T12:15:07.430593Z",
+    "md": "2026-02-07T11:38:26.190481Z",
+    "meta": "2026-02-07T10:03:51.227549Z",
+    "activities": "2026-02-07T10:03:51.295305Z",
+    "vocabulary": "2026-02-07T10:03:51.359172Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4124/4000 (raw: 4229)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4124/4000 (raw: 4229) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

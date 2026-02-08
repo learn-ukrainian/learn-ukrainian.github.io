@@ -2,13 +2,13 @@
   "module": "pomarancheva-revoliutsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:12.050523Z",
+  "last_audit": "2026-02-08T00:05:08.526856Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:56:55.215869Z",
-    "meta": "2026-01-31T20:51:53.151636Z",
-    "activities": "2026-01-31T20:53:11.536402Z",
-    "vocabulary": "2026-01-31T20:52:05.666831Z",
+    "md": "2026-02-07T11:38:26.413895Z",
+    "meta": "2026-02-07T10:03:51.236318Z",
+    "activities": "2026-02-07T10:03:51.318980Z",
+    "vocabulary": "2026-02-07T10:03:51.373383Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4355/4000 (raw: 4452)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4355/4000 (raw: 4452) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

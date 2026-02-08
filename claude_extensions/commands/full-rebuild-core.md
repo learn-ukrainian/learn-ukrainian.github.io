@@ -1,5 +1,7 @@
 # Core Track Full-Rebuild Workflow
 
+> **Alternative:** `/orchestrate-rebuild` — Claude orchestrates phase-by-phase, Gemini executes focused tasks. Use when Gemini skips steps or produces thin content in solo mode.
+
 > **Scope:** Standard for rebuilding or creating modules in core tracks: `a1`, `a2`, `b1`, `b2`, `c1`, `c2`, `b2-pro`, `c1-pro`. Chains research, build, review, and verification into a single resumable command.
 
 ## Usage
@@ -53,12 +55,12 @@ else:
 
 Detection determines:
 
-| | Core A | Core B |
-|---|--------|--------|
-| Research depth | Lightweight (15-20 min) | Moderate (20-30 min) |
-| Workflow doc | `docs/CORE-A-WORKFLOW.md` | `docs/CORE-B-WORKFLOW.md` |
-| Review prompt | `/review-content-core-a` (12 dimensions) | `/review-content-v4` (14 dimensions) |
-| Tier file | `tier-1-beginner.md` | `tier-2-core.md` or `tier-4-advanced.md` |
+|                | Core A                                   | Core B                                   |
+| -------------- | ---------------------------------------- | ---------------------------------------- |
+| Research depth | Lightweight (15-20 min)                  | Moderate (20-30 min)                     |
+| Workflow doc   | `docs/CORE-A-WORKFLOW.md`                | `docs/CORE-B-WORKFLOW.md`                |
+| Review prompt  | `/review-content-core-a` (12 dimensions) | `/review-content-v4` (14 dimensions)     |
+| Tier file      | `tier-1-beginner.md`                     | `tier-2-core.md` or `tier-4-advanced.md` |
 
 ---
 
@@ -104,11 +106,11 @@ status:     curriculum/l2-uk-en/{level}/status/{slug}.json
 
 Check which phases are already complete. **Unless `--from` is specified, auto-detect:**
 
-| Check | Condition | Phase to skip |
-|-------|-----------|---------------|
-| Research file exists? | `research/{slug}-research.md` exists with State Standard §ref | Skip Phase 0 |
-| Module audit passes? | Run `scripts/audit_module.sh`, exit code 0 | Skip Phase 1 |
-| Content aligned with research? | All research hooks/facts present in `.md` | Skip Phase 1.5 |
+| Check                          | Condition                                                     | Phase to skip  |
+| ------------------------------ | ------------------------------------------------------------- | -------------- |
+| Research file exists?          | `research/{slug}-research.md` exists with State Standard §ref | Skip Phase 0   |
+| Module audit passes?           | Run `scripts/audit_module.sh`, exit code 0                    | Skip Phase 1   |
+| Content aligned with research? | All research hooks/facts present in `.md`                     | Skip Phase 1.5 |
 
 > **IMPORTANT: Phase 2 (Review) NEVER skips.**
 > Always run the latest review prompt regardless of whether a previous review exists.
@@ -181,6 +183,7 @@ Then run:
 ```
 
 This runs:
+
 1. Meta generation/validation (Phases 1-2)
 2. Lesson generation/validation (Phases 3-4)
 3. Activity generation/validation (Phases 5-6)
@@ -214,14 +217,14 @@ cat "curriculum/l2-uk-en/${level}/${num_padded}-${slug}.md"
 
 3. **Compare research against prose.** Check each research finding:
 
-| Research Element | What to Check in Prose |
-|-----------------|----------------------|
-| State Standard §reference | Cited or reflected in grammar explanation? |
-| Cultural hooks / facts | Integrated into lesson sections (not just mentioned)? |
-| Verified vocabulary | Used in examples and practice? |
-| Corpus collocations | Included in natural example sentences? |
-| Cross-references | Builds-on / prepares-for chain mentioned? |
-| Etymology notes | Woven into explanations where pedagogically useful? |
+| Research Element          | What to Check in Prose                                |
+| ------------------------- | ----------------------------------------------------- |
+| State Standard §reference | Cited or reflected in grammar explanation?            |
+| Cultural hooks / facts    | Integrated into lesson sections (not just mentioned)? |
+| Verified vocabulary       | Used in examples and practice?                        |
+| Corpus collocations       | Included in natural example sentences?                |
+| Cross-references          | Builds-on / prepares-for chain mentioned?             |
+| Etymology notes           | Woven into explanations where pedagogically useful?   |
 
 4. **If gaps found — expand or rebuild the prose:**
 
@@ -252,24 +255,24 @@ scripts/audit_module.sh curriculum/l2-uk-en/{level}/{num_padded}-{slug}.md
 > review exists with PASS status. Review prompts evolve and improve over time —
 > we always want the current version evaluating the content.
 
-> **Review context requirements:**
-> Generic subagents lack schema context and suggest invalid fixes.
-> **Exception:** The **Curriculum Maintainer** subagent (`subagent_type: "Curriculum Maintainer"`)
-> is authorized for full-rebuild workflows — it dynamically loads review prompts, tier files,
-> and schemas before reviewing. See `.claude/agents/curriculum-maintainer.md` for details.
+> **CRITICAL: YOU (Gemini) are the reviewer.**
+> Do NOT ask Claude. Do NOT skip this step.
+> You must manually read the prompt file corresponding to the workflow and apply its criteria rigorously.
+> **BE BRUTALLY HONEST AND CRITICAL.** Do not sugarcoat. If it's trash, say it's trash and fix it.
 
-**Auto-select review prompt based on workflow:**
+**Auto-select review standard based on workflow:**
 
 ```
 if workflow == "core-a":
-    /review-content-core-a {LEVEL} {NUM}
+    READ: /review-content-core-a {LEVEL} {NUM}
     # 12 dimensions: L1/L2 Balance, Beginner Safety, IPA, State Standard
 elif workflow == "core-b":
-    /review-content-v4 {LEVEL} {NUM}
+    READ: /review-content-v4 {LEVEL} {NUM}
     # 14 dimensions: Propaganda Filter, Semantic Nuance, State Standard
 ```
 
 **Review includes:**
+
 - Deep Ukrainian verification (every sentence)
 - Activity item-by-item check
 - Scoring on all dimensions
@@ -289,6 +292,7 @@ scripts/audit_module.sh curriculum/l2-uk-en/{level}/{num_padded}-{slug}.md
 ## Phase 3: Verify
 
 Final checks:
+
 1. Re-run audit after review fixes — confirm PASS
 2. Confirm `status/{slug}.json` has `overall.status: "pass"`
 3. MDX is up-to-date (run pipeline if needed)

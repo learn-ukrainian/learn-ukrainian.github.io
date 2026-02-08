@@ -4,60 +4,66 @@ level: A1
 version: '2.0'
 items:
 - lemma: вмиватися
-  ipa: /ʋmɪʋˈatɪsja/
-  translation: to wash one's face
-  pos: verb
-- lemma: вітатися
-  ipa: /ʋitˈatɪsja/
-  translation: to greet each other
-  pos: verb
-- lemma: дивитися
-  ipa: /dɪʋˈɪtɪsʲa/
-  translation: to watch, to look
-  pos: verb
-- lemma: збиратися
-  ipa: /zbɪrˈatɪsja/
-  translation: to gather, to intend
-  pos: verb
-- lemma: комедія
-  ipa: /kɔmˈɛdija/
-  translation: comedy
-  pos: noun
-  gender: f
-- lemma: мити
-  ipa: /mˈɪtɪ/
-  translation: to wash
-  pos: verb
-- lemma: митися
-  ipa: /mˈɪtɪsja/
+  ipa: /vmɪˈvɑtɪsʲɑ/
   translation: to wash oneself
   pos: verb
-- lemma: одягати
-  ipa: /ɔdjaɦˈatɪ/
-  translation: to put on (clothes)
-  pos: verb
 - lemma: одягатися
-  ipa: /ɔdjaɦˈatɪsja/
-  translation: to get dressed
+  ipa: /odʲɐˈɦɑtɪsʲɑ/
+  translation: to dress oneself
   pos: verb
-- lemma: прокинутися
-  ipa: /prɔkˈɪnutɪsja/
-  translation: to wake up (perfective)
+- lemma: дивитися
+  ipa: /dɪˈvɪtɪsʲɑ/
+  translation: to watch, to look
   pos: verb
 - lemma: сміятися
-  ipa: /smiˈjatɪsja/
+  ipa: /smʲiˈjɑtɪsʲɑ/
   translation: to laugh
   pos: verb
-- lemma: усміхатися
-  ipa: /usmixˈatɪsja/
-  translation: to smile
+- lemma: називатися
+  ipa: /nɐzɪˈvɑtɪsʲɑ/
+  translation: to be called
   pos: verb
-- lemma: усмішка
-  ipa: /ˈusmiʃka/
-  translation: smile
-  pos: noun
-  gender: f
+- lemma: вчитися
+  ipa: /ˈʋt͡ʃɪtɪsʲɑ/
+  translation: to study, to learn
+  pos: verb
+- lemma: займатися
+  ipa: /zɐjˈmɑtɪsʲɑ/
+  translation: to do, to engage in
+  pos: verb
+- lemma: повертатися
+  ipa: /poverˈtɑtɪsʲɑ/
+  translation: to return
+  pos: verb
+- lemma: голитися
+  ipa: /ɦoˈlɪtɪsʲɑ/
+  translation: to shave
+  pos: verb
+- lemma: зупинятися
+  ipa: /zupɪˈnʲɑtɪsʲɑ/
+  translation: to stop
+  pos: verb
+- lemma: знайомитися
+  ipa: /znɐˈjɔmɪtɪsʲɑ/
+  translation: to get acquainted
+  pos: verb
+- lemma: цікавитися
+  ipa: /t͡sʲiˈkɑwɪtɪsʲɑ/
+  translation: to be interested in
+  pos: verb
+- lemma: зустрічатися
+  ipa: /zustrʲiˈt͡ʃɑtɪsʲɑ/
+  translation: to meet up
+  pos: verb
+- lemma: вітатися
+  ipa: /wʲiˈtɑtɪsʲɑ/
+  translation: to greet each other
+  pos: verb
+- lemma: митися
+  ipa: /ˈmɪtɪsʲɑ/
+  translation: to wash oneself
+  pos: verb
 - lemma: цілуватися
-  ipa: /t͡siluʋˈatɪsja/
-  translation: to kiss each other (imperfective)
+  ipa: /t͡sʲiluˈʋɑtɪsʲɑ/
+  translation: to kiss (each other)
   pos: verb

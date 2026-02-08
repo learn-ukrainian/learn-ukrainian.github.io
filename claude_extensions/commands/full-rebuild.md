@@ -1,5 +1,7 @@
 # Seminar Track Full-Rebuild Workflow
 
+> **Alternative:** `/orchestrate-rebuild` — Claude orchestrates phase-by-phase, Gemini executes focused tasks. Use when Gemini skips steps or produces thin content in solo mode.
+
 > **Scope:** Mandatory standard for rebuilding or creating modules in seminar tracks: `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, and `ruth`. Prioritizes research-driven, decolonized, and linguistically rich content.
 
 ## Usage
@@ -227,11 +229,10 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 
 ## Phase 5: Review-Content-v4 (Deep Quality & Scoring)
 
-> **Review context requirements:**
-> Generic subagents lack schema context and suggest invalid fixes.
-> **Exception:** The **Curriculum Maintainer** subagent (`subagent_type: "Curriculum Maintainer"`)
-> is authorized for full-rebuild workflows — it dynamically loads review prompts, tier files,
-> and schemas before reviewing. See `.claude/agents/curriculum-maintainer.md` for details.
+> **CRITICAL: YOU (Gemini) are the reviewer.**
+> Do NOT ask Claude. Do NOT skip this step.
+> You must rigorously apply the V4 Deep Review standard yourself by reading `claude_extensions/commands/review-content-v4.md` and executing it step-by-step.
+> **BE BRUTALLY HONEST AND CRITICAL.** Do not sugarcoat. If it's trash, say it's trash and fix it.
 
 - **Linguistic Sophistication**: Verify the Ukrainian register (e.g., Academic for C1). Check for high-level connectors and specialized terminology.
 - **IPA Stress Verification**: Check every IPA transcription in vocabulary for correct stress placement.

@@ -2,7 +2,7 @@
   "module": "vasyl-stefanyk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T17:13:22.988452Z",
+  "last_audit": "2026-02-08T23:14:00.240343Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T17:13:18.194925Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "5502/4500 (raw: 5881) | pedagogy: 17 violations | richness: 94% < 95% min (biography)"
+      "message": "5502/4500 (raw: 5881) | pedagogy: 18 violations | richness: 94% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",

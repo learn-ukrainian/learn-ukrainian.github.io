@@ -2,13 +2,13 @@
   "module": "velyke-kniazivstvo-lytovske",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:16.391927Z",
+  "last_audit": "2026-02-08T00:04:12.255362Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T10:16:01.146479Z",
-    "meta": "2026-01-30T13:28:03.064412Z",
-    "activities": "2026-01-27T16:35:01.508914Z",
-    "vocabulary": "2026-01-27T16:31:23.629215Z",
+    "md": "2026-02-07T11:38:26.543812Z",
+    "meta": "2026-02-07T10:03:51.209205Z",
+    "activities": "2026-02-07T10:03:51.266753Z",
+    "vocabulary": "2026-02-07T10:03:51.341917Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4676/4542 (raw: 4927)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4676/4542 (raw: 4927) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

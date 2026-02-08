@@ -1,0 +1,20 @@
+=== RAW OUTPUT (916 chars) ===
+✅ Message sent to Gemini (ID: 937)
+✓ Message 937 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #937...
+📨 Message #937
+   From: claude → To: gemini
+   Type: query
+   Task: fix-numbers-and-money-v2
+   Time: 2026-02-08T21:45:33.210099+00:00
+
+============================================================
+
+Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/numbers-and-money/fix-prompt.md. Return your output as text. IMPORTANT: Put fixed files between delimiter lines like ===CONTENT_START=== and ===CONTENT_END=== on their own lines, NOT inside code blocks.
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-pro-preview"}
+⏸️  Task 'fix-numbers-and-money-v2' is already being processed by another Gemini bridge. Skipping.

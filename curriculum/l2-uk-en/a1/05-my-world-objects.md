@@ -4,7 +4,7 @@
 
 Imagine you're in a new Ukrainian apartment. You're standing in the kitchen. Your friend hands you a phone. «Це телефон,» they say. You point to a cup on the table: «Ця чашка?» They nod. You gesture to a window across the room: «Те вікно?» Again, they agree.
 
-You've just used Ukrainian demonstratives. Words that point to things. Words that say «this one» or «that one.» In Ukrainian, these pointing words change based on what you're pointing at. Not just near or far, but masculine, feminine, or neuter.
+You've just used Ukrainian demonstratives. Words that point to things. Words that say «this one» or «that one.» Imagine pointing: «Це чашка» (This is a cup) vs «Ця чашка» (This cup). In Ukrainian, these pointing words change based on what you're pointing at. Not just near or far, but masculine, feminine, or neuter.
 
 By the end of this module, you'll be able to navigate your entire living space in Ukrainian, pointing to objects and naming them with confidence. Let's start with the closest things around you.
 
@@ -64,7 +64,10 @@ You already learned gender in Module 03. Now you're using it in real sentences. 
 
 - Цей ніж (tsey nizh) — this knife (m)
 - Ця ложка (tsya lozhka) — this spoon (f)
-- Це блюдо (tse blyudo) — this dish (n)
+- Ця тарілка (tsya tarilka) — this plate (f)
+- Ця склянка (tsya sklyanka) — this glass (f)
+- Ця пляшка (tsya plyashka) — this bottle (f)
+- Ця плита (tsya plyta) — this stove (f)
 
 **Furniture:**
 
@@ -75,7 +78,8 @@ You already learned gender in Module 03. Now you're using it in real sentences. 
 **Room Parts:**
 
 - Ця стіна (tsya stina) — this wall (f)
-- Цей стелю... wait! Стеля is feminine! → **Ця стеля** (tsya stelya) — this ceiling (f)
+- Ця стелю... wait! Стеля is feminine! → **Ця стеля** (tsya stelya) — this ceiling (f)
+- Ця підлога (tsya pidloha) — this floor (f)
 - Це вікно (tse vikno) — this window (n)
 
 > ⚡ **Pro Tip**
@@ -104,10 +108,10 @@ Notice how **«Це»** introduces objects (This is a...), but **«ця»** poin
 You're describing furniture to someone on the phone:
 
 — Де твій телефон? (De tviy telefon?) — Where is your phone?
-— **Він на тому столі.** (Vin na tomu stoli.) — It's on that table.
+— **Ось той стіл. Телефон там.** (Os' toy stil. Telefon tam.) — Here is that table. The phone is there.
 
 — а пульт? (A pul't?) — And the remote?
-— **Цей пульт на дивані.** (Tsey pul't na dyvani.) — This remote is on the couch.
+— **Ось диван. Пульт там.** (Os' dyvan. Pul't tam.) — Here is the couch. The remote is there.
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >

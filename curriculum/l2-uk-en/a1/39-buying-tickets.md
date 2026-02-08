@@ -48,7 +48,7 @@ On a train, you might have a preference for your seat.
 | **Місце** | /ˈmʲisʲt͡sɛ/ | Seat / Place |
 | **Вагон** | /vɑˈɦɔn/ | Carriage / Car |
 | **Біля вікна** | /ˈbilʲɑ vʲiˈknɑ/ | Window seat |
-| **При проході** | /prɪ prɔˈxɔdʲi/ | Aisle seat |
+| **Біля проходу** | /ˈbilʲɑ prɔˈxɔdʊ/ | Aisle seat |
 | **Нижнє місце** | /ˈnɪʒnʲɛ ˈmʲisʲt͡sɛ/ | Lower bunk |
 | **Верхнє місце** | /ˈvɛrxnʲɛ ˈmʲisʲt͡sɛ/ | Upper bunk |
 
@@ -117,10 +117,10 @@ Read about Petro's trip preparation.
 «**На п'ятницю, ранок.**»
 «**Є Інтерсіті. Відправлення о шостій ранку.**»
 «**Чудово. Дайте один квиток.**»
-«**Місце біля вікна чи при проході?**»
+«**Місце біля вікна чи біля проходу?**»
 «**Біля вікна, будь ласка. Я люблю дивитися у вікно.**»
 «**Ваш паспорт?**»
-Петро дає паспорт. Він платить карткою.
+Петро дає паспорт. Він платить за квиток.
 «**Ось ваш квиток. Вагон номер п'ять, місце двадцять три. Платформа друга.**»
 «**Дякую!**»
 Петро радий. Скоро він буде в горах!
@@ -134,7 +134,7 @@ You are ready to travel! You learned how to buy tickets for trains and buses.
 Key takeaways:
 - Use **До...** (Genitive) for destination: **До Львова**, **До Києва**.
 - Specify the type: **Туди й назад** (Round trip).
-- Choose your seat: **Біля вікна** or **При проході**.
+- Choose your seat: **Біля вікна** or **Біля проходу**.
 - Check the **розклад** for **відправлення** (departure) time.
 
 ### The Ukrainian Railways App (Додаток Укрзалізниці)

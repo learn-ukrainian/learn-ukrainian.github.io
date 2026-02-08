@@ -1,4 +1,3 @@
----
 module: 27-colors-and-clothing
 level: A1
 version: '2.0'
@@ -43,7 +42,7 @@ items:
   ipa: /tˈɛmnɪj/
   translation: dark
   pos: adj
-- lemma: яскравій
+- lemma: яскравий
   ipa: /jaskrˈaʋɪj/
   translation: bright, vivid
   pos: adj
@@ -81,6 +80,36 @@ items:
   translation: T-shirt
   pos: noun
   gender: f
+- lemma: спідниця
+  ipa: /spidˈnɪt͡sʲa/
+  translation: skirt
+  pos: noun
+  gender: f
+- lemma: пальто
+  ipa: /palʲˈtɔ/
+  translation: coat
+  pos: noun
+  gender: n
+- lemma: капелюх
+  ipa: /kapɛˈlʲux/
+  translation: hat
+  pos: noun
+  gender: m
+- lemma: шарф
+  ipa: /ʃarf/
+  translation: scarf
+  pos: noun
+  gender: m
+- lemma: піджак
+  ipa: /pidˈʒak/
+  translation: blazer
+  pos: noun
+  gender: m
+- lemma: черевики
+  ipa: /t͡ʃɛrɛˈʋɪkɪ/
+  translation: boots
+  pos: noun
+  gender: pl
 - lemma: взуття
   ipa: /ʋzuttˈja/
   translation: footwear, shoes
@@ -129,3 +158,19 @@ items:
   translation: verb
   pos: noun
   gender: n
+- lemma: сірий
+  ipa: /sˈirɪj/
+  translation: gray
+  pos: adj
+- lemma: рожевий
+  ipa: /rɔˈʒɛʋɪj/
+  translation: pink
+  pos: adj
+- lemma: фіолетовий
+  ipa: /fiɔˈlɛtɔʋɪj/
+  translation: purple, violet
+  pos: adj
+- lemma: помаранчевий
+  ipa: /pɔmaˈrant͡ʃɛʋɪj/
+  translation: orange
+  pos: adj

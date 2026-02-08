@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1331
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:23:11
+**Generated:** 2026-02-08 22:24:40
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,32 +38,29 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1396/1331 (raw: 1716)
+- **Words:** ✅ 2071/1331 (raw: 2243)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/3
+- **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 7/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.3% (target 25-40% (M13))
+- **Immersion:** 🇺🇦 25.4% (target 25-40% (M13))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 163 | Included in Core |
-| **Presentation** | ✅ | 558 | Included in Core |
-| **Practice** | ⚪️ | 283 | Skipped |
-| **Production** | ➖ | 245 | Excluded Type |
-| **Підсумок** | ✅ | 128 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **Warm-up** | ✅ | 203 | Included in Core |
+| **Presentation** | ✅ | 753 | Included in Core |
+| **Practice** | ⚪️ | 712 | Skipped |
+| **Production** | ➖ | 219 | Excluded Type |
+| **Summary** | ✅ | 154 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

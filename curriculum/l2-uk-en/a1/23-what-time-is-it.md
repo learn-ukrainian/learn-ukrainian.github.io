@@ -169,7 +169,7 @@ Or in conversation:
 >
 > - О котрій починається фільм? — О восьмій. (What time does the movie start? — At eight.)
 > - Зараз пів на другу. (It's half past one now.)
-> - Магазин відкривається о дев'ятій. (The store opens at nine.)
+> - Магазин відчиняється о дев'ятій. (The store opens at nine.)
 > - Урок триває годину. (The lesson lasts an hour.)
 > - Чекай п'ять хвилин! (Wait five minutes!)
 > - У понеділок я працюю. (On Monday I work.)

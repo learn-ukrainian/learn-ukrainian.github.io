@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M31 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 820
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:39:29
+**Generated:** 2026-02-09 00:10:51
 
 ## Configuration
 **Type:** A1-vocab
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 904/820 (raw: 1267)
+- **Words:** ✅ 904/820 (raw: 1280)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -54,9 +54,6 @@
 - **Immersion:** 🇺🇦 37.4% (target 35-55% (M31))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

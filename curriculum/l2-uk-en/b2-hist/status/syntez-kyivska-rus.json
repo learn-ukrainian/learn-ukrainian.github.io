@@ -2,13 +2,13 @@
   "module": "syntez-kyivska-rus",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-03T22:54:11.179881Z",
+  "last_audit": "2026-02-08T00:04:06.827242Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T11:02:04.518344Z",
-    "meta": "2026-01-29T07:38:18.617682Z",
-    "activities": "2026-01-27T16:20:37.171456Z",
-    "vocabulary": "2026-01-27T16:20:46.722823Z",
+    "md": "2026-02-07T11:38:26.496056Z",
+    "meta": "2026-02-07T10:03:51.233785Z",
+    "activities": "2026-02-07T10:03:51.309341Z",
+    "vocabulary": "2026-02-07T10:03:51.367855Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4748/4000 (raw: 4893)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4748/4000 (raw: 4893) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

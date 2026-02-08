@@ -4,7 +4,7 @@ level: A1
 version: '2.0'
 items:
 - lemma: американо
-  ipa: /amɛrɪkanɔ/
+  ipa: /amɛrɪkˈanɔ/
   translation: Americano (coffee)
   pos: noun
   gender: n
@@ -21,7 +21,7 @@ items:
   translation: green
   pos: adj
 - lemma: латте
-  ipa: /lattɛ/
+  ipa: /lˈattɛ/
   translation: latte
   pos: noun
   gender: n
@@ -33,3 +33,55 @@ items:
   ipa: /t͡ʃˈɔrnɪj/
   translation: black
   pos: adj
+- lemma: читати
+  ipa: /t͡ʃɪtˈatɪ/
+  translation: to read
+  pos: verb
+- lemma: писати
+  ipa: /pɪsˈatɪ/
+  translation: to write
+  pos: verb
+- lemma: говорити
+  ipa: /ɦɔwɔrˈɪtɪ/
+  translation: to speak
+  pos: verb
+- lemma: знати
+  ipa: /znˈatɪ/
+  translation: to know
+  pos: verb
+- lemma: хто
+  ipa: /xtɔ/
+  translation: who
+  pos: pron
+- lemma: що
+  ipa: /ʃt͡ʃɔ/
+  translation: what
+  pos: pron
+- lemma: де
+  ipa: /dɛ/
+  translation: where
+  pos: adv
+- lemma: так
+  ipa: /tak/
+  translation: yes
+  pos: part
+- lemma: ні
+  ipa: /n⁽ʲ⁾i/
+  translation: no
+  pos: part
+- lemma: розуміти
+  ipa: /rɔzumˈitɪ/
+  translation: to understand
+  pos: verb
+- lemma: питати
+  ipa: /pɪtˈatɪ/
+  translation: to ask
+  pos: verb
+- lemma: відповідати
+  ipa: /ʋidpɔʋidˈatɪ/
+  translation: to answer
+  pos: verb
+- lemma: перевіряти
+  ipa: /pɛrɛʋirˈatɪ/
+  translation: to check
+  pos: verb

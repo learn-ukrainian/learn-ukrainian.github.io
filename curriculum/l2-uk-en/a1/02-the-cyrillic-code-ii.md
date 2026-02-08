@@ -39,8 +39,8 @@ These are vowels that carry a built-in «y» sound (called «iotation»). They'r
 | Letter  | Sound                     | Example                | English   |
 | ------- | ------------------------- | ---------------------- | --------- |
 | **Є є** | /jɛ/ like «ye» in «yes»   | **Є**вро́па (Yevropa)   | Europe    |
-| **Ї ї** | /ji/ like «yee» in «yeet» | Ки́**ї**в (Kýyiv)       | Kyiv      |
-| **Ю ю** | /ju/ like «you»           | д**я́**к**ю** (dyákuyu) | thank you |
+| **Ї ї** | /ji/ like «yee» in «yield» | Ки́**ї**в (Kýyiv)       | Kyiv      |
+| **Ю ю** | /ju/ like «you»           | д**я́**к**у**ю (dyákuyu) | thank you |
 | **Я я** | /jɑ/ like «ya» in «yacht» | **я**к (yak)           | how       |
 
 These letters are why «Kyiv» is spelled with a «y» in English. The Ukrainian name is **Київ**. That **Ї** makes a «yi» sound. So it's «Kýyiv,» not «Keev.»
@@ -73,7 +73,7 @@ The letter **И** is different from **І**. While **І** makes the soft «ee» s
 
 | Letter  | Sound           | Example              | English |
 | ------- | --------------- | -------------------- | ------- |
-| **І і** | /i/ like «meet» | п**і**ца (píttsa)    | pizza   |
+| **І і** | /i/ like «meet» | п**і**ца (pítsa)     | pizza   |
 | **И и** | /ɪ/ like «bit»  | джи́нс**и** (dzhýnsy) | jeans   |
 
 The word **джинси** (jeans) has the hard **И** at the end: «dzhýnsy.» The city **Київ** has the soft **І**: «Kýyiv.»
@@ -109,7 +109,21 @@ So the word **мама** (mama) in italic looks like *мама*, which might loo
 
 The word **привіт** (hello) in italic is *привіт*. That italic **т** at the end looks like an «m,» but it's still a «t» sound.
 
+> 💡 **Don't Panic!**
+>
+> If you find italics confusing, you're not alone. Most beginners struggle with the italic **т** and **д**. Just remember: if it's a lowercase letter that looks like a Latin «m,» it's almost certainly a Ukrainian **т**. If it looks like a Latin «g,» it's a **д**. With practice, your brain will stop seeing the Latin letters and start seeing the Ukrainian ones!
+
 ## Practice
+
+### Self-Check: Can You Read This?
+
+Before moving on, try to read these words aloud. They contain the letters we learned today:
+
+1. **Гараж** (ha-razh) — Garage
+2. **Центр** (tsentr) — Center
+3. **Любов** (lyu-bov) — Love
+4. **Україна** (Uk-ra-yi-na) — Ukraine
+5. **Смачного!** (Smach-no-ho!) — Enjoy your meal! (Bon appétit!)
 
 ### Reading Basic Phrases
 
@@ -120,11 +134,13 @@ Now that you know all 33 letters, let's read some real Ukrainian phrases:
 Дякую. (Dyakuyu.) — Thank you.
 Будь ласка. (Budʲ laska.) — Please. / You're welcome.
 До побачення. (Do pobachennya.) — Goodbye.
+Вибачте. (Vybachte.) — Excuse me. / Sorry.
 
 **Questions:**
 Як? (Yak?) — How?
 Де? (De?) — Where?
 Хто? (Khto?) — Who?
+Що? (Shcho?) — What?
 
 **Answers:**
 Так. (Tak.) — Yes.
@@ -148,9 +164,22 @@ Notice **дякую** uses the iotated **Я** (ya) and **Ю** (yu). It flows: «
 
 The word **борщ** showcases the **Щ** sound perfectly. It's not «borsh,» it's «borshch» — that soft «shch» blend is uniquely Ukrainian.
 
+### Reading Everyday Words
+
+Чай (chay) — tea
+Школа (shkola) — school
+Яблуко (yabluko) — apple
+Гарний (harnyi) — beautiful
+Жити (zhyty) — to live
+День (denʲ) — day
+
 ### Reading Food Words
 
 Борщ (borshch) — borscht
+Суп (sup) — soup
+Салат (salat) — salad
+Банан (banan) — banana
+Чай (chay) — tea
 Йогурт (yogurt) — yogurt
 Желе (zhele) — jelly
 Майонез (mayonez) — mayonnaise

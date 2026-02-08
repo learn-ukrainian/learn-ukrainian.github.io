@@ -1,8 +1,8 @@
 # Audit Report: M30 — pavlo-polubotok.md
 **Level:** C1-BIO | **Module:** M30 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:40
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-08 23:13:35
 
 ## Configuration
 **Type:** C1-biography
@@ -34,6 +34,15 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/pavlo-polubotok-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4371/4300 (raw: 4436)
 - **Activities:** ✅ 6/3
@@ -45,7 +54,7 @@
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

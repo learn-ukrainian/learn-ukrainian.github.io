@@ -124,7 +124,7 @@
     - text: ваші
       correct: true
     explanation: ваші matches батьки (plural)
-  - question: Скажіть, чий це великий наш дім?
+  - question: Скажіть, чий це великий ___ дім?
     options:
     - text: наш
       correct: true
@@ -412,7 +412,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Де ваші батьки'
-  - question: 'Identify the correct order: "Wait — this is..."'
+  - question: 'Whose is this house of ours?'
     options:
     - text: Чий це наш дім
       correct: true
@@ -456,7 +456,7 @@
     - text: вони
       correct: false
     explanation: 'Correct: Твоє місто гарне'
-  - question: 'Identify the correct order: "Wait — another trick!..."'
+  - question: 'Identify the correct order: "Whose things are these?"'
     options:
     - text: Чиї це їхні речі
       correct: true
@@ -511,15 +511,15 @@
     - наш / наша / наше
     - ваш / ваша / ваше
     - їхній / їхня / їхнє
+    - свій / своя / своє
     - чий / чия / чиє
-    - цей / ця / це
   - name: Invariant (Never Change)
     items:
-    - його (his)
-    - її (her)
-    - їх (their)
-    - Марка (Mark's)
-    - Анни (Anna's)
+    - його
+    - її
+    - його (with masculine noun)
+    - її (with feminine noun)
+    - його (with neuter noun)
   instruction: Distribute the elements into groups.
 - type: quiz
   title: Cultural Context
@@ -726,17 +726,17 @@
     - text: твій
       correct: false
     explanation: його = his (someone else's phone)
-  - question: Діти люблять ___ батьків. (Children love their OWN parents.)
+  - question: Вони знають ___ права. (They know their OWN rights.)
     options:
-    - text: своїх
+    - text: свої
       correct: true
-    - text: їхніх
+    - text: їхні
       correct: false
     - text: його
       correct: false
     - text: наших
       correct: false
-    explanation: своїх = their own (subject = possessor)
+    explanation: свої = their own (subject = possessor)
   - question: Він знає ___ адресу. (He knows his OWN address.)
     options:
     - text: свою

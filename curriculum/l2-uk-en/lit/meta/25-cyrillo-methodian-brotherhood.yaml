@@ -1,19 +1,58 @@
----
-module: lit-25
-level: LIT
+module_id: 25 # derived from order
 slug: cyrillo-methodian-brotherhood
+id: '25'
 version: '2.0'
-id: lit-25
-naturalness:
-  score: 9
-  status: PASS
-duration: 100
-transliteration: none
-tags:
-- history
-- politics
-- kostomarov
-- secret-society
+title: Кирило-Мефодіївське братство
+subtitle: The Cyrillo-Methodian Brotherhood
+level: lit
+order: 25
+status: draft
+timestamp: 2026-02-08T22:50:00+01:00
 word_target: 4500
-build:
-  last_modified: '2026-01-26'
+content_outline:
+  - section: "Вступ — Перша політична організація"
+    words: 625
+    points:
+      - Києв, 1845-1847
+      - Революційний контекст
+      - Таємне товариство в імперіях
+  - section: Засновники і члени
+    words: 875
+    points:
+      - Микола Костомаров (ідеолог)
+      - Пантелеймон Куліш (організатор)
+      - Тарас Шевченко (радикал)
+      - Василь Білозерський, Микола Гулак
+  - section: Книги буття українського народу
+    words: 1000
+    points:
+      - Жанр і структура документу
+      - Ідея слов'янської федерації
+      - Україна як "месія народів"
+  - section: Політична програма
+    words: 875
+    points:
+      - Скасування кріпацтва
+      - Демократія і рівність
+      - Християнський соціалізм
+  - section: Розгром і наслідки
+    words: 625
+    points:
+      - Донос Олексія Петрова і арешти (1847)
+      - Покарання членів (Шевченко, Костомаров, Гулак)
+      - Вплив вироку на долю Шевченка
+  - section: "Підсумок — Ідея, що пережила репресії"
+    words: 500
+    points:
+      - Вплив братства на українську думку
+      - Від 1847 до 1991 року
+      - Завершення фази "Інтелектуалів"
+naturalness:
+  status: PASS
+  score: 10
+  checked_by: gemini-2.0-flash-thinking
+  checklist:
+    - "No 'in conclusion' or 'summary' headers (use Ukrainian)"
+    - "No 'Russian' sentences in content (except quoted)"
+    - "No Latin characters in Ukrainian text"
+    - "Authentic phrasing (not translationese)"

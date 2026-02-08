@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M24 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1049
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:35:14
+**Generated:** 2026-02-09 00:20:35
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,38 +37,36 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 962/1049 (raw: 1728) (87 short)
+- **Words:** ✅ 1183/1049 (raw: 2064)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 8/1
+- **Vocab:** ✅ 18/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.4% (target 35-55% (M24))
+- **Immersion:** 🇺🇦 41.6% (target 35-55% (M24))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 35 | Included in Core |
-| **Presentation** | ✅ | 50 | Included in Core |
-| **Presentation 2** | ✅ | 80 | Included in Core |
-| **Presentation 3** | ✅ | 39 | Included in Core |
-| **Presentation 4** | ✅ | 0 | Included in Core |
-| **Presentation 5** | ✅ | 0 | Included in Core |
-| **Presentation 6** | ✅ | 0 | Included in Core |
-| **Presentation 7** | ✅ | 243 | Included in Core |
+| **Presentation** | ✅ | 97 | Included in Core |
+| **Expressing Desire: хотіти** | ⚪️ | 52 | Skipped |
+| **Expressing Obligation: повинен, треба, мусити** | ⚪️ | 144 | Skipped |
+| **Expressing Permission: можна / не можна** | ⚪️ | 39 | Skipped |
+| **Recommendations and Advice** | ⚪️ | 0 | Skipped |
+| **Trying and Succeeding** | ⚪️ | 0 | Skipped |
+| **Modal Adjectives** | ⚪️ | 0 | Skipped |
+| **Examples in Context** | ✅ | 243 | Included in Core |
 | **Practice** | ⚪️ | 380 | Skipped |
 | **Practice 2** | ⚪️ | 21 | Skipped |
-| **Підсумок** | ✅ | 95 | Included in Core |
+| **Підсумок** | ✅ | 153 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

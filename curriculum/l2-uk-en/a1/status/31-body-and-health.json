@@ -2,12 +2,12 @@
   "module": "31-body-and-health",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:39:29.007944Z",
+  "last_audit": "2026-02-09T00:10:51.961422Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T21:10:35.443774Z",
+    "md": "2026-02-08T23:41:31.730846Z",
     "meta": "2026-02-07T10:03:51.783474Z",
-    "activities": "2026-02-07T21:38:16.843109Z",
+    "activities": "2026-02-09T00:10:48.817063Z",
     "vocabulary": "2026-02-07T10:03:51.824678Z",
     "plan": "2026-02-07T10:05:59.913749Z"
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "904/820 (raw: 1267)"
+      "message": "904/820 (raw: 1280)"
     },
     "activities": {
       "status": "pass",

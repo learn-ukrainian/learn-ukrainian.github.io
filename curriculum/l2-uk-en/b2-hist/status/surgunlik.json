@@ -2,13 +2,13 @@
   "module": "surgunlik",
   "level": "B2",
   "plan_version": "3.0",
-  "last_audit": "2026-02-03T22:55:04.844627Z",
+  "last_audit": "2026-02-08T00:05:01.412301Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T14:06:15.899900Z",
-    "meta": "2026-01-29T13:31:30.008950Z",
-    "activities": "2026-01-29T21:41:32.765939Z",
-    "vocabulary": "2026-01-29T21:48:02.576915Z",
+    "md": "2026-02-07T11:38:26.477997Z",
+    "meta": "2026-02-07T10:03:51.205779Z",
+    "activities": "2026-02-07T10:03:51.255698Z",
+    "vocabulary": "2026-02-07T10:03:51.336606Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4319/4000 (raw: 4481)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4319/4000 (raw: 4481) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

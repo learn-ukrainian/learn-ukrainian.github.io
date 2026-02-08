@@ -1,0 +1,63 @@
+id: lit-20-cult-vocab
+module_id: lit-20
+vocabulary:
+  - term: культ особи
+    ipa: "ˈkulʲt ɔˈsɔbɪ"
+    translation: "cult of personality"
+    context: "Радянська влада створила культ особи Шевченка, вихолостивши його революційний дух."
+  - term: іконографія
+    ipa: "ikɔnɔˈɦrafʲijɐ"
+    translation: "iconography"
+    context: "Іконографія поета зазвичай зводиться до зображення старого діда в шапці."
+  - term: канонізація
+    ipa: "kanɔnʲiˈzat͡sʲijɐ"
+    translation: "canonization"
+    context: "Літературна канонізація перетворила живого митця на бронзовий пам'ятник."
+  - term: десакралізація
+    ipa: "dɛsakralʲiˈzat͡sʲijɐ"
+    translation: "desacralization"
+    context: "Сучасне мистецтво займається десакралізацією класичних образів."
+  - term: шароварщина
+    ipa: "ʃarɔˈvarʃt͡ʃɪna"
+    translation: "sharovarschyna (kitsch pseudo-folk culture)"
+    context: "Вшанування Шевченка часто перетворюється на несмак і шароварщину."
+  - term: офіціоз
+    ipa: "ɔfʲit͡sʲiˈjɔz"
+    translation: "officialdom / official stiff style"
+    context: "Молодь відштовхує шкільний офіціоз і примусові лінійки."
+  - term: пророк
+    ipa: "prɔˈrɔk"
+    translation: "prophet"
+    context: "Куліш назвав Шевченка національним пророком."
+  - term: мужицький
+    ipa: "muˈʒɪt͡sʲkɪi̯"
+    translation: "peasant (adj.) / rustic"
+    context: "Радянська пропаганда підкреслювала мужицьке походження поета."
+  - term: інтелектуал
+    ipa: "intɛlɛktuˈɑl"
+    translation: "intellectual"
+    context: "Грабович доводить, що Шевченко був глибоким європейським інтелектуалом."
+  - term: сприйняття
+    ipa: "sprɪi̯nʲːɐˈtʲːa"
+    translation: "perception / reception"
+    context: "Сприйняття творчості Шевченка змінюється з кожним поколінням."
+  - term: погруддя
+    ipa: "pɔˈɦrudʲːɐ"
+    translation: "bust (sculpture)"
+    context: "У кожній школі стоїть гіпсове погруддя Кобзаря."
+  - term: заповіт
+    ipa: "zapɔˈvʲit"
+    translation: "testament / will"
+    context: "Політичний заповіт поета — це не лише вірш, а й уся його творчість."
+  - term: сучасник
+    ipa: "suˈt͡ʃasnɪk"
+    translation: "contemporary"
+    context: "Шевченко залишається нашим сучасником, бо його питання досі актуальні."
+  - term: міфотворчість
+    ipa: "mifɔˈtvɔrt͡ʃisʲtʲ"
+    translation: "myth-making"
+    context: "Міфотворчість є невід'ємною частиною національної культури."
+  - term: іпостась
+    ipa: "ipɔˈstasʲ"
+    translation: "hypostasis / incarnation / aspect"
+    context: "Ми розглядаємо різні іпостасі поета: художника, пророка, людини."

@@ -1,61 +1,174 @@
----
 module: 23-what-time-is-it
 level: A1
 version: '2.0'
 items:
-- lemma: відкриватися
-  ipa: /ʋidkrɪʋˈatɪsja/
+- lemma: вівторок
+  ipa: /viwˈtɔrɔk/
+  translation: Tuesday
+  pos: noun
+  gender: m
+- lemma: відчинятися
+  ipa: /ʋid͡tʃɪˈnʲɑtɪsʲɑ/
   translation: to open (passive)
   pos: verb
+- lemma: вчасно
+  ipa: /ˈvt͡ʃɑsnɔ/
+  translation: on time
+  pos: adv
+- lemma: вечір
+  ipa: /ˈvɛt͡ʃir/
+  translation: evening
+  pos: noun
+  gender: m
+- lemma: вересень
+  ipa: /ˈvɛrɛsɛnʲ/
+  translation: September
+  pos: noun
+  gender: m
+- lemma: година
+  ipa: /ɦɔˈdɪnɑ/
+  translation: hour
+  pos: noun
+  gender: f
 - lemma: грудень
-  ipa: /ɦrˈudɛnʲ/
+  ipa: /ˈɦrudɛnʲ/
   translation: December
   pos: noun
   gender: m
+- lemma: до
+  ipa: /dɔ/
+  translation: until / to
+  pos: prep
+- lemma: зараз
+  ipa: /ˈzɑrɑz/
+  translation: now
+  pos: adv
+- lemma: жовтень
+  ipa: /ˈʒɔwtɛnʲ/
+  translation: October
+  pos: noun
+  gender: m
+- lemma: квітень
+  ipa: /ˈkvitɛnʲ/
+  translation: April
+  pos: noun
+  gender: m
 - lemma: липень
-  ipa: /lˈɪpɛnʲ/
+  ipa: /ˈlɪpɛnʲ/
   translation: July
   pos: noun
   gender: m
 - lemma: листопад
-  ipa: /lɪstɔpˈad/
+  ipa: /lɪstɔˈpɑd/
   translation: November
   pos: noun
   gender: m
-- lemma: модальний
-  ipa: /mɔdˈalʲnɪj/
-  translation: modal (grammar)
-  pos: adj
+- lemma: лютий
+  ipa: /ˈlʲutɪj/
+  translation: February
+  pos: noun
+  gender: m
+- lemma: неділя
+  ipa: /nɛˈdʲilʲɑ/
+  translation: Sunday
+  pos: noun
+  gender: f
+- lemma: о
+  ipa: /ɔ/
+  translation: at (time)
+  pos: prep
 - lemma: пів
-  ipa: /piʋ/
+  ipa: /piw/
   translation: half
   pos: num
+- lemma: після
+  ipa: /ˈpisʲlʲɑ/
+  translation: after
+  pos: prep
+- lemma: пізно
+  ipa: /ˈpiznɔ/
+  translation: late
+  pos: adv
+- lemma: понеділок
+  ipa: /pɔnɛˈdʲilɔk/
+  translation: Monday
+  pos: noun
+  gender: m
+- lemma: п'ятниця
+  ipa: /ˈpjɑtnɪt͡sʲɑ/
+  translation: Friday
+  pos: noun
+  gender: f
+- lemma: рано
+  ipa: /ˈrɑnɔ/
+  translation: early
+  pos: adv
+- lemma: ранок
+  ipa: /ˈrɑnɔk/
+  translation: morning
+  pos: noun
+  gender: m
+- lemma: рік
+  ipa: /rik/
+  translation: year
+  pos: noun
+  gender: m
 - lemma: секунда
-  ipa: /sɛkˈunda/
+  ipa: /sɛˈkundɑ/
   translation: second
   pos: noun
   gender: f
 - lemma: серпень
-  ipa: /sˈɛrpɛnʲ/
+  ipa: /ˈsɛrpɛnʲ/
   translation: August
   pos: noun
   gender: m
+- lemma: середа
+  ipa: /sɛrɛˈdɑ/
+  translation: Wednesday
+  pos: noun
+  gender: f
 - lemma: січень
   ipa: /ˈsit͡ʃɛnʲ/
   translation: January
   pos: noun
   gender: m
+- lemma: субота
+  ipa: /suˈbɔtɑ/
+  translation: Saturday
+  pos: noun
+  gender: f
+- lemma: тиждень
+  ipa: /ˈtɪʒdɛnʲ/
+  translation: week
+  pos: noun
+  gender: m
 - lemma: травень
-  ipa: /ˈtraʋɛnʲ/
+  ipa: /ˈtrɑvɛnʲ/
   translation: May
   pos: noun
   gender: m
-- lemma: цвісти
-  ipa: /t͡sʋistˈɪ/
-  translation: to bloom
-  pos: verb
+- lemma: хвилина
+  ipa: /xvɪˈlɪnɑ/
+  translation: minute
+  pos: noun
+  gender: f
+- lemma: чверть
+  ipa: /t͡ʃvɛrtʲ/
+  translation: quarter
+  pos: noun
+  gender: f
+- lemma: червоний
+  ipa: /t͡ʃɛrˈvɔnɪj/
+  translation: red
+  pos: adj
 - lemma: червень
-  ipa: /t͡ʃˈɛrʋɛnʲ/
+  ipa: /ˈt͡ʃɛrvɛnʲ/
   translation: June
+  pos: noun
+  gender: m
+- lemma: четвер
+  ipa: /t͡ʃɛtˈvɛr/
+  translation: Thursday
   pos: noun
   gender: m

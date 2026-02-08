@@ -29,20 +29,20 @@
     items:
     - завжди
     - часто
-    - постійно
     - дуже часто
+    - майже завжди
+    - доволі часто
   - name: Usually / Sometimes (25-60%)
     items:
     - зазвичай
     - іноді
-    - деколи
-    - час від часу
+    - не дуже часто
   - name: Rarely / Never (0-10%)
     items:
     - рідко
-    - майже ніколи
-    - зовсім не часто
     - ніколи
+    - дуже рідко
+    - майже ніколи
   instruction: Distribute the elements into groups based on frequency.
 - type: group-sort
   title: Type of Adverb
@@ -169,8 +169,8 @@
     options:
     - часто
     - ніколи
-    - швидко
-    - добре
+    - швидка
+    - добра
   - sentence: Ми ___ їмо в ресторані.
     answer: іноді
     options:
@@ -539,7 +539,7 @@
     - добре
     - справи
     - як
-    answer: Як справи Добре
+    answer: Як справи? Добре.
   - words:
     - іноді
     - ми

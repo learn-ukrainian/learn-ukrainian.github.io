@@ -1,0 +1,47 @@
+{
+  "module": "haidamaky",
+  "level": "LIT",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-08T19:57:46.562056Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-08T19:54:07.619699Z",
+    "meta": "2026-02-08T19:57:42.957819Z",
+    "activities": "2026-02-08T19:51:06.249157Z",
+    "vocabulary": "2026-02-08T19:44:10.919923Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "warn",
+      "violations": 0,
+      "message": "3939/4000 (raw: 4085) (61 short)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "31/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

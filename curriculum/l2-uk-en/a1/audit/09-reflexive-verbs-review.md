@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:17:17
+**Generated:** 2026-02-08 21:51:34
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,48 +20,48 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Reflexive Verbs Meanings | 10 | 8 | ✅ |
-| 2 | fill-in | Conjugation Drill (Present Tense) | 12 | 8 | ✅ |
-| 3 | quiz | Find the Mistake | 12 | 8 | ✅ |
-| 4 | fill-in | Dialogue: Morning Routine | 12 | 8 | ✅ |
-| 5 | true-false | Reflexive Concepts | 12 | 8 | ✅ |
-| 6 | match-up | Match Person to Verb | 10 | 8 | ✅ |
-| 7 | quiz | Context Quiz | 12 | 8 | ✅ |
-| 8 | fill-in | Sentence Builder | 12 | 8 | ✅ |
+| 1 | fill-in | Conjugate Reflexive Verbs | 10 | 8 | ✅ |
+| 2 | fill-in | Choosing -ся or -сь | 10 | 8 | ✅ |
+| 3 | match-up | Transitive vs Reflexive Pairs | 8 | 8 | ✅ |
+| 4 | match-up | Reflexive Verbs and Meanings | 8 | 8 | ✅ |
+| 5 | quiz | Reflexive Verb Rules | 8 | 8 | ✅ |
+| 6 | true-false | True or False: Reflexive Logic | 8 | 8 | ✅ |
+| 7 | group-sort | Categorize Reflexive Verbs | 12 | 12 | ✅ |
+| 8 | anagram | Unscramble Reflexive Verbs | 8 | 8 | ✅ |
+| 9 | anagram | Unscramble Reflexive Verbs II | 8 | 8 | ✅ |
+| 10 | fill-in | Daily Routine Conversation | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 8-12) ✅
-- Unique types: 4 (minimum: 4) ✅
-- Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 977/750 (raw: 1134)
-- **Activities:** ✅ 8/8
+- **Words:** ✅ 1496/750 (raw: 1669)
+- **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 4/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 14/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 17.4% (target 15-35% (M09))
+- **Immersion:** 🇺🇦 15.9% (target 15-35% (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 228 | Included in Core |
-| **Presentation** | ✅ | 642 | Included in Core |
-| **Cultural Insight** | ✅ | 45 | Included in Core |
-| **Підсумок** | ✅ | 43 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **Reflexive Verbs (-ся)** | ⚪️ | 0 | Skipped |
+| **Warm-up** | ✅ | 336 | Included in Core |
+| **Presentation** | ✅ | 626 | Included in Core |
+| **Practice** | ⚪️ | 284 | Skipped |
+| **Cultural Insight** | ✅ | 165 | Included in Core |
+| **Підсумок** | ✅ | 85 | Included in Core |

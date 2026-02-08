@@ -84,8 +84,8 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
 10. **Немає різниці.**
     There's no difference.
 
-11. **У них немає знання.**
-    They don't have knowledge.
+11. **У них немає права.**
+    They don't have the right.
 
 12. **Без допомоги це важко.**
     Without help, it's difficult.
@@ -98,6 +98,22 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
 
 15. **У мене немає сили.**
     I don't have strength.
+
+16. **У нас немає хліба.**
+    We don't have bread.
+
+17. **У мене немає квитка.**
+    I don't have a ticket.
+
+18. **Тут немає телефону.**
+    There is no phone here.
+
+19. **У нього немає ключа.**
+    He doesn't have a key.
+
+> [!note] Note
+>
+> Some words like **гроші** (money) are always plural, so they have a different ending. We'll learn this later!
 
 > [!warning] **Common Mistake**
 >
@@ -162,14 +178,14 @@ You might hear:
 **Setting:** A student café near Kyiv University
 
 **Оля:** Привіт! Маєш час на каву?
-**Андрій:** Вибачте, у мене **немає часу**. Мушу на лекцію.
+**Андрій:** Вибачте, у мене **немає часу**. У мене лекція.
 **Оля:** А може після лекції?
 **Андрій:** Добре! Але **без цукру**, будь ласка.
 **Оля:** Зрозуміло. До зустрічі!
 
 Translation:
 — Hi! Do you have time for coffee?
-— Sorry, I don't have time. I must go to a lecture.
+— Sorry, I don't have time. I have a lecture.
 — Maybe after the lecture?
 — Okay! But without sugar, please.
 — Understood. See you!

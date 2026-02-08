@@ -4,7 +4,7 @@
 
 > 💡 **Кольори навколо нас! (Colors Around Us)**
 >
-> Colors are adjectives! They must agree with nouns. A shirt is **біла** (feminine). A sweater is **білий** (masculine). A coat is **біле** (neuter). Ви вже знаєте це правило! (You already know this rule!) Look at your clothes right now. Які кольори ви бачите? (What colors do you see?) Is your t-shirt **синя** or **зелена**? Is your hat **чорна**? Or maybe you have a **червоний** светр? 
+> Colors are adjectives! They must agree with nouns. A shirt is **біла** (feminine). A sweater is **білий** (masculine). A coat is **біле** (neuter). Ви вже знаєте це правило! (You already know this rule!) Look at your clothes right now. Які кольори ви бачите? (What colors do you see?) Is your t-shirt **синя** or **зелена**? Is your jacket **чорна**? Or maybe you have a **червоний** светр? 
 >
 > Сьогодні ми вивчаємо кольори. (Today we study colors.) Ми також вчимо назви одягу. (We also learn clothing names.) It is fun and very useful for your daily life in Ukraine! Think about your friends and family. What is their style? Do they like **червоний** or **чорний**? Some people love bright colors, and some people love dark colors. Colors help us express our personality and our mood. Let's start our journey into the world of colors and fashion! It is a great way to practice your grammar. Це буде цікаво! (It will be interesting!)
 
@@ -24,12 +24,16 @@ The basic colors are adjectives. They follow the same rules as other adjectives.
 | синій     | синя     | синє    | сині    | blue    |
 | зелений   | зелена   | зелене  | зелені  | green   |
 | жовтий    | жовта    | жовте   | жовті   | yellow  |
+| сірий     | сіра     | сіре    | сірі    | gray    |
+| рожевий   | рожева   | рожеве  | рожеві  | pink    |
+| фіолетовий| фіолетова| фіолетове| фіолетові| purple  |
+| помаранчевий| помаранчева| помаранчеве| помаранчеві| orange |
 
 Деякі кольори не змінюються. (Some colors do not change.) These are words like **бордо** (maroon), **беж** (beige), or **хакі** (khaki). Ви можете використовувати їх з будь-яким іменником. (You can use them з будь-яким іменником.) For example: беж сумка, беж светр. They are very simple to use and quite popular now. Це сучасний стиль. (This is a modern style.)
 
 ### Clothing and Verbs
 
-Let's learn the names of clothing items. Ми використовуємо дієслово **носити** (to wear). This verb is very useful for fashion and style.
+Let's learn the names of clothing items. Ми використовуємо дієслово **носити** (to wear). Note: To say 'to put on', we use **одягати**. But for 'wearing', use **носити**. This verb is very useful for fashion and style.
 
 - **сорочка** (shirt)
 - **штани** (pants)
@@ -37,6 +41,12 @@ Let's learn the names of clothing items. Ми використовуємо ді�
 - **куртка** (jacket)
 - **светр** (sweater)
 - **футболка** (t-shirt)
+- **спідниця** (skirt)
+- **пальто** (coat)
+- **капелюх** (hat)
+- **шарф** (scarf)
+- **піджак** (blazer)
+- **черевики** (boots)
 
 Коли ми використовуємо дієслово **носити**, іменник змінюється. (When we use the verb wear, the noun changes.)
 - Я ношу **сорочку** (feminine form uses -у).
@@ -61,7 +71,7 @@ You cannot say "одна штана". Ви повинні казати "це ш�
 How do we describe what someone is wearing? We can use simple sentences to tell about the style.
 
 > [!example] Опис одягу (Describing Clothes)
-> У мене **біла** сорочка і **чорні** штани. Мій друг носить **зелений** светр. Вона має **червоне** плаття. Мої джинси **сині**. Це **нова** куртка. Взуття **коричневе**. Я виглядаю добре сьогодні. Мій одяг затишний. Це мій стиль.
+> У мене **біла** сорочка і **чорні** штани. Мій друг носить **зелений** светр. У неї **червоне** плаття. Мої джинси **сині**. Це **нова** куртка. Взуття **коричневе**. Я маю гарний вигляд сьогодні. Мій одяг затишний. Це мій стиль.
 
 ### Shopping for Clothes
 
@@ -101,7 +111,7 @@ How do we describe what someone is wearing? We can use simple sentences to tell 
 > — Привіт! Розкажи про свого друга. Що він сьогодні носить?
 > — Привіт! Він носить **зелену** футболку і **сині** джинси.
 > — У нього є **нова** куртка?
-> — Так, у нього **чорна** куртка. Вона дуже **красива**. Він купив її вчора.
+> — Так, у нього **чорна** куртка. Вона дуже **красива**. Він дуже любить її.
 — А взуття? Який колір?
 — У нього **білі** кросівки. Він виглядає класно! Він любить цей стиль.
 — Це правда. Його одяг завжди гарний.
@@ -109,7 +119,7 @@ How do we describe what someone is wearing? We can use simple sentences to tell 
 > — Hi! Tell me about your friend. What is he wearing today?
 > — Hi! He is wearing a green t-shirt and blue jeans.
 > — Does he have a new jacket?
-> — Yes, he has a black jacket. It is very beautiful. He bought it yesterday.
+> — Yes, he has a black jacket. It is very beautiful. He loves it very much.
 > — And footwear? What color?
 > — He has white sneakers on. He looks cool! He loves this style.
 > — That's true. His clothes are always nice.

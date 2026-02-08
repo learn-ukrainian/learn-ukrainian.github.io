@@ -1,4 +1,3 @@
----
 module: 40-taking-transport
 level: A1
 version: '2.0'
@@ -19,10 +18,24 @@ items:
   ipa: /bjust/
   translation: bust
   pos: noun
+- lemma: вагон
+  ipa: /vɑˈɦɔn/
+  translation: wagon, train car
+  pos: noun
+  gender: m
+- lemma: вільний
+  ipa: /vˈilʲnɪj/
+  translation: free, empty
+  pos: adj
 - lemma: громадський
   ipa: /ɦrɔmadsʲkɪj/
   translation: public, social
   pos: adj
+- lemma: дорога
+  ipa: /dɔˈrɔɦɑ/
+  translation: road, way
+  pos: noun
+  gender: f
 - lemma: е-квиток
   ipa: /ɛ-kʋɪtˈɔk/
   translation: e-ticket
@@ -32,6 +45,11 @@ items:
   ipa: /zupɪnˈɪtɪ/
   translation: to stop
   pos: verb
+- lemma: маршрут
+  ipa: /mɑrˈʃrut/
+  translation: route
+  pos: noun
+  gender: m
 - lemma: Оболонь
   ipa: /ɔbɔlˈɔnʲ/
   translation: Obolon (district in Kyiv)
@@ -46,6 +64,10 @@ items:
   translation: transplant, transfer (travel)
   pos: noun
   gender: f
+- lemma: повний
+  ipa: /pˈɔʋnɪj/
+  translation: full
+  pos: adj
 - lemma: почайна
   ipa: /pɔt͡ʃˈajna/
   translation: Pochaina (name/river)
@@ -59,6 +81,11 @@ items:
   ipa: /prɪstibnutɪsja/
   translation: to buckle up
   pos: verb
+- lemma: статуя
+  ipa: /stˈɑtujɑ/
+  translation: statue
+  pos: noun
+  gender: f
 - lemma: тролейбус
   ipa: /trɔlˈɛjbus/
   translation: trolleybus

@@ -44,7 +44,8 @@ It's simpler than it looks! Just check if you're talking about one thing or many
 | голова болить     | /ɦɔlɔˈvɑ bɔˈlɪtʲ/ | зуби болять     | /ˈzubɪ bɔˈlʲɑtʲ/ |
 | живіт болить      | /ʒɪˈvit bɔˈlɪtʲ/ | очі болять      | /ˈɔt͡ʃi bɔˈlʲɑtʲ/ |
 | горло болить      | /ˈɦɔrlɔ bɔˈlɪtʲ/ | вуха болять     | /ˈvuxɑ bɔˈlʲɑtʲ/ |
-| спина болить      | /spɪˈnɑ bɔˈlɪtʲ/ | ноги болять     | /ˈnɔɦɪ bɔˈlʲɑtʲ/ |
+| спина болить      | /ˈspɪnɑ bɔˈlɪtʲ/ | ноги болять     | /ˈnɔɦɪ bɔˈlʲɑtʲ/ |
+| рука болить       | /ˈrukɑ bɔˈlɪtʲ/ | руки болять     | /ˈrukɪ bɔˈlʲɑtʲ/ |
 
 ---
 

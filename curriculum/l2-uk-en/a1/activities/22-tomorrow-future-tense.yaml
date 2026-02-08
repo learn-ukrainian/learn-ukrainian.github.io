@@ -33,14 +33,15 @@
     - планую
     - збираюся
     - маю намір
+    - гарантую
   - name: Less Certain (Може бути)
     items:
     - сподіваюся
     - мрію
     - хочу
-    - спробую
-    - постараюся
     - думаю
+    - мабуть
+    - можливо
   instruction: Distribute the elements into groups.
 - type: fill-in
   title: Future Tense Forms
@@ -133,84 +134,84 @@
 - type: fill-in
   title: Planning Expressions
   items:
-  - sentence: Я ___ поїхати до Києва наступного місяця.
+  - sentence: Я ___ поїхати до Києва наступного місяця. (I plan...)
     answer: планую
     options:
     - планую
     - мрію
     - обіцяю
     - сподіваюся
-  - sentence: А моя сестра ___ стати вчителькою.
+  - sentence: А моя сестра ___ стати вчителькою. (She dreams...)
     answer: мріє
     options:
     - мріє
     - планує
     - обіцяє
     - вирішила
-  - sentence: Тато ___ купити нову машину.
+  - sentence: Тато ___ купити нову машину. (He decided...)
     answer: вирішив
     options:
     - вирішив
     - мріє
     - сподівається
     - обіцяє
-  - sentence: Ми всі ___ побачити бабусю скоро.
+  - sentence: Ми всі ___ побачити бабусю скоро. (We hope...)
     answer: сподіваємося
     options:
     - сподіваємося
     - плануємо
     - обіцяємо
     - мріємо
-  - sentence: Я ___ прийти на вечерю вчасно.
-    answer: постараюся
+  - sentence: Я ___ прийти на вечерю вчасно. (I want...)
+    answer: хочу
     options:
-    - постараюся
+    - хочу
     - планую
     - мрію
     - вирішив
-  - sentence: Мама ___ допомогти мені з уроками завтра.
+  - sentence: Мама ___ допомогти мені з уроками завтра. (She promises...)
     answer: обіцяє
     options:
     - обіцяє
     - мріє
     - думає
     - сподівається
-  - sentence: Мій друг ___ вивчити англійську мову.
+  - sentence: Мій друг ___ вивчити англійську мову. (He wants...)
     answer: хоче
     options:
     - хоче
     - обіцяє
     - планує
     - мріє
-  - sentence: Потім ми ___ почати курс разом наступного тижня.
+  - sentence: Потім ми ___ почати курс разом наступного тижня. (We are going to...)
     answer: збираємося
     options:
     - збираємося
     - мріємо
     - сподіваємося
     - думаємо
-  - sentence: Я ___ вивчити три мови.
+  - sentence: Я ___ вивчити три мови. (I intend...)
     answer: маю намір
     options:
     - маю намір
     - хочу
     - думаю
     - обіцяю
-  - sentence: Ми ___ поїхати в Одесу.
+  - sentence: Ми ___ поїхати в Одесу. (We dream...)
     answer: мріємо
     options:
     - мріємо
     - маємо
     - будемо
     - хочемо
-  - sentence: Я ___ зробити це добре.
-    answer: спробую
+  - sentence: Я ___ зробити це добре. (I want...)
+    answer: хочу
     options:
-    - спробую
-    - буду
     - хочу
+    - буду
+    - спробую
     - мрію
-  - sentence: Він ___ бути там.
+  - sentence: Він ___ бути там. (He promises...)
     answer: обіцяє
     options:
     - обіцяє
@@ -346,10 +347,9 @@
 - type: quiz
   title: Time Expressions
   items:
-  - question: Which English phrase correctly translates «Наступного року ми поїдемо
-      до моря»?
+  - question: Which English phrase correctly translates «Наступного року ми плануємо поїхати до моря»?
     options:
-    - text: Next year we will go to the sea.
+    - text: Next year we plan to go to the sea.
       correct: true
     - text: Last year we went to the sea.
       correct: false
@@ -357,9 +357,9 @@
       correct: false
     - text: Every year we go to the sea.
       correct: false
-  - question: How do you accurately translate «Пізніше я подзвоню тобі» into English?
+  - question: How do you accurately translate «Пізніше я буду вдома» into English?
     options:
-    - text: Later I will call you.
+    - text: Later I will be at home.
       correct: true
     - text: Earlier I called you.
       correct: false
@@ -397,9 +397,9 @@
       correct: false
     - text: I am always at home.
       correct: false
-  - question: What is the correct English translation of «Післязавтра вона приїде»?
+  - question: What is the correct English translation of «Післязавтра вона буде тут»?
     options:
-    - text: The day after tomorrow she will arrive.
+    - text: The day after tomorrow she will be here.
       correct: true
     - text: Yesterday she arrived.
       correct: false
@@ -417,9 +417,9 @@
       correct: false
     - text: Every week we start the course.
       correct: false
-  - question: What does exactly the word «Згодом він зрозуміє» mean today?
+  - question: What does exactly the word «Згодом він буде знати» mean today?
     options:
-    - text: Eventually he will understand.
+    - text: Eventually he will know.
       correct: true
     - text: He already understands.
       correct: false
@@ -545,9 +545,9 @@
   - words:
     - пізніше
     - я
-    - тобі
-    - зателефоную
-    answer: Я зателефоную тобі пізніше
+    - працювати
+    - буду
+    answer: Я буду працювати пізніше
   instruction: Arrange the words in the correct order.
 - type: true-false
   title: Understanding Future Expressions
@@ -568,24 +568,24 @@
     correct: true
     explanation: Correct!
   - statement: «Скоро» means "soon."
-    correct: false
+    correct: true
     explanation: Correct!
   - statement: «Обіцяю» means "I promise."
     correct: true
     explanation: Correct!
   - statement: «Вже» means "already."
-    correct: false
+    correct: true
     explanation: Correct!
   - statement: «Пізніше» means "later."
     correct: true
     explanation: Correct!
   - statement: «Планую» means "I plan."
-    correct: false
+    correct: true
     explanation: Correct!
   - statement: «Сподіваюся» means "I hope."
     correct: true
     explanation: Correct!
   - statement: «Ніколи» means "never."
-    correct: false
+    correct: true
     explanation: Correct!
   instruction: Determine if the statement is true.

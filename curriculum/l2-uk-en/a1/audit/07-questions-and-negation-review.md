@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1131
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 22:43:27
+**Generated:** 2026-02-08 22:17:51
 
 ## Configuration
 **Type:** A1-grammar
@@ -26,8 +26,8 @@
 | 4 | true-false | Question and Negation Rules | 12 | 8 | ✅ |
 | 5 | group-sort | Frequency Adverbs | 12 | 12 | ✅ |
 | 6 | fill-in | Add Negation | 12 | 8 | ✅ |
-| 7 | anagram | Question Words | 12 | 8 | ✅ |
-| 8 | anagram | Frequency Words | 12 | 8 | ✅ |
+| 7 | anagram | Question Words | 11 | 8 | ✅ |
+| 8 | anagram | Frequency Words | 8 | 8 | ✅ |
 | 9 | quiz | Negative Sentence Order | 12 | 8 | ✅ |
 
 **Summary:**
@@ -38,32 +38,29 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 1041/1131 (raw: 1455) (90 short)
+- **Words:** ✅ 1163/1131 (raw: 1576)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 6/1
+- **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 20.1% (target 15-35% (M07))
+- **Immersion:** 🇺🇦 20.2% (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
-| **Presentation** | ✅ | 514 | Included in Core |
-| **Practice** | ⚪️ | 44 | Skipped |
+| **Presentation** | ✅ | 591 | Included in Core |
+| **Practice** | ⚪️ | 89 | Skipped |
 | **Production** | ➖ | 158 | Excluded Type |
 | **Cultural Insight** | ✅ | 131 | Included in Core |
 | **Підсумок** | ✅ | 74 | Included in Core |

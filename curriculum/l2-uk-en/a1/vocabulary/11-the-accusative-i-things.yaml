@@ -21,3 +21,74 @@ items:
   ipa: /t͡ʃˈutɪ/
   translation: to hear
   pos: verb
+- lemma: бачити
+  ipa: /bˈat͡ʃɪtɪ/
+  translation: to see
+  pos: verb
+- lemma: брати
+  ipa: /brˈatɪ/
+  translation: to take
+  pos: verb
+- lemma: мати
+  ipa: /mˈatɪ/
+  translation: to have
+  pos: verb
+- lemma: хотіти
+  ipa: /xɔtˈitɪ/
+  translation: to want
+  pos: verb
+- lemma: купувати
+  ipa: /kupuʋˈatɪ/
+  translation: to buy
+  pos: verb
+- lemma: книга
+  ipa: /knˈɪɦa/
+  translation: book
+  pos: noun
+  gender: f
+- lemma: кава
+  ipa: /kˈaʋa/
+  translation: coffee
+  pos: noun
+  gender: f
+- lemma: любити
+  ipa: /lʲubˈɪtɪ/
+  translation: to love, to like
+  pos: verb
+- lemma: шукати
+  ipa: /ʃukˈatɪ/
+  translation: to look for
+  pos: verb
+- lemma: знаходити
+  ipa: /znaxˈɔdɪtɪ/
+  translation: to find
+  pos: verb
+- lemma: показувати
+  ipa: /pɔkˈazuʋatɪ/
+  translation: to show
+  pos: verb
+- lemma: посилка
+  ipa: /pɔsˈɪlka/
+  translation: parcel, package
+  pos: noun
+  gender: f
+- lemma: паспорт
+  ipa: /pˈaspɔrt/
+  translation: passport
+  pos: noun
+  gender: m
+- lemma: квиток
+  ipa: /kʋɪtˈɔk/
+  translation: ticket
+  pos: noun
+  gender: m
+- lemma: журнал
+  ipa: /ʒurnˈal/
+  translation: magazine, journal
+  pos: noun
+  gender: m
+- lemma: газета
+  ipa: /ɦazˈɛta/
+  translation: newspaper
+  pos: noun
+  gender: f

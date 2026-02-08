@@ -12,10 +12,11 @@ items:
   ipa: /zblˈɪʒuʋatɪ/
   translation: to bring together
   pos: verb
-- lemma: зіркий
-  ipa: /zirkˈɪj/
-  translation: visonary, hawk-eyed
-  pos: adj
+- lemma: зірка
+  ipa: /zʲirkɑ/
+  translation: star
+  pos: noun
+  gender: f
 - lemma: календар
   ipa: /kalɛndˈar/
   translation: calendar

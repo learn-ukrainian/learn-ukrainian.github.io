@@ -2,35 +2,35 @@
   "module": "15-the-testament",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:10.877685Z",
+  "last_audit": "2026-02-08T20:18:58.674022Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349658Z",
-    "meta": "2026-01-29T07:39:04.966616Z",
-    "activities": "2026-01-18T21:38:35.704314Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.564036Z"
+    "md": "2026-02-08T20:13:21.574372Z",
+    "meta": "2026-02-08T19:47:43.633966Z",
+    "activities": "2026-02-08T19:50:05.555254Z",
+    "vocabulary": "2026-02-08T19:47:00.123443Z",
+    "plan": "2026-02-07T10:06:50.457896Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3572/4500 (raw: 4454)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4559/4500 (raw: 4722)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "4/3"
+      "message": "8/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "15/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -2,13 +2,13 @@
   "module": "yaroslav-wise",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-03T22:54:06.491208Z",
+  "last_audit": "2026-02-08T18:37:29.509201Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.347282Z",
-    "meta": "2026-01-29T07:38:18.610801Z",
-    "activities": "2026-01-27T15:34:55.197808Z",
-    "vocabulary": "2026-01-26T23:26:52.141942Z",
+    "md": "2026-02-07T11:38:26.561018Z",
+    "meta": "2026-02-07T10:03:51.235761Z",
+    "activities": "2026-02-07T10:03:51.317498Z",
+    "vocabulary": "2026-02-07T10:03:51.372121Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4055/4000 (raw: 4481)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4055/4000 (raw: 4481) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

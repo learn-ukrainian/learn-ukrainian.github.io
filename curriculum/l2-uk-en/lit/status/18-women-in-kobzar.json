@@ -2,35 +2,35 @@
   "module": "18-women-in-kobzar",
   "level": "LIT",
   "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:16:15.542610Z",
+  "last_audit": "2026-02-08T21:40:56.454301Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349657Z",
-    "meta": "2026-01-29T07:39:04.968434Z",
-    "activities": "2026-01-18T21:47:37.485446Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.575799Z"
+    "md": "2026-02-08T21:38:59.942044Z",
+    "meta": "2026-02-08T21:25:07.870988Z",
+    "activities": "2026-02-08T21:25:23.674468Z",
+    "vocabulary": "2026-02-08T21:16:12.627898Z",
+    "plan": "2026-02-07T10:06:50.456981Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3605/4500 (raw: 3911)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4994/4500 (raw: 5023)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "3/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "15/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

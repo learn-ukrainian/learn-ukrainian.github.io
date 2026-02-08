@@ -2,13 +2,13 @@
   "module": "olha-sviatoslav",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T11:36:06.645685Z",
+  "last_audit": "2026-02-08T18:25:15.890647Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:56:26.045707Z",
+    "md": "2026-02-08T18:22:26.680064Z",
     "meta": "2026-02-07T10:03:51.203535Z",
     "activities": "2026-02-07T10:03:51.253144Z",
-    "vocabulary": "2026-02-07T10:03:51.335083Z",
+    "vocabulary": "2026-02-08T18:21:53.539817Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4493/4000 (raw: 4690) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4660/4000 (raw: 4865)"
     },
     "activities": {
       "status": "pass",
@@ -28,9 +28,9 @@
       "message": "5/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "17 < 20 (soft target)"
+      "message": "20/20"
     },
     "naturalness": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

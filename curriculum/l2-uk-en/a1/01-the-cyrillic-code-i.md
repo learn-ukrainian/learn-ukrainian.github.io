@@ -16,13 +16,13 @@ These letters look and sound almost identical to their English counterparts. Whe
 | ------- | ----------------- | ------------ | ------- |
 | **А а** | /ɑ/ like «father» | м**а**м**а** | mama    |
 | **Е е** | /ɛ/ like «bet»    | м**е**тро    | metro   |
-| **І і** | /i/ like «meet»   | п**і**ца     | pizza   |
+| **І і** | /i/ like «meet»   | к**і**но     | cinema  |
 | **О о** | /ɔ/ like «soft»   | д**о**ктор   | doctor  |
-| **К к** | /k/ like «kite»   | бан**к**     | bank    |
-| **М м** | /m/ like «mom»    | **м**узика   | music   |
-| **Т т** | /t/ like «top»    | **т**урист   | tourist |
+| **К к** | /k/ like «kite»   | **к**іт      | cat     |
+| **М м** | /m/ like «mom»    | **м**аска    | mask    |
+| **Т т** | /t/ like «top»    | **т**акт     | tact    |
 
-These are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **метро** (metro) uses only True Friends, so you can read it right now: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.
+These are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **тато** (dad) uses only these letters: T-A-T-O. The word **метро** (metro) also uses letters you'll recognize: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.
 
 > 💡 **Did You Know?**
 >
@@ -39,7 +39,7 @@ These letters LOOK like English letters but make COMPLETELY different sounds. Th
 | **Р р** | P          | /r/ like «red» (rolled)  | **р**адіо | radio   |
 | **С с** | C          | /s/ like «sun»           | **с**уп   | soup    |
 | **У у** | Y          | /u/ like «moon»          | с**у**п   | soup    |
-| **Х х** | X          | /x/ like Scottish «loch» | **х**окей | hockey  |
+| **Х х** | X          | /x/ like Scottish «loch» | **х**ор   | choir   |
 
 The word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced «bank», not «bahk»!
 
@@ -59,7 +59,7 @@ These letters are completely new to English speakers. But don't worry. They repr
 | **Б б** | /b/ like «ball» | **б**анан  | banana  |
 | **Д д** | /d/ like «dog»  | **д**октор | doctor  |
 | **З з** | /z/ like «zoo»  | ва**з**а   | vase    |
-| **Л л** | /l/ like «love» | **л**имон  | lemon   |
+| **Л л** | /l/ like «love» | **л**ото   | lotto   |
 | **П п** | /p/ like «pet»  | **п**арк   | park    |
 | **Ф ф** | /f/ like «fun»  | **ф**ото   | photo   |
 
@@ -79,14 +79,14 @@ Many words in Ukrainian are international. They're borrowed from Latin, Greek, o
 Банк (bank). Парк (park). Кафе (café). Бар (bar). Ресторан (restaurant).
 
 **Food:**
-Кава (coffee). Суп (soup). Салат (salad). Піца (pizza). Банан (banana). Лимон (lemon).
+Кава (coffee). Суп (soup). Салат (salad). Тост (toast). Банан (banana). Какао (cocoa). Піца (pizza). Лимон (lemon).
 
 **Technology:**
 Метро (metro). Радіо (radio). Телефон (telephone). Інтернет (internet). Фото (photo). Відео (video).
 
 ### Mini-Dialogue 1: At the Metro Station
 
-— Це метро? *(Tse metro?)* — Is this the metro?
+— Тут метро? *(Tut metro?)* — Is the metro here?
 — Так, метро. *(Tak, metro.)* — Yes, the metro.
 
 Notice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!
@@ -98,13 +98,21 @@ Notice how **метро** looks almost English? That's because it IS almost Engl
 
 The word **кава** comes from the same root as English «coffee» but took a different path through Turkish and Arabic. In Ukrainian, it sounds like «kava.»
 
+### Decoding Strategies
+
+When you see a word in Cyrillic, your brain might feel overwhelmed at first. Follow these three steps to crack the code:
+
+1.  **Identify the True Friends**: Look for letters like **А, К, М**. These are your anchors. They look and sound exactly like you expect, giving you a head start on the word.
+2.  **Beware of the False Friends**: This is where most beginners trip up. When you see a **Р**, consciously tell yourself: «That is an R, not a P.» When you see **В**, remind yourself: «That is a V, not a B.» Slowing down at these letters will prevent common reading errors.
+3.  **Trust the Phonetics**: Unlike English, where «cough» and «dough» look similar but sound different, Ukrainian is very consistent. One letter almost always equals one sound. There are no silent letters to worry about here!
+
 ## Cultural Insight
 
 ### Why Ukrainian Uses Cyrillic
 
-When people see Cyrillic, they often think «Russian alphabet.» But Cyrillic belongs to no single nation. It was created specifically for Slavic peoples. Bulgarians, Serbs, Ukrainians, and others used it centuries before the Russian Empire even existed.
+When people see Cyrillic, they often think «Russian alphabet.» But Cyrillic belongs to no single nation. It was created specifically for Slavic peoples. Bulgarians, Serbs, Ukrainians, and others used it centuries before the Russian Empire even existed. In fact, Kyiv was a major center of literacy and culture when Moscow was still just a forest.
 
-Ukrainian Cyrillic has 33 letters. Some exist only in Ukrainian:
+Ukrainian Cyrillic has 33 letters. Some exist only in Ukrainian, making the language look distinct on the page compared to its neighbors:
 
 **І і** — Ukrainian has this simple «ee» sound like in «meet».
 

@@ -1,26 +1,26 @@
 {
   "module": "12-the-ballads",
   "level": "LIT",
-  "plan_version": "1.0",
-  "last_audit": "2026-01-30T21:16:08.450799Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-08T15:04:39.648390Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349570Z",
-    "meta": "2026-01-29T07:39:04.964729Z",
-    "activities": "2026-01-18T21:10:06.242006Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.552906Z"
+    "md": "2026-02-08T15:03:57.295769Z",
+    "meta": "2026-02-08T15:04:36.026860Z",
+    "activities": "2026-02-08T14:55:28.464915Z",
+    "vocabulary": "2026-02-08T14:48:16.470492Z",
+    "plan": "2026-02-07T10:03:50.859008Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3919/4500 (raw: 4396)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4512/4500 (raw: 4685)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "35/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

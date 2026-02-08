@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M20 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:34
+**Generated:** 2026-02-08 23:43:34
 
 ## Configuration
 **Type:** C1-biography
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5010/4300 (raw: 5168)
+- **Words:** ✅ 5009/4300 (raw: 5167)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -80,6 +80,6 @@
 | **Історичний контекст** | ✅ | 579 | Included in Core |
 | **Внесок** | ⚪️ | 418 | Skipped |
 | **Останні роки** | ⚪️ | 426 | Skipped |
-| **Спадщина** | ⚪️ | 494 | Skipped |
+| **Спадщина** | ⚪️ | 493 | Skipped |
 | **Підсумок — Мова як фортеця** | ✅ | 314 | Included in Core |
 | **Потрібно більше практики?** | ⚪️ | 136 | Skipped |

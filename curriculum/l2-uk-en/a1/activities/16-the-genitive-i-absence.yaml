@@ -41,8 +41,9 @@
   - name: Neuter -а
     items:
     - вікна
-    - знання
-    - значення
+    - слова
+    - права
+    - міста
   instruction: Distribute the elements into groups.
 - type: fill-in
   title: Complete with Genitive
@@ -94,7 +95,7 @@
     options:
     - ідея
     - ідеї
-    - ідеї
+    - ідей
     - ідеєю
   - sentence: Це ___ причини.
     answer: без
@@ -115,15 +116,15 @@
     options:
     - різниця
     - різниці
-    - різниці
+    - різницю
     - різницею
   - sentence: У них немає ___.
-    answer: знання
+    answer: права
     options:
-    - знання
-    - знання
-    - знанні
-    - знанням
+    - право
+    - права
+    - праві
+    - правом
   - sentence: ___ допомоги це важко.
     answer: Без
     options:
@@ -146,7 +147,7 @@
     - text: Locative
       correct: false
     explanation: немає always requires genitive case
-  - question: How do you accurately say "I don't have time"?
+  - question: How do you say "I don't have time"?
     options:
     - text: Я не маю час
       correct: false
@@ -157,7 +158,7 @@
     - text: У мене не час
       correct: false
     explanation: 'The pattern is: У + person + немає + noun-genitive'
-  - question: What is accurately the genitive form of «книга»?
+  - question: What is the genitive form of «книга»?
     options:
     - text: книга
       correct: false
@@ -168,7 +169,7 @@
     - text: книгою
       correct: false
     explanation: Feminine -а becomes -и in genitive
-  - question: Which word means accurately the English word "without"?
+  - question: Which word means the English word "without"?
     options:
     - text: з
       correct: false
@@ -190,7 +191,7 @@
     - text: столом
       correct: false
     explanation: Masculine consonant + -у in genitive
-  - question: How do you accurately say "No problem"?
+  - question: How do you say "No problem"?
     options:
     - text: Не проблема
       correct: false
@@ -201,7 +202,7 @@
     - text: У проблеми немає
       correct: false
     explanation: The idiomatic phrase is «Немає проблем!»
-  - question: What is accurately the genitive form of «вікно»?
+  - question: What is the genitive form of «вікно»?
     options:
     - text: вікно
       correct: false
@@ -223,7 +224,7 @@
     - text: У вона немає грошей
       correct: false
     explanation: 'Pattern: У + neї + немає + genitive'
-  - question: What does «У вас немає часу?» accurately mean?
+  - question: What does «У вас немає часу?» mean?
     options:
     - text: Do you have time?
       correct: false
@@ -234,7 +235,7 @@
     - text: Time doesn't have you
       correct: false
     explanation: У вас = "by you" (formal/plural)
-  - question: Which preposition requires accurately the genitive case?
+  - question: Which preposition requires the genitive case?
     options:
     - text: в
       correct: false
@@ -245,7 +246,7 @@
     - text: з (with)
       correct: false
     explanation: без (without) always takes genitive
-  - question: What is the genitive form of accurately the word «ідея»?
+  - question: What is the genitive form of the word «ідея»?
     options:
     - text: ідея
       correct: false
@@ -256,7 +257,7 @@
     - text: ідеєю
       correct: false
     explanation: Feminine -я becomes -ї in genitive
-  - question: How do you say accurately "coffee without sugar"?
+  - question: How do you say "coffee without sugar"?
     options:
     - text: кава не цукор
       correct: false
@@ -315,11 +316,11 @@
     options:
     - text: У мене немає часу
       correct: true
-    - text: мене У немає часу
+    - text: Часу немає мене у
       correct: false
-    - text: Incorrect order for this sentence
+    - text: У немає мене часу
       correct: false
-    - text: вони
+    - text: Мене у часу немає
       correct: false
     explanation: 'Correct: У мене немає часу'
   - question: 'Identify the correct order: "There''s no coffee here."'
@@ -328,9 +329,9 @@
       correct: true
     - text: немає Тут кави
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Кави тут немає
       correct: false
-    - text: вони
+    - text: кави Тут немає
       correct: false
     explanation: 'Correct: Тут немає кави'
   - question: 'Identify the correct order: "She doesn''t have money."'
@@ -339,9 +340,9 @@
       correct: true
     - text: неї У немає грошей
       correct: false
-    - text: Incorrect order for this sentence
+    - text: немає У грошей неї
       correct: false
-    - text: вони
+    - text: грошей немає У неї
       correct: false
     explanation: 'Correct: У неї немає грошей'
   - question: 'Identify the correct order: "Without sugar, please."'
@@ -350,20 +351,20 @@
       correct: true
     - text: цукру, Без будь ласка
       correct: false
-    - text: Incorrect order for this sentence
+    - text: будь цукру, Без ласка
       correct: false
-    - text: вони
+    - text: ласка Без будь цукру
       correct: false
     explanation: 'Correct: Без цукру, будь ласка'
   - question: 'Identify the correct order: "No problem!"'
     options:
     - text: Немає проблем
       correct: true
-    - text: проблем Némає
+    - text: проблем Немає
       correct: false
-    - text: Incorrect order for this sentence
+    - text: Проблем немає
       correct: false
-    - text: вони
+    - text: Немає Проблем
       correct: false
     explanation: 'Correct: Немає проблем'
   - question: 'Identify the correct order: "We don''t have a choice."'
@@ -372,9 +373,9 @@
       correct: true
     - text: нас У немає вибору
       correct: false
-    - text: Incorrect order for this sentence
+    - text: немає У нас вибору
       correct: false
-    - text: вони
+    - text: вибору немає У нас
       correct: false
     explanation: 'Correct: У нас немає вибору'
   - question: 'Identify the correct order: "You don''t have the opportunity?"'
@@ -383,9 +384,9 @@
       correct: true
     - text: тебе У немає можливості
       correct: false
-    - text: Incorrect order for this sentence
+    - text: немає тебе У можливості
       correct: false
-    - text: вони
+    - text: можливості У тебе немає
       correct: false
     explanation: 'Correct: У тебе немає можливості'
   - question: 'Identify the correct order: "Without help, it''s difficult."'
@@ -394,9 +395,9 @@
       correct: true
     - text: допомоги Без це важко
       correct: false
-    - text: Incorrect order for this sentence
+    - text: це важко допомоги Без
       correct: false
-    - text: вони
+    - text: важко Без допомоги це
       correct: false
     explanation: 'Correct: Без допомоги це важко'
   - question: 'Identify the correct order: "There''s no difference here."'
@@ -405,9 +406,9 @@
       correct: true
     - text: немає Тут різниці
       correct: false
-    - text: Incorrect order for this sentence
+    - text: різниці Тут немає
       correct: false
-    - text: вони
+    - text: немає різниці Тут
       correct: false
     explanation: 'Correct: Тут немає різниці'
   - question: 'Identify the correct order: "You don''t have patience?"'
@@ -416,31 +417,31 @@
       correct: true
     - text: вас У немає терпіння
       correct: false
-    - text: Incorrect order for this sentence
+    - text: немає У вас терпіння
       correct: false
-    - text: вони
+    - text: терпіння У вас немає
       correct: false
     explanation: 'Correct: У вас немає терпіння'
-  - question: 'Identify the correct order: "They don''t have knowledge."'
+  - question: 'Identify the correct order: "They don''t have the right."'
     options:
-    - text: У них немає знання
+    - text: У них немає права
       correct: true
-    - text: них У немає знання
+    - text: них У немає права
       correct: false
-    - text: Incorrect order for this sentence
+    - text: права немає У них
       correct: false
-    - text: вони
+    - text: немає У них права
       correct: false
-    explanation: 'Correct: У них немає знання'
+    explanation: 'Correct: У них немає права'
   - question: 'Identify the correct order: "I don''t have experience."'
     options:
     - text: У мене немає досвіду
       correct: true
     - text: мене У немає досвіду
       correct: false
-    - text: Incorrect order for this sentence
+    - text: немає У мене досвіду
       correct: false
-    - text: вони
+    - text: досвіду У мене немає
       correct: false
     explanation: 'Correct: У мене немає досвіду'
   instruction: Choose the correct answer.
@@ -457,10 +458,10 @@
     right: without reason
   - left: у мене немає
     right: I don't have
-  - left: для вас
-    right: for you
-  - left: крім того
-    right: except that
+  - left: без молока
+    right: without milk
+  - left: немає води
+    right: no water
   - left: без допомоги
     right: without help
   - left: у неї немає
@@ -538,16 +539,16 @@
     answer: немає терпіння
     options:
     - немає терпіння
-    - немає терпіння
+    - немає терпінню
     - є терпіння
     - не терпіння
-  - sentence: У них є знання. → У них ___ ___.
-    answer: немає знання
+  - sentence: У них є право. → У них ___ ___.
+    answer: немає права
     options:
-    - немає знання
-    - немає знання
-    - є знання
-    - не знання
+    - немає право
+    - немає права
+    - є права
+    - не право
   - sentence: У неї є допомога. → У неї ___ ___.
     answer: немає допомоги
     options:

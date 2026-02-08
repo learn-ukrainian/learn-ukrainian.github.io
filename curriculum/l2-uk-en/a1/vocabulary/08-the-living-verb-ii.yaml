@@ -1,4 +1,3 @@
----
 module: 08-the-living-verb-ii
 level: A1
 version: '2.0'
@@ -9,6 +8,62 @@ items:
   pos: noun
   gender: f
 - lemma: іти
-  ipa: /itˈɪ/
+  ipa: /iˈtɪ/
   translation: to go, to walk
+  pos: verb
+- lemma: говорити
+  ipa: /ɦɔvɔˈrɪtɪ/
+  translation: to speak
+  pos: verb
+- lemma: робити
+  ipa: /rɔˈbɪtɪ/
+  translation: to do, to make
+  pos: verb
+- lemma: бачити
+  ipa: /ˈbɑtʃɪtɪ/
+  translation: to see
+  pos: verb
+- lemma: любити
+  ipa: /lʲuˈbɪtɪ/
+  translation: to love
+  pos: verb
+- lemma: хотіти
+  ipa: /xɔˈtitɪ/
+  translation: to want
+  pos: verb
+- lemma: їсти
+  ipa: /ˈjistɪ/
+  translation: to eat
+  pos: verb
+- lemma: пити
+  ipa: /ˈpɪtɪ/
+  translation: to drink
+  pos: verb
+- lemma: ходити
+  ipa: /xɔˈdɪtɪ/
+  translation: to walk, to go
+  pos: verb
+- lemma: спати
+  ipa: /ˈspɑtɪ/
+  translation: to sleep
+  pos: verb
+- lemma: стояти
+  ipa: /stɔˈjɑtɪ/
+  translation: to stand
+  pos: verb
+- lemma: сидіти
+  ipa: /sɪˈdʲitɪ/
+  translation: to sit
+  pos: verb
+- lemma: вчити
+  ipa: /ˈwtʃɪtɪ/
+  translation: to teach, to learn
+  pos: verb
+- lemma: просити
+  ipa: /prɔˈsɪtɪ/
+  translation: to ask (for)
+  pos: verb
+- lemma: дякувати
+  ipa: /ˈdʲɑkʊwɑtɪ/
+  translation: to thank
   pos: verb

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4400
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:27
+**Generated:** 2026-02-08 23:13:21
 
 ## Configuration
 **Type:** C1-biography
@@ -28,19 +28,21 @@
 | 6 | critical-analysis | Аналіз дипломатичної символіки меча | 1 | 1 | ✅ |
 | 7 | comparative-study | Порівняння стратегій легітимізації | 1 | 1 | ✅ |
 | 8 | essay-response | Есе: Дилема легітимності в середньовічній Русі | 1 | 1 | ✅ |
+| 9 | select | Вікторина: Епоха Романа Мстиславича | 12 | 5 | ✅ |
+| 10 | true-false | Правда чи Міф: Життя Романа Великого | 12 | 5 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
+- Total activities: 10 (target: 3-9) ❌
+- Unique types: 7 (minimum: 3) ✅
 - Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 5681/4400 (raw: 5942)
-- **Activities:** ✅ 8/3
+- **Activities:** ✅ 10/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
+- **Unique_types:** ✅ 7/3 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
@@ -48,7 +50,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (8 activities)
+- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

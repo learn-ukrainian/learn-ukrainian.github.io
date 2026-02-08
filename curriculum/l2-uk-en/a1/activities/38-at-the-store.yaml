@@ -23,6 +23,27 @@
     - left: черга
       right: queue / line
 
+- type: match-up
+  title: Finding Items
+  instruction: Match the product to the correct department.
+  pairs:
+    - left: Молоко
+      right: Молочний відділ (Dairy)
+    - left: Хліб
+      right: Хлібний відділ (Bakery)
+    - left: Яблука
+      right: Овочі та фрукти (Produce)
+    - left: М'ясо
+      right: М'ясний відділ (Meat)
+    - left: Шампунь
+      right: Засоби гігієни (Hygiene)
+    - left: Сир
+      right: Молочний відділ (Dairy)
+    - left: Морква
+      right: Овочі та фрукти (Produce)
+    - left: Вода
+      right: Напої (Beverages)
+
 - type: fill-in
   title: At the Cash Register
   instruction: Complete the dialogue with the cashier using the correct words.

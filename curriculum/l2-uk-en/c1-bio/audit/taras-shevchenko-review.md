@@ -1,8 +1,8 @@
 # Audit Report: M39 — taras-shevchenko.md
 **Level:** C1-BIO | **Module:** M39 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:45
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-08 23:13:40
 
 ## Configuration
 **Type:** C1-biography
@@ -35,6 +35,15 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/taras-shevchenko-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4833/4000 (raw: 4972)
 - **Activities:** ✅ 7/3
@@ -46,7 +55,7 @@
 - **Vocab:** ✅ 28/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

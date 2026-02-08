@@ -1,40 +1,113 @@
----
-module: 13-the-locative-where-things-are
-level: A1
-version: '2.0'
 items:
-- lemma: балкон
-  ipa: /balkˈɔn/
-  translation: balcony
-  pos: noun
-  gender: m
-- lemma: Волинь
-  ipa: /ʋɔlˈɪnʲ/
-  translation: Volyn
-  pos: noun
-  gender: f
-- lemma: екран
-  ipa: /ɛkrˈan/
-  translation: screen
-  pos: noun
-  gender: m
-- lemma: Кавказ
-  ipa: /kaʋkˈaz/
-  translation: Caucasus
-  pos: noun
-  gender: m
-- lemma: Київ
-  ipa: /ˈkɪjɪʋ/
-  translation: Kyiv
-  pos: noun
-  gender: m
-- lemma: музей
-  ipa: /muzˈɛj/
-  translation: museum
-  pos: noun
-  gender: m
-- lemma: площа
-  ipa: /plˈɔʃt͡ʃa/
-  translation: square (city), area
-  pos: noun
-  gender: f
+  - lemma: де
+    ipa: /dɛ/
+    translation: where
+    pos: adv
+  - lemma: в/у
+    ipa: /w/ /u/
+    translation: in
+    pos: prep
+  - lemma: на
+    ipa: /na/
+    translation: on/at
+    pos: prep
+  - lemma: кімната
+    ipa: /kʲimˈnata/
+    translation: room
+    pos: noun
+    gender: f
+  - lemma: стіл
+    ipa: /sʲtʲil/
+    translation: table
+    pos: noun
+    gender: m
+  - lemma: магазин
+    ipa: /maɦaˈzɪn/
+    translation: store
+    pos: noun
+    gender: m
+  - lemma: школа
+    ipa: /ˈʃkɔla/
+    translation: school
+    pos: noun
+    gender: f
+  - lemma: робота
+    ipa: /rɔˈbɔta/
+    translation: work
+    pos: noun
+    gender: f
+  - lemma: банк
+    ipa: /baŋk/
+    translation: bank
+    pos: noun
+    gender: m
+  - lemma: вокзал
+    ipa: /vɔkˈzal/
+    translation: station
+    pos: noun
+    gender: m
+  - lemma: підлога
+    ipa: /pʲidˈlɔɦa/
+    translation: floor
+    pos: noun
+    gender: f
+  - lemma: стіна
+    ipa: /sʲtʲiˈna/
+    translation: wall
+    pos: noun
+    gender: f
+  - lemma: вулиця
+    ipa: /ˈwulɪt͡sʲa/
+    translation: street
+    pos: noun
+    gender: f
+  - lemma: парк
+    ipa: /park/
+    translation: park
+    pos: noun
+    gender: m
+  - lemma: місто
+    ipa: /ˈmʲistɔ/
+    translation: city
+    pos: noun
+    gender: n
+  - lemma: офіс
+    ipa: /ˈɔfʲis/
+    translation: office
+    pos: noun
+    gender: m
+  - lemma: кафе
+    ipa: /kaˈfɛ/
+    translation: cafe
+    pos: noun
+    gender: n
+  - lemma: зупинка
+    ipa: /zuˈpɪnka/
+    translation: bus stop
+    pos: noun
+    gender: f
+  - lemma: пошта
+    ipa: /ˈpɔʃta/
+    translation: post office
+    pos: noun
+    gender: f
+  - lemma: лікарня
+    ipa: /lʲiˈkarnʲa/
+    translation: hospital
+    pos: noun
+    gender: f
+  - lemma: центр
+    ipa: /t͡sɛntr/
+    translation: center
+    pos: noun
+    gender: m
+  - lemma: площа
+    ipa: /ˈplɔʃt͡ʃa/
+    translation: square
+    pos: noun
+    gender: f
+  - lemma: вухо
+    ipa: /ˈwuxɔ/
+    translation: ear
+    pos: noun
+    gender: n

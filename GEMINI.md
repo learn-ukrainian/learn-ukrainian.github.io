@@ -13,7 +13,7 @@
 ### Strategic Decisions
 
 - **Architecture v2.0 (Plan-Build-Status)**:
-  - **Plans** (Immutable): `plans/{level}/{slug}.yaml`. Defines *what* to build (outline, targets).
+  - **Plans** (Immutable): `plans/{level}/{slug}.yaml`. Defines _what_ to build (outline, targets).
   - **Build** (Mutable): `meta/{slug}.yaml`, `{slug}.md`, `activities/`, `vocabulary/`. The actual content.
   - **Status** (Cached): `status/{slug}.json`. Auto-generated audit results.
 - **Pedagogy**:
@@ -33,14 +33,14 @@
 
 ### Vocabulary Targets (Verified Dec 2025)
 
-| Level | Modules | Module Target | Cumulative Target | Note |
-|---|---|---|---|---|
-| **A1** | 34 | ~25 words | ~850 | Deduplicated (Introduced Once) |
-| **A2** | 57 | ~25 words | ~1,800 | Deduplicated (Cumulative) |
-| **B1** | 86 | ~30-40 words | ~3,300 | Narrative-driven expansion |
-| **B2** | 145 | ~24 words | ~6,780 | Specialized domains |
-| **C1** | 182 | ~24 words | ~10,300 | Academic/Literary |
-| **C2** | 100 | ~25 words | ~12,280 | Native mastery |
+| Level  | Modules | Module Target | Cumulative Target | Note                           |
+| ------ | ------- | ------------- | ----------------- | ------------------------------ |
+| **A1** | 34      | ~25 words     | ~850              | Deduplicated (Introduced Once) |
+| **A2** | 57      | ~25 words     | ~1,800            | Deduplicated (Cumulative)      |
+| **B1** | 86      | ~30-40 words  | ~3,300            | Narrative-driven expansion     |
+| **B2** | 145     | ~24 words     | ~6,780            | Specialized domains            |
+| **C1** | 182     | ~24 words     | ~10,300           | Academic/Literary              |
+| **C2** | 100     | ~25 words     | ~12,280           | Native mastery                 |
 
 ### User Preferences
 
@@ -48,19 +48,66 @@
 - **Grammar Preference**: "Declension Group" (structural) approach over simple ending rules.
 - **Goal**: Theory-first curriculum; Vibe app is a secondary practice tool.
 
-## Work Status (Active: B2 History Rebuild)
+## Work Status
 
-- **Architecture Migration (Epic #465)**: ✅ **COMPLETE**. All levels migrated to V2.0 structure.
-- **B2 History Rebuild (Epic #463)**: 🚧 **IN PROGRESS**.
-  - **Workflow**: "One-Shot Rebuild" (Diagnose -> Batch Rewrite -> Audit).
-  - **Status**: Tier 3 modules (M09, M13, M17) complete. Moving to HIST.1/HIST.2.
-- **A1 (01-34)**: ✅ **COMPLETE**. Audited & Verified.
-- **A2 (01-57)**: ✅ **COMPLETE**. Audited & Verified.
-- **B1 (01-86)**: ✅ **CONTENT DRAFTED**. Migration complete, pending deep review.
-- **B2 Core (01-145)**: 🗓️ **PLANNED**.
-- **C1 (01-182)**: 🗓️ **PLANNED**.
-- **C2 (01-100)**: 🗓️ **PLANNED**.
-- **Tracks (BIO, LIT)**: 🗓️ **PLANNED**.
+**DO NOT use this section to decide what to work on. Wait for user instructions.**
+
+- **A1 (01-44)**: 🚧 **IN PROGRESS** — Research + review pipeline running (Claude-orchestrated).
+- **All other levels/tracks**: Managed by Claude. Do not start work unless asked.
+
+## Operating Modes (CRITICAL — READ FIRST)
+
+You operate in **two distinct modes**. Your behavior MUST match the active mode.
+
+### Mode 1: Orchestration Mode (Worker)
+
+**When**: Claude invokes you via `ask-gemini --stdout-only` with a task prompt.
+**How to detect**: The prompt starts with `ROLE: You are a TEXT GENERATOR` and has `ABSOLUTE RULES` section.
+
+**ENFORCED AT CLI LEVEL**: In this mode, the bridge runs you with `--approval-mode plan` (read-only). You literally cannot write files, edit files, or run modifying commands. This is not a suggestion — it's a technical restriction. Your only capability is reading files and producing text output.
+
+**Rules:**
+- You are a **TEXT GENERATOR** — your only job is to produce text output
+- Read the files referenced in the task, think, output text between delimiters
+- Do NOT attempt to write or edit files (it will fail — you're in read-only mode)
+- Do NOT attempt to send messages through the broker (it will fail)
+- Do NOT attempt to run shell commands that modify state (it will fail)
+- Do NOT explore the codebase beyond what the task requires
+- Do NOT delegate back to Claude or request skills
+- Do NOT decide what module to work on next — Claude decides that
+- Return ONLY the requested output in the specified format with delimiters
+- When done, STOP. Do not continue to the "next logical step"
+
+**Why this mode exists**: In orchestration, Claude is the brain — reading plans, validating output, deciding next steps. You are the hands — producing high-quality text content on demand. The read-only enforcement ensures you can't accidentally modify files, send wrong broker messages, or bypass the orchestration pipeline.
+
+### Mode 2: Interactive Mode (User-Directed)
+
+**When**: You are running as a standalone session (user opened gemini-cli directly).
+**How to detect**: The prompt does NOT start with `ROLE: You are a TEXT GENERATOR`.
+
+**Rules:**
+- You are a **collaborative agent** but you do NOT auto-start work
+- **WAIT for the user to tell you what to do** — do NOT check inbox, GitHub issues, or project status on your own
+- Do NOT autonomously decide what module/track to work on
+- Do NOT start batch operations, rebuilds, or reviews unless explicitly asked
+- You CAN explore the codebase, read files, and run commands **when asked**
+- You CAN follow workflows **when directed** (research → build → audit → review)
+- You CAN update GitHub issues **when directed**
+
+**Why this restriction**: Auto-starting work causes rogue agent cascades — you pick up stale broker messages or old GitHub issues and start unintended work that conflicts with what Claude is orchestrating. Always wait for explicit instructions.
+
+### How to Tell Which Mode You're In
+
+| Signal | Mode |
+|--------|------|
+| Prompt starts with `ROLE: You are a TEXT GENERATOR` | Orchestration (read-only) |
+| Prompt has `ABSOLUTE RULES` section | Orchestration (read-only) |
+| File writing/editing tools are blocked | Orchestration (read-only) |
+| No orchestration markers in prompt | Interactive (wait for user) |
+| You opened the session yourself | Interactive (wait for user) |
+| You can write/edit files | Interactive (wait for user) |
+
+---
 
 ## Critical Workflow Rules (Gemini)
 
@@ -87,13 +134,16 @@
 18. **Historiographical Mapping (Phase 0.5)**: For high-tension modules, include a "Contested Terms" table in research notes comparing Polish/Ukrainian/Russian terminology.
 19. **Propaganda Filter**: Reviewers must explicitly check if phrasing echoes Russian dezinformatsiia framing (especially for Volhynia, Holodomor, OUN/UPA).
 20. **Semantic Nuance Gate (C1+)**: Ensure sufficient usage of modal hedging markers («можливо», «ймовірно», «з одного боку», «водночас») to reflect complexity.
+21. **Brutally Honest Self-Review**: You are the final gatekeeper. Reviews must be brutally honest and critical. If content is "trash" or doesn't meet the "Theory-First" depth, reject and fix it immediately. No sugarcoating.
 
 ## macOS Environment & Tool Usage
 
 This development environment is a **macOS (Darwin)** system optimized for Linux compatibility and modern CLI workflows.
 
 ### Linux Compatibility (GNU Tools)
+
 The system has GNU utilities prioritized in the `PATH`. You can safely use standard Linux syntax for core commands:
+
 - **`sed`**: GNU version is active. Use standard `sed -i 's/pattern/replacement/' file` (no need for empty quotes `''` as in BSD `sed`).
 - **`grep`**: GNU version is active.
 - **`find`**: GNU version (`findutils`) is active.
@@ -101,7 +151,9 @@ The system has GNU utilities prioritized in the `PATH`. You can safely use stand
 - **`coreutils`**: Standard GNU core utilities are active.
 
 ### Modern CLI Tools (Preferred)
+
 The following modern tools are installed and should be used for better performance and output:
+
 - **Search**: Always use **`ripgrep` (`rg`)** via `run_shell_command("rg ...")`. It is significantly faster and respects `.gitignore`.
 - **File Finding**: Use **`fd`** instead of `find` for quick file location.
 - **File Viewing**: Use **`bat`** for syntax-highlighted file reading (though `read_file` is preferred for agent logic).
@@ -109,12 +161,15 @@ The following modern tools are installed and should be used for better performan
 - **JSON/YAML**: Use **`jq`** and **`yq`** for command-line processing of structured data.
 
 ### Python & Node Environments
+
 - **Python**: Managed via `pyenv`. Global default is `3.12.8`.
 - **Venv**: Always use `.venv/bin/python` for project-specific scripts.
 - **Aliases**: The shell has many helpful aliases (e.g., `gs`=`git status`, `ga`=`git add`, `nr`=`npm run`). While you should prefer explicit commands in scripts, these aliases are available for quick shell operations.
 
 ### Claude Code Optimizations
+
 The environment is tuned for AI agents:
+
 - **Max File Descriptors**: Set to `10,240`.
 - **Parallelism**: `MAKEFLAGS=-j10` for faster builds.
 - **Theme**: `BAT_THEME=Monokai Extended`.
@@ -132,6 +187,7 @@ The environment is tuned for AI agents:
 **WRONG FIX**: Trying to merge sections or delete one.
 
 **CORRECT FIX**: **RENAME** one header to NOT contain the duplicate word:
+
 - `Агіографічна спадщина: Моделі святості` → `Житійна творчість: Моделі святості`
 - The content stays the same, only the header text changes.
 
@@ -140,6 +196,7 @@ The environment is tuned for AI agents:
 **Error**: `Engagement ❌ 4/5`
 
 **Problem**: Not all callout types count as "engagement". Only these count:
+
 - `[!note]`, `[!tip]`, `[!warning]`, `[!caution]`, `[!important]`
 - `[!cultural]`, `[!history-bite]`, `[!myth-buster]`, `[!quote]`, `[!context]`
 - `[!analysis]`, `[!source]`, `[!legacy]`, `[!reflection]`, `[!fact]`
@@ -148,6 +205,7 @@ The environment is tuned for AI agents:
 **DON'T count**: `[!question]`, `[!thought-provoker]`, `[!insight]`, `[!timeline]`, `[!today-link]`, `[!local-flavor]`
 
 **FIX**: Change non-counted types to counted ones:
+
 - `[!question]` → `[!reflection]`
 - `[!thought-provoker]` → `[!note]`
 
@@ -182,41 +240,48 @@ run_shell_command("rg 'somepattern' .")
 ## Workflow Orchestration
 
 ### 1. Plan Mode Default
+
 - Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions).
 - If something goes sideways, STOP and re-plan immediately - don't keep pushing.
 - Use plan mode for verification steps, not just building.
 - Write detailed specs upfront to reduce ambiguity.
 
 ### 2. Subagent Strategy
+
 - Offload research, exploration, and parallel analysis to subagents.
 - For complex problems, throw more compute at it via subagents.
 - One task per subagent for focused execution.
 
 ### 3. Self-Improvement Loop
+
 - After ANY correction from the user: update `tasks/lessons.md` with the pattern.
 - Write rules for yourself that prevent the same mistake.
 - Ruthlessly iterate on these lessons until mistake rate drops.
 - Review lessons at session start for relevant project.
 
 ### 4. Verification Before Done
+
 - Never mark a task complete without proving it works.
 - Diff behavior between main and your changes when relevant.
 - Ask yourself: "Would a staff engineer approve this?"
 - Run tests, check logs, demonstrate correctness.
 
 ### 5. Demand Elegance (Balanced)
+
 - For non-trivial changes: pause and ask "is there a more elegant way?"
 - If a fix feels hacky: "Knowing everything I know now, implement the elegant solution".
 - Skip this for simple, obvious fixes - don't over-engineer.
 - Challenge your own work before presenting it.
 
 ### 6. Autonomous Bug Fixing
+
 - When given a bug report: just fix it. Don't ask for hand-holding.
 - Point at logs, errors, failing tests -> then resolve them.
 - Zero context switching required from the user.
 - Go fix failing CI tests without being told how.
 
 ## Task Management
+
 1. **Plan First**: Write plan to `tasks/todo.md` with checkable items.
 2. **Verify Plan**: Check in before starting implementation.
 3. **Track Progress**: Mark items complete as you go.
@@ -225,6 +290,7 @@ run_shell_command("rg 'somepattern' .")
 6. **Capture Lessons**: Update `tasks/lessons.md` after corrections.
 
 ## Core Principles
+
 - **Simplicity First**: Make every change as simple as possible. Impact minimal code.
 - **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
 - **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
@@ -232,6 +298,7 @@ run_shell_command("rg 'somepattern' .")
 ## Inter-Agent Communication (Claude <-> Gemini)
 
 ### Architecture
+
 All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/messages.db`
 
 **Session tracking:** The `sessions` table stores CLI session IDs per task for multi-turn conversations with full context.
@@ -271,6 +338,7 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 ```
 
 **Batch Operations (NEW):**
+
 ```bash
 # Process ALL unread messages for Gemini
 .venv/bin/python scripts/ai_agent_bridge.py process-all
@@ -302,16 +370,18 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 ```
 
 ### Message Types
-| Type | When to Use |
-|------|-------------|
-| `query` | Ask Claude a question |
-| `response` | Answer Claude's question |
-| `request` | Request Claude to do work |
-| `handoff` | Transfer task with full context |
-| `context` | Share state/decisions |
-| `feedback` | Comment on Claude's work |
+
+| Type       | When to Use                     |
+| ---------- | ------------------------------- |
+| `query`    | Ask Claude a question           |
+| `response` | Answer Claude's question        |
+| `request`  | Request Claude to do work       |
+| `handoff`  | Transfer task with full context |
+| `context`  | Share state/decisions           |
+| `feedback` | Comment on Claude's work        |
 
 ### When to Contact Claude
+
 - Need clarification on requirements
 - Hit a blocker and need help
 - Finished a task and need review
@@ -319,76 +389,61 @@ All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/
 - Have a question about the codebase
 
 ### Important
+
 - **Headless Session Awareness**: When using `ask-claude` or `process-claude`, a **headless Claude session** (different from the user's active session) may handle the request. Responses are still valid and stored in the inbox/conversation history, but the user's active session might not be immediately aware of them unless checking the full `conversation` for the `task_id`.
 - **Use `process-claude` for seamless invocation** - Claude runs headlessly and responds
 - **Always use task_id** - enables session tracking for multi-turn conversations
-- **Check inbox at start of session** - Claude may have left messages
+- **Check inbox ONLY when asked** - do not auto-check on session start
 - **Sessions are per-task** - same task_id = same conversation context
 - **PRESERVE task_id when responding** - When you reply to a message, use the SAME task_id from the incoming message. Don't create your own task_id. Example: if Claude's message has `task_id: tooling-feedback`, your response MUST use `--task-id tooling-feedback`
 - **Symmetric Response Routing**: `process_for_claude` now routes responses back via `send_message()` (matching the Gemini-side workflow).
 - **Error Handling**: If the Claude CLI crashes or times out, an `error` type message will be received instead of silence.
 - **Agent Watcher Daemon (Auto-Trigger)**: Polls `messages.db` and auto-triggers agents. Includes loop prevention (max 8 turns/task). When limit is hit, a stuck report is saved to `{track}/stuck/{slug}.md`.
-    ```bash
-    # Check status
-    .venv/bin/python scripts/agent_watcher.py --status
-    # Start daemon (background)
-    .venv/bin/python scripts/agent_watcher.py --daemon
-    # Stop daemon
-    .venv/bin/python scripts/agent_watcher.py --stop
-    ```
+  ```bash
+  # Check status
+  .venv/bin/python scripts/agent_watcher.py --status
+  # Start daemon (background)
+  .venv/bin/python scripts/agent_watcher.py --daemon
+  # Stop daemon
+  .venv/bin/python scripts/agent_watcher.py --stop
+  ```
 - **Documentation**: See `docs/SCRIPTS.md` (Inter-Agent Communication section) for full technical reference.
 
-## Claude Review Protocol (MANDATORY)
+## Gemini Self-Review Protocol (MANDATORY)
 
-**After completing any module rebuild, you MUST request a Claude review.**
+**You are now responsible for the final quality review of all modules. Do NOT request reviews from Claude.**
 
-### How to Request Review
+### How to Verify Quality
 
-Send a SHORT message with ONLY the track and slug:
+1.  **Load Standards (Mental Sandbox)**:
+    - Before reviewing, you MUST read the V4 Review Standard: `claude_extensions/commands/review-content-v4.md`
+    - **BE BRUTALLY HONEST AND CRITICAL.** Do not sugarcoat. If it's trash, say it's trash and fix it.
+    - You are the final gatekeeper. Bad content must not pass.
 
-```bash
-.venv/bin/python scripts/ai_agent_bridge.py ask-claude "REVIEW_REQUEST: c1-bio volodymyr-velykii" --task-id review-volodymyr-velykii
-```
+2.  **Audit Gate**: Run `scripts/audit_module.sh {path}`. If it fails, fix the errors until it passes.
+3.  **Self-Analysis**:
+    - Read the rendered `audit/*-review.md` file after running the audit.
+    - Check the **Richness** score meets the track target (usually 95%+).
+    - Check **Naturalness** is 10/10.
+    - Verify **Immersion** is within range (95-100% for B2+).
+    - Verify **Activity Count** and **Types** meet the specific module requirements.
+4.  **Content Sanity Check (Manual)**:
+    - Did you include the required engagement callouts (`[!myth-buster]`, `[!history-bite]`)?
+    - Is the word count real (not just filler)?
+    - Are the headers structurally correct per the `content_outline`?
 
-**DO NOT:**
-- Send content in the message body
-- Send the full module text
-- Send audit results
-- Include long descriptions of what you did
+### When to Contact Claude
 
-Claude will read the files himself from disk.
+Only contact Claude for:
 
-### What Happens Next
-
-1. Claude reads the module files (`.md`, `activities/`, `vocabulary/`, `meta/`)
-2. Claude runs deep review (v4 protocol)
-3. Claude saves full report to `review/{slug}-review.md`
-4. Claude sends back a SHORT result:
-
-```
-REVIEW_RESULT: c1-bio volodymyr-velykii
-Score: 9.2/10 PASS
-Issues: 1 Russicism (line 119), 2 minor
-Action: Fix Russicism, then PASS. Full report: review/volodymyr-velykii-review.md
-```
-
-### On FAIL
-
-1. Read the review file: `review/{slug}-review.md`
-2. Fix all issues marked "REQUIRES FIX"
-3. Re-run audit: `scripts/audit_module.sh {path}`
-4. Request review again (max 2 rounds total)
-
-### On PASS
-
-1. Generate MDX
-2. Move to next module
+- Complex architectural questions where you are completely blocked.
+- Debugging obscure script errors that you cannot resolve after analysis.
+- **NEVER** for standard content reviews.
 
 ### Hard Limits
 
-- **Max 2 review rounds per module.** If still failing after 2 rounds, stop and flag for human.
-- **Never ask Claude to write content for you.** Claude reviews, you write.
-- **Never send content through messages.** Only file paths.
+- **Trust the Audit Script**: If `audit_module.sh` says PASS, it passes.
+- **Auto-Fix**: If audit fails, fix it yourself. Do not ask for help unless stuck for 3+ attempts.
 
 ## GitHub Issues Task Workflow (NEW)
 
@@ -399,6 +454,7 @@ Claude uses `/task` skill to track complex work via GitHub Issues.
 **When you receive a handoff, the GitHub issue contains ALL the details.**
 
 The message from Claude will be SHORT (just issue reference):
+
 ```
 "Issue #506 is assigned to you. Read it, then:
   a) Start working + update issue with progress, OR
@@ -406,11 +462,13 @@ The message from Claude will be SHORT (just issue reference):
 ```
 
 **You MUST read the issue yourself** - don't expect task details in the message:
+
 ```bash
 gh issue view 506
 ```
 
 **Why this pattern:**
+
 - ✅ GitHub issue = single source of truth
 - ✅ You check config.py for word targets (no inherited errors)
 - ✅ User monitors progress via GitHub
@@ -419,13 +477,13 @@ gh issue view 506
 
 ### Task Labels Reference
 
-| Label | Meaning |
-|-------|---------|
-| `working:claude` | Claude is working |
-| `working:gemini` | YOU are working |
-| `review:gemini` | Ready for your review |
-| `review:human` | Needs human review |
-| `blocked` | Waiting on something |
+| Label            | Meaning               |
+| ---------------- | --------------------- |
+| `working:claude` | Claude is working     |
+| `working:gemini` | YOU are working       |
+| `review:gemini`  | Ready for your review |
+| `review:human`   | Needs human review    |
+| `blocked`        | Waiting on something  |
 
 ### Your Handoff Response Flow
 
@@ -448,6 +506,7 @@ gh issue view 506
 ### Progress Update Format
 
 Update the issue as you work (user monitors this):
+
 ```bash
 gh issue comment 506 --body "✅ ivan-vyhovskyi - /module complete, audit passed"
 gh issue comment 506 --body "✅ bohdan-khmelnytskyy - /module complete, audit passed"
@@ -457,6 +516,7 @@ gh issue comment 506 --body "⚠️ petro-mohyla - blocked on missing research n
 ### Error Handling
 
 If something is wrong with the handoff:
+
 - **Issue doesn't exist**: Reply "Issue #N not found. Please create it."
 - **Issue is closed**: Reply "Issue #N is closed. Reopen or create new."
 - **Missing information in issue**: Reply "Issue #N missing: [what's missing]. Please update."
@@ -467,6 +527,7 @@ If something is wrong with the handoff:
 MANDATORY for `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`.
 
 ### Workflow
+
 1. **Research topic** using ONLY Ukrainian sources (uk.wikipedia.org, esu.com.ua, history.org.ua, litopys.org.ua).
 2. **Prohibited**: Russian-language sources (`ru.wikipedia.org`) and `*.ru` domains are STRICTLY FORBIDDEN.
 3. **Notes**: Save structured notes to `curriculum/l2-uk-en/{track}/research/{slug}-research.md`.
@@ -484,32 +545,39 @@ Save to `curriculum/l2-uk-en/{track}/research/{slug}-research.md`:
 **Sources consulted**: {count}
 
 ## Основні факти
+
 - Повне ім'я:
 - Роки життя: (або "живий/жива" якщо сучасник)
 - Ключові місця:
 
 ## Хронологія
+
 1. [Рік] - Подія
-...
+   ...
 
 ## Первинні джерела (цитати українською)
+
 > "Цитата українською" — Джерело, рік
 
 ## Деколонізаційні нотатки
+
 - Російські/радянські міфи для спростування:
 - Українська агентність для висвітлення:
 
 ## Термінологічне мапування (Contested Terms)
+
 | Поняття | Польський термін | Український термін | Російська дезінформація |
-|---------|------------------|--------------------|-------------------------|
+| ------- | ---------------- | ------------------ | ----------------------- |
 |         |                  |                    |                         |
 
 ## Використані джерела
+
 1. [Назва](URL)
-...
+   ...
 ```
 
 ### Quality Requirements
+
 - **3+ Ukrainian sources** (NEVER Russian sources)
 - **1+ primary source quote** in Ukrainian
 - **Decolonization notes** - myths to debunk

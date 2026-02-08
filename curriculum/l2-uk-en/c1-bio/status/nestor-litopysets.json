@@ -2,11 +2,11 @@
   "module": "nestor-litopysets",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T16:37:26.973299Z",
+  "last_audit": "2026-02-08T23:13:20.571054Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T11:13:06.132601Z",
-    "meta": "2026-02-07T15:13:22.005750Z",
+    "md": "2026-02-08T00:26:11.145766Z",
+    "meta": "2026-02-08T00:25:57.372964Z",
     "activities": "2026-02-07T11:06:37.412015Z",
     "vocabulary": "2026-02-07T11:10:15.904862Z",
     "plan": null
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "4610/4000 (raw: 4820)"
+      "message": "4616/4700 (raw: 4826) (84 short)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 4,
     "fail_count": 0
   }
 }

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:36:53
+**Generated:** 2026-02-09 00:10:02
 
 ## Configuration
 **Type:** A1-vocab
@@ -37,31 +37,28 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1158/750 (raw: 1301)
+- **Words:** ✅ 1192/750 (raw: 1371)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/1
+- **Vocab:** ✅ 38/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 50.2% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 50.1% (target 35-55% (M27))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 170 | Included in Core |
-| **Presentation** | ✅ | 425 | Included in Core |
-| **Practice** | ⚪️ | 509 | Skipped |
+| **Presentation** | ✅ | 458 | Included in Core |
+| **Practice** | ⚪️ | 510 | Skipped |
 | **Підсумок** | ✅ | 38 | Included in Core |
 | **Need More Practice?** | ⚪️ | 16 | Skipped |

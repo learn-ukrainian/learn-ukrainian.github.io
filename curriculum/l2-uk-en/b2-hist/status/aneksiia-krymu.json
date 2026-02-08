@@ -2,13 +2,13 @@
   "module": "aneksiia-krymu",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:14.445469Z",
+  "last_audit": "2026-02-08T00:05:10.995753Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.346733Z",
-    "meta": "2026-01-29T07:38:18.734448Z",
-    "activities": "2026-01-27T15:34:53.626548Z",
-    "vocabulary": "2026-01-22T12:35:44.715799Z",
+    "md": "2026-02-07T11:38:26.154894Z",
+    "meta": "2026-02-07T10:03:51.202504Z",
+    "activities": "2026-02-07T10:03:51.252023Z",
+    "vocabulary": "2026-02-07T10:03:51.334108Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "4144/4202 (raw: 4300) (58 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4144/4202 (raw: 4300) (58 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

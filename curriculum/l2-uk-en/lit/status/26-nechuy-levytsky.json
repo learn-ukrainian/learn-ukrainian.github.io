@@ -2,25 +2,25 @@
   "module": "26-nechuy-levytsky",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:23.771575Z",
+  "last_audit": "2026-02-08T23:16:02.903673Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349712Z",
-    "meta": "2026-01-29T07:39:04.974403Z",
-    "activities": "2026-01-18T12:34:09.062115Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.606918Z"
+    "md": "2026-02-08T23:15:31.649238Z",
+    "meta": "2026-02-08T23:15:57.854550Z",
+    "activities": "2026-02-07T10:03:50.677266Z",
+    "vocabulary": "2026-02-08T23:13:03.180047Z",
+    "plan": "2026-02-07T10:03:50.855594Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3556/4500 (raw: 3799) | richness: 74% < 90% min (literature) - REWRITE needed"
+      "status": "pass",
+      "violations": 0,
+      "message": "4688/4500 (raw: 4743)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "19/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

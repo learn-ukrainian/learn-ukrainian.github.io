@@ -1,86 +1,86 @@
 # C1-BIO Module Status
 
-**Generated:** 2026-02-07 20:40:10
+**Generated:** 2026-02-08 23:00:25
 **Total Modules:** 156
-**Status:** 66 passing, 61 failing, 29 stubs, 0 errors
+**Status:** 22 passing, 105 failing, 29 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 66/156 (42%)
-- ❌ **Failing:** 61/156
+- ✅ **Passing:** 22/156 (14%)
+- ❌ **Failing:** 105/156
 - 📝 **Stubs:** 29/156
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | knyahynia-olha | ✅ PASS | 6579/5000 | - |
-| 002 | kniaz-sviatoslav | ✅ PASS | 5209/4000 | - |
-| 003 | volodymyr-velykii | ✅ PASS | 5830/5000 | - |
-| 004 | kniaz-yaroslav-mudryi | ✅ PASS | 5002/4300 | - |
-| 005 | knyazhna-anna-yaroslavna | ✅ PASS | 6499/5000 | - |
-| 006 | volodymyr-monomakh | ✅ PASS | 5168/4300 | - |
-| 007 | nestor-litopysets | ✅ PASS | 4610/4000 | - |
+| 001 | knyahynia-olha | ✅ PASS | 6941/5000 | - |
+| 002 | kniaz-sviatoslav | ✅ PASS | 6717/5500 | - |
+| 003 | volodymyr-velykii | ✅ PASS | 5610/5000 | - |
+| 004 | kniaz-yaroslav-mudryi | ✅ PASS | 5669/5000 | - |
+| 005 | knyazhna-anna-yaroslavna | ✅ PASS | 5453/5200 | - |
+| 006 | volodymyr-monomakh | ✅ PASS | 5173/5000 | - |
+| 007 | nestor-litopysets | ✅ PASS | 4616/4700 | - |
 | 008 | roman-mstyslavych | ✅ PASS | 5681/4400 | - |
 | 009 | mykhailo-chernihivskyi | ✅ PASS | 5865/4800 | - |
 | 010 | danylo-halytskyi | ✅ PASS | 4524/4300 | - |
 | 011 | lev-danylovych | ✅ PASS | 4138/4000 | - |
 | 012 | yuriy-lvovych | ✅ PASS | 4103/4000 | - |
-| 013 | kostiantyn-ostrozky-elder | ✅ PASS | 4964/4000 | - |
-| 014 | roksolana | ✅ PASS | 4208/4000 | - |
-| 015 | dmytro-vyshnevetsky | ✅ PASS | 4634/4300 | - |
-| 016 | kostiantyn-vasyl-ostrozky | ✅ PASS | 5114/4000 | - |
-| 017 | iov-boretskyi | ✅ PASS | 4937/4000 | - |
-| 018 | severyn-nalyvaiko | ✅ PASS | 4481/4000 | - |
-| 019 | petro-sahaidachny | ✅ PASS | 4802/4000 | - |
-| 020 | meletii-smotrytskyi | ✅ PASS | 5010/4300 | - |
-| 021 | sylvestr-kosiv | ✅ PASS | 4499/4300 | - |
-| 022 | bohdan-khmelnytskyy | ✅ PASS | 4826/4300 | - |
-| 023 | petro-mohyla | ✅ PASS | 4514/4300 | - |
-| 024 | ivan-vyhovskyi | ✅ PASS | 4479/4300 | - |
-| 025 | ivan-sirko | ✅ PASS | 4978/4300 | - |
-| 026 | yuriy-nemyrych | ✅ PASS | 4390/4300 | - |
-| 027 | ivan-mazepa | ✅ PASS | 4533/4000 | - |
-| 028 | kost-hordiyenko | ✅ PASS | 4674/4300 | - |
-| 029 | danylo-apostol | ✅ PASS | 4327/4300 | - |
-| 030 | pavlo-polubotok | ✅ PASS | 4371/4300 | - |
-| 031 | pylyp-orlyk | ✅ PASS | 4805/4000 | - |
-| 032 | petro-kalnyshevskyy | ✅ PASS | 4585/4000 | - |
-| 033 | hryhoriy-skovoroda | ✅ PASS | 4803/4300 | - |
-| 034 | maksym-berezovskyy | ✅ PASS | 4748/4000 | - |
-| 035 | dmytro-bortnyanskyy | ✅ PASS | 4798/4000 | - |
-| 036 | ivan-kotliarevskyi | ✅ PASS | 5528/4000 | - |
-| 037 | hryhoriy-kvitka-osnovianenko | ✅ PASS | 5325/4000 | - |
-| 038 | semen-hulak-artemovskyy | ✅ PASS | 5340/4000 | - |
-| 039 | taras-shevchenko | ✅ PASS | 4833/4000 | - |
-| 040 | panteleimon-kulish | ✅ PASS | 4958/4000 | - |
-| 041 | hanna-barvinok | ✅ PASS | 4626/4000 | - |
-| 042 | marko-vovchok | ✅ PASS | 4514/4000 | - |
-| 043 | ivan-nechuy-levytskyi | ✅ PASS | 4220/4000 | - |
-| 044 | marko-kropyvnytskyi | ✅ PASS | 3959/4000 | - |
+| 013 | kostiantyn-ostrozky-elder | ❌ FAIL | 4964/4000 | - |
+| 014 | roksolana | ❌ FAIL | 4208/4000 | - |
+| 015 | dmytro-vyshnevetsky | ❌ FAIL | 4634/4300 | - |
+| 016 | kostiantyn-vasyl-ostrozky | ❌ FAIL | 5114/4000 | - |
+| 017 | iov-boretskyi | ❌ FAIL | 4937/4000 | - |
+| 018 | severyn-nalyvaiko | ❌ FAIL | 4481/4000 | - |
+| 019 | petro-sahaidachny | ❌ FAIL | 4802/4000 | - |
+| 020 | meletii-smotrytskyi | ❌ FAIL | 5010/4300 | - |
+| 021 | sylvestr-kosiv | ❌ FAIL | 4499/4300 | - |
+| 022 | bohdan-khmelnytskyy | ❌ FAIL | 4826/4300 | - |
+| 023 | petro-mohyla | ❌ FAIL | 4514/4300 | - |
+| 024 | ivan-vyhovskyi | ❌ FAIL | 4479/4300 | - |
+| 025 | ivan-sirko | ❌ FAIL | 4978/4300 | - |
+| 026 | yuriy-nemyrych | ❌ FAIL | 4390/4300 | - |
+| 027 | ivan-mazepa | ❌ FAIL | 4533/4000 | - |
+| 028 | kost-hordiyenko | ❌ FAIL | 4674/4300 | - |
+| 029 | danylo-apostol | ❌ FAIL | 4327/4300 | - |
+| 030 | pavlo-polubotok | ❌ FAIL | 4371/4300 | - |
+| 031 | pylyp-orlyk | ❌ FAIL | 4805/4000 | - |
+| 032 | petro-kalnyshevskyy | ❌ FAIL | 4585/4000 | - |
+| 033 | hryhoriy-skovoroda | ❌ FAIL | 4803/4300 | - |
+| 034 | maksym-berezovskyy | ❌ FAIL | 4748/4000 | - |
+| 035 | dmytro-bortnyanskyy | ❌ FAIL | 4798/4000 | - |
+| 036 | ivan-kotliarevskyi | ❌ FAIL | 5528/4000 | - |
+| 037 | hryhoriy-kvitka-osnovianenko | ❌ FAIL | 5325/4000 | - |
+| 038 | semen-hulak-artemovskyy | ❌ FAIL | 5340/4000 | - |
+| 039 | taras-shevchenko | ❌ FAIL | 4833/4000 | - |
+| 040 | panteleimon-kulish | ❌ FAIL | 4958/4000 | - |
+| 041 | hanna-barvinok | ❌ FAIL | 4626/4000 | - |
+| 042 | marko-vovchok | ❌ FAIL | 4514/4000 | - |
+| 043 | ivan-nechuy-levytskyi | ❌ FAIL | 4220/4000 | - |
+| 044 | marko-kropyvnytskyi | ❌ FAIL | 3959/4000 | - |
 | 045 | mykhailo-drahomanov | ✅ PASS | 4326/4000 | - |
 | 046 | mykola-lysenko | ✅ PASS | 6385/4300 | - |
 | 047 | ivan-puliui | ✅ PASS | 5218/5000 | - |
 | 048 | olena-pchilka | ✅ PASS | 4858/4000 | - |
 | 049 | mariya-pavlova | ✅ PASS | 4666/4000 | - |
-| 050 | mariya-zankovetska | ✅ PASS | 4507/4000 | - |
-| 051 | nataliya-kobrynska | ✅ PASS | 4900/4000 | - |
+| 050 | mariya-zankovetska | ✅ PASS | 4548/4000 | - |
+| 051 | nataliya-kobrynska | ✅ PASS | 5050/4000 | - |
 | 052 | ivan-franko | ✅ PASS | 5333/4300 | - |
-| 053 | yevhen-chykalenko | ✅ PASS | 5291/4000 | - |
-| 054 | oleksander-potebnya | ✅ PASS | 4642/4000 | - |
-| 055 | borys-hrinchenko | ✅ PASS | 5236/4800 | - |
-| 056 | olha-kobylianska | ✅ PASS | 5504/4500 | - |
-| 057 | volodymyr-vernadskyi | ✅ PASS | 5374/4300 | - |
-| 058 | kyrylo-trylovskyi | ✅ PASS | 5209/4000 | - |
-| 059 | mykhailo-kotsiubynsky | ✅ PASS | 4356/4300 | - |
-| 060 | andrey-sheptytsky | ✅ PASS | 5494/4000 | - |
-| 061 | ivan-lypa | ✅ PASS | 4919/4000 | - |
-| 062 | sofiya-okunevska | ✅ PASS | 4624/4000 | - |
-| 063 | mykhailo-hrushevskyi | ✅ PASS | 4546/4450 | - |
-| 064 | mykola-vasylenko | ✅ PASS | 4019/4000 | - |
-| 065 | liudmyla-starytska | ✅ PASS | 5077/5000 | - |
-| 066 | mariia-voiakovska | ❌ FAIL | 4532/4000 | - |
-| 067 | yevhen-paton | ❌ FAIL | 4148/4000 | 4 Outline Compliance Errors |
+| 053 | yevhen-chykalenko | ❌ FAIL | 5291/4000 | - |
+| 054 | oleksander-potebnya | ❌ FAIL | 4642/4000 | - |
+| 055 | borys-hrinchenko | ❌ FAIL | 5236/4800 | - |
+| 056 | olha-kobylianska | ❌ FAIL | 5504/4500 | - |
+| 057 | volodymyr-vernadskyi | ❌ FAIL | 5374/4300 | - |
+| 058 | kyrylo-trylovskyi | ❌ FAIL | 5209/4000 | - |
+| 059 | mykhailo-kotsiubynsky | ❌ FAIL | 4356/4300 | - |
+| 060 | andrey-sheptytsky | ❌ FAIL | 5494/4000 | - |
+| 061 | ivan-lypa | ❌ FAIL | 4919/4000 | - |
+| 062 | sofiya-okunevska | ❌ FAIL | 4624/4000 | - |
+| 063 | mykhailo-hrushevskyi | ❌ FAIL | 4546/4450 | - |
+| 064 | mykola-vasylenko | ❌ FAIL | 4019/4000 | - |
+| 065 | liudmyla-starytska | ❌ FAIL | 5077/5000 | - |
+| 066 | mariia-voiakovska | ✅ PASS | 4840/4550 | - |
+| 067 | yevhen-paton | ✅ PASS | 4456/4000 | - |
 | 068 | yulian-bachynskyi | ❌ FAIL | 3574/4000 | 3 Outline Compliance Errors |
 | 069 | ahatanhel-krymskyi | ❌ FAIL | 2137/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
 | 070 | lesya-ukrainka | ❌ FAIL | 2154/4000 | 6 Outline Compliance Errors |
@@ -138,7 +138,7 @@
 | 122 | borys-paton | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
 | 123 | oles-honchar | 📝 STUB | 0/3600 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |
 | 124 | vasyl-sukhomlynskyi | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 125 | kateryna-yushchenko | ✅ PASS | 4574/4650 | - |
+| 125 | kateryna-yushchenko | ❌ FAIL | 4574/4650 | - |
 | 126 | mykola-pohribnyi | ❌ FAIL | 2473/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
 | 127 | levko-lukyanenko | ❌ FAIL | 2209/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
 | 128 | yevhen-sverstiuk | 📝 STUB | 0/3600 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |

@@ -54,17 +54,17 @@
     - сонячно
     - жарко
     - море
-    - квітки
+    - квітка
     - тепло
-    - трава
     - зелено
   - name: Cold / Changing (Осінь/Зима)
     items:
     - холодно
-    - мороз
     - йде сніг
     - хмарно
     - вітряно
+    - йде дощ
+    - лід
   instruction: Distribute the elements into groups.
 - type: group-sort
   title: Animals vs Plants
@@ -77,14 +77,15 @@
     - риба
     - пес
     - кішка
+    - ведмідь
   - name: Рослини (Plants)
     items:
     - дерево
     - квітка
     - ліс
-    - трава
     - парк
-    - сад
+    - кущ
+    - трава
   instruction: Distribute the elements into groups.
 - type: fill-in
   title: Яка погода? (What's the Weather?)
@@ -124,20 +125,20 @@
     - Хмарно
     - Сонячно
     - Тепло
-  - sentence: Падає біла вода з неба. ___.
-    answer: Йде сніг
+  - sentence: Взимку холодно і ___.
+    answer: йде сніг
     options:
-    - Йде сніг
-    - Йде дощ
-    - Сонячно
-    - Жарко
-  - sentence: Падає вода з неба. ___.
-    answer: Йде дощ
+    - йде сніг
+    - йде дощ
+    - сонячно
+    - жарко
+  - sentence: Восени часто ___.
+    answer: йде дощ
     options:
-    - Йде дощ
-    - Йде сніг
-    - Хмарно
-    - Вітряно
+    - йде дощ
+    - йде сніг
+    - хмарно
+    - вітряно
   - sentence: Температура +20°C. Приємна погода. ___.
     answer: Тепло
     options:
@@ -233,13 +234,13 @@
     - риба
     - кіт
     - собака
-  - sentence: У мене є акваріум з ___.
-    answer: рибою
+  - sentence: У воді плаває ___.
+    answer: риба
     options:
-    - рибою
-    - котом
-    - собакою
-    - птахом
+    - риба
+    - кіт
+    - собака
+    - птах
   - sentence: ___ — це найбільша річка України.
     answer: Дніпро
     options:
@@ -305,17 +306,7 @@
       correct: true
     - text: Зима
       correct: false
-  - question: What is the correct season when «Діти грають у сніг»?
-    options:
-    - text: Літо
-      correct: false
-    - text: Зима
-      correct: true
-    - text: Весна
-      correct: false
-    - text: Осінь
-      correct: false
-  - question: Which season does «Люди на пляжі» represent?
+  - question: Which season does «Сонце і тепло» represent?
     options:
     - text: Зима
       correct: false
@@ -325,7 +316,7 @@
       correct: false
     - text: Весна
       correct: false
-  - question: How is «Листя падає з дерев» translated into a season?
+  - question: How is «Вересень, жовтень, листопад» translated into a season?
     options:
     - text: Літо
       correct: false
@@ -335,7 +326,7 @@
       correct: true
     - text: Зима
       correct: false
-  - question: What is the season when «Птахи повертаються з півдня»?
+  - question: What is the season when «Вже не холодно, є квіти»?
     options:
     - text: Осінь
       correct: false
@@ -374,16 +365,6 @@
     - text: Червень
       correct: false
     - text: Вересень
-      correct: false
-  - question: When do schools typically start in Ukraine?
-    options:
-    - text: У вересні
-      correct: true
-    - text: У березні
-      correct: false
-    - text: У червні
-      correct: false
-    - text: У грудні
       correct: false
   instruction: Choose the correct answer.
 - type: quiz
@@ -459,55 +440,15 @@
       correct: true
     - text: Фрукт
       correct: false
-  - question: What is the group for the word «Трава» accurately?
+  - question: What is the group for the word «Парк» accurately?
     options:
     - text: Напій
       correct: false
-    - text: Рослина
-      correct: true
-    - text: Тварина
-      correct: false
-    - text: Транспорт
-      correct: false
-  - question: Identify accurately the category for «Троянда» (rose).
-    options:
-    - text: Рослина
-      correct: true
-    - text: Тварина
-      correct: false
-    - text: Місто
-      correct: false
-    - text: Їжа
-      correct: false
-  - question: Which group includes the word «Ведмідь» (bear) accurately?
-    options:
-    - text: Тварина
-      correct: true
-    - text: Рослина
-      correct: false
-    - text: Погода
-      correct: false
-    - text: Колір
-      correct: false
-  - question: What is accurately the category for the word «Парк»?
-    options:
     - text: Рослина (area)
       correct: true
     - text: Тварина
       correct: false
     - text: Транспорт
-      correct: false
-    - text: Одяг
-      correct: false
-  - question: Which classification fits the word «Кущ» (bush) accurately?
-    options:
-    - text: Рослина
-      correct: true
-    - text: Тварина
-      correct: false
-    - text: Погода
-      correct: false
-    - text: Сім'я
       correct: false
   instruction: Choose the correct answer.
 - type: unjumble

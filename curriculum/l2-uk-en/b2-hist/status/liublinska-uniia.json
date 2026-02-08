@@ -2,13 +2,13 @@
   "module": "liublinska-uniia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:17.562611Z",
+  "last_audit": "2026-02-08T00:04:13.476768Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T12:16:27.203018Z",
-    "meta": "2026-01-30T13:28:03.076766Z",
-    "activities": "2026-01-27T16:57:14.763555Z",
-    "vocabulary": "2026-01-27T16:53:15.022787Z",
+    "md": "2026-02-07T11:38:26.335896Z",
+    "meta": "2026-02-07T10:03:51.206682Z",
+    "activities": "2026-02-07T10:03:51.260033Z",
+    "vocabulary": "2026-02-07T10:03:51.338171Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4550/4000 (raw: 4754)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4550/4000 (raw: 4754) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

@@ -11,7 +11,20 @@ naturalness:
 duration: 60
 transliteration: none
 word_target: 1049
+content_outline:
+  - section: Warm-up
+  - section: Presentation
+  - section: Expressing Desire
+  - section: Expressing Obligation
+  - section: Expressing Permission
+  - section: Recommendations and Advice
+  - section: Trying and Succeeding
+  - section: Modal Adjectives
+  - section: Examples in Context
+  - section: Practice
+  - section: Practice 2
+  - section: Підсумок
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-09'
 title: Can, Must, Want - Modals
 subtitle: Expressing Ability, Obligation, and Desire

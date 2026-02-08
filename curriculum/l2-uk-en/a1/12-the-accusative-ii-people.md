@@ -39,6 +39,19 @@ This means:
 
 **Why does Ukrainian do this?** Historically, the genitive case was used to mark the **target** or **affected entity** of an action. When you «see someone,» that person is affected by your gaze — so genitive made sense! Over centuries, this became the standard for all animate direct objects.
 
+### Animals as Animate Nouns
+
+In Ukrainian, animals are grammatically **animate**. This is a major difference from English, where we often use «it» for animals. In Ukrainian, a cat or a dog is a «who» (**хто**), not a «what» (**що**).
+
+This means they follow the animate rule:
+- **кіт** (cat, m.) → Я бачу **кота**.
+- **пес** (dog, m.) → Я бачу **пса**. (Notice the vowel drop: пес → пса)
+- **кішка** (cat, f.) → Я бачу **кішку**.
+
+> [!tip] **Proverb: Love Me, Love My Dog**
+>
+> In Ukraine, we say: «Любиш мене — люби й мого **пса**» (Love me, love my dog). Here, **пса** is in the accusative case because the dog is an animate direct object!
+
 ### Masculine Nouns Ending in -о
 
 Some masculine nouns end in -о (like **тато**, **батько**, **Данило**). For these, the accusative is **-а**:
@@ -47,6 +60,25 @@ Some masculine nouns end in -о (like **тато**, **батько**, **Дани
 | ---------- | ---------- | ------------------------------------------- |
 | тато       | тат**а**   | Я люблю **тата**. (I love dad.)             |
 | Данило     | Данил**а** | Вона бачить **Данила**. (She sees Danylo.) |
+
+> [!note] Masculine Nouns Ending in -a
+>
+> Some masculine nouns end in **-а** (like **колега** — colleague). They decline just like feminine nouns (**-а** → **-у**), but they are still masculine!
+>
+> Example: **мій** колега (Nom) → **мого** колег**у** (Acc).
+
+### Pro Tip: Pronouns Change Too!
+
+When you talk about people, your pronouns (my, your, this) also change to match the animate rule (Accusative = Genitive).
+
+| Pronoun (Nom) | Pronoun (Acc Animate) | Example |
+| ------------- | --------------------- | ------- |
+| **мій** (my) | **мого** | Я бачу **мого** друга. |
+| **твій** (your) | **твого** | Я знаю **твого** брата. |
+| **цей** (this) | **цього** | Вона знає **цього** студента. |
+| **той** (that) | **того** | Ти бачиш **того** лікаря? |
+| **наш** (our) | **нашого** | Ми чекаємо **нашого** директора. |
+| **ваш** (your) | **вашого** | Я знаю **вашого** сина. |
 
 ### Feminine Animate Nouns
 
@@ -79,8 +111,8 @@ So you already know how to handle feminine animate nouns from Module 11!
 - Я бачу **подругу**. (I see a friend — female.)
 - Я бачу **лікаря**. (I see the doctor.)
 - Я бачу **вчителя**. (I see the teacher.)
-- Я бачу **студента** у бібліотеці. (I see the student in the library.)
-- Я бачу **водія** біля автобуса. (I see the driver near the bus.)
+- Я бачу **студента** там. (I see the student there.)
+- Я бачу **водія**. (I see the driver.)
 
 **Pattern 2: Вона знає... (She knows...)**
 
@@ -97,7 +129,7 @@ So you already know how to handle feminine animate nouns from Module 11!
 - Ми чекаємо **офіціанта**. (We're waiting for the waiter.)
 - Ми чекаємо **нашого друга**. (We're waiting for our friend.)
 - Ми чекаємо **колегу**. (We're waiting for a colleague.)
-- Ми чекаємо **вчителя** біля школи. (We're waiting for the teacher near school.)
+- Ми чекаємо **вчителя**. (We're waiting for the teacher.)
 - Ми чекаємо **гостя**. (We're waiting for a guest.)
 
 **Pattern 4: Ти любиш... (You love...)**
@@ -121,7 +153,7 @@ So you already know how to handle feminine animate nouns from Module 11!
 **Андрій:** Добре! О, я бачу **офіціанта**. Давай замовимо каву.
 **Олена:** Чудова ідея! Я люблю каву тут.
 **Андрій:** Я теж! Ти знаєш **того офіціанта**?
-**Олена:** Так, я знаю **його**. Він **мій колега** з університету!
+**Олена:** Так, я знаю **його**. Він **мій колега**!
 
 > Translation:
 > **Olena:** Hi, Andriy! Are you waiting for someone?
@@ -130,14 +162,14 @@ So you already know how to handle feminine animate nouns from Module 11!
 > **Andriy:** Sure! Oh, I see the waiter. Let's order coffee.
 > **Olena:** Great idea! I love the coffee here.
 > **Andriy:** Me too! Do you know that waiter?
-> **Olena:** Yes, I know him. He's my colleague from university!
+> **Olena:** Yes, I know him. He's my colleague!
 
 ### Mini-Dialogue 2: На Вулиці (On the Street)
 
 **Марко:** Вибач, ти знаєш **цього чоловіка**?
 **Софія:** Так, це наш **сусід**. Чому питаєш?
-**Марко:** Я бачу **його** кожного ранку біля метро.
-**Софія:** А, він **водій**! Він возить **пасажирів** до центру.
+**Марко:** Я бачу **його** кожного ранку.
+**Софія:** А, він **водій**!
 **Марко:** Цікаво! Я також бачу там **його дружину**.
 **Софія:** Так, вона **лікарка**. Я знаю **її** добре.
 **Марко:** Вони дуже привітні люди.
@@ -146,8 +178,8 @@ So you already know how to handle feminine animate nouns from Module 11!
 > Translation:
 > **Marko:** Excuse me, do you know this man?
 > **Sofia:** Yes, that's our neighbor. Why do you ask?
-> **Marko:** I see him every morning near the metro.
-> **Sofia:** Ah, he's a driver! He takes passengers to the center.
+> **Marko:** I see him every morning.
+> **Sofia:** Ah, he's a driver!
 > **Marko:** Interesting! I also see his wife there.
 > **Sofia:** Yes, she's a doctor. I know her well.
 > **Marko:** They're very friendly people.
@@ -156,17 +188,17 @@ So you already know how to handle feminine animate nouns from Module 11!
 ### Mini-Dialogue 3: У Школі (At School)
 
 **Учень:** Ти бачиш **нашу вчительку**?
-**Учениця:** Так, я бачу **її** там біля дошки.
+**Учениця:** Так, я бачу **її** там.
 **Учень:** Я шукаю **мого друга**. Ти знаєш, де він?
-**Учениця:** Я бачила **його** в коридорі.
+**Учениця:** Я бачу **його** там.
 **Учень:** Дякую! А ти чекаєш **когось**?
 **Учениця:** Так, я чекаю **свою подругу**. Ми разом йдемо додому.
 
 > Translation:
 > **Student (m):** Do you see our teacher?
-> **Student (f):** Yes, I see her there by the board.
+> **Student (f):** Yes, I see her there.
 > **Student (m):** I'm looking for my friend. Do you know where he is?
-> **Student (f):** I saw him in the corridor.
+> **Student (f):** I see him there.
 > **Student (m):** Thanks! Are you waiting for someone?
 > **Student (f):** Yes, I'm waiting for my friend. We're going home together.
 

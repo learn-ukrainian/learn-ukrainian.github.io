@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M71 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4500
 **Naturalness:** 0/10 (PENDING)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 17:13:22
+**Generated:** 2026-02-08 23:14:00
 
 ## Configuration
 **Type:** C1-biography
@@ -35,6 +35,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/vasyl-stefanyk-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[CONTENT_REDUNDANCY]** Redundant information detected in lesson (100% overlap): "## Зразок відповіді
 
 > [!model-answer]
@@ -79,7 +81,7 @@
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 17 violations (severe - consider revision)
+- 18 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 5502/4500 (raw: 5881)
@@ -92,7 +94,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 17 violations
+- **Pedagogy:** ❌ 18 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 100.0% (target 95-100% (biography))
 - **Richness:** ❌ 94% < 95% min (biography)

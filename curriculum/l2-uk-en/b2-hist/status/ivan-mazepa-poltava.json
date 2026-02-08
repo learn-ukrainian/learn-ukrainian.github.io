@@ -2,13 +2,13 @@
   "module": "ivan-mazepa-poltava",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:38.220454Z",
+  "last_audit": "2026-02-08T00:04:34.548264Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T20:59:22.432680Z",
-    "meta": "2026-01-29T07:38:18.654849Z",
-    "activities": "2026-01-27T20:53:52.379232Z",
-    "vocabulary": "2026-01-27T12:15:06.632734Z",
+    "md": "2026-02-07T11:38:26.264947Z",
+    "meta": "2026-02-07T10:03:51.222198Z",
+    "activities": "2026-02-07T10:03:51.283105Z",
+    "vocabulary": "2026-02-07T10:03:51.351357Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4687/4000 (raw: 4867)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4687/4000 (raw: 4867) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

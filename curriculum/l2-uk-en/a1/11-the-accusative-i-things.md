@@ -30,7 +30,7 @@ In Ukrainian, when something RECEIVES the action (the direct object), it changes
 
 ### Common Verbs That Take Accusative
 
-These verbs need accusative case for their objects:
+These verbs need the accusative case for their objects:
 
 | Verb       | Infinitive | I form  | Meaning | Example                   |
 | ---------- | ---------- | ------- | ------- | ------------------------- |
@@ -40,11 +40,13 @@ These verbs need accusative case for their objects:
 | давати     | давати     | даю     | to give | Вона **дає** подарунок.   |
 | мати       | мати       | маю     | to have | Ми **маємо** квитки.      |
 | читати     | читати     | читаю   | to read | Я **читаю** газету.       |
+| хотіти     | хотіти     | хочу    | to want | Я **хочу** каву.          |
+| купувати   | купувати   | купую   | to buy  | Ми **купуємо** журнал.    |
 | показувати | показувати | показую | to show | Він **показує** документ. |
 
 > [!example] **Pop Culture Moment: S.T.A.L.K.E.R.**
 >
-> The iconic Ukrainian game S.T.A.L.K.E.R. has a famous phrase: «Іди своєю дорогою, сталкер». But notice **аномалію** — that is accusative case: аномалію (from аномалія). The Zone teaches grammar!
+> The iconic Ukrainian game S.T.A.L.K.E.R. teaches you to survive anomalies. You might shout: **«Я бачу аномалію!»** (I see an anomaly!). Notice **аномалію** — that is the accusative case of **аномалія**. The Zone teaches grammar!
 
 ### Example Sentences
 
@@ -67,6 +69,10 @@ Let's see the accusative in action:
 >
 > When you are at the post office in Ukraine, you'll use these words constantly: «Я відправляю посилку» (I'm sending a parcel), «Покажіть паспорт, будь ласка» (Show your passport, please), «Ви маєте конверт?» (Do you have an envelope?). All accusative!
 
+> [!myth-buster] **"Cases are too hard for beginners"**
+>
+> Some say you should only learn the nominative at first. But without the accusative, you can't even say «I want coffee» (**Я хочу каву**) or «I love Ukraine» (**Я люблю Україну**). By learning the accusative early, you gain the power to express your desires and actions immediately. It's not a burden; it's a key to real conversation!
+
 ### Mini-Dialogue 1: At the Post Office
 
 — Добрий день! Я хочу відправити **посилку**.
@@ -83,18 +89,18 @@ Let's see the accusative in action:
 — Так, я беру **сумку** і **валізу**.
 — Не забудь **паспорт** і **квитки**!
 — Я вже маю **паспорт**. Де **квитки**?
-— Вони в **коробці** на столі.
+— Ось вони, на столі.
 
-*(Do you have a suitcase? — Yes, I'm taking a bag and a suitcase. — Don't forget your passport and tickets! — I already have my passport. Where are the tickets? — They're in the box on the table.)*
+*(Do you have a suitcase? — Yes, I'm taking a bag and a suitcase. — Don't forget your passport and tickets! — I already have my passport. Where are the tickets? — Here they are, on the table.)*
 
 ### Mini-Dialogue 3: Reading the News
 
 — Що ти читаєш?
 — Я читаю **газету**.
-— А я маю цікавий **журнал**. Хочеш бачити?
+— А я маю цікавий **журнал**. Хочеш?
 — Так! Покажи **журнал**.
 
-*(What are you reading? — I'm reading a newspaper. — And I have an interesting magazine. Do you want to see? — Yes! Show me the magazine.)*
+*(What are you reading? — I'm reading a newspaper. — And I have an interesting magazine. Do you want? — Yes! Show me the magazine.)*
 
 ## Practice
 
@@ -162,13 +168,13 @@ It is a birthday party in Odesa. Practice saying:
 
 ## Cultural Insight
 
-> 🎭 **Ukrainian Traditions: Gift-Giving**
+> [!culture] **Ukrainian Traditions: Shopping Culture**
 >
-> When giving gifts in Ukraine, there are unwritten rules:
+> Shopping in Ukraine has its own etiquette:
 >
-> - Always give and take gifts with **both hands**: **Дякую за подарунок!**
-> - Flowers: only **odd numbers** (3, 5, 7...) for celebrations. Even numbers are for funerals.
-> - When you say **«Я даю подарунок»**, you're participating in an important cultural act of generosity.
+> - **Weighing**: In many supermarkets, you must weigh vegetables and print the sticker yourself *before* going to the checkout.
+> - **Bags**: The cashier will always ask **«Пакет потрібен?»** (Do you need a bag?). Bags are usually not free.
+> - **Small Shops**: In small kiosks, you ask the seller for everything: **«Дайте, будь ласка, воду»** (Give me water, please).
 
 ---
 

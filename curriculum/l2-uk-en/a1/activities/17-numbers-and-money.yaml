@@ -23,97 +23,97 @@
     right: '50'
   instruction: Match the corresponding elements.
 - type: fill-in
-  title: Complete with Numbers
+  title: Math Practice
   items:
-  - sentence: У мене ___ гривень.
+  - sentence: 5 + 5 = ___
     answer: десять
     options:
     - десять
     - п'ять
     - двадцять
     - сто
-  - sentence: Це коштує ___ гривень.
+  - sentence: 25 + 25 = ___
     answer: п'ятдесят
     options:
     - п'ятнадцять
     - п'ятдесят
     - п'ять
     - сорок
-  - sentence: Вона має ___ років.
+  - sentence: 20 + 3 = ___
     answer: двадцять три
     options:
     - двадцять три
     - тридцять два
     - двадцять
     - три
-  - sentence: Автобус номер ___.
+  - sentence: 20 + 20 = ___
     answer: сорок
     options:
     - чотири
     - чотирнадцять
     - сорок
-    - чотирдесят
-  - sentence: ___ студентів у класі.
-    answer: П'ятнадцять
+    - сорок чотири
+  - sentence: 10 + 5 = ___
+    answer: п'ятнадцять
     options:
-    - П'ять
-    - П'ятнадцять
-    - П'ятдесят
-    - Шістнадцять
-  - sentence: Хліб коштує ___ гривень.
+    - п'ять
+    - п'ятнадцять
+    - п'ятдесят
+    - шістнадцять
+  - sentence: 4 + 4 = ___
     answer: вісім
     options:
     - вісім
     - вісімнадцять
     - вісімдесят
     - сім
-  - sentence: Я маю ___ рік.
+  - sentence: 20 + 1 = ___
     answer: двадцять один
     options:
     - один
     - двадцять
     - двадцять один
     - одинадцять
-  - sentence: Це коштує ___ гривень.
+  - sentence: 50 + 50 = ___
     answer: сто
     options:
     - десять
     - сто
     - вісімдесят
     - дев'яносто
-  - sentence: У мене є ___ копійок.
+  - sentence: 70 + 5 = ___
     answer: сімдесят п'ять
     options:
     - сімдесят п'ять
     - сім
     - п'ятдесят сім
     - п'ять
-  - sentence: Каса номер ___.
+  - sentence: 10 - 3 = ___
     answer: сім
     options:
     - сім
     - сімдесят
     - сімнадцять
     - вісім
-  - sentence: ___ книг на столі.
-    answer: Дванадцять
+  - sentence: 6 + 6 = ___
+    answer: дванадцять
     options:
-    - Два
-    - Дванадцять
-    - Двадцять
-    - Двадцять два
-  - sentence: Молоко коштує ___ гривень.
+    - два
+    - дванадцять
+    - двадцять
+    - двадцять два
+  - sentence: 10 + 10 = ___
     answer: двадцять
     options:
     - двадцять
     - два
     - дванадцять
     - сто
-  instruction: Choose the correct word to fill in the blank.
+  instruction: Solve the problem and choose the correct number in Ukrainian.
 - type: quiz
   title: Number Grammar
   items:
-  - question: How do you accurately say exactly "one hryvnia"?
+  - question: How do you say "one hryvnia"?
     options:
     - text: одна гривня
       correct: true
@@ -146,7 +146,7 @@
     - text: п'яти гривень
       correct: false
     explanation: '5+ use genitive plural: гривень'
-  - question: What does «Скільки коштує?» accurately mean in English?
+  - question: What does «Скільки коштує?» mean in English?
     options:
     - text: How many do you have?
       correct: false
@@ -157,7 +157,7 @@
     - text: What is this?
       correct: false
     explanation: Key shopping phrase!
-  - question: Which number has accurately a gender distinction?
+  - question: Which number has a gender distinction?
     options:
     - text: один (only)
       correct: false
@@ -179,7 +179,7 @@
     - text: студентам
       correct: false
     explanation: 'Used with 5+: п''ять студентів'
-  - question: How do you say exactly "expensive" in Ukrainian?
+  - question: How do you say "expensive" in Ukrainian?
     options:
     - text: дешево
       correct: false
@@ -190,7 +190,7 @@
     - text: ціна
       correct: false
     explanation: дорого = expensive
-  - question: What does exactly the Ukrainian word «готівка» mean?
+  - question: What does the Ukrainian word «готівка» mean?
     options:
     - text: card
       correct: false
@@ -212,7 +212,7 @@
     - text: '500'
       correct: false
     explanation: п'ять + десят = fifty
-  - question: What case do numbers five and above require exactly?
+  - question: What case do numbers five and above require?
     options:
     - text: nominative
       correct: false
@@ -223,7 +223,7 @@
     - text: locative
       correct: false
     explanation: 5+ always use genitive plural
-  - question: How do you accurately say exactly "twenty-three"?
+  - question: How do you say "twenty-three"?
     options:
     - text: двадцять і три
       correct: false
@@ -234,7 +234,7 @@
     - text: три двадцять
       correct: false
     explanation: No connector "and" in Ukrainian numbers
-  - question: What is the Ukrainian currency accurately called?
+  - question: What is the Ukrainian currency called?
     options:
     - text: карбованець
       correct: false
@@ -561,7 +561,7 @@
 - type: quiz
   title: Currency and Numbers
   items:
-  - question: How do you accurately say "Twenty hryvnias"?
+  - question: How do you say "Twenty hryvnias"?
     options:
     - text: двадцять гривень
       correct: true
@@ -572,7 +572,7 @@
     - text: гривень двадцять
       correct: false
     explanation: Plural genitive for 5+.
-  - question: Which number is accurately «сорок»?
+  - question: Which number corresponds to «сорок»?
     options:
     - text: '40'
       correct: true
@@ -594,7 +594,7 @@
     - text: п'ятдесят гривень
       correct: false
     explanation: Plural genitive for 5+.
-  - question: How do you accurately say "one hryvnia"?
+  - question: How do you say "one hryvnia"?
     options:
     - text: одна гривня
       correct: true
@@ -605,7 +605,7 @@
     - text: одне гривня
       correct: false
     explanation: «Гривня» is feminine.
-  - question: How do you accurately say "Two hryvnias"?
+  - question: How do you say "Two hryvnias"?
     options:
     - text: дві гривні
       correct: true
@@ -616,7 +616,7 @@
     - text: два гривня
       correct: false
     explanation: Feminine form of "two".
-  - question: Which word means accurately "receipt"?
+  - question: Which Ukrainian word means "receipt"?
     options:
     - text: чек
       correct: true
@@ -638,7 +638,7 @@
     - text: сто
       correct: false
     explanation: Дев'яносто means ninety.
-  - question: Which phrase means accurately "By card"?
+  - question: Which phrase means "By card"?
     options:
     - text: карткою
       correct: true
@@ -648,7 +648,7 @@
       correct: false
     - text: чеком
       correct: false
-    explanation: Карткою is instrumental case.
+    explanation: Use this form to say 'by card'.
   - question: How do you say "Cash" in Ukrainian?
     options:
     - text: готівка
@@ -660,7 +660,7 @@
     - text: решта
       correct: false
     explanation: Готівка is cash.
-  - question: How do you accurately say "sixty" in Ukrainian?
+  - question: How do you say "sixty" in Ukrainian?
     options:
     - text: шістдесят
       correct: true
@@ -671,7 +671,7 @@
     - text: сорок
       correct: false
     explanation: Шістдесят means sixty.
-  - question: What is the meaning of accurately «решта»?
+  - question: What is the meaning of «решта»?
     options:
     - text: change
       correct: true

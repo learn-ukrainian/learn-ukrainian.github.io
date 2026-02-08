@@ -173,14 +173,14 @@
     - Це
     - Ці
     explanation: вікно = neuter → це
-  - sentence: ___ книги нові.
-    answer: Ці
+  - sentence: ___ газета нова.
+    answer: Ця
     options:
     - Цей
     - Ця
     - Це
     - Ці
-    explanation: книги = plural → ці
+    explanation: газета = feminine → ця
   - sentence: ___ кава гаряча.
     answer: Ця
     options:
@@ -205,14 +205,14 @@
     - Це
     - Ці
     explanation: місто = neuter → це
-  - sentence: ___ двері старі.
-    answer: Ці
+  - sentence: ___ телефон старий.
+    answer: Цей
     options:
     - Цей
     - Ця
     - Це
     - Ці
-    explanation: двері = plural → ці
+    explanation: телефон = masculine → цей
   - sentence: ___ хлопець студент.
     answer: Цей
     options:
@@ -237,19 +237,19 @@
     - Це
     - Ці
     explanation: слово = neuter → це
-  - sentence: ___ студенти працюють.
-    answer: Ці
+  - sentence: ___ студент працює.
+    answer: Цей
     options:
     - Цей
     - Ця
     - Це
     - Ці
-    explanation: студенти = plural → ці
+    explanation: студент = masculine → цей
   instruction: Choose the correct word to fill in the blank.
 - type: fill-in
   title: Verb Conjugation First Conjugation
   items:
-  - sentence: Я ___ книгу.
+  - sentence: Я ___ текст.
     answer: читаю
     options:
     - читаю
@@ -297,7 +297,7 @@
     - читають
     - читаю
     explanation: вони → читають
-  - sentence: Вона ___ книгу про Україну.
+  - sentence: Вона ___ журнал про Україну.
     answer: читає
     options:
     - читаю
@@ -305,7 +305,7 @@
     - читає
     - читають
     explanation: вона → читає
-  - sentence: Ти ___ цікаві книги?
+  - sentence: Ти ___ цікавий текст?
     answer: читаєш
     options:
     - читаю
@@ -321,7 +321,7 @@
     - читає
     - читають
     explanation: я → читаю
-  - sentence: Вони ___ українські книги.
+  - sentence: Вони ___ український текст.
     answer: читають
     options:
     - читаємо

@@ -2,10 +2,10 @@
   "module": "mariya-zankovetska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T16:37:52.305895Z",
+  "last_audit": "2026-02-08T23:13:47.444606Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T17:07:55.154926Z",
+    "md": "2026-02-08T18:45:19.727658Z",
     "meta": "2026-02-07T15:13:22.016406Z",
     "activities": "2026-02-07T10:03:51.602950Z",
     "vocabulary": "2026-02-07T10:03:51.645530Z",
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4507/4000 (raw: 4544)"
+      "message": "4548/4000 (raw: 4585)"
     },
     "activities": {
       "status": "pass",

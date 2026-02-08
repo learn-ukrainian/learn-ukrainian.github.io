@@ -2,13 +2,13 @@
   "module": "revoliutsiia-hidnosti",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:13.842757Z",
+  "last_audit": "2026-02-08T00:05:10.392532Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:56:57.306073Z",
-    "meta": "2026-01-31T22:08:42.406516Z",
-    "activities": "2026-01-31T22:48:07.541431Z",
-    "vocabulary": "2026-01-31T22:08:21.960544Z",
+    "md": "2026-02-07T11:38:26.427342Z",
+    "meta": "2026-02-07T10:03:51.229698Z",
+    "activities": "2026-02-07T10:03:51.301675Z",
+    "vocabulary": "2026-02-07T10:03:51.362188Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4688/4000 (raw: 4754)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4688/4000 (raw: 4754) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

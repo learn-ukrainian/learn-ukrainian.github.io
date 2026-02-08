@@ -2,13 +2,13 @@
   "module": "franko-lesia-hrinchenko",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:49.291266Z",
+  "last_audit": "2026-02-08T00:04:45.867186Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:26:05.970298Z",
-    "meta": "2026-01-29T07:38:18.674565Z",
-    "activities": "2026-01-27T23:04:06.510606Z",
-    "vocabulary": "2026-01-28T11:30:37.516920Z",
+    "md": "2026-02-07T11:38:26.224979Z",
+    "meta": "2026-02-07T10:03:51.215275Z",
+    "activities": "2026-02-07T10:03:51.272966Z",
+    "vocabulary": "2026-02-07T10:03:51.345650Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4292/4000 (raw: 4466)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4292/4000 (raw: 4466) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

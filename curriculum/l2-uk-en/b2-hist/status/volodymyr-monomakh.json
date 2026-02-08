@@ -2,13 +2,13 @@
   "module": "volodymyr-monomakh",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:08.257154Z",
+  "last_audit": "2026-02-08T00:04:03.804670Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T11:00:07.868478Z",
-    "meta": "2026-01-29T07:38:18.613247Z",
-    "activities": "2026-01-27T15:34:55.162983Z",
-    "vocabulary": "2026-01-26T23:26:52.733603Z",
+    "md": "2026-02-07T11:38:26.554792Z",
+    "meta": "2026-02-07T10:03:51.235977Z",
+    "activities": "2026-02-07T10:03:51.318542Z",
+    "vocabulary": "2026-02-07T10:03:51.372440Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4751/4000 (raw: 5119)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4751/4000 (raw: 5119) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

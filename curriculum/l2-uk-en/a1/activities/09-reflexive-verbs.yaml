@@ -1,624 +1,302 @@
+- type: fill-in
+  title: "Conjugate Reflexive Verbs"
+  instruction: "Choose the correct form of the reflexive verb for each person."
+  items:
+    - sentence: "Я ___ (вмиватися) щоранку."
+      answer: "вмиваюсь"
+      options: ["вмиваюсь", "вмиваєшся", "вмивається", "вмиваємось"]
+    - sentence: "Ти швидко ___ (одягатися)?"
+      answer: "одягаєшся"
+      options: ["одягаєшся", "одягається", "одягаєтесь", "одягаються"]
+    - sentence: "Він часто ___ (сміятися)."
+      answer: "сміється"
+      options: ["сміється", "сміюся", "сміємось", "сміються"]
+    - sentence: "Ми ___ (вчитися) старанно."
+      answer: "вчимось"
+      options: ["вчимось", "вчишся", "вчитися", "вчитесь"]
+    - sentence: "Ви зараз ___ (знайомитися)?"
+      answer: "знайомитесь"
+      options: ["знайомитесь", "знайомляться", "знайомишся", "знайомиться"]
+    - sentence: "Вони ___ (зустрічатися) щодня."
+      answer: "зустрічаються"
+      options: ["зустрічаються", "зустрічається", "зустрічаєшся", "зустрічаємось"]
+    - sentence: "Мій тато ___ (голитися) щодня."
+      answer: "голиться"
+      options: ["голиться", "голишся", "голюся", "голяться"]
+    - sentence: "Як ___ (називатися) це місто?"
+      answer: "називається"
+      options: ["називається", "називаються", "називаюся", "називаємось"]
+    - sentence: "Діти ___ (дивитися) мультфільми."
+      answer: "дивляться"
+      options: ["дивляться", "дивиться", "дивишся", "дивимось"]
+    - sentence: "Ви часто ___ (повертатися) пізно?"
+      answer: "повертаєтесь"
+      options: ["повертаєтесь", "повертаємось", "повертаються", "повертаєшся"]
+
+- type: fill-in
+  title: "Choosing -ся or -сь"
+  instruction: "Select the correct postfix form (-ся after consonants, -сь after vowels)."
+  items:
+    - sentence: "Я вмиваю___."
+      answer: "сь"
+      options: ["сь", "ся", "с", "сі"]
+    - sentence: "Ти вмиваєш___."
+      answer: "ся"
+      options: ["ся", "сь", "сям", "сю"]
+    - sentence: "Він вмиваєть___."
+      answer: "ся"
+      options: ["ся", "сь", "сю", "се"]
+    - sentence: "Ми вмиваємо___."
+      answer: "сь"
+      options: ["сь", "ся", "сі", "см"]
+    - sentence: "Ви вмиваєте___."
+      answer: "сь"
+      options: ["сь", "ся", "сі", "ст"]
+    - sentence: "Вони вмивають___."
+      answer: "ся"
+      options: ["ся", "сь", "сю", "с"]
+    - sentence: "Я смію___."
+      answer: "сь"
+      options: ["сь", "ся", "с", "сю"]
+    - sentence: "Вона смієть___."
+      answer: "ся"
+      options: ["ся", "сь", "сю", "сі"]
+    - sentence: "Ми зустрічаємо___."
+      answer: "сь"
+      options: ["сь", "ся", "с", "сі"]
+    - sentence: "Ви вчите___?"
+      answer: "сь"
+      options: ["сь", "ся", "с", "сю"]
+
 - type: match-up
-  title: Reflexive Verbs Meanings
+  title: "Transitive vs Reflexive Pairs"
+  instruction: "Match the transitive verb with its reflexive counterpart."
   pairs:
-  - left: називатися
-    right: to be called
-  - left: сміятися
-    right: to laugh
-  - left: усміхатися
-    right: to smile
-  - left: дивитися
-    right: to watch
-  - left: зустрічатися
-    right: to meet
-  - left: прокидатися
-    right: to wake up
-  - left: вмиватися
-    right: to wash face
-  - left: одягатися
-    right: to dress
-  - left: вітатися
-    right: to greet
-  - left: готуватися
-    right: to prepare
-  instruction: Match the corresponding elements.
-- type: fill-in
-  title: Conjugation Drill (Present Tense)
-  items:
-  - sentence: Я ___ Андрій.
-    answer: називаюсь
-    options:
-    - називаюсь
-    - називаєшся
-    - називається
-    - ми
-  - sentence: Ти ___?
-    answer: смієшся
-    options:
-    - сміюсь
-    - смієшся
-    - сміється
-    - ми
-  - sentence: Він ___ телевізор.
-    answer: дивиться
-    options:
-    - дивлюсь
-    - дивишся
-    - дивиться
-    - ми
-  - sentence: Ми ___ в парку.
-    answer: зустрічаємось
-    options:
-    - зустрічаємось
-    - зустрічаєтесь
-    - зустрічаються
-    - ми
-  - sentence: Вони ___ швидко.
-    answer: одягаються
-    options:
-    - одягається
-    - одягаємось
-    - одягаються
-    - ми
-  - sentence: Вони голосно ___
-    answer: сміються
-    options:
-    - сміються
-    - сміємось
-    - смієшся
-    - ми
-  - sentence: Ви ___ вранці?
-    answer: вмиваєтесь
-    options:
-    - вмиваюсь
-    - вмиваєтесь
-    - вмивається
-    - ми
-  - sentence: Ми ___ студенти.
-    answer: називаємось
-    options:
-    - називаємось
-    - називаюсь
-    - називаються
-    - ми
-  - sentence: Я ___ в дзеркало.
-    answer: дивлюсь
-    options:
-    - дивлюсь
-    - дивляться
-    - дивитесь
-    - ми
-  - sentence: Ви часто ___?
-    answer: смієтесь
-    options:
-    - смієтесь
-    - сміємось
-    - смієшся
-    - ми
-  - sentence: Він ___ з другом.
-    answer: вітається
-    options:
-    - вітається
-    - вітаємось
-    - вітаються
-    - ми
-  - sentence: Ми ___ вранці.
-    answer: миємось
-    options:
-    - миємось
-    - миєтесь
-    - миються
-    - ми
-  instruction: Choose the correct word to fill in the blank.
+    - left: "мити"
+      right: "митися"
+    - left: "вчити"
+      right: "вчитися"
+    - left: "одягати"
+      right: "одягатися"
+    - left: "називати"
+      right: "називатися"
+    - left: "вітати"
+      right: "вітатися"
+    - left: "голити"
+      right: "голитися"
+    - left: "знайомити"
+      right: "знайомитися"
+    - left: "повертати"
+      right: "повертатися"
+
+- type: match-up
+  title: "Reflexive Verbs and Meanings"
+  instruction: "Match each reflexive verb to its English meaning."
+  pairs:
+    - left: "вмиватися"
+      right: "to wash oneself"
+    - left: "сміятися"
+      right: "to laugh"
+    - left: "дивитися"
+      right: "to watch"
+    - left: "займатися"
+      right: "to engage in"
+    - left: "зустрічатися"
+      right: "to meet up"
+    - left: "цікавитися"
+      right: "to be interested in"
+    - left: "повертатися"
+      right: "to return"
+    - left: "голитися"
+      right: "to shave"
+
 - type: quiz
-  title: Find the Mistake
+  title: "Reflexive Verb Rules"
+  instruction: "Test your knowledge of reflexive verb grammar and pronunciation."
   items:
-  - question: Which sentence uses the correct reflexive ending?
-    options:
-    - text: Він миюся вранці.
-      correct: false
-    - text: Він миється вранці.
-      correct: true
-    - text: Він миємось вранці.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Third person singular (he) uses -ється.
-  - question: Which form is correct for 'I watch'?
-    options:
-    - text: Я дивлюсь
-      correct: true
-    - text: Я дивишся
-      correct: false
-    - text: Я дивився
-      correct: false
-    - text: вони
-      correct: false
-    explanation: 'Stem change: див- -> дивл- + юсь.'
-  - question: Which sentence uses the correct reflexive ending?
-    options:
-    - text: Ми зустрічаємо.
-      correct: false
-    - text: Ми зустрічаємось.
-      correct: true
-    - text: Ми зустрічаюсь.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: -ся makes it reciprocal (each other).
-  - question: Which of these sentences has a verb error?
-    options:
-    - text: Я смієшся.
-      correct: true
-    - text: Я сміюсь.
-      correct: false
-    - text: Я сміюся.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: 'Mistake: Я (I) needs -юсь, not -єшся (you).'
-  - question: Which sentence has the wrong verb ending?
-    options:
-    - text: Ти дивлюсь.
-      correct: true
-    - text: Ти дивишся.
-      correct: false
-    - text: Ти дивишся на мене.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: 'Mistake: Ти (you) needs -ишся.'
-  - question: Which of these reflexive sentences is wrong?
-    options:
-    - text: Ми зустрічається.
-      correct: true
-    - text: Ми зустрічаємось.
-      correct: false
-    - text: Ми зустрічаємося.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: 'Mistake: Ми (we) needs -ємось.'
-  - question: Which sentence uses the wrong reflexive form?
-    options:
-    - text: Він одягаюсь.
-      correct: true
-    - text: Він одягається.
-      correct: false
-    - text: Він одягається швидко.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: 'Mistake: Він (he) needs -ється.'
-  - question: Which of these sentences has a conjugation error?
-    options:
-    - text: Вони вмивається.
-      correct: true
-    - text: Вони вмиваються.
-      correct: false
-    - text: Вони вмиваються вранці.
-      correct: false
-    - text: вони
-      correct: false
-    explanation: 'Mistake: Вони (they) needs -ються.'
-  - question: "Identify the error in: \"Вона сміються.\""
-    options:
-    - text: should be сміється
-      correct: true
-    - text: should be сміюсь
-      correct: false
-    - text: should be смієтесь
-      correct: false
-    - text: no error
-      correct: false
-    explanation: She (вона) uses -ється.
-  - question: "Identify the error in: \"Ми називаєшся.\""
-    options:
-    - text: should be називаємось
-      correct: true
-    - text: should be називаюсь
-      correct: false
-    - text: should be називаються
-      correct: false
-    - text: no error
-      correct: false
-    explanation: We (ми) uses -ємось.
-  - question: "Identify the error in: \"Ви дивиться.\""
-    options:
-    - text: should be дивитесь
-      correct: true
-    - text: should be дивлюсь
-      correct: false
-    - text: should be дивляться
-      correct: false
-    - text: no error
-      correct: false
-    explanation: You plural (ви) uses -итесь.
-  - question: "Identify the error in: \"Ти миється.\""
-    options:
-    - text: should be миєшся
-      correct: true
-    - text: should be миюсь
-      correct: false
-    - text: should be миються
-      correct: false
-    - text: no error
-      correct: false
-    explanation: You (ти) uses -єшся.
-  instruction: Choose the correct answer.
-- type: fill-in
-  title: 'Dialogue: Morning Routine'
-  items:
-  - sentence: Вранці я ___. 
-    answer: прокидаюсь
-    options:
-    - прокидаюсь
-    - прокидається
-    - ми
-    - вони
-  - sentence: Потім я ___. 
-    answer: вмиваюсь
-    options:
-    - вмиваюсь
-    - вмивається
-    - ми
-    - вони
-  - sentence: Я ___. 
-    answer: одягаюсь
-    options:
-    - одягаюсь
-    - одягається
-    - ми
-    - вони
-  - sentence: 'Мама запитує: «Ти вже ___?»'
-    answer: збираєшся
-    options:
-    - збираєшся
-    - збираюсь
-    - ми
-    - вони
-  - sentence: Я ___ в дзеркало.
-    answer: дивлюсь
-    options:
-    - дивлюсь
-    - дивишся
-    - ми
-    - вони
-  - sentence: Там я ___ собі.
-    answer: усміхаюсь
-    options:
-    - усміхаюсь
-    - усміхається
-    - ми
-    - вони
-  - sentence: Ми з братом ___. 
-    answer: вітаємось
-    options:
-    - вітаємось
-    - вітаюсь
-    - ми
-    - вони
-  - sentence: Ми ___ до школи.
-    answer: збираємось
-    options:
-    - збираємось
-    - збираються
-    - ми
-    - вони
-  - sentence: Урок ___ о дев'ятій.
-    answer: починається
-    options:
-    - починається
-    - починаються
-    - ми
-    - вони
-  - sentence: Ми добре ___. 
-    answer: готуємось
-    options:
-    - готуємось
-    - готуються
-    - ми
-    - вони
-  - sentence: Ми часто ___ в школі.
-    answer: сміємось
-    options:
-    - сміємось
-    - сміється
-    - ми
-    - вони
-  - sentence: Урок ___ о другій.
-    answer: закінчується
-    options:
-    - закінчується
-    - закінчуються
-    - ми
-    - вони
-  instruction: Choose the correct word to fill in the blank.
+    - question: "When do you use the postfix '-сь'?"
+      options:
+        - text: "After a vowel"
+          correct: true
+        - text: "After a consonant"
+          correct: false
+        - text: "Only in the 1st person"
+          correct: false
+        - text: "In all forms"
+          correct: false
+    - question: "How is the ending '-ться' pronounced?"
+      options:
+        - text: "As a long, soft [ts':a]"
+          correct: true
+        - text: "As [t-sya]"
+          correct: false
+        - text: "As [t-sia]"
+          correct: false
+        - text: "It is silent"
+          correct: false
+    - question: "Which verb is 'lexicalized' (always uses -ся)?"
+      options:
+        - text: "сміятися"
+          correct: true
+        - text: "мити"
+          correct: false
+        - text: "читати"
+          correct: false
+        - text: "їсти"
+          correct: false
+    - question: "What does '-ся' historically mean?"
+      options:
+        - text: "себе (self)"
+          correct: true
+        - text: "сьогодні (today)"
+          correct: false
+        - text: "сонце (sun)"
+          correct: false
+        - text: "слово (word)"
+          correct: false
+    - question: "Which form is correct for 'Ми'?"
+      options:
+        - text: "вчимось"
+          correct: true
+        - text: "вчишся"
+          correct: false
+        - text: "вчитесь"
+          correct: false
+        - text: "вчиться"
+          correct: false
+    - question: "Which form is correct for 'Ти'?"
+      options:
+        - text: "одягаєшся"
+          correct: true
+        - text: "одягаюсь"
+          correct: false
+        - text: "одягається"
+          correct: false
+        - text: "одягаєтесь"
+          correct: false
+    - question: "Which form is correct for 'Вони'?"
+      options:
+        - text: "дивляться"
+          correct: true
+        - text: "дивиться"
+          correct: false
+        - text: "дивимось"
+          correct: false
+        - text: "дивишся"
+          correct: false
+    - question: "Which verb pair shows a transitive ↔ reflexive relationship?"
+      options:
+        - text: "мити → митися"
+          correct: true
+        - text: "їсти → пити"
+          correct: false
+        - text: "читати → писати"
+          correct: false
+        - text: "бігти → ходити"
+          correct: false
+
 - type: true-false
-  title: Reflexive Concepts
+  title: "True or False: Reflexive Logic"
+  instruction: "Decide if the statements about reflexive verbs are true or false."
   items:
-  - statement: -ся stands for 'себе' (self).
-    correct: true
-    explanation: Correct! It reflects the action back.
-  - statement: You use -ся after vowels.
-    correct: false
-    explanation: No, use -сь after vowels (я миюсь) and -ся after consonants (ти миєшся).
-  - statement: Сміятися is a reflexive verb (washing oneself).
-    correct: false
-    explanation: It has the form, but logically it just means 'to laugh'.
-  - statement: Reflexive verbs are always 2nd conjugation.
-    correct: false
-    explanation: No, they can be 1st (-ати) or 2nd (-ити). It depends on the verb.
-  - statement: Називатися means 'to name someone'.
-    correct: false
-    explanation: It means 'to be called' (name oneself).
-  - statement: Зустрічатися implies meeting each other (reciprocal).
-    correct: true
-    explanation: Correct! The action is shared.
-  - statement: Дивитися follows a special pattern (дивл-) in 'I' form.
-    correct: true
-    explanation: 'Yes, consonant mutation happens: я дивлюсь.'
-  - statement: -ся always changes to -сь after consonants.
-    correct: false
-    explanation: Reverse! -ся after consonants, -сь after vowels.
-  - statement: The ending -ться sounds like [ts'a].
-    correct: true
-    explanation: Yes, it is a long, soft buzzing sound.
-  - statement: "Подобатися means 'to like'."
-    correct: true
-    explanation: Yes, this verb always uses -ся.
-  - statement: "Готуватися means 'to prepare oneself'."
-    correct: true
-    explanation: Yes, it is a reflexive action.
-  - statement: "You use -сь after the ending -мо."
-    correct: true
-    explanation: "Correct! -мо ends in a vowel, so add -сь (зустрічаємось)."
-  instruction: Determine if the statement is true.
-- type: match-up
-  title: Match Person to Verb
-  pairs:
-  - left: Я
-    right: сміюсь
-  - left: Ти
-    right: смієшся
-  - left: Він
-    right: сміється
-  - left: Ми
-    right: сміємось
-  - left: Ви
-    right: смієтесь
-  - left: Вони
-    right: сміються
-  - left: Він (дивитися)
-    right: дивиться
-  - left: Ми (дивитися)
-    right: дивимось
-  - left: Ви (дивитися)
-    right: дивитесь
-  - left: Вони (дивитися)
-    right: дивляться
-  instruction: Match the corresponding elements.
-- type: quiz
-  title: Context Quiz
+    - statement: "Reflexive verbs always indicate an action done to oneself."
+      correct: false
+      explanation: "No, they can also be reciprocal (mutual) or lexicalized (fixed forms)."
+    - statement: "The postfix '-ся' changes to '-сь' after a vowel for euphony."
+      correct: true
+    - statement: "The postfix '-ся' is used after consonants."
+      correct: true
+    - statement: "The verb 'сміятися' can be used without the '-ся' tail."
+      correct: false
+      explanation: "No, 'сміятися' is incomplete without its reflexive postfix."
+    - statement: "The letters '-ться' merge into a soft 'ts' sound [ts':a]."
+      correct: true
+    - statement: "The verb 'вчитися' means 'to teach someone else'."
+      correct: false
+      explanation: "No, 'вчитися' means 'to learn' or 'to study'."
+    - statement: "The verb 'зустрічатися' implies meeting each other (reciprocal)."
+      correct: true
+    - statement: "The form 'я дивлюсь' shows a consonant mutation (див → дивл)."
+      correct: true
+
+- type: group-sort
+  title: "Categorize Reflexive Verbs"
+  instruction: "Sort the verbs into their types based on their meaning."
+  groups:
+    - name: "True Reflexive (Self-Directed)"
+      items: ["вмиватися", "голитися", "одягатися", "митися"]
+    - name: "Reciprocal (Mutual Action)"
+      items: ["знайомитися", "зустрічатися", "вітатися", "цілуватися"]
+    - name: "Lexicalized (Fixed -ся)"
+      items: ["сміятися", "дивитися", "вчитися", "називатися"]
+
+- type: anagram
+  title: "Unscramble Reflexive Verbs"
+  instruction: "Rearrange the letters to form correct reflexive verbs."
   items:
-  - question: You see a funny movie. You...
-    options:
-    - text: смієтесь
-      correct: true
-    - text: плачете
-      correct: false
-    - text: спите
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Funny -> Laugh (сміятися).
-  - question: You see a friend on the street. You...
-    options:
-    - text: вітаєтесь
-      correct: true
-    - text: прощаєтесь
-      correct: false
-    - text: спите
-      correct: false
-    - text: вони
-      correct: false
-    explanation: See friend -> Greet (вітатися).
-  - question: You get out of bed in the morning. You...
-    options:
-    - text: прокидаєтесь
-      correct: true
-    - text: засинаєте
-      correct: false
-    - text: смієтесь
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Morning -> Wake up (прокидатися).
-  - question: You put on your clothes in the morning. You...
-    options:
-    - text: одягаєтесь
-      correct: true
-    - text: роздягаєтесь
-      correct: false
-    - text: вмиваєтесь
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Clothes -> Dress (одягатися).
-  - question: You wash your face in the morning. You...
-    options:
-    - text: вмиваєтесь
-      correct: true
-    - text: купаєтесь
-      correct: false
-    - text: одягаєтесь
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Face -> Wash (вмиватися).
-  - question: You look in a mirror before leaving. You...
-    options:
-    - text: дивитесь
-      correct: true
-    - text: слухаєте
-      correct: false
-    - text: плачете
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Mirror -> Look (дивитися).
-  - question: You are late for work or school. You...
-    options:
-    - text: запізнюєтесь
-      correct: true
-    - text: поспішаєте
-      correct: false
-    - text: смієтесь
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Late -> Be late (запізнюватися).
-  - question: You meet a friend at a cafe. You...
-    options:
-    - text: зустрічаєтесь
-      correct: true
-    - text: дзвоните
-      correct: false
-    - text: прощаєтесь
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Meet -> Зустрічатися.
-  - question: You and your partner are in love. You...
-    options:
-    - text: цілуєтесь
-      correct: true
-    - text: сваритись
-      correct: false
-    - text: спите
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Love -> Kiss (цілуватися).
-  - question: You see a joke. You...
-    options:
-    - text: усміхаєтесь
-      correct: true
-    - text: плачете
-      correct: false
-    - text: кричите
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Joke -> Smile (усміхатися).
-  - question: You are getting ready for a party. You...
-    options:
-    - text: готуєтесь
-      correct: true
-    - text: відпочиваєте
-      correct: false
-    - text: спите
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Party -> Prepare (готуватися).
-  - question: You like this city. It...
-    options:
-    - text: подобається
-      correct: true
-    - text: називається
-      correct: false
-    - text: починається
-      correct: false
-    - text: вони
-      correct: false
-    explanation: Like -> Подобатися.
-  instruction: Choose the correct answer.
+    - scrambled: "тисявмива"
+      answer: "вмиватися"
+    - scrambled: "тисясмія"
+      answer: "сміятися"
+    - scrambled: "тисявчи"
+      answer: "вчитися"
+    - scrambled: "тисядиви"
+      answer: "дивитися"
+    - scrambled: "тисяназива"
+      answer: "називатися"
+    - scrambled: "тисяодяга"
+      answer: "одягатися"
+    - scrambled: "тисяголи"
+      answer: "голитися"
+    - scrambled: "тисяповерта"
+      answer: "повертатися"
+
+- type: anagram
+  title: "Unscramble Reflexive Verbs II"
+  instruction: "Rearrange the letters to form more reflexive verbs."
+  items:
+    - scrambled: "тисязайма"
+      answer: "займатися"
+    - scrambled: "тисяцікави"
+      answer: "цікавитися"
+    - scrambled: "тисязнайоми"
+      answer: "знайомитися"
+    - scrambled: "тисязустріча"
+      answer: "зустрічатися"
+    - scrambled: "тисязупиня"
+      answer: "зупинятися"
+    - scrambled: "тисявіта"
+      answer: "вітатися"
+    - scrambled: "тисяцілува"
+      answer: "цілуватися"
+    - scrambled: "сямити"
+      answer: "митися"
+
 - type: fill-in
-  title: Sentence Builder
+  title: "Daily Routine Conversation"
+  instruction: "Complete the dialogue with the correct reflexive verb forms."
   items:
-  - sentence: Фільм ___ о 8:00.
-    answer: починається
-    options:
-    - починається
-    - починаються
-    - ми
-    - вони
-  - sentence: Урок ___ о 9:00.
-    answer: закінчується
-    options:
-    - закінчується
-    - закінчуються
-    - ми
-    - вони
-  - sentence: Як ви ___?
-    answer: називаєтесь
-    options:
-    - називаєтесь
-    - називаються
-    - ми
-    - вони
-  - sentence: Я ___ Олена.
-    answer: називаюсь
-    options:
-    - називаюсь
-    - називається
-    - ми
-    - вони
-  - sentence: Ми ___ у кафе.
-    answer: зустрічаємось
-    options:
-    - зустрічаємось
-    - зустрічаються
-    - ми
-    - вони
-  - sentence: Вони ___ вдома.
-    answer: зустрічаються
-    options:
-    - зустрічаються
-    - зустрічаємось
-    - ми
-    - вони
-  - sentence: Ти ___ телевізор.
-    answer: дивишся
-    options:
-    - дивишся
-    - дивитесь
-    - ми
-    - вони
-  - sentence: Ви ___ футбол?
-    answer: дивитесь
-    options:
-    - дивитесь
-    - дивишся
-    - ми
-    - вони
-  - sentence: Він ___ вранці.
-    answer: вмивається
-    options:
-    - вмивається
-    - вмиваються
-    - ми
-    - вони
-  - sentence: Ми ___ на роботу.
-    answer: збираємось
-    options:
-    - збираємось
-    - збираються
-    - ми
-    - вони
-  - sentence: Вона ___ в дзеркало.
-    answer: дивиться
-    options:
-    - дивиться
-    - дивляться
-    - ми
-    - вони
-  - sentence: Діти ___. 
-    answer: сміються
-    options:
-    - сміються
-    - сміємось
-    - ми
-    - вони
-  instruction: Choose the correct word to fill in the blank.
+    - sentence: "— Ти вже ___ (вмиватися)?"
+      answer: "вмиваєшся"
+      options: ["вмиваєшся", "вмиваєш", "вмиваєтесь", "вмиваюсь"]
+    - sentence: "— Так, я ___ (вмиватися) і одягаюсь."
+      answer: "вмиваюсь"
+      options: ["вмиваюсь", "вмиваю", "вмивається", "вмиваємось"]
+    - sentence: "— Ти часто ___ (займатися)?"
+      answer: "займаєшся"
+      options: ["займаєшся", "займаєш", "займаєтесь", "займаються"]
+    - sentence: "— Я ___ (дивитися) телевізор."
+      answer: "дивлюсь"
+      options: ["дивлюсь", "дивлюся", "дивимось", "дивишся"]
+    - sentence: "— Як ___ (називатися) твій ліцей?"
+      answer: "називається"
+      options: ["називається", "називають", "називаюсь", "називаєшся"]
+    - sentence: "— Ми скоро ___ (зустрічатися) разом."
+      answer: "зустрічаємось"
+      options: ["зустрічаємось", "зустрічаємо", "зустрічаються", "зустрічається"]
+    - sentence: "— Вони ___ (повертатися) додому ввечері."
+      answer: "повертаються"
+      options: ["повертаються", "повертаємось", "повертаєшся", "повертається"]
+    - sentence: "— Він ___ (голитися) кожного ранку."
+      answer: "голиться"
+      options: ["голиться", "голюся", "голяться", "голишся"]

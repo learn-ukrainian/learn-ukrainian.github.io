@@ -1,0 +1,47 @@
+{
+  "module": "21-kulish-literary-legacy",
+  "level": "LIT",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-08T22:49:51.223441Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-08T22:46:10.746341Z",
+    "meta": "2026-02-08T22:49:47.587869Z",
+    "activities": "2026-02-08T22:48:45.997134Z",
+    "vocabulary": "2026-02-08T22:34:19.566738Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4508/4500 (raw: 4602)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "42/0"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

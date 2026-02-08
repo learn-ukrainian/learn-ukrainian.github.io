@@ -161,12 +161,12 @@
 - type: fill-in
   title: Complete the Directions
   items:
-  - sentence: Іди ___, потім поверни направо.
+  - sentence: Іди ___, потім поверни праворуч.
     answer: прямо
     options:
     - прямо
-    - наліво
-    - направо
+    - ліворуч
+    - праворуч
     - назад
   - sentence: Аптека на іншій стороні вулиці, ___ банку.
     answer: навпроти
@@ -176,10 +176,10 @@
     - за
     - перед
   - sentence: На перехресті поверніть ___.
-    answer: наліво
+    answer: ліворуч
     options:
-    - наліво
-    - направо
+    - ліворуч
+    - праворуч
     - прямо
     - назад
   - sentence: Музей дуже ___ парку, лише 2 хвилини.
@@ -196,12 +196,12 @@
     - далеко
     - поруч
     - туди
-  - sentence: Станція метро ___ мостом, треба перейти.
-    answer: за
+  - sentence: Станція метро ___ банку.
+    answer: біля
     options:
+    - біля
     - за
     - перед
-    - навпроти
     - між
   - sentence: Я їду до університету ___.
     answer: на трамваї
@@ -210,32 +210,25 @@
     - на автобусі
     - на машині
     - пішки
-  - sentence: Книгарня ___ кафе і банком.
-    answer: між
+  - sentence: Книгарня ___ пошти.
+    answer: навпроти
     options:
-    - між
-    - біля
-    - за
     - навпроти
-  - sentence: Іди ___ вулиці Шевченка до кінця.
-    answer: вздовж
-    options:
-    - вздовж
-    - через
-    - до
-    - від
+    - між
+    - за
+    - перед
   - sentence: Театр ___ парку.
-    answer: перед
+    answer: біля
     options:
+    - біля
     - перед
     - за
-    - біля
-    - навпроти
+    - між
   - sentence: Поверніть ___ біля світлофора.
-    answer: направо
+    answer: праворуч
     options:
-    - направо
-    - наліво
+    - праворуч
+    - ліворуч
     - прямо
     - назад
   - sentence: Я ходжу на роботу ___.
@@ -268,22 +261,22 @@
     options:
     - на велосипеді
     - велосипед
-    - велосипедом
     - у велосипеді
+    - на велосипед
   - sentence: Вони приїхали ___.
     answer: на машині
     options:
     - на машині
     - машина
     - машину
-    - машиною
+    - у машині
   - sentence: Ти їдеш ___?
     answer: на трамваї
     options:
     - на трамваї
     - трамвай
-    - трамваєм
     - у трамваї
+    - на трамвай
   - sentence: Я вже йду ___.
     answer: пішки
     options:
@@ -302,23 +295,23 @@
     answer: на автобусі
     options:
     - на автобусі
-    - автобусом
     - автобус
+    - в автобус
     - в автобусі
   - sentence: Я їду ___ до Києва.
     answer: на поїзді
     options:
     - на поїзді
-    - поїздом
     - поїзд
+    - у поїзд
     - у поїзді
   - sentence: Ми подорожуємо ___ до Львова.
     answer: на маршрутці
     options:
     - на маршрутці
-    - маршруткою
     - маршрутка
     - у маршрутці
+    - на маршрутку
   - sentence: Він іде ___ до зупинки.
     answer: пішки
     options:
@@ -330,9 +323,9 @@
     answer: на тролейбусі
     options:
     - на тролейбусі
-    - тролейбусом
     - тролейбус
     - у тролейбусі
+    - на тролейбус
   instruction: Choose the correct word to fill in the blank.
 - type: true-false
   title: City Navigation Facts
@@ -423,15 +416,15 @@
   items:
   - question: 'Identify the correct order: "Go straight, then turn left."'
     options:
-    - text: Іди прямо, потім поверни наліво
+    - text: Іди прямо, потім поверни ліворуч
       correct: true
-    - text: прямо, Іди потім поверни наліво
+    - text: прямо, Іди потім поверни ліворуч
       correct: false
     - text: Incorrect order for this sentence
       correct: false
     - text: вони
       correct: false
-    explanation: 'Correct: Іди прямо, потім поверни наліво'
+    explanation: 'Correct: Іди прямо, потім поверни ліворуч'
   - question: 'Identify the correct order: "Where is the metro station?"'
     options:
     - text: Де станція метро
@@ -511,15 +504,15 @@
     explanation: 'Correct: Це дуже далеко'
   - question: 'Identify the correct order: "Turn right at the intersection."'
     options:
-    - text: На перехресті поверніть направо
+    - text: На перехресті поверніть праворуч
       correct: true
-    - text: перехресті На поверніть направо
+    - text: перехресті На поверніть праворуч
       correct: false
     - text: Incorrect order for this sentence
       correct: false
     - text: вони
       correct: false
-    explanation: 'Correct: На перехресті поверніть направо'
+    explanation: 'Correct: На перехресті поверніть праворуч'
   - question: 'Identify the correct order: "I walk to the university."'
     options:
     - text: Я ходжу до університету пішки
@@ -568,9 +561,9 @@
   - left: Як ти їдеш на роботу?
     right: Я їжджу метро.
   - left: Де вхід?
-    right: За мостом, наліво.
+    right: За мостом, ліворуч.
   - left: Перепрошую, де банк?
-    right: Біля світлофора, направо.
+    right: Біля світлофора, праворуч.
   - left: Скільки хвилин пішки?
     right: Десь десять хвилин.
   - left: Де вокзал?
@@ -734,24 +727,24 @@
     explanation: 'Correct: Зазвичай я їду на трамваї'
   - question: 'Identify the correct order: "Turn right at the..."'
     options:
-    - text: Поверніть направо біля світлофора
+    - text: Поверніть праворуч біля світлофора
       correct: true
-    - text: направо Поверніть біля світлофора
+    - text: праворуч Поверніть біля світлофора
       correct: false
     - text: Incorrect order for this sentence
       correct: false
     - text: вони
       correct: false
-    explanation: 'Correct: Поверніть направо біля світлофора'
+    explanation: 'Correct: Поверніть праворуч біля світлофора'
   - question: 'Identify the correct order: "At the intersection go left."'
     options:
-    - text: На перехресті ідіть наліво
+    - text: На перехресті ідіть ліворуч
       correct: true
-    - text: перехресті На ідіть наліво
+    - text: перехресті На ідіть ліворуч
       correct: false
     - text: Incorrect order for this sentence
       correct: false
     - text: вони
       correct: false
-    explanation: 'Correct: На перехресті ідіть наліво'
+    explanation: 'Correct: На перехресті ідіть ліворуч'
   instruction: Choose the correct answer.

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1091
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:26:04
+**Generated:** 2026-02-09 00:09:19
 
 ## Configuration
 **Type:** A1-grammar
@@ -21,7 +21,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Numbers and Words | 10 | 8 | ✅ |
-| 2 | fill-in | Complete with Numbers | 12 | 8 | ✅ |
+| 2 | fill-in | Math Practice | 12 | 8 | ✅ |
 | 3 | quiz | Number Grammar | 12 | 8 | ✅ |
 | 4 | true-false | Money Facts | 12 | 8 | ✅ |
 | 5 | group-sort | Number Categories | 12 | 12 | ✅ |
@@ -38,31 +38,28 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1133/1091 (raw: 1485)
+- **Words:** ✅ 1154/1091 (raw: 1506)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.9% (target 25-40% (M17))
+- **Immersion:** 🇺🇦 29.6% (target 25-40% (M17))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 76 | Included in Core |
-| **Presentation** | ✅ | 493 | Included in Core |
+| **Presentation** | ✅ | 514 | Included in Core |
 | **Practice** | ⚪️ | 240 | Skipped |
 | **Cultural Insight** | ✅ | 231 | Included in Core |
 | **Підсумок** | ✅ | 74 | Included in Core |

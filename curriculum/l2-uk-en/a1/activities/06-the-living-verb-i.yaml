@@ -18,8 +18,8 @@
     right: to play
   - left: починати
     right: to start
-  - left: робити
-    right: to do/make
+  - left: снідати
+    right: to have breakfast
   - left: гуляти
     right: to walk
 - type: quiz
@@ -389,8 +389,9 @@
   - words:
     - граємо
     - Ми
+    - у
     - футбол
-    answer: Ми граємо футбол
+    answer: Ми граємо у футбол
   - words:
     - слухаєте
     - Ви
@@ -404,8 +405,8 @@
   - words:
     - пишеш
     - Ти
-    - листа
-    answer: Ти пишеш листа
+    - лист
+    answer: Ти пишеш лист
   - words:
     - співає
     - Вона

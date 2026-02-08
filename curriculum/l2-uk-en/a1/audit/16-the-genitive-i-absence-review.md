@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M16 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1038
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:26:02
+**Generated:** 2026-02-08 22:48:41
 
 ## Configuration
 **Type:** A1-grammar
@@ -21,7 +21,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Absence Vocabulary | 10 | 8 | ✅ |
-| 2 | group-sort | Genitive Endings | 12 | 12 | ✅ |
+| 2 | group-sort | Genitive Endings | 13 | 12 | ✅ |
 | 3 | fill-in | Complete with Genitive | 12 | 8 | ✅ |
 | 4 | quiz | Understanding Genitive | 12 | 8 | ✅ |
 | 5 | true-false | Genitive Rules | 12 | 8 | ✅ |
@@ -37,14 +37,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1091/1038 (raw: 1435)
+- **Words:** ✅ 1151/1038 (raw: 1495)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 11/1
+- **Vocab:** ✅ 14/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -53,16 +53,13 @@
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 114 | Included in Core |
-| **Presentation** | ✅ | 321 | Included in Core |
+| **Presentation** | ✅ | 383 | Included in Core |
 | **Practice** | ⚪️ | 103 | Skipped |
-| **Cultural Insight** | ✅ | 411 | Included in Core |
+| **Cultural Insight** | ✅ | 409 | Included in Core |
 | **Summary / Підсумок** | ✅ | 123 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

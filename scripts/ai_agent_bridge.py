@@ -27,6 +27,7 @@ Usage:
 """
 
 import argparse
+import atexit
 import json
 import os
 import shutil
@@ -48,6 +49,45 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 _PARENT_ENV = os.environ.copy()
 
 
+def _git_status_snapshot() -> set[str]:
+    """Capture current set of modified/untracked files for post-validation."""
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True, text=True, timeout=10,
+            cwd=str(Path(__file__).parent.parent)
+        )
+        return set(result.stdout.strip().splitlines()) if result.stdout.strip() else set()
+    except Exception:
+        return set()
+
+
+def _validate_file_writes(pre_snapshot: set[str], allowed_path: str) -> list[str]:
+    """Compare git status before/after to detect unauthorized file writes.
+
+    Returns list of violation descriptions (empty = clean).
+    """
+    post_snapshot = _git_status_snapshot()
+    new_changes = post_snapshot - pre_snapshot
+    if not new_changes:
+        return []
+
+    # Normalize allowed path to be relative to repo root
+    repo_root = Path(__file__).parent.parent
+    try:
+        allowed_rel = str(Path(allowed_path).resolve().relative_to(repo_root.resolve()))
+    except ValueError:
+        allowed_rel = allowed_path
+
+    violations = []
+    for change in new_changes:
+        # git status --porcelain format: "XY filename" or "XY filename -> newname"
+        file_part = change[3:].strip().split(" -> ")[0].strip('"')
+        if file_part != allowed_rel:
+            violations.append(f"{change.strip()} (unauthorized)")
+    return violations
+
+
 def _write_pid_file(agent: str, task_id: str, info: dict, pid: int = None):
     """Write a PID file for a running agent process."""
     PID_DIR.mkdir(parents=True, exist_ok=True)
@@ -67,6 +107,8 @@ def _is_task_locked(agent: str, task_id: str) -> bool:
     Returns True if locked (another process is alive), False if free.
     Cleans up stale PID files automatically.
     Excludes the current process's own PID (prevents self-lock).
+    Also detects stale locks: if PID file is older than 30 minutes and the
+    process doesn't look like a python/gemini/claude process, treat as stale.
     """
     if not task_id:
         return False
@@ -81,6 +123,33 @@ def _is_task_locked(agent: str, task_id: str) -> bool:
         if pid == os.getpid():
             return False  # It's us — not locked
         os.kill(pid, 0)  # Signal 0 = check if process exists
+
+        # Process exists, but check if PID file is stale (>30 min old)
+        started = data.get("started")
+        if started:
+            try:
+                start_time = datetime.fromisoformat(started)
+                age_minutes = (datetime.now(timezone.utc) - start_time).total_seconds() / 60
+                if age_minutes > 30:
+                    # PID exists but lock is old — verify process is actually ours
+                    try:
+                        result = subprocess.run(
+                            ["ps", "-p", str(pid), "-o", "comm="],
+                            capture_output=True, text=True, timeout=5
+                        )
+                        proc_name = result.stdout.strip().lower()
+                        if not any(name in proc_name for name in ("python", "gemini", "claude", "node")):
+                            print(f"🧹 Stale PID lock: {pid_file.name} (PID {pid} is '{proc_name}', {age_minutes:.0f}m old)")
+                            pid_file.unlink(missing_ok=True)
+                            return False
+                    except Exception:
+                        # Can't verify process name — treat old lock as stale
+                        print(f"🧹 Stale PID lock: {pid_file.name} ({age_minutes:.0f}m old, can't verify process)")
+                        pid_file.unlink(missing_ok=True)
+                        return False
+            except (ValueError, TypeError):
+                pass  # Can't parse timestamp — fall through to "locked"
+
         return True  # Another process is alive — task is locked
     except (ProcessLookupError, PermissionError):
         # Process is dead — clean up stale PID file
@@ -382,7 +451,7 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
 def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data: str = None, new_session: bool = False, from_llm: str = "gemini", from_model: str = None, to_model: str = None):
     """Send message to Claude AND invoke Claude to process it. One-step communication.
 
-    Mode auto-detection: request/handoff → async (fire-and-forget), query/response → sync.
+    Runs in sync mode by default (15 min timeout). Use --async flag for fire-and-forget.
 
     Args:
         from_llm: Sender agent family (gemini, claude) - for routing
@@ -404,7 +473,7 @@ def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", d
     return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -412,6 +481,11 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
         async_mode: If True, just queue message without invoking Gemini CLI.
                    Auto-enabled for 'handoff' type messages (complex tasks).
+        stdout_only: If True, don't route full response through broker. Output goes
+                    to stdout only. Broker gets a short summary instead. Use for
+                    orchestrated rebuilds where Claude captures stdout directly.
+        output_path: If set, Gemini writes output to this file instead of stdout.
+                    Enables -y mode with post-validation (only this file may be written).
     """
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
@@ -429,7 +503,21 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         print()
 
     # Step 1: Send the message (model param becomes to_model)
-    msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
+    # In output_path mode, skip broker entirely — batch script handles everything
+    if output_path:
+        msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
+        acknowledge(msg_id)
+        print(f"   Pre-acknowledged (file output mode — no broker traffic)")
+    else:
+        msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
+
+        # Step 1.5: Pre-acknowledge for orchestration mode.
+        # Prevents race condition: without this, the message sits unread in broker
+        # while Gemini processes it. If a standalone Gemini session checks inbox
+        # during that window, it picks up the message with no restrictions.
+        if stdout_only:
+            acknowledge(msg_id)
+            print(f"   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)")
 
     # Step 2: Invoke Gemini to process it (unless async mode)
     if async_mode:
@@ -438,7 +526,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
         print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        process_and_respond(msg_id, model)
+        process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
 
     return msg_id
 
@@ -534,39 +622,86 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False):
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
     """Read message, process with Gemini CLI, send response.
+
+    Runs in sync mode by default (15 min timeout). On any failure, sends an
+    error message back to the sender and always cleans up the PID file.
 
     Args:
         fire_and_forget: If True, launch the bridge ITSELF as a background process
-            running in no-timeout sync mode. The bridge captures stdout and routes
-            the response — Gemini doesn't need to self-report.
+            running in no-timeout sync mode. Must be explicitly requested via --async.
+        stdout_only: If True, don't store full response in broker. Send short summary instead.
         no_timeout: Internal flag. When True, run sync without timeout.
             Used by fire-and-forget to re-invoke the bridge as a background process.
+        output_path: If set, Gemini writes output to this file. Uses -y mode with
+            post-validation instead of --approval-mode plan.
     """
     msg = read_message(message_id)
     if not msg:
         return
 
-    # Auto-detect mode from message type if not explicitly set
-    if not no_timeout and not fire_and_forget and msg['type'] in ('request', 'handoff'):
-        fire_and_forget = True
-        print("ℹ️  Auto-enabled fire-and-forget for request/handoff (long-running task)")
-
     # Prepare prompt for Gemini
-    prompt = f"""You are Gemini, participating in a collaboration with Claude.
+    if stdout_only or output_path:
+        # ORCHESTRATED MODE: Ultra-restrictive prompt for Gemini Pro/Flash.
+        # Gemini Pro is especially prone to going off-script (editing files, sending broker
+        # messages, running shell commands). This prompt must be explicit about every prohibition.
+        if output_path:
+            # FILE OUTPUT MODE: Gemini writes to ONE designated file
+            output_instruction = f"""1. WRITE OUTPUT TO EXACTLY ONE FILE: {output_path}
+   Write your COMPLETE output to this file. This is the ONLY file you may create or modify.
+   Do NOT write to any other file. Do NOT edit any existing file."""
+            success_instruction = f"""- Read the files referenced in the task (using your file reading ability)
+- Think about the content
+- Write your COMPLETE output to: {output_path}
+- That's it. Nothing else."""
+        else:
+            # STDOUT MODE: Text output only, no file writing
+            output_instruction = """1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.
+2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files."""
+            success_instruction = """- Read the files referenced in the task (using your file reading ability)
+- Think about the content
+- Output your result as plain text between the delimiters specified in the task
+- That's it. Nothing else. Just text output."""
+
+        prompt = f"""ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.
+
+ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:
+
+{output_instruction}
+3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.
+4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).
+5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.
+6. DO NOT DELEGATE. Do not say "Claude should...", "please run...", or request any skills/commands.
+
+HOW TO SUCCEED:
+{success_instruction}
+
+IF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.
+
+TASK:
+{msg['content']}
+"""
+        if msg['data']:
+            prompt += f"""
+ATTACHED DATA:
+{msg['data']}
+"""
+    else:
+        # STANDARD MODE: Collaborative prompt for general communication
+        prompt = f"""You are Gemini, participating in a collaboration with Claude.
 This is a message from Claude to you:
 
 ---
 {msg['content']}
 """
-    if msg['data']:
-        prompt += f"""
+        if msg['data']:
+            prompt += f"""
 ---
 Attached data:
 {msg['data']}
 """
-    prompt += """
+        prompt += """
 ---
 
 Please respond appropriately. If this is a request, fulfill it.
@@ -625,8 +760,8 @@ Format your response clearly.
         # SYNC: Run Gemini with STREAMING output (visible in log in real-time)
         import time
         task_key = msg.get('task_id') or str(message_id)
-        timeout_val = None if no_timeout else 300
-        mode_label = "no-timeout" if no_timeout else "sync, 5 min timeout"
+        timeout_val = None if no_timeout else 900
+        mode_label = "no-timeout" if no_timeout else "sync, 15 min timeout"
 
         # LOCK CHECK: Don't process if another bridge is already working on this task
         if _is_task_locked("gemini", task_key):
@@ -643,98 +778,159 @@ Format your response clearly.
             "model": model,
             "mode": mode_label,
         })
+        atexit.register(_remove_pid_file, "gemini", task_key)
 
         max_retries = 5
         base_delay = 30  # seconds — respect the quota, don't hammer
+        _response_sent = False
 
-        for attempt in range(max_retries):
-            try:
-                # Stream stdout line-by-line so the log file updates in real-time
-                proc = subprocess.Popen(
-                    [GEMINI_CLI, "-m", model, "-y", "-p", prompt],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    cwd=str(Path(__file__).parent.parent),
-                    env=_PARENT_ENV
-                )
+        try:
+            for attempt in range(max_retries):
+                try:
+                    # Stream stdout line-by-line so the log file updates in real-time
+                    # Mode selection:
+                    # - stdout_only (no output_path): --approval-mode plan (READ-ONLY)
+                    # - output_path: -y (needs write access) with post-validation
+                    # - standard: -y (YOLO, auto-approve all tools)
+                    gemini_cmd = [GEMINI_CLI, "-m", model]
+                    if stdout_only and not output_path:
+                        gemini_cmd += ["--approval-mode", "plan"]
+                    else:
+                        gemini_cmd += ["-y"]
+                    gemini_cmd += ["-p", prompt]
 
-                # Read stdout in real-time, collect for response routing
-                output_lines = []
-                for line in proc.stdout:
-                    print(line, end='')  # Real-time to log file
-                    sys.stdout.flush()
-                    output_lines.append(line)
+                    # Snapshot for post-validation when output_path is set
+                    pre_snapshot = None
+                    if output_path:
+                        pre_snapshot = _git_status_snapshot()
 
-                # Wait for process to finish, get stderr
-                proc.wait()
-                stderr = proc.stderr.read() if proc.stderr else ""
+                    proc = subprocess.Popen(
+                        gemini_cmd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True,
+                        cwd=str(Path(__file__).parent.parent),
+                        env=_PARENT_ENV
+                    )
 
-                if proc.returncode != 0:
-                    # Detect quota/rate limit errors
-                    if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
-                        delay = base_delay * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
-                        if attempt < max_retries - 1:
-                            print(f"\n⏳ Rate limited (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
-                            sys.stdout.flush()
-                            time.sleep(delay)
-                            continue
-                        else:
-                            print(f"\n❌ Rate limited after {max_retries} attempts. Giving up.")
-                            _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
+                    # Read stdout in real-time, collect for response routing
+                    output_lines = []
+                    for line in proc.stdout:
+                        print(line, end='')  # Real-time to log file
+                        sys.stdout.flush()
+                        output_lines.append(line)
+
+                    # Wait for process to finish, get stderr
+                    proc.wait()
+                    stderr = proc.stderr.read() if proc.stderr else ""
+
+                    if proc.returncode != 0:
+                        # Detect quota/rate limit errors
+                        if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
+                            delay = base_delay * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
+                            if attempt < max_retries - 1:
+                                print(f"\n⏳ Rate limited (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
+                                sys.stdout.flush()
+                                time.sleep(delay)
+                                continue
+                            else:
+                                print(f"\n❌ Rate limited after {max_retries} attempts. Giving up.")
+                                return
+                        print(f"\n❌ Gemini CLI error (exit {proc.returncode}): {stderr[:500]}")
+                        sys.stdout.flush()
+                        # Non-zero exit but has output? Gemini tool calls may cause exit 1.
+                        # If we got substantial output, treat as success.
+                        if not output_lines or len(''.join(output_lines).strip()) < 50:
                             return
-                    print(f"\n❌ Gemini CLI error (exit {proc.returncode}): {stderr[:500]}")
+
+                    response = ''.join(output_lines).strip()
+
+                    # Post-validation: check Gemini only wrote to the allowed file
+                    if output_path and pre_snapshot is not None:
+                        violations = _validate_file_writes(pre_snapshot, output_path)
+                        if violations:
+                            print(f"\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
+                            for v in violations:
+                                print(f"   - {v}")
+                            sys.stdout.flush()
+
+                    print(f"\n\n{'─' * 40}")
+                    if output_path:
+                        output_exists = Path(output_path).exists()
+                        output_size = Path(output_path).stat().st_size if output_exists else 0
+                        print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
+                    else:
+                        print(f"✅ Gemini finished ({len(response)} chars)")
                     sys.stdout.flush()
-                    # Non-zero exit but has output? Gemini tool calls may cause exit 1.
-                    # If we got substantial output, treat as success.
-                    if not output_lines or len(''.join(output_lines).strip()) < 50:
-                        _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
-                        return
 
-                response = ''.join(output_lines).strip()
+                    if output_path:
+                        # File output mode: NO broker message. Batch script reads the file directly.
+                        print(f"   (no broker message — file output mode)")
+                    elif stdout_only:
+                        # Stdout-only mode: broker gets SHORT summary only
+                        summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
+                        send_message(
+                            content=summary,
+                            task_id=msg['task_id'],
+                            msg_type="response",
+                            from_llm="gemini",
+                            to_llm="claude",
+                            from_model=model,
+                            to_model=None
+                        )
+                    else:
+                        # Standard mode: full response through broker
+                        send_message(
+                            content=response,
+                            task_id=msg['task_id'],
+                            msg_type="response",
+                            from_llm="gemini",
+                            to_llm="claude",
+                            from_model=model,
+                            to_model=None
+                        )
+                    _response_sent = True
 
-                print(f"\n\n{'─' * 40}")
-                print(f"✅ Gemini finished ({len(response)} chars)")
-                sys.stdout.flush()
+                    # Acknowledge original message
+                    acknowledge(message_id)
+                    break  # Success — exit retry loop
 
-                # Send response with model info
-                send_message(
-                    content=response,
-                    task_id=msg['task_id'],
-                    msg_type="response",
-                    from_llm="gemini",
-                    to_llm="claude",
-                    from_model=model,
-                    to_model=None
-                )
-
-                # Acknowledge original message
-                acknowledge(message_id)
-                _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
-                break  # Success — exit retry loop
-
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                print("\n❌ Gemini CLI timed out (5 min sync limit)")
-                _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
-                return
-            except FileNotFoundError:
-                print("❌ gemini CLI not found. Is it installed?")
-                _remove_pid_file("gemini", msg.get('task_id') or str(message_id))
-                return
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    print(f"\n❌ Gemini CLI timed out ({timeout_val}s sync limit)")
+                    return
+                except FileNotFoundError:
+                    print("❌ gemini CLI not found. Is it installed?")
+                    return
+        finally:
+            # Always clean up PID file, and send error if no response was routed
+            if not _response_sent:
+                try:
+                    send_message(
+                        content=f"[Bridge Error] Gemini process failed for message #{message_id}. Check logs.",
+                        task_id=msg['task_id'],
+                        msg_type="error",
+                        from_llm="gemini",
+                        to_llm="claude",
+                        from_model="gemini-bridge-error"
+                    )
+                    acknowledge(message_id)
+                except Exception:
+                    pass  # Best-effort error reporting
+            _remove_pid_file("gemini", task_key)
 
 
 def process_for_claude(message_id: int, new_session: bool = False, fire_and_forget: bool = False, no_timeout: bool = False):
     """Read message addressed to Claude, invoke Claude CLI headlessly, send response back to sender.
 
-    Works symmetrically with process_and_respond (Gemini):
-    - Sync: Captures Claude's stdout, routes response via send_message()
-    - Async (fire-and-forget): Launches the bridge itself as a bg process in no-timeout mode
+    Runs in sync mode by default (15 min timeout). On any failure, sends an
+    error message back to the sender and always cleans up the PID file.
 
     Args:
         message_id: The message ID to process
         new_session: If True, force a new session even if one exists
         fire_and_forget: If True, re-launch bridge in background with --no-timeout.
+            Must be explicitly requested via --async flag.
         no_timeout: Internal flag. When True, run sync without timeout.
     """
     import uuid
@@ -765,11 +961,6 @@ def process_for_claude(message_id: int, new_session: bool = False, fire_and_forg
         "data": row[6],
         "timestamp": row[7]
     }
-
-    # Auto-detect mode from message type if not explicitly set
-    if not no_timeout and not fire_and_forget and msg['type'] in ('request', 'handoff'):
-        fire_and_forget = True
-        print("ℹ️  Auto-enabled fire-and-forget for request/handoff (long-running task)")
 
     # Check for existing session
     session = get_session(msg['task_id']) if msg['task_id'] else {"claude": None, "gemini": None}
@@ -866,8 +1057,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
     else:
         # SYNC: Run Claude with STREAMING output (visible in log in real-time)
         task_key = msg.get('task_id') or str(message_id)
-        timeout_val = None if no_timeout else 300
-        mode_label = "no-timeout" if no_timeout else "sync, 5 min timeout"
+        timeout_val = None if no_timeout else 900
+        mode_label = "no-timeout" if no_timeout else "sync, 15 min timeout"
 
         # LOCK CHECK: Don't process if another bridge is already working on this task
         if _is_task_locked("claude", task_key):
@@ -883,7 +1074,9 @@ Do NOT use MCP tools to send your response - just output your response directly.
             "task_id": msg.get('task_id'),
             "mode": mode_label,
         })
+        atexit.register(_remove_pid_file, "claude", task_key)
 
+        _response_sent = False
         try:
             # Stream stdout line-by-line so the log file updates in real-time
             proc = subprocess.Popen(
@@ -917,8 +1110,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
                     to_llm=msg['from'],
                     from_model="claude-bridge-error"
                 )
+                _response_sent = True
                 acknowledge(message_id)
-                _remove_pid_file("claude", msg.get('task_id') or str(message_id))
                 return
 
             response = ''.join(output_lines).strip()
@@ -936,23 +1129,24 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 from_model=None,
                 to_model=None
             )
+            _response_sent = True
 
             acknowledge(message_id)
-            _remove_pid_file("claude", msg.get('task_id') or str(message_id))
 
         except subprocess.TimeoutExpired:
             proc.kill()
-            print("\n❌ Claude CLI timed out (5 min sync limit)")
+            timeout_mins = timeout_val // 60 if timeout_val else "?"
+            print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit)")
             send_message(
-                content="[Bridge Error] Claude CLI timed out after 5 minutes. Consider using async mode for long tasks.",
+                content=f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. Consider using --async flag for long tasks.",
                 task_id=msg['task_id'],
                 msg_type="error",
                 from_llm="claude",
                 to_llm=msg['from'],
                 from_model="claude-bridge-timeout"
             )
+            _response_sent = True
             acknowledge(message_id)
-            _remove_pid_file("claude", msg.get('task_id') or str(message_id))
         except FileNotFoundError:
             print("❌ claude CLI not found. Is it installed?")
             send_message(
@@ -963,7 +1157,23 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 to_llm=msg['from'],
                 from_model="claude-bridge-not-found"
             )
-            _remove_pid_file("claude", msg.get('task_id') or str(message_id))
+            _response_sent = True
+        finally:
+            # Always clean up PID file, and send error if no response was routed
+            if not _response_sent:
+                try:
+                    send_message(
+                        content=f"[Bridge Error] Claude process failed unexpectedly for message #{message_id}. Check logs.",
+                        task_id=msg['task_id'],
+                        msg_type="error",
+                        from_llm="claude",
+                        to_llm=msg['from'],
+                        from_model="claude-bridge-error"
+                    )
+                    acknowledge(message_id)
+                except Exception:
+                    pass  # Best-effort error reporting
+            _remove_pid_file("claude", task_key)
 
 
 def interactive_mode():
@@ -1144,7 +1354,7 @@ def main():
     proc_claude_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                     help="Force new session even if one exists for this task")
     proc_claude_parser.add_argument("--async", dest="fire_and_forget", action="store_true",
-                                    help="Launch Claude in background (no timeout). Auto-enabled for request/handoff types.")
+                                    help="Launch Claude in background (no timeout). Must be explicitly requested.")
     proc_claude_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                                     help="Run sync without timeout (used internally by fire-and-forget)")
 
@@ -1174,6 +1384,10 @@ def main():
                                    help="Exact sender model ID (e.g., claude-opus-4-5-20251101)")
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
                                    help="Queue only, don't invoke Gemini CLI (for complex tasks). Auto-enabled for --type handoff")
+    ask_gemini_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
+                                   help="Don't route full response through broker. Output goes to stdout only. Broker gets short summary.")
+    ask_gemini_parser.add_argument("--output-path", dest="output_path",
+                                   help="Gemini writes output to this file (uses -y mode with post-validation).")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1220,7 +1434,7 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

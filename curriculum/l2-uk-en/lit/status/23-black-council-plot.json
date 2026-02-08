@@ -2,35 +2,35 @@
   "module": "23-black-council-plot",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:21.411003Z",
+  "last_audit": "2026-02-08T22:41:07.732178Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349691Z",
-    "meta": "2026-01-29T07:39:04.971936Z",
-    "activities": "2026-01-27T15:34:57.194948Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.595483Z"
+    "md": "2026-02-08T22:40:55.544422Z",
+    "meta": "2026-02-08T22:32:31.640222Z",
+    "activities": "2026-02-08T22:32:42.131586Z",
+    "vocabulary": "2026-02-08T22:26:51.364009Z",
+    "plan": "2026-02-07T10:06:50.456316Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3773/4500 (raw: 4226)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4837/4500 (raw: 5022)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "20/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,13 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

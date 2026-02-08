@@ -3,17 +3,67 @@ module: lit-24
 level: LIT
 slug: language-question-linguistics
 version: '2.0'
+title: "Мовне Питання: Абеткові Війни"
+phase: LIT
+focus: literature
 id: lit-24
 naturalness:
   score: 9
   status: PASS
-duration: 100
+duration: 120
 transliteration: none
 tags:
 - linguistics
 - history
 - orthography
 - kulish
+- valuev
+- ems
 word_target: 4500
+content_outline:
+  - section: "Вступ до Орфографічної Війни"
+    words: 400
+    points: []
+  - section: "Ярижка"
+    words: 600
+    points: []
+  - section: "Кулішівка"
+    words: 700
+    points: []
+  - section: "Валуєвський Циркуляр"
+    words: 600
+    points: []
+  - section: "Емський Указ"
+    words: 700
+    points: []
+  - section: "Женева і Галичина"
+    words: 600
+    points: []
+  - section: "Словник Грінченка"
+    words: 500
+    points: []
+  - section: "Спадщина"
+    words: 400
+    points: []
+sources:
+  - url: "http://litopys.org.ua/ukrmova/um45.htm"
+    name: "Емський указ"
+    type: primary
+  - url: "https://uk.wikisource.org/wiki/Валуєвський_циркуляр"
+    name: "Валуєвський циркуляр"
+    type: primary
+vocabulary_hints:
+  required:
+    - правопис
+    - абетка
+    - цензура
+  recommended:
+    - лінгвоцид
+    - русифікація
+activity_hints:
+  - type: critical-analysis
+    focus: "Visual Decolonization"
+  - type: essay-response
+    focus: "Identity and Orthography"
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-08'

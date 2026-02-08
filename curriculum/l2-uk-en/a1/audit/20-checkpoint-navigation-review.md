@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** TTT | **Target:** 1073
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:28:45
+**Generated:** 2026-02-08 22:55:47
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -46,7 +46,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 2/1
+- **Vocab:** ✅ 3/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -54,9 +54,6 @@
 - **Immersion:** 🇺🇦 37.1% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -67,7 +64,7 @@
 | **Skill 2: Locative Case** | ⚪️ | 234 | Skipped |
 | **Skill 3: Genitive Case** | ⚪️ | 221 | Skipped |
 | **Skill 4: Possessive Pronouns** | ⚪️ | 182 | Skipped |
-| **Skill 5: Practical Navigation** | ⚪️ | 251 | Skipped |
-| **Integration Challenge** | ⚪️ | 143 | Skipped |
+| **Skill 5: Practical Navigation** | ⚪️ | 253 | Skipped |
+| **Integration Challenge** | ⚪️ | 141 | Skipped |
 | **Підсумок** | ✅ | 25 | Included in Core |
 | **Need More Practice?** | ⚪️ | 21 | Skipped |

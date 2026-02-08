@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:45:49
+**Generated:** 2026-02-09 00:08:35
 
 ## Configuration
 **Type:** A1
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 808/750 (raw: 1037)
+- **Words:** ✅ 1117/750 (raw: 1348)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -49,19 +49,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.7% (target 35-55% (M36))
+- **Immersion:** 🇺🇦 43.9% (target 35-55% (M36))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 295 | Included in Core |
+| **At the Restaurant** | ⚪️ | 0 | Skipped |
 | **Warm-up** | ✅ | 126 | Included in Core |
-| **Presentation** | ✅ | 217 | Included in Core |
+| **Presentation** | ✅ | 231 | Included in Core |
 | **Практика** | ⚪️ | 160 | Skipped |
 | **Narrative: Dinner with Friends (Вечеря з друзями)** | ✅ | 137 | Included in Core |
 | **Summary** | ✅ | 141 | Included in Core |

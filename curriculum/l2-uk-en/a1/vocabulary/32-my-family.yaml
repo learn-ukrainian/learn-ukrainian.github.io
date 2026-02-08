@@ -1,22 +1,97 @@
----
 module: 32-my-family
 level: A1
 version: '2.0'
 items:
+- lemma: бабуся
+  ipa: /bɑˈbusʲɑ/
+  translation: grandmother
+  pos: noun
+  gender: f
+- lemma: батьки
+  ipa: /bɑtʲˈkɪ/
+  translation: parents
+  pos: noun
+  gender: pl
+- lemma: брат
+  ipa: /brɑt/
+  translation: brother
+  pos: noun
+  gender: m
+- lemma: веселий
+  ipa: /ʋɛˈsɛlɪj/
+  translation: funny, cheerful
+  pos: adj
+- lemma: волосся
+  ipa: /ʋɔˈlɔsʲːɑ/
+  translation: hair
+  pos: noun
+  gender: n
+- lemma: вчителька
+  ipa: /ʋt͡ʃɪtɛlʲkɑ/
+  translation: teacher (female)
+  pos: noun
+  gender: f
 - lemma: двоюрідний
   ipa: /dʋɔˈjuridnɪj/
   translation: first (cousin)
   pos: adj
+- lemma: дідусь
+  ipa: /diˈdusʲ/
+  translation: grandfather
+  pos: noun
+  gender: m
+- lemma: діти
+  ipa: /dˈitɪ/
+  translation: children
+  pos: noun
+  gender: pl
+- lemma: добрий
+  ipa: /dˈɔbrɪj/
+  translation: kind
+  pos: adj
+- lemma: дочка
+  ipa: /dɔt͡ʃˈkɑ/
+  translation: daughter
+  pos: noun
+  gender: f
+- lemma: дружина
+  ipa: /druˈʒɪnɑ/
+  translation: wife
+  pos: noun
+  gender: f
 - lemma: дядько
   ipa: /dˈjadʲkɔ/
   translation: uncle
   pos: noun
   gender: m
+- lemma: єдиний
+  ipa: /jɛˈdɪnɪj/
+  translation: only
+  pos: adj
 - lemma: Житомир
   ipa: /ʒɪtˈɔmɪr/
   translation: Zhytomyr
   pos: noun
   gender: m
+- lemma: лікар
+  ipa: /lʲikar/
+  translation: doctor
+  pos: noun
+  gender: m
+- lemma: мама
+  ipa: /mɑmɑ/
+  translation: mom
+  pos: noun
+  gender: f
+- lemma: мати
+  ipa: /mɑtɪ/
+  translation: mother
+  pos: noun
+  gender: f
+- lemma: молодший
+  ipa: /mɔˈlɔdʃɪj/
+  translation: younger
+  pos: adj
 - lemma: неодружений
   ipa: /nɛɔdrˈuʒɛnɪj/
   translation: unmarried
@@ -27,29 +102,76 @@ items:
   pos: adv
 - lemma: одружений
   ipa: /ɔdrˈuʒɛnɪj/
-  translation: married (male)
+  translation: married
   pos: adj
-- lemma: пан
-  ipa: /pan/
-  translation: sir, mister, lord
+- lemma: онук
+  ipa: /ɔˈnuk/
+  translation: grandson
   pos: noun
   gender: m
-- lemma: тату
-  ipa: /tatu/
-  translation: tattoo, daddy (vocative)
+- lemma: пан
+  ipa: /pan/
+  translation: sir, mister
   pos: noun
-  gender: n
-- lemma: тітка
-  ipa: /tˈitka/
-  translation: aunt
-  pos: noun
-  gender: f
+  gender: m
 - lemma: рід
   ipa: /rid/
   translation: gender
   pos: noun
   gender: m
+- lemma: родина
+  ipa: /rɔˈdɪnɑ/
+  translation: family
+  pos: noun
+  gender: f
+- lemma: розумний
+  ipa: /rɔˈzumnɪj/
+  translation: smart
+  pos: adj
 - lemma: середній
   ipa: /sɛˈrɛdnʲij/
   translation: middle
   pos: adj
+- lemma: сестра
+  ipa: /sɛstrˈɑ/
+  translation: sister
+  pos: noun
+  gender: f
+- lemma: сім'я
+  ipa: /sʲiˈmjɑ/
+  translation: family
+  pos: noun
+  gender: f
+- lemma: син
+  ipa: /sɪn/
+  translation: son
+  pos: noun
+  gender: m
+- lemma: старший
+  ipa: /stˈɑrʃɪj/
+  translation: older
+  pos: adj
+- lemma: тато
+  ipa: /tɑtɔ/
+  translation: dad
+  pos: noun
+  gender: m
+- lemma: тату
+  ipa: /tatu/
+  translation: dad (vocative)
+  pos: noun
+  gender: m
+- lemma: темний
+  ipa: /tˈɛmnɪj/
+  translation: dark
+  pos: adj
+- lemma: тітка
+  ipa: /tˈitka/
+  translation: aunt
+  pos: noun
+  gender: f
+- lemma: чоловік
+  ipa: /t͡ʃɔlɔˈʋik/
+  translation: husband, man
+  pos: noun
+  gender: m

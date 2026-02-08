@@ -1,6 +1,6 @@
 # C1-HIST Module Status
 
-**Generated:** 2026-02-07 11:46:46
+**Generated:** 2026-02-08 00:05:19
 **Total Modules:** 135
 **Status:** 5 passing, 0 failing, 0 stubs, 130 errors
 
@@ -15,11 +15,11 @@
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | shcho-take-istoriohrafiia | ✅ PASS | 5198/4000 | structure |
-| 002 | ukrainska-istoriohrafichna-tradytsiia | ✅ PASS | 5493/4000 | structure |
+| 001 | shcho-take-istoriohrafiia | ✅ PASS | 5198/4000 | - |
+| 002 | ukrainska-istoriohrafichna-tradytsiia | ✅ PASS | 5493/4000 | - |
 | 003 | rosiiska-imperialna-istoriohrafiia | ✅ PASS | 5639/4000 | - |
 | 004 | radyanska-istoriohrafiia | ✅ PASS | 4778/4000 | - |
-| 005 | polskyi-pohliad | ✅ PASS | 9359/4000 | structure |
+| 005 | polskyi-pohliad | ✅ PASS | 9359/4000 | - |
 | 006 | diaspora-ta-zakhidni-istoriky | ⚠️ MISSING | 0/0 | no_file |
 | 007 | nova-ukrainska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
 | 008 | metodolohiia-dekolonizatsii | ⚠️ MISSING | 0/0 | no_file |

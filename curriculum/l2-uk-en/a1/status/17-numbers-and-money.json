@@ -2,12 +2,12 @@
   "module": "17-numbers-and-money",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:26:04.483367Z",
+  "last_audit": "2026-02-09T00:09:19.954706Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351453Z",
+    "md": "2026-02-08T22:48:17.407006Z",
     "meta": "2026-02-07T10:03:51.784984Z",
-    "activities": "2026-02-07T21:06:32.695220Z",
+    "activities": "2026-02-09T00:09:16.422761Z",
     "vocabulary": "2026-02-07T21:25:48.486016Z",
     "plan": "2026-02-07T10:03:51.075987Z"
   },
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1133/1091 (raw: 1485)"
+      "message": "1154/1091 (raw: 1506)"
     },
     "activities": {
       "status": "pass",

@@ -2,13 +2,13 @@
   "module": "33-holidays-and-traditions",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:39:31.936687Z",
+  "last_audit": "2026-02-09T00:27:23.537726Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T21:12:52.165407Z",
+    "md": "2026-02-08T23:48:33.464697Z",
     "meta": "2026-02-07T10:03:51.776760Z",
-    "activities": "2026-02-07T21:38:22.786552Z",
-    "vocabulary": "2026-02-07T21:37:58.738739Z",
+    "activities": "2026-02-09T00:27:20.484343Z",
+    "vocabulary": "2026-02-08T23:48:33.465422Z",
     "plan": "2026-02-07T10:43:14.666045Z"
   },
   "gates": {

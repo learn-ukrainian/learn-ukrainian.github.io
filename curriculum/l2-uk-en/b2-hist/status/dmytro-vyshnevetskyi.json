@@ -2,13 +2,13 @@
   "module": "dmytro-vyshnevetskyi",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:24.689193Z",
+  "last_audit": "2026-02-08T00:04:20.702982Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T17:56:21.143611Z",
-    "meta": "2026-01-29T07:38:18.637754Z",
-    "activities": "2026-01-27T17:58:35.570602Z",
-    "vocabulary": "2026-01-23T21:47:24.889795Z",
+    "md": "2026-02-07T11:38:26.207340Z",
+    "meta": "2026-02-07T10:03:51.229076Z",
+    "activities": "2026-02-07T10:03:51.297566Z",
+    "vocabulary": "2026-02-07T10:03:51.360359Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4070/4000 (raw: 4210)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4070/4000 (raw: 4210) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

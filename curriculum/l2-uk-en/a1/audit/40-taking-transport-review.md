@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:45:55
+**Generated:** 2026-02-09 00:24:20
 
 ## Configuration
 **Type:** A1
@@ -37,32 +37,29 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 820/750 (raw: 967)
+- **Words:** ✅ 827/750 (raw: 990)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 16/1
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 43.4% (target 35-55% (M40))
+- **Immersion:** 🇺🇦 43.0% (target 35-55% (M40))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 122 | Included in Core |
-| **Presentation** | ✅ | 114 | Included in Core |
+| **Presentation** | ✅ | 122 | Included in Core |
 | **Practice** | ⚪️ | 170 | Skipped |
-| **Narrative: Riding the Metro (Поїздка в метро)** | ✅ | 183 | Included in Core |
+| **Narrative: Riding the Metro (Поїздка в метро)** | ✅ | 182 | Included in Core |
 | **Summary** | ✅ | 210 | Included in Core |
 | **Need More Practice?** | ⚪️ | 21 | Skipped |

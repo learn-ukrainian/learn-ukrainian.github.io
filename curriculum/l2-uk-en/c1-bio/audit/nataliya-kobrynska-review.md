@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M51 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:52
+**Generated:** 2026-02-09 00:36:03
 
 ## Configuration
 **Type:** C1-biography
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4900/4000 (raw: 5242)
+- **Words:** ✅ 5050/4000 (raw: 5171)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -83,6 +83,4 @@
 | **Критичне мислення** | ⚪️ | 188 | Skipped |
 | **Есе** | ⚪️ | 82 | Skipped |
 | **Зразок відповіді** | ⚪️ | 381 | Skipped |
-| **Підсумок: Доля жінки — доля народу** | ✅ | 161 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Підсумок: Доля жінки — доля народу** | ✅ | 311 | Included in Core |

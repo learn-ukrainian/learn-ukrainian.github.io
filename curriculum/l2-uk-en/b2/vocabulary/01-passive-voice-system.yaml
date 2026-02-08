@@ -3,25 +3,118 @@ module: 01-passive-voice-system
 level: B2
 version: '2.0'
 items:
-- lemma: агент
-  ipa: /aɦˈɛnt/
-  translation: ''
+- lemma: пасивний стан
+  ipa: /pɐˈsɪu̯nɪi̯ stɑn/
+  translation: passive voice
+  pos: phrase
+- lemma: активний стан
+  ipa: /ɐkˈtɪu̯nɪi̯ stɑn/
+  translation: active voice
+  pos: phrase
+- lemma: дієприкметник
+  ipa: /dʲijeˈprɪkmetnɪk/
+  translation: participle
   pos: noun
   gender: m
-- lemma: жура
-  ipa: /ʒurˈa/
-  translation: ''
+- lemma: безособовий
+  ipa: /bezosoˈbɔu̯ɪi̯/
+  translation: impersonal
+  pos: adj
+- lemma: зворотний
+  ipa: /zvoˈrɔtnɪi̯/
+  translation: reflexive/inverted
+  pos: adj
+- lemma: агент
+  ipa: /ɐˈɦɛnt/
+  translation: agent (performer of action)
+  pos: noun
+  gender: m
+- lemma: регістр
+  ipa: /reˈɦɪstr/
+  translation: register (style of speech)
+  pos: noun
+  gender: m
+- lemma: офіційно-діловий
+  ipa: /ofit͡sʲˈijno dʲiloˈvɪi̯/
+  translation: official-business (style)
+  pos: adj
+- lemma: науковий
+  ipa: /nɐu̯ˈkɔvɪi̯/
+  translation: scientific/academic
+  pos: adj
+- lemma: літературний
+  ipa: /lʲiterɐˈturnɪi̯/
+  translation: literary/standard
+  pos: adj
+- lemma: розмовний
+  ipa: /rozˈmɔu̯nɪi̯/
+  translation: colloquial/conversational
+  pos: adj
+- lemma: узгодження
+  ipa: /uzˈɦɔd͡ʒenʲnʲɐ/
+  translation: agreement (grammatical)
+  pos: noun
+  gender: n
+- lemma: конструкція
+  ipa: /konˈstrukt͡sʲijɐ/
+  translation: construction/structure
   pos: noun
   gender: f
-- lemma: оса
-  ipa: /ɔsˈa/
-  translation: ''
+- lemma: трансформація
+  ipa: /trɐnsformˈat͡sʲijɐ/
+  translation: transformation
   pos: noun
-- lemma: придбати
-  ipa: /prɪdbˈatɪ/
-  translation: ''
-  pos: verb
-- lemma: тя
-  ipa: /tja/
-  translation: ''
-  pos: pron
+  gender: f
+- lemma: контекст
+  ipa: /konˈtɛkst/
+  translation: context
+  pos: noun
+  gender: m
+- lemma: стиль
+  ipa: /stɪlʲ/
+  translation: style
+  pos: noun
+  gender: m
+- lemma: деперсоналізація
+  ipa: /depersonɐlʲizˈat͡sʲijɐ/
+  translation: depersonalization
+  pos: noun
+  gender: f
+- lemma: перехідність
+  ipa: /pereˈxʲidnʲistʲ/
+  translation: transitivity
+  pos: noun
+  gender: f
+- lemma: доконаний вид
+  ipa: /doˈkɔnɐnɪi̯ vɪd/
+  translation: perfective aspect
+  pos: phrase
+- lemma: недоконаний вид
+  ipa: /nedoˈkɔnɐnɪi̯ vɪd/
+  translation: imperfective aspect
+  pos: phrase
+- lemma: підмет
+  ipa: /ˈpʲidmet/
+  translation: subject (of a sentence)
+  pos: noun
+  gender: m
+- lemma: додаток
+  ipa: /doˈdɑtok/
+  translation: object/addition
+  pos: noun
+  gender: m
+- lemma: присудок
+  ipa: /ˈprɪsudok/
+  translation: predicate
+  pos: noun
+  gender: m
+- lemma: пектораль
+  ipa: /pektoˈrɑlʲ/
+  translation: pectoral (breastplate)
+  pos: noun
+  gender: f
+- lemma: монографія
+  ipa: /monoˈɦrɑfʲijɐ/
+  translation: monograph
+  pos: noun
+  gender: f

@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M68 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 20:47:27
+**Generated:** 2026-02-08 23:13:58
 
 ## Configuration
 **Type:** C1-biography
@@ -34,15 +34,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/yulian-bachynskyi-research.md
-  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in yulian-bachynskyi.yaml: ⚠️ YAML uses dictionary wrapper (`activities:` key). Activities MUST be a bare list at root level. Run auto-fix: .venv/bin/python scripts/audit_module.py --fix <file.md>
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ❌ 3574/4000 (raw: 4032)
@@ -55,7 +53,7 @@
 - **Vocab:** ✅ 26/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.9% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)

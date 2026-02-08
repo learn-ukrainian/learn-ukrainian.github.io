@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 793
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:46:05
+**Generated:** 2026-02-09 00:17:04
 
 ## Configuration
 **Type:** A1
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -52,9 +52,6 @@
 - **Immersion:** 🇺🇦 49.4% (target 35-55% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

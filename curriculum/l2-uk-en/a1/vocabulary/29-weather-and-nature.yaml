@@ -1,66 +1,148 @@
----
 module: 29-weather-and-nature
 level: A1
 version: '2.0'
 items:
+- lemma: весна
+  ipa: /vɛˈsnɑ/
+  translation: spring
+  pos: noun
+  gender: f
+- lemma: вітер
+  ipa: /ˈvitɛr/
+  translation: wind
+  pos: noun
+  gender: m
+- lemma: вітряно
+  ipa: /ˈvitrʲɑnɔ/
+  translation: windy (it is windy)
+  pos: adv
+- lemma: гора
+  ipa: /ɦɔˈra/
+  translation: mountain
+  pos: noun
+  gender: f
+- lemma: дерево
+  ipa: /ˈdɛrɛvɔ/
+  translation: tree
+  pos: noun
+  gender: n
+- lemma: дощ
+  ipa: /dɔʃt͡ʃ/
+  translation: rain
+  pos: noun
+  gender: m
+- lemma: жарко
+  ipa: /ˈʒɑrkɔ/
+  translation: hot (it is hot)
+  pos: adv
+- lemma: зима
+  ipa: /zɪˈmɑ/
+  translation: winter
+  pos: noun
+  gender: f
 - lemma: квітка
-  ipa: /kʋˈitka/
+  ipa: /ˈkʋitka/
   translation: flower
   pos: noun
   gender: f
-- lemma: клімат
-  ipa: /klˈimat/
-  translation: climate
+- lemma: кіт
+  ipa: /kit/
+  translation: cat (male)
   pos: noun
   gender: m
-- lemma: мурчик
-  ipa: /murt͡ʃɪk/
-  translation: Murchyk (cat name)
+- lemma: кішка
+  ipa: /ˈkiʃka/
+  translation: cat (female)
+  pos: noun
+  gender: f
+- lemma: ліс
+  ipa: /lʲis/
+  translation: forest
   pos: noun
   gender: m
+- lemma: літо
+  ipa: /ˈlʲitɔ/
+  translation: summer
+  pos: noun
+  gender: n
+- lemma: море
+  ipa: /ˈmɔrɛ/
+  translation: sea
+  pos: noun
+  gender: n
+- lemma: озеро
+  ipa: /ˈɔzɛrɔ/
+  translation: lake
+  pos: noun
+  gender: n
 - lemma: осінь
-  ipa: /ˈɔsinʲ/
+  ipa: /ˈɔsʲinʲ/
   translation: autumn
   pos: noun
   gender: f
+- lemma: парк
+  ipa: /park/
+  translation: park
+  pos: noun
+  gender: m
+- lemma: пес
+  ipa: /pɛs/
+  translation: dog
+  pos: noun
+  gender: m
 - lemma: природа
-  ipa: /prɪrˈɔda/
+  ipa: /prɪˈrɔda/
   translation: nature
   pos: noun
   gender: f
-- lemma: прогноз
-  ipa: /prɔɦnˈɔz/
-  translation: weather forecast, prediction
+- lemma: птах
+  ipa: /ptax/
+  translation: bird
   pos: noun
   gender: m
-- lemma: рекс
-  ipa: /rɛks/
-  translation: Rex
-  pos: noun
-  gender: m
-- lemma: рослина
-  ipa: /rɔslˈɪna/
-  translation: plant
+- lemma: річка
+  ipa: /ˈrit͡ʃka/
+  translation: river
   pos: noun
   gender: f
-- lemma: рудий
-  ipa: /rudˈɪj/
-  translation: red-haired, ginger
-  pos: adj
-- lemma: світязь
-  ipa: /sʋitjazʲ/
-  translation: Svitiaz (lake)
+- lemma: риба
+  ipa: /ˈrɪba/
+  translation: fish
+  pos: noun
+  gender: f
+- lemma: сніг
+  ipa: /snih/
+  translation: snow
   pos: noun
   gender: m
+- lemma: собака
+  ipa: /sɔˈbaka/
+  translation: dog
+  pos: noun
+  gender: m
+- lemma: сонце
+  ipa: /ˈsɔnt͡sɛ/
+  translation: sun
+  pos: noun
+  gender: n
 - lemma: сонячно
-  ipa: /sˈɔnjat͡ʃnɔ/
-  translation: sunny (adv), it's sunny
+  ipa: /ˈsɔnʲɑt͡ʃnɔ/
+  translation: sunny (it is sunny)
   pos: adv
+- lemma: тепло
+  ipa: /ˈtɛplɔ/
+  translation: warm (it is warm)
+  pos: adv
+- lemma: хмара
+  ipa: /ˈxmɑra/
+  translation: cloud
+  pos: noun
+  gender: f
 - lemma: хмарно
-  ipa: /xmˈarnɔ/
+  ipa: /ˈxmɑrnɔ/
   translation: cloudy (it is cloudy)
   pos: adv
-- lemma: чорний
-  ipa: /t͡ʃˈɔrnɪj/
-  translation: black
-  pos: adj
+- lemma: холодно
+  ipa: /ˈxɔlɔdnɔ/
+  translation: cold (it is cold)
+  pos: adv

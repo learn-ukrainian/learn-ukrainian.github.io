@@ -37,12 +37,12 @@
 
 ### Possessives with Family (Присвійні займенники)
 
-| Рід (Gender) | IPA        | Мій (My)   | Твій (Your) | Його/Її (His/Her) |
-| ------------ | ---------- | ---------- | ----------- | ----------------- |
-| Masculine    | /ˈmi j/    | мій тато   | твій тато   | його/її тато      |
-| Feminine     | /mɔˈjɑ/    | моя мама   | твоя мама   | його/її мама      |
-| Neuter       | /mɔˈjɛ/    | моє ім'я   | твоє ім'я   | його/її ім'я      |
-| Plural       | /mɔˈji/    | мої батьки | твої батьки | його/її батьки    |
+| Рід (Gender) | Мій (My)   | IPA (My) | Твій (Your) | IPA (Your) | Його/Її (His/Her) |
+| ------------ | ---------- | -------- | ----------- | ---------- | ----------------- |
+| Masculine    | мій тато   | /ˈmij/   | твій тато   | /tʋij/     | його/її тато      |
+| Feminine     | моя мама   | /mɔˈjɑ/  | твоя мама   | /tʋɔˈjɑ/   | його/її мама      |
+| Neuter       | моє ім'я   | /mɔˈjɛ/  | твоє ім'я   | /tʋɔˈjɛ/   | його/її ім'я      |
+| Plural       | мої батьки | /mɔˈji/  | твої батьки | /tʋɔˈji/   | його/її батьки    |
 
 ---
 
@@ -66,6 +66,33 @@
 | розлучений/розлучена   | /rɔzˈlut͡ʃɛnɪj/   | divorced                 |
 | вдівець/вдова          | /wdiˈwɛt͡sʲ/       | widower/widow            |
 | наречений/наречена     | /nɑrɛˈt͡ʃɛnɪj/    | engaged (fiancé/fiancée) |
+
+> [!example]
+> — **Вони одружені.** (They are married.)
+> — **У них двоє дітей.** (They have two children.)
+>
+> > [!note]
+> > **Tip:** "Двоє" is a special way to say "two" for children (collective numeral). For now, just remember **двоє дітей** means "two children".
+
+### Професія та Характер (Profession and Character)
+
+Let's describe what our family members are like!
+
+| Слово (Term) | IPA            | Значення (Meaning) |
+| ------------ | -------------- | ------------------ |
+| лікар        | /ˈlʲikar/      | doctor             |
+| вчителька    | /ˈʋt͡ʃɪtɛlʲkɑ/ | teacher (female)   |
+| добрий       | /ˈdɔbrɪj/      | kind               |
+| веселий      | /ˈʋɛsɛlɪj/     | funny/cheerful     |
+| розумний     | /rɔˈzumnɪj/    | smart              |
+| темне волосся| /ˈtɛmnɛ ʋɔˈlɔsʲːɑ/ | dark hair      |
+
+> [!example] Опис (Description)
+> - **Мій тато — лікар.** (My dad is a doctor.)
+> - **Він дуже добрий.** (He is very kind.)
+> - **Моя мама — вчителька.** (My mom is a teacher.)
+> - **Вона весела і розумна.** (She is funny and smart.)
+> - **У неї темне волосся.** (She has dark hair.)
 
 ### Vocative Case (Кличний відмінок)
 

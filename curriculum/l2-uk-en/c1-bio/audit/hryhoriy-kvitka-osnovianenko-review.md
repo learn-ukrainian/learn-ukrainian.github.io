@@ -1,8 +1,8 @@
 # Audit Report: M37 — hryhoriy-kvitka-osnovianenko.md
 **Level:** C1-BIO | **Module:** M37 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:44
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-08 23:13:39
 
 ## Configuration
 **Type:** C1-biography
@@ -35,6 +35,15 @@
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/hryhoriy-kvitka-osnovianenko-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 5325/4000 (raw: 5453)
 - **Activities:** ✅ 7/3
@@ -46,7 +55,7 @@
 - **Vocab:** ⚠️ 15 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

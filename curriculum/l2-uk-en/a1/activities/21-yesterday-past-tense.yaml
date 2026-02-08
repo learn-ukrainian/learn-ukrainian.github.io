@@ -102,7 +102,7 @@
     - була
     - було
     - були
-  - sentence: Вранці я ___ каву в кафе.
+  - sentence: Мій брат ___ каву в кафе.
     answer: пив
     options:
     - пив
@@ -185,7 +185,7 @@
     - text: їїв
       correct: false
     explanation: 'Їсти has stem change in past: їв'
-  - question: How do you say accurately "She was reading" in Ukrainian?
+  - question: How do you accurately say "She was reading" in Ukrainian?
     options:
     - text: Вона читав
       correct: false
@@ -421,14 +421,14 @@
     - працювала
     - працювало
     - працювали
-  - sentence: Я ___ музику.
+  - sentence: Марина ___ музику.
     answer: слухала
     options:
     - слухав
     - слухала
     - слухало
     - слухали
-  - sentence: Ти ___ фільм?
+  - sentence: Олег ___ фільм?
     answer: дивився
     options:
     - дивився
@@ -456,7 +456,7 @@
     - відпочивала
     - відпочивали
     - відпочивати
-  - sentence: Ти ___ мене?
+  - sentence: Тато ___ мене?
     answer: чекав
     options:
     - чекав

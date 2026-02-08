@@ -4,7 +4,7 @@
 
 ## Batch Status
 - [x] M46: mykhailo-drahomanov (Passing)
-- [ ] M47: mykola-lysenko (Failing - Word count, Outline)
+- [x] M47: mykola-lysenko (Passing)
 - [x] M48: ivan-puliui (Passing)
 - [x] M49: olena-pchilka (Passing)
 - [x] M50: mariya-zankovetska (Passing)

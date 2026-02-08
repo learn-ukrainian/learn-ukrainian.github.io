@@ -2,13 +2,13 @@
   "module": "symon-petliura-revolution",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:54:54.620304Z",
+  "last_audit": "2026-02-08T00:04:51.242093Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-03T15:58:46.630098Z",
-    "meta": "2026-01-29T07:38:18.686759Z",
-    "activities": "2026-02-03T15:57:37.598867Z",
-    "vocabulary": "2026-01-28T18:58:37.289156Z",
+    "md": "2026-02-07T11:38:26.480886Z",
+    "meta": "2026-02-07T10:03:51.223112Z",
+    "activities": "2026-02-07T10:03:51.283424Z",
+    "vocabulary": "2026-02-07T10:03:51.351670Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5052/4000 (raw: 5132)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5052/4000 (raw: 5132) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

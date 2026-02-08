@@ -59,10 +59,16 @@ The verb **подобатися** (/poˈdɔbatɪsʲa/) is used to express prefer
 
 #### Конструкція "потрібно"
 
-When we need something, we use the word **потрібно** (/poˈtrʲibnɔ/) or **треба** (/ˈtrɛba/). These are impersonal words that never change their endings, making them very easy to use once you know your Dative pronouns.
+When we need something, we use the word **потрібно** (/poˈtrʲibnɔ/) or **треба** (/ˈtrɛba/).
 
-- **Мені потрібно** кави. (I need some coffee.)
+When you need to **do** something (action), use **потрібно** + infinitive. This form never changes.
+
 - **Йому потрібно** працювати. (He needs to work.)
+
+When you need **something** (noun), the word changes to agree with the gender of the noun: **потрібен** (masculine), **потрібна** (feminine), **потрібне** (neuter), **потрібні** (plural).
+
+- **Мені потрібна кава.** (I need coffee.)
+- **Мені потрібен час.** (I need time.)
 
 > [!tip] **Verbs of Communication**
 > Many verbs that involve speaking or communicating take the Dative case for the person being spoken to. In these cases, the person is the intended target of the message.

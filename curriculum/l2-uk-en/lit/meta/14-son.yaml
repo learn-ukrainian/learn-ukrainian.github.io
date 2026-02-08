@@ -4,6 +4,7 @@ level: LIT
 slug: son
 version: '1.0'
 id: lit-14
+title: 'Політична Сатира: Сон'
 naturalness:
   score: 10
   status: PASS
@@ -17,4 +18,26 @@ tags:
 - сон
 word_target: 4500
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-08'
+content_outline:
+  - section: "Вступ Політична сатира та жанр комедії"
+    words: 600
+    points: []
+  - section: "Частина Сюжетна подорож Від України до Петербурга"
+    words: 1000
+    points: []
+  - section: "Частина Імперський гротеск Сцена у палаці"
+    words: 900
+    points: []
+  - section: "Частина Цар і Цариця Образи тиранів"
+    words: 1000
+    points: []
+  - section: "Частина Фінал Пробудження та сенс"
+    words: 600
+    points: []
+  - section: "Частина Історичний контекст Братство"
+    words: 500
+    points: []
+  - section: "Частина Рецепція та наслідки Арешт"
+    words: 500
+    points: []

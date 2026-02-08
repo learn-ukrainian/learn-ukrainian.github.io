@@ -2,7 +2,7 @@
 module: lit-12
 level: LIT
 slug: the-ballads
-version: '1.0'
+version: '2.0'
 id: lit-12
 naturalness:
   score: 10
@@ -17,4 +17,35 @@ tags:
 - фольклор
 word_target: 4500
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-08'
+content_outline:
+- section: Вступ
+  words: 800
+  points:
+  - Європейський контекст
+  - Шевченко і народна традиція
+- section: Причинна
+  words: 650
+  points:
+  - Сюжет і символіка
+  - Образ Причинної
+- section: Тополя
+  words: 750
+  points:
+  - Міф про перетворення
+  - Психологізм метаморфози
+- section: Утоплена
+  words: 800
+  points:
+  - Мати-відьма
+  - Мотив помсти
+- section: Демонологія
+  words: 950
+  points:
+  - Русалки і мавки
+  - Дуалізм світу
+- section: Підсумок
+  words: 500
+  points:
+  - Концепція фатуму
+  - Еволюція Шевченка

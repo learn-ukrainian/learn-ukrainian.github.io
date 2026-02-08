@@ -677,6 +677,34 @@ Database: `.mcp/servers/message-broker/messages.db`
 
 ---
 
+## Orchestrated Rebuild (Claude → Gemini)
+
+**`/orchestrate-rebuild {track} {num}`** — Claude orchestrates phase-by-phase, Gemini executes focused tasks. Claude validates between phases and writes all files.
+
+**When to use instead of solo `/full-rebuild`:**
+- Gemini skips steps or produces thin content in solo mode
+- You need maximum control over each phase
+- Content quality from solo runs isn't meeting standards
+
+**How it works:**
+1. Claude reads phase templates from `claude_extensions/phases/gemini/`
+2. Claude assembles a prompt file with module data, writes to `orchestration/{slug}/`
+3. Claude sends Gemini a SHORT broker message referencing the prompt file on disk
+4. Gemini reads the file, executes, returns text output
+5. Claude validates, writes to disk, moves to next phase
+6. Phase 4 (Audit) is Claude-only — runs `scripts/audit_module.sh` directly
+
+**Quick usage:**
+```bash
+/orchestrate-rebuild c1-bio 48              # Seminar: 6-phase pipeline
+/orchestrate-rebuild a1 5                   # Core: 4-phase pipeline
+/orchestrate-rebuild b2-hist 5 --from=content  # Resume from content phase
+```
+
+**Key design:** Shared filesystem is the data transport. Broker carries only ~100-300 char signals. Each Gemini call is a fresh session — files on disk are shared state.
+
+---
+
 ## Documentation Index
 
 | Topic | Location |
@@ -703,6 +731,8 @@ Database: `.mcp/servers/message-broker/messages.db`
 | **Phase workflows** | `claude_extensions/phases/module-*.md` |
 | **Track scoring system** | `scripts/scoring/README.md` ⭐ NEW |
 | **Task workflow (GH Issues)** | `docs/TASK-WORKFLOW.md` ⭐ NEW |
+| **Orchestrated rebuild** | `claude_extensions/commands/orchestrate-rebuild.md` ⭐ NEW |
+| **Gemini phase templates** | `claude_extensions/phases/gemini/README.md` |
 
 ---
 

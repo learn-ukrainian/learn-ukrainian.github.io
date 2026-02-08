@@ -1,0 +1,97 @@
+=== RAW OUTPUT (5080 chars) ===
+✅ Message sent to Gemini (ID: 1128)
+✓ Message 1128 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #1128...
+📨 Message #1128
+   From: claude → To: gemini
+   Type: query
+   Task: fix-description-adverbs-v2
+   Time: 2026-02-08T22:15:18.936537+00:00
+
+============================================================
+
+Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/description-adverbs/fix-prompt.md. Return your output as text. IMPORTANT: Put fixed files between delimiter lines like ===CONTENT_START=== and ===CONTENT_END=== on their own lines, NOT inside code blocks.
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-pro-preview"}
+
+🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
+I will read the instruction file at `curriculum/l2-uk-en/a1/orchestration/description-adverbs/fix-prompt.md` to understand the specific text generation task.
+I will read the review file, the current content, activities, vocabulary files, the plan file, and the research notes to gather all necessary information for the fix.
+I will read the review file `curriculum/l2-uk-en/a1/orchestration/description-adverbs/phase-5-response.md` to identify the required fixes.
+I will read the content, activities, and vocabulary files to prepare for applying the fixes.
+I will read the content file `curriculum/l2-uk-en/a1/28-description-adverbs.md`.
+I will read the activities file `curriculum/l2-uk-en/a1/activities/28-description-adverbs.yaml`.
+I will read the vocabulary file `curriculum/l2-uk-en/a1/vocabulary/28-description-adverbs.yaml` to ensure no untaught words are present.
+I will read the vocabulary file again to confirm its content.
+I will read the vocabulary file with a line limit to ensure I'm capturing all content.
+===CONTENT_START===
+# Description: Adverbs
+
+## Warm-up
+
+> 💡 **Як він це робить?
+...
+ний** хлопець (handsome boy) → Він **гарно** танцює. (He dances beautifully.)
+> - **швидкий** потяг (fast train) → Він **швидко** їздить. (He rides fast.)
+> - **тихий** голос (quiet voice) → Вона **тихо** говорить. (She speaks quietly.)
+>
+> Adjectives describe NOUNS. Adverbs describe VERBS.
+> Formula: Take the adjective stem + add **-о** (or **-е** for soft stems)
+
+### The Formula
+
+| Adjective (m) | Meaning | Adverb | IPA | Meaning |
+| --- | --- | --- | --- | --- |
+| гарний | beautiful | гарно | /ˈɦɑrnɔ/ | beautifully |
+| швидкий | fast | швидко | /ˈʃvɪdkɔ/ | fast, quickly |
+| повільний | slow | повільно | /pɔˈvilʲnɔ/ | slowly |
+| тихий | quiet | тихо | /ˈtɪxɔ/ | quietly |
+| голосний | loud | голосно | /ˈɦɔlɔsnɔ/ | loudly |
+
+### Irregular Adverbs
+
+| Adjective | Adverb | IPA | Meaning |
+| --------- | ------ | --- | ------- |
+| хороший | **добре** | /ˈdɔbrɛ/ | well |
+| поганий | **погано** | /ˈpɔhɑnɔ/ | badly |
+
+---
+
+### Frequency Adverbs: How Often?
+
+> [!observe] Шкала частотності (Frequency Scale)
+>
+> From ALWAYS to NEVER:
+>
+> **завжди** /zɑvˈʒdɪ/ → **часто** /ˈt͡ʃɑstɔ/ → **зазвичай** /zɑzʋɪˈt͡ʃɑj/ → **іноді** /ˈinɔdi/ → **рідко** /ˈridkɔ/ → **ніколи** /ˈnʲikɔlɪ/
+
+### Examples
+
+- Я **завжди** снідаю. (I always eat breakfast.)
+- Він **часто** читає. (He often reads.)
+- Вона **зазвичай** працює вдома. (She usually works at home.)
+- Ми **іноді** гуляємо в парку. (We sometimes walk in the park.)
+- Вони **рідко** дивляться телевізор. (They rarely watch TV.)
+- Я **ніколи не** курю. (I never smoke.)
+
+> 💡 **Ніколи + не!**
+>
+> With «ніколи» (never), you MUST use «не» before the verb. It's a double negative, but it's grammatically correct!
+> — Я **ніколи не** запізнююсь. (I am never late.)
+
+---
+
+### Degree Adverbs: How Much?
+
+| Adverb  | Meaning    | Example                                                        |
+| ------- | ---------- | 
+
+
+────────────────────────────────────────
+✅ Gemini finished (4040 chars)
+✅ Message sent to Claude (ID: 1130)
+✓ Message 1128 acknowledged

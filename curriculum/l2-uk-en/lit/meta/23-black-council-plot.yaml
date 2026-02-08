@@ -16,4 +16,53 @@ tags:
 - novel
 word_target: 4500
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-08'
+content_outline:
+  - section: "Частина I: Вступ: Дорога на Київ 🐎"
+    words: 600
+    points:
+      - "Historical setting: The Ruin"
+      - "Introduction of Shram and Petro"
+      - "Journey motif"
+  - section: "Частина II: Хутір Хмарище 🏡"
+    words: 650
+    points:
+      - "Cherevan's characterization"
+      - "The idyll vs reality"
+      - "Introduction of Lesia"
+  - section: "Частина III: Кирило Тур: Запорозький ідеал ⚔️"
+    words: 700
+    points:
+      - "Tur as a romantic hero"
+      - "Zaporozhian values"
+      - "The duel with Petro"
+  - section: "Частина IV: Дорога на Ніжин 🛣️"
+    words: 650
+    points:
+      - "Encounter with Bozhiy Cholovik"
+      - "Social stratification"
+      - "The mob ('chern')"
+  - section: "Частина V: Чорна рада 🏴"
+    words: 800
+    points:
+      - "The confrontation at Nizhyn"
+      - "Somko vs Briukhovetsky"
+      - "The triumph of demagoguery"
+  - section: "Частина VI: Трагедія і Надія 🕊️"
+    words: 600
+    points:
+      - "Prison dialogue: Somko and Tur"
+      - "Execution of Somko"
+      - "Marriage of Petro and Lesia"
+  - section: "Частина VII: Аналіз Персонажів 🧠"
+    words: 500
+    points:
+      - "Archetypes: State vs Anarchy"
+      - "Idealists vs Opportunists"
+      - "The Romantic Hero"
+  - section: "Частина VIII: Історична Правда і Художній Вимисел 📜"
+    words: 400
+    points:
+      - "Comparison with Eye-Witness Chronicle"
+      - "Kulish's interpretation of history"
+      - "The lesson of the Black Council"

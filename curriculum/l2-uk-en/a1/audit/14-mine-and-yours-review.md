@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1307
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:23:58
+**Generated:** 2026-02-08 22:44:11
 
 ## Configuration
 **Type:** A1-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1430/1307 (raw: 1786)
+- **Words:** ✅ 1758/1307 (raw: 2116)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -52,17 +52,15 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.6% (target 25-40% (M14))
+- **Immersion:** 🇺🇦 28.1% (target 25-40% (M14))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 328 | Included in Core |
+| **Mine and Yours** | ⚪️ | 0 | Skipped |
 | **Warm-up** | ✅ | 105 | Included in Core |
 | **Presentation** | ✅ | 562 | Included in Core |
 | **Practice** | ⚪️ | 226 | Skipped |

@@ -6,7 +6,7 @@ You're at a market in Kyiv. The vendor says «Двадцять гривень.»
 
 > 💡 **Did You Know?**
 >
-> The Ukrainian currency is called **гривня** /ˈɦrɪwnʲɑ/ (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century!
+> The Ukrainian currency is called **гривня** /ˈɦrɪʋnʲa/ (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century!
 
 ## Presentation
 
@@ -59,11 +59,13 @@ The tens follow a beautiful pattern:
 **Examples:**
 
 1. **У мене двадцять гривень.** (I have twenty hryvnias.)
-2. **Вона має тридцять років.** (She is thirty years old.)
+2. **Їй тридцять років.** (She is thirty years old.)
 3. **Автобус номер сорок.** (Bus number forty.)
 4. **П'ятдесят студентів.** (Fifty students.)
 5. **Шістдесят хвилин.** (Sixty minutes.)
 6. **Сто доларів.** (One hundred dollars.)
+
+> 💡 **Note:** In Ukrainian, we use the structure "To me is X years" (Мені X років) instead of "I have X years".
 
 ### Compound Numbers (21-99)
 
@@ -77,7 +79,7 @@ For numbers between tens, simply combine them:
 
 **Examples:**
 
-7. **Я маю двадцять три роки.** (I am twenty-three years old.)
+7. **Мені двадцять три роки.** (I am twenty-three years old.)
 8. **Це коштує тридцять шість гривень.** (This costs thirty-six hryvnias.)
 9. **Квартира номер сорок вісім.** (Apartment number forty-eight.)
 

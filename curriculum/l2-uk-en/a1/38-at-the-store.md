@@ -13,6 +13,22 @@ In this module, you will master the checkout process. You will learn how to answ
 
 ## Presentation
 
+### Finding Items (Пошук товарів)
+
+Before you go to the checkout, you need to find what you want. You can ask a store employee (**працівник**) for help.
+
+| Phrase | IPA | English |
+| :--- | :--- | :--- |
+| **Вибачте, де знаходиться хліб?** | /ˈvɪbɑt͡ʃtɛ dɛ znɑˈxɔdɪtʲsʲɑ xlʲib/ | Excuse me, where is the bread located? |
+| **У якому відділі молоко?** | /u jɑˈkɔmu ˈvʲidʲ:ilʲi mɔlɔˈkɔ/ | In which department is the milk? |
+| **Де тут овочі?** | /dɛ tut ˈɔvɔt͡ʃi/ | Where are the vegetables here? |
+| **Скільки це коштує?** | /ˈskʲilʲkɪ t͡sɛ ˈkɔʃtujɛ/ | How much does this cost? |
+
+**Key Vocabulary:**
+- **Відділ** /ˈvʲidʲ:il/ (Department/Section) - Dairy section, meat section, etc.
+- **Ціна** /t͡sʲiˈnɑ/ (Price) - Always check the price tag.
+- **Ваги** /vɑˈɦɪ/ (Scales) - You often need to weigh fruits and vegetables yourself.
+
 ### At the Checkout (На касі)
 
 When you approach the **каса** /ˈkɑsɑ/ (checkout), the **касир** /kɑˈsɪr/ (cashier) will usually greet you and ask if you need a bag.
@@ -60,10 +76,14 @@ After paying, you might get change or a receipt.
 
 ## Практика
 
-### Scenario 1: The Standard Checkout (Стандартна каса)
+### Scenario 1: The Full Shopping Trip (Повний похід у магазин)
 
-Imagine you are buying groceries. The cashier speaks fast.
+You are looking for milk, then you go to the checkout.
 
+**Ви:** Вибачте, у якому відділі молоко?
+**Працівник:** Молочний відділ там, зліва.
+**Ви:** Дякую!
+*(You get the milk and go to the checkout)*
 **Касир:** Добрий день! Пакет треба?
 **Ви:** Добрий день! Ні, дякую.
 **Касир:** Картка «Власний Рахунок» є? (Silpo loyalty card)

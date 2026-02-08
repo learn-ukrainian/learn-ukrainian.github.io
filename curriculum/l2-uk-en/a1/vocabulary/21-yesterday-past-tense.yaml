@@ -1,4 +1,3 @@
----
 module: 21-yesterday-past-tense
 level: A1
 version: '2.0'
@@ -7,15 +6,22 @@ items:
   ipa: /babˈusɪn/
   translation: grandmother's
   pos: adj
-- lemma: вау
-  ipa: /ʋˈau/
-  translation: wow
-  pos: intj
-- lemma: жила
-  ipa: /ʒɪlˈa/
-  translation: vein
-  pos: noun
-  gender: f
+- lemma: вчора
+  ipa: /wt͡ʃɔˈrɑ/
+  translation: yesterday
+  pos: adv
+- lemma: давно
+  ipa: /dɑwˈnɔ/
+  translation: long ago
+  pos: adv
+- lemma: колись
+  ipa: /ˈkɔlɪsʲ/
+  translation: once, sometime
+  pos: adv
+- lemma: минулого тижня
+  ipa: /mɪˈnulɔɦɔ ˈtɪʒnʲɑ/
+  translation: last week
+  pos: adv
 - lemma: молодий
   ipa: /mɔlɔdˈɪj/
   translation: young
@@ -23,6 +29,14 @@ items:
 - lemma: недавно
   ipa: /nɛdˈaʋnɔ/
   translation: recently
+  pos: adv
+- lemma: позавчора
+  ipa: /pɔzɑwˈt͡ʃɔrɑ/
+  translation: day before yesterday
+  pos: adv
+- lemma: раніше
+  ipa: /rɑˈnʲiʃɛ/
+  translation: earlier, before
   pos: adv
 - lemma: рута
   ipa: /rˈuta/

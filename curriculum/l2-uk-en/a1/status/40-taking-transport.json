@@ -2,13 +2,13 @@
   "module": "40-taking-transport",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:45:55.713473Z",
+  "last_audit": "2026-02-09T00:24:20.789372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351530Z",
+    "md": "2026-02-09T00:20:40.252992Z",
     "meta": "2026-02-07T10:03:51.776040Z",
-    "activities": "2026-02-07T21:06:32.960354Z",
-    "vocabulary": "2026-02-07T21:44:16.602741Z",
+    "activities": "2026-02-09T00:23:01.327692Z",
+    "vocabulary": "2026-02-09T00:20:40.253474Z",
     "plan": "2026-02-07T10:05:59.907429Z"
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "820/750 (raw: 967)"
+      "message": "827/750 (raw: 990)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "16/1"
+      "message": "22/1"
     },
     "naturalness": {
       "status": "pass",

@@ -2,11 +2,11 @@
   "module": "olena-pchilka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T16:37:51.138050Z",
+  "last_audit": "2026-02-08T23:13:46.253982Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T17:00:17.078721Z",
-    "meta": "2026-02-07T15:13:22.016177Z",
+    "md": "2026-02-08T22:03:35.791296Z",
+    "meta": "2026-02-08T22:02:12.721522Z",
     "activities": "2026-02-07T10:03:51.557655Z",
     "vocabulary": "2026-02-07T10:03:51.610106Z",
     "plan": null

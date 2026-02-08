@@ -2,13 +2,13 @@
   "module": "destalinizatsiia",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-03T22:55:05.996424Z",
+  "last_audit": "2026-02-08T00:05:02.591250Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-29T21:08:29.517621Z",
-    "meta": "2026-01-26T22:20:12.999019Z",
-    "activities": "2026-01-29T20:56:23.532720Z",
-    "vocabulary": "2026-01-29T20:56:42.910675Z",
+    "md": "2026-02-07T11:38:26.200519Z",
+    "meta": "2026-02-07T10:03:51.212228Z",
+    "activities": "2026-02-07T10:03:51.269423Z",
+    "vocabulary": "2026-02-07T10:03:51.343075Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "3945/4000 (raw: 4017) (55 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3945/4000 (raw: 4017) (55 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

@@ -2,13 +2,13 @@
   "module": "01-the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T15:52:51.224139Z",
+  "last_audit": "2026-02-08T22:59:30.561497Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.351124Z",
-    "meta": "2026-02-07T10:03:51.777269Z",
-    "activities": "2026-02-07T15:52:42.176459Z",
-    "vocabulary": "2026-02-07T15:52:46.011973Z",
+    "md": "2026-02-08T20:39:17.690533Z",
+    "meta": "2026-02-08T17:36:13.368650Z",
+    "activities": "2026-02-08T20:21:08.688640Z",
+    "vocabulary": "2026-02-08T20:21:25.202449Z",
     "plan": "2026-02-07T10:03:51.073506Z"
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "958/1019 (raw: 1327) (61 short)"
+      "message": "1135/1019 (raw: 1507)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "31/1"
+      "message": "41/1"
     },
     "naturalness": {
       "status": "pass",
@@ -41,7 +41,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

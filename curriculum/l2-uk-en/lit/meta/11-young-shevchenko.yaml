@@ -1,22 +1,73 @@
----
-module: lit-11
-level: LIT
+id: young-shevchenko
 slug: young-shevchenko
-version: '1.0'
-id: lit-11
-naturalness:
-  score: 10
-  status: PASS
-duration: 120
-transliteration: none
-tags:
-- література
-- біографія
-- шевченко
-- кріпацтво
-- петербург
-- викуп
-- романтизм
+title: "Тарас Шевченко: Від Кріпака до Пророка"
+subtitle: "LIT-011: Анатомія Генія"
+abstract: "Дослідження раннього періоду життя Тараса Шевченка: від дитинства в кріпацтві до виходу першого 'Кобзаря'. Аналіз унікальної історії викупу та формування Шевченка як національного пророка."
 word_target: 4500
-build:
-  last_modified: '2026-01-26'
+content_outline:
+  - section: "Вступ — Світ кріпацтва"
+    words: 650
+    points:
+      - "Історичний контекст Миколаївської епохи"
+      - "Юридичний статус кріпака як 'речі'"
+      - "Відмінність українського кріпацтва від російського"
+  - section: "Дитинство і юність (1814-1831)"
+    words: 850
+    points:
+      - "Родина та сирітство"
+      - "Школа дяків-садистів"
+      - "Пошуки маляра-вчителя"
+  - section: "Петербург — місто контрастів"
+    words: 750
+    points:
+      - "Робота у артілі Ширяєва"
+      - "Літній сад як простір свободи"
+      - "Зустріч із Сошенком"
+  - section: "Викуп — детективна історія"
+    words: 600
+    points:
+      - "Переговори з Енгельгардтом"
+      - "Роль Брюллова і Жуковського"
+      - "Механізм лотереї 1838 року"
+  - section: "Академія і \"Кобзар\""
+    words: 1000
+    points:
+      - "Навчання в Академії та художні успіхи"
+      - "Вихід 'Кобзаря' (1840)"
+      - "Аналіз перших 8 творів"
+  - section: "Аналітичний Практикум"
+    words: 100
+    points:
+      - "Психологія вільної людини"
+  - section: "Тема Есе (300-400 слів)"
+    words: 250
+    points:
+      - "Аналітичні роздуми про парадокс свободи"
+  - section: "Підсумок — Шанс, Талант, Солідарність"
+    words: 300
+    points:
+      - "Формула успіху Шевченка"
+      - "Значення викупу для нації"
+naturalness:
+  status: PASS
+  score: 10
+  last_checked: "2026-02-07"
+  reviewer: "gemini"
+  notes: "Clean, natural Ukrainian prose, seminar level."
+richness:
+  score: 95
+  status: PASS
+  metrics:
+    engagement: 6
+    cultural: 8
+    realworld: 3
+    citations: 5
+  last_updated: "2026-02-07"
+immersion_target: 100
+pedagogical_focus: biography
+prerequisites:
+  - lit-10
+  - b2-hist-15
+status: REBUILD
+version: "2.1"
+tags: ["Shevchenko", "Romanticism", "19th Century", "Serfdom"]

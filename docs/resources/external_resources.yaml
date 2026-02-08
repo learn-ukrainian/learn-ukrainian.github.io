@@ -7233,3 +7233,17 @@ resources:
       url: https://mova.gov.ua/
       relevance: medium
       source: Information on official Ukrainian language exams and standards
+  18-women-in-kobzar:
+    youtube:
+    - title: "Фільм-опера 'Наймичка' (1963)"
+      url: https://www.youtube.com/results?search_query=фільм+наймичка+1963
+      relevance: high
+      channel: Search Results
+    - title: "Оксана Забужко про Шевченка"
+      url: https://www.youtube.com/results?search_query=оксана+забужко+шевченко
+      relevance: high
+    articles:
+    - title: "Шевченко як міфотворець"
+      url: https://krytyka.com/ua/articles/shevchenko-mifotvorets
+      relevance: high
+      source: Krytyka

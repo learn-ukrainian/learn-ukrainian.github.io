@@ -19,10 +19,12 @@
 > - Я **можу** говорити українською. (I can speak Ukrainian.) — general ability
 > - Я **вмію** плавати. (I know how to swim.) — learned skill
 >
-> **могти** = physical/circumstantial ability
-> **вміти** = acquired skill or knowledge
+> **могти** = physical or circumstantial ability. Use this when you are talking about what is possible in a specific situation.
+> **вміти** = acquired skill, talent, or knowledge. Use this for things you had to learn, like languages, sports, or instruments.
 
 ### могти — Can (Physical Ability)
+
+This verb is irregular in its stem. Notice how the «г» changes to «ж» in most forms!
 
 | Person | могти | IPA | Example |
 | --- | --- | --- | --- |
@@ -46,15 +48,41 @@
 
 ---
 
-## Presentation 2
+## Expressing Desire: хотіти
 
-### Expressing Obligation: повинен, треба, мусити
+> [!observe] Pattern Discovery
+>
+> - Я **хочу** пити. (I want to drink.)
+> - Він **хоче** спати. (He wants to sleep.)
+>
+> **хотіти** = to want. This is how you express desires and wishes.
+
+### хотіти — To Want
+
+Notice that the stem changes from **хоч-** in the singular to **хот-** in the plural!
+
+| Person | хотіти | IPA | Example |
+| --- | --- | --- | --- |
+| я | хочу | /ˈxɔt͡ʃu/ | Я хочу їсти. (I want to eat.) |
+| ти | хочеш | /ˈxɔt͡ʃɛʃ/ | Ти хочеш кави? (Do you want coffee?) |
+| він/вона | хоче | /ˈxɔt͡ʃɛ/ | Він хоче спати. (He wants to sleep.) |
+| ми | хочемо | /ˈxɔt͡ʃɛmɔ/ | Ми хочемо пити. (We want to drink.) |
+| ви | хочете | /ˈxɔt͡ʃɛtɛ/ | Ви хочете чай? (Do you want tea?) |
+| вони | хочуть | /ˈxɔt͡ʃutʲ/ | Вони хочуть гуляти. (They want to walk.) |
+
+---
+
+## Expressing Obligation: повинен, треба, мусити
 
 > [!observe] Pattern Discovery
 >
 > - Я **повинен** працювати. (I must work.) — personal obligation
 > - **Треба** працювати. (One must work.) — impersonal necessity
-> - Я **мушу** йти. (I have to go.) — strong obligation
+> - Я **мушу** йти. (I have to go.) — strong, often external obligation
+
+> 📜 **History Bite: The Origin of Мусити**
+>
+> The word **мусити** (must) is a great example of the historical links between Ukrainian and other European languages. It shares the same root as the German word «müssen.» While Russian uses «должен,» Ukrainian kept this ancient European connection alive. It reflects Ukraine's long history as part of the broader European cultural space.
 
 ### повинен/повинна — Must (Personal)
 
@@ -88,9 +116,7 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Presentation 3
-
-### Expressing Permission: можна / не можна
+## Expressing Permission: можна / не можна
 
 > [!observe] Pattern Discovery
 >
@@ -109,7 +135,7 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Presentation 4
+## Recommendations and Advice
 
 ### Recommendations and Advice
 
@@ -120,7 +146,7 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Presentation 5
+## Trying and Succeeding
 
 ### Trying and Succeeding
 
@@ -134,7 +160,7 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Presentation 6
+## Modal Adjectives
 
 ### Modal Adjectives
 
@@ -148,7 +174,7 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-## Presentation 7
+## Examples in Context
 
 ### Examples in Context
 
@@ -267,12 +293,16 @@ These are impersonal — the «subject» is optional:
 
 # Підсумок
 
-Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати «я можу», «я вмію» та «я хочу». Ви також знаєте слова «треба», «можна» та «заборонено». Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
+Вітаємо! Ви вивчили модальні дієслова. Тепер ваша українська мова багатша. Ви знаєте різницю між **могти** та **вміти**. Ви вмієте висловлювати обов'язок. Для цього є слова **треба**, **мушу** та **повинен**.
+
+Тепер ви можете описувати плани. Ви знаєте свої бажання та потреби. Ви можете ввічливо попросити дозволу. Для цього є слово **можна**. Ви розумієте заборони. Наприклад: **не можна** або **заборонено**. Це дуже важливо для життя в Україні!
+
+Ви великі молодці! Ваша наполегливість дуже важлива. Кожне нове слово — це успіх. Українська мова дуже гарна. Вона має багато краси та музики. Практикуйтеся кожен день. Скоро ви будете говорити добре!
 
 > [!myth] **Міф про українську мову (Myth about Ukrainian language)**
 >
 > **Міф:** Українська мова — це діалект.  
-> **Факт:** Це неправда! Українська — це окрема солов'їна мова (separate nightingale language). Вона має свою граматику та історію.
+> **Факт:** Це неправда! Українська — це самостійна мова. Вона стародавня та мелодійна. Її часто називають «солов'їною». Вона має свою граматику та історію. Ви відкриваєте унікальну культуру!
 
 ---
 

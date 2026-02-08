@@ -2,322 +2,257 @@
 
 ## Warm-up
 
-Picture yourself in the center of Lviv, standing at the majestic Opera Theatre. A Ukrainian friend asks you: **«Як дістатися до центрального парку?»** (How do I get to the central park?). Can you answer?
+Welcome to the city! Cities in Ukraine are vibrant, busy, and sometimes a little confusing. Whether you are in ancient Kyiv or charming Lviv, knowing how to ask "Where am I?" is essential.
 
-Today you'll master the language of navigation — giving directions, describing locations, and moving confidently through Ukrainian cities. From asking **«Де метро?»** (Where is the metro?) to understanding **«Прямо, потім наліво»** (Straight, then left), you'll unlock the vocabulary that turns every street into an adventure.
+You already know simple locations like **дім** (home) and **робота** (work). Now we will expand your map. Today you will learn to give directions, describe where things are, and navigate with confidence.
 
-> 💡 **Did You Know?**
->
-> Lviv's historic center is a UNESCO World Heritage site. The city's narrow вулиці (streets) and hidden провулки (alleys) make it a navigator's dream — and a perfect place to practice your directional Ukrainian! Meanwhile, Kyiv boasts one of the deepest metro systems in the world — some stations are 100+ meters underground, built during Soviet times as dual-purpose bomb shelters.
+Look at these core words for city places:
+*   **Вулиця** (street) — usually abbreviated as *вул.* on signs. Example: *вулиця Хрещатик* (Khreshchatyk Street).
+*   **Площа** (square) — the heart of European cities. Example: *Площа Ринок* (Market Square) in Lviv.
+*   **Парк** (park) — where people relax. Example: *парк Шевченка* (Shevchenko Park).
+*   **Центр** (center) — downtown.
+*   **Тротуар** (sidewalk) — where pedestrians walk.
+
+> [!cultural]
+> In Ukrainian cities, the **центр** is not just a business district; it is the historical soul of the city, full of cafes, squares, and pedestrians. Many Ukrainians say "Я йду в центр" (I'm going downtown) even if they are just meeting a friend for coffee.
+
+To ask where something is, use **Де**:
+*   **Де центр?** (Where is the center?)
+*   **Де метро?** (Where is the metro?)
+*   **Де аптека?** (Where is the pharmacy?)
 
 ## Presentation
 
-### The Ukrainian City: Structure and Vocabulary
+### 1. Directions (Напрямки)
 
-Ukrainian cities blend historic architecture with Soviet-era planning and modern development. Understanding the urban vocabulary helps you navigate both the physical space and the cultural landscape.
+To navigate, you need four key directional words:
 
-**Urban Infrastructure:**
+1.  **Прямо** (Straight) — *Ідіть прямо.* (Go straight.)
+2.  **Ліворуч** (On the left / To the left) — *Поверніть ліворуч.* (Turn left.)
+3.  **Праворуч** (On the right / To the right) — *Поверніть праворуч.* (Turn right.)
+4.  **Назад** (Back) — *Ідіть назад.* (Go back.)
 
-When Ukrainians give directions, they reference key urban features:
+These words are used with the verbs **ідіть** (go, on foot) and **поверніть** (turn):
 
-- **вулиця** /ˈvulɪt͡sʲɑ/ — street (main roads with names)
-- **провулок** /prɔˈvulɔk/ — lane, alley (smaller connecting streets)
-- **площа** /ˈplɔʃt͡ʃɑ/ — square (public gathering spaces)
-- **проспект** /prɔˈspɛkt/ — avenue (wide, major thoroughfares)
-- **бульвар** /bulʲˈvɑr/ — boulevard (often tree-lined)
-- **набережна** /ˈnɑbɛrɛʒnɑ/ — embankment (riverside promenades)
+| Ukrainian | English | Example |
+|-----------|---------|---------|
+| Ідіть прямо | Go straight | Ідіть прямо по вулиці. |
+| Поверніть ліворуч | Turn left | Поверніть ліворуч на перехресті. |
+| Поверніть праворуч | Turn right | Поверніть праворуч біля аптеки. |
+| Ідіть назад | Go back | Ідіть назад до площі. |
 
-**Navigation Reference Points:**
+> [!note] Synonyms
+> You might also hear **наліво** (to the left) and **направо** (to the right). They mean the same thing as **ліворуч** and **праворуч**, but **ліворуч/праворуч** are slightly more formal and precise. Both are used in everyday speech.
 
-- **міст** (mist) — bridge
-- **перехрестя** (perekhrestya) — intersection, crossroads
-- **світлофор** (svitlofor) — traffic light
-- **зупинка** (zupynka) — (bus/tram) stop
-- **станція** (stantsiya) — station (metro/train)
-- **вхід / вихід** (vkhid / vykhid) — entrance / exit
+You can also use **далі** (further/then) to chain directions:
+*   **Ідіть прямо, далі поверніть ліворуч.** (Go straight, then turn left.)
+*   **Поверніть праворуч, далі прямо.** (Turn right, then straight.)
 
-> 🌍 **Real World: Kyiv Metro Color System**
+### 2. Infrastructure (Інфраструктура)
+
+Learn these signs to survive in the city:
+*   **Зупинка** (Stop) — for bus, tram, trolleybus. Look for yellow signs with route numbers. In many Ukrainian cities, there are electronic boards showing when the next bus is coming (**час прибуття**).
+*   **Станція** (Station) — for metro (**станція метро**). Kyiv, Kharkiv, and Dnipro have metro systems. Metro stations are often marked with a large green "M".
+*   **Аптека** (Pharmacy) — marked with a green cross. Often open late, sometimes 24 hours. If it is 24/7, you will see the sign **24/7** or **Цілодобово**.
+*   **Пошта** (Post office) — you might see **Укрпошта** (UkrPoshta) in yellow or the famous **Нова Пошта** (Nova Poshta) in red. **Нова Пошта** is incredibly fast and popular for sending parcels within Ukraine.
+*   **Світлофор** (Traffic light) — look for the "green man" (**зелене світло**) before crossing. Be careful, as the yellow light (**жовте світло**) comes on quickly!
+*   **Перехрестя** (Intersection/Crossroads) — where two streets meet. This is where most turns happen.
+*   **Магазин** (Shop) — a general word for any store. A supermarket is a **супермаркет**.
+*   **Банк** (Bank) — where you can find an **банкомат** (ATM).
+
+Here are some useful phrases about infrastructure:
+*   **Де найближча аптека?** (Where is the nearest pharmacy?)
+*   **Де зупинка автобуса?** (Where is the bus stop?)
+*   **Тут є станція метро?** (Is there a metro station here?)
+*   **Де знаходиться найближчий банкомат?** (Where is the nearest ATM located?)
+
+> [!tip]
+> In Ukrainian cities, green signs with **+** mark pharmacies. They are everywhere — almost on every block in city centers. If you are lost, look for an **аптека** as a reference point. Also, look for orange vests; these are usually city workers who can help you if you are really lost!
+
+### 3. Location and "Fixed Phrases"
+
+When describing where things are, we use prepositions like **біля** (near) and **навпроти** (opposite). These are two of the most useful words for giving directions.
+
+> [!important] Grammar Alert: Fixed Phrases
+> You will notice that words change after these prepositions.
+> *   **Парк** $\rightarrow$ **Біля парку** (Near the park)
+> *   **Банк** $\rightarrow$ **Навпроти банку** (Opposite the bank)
+> *   **Аптека** $\rightarrow$ **Біля аптеки** (Near the pharmacy)
+> *   **Пошта** $\rightarrow$ **Навпроти пошти** (Opposite the post office)
 >
-> Kyiv's metro has three lines, each with a distinct color:
->
-> - **Червона лінія** (Red Line) — M1, north-south
-> - **Синя лінія** (Blue Line) — M2, east-west
-> - **Зелена лінія** (Green Line) — M3, loop
->
-> Locals never say «Line 1» — they say **червона** (red), **синя** (blue), or **зелена** (green). Master this, and you'll navigate Kyiv like a native!
+> Notice how these often use specific case endings. Don't worry about the grammar rules yet—just memorize the phrases! You will learn the formal rules for these changes very soon.
 
-### Giving Directions: The Four Commands
+Here are a few more examples of these prepositions in action:
+*   **Навпроти метро** — opposite the metro station.
+*   **Біля центру** — near the city center.
+*   **Біля зупинки** — near the stop.
+*   **Навпроти світлофора** — opposite the traffic light.
+*   **Біля театру** — near the theater.
+*   **Навпроти супермаркету** — opposite the supermarket.
 
-Ukrainians use simple directional adverbs when guiding others:
+Stick to **біля** (near), **навпроти** (opposite), **до** (to), **від** (from), and **тут/там** (here/there). This is enough to describe almost any location in the city center.
 
-| Direction | Ukrainian   | IPA | Usage                |
-| --------- | ----------- | --- | -------------------- |
-| Straight  | **прямо**   | /ˈprʲɑmɔ/ | Keep going forward   |
-| Left      | **наліво**  | /nɑˈlivɔ/ | Turn/go to the left  |
-| Right     | **направо** | /nɑˈprɑvɔ/ | Turn/go to the right |
-| Back      | **назад**   | /nɑˈzɑd/ | Return, go back      |
+### 4. Asking for Directions
 
-**Mini-Dialogue: At the Train Station**
+Here are the key phrases you need when lost or looking for something:
 
-— Вибачте, де туалет?
-— Прямо, потім наліво.
-— Дякую!
+**Asking:**
+*   **Перепрошую, як дістатися до центру?** (Excuse me, how do I get to the center?)
+*   **Де знаходиться аптека?** (Where is the pharmacy located?)
+*   **Скажіть, будь ласка, де пошта?** (Tell me, please, where is the post office?)
+*   **Це далеко?** (Is it far?)
+*   **Скільки хвилин пішки?** (How many minutes on foot?)
 
-(Excuse me, where is the bathroom? — Straight, then left. — Thank you!)
+**Answering:**
+*   **Ні, це близько.** (No, it's close.)
+*   **Так, це далеко. Їдьте на автобусі.** (Yes, it's far. Take a bus.)
+*   **Ідіть прямо, потім ліворуч.** (Go straight, then left.)
+*   **Це тут, біля парку.** (It's here, near the park.)
+*   **Це там, навпроти банку.** (It's there, opposite the bank.)
+*   **Це п'ять хвилин пішки.** (It's five minutes on foot.)
 
-**Common Direction Phrases:**
-
-- **Іди/Ідіть прямо** — Go straight (informal/formal)
-- **Поверніть наліво** — Turn left (formal)
-- **Біля світлофора направо** — Right at the traffic light
-- **На перехресті** — At the intersection
-- **Після моста** — After the bridge
-
-**Міні-діалог: На вулиці**
-
-— Вибачте, де аптека?
-— Прямо, потім наліво біля парку.
-— Це далеко?
-— Ні, близько. Три хвилини пішки.
-— Дякую!
-— Будь ласка.
-
-(Excuse me, where is the pharmacy? — Straight, then left near the park. — Is it far? — No, close. Three minutes on foot. — Thank you! — You're welcome.)
-
-> ⚡ **Pro Tip: Preposition Power**
->
-> Notice how Ukrainians layer directions with prepositions:
->
-> - **До** (to) — direction toward: **до станції** (to the station)
-> - **Від** (from) — direction away: **від центру** (from the center)
-> - **Через** (through/across) — **через міст** (across the bridge)
-> - **Вздовж** (along) — **вздовж вулиці** (along the street)
->
-> These combine with locative or accusative cases depending on motion vs. location.
-
-### Distance and Proximity
-
-When asking **«Це далеко?»** (Is it far?), you'll hear responses using these key words:
-
-- **далеко** — far
-- **близько** — close, near
-- **поруч** — nearby, next to
-- **навпроти** — opposite, across from
-
-**Prepositions of Location:**
-
-- **за** — behind
-- **перед** — in front of
-- **між** — between
-- **біля** — near, by
-
-**Example:**
-
-— **Де аптека?**
-— **Навпроти банку, біля світлофора.**
-(Where is the pharmacy? — Opposite the bank, near the traffic light.)
-
-> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R. and Chornobyl**
->
-> The legendary Ukrainian game **S.T.A.L.K.E.R.** (made by GSC Game World in Kyiv) is set in the Chornobyl Exclusion Zone. Players navigate using landmarks like **міст** (bridge), **станція** (station), and **покинуті будівлі** (abandoned buildings). The game's realistic Ukrainian geography taught millions of gamers worldwide Ukrainian navigation vocabulary — even if they didn't realize it!
-
-### Transportation Methods
-
-How you get there matters. Ukrainians use several transportation phrases to describe travel:
-
-- **пішки** — on foot, walking
-- **на автобусі** — by bus (on the bus)
-- **на трамваї** — by tram (on the tram)
-- **метро** — by metro (indeclinable noun, used alone: «їду метро»)
-- **на таксі** — by taxi (in a taxi)
-  *Example:* Я їду на **таксі**. (I go by taxi.)
-- **на машині** — by car (in a car)
-- **на велосипеді** — by bicycle (on a bicycle)
-
-**Note:** These are **memorized transportation phrases** using locative case for vehicles (на + Loc), which you learned in M13.
-
-**Mini-Dialogue: How Do You Get to Work?**
-
-— Як ти дістаєшся на роботу?
-— Я їду на трамваї, а потім пішки.
-— Це далеко?
-— Ні, близько. Десять хвилин.
-
-(How do you get to work? — I go by tram, then on foot. — Is it far? — No, close. Ten minutes.)
+> [!tip]
+> When asking for directions, always start with **Перепрошую** (Excuse me) or **Скажіть, будь ласка** (Tell me, please). Ukrainians appreciate politeness! Also, it is common to ask multiple people, as everyone might have a slightly different favorite route. Ukrainians are usually very happy to help foreigners find their way!
 
 ## Practice
 
-### Scenario 1: Lost Tourist in Lviv
+### Scenario 1: On the Street
 
-You're a tourist standing at Rynok Square (Площа Ринок) in Lviv. You need to find the Post Office (Пошта).
+Read the dialogue and trace the route in your mind.
 
-**Ukrainian passerby:** Вибачте, шукаєте щось?
-**You:** Так! Де пошта?
-**Passerby:** Прямо по вулиці Дорошенка, потім наліво на перехресті. Вона навпроти парку.
-**You:** Це далеко?
-**Passerby:** Ні, близько. П'ять хвилин пішки.
-**You:** Дуже дякую!
+**Турист:** Перепрошую, де станція метро?
+**Киянин:** Станція метро «Університет»? Це недалеко.
+**Турист:** Як дістатися туди?
+**Киянин:** Ідіть **прямо** по вулиці. Там буде **перехрестя**. На перехресті поверніть **ліворуч**.
+**Турист:** А потім?
+**Киянин:** Потім ідіть прямо. Станція метро буде **праворуч**, **біля** парку.
+**Турист:** Дякую!
+**Киянин:** Прошу.
 
-**Translation:**
-Passerby: Excuse me, are you looking for something?
-You: Yes! Where is the post office?
-Passerby: Straight along Doroshenko Street, then left at the intersection. It's opposite the park.
-You: Is it far?
-Passerby: No, close. Five minutes on foot.
-You: Thank you very much!
+> [!tip]
+> Notice how the local says **біля парку**. This is a fixed phrase — you do not need to think about grammar yet. Just remember "біля парку" as one unit.
 
-### Scenario 2: Asking for the Metro
+**Comprehension check:**
+1. Where does the tourist need to turn? (**Ліворуч**, at the intersection.)
+2. Where exactly is the metro station? (**Праворуч, біля парку.**)
+3. Is it far? (**Ні, це недалеко.**)
 
-Ти зараз у столиці України. Ти хочеш дістатися до Майдану Незалежності.
+### Scenario 2: Taking Transport
 
-**Ти:** Вибачте, де станція метро?
-**Киянин:** Там, прямо за тим будинком. Вхід біля книгарні.
-**Ти:** А як дістатися до Майдану Незалежності?
-**Киянин:** Синя лінія, дві зупинки. Вийдете на станції «Майдан Незалежності.»
-**Ти:** Дякую!
-**Киянин:** Нема за що! Гарного дня!
+**Анна:** Привіт! Ти де?
+**Олег:** Я в центрі, **навпроти** пошти.
+**Анна:** Я чекаю тебе в кафе.
+**Олег:** Як дістатися до тебе?
+**Анна:** Сідай на автобус номер 24.
+**Олег:** Добре. А де виходити?
+**Анна:** **Виходьте** на зупинці «Площа Ринок». (Exit at the "Rynok Square" stop.)
+**Олег:** Добре, буду через 10 хвилин.
 
-**Translation:**
-You're in Kyiv and want to get to Maidan Nezalezhnosti (Independence Square).
-You: Excuse me, where is the metro station?
-Local: There, straight behind that building. The entrance is near the bookstore.
-You: And how do I get to Maidan Nezalezhnosti?
-Local: Blue line, two stops. You'll get off at «Maidan Nezalezhnosti» station.
-You: Thank you!
-Local: You're welcome! Have a nice day!
+> [!note] Grammar
+> **Виходьте** is the command "Exit/Get off". It works for all transport.
 
-> 🎯 **Fun Fact: Metro Announcers**
->
-> Kyiv metro announcements use gendered voices to help navigate:
->
-> - **Female voice** = train heading toward the center
-> - **Male voice** = train heading away from the center
->
-> This auditory cue helps locals and tourists alike — even when the station names blur together!
+### Scenario 3: Describing a Route
 
-### Scenario 3: Choosing Transportation
+Practice describing a route using the vocabulary from this module. Read the example aloud:
 
-Твій український друг питає, як ти подорожуєш містом.
+**Як дістатися від метро до кафе?**
 
-**Друг:** Як ти дістаєшся до університету?
-**Ти:** Зазвичай на автобусі, але іноді пішки.
-**Друг:** А на велосипеді?
-**Ти:** Ні, у мене немає велосипеда. Але я хочу купити!
-**Друг:** Добре! Велосипедом дуже зручно. Я щодня їжджу на велосипеді до роботи.
-**Ти:** Це далеко?
-**Друг:** Ні, близько. Десять хвилин.
+Вийдіть зі станції метро. Ідіть **прямо** по вулиці Шевченка. На **перехресті** поверніть **праворуч**. Ідіть прямо. Кафе буде **ліворуч**, **навпроти** аптеки.
 
-**Translation:**
-Your Ukrainian friend asks how you prefer to travel around the city.
-Friend: How do you get to the university?
-You: Usually by bus, but sometimes on foot.
-Friend: And by bicycle?
-You: No, I don't have a bicycle. But I want to buy one!
-Friend: Good! By bicycle is very convenient. I ride my bike to work every day.
-You: Is it far?
-Friend: No, close. Ten minutes.
+Now read another example:
+
+**Як дістатися від зупинки до пошти?**
+
+Від **зупинки** ідіть **прямо**. На **світлофорі** поверніть **ліворуч**. **Пошта** буде **праворуч**, **біля** банку.
+
+> [!practice]
+> Now try describing a route from your home to the nearest shop, park, or pharmacy. Use at least three directional words: **прямо**, **ліворуч/праворуч**, and one preposition (**біля** or **навпроти**).
+
+### Key Phrases Summary Table
+
+| Situation | Ukrainian | English |
+|-----------|-----------|---------|
+| Asking where | Де аптека? | Where is the pharmacy? |
+| Asking how to get | Як дістатися до центру? | How do I get to the center? |
+| Asking distance | Це далеко? | Is it far? |
+| Giving direction | Ідіть прямо. | Go straight. |
+| Giving direction | Поверніть ліворуч. | Turn left. |
+| Describing location | Біля парку. | Near the park. |
+| Describing location | Навпроти пошти. | Opposite the post office. |
 
 ## Production
 
-### Task 1: Give Directions (Speaking)
+### Task 1: Guide a Tourist
 
-Imagine you're standing at the **Central Railway Station (Центральний вокзал)** in your city. A tourist asks you how to get to:
+Imagine a tourist asks you: **"Перепрошую, де банк?"**
+Use the map in your head (or a real one) and give directions using:
+1.  **Прямо** — tell them which way to go
+2.  **Ліворуч/Праворуч** — tell them where to turn
+3.  **Біля...** or **Навпроти...** — describe the final location (e.g., *біля парку*, *біля метро*, *навпроти аптеки*)
 
-1. The central park (центральний парк)
-2. The nearest pharmacy (аптека)
-3. The opera theatre (оперний театр)
+*Model answer:* Ідіть прямо по вулиці. На перехресті поверніть праворуч. Банк буде ліворуч, біля аптеки.
 
-**Use these phrases:**
+### Task 2: Where is your home?
 
-- Прямо...
-- Наліво/направо...
-- Біля/навпроти...
-- Це близько/далеко...
+Describe where you live relative to city landmarks. Use at least two prepositions and one directional word.
 
-**Model Answer:**
+*Example:* "Мій дім **навпроти** парку. Метро **близько**. Зупинка автобуса **біля** мого дому. Магазин **біля** аптеки."
 
-**1. Центральний парк:**
-Ідіть прямо по проспекту, потім на перехресті поверніть наліво. Парк буде навпроти музею. Це п'ять хвилин пішки.
+### Task 3: Role Play — Tourist and Local
 
-**2. Аптека:**
-Біля вокзалу є аптека. Прямо, потім направо. Вона поруч, біля банку.
+Work with a partner (or practice both roles). One person is a tourist, the other is a local. The tourist is looking for three different places and is very confused about whether to take a bus or walk.
 
-**3. Оперний театр:**
-Їдьте на трамваї до центру. Вийдете на зупинці «Площа Театральна.» Театр буде там, прямо.
+**Tourist:** Ask how to get to three different places (аптека, пошта, парк). Ask "Це далеко?" for each one.
+**Local:** Give directions using **прямо**, **ліворуч/праворуч**, **біля**, **навпроти**. Suggest taking a bus if it's far.
 
-### Task 2: Describe Your Commute (Writing)
+*Example exchange:*
+**Tourist:** Перепрошую, де аптека? Це далеко?
+**Local:** Ні, це близько. Ідіть прямо. Потім поверніть праворуч. Аптека навпроти пошти.
+**Tourist:** А де парк?
+**Local:** О, це далеко. Їдьте на автобусі номер 5. Зупинка біля банку.
 
-Write 4-5 sentences describing how you get to work or school. Use transportation vocabulary and directional phrases.
+### Task 4: Draw a Map and Describe it
 
-**Model Answer:**
+On a piece of paper, draw a simple city square with four streets and a few buildings (a bank, a pharmacy, a park, and a cafe). Now, write a paragraph describing where everything is located relative to each other.
 
-Я живу в квартирі на вулиці Шевченка. Щоранку я йду пішки до зупинки. Потім їду на автобусі до центру. Університет біля парку, навпроти кафе. Це близько — двадцять хвилин.
-
-(I live in an apartment on Shevchenko Street. Every morning I walk to the bus stop. Then I go by bus to the center. The university is near the park, opposite a café. It's close — twenty minutes.)
-
-> 🔍 **Myth Buster**
->
-> **Myth:** «All Ukrainian cities have metro systems.»
-> **Fact:** Only three Ukrainian cities have metro systems: **Kyiv** (oldest and largest, opened 1960), **Kharkiv** (opened 1975), and **Dnipro** (opened 1995). Other cities rely on trams, trolleybuses, and marshrutky (minibuses). Don't assume «метро» is universal when traveling!
+*Example:* "У центрі є площа. **Біля** площі є банк. **Навпроти** банку — аптека. **Біля** аптеки є великий парк. Кафе знаходиться **навпроти** парку. Це дуже гарний центр!"
 
 ## Cultural Insight
 
-### Маршрутки: транспорт для всіх
+### Navigating the Ukrainian City
 
-Крім офіційного транспорту (автобус, трамвай, метро), в кожному українському місті є **маршрутки** — невеликі мінівени. Вони їздять за фіксованими маршрутами. Вони зупиняються на вимогу пасажирів. Вони працюють швидше за великі автобуси.
+Ukrainian cities are often a mix of ancient streets and modern avenues. In older cities like **Lviv** or parts of **Kyiv**, streets can be narrow and winding. Directions like "turn left at the church" are very common because churches are prominent landmarks.
 
-Beyond official public transport, every Ukrainian city runs **маршрутки** (marshrutky) — minibuses that follow fixed routes but stop on demand. These Soviet-era relics are faster, more flexible, and often chaotic.
+### The Deepest Metro
 
-**Як працюють маршрутки:**
+Kyiv has the deepest metro station in the world — **Arsenalna** (105.5 meters deep!). It takes about 5 minutes just to ride the escalators down! When someone says "метро глибоко" (the metro is deep), they mean it.
 
-- Ти хочеш вийти? Крикни **«На зупинці!»** (At the stop!)
-- Передавай гроші водію через інших пасажирів.
-- Особистий простір не існує — готуйся до тісноти!
+### The "Marshrutka" Phenomenon
 
-**How marshrutky work:**
+The **маршрутка** (minibus) is a unique experience. Unlike big buses, they stop on demand in some places, but mostly at designated stops (**на зупинці**).
+*   **To pay:** You pass cash to the driver (`Передайте, будь ласка` - Pass it on, please).
+*   **To stop:** You shout `На зупинці, будь ласка!` (At the stop, please!).
 
-- Shout **«На зупинці!»** when you want to get off.
-- Pass money forward to the driver through other passengers.
-- Squeeze into impossibly small spaces — personal space doesn't exist here.
+### Lviv Coffee Culture
 
-Маршрутки — це культурний досвід. Туристи їх уникають. Українці обожнюють маршрутки. Це популярний транспорт.
+In Lviv, you often navigate by the smell of coffee. "Meet me at the coffee mine" (**Копальня кави**) is a real direction! Coffee culture is huge, and cafes are common meeting points ("Зустрінемось у кафе" - Let's meet at the cafe).
 
-> 🎭 **Folklore/Traditions Corner: Lviv's Coffee Culture**
->
-> Lviv isn't just a navigation challenge — it's Ukraine's coffee capital. Legend says the first coffeehouse in Eastern Europe opened in Lviv in 1574! When navigating Lviv's winding streets, locals use **кав'ярні** (coffeehouses) as landmarks:
->
-> **«Де музей?»**
-> **«Біля кав'ярні 'Львівська копальня кави,' потім направо.»**
->
-> Coffee isn't just a drink — it's a navigational beacon.
+### How Ukrainians Give Directions
 
----
+Ukrainians tend to use landmarks rather than street names when giving directions. Instead of "Turn left on Hrushevskoho Street", you are more likely to hear **"Поверніть ліворуч біля аптеки"** (Turn left near the pharmacy). Common landmarks include churches, pharmacies, metro stations, and well-known cafes.
 
-# Підсумок
+Another thing to notice: distances are often described in time, not meters. **"Це п'ять хвилин пішки"** (It's five minutes on foot) is much more common than giving exact distances.
 
-You now have the vocabulary to:
+# Summary
 
-- **Give and follow directions** using прямо, наліво, направо, назад
-- **Describe locations** with prepositions (біля, навпроти, за, перед)
-- **Ask key questions**: «Де...?», «Як дістатися до...?», «Це далеко?»
-- **Name urban features** (вулиця, площа, міст, зупинка, станція)
-- **Discuss transportation** using memorized phrases (на автобусі, пішки, метро)
+In this module, you learned to navigate Ukrainian cities. Here is what you can now do:
 
-**Key Phrases to Remember:**
+**Directions:** You know the four key directional words — **прямо** (straight), **ліворуч** (left), **праворуч** (right), and **назад** (back).
 
-- **Де метро?** — Where is the metro?
-- **Як дістатися до...?** — How to get to...?
-- **Прямо, потім наліво.** — Straight, then left.
-- **Це далеко?** — Is it far?
-- **Біля світлофора.** — Near the traffic light.
+**Infrastructure:** You can recognize city landmarks — **зупинка** (stop), **станція** (station), **аптека** (pharmacy), **пошта** (post office), **світлофор** (traffic light), and **перехрестя** (intersection).
 
-Next module: **Genitive Case I — Absence and Negation** (немає, without). You'll learn to say «I don't have» and «There is no...» — essential for shopping, restaurants, and everyday problem-solving!
+**Prepositions:** You can describe where things are using **біля** (near) and **навпроти** (opposite) with fixed phrases.
 
----
+**Asking for directions:** You can use **Де...?** (Where is...?) and **Як дістатися до...?** (How do I get to...?) to find your way.
 
-## Need More Practice?
-
-> [!resources] External Review
->
-> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)
+**Next up:** In Module 16, you will learn the Genitive case — the grammar behind those "fixed phrases" like **біля парку** and **навпроти пошти**. You will finally understand why the words change!

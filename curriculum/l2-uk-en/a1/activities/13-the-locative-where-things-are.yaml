@@ -1,17 +1,17 @@
 - type: quiz
   title: Where Is It?
   items:
-  - question: Де ти? — Я ___ кафе.
+  - question: Де ти живеш? — Я живу ___ Києві.
     options:
-    - text: на
-      correct: false
     - text: в
       correct: true
     - text: у
       correct: false
+    - text: на
+      correct: false
     - text: біля
       correct: false
-    explanation: Enclosed space (café) uses в.
+    explanation: Previous word ends in a vowel, so we use в.
   - question: Де книга? — Вона ___ столі.
     options:
     - text: на
@@ -23,17 +23,17 @@
     - text: під
       correct: false
     explanation: Tables are surfaces, so we use на.
-  - question: Де ти живеш? — Я живу ___ Києві.
+  - question: Де ти? — Я ___ кафе.
     options:
     - text: в
-      correct: false
-    - text: у
       correct: true
     - text: на
       correct: false
-    - text: при
+    - text: у
       correct: false
-    explanation: Kyiv has consonant cluster, so у is used.
+    - text: біля
+      correct: false
+    explanation: Enclosed space (café) uses в.
   - question: Де твоя робота? — ___ центрі.
     options:
     - text: У
@@ -59,14 +59,14 @@
   - question: How do you say accurately "I am in the city"?
     options:
     - text: Я у місті
-      correct: true
+      correct: false
     - text: Я на місті
       correct: false
     - text: Я в місті
-      correct: false
+      correct: true
     - text: вони
       correct: false
-    explanation: City is an enclosed space, locative -і.
+    explanation: After 'Я' (vowel), use 'в'.
   - question: How can you say "She is at the stop"?
     options:
     - text: Вона на зупинці
@@ -210,6 +210,7 @@
     - кухні
     - кухню
     - кухні
+    explanation: The word 'кухня' typically uses 'на'.
   - sentence: Студенти в ___.
     answer: бібліотеці
     options:

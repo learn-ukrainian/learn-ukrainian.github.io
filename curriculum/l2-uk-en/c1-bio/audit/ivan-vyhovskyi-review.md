@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M24 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:36
+**Generated:** 2026-02-08 23:49:54
 
 ## Configuration
 **Type:** C1-biography
@@ -65,10 +65,10 @@
 | visual | 5 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

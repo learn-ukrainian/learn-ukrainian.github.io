@@ -17,6 +17,53 @@ tags:
 - нечуй-левицький
 - проза
 - 19-століття
+content_outline:
+  - section: "Початок шляху: Стеблів і Семінарія"
+    words: 500
+    points:
+      - "Childhood and family"
+      - "Seminary education paradox"
+  - section: "Чужі міста: Життя вчителя"
+    words: 700
+    points:
+      - "Life in Poland/Moldova"
+      - "Writing as escape"
+  - section: "Маніфест Реалізму: Дзеркало Нації"
+    words: 300
+    points:
+      - "Principles of Realism"
+      - "Literature as mirror"
+  - section: "Артист Зору: Живопис Словом"
+    words: 550
+    points:
+      - "Visual style analysis"
+      - "Landscape description"
+  - section: "Анатомія Конфлікту: Кайдашева Сім'я"
+    words: 650
+    points:
+      - "Character analysis"
+      - "Nature of conflict"
+  - section: "Етнографія як Наука"
+    words: 350
+    points:
+      - "Rituals and weddings"
+      - "Beliefs"
+  - section: "Мовна Війна: Криве Дзеркало"
+    words: 550
+    points:
+      - "Conflict with Galicians"
+      - "Language purity"
+  - section: "Київський Самітник"
+    words: 250
+    points:
+      - "Kyiv life"
+      - "Daily routine"
+  - section: "Спадщина і Вічність"
+    words: 400
+    points:
+      - "Modern relevance"
+      - "Memes and serials"
 word_target: 4500
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-08'
+  version: '2.0'

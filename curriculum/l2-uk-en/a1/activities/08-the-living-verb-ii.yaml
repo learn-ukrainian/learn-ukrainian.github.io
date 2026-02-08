@@ -44,7 +44,7 @@
       correct: false
     - text: Adverb
       correct: false
-    explanation: майже всі дієслова на -ати — це I дієвідміна.
+    explanation: працювати ends in -увати (-ати pattern), so it's First Conjugation.
   - question: To which class does **бачити** belong?
     options:
     - text: Second Conjugation (-ити)
@@ -66,7 +66,7 @@
       correct: false
     - text: Pronoun
       correct: false
-    explanation: знати to First Conjugation.
+    explanation: знати ends in -ати, so it belongs to First Conjugation.
   - question: To which class does **ходити** belong?
     options:
     - text: Second Conjugation (-ити)
@@ -88,7 +88,7 @@
       correct: false
     - text: Noun
       correct: false
-    explanation: писати is First Conjugation (change s -> sh).
+    explanation: писати ends in -ати, so it's First Conjugation (я пишу, ти пишеш).
   - question: To which class does **робити** belong?
     options:
     - text: Second Conjugation (-ити)
@@ -190,13 +190,13 @@
     - сидиш
     - сидить
     - сидимо
-  - sentence: Ви ___ фільм?
-    answer: дивитеся
+  - sentence: Ви ___ каву?
+    answer: п'єте
     options:
-    - дивлюся
-    - дивишся
-    - дивиться
-    - дивитеся
+    - п'ю
+    - п'єш
+    - п'є
+    - п'єте
   - sentence: Вони ___ в університет.
     answer: ходять
     options:
@@ -204,13 +204,13 @@
     - ходиш
     - ходить
     - ходять
-  - sentence: Він ___ фільм.
-    answer: дивиться
+  - sentence: Він ___ маму.
+    answer: бачить
     options:
-    - дивлюся
-    - дивишся
-    - дивиться
-    - дивляться
+    - бачу
+    - бачиш
+    - бачить
+    - бачать
   - sentence: Я ___ Україну.
     answer: люблю
     options:
@@ -239,8 +239,8 @@
     - хочеш
     - хоче
     - хочемо
-  - sentence: Вони ___.
-    answer: сплять
+  - sentence: Вона ___.
+    answer: спить
     options:
     - сплю
     - спиш
@@ -419,20 +419,20 @@
     - любиш
     - любить
     - люблять
-  - sentence: 'Петро: Ти ___ фільм сьогодні?'
-    answer: дивишся
+  - sentence: 'Петро: Ти ___ цей фільм?'
+    answer: бачиш
     options:
-    - дивлюся
-    - дивишся
-    - дивиться
-    - дивляться
-  - sentence: 'Марія: Так, я ___ фільм!'
-    answer: дивлюся
+    - бачу
+    - бачиш
+    - бачить
+    - бачать
+  - sentence: 'Марія: Так, я ___ цей фільм!'
+    answer: бачу
     options:
-    - дивлюся
-    - дивишся
-    - дивиться
-    - дивляться
+    - бачу
+    - бачиш
+    - бачить
+    - бачать
   instruction: Choose the correct word to fill in the blank.
 - type: quiz
   title: Choose the Right Verb
@@ -448,7 +448,7 @@
     - text: говорять
       correct: false
     explanation: я говорю = I speak
-  - question: Скажіть, чи ти часто ___ музику?
+  - question: Скажи, чи ти часто ___ музику?
     options:
     - text: слухаю
       correct: false

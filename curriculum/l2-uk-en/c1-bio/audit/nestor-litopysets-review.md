@@ -1,12 +1,12 @@
 # Audit Report: M07 — nestor-litopysets.md
-**Level:** C1-BIO | **Module:** M07 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
+**Level:** C1-BIO | **Module:** M07 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4700
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:26
+**Generated:** 2026-02-08 23:13:20
 
 ## Configuration
 **Type:** C1-biography
-**Word Target:** 4000 words
+**Word Target:** 4700 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
 **Unique Types:** ≥3 types required
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4610/4000 (raw: 4820)
+- **Words:** ⚠️ 4616/4700 (raw: 4826) (84 short)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 7/3 types
@@ -78,8 +78,8 @@
 | **Intro/Narrative** | ✅ | 86 | Included in Core |
 | **Вступ — Архітектор історичної пам'яті** | ✅ | 631 | Included in Core |
 | **Життєпис: Від послушника до диякона-вченого** | ⚪️ | 966 | Skipped |
-| **Внесок: Батько української історіографії** | ⚪️ | 1322 | Skipped |
+| **Внесок: Батько української історіографії** | ⚪️ | 1325 | Skipped |
 | **Останні роки: Політичні виклики та тиха пристань молитви** | ⚪️ | 424 | Skipped |
 | **Спадщина: Генетичний код нації та ідеологічний щит** | ⚪️ | 562 | Skipped |
-| **Порівняльний аналіз: Нестор та західноєвропейські хроністи XI–XII ст.** | ✅ | 318 | Included in Core |
-| **Підсумок** | ✅ | 301 | Included in Core |
+| **Порівняльний аналіз: Нестор та західноєвропейські хроністи XI–XII ст.** | ✅ | 319 | Included in Core |
+| **Підсумок** | ✅ | 303 | Included in Core |

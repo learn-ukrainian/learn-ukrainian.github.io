@@ -1,151 +1,155 @@
+<!-- SCOPE
+Covers: Reflexive verbs (-ся/-сь), conjugation patterns, three types (true reflexive, reciprocal, lexicalized)
+Not covered:
+  - Past tense reflexive forms → future module
+  - Imperative reflexive forms → future module
+Related: the-living-verb-ii, checkpoint-first-contact, my-daily-routine
+-->
+
 # Reflexive Verbs (-ся)
 
 ## Warm-up
 
-In English, we say «I wash **myself**» or «We meet **each other**.» Ukrainian has a superpower for this: a tiny but mighty suffix **-ся**. This little addition changes the direction of the action entirely, transforming a standard verb into a reflexive one.
+Imagine you are standing in front of a mirror. Every move you make, the reflection mimics. In English, we often use words like "myself," "yourself," or "each other" to show that an action is directed back at the person doing it. In Ukrainian, we don't need these extra words; instead, we have a tiny, powerful "tail" called a reflexive postfix: **-ся** (sia).
 
-When you add **-ся** to the end of a verb, it essentially loops the action back onto the person performing it. This is a fundamental concept in Slavic languages that allows for precise expression of daily life and social interactions.
-- **Мити** (to wash [something else, like a car or a plate]) → **Митися** (to wash [oneself]).
-- **Одягати** (to dress [someone else, like a child]) → **Одягатися** (to get dressed/dress oneself).
-- **Вчити** (to teach [someone else]) → **Вчитися** (to study/teach oneself).
+Historically, this **-ся** (sia) started its life as a separate word — **себе** (sebe), which simply means "self." Over centuries of speaking and singing, Ukrainians began to "weld" this word to the end of verbs. Today, it acts like a grammatical mirror. When you see a verb ending in **-ся** (sia), you know the action isn't going "out" to someone else; it's staying with the subject.
 
-Today, you'll learn how to talk about your daily routine, social interactions, and even your feelings using these special verbs! You'll find that these verbs are everywhere in Ukrainian, from the moment you wake up to the moment you say goodbye to a friend.
+Think about your morning routine. You wash your face, you get dressed, you look at yourself in the mirror. These are all actions directed at the "self." But it goes beyond just physical actions. We use these verbs for social interactions (meeting each other), emotions (laughing), and even your basic identity. In fact, you have already used a reflexive verb in your very first lesson! When you ask "What is this called?" (literally "How is it named?"), you are using the reflexive verb **називатися** (nazyvatysia). Without this "mirror," the sentence wouldn't make sense. In this lesson, we will learn how to attach this "tail" to our verbs and how to pronounce the unique "buzzing" sound it creates.
 
-> 💡 **Did You Know?**
+> [!tip] **Зверніть увагу!** (Pay attention!)
 >
-> **-ся** is short for **себе** (self). Historically, it was a separate word (a reflexive pronoun) that could move around in the sentence. Over many centuries, it eventually "glued" itself to the end of verbs to become a permanent suffix! This is why it always comes *after* the personal endings of the verb.
+> In English, we can say "I wash" and people assume you mean yourself. In Ukrainian, you must be precise. If you say **я мию** (ya miiu), a Ukrainian will wait for you to say *what* you are washing (the car? the dishes?). If you mean *yourself*, you must use the reflexive form: **я миюся** (ya miiusia).
+>
+> **Порівняйте** (Compare):
+> - **Я мию машину.** (Ya miiu mashynu.) — I wash the car.
+> - **Я миюся.** (Ya miiusia.) — I wash myself.
 
 ## Presentation
 
-### The Magic Suffix: -ся vs. -сь
+The most important rule for reflexive verbs in Ukrainian is that the "tail" changes its shape based on the sound that comes before it. This is a classic example of **милозвучність** (mylozvuchnist) — the Ukrainian pursuit of "euphony" or beautiful sound. We want the language to flow like a song, avoiding clusters of clashing sounds.
 
-While the concept is simple, the form of the suffix changes slightly to keep the language sounding melodic and easy to speak. The rule is based on the sound that comes immediately before the suffix:
+### The Two Shapes of the Postfix
 
-1. **-ся** (used after **consonants**): він миєть**ся**, ти вчиш**ся**. Most personal endings in Ukrainian end in a consonant, so you will see this form very often.
-2. **-сь** (used after **vowels**): я мию**сь**, ми вчимо**сь**, ви вчите**сь**. This shortens the sound and prevents a "vowel clash," making the transition smoother.
+1. **-ся** (sia): Use this form after a **consonant**.
+2. **-сь** (s): Use this form after a **vowel**.
 
-> ⚡ **Pronunciation Hack**
->
-> One of the most important things for a beginner to master is the pronunciation of the ending **-ться**. Although it looks like it should be pronounced literally, in standard Ukrainian, it sounds like a long, soft buzzing **[t͡sʲːɑ]** sound (like a very soft "ts-ts-ya"). 
-> **Сміється** (he laughs) = /smiˈjɛt͡sʲːɑ/
-> **Називається** (it is called) = /nɑzɪˈvɑjet͡sʲːɑ/
+Let's look at how the postfix attaches to both Class I (**вмиватися** — to wash oneself) and Class II (**вчитися** — to study/learn) verbs.
 
-### Conjugation Pattern
-
-Reflexive verbs are not "new" verbs to memorize from scratch. They follow the exact same First or Second Conjugation rules you have already mastered. The only difference is that you first conjugate the base verb as usual, and then tack on the appropriate reflexive suffix **-ся/-сь** at the very end.
-
-**Example: називатися (to be called / name oneself)**
-*First Conjugation (-ати pattern)*
-
-| Person | Conjugation | Ending Rule | English |
+| Person | Pronoun | вмиватися (Class I) | вчитися (Class II) |
 | :--- | :--- | :--- | :--- |
-| **Я** | називаю**сь** | (ю [vowel] + сь) | I am called |
-| **Ти** | називаєш**ся** | (еш [consonant] + ся) | You are called |
-| **Він/Вона** | називаєть**ся** | (е + ться [special rule]) | He/She/It is called |
-| **Ми** | називаємо**сь** | (мо [vowel] + сь) | We are called |
-| **Ви** | називаєте**сь** | (те [vowel] + сь) | You are called |
-| **Вони** | називають**ся** | (ють [consonant] + ся) | They are called |
+| 1st Sing. | **Я** | вмиваю**сь** | вчу**сь** |
+| 2nd Sing. | **Ти** | вмиваєш**ся** | вчиш**ся** |
+| 3rd Sing. | **Він/Вона** | вмиваєть**ся** | вчить**ся** |
+| 1st Plur. | **Ми** | вмиваємо**сь** | вчимо**сь** |
+| 2nd Plur. | **Ви** | вмиваєте**сь** | вчите**сь** |
+| 3rd Plur. | **Вони** | вмивають**ся** | вчать**ся** |
 
-### Three Types of -ся Verbs
+Did you notice the pattern? When the verb ending ends in a vowel (like **-ю**, **-мо**, **-те**), the postfix shrinks to **-сь** (s). When it ends in a consonant (like **-ш** or **-ть**), it stays as **-ся** (sia). This applies regardless of the verb class.
 
-Understanding *why* a verb is reflexive will help you remember them more easily. We can group them into three main categories:
-
-**1. True Reflexive (Action on Self)**
-These are actions you do to your own body or mind.
-- **Вмиватися** (to wash one's face/body).
-- **Одягатися** (to dress oneself).
-- **Готуватися** (to prepare oneself/get ready).
-- **Голитися** (to shave oneself).
-
-**2. Reciprocal (Action with Each Other)**
-These actions require at least two people doing something together.
-- **Зустрічатися** (to meet with someone).
-- **Вітатися** (to greet each other).
-- **Цілуватися** (to kiss each other).
-- **Знайомитися** (to get acquainted/meet for the first time).
-- «Ми зустрічаємось біля метро» = We are meeting by the metro.
-
-**3. «Just Because» (Lexicalized)**
-Some verbs in Ukrainian simply *must* have the reflexive suffix. They don't necessarily imply "self," but the verb doesn't exist without it, or its meaning changes completely.
-- **Сміятися** (to laugh).
-- **Усміхатися** (to smile).
-- **Дивитися** (to watch/look).
-- **Подобатися** (to like/be pleasing to).
-- **Боятися** (to be afraid).
-
-### Irregularities: сміятися & дивитися
-
-Even though these verbs are common, they have some quirks in their conjugation that you should watch out for.
-
-**сміятися (to laugh)**
-Despite the -яти ending, this verb follows the First Conjugation vowel pattern (-є-).
-- Я смію**сь**.
-- Ти смієш**ся**.
-- Він смієть**ся**.
-- Ми сміємо**сь**.
-- Ви смієте**сь**.
-- Вони сміють**ся**.
-
-**дивитися (to look/watch)**
-This is a standard Second Conjugation verb, but it features a **consonant mutation** in the first person singular (Я). The letter **в** changes to **вл**.
-- Я ди**вл**ю**сь** (Notice the extra **л**!).
-- Ти дивиш**ся**.
-- Він дивить**ся**.
-- Ми дивимо**сь**.
-- Ви дивите**сь**.
-- Вони дивлять**ся**.
-
-> [!important] **Usage Note: Як це називається?**
+> [!note] **Special Case: Дивитися**
 >
-> When you want to ask «What is this called?» in Ukrainian, you are literally asking «How does this name itself?». This is the most natural way to learn new vocabulary!
-> **— Як це називається?**
-> **— Це називається телефон.** (This calls itself a phone.)
-> **— Як ти називаєшся?** (What is your name? - *Informal variant of "Як тебе звати?"*)
+> Verbs ending in **-ити** (like *дивитися*, *вчитися*) drop the **-є-** and use **-ить/-ять** endings. Also, **дивитися** gets a special sound change in the "I" form: an **-л-** appears to make it smoother to say.
+>
+> - **Я дивлюсь** (Ya dyvlius) — I watch.
+> - **Ти дивишся** (Ty dyvyshsia) — You watch.
 
+### The Secret Pronunciation: The "Soft Buzz"
 
-### Mini-Dialogue 1: Meeting Up
+Here is something that catches every beginner off guard: spelling vs. pronunciation. In the 3rd person singular and plural (**вмивається**, **вмиваються**), we see the letters **-ться**. However, we **never** pronounce it as "t-sia."
 
-**Андрій:** Привіт! Як ти?
-**Олена:** Привіт! Все добре. Я **збираюся** (am getting ready) на роботу.
-**Андрій:** А я **відпочиваю**.
-**Олена:** Ти **дивишся** фільм?
-**Андрій:** Так, я **дивлюсь** комедію. Я багато **сміюсь**!
+Instead, it sounds like a long, soft "ts" sound followed by an "a": **[ц':а]** (tsya). It sounds like a gentle, prolonged buzzing or a soft hiss.
+_Example:_ **Він вмивається** (Vin vmyvaietsia) is pronounced like "vmyvaiets-tsia."
 
-**Translation:**
-— Hi! How are you?
-— Hi! All good. I'm getting ready for work.
-— And I'm resting.
-— Are you watching a movie?
-— Yes, I'm watching a comedy. I laugh a lot!
+> [!warning]
+> Be careful with spelling! Many learners try to write what they hear (**вмиваця**), but you must remember the historical **-ться** (tsia) spelling. The "ть" tells us the verb is in the 3rd person.
 
-### Mini-Dialogue 2: Morning Routine
+### Three Types of Reflexive Verbs
 
-**Мама:** Ти вже **прокинувся**? (Have you woken up? - *Past Tense preview!*)
-**Син:** Так, я **вмиваюсь**.
-**Мама:** Ти **снідаєш**?
-**Син:** Ні, я ще **одягаюсь**.
+Not all reflexive verbs work the same way. To master them, we can group them into three "flavors":
+
+**Type 1: The "True" Reflexive (Self-Directed)**
+These are actions you literally do to your own body.
+- **вмиватися** (vmyvatysia) — to wash oneself
+- **одягатися** (odiahatysia) — to dress oneself
+- **голитися** (holytysia) — to shave (oneself)
+- **повертатися** (povertatysia) — to return (oneself)
+- **зупинятися** (zupyniatysia) — to stop
+
+_Example:_ «Я швидко **одягаюсь** вранці.» (Ya shvydko odiahaius vrantsi.) — I dress myself quickly in the morning.
+
+**Type 2: The "Reciprocal" Reflexive (Mutual Action)**
+These actions require two people. You are doing it to each other.
+- **знайомитися** (znaiomytysia) — to get acquainted
+- **зустрічатися** (zustrichatysia) — to meet up
+- **вітатися** (vitatysia) — to greet each other
+- **цілуватися** (tsiluvatysia) — to kiss
+
+_Example:_ «Ми **зустрічаємось** сьогодні.» (My zustrichaiemos sohodni.) — We are meeting today.
+
+**Type 3: The "Lexicalized" Reflexive (No "Self" Meaning)**
+These verbs just "live" with the -ся tail. In English, they aren't reflexive at all, but in Ukrainian, they are incomplete without it. You cannot "laugh" someone else; you just "laugh."
+- **сміятися** (smiiatysia) — to laugh
+- **дивитися** (dyvytysia) — to watch/look
+- **вчитися** (vchytysia) — to study/learn
+- **займатися** (zaimatysia) — to engage in/do (e.g., sports)
+- **називатися** (nazyvatysia) — to be called
+- **подобатися** (podobatysia) — to be pleasing to/to like
+- **цікавитися** (tsikavytysia) — to be interested in
+
+_Example:_ «Він добре **вчиться**.» (Vin dobre vchytsia.) — He studies well.
+_Example:_ «Ми **дивимось** цікавий фільм.» (My dyvymos tsikavyi film.) — We are watching an interesting movie.
+_Example:_ «Діти весело **сміються**.» (Dity veselo smiiutsia.) — The children are laughing happily.
+
+> [!culture]
+> The verb **вчитися** (vchytysia) is very common. While **вчити** (vchyty) means "to teach" (directing the knowledge at someone else), **вчитися** means "to learn" or "to study" (directing the knowledge at yourself). It shows how Ukrainian grammar perfectly reflects the logic of the action!
+
+## Practice
+
+Let's see these verbs in action through some daily scenarios. Notice how the speakers switch between **-ся** (sia) and **-сь** (s) depending on the verb ending.
+
+### Scenario 1: A Morning Talk
+
+**Андрій:** Привіт! Ти вже **вмиваєшся** (vmyvaieshsia)?
+**Олена:** Так, я вже **вмиваюсь** (vmyvaius) і **одягаюсь** (odiahaius). А ти?
+**Андрій:** Я теж **одягаюсь** (odiahaius). Сьогодні ми **зустрічаємось** (zustrichaiemos)!
+**Олена:** Так! Тут нова студентка. Ми **знайомимось** (znaiomymos)!
+
+### Scenario 2: What Do You See?
+
+**Максим:** Що ти робиш? Ти **вчишся** (vchyshsia)?
+**Іван:** Ні, я **дивлюсь** (dyvlius) серіал. Він дуже цікавий!
+**Максим:** А я **вчусь** (vchus). Це важко, але цікаво.
+**Іван:** Добре! А потім ми **зустрічаємось** (zustrichaiemos)?
+**Максим:** Так!
+
+### Scenario 3: At School
+
+**Марія:** Як **називається** (nazyvaietsia) твоя школа?
+**Дмитро:** Вона **називається** (nazyvaietsia) «Школа номер п'ять». А твоя?
+**Марія:** Моя **називається** (nazyvaietsia) «Ліцей». Я дуже добре **вчусь** (vchus)!
+**Дмитро:** Я теж. Діти **сміються** (smiiutsia), коли вчитель жартує.
+**Марія:** А я **дивлюсь** (dyvlius) мультфільми і теж **сміюсь** (smiius)!
+
+> [!example] **Більше прикладів** (More examples)
+>
+> «Як **називається** ця вулиця?» (Yak nazyvaietsia tsia vulytsia?) — What is this street called?
+> «Чому ви **смієтесь**?» (Chomu vy smiietes?) — Why are you laughing?
+> «Вона завжди **повертається** додому.» (Vona zavzhdy povertaietsia dodomu.) — She always returns home.
+> «Мій тато **голиться** щоранку.» (Mii tato holytsia shchoranku.) — My dad shaves every morning.
+> «Ми **вітаємось** щодня.» (My vitaiemos shchodnia.) — We greet each other every day.
+
+When you are practicing, try to "feel" the direction of the action. Are you doing it to something else? No reflexive. Are you doing it to yourself, with someone else, or is it just an internal state? Use the postfix. Also, always check the letter before the postfix. If it's a vowel, "contract" it to the shorter **-сь** (s). It makes you sound much more like a native speaker!
 
 ## Cultural Insight
 
-### The «Smile» Culture
+The Ukrainian reflexive postfix is more than just a grammar rule; it is a musical element. The long, soft **-ться** [ц':а] sound in the 3rd person is one of the most distinctive "colors" in the Ukrainian phonetic palette. It gives the language a characteristic "softness" and "buzz" that sounds very different from the sharp endings of Russian or the moving particles of Polish.
 
-In some cultures, smiling at strangers is normal. In Ukraine, a smile (**усмішка**) is often reserved for friends and genuine moments. If a stranger doesn't smile at you on the street, it's not rudeness—it's neutrality. But when Ukrainians **сміються** (laugh) with you, it's 100% sincere!
-
-# Підсумок
-
-You've unlocked the **-ся** verbs!
-
-- **Formula**: Conjugate verb + add **-ся** (consonants) or **-сь** (vowels).
-- **Meaning**: Action on self (одягатися), together (зустрічатися), or state (сміятися).
-- **Pronunciation**: -ться = [ц':а].
-
-**Next up:** Module 10 - Checkpoint! You'll review everything from M01-M09.
+In the history of our language, the decision to "glue" the reflexive marker to the verb was a step toward a more "synthetic" structure. This means Ukrainian prefers to pack a lot of information into a single word. Instead of saying "I am washing myself" (four words), we say **вмиваюся** (one word). This compactness allows for a very flexible word order, as the verb itself already tells the whole story: who is doing the action, when it is happening, and where it is directed. Using these verbs correctly is your first step toward understanding the deep, elegant logic of the Ukrainian sentence.
 
 ---
 
-## Need More Practice?
+# Підсумок
 
-> [!resources] External Review
->
-> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)
+In this lesson, we explored the "grammatical mirror" of the Ukrainian language: reflexive verbs ending in **-ся** (sia). We learned that this postfix changes to **-сь** (s) after vowels for better flow. We categorized these verbs into true reflexive (self-actions), reciprocal (mutual actions), and lexicalized (verbs that always require the tail). Most importantly, we mastered the unique "soft buzzing" pronunciation of **-ться** [ц':а]. By using verbs like **вмиватися**, **вчитися**, and **називатися**, you can now describe your daily routine and social interactions with accuracy and elegance.
+
+---

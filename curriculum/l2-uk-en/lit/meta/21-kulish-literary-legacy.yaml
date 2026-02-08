@@ -1,0 +1,83 @@
+---
+module: lit-21
+title: "Panteleimon Kulish: The European on the Khutir"
+level: LIT
+phase: writers
+focus: biography
+slug: kulish-literary-legacy
+version: '1.0'
+id: lit-21
+naturalness:
+  score: 10
+  status: PASS
+duration: 120
+transliteration: none
+vocabulary_hints:
+  required:
+    - "Use 'Nation-builder' (націєтворець) prominently."
+    - "Focus on 'Khutir' (хутір) as a philosophical concept."
+activity_hints:
+  - type: critical-analysis
+    focus: "Encourage personal reflection on identity."
+  - type: essay-response
+    focus: "Modern application of Khutir philosophy."
+tags:
+- literature
+- biography
+- kulish
+- romanticism
+- translation
+word_target: 4500
+sources:
+  - name: "Hrytsak, Y. 'Outline of History of Ukraine'"
+    type: reference
+    url: "https://history.org.ua/LiberUA/978-966-8135-71-8/978-966-8135-71-8.pdf"
+  - name: "Kulish, P. 'Chorna Rada' (Original Text)"
+    type: primary
+    url: "http://litopys.org.ua/kulish/kul.htm"
+  - name: "Shevchenko, T. 'Letters'"
+    type: primary
+    url: "http://litopys.org.ua/shevchenko/shev.htm"
+  - name: "Subtelny, O. 'Ukraine: A History'"
+    type: reference
+    url: "http://litopys.org.ua/subtelny/subt.htm"
+  - name: "Plokhy, S. 'The Gates of Europe'"
+    type: reference
+    url: "https://plokhy.com/books"
+build:
+  last_modified: '2026-02-08'
+content_outline:
+  - section: "Introduction: The Man of Many Faces"
+    words: 400
+    points:
+      - "Biography Overview"
+      - "The Dual Nature"
+  - section: "The \"Kulishivka\" Revolution"
+    words: 900
+    points:
+      - "Phonetic Principle"
+      - "Visual Identity"
+      - "Ems Ukaz Ban"
+  - section: "Window to Europe: Translations"
+    words: 900
+    points:
+      - "Shakespeare Challenge"
+      - "Bible Translation"
+      - "Byron Influence"
+  - section: "The \"Khutir\" Philosopher"
+    words: 900
+    points:
+      - "Economic Independence"
+      - "Cultural Roots"
+      - "Jeffersonian Ideal"
+  - section: "Kulish and Shevchenko"
+    words: 1000
+    points:
+      - "Heart vs Mind"
+      - "Cossack Myth Deconstruction"
+      - "Synthesis"
+  - section: "Legacy"
+    words: 400
+    points:
+      - "The Architect of Modern Nation"
+      - "Executed Renaissance Heirs"

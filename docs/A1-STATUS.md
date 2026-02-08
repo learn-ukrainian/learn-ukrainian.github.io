@@ -1,6 +1,6 @@
 # A1 Module Status
 
-**Generated:** 2026-01-30 21:19:46
+**Generated:** 2026-02-09 00:27:26
 **Total Modules:** 44
 **Status:** 44 passing, 0 failing, 0 stubs, 0 errors
 
@@ -14,46 +14,46 @@
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-the-cyrillic-code-i | ✅ PASS | 958/300 | - |
-| 002 | 02-the-cyrillic-code-ii | ✅ PASS | 1463/300 | - |
-| 003 | 03-the-gender-code | ✅ PASS | 1045/300 | - |
-| 004 | 04-this-is-i-am | ✅ PASS | 1418/300 | - |
-| 005 | 05-my-world-objects | ✅ PASS | 1603/300 | - |
-| 006 | 06-the-living-verb-i | ✅ PASS | 1407/500 | - |
-| 007 | 07-questions-and-negation | ✅ PASS | 1041/500 | - |
-| 008 | 08-the-living-verb-ii | ✅ PASS | 972/500 | - |
-| 009 | 09-reflexive-verbs | ✅ PASS | 977/750 | - |
-| 010 | 10-checkpoint-first-contact | ✅ PASS | 1224/875 | - |
-| 011 | 11-the-accusative-i-things | ✅ PASS | 921/750 | - |
-| 012 | 12-the-accusative-ii-people | ✅ PASS | 1342/750 | - |
-| 013 | 13-the-locative-where-things-are | ✅ PASS | 1396/750 | - |
-| 014 | 14-mine-and-yours | ✅ PASS | 1430/750 | - |
-| 015 | 15-around-the-city | ✅ PASS | 1839/750 | - |
-| 016 | 16-the-genitive-i-absence | ✅ PASS | 1091/750 | - |
-| 017 | 17-numbers-and-money | ✅ PASS | 1133/750 | - |
+| 001 | 01-the-cyrillic-code-i | ✅ PASS | 1135/1019 | - |
+| 002 | 02-the-cyrillic-code-ii | ✅ PASS | 1628/1531 | - |
+| 003 | 03-the-gender-code | ✅ PASS | 1050/934 | - |
+| 004 | 04-this-is-i-am | ✅ PASS | 1467/1448 | - |
+| 005 | 05-my-world-objects | ✅ PASS | 1660/1412 | - |
+| 006 | 06-the-living-verb-i | ✅ PASS | 1469/1210 | - |
+| 007 | 07-questions-and-negation | ✅ PASS | 1163/1131 | - |
+| 008 | 08-the-living-verb-ii | ✅ PASS | 994/972 | - |
+| 009 | 09-reflexive-verbs | ✅ PASS | 1496/750 | - |
+| 010 | 10-checkpoint-first-contact | ✅ PASS | 1276/875 | - |
+| 011 | 11-the-accusative-i-things | ✅ PASS | 1004/855 | - |
+| 012 | 12-the-accusative-ii-people | ✅ PASS | 1479/1374 | - |
+| 013 | 13-the-locative-where-things-are | ✅ PASS | 2071/1331 | - |
+| 014 | 14-mine-and-yours | ✅ PASS | 1758/1307 | - |
+| 015 | 15-around-the-city | ✅ PASS | 1922/1602 | - |
+| 016 | 16-the-genitive-i-absence | ✅ PASS | 1151/1038 | - |
+| 017 | 17-numbers-and-money | ✅ PASS | 1154/1091 | - |
 | 018 | 18-food-and-shopping | ✅ PASS | 810/750 | - |
-| 019 | 19-at-the-cafe | ✅ PASS | 1165/750 | - |
+| 019 | 19-at-the-cafe | ✅ PASS | 1165/1075 | - |
 | 020 | 20-checkpoint-navigation | ✅ PASS | 1439/1073 | - |
-| 021 | 21-yesterday-past-tense | ✅ PASS | 1121/750 | - |
-| 022 | 22-tomorrow-future-tense | ✅ PASS | 1217/1082 | - |
-| 023 | 23-what-time-is-it | ✅ PASS | 1073/750 | - |
-| 024 | 24-can-must-want-modals | ✅ PASS | 962/1049 | - |
-| 025 | 25-my-daily-routine | ✅ PASS | 934/750 | - |
-| 026 | 26-describing-things-adjectives | ✅ PASS | 985/853 | - |
-| 027 | 27-colors-and-clothing | ✅ PASS | 1158/750 | - |
+| 021 | 21-yesterday-past-tense | ✅ PASS | 1134/1092 | - |
+| 022 | 22-tomorrow-future-tense | ✅ PASS | 1280/1082 | - |
+| 023 | 23-what-time-is-it | ✅ PASS | 1073/1064 | - |
+| 024 | 24-can-must-want-modals | ✅ PASS | 1183/1049 | - |
+| 025 | 25-my-daily-routine | ✅ PASS | 1036/750 | - |
+| 026 | 26-describing-things-adjectives | ✅ PASS | 1013/853 | - |
+| 027 | 27-colors-and-clothing | ✅ PASS | 1192/750 | - |
 | 028 | 28-description-adverbs | ✅ PASS | 1053/750 | - |
 | 029 | 29-weather-and-nature | ✅ PASS | 927/869 | - |
-| 030 | 30-prepositions-iii | ✅ PASS | 1121/936 | - |
+| 030 | 30-prepositions-iii | ✅ PASS | 1154/936 | - |
 | 031 | 31-body-and-health | ✅ PASS | 904/820 | - |
-| 032 | 32-my-family | ✅ PASS | 958/916 | - |
+| 032 | 32-my-family | ✅ PASS | 1069/916 | - |
 | 033 | 33-holidays-and-traditions | ✅ PASS | 892/750 | - |
 | 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/962 | - |
-| 035 | 35-at-the-cafe-practical | ✅ PASS | 908/750 | - |
-| 036 | 36-at-the-restaurant | ✅ PASS | 808/750 | - |
-| 037 | 37-at-the-market | ✅ PASS | 812/750 | - |
-| 038 | 38-at-the-store | ✅ PASS | 754/750 | - |
-| 039 | 39-buying-tickets | ✅ PASS | 769/750 | - |
-| 040 | 40-taking-transport | ✅ PASS | 820/750 | - |
+| 035 | 35-at-the-cafe-practical | ✅ PASS | 908/825 | - |
+| 036 | 36-at-the-restaurant | ✅ PASS | 1117/750 | - |
+| 037 | 37-at-the-market | ✅ PASS | 812/793 | - |
+| 038 | 38-at-the-store | ✅ PASS | 836/750 | - |
+| 039 | 39-buying-tickets | ✅ PASS | 770/750 | - |
+| 040 | 40-taking-transport | ✅ PASS | 827/750 | - |
 | 041 | 41-phone-basics | ✅ PASS | 813/750 | - |
 | 042 | 42-emergencies | ✅ PASS | 798/750 | - |
 | 043 | 43-combined-practice | ✅ PASS | 1101/750 | - |

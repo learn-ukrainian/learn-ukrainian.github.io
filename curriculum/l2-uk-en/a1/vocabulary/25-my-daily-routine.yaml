@@ -3,6 +3,14 @@ module: 25-my-daily-routine
 level: A1
 version: '2.0'
 items:
+- lemma: вмиватися
+  ipa: /vmɪˈvɑtɪsʲɑ/
+  translation: to wash oneself
+  pos: verb
+- lemma: вечеряти
+  ipa: /vɛt͡ʃˈɛrjɑtɪ/
+  translation: to have dinner
+  pos: verb
 - lemma: голитися
   ipa: /ɦɔlˈɪtɪsja/
   translation: to shave (oneself)
@@ -15,15 +23,43 @@ items:
   ipa: /zˈubɪ/
   translation: teeth
   pos: noun
+- lemma: лягати
+  ipa: /lʲaɦˈatɪ/
+  translation: to lie down
+  pos: verb
+- lemma: обідати
+  ipa: /ɔbˈidatɪ/
+  translation: to have lunch
+  pos: verb
+- lemma: одягатися
+  ipa: /ɔdʲaɦˈatɪsʲa/
+  translation: to get dressed
+  pos: verb
 - lemma: опівдні
   ipa: /ɔpˈiʋdni/
   translation: at noon
   pos: adv
+- lemma: повертатися
+  ipa: /pɔvɛrtˈatɪsʲa/
+  translation: to return
+  pos: verb
+- lemma: прокидатися
+  ipa: /prɔkɪdˈatɪsʲa/
+  translation: to wake up
+  pos: verb
 - lemma: розпорядок
   ipa: /rɔzpɔrˈjadɔk/
   translation: routine, order
   pos: noun
   gender: m
+- lemma: снідати
+  ipa: /snˈidatɪ/
+  translation: to have breakfast
+  pos: verb
+- lemma: спати
+  ipa: /spˈatɪ/
+  translation: to sleep
+  pos: verb
 - lemma: чистити
   ipa: /t͡ʃˈɪstɪtɪ/
   translation: to clean, to brush

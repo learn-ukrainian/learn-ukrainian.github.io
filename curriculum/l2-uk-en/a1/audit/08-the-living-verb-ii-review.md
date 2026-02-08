@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 972
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:16:27
+**Generated:** 2026-02-08 21:24:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,31 +37,28 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 976/972 (raw: 1341)
+- **Words:** ✅ 994/972 (raw: 1391)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 2/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 21.9% (target 15-35% (M08))
+- **Immersion:** 🇺🇦 21.8% (target 15-35% (M08))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 94 | Included in Core |
-| **Presentation** | ✅ | 285 | Included in Core |
+| **Presentation** | ✅ | 303 | Included in Core |
 | **Practice** | ⚪️ | 265 | Skipped |
 | **Production** | ➖ | 54 | Excluded Type |
 | **Cultural Insight** | ✅ | 185 | Included in Core |

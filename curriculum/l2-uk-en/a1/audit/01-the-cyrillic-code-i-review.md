@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1019
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 15:52:51
+**Generated:** 2026-02-08 22:59:30
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,33 +37,30 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ⚠️ 958/1019 (raw: 1327) (61 short)
+- **Words:** ✅ 1135/1019 (raw: 1507)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 31/1
+- **Vocab:** ✅ 41/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 7.1% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 6.3% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 109 | Included in Core |
-| **Presentation** | ✅ | 351 | Included in Core |
-| **Practice** | ⚪️ | 134 | Skipped |
-| **Cultural Insight** | ✅ | 155 | Included in Core |
+| **Presentation** | ✅ | 354 | Included in Core |
+| **Practice** | ⚪️ | 278 | Skipped |
+| **Cultural Insight** | ✅ | 185 | Included in Core |
 | **Production** | ➖ | 68 | Excluded Type |
 | **Підсумок** | ✅ | 122 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

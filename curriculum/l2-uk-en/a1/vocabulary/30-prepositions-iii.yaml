@@ -1,28 +1,60 @@
----
 module: 30-prepositions-iii
 level: A1
 version: '2.0'
 items:
+- lemma: де
+  ipa: /dɛ/
+  translation: where (location)
+  pos: adv
+- lemma: куди
+  ipa: /kʊˈdɪ/
+  translation: where to (direction)
+  pos: adv
+- lemma: звідки
+  ipa: /zʋˈidkɪ/
+  translation: where from (origin)
+  pos: adv
+- lemma: в
+  ipa: /w/
+  translation: in, to (place)
+  pos: prep
+- lemma: на
+  ipa: /nɑ/
+  translation: on, to (place)
+  pos: prep
+- lemma: до
+  ipa: /dɔ/
+  translation: to (person/limit)
+  pos: prep
+- lemma: з
+  ipa: /z/
+  translation: from (place)
+  pos: prep
+- lemma: від
+  ipa: /ʋid/
+  translation: from (person)
+  pos: prep
+- lemma: прямо
+  ipa: /prˈjɑmɔ/
+  translation: straight
+  pos: adv
 - lemma: ліворуч
-  ipa: /liʋˈɔrut͡ʃ/
+  ipa: /lʲiʋˈɔrut͡ʃ/
   translation: to the left
   pos: adv
-- lemma: молодка
-  ipa: /mɔlˈɔdka/
-  translation: young woman (archaic)
-  pos: noun
-  gender: f
-- lemma: польща
-  ipa: /pˈɔlʲʃt͡ʃa/
-  translation: Poland
-  pos: noun
-  gender: f
-- lemma: супер
-  ipa: /sˈupɛr/
-  translation: super!
+- lemma: праворуч
+  ipa: /prɑʋˈɔrut͡ʃ/
+  translation: to the right
   pos: adv
-- lemma: татко
-  ipa: /tˈatkɔ/
-  translation: daddy
-  pos: noun
-  gender: m
+- lemma: навпроти
+  ipa: /nɑʋprˈɔtɪ/
+  translation: opposite
+  pos: prep
+- lemma: близько
+  ipa: /blˈɪzkɔ/
+  translation: near, close
+  pos: adv
+- lemma: далеко
+  ipa: /dɑlˈɛkɔ/
+  translation: far
+  pos: adv

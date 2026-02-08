@@ -2,10 +2,10 @@
 module: lit-22
 level: LIT
 slug: black-council-history
-version: '1.0'
+version: '2.0'
 id: lit-22
 naturalness:
-  score: 9
+  score: 10
   status: PASS
 duration: 120
 transliteration: none
@@ -14,6 +14,68 @@ tags:
 - ruin
 - hetmanate
 - kulish
+- politics
 word_target: 4500
+content_outline:
+  - section: "1. Introduction: The Shadow of 1663"
+    points:
+      - "The start of the Ruin period"
+      - "Kulish's motivation for writing"
+      - "Ochlocracy defined"
+    words: 300
+  - section: "2. Historical Context: The Anatomy of Ruin"
+    points:
+      - "Death of Khmelnytsky"
+      - "Social divisions (Starshyna vs. Sich vs. Peasants)"
+      - "Geopolitical split (Left vs. Right Bank)"
+    words: 400
+  - section: "3. The Contenders: Three Visions of Ukraine"
+    points:
+      - "Somko: The Aristocrat"
+      - "Zolotarenko: The Opportunist"
+      - "Briukhovetsky: The Populist"
+    words: 600
+  - section: "4. The Black Council: Ochlocracy in Action"
+    points:
+      - "The events at Nizhyn"
+      - "Manipulation of the mob"
+      - "The role of alcohol and demagoguery"
+    words: 600
+  - section: "5. The Role of Moscow: Divide et Impera"
+    points:
+      - "Strategic support for the weaker candidate"
+      - "Prince Gagin's interference"
+      - "Betrayal of Somko"
+    words: 400
+  - section: "6. The Aftermath: Execution & Submission"
+    points:
+      - "Execution of Somko and Zolotarenko"
+      - "Moscow Articles 1665"
+      - "Loss of autonomy"
+    words: 500
+  - section: "7. Social Analysis: Why Populism Won?"
+    points:
+      - "Paternalism and 'Good Tsar' myth"
+      - "Social envy of the elite"
+      - "Short-term thinking vs strategic goals"
+    words: 500
+  - section: "8. Literary Legacy: Kulish's Interpretation"
+    points:
+      - "The novel as a warning"
+      - "Archetypes: Shram, Kyrylo Tur, Cherevan"
+      - "The tragedy of disunity"
+    words: 400
+  - section: "9. Modern Resonance: Lessons for Democracy"
+    points:
+      - "Populism in modern politics"
+      - "The cost of selling votes"
+      - "Need for responsible elite"
+    words: 400
+  - section: "Summary"
+    points:
+      - "Recap of key lessons"
+      - "Final thesis on national unity"
+      - "Call to action"
+    words: 200
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-08'

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 875
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:19:51
+**Generated:** 2026-02-08 22:21:08
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -34,41 +34,38 @@
 
 **Summary:**
 - Total activities: 11 (target: 8-12) ✅
-- Unique types: 7 (minimum: 4) ✅
+- Unique types: 6 (minimum: 4) ✅
 - Priority types used: 3/3 (fill-in, match-up, quiz) ✅
 - Required types used: 1/1 (quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1234/875 (raw: 1498)
+- **Words:** ✅ 1276/875 (raw: 1539)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 10
-- **Unique_types:** ✅ 7/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/2
+- **Engagement:** ✅ 4/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 7/1
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.7% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 25.2% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Overview** | ⚪️ | 158 | Skipped |
-| **Skill 1: Reading Cyrillic** | ⚪️ | 0 | Skipped (using YAML) |
-| **Skill 2: Identifying Gender** | ⚪️ | 162 | Skipped |
-| **Skill 3: Conjugating Verbs** | ⚪️ | 276 | Skipped |
-| **Skill 4: Asking Questions** | ⚪️ | 185 | Skipped |
-| **Skill 5: Ordering Food** | ⚪️ | 191 | Skipped |
-| **Integration Challenge** | ⚪️ | 123 | Skipped |
+| **Skill 1: Читання кирилиці** | ✅ | 96 | Included in Core |
+| **Skill 2: Визначення роду** | ⚪️ | 190 | Skipped |
+| **Skill 3: Дієвідміна** | ⚪️ | 275 | Skipped |
+| **Skill 4: Питальні речення** | ⚪️ | 200 | Skipped |
+| **Skill 5: Замовлення їжі** | ⚪️ | 191 | Skipped |
+| **Integration Task** | ⚪️ | 123 | Skipped |
 | **Підсумок** | ✅ | 22 | Included in Core |
 | **Need More Practice?** | ⚪️ | 21 | Skipped |

@@ -196,17 +196,17 @@
     - text: meyтро
       correct: false
     explanation: All True Friends except Р (which is R)
-  - question: Which word means "tourist"?
+  - question: Which word means "passport"?
     options:
-    - text: турист
+    - text: паспорт
       correct: true
-    - text: тупист
+    - text: паспопт
       correct: false
-    - text: тунист
+    - text: паснорт
       correct: false
-    - text: турісе
+    - text: паспорк
       correct: false
-    explanation: турист = tourist (Р is R sound)
+    explanation: паспорт = passport (Р is R sound, not P)
   - question: Which word means "telephone"?
     options:
     - text: телефон
@@ -215,7 +215,7 @@
       correct: false
     - text: телефоп
       correct: false
-    - text: тєлєфон
+    - text: телефом
       correct: false
     explanation: телефон = telephone
   instruction: Choose the correct answer.
@@ -296,7 +296,7 @@
     options:
     - С
     - З
-    - Ц
+    - Т
     - Х
   - sentence: ___арк
     answer: П
@@ -319,13 +319,13 @@
     - м
     - р
     - л
-  - sentence: ___імон
-    answer: Л
+  - sentence: ___ото
+    answer: Ф
     options:
-    - Л
+    - Ф
     - П
     - Р
-    - Н
+    - Б
   - sentence: ___октор
     answer: Д
     options:
@@ -367,14 +367,14 @@
     answer: радіо
   - scrambled: ф о т о
     answer: фото
-  - scrambled: п і ц а
-    answer: піца
+  - scrambled: т о с т
+    answer: тост
   - scrambled: с а л а т
     answer: салат
   - scrambled: т а к с і
     answer: таксі
-  - scrambled: м у з и к а
-    answer: музика
+  - scrambled: м а с к а
+    answer: маска
   instruction: Arrange the letters in the correct order.
 - type: anagram
   title: International Words
@@ -399,8 +399,8 @@
     answer: какао
   - scrambled: і н т е р н е т
     answer: інтернет
-  - scrambled: с т у д е н т
-    answer: студент
-  - scrambled: т у р и с т
-    answer: турист
+  - scrambled: т е л е ф о н
+    answer: телефон
+  - scrambled: д о к т о р
+    answer: доктор
   instruction: Arrange the letters in the correct order.

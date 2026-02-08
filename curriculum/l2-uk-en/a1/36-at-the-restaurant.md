@@ -1,3 +1,87 @@
+---
+module: a1-36
+level: A1
+slug: at-the-restaurant
+version: '2.0'
+title: At the Restaurant
+subtitle: Dining Out in Ukraine
+content_outline:
+- section: Warm-up
+  words: 124
+  points:
+  - Структура українського меню (перше, друге, десерт)
+  - Етикет у ресторані
+- section: Presentation
+  words: 329
+  points:
+  - Резервація (Я хочу замовити столик на...)
+  - Отримання столика (Столик на двох, будь ласка)
+  - Читання меню та запитання (Що таке...? / З чого це?)
+  - Замовлення страв (Я буду перше... і на друге...)
+  - Особливі потреби (Без м'яса / Без глютену)
+  - Рахунок та чайові (Скільки з мене?)
+- section: Practice
+  words: 160
+  points:
+  - Діалог 1: Замовлення повної вечері
+  - Діалог 2: Скарга на страву (ввічливо)
+  - Діалог 3: Розподіл рахунку між друзями
+- section: "Warm-up 2"
+  words: 137
+  points:
+  - Наратив про вечерю в українському ресторані
+  - Популярні страви та культурний контекст
+word_target: 750
+vocabulary_hints:
+  required:
+  - столик (table)
+  - замовити (to order)
+  - офіціант (waiter)
+  - меню (menu)
+  - страва (dish)
+  - рахунок (bill)
+  - перше (first course)
+  - друге (main course)
+  recommended:
+  - десерт (dessert)
+  - напій (drink)
+  - гарнір (side dish)
+  - порція (portion)
+  - чайові (tip)
+  - резервація (reservation)
+activity_hints:
+- type: fill-in
+  focus: Full restaurant experience
+  items: 12
+- type: fill-in
+  focus: Waiter and customer
+  items: 6
+- type: match-up
+  focus: Menu item names
+  items: 20
+- type: quiz
+  focus: Restaurant conversations
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-35 (At the Café Practical)
+connects_to:
+- a1-37 (At the Market)
+- a1-38 (At the Store)
+objectives:
+- Learner can make a reservation
+- Learner can order a full meal
+- Learner can handle restaurant situations
+- Learner can communicate dietary needs
+grammar:
+- Practical usage of A1 cases
+- Polite requests and questions
+- Future tense for ordering
+register: розмовний
+phase: "A1.4 [Practical Scenarios]"
+---
+
 # At the Restaurant
 
 ## Warm-up
@@ -38,6 +122,8 @@ The menu usually has sections:
 | **Напої** | /nɑˈpɔji/ | Beverages |
 
 > 💡 **Tip:** "First course" (**перша страва**) in Ukraine almost always means soup! A full traditional lunch includes a soup, a main dish (**головна страва**) with garnish, and a drink.
+
+When ordering a full lunch, you might order **перше** (soup) and **друге** (main course).
 
 ### Ordering Food (Замовлення їжі)
 
@@ -89,7 +175,7 @@ You call a restaurant.
 You are at the restaurant with a friend.
 
 **Офіціант:** Добрий вечір! Ось меню.
-**Ви:** Дякую. Скажіть. Що таке «Банош»?
+**Ви:** Дякую. Що це — банош?
 **Офіціант:** Це традиційна страва з кукурудзи. Вона дуже смачна.
 **Ви:** Цікаво. Я буду банош.
 **Офіціант:** Що ви будете пити сьогодні?
@@ -106,7 +192,7 @@ You are at the restaurant with a friend.
 **Офіціант:** Я радий.
 **Ви:** Можна рахунок, будь ласка?
 **Офіціант:** Звичайно.
-**Ви:** Прошу, ось оплата. Тут подарунок.
+**Ви:** Прошу, ось оплата. Ось чайові.
 **Офіціант:** Дякую! Приходьте ще!
 
 ## Narrative: Dinner with Friends (Вечеря з друзями)

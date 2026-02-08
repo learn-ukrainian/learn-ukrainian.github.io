@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:35:15
+**Generated:** 2026-02-09 00:09:49
 
 ## Configuration
 **Type:** A1
@@ -25,7 +25,7 @@
 | 3 | fill-in | Reflexive Verb Forms | 12 | 8 | ✅ |
 | 4 | fill-in | Sequence Words | 12 | 8 | ✅ |
 | 5 | quiz | Daily Routine | 12 | 8 | ✅ |
-| 6 | quiz | Reflexive Understanding | 12 | 8 | ✅ |
+| 6 | quiz | Reflexive Understanding | 11 | 8 | ✅ |
 | 7 | unjumble | Daily Routine | 12 | 6 | ✅ |
 | 8 | true-false | Daily Routine Facts | 12 | 8 | ✅ |
 
@@ -37,32 +37,29 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 934/750 (raw: 1080)
+- **Words:** ✅ 1036/750 (raw: 1182)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 6/1
+- **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.0% (target 35-55% (M25))
+- **Immersion:** 🇺🇦 36.5% (target 35-55% (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 213 | Included in Core |
-| **Presentation** | ✅ | 215 | Included in Core |
-| **Practice** | ⚪️ | 400 | Skipped |
+| **Warm-up** | ✅ | 233 | Included in Core |
+| **Presentation** | ✅ | 214 | Included in Core |
+| **Practice** | ⚪️ | 483 | Skipped |
 | **Practice 2** | ⚪️ | 20 | Skipped |
 | **Підсумок** | ✅ | 67 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

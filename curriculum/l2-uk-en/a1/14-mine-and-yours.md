@@ -1,3 +1,100 @@
+---
+module: a1-14
+level: A1
+sequence: 14
+slug: mine-and-yours
+version: '2.0'
+title: Mine and Yours
+subtitle: Possessive Pronouns in Ukrainian
+content_outline:
+- section: Warm-up
+  words: 99
+  points:
+  - Ситуація з загубленими речами
+  - Питання "Чий? Чия? Чиє?"
+- section: Presentation
+  words: 643
+  points:
+  - Змінювані форми (мій/моя/моє/мої, твій/твоя/твоє/твої)
+  - Gender agreement with nouns
+  - Незмінювані форми (його, її, їхній)
+  - Формальне ваш/ваша/ваше
+  - Наш/наша/наше для групи
+- section: Practice
+  words: 201
+  points:
+  - Choosing the correct possessive form
+  - Replacing nouns with possessives
+- section: Production
+  words: 179
+  points:
+  - Опис своїх речей (Це мій телефон)
+  - Діалог про власність (Чия це сумка?)
+- section: Cultural Insight
+  words: 185
+  points:
+  - Politeness and possessives (ваш vs твій)
+  - Коли вживати формальні форми
+word_target: 1307
+vocabulary_hints:
+  required:
+  - мій (my m.)
+  - моя (my f.)
+  - твій (your m.)
+  - його (his)
+  - її (her)
+  - наш (our)
+  - чий (whose m.)
+  - чия (whose f.)
+  recommended:
+  - ваш (your formal)
+  - їхній (their)
+  - свій (one's own)
+  - річ (thing)
+activity_hints:
+- type: fill-in
+  focus: Complete with correct possessive
+  items: 25
+- type: match-up
+  focus: Match possessive to gender
+  items: 20
+- type: fill-in
+  focus: Change gender of possessives
+  items: 15
+- type: fill-in
+  focus: Whose is this? conversations
+  items: 6
+- type: quiz
+  focus: Свій vs його/її contrastive (reflexive possessive)
+  items: 8
+- type: true-false
+  focus: Свій key concepts
+  items: 8
+- type: fill-in
+  focus: Свій in context
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-13 (The Locative)
+connects_to:
+- a1-15 (Around the City)
+- a1-32 (My Family)
+objectives:
+- Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній
+- Learner can match possessive pronouns to noun gender (m/f/n/pl)
+- Learner can ask and answer questions about possession
+- Learner can distinguish variable and invariable possessives
+- Learner can use свій correctly to show reflexive possession
+grammar:
+- Possessive pronouns
+- Gender agreement
+- Variable vs invariable forms
+- Reflexive possessive свій (свій vs його/її)
+register: розмовний
+phase: "A1.2 [Navigation]"
+---
+
 # Mine and Yours
 
 ## Warm-up
@@ -41,7 +138,7 @@ These possessives follow the same pattern as adjectives you learned in Module 03
 | Possessor            | Masculine | Feminine | Neuter | Plural | IPA (m/f/n/pl) |
 | -------------------- | --------- | -------- | ------ | ------ | -------------- |
 | **my**               | мій       | моя      | моє    | мої    | /mij/, /mɔˈjɑ/, /mɔˈjɛ/, /mɔˈji/ |
-| **your (sg)**        | твій      | твоя     | твоє   | твої   | /tvij/, /tvɔˈjɑ/, /tvɔˈjɛ/, /tvɔˈji/ |
+| **your (sg)**        | твій      | твоя     | твоє   | твої   | /tʲvʲij/, /tvɔˈjɑ/, /tvɔˈjɛ/, /tvɔˈji/ |
 | **our**              | наш       | наша     | наше   | наші   | /nɑʃ/, /ˈnɑʃɑ/, /ˈnɑʃɛ/, /ˈnɑʃi/ |
 | **your (pl/formal)** | ваш       | ваша     | ваше   | ваші   | /ʋɑʃ/, /ˈʋɑʃɑ/, /ˈʋɑʃɛ/, /ˈʋɑʃi/ |
 | **their**            | їхній     | їхня     | їхнє   | їхні   | /ˈjixnʲij/, /ˈjixnʲɑ/, /ˈjixnʲɛ/, /ˈjixnʲi/ |

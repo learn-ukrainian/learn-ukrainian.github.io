@@ -1,19 +1,91 @@
----
-module: lit-16
-level: LIT
 slug: biblical-themes
-version: '1.0'
 id: lit-16
-naturalness:
-  score: 10
-  status: PASS
-duration: 120
-transliteration: none
-tags:
-- literature
-- shevchenko
-- bible
-- romanticism
+module: biblical-themes
+title: 'Біблійні теми: Давидові псалми і "Марія"'
+subtitle: 'Biblical Themes: Psalms of David and "Maria"'
+version: '2.0'
+phase: LIT.3 The Prophet (Taras Shevchenko)
+focus: literature
+pedagogy: Seminar
+status: draft
 word_target: 4500
-build:
-  last_modified: '2026-01-26'
+naturalness:
+  score: null
+  status: PENDING
+content_outline:
+- section: "Вступ — Шевченко і Біблія"
+  words: 608
+  points:
+  - Релігійність vs антиклерикалізм
+  - Біблія як джерело поетичних образів
+  - Високий стиль у творчості поета
+- section: "Давидові псалми — переосмислення"
+  words: 973
+  points:
+  - Вибір псалмів (12 переспівів)
+  - Техніка переспіву vs переклад
+  - Політичне прочитання Давида
+- section: "Церковнослов'янізми — стиль і функція"
+  words: 851
+  points:
+  - Роль церковнослов'янської лексики
+  - Стилістична функція архаїзмів
+  - Синтез народної та книжної мови
+- section: '"Марія" — гуманізація божественного'
+  words: 973
+  points:
+  - Сюжет поеми
+  - Марія як українська жінка
+  - Критика фарисейства
+- section: "Концепція \"Святої Правди\""
+  words: 608
+  points:
+  - Етика Шевченка
+  - Правда vs закон
+  - Пророк як голос Бога
+- section: "Підсумок — Від Біблії до народу"
+  words: 487
+  points:
+  - Шевченко як "український пророк"
+  - Біблійна традиція в національній літературі
+  - Перехід до візуального мистецтва
+sources:
+- name: "Давидові псалми — переспіви"
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=40"
+  type: primary
+  notes: Біблійні переспіви Шевченка
+- name: "Марія — поема"
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=42"
+  type: primary
+  notes: Поема про Богородицю
+- name: Церковнослов'янізми в українській мові
+  url: "https://uk.wikipedia.org/wiki/Церковнослов'янізми"
+  type: reference
+  notes: Мовний контекст
+vocabulary_hints:
+  required:
+  - псалом (psalm)
+  - переспів (paraphrase)
+  - церковнослов'янізм (Church Slavonicism)
+  - архаїзм (archaism)
+  - Богородиця (Mother of God)
+  - пророк (prophet)
+  - фарисейство (pharisaism)
+  - антиклерикалізм (anticlericalism)
+  - етика (ethics)
+  - правда (truth)
+  recommended:
+  - благодать (grace)
+  - гріх (sin)
+  - спокута (atonement)
+  - апостол (apostle)
+  - євангеліє (gospel)
+activity_hints:
+- type: reading
+  focus: "Переспіви псалмів і уривки з \"Марії\""
+  source: UkrLib
+  items: 6+
+- type: essay-response
+  focus: "Концепція \"Святої Правди\" в етиці Шевченка"
+  word_target: 300
+  output: Філософське есе

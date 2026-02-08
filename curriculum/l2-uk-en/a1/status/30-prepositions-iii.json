@@ -2,13 +2,13 @@
   "module": "30-prepositions-iii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:36:58.793643Z",
+  "last_audit": "2026-02-08T23:34:17.166322Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-30T21:10:03.734050Z",
+    "md": "2026-02-08T23:34:16.065855Z",
     "meta": "2026-02-07T10:03:51.768524Z",
-    "activities": "2026-02-07T21:36:45.965507Z",
-    "vocabulary": "2026-02-07T10:03:51.810215Z",
+    "activities": "2026-02-08T23:34:16.066347Z",
+    "vocabulary": "2026-02-08T23:34:16.066827Z",
     "plan": "2026-02-07T10:05:59.888226Z"
   },
   "gates": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1121/936 (raw: 1488)"
+      "message": "1154/936 (raw: 1528)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "5/1"
+      "message": "14/1"
     },
     "naturalness": {
       "status": "pass",

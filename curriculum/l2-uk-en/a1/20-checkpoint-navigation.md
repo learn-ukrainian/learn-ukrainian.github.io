@@ -244,7 +244,7 @@ What's the correct form?
 
 - **Де...?** = Where is...?
 - **Ідіть прямо** = Go straight
-- **наліво / праворуч** = left / right
+- **наліво / направо (або праворуч)** = left / right
 - **Це далеко?** = Is it far?
 
 ### Practice: Complete the Dialogue
@@ -282,7 +282,7 @@ Fill in the gaps:
 
 **Read this text, then answer the questions.**
 
-> Привіт! Мене звати Оксана. Я живу у Львові — це моє улюблене місто. Вчора я була в кав'ярні з моєю подругою. Я замовила каву без молока, а подруга — чай без цукру. Кава коштувала сорок гривень. У мене не було готівки, тому я платила карткою.
+> Привіт! Мене звати Оксана. Я живу у Львові — це моє улюблене місто. Сьогодні я в кав'ярні. Моя подруга тут теж. Я замовляю каву без молока, а подруга — чай без цукру. Кава коштує сорок гривень. У мене немає готівки, тому я даю картку.
 
 **Questions:**
 
@@ -296,7 +296,7 @@ Fill in the gaps:
 > 1. Locative — after **у** for location (where she lives)
 > 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)
 > 3. Genitive — **без** always requires genitive
-> 4. «У мене не було готівки» — absence structure (I didn't have cash)
+> 4. «У мене немає готівки» — absence structure (I didn't have cash)
 
 ---
 

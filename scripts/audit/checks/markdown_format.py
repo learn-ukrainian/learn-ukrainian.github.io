@@ -72,12 +72,12 @@ def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
 
     # Main Sections that MUST be H1 (#) - but not for seminar tracks
     h1_required_sections = [
-        'summary', 'activities', 'vocabulary',  # English
-        'вправи', 'словник'                      # Ukrainian (always H1)
+        'activities', 'vocabulary',  # English
+        'вправи', 'словник'          # Ukrainian (always H1)
     ]
-    # Підсумок is H1 only for core curriculum, H2 for seminar tracks
+    # Summary and Підсумок are H1 only for core, H2 for seminar
     if not is_seminar:
-        h1_required_sections.append('підсумок')
+        h1_required_sections.extend(['summary', 'підсумок'])
     
     # Content sub-sections that SHOULD be H2 (##)
     h2_preferred_sections = [

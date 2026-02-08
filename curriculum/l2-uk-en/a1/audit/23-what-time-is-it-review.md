@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M23 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1064
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:32:02
+**Generated:** 2026-02-08 22:40:35
 
 ## Configuration
 **Type:** A1-grammar
@@ -45,7 +45,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 12/1
+- **Vocab:** ✅ 36/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -53,9 +53,6 @@
 - **Immersion:** 🇺🇦 38.9% (target 35-55% (M23))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

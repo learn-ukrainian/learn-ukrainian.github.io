@@ -2,7 +2,7 @@
   "module": "marko-kropyvnytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T16:37:48.697646Z",
+  "last_audit": "2026-02-08T23:13:43.741601Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.213166Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "3959/4000 (raw: 4034) (41 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3959/4000 (raw: 4034) (41 short) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

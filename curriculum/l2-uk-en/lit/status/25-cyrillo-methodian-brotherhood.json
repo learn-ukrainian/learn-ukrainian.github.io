@@ -2,25 +2,25 @@
   "module": "25-cyrillo-methodian-brotherhood",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:22.643152Z",
+  "last_audit": "2026-02-08T23:06:58.089523Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349805Z",
-    "meta": "2026-01-29T07:39:04.973222Z",
-    "activities": "2026-01-27T15:34:57.203773Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.603029Z"
+    "md": "2026-02-08T22:53:51.317721Z",
+    "meta": "2026-02-08T23:06:54.446017Z",
+    "activities": "2026-02-08T22:53:37.239938Z",
+    "vocabulary": "2026-02-08T22:49:08.567579Z",
+    "plan": "2026-02-07T10:06:50.459619Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3429/4500 (raw: 3561)"
+      "status": "warn",
+      "violations": 0,
+      "message": "4490/4500 (raw: 4525) (10 short)"
     },
     "activities": {
       "status": "pass",
@@ -30,22 +30,18 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "40/0"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "10/10 (High)"
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

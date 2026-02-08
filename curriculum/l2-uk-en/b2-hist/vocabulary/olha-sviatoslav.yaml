@@ -28,7 +28,7 @@ items:
   translation: pogost (tax station)
   pos: noun
   gender: m
-- lemma: урка
+- lemma: урок
   ipa: /uˈrɔk/
   translation: urok (fixed tribute)
   pos: noun
@@ -84,5 +84,20 @@ items:
 - lemma: дипломатія
   ipa: /dɪplɔˈmɑtʲijɑ/
   translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: дружина
+  ipa: /druˈʒɪnɑ/
+  translation: princely retinue / army
+  pos: noun
+  gender: f
+- lemma: самобутність
+  ipa: /sɑmɔˈbutʲnʲistʲ/
+  translation: originality / authenticity
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspɑdt͡ʃɪnɑ/
+  translation: legacy / heritage
   pos: noun
   gender: f

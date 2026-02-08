@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 853
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:36:51
+**Generated:** 2026-02-08 22:58:02
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 985/853 (raw: 1191)
+- **Words:** ✅ 1013/853 (raw: 1223)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -49,19 +49,16 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.9% (target 35-55% (M26))
+- **Immersion:** 🇺🇦 36.0% (target 35-55% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 86 | Included in Core |
-| **Presentation** | ✅ | 463 | Included in Core |
-| **Practice** | ⚪️ | 379 | Skipped |
+| **Presentation** | ✅ | 493 | Included in Core |
+| **Practice** | ⚪️ | 377 | Skipped |
 | **Підсумок** | ✅ | 41 | Included in Core |
 | **Need More Practice?** | ⚪️ | 16 | Skipped |

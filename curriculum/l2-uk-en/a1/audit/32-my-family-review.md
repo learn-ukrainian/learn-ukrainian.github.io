@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 916
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 21:39:30
+**Generated:** 2026-02-08 23:44:29
 
 ## Configuration
 **Type:** A1-vocab
@@ -41,31 +41,28 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 958/916 (raw: 1405)
+- **Words:** ✅ 1069/916 (raw: 1597)
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/3
+- **Engagement:** ✅ 8/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 11/1
+- **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 48.4% (target 35-55% (M32))
+- **Immersion:** 🇺🇦 46.9% (target 35-55% (M32))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 108 | Included in Core |
-| **Presentation** | ✅ | 342 | Included in Core |
+| **Presentation** | ✅ | 453 | Included in Core |
 | **Діалоги (Dialogues)** | ✅ | 373 | Included in Core |
 | **Practice** | ⚪️ | 59 | Skipped |
 | **Підсумок (Summary)** | ✅ | 58 | Included in Core |

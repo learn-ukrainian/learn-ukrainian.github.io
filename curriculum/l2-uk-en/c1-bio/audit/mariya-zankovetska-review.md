@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M50 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-07 16:37:52
+**Generated:** 2026-02-08 23:13:47
 
 ## Configuration
 **Type:** C1-biography
@@ -36,12 +36,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4507/4000 (raw: 4544)
+- **Words:** ✅ 4548/4000 (raw: 4585)
 - **Activities:** ✅ 7/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 27/24
 - **Structure:** ✅ Valid Structure
@@ -49,28 +49,28 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 98% (biography)
+- **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 4 | 100% | 19% | 19.0% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
 | quotes | 3 | 3 | 100% | 14% | 14.3% |
 | cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 13 | 4 | 100% | 10% | 9.5% |
+| visual | 14 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 2 | 3 | 67% | 5% | 3.2% |
-| **TOTAL** | | | | | **98.4%** |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -81,5 +81,5 @@
 | **Початок кар'єри (1875-1885)** | ⚪️ | 739 | Skipped |
 | **Зоряні роки (1885-1900)** | ⚪️ | 820 | Skipped |
 | **Пізній період та УНР (1900-1920)** | ⚪️ | 647 | Skipped |
-| **Спадщина та пам'ять** | ⚪️ | 783 | Skipped |
+| **Спадщина та пам'ять** | ⚪️ | 824 | Skipped |
 | **Підсумок** | ✅ | 187 | Included in Core |

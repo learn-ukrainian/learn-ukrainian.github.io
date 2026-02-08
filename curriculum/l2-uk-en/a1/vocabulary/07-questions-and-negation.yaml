@@ -3,29 +3,111 @@ module: 07-questions-and-negation
 level: A1
 version: '2.0'
 items:
-- lemma: америка
-  ipa: /amˈɛrɪka/
-  translation: America
-  pos: noun
-  gender: f
+- lemma: чи
+  ipa: /t͡ʃɪ/
+  translation: question particle (yes/no questions)
+  pos: part
+- lemma: що
+  ipa: /ʃt͡ʃɔ/
+  translation: what
+  pos: pron
+- lemma: хто
+  ipa: /xtɔ/
+  translation: who
+  pos: pron
+- lemma: де
+  ipa: /dɛ/
+  translation: where (location)
+  pos: adv
+- lemma: куди
+  ipa: /ˈkudɪ/
+  translation: where to (direction)
+  pos: adv
+- lemma: звідки
+  ipa: /ˈzʋidkɪ/
+  translation: where from
+  pos: adv
+- lemma: коли
+  ipa: /kɔˈlɪ/
+  translation: when
+  pos: adv
+- lemma: чому
+  ipa: /t͡ʃɔˈmu/
+  translation: why
+  pos: adv
+- lemma: як
+  ipa: /jɑk/
+  translation: how
+  pos: adv
+- lemma: скільки
+  ipa: /ˈskilʲkɪ/
+  translation: how much, how many
+  pos: adv
+- lemma: не
+  ipa: /nɛ/
+  translation: not (negation particle)
+  pos: part
+- lemma: так
+  ipa: /tɑk/
+  translation: yes
+  pos: part
+- lemma: ні
+  ipa: /ni/
+  translation: no
+  pos: part
+- lemma: завжди
+  ipa: /ˈzɑʋʒdɪ/
+  translation: always
+  pos: adv
+- lemma: часто
+  ipa: /ˈt͡ʃɑstɔ/
+  translation: often
+  pos: adv
+- lemma: іноді
+  ipa: /iˈnɔdi/
+  translation: sometimes
+  pos: adv
+- lemma: рідко
+  ipa: /ˈridkɔ/
+  translation: rarely
+  pos: adv
+- lemma: ніколи
+  ipa: /nʲiˈkɔlɪ/
+  translation: never
+  pos: adv
+- lemma: зазвичай
+  ipa: /zɑzʋɪˈt͡ʃɑj/
+  translation: usually
+  pos: adv
 - lemma: звати
   ipa: /zʋˈatɪ/
   translation: to call (by name)
   pos: verb
-- lemma: нормально
-  ipa: /nɔrmˈalʲnɔ/
-  translation: normally, okay
-  pos: adv
-- lemma: ніщо
-  ipa: /niʃt͡ʃˈɔ/
-  translation: nothing
-  pos: pron
-- lemma: рідко
-  ipa: /rˈidkɔ/
-  translation: rarely
-  pos: adv
+- lemma: Америка
+  ipa: /amˈɛrɪka/
+  translation: America
+  pos: noun
+  gender: f
 - lemma: туалет
   ipa: /tualˈɛt/
   translation: toilet, restroom
   pos: noun
   gender: m
+- lemma: нормально
+  ipa: /nɔrmˈalʲnɔ/
+  translation: normally, okay
+  pos: adv
+- lemma: нічого
+  ipa: /nʲiˈt͡ʃɔɦɔ/
+  translation: nothing; it's okay, no problem
+  pos: pron
+- lemma: правда
+  ipa: /ˈprɑʋdɑ/
+  translation: truth, true
+  pos: noun
+  gender: f
+- lemma: кава
+  ipa: /ˈkɑʋɑ/
+  translation: coffee
+  pos: noun
+  gender: f

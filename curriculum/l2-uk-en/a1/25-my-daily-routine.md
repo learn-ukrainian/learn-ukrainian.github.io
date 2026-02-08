@@ -6,6 +6,8 @@ What does your typical day look like? Do you wake up early, drink coffee, and ru
 
 Describing a routine is more than just listing actions; it's about connecting them using sequence words like "first," "then," and "after that." This skill is essential for survival in Ukraine, as it allows you to explain your schedule, make appointments, and understand when things happen. Let's start by looking at the core actions that define our daily lives.
 
+Важливо вміти розповідати про свій день. Це гарна практика для вас. Спочатку ми вивчимо слова, а потім будемо практикувати діалоги.
+
 > 🕰️ **Мій типовий день**
 >
 > **Ранок** /ˈrɑnɔk/
@@ -47,7 +49,7 @@ Many routine verbs are **reflexive** (ending in -ся) because the action is dir
 - **працювати** (to work) — Я працюю в офісі.
 - **обідати** (to have lunch) — Я обідаю о 1 годині.
 - **повертатися** (to return) — Я повертаюся додому.
-- **вечеряти** (to have dinner) — Я вечеряю з сім'єю.
+- **вечеряти** (to have dinner) — Я вечеряю вдома.
 - **відпочивати** (to rest) — Я відпочиваю ввечері.
 - **лягати спати** (to go to bed) — Я лягаю спати об 11 годині.
 
@@ -76,7 +78,7 @@ These verbs form the backbone of your daily narrative. Notice how some are regul
 > — Який твій розпорядок дня?
 > — **Спочатку** я прокидаюся о шостій.
 > — Так рано?
-> — Так. **Потім** я біжу у парку. **Після того** я вмиваюся і снідаю.
+> — Так. **Потім** я бігаю в парку. **Після того** я вмиваюся і снідаю.
 > — А **потім**?
 > — **Потім** я їду на роботу. **Нарешті** о сьомій вечора я повертаюся додому.
 >
@@ -109,8 +111,8 @@ These verbs form the backbone of your daily narrative. Notice how some are regul
 >
 > **How to form it:** Take a conjugated verb and add **-ся** or **-сь**.
 >
-> - Use **-сь** after vowels (я, ми, ви, ти, він/вона - sometimes).
-> - Use **-ся** after consonants (ми, ви, вони).
+> - The standard ending is **-ся**. After vowels, you will often hear **-сь**, but **-ся** is always correct.
+> - In the 3rd person (він/вони), it is always **-ться**.
 >
 > Let's look at **вмиватися** (to wash oneself):
 >
@@ -134,6 +136,10 @@ These verbs form the backbone of your daily narrative. Notice how some are regul
 > - дивитися (to watch/look at)
 
 > 🌍 **Ukrainian Daily Life**
+>
+> Unlike the "9-to-5" idiom in English, standard office hours in Ukraine are often described as "з дев'ятої до шостої" (from 9 to 6). Lunch breaks (обід) are typically one hour around 13:00 or 14:00.
+>
+> Also, Ukrainians often have a "light breakfast" (легкий сніданок) like coffee and a sandwich (бутерброд), saving the heartier meal for dinner (вечеря), which is often eaten quite late, around 19:00 or 20:00, when the whole family gathers.
 
 ---
 

@@ -2,13 +2,13 @@
   "module": "holodomor-mekhanizm",
   "level": "B2",
   "plan_version": "2.14",
-  "last_audit": "2026-02-03T22:54:58.881216Z",
+  "last_audit": "2026-02-08T00:04:55.442334Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-02T10:24:24.633051Z",
-    "meta": "2026-01-31T15:52:54.730947Z",
-    "activities": "2026-01-28T11:29:15.583838Z",
-    "vocabulary": "2026-01-22T13:40:41.388511Z",
+    "md": "2026-02-07T11:38:26.237966Z",
+    "meta": "2026-02-07T10:03:51.239834Z",
+    "activities": "2026-02-07T10:03:51.323832Z",
+    "vocabulary": "2026-02-07T10:03:51.378142Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4602/4000 (raw: 4659)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4602/4000 (raw: 4659) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

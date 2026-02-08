@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M156 | **Phase:** C1 | **Pedagogy:** Immersion | **Target:** 5500
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-07 16:38:47
+**Generated:** 2026-02-08 23:14:45
 
 ## Configuration
 **Type:** C1-biography
@@ -37,6 +37,15 @@
 - Required types used: 7/7 (authorial-intent, comparative-study, critical-analysis, essay-response, reading, select, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/oleksandr-usyk-research.md
+  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ❌ 3803/5500 (raw: 3915)
 - **Activities:** ✅ 9/3
@@ -48,7 +57,7 @@
 - **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (9 activities)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (biography))
 - **Richness:** ❌ 83% < 95% min (biography)
