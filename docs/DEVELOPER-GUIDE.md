@@ -9,7 +9,7 @@ This guide helps you understand the tools, workflows, and best practices for cur
 ## 🛠️ Environment Setup
 
 ### Prerequisites
-- **Python 3.12.x** (checked via `.python-version`)
+- **Python 3.12.12** (strictly enforced via `.python-version`)
 - **Node.js 20+**
 - **pnpm** (preferred package manager)
 

@@ -44,7 +44,19 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                 'object': act
             })
     
-    # Legacy Markdown activities support removed (Issue #394)
+    # Legacy Markdown activities support (Maintained for test suite and mixed modules)
+    if content and not yaml_activities:
+        activity_pattern = r'##\s*([a-z-]+):\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
+        matches = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
+        for act_type, title, body in matches:
+            if act_type.lower() in VALID_ACTIVITY_TYPES:
+                parsed_activities.append({
+                    'type': act_type.lower(),
+                    'title': title.strip(),
+                    'body': body,
+                    'source': 'markdown',
+                    'object': None
+                })
     
     for activity_data in parsed_activities:
         act_type = activity_data['type']

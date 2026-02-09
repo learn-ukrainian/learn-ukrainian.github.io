@@ -10,7 +10,9 @@ import sys
 import os
 
 # Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, PROJECT_ROOT)
+sys.path.insert(0, os.path.join(PROJECT_ROOT, 'scripts'))
 
 from scripts.audit.checks.activities import (
     check_activity_complexity,
@@ -642,7 +644,7 @@ class TestErrorCorrectionFormat:
     def test_error_correction_with_yaml_list(self):
         """Error-correction should work with YAML activities."""
         # Note: check_error_correction_format now expects a list of Activity objects
-        from yaml_activities import ErrorCorrectionActivity
+        from yaml_activities import Activity
 
         # Test item with placeholder
         item1 = type('obj', (object,), {
@@ -781,8 +783,6 @@ class TestClozeFormat:
     def test_cloze_structure(self):
         """Cloze should count items correctly."""
         content = """
-## cloze: Заповніть
-
 Це {речення|слово} про {граматику|лексику}. Українська {мова|література} має {правила|закони}.
 """
         # check_cloze_format is removed, but items are counted in core
