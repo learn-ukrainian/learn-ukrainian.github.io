@@ -352,9 +352,12 @@ For complex research, leverage both agents:
 ```bash
 # Claude structures, Gemini researches (parallel)
 # Send research request to Gemini:
+# Use --quiet and redirect to temp file to save context!
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Research Данило Апостол for C1-BIO module. Save notes to research/danylo-apostol-research.md" \
-  --task-id gh-500
+  --task-id gh-500 \
+  --quiet \
+  > /tmp/gemini-research-gh-500.txt 2>&1
 
 # Continue with other work while Gemini researches
 # Check for response later

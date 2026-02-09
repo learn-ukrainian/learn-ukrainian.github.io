@@ -85,9 +85,11 @@ Generate two YAML blocks: activities and vocabulary.
 
 ## Output Format
 
+**CRITICAL OUTPUT FORMAT:**
+You MUST wrap your output in delimiters. Put the delimiter on its own line, then content, then end delimiter. Do NOT wrap delimiters in code blocks. Do NOT include thinking/explanation outside delimiters. ONLY content between delimiters will be used.
+
 Return TWO YAML blocks with clear delimiters:
 
-```
 ===ACTIVITIES_START===
 - type: reading
   id: {slug}-reading-1
@@ -117,7 +119,12 @@ Return TWO YAML blocks with clear delimiters:
 
 # ... more vocabulary items
 ===VOCABULARY_END===
-```
+
+**REVIEW PROTOCOL:**
+- Only ask for review if you are UNCERTAIN about correctness
+- If you are confident the fix is correct, apply it and move on
+- Claude will only respond if changes are needed
+- No response from Claude = proceed autonomously
 
 ## Boundaries
 

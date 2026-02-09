@@ -70,7 +70,8 @@ Read these files from disk:
 
 ## Output Format
 
-**CRITICAL: You MUST output fixed files between delimiter lines. Delimiters must appear on their own line, NOT inside code blocks.**
+**CRITICAL OUTPUT FORMAT:**
+You MUST wrap your output in delimiters. Put the delimiter on its own line, then content, then end delimiter. Do NOT wrap delimiters in code blocks. Do NOT include thinking/explanation outside delimiters. ONLY content between delimiters will be used.
 
 Output ONLY the files that need changes. If a file has no fixes, skip it entirely.
 
@@ -110,6 +111,12 @@ For EACH file that needs changes, output the COMPLETE file between these EXACT d
 ## Files Changed: {list: content, activities, vocabulary — or subset}
 ## Files Unchanged: {list of files that needed no fixes}
 ===CHANGES_END===
+
+**REVIEW PROTOCOL:**
+- Only ask for review if you are UNCERTAIN about correctness
+- If you are confident the fix is correct, apply it and move on
+- Claude will only respond if changes are needed
+- No response from Claude = proceed autonomously
 
 ## Boundaries
 

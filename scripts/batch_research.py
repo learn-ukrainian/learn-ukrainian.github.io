@@ -11,7 +11,12 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+
+# Add shared utils to path
+sys.path.append(str(Path(__file__).parent))
+from utils.extraction import extract_delimited
 
 REPO = Path(__file__).parent.parent
 
@@ -246,20 +251,27 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     msg = f"{prompt}"
 
     try:
-        result = subprocess.run(
-            [
-                sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-                "ask-gemini", msg,
-                "--task-id", task_id,
-                "--output-path", output_path,
-                "--model", model,
-            ],
-            capture_output=True, text=True, timeout=600,
-            cwd=str(REPO),
-        )
+        # Create a temp file for the raw output to prevent context pollution
+        with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-research-{task_id}-", delete=False) as tf:
+            raw_output = Path(tf.name)
 
-        if result.returncode != 0:
-            return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": result.stderr[:200]}
+        with open(raw_output, "w") as f:
+            subprocess.run(
+                [
+                    sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
+                    "ask-gemini", msg,
+                    "--task-id", task_id,
+                    "--output-path", output_path,
+                    "--model", model,
+                    "--quiet",
+                ],
+                stdout=f, stderr=subprocess.STDOUT, timeout=600,
+                cwd=str(REPO),
+            )
+
+        # In output-path mode, the content is already in output_path.
+        # We don't necessarily need to extract delimited content if Gemini wrote directly to it,
+        # but ai_agent_bridge.py output-path mode expects Gemini to write to that file.
 
         if Path(output_path).exists():
             size = Path(output_path).stat().st_size

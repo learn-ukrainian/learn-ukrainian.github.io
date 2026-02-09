@@ -13,6 +13,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 import yaml
 from datetime import datetime, timezone
 from pathlib import Path
@@ -87,22 +88,27 @@ def extract_ukrainian_content(md_file_path: str, max_chars: int = 4000) -> str:
 def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
     """Call Gemini and return raw response + parsed JSON."""
     try:
-        result = subprocess.run(
-            [
-                sys.executable,
-                str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
-                "ask-gemini",
-                prompt,
-                "--task-id", task_id,
-                "--from-model", "claude-opus-4-5-20251101"  # Track sender model
-            ],
-            capture_output=True,
-            text=True,
-            timeout=120,
-            cwd=str(PROJECT_ROOT)
-        )
+        with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-nat-{task_id}-", delete=False) as tf:
+            raw_output_log = Path(tf.name)
 
-        raw_output = result.stdout + result.stderr
+        with open(raw_output_log, "w") as f:
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
+                    "ask-gemini",
+                    prompt,
+                    "--task-id", task_id,
+                    "--from-model", "claude-opus-4-5-20251101",  # Track sender model
+                    "--quiet",
+                ],
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                timeout=120,
+                cwd=str(PROJECT_ROOT)
+            )
+
+        raw_output = raw_output_log.read_text()
 
         # Extract JSON from response - handle nested brackets for arrays
         # Find JSON block that contains "score"

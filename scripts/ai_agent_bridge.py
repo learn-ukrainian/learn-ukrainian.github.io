@@ -473,7 +473,7 @@ def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", d
     return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, quiet: bool = False):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -486,6 +486,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
                     orchestrated rebuilds where Claude captures stdout directly.
         output_path: If set, Gemini writes output to this file instead of stdout.
                     Enables -y mode with post-validation (only this file may be written).
+        quiet: If True, don't print Gemini output to stdout.
     """
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
@@ -521,12 +522,14 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
 
     # Step 2: Invoke Gemini to process it (unless async mode)
     if async_mode:
-        print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
-        print(f"   Gemini will see this in his inbox when he starts a session.")
-        print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
+        if not quiet:
+            print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
+            print(f"   Gemini will see this in his inbox when he starts a session.")
+            print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
-        print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
+        if not quiet:
+            print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
+        process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path, quiet=quiet)
 
     return msg_id
 
@@ -622,7 +625,7 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, quiet: bool = False):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -636,6 +639,7 @@ def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", 
             Used by fire-and-forget to re-invoke the bridge as a background process.
         output_path: If set, Gemini writes output to this file. Uses -y mode with
             post-validation instead of --approval-mode plan.
+        quiet: If True, don't print Gemini output to stdout (prevents context pollution).
     """
     msg = read_message(message_id)
     if not msg:
@@ -768,8 +772,9 @@ Format your response clearly.
             print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
             return
 
-        print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
-        sys.stdout.flush()
+        if not quiet:
+            print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
+            sys.stdout.flush()
 
         # Write PID file for status tracking and locking
         _write_pid_file("gemini", task_key, {
@@ -816,8 +821,11 @@ Format your response clearly.
                     # Read stdout in real-time, collect for response routing
                     output_lines = []
                     for line in proc.stdout:
-                        print(line, end='')  # Real-time to log file
-                        sys.stdout.flush()
+                        # ALWAYS print if stdout_only is active (caller is capturing)
+                        # otherwise respect the quiet flag.
+                        if stdout_only or not quiet:
+                            print(line, end='')  # Real-time to log file or stdout
+                            sys.stdout.flush()
                         output_lines.append(line)
 
                     # Wait for process to finish, get stderr
@@ -854,18 +862,20 @@ Format your response clearly.
                                 print(f"   - {v}")
                             sys.stdout.flush()
 
-                    print(f"\n\n{'─' * 40}")
-                    if output_path:
-                        output_exists = Path(output_path).exists()
-                        output_size = Path(output_path).stat().st_size if output_exists else 0
-                        print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
-                    else:
-                        print(f"✅ Gemini finished ({len(response)} chars)")
-                    sys.stdout.flush()
+                    if not quiet:
+                        print(f"\n\n{'─' * 40}")
+                        if output_path:
+                            output_exists = Path(output_path).exists()
+                            output_size = Path(output_path).stat().st_size if output_exists else 0
+                            print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
+                        else:
+                            print(f"✅ Gemini finished ({len(response)} chars)")
+                        sys.stdout.flush()
 
                     if output_path:
                         # File output mode: NO broker message. Batch script reads the file directly.
-                        print(f"   (no broker message — file output mode)")
+                        if not quiet:
+                            print(f"   (no broker message — file output mode)")
                     elif stdout_only:
                         # Stdout-only mode: broker gets SHORT summary only
                         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
@@ -1347,6 +1357,7 @@ def main():
     proc_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
     proc_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                              help="Run sync without timeout (used internally by fire-and-forget)")
+    proc_parser.add_argument("--quiet", action="store_true", help="Don't print Gemini output to stdout")
 
     # process-claude (invoke Claude headlessly)
     proc_claude_parser = subparsers.add_parser("process-claude", help="Process message with Claude CLI (headless)")
@@ -1388,6 +1399,7 @@ def main():
                                    help="Don't route full response through broker. Output goes to stdout only. Broker gets short summary.")
     ask_gemini_parser.add_argument("--output-path", dest="output_path",
                                    help="Gemini writes output to this file (uses -y mode with post-validation).")
+    ask_gemini_parser.add_argument("--quiet", action="store_true", help="Don't print Gemini output to stdout")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1422,7 +1434,7 @@ def main():
     elif args.command == "conversation":
         get_conversation(args.task_id)
     elif args.command == "process":
-        process_and_respond(args.message_id, args.model, no_timeout=args.no_timeout)
+        process_and_respond(args.message_id, args.model, no_timeout=args.no_timeout, quiet=getattr(args, 'quiet', False))
     elif args.command == "process-claude":
         process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
     elif args.command == "ask-claude":
@@ -1434,7 +1446,7 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), quiet=getattr(args, 'quiet', False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

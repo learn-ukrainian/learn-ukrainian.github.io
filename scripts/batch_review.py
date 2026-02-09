@@ -11,7 +11,12 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
+
+# Add shared utils to path
+sys.path.append(str(Path(__file__).parent))
+from utils.extraction import extract_delimited
 
 REPO = Path(__file__).parent.parent
 TEMPLATE_PATH = REPO / "claude_extensions/phases/gemini/phase-5-review.md"
@@ -190,20 +195,23 @@ def review_module(level: str, num: int, model: str, dry_run: bool = False) -> di
     msg = f"Read and execute the instructions at {prompt_path}. Write your output to: {output_path}"
 
     try:
-        result = subprocess.run(
-            [
-                sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-                "ask-gemini", msg,
-                "--task-id", task_id,
-                "--output-path", output_path,
-                "--model", model,
-            ],
-            capture_output=True, text=True, timeout=600,
-            cwd=str(REPO),
-        )
+        # Create a temp file for the raw output to prevent context pollution
+        with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-review-{task_id}-", delete=False) as tf:
+            raw_output_log = Path(tf.name)
 
-        if result.returncode != 0:
-            return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": result.stderr[:200]}
+        with open(raw_output_log, "w") as f:
+            subprocess.run(
+                [
+                    sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
+                    "ask-gemini", msg,
+                    "--task-id", task_id,
+                    "--output-path", output_path,
+                    "--model", model,
+                    "--quiet",
+                ],
+                stdout=f, stderr=subprocess.STDOUT, timeout=600,
+                cwd=str(REPO),
+            )
 
         # Check if output was written
         if Path(output_path).exists():

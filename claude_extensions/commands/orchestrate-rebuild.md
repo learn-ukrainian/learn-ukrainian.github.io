@@ -145,15 +145,18 @@ Gemini streams thinking tokens mixed with actual content. A single call can prod
 
 ```bash
 # Step 1: Send to Gemini, capture to temp file (NOT Claude's context)
+# Use --quiet to suppress any output from the bridge itself.
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Read and execute the instructions at $(pwd)/curriculum/l2-uk-en/{track}/orchestration/{slug}/phase-{N}-prompt.md. Return your output as text." \
   --task-id orchestrate-{slug} \
   --stdout-only \
   --model gemini-3-pro-preview \
+  --quiet \
   > /tmp/gemini-output-{slug}-phase-{N}.txt 2>&1
 
 # Step 2: Extract ONLY delimited content (discard thinking tokens)
-sed -n '/===REVIEW_START===/,/===REVIEW_END===/p' /tmp/gemini-output-{slug}-phase-{N}.txt \
+# Use the helper utility for clean extraction
+.venv/bin/python -c "from scripts.utils.extraction import extract_delimited; print(extract_delimited('/tmp/gemini-output-{slug}-phase-{N}.txt', '===CONTENT_START===', '===CONTENT_END==='))" \
   > /tmp/gemini-extracted-{slug}-phase-{N}.txt
 
 # Step 3: Check if extraction succeeded
@@ -161,6 +164,7 @@ wc -l /tmp/gemini-extracted-{slug}-phase-{N}.txt
 # If 0 lines: Gemini didn't produce delimited output → retry
 
 # Step 4: Read ONLY the extracted file (small, clean)
+cat /tmp/gemini-extracted-{slug}-phase-{N}.txt
 ```
 
 **`--stdout-only` is CRITICAL** for four reasons:

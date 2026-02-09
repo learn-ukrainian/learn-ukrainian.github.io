@@ -58,9 +58,11 @@ The audit counts ~100-150 fewer words than raw `wc -w` due to excluding blockquo
 
 ### Output Format
 
+**CRITICAL OUTPUT FORMAT:**
+You MUST wrap your output in delimiters. Put the delimiter on its own line, then content, then end delimiter. Do NOT wrap delimiters in code blocks. Do NOT include thinking/explanation outside delimiters. ONLY content between delimiters will be used.
+
 Return the full lesson content as markdown:
 
-```
 ===CONTENT_START===
 
 <!-- SCOPE
@@ -97,17 +99,20 @@ Related: {connected slugs}
 ---
 
 ===CONTENT_END===
-```
 
 After the content block, report word counts:
 
-```
 ===WORD_COUNTS===
 Section "{name}": {count} words (target: {allocation})
 ...
 Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
 ===WORD_COUNTS===
-```
+
+**REVIEW PROTOCOL:**
+- Only ask for review if you are UNCERTAIN about correctness
+- If you are confident the fix is correct, apply it and move on
+- Claude will only respond if changes are needed
+- No response from Claude = proceed autonomously
 
 ## Boundaries
 

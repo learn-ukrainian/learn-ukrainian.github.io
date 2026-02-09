@@ -321,3 +321,20 @@ For EACH dimension scoring below 9, provide a concrete action plan:
 - Do NOT skip any step or dimension
 - Do NOT fabricate issues — every critique must cite a specific line number
 - Do NOT give vague feedback like "could be improved" — say exactly what and where
+
+**CRITICAL OUTPUT FORMAT:**
+You MUST wrap your output in delimiters. Put the delimiter on its own line, then content, then end delimiter:
+
+===REVIEW_START===
+(your content here)
+===REVIEW_END===
+
+Do NOT wrap delimiters in code blocks.
+Do NOT include thinking/explanation outside delimiters.
+ONLY content between delimiters will be used.
+
+**REVIEW PROTOCOL:**
+- Only ask for review if you are UNCERTAIN about correctness
+- If you are confident the fix is correct, apply it and move on
+- Claude will only respond if changes are needed
+- No response from Claude = proceed autonomously

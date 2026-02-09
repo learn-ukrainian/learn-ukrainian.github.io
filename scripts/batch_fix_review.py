@@ -26,6 +26,10 @@ import tempfile
 import time
 from pathlib import Path
 
+# Add shared utils to path
+sys.path.append(str(Path(__file__).parent))
+from utils.extraction import extract_delimited
+
 REPO = Path(__file__).parent.parent
 MAX_RETRIES = 3
 PASS_THRESHOLD = 9.0
@@ -238,68 +242,55 @@ def assemble_review_prompt(files: dict, level: str) -> Path:
 
 def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send prompt to Gemini, return path to output file."""
-    output = Path(tempfile.mktemp(suffix=".txt", prefix=f"gemini-{task_id}-"))
+    with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-{task_id}-", delete=False) as tf:
+        output = Path(tf.name)
 
-    result = subprocess.run(
-        [
-            sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-            "ask-gemini",
-            f"Read and execute the instructions at {prompt_path}. Return your output as text. "
-            f"IMPORTANT: Put fixed files between delimiter lines like ===CONTENT_START=== and ===CONTENT_END=== "
-            f"on their own lines, NOT inside code blocks.",
-            "--task-id", task_id,
-            "--stdout-only",
-            "--model", model,
-        ],
-        capture_output=True, text=True, timeout=GEMINI_TIMEOUT,
-        cwd=str(REPO),
-    )
+    with open(output, "w") as f:
+        subprocess.run(
+            [
+                sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
+                "ask-gemini",
+                f"Read and execute the instructions at {prompt_path}. Return your output as text.",
+                "--task-id", task_id,
+                "--stdout-only",
+                "--model", model,
+                "--quiet",
+            ],
+            stdout=f, stderr=subprocess.STDOUT, timeout=GEMINI_TIMEOUT,
+            cwd=str(REPO),
+        )
 
-    output.write_text(result.stdout + result.stderr)
     return output
 
 
 def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send review prompt to Gemini with delimiter instructions."""
-    output = Path(tempfile.mktemp(suffix=".txt", prefix=f"gemini-{task_id}-"))
+    with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-{task_id}-", delete=False) as tf:
+        output = Path(tf.name)
 
-    result = subprocess.run(
-        [
-            sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-            "ask-gemini",
-            f"Read and execute the instructions at {prompt_path}. Return your output as text. "
-            f"Wrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters.",
-            "--task-id", task_id,
-            "--stdout-only",
-            "--model", model,
-        ],
-        capture_output=True, text=True, timeout=GEMINI_TIMEOUT,
-        cwd=str(REPO),
-    )
+    with open(output, "w") as f:
+        subprocess.run(
+            [
+                sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
+                "ask-gemini",
+                f"Read and execute the instructions at {prompt_path}. Return your output as text.",
+                "--task-id", task_id,
+                "--stdout-only",
+                "--model", model,
+                "--quiet",
+            ],
+            stdout=f, stderr=subprocess.STDOUT, timeout=GEMINI_TIMEOUT,
+            cwd=str(REPO),
+        )
 
-    output.write_text(result.stdout + result.stderr)
     return output
 
 
 # ─── Output Extraction ───────────────────────────────────────────────
 
 def extract_section(output_path: Path, start_tag: str, end_tag: str) -> str | None:
-    """Extract content between delimiters, handling code block wrapping."""
-    text = output_path.read_text()
-    # Strip code block markers that Gemini sometimes wraps around delimiters
-    # e.g., ```\n===CONTENT_START===\n...\n===CONTENT_END===\n```
-    cleaned = re.sub(r'```\w*\n', '', text)
-    cleaned = re.sub(r'\n```', '', cleaned)
-    pattern = re.compile(
-        rf'{re.escape(start_tag)}\s*\n(.*?)\n\s*{re.escape(end_tag)}',
-        re.DOTALL
-    )
-    match = pattern.search(cleaned)
-    if match:
-        return match.group(1)
-    # Fallback: try original text without cleaning
-    match = pattern.search(text)
-    return match.group(1) if match else None
+    """Extract content between delimiters using the shared utility."""
+    return extract_delimited(output_path, start_tag, end_tag)
 
 
 def extract_score(review_text: str) -> float | None:

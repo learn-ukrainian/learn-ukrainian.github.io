@@ -8,14 +8,16 @@
 
 Read ALL of these files from disk before writing anything:
 
-1. **Content** (the lesson you're reviewing): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md`
-2. **Activities**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/01-the-cyrillic-code-i.yaml`
-3. **Vocabulary**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/01-the-cyrillic-code-i.yaml`
+1. **Content** (the lesson you're reviewing): `/app/curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md`
+2. **Activities**: `/app/curriculum/l2-uk-en/a1/activities/01-the-cyrillic-code-i.yaml`
+3. **Vocabulary**: `/app/curriculum/l2-uk-en/a1/vocabulary/01-the-cyrillic-code-i.yaml`
 4. **Plan** (source of truth for scope): `(no plan file)`
-5. **Meta** (build config): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/01-the-cyrillic-code-i.yaml`
-6. **Research notes** (if exists): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-cyrillic-code-i-research.md`
+5. **Meta** (build config): `/app/curriculum/l2-uk-en/a1/meta/01-the-cyrillic-code-i.yaml`
+6. **Research notes** (if exists): `/app/curriculum/l2-uk-en/a1/research/the-cyrillic-code-i-research.md`
 
 **Do not proceed until you have read every line of the content and every activity item.**
+
+> **ANTI-STALE-REVIEW RULE**: This file may have been fixed since a previous review. You MUST review the CURRENT state of the files, not repeat findings from a prior review. If an issue was cited before but is now fixed, it must NOT appear in your review. Every finding must be verifiable by quoting the actual current content.
 
 ## Audit Metrics (Facts from Claude)
 
@@ -70,9 +72,12 @@ Go through the file section by section. For EACH Ukrainian sentence:
 - Watch for English approximations instead of Ukrainian phonemes
 
 ### Activities (EVERY ITEM)
+
+**CRITICAL: Read the actual YAML file line by line.** Do NOT assume what the file contains — read it. If a previous review said "add English cues" but the file already has them, acknowledge the fix is present. Never cite an issue that doesn't exist in the CURRENT file.
+
 Check each activity item individually:
 - **quiz**: Grammatically correct? Exactly one correct answer? Options plausible?
-- **fill-in**: Sentence correct with answer filled in? Distractors plausible?
+- **fill-in**: Sentence correct with answer filled in? Only ONE valid answer given the context/cues? Distractors plausible?
 - **match-up**: All pairs correct? No duplicates?
 - **true-false**: True statements actually true? False clearly false?
 - **unjumble**: Answer forms a correct, natural sentence?
@@ -80,6 +85,8 @@ Check each activity item individually:
 - **anagram**: Solution correct? Hint clear?
 
 Count as you go. You MUST report how many items you checked.
+
+**Verification rule**: For EVERY issue you cite, quote the EXACT line from the file. If you cannot quote it, the issue does not exist.
 
 ---
 
@@ -189,7 +196,7 @@ Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational
 
 ## OUTPUT FORMAT
 
-Write your complete review to the output file specified in the task: **/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-cyrillic-code-i/phase-5-response.md**
+Write your complete review to the output file specified in the task: **/app/curriculum/l2-uk-en/a1/orchestration/the-cyrillic-code-i/phase-5-response.md**
 
 Use this exact markdown structure:
 # Рецензія: The Cyrillic Code I
@@ -314,3 +321,20 @@ For EACH dimension scoring below 9, provide a concrete action plan:
 - Do NOT skip any step or dimension
 - Do NOT fabricate issues — every critique must cite a specific line number
 - Do NOT give vague feedback like "could be improved" — say exactly what and where
+
+**CRITICAL OUTPUT FORMAT:**
+You MUST wrap your output in delimiters. Put the delimiter on its own line, then content, then end delimiter:
+
+===REVIEW_START===
+(your content here)
+===REVIEW_END===
+
+Do NOT wrap delimiters in code blocks.
+Do NOT include thinking/explanation outside delimiters.
+ONLY content between delimiters will be used.
+
+**REVIEW PROTOCOL:**
+- Only ask for review if you are UNCERTAIN about correctness
+- If you are confident the fix is correct, apply it and move on
+- Claude will only respond if changes are needed
+- No response from Claude = proceed autonomously
