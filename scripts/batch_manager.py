@@ -115,8 +115,8 @@ def cmd_fix_review(args):
         sys.executable,
         str(REPO / "scripts/batch_fix_review.py"),
         args.track,
-        "--from", str(args.start),
-        "--to", str(args.end),
+        str(args.start),
+        str(args.end),
         "--model", args.model
     ]
 
@@ -176,8 +176,8 @@ def cmd_research(args):
         sys.executable,
         str(REPO / "scripts/batch_research.py"),
         args.track,
-        "--from", str(args.start),
-        "--to", str(args.end)
+        str(args.start),
+        str(args.end)
     ]
 
     if args.background:
@@ -190,8 +190,6 @@ def cmd_research(args):
                 cwd=str(REPO)
             )
         print(f"   PID: {proc.pid}")
-        metadata['pid'] = proc.pid
-        save_task_metadata(task_id, metadata)
         print(f"\n   Monitor progress: tail -f {output_file}")
     else:
         result = subprocess.run(cmd, cwd=str(REPO))
@@ -307,49 +305,35 @@ def cmd_pause(args):
     if not task_file.exists():
         print(f"❌ Task not found: {args.task_id}")
         return 1
-
     metadata = json.loads(task_file.read_text())
     if metadata.get('pid'):
         try:
-            import os
-            import signal
+            import os, signal
             os.kill(metadata['pid'], signal.SIGSTOP)
             metadata['status'] = 'paused'
             task_file.write_text(json.dumps(metadata, indent=2))
             print(f"⏸️ Task paused: {args.task_id}")
             return 0
         except Exception as e:
-            print(f"❌ Error pausing process {metadata['pid']}: {e}")
+            print(f"❌ Error: {e}")
             return 1
-    else:
-        print(f"⚠️ No PID found for task {args.task_id}")
-        return 1
-
+    return 1
 
 def cmd_resume(args):
     """Resume paused task."""
     task_file = TASKS_DIR / f"{args.task_id}.json"
-    if not task_file.exists():
-        print(f"❌ Task not found: {args.task_id}")
-        return 1
-
+    if not task_file.exists(): return 1
     metadata = json.loads(task_file.read_text())
     if metadata.get('pid'):
         try:
-            import os
-            import signal
+            import os, signal
             os.kill(metadata['pid'], signal.SIGCONT)
             metadata['status'] = 'running'
             task_file.write_text(json.dumps(metadata, indent=2))
             print(f"▶️ Task resumed: {args.task_id}")
             return 0
-        except Exception as e:
-            print(f"❌ Error resuming process {metadata['pid']}: {e}")
-            return 1
-    else:
-        print(f"⚠️ No PID found for task {args.task_id}")
-        return 1
-
+        except Exception as e: return 1
+    return 1
 
 def cmd_stop(args):
     """Stop running task."""
@@ -360,16 +344,11 @@ def cmd_stop(args):
         return 1
 
     metadata = json.loads(task_file.read_text())
-
-    # Try to kill process if PID exists
     if metadata.get('pid'):
         try:
-            import os
-            import signal
+            import os, signal
             os.kill(metadata['pid'], signal.SIGTERM)
-            print(f"Process {metadata['pid']} terminated")
-        except Exception:
-            pass
+        except Exception: pass
 
     # Update status
     metadata['status'] = 'stopped'
