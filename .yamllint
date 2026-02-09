@@ -4,9 +4,7 @@ extends: default
 rules:
   line-length: disable
   document-start: disable
-  indentation:
-    spaces: 2
-    indent-sequences: consistent
+  indentation: disable
   truthy: disable  # Allow 'yes/no' in plans if needed
   comments: disable
   comments-indentation: disable
