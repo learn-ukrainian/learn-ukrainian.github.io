@@ -512,6 +512,12 @@
     <button class="filter-btn active" data-level="all">All Levels</button>
     <!-- Level buttons will be dynamically populated -->
 
+    <div style="margin-left: 12px; flex: 1; max-width: 300px;">
+      <input type="text" id="search-input" placeholder="Search modules..."
+             style="width: 100%; padding: 8px 12px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 13px;"
+             oninput="state.searchQuery = this.value; renderLevels();">
+    </div>
+
     <div class="status-filter">
       <button class="status-btn all active" data-status="all">All</button>
       <button class="status-btn pass" data-status="pass">Pass</button>
@@ -567,7 +573,8 @@
       expandedLevels: new Set(),
       apiConnected: false,
       auditStatus: {},
-      ws: null
+      ws: null,
+      searchQuery: ''
     };
 
     // ==================== API CALLS ====================
@@ -768,8 +775,16 @@
         ? Object.keys(state.levels)
         : [state.selectedLevel];
 
-      // Auto-expand first level with modules if nothing is expanded
-      if (state.expandedLevels.size === 0 && levelIds.length > 0) {
+      // Auto-expand if searching
+      if (state.searchQuery) {
+        levelIds.forEach(id => {
+          const level = state.levels[id];
+          if (level && level.modules.some(m => m.title.toLowerCase().includes(state.searchQuery.toLowerCase()) || m.id.toLowerCase().includes(state.searchQuery.toLowerCase()))) {
+            state.expandedLevels.add(id);
+          }
+        });
+      } else if (state.expandedLevels.size === 0 && levelIds.length > 0) {
+        // Auto-expand first level with modules if nothing is expanded
         const firstLevelWithModules = levelIds.find(id =>
           state.levels[id] && state.levels[id].modules && state.levels[id].modules.length > 0
         );
@@ -783,7 +798,17 @@
         if (!level || level.total === 0) return '';
 
         const filtered = filterModules(level.modules);
-        const passCount = filtered.filter(m => m.status === 'pass').length;
+
+        // Final filter by search query
+        const searchFiltered = filtered.filter(m =>
+          !state.searchQuery ||
+          m.title.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+          m.id.toLowerCase().includes(state.searchQuery.toLowerCase())
+        );
+
+        if (state.searchQuery && searchFiltered.length === 0) return '';
+
+        const passCount = level.modules.filter(m => m.status === 'pass').length;
         const progress = Math.round((passCount / level.total) * 100);
         const isExpanded = state.expandedLevels.has(levelId);
 
@@ -804,12 +829,17 @@
             </div>
             <div class="modules-grid">
               ${level.modules.map((m, idx) => {
-                const visible = state.selectedStatus === 'all' || m.status === state.selectedStatus;
+                const visibleStatus = state.selectedStatus === 'all' || m.status === state.selectedStatus;
+                const visibleSearch = !state.searchQuery ||
+                                     m.title.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                                     m.id.toLowerCase().includes(state.searchQuery.toLowerCase());
+                const visible = visibleStatus && visibleSearch;
+
                 const selected = state.selectedModule?.id === m.id && state.selectedLevelId === levelId;
                 const displayNum = m.num > 0 ? m.num : idx + 1;
                 return `
                   <div class="module-cell ${m.status} ${selected ? 'selected' : ''}"
-                       style="opacity: ${visible ? 1 : 0.2}"
+                       style="display: ${visible ? 'flex' : 'none'}"
                        onclick="selectModule('${levelId}', ${idx})"
                        title="M${displayNum}: ${m.title}">
                     ${displayNum}
