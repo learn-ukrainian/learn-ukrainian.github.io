@@ -80,7 +80,8 @@ def validate_plan(plan_path: Path, level: str) -> list:
 
     # Check word_target matches config
     if plan_target == 0:
-        errors.append(f"Missing word_target (config expects {config_target})")
+        if not is_experimental:
+            errors.append(f"Missing word_target (config expects {config_target})")
     elif not is_experimental and plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
         errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
@@ -88,12 +89,14 @@ def validate_plan(plan_path: Path, level: str) -> list:
     # Check content_outline sums to word_target
     outline = plan.get('content_outline', [])
     if not outline:
-        errors.append("Missing content_outline")
+        if not is_experimental:
+            errors.append("Missing content_outline")
     else:
         outline_sum = sum(s.get('words', 0) for s in outline)
         if outline_sum == 0:
-            errors.append("content_outline has no word budgets")
-        elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
+            if not is_experimental:
+                errors.append("content_outline has no word budgets")
+        elif not is_experimental and abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
             errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
 
     # Check required fields with aliases
@@ -111,7 +114,7 @@ def validate_plan(plan_path: Path, level: str) -> list:
                 if value:
                     break
 
-        if not value:
+        if not value and not is_experimental:
             errors.append(f"Missing required field: {field}")
 
     return errors
