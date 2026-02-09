@@ -7,7 +7,11 @@ Also validates activity_hints types against VALID_ACTIVITY_TYPES for all modules
 import json
 import os
 from pathlib import Path
-import jsonschema
+try:
+    import jsonschema
+    HAS_JSONSCHEMA = True
+except ImportError:
+    HAS_JSONSCHEMA = False
 
 from ..config import VALID_ACTIVITY_TYPES
 
@@ -131,6 +135,14 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
         }]
 
     # 2. Schema Validation
+    if not HAS_JSONSCHEMA:
+        return [{
+            'type': 'SCHEMA_CHECK_SKIPPED',
+            'severity': 'warning',
+            'message': 'jsonschema library not installed. skipping schema validation.',
+            'fix': 'pip install jsonschema'
+        }]
+
     schema_path = Path('schemas/meta-module.schema.json')
     if not schema_path.exists():
         return [{

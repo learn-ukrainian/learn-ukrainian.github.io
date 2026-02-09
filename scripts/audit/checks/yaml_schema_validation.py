@@ -334,7 +334,7 @@ def validate_generic_yaml(yaml_path: Path, schema_name: str) -> Tuple[bool, List
 
     try:
         with open(schema_path, 'r', encoding='utf-8') as f:
-            schema = json.load(f)
+            schema = yaml.safe_load(f)
 
         with open(yaml_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
@@ -348,7 +348,7 @@ def validate_generic_yaml(yaml_path: Path, schema_name: str) -> Tuple[bool, List
         for s_file in schema_dir_path.glob("*.schema.json"):
             try:
                 with open(s_file, 'r', encoding='utf-8') as f:
-                    s_data = json.load(f)
+                    s_data = yaml.safe_load(f)
                     if "$id" in s_data:
                         store[s_data["$id"]] = s_data
                     store[s_file.name] = s_data

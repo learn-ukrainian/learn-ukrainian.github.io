@@ -1,10 +1,22 @@
+---
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://json-schema.org/draft-2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/module-plan.schema.json",
   "title": "Module Plan",
   "description": "Schema for individual module plans (plans/{level}/{slug}.yaml)",
   "type": "object",
-  "required": ["module", "level", "sequence", "version", "title", "focus", "pedagogy", "objectives", "content_outline", "word_target"],
+  "required": [
+    "module",
+    "level",
+    "sequence",
+    "version",
+    "title",
+    "focus",
+    "pedagogy",
+    "objectives",
+    "content_outline",
+    "word_target"
+  ],
   "properties": {
     "module": {
       "type": "string",
@@ -34,7 +46,17 @@
     },
     "focus": {
       "type": "string",
-      "enum": ["grammar", "vocabulary", "cultural", "history", "biography", "literature", "integration", "checkpoint", "professional"],
+      "enum": [
+        "grammar",
+        "vocabulary",
+        "cultural",
+        "history",
+        "biography",
+        "literature",
+        "integration",
+        "checkpoint",
+        "professional"
+      ],
       "description": "Primary focus of the module"
     },
     "pedagogy": {
@@ -169,25 +191,25 @@
         {
           "type": "object",
           "properties": {
-            "previous": { "type": ["string", "null"] },
-            "next": { "type": ["string", "null"] },
-            "related": { "type": "array", "items": { "type": "string" } }
+            "previous": {"type": ["string", "null"]},
+            "next": {"type": ["string", "null"]},
+            "related": {"type": "array", "items": {"type": "string"}}
           }
         },
         {
           "type": "array",
-          "items": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
+          "items": {"oneOf": [{"type": "string"}, {"type": "object"}]}
         }
       ],
       "description": "Links to related modules"
     },
-    "activity_hints": { "type": "array" },
-    "grammar": { "type": "array", "items": { "type": "string" } },
-    "phase": { "type": "string" },
-    "prerequisites": { "type": "array", "items": { "type": "string" } },
-    "register": { "type": "string" },
-    "slug": { "type": "string" },
-    "vocabulary_hints": { "type": "object" },
+    "activity_hints": {"type": "array"},
+    "grammar": {"type": "array", "items": {"type": "string"}},
+    "phase": {"type": "string"},
+    "prerequisites": {"type": "array", "items": {"type": "string"}},
+    "register": {"type": "string"},
+    "slug": {"type": "string"},
+    "vocabulary_hints": {"type": "object"},
     "constraints": {
       "type": "object",
       "properties": {

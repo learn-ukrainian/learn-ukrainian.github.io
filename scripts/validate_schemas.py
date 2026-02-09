@@ -42,7 +42,7 @@ def get_schema_path(schema_name: str) -> Path:
 def load_json_schema(schema_path: Path) -> Dict:
     """Load a JSON schema from file."""
     with open(schema_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
+        return yaml.safe_load(f)
 
 def detect_schema_type(file_path: Path) -> Optional[str]:
     """Detect schema type based on file path."""
@@ -94,7 +94,7 @@ def validate_yaml(file_path: Path, schema_name: Optional[str] = None) -> Tuple[b
         for s_file in schema_dir.glob("*.schema.json"):
             try:
                 with open(s_file, 'r', encoding='utf-8') as f:
-                    s_data = json.load(f)
+                    s_data = yaml.safe_load(f)
                     if "$id" in s_data:
                         store[s_data["$id"]] = s_data
                     # Also store by filename to handle simple relative refs
