@@ -17,10 +17,10 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
 from .config import (
@@ -78,7 +78,42 @@ class ActivitySave(BaseModel):
     activities: list
 
 
+class BatchLaunchRequest(BaseModel):
+    """Request to launch a batch operation."""
+    operation: str
+    track: str
+    start_num: int
+    end_num: int
+    model: Optional[str] = "gemini-3-flash-preview"
+    resume: bool = False
+
+
 # ==================== HELPERS ====================
+
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: list[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, data: dict):
+        message = json.dumps(data)
+        for connection in self.active_connections:
+            try:
+                await connection.send_text(message)
+            except Exception:
+                # Connection might be closed
+                pass
+
+
+manager = ConnectionManager()
 
 
 def parse_word_count(message: str) -> tuple[int, int]:
@@ -213,6 +248,69 @@ def get_db_connection():
     return sqlite3.connect(MESSAGE_DB)
 
 
+# ==================== REPO ENDPOINTS ====================
+
+
+ALLOWED_REPO_DIRS = [
+    PROJECT_ROOT / "curriculum",
+    PROJECT_ROOT / "plans",
+    PROJECT_ROOT / "docs",
+    PROJECT_ROOT / "schemas",
+    PROJECT_ROOT / "scripts",
+    PROJECT_ROOT / "playgrounds",
+    PROJECT_ROOT / "tests",
+]
+
+
+def validate_repo_path(path_str: str) -> Path:
+    """Validate and return a Path object, ensuring it's within allowed directories."""
+    path = (PROJECT_ROOT / path_str).resolve()
+    if not any(path == allowed or allowed in path.parents for allowed in ALLOWED_REPO_DIRS):
+        raise HTTPException(status_code=403, detail="Access denied: Path outside allowed directories")
+    return path
+
+
+@app.get("/api/repo/list")
+async def list_repo_files(path: str = "."):
+    """List files in a repository directory."""
+    target_path = validate_repo_path(path)
+    if not target_path.is_dir():
+        raise HTTPException(status_code=400, detail="Path is not a directory")
+
+    items = []
+    for item in sorted(target_path.iterdir()):
+        items.append({
+            "name": item.name,
+            "path": str(item.relative_to(PROJECT_ROOT)),
+            "is_dir": item.is_dir(),
+            "size": item.stat().st_size if item.is_file() else 0,
+            "modified": datetime.fromtimestamp(item.stat().st_mtime, timezone.utc).isoformat()
+        })
+    return {"path": path, "items": items}
+
+
+@app.get("/api/repo/read")
+async def read_repo_file(path: str):
+    """Read content of a repository file."""
+    target_path = validate_repo_path(path)
+    if not target_path.is_file():
+        raise HTTPException(status_code=400, detail="Path is not a file")
+
+    try:
+        with open(target_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return {
+            "path": path,
+            "content": content,
+            "size": len(content),
+            "modified": datetime.fromtimestamp(target_path.stat().st_mtime, timezone.utc).isoformat()
+        }
+    except UnicodeDecodeError:
+        raise HTTPException(status_code=400, detail="File is not a text file")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ==================== CONFIG ENDPOINTS ====================
 
 
@@ -342,10 +440,60 @@ async def get_module_status(level: str, slug: str):
     return load_module_status(status_file, level_path=level_dir)
 
 
-# ==================== AUDIT ENDPOINTS ====================
+@app.get("/api/status/export")
+async def export_status(level: str = "all", format: str = "json"):
+    """Export module status data as CSV or JSON."""
+    if level == "all":
+        data = await get_all_levels()
+        modules = []
+        for l_id, l_data in data["levels"].items():
+            for m in l_data["modules"]:
+                m["level"] = l_id
+                modules.append(m)
+    else:
+        level_data = await get_level_status(level)
+        modules = level_data["modules"]
+        for m in modules:
+            m["level"] = level
+
+    if format == "csv":
+        import io
+        import csv
+        output = io.StringIO()
+        writer = csv.DictWriter(output, fieldnames=["level", "id", "num", "title", "status", "wordCount", "wordTarget", "activityCount", "naturalness"])
+        writer.writeheader()
+        for m in modules:
+            writer.writerow({
+                "level": m.get("level"),
+                "id": m.get("id"),
+                "num": m.get("num"),
+                "title": m.get("title"),
+                "status": m.get("status"),
+                "wordCount": m.get("wordCount"),
+                "wordTarget": m.get("wordTarget"),
+                "activityCount": m.get("activityCount"),
+                "naturalness": m.get("naturalness")
+            })
+        return StreamingResponse(
+            io.BytesIO(output.getvalue().encode()),
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename=curriculum-status-{level}.csv"}
+        )
+
+    return {"modules": modules}
+
+
+# ==================== BATCH & AUDIT ENDPOINTS ====================
 
 
 audit_status = {}  # Track running audits
+batch_tasks = {}   # Track running batch operations (task_id -> info)
+
+
+@app.get("/api/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
 @app.post("/api/audit/module")
@@ -404,6 +552,159 @@ async def get_audit_status(level: str, slug: str):
     """Get the status of a running or completed audit."""
     audit_key = f"{level}/{slug}"
     return audit_status.get(audit_key, {"status": "not_found"})
+
+
+@app.post("/api/batch/launch")
+async def launch_batch(request: BatchLaunchRequest, background_tasks: BackgroundTasks):
+    """Launch a batch operation."""
+    task_id = f"{request.operation}-{request.track}-{request.start_num}-{request.end_num}-{int(datetime.now().timestamp())}"
+
+    # Determine command based on operation
+    cmd = []
+    if request.operation == "fix-review":
+        cmd = [
+            ".venv/bin/python", "scripts/batch_fix_review.py",
+            request.track, str(request.start_num), str(request.end_num),
+            "--model", request.model or "gemini-3-flash-preview"
+        ]
+        if request.resume:
+            cmd.append("--resume")
+    elif request.operation == "research":
+        cmd = [
+            ".venv/bin/python", "scripts/batch_research.py",
+            request.track, str(request.start_num), str(request.end_num)
+        ]
+    elif request.operation == "orchestrate":
+        # This would need a loop or a specific script that handles orchestration range
+        # For now, we'll use a placeholder or assume a script exists
+        cmd = [".venv/bin/python", "scripts/audit_level.py", request.track]
+    else:
+        raise HTTPException(status_code=400, detail=f"Unknown operation: {request.operation}")
+
+    batch_tasks[task_id] = {
+        "id": task_id,
+        "operation": request.operation,
+        "track": request.track,
+        "status": "running",
+        "progress": 0,
+        "total": request.end_num - request.start_num + 1,
+        "start_num": request.start_num,
+        "end_num": request.end_num,
+        "started": datetime.now(timezone.utc).isoformat(),
+        "command": " ".join(cmd)
+    }
+
+    async def run_batch_process():
+        try:
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+                cwd=PROJECT_ROOT
+            )
+
+            # Store PID if we need to kill it later
+            batch_tasks[task_id]["pid"] = process.pid
+
+            await manager.broadcast({
+                "type": "log",
+                "task_id": task_id,
+                "level": "info",
+                "message": f"Started process {process.pid}: {' '.join(cmd)}"
+            })
+
+            async def stream_output(stream, level):
+                while True:
+                    line = await stream.readline()
+                    if not line:
+                        break
+                    decoded_line = line.decode().strip()
+                    if decoded_line:
+                        await manager.broadcast({
+                            "type": "log",
+                            "task_id": task_id,
+                            "level": level,
+                            "message": decoded_line
+                        })
+
+            # Stream stdout and stderr in parallel
+            await asyncio.gather(
+                stream_output(process.stdout, "info"),
+                stream_output(process.stderr, "error")
+            )
+
+            await process.wait()
+
+            batch_tasks[task_id]["status"] = "completed" if process.returncode == 0 else "failed"
+            batch_tasks[task_id]["exit_code"] = process.returncode
+            batch_tasks[task_id]["completed"] = datetime.now(timezone.utc).isoformat()
+
+            await manager.broadcast({
+                "type": "task_update",
+                "task_id": task_id,
+                "status": batch_tasks[task_id]["status"],
+                "exit_code": process.returncode
+            })
+
+        except Exception as e:
+            batch_tasks[task_id]["status"] = "error"
+            batch_tasks[task_id]["error"] = str(e)
+            await manager.broadcast({
+                "type": "log",
+                "task_id": task_id,
+                "level": "error",
+                "message": f"Process error: {e}"
+            })
+
+    background_tasks.add_task(run_batch_process)
+
+    return {"task_id": task_id, "message": "Batch operation launched"}
+
+
+@app.get("/api/batch/status")
+async def get_all_batch_status():
+    """Get status of all batch operations."""
+    return list(batch_tasks.values())
+
+
+@app.get("/api/batch/status/{task_id}")
+async def get_batch_status(task_id: str):
+    """Get status of a specific batch operation."""
+    if task_id not in batch_tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return batch_tasks[task_id]
+
+
+@app.post("/api/batch/stop/{task_id}")
+async def stop_batch(task_id: str):
+    """Stop a running batch operation."""
+    if task_id not in batch_tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    task = batch_tasks[task_id]
+    if task["status"] != "running":
+        return {"message": "Task is not running", "status": task["status"]}
+
+    if "pid" in task:
+        try:
+            import os
+            import signal
+            os.kill(task["pid"], signal.SIGTERM)
+            task["status"] = "stopped"
+            task["completed"] = datetime.now(timezone.utc).isoformat()
+            return {"message": "Task stopped"}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to stop task: {e}")
+
+    return {"message": "Task has no PID, cannot stop"}
+
+
+@app.get("/api/batch/recent")
+async def get_recent_results():
+    """Get recent batch results from checkpoints or logs."""
+    # This is a bit complex as it depends on where scripts save results.
+    # For now, return the in-memory tasks.
+    return {"results": list(batch_tasks.values())}
 
 
 # ==================== MESSAGE ENDPOINTS ====================
@@ -602,6 +903,20 @@ async def save_activities(level: str, slug: str, request: ActivitySave):
         return {"saved": str(activity_file), "count": len(request.activities)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error saving activities: {e}")
+
+
+# ==================== WEBSOCKET ====================
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Keep connection alive, we mostly broadcast
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
 
 
 # ==================== STATIC FILES ====================

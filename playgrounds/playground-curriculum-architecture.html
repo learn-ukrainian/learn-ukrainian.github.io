@@ -498,20 +498,12 @@
   </div>
 
   <script>
+    // ==================== CONFIG ====================
+    const API_BASE = window.location.origin;
+
     // ==================== DATA ====================
 
-    const LEVELS = [
-      { id: 'a1', name: 'A1', count: 44, track: 'core' },
-      { id: 'a2', name: 'A2', count: 70, track: 'core' },
-      { id: 'b1', name: 'B1', count: 92, track: 'core' },
-      { id: 'b2', name: 'B2', count: 94, track: 'core' },
-      { id: 'c1', name: 'C1', count: 106, track: 'core' },
-      { id: 'c2', name: 'C2', count: 100, track: 'core' },
-      { id: 'b2-hist', name: 'B2-HIST', count: 140, track: 'history' },
-      { id: 'c1-bio', name: 'C1-BIO', count: 128, track: 'biography' },
-      { id: 'c1-hist', name: 'C1-HIST', count: 0, track: 'history' },
-      { id: 'lit', name: 'LIT', count: 30, track: 'literature' }
-    ];
+    let LEVELS = [];
 
     const TRACKS = {
       core: { name: 'Core Track', levels: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'], color: '#3b82f6', total: 506 },
@@ -633,8 +625,41 @@
       view: 'layers',
       selectedLevel: 'b1',
       selectedFile: 'plan',
-      workflowStep: 0
+      selectedSlug: null,
+      workflowStep: 0,
+      fileTree: {},
+      fileContent: {}
     };
+
+    // ==================== API ====================
+
+    async function fetchAPI(endpoint) {
+      const response = await fetch(`${API_BASE}${endpoint}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }
+
+    async function initAPI() {
+      try {
+        const config = await fetchAPI('/api/config');
+        LEVELS = config.levels;
+        renderLevelSelector();
+        updateAll();
+      } catch (e) {
+        console.error('API Error:', e);
+      }
+    }
+
+    async function loadFileContent(path, key) {
+      try {
+        const data = await fetchAPI(`/api/repo/read?path=${encodeURIComponent(path)}`);
+        state.fileContent[key] = data.content;
+        renderDiagram();
+      } catch (e) {
+        state.fileContent[key] = `Error loading file: ${path}`;
+        renderDiagram();
+      }
+    }
 
     // ==================== RENDERING ====================
 
@@ -822,23 +847,48 @@
     }
 
     function renderModuleView() {
+      const slug = state.selectedSlug || '01-introduction';
+      const file = MODULE_FILES.find(f => f.id === state.selectedFile);
+      const path = file.path.replace('{level}', state.selectedLevel).replace('{slug}', slug);
+      const content = state.fileContent[path] || 'Loading...';
+
       return `
+        <div style="margin-bottom:12px; display:flex; gap:8px; align-items:center;">
+          <span style="font-size:12px; color:#94a3b8;">Module Slug:</span>
+          <input type="text" value="${slug}" onchange="state.selectedSlug = this.value; renderDiagram();"
+                 style="background:#0f172a; border:1px solid #334155; color:white; padding:4px 8px; border-radius:4px; font-size:12px;">
+          <button class="level-btn" onclick="loadFileContent('${path}', '${path}')" style="padding:4px 8px;">Reload</button>
+        </div>
         <div class="module-structure">
           <div class="module-files">
             ${MODULE_FILES.map(f => `
               <div class="module-file ${f.id} ${state.selectedFile === f.id ? 'selected' : ''}"
-                   onclick="selectFile('${f.id}')">
+                   onclick="selectModuleFile('${f.id}', '${f.path.replace('{level}', state.selectedLevel).replace('{slug}', slug)}')">
                 <div class="module-file-name">${f.name}</div>
-                <div class="module-file-path">${f.path.replace('{level}', state.selectedLevel).replace('{slug}', 'aspect-future')}</div>
+                <div class="module-file-path">${f.path.replace('{level}', state.selectedLevel).replace('{slug}', slug)}</div>
               </div>
             `).join('')}
           </div>
           <div class="file-preview">
-            <h4>${MODULE_FILES.find(f => f.id === state.selectedFile)?.name || 'Select a file'}</h4>
-            <pre class="preview-code">${FILE_PREVIEWS[state.selectedFile] || ''}</pre>
+            <h4>${file.name}</h4>
+            <pre class="preview-code">${escapeHtml(content)}</pre>
           </div>
         </div>
       `;
+    }
+
+    function selectModuleFile(id, path) {
+      state.selectedFile = id;
+      if (!state.fileContent[path]) {
+        loadFileContent(path, path);
+      }
+      renderDiagram();
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
     }
 
     function updatePrompt() {
@@ -942,7 +992,7 @@ Each module has 6 files:
 
     // ==================== INIT ====================
 
-    updateAll();
+    initAPI();
   </script>
 </body>
 </html>

@@ -549,27 +549,55 @@
     const ACTIVITY_TYPES = {
       quiz: {
         name: 'Quiz',
-        desc: 'Multiple choice questions',
+        desc: 'Multiple choice - single correct',
         defaults: {
           title: 'Vocabulary Quiz',
           instruction: 'Choose the correct answer.',
           items: [
-            { question: 'Як перекладається "hello"?', options: ['привіт', 'бувай', 'дякую', 'будь ласка'], correct: 0 },
-            { question: 'Що означає "дякую"?', options: ['hello', 'goodbye', 'thank you', 'please'], correct: 2 }
+            { question: 'Як перекладається "hello"?', options: [{text: 'привіт', correct: true}, {text: 'бувай', correct: false}, {text: 'дякую', correct: false}, {text: 'будь ласка', correct: false}] },
+            { question: 'Що означає "дякую"?', options: [{text: 'hello', correct: false}, {text: 'goodbye', correct: false}, {text: 'thank you', correct: true}, {text: 'please', correct: false}] }
+          ]
+        }
+      },
+      select: {
+        name: 'Select',
+        desc: 'Multiple choice - multiple correct',
+        defaults: {
+          title: 'Grammar Select',
+          instruction: 'Select all correct forms.',
+          items: [
+            { question: 'Які з цих слів є іменниками?', options: [
+              { text: 'стіл', correct: true },
+              { text: 'бігати', correct: false },
+              { text: 'червоний', correct: false },
+              { text: 'яблуко', correct: true }
+            ], min_correct: 2 }
           ]
         }
       },
       'fill-in': {
-        name: 'Fill in the Blanks',
-        desc: 'Complete sentences with missing words',
+        name: 'Fill in',
+        desc: 'Gap fill with dropdown',
         defaults: {
           title: 'Complete the Sentences',
-          instruction: 'Fill in the blanks with the correct words.',
+          instruction: 'Choose the correct words.',
           items: [
-            { text: 'Я ___ українською мовою.', blank: 'говорю' },
-            { text: 'Вона ___ каву щоранку.', blank: 'п\'є' }
-          ],
-          wordBank: true
+            { sentence: 'Я ___ українською мовою.', answer: 'говорю', options: ['говорю', 'говориш', 'говорять', 'говоримо'] },
+            { sentence: 'Вона ___ каву щоранку.', answer: 'п\'є', options: ['п\'ю', 'п\'єш', 'п\'є', 'п\'ють'] }
+          ]
+        }
+      },
+      cloze: {
+        name: 'Cloze',
+        desc: 'Passage with multiple blanks',
+        defaults: {
+          title: 'Reading Cloze',
+          instruction: 'Choose the correct words for the passage.',
+          passage: 'Київ — {1} України. Це {2} місто на річці Дніпро.',
+          blanks: [
+            { id: 1, answer: 'столиця', options: ['столиця', 'село', 'гора'] },
+            { id: 2, answer: 'велике', options: ['велике', 'маленьке', 'нове'] }
+          ]
         }
       },
       'match-up': {
@@ -581,14 +609,47 @@
           pairs: [
             { left: 'книга', right: 'book' },
             { left: 'стіл', right: 'table' },
-            { left: 'вікно', right: 'window' },
-            { left: 'двері', right: 'door' }
+            { left: 'вікно', right: 'window' }
+          ]
+        }
+      },
+      'group-sort': {
+        name: 'Group Sort',
+        desc: 'Sort items into categories',
+        defaults: {
+          title: 'Sort Nouns by Gender',
+          instruction: 'Place each word in the correct gender group.',
+          groups: [
+            { name: 'Чоловічий', items: ['стіл', 'син', 'батько'] },
+            { name: 'Жіночий', items: ['мама', 'книга', 'школа'] }
+          ]
+        }
+      },
+      unjumble: {
+        name: 'Unjumble',
+        desc: 'Reorder words into sentence',
+        defaults: {
+          title: 'Unjumble the Sentence',
+          instruction: 'Drag the words into the correct order.',
+          items: [
+            { words: ['Я', 'люблю', 'читати'], answer: 'Я люблю читати' }
+          ]
+        }
+      },
+      'error-correction': {
+        name: 'Error Correction',
+        desc: 'Find and fix grammatical errors',
+        defaults: {
+          title: 'Fix the Mistakes',
+          instruction: 'Find the incorrect word and choose the correction.',
+          items: [
+            { sentence: 'Я йду до школа.', error: 'школа', answer: 'школи', options: ['школи', 'школу', 'школою', 'школі'], explanation: 'Genitive case required after "до".' }
           ]
         }
       },
       'mark-the-words': {
         name: 'Mark the Words',
-        desc: 'Identify specific words in text',
+        desc: 'Identify words in text',
         defaults: {
           title: 'Find the Nouns',
           instruction: 'Click on all the nouns in the sentence.',
@@ -596,24 +657,57 @@
           answers: ['день', 'радість', 'серце']
         }
       },
-      ordering: {
-        name: 'Ordering',
-        desc: 'Arrange items in correct order',
+      translate: {
+        name: 'Translate',
+        desc: 'Translation multiple choice',
         defaults: {
-          title: 'Order the Sentence',
-          instruction: 'Drag the words into the correct order.',
-          items: ['Я', 'люблю', 'читати', 'книги', 'ввечері']
+          title: 'Translate to Ukrainian',
+          instruction: 'Choose the correct Ukrainian translation.',
+          items: [
+            { source: 'I have a book.', options: [
+              { text: 'У мене є книга.', correct: true },
+              { text: 'Я маю книгу.', correct: true },
+              { text: 'Мені є книга.', correct: false },
+              { text: 'У мене була книга.', correct: false }
+            ] }
+          ]
+        }
+      },
+      anagram: {
+        name: 'Anagram',
+        desc: 'Letter unscrambling',
+        defaults: {
+          title: 'Unscramble the Letters',
+          instruction: 'Unscramble the letters to form a word.',
+          items: [
+            { scrambled: 'овлоко', answer: 'молоко', hint: 'milk' }
+          ]
         }
       },
       'true-false': {
         name: 'True/False',
-        desc: 'Judge statements as true or false',
+        desc: 'Judge statements',
         defaults: {
           title: 'True or False?',
           instruction: 'Decide if each statement is true or false.',
           items: [
-            { statement: 'Київ — столиця України.', answer: true },
-            { statement: 'В українській мові 32 літери.', answer: false }
+            { statement: 'Київ — столиця України.', correct: true },
+            { statement: 'В українській мові 32 літери.', correct: false }
+          ]
+        }
+      },
+      'essay-response': {
+        name: 'Essay',
+        desc: 'Long-form writing task',
+        defaults: {
+          title: 'Writing Task',
+          instruction: 'Write a short essay on the given topic.',
+          prompt: 'Опишіть свій улюблений день.',
+          min_words: 50,
+          model_answer: 'Мій улюблений день — це субота...',
+          rubric: [
+            { criteria: 'Grammar', description: 'Correct use of cases.' },
+            { criteria: 'Vocabulary', description: 'Use of varied vocabulary.' }
           ]
         }
       }
@@ -758,30 +852,52 @@
         instruction: activity.instruction || ''
       };
 
-      if (type === 'quiz') {
-        config.items = (activity.questions || []).map(q => ({
-          question: q.question,
-          options: q.options || [],
-          correct: q.options?.indexOf(q.correct) ?? 0
+      if (type === 'quiz' || type === 'select' || type === 'translate') {
+        config.items = (activity.items || activity.questions || activity.source || []).map(item => ({
+          question: item.question,
+          source: item.source,
+          options: (item.options || []).map(opt => (
+            typeof opt === 'string'
+              ? { text: opt, correct: opt === item.correct }
+              : { text: opt.text, correct: opt.correct }
+          )),
+          min_correct: item.min_correct
         }));
       } else if (type === 'fill-in') {
-        config.items = (activity.sentences || []).map(s => ({
-          text: s.text,
-          blank: s.answer
+        config.items = (activity.items || activity.sentences || []).map(s => ({
+          sentence: s.sentence || s.text,
+          answer: s.answer,
+          options: s.options || [s.answer]
         }));
-        config.wordBank = activity.show_word_bank ?? true;
+      } else if (type === 'cloze') {
+        config.passage = activity.passage;
+        config.blanks = activity.blanks || [];
       } else if (type === 'match-up') {
         config.pairs = activity.pairs || [];
+      } else if (type === 'group-sort') {
+        config.groups = activity.groups || [];
+      } else if (type === 'unjumble') {
+        config.items = (activity.items || []).map(item => ({
+          words: item.words,
+          answer: item.answer
+        }));
+      } else if (type === 'error-correction') {
+        config.items = activity.items || [];
       } else if (type === 'mark-the-words') {
         config.text = activity.text || '';
         config.answers = activity.answers || [];
-      } else if (type === 'ordering') {
+      } else if (type === 'anagram') {
         config.items = activity.items || [];
       } else if (type === 'true-false') {
-        config.items = (activity.statements || []).map(s => ({
+        config.items = (activity.items || activity.statements || []).map(s => ({
           statement: s.statement,
-          answer: s.answer
+          correct: s.correct ?? s.answer
         }));
+      } else if (type === 'essay-response') {
+        config.prompt = activity.prompt;
+        config.min_words = activity.min_words || 100;
+        config.model_answer = activity.model_answer;
+        config.rubric = activity.rubric || [];
       }
 
       state.config = config;
@@ -829,36 +945,56 @@
 
     function convertToYamlFormat() {
       const c = state.config;
+      const type = state.type;
       const activity = {
-        type: state.type,
+        type: type,
         title: c.title,
         instruction: c.instruction
       };
 
-      if (state.type === 'quiz') {
-        activity.questions = c.items.map(item => ({
-          question: item.question,
-          options: item.options,
-          correct: item.options[item.correct]
+      if (type === 'quiz' || type === 'select' || type === 'translate') {
+        activity.items = c.items.map(item => {
+          const formatted = { options: item.options };
+          if (item.question) formatted.question = item.question;
+          if (item.source) formatted.source = item.source;
+          if (item.min_correct) formatted.min_correct = item.min_correct;
+          return formatted;
+        });
+      } else if (type === 'fill-in') {
+        activity.items = c.items.map(item => ({
+          sentence: item.sentence,
+          answer: item.answer,
+          options: item.options
         }));
-      } else if (state.type === 'fill-in') {
-        activity.sentences = c.items.map(item => ({
-          text: item.text,
-          answer: item.blank
-        }));
-        if (c.wordBank) activity.show_word_bank = true;
-      } else if (state.type === 'match-up') {
+      } else if (type === 'cloze') {
+        activity.passage = c.passage;
+        activity.blanks = c.blanks;
+      } else if (type === 'match-up') {
         activity.pairs = c.pairs;
-      } else if (state.type === 'mark-the-words') {
-        activity.text = c.text;
-        activity.answers = c.answers;
-      } else if (state.type === 'ordering') {
-        activity.items = c.items;
-      } else if (state.type === 'true-false') {
-        activity.statements = c.items.map(item => ({
-          statement: item.statement,
+      } else if (type === 'group-sort') {
+        activity.groups = c.groups;
+      } else if (type === 'unjumble') {
+        activity.items = c.items.map(item => ({
+          words: item.words,
           answer: item.answer
         }));
+      } else if (type === 'error-correction') {
+        activity.items = c.items;
+      } else if (type === 'mark-the-words') {
+        activity.text = c.text;
+        activity.answers = c.answers;
+      } else if (type === 'anagram') {
+        activity.items = c.items;
+      } else if (type === 'true-false') {
+        activity.items = c.items.map(item => ({
+          statement: item.statement,
+          correct: item.correct
+        }));
+      } else if (type === 'essay-response') {
+        activity.prompt = c.prompt;
+        activity.min_words = c.min_words;
+        activity.model_answer = c.model_answer;
+        activity.rubric = c.rubric;
       }
 
       return activity;
@@ -919,94 +1055,208 @@
     function renderConfig() {
       const container = document.getElementById('config-section');
       const type = state.type;
+      const c = state.config;
 
       let html = `
-        <h3>Configuration</h3>
+        <h3>General</h3>
         <div class="config-row">
           <label class="config-label">Title</label>
-          <input class="config-input" type="text" value="${state.config.title || ''}" onchange="updateConfig('title', this.value)">
+          <input class="config-input" type="text" value="${c.title || ''}" onchange="updateConfig('title', this.value)">
         </div>
         <div class="config-row">
           <label class="config-label">Instruction</label>
-          <input class="config-input" type="text" value="${state.config.instruction || ''}" onchange="updateConfig('instruction', this.value)">
+          <input class="config-input" type="text" value="${c.instruction || ''}" onchange="updateConfig('instruction', this.value)">
         </div>
       `;
 
-      if (type === 'quiz') {
-        html += `
-          <h3>Questions (${state.config.items.length})</h3>
-          ${state.config.items.map((item, i) => `
-            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
-              <input class="config-input" type="text" value="${item.question}" placeholder="Question ${i + 1}" onchange="updateQuizQuestion(${i}, 'question', this.value)" style="margin-bottom: 8px;">
+      if (type === 'quiz' || type === 'select' || type === 'translate') {
+        html += `<h3>Items (${c.items.length})</h3>`;
+        c.items.forEach((item, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <label class="config-label">${type === 'translate' ? 'Source Text' : 'Question'}</label>
+              <input class="config-input" type="text" value="${item.question || item.source || ''}"
+                     onchange="updateItem(${i}, '${type === 'translate' ? 'source' : 'question'}', this.value)" style="margin-bottom: 8px;">
+
+              <label class="config-label">Options</label>
               ${item.options.map((opt, j) => `
                 <div style="display: flex; gap: 8px; margin-bottom: 4px;">
-                  <input type="radio" name="correct-${i}" ${item.correct === j ? 'checked' : ''} onchange="updateQuizQuestion(${i}, 'correct', ${j})">
-                  <input class="config-input" type="text" value="${opt}" onchange="updateQuizOption(${i}, ${j}, this.value)" style="flex: 1;">
+                  <input type="${type === 'select' ? 'checkbox' : 'radio'}" name="correct-${i}"
+                         ${opt.correct ? 'checked' : ''}
+                         onchange="updateOptionCorrect(${i}, ${j}, ${type === 'select' ? 'this.checked' : 'true'})">
+                  <input class="config-input" type="text" value="${opt.text}"
+                         onchange="updateOptionText(${i}, ${j}, this.value)" style="flex: 1;">
+                  <button onclick="removeOption(${i}, ${j})" style="background:none;border:none;color:#ef4444;cursor:pointer;">×</button>
                 </div>
               `).join('')}
+              <button class="module-btn load" style="width:100%;margin-top:4px;" onclick="addOption(${i})">+ Add Option</button>
             </div>
-          `).join('')}
-          <button class="add-item-btn" onclick="addQuizQuestion()">+ Add Question</button>
-        `;
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addItem()">+ Add Item</button>`;
       } else if (type === 'fill-in') {
+        html += `<h3>Sentences (${c.items.length})</h3>`;
+        c.items.forEach((item, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <label class="config-label">Sentence (use ___ for blank)</label>
+              <input class="config-input" type="text" value="${item.sentence}" onchange="updateItem(${i}, 'sentence', this.value)" style="margin-bottom: 8px;">
+              <label class="config-label">Correct Answer</label>
+              <input class="config-input" type="text" value="${item.answer}" onchange="updateItem(${i}, 'answer', this.value)" style="margin-bottom: 8px;">
+              <label class="config-label">Distractors (comma separated)</label>
+              <input class="config-input" type="text" value="${item.options.filter(o => o !== item.answer).join(', ')}"
+                     onchange="updateFillInOptions(${i}, this.value)">
+            </div>
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addItem()">+ Add Sentence</button>`;
+      } else if (type === 'cloze') {
         html += `
-          <div class="checkbox-row">
-            <input type="checkbox" id="word-bank" ${state.config.wordBank ? 'checked' : ''} onchange="updateConfig('wordBank', this.checked)">
-            <label for="word-bank">Show word bank</label>
+          <div class="config-row">
+            <label class="config-label">Passage (use {1}, {2} etc. for blanks)</label>
+            <textarea class="config-input" rows="4" onchange="updateConfig('passage', this.value)">${c.passage}</textarea>
           </div>
-          <h3>Sentences (${state.config.items.length})</h3>
-          ${state.config.items.map((item, i) => `
-            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
-              <input class="config-input" type="text" value="${item.text}" placeholder="Sentence with ___ blank" onchange="updateFillInItem(${i}, 'text', this.value)" style="margin-bottom: 8px;">
-              <input class="config-input" type="text" value="${item.blank}" placeholder="Answer word" onchange="updateFillInItem(${i}, 'blank', this.value)">
+          <h3>Blanks (${c.blanks.length})</h3>
+          ${c.blanks.map((blank, i) => `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <label class="config-label">Blank #${blank.id} Correct Answer</label>
+              <input class="config-input" type="text" value="${blank.answer}" onchange="updateClozeBlank(${i}, 'answer', this.value)" style="margin-bottom: 8px;">
+              <label class="config-label">All Options (comma separated)</label>
+              <input class="config-input" type="text" value="${blank.options.join(', ')}" onchange="updateClozeBlank(${i}, 'options', this.value.split(',').map(s=>s.trim()))">
             </div>
           `).join('')}
-          <button class="add-item-btn" onclick="addFillInItem()">+ Add Sentence</button>
+          <button class="add-item-btn" onclick="addClozeBlank()">+ Add Blank</button>
         `;
       } else if (type === 'match-up') {
-        html += `
-          <h3>Pairs (${state.config.pairs.length})</h3>
-          ${state.config.pairs.map((pair, i) => `
+        html += `<h3>Pairs (${c.pairs.length})</h3>`;
+        c.pairs.forEach((pair, i) => {
+          html += `
             <div class="config-row" style="display: flex; gap: 8px; margin-bottom: 8px;">
               <input class="config-input" type="text" value="${pair.left}" onchange="updateMatchPair(${i}, 'left', this.value)">
               <span style="color: #64748b;">↔</span>
               <input class="config-input" type="text" value="${pair.right}" onchange="updateMatchPair(${i}, 'right', this.value)">
+              <button onclick="removeMatchPair(${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;">×</button>
             </div>
-          `).join('')}
-          <button class="add-item-btn" onclick="addMatchPair()">+ Add Pair</button>
-        `;
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addMatchPair()">+ Add Pair</button>`;
+      } else if (type === 'group-sort') {
+        html += `<h3>Groups (${c.groups.length})</h3>`;
+        c.groups.forEach((group, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <label class="config-label">Group Name</label>
+              <input class="config-input" type="text" value="${group.name}" onchange="updateGroup(${i}, 'name', this.value)" style="margin-bottom: 8px;">
+              <label class="config-label">Items (one per line)</label>
+              <textarea class="config-input" rows="3" onchange="updateGroup(${i}, 'items', this.value.split('\\n').filter(s=>s.trim()))">${group.items.join('\n')}</textarea>
+            </div>
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addGroup()">+ Add Group</button>`;
+      } else if (type === 'unjumble') {
+        html += `<h3>Sentences (${c.items.length})</h3>`;
+        c.items.forEach((item, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <label class="config-label">Correct Sentence</label>
+              <input class="config-input" type="text" value="${item.answer}" onchange="updateUnjumble(${i}, this.value)">
+            </div>
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addItem()">+ Add Sentence</button>`;
+      } else if (type === 'error-correction') {
+        html += `<h3>Items (${c.items.length})</h3>`;
+        c.items.forEach((item, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <label class="config-label">Sentence</label>
+              <input class="config-input" type="text" value="${item.sentence}" onchange="updateItem(${i}, 'sentence', this.value)" style="margin-bottom: 8px;">
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+                <div>
+                  <label class="config-label">Incorrect Part</label>
+                  <input class="config-input" type="text" value="${item.error}" onchange="updateItem(${i}, 'error', this.value)">
+                </div>
+                <div>
+                  <label class="config-label">Correction</label>
+                  <input class="config-input" type="text" value="${item.answer}" onchange="updateItem(${i}, 'answer', this.value)">
+                </div>
+              </div>
+              <label class="config-label">Options (comma separated)</label>
+              <input class="config-input" type="text" value="${item.options.join(', ')}" onchange="updateItem(${i}, 'options', this.value.split(',').map(s=>s.trim()))" style="margin-bottom: 8px;">
+              <label class="config-label">Explanation</label>
+              <input class="config-input" type="text" value="${item.explanation}" onchange="updateItem(${i}, 'explanation', this.value)">
+            </div>
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addItem()">+ Add Item</button>`;
       } else if (type === 'mark-the-words') {
         html += `
           <div class="config-row">
             <label class="config-label">Text</label>
-            <textarea class="config-input" rows="3" onchange="updateConfig('text', this.value)">${state.config.text}</textarea>
+            <textarea class="config-input" rows="4" onchange="updateConfig('text', this.value)">${c.text}</textarea>
           </div>
           <div class="config-row">
             <label class="config-label">Correct words (comma-separated)</label>
-            <input class="config-input" type="text" value="${state.config.answers.join(', ')}" onchange="updateConfig('answers', this.value.split(',').map(s => s.trim()))">
+            <input class="config-input" type="text" value="${c.answers.join(', ')}" onchange="updateConfig('answers', this.value.split(',').map(s => s.trim()))">
           </div>
         `;
-      } else if (type === 'ordering') {
-        html += `
-          <h3>Items to Order</h3>
-          <div class="config-row">
-            <label class="config-label">Items (one per line, in correct order)</label>
-            <textarea class="config-input" rows="6" onchange="updateConfig('items', this.value.split('\\n').filter(s => s.trim()))">${state.config.items.join('\n')}</textarea>
-          </div>
-        `;
+      } else if (type === 'anagram') {
+        html += `<h3>Items (${c.items.length})</h3>`;
+        c.items.forEach((item, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                <div>
+                  <label class="config-label">Scrambled</label>
+                  <input class="config-input" type="text" value="${item.scrambled}" onchange="updateItem(${i}, 'scrambled', this.value)">
+                </div>
+                <div>
+                  <label class="config-label">Answer</label>
+                  <input class="config-input" type="text" value="${item.answer}" onchange="updateItem(${i}, 'answer', this.value)">
+                </div>
+              </div>
+              <label class="config-label" style="margin-top:8px;">Hint (optional)</label>
+              <input class="config-input" type="text" value="${item.hint || ''}" onchange="updateItem(${i}, 'hint', this.value)">
+            </div>
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addItem()">+ Add Item</button>`;
       } else if (type === 'true-false') {
-        html += `
-          <h3>Statements (${state.config.items.length})</h3>
-          ${state.config.items.map((item, i) => `
-            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
-              <input class="config-input" type="text" value="${item.statement}" onchange="updateTFItem(${i}, 'statement', this.value)" style="margin-bottom: 8px;">
+        html += `<h3>Statements (${c.items.length})</h3>`;
+        c.items.forEach((item, i) => {
+          html += `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <input class="config-input" type="text" value="${item.statement}" onchange="updateItem(${i}, 'statement', this.value)" style="margin-bottom: 8px;">
               <label style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
-                <input type="checkbox" ${item.answer ? 'checked' : ''} onchange="updateTFItem(${i}, 'answer', this.checked)">
-                Answer is TRUE
+                <input type="checkbox" ${item.correct ? 'checked' : ''} onchange="updateItem(${i}, 'correct', this.checked)">
+                Correct answer is TRUE
               </label>
             </div>
+          `;
+        });
+        html += `<button class="add-item-btn" onclick="addItem()">+ Add Statement</button>`;
+      } else if (type === 'essay-response') {
+        html += `
+          <div class="config-row">
+            <label class="config-label">Prompt</label>
+            <textarea class="config-input" rows="3" onchange="updateConfig('prompt', this.value)">${c.prompt}</textarea>
+          </div>
+          <div class="config-row">
+            <label class="config-label">Minimum Words</label>
+            <input class="config-input" type="number" value="${c.min_words}" onchange="updateConfig('min_words', parseInt(this.value))">
+          </div>
+          <div class="config-row">
+            <label class="config-label">Model Answer</label>
+            <textarea class="config-input" rows="4" onchange="updateConfig('model_answer', this.value)">${c.model_answer}</textarea>
+          </div>
+          <h3>Rubric</h3>
+          ${c.rubric.map((r, i) => `
+            <div class="config-row" style="background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+              <input class="config-input" type="text" value="${r.criteria}" placeholder="Criteria" onchange="updateRubric(${i}, 'criteria', this.value)" style="margin-bottom: 4px;">
+              <input class="config-input" type="text" value="${r.description}" placeholder="Description" onchange="updateRubric(${i}, 'description', this.value)">
+            </div>
           `).join('')}
-          <button class="add-item-btn" onclick="addTFItem()">+ Add Statement</button>
+          <button class="add-item-btn" onclick="addRubric()">+ Add Rubric Item</button>
         `;
       }
 
@@ -1016,6 +1266,7 @@
     function renderPreview() {
       const container = document.getElementById('preview');
       const c = state.config;
+      const type = state.type;
 
       let html = `
         <div class="preview-header">
@@ -1024,57 +1275,82 @@
         </div>
       `;
 
-      if (state.type === 'quiz') {
-        html += c.items.map((item, i) => `
+      if (type === 'quiz' || type === 'select' || type === 'translate') {
+        html += (c.items || []).map((item, i) => `
           <div class="quiz-question">
-            <div class="quiz-question-text">${i + 1}. ${item.question}</div>
+            <div class="quiz-question-text">${i + 1}. ${item.question || item.source}</div>
             <div class="quiz-options">
-              ${item.options.map((opt, j) => `
-                <div class="quiz-option ${j === item.correct ? 'correct' : ''}">
+              ${(item.options || []).map(opt => `
+                <div class="quiz-option ${opt.correct ? 'correct' : ''}">
                   <div class="quiz-option-marker"></div>
-                  <span>${opt}</span>
+                  <span>${opt.text}</span>
                 </div>
               `).join('')}
             </div>
           </div>
         `).join('');
-      } else if (state.type === 'fill-in') {
+      } else if (type === 'fill-in') {
         html += '<div class="fill-in-text">';
-        c.items.forEach(item => {
-          const parts = item.text.split('___');
-          html += parts[0] + `<span class="fill-in-blank">${item.blank}</span>` + (parts[1] || '');
+        (c.items || []).forEach(item => {
+          const parts = (item.sentence || '').split('___');
+          html += parts[0] + `<span class="fill-in-blank">${item.answer}</span>` + (parts[1] || '');
           html += '<br>';
         });
         html += '</div>';
-
-        if (c.wordBank) {
-          html += '<div class="word-bank">';
-          const shuffled = [...c.items.map(i => i.blank)].sort(() => Math.random() - 0.5);
-          shuffled.forEach(word => {
-            html += `<span class="word-bank-item">${word}</span>`;
-          });
-          html += '</div>';
-        }
-      } else if (state.type === 'match-up') {
-        const shuffledRight = [...c.pairs].sort(() => Math.random() - 0.5);
+      } else if (type === 'cloze') {
+        let passage = c.passage || '';
+        (c.blanks || []).forEach(blank => {
+          passage = passage.replace(`{${blank.id}}`, `<span class="fill-in-blank">${blank.answer}</span>`);
+        });
+        html += `<div class="fill-in-text">${passage.replace(/\n/g, '<br>')}</div>`;
+      } else if (type === 'match-up') {
         html += `
           <div class="matchup-container">
             <div class="matchup-column">
-              <h4>Ukrainian</h4>
-              ${c.pairs.map(p => `<div class="matchup-item">${p.left}</div>`).join('')}
+              <h4>Left</h4>
+              ${(c.pairs || []).map(p => `<div class="matchup-item">${p.left}</div>`).join('')}
             </div>
             <div class="matchup-column">
-              <h4>English</h4>
-              ${shuffledRight.map(p => `<div class="matchup-item">${p.right}</div>`).join('')}
+              <h4>Right</h4>
+              ${(c.pairs || []).map(p => `<div class="matchup-item">${p.right}</div>`).join('')}
             </div>
           </div>
         `;
-      } else if (state.type === 'mark-the-words') {
-        const words = c.text.split(/(\s+)/);
+      } else if (type === 'group-sort') {
+        html += `<div style="display:grid; grid-template-columns: repeat(${c.groups.length}, 1fr); gap:16px;">`;
+        (c.groups || []).forEach(group => {
+          html += `
+            <div class="matchup-column">
+              <h4>${group.name}</h4>
+              <div style="background:#0f172a; padding:10px; border-radius:8px; min-height:100px;">
+                ${(group.items || []).map(item => `<div class="matchup-item" style="margin-bottom:4px;">${item}</div>`).join('')}
+              </div>
+            </div>
+          `;
+        });
+        html += `</div>`;
+      } else if (type === 'unjumble') {
+        html += (c.items || []).map((item, i) => `
+          <div style="margin-bottom:20px;">
+            <div class="quiz-question-text">${i + 1}. Unjumble:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              ${(item.words || []).map(word => `<span class="word-bank-item">${word}</span>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      } else if (type === 'error-correction') {
+        html += (c.items || []).map((item, i) => `
+          <div style="margin-bottom:20px;">
+            <div class="fill-in-text">${item.sentence.replace(item.error, `<span class="mark-word incorrect">${item.error}</span>`)}</div>
+            <div style="margin-top:8px; color:#10b981; font-size:14px;">Correction: ${item.answer}</div>
+          </div>
+        `).join('');
+      } else if (type === 'mark-the-words') {
+        const words = (c.text || '').split(/(\s+)/);
         html += '<div class="mark-text">';
         words.forEach(word => {
           const cleanWord = word.replace(/[.,!?;:]/g, '');
-          if (c.answers.includes(cleanWord)) {
+          if ((c.answers || []).includes(cleanWord)) {
             html += `<span class="mark-word correct">${word}</span>`;
           } else if (word.trim()) {
             html += `<span class="mark-word">${word}</span>`;
@@ -1083,34 +1359,37 @@
           }
         });
         html += '</div>';
-      } else if (state.type === 'ordering') {
-        const shuffled = [...c.items].sort(() => Math.random() - 0.5);
-        html += '<div class="order-list">';
-        shuffled.forEach((item, i) => {
-          html += `
-            <div class="order-item">
-              <span class="order-number">${i + 1}</span>
-              <span>${item}</span>
-            </div>
-          `;
-        });
-        html += '</div>';
-      } else if (state.type === 'true-false') {
-        html += c.items.map((item, i) => `
+      } else if (type === 'anagram') {
+        html += (c.items || []).map((item, i) => `
+          <div style="margin-bottom:20px;">
+            <div class="quiz-question-text">${i + 1}. ${item.scrambled} ${item.hint ? `<small style="color:#64748b;">(${item.hint})</small>` : ''}</div>
+            <div style="color:#10b981; font-size:14px;">Answer: ${item.answer}</div>
+          </div>
+        `).join('');
+      } else if (type === 'true-false') {
+        html += (c.items || []).map((item, i) => `
           <div class="quiz-question">
             <div class="quiz-question-text">${i + 1}. ${item.statement}</div>
             <div class="quiz-options">
-              <div class="quiz-option ${item.answer ? 'correct' : ''}">
+              <div class="quiz-option ${item.correct ? 'correct' : ''}">
                 <div class="quiz-option-marker"></div>
                 <span>True</span>
               </div>
-              <div class="quiz-option ${!item.answer ? 'correct' : ''}">
+              <div class="quiz-option ${!item.correct ? 'correct' : ''}">
                 <div class="quiz-option-marker"></div>
                 <span>False</span>
               </div>
             </div>
           </div>
         `).join('');
+      } else if (type === 'essay-response') {
+        html += `
+          <div class="fill-in-text" style="margin-bottom:16px;">${c.prompt}</div>
+          <div style="background:#334155; padding:16px; border-radius:8px;">
+            <h4 style="font-size:12px; color:#94a3b8; margin-bottom:8px;">MODEL ANSWER</h4>
+            <div style="font-size:14px; line-height:1.6;">${c.model_answer}</div>
+          </div>
+        `;
       }
 
       container.innerHTML = html;
@@ -1118,58 +1397,28 @@
 
     function renderYaml() {
       const container = document.getElementById('yaml-output');
-      const c = state.config;
-      let yaml = '';
+      const activity = convertToYamlFormat();
 
-      yaml += `<span class="yaml-key">- type:</span> <span class="yaml-string">${state.type}</span>\n`;
-      yaml += `  <span class="yaml-key">title:</span> <span class="yaml-string">${c.title}</span>\n`;
-      yaml += `  <span class="yaml-key">instruction:</span> <span class="yaml-string">${c.instruction}</span>\n`;
-
-      if (state.type === 'quiz') {
-        yaml += `  <span class="yaml-key">questions:</span>\n`;
-        c.items.forEach(item => {
-          yaml += `    - <span class="yaml-key">question:</span> <span class="yaml-string">${item.question}</span>\n`;
-          yaml += `      <span class="yaml-key">options:</span>\n`;
-          item.options.forEach((opt, j) => {
-            yaml += `        - <span class="yaml-string">${opt}</span>${j === item.correct ? ' <span class="yaml-comment"># correct</span>' : ''}\n`;
-          });
-          yaml += `      <span class="yaml-key">correct:</span> <span class="yaml-string">${item.options[item.correct]}</span>\n`;
-        });
-      } else if (state.type === 'fill-in') {
-        yaml += `  <span class="yaml-key">sentences:</span>\n`;
-        c.items.forEach(item => {
-          yaml += `    - <span class="yaml-key">text:</span> <span class="yaml-string">${item.text}</span>\n`;
-          yaml += `      <span class="yaml-key">answer:</span> <span class="yaml-string">${item.blank}</span>\n`;
-        });
-        if (c.wordBank) {
-          yaml += `  <span class="yaml-key">show_word_bank:</span> <span class="yaml-bool">true</span>\n`;
+      // Simple YAML generator for preview
+      function formatYaml(obj, indent = 0) {
+        const space = '  '.repeat(indent);
+        if (Array.isArray(obj)) {
+          return obj.map(item => `${space}- ${formatYaml(item, indent + 1).trimStart()}`).join('\n');
+        } else if (typeof obj === 'object' && obj !== null) {
+          return Object.entries(obj)
+            .filter(([_, v]) => v !== undefined && v !== null)
+            .map(([k, v]) => {
+              if (typeof v === 'object') {
+                return `${space}<span class="yaml-key">${k}:</span>\n${formatYaml(v, indent + 1)}`;
+              }
+              const valClass = typeof v === 'boolean' ? 'yaml-bool' : 'yaml-string';
+              return `${space}<span class="yaml-key">${k}:</span> <span class="${valClass}">${v}</span>`;
+            }).join('\n');
         }
-      } else if (state.type === 'match-up') {
-        yaml += `  <span class="yaml-key">pairs:</span>\n`;
-        c.pairs.forEach(pair => {
-          yaml += `    - <span class="yaml-key">left:</span> <span class="yaml-string">${pair.left}</span>\n`;
-          yaml += `      <span class="yaml-key">right:</span> <span class="yaml-string">${pair.right}</span>\n`;
-        });
-      } else if (state.type === 'mark-the-words') {
-        yaml += `  <span class="yaml-key">text:</span> <span class="yaml-string">${c.text}</span>\n`;
-        yaml += `  <span class="yaml-key">answers:</span>\n`;
-        c.answers.forEach(answer => {
-          yaml += `    - <span class="yaml-string">${answer}</span>\n`;
-        });
-      } else if (state.type === 'ordering') {
-        yaml += `  <span class="yaml-key">items:</span> <span class="yaml-comment"># in correct order</span>\n`;
-        c.items.forEach(item => {
-          yaml += `    - <span class="yaml-string">${item}</span>\n`;
-        });
-      } else if (state.type === 'true-false') {
-        yaml += `  <span class="yaml-key">statements:</span>\n`;
-        c.items.forEach(item => {
-          yaml += `    - <span class="yaml-key">statement:</span> <span class="yaml-string">${item.statement}</span>\n`;
-          yaml += `      <span class="yaml-key">answer:</span> <span class="yaml-bool">${item.answer}</span>\n`;
-        });
+        return `${space}${obj}`;
       }
 
-      container.innerHTML = yaml;
+      container.innerHTML = formatYaml([activity]);
     }
 
     function updateAll() {
@@ -1192,32 +1441,84 @@
       updateAll();
     }
 
-    function updateQuizQuestion(index, key, value) {
+    function updateItem(index, key, value) {
       state.config.items[index][key] = value;
       updateAll();
     }
 
-    function updateQuizOption(qIndex, oIndex, value) {
-      state.config.items[qIndex].options[oIndex] = value;
+    function addItem() {
+      const type = state.type;
+      let newItem = {};
+
+      if (type === 'quiz' || type === 'select' || type === 'translate') {
+        newItem = {
+          question: type === 'translate' ? undefined : 'New Question?',
+          source: type === 'translate' ? 'New Source Text' : undefined,
+          options: [
+            { text: 'Option A', correct: true },
+            { text: 'Option B', correct: false },
+            { text: 'Option C', correct: false },
+            { text: 'Option D', correct: false }
+          ]
+        };
+      } else if (type === 'fill-in') {
+        newItem = { sentence: 'Я ___ (іти).', answer: 'йду', options: ['йду', 'йдеш', 'йде', 'йдуть'] };
+      } else if (type === 'unjumble') {
+        newItem = { words: ['Я', 'йду'], answer: 'Я йду' };
+      } else if (type === 'error-correction') {
+        newItem = { sentence: 'Я йду до школа.', error: 'школа', answer: 'школи', options: ['школи', 'школу', 'школою'], explanation: '' };
+      } else if (type === 'anagram') {
+        newItem = { scrambled: 'овлоко', answer: 'молоко', hint: '' };
+      } else if (type === 'true-false') {
+        newItem = { statement: 'New statement.', correct: true };
+      }
+
+      state.config.items.push(newItem);
       updateAll();
     }
 
-    function addQuizQuestion() {
-      state.config.items.push({
-        question: 'New question?',
-        options: ['Option A', 'Option B', 'Option C', 'Option D'],
-        correct: 0
-      });
+    function updateOptionText(itemIndex, optIndex, text) {
+      state.config.items[itemIndex].options[optIndex].text = text;
       updateAll();
     }
 
-    function updateFillInItem(index, key, value) {
-      state.config.items[index][key] = value;
+    function updateOptionCorrect(itemIndex, optIndex, correct) {
+      if (state.type !== 'select') {
+        // Reset all others to false for radio-like behavior
+        state.config.items[itemIndex].options.forEach((opt, i) => {
+          opt.correct = (i === optIndex);
+        });
+      } else {
+        state.config.items[itemIndex].options[optIndex].correct = correct;
+      }
       updateAll();
     }
 
-    function addFillInItem() {
-      state.config.items.push({ text: 'New sentence with ___ blank.', blank: 'word' });
+    function addOption(itemIndex) {
+      state.config.items[itemIndex].options.push({ text: 'New Option', correct: false });
+      updateAll();
+    }
+
+    function removeOption(itemIndex, optIndex) {
+      state.config.items[itemIndex].options.splice(optIndex, 1);
+      updateAll();
+    }
+
+    function updateFillInOptions(index, value) {
+      const distractors = value.split(',').map(s => s.trim()).filter(Boolean);
+      const answer = state.config.items[index].answer;
+      state.config.items[index].options = [answer, ...distractors];
+      updateAll();
+    }
+
+    function updateClozeBlank(index, key, value) {
+      state.config.blanks[index][key] = value;
+      updateAll();
+    }
+
+    function addClozeBlank() {
+      const nextId = state.config.blanks.length + 1;
+      state.config.blanks.push({ id: nextId, answer: 'word', options: ['word', 'other', 'another'] });
       updateAll();
     }
 
@@ -1231,58 +1532,58 @@
       updateAll();
     }
 
-    function updateTFItem(index, key, value) {
-      state.config.items[index][key] = value;
+    function removeMatchPair(index) {
+      state.config.pairs.splice(index, 1);
       updateAll();
     }
 
-    function addTFItem() {
-      state.config.items.push({ statement: 'New statement.', answer: true });
+    function updateGroup(index, key, value) {
+      state.config.groups[index][key] = value;
+      updateAll();
+    }
+
+    function addGroup() {
+      state.config.groups.push({ name: 'New Group', items: [] });
+      updateAll();
+    }
+
+    function updateUnjumble(index, value) {
+      state.config.items[index].answer = value;
+      state.config.items[index].words = value.split(' ').sort(() => Math.random() - 0.5);
+      updateAll();
+    }
+
+    function updateRubric(index, key, value) {
+      state.config.rubric[index][key] = value;
+      updateAll();
+    }
+
+    function addRubric() {
+      state.config.rubric.push({ criteria: 'New Criteria', description: '' });
       updateAll();
     }
 
     function copyYaml() {
-      // Get plain text version
-      const c = state.config;
-      let yaml = `- type: ${state.type}\n`;
-      yaml += `  title: ${c.title}\n`;
-      yaml += `  instruction: ${c.instruction}\n`;
+      const activity = convertToYamlFormat();
 
-      if (state.type === 'quiz') {
-        yaml += `  questions:\n`;
-        c.items.forEach(item => {
-          yaml += `    - question: ${item.question}\n`;
-          yaml += `      options:\n`;
-          item.options.forEach(opt => yaml += `        - ${opt}\n`);
-          yaml += `      correct: ${item.options[item.correct]}\n`;
-        });
-      } else if (state.type === 'fill-in') {
-        yaml += `  sentences:\n`;
-        c.items.forEach(item => {
-          yaml += `    - text: ${item.text}\n`;
-          yaml += `      answer: ${item.blank}\n`;
-        });
-        if (c.wordBank) yaml += `  show_word_bank: true\n`;
-      } else if (state.type === 'match-up') {
-        yaml += `  pairs:\n`;
-        c.pairs.forEach(pair => {
-          yaml += `    - left: ${pair.left}\n`;
-          yaml += `      right: ${pair.right}\n`;
-        });
-      } else if (state.type === 'mark-the-words') {
-        yaml += `  text: ${c.text}\n`;
-        yaml += `  answers:\n`;
-        c.answers.forEach(a => yaml += `    - ${a}\n`);
-      } else if (state.type === 'ordering') {
-        yaml += `  items:\n`;
-        c.items.forEach(item => yaml += `    - ${item}\n`);
-      } else if (state.type === 'true-false') {
-        yaml += `  statements:\n`;
-        c.items.forEach(item => {
-          yaml += `    - statement: ${item.statement}\n`;
-          yaml += `      answer: ${item.answer}\n`;
-        });
+      function formatYamlPlain(obj, indent = 0) {
+        const space = '  '.repeat(indent);
+        if (Array.isArray(obj)) {
+          return obj.map(item => `${space}- ${formatYamlPlain(item, indent + 1).trimStart()}`).join('\n');
+        } else if (typeof obj === 'object' && obj !== null) {
+          return Object.entries(obj)
+            .filter(([_, v]) => v !== undefined && v !== null)
+            .map(([k, v]) => {
+              if (typeof v === 'object') {
+                return `${space}${k}:\n${formatYamlPlain(v, indent + 1)}`;
+              }
+              return `${space}${k}: ${v}`;
+            }).join('\n');
+        }
+        return `${space}${obj}`;
       }
+
+      const yaml = formatYamlPlain([activity]);
 
       navigator.clipboard.writeText(yaml).then(() => {
         const btn = document.querySelector('.copy-btn');

@@ -435,8 +435,8 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:8001/api';
-    const WS_URL = 'ws://localhost:8001/ws';
+    const API_BASE = window.location.origin;
+    const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
 
     let state = {
       apiConnected: false,
@@ -461,8 +461,11 @@
     }
 
     async function checkAPI() {
-      const data = await fetchAPI('/health');
+      const data = await fetchAPI('/api/health');
       updateAPIStatus(!!data);
+      if (data && !state.ws) {
+        connectWebSocket();
+      }
     }
 
     function updateAPIStatus(connected) {
@@ -510,7 +513,7 @@
 
       // Try API launch first
       if (state.apiConnected) {
-        const result = await fetchAPI('/batch/launch', {
+        const result = await fetchAPI('/api/batch/launch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -605,6 +608,9 @@
               <button class="task-btn" onclick="pauseTask('${task.id}')">Pause</button>
               <button class="task-btn" onclick="stopTask('${task.id}')">Stop</button>
             ` : ''}
+            ${task.status === 'stopped' || task.status === 'failed' ? `
+              <button class="task-btn" onclick="resumeTask('${task.id}')">Resume</button>
+            ` : ''}
             ${task.status === 'failed' ? `
               <button class="task-btn" onclick="retryTask('${task.id}')">Retry</button>
             ` : ''}
@@ -621,12 +627,45 @@
 
     // Task Actions
     async function pauseTask(taskId) {
-      logWarn(`Pause not yet implemented for ${taskId}`);
+      await stopTask(taskId);
+      logInfo(`Task ${taskId} paused (process stopped, can resume)`);
+    }
+
+    async function resumeTask(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      // Extract original params from taskId or store them in state
+      // For now, assume format: {operation}-{track}-{start}-{end}-{timestamp}
+      const parts = taskId.split('-');
+      const operation = parts[0];
+      const track = parts[1];
+      const startNum = parseInt(parts[2]);
+      const endNum = parseInt(parts[3]);
+
+      if (state.apiConnected) {
+        const result = await fetchAPI('/api/batch/launch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            operation,
+            track,
+            start_num: startNum,
+            end_num: endNum,
+            resume: true
+          })
+        });
+
+        if (result) {
+          updateTask(taskId, { status: 'running' });
+          logSuccess(`Task ${taskId} resumed`);
+        }
+      }
     }
 
     async function stopTask(taskId) {
       if (state.apiConnected) {
-        await fetchAPI(`/batch/stop/${taskId}`, { method: 'POST' });
+        await fetchAPI(`/api/batch/stop/${taskId}`, { method: 'POST' });
       }
       updateTask(taskId, { status: 'stopped' });
       logWarn(`Task ${taskId} stopped`);
@@ -652,7 +691,7 @@
     // Results
     async function refreshResults() {
       if (state.apiConnected) {
-        const data = await fetchAPI('/batch/recent');
+        const data = await fetchAPI('/api/batch/recent');
         if (data) {
           renderResults(data.results);
         }
@@ -663,7 +702,20 @@
 
     function renderResults(results) {
       const container = document.getElementById('results-container');
-      // TODO: Render results grid
+      if (!results || results.length === 0) {
+        container.innerHTML = '<div class="empty-state">No recent results</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="results-grid">
+          ${results.map(r => `
+            <div class="result-cell ${r.status}" title="${r.operation} ${r.track}">
+              ${r.track.toUpperCase()}
+            </div>
+          `).join('')}
+        </div>
+      `;
       logInfo(`Loaded ${results.length} recent results`);
     }
 

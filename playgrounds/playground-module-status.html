@@ -516,6 +516,8 @@
       <button class="status-btn all active" data-status="all">All</button>
       <button class="status-btn pass" data-status="pass">Pass</button>
       <button class="status-btn fail" data-status="fail">Fail</button>
+      <button class="refresh-btn" onclick="exportData('csv')">📥 CSV</button>
+      <button class="refresh-btn" onclick="exportData('json')">📥 JSON</button>
       <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
     </div>
   </div>
@@ -564,10 +566,32 @@
       selectedLevelId: null,
       expandedLevels: new Set(),
       apiConnected: false,
-      auditStatus: {}
+      auditStatus: {},
+      ws: null
     };
 
     // ==================== API CALLS ====================
+
+    function connectWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+      state.ws = new WebSocket(wsUrl);
+
+      state.ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'task_update') {
+          // Refresh data if a batch task completed
+          loadData();
+        } else if (data.type === 'log') {
+          console.log(`[WS LOG] ${data.message}`);
+        }
+      };
+
+      state.ws.onclose = () => {
+        setTimeout(connectWebSocket, 5000);
+      };
+    }
 
     async function fetchAPI(endpoint) {
       try {
@@ -995,6 +1019,11 @@ Click a module cell to see detailed audit results.`;
       updateAll();
     }
 
+    function exportData(format) {
+      const level = state.selectedLevel || 'all';
+      window.open(`${API_BASE}/api/status/export?level=${level}&format=${format}`, '_blank');
+    }
+
     function copyPrompt() {
       const text = document.getElementById('prompt-output').textContent;
       navigator.clipboard.writeText(text).then(() => {
@@ -1027,6 +1056,7 @@ Click a module cell to see detailed audit results.`;
     // ==================== INIT ====================
 
     loadData();
+    connectWebSocket();
   </script>
 </body>
 </html>

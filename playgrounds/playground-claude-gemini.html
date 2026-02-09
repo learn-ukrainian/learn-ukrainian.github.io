@@ -539,11 +539,11 @@
         <div class="flow-arrow">
           <div class="arrow-line top"></div>
           <div class="arrow-head right"></div>
-          <div class="arrow-label top">query / request / handoff</div>
+          <div class="arrow-label top" id="top-arrow-label">query / request / handoff</div>
 
           <div class="arrow-line bottom"></div>
           <div class="arrow-head left"></div>
-          <div class="arrow-label bottom">response / feedback</div>
+          <div class="arrow-label bottom" id="bottom-arrow-label">response / feedback</div>
         </div>
 
         <div class="agent-box gemini">
@@ -841,8 +841,13 @@
 
       if (state.messages.length === 0) {
         container.innerHTML = '<div class="empty-state">No messages in this task yet</div>';
+        updateFlowDiagram(0, 0);
         return;
       }
+
+      const claudeToGemini = state.messages.filter(m => m.from_llm === 'claude').length;
+      const geminiToClaude = state.messages.filter(m => m.from_llm === 'gemini').length;
+      updateFlowDiagram(claudeToGemini, geminiToClaude);
 
       container.innerHTML = state.messages.map(msg => {
         // Parse model info from data field
@@ -887,6 +892,8 @@
       }
 
       const taskId = state.selectedTask.task_id;
+      const lastMsg = state.messages[state.messages.length - 1];
+      const lastId = lastMsg ? lastMsg.id : '<msg_id>';
 
       container.innerHTML = `<span class="fn"># Send a message to Gemini (with model tracking)</span>
 <span class="fn">mcp__message-broker__send_message</span>(
@@ -899,11 +906,11 @@
   <span class="key">task_id</span>=<span class="str">"${taskId}"</span>
 )
 
-<span class="fn"># Bridge script (auto-invokes Gemini with model tracking)</span>
-Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id ${taskId} --from-model claude-opus-4-5-20251101</span>')
+<span class="fn"># Bridge script: process specific message</span>
+Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py process ${lastId}</span>')
 
-<span class="fn"># Ask Claude headless (with model tracking)</span>
-Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Your message" --task-id ${taskId} --from claude --from-model claude-opus-4-5-20251101 --to-model claude-sonnet-4</span>')
+<span class="fn"># Bridge script: ask gemini directly</span>
+Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id ${taskId}</span>')
 
 <span class="fn"># Check for responses</span>
 <span class="fn">mcp__message-broker__receive_messages</span>(
@@ -911,6 +918,11 @@ Bash('<span class="str">.venv/bin/python scripts/ai_agent_bridge.py ask-claude "
   <span class="key">task_id</span>=<span class="str">"${taskId}"</span>,
   <span class="key">unread_only</span>=<span class="str">True</span>
 )`;
+    }
+
+    function updateFlowDiagram(c2g, g2c) {
+      document.getElementById('top-arrow-label').textContent = `${c2g} messages →`;
+      document.getElementById('bottom-arrow-label').textContent = `← ${g2c} messages`;
     }
 
     function formatTime(timestamp) {
