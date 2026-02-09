@@ -15,6 +15,7 @@ Detection heuristics:
   - All-perfect scores without cited evidence
   - Empty "Issues Found" section
   - No Ukrainian text citations
+  - Fabricated citations (quoted text not found in source .md)
 """
 
 import re
@@ -121,7 +122,10 @@ def _build_fix_prompt(tier_num: int) -> str:
     cmd = cfg['review_cmd']
     tier_ref = cfg['tier_ref']
 
-    base = f"FIX: Run {cmd} and perform a REAL deep review using {tier_ref}. "
+    base = (
+        f"REDO: DELETE the existing review file and regenerate from scratch. "
+        f"Run {cmd} using {tier_ref}. Do NOT patch the existing review — start fresh. "
+    )
 
     if tier_num == 1:
         return base + (
@@ -167,15 +171,48 @@ def _count_perfect_scores(content: str) -> tuple[int, int]:
     return perfect, total
 
 
-def _has_ukrainian_citations(content: str) -> bool:
-    """Check if the review cites specific Ukrainian text (quoted sentences)."""
-    # Quoted Ukrainian text: «...» or "..." containing Cyrillic
-    cyrillic_quotes = re.findall(r'[«"]([^»"]{10,})[»"]', content)
-    ukr_quotes = [q for q in cyrillic_quotes if re.search(r'[а-яіїєґ]', q)]
-    # Inline code with Ukrainian: `Він пішов додому`
-    code_quotes = re.findall(r'`([^`]{10,})`', content)
-    ukr_code = [q for q in code_quotes if re.search(r'[а-яіїєґ]', q)]
-    return len(ukr_quotes) + len(ukr_code) >= 2
+def _extract_ukrainian_citations(content: str) -> list[str]:
+    """Extract quoted Ukrainian text from the review."""
+    citations = []
+    # «...» angular quotes
+    for match in re.findall(r'«([^»]{10,})»', content):
+        if re.search(r'[а-яіїєґ]', match):
+            citations.append(match)
+    # "..." straight quotes containing Cyrillic
+    for match in re.findall(r'"([^"]{10,})"', content):
+        if re.search(r'[а-яіїєґ]', match):
+            citations.append(match)
+    # `...` inline code with Ukrainian
+    for match in re.findall(r'`([^`]{10,})`', content):
+        if re.search(r'[а-яіїєґ]', match):
+            citations.append(match)
+    return citations
+
+
+def _verify_citations_against_source(citations: list[str], source_path: Path) -> tuple[int, int]:
+    """
+    Check how many cited Ukrainian sentences actually exist in the source .md file.
+    Returns (verified_count, total_count).
+    """
+    if not source_path.exists() or not citations:
+        return 0, len(citations)
+
+    try:
+        source_text = source_path.read_text(encoding='utf-8').lower()
+    except Exception:
+        return 0, len(citations)
+
+    verified = 0
+    for citation in citations:
+        # Normalize: lowercase, collapse whitespace
+        normalized = re.sub(r'\s+', ' ', citation.lower().strip())
+        # Check if a substantial substring (first 30 chars) appears in source
+        # This handles minor formatting differences
+        check_str = normalized[:min(30, len(normalized))]
+        if check_str in source_text:
+            verified += 1
+
+    return verified, len(citations)
 
 
 def check_review_validity(file_path: str, level_code: str, module_slug: str) -> list[dict]:
@@ -183,7 +220,8 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
     Validate the existence and quality of the review file.
 
     Applies tier-appropriate checks and returns violations with
-    actionable fix prompts that tell the LLM exactly what to do.
+    actionable REDO prompts that tell the LLM to regenerate from scratch.
+    Also verifies that cited Ukrainian text actually exists in the source module.
     """
     violations = []
 
@@ -195,18 +233,26 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
     cfg = TIER_CONFIG[tier_num]
     fix_prompt = _build_fix_prompt(tier_num)
 
-    # Construct review path: {level}/review/{slug}-review.md
+    # Construct review path — check both audit/ and review/ directories
     module_path = Path(file_path)
     base_dir = module_path.parent
-    review_dir = base_dir / 'review'
-    review_file = review_dir / f"{module_slug}-review.md"
+    audit_review = base_dir / 'audit' / f"{module_slug}-review.md"
+    review_review = base_dir / 'review' / f"{module_slug}-review.md"
+
+    # Prefer audit/ (canonical per AGENTS.md), fall back to review/
+    if audit_review.exists():
+        review_file = audit_review
+    elif review_review.exists():
+        review_file = review_review
+    else:
+        review_file = None
 
     # 1. Existence Check
-    if not review_file.exists():
+    if review_file is None:
         try:
-            rel_path = review_file.relative_to(base_dir.parent.parent)
+            rel_path = audit_review.relative_to(base_dir.parent.parent)
         except ValueError:
-            rel_path = review_file
+            rel_path = audit_review
         return [{
             'type': 'MISSING_REVIEW',
             'severity': 'critical',
@@ -258,11 +304,14 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                 )
             })
 
+        # Extract citations once — used by checks 5, 7, and 8
+        citations = _extract_ukrainian_citations(content)
+        has_citations = len(citations) >= 2
+
         # 5. Rubber-stamp Detection: All perfect scores with no evidence
         perfect, total = _count_perfect_scores(content)
         if total >= cfg['min_dimensions'] and perfect == total:
-            has_evidence = _has_ukrainian_citations(content)
-            if not has_evidence:
+            if not has_citations:
                 violations.append({
                     'type': 'RUBBER_STAMP_REVIEW',
                     'severity': 'critical',
@@ -294,7 +343,7 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                 })
 
         # 7. No Ukrainian citations (tier 2+ only — tier 1 is mixed-language)
-        if cfg['require_ukr_citations'] and not _has_ukrainian_citations(content):
+        if cfg['require_ukr_citations'] and not has_citations:
             # Only add if not already flagged as rubber-stamp
             if not any(v['type'] == 'RUBBER_STAMP_REVIEW' for v in violations):
                 violations.append({
@@ -304,6 +353,34 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                         "Review contains no quoted Ukrainian text. A real review cites specific "
                         "sentences from the module (e.g., «Він пішов до хати» — wrong aspect). "
                         f"{fix_prompt}"
+                    )
+                })
+
+        # 8. Citation verification — check quoted text exists in the source .md
+        if cfg['require_ukr_citations'] and len(citations) >= 2:
+            source_md = module_path  # The .md file being reviewed
+            verified, total_cit = _verify_citations_against_source(citations, source_md)
+            unverified = total_cit - verified
+            if total_cit >= 3 and verified == 0:
+                # No citations match the source at all — likely fabricated
+                violations.append({
+                    'type': 'FABRICATED_CITATIONS',
+                    'severity': 'critical',
+                    'message': (
+                        f"Review quotes {total_cit} Ukrainian sentences but NONE were found "
+                        f"in the source module. The reviewer likely fabricated citations "
+                        f"instead of reading the actual content. {fix_prompt}"
+                    )
+                })
+            elif total_cit >= 3 and (verified / total_cit) < 0.5:
+                # Less than half match — suspicious
+                violations.append({
+                    'type': 'UNVERIFIED_CITATIONS',
+                    'severity': 'warning',
+                    'message': (
+                        f"Only {verified}/{total_cit} Ukrainian citations in the review "
+                        f"were found in the source module. The reviewer may be quoting "
+                        f"from memory rather than from the actual content. {fix_prompt}"
                     )
                 })
 
