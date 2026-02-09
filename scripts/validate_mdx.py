@@ -313,8 +313,8 @@ def main():
 
     print('\n🔍 MDX Validator\n')
 
-    curriculum_path = CURRICULUM_DIR / lang_pair
-    levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+    from manifest_utils import get_modules_for_level, CORE_LEVELS, TRACKS
+    levels = CORE_LEVELS + TRACKS
 
     total_passed = 0
     total_failed = 0
@@ -324,27 +324,19 @@ def main():
         if target_level and level != target_level:
             continue
 
-        level_path = curriculum_path / level
-        if not level_path.exists():
-            continue
-
-        module_files = sorted(level_path.glob('*.md'))
-        if not module_files:
+        modules = get_modules_for_level(level)
+        if not modules:
             continue
 
         print(f'📁 Level {level.upper()}')
 
-        for md_file in module_files:
-            match = re.match(r'^(\d+)', md_file.name)
-            if not match:
+        for mod in modules:
+            if target_module and mod.local_num != target_module:
                 continue
 
-            module_num = int(match.group(1))
-
-            if target_module and module_num != target_module:
-                continue
-
-            mdx_file = DOCUSAURUS_DIR / level / f'module-{str(module_num).zfill(2)}.mdx'
+            # RFC #410: Use slug-based paths
+            mdx_file = DOCUSAURUS_DIR / level / f'{mod.slug}.mdx'
+            md_file = mod.file_path
 
             result = validate_module(md_file, mdx_file)
             all_results.append(result)
@@ -363,7 +355,7 @@ def main():
                 total_failed += 1
                 status = '❌'
 
-            print(f'  {status} Module {str(module_num).zfill(2)}', end='')
+            print(f'  {status} Module {str(mod.local_num).zfill(2)}', end='')
 
             if result.errors:
                 print(f' - {result.errors[0]}')

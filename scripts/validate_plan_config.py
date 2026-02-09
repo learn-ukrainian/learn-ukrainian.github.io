@@ -68,35 +68,61 @@ def validate_plan(plan_path: Path, level: str) -> list:
     if not plan:
         return ["Empty plan file"]
 
+    # Experimental levels (OES, RUTH) have relaxed validation
+    is_experimental = level.lower() in ['oes', 'ruth']
+
     # Get targets
     plan_target = plan.get('word_target', 0)
     sequence = plan.get('sequence', 1)
     focus = plan.get('focus')
     config_target = get_config_target(level, sequence, focus)
 
-    # Check word_target matches config
+    # Check word_target matches config (relaxed for experimental)
     if plan_target == 0:
-        errors.append(f"Missing word_target (config expects {config_target})")
+        if not is_experimental:
+            errors.append(f"Missing word_target (config expects {config_target})")
     elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
-        errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
+        if not is_experimental:
+            errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
 
     # Check content_outline sums to word_target
     outline = plan.get('content_outline', [])
     if not outline:
-        errors.append("Missing content_outline")
+        if not is_experimental:
+            errors.append("Missing content_outline")
     else:
         outline_sum = sum(s.get('words', 0) for s in outline)
         if outline_sum == 0:
-            errors.append("content_outline has no word budgets")
+            if not is_experimental:
+                errors.append("content_outline has no word budgets")
         elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
-            errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
+            if not is_experimental:
+                errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
 
-    # Check required fields
-    required_fields = ['module', 'level', 'title', 'objectives']
-    for field in required_fields:
-        if not plan.get(field):
-            errors.append(f"Missing required field: {field}")
+    # Check required fields with aliases (Architecture v2.0 support)
+    required_fields = {
+        'module': ['module', 'module_number'],
+        'level': ['level'],
+        'title': ['title', 'title_uk', 'title_en'],
+        'objectives': ['objectives', 'learning_objectives']
+    }
+
+    for field, aliases in required_fields.items():
+        found = False
+        for alias in aliases:
+            if plan.get(alias):
+                found = True
+                break
+
+        if not found:
+            # Level can be inferred from path for experimental
+            if field == 'level' and is_experimental:
+                continue
+            # Objectives might be missing in experimental drafts
+            if field == 'objectives' and is_experimental:
+                continue
+            errors.append(f"Missing required field: {field} (checked aliases: {', '.join(aliases)})")
 
     return errors
 

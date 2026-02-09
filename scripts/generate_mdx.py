@@ -1277,13 +1277,24 @@ import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';"""
 
     # Frontmatter
-    frontmatter = f'''---
-sidebar_position: {module_num}
-sidebar_label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get('title', 'Untitled'))}"
-title: "{escape_jsx(fm.get('title', 'Untitled'))}"
-description: "{escape_jsx(fm.get('subtitle', ''))}"
----
-'''
+    tags = fm.get('tags', [])
+    keywords = fm.get('keywords', [])
+
+    frontmatter_parts = [
+        '---',
+        f'sidebar_position: {module_num}',
+        f'sidebar_label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get("title", "Untitled"))}"',
+        f'title: "{escape_jsx(fm.get("title", "Untitled"))}"',
+        f'description: "{escape_jsx(fm.get("subtitle", ""))}"'
+    ]
+
+    if tags:
+        frontmatter_parts.append(f'tags: {json.dumps(tags, ensure_ascii=False)}')
+    if keywords:
+        frontmatter_parts.append(f'keywords: {json.dumps(keywords, ensure_ascii=False)}')
+
+    frontmatter_parts.append('---')
+    frontmatter = '\n'.join(frontmatter_parts) + '\n'
 
     # 0. Resolve slug links [slug:xxx] to actual paths (RFC #410)
     body = resolve_slug_links(body)
@@ -1631,9 +1642,10 @@ def get_modules_from_manifest(target_level: Optional[str] = None) -> list[Module
 def main():
     args = sys.argv[1:]
 
-    # Parse --validate flag
+    # Parse flags
     validate_after = '--validate' in args
-    args = [a for a in args if a != '--validate']
+    incremental = '--incremental' in args or '-i' in args
+    args = [a for a in args if a not in ['--validate', '--incremental', '-i']]
 
     print('\n🚀 MDX Generator (Manifest-Driven)\n', flush=True)
 
@@ -1789,16 +1801,28 @@ def main():
         module_id = f"{mod.level}-{mod.slug}"
         module_resources = all_resources.get(module_id, {})
 
+        # RFC #410: Use slug-based filenames for ALL modules
+        output_file = output_dir / f'{mod.slug}.mdx'
+
+        # Incremental check
+        if incremental and output_file.exists():
+            # Check mtime of source files
+            src_mtime = md_file.stat().st_mtime
+
+            # Related files to check
+            related_files = [meta_file, plan_file, vocab_file, yaml_file, external_resources_file]
+            for rf in related_files:
+                if rf and rf.exists():
+                    src_mtime = max(src_mtime, rf.stat().st_mtime)
+
+            if output_file.stat().st_mtime > src_mtime:
+                # print(f"  ⏩ Skipping {mod.level}/{mod.slug} (up to date)")
+                continue
+
         mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level)
 
-        # Write output
-        # Use slug-based filenames for tracks (b2-hist, c1-bio, etc.)
-        # Use numbered format for core levels (a1-c2) for backward compatibility
-        if mod.track and mod.track != 'core':
-            output_file = output_dir / f'{mod.slug}.mdx'
-        else:
-            output_file = output_dir / f'module-{mod.local_num:02d}.mdx'
         output_file.write_text(mdx_content, encoding='utf-8')
+        print(f"  ✨ Generated {mod.level}/{mod.slug}.mdx")
 
     print('\n✅ MDX generation complete!')
 

@@ -57,9 +57,8 @@ class Module:
     @property
     def path(self) -> str:
         """URL path for this module."""
-        if self.track and self.track != 'core':
-            return f"/{self.level}/{self.slug}"
-        return f"/{self.level}/module-{self.local_num:02d}"
+        # RFC #410: All modules use slug-based paths
+        return f"/{self.level}/{self.slug}"
 
     @property
     def numbered_slug(self) -> str:

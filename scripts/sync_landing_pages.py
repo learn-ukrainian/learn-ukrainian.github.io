@@ -198,14 +198,43 @@ def update_level_index(level: str, stats: dict, dry_run: bool) -> bool:
     """Update a level's index.mdx with current stats."""
     index_path = ROOT / 'docusaurus' / 'docs' / level / 'index.mdx'
     if not index_path.exists():
-        print(f"  - {level}/index.mdx not found")
+        # print(f"  - {level}/index.mdx not found")
         return False
 
     content = index_path.read_text()
     original = content
     s = stats[level]
 
-    # Update header line patterns (various formats used)
+    # 1. Update Modules Table (RFC #410 slug-based links)
+    try:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from manifest_utils import get_modules_for_level
+        modules = get_modules_for_level(level)
+
+        if modules:
+            table_lines = [
+                "| # | Модуль | Статус |",
+                "|---|--------|--------|",
+            ]
+            mdx_dir = ROOT / 'docusaurus' / 'docs' / level
+            for mod in modules:
+                # Check if MDX exists
+                slug_file = mdx_dir / f"{mod.slug}.mdx"
+                legacy_file = mdx_dir / f"module-{mod.local_num:02d}.mdx"
+                is_ready = slug_file.exists() or legacy_file.exists()
+                status_emoji = "✅" if is_ready else "⏳"
+
+                link = f"[{mod.title}](./{mod.slug})"
+                table_lines.append(f"| {mod.local_num} | {link} | {status_emoji} |")
+
+            table_text = '\n'.join(table_lines)
+            table_pattern = r'(## (?:Модулі|Modules)\n\n)(?:\|[^\n]+\|\n)+'
+            if re.search(table_pattern, content):
+                content = re.sub(table_pattern, r'\1' + table_text + '\n', content)
+    except Exception as e:
+        print(f"  ⚠️ Failed to update modules table for {level}: {e}")
+
+    # 2. Update header line patterns (various formats used)
     # Pattern 1: "**В розробці — 145 модулів**"
     # Pattern 2: "**🚧 В розробці — 86/86 модулів**"
 
