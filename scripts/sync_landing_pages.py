@@ -42,8 +42,8 @@ def load_config() -> dict:
     # Core levels + specialized tracks
     all_levels = [
         'a1', 'a2', 'b1', 'b2', 'c1', 'c2',  # Core path
-        'b2-hist', 'c1-bio',                  # History & Biography tracks
-        'b2-pro', 'c1-pro',                   # Professional tracks
+        'b2-hist', 'c1-hist', 'c1-bio',       # History & Biography tracks
+        'b2-pro', 'c1-pro', 'lit',            # Professional & Literature tracks
     ]
     for level in all_levels:
         if level not in config:
@@ -68,7 +68,8 @@ def count_ready_modules(level: str) -> int:
     mdx_dir = ROOT / 'docusaurus' / 'docs' / level
     if not mdx_dir.exists():
         return 0
-    return len(list(mdx_dir.glob('module-*.mdx')))
+    # Count all .mdx files excluding index.mdx
+    return len([f for f in mdx_dir.glob('*.mdx') if f.name != 'index.mdx'])
 
 
 def get_status(level: str, ready: int, planned: int) -> tuple[str, str]:
@@ -115,7 +116,7 @@ def collect_stats() -> dict:
 
 
 def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
-    """Update the main intro.mdx curriculum table."""
+    """Update the main intro.mdx curriculum tables."""
     intro_path = ROOT / 'docusaurus' / 'docs' / 'intro.mdx'
     if not intro_path.exists():
         print(f"  ! {intro_path} not found")
@@ -124,29 +125,57 @@ def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
     content = intro_path.read_text()
     original = content
 
-    # Build new curriculum table
-    table_lines = [
+    # 1. Update Core Curriculum Table
+    core_table_lines = [
         "| Level | Description | Lessons | Status |",
         "|-------|-------------|---------|--------|",
     ]
-
-    # Core levels for main table
     for level in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:
         s = stats[level]
         status_str = f"{s['emoji']} {s['status']}"
-        table_lines.append(
+        core_table_lines.append(
             f"| **{level.upper()}** | {s['description']} | {s['planned']} | {status_str} |"
         )
-
-    new_table = '\n'.join(table_lines)
-
-    # Replace the curriculum table (header + separator + 6 data rows)
-    pattern = (
+    core_table = '\n'.join(core_table_lines)
+    core_pattern = (
         r'\| Level \| Description \| Lessons \| Status \|\n'
         r'\|[-]+\|[-]+\|[-]+\|[-]+\|\n'
         r'(?:\|[^\n]+\|\n)+'
     )
-    content = re.sub(pattern, new_table + '\n', content)
+    content = re.sub(core_pattern, core_table + '\n', content)
+
+    # 2. Update Specialized Tracks Table
+    track_table_lines = [
+        "| Track | Description | Lessons | Status |",
+        "|-------|-------------|---------|--------|",
+    ]
+    for level in ['b2-hist', 'c1-hist', 'c1-bio', 'b2-pro', 'c1-pro']:
+        if level not in stats: continue
+        s = stats[level]
+        status_str = f"{s['emoji']} {s['status']}"
+        track_table_lines.append(
+            f"| **{level.upper()}** | {s['description']} | {s['planned']} | {status_str} |"
+        )
+    # Add LIT manually if it's not in stats but in the table
+    if 'lit' in stats:
+        s = stats['lit']
+        status_str = f"{s['emoji']} {s['status']}"
+        track_table_lines.append(
+            f"| **LIT** | {s['description']} | {s['planned']} | {status_str} |"
+        )
+    elif '| **LIT** |' in content:
+         # Keep original LIT line if not managed by stats
+         lit_match = re.search(r'\| \*\*LIT\*\* \| [^|]+ \| \d+ \| [^|]+ \|', content)
+         if lit_match:
+             track_table_lines.append(lit_match.group(0))
+
+    track_table = '\n'.join(track_table_lines)
+    track_pattern = (
+        r'\| Track \| Description \| Lessons \| Status \|\n'
+        r'\|[-]+\|[-]+\|[-]+\|[-]+\|\n'
+        r'(?:\|[^\n]+\|\n)+'
+    )
+    content = re.sub(track_pattern, track_table + '\n', content)
 
     # Update total count
     total_planned = sum(stats[l]['planned'] for l in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'])
@@ -194,6 +223,11 @@ def update_level_index(level: str, stats: dict, dry_run: bool) -> bool:
     if re.search(header_pattern, content):
         content = re.sub(header_pattern, new_header, content, count=1)
 
+    # Update Progress section list if exists
+    content = re.sub(r'-\s+\*\*Готові модулі:\*\*\s+\d+', f'- **Готові модулі:** {s["ready"]}', content)
+    content = re.sub(r'-\s+\*\*Заплановані модулі:\*\*\s+\d+', f'- **Заплановані модулі:** {s["planned"]}', content)
+    content = re.sub(r'-\s+\*\*Завершення:\*\*\s+\d+%', f'- **Завершення:** {s["pct"]}%', content)
+
     if content != original:
         if dry_run:
             print(f"  ~ Would update {index_path.relative_to(ROOT)}")
@@ -227,7 +261,7 @@ def print_summary(stats: dict):
     print("────────  ───────  ─────  ──────")
 
     # Specialized tracks
-    track_levels = ['b2-hist', 'c1-bio', 'b2-pro', 'c1-pro']
+    track_levels = ['b2-hist', 'c1-hist', 'c1-bio', 'b2-pro', 'c1-pro', 'lit']
     track_planned = 0
     track_ready = 0
     for level in track_levels:
