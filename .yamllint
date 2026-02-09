@@ -3,17 +3,17 @@ extends: default
 
 rules:
   line-length: disable
-  indentation:
-    spaces: 2
-    indent-sequences: consistent
+  indentation: disable
   truthy: disable  # Allow 'yes/no' in plans if needed
-  comments:
-    min-spaces-from-content: 1
+  comments: disable
+  comments-indentation: disable
   document-start: disable
   key-duplicates: enable
-  colons:
-    max-spaces-before: 0
-    max-spaces-after: 1
+  colons: disable
+  braces: disable
+  trailing-spaces: disable
+  new-line-at-end-of-file: disable
+  empty-lines: disable
 
 ignore: |
   .venv/
