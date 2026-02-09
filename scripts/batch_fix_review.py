@@ -17,6 +17,7 @@ Usage:
 """
 import argparse
 import json
+import logging
 import os
 import re
 import shutil
@@ -26,7 +27,37 @@ import tempfile
 import time
 from pathlib import Path
 
+# Add repo root to sys.path so we can import from scripts.*
 REPO = Path(__file__).parent.parent
+sys.path.append(str(REPO))
+
+from scripts.utils.checkpoint import CheckpointManager
+from scripts.utils.logging_utils import setup_logging
+
+# Setup logging
+logger = logging.getLogger("batch_fix_review")
+
+def setup_module_logging(orchestration_dir: Path, slug: str):
+    """Setup a file logger for a specific module."""
+    orchestration_dir.mkdir(parents=True, exist_ok=True)
+    log_file = orchestration_dir / f"{slug}-fix-review.log"
+
+    # Create handler
+    fh = logging.FileHandler(log_file, mode='a')
+    fh.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
+    fh.setFormatter(formatter)
+
+    # Add to root logger (so all logs go here)
+    root = logging.getLogger()
+    root.addHandler(fh)
+    return fh
+
+def remove_module_logging(handler):
+    """Remove the file logger handler."""
+    root = logging.getLogger()
+    root.removeHandler(handler)
+    handler.close()
 MAX_RETRIES = 3
 PASS_THRESHOLD = 9.0
 SUSPICIOUS_JUMP = 3.5  # Flag if score jumps more than this in one fix
@@ -342,7 +373,7 @@ def run_audit(content_path: Path) -> bool:
 # ─── Main Fix+Review Loop ───────────────────────────────────────────
 
 def process_module(level: str, num: int, model: str, dry_run: bool = False,
-                   review_only: bool = False) -> dict:
+                   review_only: bool = False, checkpoint: CheckpointManager = None) -> dict:
     """Process a single module through fix+review loop."""
     files = find_module_files(level, num)
     if not files:
@@ -352,7 +383,28 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
     title = get_module_title(files)
     result = {"num": num, "slug": slug, "title": title}
 
-    # Find existing review
+    # Check if already completed in checkpoint
+    if checkpoint and checkpoint.is_completed(str(num)):
+        logger.info(f"  ✅ M{num:02d} {slug} already completed in checkpoint — skipping")
+        return {"num": num, "status": "ALREADY_PASS", "score": checkpoint.state["modules"][str(num)].get("score")}
+
+    # Setup module-specific logging
+    log_handler = setup_module_logging(files["orchestration"], slug)
+    logger.info(f"--- Processing M{num:02d} {slug} ---")
+
+    try:
+        res = _process_module_inner(level, num, model, dry_run, review_only, files, result)
+        if checkpoint and res["status"] in ("ALREADY_PASS", "PASS_ON_REVIEW", "FIXED"):
+            checkpoint.update_module(str(num), "completed", slug=slug, score=res.get("score") or res.get("score_after"))
+        elif checkpoint:
+            checkpoint.update_module(str(num), "failed", slug=slug, reason=res.get("reason"), phase=res.get("phase"))
+        return res
+    finally:
+        remove_module_logging(log_handler)
+
+def _process_module_inner(level: str, num: int, model: str, dry_run: bool,
+                        review_only: bool, files: dict, result: dict) -> dict:
+    slug = files["slug"]
     review_path = files["orchestration"] / "phase-5-response.md"
     re_review_path = files["orchestration"] / "phase-5-re-review.md"
 
@@ -383,7 +435,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             result["action"] = "needs Phase 5 review first"
             return result
 
-        print(f"    → No review found. Running Phase 5 review...")
+        logger.info(f"    → No review found. Running Phase 5 review...")
         # Run audit first to get metrics
         run_audit(files["content"])
         prompt = assemble_review_prompt(files, level)
@@ -395,7 +447,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
                 review_path.parent.mkdir(parents=True, exist_ok=True)
                 review_path.write_text(review_text)
                 existing_score = extract_score(review_text)
-                print(f"    → Initial review: {existing_score}/10")
+                logger.info(f"    → Initial review: {existing_score}/10")
 
                 if existing_score and existing_score >= PASS_THRESHOLD:
                     # Also save as the review file
@@ -432,7 +484,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
     current_review = review_path
     consecutive_no_changes = 0
     for attempt in range(1, MAX_RETRIES + 1):
-        print(f"    → Fix attempt {attempt}/{MAX_RETRIES}...")
+        logger.info(f"    → Fix attempt {attempt}/{MAX_RETRIES}...")
 
         # Step 1: Assemble and send fix prompt
         fix_prompt = assemble_fix_prompt(files, current_review)
@@ -479,23 +531,23 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
                 debug_content += raw[:2000] + "\n...\n" + raw[-2000:] if len(raw) > 4000 else raw
                 debug_path.write_text(debug_content)
             consecutive_no_changes += 1
-            print(f"    → No files changed by fix (Gemini found nothing to fix)")
+            logger.info(f"    → No files changed by fix (Gemini found nothing to fix)")
             if consecutive_no_changes >= 2:
-                print(f"    → Breaking: fix produced no changes twice — needs manual intervention")
+                logger.info(f"    → Breaking: fix produced no changes twice — needs manual intervention")
                 result["status"] = "STUCK"
                 result["score"] = existing_score
                 result["reason"] = "Fix phase produces no changes but score < 9.0"
                 return result
         else:
             consecutive_no_changes = 0
-            print(f"    → Fixed: {', '.join(files_changed)}")
+            logger.info(f"    → Fixed: {', '.join(files_changed)}")
 
         fix_output.unlink(missing_ok=True)
 
         # Step 3: Run audit
         audit_pass = run_audit(files["content"])
         if not audit_pass:
-            print(f"    → Audit FAILED after fix. Retrying...")
+            logger.warning(f"    → Audit FAILED after fix. Retrying...")
             continue
 
         # Step 4: Assemble and send re-review
@@ -516,16 +568,16 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         review_output.unlink(missing_ok=True)
 
         if not review_text:
-            print(f"    → No delimited review in output. Retrying...")
+            logger.warning(f"    → No delimited review in output. Retrying...")
             continue
 
         new_score = extract_score(review_text)
         new_status = extract_status(review_text)
-        print(f"    → Re-review: {new_score}/10 ({new_status})")
+        logger.info(f"    → Re-review: {new_score}/10 ({new_status})")
 
         # Suspicious jump check
         if existing_score and new_score and (new_score - existing_score) > SUSPICIOUS_JUMP:
-            print(f"    ⚠️  Suspicious jump: {existing_score} → {new_score} (+{new_score - existing_score:.1f})")
+            logger.warning(f"    ⚠️  Suspicious jump: {existing_score} → {new_score} (+{new_score - existing_score:.1f})")
 
         # Save re-review
         re_review_path.write_text(review_text)
@@ -560,7 +612,25 @@ def main():
     parser.add_argument("--model", default="gemini-3-pro-preview")
     parser.add_argument("--dry-run", action="store_true", help="Show what would happen")
     parser.add_argument("--review-only", action="store_true", help="Only run reviews, no fixes")
+    parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")
+    parser.add_argument("--batch-id", help="Custom batch ID for checkpointing")
+    parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Set log level")
+    parser.add_argument("--json-log", action="store_true", help="Use JSON structured logging")
     args = parser.parse_args()
+
+    # Configure logging
+    setup_logging(level=getattr(logging, args.log_level), json_format=args.json_log)
+
+    batch_id = args.batch_id or f"fix-review-{args.level}-{args.from_num}-{args.to_num}"
+    checkpoint = CheckpointManager(batch_id)
+    if args.resume:
+        checkpoint.load()
+
+    try:
+        checkpoint.acquire_lock()
+    except RuntimeError as e:
+        logger.error(str(e))
+        sys.exit(1)
 
     # Enforce max 20 per batch
     if args.module:
@@ -568,73 +638,85 @@ def main():
     else:
         to_num = min(args.to_num, args.from_num + 19)  # Max 20 modules
         if to_num < args.to_num:
-            print(f"⚠️  Capped batch at 20 modules: M{args.from_num:02d}-M{to_num:02d}")
+            logger.warning(f"⚠️  Capped batch at 20 modules: M{args.from_num:02d}-M{to_num:02d}")
         modules = list(range(args.from_num, to_num + 1))
 
-    print(f"{'=' * 60}")
-    print(f"Batch Fix+Review: {args.level.upper()} M{modules[0]:02d}-M{modules[-1]:02d}")
-    print(f"Model: {args.model}")
-    print(f"Target: {PASS_THRESHOLD}/10 | Max retries: {MAX_RETRIES}")
+    logger.info(f"{'=' * 60}")
+    logger.info(f"Batch Fix+Review: {args.level.upper()} M{modules[0]:02d}-M{modules[-1]:02d}")
+    logger.info(f"Batch ID: {batch_id}")
+    logger.info(f"Model: {args.model}")
+    logger.info(f"Target: {PASS_THRESHOLD}/10 | Max retries: {MAX_RETRIES}")
     if args.dry_run:
-        print("MODE: DRY RUN (no changes)")
+        logger.info("MODE: DRY RUN (no changes)")
     if args.review_only:
-        print("MODE: REVIEW ONLY (no fixes)")
-    print(f"{'=' * 60}\n")
+        logger.info("MODE: REVIEW ONLY (no fixes)")
+    logger.info(f"{'=' * 60}\n")
 
     results = []
-    for num in modules:
-        print(f"--- M{num:02d} ---")
-        t0 = time.time()
-        result = process_module(args.level, num, args.model, args.dry_run, args.review_only)
-        elapsed = time.time() - t0
-        result["elapsed_s"] = round(elapsed, 1)
-        results.append(result)
+    max_batch_failures = 10
+    batch_failures = 0
 
-        status = result["status"]
-        if status == "ALREADY_PASS":
-            print(f"  ✅ Already {result['score']}/10 — skipping")
-        elif status == "PASS_ON_REVIEW":
-            print(f"  ✅ Initial review: {result['score']}/10 — no fix needed")
-        elif status == "FIXED":
-            print(f"  ✅ {result.get('score_before', '?')} → {result['score_after']}/10 "
-                  f"(attempt {result['attempts']}, {result['elapsed_s']}s)")
-        elif status == "REVIEWED":
-            print(f"  📋 Reviewed: {result.get('score', '?')}/10")
-        elif status == "DRY_RUN":
-            print(f"  🔍 Would: {result.get('action', '?')}")
-        elif status == "SKIP":
-            print(f"  ⏭️  Skip: {result.get('reason', '')}")
-        elif status == "FAIL_AFTER_RETRIES":
-            print(f"  ❌ Still {result.get('score', '?')}/10 after {MAX_RETRIES} attempts")
-        else:
-            print(f"  ❌ {status}: {result.get('reason', result.get('phase', ''))}")
+    try:
+        for num in modules:
+            t0 = time.time()
+            result = process_module(args.level, num, args.model, args.dry_run, args.review_only, checkpoint=checkpoint)
+            elapsed = time.time() - t0
+            result["elapsed_s"] = round(elapsed, 1)
+            results.append(result)
+
+            status = result["status"]
+            if status == "ALREADY_PASS":
+                logger.info(f"  ✅ Already {result['score']}/10 — skipping")
+            elif status == "PASS_ON_REVIEW":
+                logger.info(f"  ✅ Initial review: {result['score']}/10 — no fix needed")
+            elif status == "FIXED":
+                logger.info(f"  ✅ {result.get('score_before', '?')} → {result['score_after']}/10 "
+                      f"(attempt {result['attempts']}, {result['elapsed_s']}s)")
+            elif status == "REVIEWED":
+                logger.info(f"  📋 Reviewed: {result.get('score', '?')}/10")
+            elif status == "DRY_RUN":
+                logger.info(f"  🔍 Would: {result.get('action', '?')}")
+            elif status == "SKIP":
+                logger.info(f"  ⏭️  Skip: {result.get('reason', '')}")
+            elif status == "FAIL_AFTER_RETRIES":
+                logger.info(f"  ❌ Still {result.get('score', '?')}/10 after {MAX_RETRIES} attempts")
+                batch_failures += 1
+            else:
+                logger.info(f"  ❌ {status}: {result.get('reason', result.get('phase', ''))}")
+                batch_failures += 1
+
+            if batch_failures >= max_batch_failures:
+                logger.error(f"Too many failures ({batch_failures}) in one batch. Stopping.")
+                break
+    finally:
+        checkpoint.release_lock()
 
     # Summary
-    print(f"\n{'=' * 60}")
-    print("SUMMARY")
-    print(f"{'=' * 60}")
+    logger.info(f"\n{'=' * 60}")
+    logger.info("SUMMARY")
+    logger.info(f"{'=' * 60}")
 
     passed = [r for r in results if r["status"] in ("ALREADY_PASS", "PASS_ON_REVIEW", "FIXED")]
     failed = [r for r in results if r["status"] in ("FAIL_AFTER_RETRIES", "ERROR", "TIMEOUT", "STUCK")]
     skipped = [r for r in results if r["status"] == "SKIP"]
 
-    print(f"  ✅ Passed: {len(passed)}")
+    logger.info(f"  ✅ Passed: {len(passed)}")
     for r in passed:
         score = r.get("score_after", r.get("score", "?"))
-        print(f"     M{r['num']:02d} {r.get('slug', '')}: {score}/10")
+        logger.info(f"     M{r['num']:02d} {r.get('slug', '')}: {score}/10")
 
     if failed:
-        print(f"  ❌ Failed: {len(failed)}")
+        logger.info(f"  ❌ Failed: {len(failed)}")
         for r in failed:
-            print(f"     M{r['num']:02d} {r.get('slug', '')}: {r['status']} "
+            logger.info(f"     M{r['num']:02d} {r.get('slug', '')}: {r['status']} "
                   f"({r.get('reason', r.get('score', '?'))})")
 
     if skipped:
-        print(f"  ⏭️  Skipped: {len(skipped)}")
+        logger.info(f"  ⏭️  Skipped: {len(skipped)}")
 
     total_time = sum(r.get("elapsed_s", 0) for r in results)
-    print(f"\n  Total time: {total_time:.0f}s ({total_time/60:.1f} min)")
-    print(f"  Gemini calls: ~{len(passed) * 2 + len(failed) * MAX_RETRIES * 2}")
+    logger.info(f"\n  Total time: {total_time:.0f}s ({total_time/60:.1f} min)")
+    logger.info(f"  Gemini calls: ~{len(passed) * 2 + len(failed) * MAX_RETRIES * 2}")
 
 
 if __name__ == "__main__":

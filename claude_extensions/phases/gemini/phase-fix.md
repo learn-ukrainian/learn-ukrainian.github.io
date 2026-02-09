@@ -59,6 +59,12 @@ Read these files from disk:
 8. **If a fix is ambiguous**, choose the option that matches the plan file
 9. **Never output "no changes needed"** — if the Fix Plan lists fixes, there ARE changes to make. Read more carefully.
 
+### Reliability & Error Handling
+
+1. **Malformed Input**: If any input file (YAML/Markdown) is unreadable or malformed, report this immediately in the `CHANGES_START` section under `## Fixes NOT Applied`.
+2. **Ambiguity**: If a fix instruction is contradictory or impossible to follow, do not guess. Skip it and explain why.
+3. **Resource Limits**: If the task is too large to complete in one go, focus on the most critical fixes first and report what remains.
+
 ### What NOT to Do
 
 - Do NOT rewrite the entire file — only change what the Fix Plan says

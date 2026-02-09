@@ -8,12 +8,22 @@ Usage:
 """
 import argparse
 import json
+import logging
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
+# Add repo root to sys.path so we can import from scripts.*
 REPO = Path(__file__).parent.parent
+sys.path.append(str(REPO))
+
+from scripts.utils.checkpoint import CheckpointManager
+from scripts.utils.logging_utils import setup_logging
+
+# Setup logging
+logger = logging.getLogger("batch_research")
 
 
 def find_module_files(level: str, num: int) -> dict | None:
@@ -221,11 +231,16 @@ Use markdown format with clear headers for each section."""
     return prompt
 
 
-def research_module(level: str, num: int, model: str, dry_run: bool = False) -> dict:
+def research_module(level: str, num: int, model: str, dry_run: bool = False, checkpoint: CheckpointManager = None) -> dict:
     """Run research for a single module."""
     files = find_module_files(level, num)
     if not files:
         return {"num": num, "status": "SKIP", "reason": "no content file"}
+
+    # Check if already completed in checkpoint
+    if checkpoint and checkpoint.is_completed(str(num)):
+        logger.info(f"  ✅ M{num:02d} {files['slug']} already completed in checkpoint — skipping")
+        return {"num": num, "slug": files["slug"], "status": "EXISTS", "size": files["research"].stat().st_size if files["research"].exists() else 0}
 
     # Skip if research already exists
     if files["research"].exists() and files["research"].stat().st_size > 500:
@@ -246,7 +261,7 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     msg = f"{prompt}"
 
     try:
-        result = subprocess.run(
+        res = subprocess.run(
             [
                 sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
                 "ask-gemini", msg,
@@ -258,19 +273,26 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
             cwd=str(REPO),
         )
 
-        if result.returncode != 0:
-            return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": result.stderr[:200]}
-
-        if Path(output_path).exists():
+        if res.returncode != 0:
+            res_data = {"num": num, "slug": files["slug"], "status": "ERROR", "reason": res.stderr[:200]}
+        elif Path(output_path).exists():
             size = Path(output_path).stat().st_size
-            return {"num": num, "slug": files["slug"], "status": "OK", "size": size, "output": output_path}
+            res_data = {"num": num, "slug": files["slug"], "status": "OK", "size": size, "output": output_path}
         else:
-            return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": "no output file"}
+            res_data = {"num": num, "slug": files["slug"], "status": "ERROR", "reason": "no output file"}
 
     except subprocess.TimeoutExpired:
-        return {"num": num, "slug": files["slug"], "status": "TIMEOUT"}
+        res_data = {"num": num, "slug": files["slug"], "status": "TIMEOUT"}
     except Exception as e:
-        return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": str(e)[:200]}
+        res_data = {"num": num, "slug": files["slug"], "status": "ERROR", "reason": str(e)[:200]}
+
+    if checkpoint:
+        if res_data["status"] in ("OK", "EXISTS"):
+            checkpoint.update_module(str(num), "completed", slug=files["slug"], size=res_data.get("size"))
+        else:
+            checkpoint.update_module(str(num), "failed", slug=files["slug"], reason=res_data.get("reason"))
+
+    return res_data
 
 
 def main():
@@ -281,7 +303,13 @@ def main():
     parser.add_argument("--module", type=int)
     parser.add_argument("--model", default="gemini-3-flash-preview")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")
+    parser.add_argument("--batch-id", help="Custom batch ID for checkpointing")
+    parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Set log level")
+    parser.add_argument("--json-log", action="store_true", help="Use JSON structured logging")
     args = parser.parse_args()
+
+    setup_logging(level=getattr(logging, args.log_level), json_format=args.json_log)
 
     if args.module:
         modules = [args.module]
@@ -289,35 +317,58 @@ def main():
         to_num = args.to_num or 99
         modules = list(range(args.from_num, to_num + 1))
 
-    print(f"{'='*60}")
-    print(f"Batch Research: {args.level.upper()} M{modules[0]:02d}-M{modules[-1]:02d}")
-    print(f"Model: {args.model}")
-    print(f"{'='*60}\n")
+    batch_id = args.batch_id or f"research-{args.level}-{modules[0]}-{modules[-1]}"
+    checkpoint = CheckpointManager(batch_id)
+    if args.resume:
+        checkpoint.load()
+
+    try:
+        checkpoint.acquire_lock()
+    except RuntimeError as e:
+        logger.error(str(e))
+        sys.exit(1)
+
+    logger.info(f"{'='*60}")
+    logger.info(f"Batch Research: {args.level.upper()} M{modules[0]:02d}-M{modules[-1]:02d}")
+    logger.info(f"Batch ID: {batch_id}")
+    logger.info(f"Model: {args.model}")
+    logger.info(f"{'='*60}\n")
 
     results = []
-    for num in modules:
-        print(f"--- M{num:02d} ---")
-        result = research_module(args.level, num, args.model, args.dry_run)
-        results.append(result)
+    max_batch_failures = 10
+    batch_failures = 0
 
-        if result["status"] == "EXISTS":
-            print(f"  EXISTS ({result['size']} bytes)")
-        elif result["status"] == "OK":
-            print(f"  OK ({result['size']} bytes) → {result.get('output', '')}")
-        elif result["status"] == "SKIP":
-            print(f"  SKIP: {result.get('reason', '')}")
-        elif result["status"] == "DRY_RUN":
-            print(f"  DRY_RUN: {result.get('title', '')}")
-        else:
-            print(f"  {result['status']}: {result.get('reason', '')}")
+    try:
+        for num in modules:
+            logger.info(f"--- M{num:02d} ---")
+            result = research_module(args.level, num, args.model, args.dry_run, checkpoint=checkpoint)
+            results.append(result)
+
+            if result["status"] == "EXISTS":
+                logger.info(f"  EXISTS ({result['size']} bytes)")
+            elif result["status"] == "OK":
+                logger.info(f"  OK ({result['size']} bytes) → {result.get('output', '')}")
+            elif result["status"] == "SKIP":
+                logger.info(f"  SKIP: {result.get('reason', '')}")
+            elif result["status"] == "DRY_RUN":
+                logger.info(f"  DRY_RUN: {result.get('title', '')}")
+            else:
+                logger.info(f"  {result['status']}: {result.get('reason', '')}")
+                batch_failures += 1
+
+            if batch_failures >= max_batch_failures:
+                logger.error(f"Too many failures ({batch_failures}) in one batch. Stopping.")
+                break
+    finally:
+        checkpoint.release_lock()
 
     # Summary
-    print(f"\n{'='*60}")
+    logger.info(f"\n{'='*60}")
     ok = sum(1 for r in results if r["status"] == "OK")
     exists = sum(1 for r in results if r["status"] == "EXISTS")
     fail = sum(1 for r in results if r["status"] in ("ERROR", "TIMEOUT"))
     skip = sum(1 for r in results if r["status"] == "SKIP")
-    print(f"Done: {ok} new, {exists} existing, {fail} failed, {skip} skipped")
+    logger.info(f"Done: {ok} new, {exists} existing, {fail} failed, {skip} skipped")
 
 
 if __name__ == "__main__":

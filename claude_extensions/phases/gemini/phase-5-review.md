@@ -19,6 +19,11 @@ Read ALL of these files from disk before writing anything:
 
 > **ANTI-STALE-REVIEW RULE**: This file may have been fixed since a previous review. You MUST review the CURRENT state of the files, not repeat findings from a prior review. If an issue was cited before but is now fixed, it must NOT appear in your review. Every finding must be verifiable by quoting the actual current content.
 
+### Reliability & Error Handling
+1. **Missing Files**: If any of the required files listed above are missing or empty, report this in the Verdict section and FAIL the review.
+2. **YAML Parse Errors**: If Activities or Vocabulary YAML files are unreadable, flag this as a Critical Issue (Language/Activities dimension).
+3. **Consistency**: Ensure the Overall Score calculation is mathematically correct based on the dimension scores provided.
+
 ## Audit Metrics (Facts from Claude)
 
 ```

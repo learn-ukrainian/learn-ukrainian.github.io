@@ -29,13 +29,33 @@ Usage:
 import argparse
 import atexit
 import json
+import logging
 import os
 import shutil
 import sqlite3
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
+
+# Add repo root to sys.path so we can import from scripts.*
+REPO_ROOT = Path(__file__).parent.parent
+sys.path.append(str(REPO_ROOT))
+
+from scripts.utils.logging_utils import setup_logging
+
+# Setup logging
+logger = logging.getLogger("ai_agent_bridge")
+
+# Token cost estimation (USD per 1M tokens)
+# Values for Gemini 1.5 Pro (approximate)
+MODEL_COSTS = {
+    "gemini-3-pro-preview": {"input": 3.50, "output": 10.50},
+    "gemini-3-flash-preview": {"input": 0.075, "output": 0.30},
+    "default": {"input": 0.50, "output": 1.50}
+}
+
 
 # Database path (same as MCP server uses)
 DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
@@ -90,15 +110,18 @@ def _validate_file_writes(pre_snapshot: set[str], allowed_path: str) -> list[str
 
 def _write_pid_file(agent: str, task_id: str, info: dict, pid: int = None):
     """Write a PID file for a running agent process."""
-    PID_DIR.mkdir(parents=True, exist_ok=True)
-    pid_file = PID_DIR / f"{agent}-{task_id}.json"
-    pid_data = {
-        "pid": pid or os.getpid(),
-        "agent": agent,
-        "started": datetime.now(timezone.utc).isoformat(),
-        **info,
-    }
-    pid_file.write_text(json.dumps(pid_data, indent=2))
+    try:
+        PID_DIR.mkdir(parents=True, exist_ok=True)
+        pid_file = PID_DIR / f"{agent}-{task_id}.json"
+        pid_data = {
+            "pid": pid or os.getpid(),
+            "agent": agent,
+            "started": datetime.now(timezone.utc).isoformat(),
+            **info,
+        }
+        pid_file.write_text(json.dumps(pid_data, indent=2))
+    except (IOError, OSError) as e:
+        logger.error(f"Failed to write PID file: {e}")
 
 
 def _is_task_locked(agent: str, task_id: str) -> bool:
@@ -139,12 +162,12 @@ def _is_task_locked(agent: str, task_id: str) -> bool:
                         )
                         proc_name = result.stdout.strip().lower()
                         if not any(name in proc_name for name in ("python", "gemini", "claude", "node")):
-                            print(f"🧹 Stale PID lock: {pid_file.name} (PID {pid} is '{proc_name}', {age_minutes:.0f}m old)")
+                            logger.info(f"🧹 Stale PID lock: {pid_file.name} (PID {pid} is '{proc_name}', {age_minutes:.0f}m old)")
                             pid_file.unlink(missing_ok=True)
                             return False
                     except Exception:
                         # Can't verify process name — treat old lock as stale
-                        print(f"🧹 Stale PID lock: {pid_file.name} ({age_minutes:.0f}m old, can't verify process)")
+                        logger.info(f"🧹 Stale PID lock: {pid_file.name} ({age_minutes:.0f}m old, can't verify process)")
                         pid_file.unlink(missing_ok=True)
                         return False
             except (ValueError, TypeError):
@@ -162,19 +185,22 @@ def _is_task_locked(agent: str, task_id: str) -> bool:
 
 def _remove_pid_file(agent: str, task_id: str):
     """Remove PID file when process finishes."""
-    pid_file = PID_DIR / f"{agent}-{task_id}.json"
-    pid_file.unlink(missing_ok=True)
+    try:
+        pid_file = PID_DIR / f"{agent}-{task_id}.json"
+        pid_file.unlink(missing_ok=True)
+    except (IOError, OSError) as e:
+        logger.error(f"Failed to remove PID file: {e}")
 
 
 def bridge_status():
     """Show status of all running bridge processes."""
     if not PID_DIR.exists():
-        print("No PID directory found. No processes tracked yet.")
+        logger.info("No PID directory found. No processes tracked yet.")
         return
 
     pid_files = list(PID_DIR.glob("*.json"))
     if not pid_files:
-        print("No bridge processes tracked.")
+        logger.info("No bridge processes tracked.")
         return
 
     alive = []
@@ -195,28 +221,28 @@ def bridge_status():
             pf.unlink()
 
     if alive:
-        print(f"🟢 {len(alive)} running bridge process(es):\n")
+        logger.info(f"🟢 {len(alive)} running bridge process(es):\n")
         for name, data in alive:
-            print(f"  {name}")
-            print(f"    PID: {data.get('pid')}")
-            print(f"    Agent: {data.get('agent')}")
-            print(f"    Task: {data.get('task_id')}")
-            print(f"    Model: {data.get('model', 'N/A')}")
-            print(f"    Started: {data.get('started')}")
+            logger.info(f"  {name}")
+            logger.info(f"    PID: {data.get('pid')}")
+            logger.info(f"    Agent: {data.get('agent')}")
+            logger.info(f"    Task: {data.get('task_id')}")
+            logger.info(f"    Model: {data.get('model', 'N/A')}")
+            logger.info(f"    Started: {data.get('started')}")
             # Show log file tail
             log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
             log_file = log_dir / f"{data.get('agent')}-{data.get('task_id')}.log"
             if log_file.exists():
                 lines = log_file.read_text().strip().split('\n')
                 last_line = lines[-1] if lines else "(empty)"
-                print(f"    Log: {log_file}")
-                print(f"    Last output: {last_line[:100]}")
-            print()
+                logger.info(f"    Log: {log_file}")
+                logger.info(f"    Last output: {last_line[:100]}")
+            logger.info("")
     else:
-        print("No running bridge processes.")
+        logger.info("No running bridge processes.")
 
     if stale:
-        print(f"🔴 Cleaned up {len(stale)} stale PID file(s): {', '.join(n for n, _ in stale)}")
+        logger.info(f"🔴 Cleaned up {len(stale)} stale PID file(s): {', '.join(n for n, _ in stale)}")
 
 def init_db():
     """Initialize database if needed."""
@@ -262,7 +288,7 @@ def get_db():
     columns = [row[1] for row in cursor.fetchall()]
     
     if "status" not in columns:
-        print("🔧 Migrating database: adding 'status' column to 'messages' table")
+        logger.info("🔧 Migrating database: adding 'status' column to 'messages' table")
         conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
         conn.commit()
         
@@ -324,7 +350,7 @@ def set_session(task_id: str, agent: str, session_id: str):
 
     conn.commit()
     conn.close()
-    print(f"📌 Stored {agent} session: {session_id[:8]}... for task {task_id}")
+    logger.info(f"📌 Stored {agent} session: {session_id[:8]}... for task {task_id}")
 
 def check_inbox(for_llm: str = "gemini"):
     """Check inbox for messages addressed to an agent."""
@@ -342,17 +368,17 @@ def check_inbox(for_llm: str = "gemini"):
     conn.close()
 
     if not rows:
-        print(f"📭 No unread messages for {for_llm}")
+        logger.info(f"📭 No unread messages for {for_llm}")
         return
 
-    print(f"📬 {len(rows)} unread message(s) for {for_llm}:\n")
+    logger.info(f"📬 {len(rows)} unread message(s) for {for_llm}:\n")
     for row in rows:
         msg_id, from_llm, msg_type, preview, timestamp = row
         preview = preview.replace('\n', ' ')
         if len(preview) >= 100:
             preview += "..."
-        print(f"  [{msg_id}] From: {from_llm} | Type: {msg_type} | {timestamp}")
-        print(f"      {preview}\n")
+        logger.info(f"  [{msg_id}] From: {from_llm} | Type: {msg_type} | {timestamp}")
+        logger.info(f"      {preview}\n")
 
 def read_message(message_id: int):
     """Read a specific message."""
@@ -369,7 +395,7 @@ def read_message(message_id: int):
     conn.close()
 
     if not row:
-        print(f"❌ Message {message_id} not found")
+        logger.error(f"❌ Message {message_id} not found")
         return None
 
     msg = {
@@ -383,18 +409,18 @@ def read_message(message_id: int):
         "timestamp": row[7]
     }
 
-    print(f"📨 Message #{msg['id']}")
-    print(f"   From: {msg['from']} → To: {msg['to']}")
-    print(f"   Type: {msg['type']}")
-    print(f"   Task: {msg['task_id'] or 'N/A'}")
-    print(f"   Time: {msg['timestamp']}")
-    print(f"\n{'='*60}\n")
-    print(msg['content'])
+    logger.info(f"📨 Message #{msg['id']}")
+    logger.info(f"   From: {msg['from']} → To: {msg['to']}")
+    logger.info(f"   Type: {msg['type']}")
+    logger.info(f"   Task: {msg['task_id'] or 'N/A'}")
+    logger.info(f"   Time: {msg['timestamp']}")
+    logger.info(f"\n{'='*60}\n")
+    logger.info(msg['content'])
 
     if msg['data']:
-        print(f"\n{'='*60}")
-        print("📎 Attached Data:")
-        print(msg['data'])
+        logger.info(f"\n{'='*60}")
+        logger.info("📎 Attached Data:")
+        logger.info(msg['data'])
 
     return msg
 
@@ -435,7 +461,7 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     conn.commit()
     conn.close()
 
-    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id})")
+    logger.info(f"✅ Message sent to {to_llm.title()} (ID: {msg_id})")
 
     # Trigger macOS notification to alert human
     try:
@@ -462,7 +488,7 @@ def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data:
     msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm, to_llm="claude", from_model=from_model, to_model=to_model)
 
     # Step 2: Invoke Claude to process it (mode auto-detected from message type)
-    print(f"\n🚀 Invoking Claude to process message #{msg_id}...")
+    logger.info(f"\n🚀 Invoking Claude to process message #{msg_id}...")
     process_for_claude(msg_id, new_session)
 
     return msg_id
@@ -490,24 +516,24 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
         async_mode = True
-        print("ℹ️  Async mode auto-enabled for handoff (complex task)")
+        logger.info("ℹ️  Async mode auto-enabled for handoff (complex task)")
 
     # Validation: Warn if handoff message is too long (handoff anti-pattern)
     # Only warn for handoff type - help/query messages can be long
     HANDOFF_WARNING_THRESHOLD = 500  # chars
     if msg_type == "handoff" and len(content) > HANDOFF_WARNING_THRESHOLD and task_id and task_id.startswith("gh-"):
-        print(f"⚠️  WARNING: Handoff message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
-        print(f"   For task handoffs, the GitHub issue should contain details.")
-        print(f"   Consider sending a SHORT message with issue reference only:")
-        print(f"   'Issue #{task_id.replace('gh-', '')} is assigned to you. Read it for details.'")
-        print()
+        logger.warning(f"⚠️  WARNING: Handoff message is {len(content)} chars (>{HANDOFF_WARNING_THRESHOLD})")
+        logger.warning(f"   For task handoffs, the GitHub issue should contain details.")
+        logger.warning(f"   Consider sending a SHORT message with issue reference only:")
+        logger.warning(f"   'Issue #{task_id.replace('gh-', '')} is assigned to you. Read it for details.'")
+        logger.warning("")
 
     # Step 1: Send the message (model param becomes to_model)
     # In output_path mode, skip broker entirely — batch script handles everything
     if output_path:
         msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
         acknowledge(msg_id)
-        print(f"   Pre-acknowledged (file output mode — no broker traffic)")
+        logger.info(f"   Pre-acknowledged (file output mode — no broker traffic)")
     else:
         msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
 
@@ -517,15 +543,15 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         # during that window, it picks up the message with no restrictions.
         if stdout_only:
             acknowledge(msg_id)
-            print(f"   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)")
+            logger.info(f"   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)")
 
     # Step 2: Invoke Gemini to process it (unless async mode)
     if async_mode:
-        print(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
-        print(f"   Gemini will see this in his inbox when he starts a session.")
-        print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
+        logger.info(f"\n📥 Message #{msg_id} queued for Gemini (async mode - no immediate invocation)")
+        logger.info(f"   Gemini will see this in his inbox when he starts a session.")
+        logger.info(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
-        print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
+        logger.info(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
         process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
 
     return msg_id
@@ -550,9 +576,9 @@ def acknowledge(message_ids: list[int]):
     conn.close()
 
     if len(message_ids) == 1:
-        print(f"✓ Message {message_ids[0]} acknowledged")
+        logger.info(f"✓ Message {message_ids[0]} acknowledged")
     else:
-        print(f"✓ {len(message_ids)} messages acknowledged: {', '.join(map(str, message_ids))}")
+        logger.info(f"✓ {len(message_ids)} messages acknowledged: {', '.join(map(str, message_ids))}")
 
 
 def acknowledge_all(for_llm: str):
@@ -574,7 +600,7 @@ def acknowledge_all(for_llm: str):
     rows = cursor.fetchall()
 
     if not rows:
-        print(f"📭 No unread messages to acknowledge for {for_llm}")
+        logger.info(f"📭 No unread messages to acknowledge for {for_llm}")
         conn.close()
         return
 
@@ -589,7 +615,7 @@ def acknowledge_all(for_llm: str):
     conn.commit()
     conn.close()
 
-    print(f"✓ Acknowledged {len(msg_ids)} messages for {for_llm}: {', '.join(map(str, msg_ids))}")
+    logger.info(f"✓ Acknowledged {len(msg_ids)} messages for {for_llm}: {', '.join(map(str, msg_ids))}")
 
 def get_conversation(task_id: str):
     """Get full conversation for a task."""
@@ -607,20 +633,39 @@ def get_conversation(task_id: str):
     conn.close()
 
     if not rows:
-        print(f"❌ No messages found for task: {task_id}")
+        logger.error(f"❌ No messages found for task: {task_id}")
         return
 
-    print(f"📜 Conversation: {task_id} ({len(rows)} messages)\n")
-    print("="*70)
+    logger.info(f"📜 Conversation: {task_id} ({len(rows)} messages)\n")
+    logger.info("="*70)
 
     for row in rows:
         msg_id, from_llm, to_llm, msg_type, content, timestamp = row
-        print(f"\n[{msg_id}] {from_llm.upper()} → {to_llm.upper()} | {msg_type} | {timestamp}")
-        print("-"*70)
-        print(content[:500])
+        logger.info(f"\n[{msg_id}] {from_llm.upper()} → {to_llm.upper()} | {msg_type} | {timestamp}")
+        logger.info("-"*70)
+        logger.info(content[:500])
         if len(content) > 500:
-            print(f"\n... [{len(content) - 500} more characters]")
-        print()
+            logger.info(f"\n... [{len(content) - 500} more characters]")
+        logger.info("")
+
+def _estimate_tokens(text: str) -> int:
+    """Rough estimation of tokens based on character count."""
+    if not text:
+        return 0
+    # Average ~3.5 chars per token for mixed English/Ukrainian
+    return max(1, len(text) // 3)
+
+def _log_usage(model: str, input_text: str, output_text: str, task_id: str = None):
+    """Log estimated token usage and cost."""
+    in_tokens = _estimate_tokens(input_text)
+    out_tokens = _estimate_tokens(output_text)
+
+    costs = MODEL_COSTS.get(model, MODEL_COSTS["default"])
+    cost = (in_tokens * costs["input"] + out_tokens * costs["output"]) / 1_000_000
+
+    logger.info(f"📊 Usage [{model}] {'(Task: ' + task_id + ')' if task_id else ''}:")
+    logger.info(f"   Tokens: {in_tokens} in, {out_tokens} out (total: {in_tokens + out_tokens})")
+    logger.info(f"   Est. Cost: ${cost:.4f}")
 
 def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
     """Read message, process with Gemini CLI, send response.
@@ -717,16 +762,16 @@ Format your response clearly.
 
         # LOCK CHECK: Don't launch if another process is already working on this task
         if _is_task_locked("gemini", task_key):
-            print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
+            logger.info(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
             return
 
         log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
         log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / f"gemini-{task_key}.log"
 
-        print(f"\n🚀 Launching bridge in background (no timeout)...")
-        print(f"   Log: {log_file}")
-        print(f"   Bridge will capture Gemini's response and route it when done.")
+        logger.info(f"\n🚀 Launching bridge in background (no timeout)...")
+        logger.info(f"   Log: {log_file}")
+        logger.info(f"   Bridge will capture Gemini's response and route it when done.")
 
         try:
             bridge_cmd = [
@@ -744,7 +789,7 @@ Format your response clearly.
                 env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
                 start_new_session=True  # Survive parent exit
             )
-            print(f"   PID: {proc.pid}")
+            logger.info(f"   PID: {proc.pid}")
 
             # Write PID file for the CHILD process so lock checks work
             _write_pid_file("gemini", task_key, {
@@ -755,20 +800,19 @@ Format your response clearly.
             }, pid=proc.pid)
 
         except FileNotFoundError:
-            print("❌ Python or bridge script not found")
+            logger.error("❌ Python or bridge script not found")
     else:
         # SYNC: Run Gemini with STREAMING output (visible in log in real-time)
-        import time
         task_key = msg.get('task_id') or str(message_id)
         timeout_val = None if no_timeout else 900
         mode_label = "no-timeout" if no_timeout else "sync, 15 min timeout"
 
         # LOCK CHECK: Don't process if another bridge is already working on this task
         if _is_task_locked("gemini", task_key):
-            print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
+            logger.info(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
             return
 
-        print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
+        logger.info(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
         sys.stdout.flush()
 
         # Write PID file for status tracking and locking
@@ -780,18 +824,15 @@ Format your response clearly.
         })
         atexit.register(_remove_pid_file, "gemini", task_key)
 
-        max_retries = 5
-        base_delay = 30  # seconds — respect the quota, don't hammer
+        max_retries = 3
+        base_delay = 60  # seconds
+        max_delay = 120  # seconds
         _response_sent = False
 
         try:
             for attempt in range(max_retries):
                 try:
                     # Stream stdout line-by-line so the log file updates in real-time
-                    # Mode selection:
-                    # - stdout_only (no output_path): --approval-mode plan (READ-ONLY)
-                    # - output_path: -y (needs write access) with post-validation
-                    # - standard: -y (YOLO, auto-approve all tools)
                     gemini_cmd = [GEMINI_CLI, "-m", model]
                     if stdout_only and not output_path:
                         gemini_cmd += ["--approval-mode", "plan"]
@@ -815,28 +856,47 @@ Format your response clearly.
 
                     # Read stdout in real-time, collect for response routing
                     output_lines = []
-                    for line in proc.stdout:
+                    start_time = time.time()
+                    while True:
+                        line = proc.stdout.readline()
+                        if not line:
+                            if proc.poll() is not None:
+                                break
+                            time.sleep(0.1)
+                            # Check for timeout if not no_timeout
+                            if not no_timeout and (time.time() - start_time) > (timeout_val or 900):
+                                proc.terminate()
+                                raise subprocess.TimeoutExpired(gemini_cmd, timeout_val or 900)
+                            continue
+
                         print(line, end='')  # Real-time to log file
                         sys.stdout.flush()
                         output_lines.append(line)
+                        # Reset timeout clock on activity
+                        start_time = time.time()
 
                     # Wait for process to finish, get stderr
-                    proc.wait()
-                    stderr = proc.stderr.read() if proc.stderr else ""
+                    stdout_remaining, stderr = proc.communicate(timeout=30)
+                    if stdout_remaining:
+                        output_lines.append(stdout_remaining)
 
                     if proc.returncode != 0:
                         # Detect quota/rate limit errors
-                        if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
-                            delay = base_delay * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
+                        is_rate_limited = any(x in stderr.lower() for x in ["exhausted your capacity", "429", "quota", "too many requests"])
+                        is_cooldown = "cooldown" in stderr.lower() or "temporarily overloaded" in stderr.lower()
+
+                        if is_rate_limited or is_cooldown:
+                            delay = min(base_delay * (2 ** attempt), max_delay)
                             if attempt < max_retries - 1:
-                                print(f"\n⏳ Rate limited (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
+                                reason = "Rate limited" if is_rate_limited else "Cooldown"
+                                logger.warning(f"\n⏳ {reason} (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
                                 sys.stdout.flush()
                                 time.sleep(delay)
                                 continue
                             else:
-                                print(f"\n❌ Rate limited after {max_retries} attempts. Giving up.")
+                                logger.error(f"\n❌ {reason} after {max_retries} attempts. Giving up.")
                                 return
-                        print(f"\n❌ Gemini CLI error (exit {proc.returncode}): {stderr[:500]}")
+                        logger.error(f"\n❌ Gemini CLI error (exit {proc.returncode}): {stderr[:1000]}")
                         sys.stdout.flush()
                         # Non-zero exit but has output? Gemini tool calls may cause exit 1.
                         # If we got substantial output, treat as success.
@@ -845,27 +905,30 @@ Format your response clearly.
 
                     response = ''.join(output_lines).strip()
 
+                    # Log usage
+                    _log_usage(model, prompt, response, msg.get('task_id'))
+
                     # Post-validation: check Gemini only wrote to the allowed file
                     if output_path and pre_snapshot is not None:
                         violations = _validate_file_writes(pre_snapshot, output_path)
                         if violations:
-                            print(f"\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
+                            logger.warning(f"\n⚠️  VIOLATION: Gemini wrote to unauthorized files:")
                             for v in violations:
-                                print(f"   - {v}")
+                                logger.warning(f"   - {v}")
                             sys.stdout.flush()
 
-                    print(f"\n\n{'─' * 40}")
+                    logger.info(f"\n\n{'─' * 40}")
                     if output_path:
                         output_exists = Path(output_path).exists()
                         output_size = Path(output_path).stat().st_size if output_exists else 0
-                        print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
+                        logger.info(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
                     else:
-                        print(f"✅ Gemini finished ({len(response)} chars)")
+                        logger.info(f"✅ Gemini finished ({len(response)} chars)")
                     sys.stdout.flush()
 
                     if output_path:
                         # File output mode: NO broker message. Batch script reads the file directly.
-                        print(f"   (no broker message — file output mode)")
+                        logger.info(f"   (no broker message — file output mode)")
                     elif stdout_only:
                         # Stdout-only mode: broker gets SHORT summary only
                         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
@@ -897,10 +960,10 @@ Format your response clearly.
 
                 except subprocess.TimeoutExpired:
                     proc.kill()
-                    print(f"\n❌ Gemini CLI timed out ({timeout_val}s sync limit)")
+                    logger.error(f"\n❌ Gemini CLI timed out ({timeout_val}s sync limit)")
                     return
                 except FileNotFoundError:
-                    print("❌ gemini CLI not found. Is it installed?")
+                    logger.error("❌ gemini CLI not found. Is it installed?")
                     return
         finally:
             # Always clean up PID file, and send error if no response was routed
@@ -948,7 +1011,7 @@ def process_for_claude(message_id: int, new_session: bool = False, fire_and_forg
     conn.close()
 
     if not row:
-        print(f"❌ Message {message_id} not found or not addressed to Claude")
+        logger.error(f"❌ Message {message_id} not found or not addressed to Claude")
         return
 
     msg = {
@@ -966,12 +1029,12 @@ def process_for_claude(message_id: int, new_session: bool = False, fire_and_forg
     session = get_session(msg['task_id']) if msg['task_id'] else {"claude": None, "gemini": None}
     claude_session_id = session["claude"] if not new_session else None
 
-    print(f"📨 Message #{msg['id']}")
-    print(f"   From: {msg['from']} → To: {msg['to']}")
-    print(f"   Type: {msg['type']}")
-    print(f"   Task: {msg['task_id'] or 'N/A'}")
-    print(f"   Mode: {'🚀 async (bridge bg)' if fire_and_forget else '⏳ sync' + (' (no timeout)' if no_timeout else '')}")
-    print(f"   Session: {claude_session_id[:8] + '...' if claude_session_id else 'NEW'}")
+    logger.info(f"📨 Message #{msg['id']}")
+    logger.info(f"   From: {msg['from']} → To: {msg['to']}")
+    logger.info(f"   Type: {msg['type']}")
+    logger.info(f"   Task: {msg['task_id'] or 'N/A'}")
+    logger.info(f"   Mode: {'🚀 async (bridge bg)' if fire_and_forget else '⏳ sync' + (' (no timeout)' if no_timeout else '')}")
+    logger.info(f"   Session: {claude_session_id[:8] + '...' if claude_session_id else 'NEW'}")
 
     # Prepare prompt for Claude
     prompt = f"""You are Claude, receiving a message from {msg['from'].title()} via the message broker.
@@ -1002,12 +1065,12 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
     if claude_session_id:
         cmd.extend(["--resume", claude_session_id])
-        print(f"   Resuming session: {claude_session_id[:8]}...")
+        logger.info(f"   Resuming session: {claude_session_id[:8]}...")
     elif msg['task_id']:
         new_id = str(uuid.uuid4())
         cmd.extend(["--session-id", new_id])
         set_session(msg['task_id'], "claude", new_id)
-        print(f"   New session: {new_id[:8]}...")
+        logger.info(f"   New session: {new_id[:8]}...")
 
     if fire_and_forget:
         # ASYNC: Launch the BRIDGE ITSELF as a background process in no-timeout mode.
@@ -1015,16 +1078,16 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
         # LOCK CHECK: Don't launch if another process is already working on this task
         if _is_task_locked("claude", task_key):
-            print(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
+            logger.info(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
             return
 
         log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
         log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / f"claude-{task_key}.log"
 
-        print(f"\n🚀 Launching bridge in background (no timeout)...")
-        print(f"   Log: {log_file}")
-        print(f"   Bridge will capture Claude's response and route it when done.")
+        logger.info(f"\n🚀 Launching bridge in background (no timeout)...")
+        logger.info(f"   Log: {log_file}")
+        logger.info(f"   Bridge will capture Claude's response and route it when done.")
 
         try:
             bridge_cmd = [
@@ -1043,7 +1106,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
                 start_new_session=True  # Survive parent exit
             )
-            print(f"   PID: {proc.pid}")
+            logger.info(f"   PID: {proc.pid}")
 
             # Write PID file for the CHILD process so lock checks work
             _write_pid_file("claude", task_key, {
@@ -1053,7 +1116,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
             }, pid=proc.pid)
 
         except FileNotFoundError:
-            print("❌ Python or bridge script not found")
+            logger.error("❌ Python or bridge script not found")
     else:
         # SYNC: Run Claude with STREAMING output (visible in log in real-time)
         task_key = msg.get('task_id') or str(message_id)
@@ -1062,10 +1125,10 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
         # LOCK CHECK: Don't process if another bridge is already working on this task
         if _is_task_locked("claude", task_key):
-            print(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
+            logger.info(f"⏸️  Task '{task_key}' is already being processed by another Claude bridge. Skipping.")
             return
 
-        print(f"\n🤖 Processing with Claude CLI (headless) [{mode_label}]...")
+        logger.info(f"\n🤖 Processing with Claude CLI (headless) [{mode_label}]...")
         sys.stdout.flush()
 
         # Write PID file for status tracking and locking
@@ -1089,17 +1152,30 @@ Do NOT use MCP tools to send your response - just output your response directly.
             )
 
             output_lines = []
-            for line in proc.stdout:
+            start_time = time.time()
+            while True:
+                line = proc.stdout.readline()
+                if not line:
+                    if proc.poll() is not None:
+                        break
+                    time.sleep(0.1)
+                    if not no_timeout and (time.time() - start_time) > (timeout_val or 900):
+                        proc.terminate()
+                        raise subprocess.TimeoutExpired(cmd, timeout_val or 900)
+                    continue
+
                 print(line, end='')
                 sys.stdout.flush()
                 output_lines.append(line)
+                start_time = time.time()
 
-            proc.wait()
-            stderr = proc.stderr.read() if proc.stderr else ""
+            stdout_remaining, stderr = proc.communicate(timeout=30)
+            if stdout_remaining:
+                output_lines.append(stdout_remaining)
 
             if proc.returncode != 0:
                 error_msg = stderr.strip() or "Unknown error"
-                print(f"\n❌ Claude CLI error: {error_msg[:500]}")
+                logger.error(f"\n❌ Claude CLI error: {error_msg[:500]}")
                 sys.stdout.flush()
 
                 send_message(
@@ -1116,8 +1192,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
             response = ''.join(output_lines).strip()
 
-            print(f"\n\n{'─' * 40}")
-            print(f"✅ Claude finished ({len(response)} chars)")
+            logger.info(f"\n\n{'─' * 40}")
+            logger.info(f"✅ Claude finished ({len(response)} chars)")
             sys.stdout.flush()
 
             send_message(
@@ -1136,7 +1212,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
         except subprocess.TimeoutExpired:
             proc.kill()
             timeout_mins = timeout_val // 60 if timeout_val else "?"
-            print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit)")
+            logger.error(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit)")
             send_message(
                 content=f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. Consider using --async flag for long tasks.",
                 task_id=msg['task_id'],
@@ -1148,7 +1224,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
             _response_sent = True
             acknowledge(message_id)
         except FileNotFoundError:
-            print("❌ claude CLI not found. Is it installed?")
+            logger.error("❌ claude CLI not found. Is it installed?")
             send_message(
                 content="[Bridge Error] Claude CLI not found on system",
                 task_id=msg['task_id'],
@@ -1178,9 +1254,9 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
 def interactive_mode():
     """Interactive mode for testing."""
-    print("🔄 AI Agent Bridge Interactive Mode")
-    print("Commands: inbox [agent], read <id>, send <text> --to <agent>, ack <id>, conv <task_id>, process <id>, quit")
-    print()
+    logger.info("🔄 AI Agent Bridge Interactive Mode")
+    logger.info("Commands: inbox [agent], read <id>, send <text> --to <agent>, ack <id>, conv <task_id>, process <id>, quit")
+    logger.info("")
 
     while True:
         try:
@@ -1212,13 +1288,13 @@ def interactive_mode():
             elif action == "process" and len(parts) > 1:
                 process_and_respond(int(parts[1]))
             else:
-                print("Unknown command or missing arguments.")
+                logger.info("Unknown command or missing arguments.")
 
         except KeyboardInterrupt:
-            print("\nBye!")
+            logger.info("\nBye!")
             break
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
 
 
 def process_all_gemini(model: str = "gemini-3-flash-preview"):
@@ -1237,10 +1313,10 @@ def process_all_gemini(model: str = "gemini-3-flash-preview"):
     conn.close()
 
     if not rows:
-        print("📭 No unread messages for Gemini to process")
+        logger.info("📭 No unread messages for Gemini to process")
         return
 
-    print(f"📬 Processing {len(rows)} unread message(s) for Gemini...\n")
+    logger.info(f"📬 Processing {len(rows)} unread message(s) for Gemini...\n")
 
     success = 0
     failed = 0
@@ -1248,18 +1324,18 @@ def process_all_gemini(model: str = "gemini-3-flash-preview"):
     for row in rows:
         msg_id, task_id, from_llm, msg_type, preview = row
         preview = preview.replace('\n', ' ')[:40]
-        print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        logger.info(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
             process_and_respond(msg_id, model)
             success += 1
-            print(f"    ✅ Done\n")
+            logger.info(f"    ✅ Done\n")
         except Exception as e:
             failed += 1
-            print(f"    ❌ Failed: {e}\n")
+            logger.info(f"    ❌ Failed: {e}\n")
 
-    print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    logger.info(f"\n{'═' * 50}")
+    logger.info(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
 
 
 def process_all_claude(new_session: bool = False):
@@ -1278,10 +1354,10 @@ def process_all_claude(new_session: bool = False):
     conn.close()
 
     if not rows:
-        print("📭 No unread messages for Claude to process")
+        logger.info("📭 No unread messages for Claude to process")
         return
 
-    print(f"📬 Processing {len(rows)} unread message(s) for Claude (headless)...\n")
+    logger.info(f"📬 Processing {len(rows)} unread message(s) for Claude (headless)...\n")
 
     success = 0
     failed = 0
@@ -1289,18 +1365,18 @@ def process_all_claude(new_session: bool = False):
     for row in rows:
         msg_id, task_id, from_llm, msg_type, preview = row
         preview = preview.replace('\n', ' ')[:40]
-        print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        logger.info(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
             process_for_claude(msg_id, new_session)
             success += 1
-            print(f"    ✅ Done\n")
+            logger.info(f"    ✅ Done\n")
         except Exception as e:
             failed += 1
-            print(f"    ❌ Failed: {e}\n")
+            logger.info(f"    ❌ Failed: {e}\n")
 
-    print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    logger.info(f"\n{'═' * 50}")
+    logger.info(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
 
 
 def main():
@@ -1398,6 +1474,10 @@ def main():
     proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                         help="Force new sessions for each message")
 
+    # Logging options
+    parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Set log level")
+    parser.add_argument("--json-log", action="store_true", help="Use JSON structured logging")
+
     # status
     subparsers.add_parser("status", help="Show running bridge processes")
 
@@ -1405,6 +1485,9 @@ def main():
     subparsers.add_parser("interactive", help="Interactive mode")
 
     args = parser.parse_args()
+
+    # Initialize logging
+    setup_logging(level=getattr(logging, args.log_level), json_format=args.json_log)
 
     if args.command == "inbox":
         check_inbox(args.for_llm)
