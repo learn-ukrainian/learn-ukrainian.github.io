@@ -107,9 +107,15 @@ def calculate_immersion(text: str) -> float:
     return (cyrillic_chars / total_alpha) * 100
 
 
+# Compiled regex for word counting (performance)
+# Matches non-whitespace sequences, similar to wc -w
+_WORD_RE = re.compile(r'\S+')
+
 def count_words(text: str) -> int:
     """Count words in cleaned text."""
-    return len(text.split())
+    if not text:
+        return 0
+    return len(_WORD_RE.findall(text))
 
 
 def extract_ukrainian_sentences(text: str) -> list[str]:

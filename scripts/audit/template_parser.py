@@ -9,6 +9,7 @@ Handles:
 import os
 import re
 import yaml
+from functools import lru_cache
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional
 from pathlib import Path
@@ -32,17 +33,19 @@ class TemplateStructure:
     description: str = ""
 
 
-def resolve_template(module_id: str, meta: Dict) -> str:
+@lru_cache(maxsize=256)
+def resolve_template(module_id: str, meta_tuple: tuple) -> str:
     """
     Resolve which template file to use for a given module.
     
     Args:
         module_id: The module ID (e.g., 'a1-01', 'b2-110')
-        meta: The module's metadata dictionary
+        meta_tuple: The module's metadata as a sorted tuple of items (for caching)
         
     Returns:
         Path to the template file relative to project root
     """
+    meta = dict(meta_tuple)
     # Find project root
     current_file = Path(__file__).resolve()
     # scripts/audit/template_parser.py -> scripts/audit -> scripts -> root
@@ -98,6 +101,7 @@ def resolve_template(module_id: str, meta: Dict) -> str:
     return f"docs/l2-uk-en/templates/{module_level}-module-template.md"
 
 
+@lru_cache(maxsize=32)
 def parse_template(template_path: str) -> Optional[TemplateStructure]:
     """
     Parse a markdown template file to extract structural rules.

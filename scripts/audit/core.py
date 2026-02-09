@@ -10,6 +10,7 @@ import re
 import sys
 import yaml
 from pathlib import Path
+from functools import lru_cache
 
 # Add project root to path for shared module imports
 SCRIPT_DIR = Path(__file__).parent.parent
@@ -37,6 +38,7 @@ from .cleaners import (
     clean_for_immersion,
     extract_core_content,
     calculate_immersion,
+    count_words,
 )
 from .checks import (
     run_pedagogical_checks,
@@ -582,9 +584,9 @@ def check_structure(content: str) -> dict[str, bool]:
 
 
 
+@lru_cache(maxsize=128)
 def load_yaml_meta(md_file_path: str) -> dict | None:
     """Load metadata from YAML sidecar if exists."""
-    from pathlib import Path
     md_path = Path(md_file_path)
     yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
     if not yaml_path.exists():
@@ -597,9 +599,9 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
         print(f"     {e}")
         return None
 
+@lru_cache(maxsize=128)
 def load_yaml_plan(md_file_path: str) -> dict | None:
     """Load plan data from plans directory if exists (Split Architecture)."""
-    from pathlib import Path
     md_path = Path(md_file_path)
     
     # Determine level from path
@@ -641,9 +643,9 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
         print(f"     {e}")
         return None
 
+@lru_cache(maxsize=128)
 def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
     """Load vocabulary from YAML sidecar if exists."""
-    from pathlib import Path
     md_path = Path(md_file_path)
     yaml_path = md_path.parent / 'vocabulary' / (md_path.stem + '.yaml')
     if not yaml_path.exists():
@@ -728,6 +730,15 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
 
     except Exception:
         return None
+
+def make_hashable(obj):
+    """Recursively convert unhashable objects (dicts, lists) to hashable ones (tuples)."""
+    if isinstance(obj, dict):
+        return tuple(sorted((k, make_hashable(v)) for k, v in obj.items()))
+    elif isinstance(obj, list):
+        return tuple(make_hashable(v) for v in obj)
+    return obj
+
 
 def audit_module(file_path: str) -> bool:
     """
@@ -874,7 +885,9 @@ def audit_module(file_path: str) -> bool:
             
             # Resolve which template this module should follow
             meta_for_template = meta_data if meta_data else {}
-            template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
+            # Convert meta to hashable tuple for caching
+            meta_tuple = make_hashable(meta_for_template)
+            template_path = template_parser.resolve_template(module_id_for_mapping, meta_tuple)
             template_structure = template_parser.parse_template(template_path)
 
             if template_structure is None:
@@ -1044,11 +1057,11 @@ def audit_module(file_path: str) -> bool:
     core_content = extract_core_content(body)
 
     # Word count
-    raw_words = len(body.split())
+    raw_words = count_words(body)
     core_lines = [line for line in core_content.split('\n') if not line.strip().startswith('|')]
     core_no_tables = '\n'.join(core_lines)
     core_cleaned = clean_for_stats(core_no_tables)
-    total_words = len(core_cleaned.split())
+    total_words = count_words(core_cleaned)
 
     # Engagement pattern - includes B2+ history/cultural callouts
     engagement_pattern = re.compile(

@@ -11,7 +11,9 @@ import json
 import re
 import subprocess
 import sys
+import multiprocessing
 from pathlib import Path
+from functools import partial
 
 REPO = Path(__file__).parent.parent
 
@@ -281,6 +283,8 @@ def main():
     parser.add_argument("--module", type=int)
     parser.add_argument("--model", default="gemini-3-flash-preview")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--jobs", "-j", type=int, default=1,
+                        help="Number of parallel jobs (default: 1, recommendation: 4-8)")
     args = parser.parse_args()
 
     if args.module:
@@ -292,24 +296,44 @@ def main():
     print(f"{'='*60}")
     print(f"Batch Research: {args.level.upper()} M{modules[0]:02d}-M{modules[-1]:02d}")
     print(f"Model: {args.model}")
+    if args.jobs > 1:
+        print(f"Parallel Jobs: {args.jobs}")
     print(f"{'='*60}\n")
 
     results = []
-    for num in modules:
-        print(f"--- M{num:02d} ---")
-        result = research_module(args.level, num, args.model, args.dry_run)
-        results.append(result)
+    if args.jobs > 1 and len(modules) > 1:
+        print(f"Running parallel research with {args.jobs} jobs...")
+        with multiprocessing.Pool(processes=args.jobs) as pool:
+            worker_func = partial(research_module, args.level, model=args.model, dry_run=args.dry_run)
+            results = pool.map(worker_func, modules)
 
-        if result["status"] == "EXISTS":
-            print(f"  EXISTS ({result['size']} bytes)")
-        elif result["status"] == "OK":
-            print(f"  OK ({result['size']} bytes) → {result.get('output', '')}")
-        elif result["status"] == "SKIP":
-            print(f"  SKIP: {result.get('reason', '')}")
-        elif result["status"] == "DRY_RUN":
-            print(f"  DRY_RUN: {result.get('title', '')}")
-        else:
-            print(f"  {result['status']}: {result.get('reason', '')}")
+        for result in results:
+            num = result["num"]
+            print(f"--- M{num:02d} ---")
+            if result["status"] == "EXISTS":
+                print(f"  EXISTS ({result['size']} bytes)")
+            elif result["status"] == "OK":
+                print(f"  OK ({result['size']} bytes) → {result.get('output', '')}")
+            elif result["status"] == "SKIP":
+                print(f"  SKIP: {result.get('reason', '')}")
+            else:
+                print(f"  {result['status']}: {result.get('reason', '')}")
+    else:
+        for num in modules:
+            print(f"--- M{num:02d} ---")
+            result = research_module(args.level, num, args.model, args.dry_run)
+            results.append(result)
+
+            if result["status"] == "EXISTS":
+                print(f"  EXISTS ({result['size']} bytes)")
+            elif result["status"] == "OK":
+                print(f"  OK ({result['size']} bytes) → {result.get('output', '')}")
+            elif result["status"] == "SKIP":
+                print(f"  SKIP: {result.get('reason', '')}")
+            elif result["status"] == "DRY_RUN":
+                print(f"  DRY_RUN: {result.get('title', '')}")
+            else:
+                print(f"  {result['status']}: {result.get('reason', '')}")
 
     # Summary
     print(f"\n{'='*60}")
