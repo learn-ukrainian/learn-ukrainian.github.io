@@ -13,7 +13,7 @@
     },
     "level": {
       "type": "string",
-      "pattern": "^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit)$"
+      "pattern": "^([a-zA-Z][12](-([hH][iI][sS][tT]|[pP][rR][oO]|[bB][iI][oO]))?|[lL][iI][tT])$"
     },
     "sequence": {
       "type": "integer",
@@ -39,7 +39,7 @@
     },
     "pedagogy": {
       "type": "string",
-      "enum": ["TTT", "PPP", "seminar", "workshop", "review"],
+      "enum": ["TTT", "PPP", "seminar", "workshop", "review", "CBI", "immersion", "literature", "analysis"],
       "description": "Teaching approach"
     },
     "objectives": {
@@ -165,23 +165,29 @@
       }
     },
     "connects_to": {
-      "type": "object",
-      "properties": {
-        "previous": {
-          "type": ["string", "null"]
-        },
-        "next": {
-          "type": ["string", "null"]
-        },
-        "related": {
-          "type": "array",
-          "items": {
-            "type": "string"
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "previous": { "type": ["string", "null"] },
+            "next": { "type": ["string", "null"] },
+            "related": { "type": "array", "items": { "type": "string" } }
           }
+        },
+        {
+          "type": "array",
+          "items": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
         }
-      },
+      ],
       "description": "Links to related modules"
     },
+    "activity_hints": { "type": "array" },
+    "grammar": { "type": "array", "items": { "type": "string" } },
+    "phase": { "type": "string" },
+    "prerequisites": { "type": "array", "items": { "type": "string" } },
+    "register": { "type": "string" },
+    "slug": { "type": "string" },
+    "vocabulary_hints": { "type": "object" },
     "constraints": {
       "type": "object",
       "properties": {

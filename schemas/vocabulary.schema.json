@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/vocabulary.schema.json",
+  "title": "Module Vocabulary Schema",
+  "description": "Schema for vocabulary YAML files.",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "module": { "type": "string" },
+    "level": { "type": "string" },
+    "version": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lemma", "ipa", "pos"],
+        "anyOf": [
+          { "required": ["translation"] },
+          { "required": ["translations"] }
+        ],
+        "properties": {
+          "lemma": { "type": "string", "minLength": 1 },
+          "ipa": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+            ]
+          },
+          "pos": {
+            "type": "string",
+            "enum": ["noun", "verb", "adj", "adv", "prep", "conj", "part", "pron", "num", "intj", "phrase"]
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["m", "f", "n", "mf", "pl"]
+          },
+          "translation": { "type": "string", "minLength": 1 },
+          "translations": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

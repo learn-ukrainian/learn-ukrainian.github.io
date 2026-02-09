@@ -323,6 +323,49 @@ def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optiona
     return errors
 
 
+def validate_generic_yaml(yaml_path: Path, schema_name: str) -> Tuple[bool, List[str]]:
+    """Validate a YAML file against a specific schema."""
+    if not HAS_JSONSCHEMA:
+        return False, ["jsonschema library not installed"]
+
+    schema_path = get_schemas_dir() / schema_name
+    if not schema_path.exists():
+        return False, [f"Schema not found: {schema_name}"]
+
+    try:
+        with open(schema_path, 'r', encoding='utf-8') as f:
+            schema = json.load(f)
+
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+
+        if data is None:
+            return True, []
+
+        # Use RefResolver for schemas that might have relative $refs (like activity.schema.json)
+        schema_dir_path = schema_path.parent.absolute()
+        store = {}
+        for s_file in schema_dir_path.glob("*.schema.json"):
+            try:
+                with open(s_file, 'r', encoding='utf-8') as f:
+                    s_data = json.load(f)
+                    if "$id" in s_data:
+                        store[s_data["$id"]] = s_data
+                    store[s_file.name] = s_data
+            except Exception:
+                continue
+
+        resolver = jsonschema.RefResolver(base_uri=schema_dir_path.as_uri() + "/", referrer=schema, store=store)
+
+        jsonschema.validate(instance=data, schema=schema, resolver=resolver)
+        return True, []
+    except jsonschema.ValidationError as e:
+        path = " -> ".join([str(p) for p in e.path]) if e.path else "root"
+        return False, [f"{path}: {e.message}"]
+    except Exception as e:
+        return False, [str(e)]
+
+
 def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     """
     Validate all activities in a YAML file against the schema.
@@ -435,14 +478,14 @@ def check_activity_yaml_schema(
     module_num: int,
 ) -> List[Dict]:
     """
-    Check that activity YAML files conform to the JSON schema.
-    
+    Check that YAML files (activities, meta, plan, vocabulary) conform to their schemas.
+
     This is the main entry point called by the audit system.
-    
+
     Returns list of violation dicts with 'type', 'message', 'severity'.
     """
     violations = []
-    
+
     if not HAS_JSONSCHEMA:
         # Warn but don't fail if jsonschema not installed
         violations.append({
@@ -451,27 +494,63 @@ def check_activity_yaml_schema(
             'severity': 'warning'
         })
         return violations
-    
-    # Find the activities YAML file
+
     md_path = Path(file_path)
     slug = md_path.stem
+
+    # 1. Activities YAML
     activities_dir = md_path.parent / "activities"
-    yaml_path = activities_dir / f"{slug}.yaml"
-    
-    if not yaml_path.exists():
-        # No YAML file - that's OK, module might use embedded activities
-        return []
-    
-    # Validate
-    is_valid, errors = validate_activity_yaml_file(yaml_path)
-    
-    for error in errors:
-        violations.append({
-            'type': 'YAML_SCHEMA_VIOLATION',
-            'message': f"Schema error in {yaml_path.name}: {error}",
-            'severity': 'error',
-        })
-    
+    activities_yaml = activities_dir / f"{slug}.yaml"
+    if activities_yaml.exists():
+        is_valid, errors = validate_activity_yaml_file(activities_yaml)
+        for error in errors:
+            violations.append({
+                'type': 'YAML_SCHEMA_VIOLATION',
+                'message': f"Schema error in {activities_yaml.name}: {error}",
+                'severity': 'error',
+            })
+
+    # 2. Meta YAML
+    meta_dir = md_path.parent / "meta"
+    meta_yaml = meta_dir / f"{slug}.yaml"
+    if meta_yaml.exists():
+        is_valid, errors = validate_generic_yaml(meta_yaml, "meta.schema.json")
+        for error in errors:
+            violations.append({
+                'type': 'META_SCHEMA_VIOLATION',
+                'message': f"Meta schema error in {meta_yaml.name}: {error}",
+                'severity': 'error',
+            })
+
+    # 3. Vocabulary YAML
+    vocab_dir = md_path.parent / "vocabulary"
+    vocab_yaml = vocab_dir / f"{slug}.yaml"
+    if vocab_yaml.exists():
+        is_valid, errors = validate_generic_yaml(vocab_yaml, "vocabulary.schema.json")
+        for error in errors:
+            violations.append({
+                'type': 'VOCAB_SCHEMA_VIOLATION',
+                'message': f"Vocabulary schema error in {vocab_yaml.name}: {error}",
+                'severity': 'error',
+            })
+
+    # 4. Plan YAML
+    try:
+        # curriculum/l2-uk-en/{level}/slug.md -> curriculum/l2-uk-en/plans/{level}/slug.yaml
+        level_dir = md_path.parent
+        curriculum_dir = level_dir.parent
+        plan_yaml = curriculum_dir / "plans" / level_dir.name / f"{slug}.yaml"
+        if plan_yaml.exists():
+            is_valid, errors = validate_generic_yaml(plan_yaml, "module-plan.schema.json")
+            for error in errors:
+                violations.append({
+                    'type': 'PLAN_SCHEMA_VIOLATION',
+                    'message': f"Plan schema error in {plan_yaml.name}: {error}",
+                    'severity': 'error',
+                })
+    except Exception:
+        pass
+
     return violations
 
 

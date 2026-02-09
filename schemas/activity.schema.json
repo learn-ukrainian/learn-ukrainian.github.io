@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/activity.schema.json",
+  "title": "Module Activities",
+  "description": "Schema for activity YAML files (bare list at root).",
+  "type": "array",
+  "items": {
+    "oneOf": [
+      { "$ref": "activities-base.schema.json#/definitions/quiz" },
+      { "$ref": "activities-base.schema.json#/definitions/select" },
+      { "$ref": "activities-base.schema.json#/definitions/true-false" },
+      { "$ref": "activities-base.schema.json#/definitions/fill-in" },
+      { "$ref": "activities-base.schema.json#/definitions/cloze" },
+      { "$ref": "activities-base.schema.json#/definitions/match-up" },
+      { "$ref": "activities-base.schema.json#/definitions/group-sort" },
+      { "$ref": "activities-base.schema.json#/definitions/unjumble" },
+      { "$ref": "activities-base.schema.json#/definitions/error-correction" },
+      { "$ref": "activities-base.schema.json#/definitions/mark-the-words" },
+      { "$ref": "activities-base.schema.json#/definitions/translate" },
+      { "$ref": "activities-base.schema.json#/definitions/anagram" },
+      { "$ref": "activities-base.schema.json#/definitions/essay-response" },
+      { "$ref": "activities-base.schema.json#/definitions/critical-analysis" },
+      { "$ref": "activities-base.schema.json#/definitions/comparative-study" },
+      { "$ref": "activities-base.schema.json#/definitions/authorial-intent" },
+      { "$ref": "activities-base.schema.json#/definitions/reading" },
+      { "$ref": "activities-base.schema.json#/definitions/etymology-trace" },
+      { "$ref": "activities-base.schema.json#/definitions/transcription" },
+      { "$ref": "activities-base.schema.json#/definitions/grammar-identify" },
+      { "$ref": "activities-base.schema.json#/definitions/paleography-analysis" },
+      { "$ref": "activities-base.schema.json#/definitions/dialect-comparison" },
+      { "$ref": "activities-base.schema.json#/definitions/translation-critique" },
+      { "$ref": "activities-base.schema.json#/definitions/phonology-lab" },
+      { "$ref": "activities-base.schema.json#/definitions/grammar-lab" },
+      { "$ref": "activities-base.schema.json#/definitions/parallel-text" },
+      { "$ref": "activities-base.schema.json#/definitions/historical-writing" },
+      { "$ref": "activities-base.schema.json#/definitions/register-identify" },
+      { "$ref": "activities-base.schema.json#/definitions/loanword-trace" },
+      { "$ref": "activities-base.schema.json#/definitions/comparative-style" }
+    ]
+  }
+}

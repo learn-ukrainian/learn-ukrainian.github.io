@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/meta.schema.json",
+  "title": "Module Meta Schema",
+  "description": "Schema for module meta YAML files.",
+  "type": "object",
+  "required": [
+    "module",
+    "level",
+    "slug",
+    "version",
+    "pedagogy",
+    "grammar"
+  ],
+  "properties": {
+    "module": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "id": { "type": "string" },
+    "level": { "type": "string" },
+    "slug": { "type": "string" },
+    "version": { "type": "string" },
+    "pedagogy": { "type": "string" },
+    "grammar": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "status": { "type": "string" },
+    "focus": { "type": "string" },
+    "word_target": { "type": "integer" },
+    "content_outline": { "type": "array" },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}
