@@ -14,6 +14,9 @@ MESSAGE_DB = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db
 # Playgrounds directory (for static file serving)
 PLAYGROUNDS_DIR = PROJECT_ROOT / "playgrounds"
 
+# Task tracking directory
+TASKS_DIR = PROJECT_ROOT / "tasks"
+
 # Levels configuration
 LEVELS = [
     # Core levels

@@ -84,6 +84,10 @@ temp*.md
 *_PROMPT.md
 issue_*_body.md
 
+# Batch Manager tasks
+tasks/*.json
+tasks/*.output
+
 # Root-level scripts and data (all scripts go in scripts/)
 /*.py
 /*.js

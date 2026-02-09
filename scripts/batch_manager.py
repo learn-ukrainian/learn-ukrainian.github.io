@@ -115,8 +115,8 @@ def cmd_fix_review(args):
         sys.executable,
         str(REPO / "scripts/batch_fix_review.py"),
         args.track,
-        str(args.start),
-        str(args.end),
+        "--from", str(args.start),
+        "--to", str(args.end),
         "--model", args.model
     ]
 
@@ -130,6 +130,8 @@ def cmd_fix_review(args):
                 cwd=str(REPO)
             )
         print(f"   PID: {proc.pid}")
+        metadata['pid'] = proc.pid
+        save_task_metadata(task_id, metadata)
         print(f"\n   Monitor progress: tail -f {output_file}")
         print(f"   View results: .venv/bin/python scripts/batch_manager.py show {task_id}")
     else:
@@ -174,8 +176,8 @@ def cmd_research(args):
         sys.executable,
         str(REPO / "scripts/batch_research.py"),
         args.track,
-        str(args.start),
-        str(args.end)
+        "--from", str(args.start),
+        "--to", str(args.end)
     ]
 
     if args.background:
@@ -188,6 +190,8 @@ def cmd_research(args):
                 cwd=str(REPO)
             )
         print(f"   PID: {proc.pid}")
+        metadata['pid'] = proc.pid
+        save_task_metadata(task_id, metadata)
         print(f"\n   Monitor progress: tail -f {output_file}")
     else:
         result = subprocess.run(cmd, cwd=str(REPO))
@@ -297,6 +301,56 @@ def cmd_show(args):
     return 0
 
 
+def cmd_pause(args):
+    """Pause running task."""
+    task_file = TASKS_DIR / f"{args.task_id}.json"
+    if not task_file.exists():
+        print(f"❌ Task not found: {args.task_id}")
+        return 1
+
+    metadata = json.loads(task_file.read_text())
+    if metadata.get('pid'):
+        try:
+            import os
+            import signal
+            os.kill(metadata['pid'], signal.SIGSTOP)
+            metadata['status'] = 'paused'
+            task_file.write_text(json.dumps(metadata, indent=2))
+            print(f"⏸️ Task paused: {args.task_id}")
+            return 0
+        except Exception as e:
+            print(f"❌ Error pausing process {metadata['pid']}: {e}")
+            return 1
+    else:
+        print(f"⚠️ No PID found for task {args.task_id}")
+        return 1
+
+
+def cmd_resume(args):
+    """Resume paused task."""
+    task_file = TASKS_DIR / f"{args.task_id}.json"
+    if not task_file.exists():
+        print(f"❌ Task not found: {args.task_id}")
+        return 1
+
+    metadata = json.loads(task_file.read_text())
+    if metadata.get('pid'):
+        try:
+            import os
+            import signal
+            os.kill(metadata['pid'], signal.SIGCONT)
+            metadata['status'] = 'running'
+            task_file.write_text(json.dumps(metadata, indent=2))
+            print(f"▶️ Task resumed: {args.task_id}")
+            return 0
+        except Exception as e:
+            print(f"❌ Error resuming process {metadata['pid']}: {e}")
+            return 1
+    else:
+        print(f"⚠️ No PID found for task {args.task_id}")
+        return 1
+
+
 def cmd_stop(args):
     """Stop running task."""
     task_file = TASKS_DIR / f"{args.task_id}.json"
@@ -307,14 +361,22 @@ def cmd_stop(args):
 
     metadata = json.loads(task_file.read_text())
 
+    # Try to kill process if PID exists
+    if metadata.get('pid'):
+        try:
+            import os
+            import signal
+            os.kill(metadata['pid'], signal.SIGTERM)
+            print(f"终止 Process {metadata['pid']} terminated")
+        except Exception:
+            pass
+
     # Update status
     metadata['status'] = 'stopped'
     metadata['stopped_at'] = datetime.now().isoformat()
     task_file.write_text(json.dumps(metadata, indent=2))
 
     print(f"✋ Task marked as stopped: {args.task_id}")
-    print(f"   Note: Background process may still be running")
-    print(f"   Use 'ps aux | grep batch' to find PIDs and 'kill <pid>' to terminate")
 
     return 0
 
@@ -369,6 +431,14 @@ def main():
         parser.print_help()
         return 1
 
+    # pause command
+    pause_parser = subparsers.add_parser('pause', help='Pause running task')
+    pause_parser.add_argument('task_id', help='Task ID')
+
+    # resume command
+    resume_parser = subparsers.add_parser('resume', help='Resume paused task')
+    resume_parser.add_argument('task_id', help='Task ID')
+
     # Route to command handler
     handlers = {
         'fix-review': cmd_fix_review,
@@ -376,7 +446,9 @@ def main():
         'orchestrate': cmd_orchestrate,
         'list': cmd_list,
         'show': cmd_show,
-        'stop': cmd_stop
+        'stop': cmd_stop,
+        'pause': cmd_pause,
+        'resume': cmd_resume
     }
 
     handler = handlers.get(args.command)

@@ -10,14 +10,18 @@ Provides REST API endpoints for:
 
 import asyncio
 import json
+import os
+import re
 import sqlite3
 import subprocess
+import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import yaml
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -29,6 +33,7 @@ from .config import (
     PLAYGROUNDS_DIR,
     LEVELS,
     PROJECT_ROOT,
+    TASKS_DIR,
 )
 
 app = FastAPI(
@@ -78,7 +83,41 @@ class ActivitySave(BaseModel):
     activities: list
 
 
+class BatchLaunchRequest(BaseModel):
+    """Request to launch a batch operation."""
+    operation: str  # fix-review, research, orchestrate
+    track: str
+    start_num: int
+    end_num: int
+    model: Optional[str] = "gemini-3-pro-preview"
+
+
 # ==================== HELPERS ====================
+
+
+class ConnectionManager:
+    """Manage WebSocket connections."""
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: dict):
+        for connection in self.active_connections:
+            try:
+                await connection.send_json(message)
+            except Exception:
+                # Connection might be closed
+                pass
+
+
+manager = ConnectionManager()
 
 
 def parse_word_count(message: str) -> tuple[int, int]:
@@ -106,6 +145,17 @@ def parse_naturalness(message: str) -> int:
         return int(message.split("/")[0])
     except Exception:
         return 0
+
+
+def is_process_running(pid: int) -> bool:
+    """Check if a process is running."""
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
 
 
 def extract_module_number(module_id: str) -> int:
@@ -211,6 +261,19 @@ def get_db_connection():
         conn.commit()
         return conn
     return sqlite3.connect(MESSAGE_DB)
+
+
+# ==================== SYSTEM ENDPOINTS ====================
+
+
+@app.get("/api/health")
+async def health_check():
+    """Health check endpoint."""
+    return {
+        "status": "ok",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "tasks_dir_exists": TASKS_DIR.exists()
+    }
 
 
 # ==================== CONFIG ENDPOINTS ====================
@@ -376,7 +439,7 @@ async def trigger_audit(request: AuditRequest, background_tasks: BackgroundTasks
     async def run_audit():
         try:
             result = subprocess.run(
-                [".venv/bin/python", "scripts/audit_module.py", str(module_path)],
+                [sys.executable, "scripts/audit_module.py", str(module_path)],
                 capture_output=True,
                 text=True,
                 cwd=PROJECT_ROOT,
@@ -404,6 +467,248 @@ async def get_audit_status(level: str, slug: str):
     """Get the status of a running or completed audit."""
     audit_key = f"{level}/{slug}"
     return audit_status.get(audit_key, {"status": "not_found"})
+
+
+# ==================== BATCH ENDPOINTS ====================
+
+
+@app.post("/api/batch/launch")
+async def launch_batch(request: BatchLaunchRequest, background_tasks: BackgroundTasks):
+    """Launch a batch operation."""
+    # Validate operation
+    if request.operation not in ["fix-review", "research", "orchestrate"]:
+        raise HTTPException(status_code=400, detail=f"Invalid operation: {request.operation}")
+
+    # Create task ID
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    task_id = f"{request.operation}-{request.track}-{request.start_num}-{request.end_num}-{timestamp}"
+
+    # Prepare command
+    cmd = [
+        sys.executable,
+        "scripts/batch_manager.py",
+        request.operation,
+        request.track,
+        str(request.start_num),
+        str(request.end_num)
+    ]
+
+    if request.operation == "fix-review" and request.model:
+        cmd.extend(["--model", request.model])
+
+    # Always run in background from the CLI's perspective too
+    cmd.append("--background")
+
+    try:
+        # We run the batch manager CLI which handles process launching and metadata
+        process = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd=PROJECT_ROOT
+        )
+
+        if process.returncode != 0:
+            raise HTTPException(status_code=500, detail=f"Failed to launch batch: {process.stderr}")
+
+        # Start a background task to monitor logs and broadcast via WebSocket
+        background_tasks.add_task(monitor_task_logs, task_id)
+
+        return {"message": "Batch launched", "task_id": task_id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/batch/tasks")
+async def list_tasks():
+    """List all batch tasks."""
+    if not TASKS_DIR.exists():
+        return {"tasks": []}
+
+    tasks = []
+    for task_file in sorted(TASKS_DIR.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        try:
+            with open(task_file) as f:
+                metadata = json.load(f)
+
+            # Check if running task is still alive
+            if metadata.get("status") == "running" and metadata.get("pid"):
+                if not is_process_running(metadata["pid"]):
+                    metadata["status"] = "completed"
+                    # Update file
+                    try:
+                        with open(task_file, "w") as f:
+                            json.dump(metadata, f, indent=2)
+                    except Exception:
+                        pass
+
+            # Populate results from status files
+            if not metadata.get("results") or metadata.get("status") == "running":
+                track = metadata.get("track")
+                start = metadata.get("start")
+                end = metadata.get("end")
+
+                level_info = next((l for l in LEVELS if l["id"] == track), None)
+                if level_info:
+                    status_dir = CURRICULUM_ROOT / level_info["path"] / "status"
+                    if status_dir.exists():
+                        results = []
+                        for num in range(start, end + 1):
+                            # Try 0-padded and non-padded
+                            status_files = list(status_dir.glob(f"{num:02d}-*.json"))
+                            if not status_files:
+                                status_files = list(status_dir.glob(f"{num}-*.json"))
+
+                            if status_files:
+                                try:
+                                    with open(status_files[0]) as sf:
+                                        sdata = json.load(sf)
+                                    status = sdata.get("overall", {}).get("status", "pending")
+                                    results.append({"num": num, "status": status})
+                                except Exception:
+                                    results.append({"num": num, "status": "pending"})
+                            else:
+                                results.append({"num": num, "status": "pending"})
+                        metadata["results"] = results
+                        # Calculate progress
+                        metadata["progress"] = len([r for r in results if r["status"] != "pending"])
+
+            tasks.append(metadata)
+        except Exception:
+            continue
+
+    return {"tasks": tasks}
+
+
+@app.get("/api/batch/recent")
+async def get_recent_results():
+    """Get recent batch results."""
+    # This is a simplified version, returning last 10 tasks
+    tasks_resp = await list_tasks()
+    return {"results": tasks_resp["tasks"][:10]}
+
+
+@app.post("/api/batch/stop/{task_id}")
+async def stop_task(task_id: str):
+    """Stop a running task."""
+    cmd = [sys.executable, "scripts/batch_manager.py", "stop", task_id]
+    process = subprocess.run(cmd, capture_output=True, text=True, cwd=PROJECT_ROOT)
+
+    if process.returncode != 0:
+        raise HTTPException(status_code=500, detail=process.stderr)
+
+    return {"message": f"Task {task_id} marked as stopped"}
+
+
+@app.post("/api/batch/pause/{task_id}")
+async def pause_task(task_id: str):
+    """Pause a running task."""
+    cmd = [sys.executable, "scripts/batch_manager.py", "pause", task_id]
+    process = subprocess.run(cmd, capture_output=True, text=True, cwd=PROJECT_ROOT)
+
+    if process.returncode != 0:
+        raise HTTPException(status_code=500, detail=process.stderr)
+
+    return {"message": f"Task {task_id} paused"}
+
+
+@app.post("/api/batch/resume/{task_id}")
+async def resume_task(task_id: str):
+    """Resume a paused task."""
+    cmd = [sys.executable, "scripts/batch_manager.py", "resume", task_id]
+    process = subprocess.run(cmd, capture_output=True, text=True, cwd=PROJECT_ROOT)
+
+    if process.returncode != 0:
+        raise HTTPException(status_code=500, detail=process.stderr)
+
+    return {"message": f"Task {task_id} resumed"}
+
+
+@app.get("/api/batch/logs/{task_id}")
+async def get_task_logs(task_id: str, lines: int = 100):
+    """Get logs for a task."""
+    if not validate_slug(task_id):
+        raise HTTPException(status_code=400, detail="Invalid task_id")
+
+    output_file = TASKS_DIR / f"{task_id}.output"
+    if not output_file.exists():
+        raise HTTPException(status_code=404, detail="Log file not found")
+
+    try:
+        cmd = ["tail", f"-{lines}", str(output_file)]
+        process = subprocess.run(cmd, capture_output=True, text=True)
+        return {"logs": process.stdout}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+async def monitor_task_logs(task_id: str):
+    """Monitor task output and broadcast to WebSocket."""
+    output_file = TASKS_DIR / f"{task_id}.output"
+    metadata_file = TASKS_DIR / f"{task_id}.json"
+
+    # Wait for output file to appear
+    for _ in range(10):
+        if output_file.exists():
+            break
+        await asyncio.sleep(0.5)
+
+    if not output_file.exists():
+        return
+
+    with open(output_file, 'r') as f:
+        # Go to end of file
+        f.seek(0, 2)
+        while True:
+            line = f.readline()
+            if line:
+                # Determine log level
+                level = "info"
+                lower_line = line.lower()
+                if "error" in lower_line or "failed" in lower_line or "❌" in lower_line:
+                    level = "error"
+                elif "warn" in lower_line or "⚠️" in lower_line:
+                    level = "warn"
+                elif "success" in lower_line or "done" in lower_line or "✅" in lower_line:
+                    level = "success"
+
+                await manager.broadcast({
+                    "type": "log",
+                    "task_id": task_id,
+                    "message": line.strip(),
+                    "level": level,
+                    "timestamp": datetime.now(timezone.utc).isoformat()
+                })
+            else:
+                # Check if task is still running
+                try:
+                    with open(metadata_file) as mf:
+                        metadata = json.load(mf)
+
+                    status = metadata.get("status")
+                    pid = metadata.get("pid")
+
+                    if status not in ["running", "pending"]:
+                        break
+
+                    if pid and not is_process_running(pid):
+                        # Update status to completed
+                        metadata["status"] = "completed"
+                        with open(metadata_file, "w") as mf:
+                            json.dump(metadata, mf, indent=2)
+
+                        await manager.broadcast({
+                            "type": "task_update",
+                            "task_id": task_id,
+                            "status": "completed"
+                        })
+                        break
+                except Exception:
+                    pass
+                await asyncio.sleep(0.5)
+
+            # Also broadcast task update occasionally
+            # (In a real app we'd parse progress from logs)
 
 
 # ==================== MESSAGE ENDPOINTS ====================
@@ -602,6 +907,23 @@ async def save_activities(level: str, slug: str, request: ActivitySave):
         return {"saved": str(activity_file), "count": len(request.activities)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error saving activities: {e}")
+
+
+# ==================== WEBSOCKET ====================
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    """WebSocket endpoint for real-time updates."""
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Just keep the connection alive
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception:
+        manager.disconnect(websocket)
 
 
 # ==================== STATIC FILES ====================

@@ -435,8 +435,8 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:8001/api';
-    const WS_URL = 'ws://localhost:8001/ws';
+    const API_BASE = '/api';
+    const WS_URL = `ws://${window.location.host}/ws`;
 
     let state = {
       apiConnected: false,
@@ -553,6 +553,26 @@
     }
 
     // Task Management
+    async function loadTasks() {
+      if (state.apiConnected) {
+        const data = await fetchAPI('/batch/tasks');
+        if (data && data.tasks) {
+          state.tasks = data.tasks.slice(0, 10).map(t => ({
+            id: t.task_id,
+            operation: t.operation,
+            track: t.track,
+            range: `M${t.start}-M${t.end}`,
+            status: t.status,
+            progress: t.progress || 0,
+            total: t.end - t.start + 1,
+            results: t.results || []
+          }));
+          renderTasks();
+          updateActiveCount();
+        }
+      }
+    }
+
     function addTask(task) {
       state.tasks.unshift(task);
       if (state.tasks.length > 10) state.tasks.pop();
@@ -584,7 +604,7 @@
             <span class="badge ${task.status}">${task.status}</span>
           </div>
           <div class="task-meta">
-            ${task.operation} · ${task.progress}/${task.total} modules
+            ${task.operation} · ${task.progress || 0}/${task.total} modules
             ${task.cliOnly ? ' · CLI mode' : ''}
           </div>
           <div class="task-progress">
@@ -605,6 +625,10 @@
               <button class="task-btn" onclick="pauseTask('${task.id}')">Pause</button>
               <button class="task-btn" onclick="stopTask('${task.id}')">Stop</button>
             ` : ''}
+            ${task.status === 'paused' ? `
+              <button class="task-btn" onclick="resumeTask('${task.id}')">Resume</button>
+              <button class="task-btn" onclick="stopTask('${task.id}')">Stop</button>
+            ` : ''}
             ${task.status === 'failed' ? `
               <button class="task-btn" onclick="retryTask('${task.id}')">Retry</button>
             ` : ''}
@@ -621,7 +645,19 @@
 
     // Task Actions
     async function pauseTask(taskId) {
-      logWarn(`Pause not yet implemented for ${taskId}`);
+      if (state.apiConnected) {
+        await fetchAPI(`/batch/pause/${taskId}`, { method: 'POST' });
+      }
+      updateTask(taskId, { status: 'paused' });
+      logInfo(`Task ${taskId} paused`);
+    }
+
+    async function resumeTask(taskId) {
+      if (state.apiConnected) {
+        await fetchAPI(`/batch/resume/${taskId}`, { method: 'POST' });
+      }
+      updateTask(taskId, { status: 'running' });
+      logInfo(`Task ${taskId} resumed`);
     }
 
     async function stopTask(taskId) {
@@ -663,7 +699,28 @@
 
     function renderResults(results) {
       const container = document.getElementById('results-container');
-      // TODO: Render results grid
+      if (!results || results.length === 0) {
+        container.innerHTML = '<div class="empty-state">No recent results</div>';
+        return;
+      }
+
+      container.innerHTML = results.map(task => `
+        <div style="margin-bottom: 16px; border-bottom: 1px solid #334155; padding-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 600;">${task.track.toUpperCase()} · ${task.operation}</span>
+            <span style="font-size: 10px; color: #64748b;">${task.created_at ? new Date(task.created_at).toLocaleTimeString() : ''}</span>
+          </div>
+          <div class="task-meta" style="margin-bottom: 8px;">Range: M${task.start}-M${task.end} · Status: ${task.status}</div>
+          <div class="results-grid">
+            ${task.results && task.results.length > 0 ? task.results.map(r => `
+              <div class="result-cell ${r.status}" title="M${r.num}: ${r.status}">
+                ${r.num}
+              </div>
+            `).join('') : '<div style="font-size: 11px; color: #64748b;">Launch to see module progress</div>'}
+          </div>
+        </div>
+      `).join('');
+
       logInfo(`Loaded ${results.length} recent results`);
     }
 
@@ -760,6 +817,8 @@
       await checkAPI();
       if (state.apiConnected) {
         connectWebSocket();
+        loadTasks();
+        refreshResults();
       }
       setInterval(checkAPI, 10000);
     }
