@@ -98,6 +98,39 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - Python scripts can also invoke gemini-cli via subprocess
 - See issue #412 for content naturalness detection extension
 
+### 6a. Jules (Google AI Coding Agent)
+
+**Jules** is an async coding agent (base model: Gemini 3 Flash). Used for CODE tasks only (features, bugs, refactoring, tests, CI/CD). **NOT** for content/research.
+
+**CLI:** `/opt/homebrew/bin/jules`
+```bash
+# List all sessions (see status: Completed, Awaiting User Feedback, etc.)
+jules remote list --session
+
+# Create new task (uses current repo by default)
+jules remote new --session "task description"
+
+# Create task from file
+cat task.md | jules remote new
+
+# Create parallel sessions
+jules remote new --session "task" --parallel 3
+
+# Pull result (patch/diff)
+jules remote pull --session <session-id>
+
+# Pull and apply patch locally
+jules remote pull --session <session-id> --apply
+```
+
+**Key facts:**
+- Works in **feature branches**, creates PRs on GitHub
+- Can handle ~300 tasks/day
+- "Awaiting User Feedback" = respond via [jules.google.com](https://jules.google.com) UI (CLI has no respond command)
+- Some tasks show on GitHub (PRs), others only on Jules UI
+- Label GitHub issues with `jules` for tracking
+- Jules also self-reviews PRs via Gemini Code Assist
+
 ### 7. Word Targets Are Minimums
 
 **CRITICAL: Word targets are MINIMUMS, not maximums.**
