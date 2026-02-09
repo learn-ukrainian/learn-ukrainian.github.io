@@ -609,7 +609,7 @@ def main():
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=20)
     parser.add_argument("--module", type=int, help="Process a single module")
-    parser.add_argument("--model", default="gemini-3-pro-preview")
+    parser.add_argument("--model", default="gemini-1.5-pro")
     parser.add_argument("--dry-run", action="store_true", help="Show what would happen")
     parser.add_argument("--review-only", action="store_true", help="Only run reviews, no fixes")
     parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")

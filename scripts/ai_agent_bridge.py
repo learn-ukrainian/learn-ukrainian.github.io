@@ -430,7 +430,7 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     Args:
         from_llm: Agent family (gemini, claude) - for routing
         to_llm: Target agent family - for routing
-        from_model: Exact model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-3-flash-preview')
+        from_model: Exact model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-1.5-flash')
         to_model: Target model ID
     """
     conn = get_db()

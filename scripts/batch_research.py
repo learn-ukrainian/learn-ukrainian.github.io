@@ -301,7 +301,7 @@ def main():
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=None)
     parser.add_argument("--module", type=int)
-    parser.add_argument("--model", default="gemini-3-flash-preview")
+    parser.add_argument("--model", default="gemini-1.5-flash")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")
     parser.add_argument("--batch-id", help="Custom batch ID for checkpointing")

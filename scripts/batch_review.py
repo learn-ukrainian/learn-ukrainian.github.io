@@ -3,7 +3,7 @@
 
 Usage:
     .venv/bin/python scripts/batch_review.py a1 --from 1 --to 44
-    .venv/bin/python scripts/batch_review.py a1 --from 1 --to 13 --model gemini-3-pro-preview
+    .venv/bin/python scripts/batch_review.py a1 --from 1 --to 13 --model gemini-1.5-pro
     .venv/bin/python scripts/batch_review.py a1 --module 9  # single module
 """
 import argparse
@@ -232,7 +232,7 @@ def main():
     parser.add_argument("--from", dest="from_num", type=int, default=1, help="Start module number")
     parser.add_argument("--to", dest="to_num", type=int, default=None, help="End module number (inclusive)")
     parser.add_argument("--module", type=int, help="Single module number")
-    parser.add_argument("--model", default="gemini-3-pro-preview", help="Gemini model")
+    parser.add_argument("--model", default="gemini-1.5-pro", help="Gemini model")
     parser.add_argument("--dry-run", action="store_true", help="Assemble prompts but don't send to Gemini")
     args = parser.parse_args()
 

@@ -5,7 +5,7 @@ Batch Manager CLI - Unified interface for batch operations
 Usage:
     # Fix + Review batches
     .venv/bin/python scripts/batch_manager.py fix-review a1 1 44
-    .venv/bin/python scripts/batch_manager.py fix-review b2-hist 1 20 --model gemini-3-pro-preview
+    .venv/bin/python scripts/batch_manager.py fix-review b2-hist 1 20 --model gemini-1.5-pro
 
     # Research batches
     .venv/bin/python scripts/batch_manager.py research b1 1 92
@@ -332,9 +332,9 @@ def main():
     fix_parser.add_argument('track', help='Track name (a1, b2-hist, etc.)')
     fix_parser.add_argument('start', type=int, help='Start module number')
     fix_parser.add_argument('end', type=int, help='End module number')
-    fix_parser.add_argument('--model', default='gemini-3-pro-preview',
-                           choices=['gemini-3-pro-preview', 'gemini-3-flash-preview'],
-                           help='Model for review (default: gemini-3-pro-preview)')
+    fix_parser.add_argument('--model', default='gemini-1.5-pro',
+                           choices=['gemini-1.5-pro', 'gemini-1.5-flash'],
+                           help='Model for review (default: gemini-1.5-pro)')
     fix_parser.add_argument('-b', '--background', action='store_true',
                            help='Run in background')
 
