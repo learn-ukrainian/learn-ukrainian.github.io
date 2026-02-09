@@ -1,8 +1,8 @@
 # Audit Report: M01 — 01-the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1019
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 22:59:30
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-09 07:11:16
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,6 +36,15 @@
 - Required types used: 4/4 (anagram, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[META_SCHEMA_VIOLATION]** Meta schema error in 01-the-cyrillic-code-i.yaml: Field 'root' (line 2): 'focus' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1135/1019 (raw: 1507)
 - **Activities:** ✅ 8/8
@@ -47,7 +56,7 @@
 - **Vocab:** ✅ 41/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 6.3% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

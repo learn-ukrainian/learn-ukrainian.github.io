@@ -9,6 +9,7 @@ Issue: #397
 
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
 
@@ -19,6 +20,10 @@ except ImportError:
     HAS_JSONSCHEMA = False
 
 import yaml
+
+# Add project root to path for shared module imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+from scripts.utils.validation import get_schema_path, load_schema, validate_yaml_content, detect_meta_type, LineLoader
 
 
 # =============================================================================
@@ -362,11 +367,16 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     except FileNotFoundError as e:
         return False, [str(e)]
 
-    # Load activities from YAML with duplicate key detection
+    # Load activities from YAML with duplicate key detection and line numbers
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        data, duplicate_errors = safe_load_with_duplicate_check(content)
+
+        # Use LineLoader to get line numbers
+        data = yaml.load(content, Loader=LineLoader)
+
+        # Also check for duplicate keys (using separate logic as safe_load_with_duplicate_check does its own thing)
+        _, duplicate_errors = safe_load_with_duplicate_check(content)
 
         # Report duplicate keys as errors (these are serious issues)
         if duplicate_errors:
@@ -392,21 +402,14 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
 
     # FIRST: Validate entire array against level schema (checks minItems, etc.)
     if level_schema:
-        try:
-            jsonschema.validate(instance=activities, schema=level_schema)
-        except jsonschema.ValidationError as e:
-            # Array-level validation error (e.g., too few items)
-            # Format concise error messages
-            # Array-level validation error (e.g., too few items)
-            # Format concise error messages
-            if "too short" in e.message.lower() and len(e.path) == 0:
+        schema_errors = validate_yaml_content(activities, level_schema)
+        for err in schema_errors:
+            # Custom formatting for "too short" errors
+            if "too short" in err.lower():
                 min_items = level_schema.get('minItems', 'N/A')
                 errors.append(f"Insufficient activities: {len(activities)} found, minimum {min_items} required for {level_match.upper()}")
             else:
-                path_str = f" at key '{e.path[-1]}'" if e.path else ""
-                errors.append(f"Schema validation error{path_str}: {e.message}")
-        except jsonschema.SchemaError as e:
-            errors.append(f"Schema error: {e.message}")
+                errors.append(err)
 
     # SECOND: Validate each activity individually ONLY if no level schema
     # If level schema exists and validated, it already covers individual activities
@@ -417,10 +420,13 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
                 errors.append(f"Activity {i}: not a dictionary")
                 continue
 
-            activity_errors = validate_activity(activity, base_schema, activity_index=i)
-            for err in activity_errors:
-                # Errors are now self-contained with context, don't add prefix
-                errors.append(err)
+            # Pass to unified validator
+            activity_schema = get_activity_schema(activity.get('type', ''), base_schema)
+            if activity_schema:
+                activity_errors = validate_yaml_content(activity, activity_schema)
+                errors.extend(activity_errors)
+            else:
+                 errors.append(f"Unknown activity type: '{activity.get('type')}' (not in schema)")
 
     return len(errors) == 0, errors
 
@@ -472,6 +478,125 @@ def check_activity_yaml_schema(
             'severity': 'error',
         })
     
+    return violations
+
+
+def check_meta_yaml_schema(file_path: str) -> List[Dict]:
+    """Validate meta YAML file against schema."""
+    violations = []
+    if not HAS_JSONSCHEMA: return violations
+
+    md_path = Path(file_path)
+    slug = md_path.stem
+    yaml_path = md_path.parent / "meta" / f"{slug}.yaml"
+
+    if not yaml_path.exists():
+        return []
+
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.load(f, Loader=LineLoader)
+
+        meta_type = detect_meta_type(data)
+        schema_path = get_schema_path(meta_type)
+        schema = load_schema(schema_path)
+
+        if schema:
+            errors = validate_yaml_content(data, schema)
+            for error in errors:
+                violations.append({
+                    'type': 'META_SCHEMA_VIOLATION',
+                    'message': f"Meta schema error in {yaml_path.name}: {error}",
+                    'severity': 'error',
+                })
+    except Exception as e:
+        violations.append({
+            'type': 'META_PARSE_ERROR',
+            'message': f"Could not parse meta YAML {yaml_path.name}: {e}",
+            'severity': 'error',
+        })
+
+    return violations
+
+
+def check_plan_yaml_schema(file_path: str, level: str) -> List[Dict]:
+    """Validate plan YAML file against schema."""
+    violations = []
+    if not HAS_JSONSCHEMA: return violations
+
+    md_path = Path(file_path)
+    slug = md_path.stem
+    # Find level from path if not provided
+    if not level:
+        for part in md_path.parts:
+            if part.lower() in ["a1", "a2", "b1", "b2", "c1", "c2", "lit", "b2-hist", "c1-bio", "c1-hist", "oes", "ruth"]:
+                level = part.lower()
+                break
+
+    # Construct plan path
+    plan_path = md_path.parent.parent / "plans" / level.lower() / f"{slug}.yaml"
+    if not plan_path.exists():
+        return []
+
+    try:
+        with open(plan_path, 'r', encoding='utf-8') as f:
+            data = yaml.load(f, Loader=LineLoader)
+
+        schema_path = get_schema_path("plan")
+        schema = load_schema(schema_path)
+
+        if schema:
+            errors = validate_yaml_content(data, schema)
+            for error in errors:
+                violations.append({
+                    'type': 'PLAN_SCHEMA_VIOLATION',
+                    'message': f"Plan schema error in {plan_path.name}: {error}",
+                    'severity': 'error',
+                })
+    except Exception as e:
+        violations.append({
+            'type': 'PLAN_PARSE_ERROR',
+            'message': f"Could not parse plan YAML {plan_path.name}: {e}",
+            'severity': 'error',
+        })
+
+    return violations
+
+
+def check_vocabulary_yaml_schema(file_path: str) -> List[Dict]:
+    """Validate vocabulary YAML file against schema."""
+    violations = []
+    if not HAS_JSONSCHEMA: return violations
+
+    md_path = Path(file_path)
+    slug = md_path.stem
+    yaml_path = md_path.parent / "vocabulary" / f"{slug}.yaml"
+
+    if not yaml_path.exists():
+        return []
+
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.load(f, Loader=LineLoader)
+
+        schema_path = get_schema_path("vocabulary")
+        schema = load_schema(schema_path)
+
+        if schema:
+            errors = validate_yaml_content(data, schema)
+            for error in errors:
+                violations.append({
+                    'type': 'VOCAB_SCHEMA_VIOLATION',
+                    'message': f"Vocabulary schema error in {yaml_path.name}: {error}",
+                    'severity': 'error',
+                })
+    except Exception as e:
+        violations.append({
+            'type': 'VOCAB_PARSE_ERROR',
+            'message': f"Could not parse vocabulary YAML {yaml_path.name}: {e}",
+            'severity': 'error',
+        })
+
     return violations
 
 

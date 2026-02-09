@@ -13,7 +13,7 @@
     },
     "level": {
       "type": "string",
-      "pattern": "^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit)$"
+      "pattern": "(?i)^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit|oes|ruth)$"
     },
     "sequence": {
       "type": "integer",
@@ -129,6 +129,13 @@
         }
       }
     },
+    "vocabulary_hints": {
+      "type": "object",
+      "properties": {
+        "required": { "type": "array", "items": { "type": "string" } },
+        "recommended": { "type": "array", "items": { "type": "string" } }
+      }
+    },
     "activities": {
       "type": "object",
       "required": ["types_required", "min_items_per_type"],
@@ -142,7 +149,8 @@
               "group-sort", "anagram", "error-correction", "cloze",
               "select", "translate", "mark-the-words", "highlight-morphemes",
               "essay-response", "comparative-study", "reading",
-              "critical-analysis", "authorial-intent"
+              "critical-analysis", "authorial-intent", "etymology-trace",
+              "transcription", "grammar-identify", "paleography-analysis"
             ]
           },
           "description": "Activity types that must be present"
@@ -164,22 +172,44 @@
         }
       }
     },
-    "connects_to": {
-      "type": "object",
-      "properties": {
-        "previous": {
-          "type": ["string", "null"]
-        },
-        "next": {
-          "type": ["string", "null"]
-        },
-        "related": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+    "activity_hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "focus"],
+        "properties": {
+          "type": { "type": "string" },
+          "focus": { "type": "string" },
+          "items": { "type": ["string", "integer"] },
+          "source": { "type": "string" },
+          "output": { "type": "string" },
+          "model_answer": { "type": "string" }
         }
-      },
+      }
+    },
+    "grammar": {
+      "type": ["array", "string"],
+      "items": { "type": "string" }
+    },
+    "phase": { "type": "string" },
+    "prerequisites": { "type": ["array", "string"] },
+    "register": { "type": "string" },
+    "slug": { "type": "string" },
+    "connects_to": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "previous": { "type": ["string", "null"] },
+            "next": { "type": ["string", "null"] },
+            "related": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      ],
       "description": "Links to related modules"
     },
     "constraints": {

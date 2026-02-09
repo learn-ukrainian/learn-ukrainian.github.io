@@ -70,6 +70,9 @@ from .checks.external_resource_validation import (
 from .checks.meta_validator import check_seminar_meta_requirements, check_activity_hints_valid, check_research_file
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
+    check_meta_yaml_schema,
+    check_plan_yaml_schema,
+    check_vocabulary_yaml_schema,
 )
 from .checks.yaml_lint import lint_yaml_file
 from .checks.state_standard_compliance import (
@@ -1107,8 +1110,18 @@ def audit_module(file_path: str) -> bool:
                 sys.exit(1)
 
     if yaml_file.exists():
-        yaml_schema_violations = check_activity_yaml_schema(file_path, level_code, module_num)
-        if yaml_schema_violations:
+        yaml_schema_violations.extend(check_activity_yaml_schema(file_path, level_code, module_num))
+
+    # Meta schema validation
+    yaml_schema_violations.extend(check_meta_yaml_schema(file_path))
+
+    # Plan schema validation
+    yaml_schema_violations.extend(check_plan_yaml_schema(file_path, level_code))
+
+    # Vocabulary schema validation
+    yaml_schema_violations.extend(check_vocabulary_yaml_schema(file_path))
+
+    if yaml_schema_violations:
             print(f"  ❌ YAML schema violations: {len(yaml_schema_violations)}")
             for v in yaml_schema_violations:
                 severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
@@ -1776,7 +1789,7 @@ def audit_module(file_path: str) -> bool:
             'type': v['type'],
             'severity': v['severity'],
             'issue': v['message'],
-            'fix': 'Fix the activity YAML to match the schema in schemas/activities-base.schema.json',
+            'fix': 'Fix the YAML file to match the appropriate schema in schemas/',
             'blocking': True  # Schema violations are blocking errors
         })
 

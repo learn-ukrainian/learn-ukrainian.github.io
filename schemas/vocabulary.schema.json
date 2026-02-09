@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Vocabulary Schema",
+  "description": "Schema for individual module vocabulary files (vocabulary/{level}/{slug}.yaml)",
+  "type": "object",
+  "required": ["module", "level", "items"],
+  "properties": {
+    "module": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Module slug"
+    },
+    "level": {
+      "type": "string",
+      "pattern": "^(A1|A2|B1|B2|C1|C2|B2-HIST|B2-PRO|C1-BIO|C1-HIST|C1-PRO|C2-PRO|LIT|OES|RUTH)$",
+      "description": "CEFR level or track code"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/VocabularyItem"
+      }
+    }
+  },
+  "definitions": {
+    "VocabularyItem": {
+      "type": "object",
+      "required": ["lemma", "ipa", "translation", "pos"],
+      "properties": {
+        "lemma": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Ukrainian word (Cyrillic)"
+        },
+        "ipa": {
+          "type": "string",
+          "description": "IPA pronunciation"
+        },
+        "translation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "English translation"
+        },
+        "pos": {
+          "enum": ["noun", "verb", "adj", "adv", "pron", "prep", "conj", "part", "intj", "num", "phrase", "propn", "other", "suffix", "prefix"],
+          "description": "Part of speech"
+        },
+        "gender": {
+          "enum": ["m", "f", "n", "pl", "-", ""],
+          "description": "Grammatical gender (for nouns)"
+        },
+        "aspect": {
+          "enum": ["impf", "pf", "both", "na"],
+          "description": "Verb aspect"
+        },
+        "level": {
+          "enum": ["A1", "A2", "B1", "B2", "C1", "C2"],
+          "description": "Target level for this specific word"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Usage notes"
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
