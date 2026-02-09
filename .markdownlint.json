@@ -1,13 +1,15 @@
 {
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json",
   "default": true,
+  "MD001": false,
+  "MD004": false,
+  "MD005": false,
+  "MD007": false,
+  "MD009": false,
+  "MD012": false,
   "MD013": false,
-  "MD033": false,
-  "MD024": {
-    "siblings_only": true
-  },
-  "MD041": false,
-  "MD034": false,
+  "MD022": false,
+  "MD024": false,
   "MD025": false,
   "MD026": false,
   "MD028": false,
@@ -15,15 +17,19 @@
   "MD030": false,
   "MD031": false,
   "MD032": false,
+  "MD033": false,
+  "MD034": false,
+  "MD035": false,
   "MD036": false,
   "MD037": false,
   "MD040": false,
+  "MD041": false,
   "MD046": false,
-  "MD047": true,
-  "MD049": {
-    "style": "asterisk"
-  },
-  "MD050": {
-    "style": "asterisk"
-  }
+  "MD047": false,
+  "MD049": false,
+  "MD050": false,
+  "MD055": false,
+  "MD056": false,
+  "MD058": false,
+  "MD060": false
 }
