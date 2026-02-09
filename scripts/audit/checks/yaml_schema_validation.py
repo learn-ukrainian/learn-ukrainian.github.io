@@ -11,20 +11,8 @@ import json
 import re
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
-from functools import lru_cache
 
-try:
-    import jsonschema
-    HAS_JSONSCHEMA = True
-except ImportError:
-    HAS_JSONSCHEMA = False
-
-try:
-    import orjson
-    HAS_ORJSON = True
-except ImportError:
-    HAS_ORJSON = False
-
+import functools
 import yaml
 
 
@@ -112,17 +100,15 @@ def get_schemas_dir() -> Path:
     return Path(__file__).parent.parent.parent.parent / "schemas"
 
 
-@lru_cache(maxsize=16)
+@functools.lru_cache(maxsize=1)
 def load_base_schema() -> Dict:
     """Load the base activities schema with all activity type definitions."""
     schema_path = get_schemas_dir() / "activities-base.schema.json"
     if not schema_path.exists():
         raise FileNotFoundError(f"Schema not found: {schema_path}")
-    
-    with open(schema_path, 'rb') as f:
-        if HAS_ORJSON:
-            return orjson.loads(f.read())
-        return json.loads(f.read().decode('utf-8'))
+
+    with open(schema_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 
 def get_activity_schema(activity_type: str, base_schema: Dict) -> Optional[Dict]:
@@ -263,12 +249,14 @@ def _generate_example_fix(activity_type: str, error: 'jsonschema.ValidationError
 def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optional[int] = None) -> List[str]:
     """
     Validate a single activity against its schema.
-    
+
     Returns a list of validation error messages (empty if valid).
     """
     errors = []
-    
-    if not HAS_JSONSCHEMA:
+
+    try:
+        import jsonschema
+    except ImportError:
         return ["jsonschema library not installed - cannot validate schemas"]
     
     activity_type = activity.get('type')
@@ -333,23 +321,6 @@ def validate_activity(activity: Dict, base_schema: Dict, activity_index: Optiona
     return errors
 
 
-@lru_cache(maxsize=32)
-def load_level_schema(level_match: str) -> Optional[Dict]:
-    """Load and cache level-specific schema."""
-    schema_path = get_schemas_dir() / f"activities-{level_match}.schema.json"
-
-    # Fallback to B1 schema if specific one doesn't exist (B1 is the baseline for B1+)
-    if not schema_path.exists():
-        schema_path = get_schemas_dir() / "activities-b1.schema.json"
-
-    if schema_path.exists():
-        with open(schema_path, 'rb') as f:
-            if HAS_ORJSON:
-                return orjson.loads(f.read())
-            return json.loads(f.read().decode('utf-8'))
-    return None
-
-
 def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     """
     Validate all activities in a YAML file against the schema.
@@ -357,6 +328,11 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     Returns (is_valid, list_of_errors).
     """
     errors = []
+
+    try:
+        import jsonschema
+    except ImportError:
+        return False, ["jsonschema library not installed - cannot validate schemas"]
 
     if not yaml_path.exists():
         return True, []  # No YAML file is OK (module might use embedded activities)
@@ -372,7 +348,16 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     # Load level-specific schema (has minItems constraint)
     level_schema = None
     if level_match:
-        level_schema = load_level_schema(level_match)
+        # Check for level-specific schema (e.g., activities-c1.schema.json)
+        schema_path = get_schemas_dir() / f"activities-{level_match}.schema.json"
+
+        # Fallback to B1 schema if specific one doesn't exist (B1 is the baseline for B1+)
+        if not schema_path.exists():
+            schema_path = get_schemas_dir() / "activities-b1.schema.json"
+
+        if schema_path.exists():
+            with open(schema_path, 'r', encoding='utf-8') as f:
+                level_schema = json.load(f)
 
     # Load base schema for individual activity validation
     try:
@@ -454,14 +439,16 @@ def check_activity_yaml_schema(
 ) -> List[Dict]:
     """
     Check that activity YAML files conform to the JSON schema.
-    
+
     This is the main entry point called by the audit system.
-    
+
     Returns list of violation dicts with 'type', 'message', 'severity'.
     """
     violations = []
-    
-    if not HAS_JSONSCHEMA:
+
+    try:
+        import jsonschema
+    except ImportError:
         # Warn but don't fail if jsonschema not installed
         violations.append({
             'type': 'SCHEMA_CHECK_SKIPPED',

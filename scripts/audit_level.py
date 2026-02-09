@@ -28,22 +28,17 @@ Options:
 
 import argparse
 import glob
-import re
-import subprocess
-import sys
-import os
 import multiprocessing
-import io
+import os
+import re
+import sys
 from pathlib import Path
-from contextlib import redirect_stdout, redirect_stderr
-from functools import partial
 
 import yaml
 
-# Add current script directory to path for imports
-SCRIPT_DIR = Path(__file__).parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.append(str(SCRIPT_DIR))
+# Add project root to sys.path to allow importing from scripts.audit
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts.audit import audit_module
 
 
 def get_module_order_from_curriculum(level: str) -> list[str]:
@@ -221,92 +216,67 @@ def find_module_files(level: str, module_filter: str | None = None) -> tuple[lis
         return filtered, []
 
 
-def audit_worker(file_path: Path, fix: bool = False) -> tuple[bool, str, Path]:
-    """Worker function to audit a single file and capture output."""
-    # Delay imports until inside the worker process
-    from audit import audit_module
-    from audit_module import auto_fix_yaml_violations
+def audit_worker(args_tuple):
+    """Worker function for multiprocessing."""
+    file_path, fix, verbose = args_tuple
 
-    f = io.StringIO()
-    success = False
-    with redirect_stdout(f), redirect_stderr(f):
-        try:
-            if fix:
-                auto_fix_yaml_violations(str(file_path))
+    # Extract module identifier for display
+    match = re.match(r'^(\d+)-', file_path.name)
+    if match:
+        module_id = match.group(1)
+    else:
+        module_id = file_path.stem
+
+    if fix:
+        # Auto-fix requires subprocess because it modifies files and re-runs audit
+        # This is rare enough that we still use subprocess for it.
+        import subprocess
+        cmd = [sys.executable, "scripts/audit_module.py", str(file_path), "--fix"]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        success = (result.returncode == 0)
+    else:
+        # standard audit can be run in-process
+        # We redirect stdout to capture it if not verbose
+        if not verbose:
+            import io
+            from contextlib import redirect_stdout, redirect_stderr
+            f = io.StringIO()
+            with redirect_stdout(f), redirect_stderr(f):
+                success = audit_module(str(file_path))
+        else:
             success = audit_module(str(file_path))
-        except Exception as e:
-            print(f"\n❌ UNCAUGHT ERROR auditing {file_path.name}: {e}")
-            import traceback
-            traceback.print_exc()
-            success = False
 
-    return success, f.getvalue(), file_path
+    return module_id, success
 
 
-def run_audit(files: list[Path], fix: bool = False, verbose: bool = False, jobs: int = 1) -> tuple[int, int, list[str]]:
+def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tuple[int, int, list[str]]:
     """Run audit on the given files. Returns (passed, failed, failed_modules)."""
     passed = 0
     failed = 0
     failed_modules = []
-
     total = len(files)
 
-    if jobs > 1 and total > 1:
-        print(f"Running parallel audit with {jobs} jobs...")
+    # Prepare arguments for workers
+    worker_args = [(f, fix, verbose) for f in files]
 
-        # Use a Pool for parallel execution
-        with multiprocessing.Pool(processes=jobs) as pool:
-            # Use imap to get results as they complete
-            worker_func = partial(audit_worker, fix=fix)
-            results = pool.imap(worker_func, files)
+    # Use Pool for parallel execution
+    # Limit processes to avoid overloading
+    num_procs = min(multiprocessing.cpu_count(), 8)
 
-            for i, (success, output, file_path) in enumerate(results, 1):
-                # Extract module identifier
-                match = re.match(r'^(\d+)-', file_path.name)
-                module_id = match.group(1) if match else file_path.stem
+    print(f"Running audit with {num_procs} processes...")
 
-                status_icon = "✅" if success else "❌"
-                print(f"[{i}/{total}] {module_id}: {status_icon}")
-
-                if not success:
-                    failed += 1
-                    failed_modules.append(module_id)
-                else:
-                    passed += 1
-
-                if verbose or not success:
-                    if output:
-                        print("-" * 20)
-                        print(output.strip())
-                        print("-" * 20)
-    else:
-        # Sequential execution
-        for i, file_path in enumerate(files, 1):
-            # Extract module identifier for display
-            match = re.match(r'^(\d+)-', file_path.name)
-            if match:
-                module_id = match.group(1)  # Numbered: "05"
-            else:
-                module_id = file_path.stem  # Slug-only: "afhanistan"
-
-            # Progress indicator
-            print(f"[{i}/{total}] {module_id}: ", end="", flush=True)
-
-            success, output, _ = audit_worker(file_path, fix=fix)
+    with multiprocessing.Pool(processes=num_procs) as pool:
+        # Use imap for progress tracking
+        for i, (module_id, success) in enumerate(pool.imap(audit_worker, worker_args), 1):
+            percent = (i / total) * 100
+            status_char = "✅" if success else "❌"
+            print(f"[{i}/{total}] {percent:3.0f}% | {module_id}: {status_char}")
 
             if success:
-                print("✅")
                 passed += 1
             else:
-                print("❌")
                 failed += 1
                 failed_modules.append(module_id)
-
-            if verbose or not success:
-                if output:
-                    print("-" * 20)
-                    print(output.strip())
-                    print("-" * 20)
 
     return passed, failed, failed_modules
 
@@ -321,8 +291,6 @@ def main():
     parser.add_argument("modules", nargs="?", help="Module number(s): 5, 1-10, or 1,3,5,7-9")
     parser.add_argument("--fix", action="store_true", help="Automatically fix YAML schema violations")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed output for each module")
-    parser.add_argument("--jobs", "-j", type=int, default=multiprocessing.cpu_count(),
-                        help="Number of parallel jobs (default: number of CPUs)")
     parser.add_argument("--check-missing", action="store_true", help="Report missing content files listed in curriculum.yaml")
 
     args = parser.parse_args()
@@ -354,7 +322,7 @@ def main():
     print()
 
     # Run audit
-    passed, failed, failed_modules = run_audit(files, fix=args.fix, verbose=args.verbose, jobs=args.jobs)
+    passed, failed, failed_modules = run_audit(files, fix=args.fix, verbose=args.verbose)
 
     # Summary
     print()

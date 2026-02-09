@@ -406,10 +406,7 @@ class TestCalculateRichness:
     def test_high_score_for_rich_content(self, rich_b1_module):
         result = calculate_richness(rich_b1_module, 'B1')
         assert result['score'] >= 70  # Above threshold
-        print(f"DEBUG: result={result}")
-        # Note: result['passed'] depends on system threshold (currently 95)
-        # We assert score instead of 'passed' to avoid fragility when thresholds change
-        assert result['score'] >= 70
+        assert result['passed'] is True
 
     def test_low_score_for_dry_content(self, dry_module):
         result = calculate_richness(dry_module, 'B1')

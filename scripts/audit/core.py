@@ -10,7 +10,6 @@ import re
 import sys
 import yaml
 from pathlib import Path
-from functools import lru_cache
 
 # Add project root to path for shared module imports
 SCRIPT_DIR = Path(__file__).parent.parent
@@ -38,7 +37,6 @@ from .cleaners import (
     clean_for_immersion,
     extract_core_content,
     calculate_immersion,
-    count_words,
 )
 from .checks import (
     run_pedagogical_checks,
@@ -586,6 +584,7 @@ def check_structure(content: str) -> dict[str, bool]:
 
 def load_yaml_meta(md_file_path: str) -> dict | None:
     """Load metadata from YAML sidecar if exists."""
+    from pathlib import Path
     md_path = Path(md_file_path)
     yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
     if not yaml_path.exists():
@@ -600,6 +599,7 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
 
 def load_yaml_plan(md_file_path: str) -> dict | None:
     """Load plan data from plans directory if exists (Split Architecture)."""
+    from pathlib import Path
     md_path = Path(md_file_path)
     
     # Determine level from path
@@ -643,6 +643,7 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
 
 def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
     """Load vocabulary from YAML sidecar if exists."""
+    from pathlib import Path
     md_path = Path(md_file_path)
     yaml_path = md_path.parent / 'vocabulary' / (md_path.stem + '.yaml')
     if not yaml_path.exists():
@@ -1043,11 +1044,11 @@ def audit_module(file_path: str) -> bool:
     core_content = extract_core_content(body)
 
     # Word count
-    raw_words = count_words(body)
+    raw_words = len(body.split())
     core_lines = [line for line in core_content.split('\n') if not line.strip().startswith('|')]
     core_no_tables = '\n'.join(core_lines)
     core_cleaned = clean_for_stats(core_no_tables)
-    total_words = count_words(core_cleaned)
+    total_words = len(core_cleaned.split())
 
     # Engagement pattern - includes B2+ history/cultural callouts
     engagement_pattern = re.compile(
@@ -2075,8 +2076,7 @@ def audit_module(file_path: str) -> bool:
             results, 
             has_critical_failure, 
             critical_failure_reasons,
-            plan_version=plan_ver,
-            track_code=track_code
+            plan_version=plan_ver
         )
         print(f"Status: {cache_path}")
     except Exception as e:

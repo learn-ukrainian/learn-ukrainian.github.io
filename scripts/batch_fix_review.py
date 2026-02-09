@@ -17,6 +17,7 @@ Usage:
 """
 import argparse
 import json
+import multiprocessing
 import os
 import re
 import shutil
@@ -24,9 +25,7 @@ import subprocess
 import sys
 import tempfile
 import time
-import multiprocessing
 from pathlib import Path
-from functools import partial
 
 REPO = Path(__file__).parent.parent
 MAX_RETRIES = 3
@@ -562,8 +561,6 @@ def main():
     parser.add_argument("--model", default="gemini-3-pro-preview")
     parser.add_argument("--dry-run", action="store_true", help="Show what would happen")
     parser.add_argument("--review-only", action="store_true", help="Only run reviews, no fixes")
-    parser.add_argument("--jobs", "-j", type=int, default=1,
-                        help="Number of parallel jobs (default: 1, recommendation: 2-4)")
     args = parser.parse_args()
 
     # Enforce max 20 per batch
@@ -579,70 +576,47 @@ def main():
     print(f"Batch Fix+Review: {args.level.upper()} M{modules[0]:02d}-M{modules[-1]:02d}")
     print(f"Model: {args.model}")
     print(f"Target: {PASS_THRESHOLD}/10 | Max retries: {MAX_RETRIES}")
-    if args.jobs > 1:
-        print(f"Parallel Jobs: {args.jobs}")
     if args.dry_run:
         print("MODE: DRY RUN (no changes)")
     if args.review_only:
         print("MODE: REVIEW ONLY (no fixes)")
     print(f"{'=' * 60}\n")
 
+    # Prepare arguments for workers
+    worker_args = [(args.level, num, args.model, args.dry_run, args.review_only) for num in modules]
+
+    # Use Pool for parallel processing
+    num_procs = min(multiprocessing.cpu_count(), 4)
+    print(f"Running batch fix+review with {num_procs} parallel processes...")
+
     results = []
-
-    if args.jobs > 1 and len(modules) > 1:
-        print(f"Running parallel fix+review with {args.jobs} jobs...")
-        # Note: elapsed_s won't be as accurate because it includes queue wait
-        with multiprocessing.Pool(processes=args.jobs) as pool:
-            worker_func = partial(process_module, args.level, model=args.model,
-                                 dry_run=args.dry_run, review_only=args.review_only)
-            results = pool.map(worker_func, modules)
-
-        for result in results:
+    with multiprocessing.Pool(processes=num_procs) as pool:
+        # Use starmap to pass multiple arguments
+        # Since process_module prints to stdout, we might get interleaved output,
+        # but the speedup is worth it for batch operations.
+        for result in pool.starmap(process_module, worker_args):
+            results.append(result)
             num = result["num"]
             print(f"--- M{num:02d} ---")
-            status = result["status"]
-            if status == "ALREADY_PASS":
-                print(f"  ✅ Already {result['score']}/10 — skipping")
-            elif status == "PASS_ON_REVIEW":
-                print(f"  ✅ Initial review: {result['score']}/10 — no fix needed")
-            elif status == "FIXED":
-                print(f"  ✅ {result.get('score_before', '?')} → {result['score_after']}/10 "
-                      f"(attempt {result['attempts']})")
-            elif status == "REVIEWED":
-                print(f"  📋 Reviewed: {result.get('score', '?')}/10")
-            elif status == "SKIP":
-                print(f"  ⏭️  Skip: {result.get('reason', '')}")
-            elif status == "FAIL_AFTER_RETRIES":
-                print(f"  ❌ Still {result.get('score', '?')}/10 after {MAX_RETRIES} attempts")
-            else:
-                print(f"  ❌ {status}: {result.get('reason', result.get('phase', ''))}")
-    else:
-        for num in modules:
-            print(f"--- M{num:02d} ---")
-            t0 = time.time()
-            result = process_module(args.level, num, args.model, args.dry_run, args.review_only)
-            elapsed = time.time() - t0
-            result["elapsed_s"] = round(elapsed, 1)
-            results.append(result)
 
             status = result["status"]
-            if status == "ALREADY_PASS":
-                print(f"  ✅ Already {result['score']}/10 — skipping")
-            elif status == "PASS_ON_REVIEW":
-                print(f"  ✅ Initial review: {result['score']}/10 — no fix needed")
-            elif status == "FIXED":
-                print(f"  ✅ {result.get('score_before', '?')} → {result['score_after']}/10 "
-                      f"(attempt {result['attempts']}, {result['elapsed_s']}s)")
-            elif status == "REVIEWED":
-                print(f"  📋 Reviewed: {result.get('score', '?')}/10")
-            elif status == "DRY_RUN":
-                print(f"  🔍 Would: {result.get('action', '?')}")
-            elif status == "SKIP":
-                print(f"  ⏭️  Skip: {result.get('reason', '')}")
-            elif status == "FAIL_AFTER_RETRIES":
-                print(f"  ❌ Still {result.get('score', '?')}/10 after {MAX_RETRIES} attempts")
-            else:
-                print(f"  ❌ {status}: {result.get('reason', result.get('phase', ''))}")
+        if status == "ALREADY_PASS":
+            print(f"  ✅ Already {result['score']}/10 — skipping")
+        elif status == "PASS_ON_REVIEW":
+            print(f"  ✅ Initial review: {result['score']}/10 — no fix needed")
+        elif status == "FIXED":
+            print(f"  ✅ {result.get('score_before', '?')} → {result['score_after']}/10 "
+                  f"(attempt {result['attempts']}, {result['elapsed_s']}s)")
+        elif status == "REVIEWED":
+            print(f"  📋 Reviewed: {result.get('score', '?')}/10")
+        elif status == "DRY_RUN":
+            print(f"  🔍 Would: {result.get('action', '?')}")
+        elif status == "SKIP":
+            print(f"  ⏭️  Skip: {result.get('reason', '')}")
+        elif status == "FAIL_AFTER_RETRIES":
+            print(f"  ❌ Still {result.get('score', '?')}/10 after {MAX_RETRIES} attempts")
+        else:
+            print(f"  ❌ {status}: {result.get('reason', result.get('phase', ''))}")
 
     # Summary
     print(f"\n{'=' * 60}")

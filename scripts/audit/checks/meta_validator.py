@@ -7,7 +7,6 @@ Also validates activity_hints types against VALID_ACTIVITY_TYPES for all modules
 import json
 import os
 from pathlib import Path
-import jsonschema
 
 from ..config import VALID_ACTIVITY_TYPES
 
@@ -141,11 +140,14 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
         }]
 
     try:
+        import jsonschema
         with open(schema_path, 'r', encoding='utf-8') as f:
             schema = json.load(f)
-        
+
         jsonschema.validate(instance=meta_data, schema=schema)
-        
+
+    except ImportError:
+        return []
     except jsonschema.ValidationError as e:
         # Format the validation error for readability
         path = " -> ".join(str(p) for p in e.path) if e.path else "root"

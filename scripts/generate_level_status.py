@@ -9,22 +9,27 @@ Usage:
     python scripts/generate_level_status.py all              # All levels
 """
 
-import json
+import multiprocessing
 import os
-import argparse
-import subprocess
 import sys
 import re
 import yaml
-import multiprocessing
-import io
 from pathlib import Path
 from datetime import datetime
-from contextlib import redirect_stdout, redirect_stderr
-from functools import partial
+
+# Optional high-performance JSON
+try:
+    import orjson as json
+except ImportError:
+    import json
 
 # Project root
 ROOT = Path(__file__).parent.parent
+
+# Add project root to sys.path to allow importing from scripts.audit
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))
+from scripts.audit import audit_module as _audit_module_in_process
 
 # All levels
 LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2", "b2-hist", "c1-bio", "c1-hist", "lit"]
@@ -70,24 +75,32 @@ def get_json_cache(level: str, slug: str, md_file: Path) -> dict | None:
     """Read audit result from JSON cache if it exists and is fresh."""
     status_dir = md_file.parent / "status"
     cache_file = status_dir / f"{slug}.json"
-    
+
     if not cache_file.exists():
         return None
-        
+
     try:
-        with cache_file.open('r', encoding='utf-8') as f:
-            cache = json.load(f)
-            
+        with cache_file.open('rb') as f:
+            cache = json.loads(f.read())
+
         # Check freshness: md mtime vs last_audit
-        md_mtime = md_file.stat().st_mtime
+        # Also check sidecars
+        sources = [md_file]
+        for sub in ['meta', 'activities', 'vocabulary']:
+            sidecar = md_file.parent / sub / f"{md_file.stem}.yaml"
+            if sidecar.exists():
+                sources.append(sidecar)
+
+        max_mtime = max(s.stat().st_mtime for s in sources)
+
         last_audit_str = cache.get('last_audit', '1970-01-01T00:00:00Z').replace('Z', '')
         if '.' in last_audit_str:
             last_audit_dt = datetime.fromisoformat(last_audit_str)
         else:
             last_audit_dt = datetime.strptime(last_audit_str, '%Y-%m-%dT%H:%M:%S')
-            
-        if last_audit_dt.timestamp() < md_mtime:
-            return None # Stale
+
+        if last_audit_dt.timestamp() < max_mtime:
+            return None  # Stale
             
         # Map cache to status format
         overall = cache.get('overall', {})
@@ -117,62 +130,45 @@ def get_json_cache(level: str, slug: str, md_file: Path) -> dict | None:
         return None
 
 
-def audit_worker(md_file: Path) -> dict:
-    """Worker function to audit a single file and return status."""
+def audit_module(md_file: Path) -> dict:
+    """Run audit or read from cache."""
     level = md_file.parent.name
     slug = md_file.stem
-    
+
     # Try cache first
     cached = get_json_cache(level, slug, md_file)
     if cached:
-        return {**cached, "slug": slug}
+        return cached
 
-    # Fallback to direct import (Optimized)
-    # Add scripts to path for worker
-    script_dir = str(Path(__file__).parent)
-    if script_dir not in sys.path:
-        sys.path.append(script_dir)
+    # In-process audit (Fast)
+    try:
+        # Redirect stdout/stderr to capture audit output for parsing if needed
+        # but _audit_module_in_process handles report/cache generation itself.
+        # We just need to trigger it.
+        import io
+        from contextlib import redirect_stdout, redirect_stderr
+        f = io.StringIO()
+        with redirect_stdout(f), redirect_stderr(f):
+            _audit_module_in_process(str(md_file))
 
-    from audit import audit_module
+        # Read the newly generated cache
+        cached = get_json_cache(level, slug, md_file)
+        if cached:
+            return cached
 
-    f = io.StringIO()
-    success = False
-    with redirect_stdout(f), redirect_stderr(f):
-        try:
-            success = audit_module(str(md_file))
-        except Exception as e:
-            print(f"Error auditing {md_file}: {e}")
-            success = False
-
-    output = f.getvalue()
-    status = "✅ PASS" if success else "❌ FAIL"
-
-    # Re-parse word counts from output if needed, or better, read from fresh status cache
-    # Since audit_module saves the cache, we can just read it back
-    fresh_cached = get_json_cache(level, slug, md_file)
-    if fresh_cached:
-        return {**fresh_cached, "slug": slug}
-
-    # Fallback to parsing output
-    word_match = re.search(r'Words\s+\S+\s+(\d+)/(\d+)', output)
-    actual_words = int(word_match.group(1)) if word_match else 0
-    target_words = int(word_match.group(2)) if word_match else 0
-    issues = []
-    if actual_words < 100:
-        issues.append("empty")
-        status = "📝 STUB"
-    elif target_words > 0 and actual_words < target_words * 0.95:
-        issues.append("word_count")
-    if "Missing required activity types" in output: issues.append("activities")
-    if "Structure" in output and "❌" in output: issues.append("structure")
-
-    return {
-        "slug": slug,
-        "status": status,
-        "actual_words": actual_words,
-        "target_words": target_words,
-        "issues": issues if issues else ["-"]
-    }
+        return {
+            "status": "⚠️ ERROR",
+            "actual_words": 0,
+            "target_words": 0,
+            "issues": ["cache_failed"]
+        }
+    except Exception as e:
+        return {
+            "status": "⚠️ ERROR",
+            "actual_words": 0,
+            "target_words": 0,
+            "issues": [str(e)[:20]]
+        }
 
 
 def _parse_existing_status(status_file: Path) -> dict[int, dict]:
@@ -202,7 +198,15 @@ def _parse_existing_status(status_file: Path) -> dict[int, dict]:
     return rows
 
 
-def generate_status_for_level(level: str, module_filter: set[int] | None = None, jobs: int = 1):
+def _audit_task(args):
+    num, slug, level, md_file = args
+    if not md_file:
+        return {"num": num, "slug": slug, "status": "⚠️ MISSING", "actual_words": 0, "target_words": 0, "issues": ["no_file"]}
+    result = audit_module(md_file)
+    return {"num": num, "slug": slug, **result}
+
+
+def generate_status_for_level(level: str, module_filter: set[int] | None = None):
     """Generate status file for a single level."""
     filter_desc = f" (modules: {sorted(module_filter)})" if module_filter else ""
     print(f"Generating status for {level}{filter_desc}...")
@@ -218,64 +222,38 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None,
     modules_to_audit = module_filter if module_filter else set(range(1, len(modules) + 1))
     level_upper = level.upper()
     output_file = ROOT / "docs" / f"{level_upper}-STATUS.md"
+
     existing_rows = {}
     if module_filter and output_file.exists():
         existing_rows = _parse_existing_status(output_file)
-    module_rows = []
-    stats = {"pass": 0, "fail": 0, "stub": 0, "error": 0}
 
-    # Prepare files to audit
-    files_to_audit = []
-    module_indices = []
-
+    tasks = []
+    skipped_rows = []
     for i, slug in enumerate(modules, 1):
         if module_filter and i not in modules_to_audit:
             if i in existing_rows:
-                row = existing_rows[i]
-                module_rows.append(row)
-                if row["status"] == "✅ PASS": stats["pass"] += 1
-                elif row["status"] == "📝 STUB": stats["stub"] += 1
-                elif row["status"] == "❌ FAIL": stats["fail"] += 1
-                else: stats["error"] += 1
-            else:
-                # Placeholder for filtered out modules not in existing rows
-                module_rows.append({"num": i, "slug": slug, "status": "⚪️ SKIP", "actual_words": 0, "target_words": 0, "issues": ["-"]})
+                skipped_rows.append(existing_rows[i])
             continue
-
         md_file = find_md_file(level, slug)
-        if not md_file:
-            module_rows.append({"num": i, "slug": slug, "status": "⚠️ MISSING", "actual_words": 0, "target_words": 0, "issues": ["no_file"]})
-            stats["error"] += 1
-            continue
+        tasks.append((i, slug, level, md_file))
 
-        files_to_audit.append(md_file)
-        module_indices.append(i)
+    # Run audits in parallel
+    num_procs = min(multiprocessing.cpu_count(), 8)
+    module_rows = []
+    if tasks:
+        print(f"  Auditing {len(tasks)} modules with {num_procs} processes...")
+        with multiprocessing.Pool(processes=num_procs) as pool:
+            module_rows = list(pool.imap(_audit_task, tasks))
 
-    # Run audits in parallel if jobs > 1
-    if jobs > 1 and len(files_to_audit) > 1:
-        print(f"  Auditing {len(files_to_audit)} modules using {jobs} jobs...")
-        with multiprocessing.Pool(processes=jobs) as pool:
-            results = pool.map(audit_worker, files_to_audit)
+    # Re-combine and sort
+    all_rows = sorted(module_rows + skipped_rows, key=lambda x: x["num"])
 
-        for i, idx in enumerate(module_indices):
-            audit_result = results[i]
-            if audit_result["status"] == "✅ PASS": stats["pass"] += 1
-            elif audit_result["status"] == "📝 STUB": stats["stub"] += 1
-            elif audit_result["status"] == "❌ FAIL": stats["fail"] += 1
-            else: stats["error"] += 1
-            module_rows.append({"num": idx, "slug": slug, **audit_result})
-    else:
-        # Sequential
-        for i, md_file in zip(module_indices, files_to_audit):
-            audit_result = audit_worker(md_file)
-            if audit_result["status"] == "✅ PASS": stats["pass"] += 1
-            elif audit_result["status"] == "📝 STUB": stats["stub"] += 1
-            elif audit_result["status"] == "❌ FAIL": stats["fail"] += 1
-            else: stats["error"] += 1
-            module_rows.append({"num": i, "slug": audit_result["slug"], **audit_result})
-
-    # Sort results by module number
-    module_rows.sort(key=lambda x: x["num"])
+    stats = {"pass": 0, "fail": 0, "stub": 0, "error": 0}
+    for row in all_rows:
+        if row["status"] == "✅ PASS": stats["pass"] += 1
+        elif row["status"] == "📝 STUB": stats["stub"] += 1
+        elif row["status"] == "❌ FAIL": stats["fail"] += 1
+        else: stats["error"] += 1
     
     with open(output_file, 'w') as f:
         f.write(f"# {level_upper} Module Status\n\n")
@@ -300,24 +278,18 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None,
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate level status index files.")
-    parser.add_argument("level", help="Level (a1, a2, ... or 'all')")
-    parser.add_argument("filter", nargs="?", help="Module filter (e.g., 1-5)")
-    parser.add_argument("--jobs", "-j", type=int, default=multiprocessing.cpu_count(),
-                        help="Number of parallel jobs")
-
-    args = parser.parse_args()
-
-    level_arg = args.level.lower()
+    if len(sys.argv) < 2:
+        print("Usage: python scripts/generate_level_status.py {level|all} [module_filter]")
+        sys.exit(1)
+    level_arg = sys.argv[1].lower()
     module_filter = None
-    if args.filter:
-        module_filter = parse_module_filter(args.filter)
-
+    if len(sys.argv) >= 3:
+        module_filter = parse_module_filter(sys.argv[2])
     if level_arg == "all":
         for level in LEVELS:
-            generate_status_for_level(level, jobs=args.jobs)
+            generate_status_for_level(level)
     elif level_arg in LEVELS:
-        generate_status_for_level(level_arg, module_filter, jobs=args.jobs)
+        generate_status_for_level(level_arg, module_filter)
     else:
         print(f"❌ Unknown level: {level_arg}")
         sys.exit(1)

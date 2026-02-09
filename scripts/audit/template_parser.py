@@ -9,9 +9,9 @@ Handles:
 import os
 import re
 import yaml
-from functools import lru_cache
+import functools
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from pathlib import Path
 
 @dataclass
@@ -33,24 +33,36 @@ class TemplateStructure:
     description: str = ""
 
 
-@lru_cache(maxsize=1)
-def _load_template_mappings(mapping_file_path: str) -> Dict:
-    """Cache the template mappings file content."""
-    with open(mapping_file_path, 'r', encoding='utf-8') as f:
-        return yaml.safe_load(f)
+def make_hashable(obj: Any) -> Any:
+    """Recursively convert unhashable objects (dict, list) to hashable ones (tuple)."""
+    if isinstance(obj, dict):
+        return tuple(sorted((k, make_hashable(v)) for k, v in obj.items()))
+    if isinstance(obj, (list, tuple)):
+        return tuple(make_hashable(i) for i in obj)
+    return obj
 
 
 def resolve_template(module_id: str, meta: Dict) -> str:
     """
     Resolve which template file to use for a given module.
-    
+
     Args:
         module_id: The module ID (e.g., 'a1-01', 'b2-110')
         meta: The module's metadata dictionary
-        
+
     Returns:
         Path to the template file relative to project root
     """
+    # Use internal cached function with hashable meta
+    return _resolve_template_cached(module_id, make_hashable(meta))
+
+
+@functools.lru_cache(maxsize=128)
+def _resolve_template_cached(module_id: str, meta_hashable: tuple) -> str:
+    # Convert back to dict for internal logic if needed, but resolve_template
+    # below already uses .get() which works on dict.
+    # We'll just use the hashable version's dict representation.
+    meta = dict(meta_hashable) if isinstance(meta_hashable, tuple) else {}
     # Find project root
     current_file = Path(__file__).resolve()
     # scripts/audit/template_parser.py -> scripts/audit -> scripts -> root
@@ -58,6 +70,16 @@ def resolve_template(module_id: str, meta: Dict) -> str:
     
     mapping_file = project_root / "docs" / "l2-uk-en" / "template_mappings.yaml"
     
+    if not mapping_file.exists():
+        # Fallback to hardcoded logic if mapping file is missing
+        level = module_id.split('-')[0].lower()
+        return f"docs/l2-uk-en/templates/{level}-module-template.md"
+
+    with open(mapping_file, 'r', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+
+    mappings = config.get('mappings', [])
+
     # Extract level from module_id - handle track levels like b2-hist, c1-bio
     # Pattern: level-slug or track-level-slug
     parts = module_id.lower().split('-')
@@ -71,13 +93,6 @@ def resolve_template(module_id: str, meta: Dict) -> str:
         module_level = 'lit'
     else:
         module_level = parts[0]
-
-    if not mapping_file.exists():
-        # Fallback to hardcoded logic if mapping file is missing
-        return f"docs/l2-uk-en/templates/{module_level}-module-template.md"
-
-    config = _load_template_mappings(str(mapping_file))
-    mappings = config.get('mappings', [])
     
     for rule in mappings:
         # Check if level matches (if specified in rule)
@@ -103,14 +118,14 @@ def resolve_template(module_id: str, meta: Dict) -> str:
     return f"docs/l2-uk-en/templates/{module_level}-module-template.md"
 
 
-@lru_cache(maxsize=32)
+@functools.lru_cache(maxsize=32)
 def parse_template(template_path: str) -> Optional[TemplateStructure]:
     """
     Parse a markdown template file to extract structural rules.
-    
+
     Args:
         template_path: Path to the template file
-        
+
     Returns:
         TemplateStructure object or None if parsing fails
     """

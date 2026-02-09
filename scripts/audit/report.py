@@ -9,11 +9,16 @@ from datetime import datetime
 from typing import Optional
 
 
-import json
 import os
 from datetime import datetime
 from typing import Optional
 from pathlib import Path
+
+# Optional high-performance JSON
+try:
+    import orjson as json
+except ImportError:
+    import json
 
 
 def save_status_cache(
@@ -23,8 +28,7 @@ def save_status_cache(
     results: dict,
     has_critical_failure: bool,
     critical_failure_reasons: list[str],
-    plan_version: str = "2.0",
-    track_code: Optional[str] = None
+    plan_version: str = "2.0"
 ) -> str:
     """
     Save status cache to {level}/status/{slug}.json.
@@ -48,17 +52,36 @@ def save_status_cache(
     vocab_path = base_path / 'vocabulary' / f"{module_slug}.yaml"
     
     # Try to find plan path
-    # Check if level_code is a track (b2-hist) or simple (b1)
-    # curriculum/l2-uk-en/plans/{level}/{slug}.yaml
-    # Use lowercase track_code or level_code for directory name
-    lookup_code = track_code if track_code else level_code
-    plan_path = base_path.parent / 'plans' / lookup_code.lower() / f"{module_slug}.yaml"
+    # Use lowercase level_code for directory lookup (standard in repo)
+    # Also handle track suffixes correctly (e.g. b2-hist)
+
+    plan_path = Path("INVALID")
+
+    # 1. Try lowercase level_code
+    candidate = base_path.parent / 'plans' / level_code.lower() / f"{module_slug}.yaml"
+    if candidate.exists():
+        plan_path = candidate
+
     if not plan_path.exists():
-        # Try without numeric prefix in slug (some plans don't have it)
+        # 2. Try level from path (e.g. curriculum/l2-uk-en/b2-hist/ -> b2-hist)
+        actual_level = base_path.name.lower()
+        candidate = base_path.parent / 'plans' / actual_level / f"{module_slug}.yaml"
+        if candidate.exists():
+            plan_path = candidate
+
+    if not plan_path.exists():
+        # 3. Try stripping numeric prefix from slug if present
+        import re
         clean_slug = re.sub(r'^\d+-', '', module_slug)
-        alt_plan_path = base_path.parent / 'plans' / lookup_code.lower() / f"{clean_slug}.yaml"
-        if alt_plan_path.exists():
-            plan_path = alt_plan_path
+        if clean_slug != module_slug:
+             candidate = base_path.parent / 'plans' / level_code.lower() / f"{clean_slug}.yaml"
+             if candidate.exists():
+                 plan_path = candidate
+             else:
+                 actual_level = base_path.name.lower()
+                 candidate = base_path.parent / 'plans' / actual_level / f"{clean_slug}.yaml"
+                 if candidate.exists():
+                     plan_path = candidate
 
     source_mtimes = {}
     
@@ -187,8 +210,12 @@ def save_status_cache(
     if 'verification' in existing_data:
         cache_data['verification'] = existing_data['verification']
 
-    with open(status_file, 'w', encoding='utf-8') as f:
-        json.dump(cache_data, f, indent=2)
+    if 'orjson' in sys.modules:
+        with open(status_file, 'wb') as f:
+            f.write(json.dumps(cache_data, option=json.OPT_INDENT_2))
+    else:
+        with open(status_file, 'w', encoding='utf-8') as f:
+            json.dump(cache_data, f, indent=2)
 
     return str(status_file)
 

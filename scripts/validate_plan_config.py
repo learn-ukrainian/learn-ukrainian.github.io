@@ -76,9 +76,7 @@ def validate_plan(plan_path: Path, level: str) -> list:
 
     # Check word_target matches config
     if plan_target == 0:
-        # For experimental levels (RUTH/OES), be more lenient if word_target is missing
-        if level.upper() not in ('RUTH', 'OES'):
-            errors.append(f"Missing word_target (config expects {config_target})")
+        errors.append(f"Missing word_target (config expects {config_target})")
     elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
         errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
@@ -86,33 +84,19 @@ def validate_plan(plan_path: Path, level: str) -> list:
     # Check content_outline sums to word_target
     outline = plan.get('content_outline', [])
     if not outline:
-        if level.upper() not in ('RUTH', 'OES'):
-            errors.append("Missing content_outline")
+        errors.append("Missing content_outline")
     else:
         outline_sum = sum(s.get('words', 0) for s in outline)
         if outline_sum == 0:
-            # Only require word budgets for standard levels
-            if level.upper() not in ('RUTH', 'OES'):
-                errors.append("content_outline has no word budgets")
+            errors.append("content_outline has no word budgets")
         elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
             errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
 
     # Check required fields
-    # Use alternative field names for compatibility with different plan formats
-    module_id = plan.get('module') or plan.get('module_number')
-    if not module_id:
-        errors.append("Missing required field: module")
-
-    title = plan.get('title') or plan.get('title_uk') or plan.get('title_en')
-    if not title:
-        errors.append("Missing required field: title")
-
-    # level and objectives are strictly required for standard tracks
-    if level.upper() not in ('RUTH', 'OES'):
-        if not plan.get('level'):
-            errors.append("Missing required field: level")
-        if not plan.get('objectives'):
-            errors.append("Missing required field: objectives")
+    required_fields = ['module', 'level', 'title', 'objectives']
+    for field in required_fields:
+        if not plan.get(field):
+            errors.append(f"Missing required field: {field}")
 
     return errors
 
