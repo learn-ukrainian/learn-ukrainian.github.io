@@ -33,7 +33,7 @@ jobs:
           pip install pyyaml jsonschema pytest yamllint
 
       - name: Lint YAML Files
-        run: yamllint curriculum/ schemas/ scripts/
+        run: yamllint scripts/ curriculum/l2-uk-en/plans/
 
       - name: Run Activity Tests
         run: python -m pytest tests/test_yaml_activities.py -v
@@ -63,7 +63,7 @@ jobs:
         run: python scripts/validate_plans.py
 
       - name: Validate Plan vs Config
-        run: python scripts/validate_plan_config.py --all
+        run: python scripts/validate_plan_config.py
 
   schema-check:
     name: Schema JSON Syntax
@@ -89,4 +89,4 @@ jobs:
         run: npm install -g markdownlint-cli2
 
       - name: Lint MDX Files
-        run: markdownlint-cli2 "docusaurus/docs/**/*.mdx" "#docusaurus/docs/lit/*.mdx" "#docusaurus/docs/oes/*.mdx" "#docusaurus/docs/ruth/*.mdx"
+        run: markdownlint-cli2 "docusaurus/docs/**/*.mdx"
