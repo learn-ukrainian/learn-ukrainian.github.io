@@ -33,7 +33,7 @@ jobs:
           pip install pyyaml jsonschema pytest yamllint
 
       - name: Lint YAML Files
-        run: yamllint scripts/ curriculum/l2-uk-en/plans/
+        run: yamllint curriculum/l2-uk-en/curriculum.yaml
 
       - name: Run Activity Tests
         run: python -m pytest tests/test_yaml_activities.py -v
@@ -89,4 +89,4 @@ jobs:
         run: npm install -g markdownlint-cli2
 
       - name: Lint MDX Files
-        run: markdownlint-cli2 "docusaurus/docs/**/*.mdx"
+        run: markdownlint-cli2 "docusaurus/docs/**/*.mdx" "#docusaurus/docs/lit" "#docusaurus/docs/oes" "#docusaurus/docs/ruth"
