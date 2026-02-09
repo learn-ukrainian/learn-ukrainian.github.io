@@ -68,34 +68,58 @@ def validate_plan(plan_path: Path, level: str) -> list:
     if not plan:
         return ["Empty plan file"]
 
+    # Experimental tracks (OES, RUTH) have relaxed validation for draft data
+    is_experimental = level.lower() in ('oes', 'ruth')
+
     # Get targets
-    plan_target = plan.get('word_target', 0)
-    sequence = plan.get('sequence', 1)
+    # Support aliases: word_budget for word_target
+    plan_target = plan.get('word_target', plan.get('word_budget', 0))
+    # Support aliases: module_number for sequence
+    sequence = plan.get('sequence', plan.get('module_number', 1))
     focus = plan.get('focus')
     config_target = get_config_target(level, sequence, focus)
 
     # Check word_target matches config
     if plan_target == 0:
-        errors.append(f"Missing word_target (config expects {config_target})")
+        if not is_experimental:
+            errors.append(f"Missing word_target (config expects {config_target})")
     elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
-        errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
+        if not is_experimental:
+            errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
 
     # Check content_outline sums to word_target
     outline = plan.get('content_outline', [])
     if not outline:
-        errors.append("Missing content_outline")
+        if not is_experimental:
+            errors.append("Missing content_outline")
     else:
         outline_sum = sum(s.get('words', 0) for s in outline)
         if outline_sum == 0:
-            errors.append("content_outline has no word budgets")
+            if not is_experimental:
+                errors.append("content_outline has no word budgets")
         elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
-            errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
+            if not is_experimental:
+                errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
 
-    # Check required fields
-    required_fields = ['module', 'level', 'title', 'objectives']
-    for field in required_fields:
-        if not plan.get(field):
+    # Check required fields with aliases
+    required_fields = [
+        ('module', ['module_number']),
+        ('level', []),
+        ('title', ['title_uk']),
+        ('objectives', ['learning_outcomes'])
+    ]
+
+    for field, aliases in required_fields:
+        val = plan.get(field)
+        if not val:
+            # Try aliases
+            for alias in aliases:
+                val = plan.get(alias)
+                if val:
+                    break
+
+        if not val and not is_experimental:
             errors.append(f"Missing required field: {field}")
 
     return errors

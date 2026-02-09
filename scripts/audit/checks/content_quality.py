@@ -319,9 +319,11 @@ def validate_characters_in_content(
     for idx, line in enumerate(lines):
         # Check each character in the line
         for char_pos, char in enumerate(line):
+            # print(f"DEBUG: line[{idx}] char[{char_pos}]='{char}'")
             # Russian-only chars are invalid UNLESS inside quoted strings
             # (educational context showing Russian terms with Ukrainian translation)
             if char in RUSSIAN_ONLY_CHARS:
+                # print(f"DEBUG: Found Russian char '{char}' at line {idx+1}")
                 # Allow Russian chars inside quotes (for "Prosecutor's Voice" exception)
                 # e.g., "исконно русский Крым" (укр. «споконвічно російський Крим»)
                 if is_inside_quoted_string(line, char_pos):
