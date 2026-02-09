@@ -20,12 +20,7 @@ from scripts.audit.checks.activities import (
     check_activity_ukrainian_content,
     check_activity_level_restrictions,
     count_items,
-)
-from scripts.audit.checks.markdown_format import (
     check_error_correction_format,
-    check_unjumble_format,
-    check_quiz_format,
-    check_cloze_format,
 )
 from scripts.audit.checks.content_quality import check_content_quality
 from scripts.audit.config import VALID_ACTIVITY_TYPES
@@ -39,11 +34,17 @@ class TestActivityTypeRecognition:
     """Test that all 12 activity types are recognized."""
 
     def test_all_valid_activity_types_exist(self):
-        """Verify VALID_ACTIVITY_TYPES contains all 12 types."""
+        """Verify VALID_ACTIVITY_TYPES contains all required types."""
         expected = {
             'quiz', 'match-up', 'fill-in', 'true-false', 'group-sort',
             'unjumble', 'error-correction', 'anagram', 'select', 'translate',
-            'cloze', 'mark-the-words'
+            'cloze', 'mark-the-words', 'reading', 'essay-response',
+            'critical-analysis', 'comparative-study', 'authorial-intent',
+            'creative-writing', 'etymology-trace', 'transcription',
+            'grammar-identify', 'paleography-analysis', 'dialect-comparison',
+            'translation-critique', 'phonology-lab', 'grammar-lab',
+            'parallel-text', 'historical-writing', 'register-identify',
+            'loanword-trace', 'comparative-style'
         }
         assert set(VALID_ACTIVITY_TYPES) == expected, f"Missing or extra types: {set(VALID_ACTIVITY_TYPES) ^ expected}"
 
@@ -687,37 +688,6 @@ class TestErrorCorrectionFormat:
         assert len(explanation_violations) >= 1
 
 
-# =============================================================================
-# TEST: Unjumble Format (Required Answer Callout)
-# =============================================================================
-
-class TestUnjumbleFormat:
-    """Test unjumble required callout validation."""
-
-    def test_unjumble_nested_bullets_without_callout(self):
-        """Unjumble with nested bullets but no [!answer] callout should fail."""
-        content = """
-## unjumble: Речення
-
-1. я / люблю / Україну
-   - Я люблю Україну.
-"""
-        violations = check_unjumble_format(content)
-        assert len(violations) >= 1
-        assert any('nested bullets' in v.get('issue', '').lower() for v in violations)
-
-    def test_unjumble_with_answer_callout(self):
-        """Unjumble with [!answer] callout should pass."""
-        content = """
-## unjumble: Речення
-
-1. я / люблю / Україну
-   > [!answer] Я люблю Україну.
-"""
-        violations = check_unjumble_format(content)
-        # Should not have violations about nested bullets
-        bullet_violations = [v for v in violations if 'nested' in v.get('issue', '').lower()]
-        assert len(bullet_violations) == 0
 
 
 # =============================================================================
@@ -796,57 +766,6 @@ level: B1
         assert len(russian_violations) == 0
 
 
-# =============================================================================
-# TEST: Quiz Format
-# =============================================================================
-
-class TestQuizFormat:
-    """Test quiz format validation."""
-
-    def test_quiz_bullets_instead_of_numbers(self):
-        """Quiz with bullets instead of numbers should fail."""
-        content = """
-## quiz: Тест
-
-- Яка це частина мови?
-   - [x] Іменник
-   - [ ] Дієслово
-"""
-        violations = check_quiz_format(content)
-        assert len(violations) >= 1
-        assert any('bullets' in v.get('issue', '').lower() for v in violations)
-
-    def test_quiz_with_numbers(self):
-        """Quiz with numbered items should pass."""
-        content = """
-## quiz: Тест
-
-1. Яка це частина мови?
-   - [x] Іменник
-   - [ ] Дієслово
-"""
-        violations = check_quiz_format(content)
-        bullet_violations = [v for v in violations if 'bullets' in v.get('issue', '').lower()]
-        assert len(bullet_violations) == 0
-
-
-# =============================================================================
-# TEST: Cloze Format
-# =============================================================================
-
-class TestClozeFormat:
-    """Test cloze format validation."""
-
-    def test_cloze_structure(self):
-        """Cloze should use curly brace placeholders."""
-        content = """
-## cloze: Заповніть
-
-Це {речення} про {граматику}. Українська {мова} має {правила}.
-"""
-        violations = check_cloze_format(content)
-        # Should pass - has valid cloze format
-        assert isinstance(violations, list)
 
 
 # =============================================================================

@@ -60,15 +60,34 @@ Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and sta
 
 ### Local Development
 
+The project requires Python 3.10+ and Node.js.
+
 ```bash
+# Clone and setup
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 npm install
+
+# Setup Python environment
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
 # Start the web platform
 cd docusaurus && pnpm start
 # Opens at http://localhost:3000/
 ```
+
+See [DEVELOPER-GUIDE.md](docs/DEVELOPER-GUIDE.md) for more details.
+
+## Documentation
+
+- **[Developer Guide](docs/DEVELOPER-GUIDE.md)**: Setup, workflow, and testing.
+- **[Orchestration Workflow](docs/ORCHESTRATE-REBUILD.md)**: Automated module generation.
+- **[Batch Operations](docs/BATCH-OPERATIONS.md)**: Large-scale curriculum updates.
+- **[Playgrounds](docs/PLAYGROUNDS.md)**: Interactive visualization tools.
+- **[Schema Reference](docs/SCHEMA-REFERENCE.md)**: YAML file formats and validation.
+- **[Error Reference](docs/ERROR-REFERENCE.md)**: Audit and review error codes.
 
 ## Project Structure
 

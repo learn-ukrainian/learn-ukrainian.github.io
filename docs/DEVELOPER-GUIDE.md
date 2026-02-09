@@ -8,7 +8,25 @@ This guide helps you understand the tools, workflows, and best practices for cur
 
 ## 🚀 Quick Start
 
-### I want to...
+### 1. Environment Setup
+
+The project requires Python 3.10+ and Node.js.
+
+```bash
+# Clone the repository
+git clone https://github.com/your-repo/learn-ukrainian
+cd learn-ukrainian
+
+# Setup Python virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+# Setup Node.js dependencies
+npm install
+```
+
+### 2. Common Tasks
 
 | Goal | Command/Tool |
 |------|--------------|
@@ -296,6 +314,36 @@ npm run status:b1
 ---
 
 ## 🎯 Best Practices
+
+### Git Workflow
+
+1. **Branching**: Create a feature branch for your changes.
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+2. **Commits**: Use descriptive commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+3. **Pull Requests**: Submit a PR to `main` when your changes are ready. Ensure all audits and tests pass.
+
+### Testing Process
+
+We use `pytest` for Python logic and `playwright` for frontend verification.
+
+```bash
+# Run all Python tests
+.venv/bin/python -m pytest tests/ -v
+
+# Run a specific test file
+.venv/bin/python -m pytest tests/test_audit.py -v
+
+# Run frontend validation (requires Docusaurus running)
+npm run validate:html l2-uk-en a1 5
+```
+
+### Contribution Guidelines
+
+- **Quality First**: All modules must pass the `audit_module.py` gates with native-level Ukrainian quality.
+- **Documentation**: If you add a new feature or script, document it in `docs/` and update `SCRIPTS.md`.
+- **Review**: Every significant change requires a review from another developer or a senior agent (Claude).
 
 ### Working with Claude
 
