@@ -24,6 +24,16 @@ from scripts.audit.checks.activities import (
 )
 from scripts.audit.checks.content_quality import check_content_quality
 from scripts.audit.config import VALID_ACTIVITY_TYPES
+# Add scripts dir to path for direct imports (matching audit scripts style)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+
+from yaml_activities import (
+    QuizActivity, QuizItem, QuizOption,
+    MatchUpActivity, MatchPair,
+    GroupSortActivity, GroupSortGroup,
+    UnjumbleActivity, UnjumbleItem,
+    ErrorCorrectionActivity, ErrorCorrectionItem,
+)
 
 
 # =============================================================================
@@ -80,21 +90,13 @@ class TestQuizValidation:
 
     def test_quiz_prompt_too_short_b1(self):
         """B1 quiz prompts under 8 words should fail."""
-        from yaml_activities import QuizActivity
-
-        # Create a mock YAML activity with short prompt (5 words)
-        class MockQuizItem:
-            def __init__(self):
-                self.question = "Яка частина мови називає дії?"
-                self.options = [1, 2, 3, 4] # dummy options
-
-        class MockQuizActivity:
-            def __init__(self):
-                self.type = "quiz"
-                self.title = "Тест"
-                self.items = [MockQuizItem()]
-
-        yaml_activities = [MockQuizActivity()]
+        # Create a real QuizActivity with short prompt (5 words)
+        item = QuizItem(
+            question="Яка частина мови називає дії?",
+            options=[QuizOption("A", True), QuizOption("B", False), QuizOption("C", False), QuizOption("D", False)]
+        )
+        activity = QuizActivity(title="Тест", items=[item])
+        yaml_activities = [activity]
 
         # Pass yaml_activities to check_activity_complexity
         violations = check_activity_complexity("", 'B1', 6, yaml_activities=yaml_activities)
@@ -139,45 +141,30 @@ class TestQuizValidation:
 class TestMatchupValidation:
     """Test match-up pair count and content validation."""
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
     def test_matchup_pair_count_valid(self):
         """B1 bridge match-ups with 10-12 pairs should pass."""
-        content = """
-## match-up: Терміни
+        activity = MatchUpActivity(
+            title="Терміни",
+            pairs=[MatchPair(left=f"L{i}", right=f"R{i}") for i in range(10)]
+        )
 
-| Термін | Переклад |
-|--------|----------|
-| слово | word |
-| речення | sentence |
-| граматика | grammar |
-| відмінок | case |
-| дієслово | verb |
-| іменник | noun |
-| прикметник | adjective |
-| прислівник | adverb |
-| займенник | pronoun |
-| сполучник | conjunction |
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
+        yaml_activities = [activity]
+        violations = check_activity_complexity("", 'B1', 3, yaml_activities=yaml_activities)
         pair_violations = [v for v in violations if 'pairs' in v.get('issue', '')]
         assert len(pair_violations) == 0
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
     def test_matchup_too_many_pairs(self):
         """Match-ups exceeding pair limits should fail."""
-        # Create 14 pairs (exceeds B1 bridge max of 12)
-        pairs = "\n".join([f"| слово{i} | word{i} |" for i in range(14)])
-        content = f"""
-## match-up: Терміни
+        activity = MatchUpActivity(
+            title="Терміни",
+            pairs=[MatchPair(left=f"L{i}", right=f"R{i}") for i in range(14)]
+        )
 
-| Термін | Переклад |
-|--------|----------|
-{pairs}
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
+        yaml_activities = [activity]
+        violations = check_activity_complexity("", 'B1', 3, yaml_activities=yaml_activities)
         pair_violations = [v for v in violations if 'pairs' in v.get('issue', '')]
         assert len(pair_violations) == 1
-        assert 'pairs' in pair_violations[0]['issue']  # Just check it found pair violation
+        assert 'pairs' in pair_violations[0]['issue']
 
     def test_matchup_misuse_english_pairs(self):
         """Match-ups with English-only pairs are detected by ukrainian content check."""
@@ -204,29 +191,23 @@ class TestMatchupValidation:
 class TestUnjumbleValidation:
     """Test unjumble word count and answer matching."""
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
     def test_unjumble_word_count_valid_b1_bridge(self):
         """B1 bridge unjumbles with 8-10 words should pass."""
-        content = """
-## unjumble: Речення
+        item = UnjumbleItem(words=["W"] * 8, answer="Answer")
+        activity = UnjumbleActivity(title="Речення", items=[item])
 
-1. мова / українська / граматичні / має / правила / чіткі / і / зрозумілі
-   > [!answer] Українська мова має чіткі і зрозумілі граматичні правила.
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
+        yaml_activities = [activity]
+        violations = check_activity_complexity("", 'B1', 3, yaml_activities=yaml_activities)
         word_violations = [v for v in violations if 'words' in v.get('issue', '')]
         assert len(word_violations) == 0
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
     def test_unjumble_too_many_words_b1_bridge(self):
         """B1 bridge unjumbles with 13+ words should fail."""
-        content = """
-## unjumble: Речення
+        item = UnjumbleItem(words=["W"] * 13, answer="Answer")
+        activity = UnjumbleActivity(title="Речення", items=[item])
 
-1. мова / українська / граматичні / має / правила / чіткі / і / зрозумілі / для / всіх / хто / її / вивчає
-   > [!answer] Українська мова має чіткі і зрозумілі граматичні правила для всіх хто її вивчає.
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
+        yaml_activities = [activity]
+        violations = check_activity_complexity("", 'B1', 3, yaml_activities=yaml_activities)
         word_violations = [v for v in violations if 'words' in v.get('issue', '')]
         assert len(word_violations) == 1
         assert '13 words' in word_violations[0]['issue']
@@ -287,56 +268,32 @@ This is missing the [!error], [!answer], [!options], [!explanation] callouts.
 class TestGroupSortValidation:
     """Test group-sort group count and item validation."""
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
     def test_group_sort_valid_b1(self):
         """B1 group-sort with valid group and item counts."""
-        content = """
-## group-sort: Частини мови
+        activity = GroupSortActivity(
+            title="Частини мови",
+            groups=[
+                GroupSortGroup(name="G1", items=["I1"] * 6),
+                GroupSortGroup(name="G2", items=["I2"] * 6),
+                GroupSortGroup(name="G3", items=["I3"] * 6)
+            ]
+        )
 
-### Іменники
-- стіл
-- книга
-- людина
-- місто
-- час
-- річка
-
-### Дієслова
-- читати
-- писати
-- говорити
-- бігти
-- думати
-- працювати
-
-### Прикметники
-- великий
-- малий
-- гарний
-- поганий
-- новий
-- старий
-"""
+        yaml_activities = [activity]
         # B1 non-bridge needs 3-5 groups, 16-24 items
-        violations = check_activity_complexity(content, 'B1', 6)
+        violations = check_activity_complexity("", 'B1', 6, yaml_activities=yaml_activities)
         group_violations = [v for v in violations if 'group' in v.get('issue', '').lower()]
         # Should pass - 3 groups, 18 items
         assert len([v for v in group_violations if 'groups' in v.get('issue', '')]) == 0
 
     def test_group_sort_too_few_groups(self):
         """Group-sort with only 1 group should fail."""
-        class MockGroup:
-            def __init__(self):
-                self.items = ["item1", "item2"]
+        activity = GroupSortActivity(
+            title="Частини мови",
+            groups=[GroupSortGroup(name="G1", items=["I1", "I2"])]
+        )
 
-        class MockGroupSortActivity:
-            def __init__(self):
-                self.type = "group-sort"
-                self.title = "Частини мови"
-                self.groups = [MockGroup()] # only 1 group
-
-        yaml_activities = [MockGroupSortActivity()]
-
+        yaml_activities = [activity]
         violations = check_activity_complexity("", 'B1', 6, yaml_activities=yaml_activities)
         group_violations = [v for v in violations if '1 groups' in v.get('issue', '')]
         assert len(group_violations) == 1
@@ -658,65 +615,60 @@ class TestUkrainianContent:
 class TestErrorCorrectionFormat:
     """Test error-correction required callout validation."""
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
     def test_error_correction_missing_all_callouts(self):
         """Error-correction without callouts should fail."""
-        content = """
-## error-correction: Виправлення
+        item = ErrorCorrectionItem(
+            sentence="Він ходить до школа.",
+            error="",
+            answer="",
+            options=[],
+            explanation=""
+        )
+        activity = ErrorCorrectionActivity(title="Виправлення", items=[item])
 
-1. Він ходить до школа.
-2. Вона читає книгу.
-"""
-        violations = check_error_correction_format(content)
-        # Should flag missing [!error], [!answer], [!explanation]
-        assert len(violations) >= 3
-        types = [v['type'] for v in violations]
-        assert 'ERROR_CORRECTION_FORMAT' in types
+        yaml_activities = [activity]
+        violations = check_error_correction_format(yaml_activities)
+        assert len(violations) >= 1
+        assert violations[0]['type'] == 'MALFORMED_ERROR_CORRECTION'
 
     def test_error_correction_with_all_callouts(self):
         """Error-correction with all callouts should pass."""
-        content = """
-## error-correction: Виправлення
+        item = ErrorCorrectionItem(
+            sentence="Він ходить до школа.",
+            error="школа",
+            answer="школи",
+            options=["школа", "школи", "школу", "школою"],
+            explanation="Родовий відмінок."
+        )
+        activity = ErrorCorrectionActivity(title="Виправлення", items=[item])
 
-1. Він ходить до школа.
-   > [!error] школа
-   > [!answer] школи
-   > [!options] школа | школи | школу | школою
-   > [!explanation] Після "до" вживаємо родовий відмінок.
-"""
-        violations = check_error_correction_format(content)
+        yaml_activities = [activity]
+        violations = check_error_correction_format(yaml_activities)
         assert len(violations) == 0
 
-    @pytest.mark.skip(reason="Legacy markdown check removed")
-    def test_error_correction_missing_explanation(self):
-        """Error-correction without explanation should fail."""
-        content = """
-## error-correction: Виправлення
+    def test_error_correction_missing_error_word(self):
+        """Error-correction without error word should fail."""
+        item = ErrorCorrectionItem(
+            sentence="Він ходить до школа.",
+            error="", # Missing error word
+            answer="школи",
+            options=["школа", "школи", "школу", "школою"],
+            explanation="Родовий відмінок."
+        )
+        activity = ErrorCorrectionActivity(title="Виправлення", items=[item])
 
-1. Він ходить до школа.
-   > [!error] школа
-   > [!answer] школи
-   > [!options] школа | школи | школу | школою
-"""
-        violations = check_error_correction_format(content)
-        explanation_violations = [v for v in violations if 'explanation' in v.get('issue', '').lower()]
-        assert len(explanation_violations) >= 1
+        yaml_activities = [activity]
+        violations = check_error_correction_format(yaml_activities)
+        assert len(violations) >= 1
+        assert violations[0]['type'] == 'MALFORMED_ERROR_CORRECTION'
 
 
 # =============================================================================
 # TEST: Unjumble Format (Required Answer Callout)
 # =============================================================================
 
-class TestUnjumbleFormat:
-    """Test unjumble required callout validation."""
-
-    @pytest.mark.skip(reason="Legacy markdown check removed")
-    def test_unjumble_nested_bullets_without_callout(self):
-        pass
-
-    @pytest.mark.skip(reason="Legacy markdown check removed")
-    def test_unjumble_with_answer_callout(self):
-        pass
+# Deleted legacy markdown format tests for unjumble.
+# Answer callout is required by schema for YAML.
 
 
 # =============================================================================
@@ -797,32 +749,8 @@ level: B1
         assert len(russian_violations) == 0
 
 
-# =============================================================================
-# TEST: Quiz Format
-# =============================================================================
-
-class TestQuizFormat:
-    """Test quiz format validation."""
-
-    @pytest.mark.skip(reason="Legacy markdown check removed")
-    def test_quiz_bullets_instead_of_numbers(self):
-        pass
-
-    @pytest.mark.skip(reason="Legacy markdown check removed")
-    def test_quiz_with_numbers(self):
-        pass
-
-
-# =============================================================================
-# TEST: Cloze Format
-# =============================================================================
-
-class TestClozeFormat:
-    """Test cloze format validation."""
-
-    @pytest.mark.skip(reason="Legacy markdown check removed")
-    def test_cloze_structure(self):
-        pass
+# Legacy markdown format tests for Quiz and Cloze deleted.
+# Correct format is enforced by YAML schema.
 
 
 # =============================================================================
