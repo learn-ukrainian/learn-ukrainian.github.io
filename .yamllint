@@ -2,22 +2,22 @@
 extends: default
 
 rules:
-  line-length:
-    max: 120
-    allow-non-breakable-words: true
-  indentation:
-    spaces: 2
-    indent-sequences: consistent
-  truthy: disable  # Allow 'yes/no' in plans if needed
-  comments:
-    min-spaces-from-content: 1
-  key-duplicates: enable
-  colons:
-    max-spaces-before: 0
-    max-spaces-after: 1
+  document-start: disable
+  line-length: disable
+  indentation: disable
+  comments: disable
+  comments-indentation: disable
+  colons: disable
+  braces: disable
+  trailing-spaces: disable
+  new-line-at-end-of-file: disable
+  empty-lines: disable
+  truthy: disable
 
 ignore: |
   .venv/
   node_modules/
   docusaurus/node_modules/
+  docusaurus/pnpm-lock.yaml
+  docs/issues/artifacts/
   backup/

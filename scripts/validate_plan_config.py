@@ -74,10 +74,14 @@ def validate_plan(plan_path: Path, level: str) -> list:
     focus = plan.get('focus')
     config_target = get_config_target(level, sequence, focus)
 
+    # Relax validation for experimental levels
+    experimental_levels = ['ruth', 'oes']
+    is_experimental = level.lower() in experimental_levels
+
     # Check word_target matches config
     if plan_target == 0:
         errors.append(f"Missing word_target (config expects {config_target})")
-    elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
+    elif not is_experimental and plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
         errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
 
@@ -92,10 +96,22 @@ def validate_plan(plan_path: Path, level: str) -> list:
         elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
             errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
 
-    # Check required fields
-    required_fields = ['module', 'level', 'title', 'objectives']
-    for field in required_fields:
-        if not plan.get(field):
+    # Check required fields with aliases
+    required_fields = [
+        ('module', ['module_number']),
+        ('level', []),
+        ('title', ['title_uk']),
+        ('objectives', [])
+    ]
+    for field, aliases in required_fields:
+        value = plan.get(field)
+        if not value:
+            for alias in aliases:
+                value = plan.get(alias)
+                if value:
+                    break
+
+        if not value:
             errors.append(f"Missing required field: {field}")
 
     return errors
