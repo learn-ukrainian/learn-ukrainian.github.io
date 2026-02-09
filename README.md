@@ -63,10 +63,18 @@ Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and sta
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
+
+# Setup Python environment
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Install Node dependencies
 npm install
+cd docusaurus && pnpm install
 
 # Start the web platform
-cd docusaurus && pnpm start
+pnpm start
 # Opens at http://localhost:3000/
 ```
 
@@ -96,8 +104,11 @@ learn-ukrainian/
 ## Contributing
 
 We welcome contributions! See:
-- `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` — Content quality standards
-- `CLAUDE.md` — AI agent instructions
+- [**Developer Guide**](docs/DEVELOPER-GUIDE.md) — Setup and workflows
+- [**Orchestration Workflow**](docs/ORCHESTRATE-REBUILD.md) — How modules are built
+- [**Batch Operations**](docs/BATCH-OPERATIONS.md) — Automated batch processing
+- [**Schema Reference**](docs/SCHEMA-REFERENCE.md) — YAML schema documentation
+- [**Error Reference**](docs/ERROR-REFERENCE.md) — Audit and review error codes
 
 ## License
 

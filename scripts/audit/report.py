@@ -15,6 +15,54 @@ from datetime import datetime
 from typing import Optional
 from pathlib import Path
 
+# Mapping of internal error types to standardized error codes
+ERROR_CODE_MAP = {
+    # Audit Errors (AUD)
+    'SECTION_LENGTH_MISMATCH': 'AUD001',
+    'MISSING_OUTLINE_SECTION': 'AUD002',
+    'EXTRA_SECTION_IN_MARKDOWN': 'AUD002',
+    'MISSING_REQUIRED_TYPES': 'AUD003',
+    'LOW_NATURALNESS': 'AUD004',
+    'SCHEMA_VIOLATION': 'AUD005',
+    'INVALID_META_YAML': 'AUD005',
+    'MISSING_META_YAML': 'AUD005',
+    'RUSSIANISM_DETECTED': 'AUD006',
+    'INVALID_ACTIVITY_TYPE': 'AUD007',
+    'LOW_VOCAB_COUNT': 'AUD008',
+    'VOCABULARY_NOT_DEFINED': 'AUD008',
+    'LOW_LESSON_INTEGRATION': 'AUD008',
+    'LOW_ACTIVITY_INTEGRATION': 'AUD008',
+    'EMPTY_OUTLINE': 'AUD002',
+    'COMPLEXITY': 'AUD009',
+    'GRAMMAR': 'AUD010',
+    'AGREEMENT': 'AUD010',
+    'CASE_GOV': 'AUD010',
+    # Review Errors (REV) - mapped if detected by automated checks
+    'PEDAGOGICAL_INCONSISTENCY': 'REV001',
+    'LINGUISTIC_INACCURACY': 'REV002',
+    'TONE_MISMATCH': 'REV003',
+}
+
+# Mapping for gates
+GATE_CODE_MAP = {
+    'words': 'AUD001',
+    'activities': 'AUD003',
+    'naturalness': 'AUD004',
+    'structure': 'AUD005',
+    'lint': 'AUD005',
+    'vocab': 'AUD008',
+    'immersion': 'AUD012',
+    'richness': 'AUD013',
+    'pedagogy': 'AUD014',
+    'grammar': 'AUD015',
+    'activity_quality': 'AUD016',
+}
+
+
+def get_error_code(violation_type: str) -> str:
+    """Get standardized error code for a violation type."""
+    return ERROR_CODE_MAP.get(violation_type.upper(), "")
+
 
 def save_status_cache(
     file_path: str,
@@ -400,7 +448,9 @@ def generate_report(
     if pedagogical_violations:
         report_lines.append("## PEDAGOGICAL VIOLATIONS")
         for v in pedagogical_violations:
-            report_lines.append(f"- **[{v['type']}]** {v['issue']}")
+            err_code = get_error_code(v['type'])
+            type_display = f"{err_code}: {v['type']}" if err_code else v['type']
+            report_lines.append(f"- **[{type_display}]** {v['issue']}")
             report_lines.append(f"  - FIX: {v['fix']}")
         report_lines.append("")
 
@@ -408,7 +458,9 @@ def generate_report(
         report_lines.append("## TEMPLATE COMPLIANCE")
         for v in template_violations:
             severity_icon = "❌" if v['severity'] == 'CRITICAL' else "⚠️"
-            report_lines.append(f"- {severity_icon} **[{v['type']}]** {v['issue']}")
+            err_code = get_error_code(v['type'])
+            type_display = f"{err_code}: {v['type']}" if err_code else v['type']
+            report_lines.append(f"- {severity_icon} **[{type_display}]** {v['issue']}")
             report_lines.append(f"  - FIX: {v['fix']}")
         report_lines.append("")
 
@@ -428,10 +480,12 @@ def generate_report(
     for k in keys_order:
         r = results.get(k)
         if r:
+            err_code = GATE_CODE_MAP.get(k, "")
+            label = f"{k.capitalize()} ({err_code})" if err_code else k.capitalize()
             if hasattr(r, 'icon'):  # GateResult dataclass
-                report_lines.append(f"- **{k.capitalize()}:** {r.icon} {r.msg}")
+                report_lines.append(f"- **{label}:** {r.icon} {r.msg}")
             else:  # dict
-                report_lines.append(f"- **{k.capitalize()}:** {r['icon']} {r['msg']}")
+                report_lines.append(f"- **{label}:** {r['icon']} {r['msg']}")
 
     # Add richness details section (B1+ and LIT)
     if richness_data:
@@ -621,6 +675,13 @@ Example: «Не кажи гоп, поки не перескочиш» — **пе
     report_lines.append("|---|---|---|---|")
     report_lines.extend(table_rows)
 
+    report_lines.append("")
+    report_lines.append("---")
+    report_lines.append("### 📚 Resources")
+    report_lines.append("- **Error Reference:** [Standardized Error Codes](../../../../docs/ERROR-REFERENCE.md)")
+    report_lines.append("- **YAML Schema:** [Schema Reference](../../../../docs/SCHEMA-REFERENCE.md)")
+    report_lines.append("- **Orchestration:** [Rebuild Workflow](../../../../docs/ORCHESTRATE-REBUILD.md)")
+
     return "\n".join(report_lines)
 
 
@@ -671,10 +732,12 @@ def print_gates(results: dict, level_code: str) -> None:
     for k in keys_order:
         r = results.get(k)
         if r:
+            err_code = GATE_CODE_MAP.get(k, "")
+            label = f"{k.capitalize()} ({err_code})" if err_code else k.capitalize()
             if hasattr(r, 'icon'):  # GateResult dataclass
-                print(f"{k.capitalize():<12} {r.icon} {r.msg}")
+                print(f"{label:<18} {r.icon} {r.msg}")
             else:  # dict
-                print(f"{k.capitalize():<12} {r['icon']} {r['msg']}")
+                print(f"{label:<18} {r['icon']} {r['msg']}")
 
     imm = results.get('immersion')
     if imm:

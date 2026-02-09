@@ -1475,10 +1475,15 @@ def audit_module(file_path: str) -> bool:
         missing_required = required_types - unique_types
         if missing_required:
             has_critical_failure = True
-            critical_failure_reasons.append(
-                f"Missing required activity types: {', '.join(sorted(missing_required))}"
-            )
-            print(f"  ❌ Missing required activity types from meta.yaml: {', '.join(sorted(missing_required))}")
+            msg = f"Missing required activity types: {', '.join(sorted(missing_required))}"
+            critical_failure_reasons.append(msg)
+            pedagogical_violations.append({
+                'type': 'MISSING_REQUIRED_TYPES',
+                'severity': 'error',
+                'issue': msg,
+                'fix': f"Generate activities for missing types: {', '.join(sorted(missing_required))}"
+            })
+            print(f"  ❌ {msg}")
 
     eng_target = config.get('min_engagement', 3)
     results['engagement'] = evaluate_engagement(engagement_count, eng_target)
@@ -1936,6 +1941,12 @@ def audit_module(file_path: str) -> bool:
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if results['naturalness'].status == 'FAIL':
         has_critical_failure = True
+        pedagogical_violations.append({
+            'type': 'LOW_NATURALNESS',
+            'severity': 'error',
+            'issue': f"Naturalness score too low: {nat_score}/10",
+            'fix': "Rewrite sections with unnatural phrasing or Russianisms."
+        })
 
     # Activity quality validation check - look for -quality.md in audit folder
     quality_file = os.path.join(audit_dir, f"{base_name}-quality.md")

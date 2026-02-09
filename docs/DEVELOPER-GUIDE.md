@@ -6,6 +6,40 @@ This guide helps you understand the tools, workflows, and best practices for cur
 
 ---
 
+## 🛠️ Environment Setup
+
+### Prerequisites
+- **Python 3.12.x** (checked via `.python-version`)
+- **Node.js 20+**
+- **pnpm** (preferred package manager)
+
+### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
+   cd learn-ukrainian.github.io
+   ```
+
+2. **Setup Python Virtual Environment:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. **Install Node Dependencies:**
+   ```bash
+   npm install
+   cd docusaurus && pnpm install
+   ```
+
+4. **Install Playwright Browsers:**
+   ```bash
+   playwright install chromium
+   ```
+
+---
+
 ## 🚀 Quick Start
 
 ### I want to...
@@ -178,6 +212,43 @@ scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
 
 ---
 
+## 🌿 Git Workflow
+
+We follow a simple but strict git workflow to maintain quality:
+
+### Branching
+- **Main branch:** Production-ready content. Always stable.
+- **Feature branches:** `feat/your-feature` or `content/level-module`.
+- **Pull Requests:** All changes must go through a PR. CI/CD runs automated audits on changed modules.
+
+### Commits
+- Use descriptive commit messages.
+- If working on a tracked task, include the issue number: `feat: add B2 module 5 (#123)`.
+- Verify your work with `scripts/audit_module.sh` before committing.
+
+---
+
+## 🧪 Testing Process
+
+### Automated Tests
+We use `pytest` for Python logic and `jest` for frontend components.
+
+```bash
+# Run Python tests
+pytest tests/
+
+# Run specific test file
+pytest tests/test_activities.py
+```
+
+### Manual Verification
+For frontend changes, use the Playwright-based validation:
+```bash
+npm run validate:html l2-uk-en a1 5
+```
+
+---
+
 ## 📋 Common Workflows
 
 ### Creating a New Module
@@ -292,6 +363,18 @@ npm run pipeline l2-uk-en b1 9
 # 4. Status updated?
 npm run status:b1
 ```
+
+---
+
+---
+
+## 🤝 Contribution Guidelines
+
+1. **Check Module Status:** Before starting, check `docs/{LEVEL}-STATUS.md` to see what needs work.
+2. **Follow the Plan:** Always read the corresponding `plans/{level}/{slug}.yaml` before building or fixing a module.
+3. **Audit Early & Often:** Use `scripts/audit_module.sh` to catch issues as you develop.
+4. **Naturalness Matters:** Ensure Ukrainian text is natural and free of Russianisms. Use the `/review-content-v4` tool for deep linguistic checks.
+5. **Quality over Speed:** We are building a national educational resource. Accuracy and pedagogical soundess are top priorities.
 
 ---
 
