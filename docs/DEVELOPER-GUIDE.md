@@ -21,8 +21,8 @@ cd learn-ukrainian.github.io
 ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 source .venv/bin/activate
 
-# Install Python dependencies (from pyproject.toml / manual list)
-pip install pyyaml jsonschema pytest pytest-asyncio fastapi uvicorn pydantic yamllint
+# Install Python dependencies (managed via pyproject.toml)
+.venv/bin/pip install .
 
 # Setup Node.js dependencies
 npm install
@@ -466,6 +466,19 @@ Fix: Rewrite problematic sections
 rm -rf .venv
 ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 .venv/bin/python -m pip install .
+```
+
+**SQLite extension error**:
+```bash
+# Python must be compiled with --enable-loadable-sqlite-extensions
+# Already handled via pyenv installation (see .python-version)
+```
+
+### Dependency Installation Issues
+
+If `.venv/bin/pip install .` fails or doesn't install everything, you can install the core dependencies manually:
+```bash
+.venv/bin/pip install pyyaml jsonschema pytest pytest-asyncio fastapi uvicorn pydantic yamllint
 ```
 
 ---

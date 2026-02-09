@@ -71,7 +71,7 @@ npm install
 # Setup Python environment (requires Python 3.12.8)
 ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 source .venv/bin/activate
-pip install pyyaml jsonschema pytest pytest-asyncio fastapi uvicorn pydantic yamllint
+pip install .
 
 # Start the web platform
 cd docusaurus && pnpm start
