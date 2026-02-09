@@ -2,13 +2,13 @@
   "module": "pavlo-polubotok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:35.162269Z",
+  "last_audit": "2026-02-09T08:32:56.940775Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T23:43:58.208936Z",
-    "meta": "2026-02-07T15:13:22.012901Z",
-    "activities": "2026-02-07T10:03:51.583893Z",
-    "vocabulary": "2026-02-07T10:03:51.635602Z",
+    "md": "2026-02-09T08:31:29.681246Z",
+    "meta": "2026-02-09T08:26:16.512010Z",
+    "activities": "2026-02-09T08:32:36.850734Z",
+    "vocabulary": "2026-02-09T08:32:50.243163Z",
     "plan": null
   },
   "gates": {
@@ -19,18 +19,18 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 1,
-      "message": "4371/4300 (raw: 4436) | pedagogy: 1 violations"
+      "violations": 4,
+      "message": "3679/4300 (raw: 3778) | engagement: 4/5 | pedagogy: 5 violations | richness: 92% < 95% min (biography)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "8/3"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "24/24"
+      "message": "12 < 24 (soft target)"
     },
     "naturalness": {
       "status": "pass",
@@ -40,8 +40,11 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 4,
+    "blocking_issues": [
+      "3 Outline Compliance Errors",
+      "3 forbidden activity types (use --fix to remove)"
+    ],
+    "pass_count": 3,
     "fail_count": 1
   }
 }

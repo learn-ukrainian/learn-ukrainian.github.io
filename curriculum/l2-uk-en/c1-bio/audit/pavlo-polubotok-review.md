@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M30 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-08 23:13:35
+**Generated:** 2026-02-09 08:32:56
 
 ## Configuration
 **Type:** C1-biography
@@ -20,75 +20,84 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | reading | Аналіз джерела: Промова Полуботка до Петра I | 3 | 1 | ✅ |
-| 2 | reading | Аналіз джерела: Коломацькі чолобитні (1723) | 3 | 1 | ✅ |
-| 3 | essay-response | Есе: Ціна гідності | 1 | 1 | ✅ |
-| 4 | critical-analysis | Критичний аналіз: Методи боротьби Полуботка | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняння: Полуботок vs Мазепа | 1 | 1 | ✅ |
-| 6 | true-false | Правда чи Міф: Життя і легенда Полуботка | 11 | 5 | ✅ |
+| 1 | reading | Промова Павла Полуботка до Петра I (за «Історією Русів») | 2 | 1 | ✅ |
+| 2 | critical-analysis | Риторика опору | 1 | 1 | ✅ |
+| 3 | true-false | Міфи та реальність | 10 | 5 | ✅ |
+| 4 | match-up | Історична термінологія | 12 | 6 | ✅ |
+| 5 | quiz | Життєвий шлях Павла Полуботка | 5 | 5 | ✅ |
+| 6 | fill-in | Історичний портрет | 12 | 6 | ✅ |
+| 7 | group-sort | Сучасники Полуботка | 8 | 1 | ✅ |
+| 8 | essay-response | Ціна гідності | 1 | 1 | ✅ |
 
 **Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Total activities: 8 (target: 3-9) ✅
+- Unique types: 8 (minimum: 3) ✅
+- Priority types used: 4/6 (critical-analysis, essay-response, quiz, reading) ✅
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/pavlo-polubotok-research.md
-  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Життєвий шлях Павла Полуботка' Q2 prompt length 4 (target: 8-30)
+  - FIX: Adjust prompt length to 8-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Життєвий шлях Павла Полуботка' Q4 prompt length 7 (target: 8-30)
+  - FIX: Adjust prompt length to 8-30 words.
+- **[COMPLEXITY]** group-sort 'Сучасники Полуботка' has 8 items (target: 10-999)
+  - FIX: Adjust number of items to sort to 10-999.
+- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
+  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 violations (minor)
+- 5 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 4371/4300 (raw: 4436)
-- **Activities:** ✅ 6/3
+- **Words:** ❌ 3679/4300 (raw: 3778)
+- **Activities:** ✅ 8/3
 - **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
+- **Unique_types:** ✅ 8/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ❌ 4/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/24
+- **Vocab:** ⚠️ 12 < 24 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Pedagogy:** ❌ 5 violations
+- **Content_heavy:** ✅ Content-heavy OK (8 activities)
 - **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
+- **Richness:** ❌ 92% < 95% min (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 92% (minimum: 95%)
 **Module Type:** biography
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 9 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
+| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
+| engagement | 3 | 6 | 50% | 14% | 7.1% |
+| quotes | 13 | 3 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
 | timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **92.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 143 | Included in Core |
-| **Вступ — Символ нескореності** | ✅ | 642 | Included in Core |
-| **Життєпис** | ⚪️ | 1349 | Skipped |
-| **Історичний контекст** | ✅ | 634 | Included in Core |
-| **Внесок** | ⚪️ | 370 | Skipped |
-| **Останні роки** | ⚪️ | 432 | Skipped |
-| **Спадщина** | ⚪️ | 411 | Skipped |
-| **Підсумок** | ✅ | 264 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 126 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ — Символ нескореності** | ✅ | 607 | Included in Core |
+| **Життєпис** | ⚪️ | 1245 | Skipped |
+| **Історичний контекст** | ✅ | 478 | Included in Core |
+| **Внесок** | ⚪️ | 237 | Skipped |
+| **Останні роки** | ⚪️ | 421 | Skipped |
+| **Спадщина** | ⚪️ | 456 | Skipped |
+| **Підсумок** | ✅ | 235 | Included in Core |
