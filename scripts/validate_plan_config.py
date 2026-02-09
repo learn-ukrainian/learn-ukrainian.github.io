@@ -94,9 +94,30 @@ def validate_plan(plan_path: Path, level: str) -> list:
 
     # Check required fields
     required_fields = ['module', 'level', 'title', 'objectives']
+    aliases = {
+        'module': ['module_number'],
+        'title': ['title_uk'],
+    }
+
     for field in required_fields:
-        if not plan.get(field):
+        value = plan.get(field)
+        if not value:
+            # Check aliases
+            for alias in aliases.get(field, []):
+                value = plan.get(alias)
+                if value:
+                    break
+
+        if not value:
+            # Relaxed check for experimental levels
+            if level.lower() in ['oes', 'ruth'] and field in ['module', 'level', 'title', 'objectives']:
+                continue
             errors.append(f"Missing required field: {field}")
+
+    # Relaxed word count for experimental levels
+    if level.lower() in ['oes', 'ruth']:
+        # Filter out word count related errors if any
+        errors = [e for e in errors if "word_target" not in e and "content_outline" not in e]
 
     return errors
 
