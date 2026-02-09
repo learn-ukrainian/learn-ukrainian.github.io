@@ -30,6 +30,9 @@ from .config import (
     LEVELS,
     PROJECT_ROOT,
 )
+from scripts.utils.monitoring import MetricsManager
+
+metrics = MetricsManager()
 
 app = FastAPI(
     title="Playground API",
@@ -211,6 +214,33 @@ def get_db_connection():
         conn.commit()
         return conn
     return sqlite3.connect(MESSAGE_DB)
+
+
+# ==================== MONITORING ENDPOINTS ====================
+
+
+@app.get("/api/health")
+async def health_check():
+    """Basic health check endpoint with alerts."""
+    alerts = metrics.check_alerts()
+    return {
+        "status": "healthy" if not alerts else "degraded",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "version": "1.0.0",
+        "alerts": alerts
+    }
+
+
+@app.get("/api/metrics/llm")
+async def get_llm_metrics():
+    """Get LLM usage summary metrics."""
+    return metrics.get_llm_metrics_summary()
+
+
+@app.get("/api/metrics/batch")
+async def get_batch_metrics(limit: int = 50):
+    """Get recent batch operation metrics."""
+    return metrics.get_recent_batch_operations(limit=limit)
 
 
 # ==================== CONFIG ENDPOINTS ====================

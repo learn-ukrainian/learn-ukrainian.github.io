@@ -26,6 +26,16 @@ import tempfile
 import time
 from pathlib import Path
 
+# Add project root to sys.path for internal imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from scripts.utils.logging_utils import setup_logging
+from scripts.utils.monitoring import MetricsManager
+
+# Initialize logging and monitoring
+logger = setup_logging("batch_fix_review")
+metrics = MetricsManager()
+
 REPO = Path(__file__).parent.parent
 MAX_RETRIES = 3
 PASS_THRESHOLD = 9.0
@@ -385,11 +395,16 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
 
         print(f"    → No review found. Running Phase 5 review...")
         # Run audit first to get metrics
+        audit_start = time.time()
         run_audit(files["content"])
+        result["audit_duration_s"] = time.time() - audit_start
+
         prompt = assemble_review_prompt(files, level)
         task_id = f"review-{slug}-initial"
         try:
+            review_start = time.time()
             output = call_gemini_review(prompt, task_id, model)
+            result["initial_review_duration_s"] = time.time() - review_start
             review_text = extract_section(output, "===REVIEW_START===", "===REVIEW_END===")
             if review_text:
                 review_path.parent.mkdir(parents=True, exist_ok=True)
@@ -431,6 +446,10 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
     # Fix + Re-review loop
     current_review = review_path
     consecutive_no_changes = 0
+    fix_durations = []
+    audit_durations = []
+    review_durations = []
+
     for attempt in range(1, MAX_RETRIES + 1):
         print(f"    → Fix attempt {attempt}/{MAX_RETRIES}...")
 
@@ -438,7 +457,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         fix_prompt = assemble_fix_prompt(files, current_review)
         fix_task_id = f"fix-{slug}-v{attempt}"
         try:
+            fix_start = time.time()
             fix_output = call_gemini(fix_prompt, fix_task_id, model)
+            fix_durations.append(time.time() - fix_start)
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = f"fix_attempt_{attempt}"
@@ -493,7 +514,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         fix_output.unlink(missing_ok=True)
 
         # Step 3: Run audit
+        audit_start = time.time()
         audit_pass = run_audit(files["content"])
+        audit_durations.append(time.time() - audit_start)
         if not audit_pass:
             print(f"    → Audit FAILED after fix. Retrying...")
             continue
@@ -502,7 +525,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         review_prompt = assemble_review_prompt(files, level)
         review_task_id = f"review-{slug}-v{attempt}"
         try:
+            review_start = time.time()
             review_output = call_gemini_review(review_prompt, review_task_id, model)
+            review_durations.append(time.time() - review_start)
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = f"review_attempt_{attempt}"
@@ -552,7 +577,12 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
 # ─── Main ────────────────────────────────────────────────────────────
 
 def main():
+    # Setup logging again at main entry
+    global logger
+    logger = setup_logging("batch_fix_review")
+
     parser = argparse.ArgumentParser(description="Batch fix + review to reach 9.0+")
+    parser.add_argument("--json-log", action="store_true", help="Enable structured JSON logging")
     parser.add_argument("level", help="Level (e.g., a1, a2, b1)")
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=20)
@@ -583,6 +613,7 @@ def main():
 
     results = []
     for num in modules:
+        logger.info(f"Processing M{num:02d}")
         print(f"--- M{num:02d} ---")
         t0 = time.time()
         result = process_module(args.level, num, args.model, args.dry_run, args.review_only)
@@ -591,6 +622,25 @@ def main():
         results.append(result)
 
         status = result["status"]
+
+        # Record metrics
+        metadata = {
+            "score": result.get("score", result.get("score_after")),
+            "audit_duration_s": result.get("audit_duration_s"),
+            "initial_review_duration_s": result.get("initial_review_duration_s"),
+            "fix_durations": fix_durations,
+            "re_audit_durations": audit_durations,
+            "re_review_durations": review_durations
+        }
+        metrics.log_batch_operation(
+            op_type="fix-review",
+            level=args.level,
+            module_num=num,
+            slug=result.get("slug", ""),
+            status=status,
+            duration=elapsed,
+            metadata=metadata
+        )
         if status == "ALREADY_PASS":
             print(f"  ✅ Already {result['score']}/10 — skipping")
         elif status == "PASS_ON_REVIEW":

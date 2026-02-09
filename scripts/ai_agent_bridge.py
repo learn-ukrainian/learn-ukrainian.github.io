@@ -37,6 +37,16 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Add project root to sys.path for internal imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from scripts.utils.logging_utils import setup_logging
+from scripts.utils.monitoring import MetricsManager
+
+# Initialize logging and monitoring
+logger = setup_logging("ai_agent_bridge")
+metrics = MetricsManager()
+
 # Database path (same as MCP server uses)
 DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_DIR = Path(__file__).parent.parent / ".mcp/servers/message-broker/pids"
@@ -328,6 +338,7 @@ def set_session(task_id: str, agent: str, session_id: str):
 
 def check_inbox(for_llm: str = "gemini"):
     """Check inbox for messages addressed to an agent."""
+    logger.info(f"Checking inbox for {for_llm}")
     conn = get_db()
     cursor = conn.cursor()
 
@@ -770,6 +781,7 @@ Format your response clearly.
 
         print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
         sys.stdout.flush()
+        start_time = time.time()
 
         # Write PID file for status tracking and locking
         _write_pid_file("gemini", task_key, {
@@ -859,9 +871,24 @@ Format your response clearly.
                         output_exists = Path(output_path).exists()
                         output_size = Path(output_path).stat().st_size if output_exists else 0
                         print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
+                        duration = time.time() - start_time
                     else:
-                        print(f"✅ Gemini finished ({len(response)} chars)")
+                        duration = time.time() - start_time
+                        print(f"✅ Gemini finished ({len(response)} chars) in {duration:.1f}s")
                     sys.stdout.flush()
+
+                    # Record metrics
+                    prompt_tokens = MetricsManager.estimate_tokens(prompt)
+                    completion_tokens = MetricsManager.estimate_tokens(response)
+                    metrics.log_llm_usage(
+                        agent="gemini",
+                        model=model,
+                        task_id=msg.get('task_id'),
+                        prompt_tokens=prompt_tokens,
+                        completion_tokens=completion_tokens,
+                        duration=duration,
+                        status="success"
+                    )
 
                     if output_path:
                         # File output mode: NO broker message. Batch script reads the file directly.
@@ -1067,6 +1094,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
         print(f"\n🤖 Processing with Claude CLI (headless) [{mode_label}]...")
         sys.stdout.flush()
+        start_time = time.time()
 
         # Write PID file for status tracking and locking
         _write_pid_file("claude", task_key, {
@@ -1116,9 +1144,23 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
             response = ''.join(output_lines).strip()
 
+            duration = time.time() - start_time
             print(f"\n\n{'─' * 40}")
-            print(f"✅ Claude finished ({len(response)} chars)")
+            print(f"✅ Claude finished ({len(response)} chars) in {duration:.1f}s")
             sys.stdout.flush()
+
+            # Record metrics
+            prompt_tokens = MetricsManager.estimate_tokens(prompt)
+            completion_tokens = MetricsManager.estimate_tokens(response)
+            metrics.log_llm_usage(
+                agent="claude",
+                model="claude-3-5-sonnet", # Default for CLI usually
+                task_id=msg.get('task_id'),
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                duration=duration,
+                status="success"
+            )
 
             send_message(
                 content=response,
@@ -1304,7 +1346,12 @@ def process_all_claude(new_session: bool = False):
 
 
 def main():
+    # Setup logging again at main entry to ensure it captures all output
+    global logger
+    logger = setup_logging("ai_agent_bridge")
+
     parser = argparse.ArgumentParser(description="AI Agent Bridge - Claude/Gemini/LLM Communication")
+    parser.add_argument("--json-log", action="store_true", help="Enable structured JSON logging")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # inbox

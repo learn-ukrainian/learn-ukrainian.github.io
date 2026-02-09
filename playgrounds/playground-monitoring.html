@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring & Observability Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        h1 { margin: 0; font-size: 24px; }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-online { background-color: rgba(16, 185, 129, 0.2); color: var(--success-color); }
+        .status-offline { background-color: rgba(239, 68, 68, 0.2); color: var(--error-color); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--accent-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th { color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 12px; }
+
+        .stat-val { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: #94a3b8; }
+
+        .refresh-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .refresh-btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Monitoring & Observability</h1>
+        <div>
+            <span id="api-status" class="status-badge status-offline">API OFFLINE</span>
+            <button class="refresh-btn" onclick="refreshData()">Refresh</button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="panel">
+            <h2>LLM Usage Summary</h2>
+            <div id="llm-summary">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Calls</th>
+                            <th>Tokens</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody id="llm-metrics-body">
+                        <tr><td colspan="4" style="text-align:center">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>System Health</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                    <div class="stat-val" id="health-status">-</div>
+                    <div class="stat-label">Status</div>
+                </div>
+                <div>
+                    <div class="stat-val" id="health-version">-</div>
+                    <div class="stat-label">Version</div>
+                </div>
+            </div>
+            <div id="alerts-container"></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Recent Batch Operations</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Type</th>
+                        <th>Module</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody id="batch-metrics-body">
+                    <tr><td colspan="5" style="text-align:center">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8765/api';
+
+        async function fetchAPI(endpoint) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return null;
+            }
+        }
+
+        async function updateHealth() {
+            const data = await fetchAPI('/health');
+            const badge = document.getElementById('api-status');
+            const alertsContainer = document.getElementById('alerts-container');
+
+            if (data) {
+                badge.textContent = 'API ONLINE';
+                badge.className = 'status-badge status-online';
+                document.getElementById('health-status').textContent = data.status.toUpperCase();
+                document.getElementById('health-status').style.color = data.status === 'healthy' ? 'var(--success-color)' : 'var(--error-color)';
+                document.getElementById('health-version').textContent = data.version;
+
+                if (data.alerts && data.alerts.length > 0) {
+                    alertsContainer.innerHTML = data.alerts.map(a => `
+                        <div style="background-color: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--error-color); padding: 8px; margin-top: 8px; font-size: 12px; color: #fca5a5;">
+                            ⚠️ ${a}
+                        </div>
+                    `).join('');
+                } else {
+                    alertsContainer.innerHTML = '<div style="color: var(--success-color); font-size: 12px; margin-top: 8px;">✓ All systems normal</div>';
+                }
+            } else {
+                badge.textContent = 'API OFFLINE';
+                badge.className = 'status-badge status-offline';
+                document.getElementById('health-status').textContent = 'ERROR';
+                document.getElementById('health-version').textContent = 'N/A';
+            }
+        }
+
+        async function updateLLMMetrics() {
+            const data = await fetchAPI('/metrics/llm');
+            const body = document.getElementById('llm-metrics-body');
+            if (data && data.length > 0) {
+                body.innerHTML = data.map(m => `
+                    <tr>
+                        <td>${m.model}</td>
+                        <td>${m.call_count}</td>
+                        <td>${m.total_tokens.toLocaleString()}</td>
+                        <td>$${m.total_cost.toFixed(4)}</td>
+                    </tr>
+                `).join('');
+            } else {
+                body.innerHTML = '<tr><td colspan="4" style="text-align:center">No data available</td></tr>';
+            }
+        }
+
+        async function updateBatchMetrics() {
+            const data = await fetchAPI('/metrics/batch');
+            const body = document.getElementById('batch-metrics-body');
+            if (data && data.length > 0) {
+                body.innerHTML = data.map(m => `
+                    <tr>
+                        <td>${new Date(m.timestamp).toLocaleString()}</td>
+                        <td>${m.operation_type}</td>
+                        <td>${m.level} M${String(m.module_num).padStart(2, '0')}</td>
+                        <td><span style="color: ${m.status === 'FIXED' || m.status === 'OK' || m.status === 'ALREADY_PASS' ? 'var(--success-color)' : 'var(--error-color)'}">${m.status}</span></td>
+                        <td>${m.duration_s.toFixed(1)}s</td>
+                    </tr>
+                `).join('');
+            } else {
+                body.innerHTML = '<tr><td colspan="5" style="text-align:center">No data available</td></tr>';
+            }
+        }
+
+        function refreshData() {
+            updateHealth();
+            updateLLMMetrics();
+            updateBatchMetrics();
+        }
+
+        // Initial load
+        refreshData();
+        // Auto refresh every 30 seconds
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>

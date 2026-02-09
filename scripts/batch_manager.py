@@ -31,6 +31,16 @@ from pathlib import Path
 from datetime import datetime
 import json
 
+# Add project root to sys.path for internal imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from scripts.utils.logging_utils import setup_logging
+from scripts.utils.monitoring import MetricsManager
+
+# Initialize logging and monitoring
+logger = setup_logging("batch_manager")
+metrics = MetricsManager()
+
 REPO = Path(__file__).parent.parent
 
 # Task tracking directory
@@ -320,10 +330,15 @@ def cmd_stop(args):
 
 
 def main():
+    # Setup logging again at main entry
+    global logger
+    logger = setup_logging("batch_manager")
+
     parser = argparse.ArgumentParser(
         description="Batch Manager - Unified CLI for batch operations",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
+    parser.add_argument("--json-log", action="store_true", help="Enable structured JSON logging")
 
     subparsers = parser.add_subparsers(dest='command', help='Command to execute')
 

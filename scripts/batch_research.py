@@ -11,7 +11,18 @@ import json
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
+
+# Add project root to sys.path for internal imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from scripts.utils.logging_utils import setup_logging
+from scripts.utils.monitoring import MetricsManager
+
+# Initialize logging and monitoring
+logger = setup_logging("batch_research")
+metrics = MetricsManager()
 
 REPO = Path(__file__).parent.parent
 
@@ -274,7 +285,12 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
 
 
 def main():
+    # Setup logging again at main entry
+    global logger
+    logger = setup_logging("batch_research")
+
     parser = argparse.ArgumentParser(description="Batch research for a level")
+    parser.add_argument("--json-log", action="store_true", help="Enable structured JSON logging")
     parser.add_argument("level", help="Level (e.g., a1)")
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=None)
@@ -296,9 +312,22 @@ def main():
 
     results = []
     for num in modules:
+        logger.info(f"Researching M{num:02d}")
         print(f"--- M{num:02d} ---")
+        t0 = time.time()
         result = research_module(args.level, num, args.model, args.dry_run)
+        elapsed = time.time() - t0
         results.append(result)
+
+        # Record metrics
+        metrics.log_batch_operation(
+            op_type="research",
+            level=args.level,
+            module_num=num,
+            slug=result.get("slug", ""),
+            status=result["status"],
+            duration=elapsed
+        )
 
         if result["status"] == "EXISTS":
             print(f"  EXISTS ({result['size']} bytes)")
