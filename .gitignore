@@ -99,3 +99,6 @@ issue_*_body.md
 !.prettierrc
 !jest.config.js
 !eslint.config.mjs
+
+# MCP broker PID files
+.mcp/servers/message-broker/pids/

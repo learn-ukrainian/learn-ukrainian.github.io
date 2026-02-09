@@ -168,13 +168,14 @@ def assemble_fix_prompt(files: dict, review_path: Path) -> Path:
     files["orchestration"].mkdir(parents=True, exist_ok=True)
 
     text = template.read_text()
+    # Use relative paths to project root for portability as per AGENTS.md
     replacements = {
-        "{REVIEW_PATH}": str(review_path),
-        "{CONTENT_PATH}": str(files["content"]),
-        "{ACTIVITIES_PATH}": str(files["activities"]),
-        "{VOCAB_PATH}": str(files["vocabulary"]),
-        "{PLAN_PATH}": str(files["plan"]),
-        "{RESEARCH_PATH}": str(files["research"]),
+        "{REVIEW_PATH}": str(review_path.relative_to(REPO)),
+        "{CONTENT_PATH}": str(files["content"].relative_to(REPO)),
+        "{ACTIVITIES_PATH}": str(files["activities"].relative_to(REPO)),
+        "{VOCAB_PATH}": str(files["vocabulary"].relative_to(REPO)),
+        "{PLAN_PATH}": str(files["plan"].relative_to(REPO)),
+        "{RESEARCH_PATH}": str(files["research"].relative_to(REPO)),
     }
     for placeholder, value in replacements.items():
         text = text.replace(placeholder, value)
@@ -208,14 +209,15 @@ def assemble_review_prompt(files: dict, level: str) -> Path:
     else:
         immersion_target = f"15-35% (M{num:02d})"
 
+    # Use relative paths to project root for portability
     replacements = {
-        "{CONTENT_PATH}": str(files["content"]),
-        "{ACTIVITIES_PATH}": str(files["activities"]),
-        "{VOCAB_PATH}": str(files["vocabulary"]),
-        "{PLAN_PATH}": str(files["plan"]),
-        "{META_PATH}": str(files["meta"]),
-        "{RESEARCH_PATH}": str(files["research"]),
-        "{OUTPUT_PATH}": str(files["orchestration"] / "phase-5-re-review.md"),
+        "{CONTENT_PATH}": str(files["content"].relative_to(REPO)),
+        "{ACTIVITIES_PATH}": str(files["activities"].relative_to(REPO)),
+        "{VOCAB_PATH}": str(files["vocabulary"].relative_to(REPO)),
+        "{PLAN_PATH}": str(files["plan"].relative_to(REPO)),
+        "{META_PATH}": str(files["meta"].relative_to(REPO)),
+        "{RESEARCH_PATH}": str(files["research"].relative_to(REPO)),
+        "{OUTPUT_PATH}": str((files["orchestration"] / "phase-5-re-review.md").relative_to(REPO)),
         "{AUDIT_WORD_COUNT}": str(metrics.get("audit_words", "?")),
         "{WORD_TARGET}": str(word_target),
         "{WORD_PERCENT}": metrics.get("word_percent", "?"),
@@ -242,46 +244,72 @@ def assemble_review_prompt(files: dict, level: str) -> Path:
 
 def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send prompt to Gemini, return path to output file."""
-    with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-{task_id}-", delete=False) as tf:
-        output = Path(tf.name)
+    # Use .venv/bin/python as per AGENTS.md
+    python_exe = REPO / ".venv/bin/python"
+    if not python_exe.exists():
+        python_exe = sys.executable
 
-    with open(output, "w") as f:
-        subprocess.run(
-            [
-                sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-                "ask-gemini",
-                f"Read and execute the instructions at {prompt_path}. Return your output as text.",
-                "--task-id", task_id,
-                "--stdout-only",
-                "--model", model,
-                "--quiet",
-            ],
-            stdout=f, stderr=subprocess.STDOUT, timeout=GEMINI_TIMEOUT,
-            cwd=str(REPO),
-        )
+    tf = tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-{task_id}-", delete=False)
+    output = Path(tf.name)
+    tf.close()
+
+    try:
+        with open(output, "w") as f:
+            result = subprocess.run(
+                [
+                    str(python_exe), str(REPO / "scripts/ai_agent_bridge.py"),
+                    "ask-gemini",
+                    f"Read and execute the instructions at {prompt_path}. Return your output as text.",
+                    "--task-id", task_id,
+                    "--stdout-only",
+                    "--model", model,
+                    "--quiet",
+                ],
+                stdout=f, stderr=subprocess.STDOUT, timeout=GEMINI_TIMEOUT,
+                cwd=str(REPO),
+            )
+            if result.returncode != 0:
+                print(f"    ❌ Gemini call failed with exit code {result.returncode}")
+    except Exception as e:
+        if output.exists():
+            output.unlink()
+        raise e
 
     return output
 
 
 def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send review prompt to Gemini with delimiter instructions."""
-    with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-{task_id}-", delete=False) as tf:
-        output = Path(tf.name)
+    # Use .venv/bin/python as per AGENTS.md
+    python_exe = REPO / ".venv/bin/python"
+    if not python_exe.exists():
+        python_exe = sys.executable
 
-    with open(output, "w") as f:
-        subprocess.run(
-            [
-                sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-                "ask-gemini",
-                f"Read and execute the instructions at {prompt_path}. Return your output as text.",
-                "--task-id", task_id,
-                "--stdout-only",
-                "--model", model,
-                "--quiet",
-            ],
-            stdout=f, stderr=subprocess.STDOUT, timeout=GEMINI_TIMEOUT,
-            cwd=str(REPO),
-        )
+    tf = tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-{task_id}-", delete=False)
+    output = Path(tf.name)
+    tf.close()
+
+    try:
+        with open(output, "w") as f:
+            result = subprocess.run(
+                [
+                    str(python_exe), str(REPO / "scripts/ai_agent_bridge.py"),
+                    "ask-gemini",
+                    f"Read and execute the instructions at {prompt_path}. Return your output as text.",
+                    "--task-id", task_id,
+                    "--stdout-only",
+                    "--model", model,
+                    "--quiet",
+                ],
+                stdout=f, stderr=subprocess.STDOUT, timeout=GEMINI_TIMEOUT,
+                cwd=str(REPO),
+            )
+            if result.returncode != 0:
+                print(f"    ❌ Gemini review call failed with exit code {result.returncode}")
+    except Exception as e:
+        if output.exists():
+            output.unlink()
+        raise e
 
     return output
 
@@ -379,6 +407,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         run_audit(files["content"])
         prompt = assemble_review_prompt(files, level)
         task_id = f"review-{slug}-initial"
+        output = None
         try:
             output = call_gemini_review(prompt, task_id, model)
             review_text = extract_section(output, "===REVIEW_START===", "===REVIEW_END===")
@@ -397,9 +426,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             else:
                 result["status"] = "ERROR"
                 result["reason"] = "No delimited review in Gemini output"
-                output.unlink(missing_ok=True)
                 return result
-            output.unlink(missing_ok=True)
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = "initial_review"
@@ -408,6 +435,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             result["status"] = "ERROR"
             result["reason"] = str(e)[:200]
             return result
+        finally:
+            if output and output.exists():
+                output.unlink()
 
     if review_only:
         result["status"] = "REVIEWED"
@@ -428,8 +458,52 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         # Step 1: Assemble and send fix prompt
         fix_prompt = assemble_fix_prompt(files, current_review)
         fix_task_id = f"fix-{slug}-v{attempt}"
+        fix_output = None
         try:
             fix_output = call_gemini(fix_prompt, fix_task_id, model)
+
+            # Step 2: Extract and write fixed files
+            content_text = extract_section(fix_output, "===CONTENT_START===", "===CONTENT_END===")
+            activities_text = extract_section(fix_output, "===ACTIVITIES_START===", "===ACTIVITIES_END===")
+            vocab_text = extract_section(fix_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
+            changes_text = extract_section(fix_output, "===CHANGES_START===", "===CHANGES_END===")
+
+            files_changed = []
+            if content_text and len(content_text.strip()) > 100:
+                files["content"].write_text(content_text)
+                files_changed.append("content")
+            if activities_text and len(activities_text.strip()) > 50:
+                files["activities"].write_text(activities_text)
+                files_changed.append("activities")
+            if vocab_text and len(vocab_text.strip()) > 50:
+                files["vocabulary"].write_text(vocab_text)
+                files_changed.append("vocabulary")
+
+            # Save changes report
+            if changes_text:
+                (files["orchestration"] / f"fix-changes-v{attempt}.md").write_text(changes_text)
+
+            if not files_changed:
+                # Save raw output for debugging before deleting
+                debug_path = files["orchestration"] / f"fix-debug-v{attempt}.txt"
+                if fix_output.exists():
+                    raw = fix_output.read_text()
+                    # Save first/last 2000 chars for debugging (avoid huge files)
+                    debug_content = f"=== RAW OUTPUT ({len(raw)} chars) ===\n"
+                    debug_content += raw[:2000] + "\n...\n" + raw[-2000:] if len(raw) > 4000 else raw
+                    debug_path.write_text(debug_content)
+                consecutive_no_changes += 1
+                print(f"    → No files changed by fix (Gemini found nothing to fix)")
+                if consecutive_no_changes >= 2:
+                    print(f"    → Breaking: fix produced no changes twice — needs manual intervention")
+                    result["status"] = "STUCK"
+                    result["score"] = existing_score
+                    result["reason"] = "Fix phase produces no changes but score < 9.0"
+                    return result
+            else:
+                consecutive_no_changes = 0
+                print(f"    → Fixed: {', '.join(files_changed)}")
+
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = f"fix_attempt_{attempt}"
@@ -438,50 +512,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             result["status"] = "ERROR"
             result["reason"] = str(e)[:200]
             return result
-
-        # Step 2: Extract and write fixed files
-        content_text = extract_section(fix_output, "===CONTENT_START===", "===CONTENT_END===")
-        activities_text = extract_section(fix_output, "===ACTIVITIES_START===", "===ACTIVITIES_END===")
-        vocab_text = extract_section(fix_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
-        changes_text = extract_section(fix_output, "===CHANGES_START===", "===CHANGES_END===")
-
-        files_changed = []
-        if content_text and len(content_text.strip()) > 100:
-            files["content"].write_text(content_text)
-            files_changed.append("content")
-        if activities_text and len(activities_text.strip()) > 50:
-            files["activities"].write_text(activities_text)
-            files_changed.append("activities")
-        if vocab_text and len(vocab_text.strip()) > 50:
-            files["vocabulary"].write_text(vocab_text)
-            files_changed.append("vocabulary")
-
-        # Save changes report
-        if changes_text:
-            (files["orchestration"] / f"fix-changes-v{attempt}.md").write_text(changes_text)
-
-        if not files_changed:
-            # Save raw output for debugging before deleting
-            debug_path = files["orchestration"] / f"fix-debug-v{attempt}.txt"
-            if fix_output.exists():
-                raw = fix_output.read_text()
-                # Save first/last 2000 chars for debugging (avoid huge files)
-                debug_content = f"=== RAW OUTPUT ({len(raw)} chars) ===\n"
-                debug_content += raw[:2000] + "\n...\n" + raw[-2000:] if len(raw) > 4000 else raw
-                debug_path.write_text(debug_content)
-            consecutive_no_changes += 1
-            print(f"    → No files changed by fix (Gemini found nothing to fix)")
-            if consecutive_no_changes >= 2:
-                print(f"    → Breaking: fix produced no changes twice — needs manual intervention")
-                result["status"] = "STUCK"
-                result["score"] = existing_score
-                result["reason"] = "Fix phase produces no changes but score < 9.0"
-                return result
-        else:
-            consecutive_no_changes = 0
-            print(f"    → Fixed: {', '.join(files_changed)}")
-
-        fix_output.unlink(missing_ok=True)
+        finally:
+            if fix_output and fix_output.exists():
+                fix_output.unlink()
 
         # Step 3: Run audit
         audit_pass = run_audit(files["content"])
@@ -492,8 +525,10 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         # Step 4: Assemble and send re-review
         review_prompt = assemble_review_prompt(files, level)
         review_task_id = f"review-{slug}-v{attempt}"
+        review_output = None
         try:
             review_output = call_gemini_review(review_prompt, review_task_id, model)
+            review_text = extract_section(review_output, "===REVIEW_START===", "===REVIEW_END===")
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = f"review_attempt_{attempt}"
@@ -502,9 +537,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
             result["status"] = "ERROR"
             result["reason"] = str(e)[:200]
             return result
-
-        review_text = extract_section(review_output, "===REVIEW_START===", "===REVIEW_END===")
-        review_output.unlink(missing_ok=True)
+        finally:
+            if review_output and review_output.exists():
+                review_output.unlink()
 
         if not review_text:
             print(f"    → No delimited review in output. Retrying...")

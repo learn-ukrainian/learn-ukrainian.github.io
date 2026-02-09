@@ -250,15 +250,22 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     task_id = f"batch-research-{level}-{num:02d}"
     msg = f"{prompt}"
 
+    # Use .venv/bin/python as per AGENTS.md
+    python_exe = REPO / ".venv/bin/python"
+    if not python_exe.exists():
+        python_exe = sys.executable
+
+    raw_output = None
     try:
         # Create a temp file for the raw output to prevent context pollution
-        with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-research-{task_id}-", delete=False) as tf:
-            raw_output = Path(tf.name)
+        tf = tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-research-{task_id}-", delete=False)
+        raw_output = Path(tf.name)
+        tf.close()
 
         with open(raw_output, "w") as f:
-            subprocess.run(
+            result = subprocess.run(
                 [
-                    sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
+                    str(python_exe), str(REPO / "scripts/ai_agent_bridge.py"),
                     "ask-gemini", msg,
                     "--task-id", task_id,
                     "--output-path", output_path,
@@ -268,6 +275,8 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
                 stdout=f, stderr=subprocess.STDOUT, timeout=600,
                 cwd=str(REPO),
             )
+            if result.returncode != 0:
+                return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": f"exit code {result.returncode}"}
 
         # In output-path mode, the content is already in output_path.
         # We don't necessarily need to extract delimited content if Gemini wrote directly to it,
@@ -283,6 +292,9 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
         return {"num": num, "slug": files["slug"], "status": "TIMEOUT"}
     except Exception as e:
         return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": str(e)[:200]}
+    finally:
+        if raw_output and raw_output.exists():
+            raw_output.unlink()
 
 
 def main():

@@ -87,14 +87,21 @@ def extract_ukrainian_content(md_file_path: str, max_chars: int = 4000) -> str:
 
 def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
     """Call Gemini and return raw response + parsed JSON."""
+    # Use .venv/bin/python as per AGENTS.md
+    python_exe = PROJECT_ROOT / ".venv/bin/python"
+    if not python_exe.exists():
+        python_exe = sys.executable
+
+    raw_output_log = None
     try:
-        with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-nat-{task_id}-", delete=False) as tf:
-            raw_output_log = Path(tf.name)
+        tf = tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-nat-{task_id}-", delete=False)
+        raw_output_log = Path(tf.name)
+        tf.close()
 
         with open(raw_output_log, "w") as f:
-            subprocess.run(
+            result = subprocess.run(
                 [
-                    sys.executable,
+                    str(python_exe),
                     str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
                     "ask-gemini",
                     prompt,
@@ -107,6 +114,8 @@ def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
                 timeout=120,
                 cwd=str(PROJECT_ROOT)
             )
+            if result.returncode != 0:
+                print(f"  ❌ Gemini naturalness call failed with exit code {result.returncode}")
 
         raw_output = raw_output_log.read_text()
 
@@ -146,6 +155,9 @@ def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
         return "TIMEOUT", {"score": 0, "status": "ERROR", "feedback_uk": "Request timed out", "issues": []}
     except Exception as e:
         return str(e), {"score": 0, "status": "ERROR", "feedback_uk": f"Error: {e}", "issues": []}
+    finally:
+        if raw_output_log and raw_output_log.exists():
+            raw_output_log.unlink()
 
 
 def call_claude_headless(prompt: str, task_id: str) -> Tuple[str, Dict]:
@@ -153,10 +165,15 @@ def call_claude_headless(prompt: str, task_id: str) -> Tuple[str, Dict]:
     Call headless Claude via gemini_bridge ask-claude command.
     Returns raw response + parsed JSON.
     """
+    # Use .venv/bin/python as per AGENTS.md
+    python_exe = PROJECT_ROOT / ".venv/bin/python"
+    if not python_exe.exists():
+        python_exe = sys.executable
+
     try:
         result = subprocess.run(
             [
-                sys.executable,
+                str(python_exe),
                 str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
                 "ask-claude",
                 prompt,
@@ -171,6 +188,8 @@ def call_claude_headless(prompt: str, task_id: str) -> Tuple[str, Dict]:
             timeout=180,  # Claude may take longer
             cwd=str(PROJECT_ROOT)
         )
+        if result.returncode != 0:
+            print(f"  ❌ Claude naturalness call failed with exit code {result.returncode}")
 
         raw_output = result.stdout + result.stderr
 

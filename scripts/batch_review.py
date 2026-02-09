@@ -133,14 +133,15 @@ def assemble_prompt(template: str, files: dict, metrics: dict, level: str, outpu
     """Fill template placeholders."""
     title = get_topic_title(files)
 
+    # Use relative paths for portability as per AGENTS.md
     replacements = {
-        "{CONTENT_PATH}": str(files["content"]),
-        "{ACTIVITIES_PATH}": str(files["activities"]) if files["activities"].exists() else "(no activities file)",
-        "{VOCAB_PATH}": str(files["vocabulary"]) if files["vocabulary"].exists() else "(no vocabulary file)",
-        "{PLAN_PATH}": str(files["plan"]) if files["plan"].exists() else "(no plan file)",
-        "{META_PATH}": str(files["meta"]) if files["meta"].exists() else "(no meta file)",
-        "{RESEARCH_PATH}": str(files["research"]) if files["research"].exists() else "(no research file)",
-        "{OUTPUT_PATH}": output_path,
+        "{CONTENT_PATH}": str(files["content"].relative_to(REPO)),
+        "{ACTIVITIES_PATH}": str(files["activities"].relative_to(REPO)) if files["activities"].exists() else "(no activities file)",
+        "{VOCAB_PATH}": str(files["vocabulary"].relative_to(REPO)) if files["vocabulary"].exists() else "(no vocabulary file)",
+        "{PLAN_PATH}": str(files["plan"].relative_to(REPO)) if files["plan"].exists() else "(no plan file)",
+        "{META_PATH}": str(files["meta"].relative_to(REPO)) if files["meta"].exists() else "(no meta file)",
+        "{RESEARCH_PATH}": str(files["research"].relative_to(REPO)) if files["research"].exists() else "(no research file)",
+        "{OUTPUT_PATH}": str(Path(output_path).relative_to(REPO)),
         "{AUDIT_WORD_COUNT}": str(metrics["word_count"]),
         "{WORD_TARGET}": str(metrics["word_target"]),
         "{WORD_PERCENT}": str(metrics["word_percent"]),
@@ -194,15 +195,22 @@ def review_module(level: str, num: int, model: str, dry_run: bool = False) -> di
     task_id = f"batch-review-{level}-{num:02d}"
     msg = f"Read and execute the instructions at {prompt_path}. Write your output to: {output_path}"
 
+    # Use .venv/bin/python as per AGENTS.md
+    python_exe = REPO / ".venv/bin/python"
+    if not python_exe.exists():
+        python_exe = sys.executable
+
+    raw_output_log = None
     try:
         # Create a temp file for the raw output to prevent context pollution
-        with tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-review-{task_id}-", delete=False) as tf:
-            raw_output_log = Path(tf.name)
+        tf = tempfile.NamedTemporaryFile(suffix=".txt", prefix=f"gemini-review-{task_id}-", delete=False)
+        raw_output_log = Path(tf.name)
+        tf.close()
 
         with open(raw_output_log, "w") as f:
-            subprocess.run(
+            result = subprocess.run(
                 [
-                    sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
+                    str(python_exe), str(REPO / "scripts/ai_agent_bridge.py"),
                     "ask-gemini", msg,
                     "--task-id", task_id,
                     "--output-path", output_path,
@@ -212,6 +220,8 @@ def review_module(level: str, num: int, model: str, dry_run: bool = False) -> di
                 stdout=f, stderr=subprocess.STDOUT, timeout=600,
                 cwd=str(REPO),
             )
+            if result.returncode != 0:
+                return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": f"exit code {result.returncode}"}
 
         # Check if output was written
         if Path(output_path).exists():
@@ -232,6 +242,9 @@ def review_module(level: str, num: int, model: str, dry_run: bool = False) -> di
         return {"num": num, "slug": files["slug"], "status": "TIMEOUT"}
     except Exception as e:
         return {"num": num, "slug": files["slug"], "status": "ERROR", "reason": str(e)[:200]}
+    finally:
+        if raw_output_log and raw_output_log.exists():
+            raw_output_log.unlink()
 
 
 def main():

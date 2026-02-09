@@ -185,9 +185,12 @@ gh issue comment N --body "🔄 Handed off to Gemini"
 
 ```bash
 # Send SHORT message (issue reference only) - uses --type handoff which auto-enables async
+# Use --quiet and redirect to temp file to save Claude's context!
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Issue #N is assigned to you. Read it at: https://github.com/{repo}/issues/N" \
-  --task-id gh-N --type handoff
+  --task-id gh-N --type handoff \
+  --quiet \
+  > /tmp/gemini-handoff-gh-N.txt 2>&1
 
 # --type handoff auto-enables async mode (no CLI invocation, just queues)
 # Gemini sees it in his inbox when he starts a session

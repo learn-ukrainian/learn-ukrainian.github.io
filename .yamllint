@@ -2,15 +2,15 @@
 extends: default
 
 rules:
-  line-length: disable
-  document-start: disable
-  indentation: disable
-  trailing-spaces: disable
-  new-line-at-end-of-file: disable
-  empty-lines: disable
-  braces: disable
+  line-length:
+    max: 120
+    allow-non-breakable-words: true
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
   truthy: disable  # Allow 'yes/no' in plans if needed
-  comments: disable
+  comments:
+    min-spaces-from-content: 1
   key-duplicates: enable
   colons:
     max-spaces-before: 0
@@ -21,4 +21,3 @@ ignore: |
   node_modules/
   docusaurus/node_modules/
   backup/
-  docusaurus/pnpm-lock.yaml

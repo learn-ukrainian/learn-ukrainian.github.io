@@ -1,143 +1,48 @@
----
-- lemma: наказний
-  ipa: /nɐkɐzˈnɪi̯/
-  translation: acting (hetman)
-  pos: adj
-  note: тимчасово виконуючий обов'язки
-- lemma: коломацький
-  ipa: /koloˈmɑt͡sʲkɪi̯/
-  translation: Kolomak (adj)
-  pos: adj
-  note: пов'язаний з Коломацькими чолобитними
-- lemma: петиція
-  ipa: /petˈɪt͡sʲijɐ/
-  translation: petition
-  pos: noun
-  gender: f
-  note: прохання до влади
-- lemma: автономія
-  ipa: /ɐu̯toˈnɔmʲijɐ/
+- word: наказний гетьман
+  ipa: "nɑkɑzˈnɪj ˈɦɛtʲmɑn"
+  translation: acting hetman
+  definition: "Тимчасово виконуючий обов'язки гетьмана; посада, яку обіймав Полуботок."
+- word: Малоросійська колегія
+  ipa: "mɑlɔrɔˈsʲijsʲkɑ kɔˈlɛɦijɑ"
+  translation: Little Russian Collegium
+  definition: "Орган російської імперської адміністрації для управління Гетьманщиною та обмеження її автономії."
+- word: каземат
+  ipa: "kɑzɛˈmɑt"
+  translation: casemate (dungeon cell)
+  definition: "Приміщення у фортеці, що використовувалося як в'язниця для політичних в'язнів."
+- word: чолобитна
+  ipa: "tʃɔlɔˈbɪtnɑ"
+  translation: petition (humble request)
+  definition: "Письмове прохання або скарга на ім'я монарха (застаріле)."
+- word: осінщина
+  ipa: "ɔˈsʲinʃtʃɪnɑ"
+  translation: autumn tax
+  definition: "Грошовий або натуральний податок, який сплачували селяни раз на рік восени, замість панщини."
+- word: старшина
+  ipa: "stɑrʃɪˈnɑ"
+  translation: Cossack officer elite (starshyna)
+  definition: "Військова та адміністративна еліта Гетьманщини."
+- word: автономія
+  ipa: "ɑu̯tɔˈnɔmijɑ"
   translation: autonomy
-  pos: noun
-  gender: f
-  note: самоврядування
-- lemma: колегія
-  ipa: /koˈlɛɦʲijɐ/
-  translation: collegium / board
-  pos: noun
-  gender: f
-  note: Малоросійська колегія
-- lemma: скарб
-  ipa: /skɑrb/
+  definition: "Право на самоврядування певної території в межах держави."
+- word: бібліофіл
+  ipa: "biblʲiɔˈfʲil"
+  translation: bibliophile
+  definition: "Людина, яка любить і збирає книги."
+- word: меценат
+  ipa: "mɛt͡sɛˈnɑt"
+  translation: patron of arts
+  definition: "Багатий покровитель наук і мистецтв."
+- word: скарб
+  ipa: "skɑrb"
   translation: treasure
-  pos: noun
-  gender: m
-  note: золото Полуботка
-- lemma: фортеця
-  ipa: /forˈtɛt͡sʲɐ/
-  translation: fortress
-  pos: noun
-  gender: f
-  note: Петропавлівська фортеця
-- lemma: ув'язнення
-  ipa: /uˈʋjɑznennʲɐ/
-  translation: imprisonment
-  pos: noun
-  gender: n
-  note: позбавлення волі
-- lemma: мученик
-  ipa: /ˈmut͡ʃenɪk/
+  definition: "Коштовності, гроші, сховані в потаємному місці (легенда про золото Полуботка)."
+- word: мученик
+  ipa: "ˈmutʃɛnɪk"
   translation: martyr
-  pos: noun
-  gender: m
-  note: той, хто страждає за ідею
-- lemma: легенда
-  ipa: /leˈɦɛndɐ/
-  translation: legend
-  pos: noun
-  gender: f
-  note: переказ
-- lemma: полковник
-  ipa: /pɔlˈkɔu̯nɪk/
-  translation: colonel
-  pos: noun
-  gender: m
-  note: військовий чин
-- lemma: старшина
-  ipa: /stɐrʃɪˈnɑ/
-  translation: starshyna
-  pos: noun
-  gender: f
-  note: еліта
-- lemma: централізація
-  ipa: /t͡sentrɐlʲiˈzɑt͡sʲijɐ/
-  translation: centralization
-  pos: noun
-  gender: f
-  note: зосередження влади
-- lemma: опозиція
-  ipa: /opoˈzɪt͡sʲijɐ/
-  translation: opposition
-  pos: noun
-  gender: f
-  note: протидія владі
-- lemma: конфлікт
-  ipa: /kɔnˈflʲikt/
-  translation: conflict
-  pos: noun
-  gender: m
-  note: зіткнення
-- lemma: гідність
-  ipa: /ˈɦʲidnʲisʲtʲ/
-  translation: dignity
-  pos: noun
-  gender: f
-  note: повага до себе
-- lemma: золото
-  ipa: /ˈzɔloto/
-  translation: gold
-  pos: noun
-  gender: n
-  note: дорогоцінний метал
-- lemma: банк
-  ipa: /bɑnk/
-  translation: bank
-  pos: noun
-  gender: m
-  note: фінансова установа
-- lemma: заповіт
-  ipa: /zɐpɔˈʋʲit/
-  translation: testament
-  pos: noun
-  gender: m
-  note: остання воля
-- lemma: пророцтво
-  ipa: /proˈrɔt͡stʋo/
-  translation: prophecy
-  pos: noun
-  gender: n
-  note: передбачення
-- lemma: чолобитна
-  ipa: /t͡ʃolɔˈbɪtnɐ/
-  translation: humble petition
-  pos: noun
-  gender: f
-  note: звернення (архаїчне)
-- lemma: каземат
-  ipa: /kɐzɛˈmɑt/
-  translation: casemate / dungeon
-  pos: noun
-  gender: m
-  note: тюремна камера
-- lemma: свавілля
-  ipa: /sʋɐˈʋʲilʲːɐ/
-  translation: tyranny / lawlessness
-  pos: noun
-  gender: n
-  note: відсутність законності
-- lemma: незламність
-  ipa: /nɛˈzlɑmnʲisʲtʲ/
-  translation: indomitability
-  pos: noun
-  gender: f
-  note: неможливість бути зламаним
+  definition: "Людина, яка зазнала страждань або загинула за свої переконання."
+- word: свавілля
+  ipa: "svɑˈvʲilʲːɑ"
+  translation: arbitrariness / tyranny
+  definition: "Необмежена влада, відсутність законності, самодурство."

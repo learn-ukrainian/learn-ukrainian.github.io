@@ -15,7 +15,7 @@ In this module, you will learn how to buy a **квиток** (ticket), choose yo
 
 ### Destinations (Напрямки)
 
-First, you need to say where you are going. Use the preposition **до** + Genitive case.
+Спочатку потрібно сказати, куди ви їдете. Використовуйте прийменник **до** + родовий відмінок (Genitive case). (First, you need to say where you are going. Use the preposition **до** + Genitive case).
 
 - **До Києва** (To Kyiv)
 - **До Львова** (To Lviv)
@@ -27,7 +27,7 @@ First, you need to say where you are going. Use the preposition **до** + Genit
 
 ### Types of Tickets (Типи квитків)
 
-The cashier will ask you details about your trip.
+Касир запитає вас про деталі поїздки. (The cashier will ask you for details about your trip).
 
 | Type | IPA | English |
 | :--- | :--- | :--- |
@@ -37,11 +37,11 @@ The cashier will ask you details about your trip.
 | **На сьогодні** | /nɑ sʲɔˈɦɔdnʲi/ | For today |
 | **На завтра** | /nɑ ˈzɑvtrɑ/ | For tomorrow |
 
-> 💡 **Tip:** «Туди й назад» literally means «There and back». It is the standard way to say «Round trip ticket».
+> 💡 **Tip:** «Туди й назад» буквально означає «There and back». Це стандартний спосіб сказати «Round trip ticket». («Туди й назад» literally means «There and back». It is the standard way to say «Round trip ticket»).
 
 ### Selecting a Place (Вибір місця)
 
-On a train, you might have a preference for your seat.
+Ви можете обрати зручне місце в поїзді. (You can choose a comfortable seat on the train).
 
 | Item | IPA | English |
 | :--- | :--- | :--- |
@@ -54,6 +54,8 @@ On a train, you might have a preference for your seat.
 
 ### Station Vocabulary (На вокзалі)
 
+Here are some essential words you will see and hear at the train station (**вокзал**):
+
 - **Вокзал** /vɔkˈzɑl/ (Train station)
 - **Каса** /ˈkɑsɑ/ (Ticket office)
 - **Розклад** /ˈrɔzklɑd/ (Schedule/Timetable)
@@ -63,14 +65,14 @@ On a train, you might have a preference for your seat.
 
 ---
 
-## Практика
+## Практика (Practice)
 
 ### Scenario 1: Buying a Train Ticket (Купівля квитка на поїзд)
 
-You are at the ticket office (**каса**).
+Ви на касі (**каса**). (You are at the ticket office).
 
 **Касир:** Добрий день! Слухаю вас.
-**Ви:** Добрий день! Я хочу купити квиток до Одеси.
+**Ви:** Добрий день! Мені, будь ласка, квиток до Одеси.
 **Касир:** На коли?
 **Ви:** На завтра, на вечір.
 **Касир:** Є поїзд о двадцятій годині. Підходить?
@@ -83,11 +85,11 @@ You are at the ticket office (**каса**).
 
 ### Scenario 2: Bus Ticket (Квиток на автобус)
 
-Buying a ticket for a short trip at the bus station (**автовокзал**).
+Купівля квитка на коротку поїздку на автовокзалі (**автовокзал**). (Buying a ticket for a short trip at the bus station).
 
 **Ви:** Скажіть, будь ласка. Коли наступний автобус до Житомира?
 **Касир:** Через тридцять хвилин. О десятій п'ятнадцять.
-**Ви:** Дайте два квитки, будь ласка.
+**Ви:** Мені два квитки, будь ласка.
 **Касир:** Туди й назад?
 **Ви:** Ні, тільки туди.
 **Касир:** З вас двісті гривень. Платформа номер чотири.
@@ -95,7 +97,7 @@ Buying a ticket for a short trip at the bus station (**автовокзал**).
 
 ### Scenario 3: Checking the Schedule (Перевірка розкладу)
 
-You are looking at the electronic board.
+Ви дивитеся на табло. (You are looking at the board).
 
 **Турист:** Вибачте, я не розумію. Де поїзд до Львова?
 **Ви:** Який номер поїзда?
@@ -107,16 +109,16 @@ You are looking at the electronic board.
 
 ## Narrative: A Trip to the Mountains (Поїздка в гори)
 
-Read about Petro's trip preparation.
+Прочитайте про те, як Петро готується до поїздки. (Read about Petro's trip preparation).
 
 Петро любить подорожувати. Він хоче поїхати в Карпати (**Carpathian Mountains**).
 Він йде на вокзал. Там велика черга до каси.
 Петро чекає. Тепер його черга.
-«**Добрий день!**» — каже Петро. «**Я хочу купити квиток до Яремче.**»
+«**Добрий день!**» — каже Петро. «**Мені, будь ласка, квиток до Яремче.**»
 «**На коли?**» — питає касир.
 «**На п'ятницю, ранок.**»
 «**Є Інтерсіті. Відправлення о шостій ранку.**»
-«**Чудово. Дайте один квиток.**»
+«**Чудово. Один квиток, будь ласка.**»
 «**Місце біля вікна чи біля проходу?**»
 «**Біля вікна, будь ласка. Я люблю дивитися у вікно.**»
 «**Ваш паспорт?**»
@@ -125,35 +127,39 @@ Read about Petro's trip preparation.
 «**Дякую!**»
 Петро радий. Скоро він буде в горах!
 
-Використовуйте ці вправи. Це гарна практика. (Use these exercises. This is good practice.)
+> [!cultural]
+> **Tea Culture (Чайна культура)**
+> One of the most iconic experiences on a Ukrainian train is drinking tea (**пити чай**). It is traditionally served in special glasses with ornate metal holders called **підсклянники**. You can order tea, coffee, or snacks from the conductor (**провідник**). It’s the perfect companion for watching the Ukrainian landscape slide by your window.
+
+Використовуйте ці вправи для закріплення матеріалу. (Use these exercises to consolidate the material.)
 
 # Summary
 
-You are ready to travel! You learned how to buy tickets for trains and buses.
+Тепер ви можете подорожувати! (Now you can travel!) Ви навчилися купувати квитки на поїзд та автобус.
 
-Key takeaways:
-- Use **До...** (Genitive) for destination: **До Львова**, **До Києва**.
-- Specify the type: **Туди й назад** (Round trip).
-- Choose your seat: **Біля вікна** or **Біля проходу**.
-- Check the **розклад** for **відправлення** (departure) time.
+Основні підсумки (Key takeaways):
+- Використовуйте **До...** (Genitive) для напрямку: **До Львова**, **До Києва**. (Use "До" for destination).
+- Уточніть тип: **Туди й назад** (Round trip). (Specify the type).
+- Оберіть місце: **Біля вікна** або **Біля проходу**. (Choose your seat).
+- Перевіряйте **розклад** для часу **відправлення** (departure). (Check the schedule).
 
-### The Ukrainian Railways App (Додаток Укрзалізниці)
+### Додаток Укрзалізниці (The Ukrainian Railways App)
 
-Most Ukrainians now buy tickets through the official mobile app. It is very convenient!
+Більшість українців зараз купують квитки через офіційний мобільний додаток. Це дуже зручно! (Most Ukrainians now buy tickets through the official mobile app. It is very convenient!)
 
-- **Шукати квитки** (Search for tickets) - Enter your destination and date.
-- **Вибрати поїзд** (Choose a train) - See all available times and prices.
-- **Схема вагона** (Carriage map) - You can see exactly which seats are free and choose yours.
-- **Електронний квиток** (Electronic ticket) - You don't need to print it; just show the QR-code on your phone to the conductor.
+- **Шукати квитки** (Search for tickets) - Введіть пункт призначення та дату. (Enter your destination and date).
+- **Вибрати поїзд** (Choose a train) - Перегляньте всі доступні варіанти та ціни. (See all available times and prices).
+- **Схема вагона** (Carriage map) - Ви можете побачити вільні місця та обрати своє. (You can see free seats and choose yours).
+- **Електронний квиток** (Electronic ticket) - Квиток не потрібно друкувати; просто покажіть QR-код провіднику. (No need to print; just show the QR-code).
 
-> 💡 **Tip:** Train tickets in Ukraine are personalized. You must enter your **прізвище та ім'я** (surname and first name) exactly as they appear in your passport. When boarding, the conductor will check your ID!
+> 💡 **Tip:** Квитки на поїзд в Україні іменні. Ви повинні вказати ваше **прізвище та ім'я** саме так, як вони написані в паспорті. Під час посадки провідник перевірить ваші документи! (Train tickets are personalized. Enter your name exactly as in your passport. The conductor will check your ID!)
 
-Don't forget your **паспорт**! You often need it to buy train tickets in Ukraine.
+Не забудьте свій **паспорт**! Він потрібен для купівлі квитків та поїздки в Україні. (Don't forget your passport! You need it for tickets and travel).
 
-## Need More Practice?
+## Need More Practice? (Потрібно більше практики?)
 
-- **Online Booking:** Visit the Ukrzaliznytsia website (booking.uz.gov.ua) and try to "buy" a ticket (without paying) to see the interface.
+- **Бронювання онлайн:** Відвідайте сайт Укрзалізниці (booking.uz.gov.ua). Спробуйте «купити» квиток. Дивіться сайт. (Visit the website. Try to "buy" a ticket. Look at the site).
 
-- **Plan a Trip:** Imagine you are going from Kyiv to Lviv. Write down the dialogue you would have at the station.
+- **Планування подорожі:** Ви їдете з Києва до Львова. Напишіть діалог на вокзалі. (You are going from Kyiv to Lviv. Write a dialogue at the station).
 
-- **Timetables:** Look up a train schedule online and read the departure and arrival times in Ukrainian.
+- **Розклад поїздів:** Знайдіть розклад поїздів онлайн. Прочитайте час відправлення та прибуття українською мовою. (Find a schedule online. Read the times in Ukrainian).

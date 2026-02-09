@@ -733,8 +733,13 @@ Format your response clearly.
         print(f"   Bridge will capture Gemini's response and route it when done.")
 
         try:
+            # Use .venv/bin/python as per AGENTS.md
+            python_exe = Path(__file__).parent.parent / ".venv/bin/python"
+            if not python_exe.exists():
+                python_exe = sys.executable
+
             bridge_cmd = [
-                sys.executable, str(Path(__file__)),
+                str(python_exe), str(Path(__file__)),
                 "process", str(message_id),
                 "--model", model,
                 "--no-timeout"
@@ -1037,8 +1042,13 @@ Do NOT use MCP tools to send your response - just output your response directly.
         print(f"   Bridge will capture Claude's response and route it when done.")
 
         try:
+            # Use .venv/bin/python as per AGENTS.md
+            python_exe = Path(__file__).parent.parent / ".venv/bin/python"
+            if not python_exe.exists():
+                python_exe = sys.executable
+
             bridge_cmd = [
-                sys.executable, str(Path(__file__)),
+                str(python_exe), str(Path(__file__)),
                 "process-claude", str(message_id),
                 "--no-timeout"
             ]

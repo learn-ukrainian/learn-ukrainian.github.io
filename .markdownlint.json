@@ -19,11 +19,11 @@
   "MD037": false,
   "MD040": false,
   "MD046": false,
-  "MD012": false,
-  "MD022": false,
-  "MD047": false,
-  "MD049": false,
-  "MD050": false,
-  "MD058": false,
-  "MD060": false
+  "MD047": true,
+  "MD049": {
+    "style": "asterisk"
+  },
+  "MD050": {
+    "style": "asterisk"
+  }
 }

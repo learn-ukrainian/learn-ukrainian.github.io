@@ -20,7 +20,12 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 >
 > ```bash
 > # Quick way (sends + invokes):
-> .venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your question here" --task-id module-help
+> # Use --quiet and redirect to temp file to save Claude's context!
+> .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+>   "Your question here" \
+>   --task-id module-help \
+>   --quiet \
+>   > /tmp/gemini-module-help.txt 2>&1
 >
 > # Check for response:
 > mcp__message-broker__receive_messages(for_llm="claude", task_id="module-help")
@@ -718,10 +723,13 @@ fi
 
 ```bash
 # Send batch research requests to Gemini
+# Use --quiet and redirect to temp file to save Claude's context!
 for slug in needs_research; do
   .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
     "Research {topic} for ${level} module. Save to audit/${slug}-research.md" \
-    --task-id batch-research
+    --task-id batch-research \
+    --quiet \
+    > /tmp/gemini-research-${slug}.txt 2>&1
 done
 
 # Continue with ready_to_build modules while Gemini researches

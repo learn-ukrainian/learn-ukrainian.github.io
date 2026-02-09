@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M39 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-09 00:22:08
+**Generated:** 2026-02-09 00:56:01
 
 ## Configuration
 **Type:** A1
@@ -37,19 +37,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 770/750 (raw: 988)
+- **Words:** ✅ 986/750 (raw: 1208)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 17/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.3% (target 35-55% (M39))
+- **Immersion:** 🇺🇦 54.4% (target 35-55% (M39))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -58,8 +58,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 130 | Included in Core |
-| **Presentation** | ✅ | 117 | Included in Core |
-| **Практика** | ⚪️ | 170 | Skipped |
-| **Narrative: A Trip to the Mountains (Поїздка в гори)** | ✅ | 114 | Included in Core |
-| **Summary** | ✅ | 180 | Included in Core |
-| **Need More Practice?** | ⚪️ | 59 | Skipped |
+| **Presentation** | ✅ | 173 | Included in Core |
+| **Практика (Practice)** | ⚪️ | 183 | Skipped |
+| **Narrative: A Trip to the Mountains (Поїздка в гори)** | ✅ | 183 | Included in Core |
+| **Summary** | ✅ | 244 | Included in Core |
+| **Need More Practice? (Потрібно більше практики?)** | ⚪️ | 73 | Skipped |
