@@ -446,9 +446,9 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
     # Fix + Re-review loop
     current_review = review_path
     consecutive_no_changes = 0
-    fix_durations = []
-    audit_durations = []
-    review_durations = []
+    result["fix_durations"] = []
+    result["re_audit_durations"] = []
+    result["re_review_durations"] = []
 
     for attempt in range(1, MAX_RETRIES + 1):
         print(f"    → Fix attempt {attempt}/{MAX_RETRIES}...")
@@ -459,7 +459,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         try:
             fix_start = time.time()
             fix_output = call_gemini(fix_prompt, fix_task_id, model)
-            fix_durations.append(time.time() - fix_start)
+            result["fix_durations"].append(time.time() - fix_start)
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = f"fix_attempt_{attempt}"
@@ -516,7 +516,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         # Step 3: Run audit
         audit_start = time.time()
         audit_pass = run_audit(files["content"])
-        audit_durations.append(time.time() - audit_start)
+        result["re_audit_durations"].append(time.time() - audit_start)
         if not audit_pass:
             print(f"    → Audit FAILED after fix. Retrying...")
             continue
@@ -527,7 +527,7 @@ def process_module(level: str, num: int, model: str, dry_run: bool = False,
         try:
             review_start = time.time()
             review_output = call_gemini_review(review_prompt, review_task_id, model)
-            review_durations.append(time.time() - review_start)
+            result["re_review_durations"].append(time.time() - review_start)
         except subprocess.TimeoutExpired:
             result["status"] = "TIMEOUT"
             result["phase"] = f"review_attempt_{attempt}"
@@ -628,9 +628,9 @@ def main():
             "score": result.get("score", result.get("score_after")),
             "audit_duration_s": result.get("audit_duration_s"),
             "initial_review_duration_s": result.get("initial_review_duration_s"),
-            "fix_durations": fix_durations,
-            "re_audit_durations": audit_durations,
-            "re_review_durations": review_durations
+            "fix_durations": result.get("fix_durations", []),
+            "re_audit_durations": result.get("re_audit_durations", []),
+            "re_review_durations": result.get("re_review_durations", [])
         }
         metrics.log_batch_operation(
             op_type="fix-review",

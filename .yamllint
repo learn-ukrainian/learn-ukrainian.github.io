@@ -13,7 +13,6 @@ rules:
   new-line-at-end-of-file: disable
   empty-lines: disable
   truthy: disable
-  key-duplicates: disable
 
 ignore:
   - .venv/
