@@ -15,10 +15,10 @@ rules:
   empty-lines: disable
   key-duplicates: enable
 
-ignore: |
-  .venv/
-  node_modules/
-  docusaurus/node_modules/
-  docusaurus/pnpm-lock.yaml
-  docs/issues/artifacts/
-  backup/
+ignore:
+  - .venv/
+  - node_modules/
+  - docusaurus/node_modules/
+  - docusaurus/pnpm-lock.yaml
+  - docs/issues/artifacts/
+  - backup/

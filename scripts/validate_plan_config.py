@@ -68,34 +68,58 @@ def validate_plan(plan_path: Path, level: str) -> list:
     if not plan:
         return ["Empty plan file"]
 
+    # Experimental levels have relaxed rules
+    is_experimental = level.lower() in ['oes', 'ruth']
+
     # Get targets
     plan_target = plan.get('word_target', 0)
-    sequence = plan.get('sequence', 1)
+    # Support aliased module/sequence field
+    sequence = plan.get('sequence', plan.get('module_number', 1))
     focus = plan.get('focus')
     config_target = get_config_target(level, sequence, focus)
 
     # Check word_target matches config
-    if plan_target == 0:
-        errors.append(f"Missing word_target (config expects {config_target})")
-    elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
-        # Only flag if plan is UNDER config target (over is allowed - more content is fine)
-        errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
+    if not is_experimental:
+        if plan_target == 0:
+            errors.append(f"Missing word_target (config expects {config_target})")
+        elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
+            # Only flag if plan is UNDER config target (over is allowed - more content is fine)
+            errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
 
     # Check content_outline sums to word_target
     outline = plan.get('content_outline', [])
     if not outline:
         errors.append("Missing content_outline")
-    else:
+    elif not is_experimental:
         outline_sum = sum(s.get('words', 0) for s in outline)
         if outline_sum == 0:
             errors.append("content_outline has no word budgets")
         elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
             errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
 
-    # Check required fields
+    # Check required fields with aliases and experimental relaxations
     required_fields = ['module', 'level', 'title', 'objectives']
+    aliases = {
+        'module': ['module_number', 'id'],
+        'title': ['title_uk', 'title_en'],
+    }
+
     for field in required_fields:
-        if not plan.get(field):
+        val = plan.get(field)
+        if not val:
+            for alias in aliases.get(field, []):
+                val = plan.get(alias)
+                if val: break
+
+        # 'level' can be inferred for experimental modules if missing
+        if not val and field == 'level' and is_experimental:
+            continue
+
+        # 'objectives' are optional for experimental modules
+        if not val and field == 'objectives' and is_experimental:
+            continue
+
+        if not val:
             errors.append(f"Missing required field: {field}")
 
     return errors
