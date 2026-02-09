@@ -1,0 +1,167 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Linting & Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema yamllint
+          npm install -g markdownlint-cli2
+
+      - name: Lint YAML Files
+        run: yamllint .
+
+      - name: Validate Activity YAMLs
+        run: python scripts/validate_yaml.py --all
+
+      - name: Validate Plan YAMLs
+        run: python scripts/validate_plans.py
+
+      - name: Validate Plan vs Config
+        run: python scripts/validate_plan_config.py
+
+      - name: Validate JSON Schemas
+        run: |
+          for schema in schemas/*.schema.json; do
+            echo "Validating $schema..."
+            node -e "JSON.parse(require('fs').readFileSync('$schema'))"
+          done
+
+      - name: Lint MDX Files
+        run: markdownlint-cli2 "docusaurus/docs/**/*.mdx"
+
+  test:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema pytest pytest-asyncio pydantic requests aiohttp typing-extensions
+
+      - name: Run Pytest Suite
+        run: python -m pytest tests/ -v
+
+  audit:
+    name: Curriculum Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history needed for git diff
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema pydantic requests aiohttp typing-extensions
+
+      - name: Setup Mock Gemini
+        run: |
+          mkdir -p bin
+          cp scripts/mock_gemini.sh bin/gemini
+          chmod +x bin/gemini
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+
+      - name: Run Audit on Changed Modules
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: python scripts/audit_changed.py
+
+  build:
+    name: Docusaurus Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('docusaurus/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: cd docusaurus && pnpm install --frozen-lockfile
+
+      - name: Build Docusaurus
+        run: cd docusaurus && pnpm run build
+
+      - name: Upload Build Artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docusaurus/build'
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main'
+    needs: [lint, test, audit, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

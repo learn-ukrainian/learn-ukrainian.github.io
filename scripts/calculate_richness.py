@@ -525,10 +525,13 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         slug = path.stem
         clean_slug = re.sub(r'^\d+-', '', slug)
         # Try plan file paths
-        plan_paths = [
-            path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
-            path.parents[1] / 'plans' / level_dir / f'{slug}.yaml',
-        ]
+        plan_paths = []
+        if len(path.parents) > 1:
+            plan_paths.extend([
+                path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
+                path.parents[1] / 'plans' / level_dir / f'{slug}.yaml',
+            ])
+
         for plan_path in plan_paths:
             if plan_path.exists():
                 try:
