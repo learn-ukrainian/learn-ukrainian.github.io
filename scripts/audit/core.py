@@ -75,6 +75,7 @@ from .checks.yaml_lint import lint_yaml_file
 from .checks.state_standard_compliance import (
     check_state_standard_compliance,
 )
+from .checks.review_validation import check_review_validity
 # Vocabulary integrity checking removed - not needed (naturalness catches bad vocabulary)
 from .checks.outline_compliance import (
     check_outline_compliance,
@@ -834,6 +835,22 @@ def audit_module(file_path: str) -> bool:
             for reason in critical_failure_reasons:
                 print(f"  • {reason}")
             sys.exit(1)
+
+    # Check for Fake/Missing Reviews (Seminar V4 Mandate)
+    # This forces the agent to perform the honest, critical deep review
+    module_slug = Path(file_path).stem
+    review_violations = check_review_validity(file_path, level_code, module_slug)
+    if review_violations:
+        criticals = [v for v in review_violations if v['severity'] == 'critical']
+        warnings = [v for v in review_violations if v['severity'] == 'warning']
+        print(f"  🕵️  Review Validation: {len(criticals)} critical, {len(warnings)} warnings")
+        for v in criticals:
+            print(f"     ❌ [{v['type']}] {v['message']}")
+            critical_failure_reasons.append(v['message'])
+        for v in warnings:
+            print(f"     ⚠️  [{v['type']}] {v['message']}")
+        if criticals:
+            has_critical_failure = True
 
     # Get config
     config = get_level_config(level_code, module_focus)
