@@ -367,7 +367,7 @@ def cmd_stop(args):
             import os
             import signal
             os.kill(metadata['pid'], signal.SIGTERM)
-            print(f"终止 Process {metadata['pid']} terminated")
+            print(f"Process {metadata['pid']} terminated")
         except Exception:
             pass
 
