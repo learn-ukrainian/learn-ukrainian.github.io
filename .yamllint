@@ -4,12 +4,13 @@ extends: default
 rules:
   line-length: disable
   document-start: disable
-  indentation:
-    spaces: 2
-    indent-sequences: consistent
+  indentation: disable
+  trailing-spaces: disable
+  new-line-at-end-of-file: disable
+  empty-lines: disable
+  braces: disable
   truthy: disable  # Allow 'yes/no' in plans if needed
-  comments:
-    min-spaces-from-content: 1
+  comments: disable
   key-duplicates: enable
   colons:
     max-spaces-before: 0

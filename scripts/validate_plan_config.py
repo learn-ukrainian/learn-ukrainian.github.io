@@ -136,6 +136,8 @@ def main():
                         help='Level (e.g., c1-hist) or plan path pattern (e.g., c1-hist/shcho-*)')
     parser.add_argument('--quiet', '-q', action='store_true',
                         help='Only show errors, not successes')
+    parser.add_argument('--all', action='store_true',
+                        help='Validate all plans (default behavior if no target specified)')
 
     args = parser.parse_args()
 
