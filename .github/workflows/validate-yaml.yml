@@ -63,7 +63,7 @@ jobs:
         run: python scripts/validate_plans.py
 
       - name: Validate Plan vs Config
-        run: python scripts/validate_plan_config.py
+        run: python scripts/validate_plan_config.py --all --quiet
 
   schema-check:
     name: Schema JSON Syntax

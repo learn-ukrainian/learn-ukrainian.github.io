@@ -49,10 +49,10 @@ from scripts.utils.logging_utils import setup_logging
 logger = logging.getLogger("ai_agent_bridge")
 
 # Token cost estimation (USD per 1M tokens)
-# Values for Gemini 1.5 Pro (approximate)
+# Values for Gemini 1.5 (approximate)
 MODEL_COSTS = {
-    "gemini-3-pro-preview": {"input": 3.50, "output": 10.50},
-    "gemini-3-flash-preview": {"input": 0.075, "output": 0.30},
+    "gemini-1.5-pro": {"input": 3.50, "output": 10.50},
+    "gemini-1.5-flash": {"input": 0.075, "output": 0.30},
     "default": {"input": 0.50, "output": 1.50}
 }
 
@@ -195,12 +195,12 @@ def _remove_pid_file(agent: str, task_id: str):
 def bridge_status():
     """Show status of all running bridge processes."""
     if not PID_DIR.exists():
-        logger.info("No PID directory found. No processes tracked yet.")
+        print("No PID directory found. No processes tracked yet.")
         return
 
     pid_files = list(PID_DIR.glob("*.json"))
     if not pid_files:
-        logger.info("No bridge processes tracked.")
+        print("No bridge processes tracked.")
         return
 
     alive = []
@@ -221,28 +221,28 @@ def bridge_status():
             pf.unlink()
 
     if alive:
-        logger.info(f"🟢 {len(alive)} running bridge process(es):\n")
+        print(f"🟢 {len(alive)} running bridge process(es):\n")
         for name, data in alive:
-            logger.info(f"  {name}")
-            logger.info(f"    PID: {data.get('pid')}")
-            logger.info(f"    Agent: {data.get('agent')}")
-            logger.info(f"    Task: {data.get('task_id')}")
-            logger.info(f"    Model: {data.get('model', 'N/A')}")
-            logger.info(f"    Started: {data.get('started')}")
+            print(f"  {name}")
+            print(f"    PID: {data.get('pid')}")
+            print(f"    Agent: {data.get('agent')}")
+            print(f"    Task: {data.get('task_id')}")
+            print(f"    Model: {data.get('model', 'N/A')}")
+            print(f"    Started: {data.get('started')}")
             # Show log file tail
             log_dir = Path(__file__).parent.parent / ".mcp/servers/message-broker/logs"
             log_file = log_dir / f"{data.get('agent')}-{data.get('task_id')}.log"
             if log_file.exists():
                 lines = log_file.read_text().strip().split('\n')
                 last_line = lines[-1] if lines else "(empty)"
-                logger.info(f"    Log: {log_file}")
-                logger.info(f"    Last output: {last_line[:100]}")
-            logger.info("")
+                print(f"    Log: {log_file}")
+                print(f"    Last output: {last_line[:100]}")
+            print("")
     else:
-        logger.info("No running bridge processes.")
+        print("No running bridge processes.")
 
     if stale:
-        logger.info(f"🔴 Cleaned up {len(stale)} stale PID file(s): {', '.join(n for n, _ in stale)}")
+        print(f"🔴 Cleaned up {len(stale)} stale PID file(s): {', '.join(n for n, _ in stale)}")
 
 def init_db():
     """Initialize database if needed."""
@@ -368,17 +368,17 @@ def check_inbox(for_llm: str = "gemini"):
     conn.close()
 
     if not rows:
-        logger.info(f"📭 No unread messages for {for_llm}")
+        print(f"📭 No unread messages for {for_llm}")
         return
 
-    logger.info(f"📬 {len(rows)} unread message(s) for {for_llm}:\n")
+    print(f"📬 {len(rows)} unread message(s) for {for_llm}:\n")
     for row in rows:
         msg_id, from_llm, msg_type, preview, timestamp = row
         preview = preview.replace('\n', ' ')
         if len(preview) >= 100:
             preview += "..."
-        logger.info(f"  [{msg_id}] From: {from_llm} | Type: {msg_type} | {timestamp}")
-        logger.info(f"      {preview}\n")
+        print(f"  [{msg_id}] From: {from_llm} | Type: {msg_type} | {timestamp}")
+        print(f"      {preview}\n")
 
 def read_message(message_id: int):
     """Read a specific message."""
@@ -395,7 +395,7 @@ def read_message(message_id: int):
     conn.close()
 
     if not row:
-        logger.error(f"❌ Message {message_id} not found")
+        print(f"❌ Message {message_id} not found")
         return None
 
     msg = {
@@ -409,18 +409,18 @@ def read_message(message_id: int):
         "timestamp": row[7]
     }
 
-    logger.info(f"📨 Message #{msg['id']}")
-    logger.info(f"   From: {msg['from']} → To: {msg['to']}")
-    logger.info(f"   Type: {msg['type']}")
-    logger.info(f"   Task: {msg['task_id'] or 'N/A'}")
-    logger.info(f"   Time: {msg['timestamp']}")
-    logger.info(f"\n{'='*60}\n")
-    logger.info(msg['content'])
+    print(f"📨 Message #{msg['id']}")
+    print(f"   From: {msg['from']} → To: {msg['to']}")
+    print(f"   Type: {msg['type']}")
+    print(f"   Task: {msg['task_id'] or 'N/A'}")
+    print(f"   Time: {msg['timestamp']}")
+    print(f"\n{'='*60}\n")
+    print(msg['content'])
 
     if msg['data']:
-        logger.info(f"\n{'='*60}")
-        logger.info("📎 Attached Data:")
-        logger.info(msg['data'])
+        print(f"\n{'='*60}")
+        print("📎 Attached Data:")
+        print(msg['data'])
 
     return msg
 
@@ -499,11 +499,11 @@ def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", d
     return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-1.5-flash", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
-        model: Gemini model to use (default: gemini-3-flash-preview)
+        model: Gemini model to use (default: gemini-1.5-flash)
         from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
         async_mode: If True, just queue message without invoking Gemini CLI.
                    Auto-enabled for 'handoff' type messages (complex tasks).
@@ -633,20 +633,20 @@ def get_conversation(task_id: str):
     conn.close()
 
     if not rows:
-        logger.error(f"❌ No messages found for task: {task_id}")
+        print(f"❌ No messages found for task: {task_id}")
         return
 
-    logger.info(f"📜 Conversation: {task_id} ({len(rows)} messages)\n")
-    logger.info("="*70)
+    print(f"📜 Conversation: {task_id} ({len(rows)} messages)\n")
+    print("="*70)
 
     for row in rows:
         msg_id, from_llm, to_llm, msg_type, content, timestamp = row
-        logger.info(f"\n[{msg_id}] {from_llm.upper()} → {to_llm.upper()} | {msg_type} | {timestamp}")
-        logger.info("-"*70)
-        logger.info(content[:500])
+        print(f"\n[{msg_id}] {from_llm.upper()} → {to_llm.upper()} | {msg_type} | {timestamp}")
+        print("-"*70)
+        print(content[:500])
         if len(content) > 500:
-            logger.info(f"\n... [{len(content) - 500} more characters]")
-        logger.info("")
+            print(f"\n... [{len(content) - 500} more characters]")
+        print("")
 
 def _estimate_tokens(text: str) -> int:
     """Rough estimation of tokens based on character count."""
@@ -667,7 +667,7 @@ def _log_usage(model: str, input_text: str, output_text: str, task_id: str = Non
     logger.info(f"   Tokens: {in_tokens} in, {out_tokens} out (total: {in_tokens + out_tokens})")
     logger.info(f"   Est. Cost: ${cost:.4f}")
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
+def process_and_respond(message_id: int, model: str = "gemini-1.5-flash", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -1254,9 +1254,9 @@ Do NOT use MCP tools to send your response - just output your response directly.
 
 def interactive_mode():
     """Interactive mode for testing."""
-    logger.info("🔄 AI Agent Bridge Interactive Mode")
-    logger.info("Commands: inbox [agent], read <id>, send <text> --to <agent>, ack <id>, conv <task_id>, process <id>, quit")
-    logger.info("")
+    print("🔄 AI Agent Bridge Interactive Mode")
+    print("Commands: inbox [agent], read <id>, send <text> --to <agent>, ack <id>, conv <task_id>, process <id>, quit")
+    print("")
 
     while True:
         try:
@@ -1288,16 +1288,16 @@ def interactive_mode():
             elif action == "process" and len(parts) > 1:
                 process_and_respond(int(parts[1]))
             else:
-                logger.info("Unknown command or missing arguments.")
+                print("Unknown command or missing arguments.")
 
         except KeyboardInterrupt:
-            logger.info("\nBye!")
+            print("\nBye!")
             break
         except Exception as e:
-            logger.error(f"Error: {e}")
+            print(f"Error: {e}")
 
 
-def process_all_gemini(model: str = "gemini-3-flash-preview"):
+def process_all_gemini(model: str = "gemini-1.5-flash"):
     """Process ALL unread messages for Gemini in batch."""
     conn = get_db()
     cursor = conn.cursor()
@@ -1420,7 +1420,7 @@ def main():
     # process (for Gemini)
     proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
     proc_parser.add_argument("message_id", type=int, help="Message ID to process")
-    proc_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
+    proc_parser.add_argument("--model", default="gemini-1.5-flash", help="Gemini model")
     proc_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                              help="Run sync without timeout (used internally by fire-and-forget)")
 
@@ -1455,7 +1455,7 @@ def main():
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
-    ask_gemini_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model to use (also used as to_model)")
+    ask_gemini_parser.add_argument("--model", default="gemini-1.5-flash", help="Gemini model to use (also used as to_model)")
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID (e.g., claude-opus-4-5-20251101)")
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
@@ -1467,7 +1467,7 @@ def main():
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
-    proc_all_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
+    proc_all_parser.add_argument("--model", default="gemini-1.5-flash", help="Gemini model")
 
     # process-claude-all (batch process all unread for Claude)
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
