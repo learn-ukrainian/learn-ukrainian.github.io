@@ -2,14 +2,14 @@
   "module": "07-questions-and-negation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T00:24:45.207911Z",
+  "last_audit": "2026-02-08T22:17:51.185005Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T23:54:34.611910Z",
-    "meta": "2026-02-08T23:54:34.667910Z",
-    "activities": "2026-02-08T23:54:34.631910Z",
-    "vocabulary": "2026-02-08T23:54:34.791910Z",
-    "plan": null
+    "md": "2026-02-08T21:25:33.397490Z",
+    "meta": "2026-02-07T22:39:30.868808Z",
+    "activities": "2026-02-08T21:49:51.584407Z",
+    "vocabulary": "2026-02-08T21:50:00.153800Z",
+    "plan": "2026-02-07T10:03:51.072499Z"
   },
   "gates": {
     "meta": {

@@ -584,7 +584,6 @@ def check_structure(content: str) -> dict[str, bool]:
 
 
 
-@lru_cache(maxsize=128)
 def load_yaml_meta(md_file_path: str) -> dict | None:
     """Load metadata from YAML sidecar if exists."""
     md_path = Path(md_file_path)
@@ -599,7 +598,6 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
         print(f"     {e}")
         return None
 
-@lru_cache(maxsize=128)
 def load_yaml_plan(md_file_path: str) -> dict | None:
     """Load plan data from plans directory if exists (Split Architecture)."""
     md_path = Path(md_file_path)
@@ -643,7 +641,6 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
         print(f"     {e}")
         return None
 
-@lru_cache(maxsize=128)
 def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
     """Load vocabulary from YAML sidecar if exists."""
     md_path = Path(md_file_path)
@@ -730,15 +727,6 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
 
     except Exception:
         return None
-
-def make_hashable(obj):
-    """Recursively convert unhashable objects (dicts, lists) to hashable ones (tuples)."""
-    if isinstance(obj, dict):
-        return tuple(sorted((k, make_hashable(v)) for k, v in obj.items()))
-    elif isinstance(obj, list):
-        return tuple(make_hashable(v) for v in obj)
-    return obj
-
 
 def audit_module(file_path: str) -> bool:
     """
@@ -885,9 +873,7 @@ def audit_module(file_path: str) -> bool:
             
             # Resolve which template this module should follow
             meta_for_template = meta_data if meta_data else {}
-            # Convert meta to hashable tuple for caching
-            meta_tuple = make_hashable(meta_for_template)
-            template_path = template_parser.resolve_template(module_id_for_mapping, meta_tuple)
+            template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
             template_structure = template_parser.parse_template(template_path)
 
             if template_structure is None:
@@ -2089,7 +2075,8 @@ def audit_module(file_path: str) -> bool:
             results, 
             has_critical_failure, 
             critical_failure_reasons,
-            plan_version=plan_ver
+            plan_version=plan_ver,
+            track_code=track_code
         )
         print(f"Status: {cache_path}")
     except Exception as e:

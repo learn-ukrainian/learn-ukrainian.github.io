@@ -33,19 +33,24 @@ class TemplateStructure:
     description: str = ""
 
 
-@lru_cache(maxsize=256)
-def resolve_template(module_id: str, meta_tuple: tuple) -> str:
+@lru_cache(maxsize=1)
+def _load_template_mappings(mapping_file_path: str) -> Dict:
+    """Cache the template mappings file content."""
+    with open(mapping_file_path, 'r', encoding='utf-8') as f:
+        return yaml.safe_load(f)
+
+
+def resolve_template(module_id: str, meta: Dict) -> str:
     """
     Resolve which template file to use for a given module.
     
     Args:
         module_id: The module ID (e.g., 'a1-01', 'b2-110')
-        meta_tuple: The module's metadata as a sorted tuple of items (for caching)
+        meta: The module's metadata dictionary
         
     Returns:
         Path to the template file relative to project root
     """
-    meta = dict(meta_tuple)
     # Find project root
     current_file = Path(__file__).resolve()
     # scripts/audit/template_parser.py -> scripts/audit -> scripts -> root
@@ -53,16 +58,6 @@ def resolve_template(module_id: str, meta_tuple: tuple) -> str:
     
     mapping_file = project_root / "docs" / "l2-uk-en" / "template_mappings.yaml"
     
-    if not mapping_file.exists():
-        # Fallback to hardcoded logic if mapping file is missing
-        level = module_id.split('-')[0].lower()
-        return f"docs/l2-uk-en/templates/{level}-module-template.md"
-        
-    with open(mapping_file, 'r', encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-
-    mappings = config.get('mappings', [])
-
     # Extract level from module_id - handle track levels like b2-hist, c1-bio
     # Pattern: level-slug or track-level-slug
     parts = module_id.lower().split('-')
@@ -76,6 +71,13 @@ def resolve_template(module_id: str, meta_tuple: tuple) -> str:
         module_level = 'lit'
     else:
         module_level = parts[0]
+
+    if not mapping_file.exists():
+        # Fallback to hardcoded logic if mapping file is missing
+        return f"docs/l2-uk-en/templates/{module_level}-module-template.md"
+
+    config = _load_template_mappings(str(mapping_file))
+    mappings = config.get('mappings', [])
     
     for rule in mappings:
         # Check if level matches (if specified in rule)

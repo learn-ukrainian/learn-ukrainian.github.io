@@ -23,7 +23,8 @@ def save_status_cache(
     results: dict,
     has_critical_failure: bool,
     critical_failure_reasons: list[str],
-    plan_version: str = "2.0"
+    plan_version: str = "2.0",
+    track_code: Optional[str] = None
 ) -> str:
     """
     Save status cache to {level}/status/{slug}.json.
@@ -49,11 +50,15 @@ def save_status_cache(
     # Try to find plan path
     # Check if level_code is a track (b2-hist) or simple (b1)
     # curriculum/l2-uk-en/plans/{level}/{slug}.yaml
-    plan_path = base_path.parent / 'plans' / level_code / f"{module_slug}.yaml"
+    # Use lowercase track_code or level_code for directory name
+    lookup_code = track_code if track_code else level_code
+    plan_path = base_path.parent / 'plans' / lookup_code.lower() / f"{module_slug}.yaml"
     if not plan_path.exists():
-        # Try numeric prefix check if slug doesn't have it but filename does
-        # or vice versa. But for now, simple check.
-        pass
+        # Try without numeric prefix in slug (some plans don't have it)
+        clean_slug = re.sub(r'^\d+-', '', module_slug)
+        alt_plan_path = base_path.parent / 'plans' / lookup_code.lower() / f"{clean_slug}.yaml"
+        if alt_plan_path.exists():
+            plan_path = alt_plan_path
 
     source_mtimes = {}
     
