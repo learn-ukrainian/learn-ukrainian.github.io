@@ -60,7 +60,7 @@ Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and sta
 
 ### Local Development
 
-The project requires Python 3.10+ and Node.js.
+The project requires **Python 3.12.8** and Node.js. We use `pyenv` to manage Python versions.
 
 ```bash
 # Clone and setup
@@ -68,10 +68,10 @@ git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 npm install
 
-# Setup Python environment
-python3 -m venv .venv
+# Setup Python environment (requires Python 3.12.8)
+~/.pyenv/versions/3.12.8/bin/python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install pyyaml jsonschema pytest pytest-asyncio fastapi uvicorn pydantic yamllint
 
 # Start the web platform
 cd docusaurus && pnpm start

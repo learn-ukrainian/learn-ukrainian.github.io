@@ -10,17 +10,19 @@ This guide helps you understand the tools, workflows, and best practices for cur
 
 ### 1. Environment Setup
 
-The project requires Python 3.10+ and Node.js.
+The project requires **Python 3.12.8** and Node.js. We use `pyenv` to manage Python versions.
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/learn-ukrainian
-cd learn-ukrainian
+git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
+cd learn-ukrainian.github.io
 
-# Setup Python virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+# Setup Python virtual environment using the required version
+~/.pyenv/versions/3.12.8/bin/python -m venv .venv
+source .venv/bin/activate
+
+# Install Python dependencies (from pyproject.toml / manual list)
+pip install pyyaml jsonschema pytest pytest-asyncio fastapi uvicorn pydantic yamllint
 
 # Setup Node.js dependencies
 npm install
@@ -330,10 +332,10 @@ We use `pytest` for Python logic and `playwright` for frontend verification.
 
 ```bash
 # Run all Python tests
-.venv/bin/python -m pytest tests/ -v
+python3 -m pytest tests/ -v
 
 # Run a specific test file
-.venv/bin/python -m pytest tests/test_audit.py -v
+python3 -m pytest tests/test_audit.py -v
 
 # Run frontend validation (requires Docusaurus running)
 npm run validate:html l2-uk-en a1 5
@@ -403,63 +405,6 @@ npm run validate:html l2-uk-en a1 5
 3. Activity gaps (missing types)
 4. Checkpoint confusion (treating like regular modules)
 
-### Resource Strategy
-
-**During content generation (A1-C1)**:
-- Use **quick review** (fast, catches obvious issues)
-- Use `audit_module.sh` (validates structure)
-- Save deep review for later
-
-**Before publication**:
-- Run **deep review** (comprehensive validation)
-- Batch deep reviews by level when complete
-- Quality is non-negotiable (this is for a nation's education)
-
----
-
-## 📚 Key Documentation
-
-### Essential Reading (Start Here)
-
-| Doc | Purpose |
-|-----|---------|
-| **CLAUDE.md** | AI agent instructions, critical rules, prompting patterns |
-| **CURRENT-STATUS.md** | Current project state, recent work, next priorities |
-| **SCRIPTS.md** | All scripts and skills reference |
-| **ARCHITECTURE-PLANS.md** | Three-layer architecture explanation |
-| **CLAUDE-GEMINI-COOPERATION.md** | Multi-LLM collaboration system ⭐ NEW |
-
-### Workflow Guides
-
-| Doc | Purpose |
-|-----|---------|
-| **CORE-A-WORKFLOW.md** | Mixed-language rebuild workflow (A1/A2/B1.0 — 119 modules) |
-| **CORE-B-WORKFLOW.md** | Full-immersion rebuild workflow (B1.1+/B2/C1/C2/PRO — 477 modules) |
-| **RESEARCH-FIRST-WORKFLOW.md** | Deep research workflow (seminar tracks — B2-HIST, C1-BIO, LIT) |
-| **MODULE-RICHNESS-GUIDELINES-v2.md** | Activity counts, complexity requirements |
-| **PLANNING-GUIDE.md** | How to create module plans |
-| **STATUS-SYSTEM.md** | Status caching system |
-| **SUBSECTION-FLEXIBILITY-GUIDE.md** | When to deviate from plan structure |
-
-### Quick References (By Level)
-
-| Level | Quick Ref |
-|-------|-----------|
-| B1 | `claude_extensions/quick-ref/B1.md` |
-| B2 | `claude_extensions/quick-ref/B2.md` |
-| C1 | `claude_extensions/quick-ref/C1.md` |
-
-### Skills Documentation
-
-| Skill | File |
-|-------|------|
-| Interview | `claude_extensions/commands/interview.md` |
-| Explain Decision | `claude_extensions/commands/explain-decision.md` |
-| Quick Review | `claude_extensions/commands/review-content-quick.md` |
-| Core A Review (A1/A2/B1.0) | `claude_extensions/commands/review-content-core-a.md` |
-| Deep Review (B1.1+/B2+) | `claude_extensions/commands/review-content-v4.md` |
-| Deep Review Optimization | `claude_extensions/commands/review-content-deep-optimized.md` |
-
 ---
 
 ## 🔧 Terminal Setup
@@ -475,20 +420,6 @@ npm run validate:html l2-uk-en a1 5
 - Auto-naming - Tabs name themselves based on commands
 
 **Config** (optional): `~/.config/ghostty/config`
-
-**Resources**:
-- [Ghostty Docs](https://ghostty.org/docs)
-- [Feature Guide](https://itsfoss.com/ghostty-terminal-features/)
-
-### Modern CLI Tools
-
-**Installed and preferred**:
-- `rg` (grep) - Fast code search
-- `fd` (find) - Fast file finding
-- `bat` (cat) - Syntax highlighting
-- `sd` (sed) - Modern text replacement
-- `yq` (YAML) - YAML manipulation
-- `jq` (JSON) - JSON manipulation
 
 ---
 
@@ -534,152 +465,8 @@ Fix: Rewrite problematic sections
 # If wrong, recreate venv
 rm -rf .venv
 ~/.pyenv/versions/3.12.8/bin/python -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install .
 ```
-
-**SQLite extension error**:
-```bash
-# Python must be compiled with --enable-loadable-sqlite-extensions
-# Already handled via pyenv installation (see .python-version)
-```
-
-### Skill Not Found
-
-**Deploy skills**:
-```bash
-npm run claude:deploy
-```
-
-**Check deployment**:
-```bash
-ls -la .claude/commands/interview.md
-ls -la .agent/workflows/interview.md
-```
-
----
-
-## 🎓 Learning Path
-
-**For new developers** (you):
-
-1. **Understand architecture** (30 min)
-   - Read `ARCHITECTURE-PLANS.md`
-   - Understand Plans → Build → Status flow
-
-2. **Learn quality standards** (20 min)
-   - Read `MODULE-RICHNESS-GUIDELINES-v2.md`
-   - Check `claude_extensions/quick-ref/B1.md` (or your target level)
-
-3. **Try creating a module** (1-2 hours)
-   - Use `/module b1 [pick a number]`
-   - Watch the 9-phase workflow
-   - Review audit output
-
-4. **Fix a failing module** (30 min)
-   - Pick one from `docs/B1-STATUS.md`
-   - Use Bug Fix Protocol
-   - Iterate until audit passes
-
-5. **Use learning tools** (ongoing)
-   - `/explain-decision` when confused about design
-   - `/interview` before complex features
-   - Prompting patterns for better Claude output
-
-**For understanding pedagogy**:
-
-```bash
-/explain-decision why-aspect-at-b1-not-a2
-/explain-decision checkpoint-placement
-/explain-decision vocabulary-selection-criteria
-```
-
----
-
-## 📊 Current Project Status
-
-**As of February 2026**:
-
-| Level | Modules | Passing | Status |
-|-------|---------|---------|--------|
-| A1 | 44 | 44 | ✅ Complete |
-| A2 | 70 | 70 | ✅ Complete |
-| B1 | 92 | 23 | 🚧 25% (fixing) |
-| B2 | 94 | TBD | 🚧 In progress |
-| B2-HIST | 140 | TBD | 🚧 Content phase |
-| C1 | 106 | TBD | 🚧 In progress |
-
-**Current priority**: Fix B1 failing modules (23/92 → 80%+)
-
-**See**: `docs/CURRENT-STATUS.md` for detailed status
-
----
-
-## 🚀 Next Steps
-
-**Immediate**:
-1. Fix B1 failing modules using new workflow tools
-2. Complete B2-HIST content generation
-3. Batch deep review before publication
-
-**Future**:
-4. Improve Claude-Gemini cooperation (Task #18)
-5. Complete C1, C2, LIT tracks
-
----
-
-## 💡 Tips & Tricks
-
-### Time Savers
-
-1. **Use parallel reads** in Claude prompts:
-   ```
-   "Read these files in parallel:
-   - plans/b1/aspect-future.yaml
-   - meta/aspect-future.yaml
-   - quick-ref/B1.md"
-   ```
-
-2. **Batch operations** when possible:
-   ```bash
-   # Fix multiple modules
-   for i in {9..15}; do
-     scripts/audit_module.sh curriculum/l2-uk-en/b1/$i-*.md
-   done
-   ```
-
-3. **Use interview mode** for specs:
-   - Comprehensive: When totally unclear
-   - Focused: When mostly clear but gaps
-   - Rapid: When just need quick clarification
-
-### Quality Boosters
-
-1. **Self-review before asking Claude**:
-   - Does this match the plan?
-   - Is Ukrainian natural?
-   - Are there obvious issues?
-
-2. **Reference previous success**:
-   ```
-   "M87 and M88 passed with high scores.
-   Use those as templates for M89."
-   ```
-
-3. **Specify constraints upfront**:
-   ```
-   "Generate M25 with these constraints:
-   MUST: Test modules 16-24, 3000 words, TTT approach
-   MUST NOT: Introduce new grammar, use vocab outside range"
-   ```
-
----
-
-## 🔗 External Resources
-
-- [CEFR Official Descriptors](https://www.coe.int/en/web/common-european-framework-reference-languages)
-- [Ukrainian State Standard 2024](https://mon.gov.ua/)
-- [Ghostty Terminal](https://ghostty.org/)
-- [Claude Code CLI](https://claude.ai/code)
 
 ---
 
@@ -707,12 +494,7 @@ npm run pipeline l2-uk-en {level} {num}        # Generate MDX + validate
 npm run claude:deploy                          # Deploy skill changes
 
 # PYTHON ENVIRONMENT
+python3 -m pytest tests/                       # Run tests
 .venv/bin/python scripts/audit_module.py      # Always use venv Python
 .venv/bin/python --version                     # Check version (3.12.8)
 ```
-
----
-
-**Remember**: Quality over speed. This is for Ukrainian language and culture preservation.
-
-**Мова – душа народу 🇺🇦**
