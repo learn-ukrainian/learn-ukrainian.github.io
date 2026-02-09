@@ -1,0 +1,4 @@
+- type: quiz
+  # missing title and items
+- type: unknown-type
+  title: "Bad"

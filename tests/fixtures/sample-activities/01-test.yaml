@@ -1,0 +1,18 @@
+- type: quiz
+  title: "Test Quiz"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "How do you say Hello in Ukrainian?"
+      options:
+        - text: "Привіт"
+          correct: true
+        - text: "Па-па"
+          correct: false
+- type: match-up
+  title: "Test Match-up"
+  instruction: "Match words."
+  pairs:
+    - left: "Так"
+      right: "Yes"
+    - left: "Ні"
+      right: "No"
