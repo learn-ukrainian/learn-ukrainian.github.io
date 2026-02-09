@@ -44,7 +44,20 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                 'object': act
             })
     
-    # Legacy Markdown activities support removed (Issue #394)
+    # Handle Markdown activities (Legacy support for tests and old modules)
+    if not yaml_activities:
+        activity_pattern = r'##\s*([a-z-]+):\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
+        md_activities = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
+        for act_type, title, body in md_activities:
+            act_type_lower = act_type.lower()
+            if act_type_lower in VALID_ACTIVITY_TYPES:
+                parsed_activities.append({
+                    'type': act_type_lower,
+                    'title': title.strip(),
+                    'body': body,
+                    'source': 'markdown',
+                    'object': None
+                })
     
     for activity_data in parsed_activities:
         act_type = activity_data['type']
@@ -1254,10 +1267,36 @@ def check_cloze_syntax_errors(activities: list) -> list[dict]:
     return violations
 
 
-def check_error_correction_format(activities: list) -> list[dict]:
+def check_error_correction_format(content_or_activities: list | str) -> list[dict]:
     """Check for malformed error-correction activities."""
     violations = []
 
+    if isinstance(content_or_activities, str):
+        # Legacy Markdown support for tests
+        activity_pattern = r'##\s*error-correction:\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
+        matches = re.findall(activity_pattern, content_or_activities, re.DOTALL | re.IGNORECASE)
+        for title, body in matches:
+            if '> [!error]' not in body:
+                violations.append({
+                    'type': 'ERROR_CORRECTION_FORMAT',
+                    'issue': f"error-correction '{title.strip()}' missing > [!error] callout",
+                    'fix': "Add > [!error] callout."
+                })
+            if '> [!answer]' not in body:
+                violations.append({
+                    'type': 'ERROR_CORRECTION_FORMAT',
+                    'issue': f"error-correction '{title.strip()}' missing > [!answer] callout",
+                    'fix': "Add > [!answer] callout."
+                })
+            if '> [!explanation]' not in body:
+                violations.append({
+                    'type': 'ERROR_CORRECTION_FORMAT',
+                    'issue': f"error-correction '{title.strip()}' missing > [!explanation] callout",
+                    'fix': "Add > [!explanation] callout."
+                })
+        return violations
+
+    activities = content_or_activities
     if not activities or not isinstance(activities, list):
         return violations
 
