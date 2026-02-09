@@ -2,14 +2,16 @@
   "module": "24-can-must-want-modals",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T00:20:35.013633Z",
+  "last_audit": "2026-02-09T07:52:10.262515Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-09T00:20:23.195701Z",
-    "meta": "2026-02-07T10:03:51.783586Z",
-    "activities": "2026-02-07T21:31:32.041938Z",
-    "vocabulary": "2026-02-09T00:20:31.890060Z",
-    "plan": "2026-02-07T10:05:59.913870Z"
+    "md": "2026-02-09T07:22:06.218749Z",
+    "meta": "2026-02-09T07:22:06.278749Z",
+    "activities": "2026-02-09T07:22:06.238749Z",
+    "vocabulary": "2026-02-09T07:22:06.434749Z",
+    "plan": "2026-02-09T07:22:08.146749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

@@ -11,18 +11,31 @@ Usage:
 
 import json
 import os
-import subprocess
 import sys
 import re
 import yaml
 from pathlib import Path
 from datetime import datetime
+from multiprocessing import Pool
 
-# Project root
+# Add project root to sys.path
 ROOT = Path(__file__).parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))
+
+# Also add scripts dir to sys.path for audit imports
+SCRIPTS_DIR = ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.append(str(SCRIPTS_DIR))
+
+try:
+    from audit.core import audit_module as run_module_audit
+except ImportError:
+    # Fallback for different environments
+    run_module_audit = None
 
 # All levels
-LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2", "b2-hist", "c1-bio", "c1-hist", "lit"]
+LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2", "b2-hist", "c1-bio", "c1-hist", "lit", "oes", "ruth"]
 
 
 def parse_module_filter(filter_str: str) -> set[int]:
@@ -32,10 +45,16 @@ def parse_module_filter(filter_str: str) -> set[int]:
     for part in parts:
         part = part.strip()
         if '-' in part:
-            start, end = part.split('-', 1)
-            result.update(range(int(start), int(end) + 1))
+            try:
+                start, end = part.split('-', 1)
+                result.update(range(int(start), int(end) + 1))
+            except ValueError:
+                continue
         else:
-            result.add(int(part))
+            try:
+                result.add(int(part))
+            except ValueError:
+                continue
     return result
 
 
@@ -73,15 +92,50 @@ def get_json_cache(level: str, slug: str, md_file: Path) -> dict | None:
         with cache_file.open('r', encoding='utf-8') as f:
             cache = json.load(f)
             
-        # Check freshness: md mtime vs last_audit
-        md_mtime = md_file.stat().st_mtime
+        source_mtimes = cache.get('source_mtimes', {})
         last_audit_str = cache.get('last_audit', '1970-01-01T00:00:00Z').replace('Z', '')
-        if '.' in last_audit_str:
-            last_audit_dt = datetime.fromisoformat(last_audit_str)
-        else:
-            last_audit_dt = datetime.strptime(last_audit_str, '%Y-%m-%dT%H:%M:%S')
+
+        # Freshness check
+        is_stale = False
+
+        if not source_mtimes:
+            # Legacy check: md mtime vs last_audit
+            md_mtime = md_file.stat().st_mtime
+            if '.' in last_audit_str:
+                last_audit_dt = datetime.fromisoformat(last_audit_str)
+            else:
+                last_audit_dt = datetime.strptime(last_audit_str, '%Y-%m-%dT%H:%M:%S')
             
-        if last_audit_dt.timestamp() < md_mtime:
+            if last_audit_dt.timestamp() < md_mtime:
+                is_stale = True
+        else:
+            # Robust check: all source_mtimes
+            base_path = md_file.parent
+            for key, cached_mtime in source_mtimes.items():
+                if cached_mtime is None:
+                    continue
+
+                # Resolve path
+                path = None
+                if key == 'md': path = md_file
+                elif key == 'meta': path = base_path / 'meta' / f"{slug}.yaml"
+                elif key == 'activities': path = base_path / 'activities' / f"{slug}.yaml"
+                elif key == 'vocabulary': path = base_path / 'vocabulary' / f"{slug}.yaml"
+                elif key == 'plan': path = ROOT / 'curriculum' / 'l2-uk-en' / 'plans' / base_path.name / f"{slug}.yaml"
+                elif key == 'grammar':
+                    path = base_path / 'audit' / f"{slug}-grammar.yaml"
+                    if not path.exists(): path = base_path / f"{slug}-grammar.yaml"
+                elif key == 'quality':
+                    path = base_path / 'audit' / f"{slug}-quality.md"
+                    if not path.exists(): path = base_path / f"{slug}-quality.md"
+
+                if path and path.exists():
+                    current_mtime = datetime.fromtimestamp(path.stat().st_mtime).isoformat() + "Z"
+                    if current_mtime != cached_mtime:
+                        is_stale = True
+                        break
+
+        if is_stale:
             return None # Stale
             
         # Map cache to status format
@@ -112,7 +166,7 @@ def get_json_cache(level: str, slug: str, md_file: Path) -> dict | None:
         return None
 
 
-def audit_module(md_file: Path) -> dict:
+def get_module_status(md_file: Path) -> dict:
     """Run audit or read from cache."""
     level = md_file.parent.name
     slug = md_file.stem
@@ -122,15 +176,37 @@ def audit_module(md_file: Path) -> dict:
     if cached:
         return cached
 
-    # Fallback to subprocess (Slow)
+    # If we are here, cache is stale or missing
+    # Run audit
+    if run_module_audit:
+        # Capture stdout to avoid clutter
+        import io
+        from contextlib import redirect_stdout
+        f = io.StringIO()
+        with redirect_stdout(f):
+            run_module_audit(str(md_file))
+
+        # After audit, cache should be updated. Try reading it again.
+        cached = get_json_cache(level, slug, md_file)
+        if cached:
+            return cached
+
+    # Fallback to older subprocess method if direct call failed or unavailable
     try:
+        import subprocess
         result = subprocess.run(
-            [".venv/bin/python", "scripts/audit_module.py", str(md_file)],
+            [sys.executable, str(SCRIPTS_DIR / "audit_module.py"), str(md_file)],
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=60,
             cwd=ROOT
         )
+        # Try reading cache one last time
+        cached = get_json_cache(level, slug, md_file)
+        if cached:
+            return cached
+
+        # If cache still not there, parse output
         output = result.stdout + result.stderr
         status = "✅ PASS" if "✅ AUDIT PASSED" in output else "❌ FAIL"
         word_match = re.search(r'Words\s+\S+\s+(\d+)/(\d+)', output)
@@ -187,6 +263,25 @@ def _parse_existing_status(status_file: Path) -> dict[int, dict]:
     return rows
 
 
+def process_module(args):
+    """Worker function for multiprocessing."""
+    num, slug, level, module_filter, modules_to_audit, existing_rows = args
+
+    if module_filter and num not in modules_to_audit:
+        if num in existing_rows:
+            return existing_rows[num]
+        return None
+
+    md_file = find_md_file(level, slug)
+    if not md_file:
+        return {"num": num, "slug": slug, "status": "⚠️ MISSING", "actual_words": 0, "target_words": 0, "issues": ["no_file"]}
+
+    result = get_module_status(md_file)
+    result["num"] = num
+    result["slug"] = slug
+    return result
+
+
 def generate_status_for_level(level: str, module_filter: set[int] | None = None):
     """Generate status file for a single level."""
     filter_desc = f" (modules: {sorted(module_filter)})" if module_filter else ""
@@ -200,36 +295,37 @@ def generate_status_for_level(level: str, module_filter: set[int] | None = None)
     if not modules:
         print(f"  ⚠️ No modules found for {level}")
         return
+
     modules_to_audit = module_filter if module_filter else set(range(1, len(modules) + 1))
     level_upper = level.upper()
     output_file = ROOT / "docs" / f"{level_upper}-STATUS.md"
+
     existing_rows = {}
     if module_filter and output_file.exists():
         existing_rows = _parse_existing_status(output_file)
-    module_rows = []
-    stats = {"pass": 0, "fail": 0, "stub": 0, "error": 0}
+
+    # Prepare tasks for pool
+    tasks = []
     for i, slug in enumerate(modules, 1):
-        if module_filter and i not in modules_to_audit:
-            if i in existing_rows:
-                row = existing_rows[i]
-                module_rows.append(row)
-                if row["status"] == "✅ PASS": stats["pass"] += 1
-                elif row["status"] == "📝 STUB": stats["stub"] += 1
-                elif row["status"] == "❌ FAIL": stats["fail"] += 1
-                else: stats["error"] += 1
-            continue
-        md_file = find_md_file(level, slug)
-        if not md_file:
-            module_rows.append({"num": i, "slug": slug, "status": "⚠️ MISSING", "actual_words": 0, "target_words": 0, "issues": ["no_file"]})
-            stats["error"] += 1
-            continue
-        audit_result = audit_module(md_file)
-        if audit_result["status"] == "✅ PASS": stats["pass"] += 1
-        elif audit_result["status"] == "📝 STUB": stats["stub"] += 1
-        elif audit_result["status"] == "❌ FAIL": stats["fail"] += 1
+        # Handle curriculum.yaml entry which might be "slug # comments"
+        clean_slug = slug.split('#')[0].strip()
+        tasks.append((i, clean_slug, level, module_filter, modules_to_audit, existing_rows))
+
+    # Run tasks in parallel
+    with Pool() as pool:
+        results = pool.map(process_module, tasks)
+
+    module_rows = [r for r in results if r is not None]
+
+    # Calculate stats
+    stats = {"pass": 0, "fail": 0, "stub": 0, "error": 0}
+    for row in module_rows:
+        if row["status"] == "✅ PASS": stats["pass"] += 1
+        elif row["status"] == "📝 STUB": stats["stub"] += 1
+        elif row["status"] == "❌ FAIL": stats["fail"] += 1
         else: stats["error"] += 1
-        module_rows.append({"num": i, "slug": slug, **audit_result})
     
+    # Write report
     with open(output_file, 'w') as f:
         f.write(f"# {level_upper} Module Status\n\n")
         f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")

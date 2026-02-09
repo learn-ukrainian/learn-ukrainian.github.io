@@ -2,14 +2,16 @@
   "module": "10-checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T22:21:08.635581Z",
+  "last_audit": "2026-02-09T07:34:51.470125Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T21:53:54.978925Z",
-    "meta": "2026-02-08T17:37:30.951844Z",
-    "activities": "2026-02-08T21:54:46.857296Z",
-    "vocabulary": "2026-02-08T17:37:01.901962Z",
-    "plan": "2026-02-07T10:03:51.072332Z"
+    "md": "2026-02-09T07:22:06.210749Z",
+    "meta": "2026-02-09T07:22:06.274749Z",
+    "activities": "2026-02-09T07:22:06.230749Z",
+    "vocabulary": "2026-02-09T07:22:06.430749Z",
+    "plan": "2026-02-09T07:22:08.142749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

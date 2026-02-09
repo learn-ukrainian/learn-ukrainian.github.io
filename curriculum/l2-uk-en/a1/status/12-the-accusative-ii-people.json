@@ -2,14 +2,16 @@
   "module": "12-the-accusative-ii-people",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T22:02:32.810856Z",
+  "last_audit": "2026-02-09T07:34:54.139676Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T22:02:32.240281Z",
-    "meta": "2026-02-08T17:38:32.532999Z",
-    "activities": "2026-02-08T22:02:32.240403Z",
-    "vocabulary": "2026-02-08T21:58:46.292725Z",
-    "plan": "2026-02-07T10:03:51.075372Z"
+    "md": "2026-02-09T07:22:06.214749Z",
+    "meta": "2026-02-09T07:22:06.278749Z",
+    "activities": "2026-02-09T07:22:06.230749Z",
+    "vocabulary": "2026-02-09T07:22:06.434749Z",
+    "plan": "2026-02-09T07:22:08.142749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

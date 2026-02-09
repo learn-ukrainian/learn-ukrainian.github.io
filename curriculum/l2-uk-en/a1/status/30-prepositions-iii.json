@@ -2,14 +2,16 @@
   "module": "30-prepositions-iii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:34:17.166322Z",
+  "last_audit": "2026-02-09T07:35:01.124027Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T23:34:16.065855Z",
-    "meta": "2026-02-07T10:03:51.768524Z",
-    "activities": "2026-02-08T23:34:16.066347Z",
-    "vocabulary": "2026-02-08T23:34:16.066827Z",
-    "plan": "2026-02-07T10:05:59.888226Z"
+    "md": "2026-02-09T07:22:06.222749Z",
+    "meta": "2026-02-09T07:22:06.278749Z",
+    "activities": "2026-02-09T07:22:06.242749Z",
+    "vocabulary": "2026-02-09T07:22:06.434749Z",
+    "plan": "2026-02-09T07:22:08.146749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

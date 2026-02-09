@@ -2,14 +2,16 @@
   "module": "35-at-the-cafe-practical",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:53:46.492236Z",
+  "last_audit": "2026-02-09T07:35:00.958367Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-25T19:58:06.639732Z",
-    "meta": "2026-02-07T10:03:51.784261Z",
-    "activities": "2026-02-07T21:06:32.900831Z",
-    "vocabulary": "2026-02-07T21:45:42.135930Z",
-    "plan": "2026-02-07T10:05:59.914373Z"
+    "md": "2026-02-09T07:22:06.222749Z",
+    "meta": "2026-02-09T07:22:06.282749Z",
+    "activities": "2026-02-09T07:22:06.246749Z",
+    "vocabulary": "2026-02-09T07:22:06.438749Z",
+    "plan": "2026-02-09T07:22:08.146749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

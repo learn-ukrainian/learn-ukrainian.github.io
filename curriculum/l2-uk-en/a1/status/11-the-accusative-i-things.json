@@ -2,14 +2,16 @@
   "module": "11-the-accusative-i-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T22:04:40.220845Z",
+  "last_audit": "2026-02-09T07:34:52.750198Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T22:04:31.539496Z",
-    "meta": "2026-02-08T17:38:07.405267Z",
-    "activities": "2026-02-08T21:55:07.930847Z",
-    "vocabulary": "2026-02-08T10:04:07.278906Z",
-    "plan": "2026-02-07T10:03:51.075108Z"
+    "md": "2026-02-09T07:22:06.210749Z",
+    "meta": "2026-02-09T07:22:06.278749Z",
+    "activities": "2026-02-09T07:22:06.230749Z",
+    "vocabulary": "2026-02-09T07:22:06.430749Z",
+    "plan": "2026-02-09T07:22:08.142749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

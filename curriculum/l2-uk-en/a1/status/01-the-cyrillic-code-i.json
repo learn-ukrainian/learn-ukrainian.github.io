@@ -2,14 +2,16 @@
   "module": "01-the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T22:59:30.561497Z",
+  "last_audit": "2026-02-09T07:59:38.577572Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T20:39:17.690533Z",
-    "meta": "2026-02-08T17:36:13.368650Z",
-    "activities": "2026-02-08T20:21:08.688640Z",
-    "vocabulary": "2026-02-08T20:21:25.202449Z",
-    "plan": "2026-02-07T10:03:51.073506Z"
+    "md": "2026-02-09T07:56:40.798726Z",
+    "meta": "2026-02-09T07:22:06.270749Z",
+    "activities": "2026-02-09T07:22:06.226749Z",
+    "vocabulary": "2026-02-09T07:22:06.430749Z",
+    "plan": "2026-02-09T07:59:36.094724Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {

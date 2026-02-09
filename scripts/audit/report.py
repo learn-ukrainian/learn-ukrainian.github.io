@@ -49,14 +49,24 @@ def save_status_cache(
     # Try to find plan path
     # Check if level_code is a track (b2-hist) or simple (b1)
     # curriculum/l2-uk-en/plans/{level}/{slug}.yaml
-    plan_path = base_path.parent / 'plans' / level_code / f"{module_slug}.yaml"
+    plan_path = base_path.parent / 'plans' / base_path.name / f"{module_slug}.yaml"
     if not plan_path.exists():
         # Try numeric prefix check if slug doesn't have it but filename does
         # or vice versa. But for now, simple check.
         pass
 
+    # Find grammar and quality reports
+    audit_dir = base_path / 'audit'
+    grammar_path = audit_dir / f"{module_slug}-grammar.yaml"
+    if not grammar_path.exists():
+        grammar_path = base_path / f"{module_slug}-grammar.yaml"
+
+    quality_path = audit_dir / f"{module_slug}-quality.md"
+    if not quality_path.exists():
+        quality_path = base_path / f"{module_slug}-quality.md"
+
     source_mtimes = {}
-    
+
     def get_mtime(p: Path) -> str:
         if p.exists():
             return datetime.fromtimestamp(p.stat().st_mtime).isoformat() + "Z"
@@ -67,6 +77,8 @@ def save_status_cache(
     source_mtimes['activities'] = get_mtime(activities_path)
     source_mtimes['vocabulary'] = get_mtime(vocab_path)
     source_mtimes['plan'] = get_mtime(plan_path)
+    source_mtimes['grammar'] = get_mtime(grammar_path)
+    source_mtimes['quality'] = get_mtime(quality_path)
 
     # 2. Serialize Gates
     gates = {}

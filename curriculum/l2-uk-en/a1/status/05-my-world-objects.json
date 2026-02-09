@@ -2,14 +2,16 @@
   "module": "05-my-world-objects",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T21:07:19.652197Z",
+  "last_audit": "2026-02-09T07:34:52.986332Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T20:51:25.876660Z",
-    "meta": "2026-02-07T10:03:51.784580Z",
-    "activities": "2026-02-08T20:57:37.386240Z",
-    "vocabulary": "2026-02-08T20:57:51.932134Z",
-    "plan": "2026-02-07T10:03:51.075456Z"
+    "md": "2026-02-09T07:22:06.210749Z",
+    "meta": "2026-02-09T07:22:06.274749Z",
+    "activities": "2026-02-09T07:22:06.230749Z",
+    "vocabulary": "2026-02-09T07:22:06.430749Z",
+    "plan": "2026-02-09T07:22:08.142749Z",
+    "grammar": null,
+    "quality": null
   },
   "gates": {
     "meta": {
