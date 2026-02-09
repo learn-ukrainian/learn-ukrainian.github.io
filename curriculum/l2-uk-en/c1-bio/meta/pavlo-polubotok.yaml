@@ -1,22 +1,75 @@
-slug: pavlo-polubotok
+id: c1-bio-029
 module_id: c1-bio-029
+slug: pavlo-polubotok
 title: "Павло Полуботок: Мученик за автономію"
+version: "2.0"
+phase: "C1-BIO"
+focus: "biography"
+pedagogy: "immersion"
 word_target: 4300
 content_outline:
   - section: "Вступ — Символ нескореності"
     words: 600
+    points:
+      - "Полуботок як символ морального та правового опору"
+      - "Протистояння з імперською владою"
+      - "Легендарний образ у пам'яті народу"
   - section: "Життєпис"
     words: 1600
+    points:
+      - "Походження та інтелектуальне становлення"
+      - "Шлях магната і полковника чернігівського"
+      - "Наказний гетьман 1722 р."
+      - "Арешт і смерть у Петропавлівці"
   - section: "Історичний контекст"
     words: 600
+    points:
+      - "Наступ імперії після Північної війни"
+      - "Малоросійська колегія та адміністративний терор"
   - section: "Внесок"
     words: 400
+    points:
+      - "Захист прав народу через закон"
+      - "Меценатство та розбудова Чернігова"
   - section: "Останні роки"
     words: 400
+    points:
+      - "Ув'язнення і діалог з Петром I"
+      - "Моральна перемога над тираном"
   - section: "Спадщина"
     words: 400
+    points:
+      - "Легенда про золото Полуботка"
+      - "Символ національної гідності"
   - section: "Підсумок"
     words: 300
+    points:
+      - "Значення постаті для сучасності"
+sources:
+  - name: "Павло Полуботок (Wikipedia UA)"
+    url: "https://uk.wikipedia.org/wiki/Павло_Полуботок"
+    type: "primary"
+    notes: "Біографія та діяльність"
+  - name: "Малоросійська колегія (Wikipedia UA)"
+    url: "https://uk.wikipedia.org/wiki/Малоросійська_колегія"
+    type: "reference"
+    notes: "Контекст імперської політики"
+vocabulary_hints:
+  required:
+    - "наказний гетьман"
+    - "Коломацькі чолобитні"
+    - "каземат"
+    - "осінщина"
+    - "бібліофіл"
+  recommended:
+    - "магнат"
+    - "скарб"
+    - "автономія"
+activity_hints:
+  - type: "reading"
+    focus: "Промова Полуботка"
+  - type: "essay-response"
+    focus: "Ціна гідності"
 naturalness:
   status: PASS
   score: 10
@@ -25,4 +78,4 @@ prerequisites:
   - c1-bio-024
 timestamps:
   created: "2026-02-09T12:00:00Z"
-  updated: "2026-02-09T12:00:00Z"
+  updated: "2026-02-09T13:00:00Z"
