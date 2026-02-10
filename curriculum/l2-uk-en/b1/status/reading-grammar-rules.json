@@ -1,0 +1,52 @@
+{
+  "module": "03-reading-grammar-rules",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-10T19:11:07.342761Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-27T15:24:10.349931Z",
+    "meta": "2026-02-07T10:03:51.664593Z",
+    "activities": "2026-02-07T10:03:51.708175Z",
+    "vocabulary": "2026-02-07T10:03:51.748482Z",
+    "plan": "2026-02-09T12:52:14.367203Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3064/3000 (raw: 3837) | richness: 84% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/12"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "88/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

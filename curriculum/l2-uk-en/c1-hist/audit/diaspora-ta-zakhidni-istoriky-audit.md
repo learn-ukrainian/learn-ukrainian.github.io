@@ -1,7 +1,8 @@
 # Audit Report: M06 — diaspora-ta-zakhidni-istoriky.md
 **Level:** C1-HIST | **Module:** M06 | **Phase:** c1 | **Pedagogy:** seminar | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-10 17:46:14
+**Generated:** 2026-02-10 17:57:44
 
 ## Configuration
 **Type:** C1-history
@@ -34,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4002/4000 (raw: 4042)
+- **Words:** ✅ 4051/4000 (raw: 4091)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/3 types
@@ -46,10 +47,10 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.0% (target 95-100% (history))
+- **Immersion:** 🇺🇦 98.1% (target 95-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ℹ️ PENDING — awaiting review
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -63,11 +64,11 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -77,5 +78,5 @@
 | **Омелян Пріцак: Гарвардський проект** | ⚪️ | 893 | Skipped |
 | **Іван Лисяк-Рудницький: Політична філософія** | ⚪️ | 950 | Skipped |
 | **Юрій Шевельов: Лінгвістичний щит** | ⚪️ | 827 | Skipped |
-| **Інституції пам'яті: ГУНІ та КІУС** | ⚪️ | 695 | Skipped |
+| **Інституції пам'яті: ГУНІ та КІУС** | ⚪️ | 744 | Skipped |
 | **Підсумок: Повернення спадщини** | ✅ | 271 | Included in Core |

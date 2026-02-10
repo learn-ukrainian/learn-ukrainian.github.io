@@ -1,0 +1,54 @@
+{
+  "module": "03-dative-verbs",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-10T19:11:04.965731Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-01-25T09:17:23.248253Z",
+    "meta": "2026-02-07T10:03:50.717164Z",
+    "activities": "2026-02-07T10:03:50.744242Z",
+    "vocabulary": "2026-02-07T10:03:50.789680Z",
+    "plan": "2026-02-09T12:52:14.134379Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1585/1000 (raw: 1732)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "11/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "85/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Review missing required sections: Scores/Assessment, Issues/Critique, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Review missing required sections: Scores/Assessment, Issues/Critique, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+    ],
+    "pass_count": 5,
+    "fail_count": 1
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "module": "povist-mynulykh-lit-i",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-10T18:17:43.098489Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-10T18:14:51.949484Z",
+    "meta": "2026-02-10T18:12:01.349141Z",
+    "activities": "2026-02-10T18:14:53.746111Z",
+    "vocabulary": "2026-02-10T17:58:56.298348Z",
+    "plan": "2026-02-09T12:52:16.695959Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4547/4000 (raw: 4689)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
+  }
+}

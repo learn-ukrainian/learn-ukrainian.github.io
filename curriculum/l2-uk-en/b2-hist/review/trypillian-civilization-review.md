@@ -1,0 +1,87 @@
+# Audit Report: M01 — trypillian-civilization.md
+**Level:** B2-HIST | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 6133
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-07 11:35:52
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 6133 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз первинного джерела: звіт Вікентія Хвойки | 4 | 1 | ✅ |
+| 2 | true-false | Правда чи міф? | 10 | 8 | ✅ |
+| 3 | essay-response | Есе: Трипільці та сучасні українці | 1 | 1 | ✅ |
+| 4 | critical-analysis | Аналіз: Символіка трипільської кераміки | 1 | 1 | ✅ |
+| 5 | comparative-study | Порівняння цивілізацій: Трипілля vs Месопотамія | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
+
+## Gates
+- **Words:** ✅ 6369/6133 (raw: 6417)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 17/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 324/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 15 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 4 | 4 | 100% | 10% | 9.5% |
+| visual | 17 | 4 | 100% | 10% | 9.5% |
+| variety | 0.95 | - | 95% | 5% | 4.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 8 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Трипільська цивілізація** | ⚪️ | 56 | Skipped |
+| **Вступ** | ✅ | 491 | Included in Core |
+| **Читання** | ✅ | 493 | Included in Core |
+| **Історія відкриття** | ⚪️ | 509 | Skipped |
+| **Первинні джерела** | ✅ | 349 | Included in Core |
+| **Протоміста** | ⚪️ | 1167 | Skipped |
+| **Господарство та економіка** | ⚪️ | 667 | Skipped |
+| **Ремесла та технології** | ⚪️ | 821 | Skipped |
+| **Духовний світ та суспільний устрій** | ⚪️ | 595 | Skipped |
+| **Деколонізаційний погляд** | ✅ | 401 | Included in Core |
+| **Підсумок** | ✅ | 20 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 800 | Skipped |

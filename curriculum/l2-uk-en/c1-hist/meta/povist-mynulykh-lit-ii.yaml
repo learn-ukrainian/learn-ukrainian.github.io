@@ -1,8 +1,55 @@
----
-module: c1-hist-012
-level: C1-HIST
 slug: povist-mynulykh-lit-ii
-version: '1.0'
-id: c1-hist-012
-build:
-  last_modified: '2026-01-26'
+id: povist-mynulykh-lit-ii
+version: "2.0"
+title: "Повість минулих літ II: Ключові фрагменти"
+sequence: 12
+level: c1-hist
+focus: history
+pedagogy: seminar
+word_target: 4500
+status: implemented
+writers:
+- gemini-2-flash
+auditors:
+- gemini-2-flash
+content_outline:
+- section: "Вступ — Читаємо первинне джерело"
+  words: 400
+- section: "Текстологія: Хто і коли написав ПВЛ? (Гіпотеза Шахматова)"
+  words: 500
+- section: "Фрагмент 1 — Сакральна географія (Апостол Андрій)"
+  words: 500
+- section: "Фрагмент 2 — Заснування Києва (Кий, Щек, Хорив)"
+  words: 500
+- section: "Фрагмент 3 — Покликання варягів (862)"
+  words: 800
+- section: "Фрагмент 4 — Смерть Олега (Віщий і Змія)"
+  words: 500
+- section: "Фрагмент 5 — Святослав Хоробрий («Іду на ви!»)"
+  words: 500
+- section: "Фрагмент 6 — Хрещення Володимира (988)"
+  words: 800
+- section: "Фрагмент 7 — Ярослав Мудрий і Книжність"
+  words: 500
+- section: "Фрагмент 8 — Повчання Володимира Мономаха"
+  words: 600
+- section: "Фрагмент 9 — Половецька загроза (Бонняк Шолудивий)"
+  words: 500
+- section: "Фрагмент 10 — Любецький з'їзд і осліплення Василька"
+  words: 600
+- section: "Фрагмент 11 — Помста Ольги"
+  words: 600
+- section: "Літературний аналіз: Стиль монументального історизму"
+  words: 500
+- section: "Порівняльний аналіз: Історія ідей"
+  words: 400
+- section: "Практикум — Ваш аналіз"
+  words: 300
+- section: "Підсумок"
+  words: 200
+naturalness:
+  score: 1 
+  status: CHECKED
+timestamps:
+  created: 2026-02-10T17:00:00Z
+  updated: 2026-02-10T17:00:00Z

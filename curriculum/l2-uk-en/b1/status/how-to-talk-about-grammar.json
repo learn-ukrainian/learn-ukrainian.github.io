@@ -1,0 +1,52 @@
+{
+  "module": "01-how-to-talk-about-grammar",
+  "level": "B1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-10T19:11:05.883802Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-07T01:04:16.996359Z",
+    "meta": "2026-02-07T10:03:51.670942Z",
+    "activities": "2026-02-07T10:03:51.718225Z",
+    "vocabulary": "2026-02-07T10:03:51.753249Z",
+    "plan": "2026-02-09T12:52:14.356068Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3543/3000 (raw: 4099) | richness: 84% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "16/12"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "148/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1
+  }
+}

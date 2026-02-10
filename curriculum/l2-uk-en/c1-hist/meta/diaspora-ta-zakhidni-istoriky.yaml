@@ -50,3 +50,6 @@ content_outline:
     points:
       - "Integration of diaspora historiography into modern Ukraine"
       - "Legacy today"
+naturalness:
+  score: 10
+  status: PASS

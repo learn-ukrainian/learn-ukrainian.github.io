@@ -2,7 +2,7 @@
 **Level:** C1-HIST | **Module:** M07 | **Phase:** c1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-10 17:46:16
+**Generated:** 2026-02-10 18:19:02
 
 ## Configuration
 **Type:** C1-history
@@ -33,7 +33,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4139/4000 (raw: 4195)
+- **Words:** ✅ 4192/4000 (raw: 4248)
 - **Activities:** ✅ 4/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 4/3 types
@@ -45,7 +45,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
-- **Immersion:** 🇺🇦 99.6% (target 95-100% (history))
+- **Immersion:** 🇺🇦 99.7% (target 95-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
@@ -61,11 +61,11 @@
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| cultural | 9 | 4 | 100% | 10% | 9.5% |
+| visual | 9 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
@@ -79,5 +79,5 @@
 | **Глобальна історія та деколонізація** | ⚪️ | 416 | Skipped |
 | **Публічна історія та діджиталізація** | ⚪️ | 336 | Skipped |
 | **Архіви та декласифікація: "Архівна революція"** | ⚪️ | 580 | Skipped |
-| **Повернення імен: Роль діаспори** | ⚪️ | 569 | Skipped |
+| **Повернення імен: Роль діаспори** | ⚪️ | 622 | Skipped |
 | **Підсумок** | ✅ | 130 | Included in Core |

@@ -1,0 +1,89 @@
+# Audit Report: M77 — 77-ukrainian-cinema-and-tv.md
+**Level:** B1 | **Module:** M77 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 1400
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-01 19:05:42
+
+## Configuration
+**Type:** B1-culture
+**Word Target:** 1400 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** fill-in, match-up, quiz, reading
+**Required Types:** fill-in, match-up, quiz, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Українське кіно — розуміння тексту | 10 | 8 | ✅ |
+| 2 | true-false | Правда чи хибність про українське кіно | 12 | 8 | ✅ |
+| 3 | match-up | Кіно лексика — терміни та визначення | 14 | 8 | ✅ |
+| 4 | cloze | Заповніть пропуски кінолексикою | 12 | 12 | ✅ |
+| 5 | cloze | Заповніть текст про українське кіно | 16 | 12 | ✅ |
+| 6 | group-sort | Розподіліть за категоріями | 19 | 12 | ✅ |
+| 7 | select | Оберіть усі правильні відповіді | 8 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть слова, пов'язані з кіно | 10 | 6 | ✅ |
+| 9 | unjumble | Складіть речення про українське кіно | 8 | 6 | ✅ |
+| 10 | error-correction | Виправте помилки у реченнях про кіно | 8 | 6 | ✅ |
+| 11 | fill-in | Доповніть речення про кіно | 8 | 8 | ✅ |
+| 12 | reading | Сучасне українське кіно | 3 | 3 | ✅ |
+| 13 | translate | Перекладіть фрази про кіно | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 13 (target: 8-12) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, reading) ✅
+- Low density activities: 0
+
+## Gates
+- **Words:** ✅ 1708/1400 (raw: 1931)
+- **Activities:** ✅ 13/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 10/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 47/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 98% (cultural)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
+
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| cultural | 5 | 5 | 100% | 33% | 33.3% |
+| engagement | 10 | 6 | 100% | 20% | 20.0% |
+| visual | 8 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 0.82 | - | 82% | 7% | 5.5% |
+| examples | 22 | - | 100% | 7% | 6.7% |
+| realworld | 4 | - | 100% | 7% | 6.7% |
+| questions | 31 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.7%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 52 | Included in Core |
+| **Вступ** | ✅ | 113 | Included in Core |
+| **Історія та культура** | ✅ | 331 | Included in Core |
+| **Сучасність** | ⚪️ | 574 | Skipped |
+| **Практика** | ⚪️ | 140 | Skipped |
+| **Продукція** | ⚪️ | 260 | Skipped |
+| **Підсумок** | ✅ | 128 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

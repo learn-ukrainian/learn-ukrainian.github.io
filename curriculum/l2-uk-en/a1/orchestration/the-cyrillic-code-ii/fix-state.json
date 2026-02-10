@@ -3,13 +3,12 @@
   "iterations": [
     {
       "iteration": 1,
-      "started": "2026-02-09T20:28:47.886577Z",
-      "audit_passed": false,
-      "action": "regenerate_review",
-      "post_review_audit_passed": true,
-      "result": "success_after_review"
+      "started": "2026-02-10T19:11:01.850912Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
     }
   ],
-  "started": "2026-02-09T20:28:47.886557Z",
+  "started": "2026-02-10T19:11:01.850886Z",
   "result": "success"
 }

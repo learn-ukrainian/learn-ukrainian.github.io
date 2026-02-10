@@ -1,8 +1,63 @@
 ---
+id: c1-hist-011
 module: c1-hist-011
-level: C1-HIST
+level: c1-hist
 slug: povist-mynulykh-lit-i
 version: '1.0'
-id: c1-hist-011
+title: 'Повість минулих літ I: Структура та автори'
+focus: history
+pedagogy: seminar
+word_target: 4000
+naturalness:
+  score: null
+  status: PENDING
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-10'
+content_outline:
+- section: "Вступ — Найстаріший літопис Русі"
+  words: 457
+  points:
+    - "Definition of PVL"
+    - "Historical significance"
+    - "Editions overview"
+- section: Структура літопису
+  words: 686
+  points: # Expanded for C1 depth
+    - "Biblical intro"
+    - "Undated part"
+    - "Dated chronicles"
+    - "Annals principle"
+- section: Питання авторства
+  words: 800
+  points:
+    - "Nestor tradition"
+    - "Collective authorship"
+    - "Shakhmatov's theory"
+    - "Political patrons"
+- section: Редакції та рукописи
+  words: 686
+  points:
+    - "Laurentian list"
+    - "Hypatian list"
+    - "Radziwill list"
+    - "Differences"
+- section: Мова літопису
+  words: 571
+  points:
+    - "Old Rus base"
+    - "Church Slavonic elements"
+    - "Ukrainian features"
+    - "Glossary"
+- section: Чому важлива критика джерела
+  words: 457
+  points:
+    - "Subjectivity"
+    - "Legends vs Facts"
+    - "Political bias"
+    - "Critical method"
+- section: Підсумок
+  words: 343
+  points:
+    - "Foundation of memory"
+    - "Critical reading"
+    - "Next module preview"

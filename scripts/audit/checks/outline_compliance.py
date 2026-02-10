@@ -320,7 +320,7 @@ def check_outline_compliance(
     # Calculate total word counts for smart enforcement
     # Rule: If module meets overall word target, don't enforce individual section minimums
     total_md_words = sum(s["words"] for s in md_sections.values())
-    expected_total_words = sum(s["words"] for s in outline)
+    expected_total_words = sum(s.get("words", 0) for s in outline)
     skip_section_enforcement = total_md_words >= expected_total_words
 
     # Debug output
@@ -329,7 +329,7 @@ def check_outline_compliance(
     # Check each outline section exists in markdown
     for outline_sec in outline:
         section_name = outline_sec["section"]
-        expected_words = outline_sec["words"]
+        expected_words = outline_sec.get("words", 0)
 
         # Skip exempt sections if they are missing from markdown
         # (They are allowed to be in the outline for planning, but missing from MD for Clean MD architecture)

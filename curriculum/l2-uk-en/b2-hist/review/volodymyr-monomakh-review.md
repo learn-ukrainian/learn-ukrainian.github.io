@@ -1,0 +1,94 @@
+# Audit Report: M15 — volodymyr-monomakh.md
+**Level:** B2-HIST | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 4000
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-03 22:54:08
+
+## Configuration
+**Type:** B2-history
+**Word Target:** 4000 words
+**Activities:** 3-9 required
+**Items per Activity:** ≥1 items
+**Unique Types:** ≥2 types required
+**Priority Types:** comparative-study, critical-analysis, essay-response, reading
+**Required Types:** comparative-study, critical-analysis, essay-response, reading
+**Engagement:** ≥5 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥20 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Джерело: Повчання дітям | 3 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз: Моральний кодекс правителя | 1 | 1 | ✅ |
+| 3 | comparative-study | Князі-законодавці: Ярослав Мудрий vs Володимир Мономах | 1 | 1 | ✅ |
+| 4 | essay-response | Мономах — останній об’єднувач | 1 | 1 | ✅ |
+| 5 | true-false | Міфи та істина про життя Мономаха | 10 | 8 | ✅ |
+| 6 | comparative-study | Любецький з'їзд vs Віче | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
+
+## Gates
+- **Words:** ✅ 4751/4000 (raw: 5119)
+- **Activities:** ✅ 6/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 6/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 22/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
+- **Richness:** ✅ 99% (history)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 9/10 (High)
+
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 15 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 6 | 4 | 100% | 10% | 9.5% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 18 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Володимир Мономах: Останній велетень єдиної держави** | ⚪️ | 141 | Skipped |
+| **Вступ** | ✅ | 107 | Included in Core |
+| **Читання: Момент істини в Києві** | ✅ | 322 | Included in Core |
+| **Хронологія: Шлях до великого княжіння** | ✅ | 658 | Included in Core |
+| **Глибоке занурення: Династична криза 1093-1113 років: Шлях крізь темряву** | ✅ | 194 | Included in Core |
+| **Аналіз: Любецький з'їзд 1097 року: Мистецтво компромісу** | ✅ | 139 | Included in Core |
+| **Внутрішня політика: Великий реформатор та Законодавець** | ⚪️ | 951 | Skipped |
+| **Культура: Культурний ренесанс епохи Мономаха** | ✅ | 208 | Included in Core |
+| **Глибоке занурення: «Повчання дітям»: Літературний шедевр епохи** | ✅ | 233 | Included in Core |
+| **Розмова: Родина Мономаха: Династія великих справ та європейські зв'язки** | ✅ | 262 | Included in Core |
+| **Сьогодення: Економічне життя та Побут Русі** | ✅ | 156 | Included in Core |
+| **Погляд: Військове мистецтво та Озброєння** | ✅ | 87 | Included in Core |
+| **Первинні джерела: Голоси вічності** | ✅ | 433 | Included in Core |
+| **Деколонізаційний погляд: Мономах — наш, а не їхній** | ✅ | 159 | Included in Core |
+| **Підсумкове есе** | ⚪️ | 106 | Skipped |
+| **Оцінювання есе** | ⚪️ | 416 | Skipped |
+| **Підсумок** | ✅ | 56 | Included in Core |
+| **Погляд: Потрібно більше практики?** | ✅ | 123 | Included in Core |
