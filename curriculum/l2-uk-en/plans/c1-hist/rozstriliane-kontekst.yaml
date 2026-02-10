@@ -1,5 +1,5 @@
 ---
-module: rozstriliane-kontekst
+module: c1-hist-052
 level: c1-hist
 sequence: 52
 version: '1.0'

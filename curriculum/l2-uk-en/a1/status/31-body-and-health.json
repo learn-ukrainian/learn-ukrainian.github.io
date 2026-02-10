@@ -2,7 +2,7 @@
   "module": "31-body-and-health",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T00:10:51.961422Z",
+  "last_audit": "2026-02-10T10:54:00.252035Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T23:41:31.730846Z",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

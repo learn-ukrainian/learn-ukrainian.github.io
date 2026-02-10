@@ -1,8 +1,8 @@
 ---
-module: teatr-kurbasa
+module: c1-hist-055
 level: C1-HIST
 slug: teatr-kurbasa
 version: '1.0'
-id: c1-hist-55
+id: c1-hist-055
 build:
   last_modified: '2026-01-26'

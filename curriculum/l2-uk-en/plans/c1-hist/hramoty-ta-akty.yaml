@@ -1,5 +1,5 @@
 ---
-module: hramoty-ta-akty
+module: c1-hist-017
 level: c1-hist
 sequence: 17
 version: '1.0'

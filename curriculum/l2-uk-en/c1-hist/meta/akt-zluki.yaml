@@ -1,8 +1,8 @@
 ---
-module: akt-zluki
+module: c1-hist-035
 level: C1-HIST
 slug: akt-zluki
 version: '1.0'
-id: c1-hist-35
+id: c1-hist-035
 build:
   last_modified: '2026-01-26'

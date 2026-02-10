@@ -1,5 +1,6 @@
 ---
-module: eneida-war
+sequence: 4
+module: lit-04
 level: LIT
 slug: eneida-war
 version: '2.0'

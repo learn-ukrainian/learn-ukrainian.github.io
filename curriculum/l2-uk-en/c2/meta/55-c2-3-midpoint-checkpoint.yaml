@@ -1,9 +1,9 @@
 ---
-module: c2-3-midpoint-checkpoint
+module: c2-055
 level: C2
 slug: c2-3-midpoint-checkpoint
 version: '2.0'
-id: c2-55
+id: c2-055
 naturalness:
   score: 1
   status: PENDING

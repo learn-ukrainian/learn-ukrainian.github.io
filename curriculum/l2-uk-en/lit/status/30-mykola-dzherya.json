@@ -1,36 +1,36 @@
 {
   "module": "30-mykola-dzherya",
   "level": "LIT",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:28.627008Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-09T13:11:08.853212Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349852Z",
-    "meta": "2026-01-29T07:39:04.977357Z",
-    "activities": "2026-01-27T15:34:57.219638Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.622749Z"
+    "md": "2026-02-09T12:52:11.443292Z",
+    "meta": "2026-02-09T13:06:04.438130Z",
+    "activities": "2026-02-09T12:51:09.261947Z",
+    "vocabulary": "2026-02-09T10:42:39.114734Z",
+    "plan": "2026-02-09T12:52:17.980247Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3532/4500 (raw: 3975) | pedagogy: 3 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4432/4000 (raw: 4472)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2/3"
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "25/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 2,
-    "fail_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -1,9 +1,9 @@
 ---
-module: translation-theory
+module: c2-033
 level: C2
 slug: translation-theory
 version: '2.0'
-id: c2-33
+id: c2-033
 naturalness:
   score: 1
   status: PENDING

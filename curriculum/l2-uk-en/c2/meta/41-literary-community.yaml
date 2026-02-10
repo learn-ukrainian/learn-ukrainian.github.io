@@ -1,9 +1,9 @@
 ---
-module: literary-community
+module: c2-041
 level: C2
 slug: literary-community
 version: '2.0'
-id: c2-41
+id: c2-041
 naturalness:
   score: 1
   status: PENDING

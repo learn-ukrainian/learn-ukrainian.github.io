@@ -2,14 +2,14 @@
   "module": "66-asking-for-directions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:59:00.622093Z",
+  "last_audit": "2026-02-10T11:23:21.099376Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.363299Z",
-    "meta": "2026-01-26T17:21:18.997138Z",
-    "activities": "2026-01-17T21:45:15.607056Z",
-    "vocabulary": "2026-01-25T16:02:17.945407Z",
-    "plan": "2026-01-30T12:32:20.137458Z"
+    "meta": "2026-02-07T10:03:50.706599Z",
+    "activities": "2026-02-07T10:03:50.721900Z",
+    "vocabulary": "2026-02-07T10:03:50.755263Z",
+    "plan": "2026-02-07T10:03:50.860135Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,19 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a2/review/asking-for-directions-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 1 (Beginner) review file at l2-uk-en/a2/review/asking-for-directions-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+    ],
     "pass_count": 5,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

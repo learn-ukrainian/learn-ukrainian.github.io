@@ -1,5 +1,5 @@
 ---
-module: hromadianske-suspilstvo
+module: c1-hist-127
 level: c1-hist
 sequence: 127
 version: '1.0'

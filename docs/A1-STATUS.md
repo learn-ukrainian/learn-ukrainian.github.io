@@ -1,6 +1,6 @@
 # A1 Module Status
 
-**Generated:** 2026-02-09 00:27:26
+**Generated:** 2026-02-10 16:08:58
 **Total Modules:** 44
 **Status:** 44 passing, 0 failing, 0 stubs, 0 errors
 
@@ -52,7 +52,7 @@
 | 036 | 36-at-the-restaurant | ✅ PASS | 1117/750 | - |
 | 037 | 37-at-the-market | ✅ PASS | 812/793 | - |
 | 038 | 38-at-the-store | ✅ PASS | 836/750 | - |
-| 039 | 39-buying-tickets | ✅ PASS | 770/750 | - |
+| 039 | 39-buying-tickets | ✅ PASS | 986/750 | - |
 | 040 | 40-taking-transport | ✅ PASS | 827/750 | - |
 | 041 | 41-phone-basics | ✅ PASS | 813/750 | - |
 | 042 | 42-emergencies | ✅ PASS | 798/750 | - |

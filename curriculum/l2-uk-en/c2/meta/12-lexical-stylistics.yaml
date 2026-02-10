@@ -1,9 +1,9 @@
 ---
-module: lexical-stylistics
+module: c2-012
 level: C2
 slug: lexical-stylistics
 version: '2.0'
-id: c2-12
+id: c2-012
 naturalness:
   score: 1
   status: PENDING

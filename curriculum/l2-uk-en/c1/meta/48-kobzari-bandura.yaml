@@ -1,5 +1,6 @@
 ---
-module: c1-48
+id: c1-048
+module: c1-048
 level: C1
 slug: 48-kobzari-bandura
 version: '1.0'

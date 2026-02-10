@@ -1,9 +1,9 @@
 ---
-module: c1-bridge-assessment
+module: c2-001
 level: C2
 slug: c1-bridge-assessment
 version: '2.0'
-id: c2-01
+id: c2-001
 naturalness:
   score: 1
   status: PENDING

@@ -1,84 +1,107 @@
-# Audit Report: M10 — danylo-halytskyi.md
-**Level:** C1-BIO | **Module:** M10 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 23:13:22
+# Рецензія: Данило Галицький: Король Русі
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4300 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 10
+**Overall Score:** 9.8/10
+**Status:** PASS
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Данило Галицький в Орді (1245) | 1 | 1 | ✅ |
-| 2 | critical-analysis | Аналіз літописної драми приниження | 1 | 1 | ✅ |
-| 3 | essay-response | Есе: Данило Галицький — стратег чи васал? | 1 | 1 | ✅ |
-| 4 | reading | Коронація в Дорогочині (1253) | 1 | 1 | ✅ |
-| 5 | authorial-intent | Аналіз дипломатичної інтенції | 1 | 1 | ✅ |
-| 6 | comparative-study | Порівняння стратегій: Данило vs Олександр Невський | 1 | 1 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: [PASS]
+- Sections: [all present]
+- Vocabulary: [5/5 from plan used]
+- Grammar scope: [clean]
+- Objectives: [all covered]
+```
 
-## Gates
-- **Words:** ✅ 4524/4300 (raw: 4610)
-- **Activities:** ✅ 6/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 15/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** biography
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 10/10 | <7 | Strong narrative, excellent hooks ("блокбастер"). |
+| 2 | Coherence | 10/10 | <7 | Logical flow from childhood to legacy. |
+| 3 | Relevance | 10/10 | <7 | Directly addresses C1 biography and history goals. |
+| 4 | Educational | 9/10 | <7 | Excellent historical depth, but one factual error in activity text. |
+| 5 | Language | 10/10 | <8 | High-level academic Ukrainian, rich vocabulary. |
+| 6 | Pedagogy | 10/10 | <7 | Good mix of reading, analysis, and critical thinking. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian, deep cultural context. |
+| 8 | Activities | 9/10 | <7 | Well-designed, but `reading-02` contains a factual error. |
+| 9 | Richness | 10/10 | <6 | Dense with facts, quotes, and analysis. |
+| 10 | Beginner Safety | 10/10 | <7 | 5/5. Appropriate for C1, clear structure. |
+| 11 | LLM Fingerprint | 10/10 | <7 | Feels like human-written history. |
+| 12 | Linguistic Accuracy | 10/10 | <9 | No grammatical errors found. |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 15 | 4 | 100% | 19% | 19.0% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
-| quotes | 15 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 14 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 11 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+**Weighted Overall:** 9.8/10
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 124 | Included in Core |
-| **Вступ — Єдиний коронований король Русі** | ✅ | 407 | Included in Core |
-| **Життєпис: Шлях до влади** | ⚪️ | 1546 | Skipped |
-| **Внесок: Коронація та держава** | ⚪️ | 841 | Skipped |
-| **Останні роки: Боротьба до кінця** | ⚪️ | 578 | Skipped |
-| **Спадщина: Королівська традиція** | ⚪️ | 518 | Skipped |
-| **Підсумок — Король без королівства?** | ✅ | 293 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 217 | Skipped |
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [reading-02 factual error]
+- Beginner safety: 5/5
+
+## Critical Issues Found
+
+### Issue 1: Factual Error (Pope Name)
+- **Location**: Activity `reading-02`, field `text` (approx line 61 in YAML)
+- **Original**: "...посол від Папи **Інокентія III** з короною."
+- **Problem**: Pope Innocent III died in 1216. The coronation in 1253 was authorized by **Pope Innocent IV**. The main content file correctly identifies him as "Інокентієм IV".
+- **Fix**: Change "Інокентія III" to "Інокентія IV".
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| - | - | - | - |
+
+(No language issues found in the content text.)
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? [No]
+- Instructions clear? [Yes]
+- Quick wins? [Yes]
+- Ukrainian scary? [No (Appropriate for level)]
+- Come back tomorrow? [Yes]
+
+Emotional beats: 5 found
+- Welcome: "Чому це важливо?" (Hook)
+- Curiosity: "Король чи Князь?" (History bite)
+- Encouragement: "Потрібно більше практики?"
+- Depth: Myth-buster about Galician separatism.
+
+## Strengths
+- **Decolonization**: Excellent contrast with Alexander Nevsky and debunking of Soviet/Russian myths about "useless" coronation.
+- **Narrative**: The biography is written as a compelling story, not just a list of dates.
+- **Vocabulary**: Rich use of historical terms (`темник`, `баскак`, `ярлик`, `унія`).
+
+## Fix Plan to Reach 10/10
+
+### Activities: 9/10 → 10/10
+
+**What to fix:**
+1. File `curriculum/l2-uk-en/c1-bio/activities/danylo-halytskyi.yaml`: Find `id: reading-02`. In the `text` field, change "Папи Інокентія III" to "Папи Інокентія IV".
+
+### Projected Overall After Fixes
+
+```
+10/10
+```
+
+## Verification Summary
+
+- Content lines read: ~160
+- Activity items checked: 6
+- Ukrainian sentences verified: All
+- IPA transcriptions checked: 25
+- Issues found: 1 (Factual error in activity)
+- Naturalness score recommendation: 10/10
+
+## Verdict
+
+**PASS**
+
+The module is exceptional in quality, narrative depth, and linguistic richness. It meets all C1 requirements and provides a strong decolonial perspective. The only issue is a minor factual error (wrong Pope number) in one activity text, which is easily fixed.

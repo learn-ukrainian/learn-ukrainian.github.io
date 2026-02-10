@@ -1,0 +1,129 @@
+module: c1-bio-069
+level: C1-BIO
+version: '2.0'
+items:
+- lemma: орієнталістика
+  ipa:
+  - ɔrʲijentɐˈlʲistɪkɐ
+  translation: Oriental studies
+  definition: Сукупність наук про історію, мови, літературу та культуру народів Сходу; сходознавство.
+- lemma: поліглот
+  ipa:
+  - pɔlʲiˈɦlɔt
+  translation: polyglot
+  definition: Людина, яка володіє багатьма мовами.
+- lemma: лінгвоцид
+  ipa:
+  - lʲinɦwɔˈt͡sɪd
+  translation: linguicide
+  definition: Свідоме нищення мови як головної ознаки етносу; мововбивство.
+- lemma: мулла
+  ipa:
+  - mʊˈlːa
+  translation: mullah
+  definition: Служитель релігійного культу в мусульман; знавець Корану.
+- lemma: касида
+  ipa:
+  - kɐˈsɪdɐ
+  translation: qasida
+  definition: Жанр східної поезії, урочистий вірш-панегірик.
+- lemma: суфізм
+  ipa:
+  - sʊˈfizm
+  translation: Sufism
+  definition: Містичний напрям в ісламі, що проповідує аскетизм і духовне самовдосконалення.
+- lemma: феноменальний
+  ipa:
+  - fenɔmeˈnɑlʲnei̯
+  translation: phenomenal
+  definition: Надзвичайний, винятковий, рідкісний за своїми якостями.
+- lemma: мароніти
+  ipa:
+  - mɐrɔˈnʲite
+  translation: Maronites
+  definition: Представники однієї з християнських церков на Близькому Сході (переважно в Лівані).
+- lemma: медресе
+  ipa:
+  - medreˈsɛ
+  translation: madrasa
+  definition: Мусульманська середня або вища школа.
+- lemma: етимологія
+  ipa:
+  - etɪmɔˈlɔɦʲijɐ
+  translation: etymology
+  definition: Наука про походження слів; походження слова.
+- lemma: шовініст
+  ipa:
+  - ʃɔwiˈnʲist
+  translation: chauvinist
+  definition: Прихильник ідеології національної винятковості та зверхності однієї нації над іншими.
+- lemma: реабілітація
+  ipa:
+  - reɐbʲilʲiˈtɑt͡sʲijɐ
+  translation: rehabilitation
+  definition: Відновлення доброго імені, прав та репутації особи, яка була безпідставно звинувачена.
+- lemma: репресії
+  ipa:
+  - reˈprɛsʲiji
+  translation: repressions
+  definition: Каральні заходи держави проти своїх громадян з політичних мотивів.
+- lemma: евакуація
+  ipa:
+  - ewɐkʊˈɑt͡sʲijɐ
+  translation: evacuation
+  definition: Організоване вивезення людей та майна з небезпечної зони.
+- lemma: інтелігенція
+  ipa:
+  - intelʲiˈɦɛnt͡sʲijɐ
+  translation: intelligentsia
+  definition: Суспільна верства людей, що професійно займаються розумовою працею та творчістю.
+- lemma: рукопис
+  ipa:
+  - rʊˈkɔpɪs
+  translation: manuscript
+  definition: Текст, написаний від руки; давня книга.
+- lemma: лексикографія
+  ipa:
+  - leksɪkɔˈhrɑfʲijɐ
+  translation: lexicography
+  definition: Наука про укладання словників.
+- lemma: шляхта
+  ipa:
+  - ˈʃlʲɑxtɐ
+  translation: nobility (szlachta)
+  definition: Привілейований стан у Польщі, Литві та Україні в XIV-XVIII ст.
+- lemma: діалект
+  ipa:
+  - dʲiɐˈlɛkt
+  translation: dialect
+  definition: Різновид мови, яким спілкуються люди на певній території.
+- lemma: тоталітаризм
+  ipa:
+  - tɔtɐlʲitɐˈrɪzm
+  translation: totalitarianism
+  definition: Політичний режим, що характеризується повним контролем держави над усіма сферами життя.
+- lemma: гуманітарний
+  ipa:
+  - hʊmɐnʲiˈtɑrnei̯
+  translation: humanities (adj)
+  definition: Такий, що стосується суспільства, культури, людини (на відміну від технічного).
+- lemma: фундамент
+  ipa:
+  - fʊnˈdɑment
+  translation: foundation
+  definition: Основа, база чого-небудь.
+- lemma: емпатія
+  ipa:
+  - emˈpɑtʲijɐ
+  translation: empathy
+  definition: Здатність розуміти емоційний стан іншої людини, співпереживати.
+- lemma: лібідо
+  ipa:
+  - lʲiˈbʲidɔ
+  translation: libido
+  definition: Психічна енергія, потяг (термін психоаналізу).
+- lemma: сублімація
+  ipa:
+  - sʊblʲiˈmɑt͡sʲijɐ
+  translation: sublimation
+  definition: Переключення енергії (зокрема сексуальної) на соціально прийнятні цілі (творчість, науку).

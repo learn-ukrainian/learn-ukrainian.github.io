@@ -2,11 +2,11 @@
   "module": "yurii-lypa",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:21.285889Z",
+  "last_audit": "2026-02-09T23:24:58.092860Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T01:04:17.310299Z",
-    "meta": "2026-02-07T15:13:22.024545Z",
+    "md": "2026-02-09T07:57:54.898790Z",
+    "meta": "2026-02-09T15:59:44.226566Z",
     "activities": null,
     "vocabulary": null,
     "plan": null
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "fail",
       "violations": 5,
-      "message": "0/3600 (raw: 80) | engagement: 0/5 | pedagogy: 3 violations | immersion: 0.0% LOW (target 95-100% (biography)) | richness: 21% < 95% min (biography) - REWRITE needed"
+      "message": "0/3600 (raw: 80) | engagement: 0/5 | pedagogy: 2 violations | immersion: 0.0% LOW (target 95-100% (biography)) | richness: 21% < 95% min (biography) - REWRITE needed"
     },
     "activities": {
       "status": "fail",
@@ -36,6 +36,11 @@
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

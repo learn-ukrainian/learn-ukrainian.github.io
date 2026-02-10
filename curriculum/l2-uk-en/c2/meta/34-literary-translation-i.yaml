@@ -1,9 +1,9 @@
 ---
-module: literary-translation-i
+module: c2-034
 level: C2
 slug: literary-translation-i
 version: '2.0'
-id: c2-34
+id: c2-034
 naturalness:
   score: 1
   status: PENDING

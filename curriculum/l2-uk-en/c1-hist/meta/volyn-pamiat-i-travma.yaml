@@ -1,8 +1,8 @@
 ---
-module: volyn-pamiat-i-travma
+module: c1-hist-074
 level: C1-HIST
 slug: volyn-pamiat-i-travma
 version: '1.0'
-id: c1-hist-74
+id: c1-hist-074
 build:
   last_modified: '2026-01-26'

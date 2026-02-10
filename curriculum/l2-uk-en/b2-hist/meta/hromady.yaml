@@ -1,9 +1,9 @@
 ---
-module: hromady
+module: b2-hist-083
 level: B2-HIST
 slug: hromady
 version: '2.0'
-id: b2-hist-83
+id: b2-hist-083
 naturalness:
   score: 10
   status: PASS

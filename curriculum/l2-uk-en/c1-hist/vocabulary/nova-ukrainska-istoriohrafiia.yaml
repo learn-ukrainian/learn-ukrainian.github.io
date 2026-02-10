@@ -1,0 +1,174 @@
+vocabulary:
+  - term: парадигма
+    ipa: [pɐrɐˈdɪɦmɐ]
+    translation: paradigm
+    definition: "Система поглядів і понять, що визначає підхід до розв'язання проблем у певній науці."
+    context: "Зміна історичної парадигми після 1991 року."
+
+  - term: наратив
+    ipa: [nɐrɐˈtɪu̯]
+    translation: narrative
+    definition: "Спосіб викладу подій, що формує певне розуміння історії."
+    context: "Національний історичний наратив."
+
+  - term: дискурс
+    ipa: [dɪsˈkurs]
+    translation: discourse
+    definition: "Сукупність висловлювань і текстів, що творять певне розуміння реальності."
+    context: "Публічний історичний дискурс."
+
+  - term: ідентичність
+    ipa: [iˈdɛntɪtʲnʲisʲtʲ]
+    translation: identity
+    definition: "Усвідомлення людиною своєї приналежності до певної групи (нації, спільноти)."
+    context: "Пошук національної ідентичності."
+
+  - term: деколонізація
+    ipa: [dɛkɔlɔnʲiˈzɑt͡sʲijɐ]
+    translation: decolonization
+    definition: "Процес звільнення від колоніальної залежності та імперських впливів у культурі й свідомості."
+    context: "Деколонізація історичної пам'яті."
+
+  - term: спецсховище
+    ipa: [spɛt͡sˈsxɔvɪʃt͡ʃe]
+    translation: special repository (restricted access)
+    definition: "Відділ у бібліотеках та архівах СРСР з обмеженим доступом, де зберігалася заборонена література."
+    context: "Відкриття спецсховищ у 1990-х роках."
+
+  - term: джерелознавство
+    ipa: [d͡ʒerɛlɔˈznɑu̯stwɔ]
+    translation: source criticism / source studies
+    definition: "Наука про історичні джерела, методи їх пошуку та аналізу."
+    context: "Семінари з джерелознавства в НаУКМА."
+
+  - term: політика пам'яті
+    ipa: [pɔˈlʲitɪkɐ ˈpɑmʲjɐtʲi]
+    translation: politics of memory
+    definition: "Державна або громадська діяльність, спрямована на утвердження певних уявлень про минуле."
+    context: "Війни пам'яті в українському суспільстві."
+
+  - term: інструменталізація
+    ipa: [instrʊmɛntɐlʲiˈzɑt͡sʲijɐ]
+    translation: instrumentalization
+    definition: "Використання чогось (наприклад, історії) як засобу для досягнення певної мети."
+    context: "Інструменталізація трагедії політиками."
+
+  - term: нормалізація
+    ipa: [nɔrmɐlʲiˈzɑt͡sʲijɐ]
+    translation: normalization
+    definition: "Приведення до норми; в історії — відмова від надмірного пафосу чи трагізму."
+    context: "Дискусія про нормалізацію української історії."
+
+  - term: амбівалентність
+    ipa: [ɐmbivɐˈlɛntnʲisʲtʲ]
+    translation: ambivalence
+    definition: "Двоїстість, суперечливість почуттів або ставлення."
+    context: "Амбівалентне ставлення до радянського минулого."
+
+  - term: мультиперспективність
+    ipa: [mʊlʲtɪpɛrspɛkˈtɪu̯nʲisʲtʲ]
+    translation: multiperspectivity
+    definition: "Підхід, що враховує різні точки зору на одну й ту ж подію."
+    context: "Толерантність до мультиперспективності в освіті."
+
+  - term: антропологічний
+    ipa: [ɐntrɔpɔlɔˈɦit͡ʃnɪj]
+    translation: anthropological
+    definition: "Такий, що стосується людини; в історії — підхід, що ставить людину в центр дослідження."
+    context: "Антропологічний поворот у дослідженнях Яковенко."
+
+  - term: мікроісторія
+    ipa: [mʲikrɔisˈtɔrʲijɐ]
+    translation: microhistory
+    definition: "Напрям історії, що досліджує минуле через призму долі окремих людей або малих спільнот."
+    context: "Дослідження повсякдення методами мікроісторії."
+
+  - term: усна історія
+    ipa: [ˈusnɐ isˈtɔrʲijɐ]
+    translation: oral history
+    definition: "Метод збору історичної інформації через інтерв'ю з учасниками подій."
+    context: "Проект 'Майдан: усна історія'."
+
+  - term: публічна історія
+    ipa: [pʊbˈlʲit͡ʃnɐ isˈtɔrʲijɐ]
+    translation: public history
+    definition: "Історія, орієнтована на широку аудиторію та існуюча поза академічними стінами."
+    context: "Розвиток публічної історії в YouTube."
+
+  - term: декомунізація
+    ipa: [dɛkɔmʊnʲiˈzɑt͡sʲijɐ]
+    translation: decommunization
+    definition: "Процес позбавлення від комуністичної ідеології та символіки."
+    context: "Пакет законів про декомунізацію 2015 року."
+
+  - term: люстрація
+    ipa: [lʲʊsˈtrɑt͡sʲijɐ]
+    translation: lustration
+    definition: "Очищення влади; законодавча заборона діячам старого режиму займати державні посади."
+    context: "Спроби люстрації в Україні."
+
+  - term: тоталітаризм
+    ipa: [tɔtɐlʲitɐˈrɪzm]
+    translation: totalitarianism
+    definition: "Політичний режим, що прагне повного контролю над життям суспільства."
+    context: "Зіткнення двох тоталітаризмів."
+
+  - term: постколоніалізм
+    ipa: [pɔstkɔlɔnʲiɐˈlʲizm]
+    translation: postcolonialism
+    definition: "Напрям досліджень, що вивчає наслідки колоніального панування."
+    context: "Постколоніальна критика російського імперіалізму."
+
+  - term: європоцентризм
+    ipa: [jɛu̯rɔpɔt͡sɛnˈtrɪzm]
+    translation: Eurocentrism
+    definition: "Погляд на світ, де Європа є центром історії та культури."
+    context: "Подолання провінційності та європоцентризму."
+
+  - term: націєтворення
+    ipa: [nɐt͡sʲijɛˈtwɔrɛnʲːɐ]
+    translation: nation-building
+    definition: "Процес формування нації."
+    context: "Україна як лабораторія націєтворення."
+
+  - term: конструктивізм
+    ipa: [kɔnstrʊktɪˈwizm]
+    translation: constructivism
+    definition: "Теорія, згідно з якою нації є модерними конструктами, створеними елітами."
+    context: "Конструктивістський підхід Грицака."
+
+  - term: примордіалізм
+    ipa: [prɪmɔrdʲiɐˈlʲizm]
+    translation: primordialism
+    definition: "Теорія, що розглядає нації як давні, природні утворення."
+    context: "Критика примордіалізму в сучасній науці."
+
+  - term: еліта
+    ipa: [ɛˈlʲitɐ]
+    translation: elite
+    definition: "Вибрана частина суспільства, що здійснює керівництво або творить культуру."
+    context: "Роль шляхетської еліти."
+
+  - term: шляхта
+    ipa: [ˈʃlʲɑxtɐ]
+    translation: szlachta (nobility)
+    definition: "Привілейований стан у Польщі, Литві та Україні XIV–XVIII ст."
+    context: "Українська шляхта як суб'єкт історії."
+
+  - term: громадянське суспільство
+    ipa: [hrɔmɐˈdʲɑnʲsʲkɛ sʊsˈpʲilʲstwo]
+    translation: civil society
+    definition: "Суфера самовиявлення вільних громадян, незалежна від держави."
+    context: "Роль істориків у розбудові громадянського суспільства."
+
+  - term: інтелектуал
+    ipa: [intɛlɛktʊˈɑl]
+    translation: intellectual
+    definition: "Людина розумової праці, що активно впливає на суспільну думку."
+    context: "Публічні інтелектуали та їх відповідальність."
+
+  - term: рефлексія
+    ipa: [rɛfˈlɛksʲijɐ]
+    translation: reflection
+    definition: "Роздуми, аналіз власних думок і переживань."
+    context: "Історична рефлексія травматичного минулого."

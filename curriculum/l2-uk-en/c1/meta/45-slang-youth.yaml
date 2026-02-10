@@ -1,5 +1,6 @@
 ---
-module: c1-45
+id: c1-045
+module: c1-045
 level: C1
 slug: 45-slang-youth
 version: '1.0'

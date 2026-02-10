@@ -1,9 +1,9 @@
 ---
-module: naukovyi-styl-mastery
+module: c2-003
 level: C2
 slug: naukovyi-styl-mastery
 version: '2.0'
-id: c2-03
+id: c2-003
 naturalness:
   score: 1
   status: PENDING

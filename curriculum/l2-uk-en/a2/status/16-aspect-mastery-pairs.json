@@ -2,14 +2,14 @@
   "module": "16-aspect-mastery-pairs",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:37.022418Z",
+  "last_audit": "2026-02-10T10:45:20.089442Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T18:07:12.423201Z",
-    "meta": "2026-01-29T07:39:04.588606Z",
-    "activities": "2026-01-11T10:24:57.786058Z",
-    "vocabulary": "2026-01-25T18:06:58.644587Z",
-    "plan": "2026-01-30T12:31:49.576134Z"
+    "meta": "2026-02-07T10:03:50.719476Z",
+    "activities": "2026-02-07T10:03:50.750038Z",
+    "vocabulary": "2026-02-07T10:03:50.793466Z",
+    "plan": "2026-02-09T12:52:14.185752Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

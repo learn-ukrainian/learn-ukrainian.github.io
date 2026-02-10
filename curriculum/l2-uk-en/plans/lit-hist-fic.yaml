@@ -1,0 +1,98 @@
+---
+# Level Plan: LIT-HIST-FIC (Ukrainian Historical Fiction Track)
+# Post-C1 specialization: The Memory of the Nation
+
+level: lit-hist-fic
+track: literature-historical-fiction
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 20
+  description: "Epic Ukrainian historical fiction — novels that shaped how Ukrainians understand their own history, from Kozak glory to insurgent resistance"
+  prerequisites: "[c1, b2-hist recommended]"
+  target_audience: "Advanced learners interested in how fiction preserves and constructs national memory"
+  decolonization_mission: "Ukrainian historical fiction was often the ONLY way to tell Ukrainian history when academic history was banned or distorted"
+
+sources:
+  primary: "Ukrainian novels (ukrlib.com.ua, original editions)"
+  supplementary:
+    - "Ukrainian literary criticism on historical prose"
+    - "Historical context from B2-HIST track"
+  note: "Historical accuracy verified against Ukrainian scholarship, not Soviet/Russian narratives"
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 600
+  focus_areas:
+    - "Historical vocabulary (гетьман, козак, яничар, повстанець)"
+    - "Archaic forms preserved in historical prose"
+    - "Military/political terminology"
+    - "Regional/dialectal vocabulary used for authenticity"
+
+phases:
+  - id: HISTFIC.1
+    name: "Класичний Історичний Роман"
+    name_en: "Classical Historical Novel"
+    modules: "[1, 4]"
+    focus: "19th-century foundations: Kulish, Starytsky, Lepkyi"
+    era: "Works set across Ukrainian history"
+    key_works:
+      - "Куліш — Чорна рада (revisited from LIT main)"
+      - "Старицький — Богдан Хмельницький"
+      - "Лепкий — трилогія про Мазепу"
+
+  - id: HISTFIC.2
+    name: "Загребельний: Архітектор Минулого"
+    name_en: "Zahrebelny: Architect of the Past"
+    modules: "[5, 9]"
+    focus: "Pavlo Zahrebelny — the master of Ukrainian historical epic"
+    key_works:
+      - "Роксолана (1980) — влада та ідентичність"
+      - "Диво (1968) — Софія Київська як символ"
+      - "Смерть у Києві (1973) — давній Київ"
+
+  - id: HISTFIC.3
+    name: "Іванючук та Білик: Національна Пам'ять"
+    name_en: "Ivanychuk & Bilyk: National Memory"
+    modules: "[10, 13]"
+    focus: "Historical fiction as preservation of suppressed history"
+    key_works:
+      - "Іванючук — Мальви (яничари та ідентичність)"
+      - "Іванючук — Вода (екологія та історія)"
+      - "Іванючук — Шрам (козацька доба)"
+      - "Білик — Меч Арея (давня історія)"
+
+  - id: HISTFIC.4
+    name: "Сучасний Історичний Роман"
+    name_en: "Contemporary Historical Novel"
+    modules: "[14, 20]"
+    focus: "Post-independence historical fiction — from insurgent narratives to European integration"
+    key_works:
+      - "Шкляр — Чорний Ворон (повстанська армія)"
+      - "Шкляр — Маруся (козацька доба)"
+      - "Лис — Століття Якова (село через 100 років)"
+      - "Кокотюха — Червоний (детектив + історія)"
+      - "Курков — Сірі бджоли (сучасний Донбас)"
+      - "Рафеєнко — Довгі часи (окупація)"
+
+constraints:
+  min_word_target: 4000
+  max_word_target: 5500
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Novel excerpt with glossary and historical context"
+    - "Literary analysis: how does fiction shape historical understanding?"
+    - "Comparison with actual historical events (cross-reference B2-HIST)"
+    - "Discussion: fiction as national memory tool"
+  decolonization:
+    - "Historical fiction was resistance — writing Ukrainian history in Ukrainian when it was forbidden"
+    - "Zahrebelny wrote within Soviet system but encoded Ukrainian identity"
+    - "Shklyar openly celebrated UPA — post-independence freedom"
+    - "Always identify what imperial myth each novel challenges"

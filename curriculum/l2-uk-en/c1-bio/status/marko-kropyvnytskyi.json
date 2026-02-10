@@ -2,11 +2,11 @@
   "module": "marko-kropyvnytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:43.741601Z",
+  "last_audit": "2026-02-09T23:24:20.449866Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.213166Z",
-    "meta": "2026-02-07T15:13:22.015362Z",
+    "meta": "2026-02-09T15:59:44.199787Z",
     "activities": "2026-02-07T10:03:51.567163Z",
     "vocabulary": "2026-02-07T10:03:51.618672Z",
     "plan": null
@@ -36,6 +36,11 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

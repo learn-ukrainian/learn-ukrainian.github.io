@@ -1,85 +1,136 @@
-# Audit Report: M22 — bohdan-khmelnytskyy.md
-**Level:** C1-BIO | **Module:** M22 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 23:47:50
+# Рецензія: Богдан Хмельницький: Гетьман-державотворець
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4300 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** comparative-study, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 22
+**Overall Score:** 8.8/10
+**Status:** FAIL
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Первинне джерело: Універсал гетьмана | 1 | 1 | ✅ |
-| 2 | critical-analysis | Критичний аналіз гетьманської риторики | 1 | 1 | ✅ |
-| 3 | reading | Дипломатичне листування: Лист до шведського короля | 1 | 1 | ✅ |
-| 4 | authorial-intent | Аналіз авторських намірів | 1 | 1 | ✅ |
-| 5 | comparative-study | Компаративний аналіз: Хмельницький та Кромвель | 1 | 1 | ✅ |
-| 6 | essay-response | Підсумкове есе: Хмельницький як архітектор суб'єктності | 1 | 1 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (comparative-study, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: FAIL
+- Sections: PASS (All outline points covered)
+- Vocabulary: 2/3 required words found. MISSING: "Гетьманщина" (Critical term required by plan).
+- Grammar scope: PASS
+- Objectives: PASS
+```
 
-## Gates
-- **Words:** ✅ 4826/4300 (raw: 5017)
-- **Activities:** ✅ 6/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.8% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** biography
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 10/10 | <7 | Powerful narrative, excellent rhetorical flow. |
+| 2 | Coherence | 10/10 | <7 | Logical progression from biography to analysis. |
+| 3 | Relevance | 10/10 | <7 | Central figure of Ukrainian history, crucial for C1. |
+| 4 | Educational | 10/10 | <7 | Deep insights into state-building and diplomacy. |
+| 5 | Language | 8/10 | <8 | Several euphony violations ("у унікальній", "у 1664"). |
+| 6 | Pedagogy | 9/10 | <7 | Strong seminar approach, good activities. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian, authentic feel. |
+| 8 | Activities | 10/10 | <7 | Excellent C1-level tasks (comparative, critical analysis). |
+| 9 | Richness | 10/10 | <6 | 5000+ words, dense with history. |
+| 10 | Beginner Safety | 8/10 | <7 | Dense text, but appropriate for C1. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Feels curated and specific. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error in vocabulary. |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 7 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+**Weighted Overall:** (15 + 10 + 10 + 12 + 8.8 + 10.8 + 10 + 13 + 9 + 10.4 + 9 + 12) / 14.0 = **9.28/10**
+*Correction*: Despite high weighted score, the **Plan Alignment Failure** and **Linguistic Accuracy** issues (<9) require a mandatory fix loop. I am overriding the status to FAIL to ensure these technical fixes are applied.
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 119 | Included in Core |
-| **Вступ — Творець козацької держави** | ✅ | 675 | Included in Core |
-| **Життєпис** | ⚪️ | 1442 | Skipped |
-| **Історичний контекст** | ✅ | 627 | Included in Core |
-| **Внесок** | ⚪️ | 454 | Skipped |
-| **Останні роки** | ⚪️ | 437 | Skipped |
-| **Спадщина** | ⚪️ | 502 | Skipped |
-| **Підсумок** | ✅ | 311 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 259 | Skipped |
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [CLEAN]
+- Beginner safety: 5/5
+
+## Critical Issues Found
+
+### Issue 1: Missing Required Vocabulary
+- **Location**: `vocabulary/bohdan-khmelnytskyy.yaml`
+- **Original**: (Missing)
+- **Problem**: Plan explicitly requires `Гетьманщина` (Hetmanate) as a vocabulary item.
+- **Fix**: Add entry for `Гетьманщина`.
+
+### Issue 2: Euphony Violation (U/V rule)
+- **Location**: Paragraph 1 (Intro) / Line ~5
+- **Original**: "полягав у унікальній здатності"
+- **Problem**: Hiatus "у у..." is hard to pronounce and violates euphony rules (after consonant `в`, before vowel `у`, use `в`).
+- **Fix**: "полягав в унікальній здатності"
+
+### Issue 3: Euphony Violation (Prepositions with dates)
+- **Location**: Section "Останні роки" / Paragraph 3
+- **Original**: "за легендою, у 1664 році"
+- **Problem**: After vowel `ю`, before number starting with consonant `1` (тисяча), use `в`.
+- **Fix**: "за легендою, в 1664 році"
+
+### Issue 4: IPA Stress Error
+- **Location**: Vocabulary item `суб'єктність`
+- **Original**: `/subjekˈtnʲisʲtʲ/`
+- **Problem**: Stress is placed incorrectly on the suffix `-ність`. Stress should be on the root/suffix boundary `є`. Also missing palatalization marker or syllable break nuance.
+- **Fix**: `/subˈjɛktnʲisʲtʲ/`
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| Intro | "полягав у унікальній" | "полягав в унікальній" | Euphony |
+| Late Yrs | "за легендою, у 1664" | "за легендою, в 1664" | Euphony |
+| Vocab | `/subjekˈtnʲisʲtʲ/` | `/subˈjɛktnʲisʲtʲ/` | IPA Error |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? No (C1 expectation met)
+- Instructions clear? Yes
+- Quick wins? Yes (Reading activities are segmented)
+- Ukrainian scary? No (Appropriate density)
+- Come back tomorrow? Yes
+
+Emotional beats: 4 found
+- Welcome: Strong patriotic intro.
+- Curiosity: "History bite" about coffee.
+- Quick wins: "History bite" box.
+- Progress: Detailed timeline.
+
+## Strengths
+- **Narrative Power**: The text effectively positions Khmelnytskyy not just as a warrior, but as a sophisticated politician ("Machiavellian mind").
+- **Vocabulary**: Rich, academic lexicon ("деміург", "суб'єктність", "легітимність").
+- **Activities**: The comparison with Cromwell is a brilliant C1-level analytical task.
+
+## Fix Plan to Reach 9/10 (REQUIRED)
+
+### Language & Accuracy: 8/10 → 10/10
+
+**What to fix:**
+1.  **Vocabulary**: Add the missing item:
+    ```yaml
+    - lemma: Гетьманщина
+      ipa: /ɦetʲˈmɑnʃt͡ʃɪnɐ/
+      translation: Hetmanate
+      pos: noun
+      gender: f
+      note: козацька держава
+    ```
+2.  **Vocabulary**: Fix IPA for `суб'єктність` -> `/subˈjɛktnʲisʲtʲ/`.
+3.  **Content (Intro)**: Change "полягав у унікальній" to "полягав в унікальній".
+4.  **Content (Late Years)**: Change "за легендою, у 1664" to "за легендою, в 1664".
+5.  **Content (Late Years)**: Change "Коли у 1656" to "Коли в 1656" (Euphony: after vowel `и`).
+
+### Projected Overall After Fixes
+
+9.5/10
+
+## Verification Summary
+
+- Content lines read: ~200
+- Activity items checked: 6
+- Ukrainian sentences verified: ~80
+- IPA transcriptions checked: 25
+- Issues found: 4
+- Naturalness score recommendation: 10/10
+
+## Verdict
+
+**FAIL**
+
+Excellent content quality marred by minor but strict euphony violations and a missing required vocabulary item from the plan. Fix the euphony issues and add "Гетьманщина" to the vocabulary to pass.

@@ -1,8 +1,8 @@
 ---
-module: beresteyska-uniia-analiz
+module: c1-hist-059
 level: C1-HIST
 slug: beresteyska-uniia-analiz
 version: '1.0'
-id: c1-hist-59
+id: c1-hist-059
 build:
   last_modified: '2026-01-26'

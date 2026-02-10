@@ -1,8 +1,8 @@
 ---
-module: mekhanizm-znyshchennia
+module: c1-hist-056
 level: C1-HIST
 slug: mekhanizm-znyshchennia
 version: '1.0'
-id: c1-hist-56
+id: c1-hist-056
 build:
   last_modified: '2026-01-26'

@@ -1,8 +1,8 @@
 ---
-module: mekhanizm-kooptatsii
+module: c1-hist-081
 level: C1-HIST
 slug: mekhanizm-kooptatsii
 version: '1.0'
-id: c1-hist-81
+id: c1-hist-081
 build:
   last_modified: '2026-01-26'

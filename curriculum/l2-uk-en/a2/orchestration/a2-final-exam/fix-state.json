@@ -1,0 +1,14 @@
+{
+  "slug": "a2-final-exam",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:23:22.591264Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T11:23:22.591249Z",
+  "result": "success"
+}

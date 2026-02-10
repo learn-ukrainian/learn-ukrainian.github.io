@@ -1,9 +1,9 @@
 ---
-module: professional-research-skills
+module: c2-059
 level: C2
 slug: professional-research-skills
 version: '2.0'
-id: c2-59
+id: c2-059
 naturalness:
   score: 1
   status: PENDING

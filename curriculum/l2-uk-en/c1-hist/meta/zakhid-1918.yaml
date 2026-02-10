@@ -1,8 +1,8 @@
 ---
-module: zakhid-1918
+module: c1-hist-095
 level: C1-HIST
 slug: zakhid-1918
 version: '1.0'
-id: c1-hist-95
+id: c1-hist-095
 build:
   last_modified: '2026-01-26'

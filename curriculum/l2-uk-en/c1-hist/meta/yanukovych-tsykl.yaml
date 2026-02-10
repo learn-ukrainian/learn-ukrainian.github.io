@@ -1,8 +1,8 @@
 ---
-module: yanukovych-tsykl
+module: c1-hist-087
 level: C1-HIST
 slug: yanukovych-tsykl
 version: '1.0'
-id: c1-hist-87
+id: c1-hist-087
 build:
   last_modified: '2026-01-26'

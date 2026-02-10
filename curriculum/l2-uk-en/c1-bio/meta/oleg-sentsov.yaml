@@ -1,12 +1,68 @@
----
-module: c1-bio-144
-level: C1-BIO
+id: c1-bio-155
 slug: oleg-sentsov
-version: '2.0'
-id: c1-bio-152
-naturalness:
-  score: 1
-  status: PENDING
+title: "Олег Сенцов: Режисер власної долі та воїн"
+level: C1
+track: c1-bio
+goal: "Дослідити життя та творчість Олега Сенцова як приклад інтелектуальної незламності, трансформації митця у воїна та глобальної адвокації прав людини в умовах російської агресії."
+focus:
+  - "Кримський опір 2014 року"
+  - "Голодування як акт політичного виклику"
+  - "Документальне кіно на війні (фільм Реал)"
+  - "Сенцов як командир підрозділу 47-ї бригади"
 word_target: 4000
-build:
-  last_modified: '2026-01-26'
+content_outline:
+  - section: "Вступ — Людина, яка не злякалася імперії"
+    words: 600
+  - section: "Життєпис: Від кримських знімальних майданчиків до в'язниць Сибіру"
+    words: 1600
+  - section: "Історичний контекст: Крим як точка зламу та боротьба за політв'язнів"
+    words: 600
+  - section: "Творчість та опір: «Носоріг» і філософія незламності"
+    words: 400
+  - section: "Сучасний етап: Від камери GoPro до штурмової роти «Маґури»"
+    words: 400
+  - section: "Вплив: Голос України у світовому інтелектуальному просторі"
+    words: 400
+naturalness:
+  status: "PASS"
+  score: 10
+  last_checked: "2026-02-09"
+activities:
+  - reading
+  - critical-analysis
+  - essay-response
+  - comparative-study
+sources:
+  - "https://uk.wikipedia.org/wiki/Сенцов_Олег_Геннадійович"
+  - "https://ukrlib.com.ua"
+  - "https://detector.media"
+prerequisites:
+  - "c1-bio-154"
+audio:
+  status: "PENDING"
+  last_updated: "2026-02-09"
+visuals:
+  - "Портрет Олега Сенцова в колонії (фото Громадське)"
+  - "Кадр із фільму 'Носоріг'"
+  - "Сенцов у формі 47-ї ОМБр"
+  - "Отримання Премії Сахарова (архів Європарламенту)"
+tags:
+  - "Крим"
+  - "Кіно"
+  - "Політв'язні"
+  - "47-ма бригада"
+  - "Премія Сахарова"
+  - "Режисер"
+  - "Деколонізація"
+vocabulary_count: 25
+activity_density: 8
+immersion_target: 100
+richness_target: 95
+decolonization_focus: true
+primary_source_quotes: true
+history_bite_count: 1
+myth_buster_count: 1
+model_answer_required: true
+vital_status: "LIVING"
+curriculum_index: 155
+manifest_id: "M155"

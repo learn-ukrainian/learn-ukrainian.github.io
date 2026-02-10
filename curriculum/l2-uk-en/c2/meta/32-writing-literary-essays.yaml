@@ -1,9 +1,9 @@
 ---
-module: writing-literary-essays
+module: c2-032
 level: C2
 slug: writing-literary-essays
 version: '2.0'
-id: c2-32
+id: c2-032
 naturalness:
   score: 1
   status: PENDING

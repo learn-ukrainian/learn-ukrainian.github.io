@@ -1,9 +1,9 @@
 ---
-module: hrushevskyi
+module: b2-hist-087
 level: B2-HIST
 slug: hrushevskyi
 version: '2.0'
-id: b2-hist-87
+id: b2-hist-087
 naturalness:
   score: 10
   status: PASS

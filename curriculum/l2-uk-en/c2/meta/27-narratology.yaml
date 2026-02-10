@@ -1,9 +1,9 @@
 ---
-module: narratology
+module: c2-027
 level: C2
 slug: narratology
 version: '2.0'
-id: c2-27
+id: c2-027
 naturalness:
   score: 1
   status: PENDING

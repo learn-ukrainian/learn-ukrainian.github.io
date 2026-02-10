@@ -14,6 +14,8 @@ import re
 from pathlib import Path
 from collections import defaultdict
 
+from slug_utils import to_bare_slug
+
 
 PROJECT_ROOT = Path(__file__).parent.parent
 CURRICULUM_DIR = PROJECT_ROOT / 'curriculum' / 'l2-uk-en'
@@ -60,7 +62,7 @@ def extract_topic_keywords(slug: str) -> set:
     """Extract topic keywords from a slug."""
     # Remove common suffixes/prefixes
     slug = slug.lower()
-    slug = re.sub(r'^\d+-', '', slug)  # Remove leading numbers
+    slug = to_bare_slug(slug)  # Remove leading numbers
     
     # Split on hyphens and underscores
     words = set(re.split(r'[-_]', slug))

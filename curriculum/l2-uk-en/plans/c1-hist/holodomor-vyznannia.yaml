@@ -1,5 +1,5 @@
 ---
-module: holodomor-vyznannia
+module: c1-hist-050
 level: c1-hist
 sequence: 50
 version: '1.0'

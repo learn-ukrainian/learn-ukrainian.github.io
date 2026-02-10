@@ -1,0 +1,48 @@
+---
+sequence: 8
+module: lit-essay-08
+level: LIT.ESSAY
+slug: mikhnovsky-independent-ukraine
+version: '2.0'
+title: "Mikhnovsky Independent Ukraine"
+subtitle: "Mikhnovsky Independent Ukraine"
+content_outline:
+- section: "Вступ та контекст"
+  words: 800
+  points: []
+- section: "Аналіз ключових творів"
+  words: 1200
+  points: []
+- section: "Стилістика та мова автора"
+  words: 1000
+  points: []
+- section: "Деколонізаційна перспектива"
+  words: 800
+  points:
+  - "Як цей автор руйнує імперські міфи"
+  - "Українська суб'єктність у тексті"
+- section: "Підсумок та спадщина"
+  words: 700
+  points: []
+word_target: 4500
+vocabulary_hints:
+  required:
+  - "історіографія"
+  - "наратив"
+  - "суб'єктність"
+  recommended:
+  - "деколонізація"
+activity_hints:
+- type: reading
+  focus: "Аналіз першоджерела"
+- type: essay-response
+  focus: "Критичне есе"
+- type: critical-analysis
+  focus: "Деконструкція тексту"
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: "LIT Expansion"
+objectives:
+- "Проаналізувати творчість Mikhnovsky Independent Ukraine у контексті української літератури"
+- "Дослідити вплив автора на формування національної ідентичності"

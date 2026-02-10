@@ -1,8 +1,8 @@
 ---
-module: pravoslavna-identychnist
+module: c1-hist-060
 level: C1-HIST
 slug: pravoslavna-identychnist
 version: '1.0'
-id: c1-hist-60
+id: c1-hist-060
 build:
   last_modified: '2026-01-26'

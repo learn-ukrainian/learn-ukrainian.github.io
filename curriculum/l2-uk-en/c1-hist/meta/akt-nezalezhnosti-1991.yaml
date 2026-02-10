@@ -1,8 +1,8 @@
 ---
-module: akt-nezalezhnosti-1991
+module: c1-hist-043
 level: C1-HIST
 slug: akt-nezalezhnosti-1991
 version: '1.0'
-id: c1-hist-43
+id: c1-hist-043
 build:
   last_modified: '2026-01-26'

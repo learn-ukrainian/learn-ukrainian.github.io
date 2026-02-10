@@ -2,11 +2,11 @@
   "module": "oles-honchar",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:27.262117Z",
+  "last_audit": "2026-02-09T23:25:05.768419Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.241829Z",
-    "meta": "2026-02-07T15:13:22.025940Z",
+    "meta": "2026-02-09T15:59:44.232395Z",
     "activities": null,
     "vocabulary": null,
     "plan": null
@@ -36,6 +36,11 @@
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

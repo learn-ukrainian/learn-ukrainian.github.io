@@ -1,8 +1,8 @@
 ---
-module: rozumovskyi-tsykl
+module: c1-hist-084
 level: C1-HIST
 slug: rozumovskyi-tsykl
 version: '1.0'
-id: c1-hist-84
+id: c1-hist-084
 build:
   last_modified: '2026-01-26'

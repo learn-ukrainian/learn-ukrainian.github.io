@@ -1,6 +1,7 @@
+module: lit-25
 module_id: 25 # derived from order
 slug: cyrillo-methodian-brotherhood
-id: '25'
+id: lit-25
 version: '2.0'
 title: Кирило-Мефодіївське братство
 subtitle: The Cyrillo-Methodian Brotherhood

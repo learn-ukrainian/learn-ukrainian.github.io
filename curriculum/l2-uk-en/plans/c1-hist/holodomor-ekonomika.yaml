@@ -1,5 +1,5 @@
 ---
-module: holodomor-ekonomika
+module: c1-hist-105
 level: c1-hist
 sequence: 105
 version: '1.0'

@@ -1,5 +1,5 @@
 ---
-module: chicken-kyiv
+module: c1-hist-097
 level: c1-hist
 sequence: 97
 version: '1.0'

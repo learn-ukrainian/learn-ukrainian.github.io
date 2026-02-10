@@ -1,8 +1,8 @@
 ---
-module: hramoty-ta-akty
+module: c1-hist-017
 level: C1-HIST
 slug: hramoty-ta-akty
 version: '1.0'
-id: c1-hist-17
+id: c1-hist-017
 build:
   last_modified: '2026-01-26'

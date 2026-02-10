@@ -1,8 +1,8 @@
 ---
-module: syntez-rehionalna-riznomanitnist
+module: c1-hist-080
 level: C1-HIST
 slug: syntez-rehionalna-riznomanitnist
 version: '1.0'
-id: c1-hist-80
+id: c1-hist-080
 build:
   last_modified: '2026-01-26'

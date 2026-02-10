@@ -1,0 +1,14 @@
+{
+  "slug": "social-media-ukrainian",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:23:21.115117Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T11:23:21.115100Z",
+  "result": "success"
+}

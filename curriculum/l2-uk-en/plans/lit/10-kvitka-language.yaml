@@ -1,5 +1,6 @@
 ---
-module: kvitka-language
+sequence: 10
+module: lit-10
 level: LIT
 slug: kvitka-language
 version: '2.0'

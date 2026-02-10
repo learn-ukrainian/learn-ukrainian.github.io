@@ -1,8 +1,8 @@
 ---
-module: svidchennia-holodomoru-ii
+module: c1-hist-037
 level: C1-HIST
 slug: svidchennia-holodomoru-ii
 version: '1.0'
-id: c1-hist-37
+id: c1-hist-037
 build:
   last_modified: '2026-01-26'

@@ -1,5 +1,5 @@
 ---
-module: pravoslavna-identychnist
+module: c1-hist-060
 level: c1-hist
 sequence: 60
 version: '1.0'

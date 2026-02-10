@@ -22,6 +22,8 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional
 
+from slug_utils import to_bare_slug
+
 # Add current dir to path for imports
 SCRIPT_DIR = Path(__file__).parent
 sys.path.append(str(SCRIPT_DIR))
@@ -1647,9 +1649,7 @@ def main():
             file_path = Path(args[0])
             # Path format: curriculum/l2-uk-en/{level}/{slug}.md
             level_from_path = file_path.parent.name
-            slug = file_path.stem
-            # Remove leading numbers if present (migration period)
-            slug = re.sub(r'^\d+-', '', slug)
+            slug = to_bare_slug(file_path.stem)
             
             # Find all modules with this slug from manifest
             all_available_modules = get_modules_from_manifest()

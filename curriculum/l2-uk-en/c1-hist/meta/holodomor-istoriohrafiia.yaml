@@ -1,8 +1,8 @@
 ---
-module: holodomor-istoriohrafiia
+module: c1-hist-045
 level: C1-HIST
 slug: holodomor-istoriohrafiia
 version: '1.0'
-id: c1-hist-45
+id: c1-hist-045
 build:
   last_modified: '2026-01-26'

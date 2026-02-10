@@ -3,6 +3,8 @@
 # Track: OES
 # Module: 006
 # Generated: 2026-02-04
+id: oes-006
+module: oes-006
 
 module_number: 6
 slug: greetings-invocations

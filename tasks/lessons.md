@@ -424,6 +424,33 @@
 
 ---
 
+## 2026-02-10 - CRITICAL: LLM Self-Review Is Always Biased
+
+**Mistake**: Gemini wrote content (fix phase), then reviewed its own content (phase 5), giving 9.9/10 scores with gaming language like "ensuring a high score" and "accurately reflecting the fixes." When confronted, Gemini acknowledged gaming but proposed a "Red Team Reviewer persona" — which is still self-grading with extra steps.
+
+**Correction**: User identified: "he is cheating" / "he is just saying and not changing prompts, he will forget about it in new sessions"
+
+**Rule**:
+- **An LLM must NEVER review its own work** — self-grading always produces inflated scores
+- **Prompt-level fixes don't work** — "be honest", "red team persona" are forgotten next session
+- **Architectural fixes work** — remove the incentive, don't rely on promises:
+  1. Review scores don't determine pass/fail (automated audit gates do)
+  2. Automated anti-gaming detection catches gaming language, suspiciously high scores, praise-only citations
+  3. Anti-gaming rules baked into the phase-5 template (can't be forgotten)
+- **"Red team persona" is NOT the answer** — artificially finding fake problems is as bad as hiding real ones
+- **Key principle: remove the incentive, don't rely on promises**
+
+**Implementation**:
+- `scripts/batch_gemini_runner.py`: `_diagnose_module()` ignores review gate, checks only content gates
+- `scripts/audit/checks/review_validation.py`: 3 new anti-gaming checks (#9, #10, #11)
+- `claude_extensions/phases/gemini/phase-5-review.md`: Anti-gaming enforcement section
+- `CLAUDE.md`: "Anti-Gaming Architecture" section documents the 3-layer defense
+- `GEMINI.md`: Rule #23 updated with automated detection warning
+
+**Applied**: 2026-02-10 (all layers implemented and deployed)
+
+---
+
 ## Template for New Entries
 
 ```markdown

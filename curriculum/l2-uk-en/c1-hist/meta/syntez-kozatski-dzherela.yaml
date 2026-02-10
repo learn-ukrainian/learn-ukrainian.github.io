@@ -1,8 +1,8 @@
 ---
-module: syntez-kozatski-dzherela
+module: c1-hist-028
 level: C1-HIST
 slug: syntez-kozatski-dzherela
 version: '1.0'
-id: c1-hist-28
+id: c1-hist-028
 build:
   last_modified: '2026-01-26'

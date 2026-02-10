@@ -1,8 +1,8 @@
 ---
-module: syntez-relihiina-identychnist
+module: c1-hist-063
 level: C1-HIST
 slug: syntez-relihiina-identychnist
 version: '1.0'
-id: c1-hist-63
+id: c1-hist-063
 build:
   last_modified: '2026-01-26'

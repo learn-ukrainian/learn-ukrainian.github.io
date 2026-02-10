@@ -1,0 +1,72 @@
+# Audit Report: M21 — 21-yesterday-past-tense.md
+**Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1092
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-10 10:53:55
+
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 1092 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Past Tense Vocabulary | 10 | 8 | ✅ |
+| 2 | group-sort | Gender Endings | 18 | 12 | ✅ |
+| 3 | fill-in | Complete with Past Tense | 12 | 8 | ✅ |
+| 4 | quiz | Understanding Past Tense | 12 | 8 | ✅ |
+| 5 | unjumble | Build Past Tense Sentences | 12 | 6 | ✅ |
+| 6 | true-false | Past Tense Facts | 12 | 8 | ✅ |
+| 7 | fill-in | Transform to Past Tense | 12 | 8 | ✅ |
+| 8 | quiz | Time Expressions | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 1/1 (fill-in) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
+## Gates
+- **Words:** ✅ 1134/1092 (raw: 1730)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 5/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 12/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 35.5% (target 35-55% (M21))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 187 | Included in Core |
+| **Presentation** | ✅ | 827 | Included in Core |
+| **Практика** | ⚪️ | 42 | Skipped |
+| **Підсумок** | ✅ | 78 | Included in Core |

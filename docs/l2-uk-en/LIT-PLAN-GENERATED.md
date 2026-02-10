@@ -1,23 +1,25 @@
 # LIT Curriculum Plan: Literature Track
 
-**Generated from YAML plans**
-**Modules:** 30 module meta files found
+**Generated from YAML plans (v2.0)**
+**Modules:** 210 (30 with full plans, 180 planned)
 **Prerequisite:** C1
-**Vocabulary Target:** 1500
-**Immersion:** 100%
+**Vocabulary Target:** 3,000 new words
+**Immersion:** 95%
+**Version:** 2.0 — The Complete Canon (1798–2024)
 
 ---
 
 ## Track Overview
 
-Deep study of classic Ukrainian literature through original texts, literary analysis, and cultural context
+The complete canon of Ukrainian literature from Kotliarevsky (1798) to war literature (2024) — chronological, decolonized, intellectually uncompromising. Ukrainian literature is an independent European tradition, not a 'branch' of Russian letters.
 
 ### Vocabulary Focus
 
-- Literary terminology (жанр, метафора, алегорія)
-- Archaic/historical vocabulary from texts
-- Church Slavonic elements
-- Regional dialects in literature
+- Literary terminology (жанр, метафора, алегорія, силабо-тоніка)
+- Archaic/historical vocabulary from 19th-century texts
+- Church Slavonic elements in early works
+- Regional dialects in literature (Galician, Polesian, Slobozhanian)
+- Contemporary literary vocabulary
 
 ### Pedagogical Approach
 
@@ -31,15 +33,24 @@ Deep study of classic Ukrainian literature through original texts, literary anal
 - Comparative analysis (where applicable)
 
 **Decolonization:**
-- Present Ukrainian literature as independent tradition, not 'branch' of Russian
-- Highlight anti-imperial themes in texts
-- Use Ukrainian literary criticism, not Russian/Soviet interpretations
+- Ukrainian literature is an independent European tradition
+- Highlight anti-imperial themes in every text
+- Use Ukrainian literary criticism, not Russian/Soviet
+- Every module answers: what imperial myth does this destroy?
+- Ukrainian-language authors ONLY — no Russian-language writers
 
 ---
 
 ## Phase Structure
 
-### Котляревський (M01-05)
+> **Phase 1 (M01–41)** has full module-level plans with content outlines below.
+> **Phases 2–5 (M42–210)** are planned — author lists and focus areas shown, module-level plans pending.
+
+---
+
+### Фаза 1: Засновники (1798–1890s) — M01–41
+
+#### Котляревський (M01-05)
 
 **Focus:** Father of modern Ukrainian literature - Eneida and Natalka Poltavka
 **Author:** Іван Котляревський (1769-1838)
@@ -116,13 +127,137 @@ Deep study of classic Ukrainian literature through original texts, literary anal
 
 ---
 
+### Фаза 2: Європейський Модернізм (1890s–1917) — M42–78
+
+**Focus:** Ukrainian literature joins the European modernist movement
+
+**Authors:**
+- Франко (1856–1916) — *Захар Беркут*, *Мойсей*, *Перехресні стежки*
+- Леся Українка (1871–1913) — *Лісова пісня*, *Кассандра*
+- Кобилянська (1863–1942) — *Земля*, *Царівна*
+- Стефаник (1871–1936) — *Камінний хрест*, *Синя книжечка*
+- Коцюбинський (1864–1913) — *Тіні забутих предків*, *Інтермеццо*
+- Винниченко (1880–1951) — *Чорна Пантера*, *Сонячна машина*
+- Олесь, Вороний, Лепкий
+
+| Modules | Word Target | Status |
+|---------|-------------|--------|
+| M42–78 (37 modules) | 4,500 each | Planned |
+
+---
+
+### Фаза 3: Розстріляне Відродження (1917–1933) — M79–121
+
+**Focus:** The greatest generation of Ukrainian literature — and its destruction by Stalin
+
+**Authors:**
+- Семенко (1899–1937) — Футуризм, спалення Кобзаря
+- Яновський (1902–1954) — *Майстер корабля*, *Чотири шаблі*
+- Тичина (1891–1967) — *Сонячні кларнети* → трагічний злам
+- Рильський (1895–1964) — неокласицизм, переклади
+- Зеров (1890–1937) — Київський Парнас, сонети
+- Хвильовий (1893–1933) — *Я (Романтика)*, памфлети
+- Підмогильний (1901–1937) — *Місто*
+- Курбас (1887–1937) — Березіль
+- Куліш (1897–1937) — *Мина Мазайло*, *Патетична соната*
+- Антоненко-Давидович (1899–1984) — *Смерть*, проза
+- Йогансен, Домонтович, Антонич, Сосюра, Плужник, Бажан
+
+**Thematic modules:**
+- Сандармох — трагедія і стирання пам'яті
+- Розстріляне Відродження як феномен
+- Переклад як культурна зброя
+
+| Modules | Word Target | Status |
+|---------|-------------|--------|
+| M79–121 (43 modules) | 4,500 each | Planned |
+
+---
+
+### Фаза 4: Опір та Стійкість (1933–1991) — M122–157
+
+**Focus:** Literature under terror — exile, prison, underground, and moral courage
+
+**Authors:**
+- Лукаш (1890–1937) — переклад як опір
+- Багряний (1906–1963) — *Тигролови*, *Сад Гетсиманський*
+- Довженко (1894–1956) — *Зачарована Десна*, кіно як література
+- Симоненко (1935–1963) — *Лицарі*, правда
+- Стус (1938–1985) — *Палімпсести*, моральний імператив
+- Костенко (1930–2011) — *Маруся Чурай*, *Сад нетанучих скульптур*
+- Вінграновський (1925–2005) — поезія та проза
+- Тютюнник (1931–1980) — новели
+- Гончар, Малишко, Драч, Сверстюк, Дзюба, Голобородько
+
+**Thematic modules:**
+- Голодомор у літературі
+- Самвидав і підпілля
+- Жінки-письменниці та опір
+- Шістдесятники як феномен
+
+| Modules | Word Target | Status |
+|---------|-------------|--------|
+| M122–157 (36 modules) | 4,500 each | Planned |
+
+---
+
+### Фаза 5: Незалежність та Війна (1991–2024) — M158–210
+
+**Focus:** Post-independence literary explosion, postmodernism, decolonization, and war
+
+**Authors:**
+- Бу-Ба-Бу (Андрухович, Ірванець, Неборак) — постмодерний карнавал
+- Андрухович — *Рекреації*, *Московіада*, *Перверзія*
+- Забужко — *Польові дослідження*, *Музей*, *Notre Dame*
+- Жадан — *Депеш Мод*, *Ворошиловград*, *Інтернат*
+- Дереш — *Культ*, *Намір*
+- Коваль — *Сторінки* (1990s), проза ренесансу
+- Іздрик, Прохасько, Матіос, Маляртшук
+- Чех, Сенцов, Калитко, Софія Андрухович
+- Амеліна — *Ренесанс* (загинула 2023)
+- Пахловська — діаспорна теорія
+
+**Thematic modules:**
+- Деколонізаційна теорія літератури
+- Гундорова — Постчорнобильська бібліотека
+- Війна як літературний рух
+- Діаспорна свідомість / МУР
+
+| Modules | Word Target | Status |
+|---------|-------------|--------|
+| M158–210 (53 modules) | 4,500 each | Planned |
+
+---
+
+## Variant Tracks
+
+The LIT canon has 6 specialized variant tracks (separate curriculum plans):
+
+| Track | Modules | Focus | Plan |
+|-------|---------|-------|------|
+| [LIT-ESSAY](LIT-ESSAY-PLAN-GENERATED.md) | 49 | Non-fiction, essays, intellectual history | `plans/lit-essay.yaml` |
+| [LIT-HIST-FIC](LIT-HIST-FIC-PLAN-GENERATED.md) | 20 | Historical fiction epics | `plans/lit-hist-fic.yaml` |
+| [LIT-FANTASTIKA](LIT-FANTASTIKA-PLAN-GENERATED.md) | 27 | Sci-fi, fantasy, Gothic, magic realism | `plans/lit-fantastika.yaml` |
+| [LIT-WAR](LIT-WAR-PLAN-GENERATED.md) | 20 | War literature 2014–present | `plans/lit-war.yaml` |
+| [LIT-HUMOR](LIT-HUMOR-PLAN-GENERATED.md) | 14 | Humor and satire tradition | `plans/lit-humor.yaml` |
+| [LIT-JUVENILE](LIT-JUVENILE-PLAN-GENERATED.md) | 30 | Children's and young adult literature | `plans/lit-juvenile.yaml` |
+
+**Total across all LIT tracks:** 370 modules
+
+---
+
 ## Statistics
 
-- **Module plans (YAML):** 30
-- **Meta files:** 30
-- **Modules with content_outline:** 30
-- **Total word target:** 132,100
-- **Total objectives:** 87
+- **Phase 1 module plans (YAML):** 30
+- **Phase 1 meta files:** 30
+- **Phase 1 modules with content_outline:** 30
+- **Phase 1 word target:** 132,100
+- **Phase 1 objectives:** 87
+- **Phases 2–5 modules:** 180 (planned, no module-level plans yet)
+- **Total modules (main track):** 210
+- **Total word target (main track):** ~945,000
+- **Total modules (all LIT tracks):** 370
+- **Total word target (all LIT tracks):** ~1,607,500
 
 ---
 

@@ -2,11 +2,11 @@
   "module": "liudmyla-starytska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:56.725094Z",
+  "last_audit": "2026-02-09T23:24:33.664553Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T16:12:13.082795Z",
-    "meta": "2026-02-07T16:29:21.591690Z",
+    "meta": "2026-02-09T15:59:44.212844Z",
     "activities": "2026-02-07T16:08:01.362414Z",
     "vocabulary": "2026-02-07T10:03:51.645733Z",
     "plan": null
@@ -36,6 +36,11 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

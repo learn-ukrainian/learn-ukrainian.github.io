@@ -1,5 +1,5 @@
 ---
-module: building-domain-expertise
+module: c2-060
 level: c2
 sequence: 60
 version: '2.0'

@@ -1,0 +1,54 @@
+{
+  "module": "roman-ratushny",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-09T23:25:26.119404Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-09T14:00:35.108885Z",
+    "meta": "2026-02-09T15:59:44.246557Z",
+    "activities": "2026-02-09T12:38:28.820021Z",
+    "vocabulary": "2026-02-09T12:30:50.739111Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5662/4000 (raw: 5842)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/24"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 3 (Seminar) review file at l2-uk-en/c1-bio/review/roman-ratushny-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly \u2014 if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources."
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 3 (Seminar) review file at l2-uk-en/c1-bio/review/roman-ratushny-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly \u2014 if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources."
+    ],
+    "pass_count": 5,
+    "fail_count": 1
+  }
+}

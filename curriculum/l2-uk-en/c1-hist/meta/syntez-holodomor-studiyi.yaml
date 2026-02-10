@@ -1,8 +1,8 @@
 ---
-module: syntez-holodomor-studiyi
+module: c1-hist-051
 level: C1-HIST
 slug: syntez-holodomor-studiyi
 version: '1.0'
-id: c1-hist-51
+id: c1-hist-051
 build:
   last_modified: '2026-01-26'

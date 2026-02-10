@@ -2,14 +2,14 @@
   "module": "03-dative-verbs",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:30.937007Z",
+  "last_audit": "2026-02-10T10:45:13.897650Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T09:17:23.248253Z",
-    "meta": "2026-01-29T07:39:04.579497Z",
-    "activities": "2026-01-25T09:16:16.069313Z",
-    "vocabulary": "2026-01-25T16:02:17.598129Z",
-    "plan": "2026-01-30T12:31:49.551433Z"
+    "meta": "2026-02-07T10:03:50.717164Z",
+    "activities": "2026-02-07T10:03:50.744242Z",
+    "vocabulary": "2026-02-07T10:03:50.789680Z",
+    "plan": "2026-02-09T12:52:14.134379Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

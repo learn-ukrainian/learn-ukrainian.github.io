@@ -1,148 +1,157 @@
----
-items:
-  # Core historiographical terms
-  - lemma: історіографія
-    translation: historiography
-    note: наука про написання історії та аналіз історичних текстів
+# Vocabulary: Що таке історіографія?
 
-  - lemma: наратив
-    translation: narrative
-    note: структура розповіді, яка надає сенсу історичним фактам
+історіографія:
+  ipa: "is.tɔ.rʲi.ɔˈɦrɑ.fʲi.jɐ"
+  translation: "historiography"
+  definition: "Наука про історію історичної науки, яка вивчає розвиток історичних знань та методів."
+  usage_example: "Українська історіографія пройшла шлях від літописів до модерних наукових досліджень."
 
-  - lemma: інтерпретація
-    translation: interpretation
-    note: пояснення та оцінка фактів; завжди суб'єктивна
+наратив:
+  ipa: "nɑ.rɑˈtɪu̯"
+  translation: "narrative"
+  definition: "Спосіб викладу подій, який формує певне уявлення про них; структурована розповідь."
+  usage_example: "Імперський наратив заперечував існування окремого українського народу."
 
-  - lemma: первинне джерело
-    translation: primary source
-    note: документ, створений у досліджуваний період (літопис, лист, договір)
+інтерпретація:
+  ipa: "in.tɛr.prɛˈtɑ.t͡sʲi.jɐ"
+  translation: "interpretation"
+  definition: "Тлумачення, пояснення змісту чогось; надання фактам певного сенсу."
+  usage_example: "Різні історики пропонують власну інтерпретацію причин революції."
 
-  - lemma: вторинне джерело
-    translation: secondary source
-    note: дослідження, написане пізніше на основі первинних джерел
+первинне джерело:
+  ipa: "pɛrˈʋɪn.nɛ d͡ʒɛ.rɛˈlɔ"
+  translation: "primary source"
+  definition: "Документ або свідчення, створене безпосередньо в час подій (літопис, лист, акт)."
+  usage_example: "Для дослідження ми використовували первинні джерела з архіву."
 
-  - lemma: упередження
-    translation: bias
-    note: систематичне відхилення від об'єктивності на користь певної позиції
+вторинне джерело:
+  ipa: "u̯tɔˈrɪn.nɛ d͡ʒɛ.rɛˈlɔ"
+  translation: "secondary source"
+  definition: "Праця, написана на основі аналізу первинних джерел (монографія, стаття)."
+  usage_example: "Підручник з історії є типовим вторинним джерелом."
 
-  - lemma: контекст
-    translation: context
-    note: обставини створення тексту (час, місце, політичний режим)
+упередження:
+  ipa: "u.pɛˈrɛ.d͡ʒɛnʲ.nʲɐ"
+  translation: "bias / prejudice"
+  definition: "Хибна думка, що склалася заздалегідь, без ознайомлення з фактами; необ'єктивність."
+  usage_example: "Дослідник повинен усвідомлювати власні упередження при аналізі тексту."
 
-  - lemma: перспектива
-    translation: perspective
-    note: точка зору, з якої автор бачить події
+контекст:
+  ipa: "kɔnˈtɛkst"
+  translation: "context"
+  definition: "Умови та обставини, в яких відбувається подія або створюється текст."
+  usage_example: "Вислів не можна зрозуміти без історичного контексту."
 
-  - lemma: критичний аналіз
-    translation: critical analysis
-    note: систематична оцінка джерела за допомогою аналітичних питань
+деколонізація:
+  ipa: "dɛ.kɔ.lɔ.nʲiˈzɑ.t͡sʲi.jɐ"
+  translation: "decolonization"
+  definition: "Процес звільнення від колоніальної залежності, а також від імперських впливів у культурі та свідомості."
+  usage_example: "Деколонізація історії передбачає перегляд імперських міфів."
 
-  - lemma: методологія
-    translation: methodology
-    note: сукупність методів дослідження; «як ми знаємо»
+суб'єктність:
+  ipa: "subˈjɛkt.nʲisʲtʲ"
+  translation: "subjectivity / agency"
+  definition: "Здатність бути активним діячем, творцем власної історії, а не пасивним об'єктом."
+  usage_example: "Боротьба за суб'єктність є наскрізною темою української історії."
 
-  # Source criticism vocabulary
-  - lemma: достовірність
-    translation: reliability, credibility
-    note: ступінь, до якого можна довіряти інформації в джерелі
+агентність:
+  ipa: "ɑˈɦɛnt.nʲisʲtʲ"
+  translation: "agency"
+  definition: "Здатність діяти незалежно та здійснювати вільний вибір (синонім до суб'єктність у соціології)."
+  usage_example: "Ми повертаємо українцям їхню історичну агентність."
 
-  - lemma: верифікація
-    translation: verification
-    note: процес перевірки інформації за допомогою інших джерел
+міфотворчість:
+  ipa: "mʲi.fɔˈtʋɔr.t͡ʃisʲtʲ"
+  translation: "myth-making"
+  definition: "Процес створення міфів, часто з політичною або ідеологічною метою."
+  usage_example: "Радянська міфотворчість спотворила уявлення про минуле."
 
-  - lemma: автентичність
-    translation: authenticity
-    note: справжність документа; чи це оригінал, чи підробка
+фальсифікація:
+  ipa: "fɑlʲ.sɪ.fʲiˈkɑ.t͡sʲi.jɐ"
+  translation: "falsification"
+  definition: "Умисне викривлення фактів, підробка."
+  usage_example: "Фальсифікація історії була державною політикою СРСР."
 
-  - lemma: деконтекстуалізація
-    translation: decontextualization
-    note: вилучення інформації з її історичного контексту (прийом маніпуляції)
+конструкт:
+  ipa: "kɔnˈstrukt"
+  translation: "construct"
+  definition: "Штучно створене поняття або ідея (наприклад, 'Новоросія')."
+  usage_example: "Поняття 'братні народи' є ідеологічним конструктом."
 
-  # Historical tradition terms
-  - lemma: літопис
-    translation: chronicle
-    note: середньовічний жанр послідовного запису подій за роками
+тяглість:
+  ipa: "ˈtʲɑɦ.lʲisʲtʲ"
+  translation: "continuity"
+  definition: "Безперервність, наступність історичного процесу або традиції."
+  usage_example: "Грушевський довів тяглість української державності від Русі."
 
-  - lemma: літописець
-    translation: chronicler
-    note: автор літопису; у середньовіччі зазвичай чернець
+дискурс:
+  ipa: "dɪsˈkurs"
+  translation: "discourse"
+  definition: "Сукупність висловлювань і текстів у певному контексті; спосіб обговорення теми."
+  usage_example: "В сучасному історичному дискурсі домінує постколоніальний підхід."
 
-  - lemma: хроніка
-    translation: chronicle (secular)
-    note: послідовний опис подій; ширше значення, ніж «літопис»
+парадигма:
+  ipa: "pɑ.rɑˈdɪɦ.mɑ"
+  translation: "paradigm"
+  definition: "Сукупність теоретичних і методологічних передумов, що визначають конкретне наукове дослідження."
+  usage_example: "Зміна історичної парадигми відбулася після 1991 року."
 
-  # Decolonization terms
-  - lemma: деколонізація
-    translation: decolonization
-    note: перегляд історії з позиції колонізованих народів
+ревізіонізм:
+  ipa: "rɛ.ʋʲi.zʲi.ɔˈnʲizm"
+  translation: "revisionism"
+  definition: "Перегляд усталених поглядів, концепцій або теорій в історичній науці."
+  usage_example: "Історичний ревізіонізм може бути як корисним (уточнення фактів), так і шкідливим (заперечення злочинів)."
 
-  - lemma: імперський наратив
-    translation: imperial narrative
-    note: версія історії, яка легітимізує панування імперії
+джерелознавство:
+  ipa: "d͡ʒɛ.rɛ.lɔzˈnɑu̯.stʋɔ"
+  translation: "source criticism / source studies"
+  definition: "Допоміжна історична дисципліна, що розробляє методику пошуку та аналізу історичних джерел."
+  usage_example: "Без ґрунтовного джерелознавства неможливе об'єктивне дослідження."
 
-  - lemma: офіційний наратив
-    translation: official narrative
-    note: версія історії, яку просуває держава
+апологетика:
+  ipa: "ɑ.pɔ.lɔˈɦɛ.tɪ.kɑ"
+  translation: "apologetics"
+  definition: "Упереджений захист, вихваляння якоїсь ідеї, вчення або політичного режиму."
+  usage_example: "Радянські історики займалися апологетикою комуністичної партії."
 
-  - lemma: альтернативна історія
-    translation: alternative history
-    note: версія подій, що відрізняється від панівного наративу
+офіціоз:
+  ipa: "ɔ.fʲi.t͡sʲiˈɔz"
+  translation: "officialdom / official narrative"
+  definition: "Офіційно схвалена владою версія подій, часто позбавлена критичності."
+  usage_example: "Він намагався знайти правду за межами державного офіціозу."
 
-  - lemma: переосмислення
-    translation: reinterpretation, rethinking
-    note: новий погляд на усталену версію подій
+цензура:
+  ipa: "t͡sɛnˈzu.rɑ"
+  translation: "censorship"
+  definition: "Контроль влади над змістом і поширенням інформації."
+  usage_example: "Цензура в Російській імперії забороняла українське друковане слово."
 
-  # Academic discourse markers
-  - lemma: на думку
-    translation: according to, in the opinion of
-    note: вказує на позицію конкретного автора
+архів:
+  ipa: "ɑrˈxiu̯"
+  translation: "archive"
+  definition: "Установа, де зберігаються старі документи, або сукупність таких документів."
+  usage_example: "Відкриття архівів КДБ пролило світло на сталінські репресії."
 
-  - lemma: згідно з
-    translation: according to
-    note: посилання на джерело або авторитет
+мемуаристика:
+  ipa: "mɛ.mu.ɑˈrɪs.tɪ.kɑ"
+  translation: "memoirs"
+  definition: "Літературний жанр, що охоплює твори у формі записок-спогадів про минулі події."
+  usage_example: "Козацька мемуаристика є цінним джерелом для вивчення XVII століття."
 
-  - lemma: з іншого боку
-    translation: on the other hand
-    note: вводить альтернативну перспективу
+періодизація:
+  ipa: "pɛ.rʲi.ɔ.dɪˈzɑ.t͡sʲi.jɐ"
+  translation: "periodization"
+  definition: "Умовний поділ історичного процесу на певні хронологічні періоди."
+  usage_example: "Періодизація історії України Грушевського відрізняється від радянської."
 
-  - lemma: слід зазначити
-    translation: it should be noted
-    note: академічний маркер для важливого спостереження
+методологія:
+  ipa: "mɛ.tɔ.dɔˈlɔ.hʲi.jɐ"
+  translation: "methodology"
+  definition: "Вчення про методи пізнання та перетворення дійсності; сукупність прийомів дослідження."
+  usage_example: "Сучасна методологія вимагає міждисциплінарного підходу."
 
-  - lemma: постає питання
-    translation: the question arises
-    note: вводить дослідницьке питання або проблему
-
-  # Propaganda and manipulation
-  - lemma: пропаганда
-    translation: propaganda
-    note: систематичне поширення упереджених ідей; часто історичних
-
-  - lemma: маніпуляція
-    translation: manipulation
-    note: навмисне спотворення інформації для впливу
-
-  - lemma: фальсифікація
-    translation: falsification
-    note: навмисне спотворення фактів
-
-  - lemma: селективне цитування
-    translation: selective quotation
-    note: вибір цитат, що підтверджують позицію, ігнорування інших
-
-  # Key historical concepts from module
-  - lemma: возз'єднання
-    translation: reunification
-    note: радянський термін для Переяслава 1654; ідеологічно навантажений
-
-  - lemma: угода
-    translation: agreement, treaty
-    note: нейтральний термін для Переяслава; підкреслює договірний характер
-
-  - lemma: автономія
-    translation: autonomy
-    note: самоврядування в межах більшої держави
-
-  - lemma: вольності
-    translation: liberties, freedoms
-    note: козацькі права та привілеї
+архетип:
+  ipa: "ɑr.xɛˈtɪp"
+  translation: "archetype"
+  definition: "Первинний образ, оригінал, загальнолюдський символ, що лежить в основі міфів."
+  usage_example: "Образ козака став національним архетипом українців."

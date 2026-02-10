@@ -1,5 +1,5 @@
 ---
-module: poetyka-prose-analysis
+module: c2-029
 level: c2
 sequence: 29
 version: '2.0'

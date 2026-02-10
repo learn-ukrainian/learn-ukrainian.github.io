@@ -1,5 +1,5 @@
 ---
-module: terminology-acquisition-i
+module: c2-047
 level: c2
 sequence: 47
 version: '2.0'

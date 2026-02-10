@@ -1,5 +1,5 @@
 ---
-module: medical-ukrainian-v
+module: c2-070
 level: c2
 sequence: 70
 version: '2.0'

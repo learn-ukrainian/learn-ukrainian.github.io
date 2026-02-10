@@ -1,7 +1,7 @@
 ---
-module: c1-bio-140
+module: c1-bio-150
 level: C1-BIO
-sequence: 140
+sequence: 150
 slug: vitaly-portnikov
 version: '2.0'
 title: 'Віталій Портников: Журналіст і аналітик'

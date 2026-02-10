@@ -1,9 +1,9 @@
 ---
-module: milozvuchnist-complete
+module: c2-002
 level: C2
 slug: milozvuchnist-complete
 version: '2.0'
-id: c2-02
+id: c2-002
 naturalness:
   score: 1
   status: PENDING

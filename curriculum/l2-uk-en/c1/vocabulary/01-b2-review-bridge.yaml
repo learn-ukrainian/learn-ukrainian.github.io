@@ -1,0 +1,180 @@
+module: c1-001
+level: C1
+version: '2.0'
+items:
+- lemma: регістр
+  ipa:
+  - reˈɦʲistr
+  translation: register
+  definition: Різновид мови, що використовується в певній комунікативній ситуації
+    (офіційний, дружній тощо).
+- lemma: пасивний стан
+  ipa:
+  - pɐˈsɪu̯nei̯ stɑn
+  translation: passive voice
+  definition: Граматична категорія дієслова, що вказує на те, що підмет є об'єктом
+    дії, а не її виконавцем.
+- lemma: дієприкметник
+  ipa:
+  - dʲijeprɪkˈmɛtnɪk
+  translation: participle
+  definition: Особлива форма дієслова, що виражає ознаку предмета за дією.
+- lemma: складнопідрядне речення
+  ipa:
+  - skɫɐdnɔpidˈrʲɑdne ˈrɛt͡ʃenʲːɐ
+  translation: complex sentence
+  definition: Складне речення, частини якого нерівноправні за змістом і з'єднані підрядним
+    зв'язком.
+- lemma: функціональний стиль
+  ipa:
+  - fʊnkt͡sʲoˈnɑlʲnei̯ stɪlʲ
+  translation: functional style
+  definition: Різновид літературної мови, що обслуговує певну сферу суспільної діяльності.
+- lemma: науковий стиль
+  ipa:
+  - nɐʊˈkɔʋei̯ stɪlʲ
+  translation: academic style
+  definition: Стиль, що характеризується логічністю, об'єктивністю та використанням
+    термінології.
+- lemma: офіційно-діловий стиль
+  ipa:
+  - ɔfiˈt͡sʲii̯nɔ diɫoˈʋei̯ stɪlʲ
+  translation: official style
+  definition: Стиль документів, законів та ділового листування.
+- lemma: публіцистичний стиль
+  ipa:
+  - pʊblit͡sɪsˈtɪt͡ʃnei̯ stɪlʲ
+  translation: journalistic style
+  definition: Стиль ЗМІ, що поєднує інформативність з емоційним впливом.
+- lemma: фразеологізм
+  ipa:
+  - frɐzeɔɫoˈɦʲizm
+  translation: phraseological unit
+  definition: Стійке сполучення слів, яке за значенням дорівнює одному слову.
+- lemma: сталий вираз
+  ipa:
+  - ˈstɑɫei̯ ˈʋɪrɐz
+  translation: set expression
+  definition: Стійка конструкція, властива певній мові.
+- lemma: консолідація
+  ipa:
+  - kɔnsɔliˈdɑt͡sʲijɐ
+  translation: consolidation
+  definition: Зміцнення, об'єднання, згуртування.
+- lemma: компетенція
+  ipa:
+  - kɔmpeˈtɛnt͡sʲijɐ
+  translation: competency
+  definition: Сукупність знань і навичок, необхідних для ефективної діяльності.
+- lemma: самооцінка
+  ipa:
+  - sɐmɔoˈt͡sʲinkɐ
+  translation: self-assessment
+  definition: Оцінка людиною самої себе, своїх можливостей і якостей.
+- lemma: перехідний
+  ipa:
+  - perexiˈdnei̯
+  translation: transitional
+  definition: Такий, що є проміжним етапом між чимось.
+- lemma: інтеграція
+  ipa:
+  - inteˈɦrɑt͡sʲijɐ
+  translation: integration
+  definition: Процес об'єднання частин у ціле.
+- lemma: абстракція
+  ipa:
+  - ɐbˈstrɑkt͡sʲijɐ
+  translation: abstraction
+  definition: Відволікання від несуттєвих властивостей предмета для виділення загальних
+    ознак.
+- lemma: об'єктивність
+  ipa:
+  - ɔbjekˈtɪu̯nʲisʲtʲ
+  translation: objectivity
+  definition: Здатність розглядати предмети такими, якими вони є насправді, без упередженості.
+- lemma: аргументація
+  ipa:
+  - ɐrɦʊmenˈtɑt͡sʲijɐ
+  translation: argumentation
+  definition: Наведення доказів для обґрунтування певної думки.
+- lemma: вдосконалення
+  ipa:
+  - wdɔskɔˈnɑɫenʲːɐ
+  translation: improvement
+  definition: Процес покращення чого-небудь, доведення до вищого рівня.
+- lemma: майстерність
+  ipa:
+  - mɐi̯ˈstɛrnʲisʲtʲ
+  translation: mastery
+  definition: Високий рівень професіоналізму, вправність у якійсь справі.
+- lemma: трансформація
+  ipa:
+  - trɐnsfɔrˈmɑt͡sʲijɐ
+  translation: transformation
+  definition: Перетворення, зміна вигляду, форми або властивостей.
+- lemma: елегантність
+  ipa:
+  - eɫeˈɦɑntnʲisʲtʲ
+  translation: elegance
+  definition: Вишуканість, граціозність, простота і ясність.
+- lemma: нюанс
+  ipa:
+  - nʲuˈɑns
+  translation: nuance
+  definition: Ледь помітна відмінність, тонкість.
+- lemma: систематизація
+  ipa:
+  - sɪstemɐtɪˈzɑt͡sʲijɐ
+  translation: systematization
+  definition: Приведення у систему, впорядкування.
+- lemma: синтез
+  ipa:
+  - ˈsɪntez
+  translation: synthesis
+  definition: Поєднання окремих елементів у єдине ціле.
+- lemma: оцінювання
+  ipa:
+  - oˈt͡sʲinʲuʋɐnʲːɐ
+  translation: evaluation
+  definition: Визначення вартості, якості або значення чогось.
+- lemma: верифікація
+  ipa:
+  - ʋerɪfiˈkɑt͡sʲijɐ
+  translation: verification
+  definition: Перевірка істинності, достовірності чого-небудь.
+- lemma: оптимізація
+  ipa:
+  - ɔptɪmiˈzɑt͡sʲijɐ
+  translation: optimization
+  definition: Вибір найкращого варіанту з можливих.
+- lemma: актуальний
+  ipa:
+  - ɐktuˈɑlʲnei̯
+  translation: relevant
+  definition: Важливий для даного моменту, сучасний.
+- lemma: гіпотеза
+  ipa:
+  - ɦiˈpɔtezɐ
+  translation: hypothesis
+  definition: Наукове припущення, що потребує перевірки.
+- lemma: корелювати
+  ipa:
+  - kɔrelʲuˈʋɑtɪ
+  translation: to correlate
+  definition: Перебувати у взаємному зв'язку, відповідати одне одному.
+- lemma: лінгвоцид
+  ipa:
+  - lʲinɦʋɔˈt͡sɪd
+  translation: linguicide
+  definition: Свідоме знищення мови як головної ознаки етносу.
+- lemma: дискурс
+  ipa:
+  - dɪsˈkurs
+  translation: discourse
+  definition: Мовлення, занурене в життя; зв'язний текст у сукупності з екстралінгвістичними
+    факторами.
+- lemma: термінотворення
+  ipa:
+  - terminɔˈtʋɔrenʲːɐ
+  translation: terminology creation
+  definition: Процес створення нових термінів.

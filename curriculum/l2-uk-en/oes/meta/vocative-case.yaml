@@ -3,6 +3,8 @@
 # Track: OES
 # Module: 008
 # Generated: 2026-02-04
+id: oes-008
+module: oes-008
 
 module_number: 8
 slug: vocative-case

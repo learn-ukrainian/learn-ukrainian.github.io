@@ -1,8 +1,8 @@
 ---
-module: lysty-mazepy
+module: c1-hist-026
 level: C1-HIST
 slug: lysty-mazepy
 version: '1.0'
-id: c1-hist-26
+id: c1-hist-026
 build:
   last_modified: '2026-01-26'

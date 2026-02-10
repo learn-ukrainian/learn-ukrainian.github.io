@@ -1,5 +1,5 @@
 ---
-module: emskyi-ukaz-tekst
+module: c1-hist-032
 level: c1-hist
 sequence: 32
 version: '1.0'

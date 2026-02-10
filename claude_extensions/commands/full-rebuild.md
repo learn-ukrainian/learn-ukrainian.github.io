@@ -90,6 +90,21 @@ Check which phases are already complete. **Unless `--from` is specified, auto-de
 
 **If `--from=PHASE` is specified, force start from that phase regardless of state.**
 
+### Monitor Integration
+
+Report progress to the batch monitor so it shows up in the playground:
+
+```bash
+# At start of module processing:
+.venv/bin/python scripts/batch_report.py {track} {slug} running --mode manual
+
+# When module passes all gates:
+.venv/bin/python scripts/batch_report.py {track} {slug} pass --mode manual
+
+# If module fails and you're moving on:
+.venv/bin/python scripts/batch_report.py {track} {slug} fail --mode manual
+```
+
 ---
 
 ## Phase 0: Research-First Mandate
@@ -210,6 +225,22 @@ yq '.content_outline' curriculum/l2-uk-en/{track}/meta/{slug}.yaml
 
 - **Enriched Vocabulary**: Create `vocabulary/{slug}.yaml` matching the count target defined in the plan/meta. Include IPA and English translations.
 - **Pedagogical Activities**: Create `activities/{slug}.yaml` following track-specific schemas (Seminar style: **Reading Input -> Analytical Output**).
+
+> **ACTIVITY TYPE CONSTRAINTS: Check allowed/forbidden types BEFORE writing activities.**
+>
+> ```bash
+> .venv/bin/python -c "
+> import sys; sys.path.insert(0, 'scripts')
+> from audit.config import get_level_config
+> cfg = get_level_config('{LEVEL}', '{FOCUS}')
+> print('ALLOWED:', sorted(cfg.get('priority_types', set())))
+> print('FORBIDDEN:', sorted(cfg.get('forbidden_types', set())))
+> "
+> ```
+>
+> Using a forbidden type wastes the entire activity phase — audit will auto-FAIL.
+> Seminar tracks typically allow: `reading`, `essay-response`, `critical-analysis`, `comparative-study`.
+> Seminar tracks typically forbid: `quiz`, `fill-in`, `cloze`, `match-up`, `unjumble`, `anagram`, etc.
 
 ## Phase 4: Technical Audit (`scripts/audit_module.py`)
 

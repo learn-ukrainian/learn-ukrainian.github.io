@@ -1,7 +1,7 @@
 ---
-module: c1-bio-100
+module: c1-bio-101
 level: C1-BIO
-sequence: 100
+sequence: 101
 slug: anatol-petrytskyi
 version: '2.0'
 title: 'Анатоль Петрицький: <!-- Title -->'

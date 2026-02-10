@@ -2,14 +2,14 @@
   "module": "01-the-dative-i-pronouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T22:58:08.423028Z",
+  "last_audit": "2026-02-10T10:52:37.922391Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T22:58:07.895529Z",
     "meta": "2026-02-07T10:03:50.719902Z",
     "activities": "2026-02-08T22:58:07.896021Z",
     "vocabulary": "2026-02-07T10:03:50.794640Z",
-    "plan": "2026-02-07T10:03:50.869942Z"
+    "plan": "2026-02-09T12:52:14.126681Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

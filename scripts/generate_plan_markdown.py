@@ -13,6 +13,8 @@ import argparse
 import re
 import sys
 from pathlib import Path
+
+from slug_utils import to_bare_slug
 import yaml
 import subprocess
 
@@ -86,11 +88,11 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
         plan_content = module_plans.get(filename, {})
         if not plan_content:
             # filename might have number prefix, try stripping it
-            stripped = re.sub(r'^\d+-', '', filename)
+            stripped = to_bare_slug(filename)
             plan_content = module_plans.get(stripped, {})
         slug = plan_content.get('slug') or filename
         # Normalize slug by stripping number prefix
-        slug = re.sub(r'^\d+-', '', slug)
+        slug = to_bare_slug(slug)
         if slug not in slug_to_num:
             # Try filename pattern like "01-trypillian-civilization"
             match = re.match(r'^(\d+)-', filename)

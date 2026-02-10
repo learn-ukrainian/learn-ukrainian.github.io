@@ -4,6 +4,8 @@ import re
 import yaml
 from pathlib import Path
 
+from slug_utils import to_bare_slug
+
 def count_external_yaml_resources(file_path: Path) -> int:
     """Count resources defined in docs/resources/external_resources.yaml."""
     print(f"DEBUG: Checking file path: {file_path}")
@@ -30,7 +32,7 @@ def count_external_yaml_resources(file_path: Path) -> int:
             
         slug = file_path.stem
         # Also try removing numeric prefix for lookup
-        clean_slug = re.sub(r'^\d+-', '', slug) if slug else slug
+        clean_slug = to_bare_slug(slug) if slug else slug
         
         print(f"DEBUG: Looking for slug '{slug}' or '{clean_slug}'")
         

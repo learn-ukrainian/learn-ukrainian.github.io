@@ -1,105 +1,188 @@
 ---
-# Level Plan: LIT (Ukrainian Literature Track)
-# Post-C1 specialization track
+# Level Plan: LIT (Ukrainian Literature — The Canon)
+# Post-C1 specialization: Chronological evolution of Ukrainian letters (1798-2024)
 
 level: lit
 track: literature
-version: "1.0"
+version: "2.0"
+status: in_progress
 
 overview:
-  total_modules: 30
-  description: "Deep study of classic Ukrainian literature through original texts, literary analysis, and cultural context"
+  total_modules: 210
+  description: "The complete canon of Ukrainian literature from Kotliarevsky (1798) to war literature (2024) — chronological, decolonized, intellectually uncompromising"
   prerequisites: "[c1]"
-  target_audience: "Advanced learners seeking literary and cultural mastery"
+  target_audience: "Advanced learners building sovereign cultural fluency through original Ukrainian texts"
+  decolonization_mission: "Ukrainian literature is an independent European tradition, not a 'branch' of Russian letters. Every module answers: what imperial myth does this author destroy?"
 
-# Primary source of truth
 sources:
   primary: "ukrlib (Ukrainian digital library - ukrlib.com.ua)"
   supplementary:
-    - "Ukrainian literary criticism"
-    - "Historical context from Ukrainian sources"
-  note: "All texts and analysis based on Ukrainian scholarship, avoiding Russian imperial interpretations"
+    - "Ukrainian literary criticism (Krytyka, Слово і час)"
+    - "Diaspora scholarship (HURI, CIUS)"
+    - "Contemporary literary journalism"
+  note: "All analysis from Ukrainian perspective. Russian/Soviet interpretations used only as objects of critique. Ukrainian-language authors ONLY."
 
-# Vocabulary scope
 vocabulary:
   cumulative_from: "[a1, a2, b1, b2, c1]"
-  new_words: 1500
+  new_words: 3000
   focus_areas:
-    - "Literary terminology (жанр, метафора, алегорія)"
-    - "Archaic/historical vocabulary from texts"
-    - "Church Slavonic elements"
-    - "Regional dialects in literature"
+    - "Literary terminology (жанр, метафора, алегорія, силабо-тоніка)"
+    - "Archaic/historical vocabulary from 19th-century texts"
+    - "Church Slavonic elements in early works"
+    - "Regional dialects in literature (Galician, Polesian, Slobozhanian)"
+    - "Contemporary literary vocabulary"
 
-# Literary periods and authors covered
 grammar:
   - "Archaic grammatical forms (Eneida, older texts)"
   - "Dialectal features in realist prose"
   - "Stylistic analysis techniques"
-  - "Literary Ukrainian vs vernacular"
+  - "Literary Ukrainian vs vernacular (across periods)"
+  - "Avant-garde syntax (Futurism, Modernism)"
+  - "Contemporary literary register"
 
-# Module phases by author/period
 phases:
-  - name: "Котляревський"
-    modules: "[1, 5]"
-    focus: "Father of modern Ukrainian literature - Eneida and Natalka Poltavka"
-    author: "Іван Котляревський (1769-1838)"
-    key_works:
-      - "Енеїда (1798-1842)"
-      - "Наталка Полтавка (1819)"
+  - id: LIT.1
+    name: "Фаза 1: Засновники (1798-1890s)"
+    name_en: "Phase 1: Foundations (1798-1890s)"
+    modules: "[1, 41]"
+    focus: "Birth and consolidation of modern Ukrainian literature"
+    checkpoint: "phase-1-checkpoint"
+    authors:
+      - "Котляревський (1769-1838) — Енеїда, Наталка Полтавка"
+      - "Квітка-Основ'яненко (1778-1843) — Маруся, Конотопська відьма"
+      - "Шевченко (1814-1861) — Кобзар (10 modules)"
+      - "Куліш (1819-1897) — Чорна рада, мовне питання"
+      - "Нечуй-Левицький (1838-1918) — Кайдашева сім'я"
+      - "Панас Мирний (1849-1920) — Хіба ревуть воли"
+      - "Марко Вовчок (1833-1907) — Інститутка"
+      - "Руданський, Глібов, Старицький, Грінченко"
 
-  - name: "Квітка-Основ'яненко"
-    modules: "[6, 10]"
-    focus: "First Ukrainian prose writer - ethnographic realism"
-    author: "Григорій Квітка-Основ'яненко (1778-1843)"
-    key_works:
-      - "Маруся (1834)"
-      - "Конотопська відьма (1833)"
+  - id: LIT.2
+    name: "Фаза 2: Європейський Модернізм (1890s-1917)"
+    name_en: "Phase 2: European Modernism (1890s-1917)"
+    modules: "[42, 78]"
+    focus: "Ukrainian literature joins the European modernist movement"
+    checkpoint: "phase-2-checkpoint"
+    authors:
+      - "Франко (1856-1916) — Захар Беркут, Мойсей, Перехресні стежки"
+      - "Леся Українка (1871-1913) — Лісова пісня, Кассандра"
+      - "Кобилянська (1863-1942) — Земля, Царівна"
+      - "Стефаник (1871-1936) — Камінний хрест, Синя книжечка"
+      - "Коцюбинський (1864-1913) — Тіні забутих предків, Інтермеццо"
+      - "Винниченко (1880-1951) — Чорна Пантера, Сонячна машина"
+      - "Олесь, Вороний, Лепкий"
 
-  - name: "Шевченко"
-    modules: "[11, 20]"
-    focus: "National poet - Kobzar, poetry analysis, cultural impact"
-    author: "Тарас Шевченко (1814-1861)"
-    key_works:
-      - "Кобзар (1840)"
-      - "Гайдамаки (1841)"
-      - "Сон (1844)"
-      - "Заповіт (1845)"
+  - id: LIT.3
+    name: "Фаза 3: Розстріляне Відродження (1917-1933)"
+    name_en: "Phase 3: The Executed Renaissance (1917-1933)"
+    modules: "[79, 121]"
+    focus: "The greatest generation of Ukrainian literature — and its destruction by Stalin"
+    checkpoint: "phase-3-checkpoint"
+    authors:
+      - "Семенко (1899-1937) — Футуризм, спалення Кобзаря"
+      - "Яновський (1902-1954) — Майстер корабля, Чотири шаблі"
+      - "Тичина (1891-1967) — Сонячні кларнети → трагічний злам"
+      - "Рильський (1895-1964) — неокласицизм, переклади"
+      - "Зеров (1890-1937) — Київський Парнас, сонети"
+      - "Хвильовий (1893-1933) — Я (Романтика), памфлети"
+      - "Підмогильний (1901-1937) — Місто"
+      - "Курбас (1887-1937) — Березіль"
+      - "Куліш (1897-1937) — Мина Мазайло, Патетична соната"
+      - "Антоненко-Давидович (1899-1984) — Смерть, проза"
+      - "Йогансен, Домонтович, Антонич, Сосюра, Плужник, Бажан"
+      - "Сандармох — трагедія і стирання пам'яті"
+      - "Розстріляне Відродження як феномен (thematic)"
 
-  - name: "Куліш"
-    modules: "[21, 25]"
-    focus: "Historical novel, language standardization, Cyrillo-Methodian Brotherhood"
-    author: "Пантелеймон Куліш (1819-1897)"
-    key_works:
-      - "Чорна рада (1857)"
+  - id: LIT.4
+    name: "Фаза 4: Опір та Стійкість (1933-1991)"
+    name_en: "Phase 4: Resistance and Resilience (1933-1991)"
+    modules: "[122, 157]"
+    focus: "Literature under terror — exile, prison, underground, and moral courage"
+    checkpoint: "phase-4-checkpoint"
+    authors:
+      - "Лукаш (1890-1937) — переклад як опір"
+      - "Багряний (1906-1963) — Тигролови, Сад Гетсиманський"
+      - "Довженко (1894-1956) — Зачарована Десна, кіно як література"
+      - "Симоненко (1935-1963) — Лицарі, правда"
+      - "Стус (1938-1985) — Палімпсести, моральний імператив"
+      - "Костенко (1930-2011) — Маруся Чурай, Сад нетанучих скульптур"
+      - "Вінграновський (1925-2005) — поезія та проза"
+      - "Тютюнник (1931-1980) — новели"
+      - "Гончар, Малишко, Драч, Сверстюк, Дзюба, Голобородько"
+      - "Голодомор у літературі (thematic)"
+      - "Самвидав і підпілля (thematic)"
+      - "Жінки-письменниці та опір (thematic)"
+      - "Шістдесятники як феномен (thematic)"
 
-  - name: "Нечуй-Левицький"
-    modules: "[26, 30]"
-    focus: "Realist prose - village life, social critique"
-    author: "Іван Нечуй-Левицький (1838-1918)"
-    key_works:
-      - "Кайдашева сім'я (1879)"
-      - "Микола Джеря (1878)"
+  - id: LIT.5
+    name: "Фаза 5: Незалежність та Війна (1991-2024)"
+    name_en: "Phase 5: Independence and War (1991-2024)"
+    modules: "[158, 210]"
+    focus: "Post-independence literary explosion, postmodernism, decolonization, and war"
+    checkpoint: "phase-5-checkpoint"
+    authors:
+      - "Бу-Ба-Бу (Андрухович, Ірванець, Неборак) — постмодерний карнавал"
+      - "Андрухович — Рекреації, Московіада, Перверзія"
+      - "Забужко — Польові дослідження, Музей, Notre Dame"
+      - "Жадан — Депеш Мод, Ворошиловград, Інтернат"
+      - "Дереш — Культ, Намір"
+      - "Коваль — Сторінки (1990s)"
+      - "Іздрик, Прохасько, Матіос, Маляртшук"
+      - "Чех, Сенцов, Калитко, Софія Андрухович"
+      - "Деколонізаційна теорія літератури (thematic)"
+      - "Гундорова — Постчорнобильська бібліотека"
+      - "Війна як літературний рух (thematic)"
+      - "Пахловська — діаспорна теорія"
+      - "Діаспорна свідомість / МУР (thematic)"
+      - "Амеліна — Ренесанс (загинула 2023)"
 
-# Constraints for all modules
+# Variant tracks (separate plans)
+variant_tracks:
+  - track: lit-essay
+    modules: 49
+    focus: "Non-fiction, essays, intellectual history"
+    plan: "plans/lit-essay.yaml"
+  - track: lit-hist-fic
+    modules: 20
+    focus: "Historical fiction epics"
+    plan: "plans/lit-hist-fic.yaml"
+  - track: lit-fantastika
+    modules: 27
+    focus: "Sci-fi, fantasy, Gothic, magic realism"
+    plan: "plans/lit-fantastika.yaml"
+  - track: lit-war
+    modules: 20
+    focus: "War literature 2014-present"
+    plan: "plans/lit-war.yaml"
+  - track: lit-humor
+    modules: 14
+    focus: "Humor and satire tradition"
+    plan: "plans/lit-humor.yaml"
+  - track: lit-juvenile
+    modules: 30
+    focus: "Children's and young adult literature"
+    plan: "plans/lit-juvenile.yaml"
+
 constraints:
-  min_word_target: 3000
-  max_word_target: 5000
+  min_word_target: 4000
+  max_word_target: 5500
   min_engagement_boxes: 3
   min_examples: 15
-  immersion_target: 1.0  # 100% Ukrainian
+  immersion_target: 0.95
   naturalness_threshold: 8
-  min_primary_sources: 2  # At least 2 text excerpts per module
+  min_primary_sources: 2
 
-# Pedagogical approach
 pedagogy_notes:
   approach: "seminar"
   structure:
-    - "Text excerpt with glossary"
+    - "Primary text excerpt with glossary"
     - "Literary analysis in Ukrainian"
     - "Historical/cultural context"
     - "Discussion questions"
     - "Comparative analysis (where applicable)"
   decolonization:
-    - "Present Ukrainian literature as independent tradition, not 'branch' of Russian"
-    - "Highlight anti-imperial themes in texts"
-    - "Use Ukrainian literary criticism, not Russian/Soviet interpretations"
+    - "Ukrainian literature is an independent European tradition"
+    - "Highlight anti-imperial themes in every text"
+    - "Use Ukrainian literary criticism, not Russian/Soviet"
+    - "Every module answers: what imperial myth does this destroy?"
+    - "Ukrainian-language authors ONLY — no Russian-language writers"

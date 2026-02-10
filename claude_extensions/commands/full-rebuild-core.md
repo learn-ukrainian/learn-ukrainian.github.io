@@ -135,6 +135,21 @@ Check which phases are already complete. **Unless `--from` is specified, auto-de
 
 **If `--from=PHASE` is specified, force start from that phase regardless of state.**
 
+### Monitor Integration
+
+Report progress to the batch monitor so it shows up in the playground:
+
+```bash
+# At start of module processing:
+.venv/bin/python scripts/batch_report.py {level} {slug} running --mode manual
+
+# When module passes all gates:
+.venv/bin/python scripts/batch_report.py {level} {slug} pass --mode manual
+
+# If module fails and you're moving on:
+.venv/bin/python scripts/batch_report.py {level} {slug} fail --mode manual
+```
+
 ---
 
 ## Phase 0: Research

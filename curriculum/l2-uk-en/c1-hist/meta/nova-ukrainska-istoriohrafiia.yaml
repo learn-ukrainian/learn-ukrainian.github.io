@@ -1,8 +1,57 @@
 ---
-module: nova-ukrainska-istoriohrafiia
+module: c1-hist-007
 level: C1-HIST
 slug: nova-ukrainska-istoriohrafiia
+type: seminar
 version: '1.0'
-id: c1-hist-07
+id: c1-hist-007
+phase: c1
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-10'
+word_target: 4000
+naturalness:
+  score: 9
+  status: PASS
+prerequisites:
+  - c1-hist-006
+content_outline:
+  - section: 'Криза радянської моделі та парадигмальні зміни'
+    words: 600
+    points:
+      - "Криза радянської ідеології"
+      - "Вплив Перебудови"
+  - section: '"Нормалізація" історії: Дискусія Яковенко—Грицак'
+    words: 550
+    points:
+      - "Подолання віктимізації"
+      - "Антропологічний підхід"
+  - section: 'Інституційні зміни та нові осередки'
+    words: 450
+    points:
+      - "Роль УКУ та НаУКМА"
+      - "Нові видавництва"
+  - section: 'Політика пам''яті та "війни пам''яті"'
+    words: 450
+    points:
+      - "Закони про декомунізацію"
+      - "Концепція воєн пам'яті"
+  - section: 'Глобальна історія та деколонізація'
+    words: 450
+    points:
+      - "Україна як суб'єкт"
+      - "Подолання провінційності"
+  - section: 'Публічна історія та діджиталізація (Public History)'
+    words: 300
+    points:
+      - "Популяризація"
+      - "Музеїфікація"
+  - section: 'Архіви та декласифікація: "Архівна революція"'
+    words: 600
+    points:
+      - "Відкриття архівів КДБ"
+      - "Соціальне значення"
+  - section: 'Повернення імен: Роль діаспори'
+    words: 550
+    points:
+      - "Вплив Гарварду"
+      - "Переклад Грушевського"

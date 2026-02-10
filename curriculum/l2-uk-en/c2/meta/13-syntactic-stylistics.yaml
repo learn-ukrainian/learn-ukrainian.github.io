@@ -1,9 +1,9 @@
 ---
-module: syntactic-stylistics
+module: c2-013
 level: C2
 slug: syntactic-stylistics
 version: '2.0'
-id: c2-13
+id: c2-013
 naturalness:
   score: 1
   status: PENDING

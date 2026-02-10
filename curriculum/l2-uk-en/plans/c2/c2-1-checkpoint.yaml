@@ -1,5 +1,5 @@
 ---
-module: c2-1-checkpoint
+module: c2-020
 level: c2
 sequence: 20
 version: '2.0'

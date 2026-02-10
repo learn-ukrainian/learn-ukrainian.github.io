@@ -1,8 +1,8 @@
 ---
-module: bukovyna-mizh-imperiiamy
+module: c1-hist-072
 level: C1-HIST
 slug: bukovyna-mizh-imperiiamy
 version: '1.0'
-id: c1-hist-72
+id: c1-hist-072
 build:
   last_modified: '2026-01-26'

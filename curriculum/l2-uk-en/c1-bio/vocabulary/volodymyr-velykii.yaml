@@ -1,198 +1,124 @@
----
+module: c1-bio-003
+level: C1-BIO
+version: '2.0'
 items:
-  - lemma: хрещення
-    ipa: /ˈxrɛʃt͡ʃenʲːɐ/
-    translation: baptism / Christianization
-    pos: noun
-    gender: n
-    note: Хрещення Русі 988 року
-  - lemma: язичництво
-    ipa: /jɐˈzɪt͡ʃnɪt͡stʋo/
-    translation: paganism
-    pos: noun
-    gender: n
-    note: дохристиянські вірування
-  - lemma: хреститель
-    ipa: /xresˈtɪtelʲ/
-    translation: baptizer / christener
-    pos: noun
-    gender: m
-    note: Володимир — хреститель Русі
-  - lemma: рівноапостольний
-    ipa: /rʲiwnoɐˈpɔstolʲnɪj/
-    translation: equal-to-the-apostles
-    pos: adjective
-    note: титул святого правителя
-  - lemma: пантеон
-    ipa: /pɐnˈtɛon/
-    translation: pantheon
-    pos: noun
-    gender: m
-    note: сукупність богів
-  - lemma: ідол
-    ipa: /ˈidɔl/
-    translation: idol / cult image
-    pos: noun
-    gender: m
-    note: язичницький кумир
-  - lemma: десятина
-    ipa: /desʲɐˈtɪnɐ/
-    translation: tithe
-    pos: noun
-    gender: f
-    note: податок на користь церкви
-  - lemma: усобиця
-    ipa: /uˈsɔbɪt͡sʲɐ/
-    translation: internecine war / civil strife
-    pos: noun
-    gender: f
-    note: князівські міжусобиці
-  - lemma: порфірородна
-    ipa: /porfʲiroˈrɔdnɐ/
-    translation: born in the purple
-    pos: adjective
-    note: титул візантійської принцеси
-  - lemma: Корсунь
-    ipa: /ˈkɔrsunʲ/
-    translation: Chersonesus
-    pos: noun
-    gender: m
-    note: давнє місто в Криму
-  - lemma: клятва
-    ipa: /ˈklʲɐtʋɐ/
-    translation: oath / vow
-    pos: noun
-    gender: f
-    note: урочиста обіцянка
-  - lemma: святиня
-    ipa: /sʲwɐˈtɪnʲɐ/
-    translation: shrine / sanctuary
-    pos: noun
-    gender: f
-    note: сакральне місце
-  - lemma: монастир
-    ipa: /monɐsˈtɪr/
-    translation: monastery
-    pos: noun
-    gender: m
-    note: релігійна громада та комплекс споруд
-  - lemma: єпископ
-    ipa: /jepˈiskop/
-    translation: bishop
-    pos: noun
-    gender: m
-    note: вищий духовний чин
-  - lemma: грамота
-    ipa: /ˈɦrɑmotɐ/
-    translation: charter / literacy
-    pos: noun
-    gender: f
-    note: здатність читати та писати
-  - lemma: карбування
-    ipa: /kɐrˈbuʋɐnʲːɐ/
-    translation: minting / coining
-    pos: noun
-    gender: n
-    note: виготовлення монет
-  - lemma: златник
-    ipa: /ˈzlɑtnɪk/
-    translation: zlatnyk (gold coin)
-    pos: noun
-    gender: m
-    note: перша золота монета Русі
-  - lemma: срібник
-    ipa: /ˈsrʲibnɪk/
-    translation: sribnyk (silver coin)
-    pos: noun
-    gender: m
-    note: перша срібна монета Русі
-  - lemma: легітимність
-    ipa: /leɦʲiˈtɪmnʲisʲtʲ/
-    translation: legitimacy
-    pos: noun
-    gender: f
-    note: законність влади
-  - lemma: централізація
-    ipa: /t͡sɛntrɐlʲiˈzɑt͡sʲijɐ/
-    translation: centralization
-    pos: noun
-    gender: f
-    note: зосередження влади в центрі
-  - lemma: тризуб
-    ipa: /ˈtrɪzub/
-    translation: trident
-    pos: noun
-    gender: m
-    note: Державний Герб України
-  - lemma: фундамент
-    ipa: /funˈdɑment/
-    translation: foundation / basis
-    pos: noun
-    gender: m
-    note: основа будівлі або держави
-  - lemma: місіонер
-    ipa: /mʲisʲioˈnɛr/
-    translation: missionary
-    pos: noun
-    gender: m
-    note: проповідник релігії
-  - lemma: саркофаг
-    ipa: /sɐrkoˈfɑɦ/
-    translation: sarcophagus
-    pos: noun
-    gender: m
-    note: кам'яна труна
-  - lemma: билина
-    ipa: /ˈbɪlɪnɐ/
-    translation: bylina (heroic epic)
-    pos: noun
-    gender: f
-    note: давньоруська епічна пісня
-  - lemma: ойкумена
-    ipa: /ojkuˈmɛnɐ/
-    translation: ecumene / inhabited world
-    pos: noun
-    gender: f
-    note: відомий цивілізований світ
-  - lemma: суб'єктність
-    ipa: /subjɛkˈtɪwnʲisʲtʲ/
-    translation: agency / subjectivity
-    pos: noun
-    gender: f
-    note: здатність діяти як самостійний гравець
-  - lemma: деколонізація
-    ipa: /dekoloɲiˈzɑt͡sʲijɐ/
-    translation: decolonization
-    pos: noun
-    gender: f
-    note: звільнення від імперських наративів
-  - lemma: тяглість
-    ipa: /ˈtʲɑɦlʲisʲtʲ/
-    translation: continuity
-    pos: noun
-    gender: f
-    note: безперервність історичного процесу
-  - lemma: візіонер
-    ipa: /ʋʲizʲioˈnɛr/
-    translation: visionary
-    pos: noun
-    gender: m
-    note: людина з далекоглядним баченням
-  - lemma: прагматизм
-    ipa: /prɐɦmɐˈtɪzm/
-    translation: pragmatism
-    pos: noun
-    gender: m
-    note: практичний підхід до політики
-  - lemma: амбівалентність
-    ipa: /ɐmbʲiʋɐˈlɛntnʲisʲtʲ/
-    translation: ambivalence
-    pos: noun
-    gender: f
-    note: подвійність сприйняття постаті
-  - lemma: легітимізація
-    ipa: /leɦʲitɪmʲiˈzɑt͡sʲijɐ/
-    translation: legitimization
-    pos: noun
-    gender: f
-    note: надання законності владі
+- lemma: хрещення
+  ipa:
+  - ˈxrɛʃt͡ʃenʲːɐ
+  translation: baptism / Christianization
+  definition: Таїнство прийняття християнської віри; історичний процес впровадження християнства як державної релігії.
+- lemma: язичництво
+  ipa:
+  - jɐˈzɪt͡ʃnɪt͡stʋɔ
+  translation: paganism
+  definition: Система вірувань, заснована на поклонінні багатьом богам, силам природи та ідолам.
+- lemma: пантеон
+  ipa:
+  - pɐnteˈɔn
+  translation: pantheon
+  definition: Сукупність богів певної релігії або храм, присвячений їм усім.
+- lemma: ідол
+  ipa:
+  - ˈidɔl
+  translation: idol
+  definition: Зображення божества (статуя), якому поклоняються язичники.
+- lemma: десятина
+  ipa:
+  - desʲɐˈtɪnɐ
+  translation: tithe
+  definition: Десята частина прибутків, яку віддавали на користь церкви.
+- lemma: усобиця
+  ipa:
+  - ʊˈsɔbɪt͡sʲɐ
+  translation: internecine war / strife
+  definition: Збройна боротьба за владу між членами одного роду або всередині однієї держави.
+- lemma: златник
+  ipa:
+  - ˈzɫɑtnɪk
+  translation: zlatnyk (gold coin)
+  definition: Перша золота монета Київської Русі, карбована Володимиром.
+- lemma: срібник
+  ipa:
+  - ˈsrʲibnɪk
+  translation: sribnyk (silver coin)
+  definition: Срібна монета Київської Русі.
+- lemma: тризуб
+  ipa:
+  - ˈtrɪzʊb
+  translation: trident
+  definition: Особистий знак князів Рюриковичів (зокрема Володимира), сучасний герб України.
+- lemma: варяг
+  ipa:
+  - ʋɐˈrʲɑh
+  translation: Varangian
+  definition: Скандинавський воїн-найманець або купець у Київській Русі.
+- lemma: канонізація
+  ipa:
+  - kɐnɔnʲizɐˈt͡sʲijɐ
+  translation: canonization
+  definition: Зарахування до лику святих.
+- lemma: літописання
+  ipa:
+  - lʲitɔpɪˈsɑnʲːɐ
+  translation: chronicle writing
+  definition: Процес створення історичних творів, де події викладаються за роками.
+- lemma: меценат
+  ipa:
+  - met͡seˈnɑt
+  translation: patron (of arts)
+  definition: Багатий покровитель наук і мистецтв (Володимир як будівничий церков і шкіл).
+- lemma: візантійський
+  ipa:
+  - ʋʲizɐnˈtʲii̯sʲkɪi̯
+  translation: Byzantine
+  definition: Такий, що стосується Візантійської імперії, її культури та обряду.
+- lemma: порфірородна
+  ipa:
+  - pɔrfʲirɔˈrɔdnɐ
+  translation: Porphyrogenita (Born in the Purple)
+  definition: Титул візантійських принцес, народжених у Порфіровій залі імператорського палацу (знак вищої легітимності).
+- lemma: легітимність
+  ipa:
+  - leɦiˈtɪmnʲisʲtʲ
+  translation: legitimacy
+  definition: Законність і визнання влади народом та іншими державами.
+- lemma: цивілізаційний
+  ipa:
+  - t͡sɪʋilʲizɐˈt͡sʲii̯nɪi̯
+  translation: civilizational
+  definition: Такий, що стосується рівня розвитку суспільства та його культурного вибору.
+- lemma: монотеїзм
+  ipa:
+  - mɔnɔteˈjizm
+  translation: monotheism
+  definition: Віра в єдиного Бога (на відміну від політеїзму).
+- lemma: ієрархія
+  ipa:
+  - ijeˈrɑrxʲijɐ
+  translation: hierarchy
+  definition: Порядок підпорядкування нижчих ланок вищим.
+- lemma: реформатор
+  ipa:
+  - refɔrˈmɑtɔr
+  translation: reformer
+  definition: Той, хто здійснює зміни в суспільному ладі.
+- lemma: капище
+  ipa:
+  - kɐˈpɪʃt͡ʃe
+  translation: pagan shrine
+  definition: Місце, де стояли ідоли і приносилися жертви.
+- lemma: ойкумена
+  ipa:
+  - ɔi̯kʊˈmɛnɐ
+  translation: oikumene
+  definition: Заселений світ; культурний простір, відомий давнім людям.
+- lemma: стратег
+  ipa:
+  - strɐˈtɛh
+  translation: strategist
+  definition: Полководець або політик, який мислить масштабно і планує на далеку перспективу.
+- lemma: милосердя
+  ipa:
+  - mɪɫɔˈsɛrdʲːɐ
+  translation: mercy / charity
+  definition: Співчутливе ставлення до людей, готовність допомогти (характеристика пізнього Володимира).

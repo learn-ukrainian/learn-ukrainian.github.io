@@ -2,11 +2,11 @@
   "module": "leonid-kadenyuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:35.458888Z",
+  "last_audit": "2026-02-09T23:25:13.717385Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.357507Z",
-    "meta": "2026-02-07T15:13:22.027713Z",
+    "meta": "2026-02-09T15:59:44.238645Z",
     "activities": "2026-02-07T10:03:51.564487Z",
     "vocabulary": null,
     "plan": null
@@ -36,6 +36,11 @@
       "status": "info",
       "violations": 0,
       "message": "1/10 (PENDING \u2014 awaiting review)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

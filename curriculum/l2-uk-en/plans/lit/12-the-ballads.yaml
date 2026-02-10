@@ -1,5 +1,6 @@
 ---
-module: the-ballads
+sequence: 12
+module: lit-12
 level: LIT
 slug: the-ballads
 version: '2.0'

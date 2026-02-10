@@ -1,9 +1,9 @@
 ---
-module: c2-1-checkpoint
+module: c2-020
 level: C2
 slug: c2-1-checkpoint
 version: '2.0'
-id: c2-20
+id: c2-020
 naturalness:
   score: 1
   status: PENDING

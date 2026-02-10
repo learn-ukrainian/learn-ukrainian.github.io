@@ -1,77 +1,129 @@
----
-vocabulary:
-- word: регентка
-  ipa: "[rɛˈɦɛntkɑ]"
+module: c1-bio-001
+level: C1-BIO
+version: '2.0'
+items:
+- lemma: регентка
+  ipa:
+  - ˈrɛɦentkɐ
   translation: regent (female)
-- word: погост
-  ipa: "[pɔˈɦɔst]"
-  translation: administrative center / trading post
-- word: урок
-  ipa: "[uˈrɔk]"
-  translation: fixed tax / tribute
-- word: устав
-  ipa: "[uˈstɑu̯]"
-  translation: statute / law
-- word: данина
-  ipa: "[dɑˈnɪnɑ]"
-  translation: tribute
-- word: полюддя
-  ipa: "[pɔˈlʲudʲːɑ]"
-  translation: collecting tribute through tours
-- word: дипломатія
-  ipa: "[dɪplɔˈmɑt⁽ʲ⁾ijɑ]"
-  translation: diplomacy
-- word: хрещення
-  ipa: "[xrɛˈʃt͡ʃɛnʲnʲɑ]"
-  translation: baptism
-- word: канонізація
-  ipa: "[kɑnɔn⁽ʲ⁾izɑˈt͡s⁽ʲ⁾ijɑ]"
-  translation: canonization
-- word: суб'єктність
-  ipa: "[subˈjɛktn⁽ʲ⁾istʲ]"
-  translation: subjectivity / agency
-- word: агентність
-  ipa: "[ɑˈɦɛntn⁽ʲ⁾istʲ]"
-  translation: agency
-- word: легітимізація
-  ipa: "[lɛɦ⁽ʲ⁾itɪm⁽ʲ⁾izɑˈt͡s⁽ʲ⁾ijɑ]"
+  definition: Особа, яка тимчасово правила державою замість малолітнього або хворого монарха.
+- lemma: погост
+  ipa:
+  - pɔˈɦɔst
+  translation: pohost (administrative center)
+  definition: Адміністративно-територіальна одиниця та центр збору данини у Київській Русі.
+- lemma: урок
+  ipa:
+  - ʊˈrɔk
+  translation: urok (fixed tax)
+  definition: Чітко визначений розмір данини, встановлений законом.
+- lemma: устав
+  ipa:
+  - ʊˈstɑu̯
+  translation: ustav (legal decree)
+  definition: Письмовий або усний державний акт, що регулював правила збору податків та адміністративний лад.
+- lemma: полюддя
+  ipa:
+  - pɔˈlʲudʲːɐ
+  translation: polyuddia (tribute collection)
+  definition: Збір данини князем з підвладних племен шляхом щорічного об'їзду територій.
+- lemma: легітимізація
+  ipa:
+  - leɦitɪmʲizɐˈt͡sʲijɐ
   translation: legitimization
-- word: бюрократія
-  ipa: "[bjurɔˈkrɑt⁽ʲ⁾ijɑ]"
-  translation: bureaucracy
-- word: тризна
-  ipa: "[ˈtrɪznɑ]"
-  translation: funeral feast
-- word: посли
-  ipa: "[pɔˈslɪ]"
-  translation: ambassadors
-- word: митрополит
-  ipa: "[mɪtrɔpɔˈlɪt]"
-  translation: metropolitan (bishop)
-- word: рівноапостольна
-  ipa: "[r⁽ʲ⁾iu̯nɔɑˈpɔstɔlʲnɑ]"
-  translation: equal-to-the-apostles
-- word: дружина
-  ipa: "[druˈʒɪnɑ]"
-  translation: prince's retinue / army
-- word: межові знаки
-  ipa: "[mɛʒɔˈw⁽ʲ⁾i ˈznɑkɪ]"
-  translation: boundary markers
-- word: тяглість
-  ipa: "[ˈtʲɑɦl⁽ʲ⁾istʲ]"
+  definition: Визнання законності влади або певних дій на міжнародному чи внутрішньому рівні.
+- lemma: суб'єктність
+  ipa:
+  - sʊbjekˈtnʲisʲtʲ
+  translation: agency / subjectivity
+  definition: Здатність держави чи особи діяти самостійно, бути активним учасником історичних та політичних процесів.
+- lemma: деколонізація
+  ipa:
+  - dekɔɫɔnʲizɐˈt͡sʲijɐ
+  translation: decolonization
+  definition: Процес звільнення від колоніальної залежності або імперських міфів про власне минуле.
+- lemma: тяглість
+  ipa:
+  - ˈtʲɑɦlʲisʲtʲ
   translation: continuity
-- word: передвісниця
-  ipa: "[pɛrɛˈdw⁽ʲ⁾isnɪt͡sʲɑ]"
-  translation: harbinger (female)
-- word: вишгород
-  ipa: "[wɪʃˈɦɔrɔd]"
-  translation: Vyshhorod (residence)
-- word: константинополь
-  ipa: "[kɔnstɑntɪˈnɔpɔlʲ]"
-  translation: Constantinople
-- word: іскоростень
-  ipa: "[iskɔˈrɔstɛnʲ]"
-  translation: Iskorosten (Drevlian capital)
-- word: рюриковичі
-  ipa: "[ˈrʲurɪkɔwɪt͡ʃ⁽ʲ⁾i]"
-  translation: Rurikids (dynasty)
+  definition: Безперервність історичного розвитку, традиції або державної ідеї.
+- lemma: інституційне будівництво
+  ipa:
+  - instɪtʊt͡sʲijˈnɛ bʊdʲiu̯ˈnɪt͡stʋɔ
+  translation: institutional building
+  definition: Процес створення та зміцнення державних структур, законів та адміністративних органів.
+- lemma: дипломатія
+  ipa:
+  - dɪpɫɔˈmɑtʲijɐ
+  translation: diplomacy
+  definition: Діяльність держави щодо здійснення її зовнішньої політики та захисту інтересів за кордоном.
+- lemma: візіонерство
+  ipa:
+  - ʋʲizʲiɔˈnɛrstʋɔ
+  translation: visionaries (scholarly)
+  definition: Здатність бачити майбутній розвиток держави на багато десятиліть вперед.
+- lemma: консолідація
+  ipa:
+  - kɔnsɔlʲiˈdɑt͡sʲijɐ
+  translation: consolidation
+  definition: Об'єднання, зміцнення сил або територій для досягнення спільної мети.
+- lemma: агентність
+  ipa:
+  - ɐˈɦɛntnʲisʲtʲ
+  translation: agency
+  definition: Активна роль у прийнятті рішень та впливі на події.
+- lemma: васалітет
+  ipa:
+  - ʋɐsɐlʲiˈtɛt
+  translation: vassalage
+  definition: Система політичної залежності одного володаря від іншого.
+- lemma: канонізація
+  ipa:
+  - kɐnɔnʲizɐˈt͡sʲijɐ
+  translation: canonization
+  definition: Офіційне визнання церкви особи святою після її смерті.
+- lemma: сакральний
+  ipa:
+  - sɐˈkrɑlʲnei̯
+  translation: sacred
+  definition: Священний, такий, що має стосунок до релігійного культу або вищих духовних смислів.
+- lemma: етикет
+  ipa:
+  - etɪˈkɛt
+  translation: etiquette
+  definition: Сукупність правил поведінки та протоколу у вищому суспільстві або при дворі.
+- lemma: реформаторка
+  ipa:
+  - refɔrmɑˈtɔrkɐ
+  translation: reformer (female)
+  definition: Жінка, яка здійснює докорінні перетворення у певній сфері життя суспільства.
+- lemma: сепаратизм
+  ipa:
+  - sepɐrɐˈtɪzm
+  translation: separatism
+  definition: Прагнення окремих частин держави до відокремлення та створення власної незалежності.
+- lemma: суверенітет
+  ipa:
+  - sʊʋerenʲiˈtɛt
+  translation: sovereignty
+  definition: Повна незалежність держави від інших держав у її внутрішніх справах та зовнішніх відносинах.
+- lemma: пасіонарність
+  ipa:
+  - pɐsʲiɔˈnɑrnʲisʲtʲ
+  translation: passionarity
+  definition: Велика внутрішня енергія, що спонукає людей до активної діяльності та самопожертви.
+- lemma: домен
+  ipa:
+  - dɔˈmɛn
+  translation: domain
+  definition: Спадкове земельне володіння монарха.
+- lemma: емісар
+  ipa:
+  - emʲiˈsɑr
+  translation: emissary
+  definition: Спеціальний посланець для виконання важливого політичного або релігійного доручення.
+- lemma: синкретизм
+  ipa:
+  - sɪnkreˈtɪzm
+  translation: syncretism
+  definition: Поєднання різних релігійних або культурних елементів у єдину систему.

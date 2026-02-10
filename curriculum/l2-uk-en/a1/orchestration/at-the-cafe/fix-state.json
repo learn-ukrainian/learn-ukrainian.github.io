@@ -1,0 +1,15 @@
+{
+  "slug": "at-the-cafe",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T21:13:45.436432Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T21:13:45.436413Z",
+  "result": "success"
+}

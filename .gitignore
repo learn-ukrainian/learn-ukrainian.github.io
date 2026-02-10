@@ -100,5 +100,8 @@ issue_*_body.md
 !jest.config.js
 !eslint.config.mjs
 
+# Batch runner state (generated at runtime)
+batch_state/
+
 # MCP broker PID files
 .mcp/servers/message-broker/pids/

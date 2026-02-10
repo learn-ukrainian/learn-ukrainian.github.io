@@ -13,7 +13,7 @@
     },
     "level": {
       "type": "string",
-      "pattern": "^(a1|a2|b1|b2|c1|c2|b2-hist|b2-pro|c1-bio|c1-hist|c1-pro|c2-pro|lit)$"
+      "pattern": "^([Aa]1|[Aa]2|[Bb]1|[Bb]2|[Cc]1|[Cc]2|[Bb]2-[Hh][Ii][Ss][Tt]|[Bb]2-[Pp][Rr][Oo]|[Cc]1-[Bb][Ii][Oo]|[Cc]1-[Hh][Ii][Ss][Tt]|[Cc]1-[Pp][Rr][Oo]|[Cc]2-[Pp][Rr][Oo]|[Ll][Ii][Tt])$"
     },
     "sequence": {
       "type": "integer",
@@ -165,22 +165,21 @@
       }
     },
     "connects_to": {
-      "type": "object",
-      "properties": {
-        "previous": {
-          "type": ["string", "null"]
-        },
-        "next": {
-          "type": ["string", "null"]
-        },
-        "related": {
-          "type": "array",
-          "items": {
-            "type": "string"
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "previous": { "type": ["string", "null"] },
+            "next": { "type": ["string", "null"] },
+            "related": { "type": "array", "items": { "type": "string" } }
           }
+        },
+        {
+          "type": "array",
+          "items": { "type": "string" }
         }
-      },
-      "description": "Links to related modules"
+      ],
+      "description": "Links to related modules (object or array format)"
     },
     "constraints": {
       "type": "object",
@@ -241,5 +240,5 @@
       "description": "Version history for plan changes (per Epic #465 review)"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": true
 }

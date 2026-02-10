@@ -1,9 +1,9 @@
 ---
-module: cross-domain-communication
+module: c2-058
 level: C2
 slug: cross-domain-communication
 version: '2.0'
-id: c2-58
+id: c2-058
 naturalness:
   score: 1
   status: PENDING

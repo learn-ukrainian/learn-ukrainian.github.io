@@ -1,9 +1,9 @@
 ---
-module: c1-bio-139
+module: c1-bio-148
 level: C1-BIO
 slug: yaroslav-hrytsak
 version: '2.0'
-id: c1-bio-146
+id: c1-bio-148
 naturalness:
   score: 1
   status: PENDING

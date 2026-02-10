@@ -1,5 +1,6 @@
 ---
-module: shevchenkos-diary
+sequence: 19
+module: lit-19
 level: LIT
 slug: shevchenkos-diary
 version: '2.0'

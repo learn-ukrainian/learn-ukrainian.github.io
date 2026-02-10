@@ -1,5 +1,6 @@
 ---
-module: women-in-kobzar
+sequence: 18
+module: lit-18
 level: LIT
 slug: women-in-kobzar
 version: '2.0'

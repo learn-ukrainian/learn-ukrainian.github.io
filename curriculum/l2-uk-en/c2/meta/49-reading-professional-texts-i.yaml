@@ -1,9 +1,9 @@
 ---
-module: reading-professional-texts-i
+module: c2-049
 level: C2
 slug: reading-professional-texts-i
 version: '2.0'
-id: c2-49
+id: c2-049
 naturalness:
   score: 1
   status: PENDING

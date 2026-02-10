@@ -1,9 +1,10 @@
 ---
-module: c1-bio-028
+module: c1-bio-029
 level: C1-BIO
 slug: danylo-apostol
 version: '2.0'
 id: c1-bio-029
+module_id: c1-bio-029
 title: "Данило Апостол: Останній обраний гетьман"
 naturalness:
   score: 10

@@ -1,0 +1,15 @@
+{
+  "slug": "the-living-verb-ii",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T20:40:27.123146Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T20:40:27.123128Z",
+  "result": "success"
+}

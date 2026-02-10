@@ -1,9 +1,9 @@
 ---
-module: teaching-ukrainian-i
+module: c2-082
 level: C2
 slug: teaching-ukrainian-i
 version: '2.0'
-id: c2-82
+id: c2-082
 naturalness:
   score: 1
   status: PENDING

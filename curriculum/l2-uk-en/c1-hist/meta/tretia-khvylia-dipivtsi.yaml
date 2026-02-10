@@ -1,8 +1,8 @@
 ---
-module: tretia-khvylia-dipivtsi
+module: c1-hist-066
 level: C1-HIST
 slug: tretia-khvylia-dipivtsi
 version: '1.0'
-id: c1-hist-66
+id: c1-hist-066
 build:
   last_modified: '2026-01-26'

@@ -1,188 +1,124 @@
----
+module: c1-bio-004
+level: C1-BIO
+version: '2.0'
 items:
-  - lemma: законодаввець
-    ipa: /zɐkonodɑˈʋet͡sʲ/
-    translation: lawgiver
-    pos: noun
-    gender: m
-    note: творець системи законів
-  - lemma: правда
-    ipa: /ˈprɑu̯dɐ/
-    translation: law code / justice
-    pos: noun
-    gender: f
-    note: Руська Правда — перший звід законів
-  - lemma: віра
-    ipa: /ˈʋirɐ/
-    translation: wergeld (fine for murder)
-    pos: noun
-    gender: f
-    note: грошовий штраф за вбивство
-  - lemma: скрипторій
-    ipa: /skrɪpˈtɔrʲij/
-    translation: scriptorium
-    pos: noun
-    gender: m
-    note: майстерня для переписування книг
-  - lemma: митрополія
-    ipa: /mɪtropoˈlʲijɐ/
-    translation: metropolitanate
-    pos: noun
-    gender: f
-    note: центр церковного управління
-  - lemma: усобиця
-    ipa: /uˈsɔbɪt͡sʲɐ/
-    translation: internecine strife
-    pos: noun
-    gender: f
-    note: внутрішній воєнний конфлікт
-  - lemma: собор
-    ipa: /soˈbɔr/
-    translation: cathedral
-    pos: noun
-    gender: m
-    note: головний храм міста
-  - lemma: грамота
-    ipa: /ˈɦrɑmotɐ/
-    translation: literacy / charter
-    pos: noun
-    gender: f
-    note: знання читання та письма
-  - lemma: династія
-    ipa: /dɪˈnɑstʲijɐ/
-    translation: dynasty
-    pos: noun
-    gender: f
-    note: ряд правителів одного роду
-  - lemma: завіт
-    ipa: /zɐˈʋit/
-    translation: testament / covenant
-    pos: noun
-    gender: m
-    note: повчальна настанова нащадкам
-  - lemma: мозаїка
-    ipa: /mozɐˈjikɐ/
-    translation: mosaic
-    pos: noun
-    gender: f
-    note: зображення зі шматочків смальти
-  - lemma: фреска
-    ipa: /ˈfrɛskɐ/
-    translation: fresco
-    pos: noun
-    gender: f
-    note: розпис водяними фарбами по вологому тиньку
-  - lemma: посадник
-    ipa: /poˈsɑdnɪk/
-    translation: governor / burgomaster
-    pos: noun
-    gender: m
-    note: намісник князя у місті
-  - lemma: віче
-    ipa: /vʲit͡ʃe/
-    translation: assembly / viche
-    pos: noun
-    gender: n
-    note: народні збори на Русі
-  - lemma: престол
-    ipa: /presˈtɔl/
-    translation: throne
-    pos: noun
-    gender: m
-    note: символ монаршої влади
-  - lemma: дуумвірат
-    ipa: /duumʋʲiˈrɑt/
-    translation: duumvirate
-    pos: noun
-    gender: m
-    note: спільне правління двох осіб
-  - lemma: кодифікація
-    ipa: /kodɪfʲikˈɑt͡sʲijɐ/
-    translation: codification
-    pos: noun
-    gender: f
-    note: систематизація законів
-  - lemma: регент
-    ipa: /ˈrɛɦent/
-    translation: regent
-    pos: noun
-    gender: m
-    note: тимчасовий правитель при малолітньому монарху
-  - lemma: саркофаг
-    ipa: /sɐrkoˈfɑɦ/
-    translation: sarcophagus
-    pos: noun
-    gender: m
-    note: оздоблена кам'яна труна
-  - lemma: літопис
-    ipa: /ˈlʲitopɪs/
-    translation: chronicle
-    pos: noun
-    gender: m
-    note: історичний твір з погодовим записом подій
-  - lemma: реформатор
-    ipa: /reformˈɑtor/
-    translation: reformer
-    pos: noun
-    gender: m
-    note: творець глибоких суспільних змін
-  - lemma: гуманізація
-    ipa: /ɦumɐnʲizˈɑt͡sʲijɐ/
-    translation: humanization
-    pos: noun
-    gender: f
-    note: пом'якшення та олюднення законів
-  - lemma: мегаполіс
-    ipa: /meɦɐˈpɔlʲis/
-    translation: metropolis
-    pos: noun
-    gender: m
-    note: велике місто з розвиненою структурою
-  - lemma: суверенітет
-    ipa: /suʋerenʲiˈtɛt/
-    translation: sovereignty
-    pos: noun
-    gender: m
-    note: повна незалежність держави
-  - lemma: агентність
-    ipa: /ɐˈɦɛntnʲistʲ/
-    translation: agency
-    pos: noun
-    gender: f
-    note: здатність діяти самостійно
-  - lemma: суб'єктність
-    ipa: /subˈjɛktnʲistʲ/
-    translation: subjectivity / agency
-    pos: noun
-    gender: f
-    note: статус самостійного гравця в історії
-  - lemma: плінфа
-    ipa: /ˈplʲinfɐ/
-    translation: plinthite
-    pos: noun
-    gender: f
-    note: тонка широка цегла давньоруського будівництва
-  - lemma: Оранта
-    ipa: /oˈrɑntɐ/
-    translation: Orans
-    pos: noun
-    gender: f
-    note: тип зображення Богородиці з піднятими руками
-  - lemma: лествиця
-    ipa: /ˈlɛstʋɪt͡sʲɐ/
-    translation: ladder system
-    pos: noun
-    gender: f
-    note: порядок успадкування влади від брата до брата
-  - lemma: деколонізація
-    ipa: /dekolonʲizˈɑt͡sʲijɐ/
-    translation: decolonization
-    pos: noun
-    gender: f
-    note: процес звільнення від імперського впливу
-  - lemma: рецепція
-    ipa: /ret͡sɛpt͡sʲijɐ/
-    translation: reception
-    pos: noun
-    gender: f
-    note: запозичення та адаптація ідей або правових норм
+- lemma: віра
+  ipa:
+  - ˈʋʲirɐ
+  translation: vira (bloodwite)
+  definition: Грошовий штраф за вбивство вільної людини у Київській Русі, що замінив кровну помсту.
+- lemma: скрипторій
+  ipa:
+  - skrɪpˈtɔrʲii̯
+  translation: scriptorium
+  definition: Майстерня при монастирі або церкві, де переписували книги.
+- lemma: усобиця
+  ipa:
+  - ʊˈsɔbɪt͡sʲɐ
+  translation: internecine strife
+  definition: Збройна боротьба за владу всередині держави.
+- lemma: митрополит
+  ipa:
+  - mɪtrɔpɔˈlɪt
+  translation: metropolitan
+  definition: Вищий духовний сан у православній церкві, глава церковного округу.
+- lemma: фреска
+  ipa:
+  - ˈfrɛskɐ
+  translation: fresco
+  definition: Живопис на вогкій штукатурці, одна з технік стінопису.
+- lemma: мозаїка
+  ipa:
+  - mɔˈzɑjikɐ
+  translation: mosaic
+  definition: Зображення, викладене з різнокольорових камінців або смальти.
+- lemma: смальта
+  ipa:
+  - ˈsmɑlʲtɐ
+  translation: smalt
+  definition: Кольорове непрозоре скло у вигляді кубиків, що застосовується для мозаїк.
+- lemma: тесть
+  ipa:
+  - tɛsʲtʲ
+  translation: father-in-law
+  definition: Батько дружини (Ярослава називали "тестем Європи").
+- lemma: династія
+  ipa:
+  - dɪˈnɑstʲijɐ
+  translation: dynasty
+  definition: Ряд монархів з одного роду, які змінюють один одного на престолі.
+- lemma: кодифікація
+  ipa:
+  - kɔdɪfʲiˈkɑt͡sʲijɐ
+  translation: codification
+  definition: Упорядкування і систематизація законів, зведення їх у єдиний кодекс.
+- lemma: ізгой
+  ipa:
+  - izˈɦɔi̯
+  translation: izgoi (outcast)
+  definition: Людина, яка втратила свій соціальний статус (наприклад, князь без землі).
+- lemma: смерд
+  ipa:
+  - smɛrd
+  translation: smerd (peasant)
+  definition: Вільний селянин-общинник у Київській Русі.
+- lemma: холоп
+  ipa:
+  - xɔˈlɔp
+  translation: kholop (serf/slave)
+  definition: Людина, яка перебувала у повній залежності від господаря, раб.
+- lemma: гривня
+  ipa:
+  - ˈhrɪu̯nʲɐ
+  translation: hryvnia
+  definition: Грошова одиниця та міра ваги срібла в Київській Русі.
+- lemma: саркофаг
+  ipa:
+  - sɐrkɔˈfɑh
+  translation: sarcophagus
+  definition: Кам'яна труна, часто прикрашена різьбленням.
+- lemma: печеніги
+  ipa:
+  - pet͡ʃeˈnʲiɦɪ
+  translation: Pechenegs
+  definition: Тюркомовні кочові племена, що нападали на Русь у X-XI ст.
+- lemma: графіті
+  ipa:
+  - ɡrɐˈfʲitʲi
+  translation: graffiti
+  definition: Стародавні написи, видряпані на стінах храмів (важливе історичне джерело).
+- lemma: оранта
+  ipa:
+  - ɔˈrɑntɐ
+  translation: Orans
+  definition: Іконографічний тип Богоматері з піднятими в молитві руками (знаменита мозаїка в Софії).
+- lemma: мудрість
+  ipa:
+  - ˈmudrʲisʲtʲ
+  translation: wisdom
+  definition: Глибокий розум, спертий на життєвий досвід (епітет Ярослава).
+- lemma: культуртрегер
+  ipa:
+  - kʊlʲtʊrˈtrɛɦer
+  translation: kulturträger
+  definition: Носій і поширювач культури, просвітитель.
+- lemma: дуумвірат
+  ipa:
+  - dʊʊmʋʲiˈrɑt
+  translation: duumvirate
+  definition: Спільне правління двох осіб (Ярослава і Мстислава).
+- lemma: легітимність
+  ipa:
+  - leɦiˈtɪmnʲisʲtʲ
+  translation: legitimacy
+  definition: Законність влади.
+- lemma: скрижаль
+  ipa:
+  - skrɪˈʒɑlʲ
+  translation: tablet (law)
+  definition: Кам'яна плита з написаним законом.
+- lemma: меценатство
+  ipa:
+  - met͡seˈnɑtstʋɔ
+  translation: patronage
+  definition: Покровительство наукам і мистецтвам.

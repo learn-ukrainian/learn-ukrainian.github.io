@@ -1,13 +1,13 @@
 # B2-HIST Module Status
 
-**Generated:** 2026-02-08 18:53:02
+**Generated:** 2026-02-10 16:09:01
 **Total Modules:** 140
-**Status:** 12 passing, 128 failing, 0 stubs, 0 errors
+**Status:** 13 passing, 127 failing, 0 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 12/140 (8%)
-- ❌ **Failing:** 128/140
+- ✅ **Passing:** 13/140 (9%)
+- ❌ **Failing:** 127/140
 - 📝 **Stubs:** 0/140
 
 ## Module Details
@@ -24,7 +24,7 @@
 | 008 | syntez-vytoky-1 | ✅ PASS | 4610/4000 | - |
 | 009 | oleh-ihor | ✅ PASS | 4102/4000 | - |
 | 010 | olha-sviatoslav | ✅ PASS | 4660/4000 | - |
-| 011 | volodymyr-khreshchennia | ❌ FAIL | 4048/4000 | - |
+| 011 | volodymyr-khreshchennia | ✅ PASS | 4048/4000 | - |
 | 012 | yaroslav-wise | ❌ FAIL | 4055/4000 | - |
 | 013 | ruska-pravda | ✅ PASS | 4274/4000 | - |
 | 014 | sofiya-kyivska | ❌ FAIL | 4038/4000 | 3 Outline Compliance Errors |

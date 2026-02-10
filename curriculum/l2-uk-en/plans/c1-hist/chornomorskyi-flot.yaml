@@ -1,5 +1,5 @@
 ---
-module: chornomorskyi-flot
+module: c1-hist-099
 level: c1-hist
 sequence: 99
 version: '1.0'

@@ -2,14 +2,14 @@
   "module": "23-complete-imperative",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-02T07:30:46.041715Z",
+  "last_audit": "2026-02-10T10:45:23.374932Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-02T00:04:33.604931Z",
-    "meta": "2026-01-29T07:39:04.595423Z",
-    "activities": "2026-01-11T10:24:57.901309Z",
-    "vocabulary": "2026-02-01T23:59:32.821637Z",
-    "plan": "2026-01-30T12:31:49.590388Z"
+    "meta": "2026-02-07T10:03:50.716191Z",
+    "activities": "2026-02-07T10:03:50.742646Z",
+    "vocabulary": "2026-02-07T10:03:50.788738Z",
+    "plan": "2026-02-09T12:52:14.208470Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

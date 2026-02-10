@@ -1,22 +1,88 @@
 ---
+title: "Микола Джеря"
 module: lit-30
 level: LIT
+phase: "LIT.Realism"
+focus: literature
+vocabulary_hints:
+  required:
+    - "кріпацтво"
+    - "нива"
+    - "бурлака"
+    - "каторжний"
+sources:
+  - name: "Микола Джеря (Текст)"
+    url: "https://uk.wikisource.org/wiki/%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%94%D0%B6%D0%B5%D1%80%D1%8F"
+    type: primary
+  - name: "Dovidka.biz.ua - Аналіз"
+    url: "https://dovidka.biz.ua/mikola-dzherya-analiz-pasport/"
+    type: secondary
 slug: mykola-dzherya
-version: '2.0'
+version: '1.0'
 id: lit-30
 naturalness:
   score: 10
   status: PASS
-  justification: Graduate level academic Ukrainian
+  justification: Pending review
 duration: 120
 transliteration: none
 tags:
 - література
 - реалізм
-- нечуй-левицький
-- микола-джеря
 - кріпацтво
-- бунтар
-word_target: 4500
+- нечуй-левицький
+- проза
+- 19-століття
+content_outline:
+  - section: "Початок шляху: Кріпацтво"
+    words: 500
+    points:
+      - "Serfdom context"
+      - "Village of Verbivka"
+      - "Conflict with Pan"
+  - section: "Бунт і Втеча"
+    words: 500
+    points:
+      - "Decision to flee"
+      - "Leaving family"
+      - "Moral dilemma"
+  - section: "Степами до Волі"
+    words: 500
+    points:
+      - "Journey description"
+      - "Psychology of escape"
+      - "Steppe landscape"
+  - section: "Бурлаки на Лимані"
+    words: 500
+    points:
+      - "Bessarabia setting"
+      - "Fishing artel labor"
+      - "New exploitation"
+  - section: "Втрачений Рай"
+    words: 500
+    points:
+      - "Longing for home"
+      - "Nymydora's tragedy"
+      - "Years of separation"
+  - section: "Повернення Блудного Батька"
+    words: 500
+    points:
+      - "1861 Reform"
+      - "Return to ruins"
+      - "Alienation from daughter"
+  - section: "Вічний Бунтар"
+    words: 500
+    points:
+      - "Old Mykola's activism"
+      - "New social struggles"
+      - "Unbroken spirit"
+  - section: "Реалізм і Народ"
+    words: 500
+    points:
+      - "Nechuy-Levytsky's style"
+      - "Franko's assessment"
+      - "Legacy of the work"
+word_target: 4000
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-09'
+  version: '1.0'

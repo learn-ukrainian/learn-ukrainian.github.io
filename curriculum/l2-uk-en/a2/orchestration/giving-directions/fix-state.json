@@ -1,0 +1,14 @@
+{
+  "slug": "giving-directions",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:23:20.141825Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T11:23:20.141810Z",
+  "result": "success"
+}

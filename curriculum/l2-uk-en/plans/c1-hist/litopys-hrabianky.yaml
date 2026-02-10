@@ -1,5 +1,5 @@
 ---
-module: litopys-hrabianky
+module: c1-hist-021
 level: c1-hist
 sequence: 21
 version: '1.0'

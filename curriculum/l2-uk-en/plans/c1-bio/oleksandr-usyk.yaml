@@ -1,106 +1,73 @@
 ---
-module: c1-bio-148
+module: c1-bio-160
 level: C1-BIO
-sequence: 148
+sequence: 160
 slug: oleksandr-usyk
 version: '2.0'
-title: 'Олександр Усик: Чемпіон із серцем воїна'
-content_outline:
-- section: "Вступ — Абсолютний чемпіон світу"
-  words: 457
-  points:
-  - Усик як перший в історії undisputed у двох вагах
-  - Кримчанин, який став символом України
-  - Боксер-патріот під час війни
-- section: Молодість у Криму
-  words: 571
-  points:
-  - Народження в Сімферополі (1987)
-  - Початок занять боксом
-  - Тренування та перші перемоги
-  - Переїзд до Києва
-- section: Аматорська кар'єра
-  words: 685
-  points:
-  - Чемпіонати світу та Європи
-  - Олімпійське золото в Лондоні (2012)
-  - Стиль "українського танцю"
-  - Перехід у професіонали
-- section: Шлях до undisputed
-  words: 914
-  points:
-  - Перемоги у першій важкій вазі
-  - Undisputed у крузервейті (2018)
-  - Перехід у важку вагу
-  - Перемоги над Джошуа та Ф'юрі
-- section: Патріот під час війни
-  words: 800
-  points:
-  - Повернення в Україну 2022
-  - Служба в тероборороні
-  - Присвята перемог Україні
-  - Голос України у світі
-- section: Значення для нації
-  words: 573
-  points:
-  - Скромність і віра
-  - Приклад для молоді
-  - Усик як символ незламності
-  - Спортсмен із місією
+title: 'Олександр Усик: Абсолютний чемпіон та посол незламності'
 word_target: 4000
-vocabulary_hints:
-  required:
-  - боксер (boxer)
-  - чемпіон світу (world champion)
-  - важка вага (heavyweight)
-  - олімпійська медаль (Olympic medal)
-  - патріот (patriot)
-  - територіальна оборона (territorial defense)
-  - перемога (victory)
-  - скромність (modesty)
-  - незламність (unbreakability)
-  - віра (faith)
-  recommended:
-  - ринг (ring)
-  - раунд (round)
-  - нокаут (knockout)
-  - титул (title)
-  - суперник (opponent)
-activity_hints:
-- type: reading
-  focus: Usyk's interviews and statements
-  source: Sports media
-  items: 3 passages
-- type: essay-response
-  focus: How does Usyk represent Ukraine to the world?
-  word_target: 300
-  output: Sports diplomacy analysis
+content_outline:
+  - section: "Вступ — Більше ніж спорт: Усик як національний символ"
+    words: 600
+    points:
+      - Усик як втілення козацького духу в сучасному спорті
+      - Значення його перемог для підняття національного бойового духу
+      - Поєднання атлетизму з глибокою вірою та патріотизмом
+  - section: "Життєпис: Від сімферопольських вулиць до олімпійського Лондона"
+    words: 1600
+    points:
+      - Ранні роки в Криму, заняття футболом та вибір боксу
+      - Роль першого тренера та формування бійцівського характеру
+      - Тріумф на Олімпіаді-2012: золото та легендарний гопак
+      - Перехід у професіонали: шлях до статусу абсолютного чемпіона у Cruiserweight
+      - Виклики переходу в надважку вагу (Heavyweight)
+  - section: "Історичний контекст: Кримське коріння та виклики ідентичності"
+    words: 600
+    points:
+      - Життя та тренування в окупованому Криму після 2014-го
+      - Еволюція публічної позиції: від «Крим — це боже» до чіткого українського маніфесту
+      - Боротьба проти спроб російської пропаганди привласнити імідж спортсмена
+  - section: "Спортивні досягнення: Естетика боксу та інтелектуальна перевага"
+    words: 400
+    points:
+      - Аналіз техніки Усика: швидкість ніг, таймінг та боксерський інтелект
+      - Перемоги над Джошуа та Ф'юрі як вершини спортивної майстерності
+      - Філософія «розумного боксу» як противага грубій силі
+  - section: "Сучасний етап: Війна, волонтерство та «Usyk Foundation»"
+    words: 400
+    points:
+      - Реакція на повномасштабне вторгнення: вступ до ТрО
+      - Робота благодійного фонду: допомога армії та відбудова житла
+      - Участь у гуманітарних місіях та зустрічі з воїнами
+  - section: "Вплив: Голос України на світових рингах"
+    words: 400
+    points:
+      - Використання світових медіа-платформ для адвокації України
+      - Популяризація української культури (оселедець, вишиванка, музика)
+      - Усик як приклад глобального лідерства нової України
 focus: biography
-prerequisites:
-- Understanding of boxing
-- 2022 Russian invasion context
-- Contemporary Ukraine
-connects_to:
-- Contemporary Ukrainian athletes
-- c1-bio-77 (Stus - another symbol of resistance)
-- c1-bio-71 (Lukyanenko - contemporary patriot)
-module_type: biography
+pedagogy: immersion
+word_target: 4000
 sources:
-- name: Олександр Усик (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Усик_Олександр_Олександрович"
-  type: primary
-  notes: Biography, boxing career, patriotism
-- name: Олімпійські ігри 2012
-  url: "https://uk.wikipedia.org/wiki/Україна_на_літніх_Олімпійських_іграх_2012"
-  type: reference
-  notes: Olympic gold medal
-- name: Undisputed champion
-  url: "https://uk.wikipedia.org/wiki/Undisputed_champion"
-  type: reference
-  notes: His championship status
+  - name: Олександр Усик (Wikipedia UA)
+    url: "https://uk.wikipedia.org/wiki/Усик_Олександр_Олександрович"
+    type: primary
+  - name: Usyk Foundation
+    url: "https://usykfoundation.org"
+    type: secondary
 immersion: 100% Ukrainian
 phase: C1-BIO
-objectives:
-- 'Analyze the life and legacy of олександр усик: чемпіон із серцем воїна'
-- Evaluate the contributions of абсолютний чемпіон світу
-- Trace the career and influence of значення для нації
+vocabulary_hints:
+  required:
+    - надважка вага
+    - абсолютний чемпіон
+    - меценатство
+    - олімпієць
+    - ідентичність
+activity_hints:
+  - type: reading
+    focus: "Інтерв'ю Усика про його почуття під час бою з Тайсоном Ф'юрі"
+  - type: critical-analysis
+    focus: "Як спортивні перемоги стають інструментом культурної дипломатії?"
+  - type: comparative-study
+    focus: "Порівняння образу Усика та легендарних козацьких героїв."

@@ -2,11 +2,11 @@
   "module": "yuriy-kondratiuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:18.874484Z",
+  "last_audit": "2026-02-09T23:24:55.655894Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-05T12:06:25.338588Z",
-    "meta": "2026-02-07T15:13:22.024020Z",
+    "meta": "2026-02-09T15:59:44.225092Z",
     "activities": "2026-02-07T10:03:51.565836Z",
     "vocabulary": "2026-02-07T10:03:51.617517Z",
     "plan": null
@@ -36,6 +36,11 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

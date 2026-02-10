@@ -1,5 +1,5 @@
 ---
-module: zakhidni-media
+module: c1-hist-111
 level: c1-hist
 sequence: 111
 version: '1.0'

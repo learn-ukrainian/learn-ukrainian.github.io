@@ -1,0 +1,14 @@
+{
+  "slug": "home-and-furniture",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T10:54:41.064421Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T10:54:41.064405Z",
+  "result": "success"
+}

@@ -1,83 +1,92 @@
-# Audit Report: M13 — kostiantyn-ostrozky-elder.md
-**Level:** C1-BIO | **Module:** M13 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 23:23:39
+# Рецензія: Костянтин Іванович Острозький: Гетьман двох народів
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4000 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** comparative-study, critical-analysis, essay-response, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 13
+**Overall Score:** 9.9/10
+**Status:** PASS
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Літописна оповідь про битву під Оршею | 1 | 1 | ✅ |
-| 2 | critical-analysis | Аналіз військової тактики Острозького | 1 | 1 | ✅ |
-| 3 | authorial-intent | Ідеологічне значення перемоги | 1 | 1 | ✅ |
-| 4 | essay-response | Есе: Костянтин Острозький — захисник віри та держави | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняння лідерів: Острозький vs Вишневецький | 1 | 1 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: [PASS]
+- Sections: [all present]
+- Vocabulary: [10/10 from plan used, 0 extra]
+- Grammar scope: [status: clean C1 level]
+- Objectives: [all covered]
+```
 
-## Gates
-- **Words:** ✅ 4964/4000 (raw: 5075)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 15/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** biography
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 10/10 | <7 | Gripping narrative, excellent use of historical "hooks" like "Scipio Ruthenus". |
+| 2 | Coherence | 10/10 | <7 | Logical flow from biography to context to legacy. |
+| 3 | Relevance | 10/10 | <7 | Perfectly aligned with C1 history track goals. |
+| 4 | Educational | 10/10 | <7 | Deep historical analysis combined with rich vocabulary. |
+| 5 | Language | 10/10 | <8 | High-register literary Ukrainian, free of errors. |
+| 6 | Pedagogy | 10/10 | <7 | Activities are intellectually stimulating and appropriate for C1. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian content. |
+| 8 | Activities | 10/10 | <7 | Varied types (Analysis, Essay, Comparison); robust model answers. |
+| 9 | Richness | 10/10 | <6 | Dense, informative text that meets "Content is King" standard. |
+| 10 | Beginner Safety | 9/10 | <7 | Appropriate density for C1; clear structure prevents overwhelm. |
+| 11 | LLM Fingerprint | 10/10 | <7 | Feels curated and authored, not generic. |
+| 12 | Linguistic Accuracy | 10/10 | <9 | No Russianisms or calques found. |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 4 | 100% | 19% | 19.0% |
-| engagement | 11 | 6 | 100% | 14% | 14.3% |
-| quotes | 11 | 3 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 14 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 9 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.9%** |
+**Weighted Overall:** 9.9/10
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 142 | Included in Core |
-| **Вступ — Гетьман двох народів** | ✅ | 725 | Included in Core |
-| **Життєпис** | ⚪️ | 1778 | Skipped |
-| **Історичний контекст** | ✅ | 682 | Included in Core |
-| **Внесок та Спадщина** | ⚪️ | 615 | Skipped |
-| **Порівняльний аналіз** | ✅ | 587 | Included in Core |
-| **Підсумок — Гетьман вічності** | ✅ | 245 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 190 | Skipped |
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [CLEAN]
+- Beginner safety: 5/5
+
+## Critical Issues Found
+
+*None. The module is exceptional.*
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| - | - | - | - |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? [Pass] (Appropriate challenge for C1)
+- Instructions clear? [Pass]
+- Quick wins? [Pass] (Exciting battle narrative)
+- Ukrainian scary? [Pass] (Rich but accessible with vocab support)
+- Come back tomorrow? [Pass]
+
+Emotional beats: 4 found
+- Welcome: Intro sets a grand historical stage.
+- Curiosity: "Scipio Ruthenus", "Гетьман двох народів".
+- Quick wins: The battle of Orsha description.
+- Encouragement: Legacy section emphasizing national dignity.
+
+## Strengths
+- **Narrative Power**: The text effectively positions Ostrozky not just as a soldier, but as a "civilizational architect," which adds profound depth suitable for C1 learners.
+- **Vocabulary Integration**: Complex terms like "деспотія", "експансія", "суверенітет" are used naturally in context.
+- **Activity Design**: The "Critical Analysis" of the chronicle is an excellent bridge between language learning and historical source criticism.
+
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+*Not applicable. Score is > 9.0.*
+
+## Verification Summary
+
+- Content lines read: ~230
+- Activity items checked: 5 activities (approx 15 items)
+- Ukrainian sentences verified: ~100
+- IPA transcriptions checked: 30
+- Issues found: 0
+- Naturalness score recommendation: 10/10
+
+## Verdict
+
+**PASS**
+
+This module represents the "Gold Standard" for the C1 Biography track. It combines historical rigor, linguistic richness, and engaging storytelling perfectly. It requires no changes.

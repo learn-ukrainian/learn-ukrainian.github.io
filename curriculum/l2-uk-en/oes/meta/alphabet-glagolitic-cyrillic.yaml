@@ -3,6 +3,8 @@
 # Track: OES
 # Module: 002
 # Generated: 2026-02-04
+id: oes-002
+module: oes-002
 
 module_number: 2
 slug: alphabet-glagolitic-cyrillic

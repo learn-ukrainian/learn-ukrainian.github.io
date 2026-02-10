@@ -2,11 +2,11 @@
   "module": "hanna-barvinok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:41.919160Z",
+  "last_audit": "2026-02-09T23:24:18.653216Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.207232Z",
-    "meta": "2026-02-07T15:13:22.014973Z",
+    "meta": "2026-02-09T15:59:44.198717Z",
     "activities": "2026-02-07T10:03:51.600406Z",
     "vocabulary": "2026-02-07T10:03:51.644750Z",
     "plan": null
@@ -36,6 +36,11 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

@@ -1,8 +1,52 @@
 ---
-module: diaspora-ta-zakhidni-istoriky
+module: c1-hist-006
 level: C1-HIST
 slug: diaspora-ta-zakhidni-istoriky
-version: '1.0'
-id: c1-hist-06
+version: '2.0'
+id: c1-hist-006
+phase: c1-hist
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-09'
+  word_target: 3800
+  status: draft
+  naturalness: CHECKED
+  richness: CHECKED
+  engagement: CHECKED
+  activity_density: CHECKED
+  immersion: CHECKED
+content_outline:
+  - section: "Вступ: Голос з-за океану"
+    words: 300
+    points:
+      - "Role of diaspora in preserving memory during Soviet censorship"
+      - "Concept of 'free science' vs 'ideological science'"
+  - section: "Омелян Пріцак: Гарвардський проект"
+    words: 900
+    points:
+      - "Biography and vision"
+      - "The Origin of Rus' and Oriental sources"
+      - "Founding of HURI (1973)"
+      - "Chair of Ukrainian History"
+  - section: "Іван Лисяк-Рудницький: Політична філософія"
+    words: 900
+    points:
+      - "Ukraine between East and West concept"
+      - "Analysis of political traditions (conservatism, radicalism)"
+      - "Essays on history and nation-building"
+  - section: "Юрій Шевельов: Лінгвістичний щит"
+    words: 900
+    points:
+      - "A Prehistory of Slavic vs Common Russian myth"
+      - "Fifth Kharkiv concept"
+      - "Role regarding MUR and literary criticism"
+  - section: "Інституції пам'яті: HURI та CIUS"
+    words: 500
+    points:
+      - "Harvard Ukrainian Research Institute missions"
+      - "Canadian Institute of Ukrainian Studies (CIUS) and Encyclopedia"
+      - "Role of philanthropy (Yacyk, etc.)"
+  - section: "Підсумок: Повернення спадщини"
+    words: 300
+    points:
+      - "Integration of diaspora historiography into modern Ukraine"
+      - "Legacy today"

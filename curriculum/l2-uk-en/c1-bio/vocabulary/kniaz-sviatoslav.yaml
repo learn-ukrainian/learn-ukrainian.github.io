@@ -1,127 +1,129 @@
----
+module: c1-bio-002
+level: C1-BIO
+version: '2.0'
 items:
-  - word: воїн
-    ipa: ˈwɔjin
-    pos: noun
-    translation: warrior
-    example: "Князь Святослав був видатним воїном свого часу."
-  - word: завойовник
-    ipa: zɐwɔˈjɔwnɪk
-    pos: noun
-    translation: conqueror
-    example: "Його називали великим завойовником за розширення кордонів Русі."
-  - word: каганат
-    ipa: kɐɦɐˈnɑt
-    pos: noun
-    translation: khaganate
-    example: "Хазарський каганат перестав існувати після походу Святослава."
-  - word: похід
-    ipa: pɔˈxʲid
-    pos: noun
-    translation: campaign/march
-    example: "Балканський похід Святослава змінив геополітику регіону."
-  - word: дружина
-    ipa: drʊˈʒɪnɐ
-    pos: noun
-    translation: retinue/warband
-    example: "Князь завжди радився зі своєю вірною дружиною."
-  - word: печеніги
-    ipa: pet͡ʃeˈn⁽ʲ⁾iɦɪ
-    pos: noun
-    translation: Pechenegs
-    example: "Печеніги чатували на князя біля дніпровських порогів."
-  - word: пороги
-    ipa: pɔˈrɔɦɪ
-    pos: noun
-    translation: rapids
-    example: "Дніпровські пороги були небезпечною перешкодою для мандрівників."
-  - word: засідка
-    ipa: ˈzɑs⁽ʲ⁾idkɐ
-    pos: noun
-    translation: ambush
-    example: "Князь потрапив у засідку, влаштовану печенігами."
-  - word: данник
-    ipa: ˈdɑnnɪk
-    pos: noun
-    translation: tributary
-    example: "Багато племен стали данниками Києва за часів Святослава."
-  - word: договір
-    ipa: dɔˈɦɔw⁽ʲ⁾ir
-    pos: noun
-    translation: treaty
-    example: "Мирний договір із Візантією був підписаний у 971 році."
-  - word: чаша
-    ipa: ˈt͡ʃɑʃɐ
-    pos: noun
-    translation: cup/goblet
-    example: "Легенда про чашу з черепа свідчить про повагу ворога."
-  - word: череп
-    ipa: ˈt͡ʃerep
-    pos: noun
-    translation: skull
-    example: "З черепа князя печенізький хан наказав зробити чашу."
-  - word: здобич
-    ipa: ˈzdɔbɪt͡ʃ
-    pos: noun
-    translation: spoils/booty
-    example: "Військо повернулося з походу з великою здобиччю."
-  - word: облога
-    ipa: ɔbˈlɔɦɐ
-    pos: noun
-    translation: siege
-    example: "Облога Доростола тривала три місяці."
-  - word: перемога
-    ipa: peremˈɔɦɐ
-    pos: noun
-    translation: victory
-    example: "Кожна перемога зміцнювала авторитет київського князя."
-  - word: аскетизм
-    ipa: ɐskeˈtɪzm
-    pos: noun
-    translation: asceticism
-    example: "Князь вражав сучасників своїм аскетизмом."
-  - word: етос
-    ipa: ˈɛtɔs
-    pos: noun
-    translation: ethos
-    example: "Воїнський етос Святослава став легендарним."
-  - word: звитяга
-    ipa: zwɪˈtʲɑɦɐ
-    pos: noun
-    translation: valor/bravery
-    example: "Його походи — це приклад справжньої козацької звитяги."
-  - word: ініціація
-    ipa: init͡s⁽ʲ⁾iˈɑt͡s⁽ʲ⁾ijɐ
-    pos: noun
-    translation: initiation
-    example: "Битва з древлянами стала для нього ініціацією війною."
-  - word: легітимація
-    ipa: leɦitɪˈmat͡s⁽ʲ⁾ijɐ
-    pos: noun
-    translation: legitimation
-    example: "Перемога забезпечила легітимацію його влади."
-  - word: престиж
-    ipa: presˈtɪʒ
-    pos: noun
-    translation: prestige
-    example: "Військові успіхи підняли престиж Київської держави."
-  - word: суб'єктність
-    ipa: subjekˈtnistʲ
-    pos: noun
-    translation: agency/subjectivity
-    example: "Україна утверджувала свою політичну суб'єктність."
-  - word: тяглість
-    ipa: ˈtʲɑɦlistʲ
-    pos: noun
-    translation: continuity
-    example: "Ми бачимо тяглість воєнних традицій від князів до козаків."
-  - word: фатальний
-    ipa: fɐˈtɑlʲnɪj
-    pos: adj
-    translation: fatal
-    example: "Зустріч на порогах виявилася фатальною."
-  - word: щит
-    ipa: ʃt͡ʃɪt
-    pos: noun
-    translation: shield
-    example: "Хазарія була щитом, що стримував кочовиків."
+- lemma: каганат
+  ipa:
+  - kɐɦɐˈnɑt
+  translation: khaganate
+  definition: Тип середньовічної монархії у тюркомовних народів на чолі з каганом (хазари, авари).
+- lemma: дружина
+  ipa:
+  - drʊˈʒɪnɐ
+  translation: retinue / warband
+  definition: Постійний військовий загін князя в Русі, що був ядром війська і частиною управління.
+- lemma: пороги
+  ipa:
+  - pɔˈrɔɦɪ
+  translation: rapids
+  definition: Кам'янисті ділянки в руслі річки (зокрема Дніпра), що перешкоджають судноплавству.
+- lemma: засідка
+  ipa:
+  - zɐˈsʲidkɐ
+  translation: ambush
+  definition: Раптовий напад із прихованої позиції.
+- lemma: оселедець
+  ipa:
+  - ɔseˈlɛdet͡sʲ
+  translation: oseledets (Cossack forelock)
+  definition: Характерна зачіска (пасма волосся на голеній голові), ознака знатності воїна.
+- lemma: експансія
+  ipa:
+  - eksˈpɑnsʲijɐ
+  translation: expansion
+  definition: Розширення сфери панування, впливу, поширення чого-небудь за початкові межі.
+- lemma: доблесть
+  ipa:
+  - ˈdɔblestʲ
+  translation: valor / prowess
+  definition: Мужність, відвага, виявлені в бою; висока моральна якість воїна.
+- lemma: візантійський
+  ipa:
+  - ʋizɐnˈtʲii̯sʲkei̯
+  translation: Byzantine
+  definition: Такий, що стосується Візантії (Східної Римської імперії).
+- lemma: данник
+  ipa:
+  - ˈdɑnːɪk
+  translation: tributary
+  definition: Той, хто платить данину переможцю або сюзерену.
+- lemma: язичництво
+  ipa:
+  - jɐˈzɪt͡ʃnɪt͡stʋɔ
+  translation: paganism
+  definition: Політеїстична релігія, заснована на поклонінні силам природи та багатьом богам.
+- lemma: ультиматум
+  ipa:
+  - ʊlʲtɪˈmɑtʊm
+  translation: ultimatum
+  definition: Категорична вимога, невиконання якої загрожує застосуванням сили.
+- lemma: стратегія
+  ipa:
+  - strɐˈtɛɦʲijɐ
+  translation: strategy
+  definition: Мистецтво ведення війни, загальний план військових дій.
+- lemma: маневреність
+  ipa:
+  - mɐˈnɛu̯renʲisʲtʲ
+  translation: maneuverability
+  definition: Здатність швидко змінювати напрямок руху або дії (про військо).
+- lemma: гегемонія
+  ipa:
+  - heɦeˈmɔnʲijɐ
+  translation: hegemony
+  definition: Політичне, економічне або військове панування однієї держави над іншими.
+- lemma: фатальний
+  ipa:
+  - fɐˈtɑlʲnei̯
+  translation: fatal
+  definition: Такий, що неминуче веде до загибелі або тяжких наслідків; визначений долею.
+- lemma: аскетизм
+  ipa:
+  - ɐskeˈtɪzm
+  translation: asceticism
+  definition: Обмеження життєвих потреб, відмова від розкоші (характерне для Святослава).
+- lemma: мілітарний
+  ipa:
+  - mʲilʲiˈtɑrnei̯
+  translation: military (adj)
+  definition: Військовий, воєнний; пов'язаний з війною.
+- lemma: пастка
+  ipa:
+  - ˈpɑstkɐ
+  translation: trap
+  definition: Пристрій або ситуація для захоплення когось зненацька.
+- lemma: тріумф
+  ipa:
+  - trʲiˈʊmf
+  translation: triumph
+  definition: Блискучий успіх, видатна перемога.
+- lemma: капітуляція
+  ipa:
+  - kɐpʲitʊˈlʲɑt͡sʲijɐ
+  translation: capitulation
+  definition: Припинення опору і здача ворогові на певних умовах.
+- lemma: форпост
+  ipa:
+  - fɔrˈpɔst
+  translation: outpost
+  definition: Передовий пункт, укріплення на кордоні.
+- lemma: степ
+  ipa:
+  - stɛp
+  translation: steppe
+  definition: Великий безлісий простір у помірному поясі, вкритий трав'янистою рослинністю.
+- lemma: імперський
+  ipa:
+  - imˈpɛrsʲkei̯
+  translation: imperial
+  definition: Такий, що стосується імперії; владний, завойовницький.
+- lemma: пакт
+  ipa:
+  - pɑkt
+  translation: pact
+  definition: Міжнародна угода, договір (зазвичай про ненапад або взаємодопомогу).
+- lemma: жертовність
+  ipa:
+  - ʒerˈtɔu̯nʲisʲtʲ
+  translation: sacrifice / selflessness
+  definition: Готовність пожертвувати власними інтересами або життям заради вищої мети.

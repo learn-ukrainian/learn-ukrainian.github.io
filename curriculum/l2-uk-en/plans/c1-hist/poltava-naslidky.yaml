@@ -1,5 +1,5 @@
 ---
-module: poltava-naslidky
+module: c1-hist-090
 level: c1-hist
 sequence: 90
 version: '1.0'

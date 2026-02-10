@@ -1,7 +1,7 @@
 ---
-module: c1-bio-020
+module: c1-bio-019
 level: C1-BIO
-sequence: 20
+sequence: 19
 slug: petro-sahaidachny
 version: '2.0'
 title: 'Петро Сагайдачний: Гетьман-Державник'

@@ -4,6 +4,8 @@
 # Module: 006
 # Source: Gemini Research (ISSUE-501)
 # Generated: 2026-02-04
+sequence: 6
+module: oes-006
 
 module_number: 6
 slug: greetings-invocations

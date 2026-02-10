@@ -1,9 +1,9 @@
 ---
-module: c1-bio-142
+module: c1-bio-152
 level: C1-BIO
 slug: tamara-horikha-zernya
 version: '2.0'
-id: c1-bio-150
+id: c1-bio-152
 naturalness:
   score: 1
   status: PENDING

@@ -1,8 +1,8 @@
 ---
-module: zakarpattia-tysiacholittia
+module: c1-hist-073
 level: C1-HIST
 slug: zakarpattia-tysiacholittia
 version: '1.0'
-id: c1-hist-73
+id: c1-hist-073
 build:
   last_modified: '2026-01-26'

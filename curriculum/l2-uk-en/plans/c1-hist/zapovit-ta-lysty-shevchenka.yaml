@@ -1,5 +1,5 @@
 ---
-module: zapovit-ta-lysty-shevchenka
+module: c1-hist-030
 level: c1-hist
 sequence: 30
 version: '1.0'

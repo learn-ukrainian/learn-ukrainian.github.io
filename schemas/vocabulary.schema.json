@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/vocabulary.schema.json",
+  "title": "Module Vocabulary",
+  "description": "Schema for per-module vocabulary files (vocabulary/{slug}.yaml)",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "module": {
+      "type": "string",
+      "description": "Module identifier (e.g., 06-aspect-complete-system)"
+    },
+    "level": {
+      "type": "string",
+      "description": "CEFR level (e.g., B1)"
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version (e.g., '2.0')"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["lemma", "translation", "pos"],
+        "additionalProperties": false,
+        "properties": {
+          "lemma": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Ukrainian word form (dictionary form)"
+          },
+          "ipa": {
+            "type": "string",
+            "description": "IPA pronunciation (e.g., /prɪʋˈit/)"
+          },
+          "translation": {
+            "type": "string",
+            "minLength": 1,
+            "description": "English translation"
+          },
+          "pos": {
+            "type": "string",
+            "enum": ["noun", "verb", "adj", "adv", "num", "pron", "part", "prep", "conj", "intj", "phrase"],
+            "description": "Part of speech"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["m", "f", "n"],
+            "description": "Grammatical gender (for nouns)"
+          },
+          "aspect": {
+            "type": "string",
+            "enum": ["imperfective", "perfective", "both"],
+            "description": "Verbal aspect (for verbs)"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional usage notes"
+          },
+          "usage": {
+            "type": "string",
+            "description": "Usage context or example"
+          },
+          "register": {
+            "type": "string",
+            "description": "Language register (e.g., formal, informal, colloquial)"
+          },
+          "example": {
+            "type": "string",
+            "description": "Example sentence"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

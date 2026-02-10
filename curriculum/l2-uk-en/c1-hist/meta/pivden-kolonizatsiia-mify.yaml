@@ -1,8 +1,8 @@
 ---
-module: pivden-kolonizatsiia-mify
+module: c1-hist-079
 level: C1-HIST
 slug: pivden-kolonizatsiia-mify
 version: '1.0'
-id: c1-hist-79
+id: c1-hist-079
 build:
   last_modified: '2026-01-26'

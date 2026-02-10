@@ -5,6 +5,8 @@ import re
 import hashlib
 from pathlib import Path
 
+from slug_utils import to_bare_slug, review_path as _review_path
+
 # Add scripts/ to path for internal imports to reach audit.cleaners
 SCRIPT_DIR = Path(__file__).parent
 if str(SCRIPT_DIR) not in sys.path:
@@ -34,13 +36,17 @@ def update_review_file(md_file_path, new_hash):
     if md_path.name.endswith('-llm-review.md') or md_path.name.endswith('-review.md'):
         return False
 
-    audit_dir = md_path.parent / 'audit'
-    review_file = audit_dir / f"{md_path.stem}-llm-review.md"
-    
+    # Check canonical review/ location first, then legacy audit/ locations
+    review_file = _review_path(md_path.parent, md_path.stem)
     if not review_file.exists():
-        # Try without -llm suffix just in case
-        review_file = audit_dir / f"{md_path.stem}-review.md"
-        if not review_file.exists():
+        audit_dir = md_path.parent / 'audit'
+        bare = to_bare_slug(md_path.stem)
+        for name in (f"{bare}-review.md", f"{md_path.stem}-llm-review.md", f"{md_path.stem}-review.md"):
+            candidate = audit_dir / name
+            if candidate.exists():
+                review_file = candidate
+                break
+        else:
             return False
     
     try:

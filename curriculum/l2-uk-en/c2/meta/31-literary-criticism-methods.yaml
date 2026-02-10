@@ -1,9 +1,9 @@
 ---
-module: literary-criticism-methods
+module: c2-031
 level: C2
 slug: literary-criticism-methods
 version: '2.0'
-id: c2-31
+id: c2-031
 naturalness:
   score: 1
   status: PENDING

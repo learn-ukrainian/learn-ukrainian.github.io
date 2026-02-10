@@ -2,25 +2,25 @@
   "module": "01-b2-review-bridge",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-06T20:12:41.763909Z",
+  "last_audit": "2026-02-09T21:12:39.875585Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.366582Z",
-    "meta": "2026-02-05T20:58:09.303338Z",
-    "activities": "2026-02-06T19:35:20.613243Z",
-    "vocabulary": null,
-    "plan": "2026-01-29T07:45:40.762246Z"
+    "md": "2026-02-09T21:12:34.543756Z",
+    "meta": "2026-02-09T21:12:34.592006Z",
+    "activities": "2026-02-09T21:12:34.569999Z",
+    "vocabulary": "2026-02-09T17:42:54.637145Z",
+    "plan": "2026-02-09T12:52:15.691375Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2607/4000 (raw: 2670)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5139/4000 (raw: 5823)"
     },
     "activities": {
       "status": "pass",
@@ -28,23 +28,25 @@
       "message": "17/12"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 25 (soft target)"
+      "message": "34/25"
     },
     "naturalness": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "PENDING \u2014 awaiting review"
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 1,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

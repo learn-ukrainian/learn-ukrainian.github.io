@@ -1,9 +1,9 @@
 ---
-module: building-domain-expertise
+module: c2-060
 level: C2
 slug: building-domain-expertise
 version: '2.0'
-id: c2-60
+id: c2-060
 naturalness:
   score: 1
   status: PENDING

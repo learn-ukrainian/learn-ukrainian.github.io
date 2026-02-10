@@ -1,8 +1,8 @@
 ---
-module: diaspora-orhanizatsiyi
+module: c1-hist-067
 level: C1-HIST
 slug: diaspora-orhanizatsiyi
 version: '1.0'
-id: c1-hist-67
+id: c1-hist-067
 build:
   last_modified: '2026-01-26'

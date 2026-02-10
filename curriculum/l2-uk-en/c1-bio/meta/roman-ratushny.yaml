@@ -1,0 +1,70 @@
+id: c1-bio-163
+slug: roman-ratushny
+title: "Роман Ратушний: Громадянин, активіст, воїн"
+level: C1
+track: c1-bio
+goal: "Дослідити життя Романа Ратушного як символу незламності громадянського суспільства, екологічного опору та жертовного захисту України, аналізуючи його шлях від активіста до воїна-розвідника."
+focus:
+  - "Боротьба за Протасів Яр"
+  - "Громадянське суспьльство як фундамент оборони"
+  - "Деколонізація міського простору Києва"
+  - "Філософія стоїцизму в умовах війни (позивний Сенека)"
+word_target: 4000
+content_outline:
+  - section: "Вступ — Голос Протасового Яру"
+    words: 600
+  - section: "Життєпис: Від Євромайдану до барикад правосуддя"
+    words: 1600
+  - section: "Історичний контекст: Активізм як форма деколонізації"
+    words: 600
+  - section: "Внесок: Філософія дії та захист «легенів» столиці"
+    words: 400
+  - section: "Останні роки: Позивний «Сенека» на фронтах великої війни"
+    words: 400
+  - section: "Спадщина: Громада, що перемогла забудовників і смерть"
+    words: 400
+naturalness:
+  status: "PASS"
+  score: 10
+  last_checked: "2026-02-09"
+activities:
+  - reading
+  - critical-analysis
+  - essay-response
+  - authorial-intent
+sources:
+  - "https://uk.wikipedia.org/wiki/Ратушний_Роман_Тарасович"
+  - "https://www.chesno.org/post/5182/"
+  - "https://suspilne.media/249411-hto-takij-roman-ratusnij/"
+  - "https://protasivyar.org.ua"
+prerequisites:
+  - "c1-bio-162"
+audio:
+  status: "PENDING"
+  last_updated: "2026-02-09"
+visuals:
+  - "Портрет Романа Ратушного у формі 93-ї бригади"
+  - "Фото акцій протесту в Протасовому Яру"
+  - "Мурал Роману Ратушному в Києві"
+  - "Інфографіка: Хронологія боротьби за парк"
+tags:
+  - "Київ"
+  - "Активізм"
+  - "Екологія"
+  - "93-тя бригада"
+  - "Євромайдан"
+  - "Сенека"
+  - "Деколонізація"
+  - "Герої сучасності"
+vocabulary_count: 25
+activity_density: 8
+immersion_target: 100
+richness_target: 95
+decolonization_focus: true
+primary_source_quotes: true
+history_bite_count: 1
+myth_buster_count: 1
+model_answer_required: true
+vital_status: "DECEASED"
+curriculum_index: 163
+manifest_id: "M163"

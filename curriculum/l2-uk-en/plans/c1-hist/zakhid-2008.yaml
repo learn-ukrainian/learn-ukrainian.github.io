@@ -1,5 +1,5 @@
 ---
-module: zakhid-2008
+module: c1-hist-100
 level: c1-hist
 sequence: 100
 version: '1.0'

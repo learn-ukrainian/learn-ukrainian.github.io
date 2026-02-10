@@ -1,9 +1,9 @@
 ---
-module: final-exam-integrated-skills
+module: c2-098
 level: C2
 slug: final-exam-integrated-skills
 version: '2.0'
-id: c2-98
+id: c2-098
 naturalness:
   score: 1
   status: PENDING

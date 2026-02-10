@@ -683,11 +683,13 @@ levels:
     - heo-shkurupii
     - serge-lifar
     - olena-teliha
+    - oleg-antonov
     - roman-shukhevych
     - serhiy-korolyov
     - george-shevelov
     - bohdan-ihor-antonych
     - mariia-prymachenko
+    - mykhailo-yangel
     - mykola-amosov
     - borys-paton
     - oles-honchar
@@ -718,12 +720,22 @@ levels:
     - vitaly-portnikov
     - taras-prokhasko
     - tamara-horikha-zernya
+    - pavlo-sheremet
     - serhiy-zhadan
     - oleg-sentsov
     - kateryna-kalytko
     - sofia-andrukhovych
     - oleksandra-matviichuk
+    - kateryna-handziuk
     - oleksandr-usyk
+    - andriy-pilshchykov
+    - dmytro-kotsyubailo
+    - roman-ratushny
+    - volodymyr-vakulenko
+    - victoria-amelina
+    - maksym-kryvtsov
+    - yuriy-ruf
+    - illia-chernilevskyi
   lit:
     type: track
     modules:
@@ -757,6 +769,193 @@ levels:
     - kaidash-family-conflict
     - language-of-realism
     - mykola-dzherya
+    - panas-myrny-intro
+    - khiba-revut-voly-1
+    - khiba-revut-voly-2
+    - khiba-revut-voly-style
+    - marko-vovchok-instytutka
+    - marko-vovchok-marusya
+    - stepan-rudansky
+    - leonid-hlibov
+    - mykhailo-starytsky
+    - borys-hrinchenko
+    - synthesis-1
+    - franko-biography
+    - franko-zakhar-berkut
+    - franko-stolen-happiness
+    - franko-moses
+    - franko-lviv-period
+    - franko-social-poetry
+    - franko-historical-prose
+    - franko-letters
+    - lesia-ukrainka-intro
+    - lesia-forest-song-1
+    - lesia-forest-song-2
+    - lesia-cassandra
+    - lesia-stone-guest
+    - lesia-blue-rose
+    - lesia-in-the-catacombs
+    - kobylianska-nature
+    - kobylianska-zemlya
+    - kobylianska-tsarivna
+    - kobylianska-persona
+    - stefanyk-stone-cross
+    - stefanyk-blue-book
+    - stefanyk-novellas
+    - kotsiubynsky-intermezzo
+    - kotsiubynsky-shadows-forgotten
+    - kotsiubynsky-apple-blossom
+    - kotsiubynsky-fata-morgana
+    - vynnychenko-black-panther
+    - vynnychenko-solar-machine
+    - vynnychenko-honesty
+    - oles-oleksandr-liryka
+    - oles-the-nightingale
+    - voronyi-symbolism
+    - voronyi-poetry
+    - lepkyi-mazepa-trilogy
+    - synthesis-2
+    - semenko-futurism-manifesto
+    - semenko-kobzar-burning
+    - yanovsky-master-of-the-ship
+    - yanovsky-four-sabres
+    - tychyna-clarinets
+    - tychyna-tragic-turn
+    - tychyna-soviet-period
+    - rylsky-neoclassicism
+    - rylsky-liryka
+    - rylsky-translations
+    - zerov-kyiv-parnassus
+    - zerov-sonnets
+    - zerov-criticism
+    - khvylovy-intro
+    - khvylovy-i-am-romance
+    - khvylovy-woodsnipes
+    - khvylovy-pamphlets
+    - pidmohylny-city-1
+    - pidmohylny-city-2
+    - pidmohylny-small-prose
+    - kurbas-berezil-theater
+    - kurbas-philosophy
+    - kurbas-legacy
+    - kulish-myna-mazailo
+    - kulish-pathetique
+    - kulish-narodnyi-malahii
+    - kulish-dramaturgy
+    - yohansen-doctor-leonardo
+    - yohansen-experimental
+    - domontovych-girl-bear
+    - domontovych-dr-seraphicus
+    - domontovych-intellectuals
+    - antonych-green-gospel
+    - antonych-urbanism
+    - antonych-mythology
+    - sosiura-love-ukraine
+    - sosiura-red-winter
+    - sosiura-internal-conflict
+    - pluzhnyk-galileo
+    - pluzhnyk-poetry
+    - bazhan-idols
+    - bazhan-quiet-step
+    - antonenko-davydovych-smert
+    - antonenko-davydovych-prose
+    - sandarmokh-tragedy-erasure
+    - rozstriliane-vidrodzennia-phenomenon
+    - synthesis-3
+    - lukash-translation-as-resistance
+    - translation-as-cultural-weapon
+    - bahrianyi-tiger-trappers
+    - bahrianyi-garden-gethsemane
+    - bahrianyi-man-runs
+    - dovzhenko-enchanted-desna
+    - dovzhenko-ukraine-flames
+    - dovzhenko-cinema-as-literature
+    - samchuk-maria
+    - barka-yellow-prince
+    - osmachka-prose
+    - symonenko-knights
+    - symonenko-truth
+    - stus-palimpsests
+    - stus-moral-imperative
+    - stus-letters-to-son
+    - stus-vertical-of-spirit
+    - kostenko-marusia-churai-1
+    - kostenko-marusia-churai-2
+    - kostenko-garden-of-unthawed-sculptures
+    - kostenko-poetry
+    - tiutiunnyk-three-cuckoos
+    - tiutiunnyk-novella-mastery
+    - honchar-cathedral
+    - honchar-banners
+    - malyshko-poetry
+    - malyshko-songs
+    - malaniuk-poetry
+    - teliha-poetry
+    - olzhych-poetry
+    - vinhranovskyi-poetry
+    - vinhranovskyi-prose
+    - drach-knife-sun
+    - drach-ballads
+    - sverstiuk-prodigal-sons-lit
+    - sverstiuk-moral-resistance
+    - dziuba-internationalism
+    - dziuba-literature
+    - holoborodko-flying-window
+    - holodomor-in-literature
+    - samvydav-underground-publishing
+    - women-writers-resistance
+    - shestydesiatnyky-as-phenomenon
+    - synthesis-4
+    - bu-ba-bu-carnival
+    - bu-ba-bu-the-end-of-soviet
+    - andrukhovych-recreations
+    - andrukhovych-moscoviad
+    - andrukhovych-perverzion
+    - andrukhovych-essays
+    - zabuzhko-fieldwork
+    - zabuzhko-museum
+    - zabuzhko-notre-dame-lit
+    - zabuzhko-longest-journey
+    - zhadan-depeche-mode
+    - zhadan-voroshilovgrad
+    - zhadan-orphanage
+    - zhadan-poetry
+    - zhadan-kharkiv-landscape
+    - decolonization-theory-literature
+    - hundorova-post-chornobyl-library
+    - izdryk-votsatsek
+    - izdryk-poetry
+    - andijewska-magic-realism
+    - koval-storinky
+    - koval-prose-renaissance
+    - prokhasko-unsimple
+    - prokhasko-magical-carpathians
+    - matios-sweet-darusia
+    - matios-bukovina-trauma
+    - tanja-maljartschuk-biography
+    - tanja-maljartschuk-prose
+    - artem-chekh-absolute-zero
+    - artem-chekh-district-d
+    - artem-chekh-who-are-you
+    - deresh-cult
+    - deresh-intention
+    - sentsov-numbers
+    - sentsov-stories
+    - kateryna-kalytko-poetry
+    - kateryna-kalytko-prose
+    - sofia-andrukhovych-amados
+    - sofia-andrukhovych-felix-austria
+    - war-poetry-2014-2022
+    - war-poetry-full-scale
+    - war-literature-as-movement
+    - new-prose-displacement
+    - new-prose-resistance
+    - pachlovska-diaspora-theory
+    - diaspora-modern-lit
+    - diaspora-connections
+    - diaspora-consciousness-mur
+    - amelina-renaissance
+    - synthesis-5
   c1-hist:
     type: track
     modules:
@@ -894,6 +1093,7 @@ levels:
     - ukrainska-m-iaka-syla
     - syntez-ahentsnist
     - ukrainske-pytannia-xxi
+    - continuity-of-cultural-genocide
     - finalnyi-syntez
   b2-pro:
     type: track
@@ -1300,3 +1500,188 @@ levels:
     - transition-to-modern
     - philosophical-lab
     - ruth-capstone
+  lit-essay:
+    type: track
+    modules:
+    - essay-origins-polemics
+    - kostomarov-two-rus-nationalities
+    - drahomanov-chudatski-dumky
+    - drahomanov-shevchenko
+    - franko-what-is-progress
+    - franko-some-words
+    - lesia-ukrainka-voice
+    - mikhnovsky-independent-ukraine
+    - lypynsky-letters-brothers
+    - lypynsky-ham-japheth
+    - dontsov-nationalism
+    - dontsov-chaos
+    - khvylovy-ukraine-or-little-russia
+    - khvylovy-thoughts-current
+    - zerov-ad-fontes
+    - malaniuk-little-russianism
+    - sherekh-fifth-kharkiv
+    - shevelov-moscow-maros
+    - shevelov-history-language
+    - dziuba-internationalism
+    - stus-phenomenon
+    - sverstiuk-cathedral
+    - lysiah-rudnytsky-history
+    - grabowicz-poet-prophet
+    - zabuzhko-fortinbras
+    - zabuzhko-notre-dame
+    - zabuzhko-longest-journey
+    - riabchuk-two-ukraines
+    - hrytsak-history-ukraine
+    - hrytsak-overcoming-past
+    - prokhasko-fm-halychyna
+    - portnikov-bells
+    - portnikov-conclusion
+    - yermolenko-fluid-ideologies
+    - plokhy-gates-of-europe
+    - plokhy-frontline
+    - snyder-dialogues
+    - mariia-berlinska-dignity
+    - chmut-institutions
+    - kotsyubailo-legacy
+    - kipiani-case-of-stus
+    - aseyev-isolation-donetsk
+    - aseyev-the-torture-camp
+    - essay-synthesis-1
+    - marynovych-universe-barbed-wire
+    - chyzhevsky-baroque-history
+    - lutsky-diaspora-bridge
+    - grabowicz-myth-shevchenko
+    - essay-synthesis-2
+    - solomea-pavlychko-modernism
+    - oxana-hundorova-postcolonialism
+    - vira-ageyeva-canon
+  lit-hist-fic:
+    type: track
+    modules:
+    - kulish-black-council-revisit
+    - starytsky-bohdan
+    - lepkyi-mazepa
+    - zahrebelny-roksolana-1
+    - zahrebelny-roksolana-2
+    - zahrebelny-dyvo
+    - zahrebelny-death-in-kyiv
+    - ivanychuk-malvy
+    - ivanychuk-water
+    - ivanychuk-scar
+    - bilyk-sword-ares
+    - shklyar-black-raven-1
+    - shklyar-black-raven-2
+    - shklyar-marusia
+    - lys-century-jacob
+    - kokotyukha-red
+    - kokotyukha-chervonyi
+    - rafeyenko-long-times
+    - hist-fic-synthesis
+    - shevchuk-three-leaves
+  lit-fantastika:
+    type: track
+    modules:
+    - kvitka-dead-mans-easter
+    - storozhenko-devil
+    - kotsiubynsky-shadows-revisit
+    - vynnychenko-solar-machine-revisit
+    - smolych-beautiful-catastrophes
+    - berdnyk-star-corsair-1
+    - berdnyk-star-corsair-2
+    - berdnyk-prometheus
+    - rosokhovatsky-cyborgs
+    - vynnychuk-tango-death
+    - vynnychuk-night-maiden
+    - pavliuk-flesh
+    - arenev-powder
+    - arenev-soul-traps
+    - korniy-chimaeras
+    - korniy-forest
+    - dashvar-village
+    - kidruk-bots
+    - kidruk-colony
+    - babenko-witch
+    - fantastika-anthology
+    - kidruk-bot-thriller
+    - kidruk-colony-hard-scifi
+    - deresh-cult-psychotropic
+    - deresh-arche
+    - antonych-pagan-myth
+    - fantastika-synthesis
+  lit-war:
+    type: track
+    modules:
+    - war-lit-origins-2014
+    - lozko-poetry-of-maidan
+    - chekh-absolute-zero
+    - chekh-point-zero
+    - zhadan-internat-war
+    - zhadan-life-maria
+    - markus-traces-on-road
+    - markus-infantry
+    - zernya-daughter-donetsk
+    - polozhiy-ilovaisk
+    - yashchenko-donbas-stories
+    - bilozerska-diary
+    - babich-poetry
+    - kotsyubailo-legacy-lit
+    - kalytko-borders-lit
+    - yakimchuk-apricots-war
+    - vakulenko-occupation-diary
+    - amelina-new-renaissance
+    - aseyev-camp-paradise
+    - war-lit-synthesis
+    - maksym-kryvtsov-poetry
+    - yaryna-chornohuz-war
+    - yuriy-ruf-steel
+    - illia-chernilevskyi-poetry
+  lit-humor:
+    type: track
+    modules:
+    - kotliarevsky-laughter
+    - rudansky-spivomovky
+    - nechuy-levytsky-kaidash-humor
+    - ostap-vyshnia-smiles-1
+    - ostap-vyshnia-smiles-2
+    - ostap-vyshnia-prison
+    - hlazovyi-satire
+    - ilchenko-cossack-mamai
+    - andrukhovych-postmodern-irony
+    - poderviansky-hamlet-critique
+    - lyubka-carbide-satire
+    - vynnychuk-hoaxes
+    - modern-memes-as-folklore
+    - humor-synthesis
+  lit-juvenile:
+    type: track
+    modules:
+    - franko-fox-mykyta
+    - pchilka-fables
+    - zavadovych-adventures
+    - nestayko-toreadors-1
+    - nestayko-toreadors-2
+    - nestayko-toreadors-3
+    - nestayko-forest-school
+    - nestayko-fantasy
+    - blyznets-zemlyanyk
+    - malyk-alice
+    - rutkivsky-dzhury
+    - rutkivsky-dzhury-2
+    - malkovych-poems
+    - dermansky-monsters
+    - dermansky-chu-drove
+    - vynnychuk-lviv-tales
+    - starovyt-my-kyiv
+    - oksenyk-forest-valley
+    - bachynsky-140-decibels
+    - pavliuk-rytm
+    - andrusyak-rabbits
+    - lutsyshyna-whale
+    - kids-poetry-anthology
+    - kids-folklore
+    - zabila-poems
+    - rutkivsky-dzhury-1
+    - rutkivsky-dzhury-3
+    - voronyna-agent-000
+    - andrusyak-adventures
+    - juvenile-synthesis

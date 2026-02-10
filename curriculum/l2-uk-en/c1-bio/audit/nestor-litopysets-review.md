@@ -1,85 +1,123 @@
-# Audit Report: M07 — nestor-litopysets.md
-**Level:** C1-BIO | **Module:** M07 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4700
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 23:13:20
+# Рецензія: Нестор Літописець: Батько української історіографії
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4700 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 7
+**Overall Score:** 8.6/10
+**Status:** FAIL
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Вступ до «Повісті минулих літ» | 3 | 1 | ✅ |
-| 2 | authorial-intent | Аналіз авторського задуму: Покликання варягів | 1 | 1 | ✅ |
-| 3 | essay-response | Есе: Нестор як архітектор національної пам'яті | 1 | 1 | ✅ |
-| 4 | critical-analysis | Критичний розбір: Деколонізація образа Нестора | 1 | 1 | ✅ |
-| 5 | comparative-study | Компаративний аналіз: Нестор та європейські хроністи | 1 | 1 | ✅ |
-| 6 | true-false | Правда чи фейк: Життя та праця Нестора | 10 | 5 | ✅ |
-| 7 | select | Вибір: Спадщина Нестора | 10 | 5 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 7 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (critical-analysis, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: [PASS]
+- Sections: [all present; extra section "Порівняльний аналіз" adds value]
+- Vocabulary: [3/3 from plan used]
+- Grammar scope: [clean]
+- Objectives: [all covered]
+```
 
-## Gates
-- **Words:** ⚠️ 4616/4700 (raw: 4826) (84 short)
-- **Activities:** ✅ 7/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** biography
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 9/10 | <7 | Strong narrative voice, deeply patriotic and intellectual tone. |
+| 2 | Coherence | 10/10 | <7 | Excellent logical flow from biography to legacy. |
+| 3 | Relevance | 10/10 | <7 | Highly relevant connection to modern "Battle for meanings". |
+| 4 | Educational | 10/10 | <7 | Comprehensive coverage of historiography and political context. |
+| 5 | Language | 7/10 | <8 | **FAIL**: Multiple grammatical agreement errors (gender/case) found. |
+| 6 | Pedagogy | 10/10 | <7 | Excellent seminar-style activities and deep analysis. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian, authentic cultural context. |
+| 8 | Activities | 10/10 | <7 | High variety, critical thinking focused. |
+| 9 | Richness | 10/10 | <6 | 4700+ words, dense with historical detail. |
+| 10 | Beginner Safety | 10/10 | <7 | Engaging, clear structure (evaluated for C1 context). |
+| 11 | LLM Fingerprint | 9/10 | <7 | Feels mostly human-written, though some rhetorical flourishes are typical. |
+| 12 | Linguistic Accuracy | 7/10 | <9 | **FAIL**: Agreement errors (Fem Adj + Masc Noun) are unacceptable at C1. |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 13 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 13 | 3 | 100% | 14% | 14.3% |
-| cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 27 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.90 | - | 90% | 5% | 4.3% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 4 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.1%** |
+**Weighted Overall:** 8.6/10
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 86 | Included in Core |
-| **Вступ — Архітектор історичної пам'яті** | ✅ | 631 | Included in Core |
-| **Життєпис: Від послушника до диякона-вченого** | ⚪️ | 966 | Skipped |
-| **Внесок: Батько української історіографії** | ⚪️ | 1325 | Skipped |
-| **Останні роки: Політичні виклики та тиха пристань молитви** | ⚪️ | 424 | Skipped |
-| **Спадщина: Генетичний код нації та ідеологічний щит** | ⚪️ | 562 | Skipped |
-| **Порівняльний аналіз: Нестор та західноєвропейські хроністи XI–XII ст.** | ✅ | 319 | Included in Core |
-| **Підсумок** | ✅ | 303 | Included in Core |
+## Auto-Fail Checklist Results
+
+- Russianisms: [Line 132: "князьями"]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [CLEAN]
+- Beginner safety: 5/5
+
+## Critical Issues Found
+
+### Issue 1: Grammar (Verb Aspect/Form)
+- **Location**: Line 48 / Section "Вступ"
+- **Original**: "монастиря, який на той момент **виконувати** роль найпотужнішого"
+- **Problem**: Infinitive used instead of past tense.
+- **Fix**: "монастиря, який на той момент **виконував** роль найпотужнішого"
+
+### Issue 2: Grammar (Case/Predicative)
+- **Location**: Line 89 / Section "Життєпис"
+- **Original**: "Він **був людина** своєї епохи"
+- **Problem**: In Ukrainian, the instrumental case is preferred for defining a person's role/state in the past with "бути". Nominative is possible but stylistically weaker here.
+- **Fix**: "Він **був людиною** своєї епохи"
+
+### Issue 3: Russianism / Morphology
+- **Location**: Line 132 / Section "Внесок"
+- **Original**: "заснований мудрими місцевими **князьями**"
+- **Problem**: "Князья" is a Russian plural form. Ukrainian plural is "князі", instrumental "князями".
+- **Fix**: "заснований мудрими місцевими **князями**"
+
+### Issue 4: Grammar (Case Agreement)
+- **Location**: Line 160 / Section "Внесок"
+- **Original**: "перемагає через непохитну віру та **безмежна любов**"
+- **Problem**: Preposition "через" governs the Accusative case. "Віру" is correct (Acc), but "безмежна любов" is Nominative. "Любов" is 3rd declension (Acc=Nom), but the adjective MUST be Accusative ("безмежну").
+- **Fix**: "перемагає через непохитну віру та **безмежну любов**"
+
+### Issue 5: Grammar (Gender Agreement)
+- **Location**: Line 245 / Section "Порівняльний аналіз"
+- **Original**: "з **власною потужною голосом**"
+- **Problem**: "Голос" is Masculine. "Власною потужною" is Feminine Instrumental. Severe agreement error.
+- **Fix**: "з **власним потужним голосом**"
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 48 | виконувати роль | виконував роль | Grammar |
+| 89 | був людина | був людиною | Style/Grammar |
+| 132 | князьями | князями | Russianism |
+| 160 | безмежна любов | безмежну любов | Grammar (Case) |
+| 245 | власною потужною голосом | власним потужним голосом | Grammar (Gender) |
+
+## Strengths
+- Exceptional depth of historical analysis, positioning Nestor not just as a chronicler but as a "state architect".
+- Powerful, patriotic rhetoric that aligns perfectly with the "Battle for Meanings" curriculum goal.
+- Excellent usage of "contested terms" and decolonization narratives.
+
+## Fix Plan to Reach 9/10
+
+### Language & Linguistic Accuracy: 7/10 → 9/10
+
+**What to fix:**
+1. Line 48: Change "виконувати роль" → "виконував роль" — Fixes basic verb form error.
+2. Line 89: Change "був людина" → "був людиною" — Improves stylistic accuracy.
+3. Line 132: Change "князьями" → "князями" — Removes Russian morphology.
+4. Line 160: Change "безмежна любов" → "безмежну любов" — Fixes accusative case agreement.
+5. Line 245: Change "з власною потужною голосом" → "з власним потужним голосом" — Fixes gender agreement error.
+
+**Expected score after fix:** 9.5/10
+
+### Projected Overall After Fixes
+
+```
+(9*1.5 + 10*1.0 + 10*1.0 + 10*1.2 + 9.5*1.1 + 10*1.2 + 10*1.0 + 10*1.3 + 10*0.9 + 10*1.3 + 9*1.0 + 9.5*1.5) / 14.0 = 9.7/10
+```
+
+## Verification Summary
+
+- Content lines read: 260
+- Activity items checked: 7 items (multi-part)
+- Ukrainian sentences verified: ~120
+- Issues found: 5 grammar/morphology errors
+- Naturalness score recommendation: 7/10 (due to errors)
+
+## Verdict
+
+**FAIL**
+
+The content is conceptually brilliant and structurally sound, but it contains **5 distinct grammatical and morphological errors** that are unacceptable for a C1-level language module. Specifically, gender/case agreement errors ("власною потужною голосом", "безмежна любов") and Russian morphology ("князьями") must be fixed before this can pass.

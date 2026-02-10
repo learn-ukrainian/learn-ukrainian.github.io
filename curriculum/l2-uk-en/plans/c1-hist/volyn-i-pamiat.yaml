@@ -1,5 +1,5 @@
 ---
-module: volyn-i-pamiat
+module: c1-hist-116
 level: c1-hist
 sequence: 116
 version: '1.0'

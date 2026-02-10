@@ -1,5 +1,5 @@
 ---
-module: literary-translation-i
+module: c2-034
 level: c2
 sequence: 34
 version: '2.0'

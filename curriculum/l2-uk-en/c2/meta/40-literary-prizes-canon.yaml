@@ -1,9 +1,9 @@
 ---
-module: literary-prizes-canon
+module: c2-040
 level: C2
 slug: literary-prizes-canon
 version: '2.0'
-id: c2-40
+id: c2-040
 naturalness:
   score: 1
   status: PENDING

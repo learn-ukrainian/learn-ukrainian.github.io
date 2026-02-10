@@ -1,4 +1,6 @@
 ---
+sequence: 60
+module: oes-060
 module_number: 48
 slug: bridge-builders
 title_uk: Мостники

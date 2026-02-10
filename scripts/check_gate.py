@@ -23,7 +23,10 @@ from audit.config import (
     get_word_target,
     get_b1_immersion_range,
     LEVEL_CONFIG,
+    VALID_ACTIVITY_TYPES,
 )
+
+import yaml
 
 
 def parse_frontmatter(content: str) -> dict:
@@ -114,14 +117,24 @@ def count_examples(content: str) -> int:
 
 
 def count_dialogues(content: str) -> int:
-    """Count mini-dialogues (А:/Б: patterns)."""
+    """Count mini-dialogues.
+
+    Detects dialogue lines in these formats:
+    - А: / Б: / В: (plain or bold)
+    - — Speaker text (em-dash, plain or in blockquote)
+    - **Speaker:** text (bold speaker name, in blockquote only — outside blockquotes
+      this pattern matches too many section subheaders)
+    - Speaker: text (plain speaker name)
+
+    Lines are counted then divided by 2 to get dialogue pairs.
+    """
     patterns = [
-        r'^[АБВ]:\s',
-        r'^\*\*[АБВ]:\*\*\s',
-        r'^—\s*[А-ЯІЇЄҐа-яіїєґ]',  # Em-dash dialogue
-        r'^>\s*—\s*[А-ЯІЇЄҐа-яіїєґ]',  # Em-dash dialogue inside blockquote
-        r'^\*\*[А-ЯІЇЄҐа-яіїєґ]+:\*\*\s',  # **Speaker:** format
-        r'^[А-ЯІЇЄҐа-яіїєґ]+:\s+[А-ЯІЇЄҐа-яіїєґ]',  # Speaker: text format
+        r'^[АБВ]:\s',                                       # А: text
+        r'^\*\*[АБВ]:\*\*\s',                               # **А:** text
+        r'^—\s*[А-ЯІЇЄҐа-яіїєґ]',                          # — Speaker text
+        r'^>\s*—\s*[А-ЯІЇЄҐа-яіїєґ]',                      # > — Speaker text (blockquote)
+        r'^>\s*\*\*[А-ЯІЇЄҐа-яіїєґ][^*]*?:\*\*\s',         # > **Speaker (desc):** text (blockquote)
+        r'^[А-ЯІЇЄҐа-яіїєґ]+:\s+[А-ЯІЇЄҐа-яіїєґ]',       # Speaker: text (plain)
     ]
     count = 0
     for pattern in patterns:
@@ -129,11 +142,40 @@ def count_dialogues(content: str) -> int:
     return count // 2  # Pairs
 
 
-def count_activities(content: str) -> tuple[int, set]:
-    """Count activities and unique types."""
-    activity_pattern = r'^##\s+(quiz|match-up|fill-in|true-false|group-sort|unjumble|anagram|error-correction|cloze|mark-the-words|select|translate):'
+def count_activities(content: str, file_path: Path = None) -> tuple[int, set]:
+    """Count activities and unique types from inline markdown and/or YAML file."""
+    # Build pattern from all valid activity types
+    all_types = '|'.join(re.escape(t) for t in VALID_ACTIVITY_TYPES)
+    activity_pattern = rf'^##\s+({all_types}):'
     matches = re.findall(activity_pattern, content, re.MULTILINE | re.IGNORECASE)
-    return len(matches), set(m.lower() for m in matches)
+    inline_count = len(matches)
+    inline_types = set(m.lower() for m in matches)
+
+    # Also check YAML activities file (seminar tracks use these)
+    yaml_count = 0
+    yaml_types = set()
+    if file_path:
+        yaml_file = file_path.parent / 'activities' / (file_path.stem + '.yaml')
+        if not yaml_file.exists():
+            yaml_file = file_path.with_suffix('.activities.yaml')
+        if yaml_file.exists():
+            try:
+                with open(yaml_file, 'r', encoding='utf-8') as f:
+                    activities = yaml.safe_load(f)
+                if isinstance(activities, list):
+                    for act in activities:
+                        if isinstance(act, dict) and 'type' in act:
+                            act_type = act['type'].lower()
+                            if act_type in [t.lower() for t in VALID_ACTIVITY_TYPES]:
+                                yaml_count += 1
+                                yaml_types.add(act_type)
+            except (yaml.YAMLError, OSError):
+                pass
+
+    # Prefer YAML if it has activities (seminar tracks), else use inline
+    if yaml_count > 0:
+        return yaml_count, yaml_types
+    return inline_count, inline_types
 
 
 def count_vocab(content: str) -> int:
@@ -282,9 +324,9 @@ def check_activities_gate(file_path: Path, content: str) -> tuple[bool, list[str
     module_focus = fm.get('focus', None)
     config = get_level_config(level, module_focus)
 
-    # 1. Activity count
+    # 1. Activity count (checks both inline markdown and YAML file)
     min_activities = config.get('min_activities', 8)
-    activity_count, activity_types = count_activities(content)
+    activity_count, activity_types = count_activities(content, file_path)
     if activity_count < min_activities:
         failures.append(f"Activities: {activity_count}/{min_activities} FAIL")
 
@@ -298,9 +340,17 @@ def check_activities_gate(file_path: Path, content: str) -> tuple[bool, list[str
     if priority_types and not activity_types.intersection(priority_types):
         failures.append(f"No priority activity types used (need: {priority_types})")
 
-    # 4. Activity item counts (check each activity has minimum items)
+    # 4. Forbidden types check
+    forbidden_types = config.get('forbidden_types', set())
+    if forbidden_types:
+        used_forbidden = activity_types.intersection(forbidden_types)
+        if used_forbidden:
+            failures.append(f"Forbidden activity types used: {used_forbidden} (not allowed for this track)")
+
+    # 5. Activity item counts (check each activity has minimum items)
     min_items = config.get('min_items_per_activity', 12)
-    activity_sections = re.split(r'^##\s+(?:quiz|match-up|fill-in|true-false|group-sort|unjumble|anagram|error-correction|cloze|mark-the-words|select|translate):', content, flags=re.MULTILINE | re.IGNORECASE)
+    all_types_pattern = '|'.join(re.escape(t) for t in VALID_ACTIVITY_TYPES)
+    activity_sections = re.split(rf'^##\s+(?:{all_types_pattern}):', content, flags=re.MULTILINE | re.IGNORECASE)
 
     for i, section in enumerate(activity_sections[1:], 1):
         # Count numbered items

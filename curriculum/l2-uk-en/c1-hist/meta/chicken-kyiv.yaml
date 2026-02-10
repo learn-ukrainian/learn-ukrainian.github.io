@@ -1,8 +1,8 @@
 ---
-module: chicken-kyiv
+module: c1-hist-097
 level: C1-HIST
 slug: chicken-kyiv
 version: '1.0'
-id: c1-hist-97
+id: c1-hist-097
 build:
   last_modified: '2026-01-26'

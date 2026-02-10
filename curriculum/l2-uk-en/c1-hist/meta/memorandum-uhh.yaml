@@ -1,8 +1,8 @@
 ---
-module: memorandum-uhh
+module: c1-hist-042
 level: C1-HIST
 slug: memorandum-uhh
 version: '1.0'
-id: c1-hist-42
+id: c1-hist-042
 build:
   last_modified: '2026-01-26'

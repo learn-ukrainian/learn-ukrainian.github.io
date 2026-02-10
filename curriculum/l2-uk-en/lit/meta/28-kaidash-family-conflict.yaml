@@ -19,3 +19,41 @@ tags:
 word_target: 4500
 build:
   last_modified: '2026-01-26'
+
+content_outline:
+  - section: "Historical Context: Post-Reform Reality"
+    words: 600
+    points:
+      - "1861 Reform impact"
+      - "Land hunger"
+      - "Semystryzh prototype"
+  - section: "The Nature of Conflict: Generational & Economic"
+    words: 800
+    points:
+      - "Generational clash"
+      - "Economic struggle"
+      - "Psychological roots"
+  - section: "Character Analysis: The Older Generation"
+    words: 800
+    points:
+      - "Omelko's tragedy"
+      - "Kaidaykha's tyranny"
+      - "Serfdom legacy"
+  - section: "Character Analysis: The Younger Generation"
+    words: 1000
+    points:
+      - "Karp's pragmatism"
+      - "Motrya's rebellion"
+      - "Lavrin and Melashka"
+  - section: "Realism & Style"
+    words: 700
+    points:
+      - "Nechuy's realism"
+      - "Humor and satire"
+      - "Ethnography"
+  - section: "Critical Reception & Legacy"
+    words: 600
+    points:
+      - "Franko's assessment"
+      - "Modern relevance"
+      - "Stage adaptations"

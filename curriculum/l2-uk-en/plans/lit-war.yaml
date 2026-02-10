@@ -1,0 +1,114 @@
+---
+# Level Plan: LIT-WAR (Ukrainian War Literature Track)
+# Post-C1 specialization: Literature of Resistance
+
+level: lit-war
+track: literature-war
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 20
+  description: "Ukrainian war literature from 2014 to present — poetry, prose, testimony, and journalism documenting resistance, displacement, and resilience"
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners engaging with contemporary Ukrainian cultural production"
+  decolonization_mission: "Documents the ongoing struggle for Ukrainian sovereignty through literature. These are not 'conflict narratives' — they are testimony of a nation fighting for existence."
+  urgency: "This is the most time-sensitive track. Authors are writing NOW. Some gave their lives."
+
+sources:
+  primary: "Contemporary Ukrainian publishers (Meridian Czernowitz, Vivat, Old Lion)"
+  supplementary:
+    - "Ukrainian PEN Club publications"
+    - "War journalism (Ukrainska Pravda, Hromadske)"
+    - "Military memoirs and diaries"
+  note: "All texts by Ukrainians, about Ukraine. No 'both sides' framing."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 500
+  focus_areas:
+    - "Military vocabulary (окоп, обстріл, евакуація, зброя)"
+    - "Displacement terminology (переселенець, тимчасова окупація, вимушений переїзд)"
+    - "Emotional/trauma vocabulary (ПТСР, стійкість, горювання, надія)"
+    - "Journalistic register (свідчення, репортаж, хроніка)"
+
+grammar:
+  - "Documentary prose style"
+  - "Fragmented/stream-of-consciousness narrative (trauma writing)"
+  - "Poetry of urgency — compressed syntax"
+  - "Testimonial voice — first person witness"
+
+phases:
+  - id: WAR.1
+    name: "Початок: 2014"
+    name_en: "The Beginning: 2014"
+    modules: "[1, 4]"
+    focus: "Maidan poetry, first Donbas narratives"
+    era: "2013-2015"
+    key_authors:
+      - "Лозко — Поезія Майдану"
+      - "Чех — Абсолютний нуль (2014), Точка нуль (2017)"
+
+  - id: WAR.2
+    name: "Донбаський Фронт"
+    name_en: "The Donbas Front"
+    modules: "[5, 11]"
+    focus: "Prose and poetry from the eastern front 2014-2021"
+    era: "2014-2021"
+    key_authors:
+      - "Жадан — Інтернат (2017), Життя Марії (2015)"
+      - "Маркус — Сліди на дорозі (2018), Піхота (2020)"
+      - "Зернія — Дочка Донецька"
+      - "Положій — Іловайськ (2015)"
+      - "Ященко — оповідання з Донбасу"
+
+  - id: WAR.3
+    name: "Свідчення та Щоденники"
+    name_en: "Testimony and Diaries"
+    modules: "[12, 16]"
+    focus: "First-person accounts — soldiers, volunteers, captives"
+    era: "2014-2024"
+    key_authors:
+      - "Білозерська — щоденник волонтера"
+      - "Бабіч — поезія з фронту"
+      - "Коцюбайло (Да Вінчі) — спадщина воїна-письменника"
+      - "Вакуленко — щоденник окупації (посмертно)"
+      - "Асєєв — Табір (2021), Ізольований Донецьк (2020)"
+
+  - id: WAR.4
+    name: "Повномасштабна Війна та Нова Література"
+    name_en: "Full-Scale War and New Literature"
+    modules: "[17, 20]"
+    focus: "Literature of 2022-present — loss, resilience, and the new Ukrainian identity"
+    era: "2022-present"
+    key_authors:
+      - "Калитко — кордони (поезія війни)"
+      - "Якімчук — Абрикоси Донбасу (поезія)"
+      - "Амеліна — Новий Ренесанс (загинула 2023)"
+      - "Підсумковий модуль: Війна як літературний рух"
+
+constraints:
+  min_word_target: 4000
+  max_word_target: 5500
+  min_engagement_boxes: 3
+  min_primary_sources: 3
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Primary text excerpt (poem, prose fragment, diary entry)"
+    - "Historical context: what was happening when this was written?"
+    - "Literary analysis: how does form serve the content?"
+    - "Biographical context of the author (many are soldiers, volunteers, captives)"
+    - "Discussion: what does this text tell us about Ukraine today?"
+  decolonization:
+    - "This is NOT 'conflict literature' — it is RESISTANCE literature"
+    - "Authors are not victims — they are agents of their nation's survival"
+    - "Never frame as 'tragedy on both sides'"
+    - "Fallen authors (Амеліна, Вакуленко, Коцюбайло) treated with dignity, not sentimentality"
+  sensitivity:
+    - "Content includes graphic war descriptions — pedagogical framing required"
+    - "Trauma-informed approach: acknowledge emotional weight"
+    - "Focus on resilience and agency, not helplessness"

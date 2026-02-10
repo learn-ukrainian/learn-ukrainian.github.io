@@ -1,9 +1,9 @@
 ---
-module: translation-practice-i
+module: c2-086
 level: C2
 slug: translation-practice-i
 version: '2.0'
-id: c2-86
+id: c2-086
 naturalness:
   score: 1
   status: PENDING

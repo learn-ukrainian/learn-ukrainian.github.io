@@ -1,9 +1,9 @@
 ---
-module: khudozhniy-styl
+module: c2-006
 level: C2
 slug: khudozhniy-styl
 version: '2.0'
-id: c2-06
+id: c2-006
 naturalness:
   score: 1
   status: PENDING

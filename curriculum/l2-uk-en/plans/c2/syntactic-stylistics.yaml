@@ -1,5 +1,5 @@
 ---
-module: syntactic-stylistics
+module: c2-013
 level: c2
 sequence: 13
 version: '2.0'

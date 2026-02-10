@@ -27,6 +27,8 @@ import yaml
 from pathlib import Path
 from typing import Union
 
+from slug_utils import to_bare_slug
+
 # Module type detection from pedagogy field
 MODULE_TYPE_MAP = {
     # Grammar types
@@ -521,9 +523,8 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         # Get level from path (e.g., b1 from curriculum/l2-uk-en/b1/module.md)
         level_dir = path.parent.name.lower()
         # Clean slug: remove leading number prefix
-        import re
         slug = path.stem
-        clean_slug = re.sub(r'^\d+-', '', slug)
+        clean_slug = to_bare_slug(slug)
         # Try plan file paths
         plan_paths = [
             path.parents[1] / 'plans' / level_dir / f'{clean_slug}.yaml',
@@ -687,14 +688,24 @@ def count_examples(content: str) -> int:
 
 
 def count_dialogues(content: str) -> int:
-    """Count mini-dialogues."""
+    """Count mini-dialogues.
+
+    Detects dialogue lines in these formats:
+    - А: / Б: / В: (plain or bold)
+    - — Speaker text (em-dash, plain or in blockquote)
+    - **Speaker:** text (bold speaker name, in blockquote only — outside blockquotes
+      this pattern matches too many section subheaders)
+    - Speaker: text (plain speaker name)
+
+    Lines are counted then divided by 2 to get dialogue pairs.
+    """
     patterns = [
-        r'^[АБВ]:\s',
-        r'^\*\*[АБВ]:\*\*\s',
-        r'^—\s*[А-ЯІЇЄҐа-яіїєґ]',  # Em-dash dialogue
-        r'^>\s*—\s*[А-ЯІЇЄҐа-яіїєґ]',  # Em-dash dialogue inside blockquote
-        r'^\*\*[А-ЯІЇЄҐа-яіїєґ]+:\*\*\s',  # **Speaker:** format
-        r'^[А-ЯІЇЄҐа-яіїєґ]+:\s+[А-ЯІЇЄҐа-яіїєґ]',  # Speaker: text format
+        r'^[АБВ]:\s',                                       # А: text
+        r'^\*\*[АБВ]:\*\*\s',                               # **А:** text
+        r'^—\s*[А-ЯІЇЄҐа-яіїєґ]',                          # — Speaker text
+        r'^>\s*—\s*[А-ЯІЇЄҐа-яіїєґ]',                      # > — Speaker text (blockquote)
+        r'^>\s*\*\*[А-ЯІЇЄҐа-яіїєґ][^*]*?:\*\*\s',         # > **Speaker (desc):** text (blockquote)
+        r'^[А-ЯІЇЄҐа-яіїєґ]+:\s+[А-ЯІЇЄҐа-яіїєґ]',       # Speaker: text (plain)
     ]
     count = 0
     for pattern in patterns:
@@ -1024,7 +1035,7 @@ def count_external_yaml_resources(file_path: Union[Path, str]) -> int:
             
         slug = file_path.stem
         # Also try removing numeric prefix for lookup
-        clean_slug = re.sub(r'^\d+-', '', slug) if slug else slug
+        clean_slug = to_bare_slug(slug) if slug else slug
         
         resources = data['resources']
         count = 0

@@ -1,5 +1,5 @@
 ---
-module: legal-ukrainian-v
+module: c2-065
 level: c2
 sequence: 65
 version: '2.0'

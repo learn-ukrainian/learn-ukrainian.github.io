@@ -1,5 +1,5 @@
 ---
-module: milozvuchnist-complete
+module: c2-002
 level: c2
 sequence: 2
 version: '2.0'

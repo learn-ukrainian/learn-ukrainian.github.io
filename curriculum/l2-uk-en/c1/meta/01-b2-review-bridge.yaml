@@ -5,8 +5,8 @@ slug: 01-b2-review-bridge
 version: '2.0'
 id: c1-001
 naturalness:
-  score: null
-  status: PENDING
+  score: 10
+  status: PASS
 word_target: 4000
 build:
   last_modified: '2026-01-26'

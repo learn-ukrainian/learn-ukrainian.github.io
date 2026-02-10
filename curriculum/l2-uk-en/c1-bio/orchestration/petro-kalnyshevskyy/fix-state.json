@@ -1,0 +1,42 @@
+{
+  "slug": "petro-kalnyshevskyy",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T10:58:30.533950Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 2,
+      "started": "2026-02-10T11:16:16.491903Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 3,
+      "started": "2026-02-10T11:18:14.597437Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 4,
+      "started": "2026-02-10T11:19:52.718867Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 5,
+      "started": "2026-02-10T11:22:43.248591Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    }
+  ],
+  "started": "2026-02-10T10:58:30.533929Z",
+  "result": "exhausted"
+}

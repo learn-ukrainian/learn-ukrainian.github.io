@@ -2,14 +2,14 @@
   "module": "07-spatial-prepositions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:32.821473Z",
+  "last_audit": "2026-02-10T10:45:15.817582Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-31T16:24:47.356125Z",
-    "meta": "2026-01-29T07:39:04.582514Z",
-    "activities": "2026-01-31T16:18:11.097731Z",
-    "vocabulary": "2026-01-25T16:02:17.642613Z",
-    "plan": "2026-01-30T12:31:49.559490Z"
+    "meta": "2026-02-07T10:03:50.719575Z",
+    "activities": "2026-02-07T10:03:50.750534Z",
+    "vocabulary": "2026-02-07T10:03:50.793719Z",
+    "plan": "2026-02-09T12:52:14.149753Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

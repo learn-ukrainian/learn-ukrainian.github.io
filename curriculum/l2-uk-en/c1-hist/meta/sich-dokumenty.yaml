@@ -1,8 +1,8 @@
 ---
-module: sich-dokumenty
+module: c1-hist-027
 level: C1-HIST
 slug: sich-dokumenty
 version: '1.0'
-id: c1-hist-27
+id: c1-hist-027
 build:
   last_modified: '2026-01-26'

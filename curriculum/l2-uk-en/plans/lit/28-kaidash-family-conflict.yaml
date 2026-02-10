@@ -1,5 +1,6 @@
 ---
-module: kaidash-family-conflict
+sequence: 28
+module: lit-28
 level: LIT
 slug: kaidash-family-conflict
 version: '2.0'

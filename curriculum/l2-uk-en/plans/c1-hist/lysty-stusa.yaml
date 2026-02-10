@@ -1,5 +1,5 @@
 ---
-module: lysty-stusa
+module: c1-hist-040
 level: c1-hist
 sequence: 40
 version: '1.0'

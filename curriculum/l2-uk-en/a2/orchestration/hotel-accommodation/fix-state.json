@@ -1,0 +1,14 @@
+{
+  "slug": "hotel-accommodation",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:23:18.230476Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T11:23:18.230461Z",
+  "result": "success"
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Batch Manager - Orchestration & Operations</title>
+  <title>Batch Manager - Live Monitor</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,93 +29,424 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
 
-    .header h1 {
-      font-size: 28px;
-      font-weight: 600;
-    }
+    .header h1 { font-size: 28px; font-weight: 600; }
 
-    .api-status {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      font-size: 12px;
+      gap: 12px;
     }
 
-    .api-dot {
+    .refresh-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .refresh-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #ef4444;
+      background: #10b981;
+      animation: pulse 2s infinite;
     }
 
-    .api-status.connected .api-dot { background: #10b981; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
 
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #334155;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Track Tabs */
+    .track-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .track-tab {
+      padding: 8px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .track-tab:hover { border-color: #475569; }
+    .track-tab.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+    .track-tab.has-data { border-color: #475569; }
+    .track-tab.has-data::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+    .track-tab.has-running::after { background: #3b82f6; animation: pulse 1s infinite; }
+    .track-tab.no-data { opacity: 0.4; }
+
+    .track-tab .tab-count {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-left: 4px;
+    }
+
+    .track-tab.active .tab-count { color: #dbeafe; }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stat-value.green { color: #10b981; }
+    .stat-value.red { color: #f43f5e; }
+    .stat-value.blue { color: #3b82f6; }
+    .stat-value.yellow { color: #f59e0b; }
+
+    .stat-sub {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      background: #334155;
+      border-radius: 4px;
+      height: 6px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-bar-fill.green { background: #10b981; }
+    .progress-bar-fill.blue { background: #3b82f6; }
+
+    /* Active Module Banner */
+    .active-banner {
+      background: linear-gradient(135deg, #1e3a5f, #1e293b);
+      border: 1px solid #1d4ed8;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: none;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .active-banner.visible { display: flex; }
+
+    .active-banner .spinner-large {
+      width: 24px;
+      height: 24px;
+      border: 3px solid #334155;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .active-info { flex: 1; }
+
+    .active-slug {
+      font-size: 16px;
+      font-weight: 600;
+      color: #93c5fd;
+      font-family: ui-monospace, monospace;
+    }
+
+    .active-meta {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .active-meta span {
+      margin-right: 16px;
+    }
+
+    .active-elapsed {
+      font-size: 22px;
+      font-weight: 700;
+      color: #60a5fa;
+      font-family: ui-monospace, monospace;
+      flex-shrink: 0;
+    }
+
+    /* Main Grid */
     .main-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 2fr 1fr;
       gap: 24px;
-      margin-bottom: 24px;
     }
 
     .panel {
       background: #1e293b;
       border: 1px solid #334155;
       border-radius: 12px;
-      padding: 20px;
+      overflow: hidden;
     }
 
     .panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #334155;
     }
 
     .panel-header h2 {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
     }
 
-    .badge {
-      padding: 3px 8px;
-      border-radius: 4px;
+    /* Module Grid - visual heatmap */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 4px;
+      padding: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .module-cell {
+      padding: 8px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      text-align: center;
+      cursor: default;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      line-height: 1.3;
+    }
+
+    .module-cell:hover {
+      transform: scale(1.05);
+      z-index: 1;
+    }
+
+    .module-cell.pass {
+      background: #166534;
+      color: #bbf7d0;
+      border-color: #22863a;
+    }
+
+    .module-cell.fail {
+      background: #991b1b;
+      color: #fecaca;
+      border-color: #dc2626;
+    }
+
+    .module-cell.running {
+      background: #1e40af;
+      color: #bfdbfe;
+      border-color: #3b82f6;
+      animation: pulse 1.5s infinite;
+    }
+
+    .module-cell.pending {
+      background: #1e293b;
+      color: #475569;
+      border-color: #334155;
+    }
+
+    .module-cell .cell-slug {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .module-cell .cell-time {
+      font-size: 9px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    /* Module Detail Popover */
+    .module-detail {
+      display: none;
+      position: fixed;
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 12px;
+      z-index: 100;
+      font-size: 12px;
+      max-width: 300px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .module-detail.visible { display: block; }
+
+    .module-detail h4 {
+      font-size: 13px;
+      margin-bottom: 8px;
+      font-family: ui-monospace, monospace;
+    }
+
+    .module-detail .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+      color: #94a3b8;
+    }
+
+    .module-detail .detail-row .val { color: #e2e8f0; font-weight: 500; }
+
+    /* Sidebar panels */
+    .sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+    /* Failure Queue */
+    .failure-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .failure-item {
+      padding: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .failure-item:last-child { border-bottom: none; }
+
+    .failure-slug {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: ui-monospace, monospace;
+      color: #fca5a5;
+    }
+
+    .failure-meta {
       font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .failure-gates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .gate-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
       font-weight: 600;
     }
 
-    .badge.running { background: #1d4ed8; color: #dbeafe; }
-    .badge.complete { background: #166534; color: #bbf7d0; }
-    .badge.failed { background: #991b1b; color: #fecaca; }
-    .badge.pending { background: #854d0e; color: #fef08a; }
+    .gate-badge.fail { background: #991b1b; color: #fecaca; }
+    .gate-badge.pass { background: #166534; color: #bbf7d0; }
+    .gate-badge.skipped { background: #334155; color: #94a3b8; }
 
-    .form-group {
-      margin-bottom: 16px;
+    /* Log Output */
+    .log-output {
+      padding: 12px;
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      max-height: 250px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .log-line { margin-bottom: 2px; }
+    .log-line.info { color: #94a3b8; }
+    .log-line.pass { color: #10b981; }
+    .log-line.fail { color: #f43f5e; }
+    .log-line.diag { color: #f59e0b; }
+
+    /* CLI Panel */
+    .cli-panel {
+      grid-column: 1 / -1;
+    }
+
+    .cli-content {
+      padding: 16px;
+    }
+
+    .cli-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 80px 80px auto;
+      gap: 12px;
+      align-items: end;
     }
 
     .form-group label {
       display: block;
-      font-size: 12px;
-      color: #94a3b8;
-      margin-bottom: 6px;
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    select, input {
+    select, input[type="number"] {
       width: 100%;
-      padding: 10px 12px;
+      padding: 8px 10px;
       background: #0f172a;
       border: 1px solid #334155;
-      border-radius: 8px;
+      border-radius: 6px;
       color: #e2e8f0;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     select:focus, input:focus {
@@ -123,645 +454,806 @@
       border-color: #3b82f6;
     }
 
-    .range-inputs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
     .btn {
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 8px 16px;
+      border-radius: 6px;
       border: none;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.15s;
-      width: 100%;
     }
 
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
-
+    .btn-primary { background: #3b82f6; color: white; }
     .btn-primary:hover { background: #2563eb; }
+    .btn-copy { background: #334155; color: #e2e8f0; }
+    .btn-copy:hover { background: #475569; }
+    .btn-copy.copied { background: #10b981; }
 
-    .btn-secondary {
-      background: #334155;
-      color: #e2e8f0;
-    }
-
-    .btn-secondary:hover { background: #475569; }
-
-    .btn-danger {
-      background: #dc2626;
-      color: white;
-    }
-
-    .btn-danger:hover { background: #b91c1c; }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .task-list {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .task-item {
-      padding: 12px;
+    .cli-output {
+      margin-top: 12px;
+      padding: 10px 14px;
       background: #0f172a;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      border: 1px solid #1e293b;
-    }
-
-    .task-header {
+      border: 1px solid #334155;
+      border-radius: 6px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      color: #10b981;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
     }
-
-    .task-title {
-      font-size: 13px;
-      font-weight: 600;
-      font-family: ui-monospace, monospace;
-    }
-
-    .task-meta {
-      font-size: 11px;
-      color: #64748b;
-      font-family: ui-monospace, monospace;
-    }
-
-    .task-progress {
-      background: #1e293b;
-      border-radius: 4px;
-      height: 6px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-
-    .task-progress-bar {
-      height: 100%;
-      background: #3b82f6;
-      transition: width 0.3s;
-    }
-
-    .task-progress-bar.complete { background: #10b981; }
-    .task-progress-bar.failed { background: #ef4444; }
-
-    .task-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .task-btn {
-      padding: 4px 12px;
-      font-size: 11px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background: #334155;
-      color: #e2e8f0;
-    }
-
-    .task-btn:hover { background: #475569; }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-      gap: 6px;
-      margin-top: 12px;
-    }
-
-    .result-cell {
-      padding: 8px 4px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      text-align: center;
-      font-family: ui-monospace, monospace;
-    }
-
-    .result-cell.pass { background: #166534; color: #bbf7d0; }
-    .result-cell.fail { background: #991b1b; color: #fecaca; }
-    .result-cell.pending { background: #854d0e; color: #fef08a; }
-
-    .logs-panel {
-      grid-column: 1 / -1;
-      max-height: 300px;
-    }
-
-    .logs-output {
-      background: #0f172a;
-      border-radius: 8px;
-      padding: 12px;
-      font-family: ui-monospace, monospace;
-      font-size: 12px;
-      max-height: 220px;
-      overflow-y: auto;
-      line-height: 1.6;
-    }
-
-    .log-line {
-      margin-bottom: 4px;
-    }
-
-    .log-line.info { color: #94a3b8; }
-    .log-line.success { color: #10b981; }
-    .log-line.error { color: #f43f5e; }
-    .log-line.warn { color: #f59e0b; }
 
     .empty-state {
       text-align: center;
-      padding: 40px;
-      color: #64748b;
+      padding: 32px;
+      color: #475569;
+      font-size: 13px;
     }
 
-    .copy-prompt {
-      background: #0f172a;
+    .server-note {
+      text-align: center;
+      padding: 12px;
+      background: #1e293b;
       border: 1px solid #334155;
       border-radius: 8px;
-      padding: 16px;
-      margin-top: 16px;
-      font-family: ui-monospace, monospace;
       font-size: 12px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      max-height: 200px;
-      overflow-y: auto;
+      color: #94a3b8;
+      margin-bottom: 24px;
     }
 
-    .copy-btn-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 8px;
+    .server-note code {
+      background: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: ui-monospace, monospace;
+      color: #10b981;
     }
 
-    .copy-btn {
-      padding: 6px 12px;
-      font-size: 11px;
-      background: #334155;
-      border: none;
-      border-radius: 6px;
-      color: #e2e8f0;
+    /* Multi-track Overview */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .overview-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px;
       cursor: pointer;
+      transition: all 0.15s;
     }
 
-    .copy-btn:hover { background: #475569; }
-    .copy-btn.copied { background: #10b981; }
+    .overview-card:hover { border-color: #475569; transform: translateY(-2px); }
+    .overview-card.active { border-color: #3b82f6; }
+    .overview-card.no-data { opacity: 0.3; cursor: default; }
+    .overview-card.no-data:hover { transform: none; border-color: #334155; }
+
+    .overview-track {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .overview-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .overview-stats .green { color: #10b981; }
+    .overview-stats .red { color: #f43f5e; }
+    .overview-stats .gray { color: #64748b; }
+
+    .mini-progress {
+      width: 100%;
+      background: #334155;
+      border-radius: 3px;
+      height: 4px;
+      overflow: hidden;
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      background: #10b981;
+      transition: width 0.5s;
+    }
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-link">← Back to Playgrounds</a>
+  <a href="index.html" class="back-link">&larr; Back to Playgrounds</a>
 
   <div class="header">
     <h1>Batch Manager</h1>
-    <div class="api-status" id="api-status">
-      <div class="api-dot"></div>
-      <span id="api-status-text">Connecting...</span>
+    <div class="header-right">
+      <div class="refresh-status">
+        <div class="refresh-dot"></div>
+        <span id="last-refresh">Auto-refresh 5s</span>
+      </div>
     </div>
   </div>
 
-  <div class="main-grid">
-    <!-- Batch Launcher -->
+  <div id="server-note" class="server-note" style="display:none;">
+    Serve files with: <code>cd /Users/krisztiankoos/projects/learn-ukrainian && python3 -m http.server 8080</code>
+    then open <code>http://localhost:8080/playgrounds/playground-batch-manager.html</code>
+  </div>
+
+  <!-- Multi-Track Overview -->
+  <div id="overview-section">
+    <div class="overview-grid" id="overview-grid"></div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row" id="stats-row" style="display:none;">
+    <div class="stat-card">
+      <div class="stat-label">Progress</div>
+      <div class="stat-value blue" id="stat-progress">-</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill blue" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Passed</div>
+      <div class="stat-value green" id="stat-passed">0</div>
+      <div class="stat-sub" id="stat-pass-rate">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Failed</div>
+      <div class="stat-value red" id="stat-failed">0</div>
+      <div class="stat-sub" id="stat-fail-info">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Duration</div>
+      <div class="stat-value" id="stat-avg">-</div>
+      <div class="stat-sub">per module</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ETA</div>
+      <div class="stat-value" id="stat-eta">-</div>
+      <div class="stat-sub" id="stat-remaining">-</div>
+    </div>
+  </div>
+
+  <!-- Active Module Banner -->
+  <div class="active-banner" id="active-banner">
+    <div class="spinner-large"></div>
+    <div class="active-info">
+      <div class="active-slug" id="active-slug">-</div>
+      <div class="active-meta">
+        <span>Mode: <strong id="active-mode">fix</strong></span>
+        <span>Started: <strong id="active-start">-</strong></span>
+      </div>
+    </div>
+    <div class="active-elapsed" id="active-elapsed">0:00</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-grid" id="main-content" style="display:none;">
+    <!-- Module Grid -->
     <div class="panel">
       <div class="panel-header">
-        <h2>Launch Batch Operation</h2>
+        <h2>Modules <span id="module-count" style="color:#64748b;font-weight:400;"></span></h2>
+        <div style="display:flex;gap:8px;">
+          <span style="font-size:10px;color:#10b981;">&#9632; Pass</span>
+          <span style="font-size:10px;color:#f43f5e;">&#9632; Fail</span>
+          <span style="font-size:10px;color:#3b82f6;">&#9632; Running</span>
+          <span style="font-size:10px;color:#475569;">&#9632; Pending</span>
+        </div>
       </div>
+      <div class="module-grid" id="module-grid"></div>
+    </div>
 
-      <div class="form-group">
-        <label>Operation Type</label>
-        <select id="operation-type">
-          <option value="fix-review">Fix + Review (A1/A2/B1/B2/C1/C2)</option>
-          <option value="research">Research (Seminar: B2-HIST, C1-BIO, etc.)</option>
-          <option value="orchestrate">Orchestrated Rebuild (Full Pipeline)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Track/Level</label>
-        <select id="track">
-          <option value="a1">A1 (44 modules)</option>
-          <option value="a2">A2 (70 modules)</option>
-          <option value="b1">B1 (92 modules)</option>
-          <option value="b2">B2 (94 modules)</option>
-          <option value="c1">C1 (106 modules)</option>
-          <option value="c2">C2 (100 modules)</option>
-          <option value="b2-hist">B2-HIST (140 modules)</option>
-          <option value="c1-bio">C1-BIO (128 modules)</option>
-          <option value="c1-hist">C1-HIST (60 modules)</option>
-          <option value="lit">LIT (30 modules)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Module Range</label>
-        <div class="range-inputs">
-          <input type="number" id="start-num" placeholder="Start" min="1" value="1">
-          <input type="number" id="end-num" placeholder="End" min="1" value="10">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Failure Queue -->
+      <div class="panel">
+        <div class="panel-header" style="background:#1a0a0a;">
+          <h2 style="color:#fca5a5;">Failure Queue</h2>
+          <span id="failure-badge" style="font-size:11px;font-weight:700;color:#fca5a5;">0</span>
+        </div>
+        <div class="failure-list" id="failure-list">
+          <div class="empty-state">No failures</div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Model (for Review/Orchestrate)</label>
-        <select id="model">
-          <option value="gemini-3-pro-preview">Gemini 3 Pro (slower, better)</option>
-          <option value="gemini-3-flash-preview">Gemini 3 Flash (faster)</option>
-        </select>
-      </div>
-
-      <button class="btn btn-primary" id="launch-btn" onclick="launchBatch()">
-        Launch Batch
-      </button>
-    </div>
-
-    <!-- Active Tasks -->
-    <div class="panel">
-      <div class="panel-header">
-        <h2>Active Tasks</h2>
-        <span class="badge running" id="active-count">0 running</span>
-      </div>
-      <div class="task-list" id="task-list">
-        <div class="empty-state">No active tasks</div>
-      </div>
-    </div>
-
-    <!-- Results Summary -->
-    <div class="panel">
-      <div class="panel-header">
-        <h2>Recent Results</h2>
-        <button class="btn-secondary task-btn" onclick="refreshResults()">Refresh</button>
-      </div>
-      <div id="results-container">
-        <div class="empty-state">Launch a batch to see results</div>
-      </div>
-    </div>
-
-    <!-- Logs -->
-    <div class="panel logs-panel">
-      <div class="panel-header">
-        <h2>Live Logs</h2>
-        <div style="display: flex; gap: 8px;">
-          <button class="btn-secondary task-btn" onclick="clearLogs()">Clear</button>
-          <button class="btn-secondary task-btn" onclick="toggleAutoscroll()">
-            <span id="autoscroll-text">Auto-scroll: ON</span>
-          </button>
+      <!-- Event Log -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Event Log</h2>
+          <span style="font-size:10px;color:#64748b;" id="log-count">0 events</span>
+        </div>
+        <div class="log-output" id="log-output">
+          <div class="log-line info">Waiting for data...</div>
         </div>
       </div>
-      <div class="logs-output" id="logs-output">
-        <div class="log-line info">Ready. Launch a batch operation to begin.</div>
-      </div>
     </div>
+  </div>
 
-    <!-- Copy Prompt -->
-    <div class="panel" style="grid-column: 1 / -1;">
-      <div class="panel-header">
-        <h2>Generated CLI Command</h2>
+  <!-- API Usage Panel -->
+  <div class="panel" style="margin-top:24px;">
+    <div class="panel-header" style="background:#0a1628;">
+      <h2>Gemini API Usage</h2>
+      <span style="font-size:10px;color:#64748b;" id="usage-updated">—</span>
+    </div>
+    <div id="api-usage-content" style="padding:16px;">
+      <div class="empty-state" style="color:#475569;font-size:12px;">No usage data yet. Runs with updated runner will log here.</div>
+    </div>
+  </div>
+
+  <!-- CLI Command Generator -->
+  <div class="panel cli-panel" style="margin-top:24px;">
+    <div class="panel-header">
+      <h2>CLI Command Generator</h2>
+    </div>
+    <div class="cli-content">
+      <div class="cli-form">
+        <div class="form-group">
+          <label>Track</label>
+          <select id="cli-track">
+            <option value="a1">a1</option>
+            <option value="a2">a2</option>
+            <option value="b1">b1</option>
+            <option value="b2">b2</option>
+            <option value="c1">c1</option>
+            <option value="c2">c2</option>
+            <option value="b2-hist">b2-hist</option>
+            <option value="c1-bio">c1-bio</option>
+            <option value="c1-hist">c1-hist</option>
+            <option value="lit">lit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mode</label>
+          <select id="cli-mode">
+            <option value="fix">fix (audit-driven)</option>
+            <option value="build">build (full rebuild)</option>
+            <option value="auto">auto (detect)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>From</label>
+          <input type="number" id="cli-from" min="1" value="1" placeholder="1">
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input type="number" id="cli-to" min="1" value="10" placeholder="10">
+        </div>
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" onclick="generateCmd()">Generate</button>
+        </div>
       </div>
-      <div class="copy-prompt" id="copy-prompt">
-# Launch a batch operation to generate CLI command
-      </div>
-      <div class="copy-btn-wrapper">
-        <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy Command</button>
+      <div class="cli-output" id="cli-output" style="display:none;">
+        <code id="cli-cmd"></code>
+        <button class="btn btn-copy" id="copy-btn" onclick="copyCmd()">Copy</button>
       </div>
     </div>
+  </div>
+
+  <!-- Module Detail Popover -->
+  <div class="module-detail" id="module-detail">
+    <h4 id="detail-slug">-</h4>
+    <div id="detail-rows"></div>
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:8001/api';
-    const WS_URL = 'ws://localhost:8001/ws';
+    // ========== CONFIG ==========
+    const ALL_TRACKS = ['a1','a2','b1','b2','c1','c2','b2-hist','c1-bio','c1-hist','lit'];
+    const STATE_BASE = '../batch_state';
+    const REFRESH_INTERVAL = 5000;
 
-    let state = {
-      apiConnected: false,
-      tasks: [],
-      logs: [],
-      autoscroll: true,
-      ws: null
-    };
+    let currentTrack = null;
+    let trackStates = {};  // track -> state JSON
+    let trackFailures = {};  // track -> [failure objects]
+    let logEntries = [];
+    let previousModuleCount = {};  // track -> count of completed modules
+    let activeStartTime = null;
+    let elapsedTimer = null;
 
-    // API Functions
-    async function fetchAPI(endpoint, options = {}) {
+    // ========== DATA LOADING ==========
+    async function loadTrackState(track) {
       try {
-        const response = await fetch(`${API_BASE}${endpoint}`, options);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        return await response.json();
-      } catch (error) {
-        logError(`API Error: ${error.message}`);
-        return null;
-      }
+        const res = await fetch(`${STATE_BASE}/state_${track}.json?_=${Date.now()}`);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch { return null; }
     }
 
-    async function checkAPI() {
-      const data = await fetchAPI('/health');
-      updateAPIStatus(!!data);
+    async function loadTrackFailures(track) {
+      // Try per-track failures directory first (new format)
+      try {
+        const res = await fetch(`${STATE_BASE}/failures/${track}/index.json?_=${Date.now()}`);
+        if (res.ok) return await res.json();
+      } catch {}
+
+      // Scan individual failure files (fallback - won't work without server-side listing)
+      // For now, we'll track failures from the state file
+      return [];
     }
 
-    function updateAPIStatus(connected) {
-      state.apiConnected = connected;
-      const statusEl = document.getElementById('api-status');
-      const textEl = document.getElementById('api-status-text');
-
-      if (connected) {
-        statusEl.classList.add('connected');
-        textEl.textContent = 'API Connected';
-      } else {
-        statusEl.classList.remove('connected');
-        textEl.textContent = 'API Offline (CLI Mode)';
-      }
+    async function loadApiUsage() {
+      const summaries = {};
+      const promises = ALL_TRACKS.map(async (track) => {
+        try {
+          const url = `${STATE_BASE}/api_usage/summary_${track}.json?t=${Date.now()}`;
+          const res = await fetch(url);
+          if (res.ok) summaries[track] = await res.json();
+        } catch {}
+      });
+      await Promise.all(promises);
+      return summaries;
     }
 
-    // Batch Launch
-    async function launchBatch() {
-      const operation = document.getElementById('operation-type').value;
-      const track = document.getElementById('track').value;
-      const startNum = parseInt(document.getElementById('start-num').value);
-      const endNum = parseInt(document.getElementById('end-num').value);
-      const model = document.getElementById('model').value;
-
-      if (!startNum || !endNum || startNum > endNum) {
-        logError('Invalid module range');
+    function renderApiUsage(summaries) {
+      const el = document.getElementById('api-usage-content');
+      const tracks = Object.entries(summaries);
+      if (tracks.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="color:#475569;font-size:12px;">No usage data yet. Runs with updated runner will log here.</div>';
         return;
       }
 
-      const taskId = `${operation}-${track}-${startNum}-${endNum}-${Date.now()}`;
+      let totalCalls = 0, totalInput = 0, totalOutput = 0, totalCached = 0, totalLatency = 0;
+      tracks.forEach(([_, s]) => {
+        totalCalls += s.total_calls || 0;
+        totalInput += s.total_input_tokens || 0;
+        totalOutput += s.total_output_tokens || 0;
+        totalCached += s.total_cached_tokens || 0;
+        totalLatency += s.total_latency_ms || 0;
+      });
 
-      logInfo(`Launching ${operation} for ${track} M${startNum}-M${endNum}...`);
+      const fmtTokens = (n) => n > 1000000 ? `${(n/1000000).toFixed(1)}M` : n > 1000 ? `${(n/1000).toFixed(1)}K` : n.toString();
+      const avgLatency = totalCalls > 0 ? Math.round(totalLatency / totalCalls) : 0;
 
-      // Generate CLI command
-      let command = '';
-      if (operation === 'fix-review') {
-        command = `.venv/bin/python scripts/batch_fix_review.py ${track} ${startNum} ${endNum} --model ${model}`;
-      } else if (operation === 'research') {
-        command = `.venv/bin/python scripts/batch_research.py ${track} ${startNum} ${endNum}`;
-      } else if (operation === 'orchestrate') {
-        command = `# For each module ${startNum}-${endNum}:\n/orchestrate-rebuild ${track} {num}`;
-      }
+      let html = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;">
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:700;color:#3b82f6;">${totalCalls}</div>
+            <div style="font-size:10px;color:#64748b;">API Calls</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:700;color:#8b5cf6;">${fmtTokens(totalInput)}</div>
+            <div style="font-size:10px;color:#64748b;">Input Tokens</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:700;color:#f59e0b;">${fmtTokens(totalOutput)}</div>
+            <div style="font-size:10px;color:#64748b;">Output Tokens</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:700;color:#10b981;">${fmtTokens(totalCached)}</div>
+            <div style="font-size:10px;color:#64748b;">Cached</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:700;color:#64748b;">${(avgLatency/1000).toFixed(1)}s</div>
+            <div style="font-size:10px;color:#64748b;">Avg Latency</div>
+          </div>
+        </div>
+        <table style="width:100%;font-size:11px;border-collapse:collapse;">
+          <tr style="color:#64748b;border-bottom:1px solid #1e293b;">
+            <th style="text-align:left;padding:4px;">Track</th>
+            <th style="text-align:right;padding:4px;">Calls</th>
+            <th style="text-align:right;padding:4px;">Input</th>
+            <th style="text-align:right;padding:4px;">Output</th>
+            <th style="text-align:right;padding:4px;">Cached</th>
+          </tr>`;
 
-      document.getElementById('copy-prompt').textContent = command;
+      tracks.sort((a,b) => (b[1].total_calls||0) - (a[1].total_calls||0));
+      tracks.forEach(([track, s]) => {
+        html += `<tr style="border-bottom:1px solid #0f172a;">
+          <td style="padding:4px;color:#94a3b8;">${track}</td>
+          <td style="text-align:right;padding:4px;">${s.total_calls||0}</td>
+          <td style="text-align:right;padding:4px;color:#8b5cf6;">${fmtTokens(s.total_input_tokens||0)}</td>
+          <td style="text-align:right;padding:4px;color:#f59e0b;">${fmtTokens(s.total_output_tokens||0)}</td>
+          <td style="text-align:right;padding:4px;color:#10b981;">${fmtTokens(s.total_cached_tokens||0)}</td>
+        </tr>`;
+      });
+      html += '</table>';
 
-      // Try API launch first
-      if (state.apiConnected) {
-        const result = await fetchAPI('/batch/launch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            operation,
-            track,
-            start_num: startNum,
-            end_num: endNum,
-            model
-          })
+      // Per-account breakdown (aggregate from all tracks)
+      const accounts = {};
+      tracks.forEach(([_, s]) => {
+        Object.entries(s.by_account || {}).forEach(([acct, data]) => {
+          if (!accounts[acct]) accounts[acct] = {calls:0, input:0, output:0};
+          accounts[acct].calls += data.calls || 0;
+          accounts[acct].input += data.input_tokens || 0;
+          accounts[acct].output += data.output_tokens || 0;
         });
+      });
+      const acctEntries = Object.entries(accounts);
+      if (acctEntries.length > 0) {
+        html += `<div style="margin-top:12px;padding-top:8px;border-top:1px solid #1e293b;">
+          <div style="font-size:10px;color:#64748b;margin-bottom:6px;">By Account</div>`;
+        acctEntries.sort((a,b) => b[1].calls - a[1].calls);
+        acctEntries.forEach(([acct, data]) => {
+          const short = acct.split('@')[0];
+          html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:#94a3b8;">
+            <span>${short}</span>
+            <span>${data.calls} calls &middot; ${fmtTokens(data.input)} in &middot; ${fmtTokens(data.output)} out</span>
+          </div>`;
+        });
+        html += '</div>';
+      }
+      el.innerHTML = html;
 
-        if (result) {
-          addTask({
-            id: result.task_id,
-            operation,
-            track,
-            range: `M${startNum}-M${endNum}`,
-            status: 'running',
-            progress: 0,
-            total: endNum - startNum + 1,
-            results: []
-          });
-          logSuccess(`Task ${result.task_id} launched via API`);
+      const lastUpdate = tracks.map(([_,s]) => s.last_updated).filter(Boolean).sort().pop();
+      document.getElementById('usage-updated').textContent = lastUpdate
+        ? `Last: ${new Date(lastUpdate).toLocaleTimeString()}`
+        : '—';
+    }
+
+    async function refreshAll() {
+      const promises = ALL_TRACKS.map(async (track) => {
+        const state = await loadTrackState(track);
+        if (state) {
+          trackStates[track] = state;
+          // Detect changes and log them
+          detectChanges(track, state);
         }
-      } else {
-        // CLI fallback mode
-        logWarn('API offline - copy command below and run in terminal');
-        addTask({
-          id: taskId,
-          operation,
-          track,
-          range: `M${startNum}-M${endNum}`,
-          status: 'pending',
-          progress: 0,
-          total: endNum - startNum + 1,
-          results: [],
-          cliOnly: true
-        });
-      }
-    }
+      });
 
-    // Task Management
-    function addTask(task) {
-      state.tasks.unshift(task);
-      if (state.tasks.length > 10) state.tasks.pop();
-      renderTasks();
-      updateActiveCount();
-    }
+      await Promise.all(promises);
 
-    function updateTask(taskId, updates) {
-      const task = state.tasks.find(t => t.id === taskId);
-      if (task) {
-        Object.assign(task, updates);
-        renderTasks();
-        updateActiveCount();
-      }
-    }
+      renderOverview();
 
-    function renderTasks() {
-      const container = document.getElementById('task-list');
-
-      if (state.tasks.length === 0) {
-        container.innerHTML = '<div class="empty-state">No active tasks</div>';
-        return;
+      if (currentTrack && trackStates[currentTrack]) {
+        renderTrackDetail(currentTrack);
       }
 
-      container.innerHTML = state.tasks.map(task => `
-        <div class="task-item">
-          <div class="task-header">
-            <span class="task-title">${task.track} ${task.range}</span>
-            <span class="badge ${task.status}">${task.status}</span>
-          </div>
-          <div class="task-meta">
-            ${task.operation} · ${task.progress}/${task.total} modules
-            ${task.cliOnly ? ' · CLI mode' : ''}
-          </div>
-          <div class="task-progress">
-            <div class="task-progress-bar ${task.status}"
-                 style="width: ${(task.progress / task.total * 100)}%"></div>
-          </div>
-          ${task.results.length > 0 ? `
-            <div class="results-grid">
-              ${task.results.map(r => `
-                <div class="result-cell ${r.status}" title="${r.module}: ${r.score || 'N/A'}/10">
-                  ${r.num}
-                </div>
-              `).join('')}
+      // Refresh API usage
+      const apiSummaries = await loadApiUsage();
+      renderApiUsage(apiSummaries);
+
+      document.getElementById('last-refresh').textContent =
+        `Updated ${new Date().toLocaleTimeString()}`;
+    }
+
+    function detectChanges(track, newState) {
+      const modules = Object.entries(newState.modules || {});
+      const completed = modules.filter(([_,m]) => m.status === 'pass' || m.status === 'fail');
+      const prevCount = previousModuleCount[track] || 0;
+
+      if (completed.length > prevCount) {
+        // Find newly completed modules
+        const sorted = completed.sort((a,b) =>
+          new Date(b[1].end_time || 0) - new Date(a[1].end_time || 0)
+        );
+        const newlyDone = completed.length - prevCount;
+        for (let i = 0; i < Math.min(newlyDone, 5); i++) {
+          const [slug, data] = sorted[i];
+          const dur = data.duration ? formatDuration(data.duration) : '';
+          const type = data.status === 'pass' ? 'pass' : 'fail';
+          addLog(`[${track}] ${slug} → ${data.status.toUpperCase()} ${dur}`, type);
+        }
+      }
+
+      previousModuleCount[track] = completed.length;
+    }
+
+    // ========== OVERVIEW RENDERING ==========
+    function renderOverview() {
+      const grid = document.getElementById('overview-grid');
+      grid.innerHTML = '';
+
+      ALL_TRACKS.forEach(track => {
+        const state = trackStates[track];
+        const card = document.createElement('div');
+        card.className = `overview-card ${state ? '' : 'no-data'} ${track === currentTrack ? 'active' : ''}`;
+
+        if (state) {
+          const modules = Object.values(state.modules || {});
+          const total = modules.length;
+          const pass = modules.filter(m => m.status === 'pass').length;
+          const fail = modules.filter(m => m.status === 'fail').length;
+          const running = modules.filter(m => m.status === 'running').length;
+          const pct = total > 0 ? Math.round(((pass + fail) / total) * 100) : 0;
+
+          card.innerHTML = `
+            <div class="overview-track">${track} ${running > 0 ? '<span class="spinner"></span>' : ''}</div>
+            <div class="overview-stats">
+              <span class="green">${pass} pass</span>
+              <span class="red">${fail} fail</span>
+              <span class="gray">${total - pass - fail} left</span>
             </div>
-          ` : ''}
-          <div class="task-actions">
-            ${task.status === 'running' ? `
-              <button class="task-btn" onclick="pauseTask('${task.id}')">Pause</button>
-              <button class="task-btn" onclick="stopTask('${task.id}')">Stop</button>
-            ` : ''}
-            ${task.status === 'failed' ? `
-              <button class="task-btn" onclick="retryTask('${task.id}')">Retry</button>
-            ` : ''}
-            <button class="task-btn" onclick="viewTaskDetails('${task.id}')">Details</button>
+            <div class="mini-progress">
+              <div class="mini-progress-fill" style="width:${pct}%"></div>
+            </div>
+          `;
+          card.onclick = () => selectTrack(track);
+        } else {
+          card.innerHTML = `
+            <div class="overview-track">${track}</div>
+            <div class="overview-stats"><span class="gray">No batch data</span></div>
+            <div class="mini-progress"><div class="mini-progress-fill" style="width:0%"></div></div>
+          `;
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    // ========== TRACK SELECTION ==========
+    function selectTrack(track) {
+      if (!trackStates[track]) return;
+      currentTrack = track;
+
+      document.getElementById('stats-row').style.display = 'grid';
+      document.getElementById('main-content').style.display = 'grid';
+
+      renderOverview();  // Update active state
+      renderTrackDetail(track);
+    }
+
+    // ========== TRACK DETAIL ==========
+    function renderTrackDetail(track) {
+      const state = trackStates[track];
+      if (!state) return;
+
+      const modules = Object.entries(state.modules || {});
+      const total = modules.length;
+      const pass = modules.filter(([_,m]) => m.status === 'pass').length;
+      const fail = modules.filter(([_,m]) => m.status === 'fail').length;
+      const running = modules.find(([_,m]) => m.status === 'running');
+      const completed = pass + fail;
+
+      // Stats
+      document.getElementById('stat-progress').textContent = `${completed}/${total}`;
+      const pct = total > 0 ? (completed / total) * 100 : 0;
+      document.getElementById('progress-fill').style.width = `${pct}%`;
+
+      document.getElementById('stat-passed').textContent = pass;
+      document.getElementById('stat-pass-rate').textContent =
+        completed > 0 ? `${Math.round((pass/completed)*100)}% rate` : '-';
+
+      document.getElementById('stat-failed').textContent = fail;
+      const failRate = completed > 0 ? (fail / completed) * 100 : 0;
+      const failEl = document.getElementById('stat-fail-info');
+      if (fail > 0) {
+        failEl.textContent = `${failRate.toFixed(1)}% rate`;
+        failEl.style.color = failRate > 30 ? '#ef4444' : failRate > 10 ? '#f59e0b' : '#6b7280';
+      } else {
+        failEl.textContent = `${total - completed} remaining`;
+        failEl.style.color = '';
+      }
+      // Show abort reason if present
+      if (state.abort_reason) {
+        failEl.textContent = `ABORTED: ${state.abort_reason}`;
+        failEl.style.color = '#ef4444';
+      }
+
+      // Average duration
+      const timed = modules.filter(([_,m]) => m.duration).map(([_,m]) => m.duration);
+      const avg = timed.length > 0 ? timed.reduce((a,b) => a+b, 0) / timed.length : 0;
+      document.getElementById('stat-avg').textContent = formatDuration(avg);
+
+      // ETA
+      const remaining = total - completed;
+      if (avg > 0 && remaining > 0) {
+        const etaSec = remaining * avg;
+        const eta = new Date(Date.now() + etaSec * 1000);
+        document.getElementById('stat-eta').textContent = eta.toLocaleTimeString();
+        document.getElementById('stat-remaining').textContent = `${remaining} modules left`;
+      } else if (remaining === 0) {
+        document.getElementById('stat-eta').textContent = 'Done';
+        document.getElementById('stat-remaining').textContent = 'All modules processed';
+      } else {
+        document.getElementById('stat-eta').textContent = '-';
+        document.getElementById('stat-remaining').textContent = `${remaining} modules left`;
+      }
+
+      // Active module
+      const banner = document.getElementById('active-banner');
+      if (running) {
+        const [slug, data] = running;
+        banner.classList.add('visible');
+        document.getElementById('active-slug').textContent = slug;
+        document.getElementById('active-mode').textContent = data.mode || 'fix';
+        document.getElementById('active-start').textContent =
+          new Date(data.start_time).toLocaleTimeString();
+
+        // Elapsed timer
+        activeStartTime = new Date(data.start_time);
+        updateElapsed();
+        if (elapsedTimer) clearInterval(elapsedTimer);
+        elapsedTimer = setInterval(updateElapsed, 1000);
+      } else {
+        banner.classList.remove('visible');
+        if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null; }
+      }
+
+      // Module grid
+      renderModuleGrid(modules);
+
+      // Module count
+      document.getElementById('module-count').textContent = `(${total} total)`;
+
+      // Failures - check for failed modules
+      const failures = modules.filter(([_,m]) => m.status === 'fail');
+      renderFailures(failures);
+    }
+
+    function updateElapsed() {
+      if (!activeStartTime) return;
+      const elapsed = Math.max(0, Math.floor((Date.now() - activeStartTime.getTime()) / 1000));
+      const mins = Math.floor(elapsed / 60);
+      const secs = elapsed % 60;
+      document.getElementById('active-elapsed').textContent =
+        `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // ========== MODULE GRID ==========
+    function renderModuleGrid(modules) {
+      const grid = document.getElementById('module-grid');
+      grid.innerHTML = '';
+
+      // Sort by start_time to show in processing order
+      const sorted = modules.sort((a, b) => {
+        const ta = new Date(a[1].start_time || '2099-01-01');
+        const tb = new Date(b[1].start_time || '2099-01-01');
+        return ta - tb;
+      });
+
+      sorted.forEach(([slug, data]) => {
+        const cell = document.createElement('div');
+        cell.className = `module-cell ${data.status || 'pending'}`;
+
+        const shortSlug = slug.length > 14 ? slug.slice(0, 12) + '..' : slug;
+        const dur = data.duration ? formatDuration(data.duration) : '';
+
+        cell.innerHTML = `
+          <div class="cell-slug" title="${slug}">${shortSlug}</div>
+          ${dur ? `<div class="cell-time">${dur}</div>` : ''}
+        `;
+
+        cell.addEventListener('mouseenter', (e) => showDetail(e, slug, data));
+        cell.addEventListener('mouseleave', hideDetail);
+
+        grid.appendChild(cell);
+      });
+    }
+
+    // ========== MODULE DETAIL POPOVER ==========
+    function showDetail(event, slug, data) {
+      const detail = document.getElementById('module-detail');
+      document.getElementById('detail-slug').textContent = slug;
+
+      let rows = '';
+      rows += detailRow('Status', data.status?.toUpperCase() || 'PENDING');
+      rows += detailRow('Mode', data.mode || '-');
+      if (data.start_time) {
+        rows += detailRow('Started', new Date(data.start_time).toLocaleTimeString());
+      }
+      if (data.end_time) {
+        rows += detailRow('Ended', new Date(data.end_time).toLocaleTimeString());
+      }
+      if (data.duration) {
+        rows += detailRow('Duration', formatDuration(data.duration));
+      }
+
+      document.getElementById('detail-rows').innerHTML = rows;
+
+      const rect = event.target.getBoundingClientRect();
+      detail.style.left = `${Math.min(rect.left, window.innerWidth - 320)}px`;
+      detail.style.top = `${rect.bottom + 8}px`;
+      detail.classList.add('visible');
+    }
+
+    function hideDetail() {
+      document.getElementById('module-detail').classList.remove('visible');
+    }
+
+    function detailRow(label, value) {
+      return `<div class="detail-row"><span>${label}</span><span class="val">${value}</span></div>`;
+    }
+
+    // ========== FAILURE QUEUE ==========
+    function renderFailures(failures) {
+      const list = document.getElementById('failure-list');
+      document.getElementById('failure-badge').textContent = failures.length;
+
+      if (failures.length === 0) {
+        list.innerHTML = '<div class="empty-state">No failures</div>';
+        return;
+      }
+
+      list.innerHTML = failures.map(([slug, data]) => `
+        <div class="failure-item">
+          <div class="failure-slug">${slug}</div>
+          <div class="failure-meta">
+            ${data.duration ? formatDuration(data.duration) : '-'} ·
+            Mode: ${data.mode || 'fix'}
           </div>
         </div>
       `).join('');
     }
 
-    function updateActiveCount() {
-      const running = state.tasks.filter(t => t.status === 'running').length;
-      document.getElementById('active-count').textContent = `${running} running`;
+    // ========== EVENT LOG ==========
+    function addLog(message, type = 'info') {
+      const time = new Date().toLocaleTimeString();
+      logEntries.push({ time, message, type });
+      if (logEntries.length > 200) logEntries.shift();
+      renderLog();
     }
 
-    // Task Actions
-    async function pauseTask(taskId) {
-      logWarn(`Pause not yet implemented for ${taskId}`);
-    }
+    function renderLog() {
+      const output = document.getElementById('log-output');
+      const wasAtBottom = output.scrollTop >= output.scrollHeight - output.clientHeight - 20;
 
-    async function stopTask(taskId) {
-      if (state.apiConnected) {
-        await fetchAPI(`/batch/stop/${taskId}`, { method: 'POST' });
-      }
-      updateTask(taskId, { status: 'stopped' });
-      logWarn(`Task ${taskId} stopped`);
-    }
-
-    async function retryTask(taskId) {
-      const task = state.tasks.find(t => t.id === taskId);
-      if (task) {
-        updateTask(taskId, { status: 'running', progress: 0, results: [] });
-        logInfo(`Retrying task ${taskId}...`);
-      }
-    }
-
-    async function viewTaskDetails(taskId) {
-      const task = state.tasks.find(t => t.id === taskId);
-      if (task) {
-        logInfo(`Task: ${task.id}`);
-        logInfo(`Status: ${task.status} (${task.progress}/${task.total})`);
-        logInfo(`Results: ${task.results.filter(r => r.status === 'pass').length} pass, ${task.results.filter(r => r.status === 'fail').length} fail`);
-      }
-    }
-
-    // Results
-    async function refreshResults() {
-      if (state.apiConnected) {
-        const data = await fetchAPI('/batch/recent');
-        if (data) {
-          renderResults(data.results);
-        }
-      } else {
-        logWarn('API offline - results only available via CLI');
-      }
-    }
-
-    function renderResults(results) {
-      const container = document.getElementById('results-container');
-      // TODO: Render results grid
-      logInfo(`Loaded ${results.length} recent results`);
-    }
-
-    // Logging
-    function log(message, type = 'info') {
-      const timestamp = new Date().toLocaleTimeString();
-      state.logs.push({ timestamp, message, type });
-      if (state.logs.length > 100) state.logs.shift();
-      renderLogs();
-    }
-
-    function logInfo(msg) { log(msg, 'info'); }
-    function logSuccess(msg) { log(msg, 'success'); }
-    function logError(msg) { log(msg, 'error'); }
-    function logWarn(msg) { log(msg, 'warn'); }
-
-    function renderLogs() {
-      const container = document.getElementById('logs-output');
-      container.innerHTML = state.logs.map(log =>
-        `<div class="log-line ${log.type}">[${log.timestamp}] ${log.message}</div>`
+      output.innerHTML = logEntries.map(e =>
+        `<div class="log-line ${e.type}">[${e.time}] ${e.message}</div>`
       ).join('');
 
-      if (state.autoscroll) {
-        container.scrollTop = container.scrollHeight;
+      document.getElementById('log-count').textContent = `${logEntries.length} events`;
+
+      if (wasAtBottom) {
+        output.scrollTop = output.scrollHeight;
       }
     }
 
-    function clearLogs() {
-      state.logs = [];
-      renderLogs();
-      logInfo('Logs cleared');
+    // ========== CLI COMMAND GENERATOR ==========
+    function generateCmd() {
+      const track = document.getElementById('cli-track').value;
+      const mode = document.getElementById('cli-mode').value;
+      const from = document.getElementById('cli-from').value;
+      const to = document.getElementById('cli-to').value;
+
+      let cmd = `.venv/bin/python scripts/batch_gemini_runner.py ${track}`;
+      cmd += ` --range ${from}-${to}`;
+      cmd += ` --mode ${mode}`;
+
+      document.getElementById('cli-cmd').textContent = cmd;
+      document.getElementById('cli-output').style.display = 'flex';
     }
 
-    function toggleAutoscroll() {
-      state.autoscroll = !state.autoscroll;
-      document.getElementById('autoscroll-text').textContent =
-        `Auto-scroll: ${state.autoscroll ? 'ON' : 'OFF'}`;
-    }
-
-    // Copy Prompt
-    function copyPrompt() {
-      const text = document.getElementById('copy-prompt').textContent;
-      navigator.clipboard.writeText(text).then(() => {
+    function copyCmd() {
+      const cmd = document.getElementById('cli-cmd').textContent;
+      navigator.clipboard.writeText(cmd).then(() => {
         const btn = document.getElementById('copy-btn');
         btn.textContent = 'Copied!';
         btn.classList.add('copied');
         setTimeout(() => {
-          btn.textContent = 'Copy Command';
+          btn.textContent = 'Copy';
           btn.classList.remove('copied');
         }, 2000);
       });
     }
 
-    // WebSocket (if API available)
-    function connectWebSocket() {
-      if (!state.apiConnected) return;
-
-      const ws = new WebSocket(WS_URL);
-
-      ws.onopen = () => {
-        logSuccess('WebSocket connected');
-        state.ws = ws;
-      };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        handleWSMessage(data);
-      };
-
-      ws.onerror = () => {
-        logWarn('WebSocket error - falling back to polling');
-      };
-
-      ws.onclose = () => {
-        state.ws = null;
-        setTimeout(connectWebSocket, 5000);
-      };
+    // ========== UTILS ==========
+    function formatDuration(seconds) {
+      if (!seconds || seconds <= 0) return '0s';
+      if (seconds < 60) return `${Math.round(seconds)}s`;
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.round(seconds % 60);
+      if (mins < 60) return `${mins}m${secs > 0 ? ` ${secs}s` : ''}`;
+      const hrs = Math.floor(mins / 60);
+      const rmins = mins % 60;
+      return `${hrs}h ${rmins}m`;
     }
 
-    function handleWSMessage(data) {
-      if (data.type === 'task_update') {
-        updateTask(data.task_id, {
-          progress: data.progress,
-          status: data.status,
-          results: data.results || []
-        });
-      } else if (data.type === 'log') {
-        log(data.message, data.level);
-      }
-    }
-
-    // Init
+    // ========== INIT ==========
     async function init() {
-      await checkAPI();
-      if (state.apiConnected) {
-        connectWebSocket();
+      // Check if fetch works (are we served by HTTP?)
+      try {
+        await fetch(`${STATE_BASE}/state_a1.json`);
+      } catch (e) {
+        document.getElementById('server-note').style.display = 'block';
       }
-      setInterval(checkAPI, 10000);
+
+      addLog('Batch Monitor started. Scanning for track state files...', 'info');
+      await refreshAll();
+
+      // Auto-select first track with data
+      const firstTrack = ALL_TRACKS.find(t => trackStates[t]);
+      if (firstTrack) {
+        selectTrack(firstTrack);
+        addLog(`Auto-selected track: ${firstTrack}`, 'info');
+      }
+
+      // Auto-refresh
+      setInterval(refreshAll, REFRESH_INTERVAL);
     }
 
     init();

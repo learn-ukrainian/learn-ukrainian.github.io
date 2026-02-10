@@ -976,8 +976,163 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     return total_fixes, all_fixes
 
 
+# =============================================================================
+# PLAN / META / VOCABULARY SCHEMA CHECK FUNCTIONS
+# =============================================================================
+
+def _validate_yaml_against_schema(yaml_path: Path, schema_name: str) -> List[str]:
+    """
+    Generic helper: load a YAML file and validate it against a named JSON schema.
+
+    Returns list of error strings (empty = valid).
+    """
+    if not HAS_JSONSCHEMA:
+        return []
+
+    if not yaml_path.exists():
+        return []
+
+    schema_path = get_schemas_dir() / schema_name
+    if not schema_path.exists():
+        return [f"Schema not found: {schema_path}"]
+
+    with open(schema_path, 'r', encoding='utf-8') as f:
+        schema = json.load(f)
+
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+    except yaml.YAMLError as e:
+        return [f"YAML parse error: {e}"]
+
+    if data is None:
+        return [f"File is empty: {yaml_path}"]
+
+    errors = []
+    try:
+        jsonschema.validate(instance=data, schema=schema)
+    except jsonschema.ValidationError as e:
+        field_path = '.'.join(str(p) for p in e.absolute_path) if e.absolute_path else '(root)'
+        errors.append(f"{field_path}: {e.message}")
+    except jsonschema.SchemaError as e:
+        errors.append(f"Schema error: {e.message}")
+
+    return errors
+
+
+def check_plan_yaml_schema(
+    file_path: str,
+    level: str,
+    module_num: int,
+) -> List[Dict]:
+    """
+    Check that a plan YAML file conforms to module-plan.schema.json.
+
+    Returns list of violation dicts with 'type', 'message', 'severity'.
+    """
+    violations = []
+
+    if not HAS_JSONSCHEMA:
+        violations.append({
+            'type': 'SCHEMA_CHECK_SKIPPED',
+            'message': 'jsonschema library not installed. Run: pip install jsonschema',
+            'severity': 'warning'
+        })
+        return violations
+
+    yaml_path = Path(file_path)
+    if not yaml_path.exists():
+        return []
+
+    errors = _validate_yaml_against_schema(yaml_path, 'module-plan.schema.json')
+
+    for error in errors:
+        violations.append({
+            'type': 'PLAN_SCHEMA_VIOLATION',
+            'message': f"Schema error in {yaml_path.name}: {error}",
+            'severity': 'error',
+        })
+
+    return violations
+
+
+def check_meta_yaml_schema(
+    file_path: str,
+    level: str,
+    module_num: int,
+) -> List[Dict]:
+    """
+    Check that a meta YAML file conforms to meta-module.schema.json.
+
+    Returns list of violation dicts with 'type', 'message', 'severity'.
+    """
+    violations = []
+
+    if not HAS_JSONSCHEMA:
+        violations.append({
+            'type': 'SCHEMA_CHECK_SKIPPED',
+            'message': 'jsonschema library not installed. Run: pip install jsonschema',
+            'severity': 'warning'
+        })
+        return violations
+
+    yaml_path = Path(file_path)
+    if not yaml_path.exists():
+        return []
+
+    errors = _validate_yaml_against_schema(yaml_path, 'meta-module.schema.json')
+
+    for error in errors:
+        violations.append({
+            'type': 'META_SCHEMA_VIOLATION',
+            'message': f"Schema error in {yaml_path.name}: {error}",
+            'severity': 'error',
+        })
+
+    return violations
+
+
+def check_vocabulary_yaml_schema(
+    file_path: str,
+    level: str,
+    module_num: int,
+) -> List[Dict]:
+    """
+    Check that a vocabulary YAML file conforms to vocabulary.schema.json.
+
+    Returns list of violation dicts with 'type', 'message', 'severity'.
+    """
+    violations = []
+
+    if not HAS_JSONSCHEMA:
+        violations.append({
+            'type': 'SCHEMA_CHECK_SKIPPED',
+            'message': 'jsonschema library not installed. Run: pip install jsonschema',
+            'severity': 'warning'
+        })
+        return violations
+
+    yaml_path = Path(file_path)
+    if not yaml_path.exists():
+        return []
+
+    errors = _validate_yaml_against_schema(yaml_path, 'vocabulary.schema.json')
+
+    for error in errors:
+        violations.append({
+            'type': 'VOCABULARY_SCHEMA_VIOLATION',
+            'message': f"Schema error in {yaml_path.name}: {error}",
+            'severity': 'error',
+        })
+
+    return violations
+
+
 __all__ = [
     'check_activity_yaml_schema',
+    'check_plan_yaml_schema',
+    'check_meta_yaml_schema',
+    'check_vocabulary_yaml_schema',
     'validate_activity_yaml_file',
     'validate_activity',
     'fix_activity_violations',

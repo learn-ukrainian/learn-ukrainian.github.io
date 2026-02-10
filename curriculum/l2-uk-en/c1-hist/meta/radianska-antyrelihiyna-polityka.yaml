@@ -1,8 +1,8 @@
 ---
-module: radianska-antyrelihiyna-polityka
+module: c1-hist-062
 level: C1-HIST
 slug: radianska-antyrelihiyna-polityka
 version: '1.0'
-id: c1-hist-62
+id: c1-hist-062
 build:
   last_modified: '2026-01-26'

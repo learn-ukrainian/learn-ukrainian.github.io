@@ -566,6 +566,13 @@ This command:
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
 
+### Slug & Path Utilities (Python)
+
+| Script                         | Purpose                                  | Command                                                               |
+| ------------------------------ | ---------------------------------------- | --------------------------------------------------------------------- |
+| `slug_utils.py`                | Single source of truth for slug stripping and path construction | `from slug_utils import to_bare_slug, review_path` |
+| `migrate_audit_review_paths.py`| One-shot migration: standardize review/audit/status file paths | `.venv/bin/python scripts/migrate_audit_review_paths.py --dry-run` |
+
 ### Meta & Vocabulary (Python)
 
 | Script                        | Purpose                        | Command                                                                |

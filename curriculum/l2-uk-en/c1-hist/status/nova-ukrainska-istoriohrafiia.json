@@ -1,0 +1,52 @@
+{
+  "module": "nova-ukrainska-istoriohrafiia",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-10T17:46:16.900509Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-10T16:22:19.521077Z",
+    "meta": "2026-02-10T16:19:22.328827Z",
+    "activities": "2026-02-10T16:19:12.189989Z",
+    "vocabulary": "2026-02-09T21:15:44.924263Z",
+    "plan": "2026-02-09T12:52:16.677694Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4139/4000 (raw: 4195)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "29/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0
+  }
+}

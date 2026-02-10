@@ -1,9 +1,9 @@
 ---
-module: legal-ukrainian-i
+module: c2-061
 level: C2
 slug: legal-ukrainian-i
 version: '2.0'
-id: c2-61
+id: c2-061
 naturalness:
   score: 1
   status: PENDING

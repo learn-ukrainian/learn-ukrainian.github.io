@@ -1,9 +1,9 @@
 ---
-module: capstone-topic-selection
+module: c2-089
 level: C2
 slug: capstone-topic-selection
 version: '2.0'
-id: c2-89
+id: c2-089
 naturalness:
   score: 1
   status: PENDING

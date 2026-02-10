@@ -1,9 +1,9 @@
 ---
-module: ofitsiynyi-styl-mastery
+module: c2-004
 level: C2
 slug: ofitsiynyi-styl-mastery
 version: '2.0'
-id: c2-04
+id: c2-004
 naturalness:
   score: 1
   status: PENDING

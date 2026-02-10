@@ -1,5 +1,6 @@
 ---
-module: natalka-poltavka
+sequence: 5
+module: lit-05
 level: LIT
 slug: natalka-poltavka
 version: '2.0'

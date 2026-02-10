@@ -1,5 +1,6 @@
 ---
-module: young-shevchenko
+sequence: 11
+module: lit-11
 level: LIT
 slug: young-shevchenko
 version: '2.0'

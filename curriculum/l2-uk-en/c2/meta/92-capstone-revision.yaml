@@ -1,9 +1,9 @@
 ---
-module: capstone-revision
+module: c2-092
 level: C2
 slug: capstone-revision
 version: '2.0'
-id: c2-92
+id: c2-092
 naturalness:
   score: 1
   status: PENDING

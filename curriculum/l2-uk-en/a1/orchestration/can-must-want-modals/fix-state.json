@@ -1,0 +1,14 @@
+{
+  "slug": "can-must-want-modals",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T21:22:25.846922Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-09T21:22:25.846898Z",
+  "result": "success"
+}

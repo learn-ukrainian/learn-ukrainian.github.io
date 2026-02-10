@@ -1,4 +1,5 @@
 ---
+sequence: 42
 module: a1-42
 level: A1
 slug: emergencies

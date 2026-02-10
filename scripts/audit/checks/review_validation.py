@@ -19,12 +19,42 @@ Detection heuristics:
 """
 
 import re
+import sys
 from pathlib import Path
+
+# Ensure scripts/ is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+from slug_utils import to_bare_slug, review_path as _review_path
 
 
 # --- Tier Configuration ---
 
 TIER_3_TRACKS = {'c1-bio', 'b2-hist', 'c1-hist', 'lit', 'oes', 'ruth'}
+
+# Regex patterns for required review sections.
+# Accept natural variations: numbered prefixes (## 1. ...), synonyms, modifiers.
+# Examples that must match:
+#   "## Scores Breakdown", "## 2. Detailed Assessment", "## Evaluation"
+#   "## Issues Found", "## 3. "Brutal" Critique", "## Problems"
+#   "## Verification Summary", "## 1. Executive Summary", "## Summary"
+#   "## Recommendation", "## 4. Final Recommendation", "## Verdict"
+_NUM = r'(\d+\.\s*)?'  # optional numbered prefix: "3. "
+_HEADER_SCORES = (
+    rf'## {_NUM}(Scores( Breakdown)?|Detailed Assessment|Assessment|Evaluation)',
+    'Scores/Assessment',
+)
+_HEADER_ISSUES = (
+    rf'## {_NUM}("?Brutal"?\s+)?((Critical )?Issues( Found)?|Critique|Problems|Concerns)',
+    'Issues/Critique',
+)
+_HEADER_VERIFICATION = (
+    rf'## {_NUM}((Executive |Verification )?Summary|Verification)',
+    'Summary/Verification',
+)
+_HEADER_RECOMMENDATION = (
+    rf'## {_NUM}(Final )?(Recommendation|Verdict|Conclusion)',
+    'Recommendation/Verdict',
+)
 
 TIER_CONFIG = {
     1: {
@@ -36,9 +66,9 @@ TIER_CONFIG = {
         'min_chars': 400,
         'min_dimensions': 5,
         'required_headers': [
-            ('## Scores Breakdown', 'Scores Breakdown'),
-            ('## Issues Found', 'Issues Found'),
-            ('## Recommendation', 'Recommendation'),
+            _HEADER_SCORES,
+            _HEADER_ISSUES,
+            _HEADER_RECOMMENDATION,
         ],
         'require_ukr_citations': False,  # A1/A2 modules are mixed-language
     },
@@ -51,10 +81,10 @@ TIER_CONFIG = {
         'min_chars': 800,
         'min_dimensions': 8,
         'required_headers': [
-            ('## Scores Breakdown', 'Scores Breakdown'),
-            ('## Issues Found', 'Issues Found'),
-            ('## Verification Summary', 'Verification Summary'),
-            ('## Recommendation', 'Recommendation'),
+            _HEADER_SCORES,
+            _HEADER_ISSUES,
+            _HEADER_VERIFICATION,
+            _HEADER_RECOMMENDATION,
         ],
         'require_ukr_citations': True,
     },
@@ -67,10 +97,10 @@ TIER_CONFIG = {
         'min_chars': 1500,
         'min_dimensions': 10,
         'required_headers': [
-            ('## Scores Breakdown', 'Scores Breakdown'),
-            ('## Issues Found', 'Issues Found'),
-            ('## Verification Summary', 'Verification Summary'),
-            ('## Recommendation', 'Recommendation'),
+            _HEADER_SCORES,
+            _HEADER_ISSUES,
+            _HEADER_VERIFICATION,
+            _HEADER_RECOMMENDATION,
         ],
         'require_ukr_citations': True,
     },
@@ -83,10 +113,10 @@ TIER_CONFIG = {
         'min_chars': 800,
         'min_dimensions': 8,
         'required_headers': [
-            ('## Scores Breakdown', 'Scores Breakdown'),
-            ('## Issues Found', 'Issues Found'),
-            ('## Verification Summary', 'Verification Summary'),
-            ('## Recommendation', 'Recommendation'),
+            _HEADER_SCORES,
+            _HEADER_ISSUES,
+            _HEADER_VERIFICATION,
+            _HEADER_RECOMMENDATION,
         ],
         'require_ukr_citations': True,
     },
@@ -172,19 +202,25 @@ def _count_perfect_scores(content: str) -> tuple[int, int]:
 
 
 def _extract_ukrainian_citations(content: str) -> list[str]:
-    """Extract quoted Ukrainian text from the review."""
+    """Extract quoted Ukrainian text from the review.
+
+    IMPORTANT: Match ALL quote pairs first, then filter by length.
+    Using {10,} inside the regex causes it to skip short matches like "scary",
+    making the closing quote become the opening of a huge cross-line match.
+    """
     citations = []
+    min_len = 10
     # «...» angular quotes
-    for match in re.findall(r'«([^»]{10,})»', content):
-        if re.search(r'[а-яіїєґ]', match):
+    for match in re.findall(r'«([^»]*)»', content):
+        if len(match) >= min_len and re.search(r'[а-яіїєґ]', match):
             citations.append(match)
     # "..." straight quotes containing Cyrillic
-    for match in re.findall(r'"([^"]{10,})"', content):
-        if re.search(r'[а-яіїєґ]', match):
+    for match in re.findall(r'"([^"]*)"', content):
+        if len(match) >= min_len and re.search(r'[а-яіїєґ]', match):
             citations.append(match)
-    # `...` inline code with Ukrainian
-    for match in re.findall(r'`([^`]{10,})`', content):
-        if re.search(r'[а-яіїєґ]', match):
+    # `...` inline code with Ukrainian (skip multi-line matches from code fences)
+    for match in re.findall(r'`([^`]*)`', content):
+        if len(match) >= min_len and '\n' not in match and re.search(r'[а-яіїєґ]', match):
             citations.append(match)
     return citations
 
@@ -233,26 +269,28 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
     cfg = TIER_CONFIG[tier_num]
     fix_prompt = _build_fix_prompt(tier_num)
 
-    # Construct review path — check both audit/ and review/ directories
+    # Construct canonical review path
     module_path = Path(file_path)
     base_dir = module_path.parent
-    audit_review = base_dir / 'audit' / f"{module_slug}-review.md"
-    review_review = base_dir / 'review' / f"{module_slug}-review.md"
+    canonical = _review_path(base_dir, module_slug)
 
-    # Prefer audit/ (canonical per AGENTS.md), fall back to review/
-    if audit_review.exists():
-        review_file = audit_review
-    elif review_review.exists():
-        review_file = review_review
+    # Also check legacy audit/ location during transition
+    bare = to_bare_slug(module_slug)
+    review_file = None
+    if canonical.exists():
+        review_file = canonical
     else:
-        review_file = None
+        legacy = base_dir / "audit" / f"{bare}-review.md"
+        if legacy.exists():
+            review_file = legacy
 
     # 1. Existence Check
     if review_file is None:
+        target_path = canonical
         try:
-            rel_path = audit_review.relative_to(base_dir.parent.parent)
+            rel_path = target_path.relative_to(base_dir.parent.parent)
         except ValueError:
-            rel_path = audit_review
+            rel_path = target_path
         return [{
             'type': 'MISSING_REVIEW',
             'severity': 'critical',
@@ -322,9 +360,10 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                     )
                 })
 
-        # 6. Empty "Issues Found" section
+        # 6. Empty "Issues/Critique" section (matches natural variations)
         issues_match = re.search(
-            r'## Issues Found[^\n]*\n(.*?)(?=\n## |\Z)', content, re.DOTALL
+            r'## (?:\d+\.\s*)?(?:"?Brutal"?\s+)?(?:(?:Critical )?Issues(?: Found)?|Critique|Problems|Concerns)[^\n]*\n(.*?)(?=\n## |\Z)',
+            content, re.DOTALL
         )
         if issues_match:
             issue_text = issues_match.group(1).strip()
@@ -381,6 +420,92 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                         f"Only {verified}/{total_cit} Ukrainian citations in the review "
                         f"were found in the source module. The reviewer may be quoting "
                         f"from memory rather than from the actual content. {fix_prompt}"
+                    )
+                })
+
+        # 9. Anti-gaming: detect meta-language that reveals intent to pass audit
+        gaming_phrases = [
+            r'ensur(e|es|ing)\s+(a\s+)?high\s+(overall\s+)?score',
+            r'clean\s+audit',
+            r'designed?\s+to\s+pass',
+            r'ensuring?\s+.*pass(es|ing)?',
+            r'reflect(s|ing)?\s+the\s+fix(es)?',
+            r'accurately\s+(citing|reflect)',
+            r'this\s+fresh\s+review\s+will',
+            r'will\s+ensure\s+.*compli(ance|ant)',
+            r'crafted?\s+to\s+(meet|satisfy|ensure)',
+            r'tailored?\s+to\s+(pass|satisfy)',
+        ]
+        found_gaming = []
+        content_lower = content.lower()
+        for pattern in gaming_phrases:
+            match = re.search(pattern, content_lower)
+            if match:
+                found_gaming.append(match.group(0))
+        if found_gaming:
+            violations.append({
+                'type': 'GAMING_LANGUAGE_DETECTED',
+                'severity': 'critical',
+                'message': (
+                    f"Review contains audit-gaming language: "
+                    f"{', '.join(repr(g) for g in found_gaming[:3])}. "
+                    f"Reviews must HONESTLY evaluate content, not be written to "
+                    f"'ensure a high score'. {fix_prompt}"
+                )
+            })
+
+        # 10. Suspiciously uniform high scores (all ≥ 9/10) with no real issues
+        if total >= cfg['min_dimensions']:
+            scores = [float(s) for s in re.findall(
+                r'\|\s*\w[^|]*\|\s*(\d+(?:\.\d+)?)/10\s*\|', content
+            )]
+            if scores:
+                avg_score = sum(scores) / len(scores)
+                min_score = min(scores)
+                # All dimensions ≥ 9 AND issues section is empty/trivial
+                has_real_issues = (issues_match and issue_text
+                                  and len(issue_text) >= 50
+                                  and not re.match(
+                                      r'^(None|No issues|N/A|—|-)\s*$',
+                                      issue_text, re.IGNORECASE))
+                if min_score >= 9.0 and not has_real_issues:
+                    violations.append({
+                        'type': 'SUSPICIOUSLY_HIGH_SCORES',
+                        'severity': 'warning',
+                        'message': (
+                            f"All {len(scores)} dimensions scored ≥ 9/10 "
+                            f"(avg {avg_score:.1f}) but no substantive issues found. "
+                            f"No module is perfect — a credible review identifies at least "
+                            f"1 concrete improvement. {fix_prompt}"
+                        )
+                    })
+
+        # 11. Positive-only citations — all Ukrainian quotes used for praise, none for criticism
+        if has_citations and len(citations) >= 3:
+            # Look for negative context around citations (within 100 chars before/after)
+            has_critical_citation = False
+            negative_markers = re.compile(
+                r'(issue|problem|incorrect|помилк|неприродн|awkward|wrong|error|'
+                r'should\s+be|could\s+be\s+(improved|better)|missing|lacks?|weak|'
+                r'unclear|confusing|inaccurat|fix|❌|⚠️)', re.IGNORECASE
+            )
+            for cit in citations:
+                cit_escaped = re.escape(cit[:30])
+                ctx_match = re.search(
+                    rf'.{{0,100}}{cit_escaped}.{{0,100}}',
+                    content, re.DOTALL
+                )
+                if ctx_match and negative_markers.search(ctx_match.group(0)):
+                    has_critical_citation = True
+                    break
+            if not has_critical_citation:
+                violations.append({
+                    'type': 'PRAISE_ONLY_CITATIONS',
+                    'severity': 'warning',
+                    'message': (
+                        f"Review cites {len(citations)} Ukrainian passages but ALL are used "
+                        f"positively — none highlight problems. A credible review uses citations "
+                        f"to show both strengths AND weaknesses. {fix_prompt}"
                     )
                 })
 

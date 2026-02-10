@@ -1,8 +1,8 @@
 ---
-module: khvylovyi-kulish-debaty
+module: c1-hist-054
 level: C1-HIST
 slug: khvylovyi-kulish-debaty
 version: '1.0'
-id: c1-hist-54
+id: c1-hist-054
 build:
   last_modified: '2026-01-26'

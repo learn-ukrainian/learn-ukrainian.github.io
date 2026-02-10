@@ -13,6 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from slug_utils import to_bare_slug, status_path as _status_path
+
 REPO = Path(__file__).parent.parent
 TEMPLATE_PATH = REPO / "claude_extensions/phases/gemini/phase-5-review.md"
 
@@ -27,7 +29,7 @@ def find_module_files(level: str, num: int) -> dict | None:
         return None
 
     content_path = content_files[0]
-    slug = content_path.stem[3:]  # Remove "01-" prefix
+    slug = to_bare_slug(content_path.stem)
     full_stem = content_path.stem  # "01-the-cyrillic-code-i"
 
     # Activities/vocabulary/meta use full stem with number prefix
@@ -43,7 +45,6 @@ def find_module_files(level: str, num: int) -> dict | None:
         meta_path = level_dir / f"meta/{slug}.yaml"
     plan_path = REPO / f"curriculum/l2-uk-en/plans/{level}/{slug}.yaml"
     research_path = level_dir / f"research/{slug}-research.md"
-    status_path = level_dir / f"status/{slug}.json"
 
     return {
         "num": num,
@@ -54,7 +55,7 @@ def find_module_files(level: str, num: int) -> dict | None:
         "meta": meta_path,
         "plan": plan_path,
         "research": research_path,
-        "status": status_path,
+        "status": _status_path(level_dir, slug),
     }
 
 

@@ -1,5 +1,6 @@
 ---
-module: professional-email-advanced
+sequence: 86
+module: b2-86
 level: B2
 slug: professional-email-advanced
 version: '2.0'

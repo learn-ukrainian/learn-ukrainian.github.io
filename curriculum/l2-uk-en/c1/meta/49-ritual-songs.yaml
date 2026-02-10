@@ -1,5 +1,6 @@
 ---
-module: c1-49
+id: c1-049
+module: c1-049
 level: C1
 slug: 49-ritual-songs
 version: '1.0'

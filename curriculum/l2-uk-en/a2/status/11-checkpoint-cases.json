@@ -2,14 +2,14 @@
   "module": "11-checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:34.701692Z",
+  "last_audit": "2026-02-10T10:45:17.729123Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T17:30:21.319895Z",
-    "meta": "2026-01-29T07:39:04.585557Z",
-    "activities": "2026-01-11T23:20:54.282986Z",
-    "vocabulary": "2026-01-25T17:27:07.017036Z",
-    "plan": "2026-01-30T12:31:49.566346Z"
+    "meta": "2026-02-07T10:03:50.717479Z",
+    "activities": "2026-02-07T10:03:50.745467Z",
+    "vocabulary": "2026-02-07T10:03:50.790459Z",
+    "plan": "2026-02-09T12:52:14.166725Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

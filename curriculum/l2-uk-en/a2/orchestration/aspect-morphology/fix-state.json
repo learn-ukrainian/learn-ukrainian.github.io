@@ -1,0 +1,15 @@
+{
+  "slug": "aspect-morphology",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T22:31:43.030942Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T22:31:43.030922Z",
+  "result": "success"
+}

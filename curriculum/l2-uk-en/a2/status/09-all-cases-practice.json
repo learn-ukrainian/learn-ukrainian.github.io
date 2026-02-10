@@ -2,14 +2,14 @@
   "module": "09-all-cases-practice",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:33.744823Z",
+  "last_audit": "2026-02-10T10:45:16.759046Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T17:21:40.849620Z",
-    "meta": "2026-01-29T07:39:04.583916Z",
-    "activities": "2026-01-12T13:36:01.212915Z",
-    "vocabulary": "2026-01-25T09:40:53.692190Z",
-    "plan": "2026-01-30T12:31:49.562926Z"
+    "meta": "2026-02-07T10:03:50.720807Z",
+    "activities": "2026-02-07T10:03:50.753902Z",
+    "vocabulary": "2026-02-07T10:03:50.799374Z",
+    "plan": "2026-02-09T12:52:14.157705Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

@@ -1,8 +1,8 @@
 ---
-module: unr-vybory
+module: c1-hist-091
 level: C1-HIST
 slug: unr-vybory
 version: '1.0'
-id: c1-hist-91
+id: c1-hist-091
 build:
   last_modified: '2026-01-26'

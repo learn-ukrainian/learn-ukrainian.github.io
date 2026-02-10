@@ -1,12 +1,12 @@
 ---
-module: c1-bio-068
+module: c1-bio-069
 level: C1-BIO
 slug: ahatanhel-krymskyi
 version: '2.0'
 id: c1-bio-069
 naturalness:
-  score: 1
-  status: PENDING
+  score: 10
+  status: PASS
 word_target: 4000
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-09'

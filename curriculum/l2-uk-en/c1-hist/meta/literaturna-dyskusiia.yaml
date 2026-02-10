@@ -1,8 +1,8 @@
 ---
-module: literaturna-dyskusiia
+module: c1-hist-053
 level: C1-HIST
 slug: literaturna-dyskusiia
 version: '1.0'
-id: c1-hist-53
+id: c1-hist-053
 build:
   last_modified: '2026-01-26'

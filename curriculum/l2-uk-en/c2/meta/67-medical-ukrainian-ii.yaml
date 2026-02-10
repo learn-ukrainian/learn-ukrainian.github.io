@@ -1,9 +1,9 @@
 ---
-module: medical-ukrainian-ii
+module: c2-067
 level: C2
 slug: medical-ukrainian-ii
 version: '2.0'
-id: c2-67
+id: c2-067
 naturalness:
   score: 1
   status: PENDING

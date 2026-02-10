@@ -1,5 +1,5 @@
 ---
-module: capstone-topic-selection
+module: c2-089
 level: c2
 sequence: 89
 version: '2.0'

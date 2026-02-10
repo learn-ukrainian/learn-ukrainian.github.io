@@ -1,8 +1,8 @@
 ---
-module: litopys-samovidtsia
+module: c1-hist-020
 level: C1-HIST
 slug: litopys-samovidtsia
 version: '1.0'
-id: c1-hist-20
+id: c1-hist-020
 build:
   last_modified: '2026-01-26'

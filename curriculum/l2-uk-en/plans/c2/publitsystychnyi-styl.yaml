@@ -1,5 +1,5 @@
 ---
-module: publitsystychnyi-styl
+module: c2-005
 level: c2
 sequence: 5
 version: '2.0'

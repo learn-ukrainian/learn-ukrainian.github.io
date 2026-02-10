@@ -1,9 +1,9 @@
 ---
-module: yuri-andrukhovych
+module: c1-bio-149
 level: C1-BIO
 slug: yuri-andrukhovych
 version: '2.0'
-id: c1-bio-147
+id: c1-bio-149
 title: "Юрій Андрухович: Карнавал на руїнах імперії"
 naturalness:
   score: 0

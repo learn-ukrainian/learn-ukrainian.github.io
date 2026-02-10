@@ -26,6 +26,8 @@ import tempfile
 import time
 from pathlib import Path
 
+from slug_utils import to_bare_slug, review_path as _review_path, status_path as _status_path
+
 REPO = Path(__file__).parent.parent
 MAX_RETRIES = 3
 PASS_THRESHOLD = 9.0
@@ -43,7 +45,7 @@ def find_module_files(level: str, num: int) -> dict | None:
         return None
 
     content_path = content_files[0]
-    slug = content_path.stem[3:]  # strip "NN-" prefix
+    slug = to_bare_slug(content_path.stem)
     full_stem = content_path.stem
 
     # Plan files may or may not have the number prefix
@@ -65,8 +67,8 @@ def find_module_files(level: str, num: int) -> dict | None:
         "meta": meta_path,
         "plan": plan_path,
         "research": level_dir / f"research/{slug}-research.md",
-        "review": level_dir / f"review/{full_stem}-review.md",
-        "status": level_dir / f"status/{full_stem}.json",
+        "review": _review_path(level_dir, slug),
+        "status": _status_path(level_dir, slug),
         "orchestration": level_dir / f"orchestration/{slug}",
     }
 

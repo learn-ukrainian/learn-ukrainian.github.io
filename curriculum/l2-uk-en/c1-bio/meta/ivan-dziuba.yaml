@@ -1,9 +1,9 @@
 ---
-module: ivan-dziuba
+module: c1-bio-134
 level: C1-BIO
 slug: ivan-dziuba
 version: '2.0'
-id: c1-bio-132
+id: c1-bio-134
 title: "Іван Дзюба: Інтернаціоналізм чи русифікація?"
 naturalness:
   score: 0

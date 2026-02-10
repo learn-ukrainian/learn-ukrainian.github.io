@@ -1,22 +1,69 @@
----
+id: lit-29
 module: lit-29
 level: LIT
 slug: language-of-realism
-version: '2.0'
-id: lit-29
+title: "Мова Реалізму: Від книжної до живої"
+description: "How Realism revolutionized Ukrainian literary language by embracing the vernacular and rejecting artificial constructs."
+word_target: 4000
+version: "1.0"
+phase: "2"
+focus: "linguistics"
+sources:
+  - name: "Ізборник"
+    url: "http://litopys.org.ua/"
+    type: primary
+  - name: "Історія української літератури. Т. 2."
+    url: "http://litopys.org.ua/istukr/istukr.htm"
+    type: secondary
+vocabulary_hints:
+  required:
+    - "діалектизм"
+    - "суржик"
+    - "язичіє"
+    - "котляревщина"
+activity_hints:
+  - type: reading
+    focus: "Зверніть увагу на відмінності між зовнішнім описом (діалект) та внутрішнім монологом."
+tags:
+  - linguistics
+  - realism
+  - nechuy-levytsky
+  - panas-myrny
+  - history-of-language
+content_outline:
+  - section: "Від Романтизму до Реалізму"
+    words: 800
+    points:
+      - "Role of Romanticism in language formation"
+      - "Realism's demand for authenticity"
+      - "Language as a tool of social critique"
+  - section: "Маніфест Нечуя-Левицького"
+    words: 900
+    points:
+      - "Nechuy's linguistic articles"
+      - "Rejection of Galician 'bookishness'"
+      - "The 'Hromada' movement context"
+  - section: "Діалект як інструмент"
+    words: 900
+    points:
+      - "Kaidash family dialect features"
+      - "Burlachka: Social jargon vs Dialect"
+      - "Linguistic realism"
+  - section: "Психологізм Панаса Мирного"
+    words: 700
+    points:
+      - "Internal monologue syntax"
+      - "Chipka's evolution through language"
+      - "Intellectualization of vernacular"
+  - section: "Стандартизація в умовах заборон"
+    words: 700
+    points:
+      - "Valuev Circular impact"
+      - "Hrinchenko's Dictionary"
+      - "Women's role (Olena Pchilka)"
 naturalness:
   score: 10
   status: PASS
-  justification: Graduate level academic Ukrainian
-duration: 120
-transliteration: none
-tags:
-- література
-- реалізм
-- нечуй-левицький
-- мова
-- стиль
-- діалекти
-word_target: 4500
-build:
-  last_modified: '2026-01-26'
+marketing:
+  seo_title: "Мова українського реалізму: Нечуй-Левицький та Панас Мирний"
+  seo_description: "Як реалісти змінили українську літературну мову. Відмова від книжності, перехід до живої народної мови, діалектизми та боротьба за стандарт."

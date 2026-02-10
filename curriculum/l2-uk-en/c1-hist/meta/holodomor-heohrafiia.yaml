@@ -1,8 +1,8 @@
 ---
-module: holodomor-heohrafiia
+module: c1-hist-048
 level: C1-HIST
 slug: holodomor-heohrafiia
 version: '1.0'
-id: c1-hist-48
+id: c1-hist-048
 build:
   last_modified: '2026-01-26'

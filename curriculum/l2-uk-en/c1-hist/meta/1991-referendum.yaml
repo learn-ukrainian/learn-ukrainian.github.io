@@ -1,8 +1,8 @@
 ---
-module: 1991-referendum
+module: c1-hist-092
 level: C1-HIST
 slug: 1991-referendum
 version: '1.0'
-id: c1-hist-92
+id: c1-hist-092
 build:
   last_modified: '2026-01-26'

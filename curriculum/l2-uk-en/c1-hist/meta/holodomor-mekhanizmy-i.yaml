@@ -1,8 +1,8 @@
 ---
-module: holodomor-mekhanizmy-i
+module: c1-hist-046
 level: C1-HIST
 slug: holodomor-mekhanizmy-i
 version: '1.0'
-id: c1-hist-46
+id: c1-hist-046
 build:
   last_modified: '2026-01-26'

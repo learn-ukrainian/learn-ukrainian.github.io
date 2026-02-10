@@ -2,50 +2,53 @@
   "module": "ahatanhel-krymskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:59.046430Z",
+  "last_audit": "2026-02-09T23:24:36.049000Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.342396Z",
-    "meta": "2026-02-07T15:13:22.019771Z",
-    "activities": "2026-02-07T10:03:51.592547Z",
-    "vocabulary": null,
+    "md": "2026-02-09T21:25:16.823597Z",
+    "meta": "2026-02-09T21:17:55.598955Z",
+    "activities": "2026-02-09T21:21:21.840632Z",
+    "vocabulary": "2026-02-09T21:17:12.971890Z",
     "plan": null
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2137/4000 (raw: 2364) | pedagogy: 2 violations"
+      "status": "warn",
+      "violations": 0,
+      "message": "3958/4000 (raw: 4032) (42 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "4/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 24 (soft target)"
+      "message": "25/24"
     },
     "naturalness": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "1/10 (PENDING \u2014 awaiting review)"
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "6 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar",
-      "Missing required activity types: reading"
+      "1 Outline Compliance Errors"
     ],
-    "pass_count": 1,
-    "fail_count": 2
+    "pass_count": 4,
+    "fail_count": 0
   }
 }

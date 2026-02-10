@@ -1,0 +1,14 @@
+{
+  "slug": "texting-messaging",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:23:21.603990Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T11:23:21.603975Z",
+  "result": "success"
+}

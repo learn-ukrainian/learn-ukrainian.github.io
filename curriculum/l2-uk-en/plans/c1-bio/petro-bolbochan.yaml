@@ -1,7 +1,7 @@
 ---
-module: c1-bio-080
+module: c1-bio-083
 level: C1-BIO
-sequence: 80
+sequence: 83
 slug: petro-bolbochan
 version: '2.0'
 title: 'Петро Болбочан: Полковник-герой'

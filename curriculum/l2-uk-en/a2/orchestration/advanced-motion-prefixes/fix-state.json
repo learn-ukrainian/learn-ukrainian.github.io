@@ -1,0 +1,23 @@
+{
+  "slug": "advanced-motion-prefixes",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T23:01:32.154734Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": false,
+      "result": "review_generated_content_issues_remain"
+    },
+    {
+      "iteration": 2,
+      "started": "2026-02-09T23:02:26.494676Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T23:01:32.154712Z",
+  "result": "success"
+}

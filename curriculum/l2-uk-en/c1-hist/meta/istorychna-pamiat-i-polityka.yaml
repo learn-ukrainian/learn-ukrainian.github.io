@@ -1,8 +1,65 @@
----
-module: istorychna-pamiat-i-polityka
+module: c1-hist-010
+id: c1-hist-010
 level: C1-HIST
+phase: C1
 slug: istorychna-pamiat-i-polityka
 version: '1.0'
-id: c1-hist-10
-build:
-  last_modified: '2026-01-26'
+type: seminar
+status: draft
+word_target: 4000
+description: >-
+  Module analyzing the intersection of history and politics, memory wars, and the formation of collective memory in Ukraine.
+content_outline:
+  - section: "Вступ — Пам'ять як поле битви"
+    words: 457
+    points: 
+      - "Історія vs Пам'ять"
+      - "Політичне використання минулого"
+  - section: Теоретичні основи
+    words: 686
+    points:
+      - "Моріс Альбвакс і соціальні рамки"
+      - "П'єр Нора і місця пам'яті"
+      - "Ян Ассман: комунікативна vs культурна пам'ять"
+      - "Алейда Ассман: канон і архів"
+  - section: Інструменти політики пам'яті
+    words: 686
+    points:
+      - "Законодавство"
+      - "Календар і свята"
+      - "Монументальна пропаганда"
+      - "Освіта"
+  - section: "Війни пам'яті — Україна vs. Росія"
+    words: 686
+    points:
+      - "Спадщина Русі"
+      - "Голодомор"
+      - "УПА"
+      - "Друга світова війна"
+  - section: Законодавство про пам'ять в Україні
+    words: 571
+    points:
+      - "Закон про Голодомор 2006"
+      - "Декомунізація 2015"
+      - "Відкриття архівів"
+  - section: Місця пам'яті в Україні
+    words: 457
+    points:
+      - "Биківня"
+      - "Простір Синагог"
+      - "Музей Голодомору"
+      - "Деколонізація топонімії"
+  - section: Виклики і перспективи
+    words: 457
+    points:
+      - "Пам'ять і демократія"
+      - "Конкуренція жертв"
+      - "Меморіалізація сучасної війни"
+naturalness:
+  score: 10
+  status: PASS
+marketing:
+  title: "Memory Wars: History as a Political Weapon"
+  seo_title: "Ukrainian Historical Memory and Politics: A Deep Dive"
+  description: "Explore how history is used in politics, the concept of memory wars, and Ukraine's struggle for its own historical narrative."
+timestamp: 2026-02-09T22:00:00Z

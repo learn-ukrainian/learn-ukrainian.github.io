@@ -1,8 +1,8 @@
 ---
-module: krym-bahatosharovyi
+module: c1-hist-078
 level: C1-HIST
 slug: krym-bahatosharovyi
 version: '1.0'
-id: c1-hist-78
+id: c1-hist-078
 build:
   last_modified: '2026-01-26'

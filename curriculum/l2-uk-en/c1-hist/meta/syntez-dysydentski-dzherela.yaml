@@ -1,8 +1,8 @@
 ---
-module: syntez-dysydentski-dzherela
+module: c1-hist-044
 level: C1-HIST
 slug: syntez-dysydentski-dzherela
 version: '1.0'
-id: c1-hist-44
+id: c1-hist-044
 build:
   last_modified: '2026-01-26'

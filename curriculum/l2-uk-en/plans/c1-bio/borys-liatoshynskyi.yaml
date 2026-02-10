@@ -1,7 +1,7 @@
 ---
-module: c1-bio-101
+module: c1-bio-102
 level: C1-BIO
-sequence: 101
+sequence: 102
 slug: borys-liatoshynskyi
 version: '2.0'
 title: 'Борис Лятошинський: Симфоніст'

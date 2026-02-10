@@ -1,9 +1,9 @@
 ---
-module: yevhen-sverstiuk
+module: c1-bio-130
 level: C1-BIO
 slug: yevhen-sverstiuk
 version: '2.0'
-id: c1-bio-128
+id: c1-bio-130
 title: "Євген Сверстюк: Моральний авторитет нації"
 naturalness:
   score: 0

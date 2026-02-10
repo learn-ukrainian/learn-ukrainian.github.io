@@ -1,0 +1,105 @@
+---
+# Level Plan: LIT-FANTASTIKA (Ukrainian Sci-Fi, Fantasy & Gothic Track)
+# Post-C1 specialization: The Imagination of the Nation
+
+level: lit-fantastika
+track: literature-fantastika
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 27
+  description: "Ukrainian speculative fiction from Gothic folklore to cyberpunk — proving Ukrainian imagination has always transcended realism and imperial constraints"
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners exploring Ukrainian genre fiction and its cultural significance"
+  decolonization_mission: "Destroys the myth that Ukrainian literature is 'just village prose' — showcases cosmic philosophy, urban fantasy, magic realism, and cyberpunk"
+
+sources:
+  primary: "Ukrainian genre fiction publishers (Фабула, Vivat, A-BA-BA-HA-LA-MA-HA)"
+  supplementary:
+    - "Ukrainian genre criticism"
+    - "Comparative studies with European/world sci-fi traditions"
+  note: "Ukrainian-language authors ONLY. Authors who wrote primarily in Russian are excluded."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 500
+  focus_areas:
+    - "Sci-fi terminology (космос, кіборг, штучний інтелект, паралельний всесвіт)"
+    - "Fantasy/Gothic vocabulary (чаклунство, прокляття, примари, лісовик)"
+    - "Philosophical vocabulary (свідомість, буття, трансцендентність)"
+    - "Ukrainian mythological vocabulary (мавка, русалка, упир)"
+
+phases:
+  - id: FANT.1
+    name: "Готика та Фольклорна Фантастика"
+    name_en: "Gothic and Folkloric Fantasy"
+    modules: "[1, 5]"
+    focus: "Ukrainian supernatural tradition rooted in folklore"
+    era: "19th century"
+    key_works:
+      - "Квітка — Мертвецький Великдень (Gothic)"
+      - "Стороженко — Чортова пригода"
+      - "Коцюбинський — Тіні забутих предків (revisited as fantasy)"
+      - "Винниченко — Сонячна машина (utopia/dystopia)"
+      - "Смолич — Прекрасні катастрофи"
+
+  - id: FANT.2
+    name: "Космічна Філософія"
+    name_en: "Cosmic Philosophy"
+    modules: "[6, 10]"
+    focus: "Ukrainian space-age sci-fi — Berdnyk's cosmic vision"
+    era: "1960s-1980s"
+    key_authors:
+      - "Бердник — Зоряний корсар (космічна філософія)"
+      - "Бердник — Прометей"
+      - "Розсоховатський — Кіборги (ранній кіберпанк)"
+    note: "Berdnyk was a dissident — his sci-fi encoded Ukrainian spiritual independence. Critical framing of his Soviet-era context required."
+
+  - id: FANT.3
+    name: "Магічний Реалізм та Міська Фантастика"
+    name_en: "Magic Realism and Urban Fantasy"
+    modules: "[11, 18]"
+    focus: "Post-independence genre explosion"
+    era: "1990s-2010s"
+    key_works:
+      - "Винничук — Танго смерті (львівський магічний реалізм)"
+      - "Винничук — Нічна панна"
+      - "Павлюк — Плоть"
+      - "Аренєв — Порох, Пастки душ"
+      - "Корній — Химери, Ліс"
+      - "Дашвар — Село (myth + dystopia)"
+
+  - id: FANT.4
+    name: "Нова Хвиля: Кіберпанк та Трилер"
+    name_en: "New Wave: Cyberpunk and Thriller"
+    modules: "[19, 27]"
+    focus: "Contemporary Ukrainian genre fiction — global quality, local soul"
+    era: "2010s-present"
+    key_works:
+      - "Кідрук — Боти, Колонія (sci-fi трилер)"
+      - "Бабенко — Відьма (містика)"
+      - "Дереш — Культ (психотропна проза), Архе"
+      - "Антонич — поганський міф як передтеча фантастики"
+      - "Підсумковий модуль: Антологія та огляд"
+
+constraints:
+  min_word_target: 3500
+  max_word_target: 5000
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Genre excerpt with glossary"
+    - "Genre analysis: what makes this Ukrainian (not just translated Western tropes)?"
+    - "Cultural context: how does this work engage with Ukrainian mythology/identity?"
+    - "Comparative analysis with world genre traditions"
+  decolonization:
+    - "Ukrainian speculative fiction is NOT derivative of Russian sci-fi"
+    - "Berdnyk was imprisoned for his ideas — his sci-fi was resistance"
+    - "Ukrainian Gothic predates and differs from Russian Gothic"
+    - "Contemporary genre fiction proves Ukrainian culture is modern, urban, global"

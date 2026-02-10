@@ -1,8 +1,103 @@
 ---
-module: krytyka-dzherel
-level: C1-HIST
+module: c1-hist-009
+id: c1-hist-009
 slug: krytyka-dzherel
-version: '1.0'
-id: c1-hist-09
+title: "Критика джерел: Принципи та практика"
+subtitle: "Методологія критичного аналізу історичних документів"
+version: '2.0'
+phase: C1-HIST
+pedagogy: seminar
+duration: 120
+transliteration: none
+tags:
+- source-criticism
+- methodology
+- archives
+- historiography
+grammar: []
+focus: methodology
+objectives:
+- "Аналізувати причини упередженості історичних джерел"
+- "Розрізняти методи зовнішньої та внутрішньої критики"
+- "Застосовувати алгоритм критичного аналізу до документів"
+naturalness:
+  score: null
+  status: PENDING
+  last_check: null
+word_target: 4000
+content_outline:
+- section: "Вступ — Природа історичного доказу"
+  words: 500
+  points:
+  - "Ранке: «Wie es eigentlich gewesen» vs. постмодернізм"
+  - "Марк Блок: Історія як ремесло"
+  - "Джерело як «слід» минулого (Коллінгвуд)"
+- section: "Типологія джерел: Від пергаменту до цифри"
+  words: 600
+  points:
+  - "Класифікація: Наративні vs Актові"
+  - "Его-документи (щоденники, листування)"
+  - "Самвидав та усна історія"
+  - "Цифрові сліди та проблема ефемерності"
+- section: "Зовнішня критика: Встановлення автентичності"
+  words: 800
+  points:
+  - "Палеографія та дипломатика"
+  - "Кейс: «Слово о полку Ігоревім» (лінгвістичний доказ)"
+  - "Кейс: «Велесова книга» (анатомія фейку)"
+  - "Сучасні виклики: Deepfakes та цифрова криміналістика"
+- section: "Внутрішня критика: Герменевтика тексту"
+  words: 900
+  points:
+  - "Заангажованість vs Тенденційність"
+  - "Читання «між рядків» (імперський дискурс)"
+  - "Кейс: Березневі статті 1654 року (документ, якого не існує)"
+- section: "Особливості української джерельної бази"
+  words: 600
+  points:
+  - "«Архіви імперії»: де шукати Україну?"
+  - "Культурний Чорнобиль (Пожежа 1964 року)"
+  - "Археографічні комісії XIX ст. vs Сучасна цифровізація"
+- section: "Практикум: 5 питань історика"
+  words: 600
+  points:
+  - "Алгоритм критичного аналізу"
+  - "Вправи на деконструювання новин"
+sources:
+- name: "Джерелознавство (Вікіпедія)"
+  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
+  type: reference
+- name: "Критика джерел"
+  url: "https://uk.wikipedia.org/wiki/Критика_джерел"
+  type: reference
+- name: "Fontes: Open Access Sources for Ukrainian History"
+  url: "https://projects.iq.harvard.edu/fontes"
+  type: primary
+vocabulary_hints:
+  required:
+  - "джерелознавство"
+  - "первинне джерело"
+  - "вторинне джерело"
+  - "автентичність"
+  - "достовірність"
+  - "зовнішня критика"
+  - "внутрішня критика"
+  - "упередження"
+  recommended:
+  - "контекст"
+  - "верифікація"
+  - "палеографія"
+  - "дипломатика"
+  - "провенанс"
+activity_hints:
+- type: reading
+  focus: "Первинні джерела (уривок)"
+  items: 4
+- type: essay-response
+  focus: "Чи може історик бути об'єктивним?"
+  word_target: 300
+- type: true-false
+  focus: "Факти та інтерпретації"
+  items: 10
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-09'

@@ -1,9 +1,9 @@
 ---
-module: publitsystychnyi-styl
+module: c2-005
 level: C2
 slug: publitsystychnyi-styl
 version: '2.0'
-id: c2-05
+id: c2-005
 naturalness:
   score: 1
   status: PENDING

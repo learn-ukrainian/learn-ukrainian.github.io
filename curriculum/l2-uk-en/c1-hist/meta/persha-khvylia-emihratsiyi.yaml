@@ -1,8 +1,8 @@
 ---
-module: persha-khvylia-emihratsiyi
+module: c1-hist-064
 level: C1-HIST
 slug: persha-khvylia-emihratsiyi
 version: '1.0'
-id: c1-hist-64
+id: c1-hist-064
 build:
   last_modified: '2026-01-26'

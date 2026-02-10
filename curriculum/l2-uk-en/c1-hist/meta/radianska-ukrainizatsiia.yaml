@@ -1,8 +1,8 @@
 ---
-module: radianska-ukrainizatsiia
+module: c1-hist-085
 level: C1-HIST
 slug: radianska-ukrainizatsiia
 version: '1.0'
-id: c1-hist-85
+id: c1-hist-085
 build:
   last_modified: '2026-01-26'

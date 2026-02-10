@@ -1,5 +1,5 @@
 ---
-module: unr-vybory
+module: c1-hist-091
 level: c1-hist
 sequence: 91
 version: '1.0'

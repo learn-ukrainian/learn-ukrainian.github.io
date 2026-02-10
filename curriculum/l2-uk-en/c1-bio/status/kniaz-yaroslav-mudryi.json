@@ -2,13 +2,13 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:18.661876Z",
+  "last_audit": "2026-02-10T10:35:22.142409Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T22:38:40.512323Z",
-    "meta": "2026-02-07T21:12:55.278628Z",
-    "activities": "2026-02-07T21:54:23.740109Z",
-    "vocabulary": "2026-02-07T21:41:13.351034Z",
+    "md": "2026-02-09T23:03:34.172493Z",
+    "meta": "2026-02-09T22:59:47.634514Z",
+    "activities": "2026-02-09T21:55:30.637990Z",
+    "vocabulary": "2026-02-09T22:56:09.332178Z",
     "plan": null
   },
   "gates": {
@@ -20,28 +20,33 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5669/5000 (raw: 6189)"
+      "message": "4111/4000 (raw: 4176)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "31/24"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

@@ -1,8 +1,8 @@
 ---
-module: ukrayinskyi-visnyk
+module: c1-hist-041
 level: C1-HIST
 slug: ukrayinskyi-visnyk
 version: '1.0'
-id: c1-hist-41
+id: c1-hist-041
 build:
   last_modified: '2026-01-26'

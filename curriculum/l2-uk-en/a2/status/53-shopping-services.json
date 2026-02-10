@@ -2,14 +2,14 @@
   "module": "53-shopping-services",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:54.344956Z",
+  "last_audit": "2026-02-10T10:54:45.171811Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T21:37:17.980241Z",
-    "meta": "2026-01-26T17:21:18.956678Z",
-    "activities": "2026-01-27T12:39:30.265385Z",
-    "vocabulary": "2026-01-30T21:36:05.842929Z",
-    "plan": "2026-01-30T12:31:49.654366Z"
+    "meta": "2026-02-07T10:03:50.709554Z",
+    "activities": "2026-02-07T10:03:50.729031Z",
+    "vocabulary": "2026-02-07T10:03:50.760234Z",
+    "plan": "2026-02-07T10:03:50.863846Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

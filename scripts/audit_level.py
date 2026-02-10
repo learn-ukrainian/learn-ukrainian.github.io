@@ -28,9 +28,11 @@ Options:
 
 import argparse
 import glob
+import json
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -211,11 +213,23 @@ def find_module_files(level: str, module_filter: str | None = None) -> tuple[lis
         return filtered, []
 
 
-def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tuple[int, int, list[str]]:
-    """Run audit on the given files. Returns (passed, failed, failed_modules)."""
+def _extract_slug(file_path: Path) -> str:
+    """Extract slug from module file path.
+
+    Handles both numbered (01-slug.md) and slug-only (slug.md) patterns.
+    """
+    match = re.match(r'^\d+-(.+)\.md$', file_path.name)
+    if match:
+        return match.group(1)
+    return file_path.stem
+
+
+def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tuple[int, int, list[str], dict[str, str]]:
+    """Run audit on the given files. Returns (passed, failed, failed_modules, slug_results)."""
     passed = 0
     failed = 0
     failed_modules = []
+    slug_results = {}  # slug -> "pass" | "fail"
 
     total = len(files)
 
@@ -226,6 +240,8 @@ def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tu
             module_id = match.group(1)  # Numbered: "05"
         else:
             module_id = file_path.stem  # Slug-only: "afhanistan"
+
+        slug = _extract_slug(file_path)
 
         # Progress indicator
         print(f"[{i}/{total}] {module_id}: ", end="", flush=True)
@@ -245,12 +261,82 @@ def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tu
         if result.returncode == 0:
             print("✅")
             passed += 1
+            slug_results[slug] = "pass"
         else:
             print("❌")
             failed += 1
             failed_modules.append(module_id)
+            slug_results[slug] = "fail"
 
-    return passed, failed, failed_modules
+    return passed, failed, failed_modules, slug_results
+
+
+def sync_batch_state(level: str, slug_results: dict[str, str]) -> None:
+    """Sync batch_state/state_{level}.json with fresh audit results.
+
+    Updates existing entries to match actual audit pass/fail.
+    Adds new entries for modules not previously tracked.
+    This keeps the batch monitor UI in sync with actual audit state.
+    """
+    state_file = Path(f"batch_state/state_{level}.json")
+    now = datetime.now(timezone.utc).isoformat()
+
+    if state_file.exists():
+        with open(state_file, 'r', encoding='utf-8') as f:
+            state = json.load(f)
+    else:
+        # Create new state file
+        state_file.parent.mkdir(parents=True, exist_ok=True)
+        state = {
+            "batch": level,
+            "range": "1",
+            "started": now,
+            "current_module": 1,
+            "modules": {},
+            "summary": {}
+        }
+
+    modules = state.setdefault("modules", {})
+    updated = 0
+
+    for slug, result in slug_results.items():
+        if slug in modules:
+            old_status = modules[slug].get("status")
+            if old_status != result:
+                modules[slug]["status"] = result
+                modules[slug]["synced_at"] = now
+                updated += 1
+        else:
+            # New module not previously in batch state
+            modules[slug] = {
+                "status": result,
+                "mode": "audit",
+                "start_time": now,
+                "duration": 0,
+                "end_time": now,
+                "synced_at": now
+            }
+            updated += 1
+
+    # Recalculate summary
+    all_statuses = [m.get("status") for m in modules.values()]
+    passed = all_statuses.count("pass")
+    failed = all_statuses.count("fail")
+    state["summary"] = {
+        "passed": passed,
+        "failed": failed,
+        "processed": passed + failed,
+        "total": len(modules),
+        "failure_rate": round(failed / max(passed + failed, 1), 3),
+        "synced_at": now
+    }
+
+    with open(state_file, 'w', encoding='utf-8') as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
+        f.write('\n')
+
+    if updated:
+        print(f"  Synced batch state: {updated} module(s) updated in {state_file}")
 
 
 def main():
@@ -264,6 +350,7 @@ def main():
     parser.add_argument("--fix", action="store_true", help="Automatically fix YAML schema violations")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed output for each module")
     parser.add_argument("--check-missing", action="store_true", help="Report missing content files listed in curriculum.yaml")
+    parser.add_argument("--no-sync", action="store_true", help="Don't sync batch state file after audit")
 
     args = parser.parse_args()
 
@@ -286,15 +373,19 @@ def main():
         print(f"  {level_upper} Audit: {len(files)} module(s)")
     else:
         print(f"  {level_upper} Full Level Audit: {total_planned} modules")
-    
+
     if missing and args.check_missing:
         print(f"  (Warning: {len(missing)} modules are missing content files)")
-    
+
     print("═" * 64)
     print()
 
     # Run audit
-    passed, failed, failed_modules = run_audit(files, fix=args.fix, verbose=args.verbose)
+    passed, failed, failed_modules, slug_results = run_audit(files, fix=args.fix, verbose=args.verbose)
+
+    # Sync batch state (unless --no-sync or auditing a subset)
+    if not args.no_sync and slug_results:
+        sync_batch_state(args.level, slug_results)
 
     # Summary
     print()
@@ -306,7 +397,7 @@ def main():
     print(f"Found:         {len(files)}")
     print(f"Passed:        {passed}")
     print(f"Failed:        {failed}")
-    
+
     if args.check_missing:
         print(f"Missing:       {len(missing)}")
 

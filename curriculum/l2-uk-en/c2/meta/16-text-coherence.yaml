@@ -1,9 +1,9 @@
 ---
-module: text-coherence
+module: c2-016
 level: C2
 slug: text-coherence
 version: '2.0'
-id: c2-16
+id: c2-016
 naturalness:
   score: 1
   status: PENDING

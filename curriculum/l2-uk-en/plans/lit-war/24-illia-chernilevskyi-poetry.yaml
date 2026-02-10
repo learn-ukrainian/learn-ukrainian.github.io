@@ -1,0 +1,46 @@
+---
+sequence: 24
+module: lit-war-24
+level: LIT.WAR
+slug: illia-chernilevskyi-poetry
+version: '2.0'
+title: "Ілля Чернілевський: Поезія несправдженого майбуття"
+subtitle: "Ілля Чернілевський: Поезія несправдженого майбуття"
+content_outline:
+- section: "Вступ та контекст"
+  words: 800
+  points: []
+- section: "Ліризм та війна: Аналіз збірки"
+  words: 1200
+  points: []
+- section: "Метафорика втраченої весни"
+  words: 1000
+  points: []
+- section: "Деколонізаційна перспектива"
+  words: 800
+  points:
+  - "Зв'язок з Розстріляним Відродженням 1930-х"
+  - "Українська суб'єктність та опір"
+- section: "Підсумок та спадщина"
+  words: 700
+  points: []
+word_target: 4500
+vocabulary_hints:
+  required:
+  - "суб'єктність"
+  - "тяглість"
+  - "геноцид"
+  recommended:
+  - "деколонізація"
+activity_hints:
+- type: reading
+  focus: "Аналіз життєвого шляху та вибору"
+- type: essay-response
+  focus: "Критичне есе про ціну культури"
+focus: literature
+pedagogy: seminar
+immersion: 100% Ukrainian
+phase: "Executed Renaissance 2.0"
+objectives:
+- "Дослідити життя та внесок Ілля Чернілевський: Поезія несправдженого майбуття у сучасну українську культуру"
+- "Проаналізувати історичну тяглість російських репресій проти української інтелігенції"

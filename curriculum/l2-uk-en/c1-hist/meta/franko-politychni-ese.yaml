@@ -1,8 +1,8 @@
 ---
-module: franko-politychni-ese
+module: c1-hist-033
 level: C1-HIST
 slug: franko-politychni-ese
 version: '1.0'
-id: c1-hist-33
+id: c1-hist-033
 build:
   last_modified: '2026-01-26'

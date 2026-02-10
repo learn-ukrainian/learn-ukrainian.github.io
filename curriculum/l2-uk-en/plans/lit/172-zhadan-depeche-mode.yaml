@@ -1,0 +1,83 @@
+---
+sequence: 172
+module: lit-172
+level: LIT
+slug: zhadan-depeche-mode
+version: '2.0'
+title: Zhadan Depeche Mode
+subtitle: Zhadan Depeche Mode
+content_outline:
+- section: Вступ та культурний контекст
+  words: 750
+  points:
+  - Історичні умови появи твору/автора
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  words: 1000
+  points:
+  - Ключові етапи життя/розвитку сюжету
+  - Впливи та джерела
+  - Конфлікт як рушійна сила
+- section: Герменевтика та ключові образи
+  words: 875
+  points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та міфологічні підтексти
+- section: Мова, стиль та поетика
+  words: 750
+  points:
+  - Стилістичні інновації автора
+  - Робота з народною мовою або неохотизмами
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  words: 625
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського героя
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  words: 500
+  points:
+  - Вплив на наступні покоління письменників
+  - Світовий контекст твору
+  - Питання для дискусії
+word_target: 4500
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків zhadan-depeche-mode
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  word_target: 400
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-171
+connects_to:
+- lit-173
+module_type: literature
+sources:
+- name: Zhadan Depeche Mode — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.5 Independence Era 1991-Present
+objectives:
+- Проаналізувати твір Zhadan Depeche Mode у контексті епохи
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора

@@ -1,8 +1,8 @@
 ---
-module: khrushchov-shelest-tsykl
+module: c1-hist-086
 level: C1-HIST
 slug: khrushchov-shelest-tsykl
 version: '1.0'
-id: c1-hist-86
+id: c1-hist-086
 build:
   last_modified: '2026-01-26'

@@ -5,16 +5,8 @@
   "type": "object",
   "required": [
     "id",
-    "title",
-    "slug",
     "version",
-    "phase",
-    "focus",
-    "word_target",
-    "sources",
-    "content_outline",
-    "vocabulary_hints",
-    "activity_hints"
+    "word_target"
   ],
   "properties": {
     "module": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Module identifier (e.g., b2-hist-01)" },

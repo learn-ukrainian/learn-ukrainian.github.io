@@ -1,90 +1,144 @@
-# Audit Report: M08 — roman-mstyslavych.md
-**Level:** C1-BIO | **Module:** M08 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4400
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 23:13:21
+# Рецензія: Роман Мстиславич: Засновник Галицько-Волинської держави
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4400 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 8
+**Overall Score:** 8.5/10
+**Status:** FAIL
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Літописний портрет Романа Мстиславича | 1 | 1 | ✅ |
-| 2 | critical-analysis | Аналіз метафоричного ряду літопису | 1 | 1 | ✅ |
-| 3 | authorial-intent | Аналіз ідеологічного наміру літописця | 1 | 1 | ✅ |
-| 4 | essay-response | Есе: Роман Мстиславич як архітектор української суб'єктності | 1 | 1 | ✅ |
-| 5 | reading | Пропозиція королівської корони (1204) | 1 | 1 | ✅ |
-| 6 | critical-analysis | Аналіз дипломатичної символіки меча | 1 | 1 | ✅ |
-| 7 | comparative-study | Порівняння стратегій легітимізації | 1 | 1 | ✅ |
-| 8 | essay-response | Есе: Дилема легітимності в середньовічній Русі | 1 | 1 | ✅ |
-| 9 | select | Вікторина: Епоха Романа Мстиславича | 12 | 5 | ✅ |
-| 10 | true-false | Правда чи Міф: Життя Романа Великого | 12 | 5 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 10 (target: 3-9) ❌
-- Unique types: 7 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: [FAIL]
+- Sections: [PASS]
+- Vocabulary: [2/10 from plan, 23 extra] - Significant mismatch. Required terms like "князівство", "об'єднання", "літопис" missing from vocabulary.yaml.
+- Grammar scope: [PASS]
+- Objectives: [PASS]
+```
 
-## Gates
-- **Words:** ✅ 5681/4400 (raw: 5942)
-- **Activities:** ✅ 10/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 7/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 10 (target 3-9)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** biography
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 8/10 | <7 | Broken quiz logic prevents successful completion. |
+| 2 | Coherence | 9/10 | <7 | Excellent narrative flow and historical argumentation. |
+| 3 | Relevance | 10/10 | <7 | Perfectly aligned with C1 Biography track goals. |
+| 4 | Educational | 8/10 | <7 | Content is strong, but assessment logic is flawed. |
+| 5 | Language | 9/10 | <8 | High C1 standard, one obvious typo ("йогоїзм"). |
+| 6 | Pedagogy | 7/10 | <7 | Vocabulary file does not support the required plan vocabulary. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian, rich historical register. |
+| 8 | Activities | 5/10 | <7 | **CRITICAL:** Multiple quiz questions require more correct answers than exist. |
+| 9 | Richness | 10/10 | <6 | Deep, culturally significant content. |
+| 10 | Beginner Safety | 9/10 | <7 | Clear structure, engaging callouts. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Feels curated and specific. |
+| 12 | Linguistic Accuracy | 9/10 | <9 | Mostly accurate, one questionable term ("тари"). |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 7 | 4 | 100% | 19% | 19.0% |
-| engagement | 7 | 6 | 100% | 14% | 14.3% |
-| quotes | 14 | 3 | 100% | 14% | 14.3% |
-| cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 11 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 12 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+**Weighted Overall:** (8*1.5 + 9 + 10 + 8*1.2 + 9*1.1 + 7*1.2 + 10 + 5*1.3 + 10*0.9 + 9*1.3 + 9 + 9*1.5) / 14.0 = **8.46/10**
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 141 | Included in Core |
-| **Вступ — Самодержець усієї Русі** | ✅ | 718 | Included in Core |
-| **Життєпис: Від Волині до Галича** | ⚪️ | 1031 | Skipped |
-| **Внесок: Створення Галицько-Волинської держави** | ⚪️ | 1295 | Skipped |
-| **Зовнішня політика та дипломатія глобального масштабу** | ⚪️ | 414 | Skipped |
-| **Останні роки: Загибель під Завихостом** | ⚪️ | 732 | Skipped |
-| **Спадщина: Від Романа до Данила** | ⚪️ | 434 | Skipped |
-| **Порівняльний аналіз: Роман Мстиславич vs. Філіп II Август** | ✅ | 396 | Included in Core |
-| **Підсумок — Будівничий держави** | ✅ | 328 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 192 | Skipped |
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [FAIL] - Systemic `min_correct` logic errors in quiz.
+- Beginner safety: 5/5
+
+## Critical Issues Found
+
+### Issue 1: Activity Logic Error (Quiz)
+- **Location**: `activities/roman-mstyslavych.yaml`, Question 2, 3, 4, 5, 11
+- **Original**: `min_correct: 3` (where only 2 are correct) or `min_correct: 2` (where only 1 is correct).
+- **Problem**: It is mathematically impossible for the user to pass these questions. For example, Q3 has only 1 correct option ("Філіп II Август") but requires 2 correct choices.
+- **Fix**: Set `min_correct` to match the actual number of correct options (1 or 2).
+
+### Issue 2: Typo in Content
+- **Location**: Section "Київський епізод...", para 3.
+- **Original**: "На жаль, **йогоїзм**, дріб'язковість та обмеженість інших князів..."
+- **Problem**: Typos/Nonsense word. "Йогоїзм" is not a word. Likely meant "egoism".
+- **Fix**: Change to "егоїзм".
+
+### Issue 3: Vocabulary Alignment
+- **Location**: `vocabulary/roman-mstyslavych.yaml` vs Plan
+- **Original**: Missing `князівство`, `об'єднання`, `літопис`, `усобиця`, `засідка`, `спадкоємець`, `данина`, `похід`.
+- **Problem**: The plan explicitly lists these as "Required". While the text uses them, the vocabulary file (glossary) must define them for learners.
+- **Fix**: Add these lemmas to the vocabulary file.
+
+### Issue 4: Questionable Terminology
+- **Location**: Section "Військова реформа...", para 1.
+- **Original**: "...потужні облогові машини — пороки та **тари**."
+- **Problem**: "Тара" typically means "packaging" in modern Ukrainian. The siege weapon is "таран" (battering ram). While "тари" might be an obscure archaic form or plural of "тара" (shield wall?), "таран" is the standard term for a battering ram.
+- **Fix**: Change "тари" to "тарани" for clarity and accuracy.
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| Text | "йогоїзм" | "егоїзм" | Typo |
+| Text | "тари" | "тарани" | Lexical accuracy |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? Pass
+- Instructions clear? Pass
+- Quick wins? Pass
+- Ukrainian scary? Pass (Appropriate for C1)
+- Come back tomorrow? Pass
+
+Emotional beats: 5 found
+- Welcome: "Вступ — Самодержець усієї Русі"
+- Curiosity: "Чи такий меч у Папи?" (Intro)
+- Quick wins: Clear callouts explaining myths.
+- Encouragement: "Потрібно більше практики?" section.
+- Progress: Clear chronological flow.
+
+## Strengths
+- **Narrative Power**: The text is compelling, painting Roman not just as a historical figure but as a "state architect".
+- **Decolonization**: Excellent dismantling of the "gathering of lands" myth, reclaiming it for Roman vs Moscow.
+- **Richness**: Usage of "оружники", "добрий порядок" adds great historical flavor.
+
+## Fix Plan to Reach 9/10
+
+### Activities: 5/10 → 10/10
+
+**What to fix:**
+1.  **Quiz Q2**: Change `min_correct: 3` → `min_correct: 2`.
+2.  **Quiz Q3**: Change `min_correct: 2` → `min_correct: 1`.
+3.  **Quiz Q4**: Change `min_correct: 2` → `min_correct: 1`.
+4.  **Quiz Q5**: Change `min_correct: 2` → `min_correct: 1`.
+5.  **Quiz Q11**: Change `min_correct: 2` → `min_correct: 1`.
+
+**Expected score after fix:** 10/10
+
+### Language: 9/10 → 10/10
+
+**What to fix:**
+1.  **Section "Київський епізод"**: Change "йогоїзм" → "егоїзм".
+2.  **Section "Військова реформа"**: Change "тари" → "тарани".
+
+**Expected score after fix:** 10/10
+
+### Pedagogy: 7/10 → 9/10
+
+**What to fix:**
+1.  **Vocabulary File**: Add the missing required words from the plan: `князівство`, `об'єднання`, `літопис`, `засідка`, `спадкоємець`, `данина`, `похід`, `міжусобиця` (for `усобиця`).
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+
+(8*1.5 + 9 + 10 + 9*1.2 + 10*1.1 + 9*1.2 + 10 + 10*1.3 + 10*0.9 + 9*1.3 + 9 + 10*1.5) / 14.0 = **9.6/10**
+
+## Verification Summary
+
+- Content lines read: ~180
+- Activity items checked: 10 activities (approx 20+ items)
+- Ukrainian sentences verified: ~40
+- IPA transcriptions checked: 25
+- Issues found: 4 (Activity logic, Typo, Terminology, Vocab gap)
+- Naturalness score recommendation: 10/10
+
+## Verdict
+
+**FAIL**
+
+The content is excellent, but the **broken quiz logic** (making it impossible to pass 50% of questions) and the **vocabulary gap** (missing plan requirements) require immediate intervention. The typo "йогоїзм" is a minor but necessary fix.

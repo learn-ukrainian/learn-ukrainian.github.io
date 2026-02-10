@@ -1,5 +1,5 @@
 ---
-module: capstone-defense
+module: c2-094
 level: c2
 sequence: 94
 version: '2.0'

@@ -1,0 +1,86 @@
+---
+# Level Plan: LIT-HUMOR (Ukrainian Humor & Satire Track)
+# Post-C1 specialization: Laughter as Weapon
+
+level: lit-humor
+track: literature-humor
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 14
+  description: "Ukrainian humor tradition from Kotliarevsky's burlesque to internet memes — how laughter preserved identity under empires and how it fights today"
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners exploring Ukrainian humor as cultural resistance and identity marker"
+  decolonization_mission: "Ukrainian humor is not 'simple folk comedy' — it is sophisticated, subversive, and has survived every imperial attempt to silence it"
+
+sources:
+  primary: "Ukrainian satirical works (ukrlib.com.ua, contemporary publishers)"
+  supplementary:
+    - "Studies of Ukrainian humor tradition"
+    - "Folklore collections (сміховинки, дотепи)"
+  note: "Ukrainian humor tradition is distinct from Russian — different targets, different sensibility"
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 300
+  focus_areas:
+    - "Humor terminology (сатира, іронія, бурлеск, гротеск, пародія)"
+    - "Colloquial/informal register"
+    - "Dialectal humor vocabulary"
+    - "Internet slang and meme vocabulary"
+
+phases:
+  - id: HUMOR.1
+    name: "Класична Сатира"
+    name_en: "Classical Satire"
+    modules: "[1, 5]"
+    focus: "Foundations of Ukrainian humor tradition"
+    key_works:
+      - "Котляревський — сміх як зброя (Енеїда як бурлеск)"
+      - "Руданський — Співомовки (народний гумор)"
+      - "Нечуй-Левицький — Кайдашева сім'я (humor revisited)"
+      - "Остап Вишня — Усмішки (1920s golden age)"
+
+  - id: HUMOR.2
+    name: "Гумор Під Тиском"
+    name_en: "Humor Under Pressure"
+    modules: "[6, 9]"
+    focus: "How humor survived Soviet censorship"
+    key_works:
+      - "Остап Вишня — тюремна проза (humor from the gulag)"
+      - "Глазовий — сатира на радянську систему"
+      - "Ільченко — Козак Мамай (mythic humor)"
+
+  - id: HUMOR.3
+    name: "Постмодерний Сміх та Новий Гумор"
+    name_en: "Postmodern Laughter and New Humor"
+    modules: "[10, 14]"
+    focus: "Post-independence humor — from literary postmodernism to meme culture"
+    key_works:
+      - "Андрухович — постмодерна іронія як ідентичність"
+      - "Подерв'янський — Гамлет (критика через пародію)"
+      - "Любка — Карбід (їдка сатира)"
+      - "Винничук — містифікації та жарти"
+      - "Підсумковий: Меми як фольклор — українська інтернет-культура"
+
+constraints:
+  min_word_target: 3000
+  max_word_target: 4500
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Humorous text excerpt with glossary"
+    - "Analysis: what makes this funny? (cultural context required)"
+    - "Discussion: humor as survival mechanism under empire"
+    - "Comparative: how does Ukrainian humor differ from neighboring traditions?"
+  decolonization:
+    - "Ukrainian humor targets POWER, not weakness — it punches up"
+    - "Ostap Vyshnia was imprisoned for being funny — humor was dangerous to the empire"
+    - "Meme culture during 2022 invasion = direct continuation of Eneida tradition"
+    - "Russian humor about Ukraine (малоросійські анекдоти) is imperial — ours is resistance"

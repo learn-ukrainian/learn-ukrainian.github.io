@@ -16,6 +16,7 @@ SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 from yaml_activities import ActivityParser, Activity
+from slug_utils import to_bare_slug, grammar_path as _grammar_path, quality_path as _quality_path
 
 from .config import (
     LEVEL_CONFIG,
@@ -674,9 +675,8 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
 
     # Remove numeric prefix if exists (e.g., "01-passive-voice" -> "passive-voice")
     # But keep it for lookup first
-    slug_variants = [module_slug]
-    if re.match(r'^\d{2,3}-', module_slug):
-        slug_variants.append(re.sub(r'^\d{2,3}-', '', module_slug))
+    bare = to_bare_slug(module_slug)
+    slug_variants = [module_slug] if bare == module_slug else [module_slug, bare]
 
     # Find curriculum.yaml
     curriculum_yaml_path = Path(file_path).parent.parent / 'curriculum.yaml'
@@ -835,22 +835,6 @@ def audit_module(file_path: str) -> bool:
             for reason in critical_failure_reasons:
                 print(f"  • {reason}")
             sys.exit(1)
-
-    # Check for Fake/Missing Reviews (Seminar V4 Mandate)
-    # This forces the agent to perform the honest, critical deep review
-    module_slug = Path(file_path).stem
-    review_violations = check_review_validity(file_path, level_code, module_slug)
-    if review_violations:
-        criticals = [v for v in review_violations if v['severity'] == 'critical']
-        warnings = [v for v in review_violations if v['severity'] == 'warning']
-        print(f"  🕵️  Review Validation: {len(criticals)} critical, {len(warnings)} warnings")
-        for v in criticals:
-            print(f"     ❌ [{v['type']}] {v['message']}")
-            critical_failure_reasons.append(v['message'])
-        for v in warnings:
-            print(f"     ⚠️  [{v['type']}] {v['message']}")
-        if criticals:
-            has_critical_failure = True
 
     # Get config
     config = get_level_config(level_code, module_focus)
@@ -1086,9 +1070,6 @@ def audit_module(file_path: str) -> bool:
     table_rows = []
     low_density_activities = []  # Track activities with insufficient items
     activity_details = []  # Track ALL activities for detailed report
-
-    print(f"\n📋 Auditing: {display_level} M{module_num:02d} — {module_title}")
-    print(f"   File: {file_path} | Target: {target} words\n")
 
     # Check for YAML activities file using shared parser (Issue #394)
     yaml_activities = None
@@ -1897,11 +1878,13 @@ def audit_module(file_path: str) -> bool:
                     print(f"     - {flag}")
 
     # Grammar validation check - look for -grammar.yaml in audit folder
-    file_dir = os.path.dirname(os.path.abspath(file_path))
-    file_name = os.path.basename(file_path)
-    base_name = os.path.splitext(file_name)[0]
-    audit_dir = os.path.join(file_dir, 'audit')
-    grammar_file = os.path.join(audit_dir, f"{base_name}-grammar.yaml")
+    md_abs = Path(os.path.abspath(file_path))
+    grammar_file = str(_grammar_path(md_abs.parent, md_abs.stem))
+    # Also check legacy path (numbered stem) during transition
+    if not os.path.exists(grammar_file):
+        legacy_grammar = os.path.join(str(md_abs.parent), 'audit', f"{md_abs.stem}-grammar.yaml")
+        if os.path.exists(legacy_grammar):
+            grammar_file = legacy_grammar
 
     grammar_summary = None
     if os.path.exists(grammar_file):
@@ -1938,7 +1921,12 @@ def audit_module(file_path: str) -> bool:
         has_critical_failure = True
 
     # Activity quality validation check - look for -quality.md in audit folder
-    quality_file = os.path.join(audit_dir, f"{base_name}-quality.md")
+    quality_file = str(_quality_path(md_abs.parent, md_abs.stem))
+    # Also check legacy path during transition
+    if not os.path.exists(quality_file):
+        legacy_quality = os.path.join(str(md_abs.parent), 'audit', f"{md_abs.stem}-quality.md")
+        if os.path.exists(legacy_quality):
+            quality_file = legacy_quality
     quality_result = None
     quality_failed_gates = 0
 
@@ -2082,18 +2070,45 @@ def audit_module(file_path: str) -> bool:
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")
 
+    # Review Validation (final gate — only checked if all content gates pass)
+    review_violations = []
+    review_gate_status = "skipped"
+    if not has_critical_failure:
+        module_slug_for_review = Path(file_path).stem
+        review_violations = check_review_validity(file_path, level_code, module_slug_for_review)
+        if review_violations:
+            criticals = [v for v in review_violations if v['severity'] == 'critical']
+            warnings = [v for v in review_violations if v['severity'] == 'warning']
+            print(f"  🕵️  Review Validation: {len(criticals)} critical, {len(warnings)} warnings")
+            for v in criticals:
+                print(f"     ❌ [{v['type']}] {v['message']}")
+                critical_failure_reasons.append(v['message'])
+            for v in warnings:
+                print(f"     ⚠️  [{v['type']}] {v['message']}")
+            if criticals:
+                has_critical_failure = True
+                review_gate_status = "fail"
+            else:
+                review_gate_status = "pass"
+        else:
+            review_gate_status = "pass"  # No violations
+    else:
+        review_gate_status = "skipped"  # Content gates failed, review not checked
+
     # Save Status Cache (V2 Architecture)
     try:
         module_slug = Path(file_path).stem
         plan_ver = meta_data.get('version', '2.0') if meta_data else '2.0'
         cache_path = save_status_cache(
-            file_path, 
-            level_code, 
-            module_slug, 
-            results, 
-            has_critical_failure, 
+            file_path,
+            level_code,
+            module_slug,
+            results,
+            has_critical_failure,
             critical_failure_reasons,
-            plan_version=plan_ver
+            plan_version=plan_ver,
+            review_violations=review_violations,
+            review_gate_status=review_gate_status,
         )
         print(f"Status: {cache_path}")
     except Exception as e:

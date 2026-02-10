@@ -2,11 +2,11 @@
   "module": "viacheslav-lypynskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:05.616835Z",
+  "last_audit": "2026-02-09T23:24:42.737166Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.348063Z",
-    "meta": "2026-02-07T15:13:22.021441Z",
+    "meta": "2026-02-09T15:59:44.218835Z",
     "activities": "2026-02-07T10:03:51.573271Z",
     "vocabulary": null,
     "plan": null
@@ -36,6 +36,11 @@
       "status": "info",
       "violations": 0,
       "message": "1/10 (PENDING \u2014 awaiting review)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

@@ -1,8 +1,8 @@
 ---
-module: poltava-naslidky
+module: c1-hist-090
 level: C1-HIST
 slug: poltava-naslidky
 version: '1.0'
-id: c1-hist-90
+id: c1-hist-090
 build:
   last_modified: '2026-01-26'

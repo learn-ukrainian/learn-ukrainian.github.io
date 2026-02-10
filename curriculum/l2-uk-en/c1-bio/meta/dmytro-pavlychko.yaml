@@ -1,9 +1,9 @@
 ---
-module: c1-bio-124
+module: c1-bio-132
 level: C1-BIO
 slug: dmytro-pavlychko
 version: '2.0'
-id: c1-bio-130
+id: c1-bio-132
 naturalness:
   score: 1
   status: PENDING

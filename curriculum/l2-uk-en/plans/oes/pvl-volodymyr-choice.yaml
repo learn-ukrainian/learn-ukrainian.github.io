@@ -1,4 +1,6 @@
 ---
+sequence: 32
+module: oes-032
 module_number: 26
 slug: pvl-volodymyr-choice
 title_uk: 'ПВЛ: Вибір Володимира'

@@ -1,0 +1,15 @@
+{
+  "slug": "checkpoint-navigation",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T21:15:11.668745Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T21:15:11.668724Z",
+  "result": "success"
+}

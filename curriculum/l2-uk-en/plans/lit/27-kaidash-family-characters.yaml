@@ -1,5 +1,6 @@
 ---
-module: kaidash-family-characters
+sequence: 27
+module: lit-27
 level: LIT
 slug: kaidash-family-characters
 version: '2.0'

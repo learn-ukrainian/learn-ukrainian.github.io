@@ -1,8 +1,8 @@
 ---
-module: litopys-velychka
+module: c1-hist-022
 level: C1-HIST
 slug: litopys-velychka
 version: '1.0'
-id: c1-hist-22
+id: c1-hist-022
 build:
   last_modified: '2026-01-26'

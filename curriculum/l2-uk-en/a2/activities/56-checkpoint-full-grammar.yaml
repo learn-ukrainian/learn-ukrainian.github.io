@@ -1,4 +1,3 @@
----
 - type: match-up
   title: Vocabulary Categories
   pairs:
@@ -29,13 +28,17 @@
   instruction: З'єднайте відповідні елементи.
 - type: cloze
   title: Vocabulary Test
-  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}. У мене болить {голова|голову|голові}. (head)
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
+    У мене болить {голова|голову|голові}. (head)
 
-    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}? Я хочу купити {квиток|квитка|квитку}. (ticket)
+    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}?
+    Я хочу купити {квиток|квитка|квитку}. (ticket)
 
-    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
+    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську
+    мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
 
-    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}. (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
+    (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
   instruction: Заповніть пропуски, обравши правильні слова.
 - type: quiz
   title: A2 Vocabulary Quiz
@@ -60,7 +63,8 @@
       correct: false
     - text: Genitive case
       correct: false
-  - question: In the phrase «У мене болить голова», what is the grammatical role of «голова»?
+  - question: In the phrase «У мене болить голова», what is the grammatical role of
+      «голова»?
     options:
     - text: Nominative (subject)
       correct: true
@@ -80,7 +84,8 @@
       correct: false
     - text: Locative
       correct: false
-  - question: What is the primary meaning of the verb «вчитися» in an educational context?
+  - question: What is the primary meaning of the verb «вчитися» in an educational
+      context?
     options:
     - text: To study
       correct: true
@@ -317,10 +322,12 @@
   instruction: Розташуйте слова у правильному порядку.
 - type: mark-the-words
   title: Find the Vocabulary
-  text: Вранці я прокидаюся о 7:00 і йду до кухні, щоб снідати. --- Моя сестра працює лікаркою. Вона вчилася в університеті 6 років. --- У мене болить голова і горло. Де тут аптека?
+  text: Вранці я прокидаюся о 7:00 і йду на кухню, щоб снідати. --- Моя сестра працює
+    лікаркою. Вона вчилася в університеті 6 років. --- У мене болить голова і горло.
+    Де тут аптека?
   answers:
   - прокидаюся
-  - кухні
+  - кухню
   - снідати
   - працює
   - лікаркою
@@ -437,62 +444,118 @@
 - type: error-correction
   title: Grammar Errors
   items:
-  - sentence: Я йду до магазина.
-    error: магазина
-    answer: магазину
-    options: [магазину, магазина, магазині, магазином]
-    explanation: Genitive of магазин is магазину (masculine -ин → -у).
+  - sentence: Я йду до парк.
+    error: парк
+    answer: парку
+    options:
+    - парку
+    - парк
+    - парка
+    - парком
+    explanation: Genitive of парк is парку (spatial concept -у).
   - sentence: Вона читає книга.
     error: книга
     answer: книгу
-    options: [книгу, книга, книги, книгою]
+    options:
+    - книгу
+    - книга
+    - книги
+    - книгою
     explanation: Accusative feminine -а → -у.
-  - sentence: Я купила новий сумка.
-    error: новий
-    answer: нову
-    options: [нову, новий, нова, нової]
-    explanation: Adjective must agree with feminine noun сумка.
+  - sentence: Я люблю слухати музика.
+    error: музика
+    answer: музику
+    options:
+    - музику
+    - музика
+    - музики
+    - музикою
+    explanation: Accusative case is required for the object (музика → музику).
   - sentence: Він працюють у банку.
     error: працюють
     answer: працює
-    options: [працює, працюють, працюємо, працюєш]
+    options:
+    - працює
+    - працюють
+    - працюємо
+    - працюєш
     explanation: Third person singular needs -є ending.
   - sentence: Ми їхали до Львова вчора.
     error: їхали
     answer: поїхали
-    options: [поїхали, їхали, їдемо, їздили]
+    options:
+    - поїхали
+    - їхали
+    - їдемо
+    - їздили
     explanation: Single completed action requires perfective поїхали.
   - sentence: Діти грають на футбол.
     error: на
     answer: у
-    options: [у, на, в, до]
+    options:
+    - у
+    - на
+    - в
+    - до
     explanation: Play football = грати у/в футбол.
   instruction: Знайдіть і виправте помилку в реченні.
 - type: fill-in
   title: Grammar Fill-In
   instruction: Заповніть пропуски правильним словом.
   items:
-    - sentence: 'Я іду [___] роботу.'
-      answer: на
-      options: [на, до, в, від]
-    - sentence: 'Вона живе [___] Києві.'
-      answer: у
-      options: [у, на, до, від]
-    - sentence: 'Він [___] українську мову щодня.'
-      answer: вивчає
-      options: [вивчає, вчиться, навчає, вивчати]
-    - sentence: 'Ми [___] в кіно вчора ввечері.'
-      answer: ходили
-      options: [ходили, ходимо, йшли, піти]
-    - sentence: 'Мені [___] допомога.'
-      answer: потрібна
-      options: [потрібна, потрібно, потрібні, потрібний]
-    - sentence: 'Вони [___] на концерт наступної суботи.'
-      answer: підуть
-      options: [підуть, йдуть, ходять, піти]
-    - sentence: 'Я [___] каву без цукру.'
-      answer: п'ю
-      options: [п'ю, їм, пити, випити]
-    - sentence: 'Студенти [___] іспит завтра.'
-      answer: складатимуть
-      options: [складатимуть, склали, складають, здавати]
+  - sentence: Я іду [___] роботу.
+    answer: на
+    options:
+    - на
+    - до
+    - в
+    - від
+  - sentence: Вона живе [___] Києві.
+    answer: у
+    options:
+    - у
+    - на
+    - до
+    - від
+  - sentence: Він [___] українську мову щодня.
+    answer: вивчає
+    options:
+    - вивчає
+    - вчиться
+    - навчає
+    - вивчати
+  - sentence: Ми [___] в кіно вчора ввечері.
+    answer: ходили
+    options:
+    - ходили
+    - ходимо
+    - йшли
+    - піти
+  - sentence: Мені [___] допомога.
+    answer: потрібна
+    options:
+    - потрібна
+    - потрібно
+    - потрібні
+    - потрібний
+  - sentence: Вони [___] на концерт наступної суботи.
+    answer: підуть
+    options:
+    - підуть
+    - йдуть
+    - ходять
+    - піти
+  - sentence: Я [___] каву без цукру.
+    answer: п'ю
+    options:
+    - п'ю
+    - їм
+    - пити
+    - випити
+  - sentence: Студенти [___] іспит завтра.
+    answer: складатимуть
+    options:
+    - складатимуть
+    - склали
+    - складають
+    - здавати

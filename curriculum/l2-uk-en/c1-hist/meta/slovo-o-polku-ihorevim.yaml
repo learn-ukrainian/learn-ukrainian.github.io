@@ -1,8 +1,8 @@
 ---
-module: slovo-o-polku-ihorevim
+module: c1-hist-014
 level: C1-HIST
 slug: slovo-o-polku-ihorevim
 version: '1.0'
-id: c1-hist-14
+id: c1-hist-014
 build:
   last_modified: '2026-01-26'

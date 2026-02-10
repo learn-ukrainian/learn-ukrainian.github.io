@@ -2,14 +2,14 @@
   "module": "35-checkpoint",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:45.801390Z",
+  "last_audit": "2026-02-10T10:45:28.986145Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-26T08:44:16.574517Z",
-    "meta": "2026-01-29T07:39:04.605931Z",
-    "activities": "2026-01-11T23:20:54.285472Z",
-    "vocabulary": "2026-01-25T22:13:41.472892Z",
-    "plan": "2026-01-30T12:31:49.616150Z"
+    "meta": "2026-02-07T10:03:50.720726Z",
+    "activities": "2026-02-07T10:03:50.753586Z",
+    "vocabulary": "2026-02-07T10:03:50.799000Z",
+    "plan": "2026-02-09T12:52:14.244569Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

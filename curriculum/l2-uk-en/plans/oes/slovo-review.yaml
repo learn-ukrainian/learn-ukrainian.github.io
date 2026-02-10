@@ -1,4 +1,6 @@
 ---
+sequence: 90
+module: oes-090
 module_number: 90
 slug: slovo-review
 title_uk: 'Слово: Підсумок'

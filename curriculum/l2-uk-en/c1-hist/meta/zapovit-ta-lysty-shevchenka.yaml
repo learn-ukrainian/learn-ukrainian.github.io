@@ -1,8 +1,8 @@
 ---
-module: zapovit-ta-lysty-shevchenka
+module: c1-hist-030
 level: C1-HIST
 slug: zapovit-ta-lysty-shevchenka
 version: '1.0'
-id: c1-hist-30
+id: c1-hist-030
 build:
   last_modified: '2026-01-26'

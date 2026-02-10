@@ -1,5 +1,6 @@
 ---
-module: cyrillo-methodian-brotherhood
+sequence: 25
+module: lit-25
 level: LIT
 slug: cyrillo-methodian-brotherhood
 version: '2.0'

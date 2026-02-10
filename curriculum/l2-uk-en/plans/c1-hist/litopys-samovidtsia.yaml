@@ -1,5 +1,5 @@
 ---
-module: litopys-samovidtsia
+module: c1-hist-020
 level: c1-hist
 sequence: 20
 version: '1.0'

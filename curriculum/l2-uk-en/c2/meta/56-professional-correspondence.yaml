@@ -1,9 +1,9 @@
 ---
-module: professional-correspondence
+module: c2-056
 level: C2
 slug: professional-correspondence
 version: '2.0'
-id: c2-56
+id: c2-056
 naturalness:
   score: 1
   status: PENDING

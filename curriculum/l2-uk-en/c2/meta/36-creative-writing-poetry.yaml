@@ -1,9 +1,9 @@
 ---
-module: creative-writing-poetry
+module: c2-036
 level: C2
 slug: creative-writing-poetry
 version: '2.0'
-id: c2-36
+id: c2-036
 naturalness:
   score: 1
   status: PENDING

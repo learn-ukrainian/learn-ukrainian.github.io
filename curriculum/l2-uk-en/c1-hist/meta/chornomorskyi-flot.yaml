@@ -1,8 +1,8 @@
 ---
-module: chornomorskyi-flot
+module: c1-hist-099
 level: C1-HIST
 slug: chornomorskyi-flot
 version: '1.0'
-id: c1-hist-99
+id: c1-hist-099
 build:
   last_modified: '2026-01-26'

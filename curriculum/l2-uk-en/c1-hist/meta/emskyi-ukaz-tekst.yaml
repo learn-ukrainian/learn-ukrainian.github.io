@@ -1,8 +1,8 @@
 ---
-module: emskyi-ukaz-tekst
+module: c1-hist-032
 level: C1-HIST
 slug: emskyi-ukaz-tekst
 version: '1.0'
-id: c1-hist-32
+id: c1-hist-032
 build:
   last_modified: '2026-01-26'

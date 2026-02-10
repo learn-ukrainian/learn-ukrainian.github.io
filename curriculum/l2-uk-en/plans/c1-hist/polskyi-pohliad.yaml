@@ -1,5 +1,5 @@
 ---
-module: polskyi-pohliad
+module: c1-hist-005
 level: c1-hist
 sequence: 5
 version: '1.0'

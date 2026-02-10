@@ -1,201 +1,121 @@
----
-- term: імперський наратив
-  ipa: /imˈpersʲkɪj nɑrɑˈtɪw/
-  translation: imperial narrative
-  pos: noun phrase
-  notes: Цілеспрямована система історіописання, що обслуговує геополітичні інтереси імперії
+# Vocabulary: Російська імперіальна історіографія
 
-- term: Малоросія
-  ipa: /mɑloˈrosijɑ/
-  translation: Little Russia
-  pos: noun
-  gender: f
-  notes: Від грецького Μικρὰ Ῥωσσία (1303), спочатку означало ядрову територію Русі
+імперський наратив:
+  ipa: "imˈpɛr.sʲkɪi̯ nɑ.rɑˈtɪu̯"
+  translation: "imperial narrative"
+  definition: "Спосіб опису історії, що виправдовує домінування імперії над підкореними народами."
+  usage_example: "Імперський наратив заперечує право України на власну історію."
 
-- term: малорос
-  ipa: /mɑloˈros/
-  translation: Little Russian
-  pos: noun
-  gender: m
-  notes: Людина, яка інтерналізувала колоніальний погляд і сприймає себе як «підлеглого росіянина»
+привласнення:
+  ipa: "prɪu̯ˈɫɑs.nɛnʲ.nʲɐ"
+  translation: "appropriation"
+  definition: "Незаконне захоплення чужої власності, спадщини або історії; оголошення чужого своїм."
+  usage_example: "Привласнення історії Київської Русі стало основою російської ідеології."
 
-- term: малоросійство
-  ipa: /mɑloroˈsijstwo/
-  translation: Little Russianism
-  pos: noun
-  gender: n
-  notes: Комплекс зниженого патріотизму та провінційності; Маланюк класифікував 5 типів
+легітимація:
+  ipa: "lɛ.ɦʲi.tɪˈmɑ.t͡sʲi.jɐ"
+  translation: "legitimization"
+  definition: "Надання законності, виправдання певних дій (наприклад, загарбання) в очах суспільства."
+  usage_example: "Історія слугувала легітимації територіальних загарбань Російської імперії."
 
-- term: "возз'єднання"
-  ipa: /wozːjedˈnɑnːɑ/
-  translation: reunification
-  pos: noun
-  gender: n
-  notes: Пропагандистський термін щодо Переяславської ради 1654; передбачає попередню єдність, якої не було
+асиміляція:
+  ipa: "ɑ.sɪ.mʲiˈlʲɑ.t͡sʲi.jɐ"
+  translation: "assimilation"
+  definition: "Втрата одним народом своєї мови та культури під впливом іншого, панівного народу."
+  usage_example: "Політика русифікації мала на меті повну асиміляцію українців."
 
-- term: привласнення
-  ipa: /prɪwˈlɑsnenːɑ/
-  translation: appropriation
-  pos: noun
-  gender: n
-  notes: Привласнення Київської Русі як «початку Росії» — основа імперського наративу
+деконструкція:
+  ipa: "dɛ.kɔnˈstruk.t͡sʲi.jɐ"
+  translation: "deconstruction"
+  definition: "Критичний аналіз тексту або міфу з метою виявлення прихованих смислів та суперечностей."
+  usage_example: "Деконструкція імперських міфів є завданням сучасної української науки."
 
-- term: легітимація
-  ipa: /leɦitɪmɑˈt͡sijɑ/
-  translation: legitimation
-  pos: noun
-  gender: f
-  notes: Використання історії для обґрунтування права імперії на панування
+шовінізм:
+  ipa: "ʃɔ.ʋʲiˈnʲizm"
+  translation: "chauvinism"
+  definition: "Ідеологія, що проповідує національну винятковість одного народу та зневагу до інших."
+  usage_example: "Великодержавний шовінізм був основою політики царату."
 
-- term: асиміляція
-  ipa: /ɑsimilʲɑˈt͡sijɑ/
-  translation: assimilation
-  pos: noun
-  gender: f
-  notes: Культурна асиміляція як стратегічна мета імперії щодо українців
+експансіонізм:
+  ipa: "ɛks.pɑn.sʲi.ɔˈnʲizm"
+  translation: "expansionism"
+  definition: "Політика розширення сфери впливу, захоплення нових територій."
+  usage_example: "Історичні праці виправдовували російський експансіонізм на Захід."
 
-- term: теорія Погодіна
-  ipa: /teoˈrijɑ poˈɦodinɑ/
-  translation: Pogodin theory
-  pos: noun phrase
-  notes: Теза 1856 р., що населення Києва переселилося на північ і стало москвичами
+газлайтинг:
+  ipa: "ɡɑzˈlɑi̯.tɪnɦ"
+  translation: "gaslighting"
+  definition: "Форма психологічної маніпуляції, що змушує жертву сумніватися в адекватності свого сприйняття реальності (тут: історичної пам'яті)."
+  usage_example: "Заперечення існування української мови було формою культурного газлайтингу."
 
-- term: братні народи
-  ipa: /ˈbrɑtni nɑˈrodɪ/
-  translation: fraternal peoples
-  pos: noun phrase
-  notes: Радянська формула, яка маскувала ієрархію «старший брат» (росіяни) — «молодший» (українці)
+телеологія:
+  ipa: "tɛ.lɛ.ɔˈlɔ.hʲi.jɐ"
+  translation: "teleology"
+  definition: "Вчення про доцільність; в історії — уявлення, що події неминуче рухаються до певної заздалегідь визначеної мети (наприклад, створення імперії)."
+  usage_example: "Карамзін вибудував телеологію, де вся історія Русі неминуче вела до Москви."
 
-- term: один народ
-  ipa: /oˈdɪn nɑˈrod/
-  translation: one people
-  pos: noun phrase
-  notes: Путінська теза 2021 року — синтез 200-річного імперського наративу
+автохтонність:
+  ipa: "ɑu̯.tɔxˈtɔn.nʲisʲtʲ"
+  translation: "autochthony"
+  definition: "Корінне походження, споконвічне проживання на певній території."
+  usage_example: "Максимович доводив автохтонність українського населення на Дніпрі."
 
-- term: колиска
-  ipa: /koˈlɪskɑ/
-  translation: cradle
-  pos: noun
-  gender: f
-  notes: Метафора «колиски російської державності» щодо Києва — ключовий елемент привласнення
+етноцид:
+  ipa: "ɛt.nɔˈt͡sɪd"
+  translation: "ethnocide"
+  definition: "Цілеспрямоване знищення культури, мови та ідентичності народу (культурний геноцид)."
+  usage_example: "Валуєвський циркуляр був актом лінгвістичного етноциду."
 
-- term: спадкоємність
-  ipa: /spɑdkoˈjɛmnisʲtʲ/
-  translation: succession; continuity
-  pos: noun
-  gender: f
-  notes: Ідея безперервного переходу від Києва через Москву до Петербурга
+месіанство:
+  ipa: "mɛ.sʲiˈɑn.stʋɔ"
+  translation: "messianism"
+  definition: "Віра в особливу, рятівну місію свого народу або держави."
+  usage_example: "Російське месіанство ('Третій Рим') виправдовувало будь-які злочини."
 
-- term: фальсифікація
-  ipa: /fɑlʲsɪfikɑˈt͡sijɑ/
-  translation: falsification
-  pos: noun
-  gender: f
-  notes: Свідоме спотворення історичних фактів для ідеологічних цілей
+самодержець:
+  ipa: "sɑ.mɔˈdɛr.ʒɛt͡sʲ"
+  translation: "autocrat"
+  definition: "Монарх з необмеженою владою; символ абсолютної державної сили."
+  usage_example: "Для Карамзіна самодержець був єдиним гарантом стабільності."
 
-- term: деконструкція
-  ipa: /dekonstrukˈt͡sijɑ/
-  translation: deconstruction
-  pos: noun
-  gender: f
-  notes: Метод критичного аналізу, що розкриває приховані ідеологічні структури наративу
+денаціоналізація:
+  ipa: "dɛ.nɑ.t͡sʲi.ɔ.nɑ.lʲiˈzɑ.t͡sʲi.jɐ"
+  translation: "denationalization"
+  definition: "Позбавлення національних ознак, втрата національної свідомості."
+  usage_example: "Школа була головним інструментом денаціоналізації українських дітей."
 
-- term: ідеологія
-  ipa: /ideoloˈɦijɑ/
-  translation: ideology
-  pos: noun
-  gender: f
-  notes: Система ідей, що обслуговує інтереси влади; імперська історіографія — форма ідеології
+пропаганда:
+  ipa: "prɔ.pɑˈɦɑn.dɑ"
+  translation: "propaganda"
+  definition: "Поширення поглядів, фактів, аргументів та чуток для формування громадської думки."
+  usage_example: "Імперська пропаганда називала українську мову 'зіпсованим наріччям'."
 
-- term: історична пам'ять
-  ipa: /istoˈrɪt͡ʃnɑ ˈpɑmjɑtʲ/
-  translation: historical memory
-  pos: noun phrase
-  notes: Колективне сприйняття минулого; об'єкт маніпуляції з боку імперій
+фальсифікація:
+  ipa: "fɑlʲ.sɪ.fʲiˈkɑ.t͡sʲi.jɐ"
+  translation: "falsification"
+  definition: "Підробка, викривлення фактів."
+  usage_example: "Фальсифікація літописів була поширеною практикою московських книжників."
 
-- term: автохтонний
-  ipa: /ɑwtoˈxtonːɪj/
-  translation: autochthonous; indigenous
-  pos: adjective
-  notes: Грушевський довів, що українці — автохтонне населення Наддніпрянщини
+спадкоємність:
+  ipa: "spɑd.kɔˈjɛm.nʲisʲtʲ"
+  translation: "continuity / succession"
+  definition: "Перехід прав та обов'язків, культурних традицій від попередників до нащадків."
+  usage_example: "Москва намагалася монополізувати спадкоємність від Київської Русі."
 
-- term: телеологія
-  ipa: /teleoloˈɦijɑ/
-  translation: teleology
-  pos: noun
-  gender: f
-  notes: Подання історії як наперед визначеного процесу з «природним» завершенням
+ідеологема:
+  ipa: "i.dɛ.ɔ.lɔˈɦɛ.mɑ"
+  translation: "ideologeme"
+  definition: "Стійкий елемент ідеології, штамп (наприклад, 'братні народи')."
+  usage_example: "Ідеологема про 'триєдиний народ' стала зброєю проти України."
 
-- term: замовчування
-  ipa: /zɑmowˈt͡ʃuwɑnːɑ/
-  translation: silencing; omission
-  pos: noun
-  gender: n
-  notes: Прийом, коли текст не згадує незручних фактів (Голодомор, репресії, спротив)
+регенерація:
+  ipa: "rɛ.ɦɛ.nɛˈrɑ.t͡sʲi.jɐ"
+  translation: "regeneration"
+  definition: "Відновлення, відродження."
+  usage_example: "Сьогодні ми спостерігаємо регенерацію старих імперських міфів у новій формі."
 
-- term: агентність
-  ipa: /ɑˈɦentnisʲtʲ/
-  translation: agency
-  pos: noun
-  gender: f
-  notes: Здатність суб'єкта діяти самостійно; в імперському наративі українці позбавлені агентності
-
-- term: триєдиний народ
-  ipa: /trɪjeˈdɪnɪj nɑˈrod/
-  translation: triune nation
-  pos: noun phrase
-  notes: Концепція Устрялова (1837) — великороси, малороси, білоруси як «один народ»
-
-- term: циркуляр
-  ipa: /t͡sɪrkuˈlʲɑr/
-  translation: circular; decree
-  pos: noun
-  gender: m
-  notes: Валуєвський циркуляр 1863 — таємне розпорядження про заборону українських публікацій
-
-- term: інтерналізація
-  ipa: /internɑlizɑˈt͡sijɑ/
-  translation: internalization
-  pos: noun
-  gender: f
-  notes: Засвоєння колоніального погляду самим колонізованим народом
-
-- term: підміна
-  ipa: /pidˈminɑ/
-  translation: substitution; sleight of hand
-  pos: noun
-  gender: f
-  notes: "Підміна «руський» на «російський» — основний прийом імперської історіографії"
-
-- term: маніфест
-  ipa: /mɑniˈfest/
-  translation: manifesto
-  pos: noun
-  gender: m
-  notes: Есе Путіна 2021 року — ідеологічний маніфест, а не академічна праця
-
-- term: табу
-  ipa: /tɑˈbu/
-  translation: taboo
-  pos: noun
-  gender: n
-  notes: Радянська система табу — заборонені теми в історіографії (Голодомор, ОУН)
-
-- term: десталінізація
-  ipa: /destɑlinizɑˈt͡sijɑ/
-  translation: de-Stalinization
-  pos: noun
-  gender: f
-  notes: Процес 1956 р., який не зняв табу на Голодомор та українські «національні» теми
-
-- term: Розстріляне відродження
-  ipa: /rozstriˈlʲɑne widˈrod͡ʒenːɑ/
-  translation: Executed Renaissance
-  pos: noun phrase
-  notes: Масове знищення українських інтелектуалів 1920–1930-х; тема, замовчувана в СРСР
-
-- term: звичайна схема
-  ipa: /zwɪˈt͡ʃɑjnɑ ˈsxemɑ/
-  translation: traditional scheme
-  pos: noun phrase
-  notes: "Термін Грушевського для позначення імперської схеми: Київ → Москва → Петербург"
+суб'єкт:
+  ipa: "subˈjɛkt"
+  translation: "subject"
+  definition: "Носій предметно-практичної діяльності і пізнання, джерело активності (на противагу об'єкту)."
+  usage_example: "Мета деколонізації — стати суб'єктом власної історії."

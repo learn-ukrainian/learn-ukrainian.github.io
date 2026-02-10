@@ -1,5 +1,6 @@
 ---
-module: kvitka-bio
+sequence: 6
+module: lit-06
 level: LIT
 slug: kvitka-bio
 version: '2.0'

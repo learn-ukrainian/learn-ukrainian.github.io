@@ -1,8 +1,8 @@
 ---
-module: slobozhanshchyna-identychnist
+module: c1-hist-076
 level: C1-HIST
 slug: slobozhanshchyna-identychnist
 version: '1.0'
-id: c1-hist-76
+id: c1-hist-076
 build:
   last_modified: '2026-01-26'

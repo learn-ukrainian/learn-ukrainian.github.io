@@ -1,5 +1,5 @@
 ---
-module: kozatski-litopysy-ohliad
+module: c1-hist-019
 level: c1-hist
 sequence: 19
 version: '1.0'

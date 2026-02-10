@@ -1,4 +1,6 @@
 ---
+sequence: 10
+module: oes-010
 module_number: 8
 slug: verbs-present-tense
 title_uk: 'Дієслова I: Теперішній час'

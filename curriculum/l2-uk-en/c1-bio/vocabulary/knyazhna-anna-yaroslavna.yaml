@@ -1,149 +1,174 @@
 ---
 items:
   - lemma: княжна
-    ipa: /ˈknʲɐʒnɐ/
+    ipa:
+    - knʲɐʒˈnɑ
     translation: princess
     pos: noun
     gender: f
     note: донька князя
   - lemma: королева
-    ipa: /koroˈlɛʋɐ/
+    ipa:
+    - kɔrɔˈlɛʋɐ
     translation: queen
     pos: noun
     gender: f
     note: дружина короля або правителька
   - lemma: регент
-    ipa: /ˈrɛɦent/
+    ipa:
+    - ˈrɛɦent
     translation: regent
     pos: noun
     gender: m
     note: тимчасовий правитель при малолітньому монарху
   - lemma: посольство
-    ipa: /poˈsɔlʲstʋo/
+    ipa:
+    - pɔˈsɔlʲstʋɔ
     translation: embassy
     pos: noun
     gender: n
     note: дипломатична місія
   - lemma: грамотність
-    ipa: /ˈɦrɑmɔtnʲisʲtʲ/
+    ipa:
+    - ˈɦrɑmɔtnʲisʲtʲ
     translation: literacy
     pos: noun
     gender: f
     note: вміння читати та писати
   - lemma: вінчання
-    ipa: /ʋʲinʲˈt͡ʃɐnʲːɐ/
+    ipa:
+    - ʋinʲˈt͡ʃɑnʲːɐ
     translation: coronation / wedding ceremony
     pos: noun
     gender: n
     note: релігійний обряд шлюбу або коронації
   - lemma: вдова
-    ipa: /ʋdoˈʋɑ/
+    ipa:
+    - ʋdɔˈʋɑ
     translation: widow
     pos: noun
     gender: f
     note: жінка, у якої помер чоловік
   - lemma: спадкоємець
-    ipa: /spɐdkoˈjɛmet͡sʲ/
+    ipa:
+    - spɐdkɔˈjɛmet͡sʲ
     translation: heir / successor
     pos: noun
     gender: m
     note: той, хто отримує престол або майно
   - lemma: монастир
-    ipa: /monɐsˈtɪr/
+    ipa:
+    - mɔnɐsˈtɪr
     translation: monastery
     pos: noun
     gender: m
     note: комплекс споруд релігійної громади
   - lemma: євангеліє
-    ipa: /jɛʋɐnˈɦɛlʲijɛ/
+    ipa:
+    - jeʋɐnˈɦɛlʲije
     translation: gospel
     pos: noun
     gender: n
     note: священна книга християн
   - lemma: придане
-    ipa: /ˈprɪdɐne/
+    ipa:
+    - prɪˈdɑne
     translation: dowry
     pos: noun
     gender: n
     note: майно, яке дають нареченій
   - lemma: династичний
-    ipa: /dɪnɐsˈtɪt͡ʃnɪj/
+    ipa:
+    - dɪnɐsˈtɪt͡ʃnɪi̯
     translation: dynastic
     pos: adjective
     note: пов'язаний із правлячим родом
   - lemma: коронація
-    ipa: /koronˈɑt͡sʲijɐ/
+    ipa:
+    - kɔrɔˈnɑt͡sʲijɐ
     translation: coronation
     pos: noun
     gender: f
     note: урочисте возведення на престол
   - lemma: печатка
-    ipa: /peˈt͡ʃɑtkɐ/
+    ipa:
+    - peˈt͡ʃɑtkɐ
     translation: seal / stamp
     pos: noun
     gender: f
     note: засіб засвідчення документів
   - lemma: абатство
-    ipa: /ɐˈbɑtstʋo/
+    ipa:
+    - ɐˈbɑtstʋɔ
     translation: abbey
     pos: noun
     gender: n
     note: великий католицький монастир
   - lemma: посаг
-    ipa: /ˈpɔsɐɦ/
+    ipa:
+    - ˈpɔsɐɦ
     translation: dowry
     pos: noun
     gender: m
     note: майно нареченої (синонім до "придане")
   - lemma: порфірородна
-    ipa: /porfʲiroˈrɔdnɐ/
+    ipa:
+    - pɔrfʲirɔˈrɔdnɐ
     translation: born in the purple
     pos: adjective
     note: титул принцеси, народженої у панівному роді
   - lemma: транзит
-    ipa: /trɐnˈzɪt/
+    ipa:
+    - trɐnˈzɪt
     translation: transit / passage
     pos: noun
     gender: m
     note: проїзд через територію
   - lemma: кирилиця
-    ipa: /kɪˈrɪlɪt͡sʲɐ/
+    ipa:
+    - kɪˈrɪlɪt͡sʲɐ
     translation: Cyrillic
     pos: noun
     gender: f
     note: слов'янське письмо
   - lemma: релікварій
-    ipa: /relʲiˈkʋarʲij/
+    ipa:
+    - relʲiˈkʋɑrʲii̯
     translation: reliquary
     pos: noun
     gender: m
     note: вмістилище для реліквій
   - lemma: ктитор
-    ipa: /ˈktɪtor/
+    ipa:
+    - ˈktɪtɔr
     translation: founder / patron
     pos: noun
     gender: m
     note: засновник або меценат храму
   - lemma: легітимація
-    ipa: /leɦitɪmɐˈt͡sʲijɐ/
+    ipa:
+    - leɦitɪmɐˈt͡sʲijɐ
     translation: legitimation
     pos: noun
     gender: f
     note: визнання законності
   - lemma: суб'єктність
-    ipa: /subjɛkˈtɪʋnʲistʲ/
+    ipa:
+    - subˈjɛktnʲisʲtʲ
     translation: subjectivity / agency
     pos: noun
     gender: f
     note: здатність діяти як самостійна сила
   - lemma: трансфер
-    ipa: /trɐnsˈfɛr/
+    ipa:
+    - trɐnsˈfɛr
     translation: transfer
     pos: noun
     gender: m
     note: перенесення культури або знань
   - lemma: амбасадорка
-    ipa: /ɐmbɐsɐˈdɔrkɐ/
+    ipa:
+    - ɐmbɐsɐˈdɔrkɐ
     translation: ambassador (female)
     pos: noun
     gender: f

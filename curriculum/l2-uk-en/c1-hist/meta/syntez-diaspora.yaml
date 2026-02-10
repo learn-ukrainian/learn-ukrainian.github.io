@@ -1,8 +1,8 @@
 ---
-module: syntez-diaspora
+module: c1-hist-069
 level: C1-HIST
 slug: syntez-diaspora
 version: '1.0'
-id: c1-hist-69
+id: c1-hist-069
 build:
   last_modified: '2026-01-26'

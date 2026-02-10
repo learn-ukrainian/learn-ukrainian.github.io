@@ -1,8 +1,8 @@
 ---
-module: halytsko-volynskyi-litopys-ii
+module: c1-hist-016
 level: C1-HIST
 slug: halytsko-volynskyi-litopys-ii
 version: '1.0'
-id: c1-hist-16
+id: c1-hist-016
 build:
   last_modified: '2026-01-26'

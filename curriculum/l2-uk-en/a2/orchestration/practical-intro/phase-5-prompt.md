@@ -1,0 +1,1453 @@
+# Phase 5: Critical Deep Review
+
+> **You are executing Phase 5 of an orchestrated rebuild.**
+> **Your ONLY task: Perform a rigorous, evidence-based review.**
+> **Every score must be backed by specific findings. Every finding must cite a line number.**
+
+## Files to Read (ALL REQUIRED)
+
+Read ALL of these files from disk before writing anything:
+
+1. **Content** (the lesson you're reviewing): `# Practical Introduction
+
+## Огляд
+
+**Вітаємо!** Тепер ви готові до практичних сценаріїв!
+
+Після опанування граматики А2 в модулях М01-56, настав час застосувати ваші знання в реальних ситуаціях.
+У цьому модулі ми розглянемо практичні сценарії, з якими ви зустрінетесь у М58-70.
+
+**Майбутні теми:**
+1. **Медичні ситуації** — візит до лікаря, аптека
+2. **Проживання** — готелі, оренда житла
+3. **Складні Речення** — логічні зв'язки.
+4. **Виправлення Помилок** — шліфування мови.
+
+---
+
+## Skill 1: The 7 Cases (Сім відмінків)
+
+**Чи можете ви вибрати правильний відмінок?**
+
+В українській мові сім відмінків. Кожен відмінок має свою функцію та відповідає на певні питання. Розуміння відмінків дозволяє будувати логічні речення. Ви можете сказати, хто виконує дію і на кого вона спрямована.
+
+### Model: Case Function
+
+> **Nominative** (Називний): Хто? Що? (Суб'єкт) -> **Студент** читає книгу вдома.
+> **Genitive** (Родовий): Кого? Чого? (Absence/Possession/From) -> Немає **часу**. Книга **брата**. Я з **Києва**.
+> **Dative** (Давальний): Кому? (Recipient/Feeling/Age) -> Я даю книгу **Олегові**. **Мені** холодно. **Йому** десять років.
+> **Accusative** (Знахідний): Кого? Що? (Direct Object/Direction) -> Я бачу **сестру**. Я пішов у **парк**.
+> **Instrumental** (Орудний): Ким? Чим? (Tool/With/Profession) -> Я пишу **олівцем**. Я працюю **вчителем**. Я з **другом**.
+> **Locative** (Місцевий): Де? (Location - only with prepositions) -> Книга лежить у **кімнаті**. Ми живемо в **Україні**.
+> **Vocative** (Кличний): (Address) -> **Мамо**! **Друже**! **Маріє**!
+
+> [!tip] 💡 Стратегія вибору відмінка
+> Щоб обрати правильний відмінок, завжди запитуйте: **Що робить дієслово?** Якщо це «давати», отримувач завжди в Давальному відмінку. Якщо «бачити», об'єкт завжди в Знахідному. Дієслово — це «бос» відмінків! Тренуйтеся ставити ці питання вголос.
+
+### Практика: Оберіть відмінок
+
+1. Я йду в \_\_\_ (парк / парку) - Accusative (direction).
+   > [!solution] Перевірити
+   > **парк**
+2. Я пишу \_\_\_ (олівцем / олівець) - Instrumental (tool).
+   > [!solution] Перевірити
+   > **олівцем**
+3. Немає \_\_\_ (вода / води) - Genitive (absence).
+   > [!solution] Перевірити
+   > **води**
+
+### Self-Check
+
+- ☐ Can you list all 7 cases in order?
+- ☐ Do you know the question words for each? (Кого/Чого, Кому/Чому, Ким/Чим...)
+- ☐ Can you use prepositions correctly? (без + Gen, з + Instr, в + Loc/Acc...)
+
+---
+
+## Skill 2: Verb Aspect (Вид дієслова)
+
+**Чи розрізняєте ви процес і результат?**
+
+Вид дієслова — це фундаментальна категорія. Більшість українських дієслів мають пару: Недоконаний (процес) і Доконаний (результат). Це допомагає розрізняти дію в процесі та завершену дію.
+
+### Model: Aspect Pairs
+
+> **Недоконаний вид** / Imperfective:
+> Focuses on duration, frequency, or the process itself.
+>
+> - Я **писав** листа вчора дві години. (тривалість)
+> - Я **часто купував** каву тут. (звичка)
+> - Я буду **читати** завтра ввечері. (майбутній процес)
+
+> **Доконаний вид** / Perfective:
+> Focuses on the completed action, result, or one-time event.
+>
+> - Я **написав** листа і відправив його. (результат)
+> - Я **купив** каву сьогодні вранці. (одноразова дія)
+> - Я **прочитаю** цю книгу до вечора. (майбутній результат)
+
+### Практика: Оберіть вид
+
+1. Вчора я \_\_\_ (читав / прочитав) книгу 2 години.
+   > [!solution] Перевірити
+   > **читав** (Process/Duration)
+2. Я вже \_\_\_ (читав / прочитав) цю книгу, вона цікава.
+   > [!solution] Перевірити
+   > **прочитав** (Result)
+3. Завтра я обов'язково \_\_\_ (писатиму / напишу) листа бабусі.
+   > [!solution] Перевірити
+   > **напишу** (Future result)
+
+### Self-Check
+
+- ☐ Do you use Imperfective for duration/habitual actions?
+- ☐ Do you use Perfective for result or one-time completion?
+- ☐ Can you form the Future Perfective using prefixes (напишу, зроблю, прочитаю)?
+
+---
+
+## Skill 3: Complex Sentences (Складні речення)
+
+**Чи можете ви логічно поєднувати думки?**
+
+Складні речення пояснюють «чому», «як», «якщо» і «коли». На рівні А2 ми використовуємо логічні сполучники. Ці маленькі слова з'єднують ваші думки.
+
+### Model: Connectors
+
+> **Тому що / Бо** (Because): Пояснює причину.
+>
+> - Я залишився вдома, **тому що** сьогодні дуже холодно.
+>   **Щоб** (In order to): Пояснює мету.
+> - Я вчу українську мову, **щоб** краще розуміти друзів.
+>   **Який / Яка / Яке / Які** (Which/Who): Описує іменник.
+> - Це місто, **яке** мені дуже подобається.
+>   **Якщо** (If): Виражає умову.
+> - **Якщо** завтра буде сонце, ми підемо на прогулянку.
+>   **Хоча** (Although): Виражає контраст.
+> - **Хоча** він втомився, він продовжував працювати.
+
+> [!myth-buster] 🔍 Пастка «Що»
+> Учні часто забувають про слово **що**. Воно обов'язкове при поєднанні думок. Майже завжди перед ним потрібна кома. В англійській ви кажете «I think he is here.» В українській треба: «Я думаю, **що** він тут.» Не пропускайте «що»!
+
+> [!note] 🌍 Ввічливість
+> Українці часто використовують слова «будь ласка» та «дякую». Це показує вашу повагу. Навіть якщо ви робите помилки, ввічливість завжди допомагає!
+
+### Практика: З'єднайте слова
+
+1. Я працюю в офісі, \_\_\_ (тому що) мені потрібні гроші.
+   > [!solution] Перевірити
+   > **тому що / бо** (Reason)
+2. Ми прийшли сюди, \_\_\_ (щоб) допомогти вам.
+   > [!solution] Перевірити
+   > **щоб** (Purpose)
+3. Це мій старий друг, \_\_\_ (який) живе в Одесі.
+   > [!solution] Перевірити
+   > **який** (Description)
+
+### Self-Check
+
+- ☐ Can you explain «Why» using *тому що*?
+- ☐ Can you explain «What for» using *щоб*?
+- ☐ Can you describe a person or object using *який*?
+- ☐ Do you remember to put a comma before these connectors?
+
+---
+
+## Skill 4: Common Mistakes (Типові помилки)
+
+**Чи можете ви знайти та виправити типові помилки?**
+
+### Model: Error Correction
+
+> **1. Напрямок проти Місця** (Direction vs. Location)
+> ❌ **Я гуляю в парк.** (Відмінок напрямку використано для місця)
+> ✅ **Я гуляю в парку.** (Місцевий відмінок потрібен для «де»)
+> ✅ **Я йду в парк.** (Знахідний відмінок правильний для «куди»)
+
+> **2. Керування дієслів** (Verb Governance)
+> ❌ **Я дякую тебе.** (Знахідний використано замість Давального)
+> ✅ **Я дякую тобі.** (Дієслова як *дякувати* вимагають Давального)
+
+> **3. Логіка володіння** (Possession Logic)
+> ❌ **Я маю болить голова.** (Дослівний переклад)
+> ✅ **У мене болить голова.** (Стандартна структура володіння)
+
+### Практика: Виправте речення
+
+1. Я граю в футболі. (Це правильно?)
+   > [!solution] Перевірити
+   > **Ні.** Правильно: «Я граю у **футбол**» (Знахідний для спорту).
+2. Я їду в Києві.
+   > [!solution] Перевірити
+   > **Ні.** Правильно: «Я їду в **Київ**» (Рух вимагає Знахідного).
+3. Привіт, Олександр!
+   > [!solution] Перевірити
+   > **Ні.** Правильно: «Привіт, **Олександре**!» (Потрібен Кличний).
+
+### Self-Check
+
+- ☐ Do you distinguish between Motion (Acc) and Location (Loc)?
+- ☐ Do you use Dative with verbs of communication?
+- ☐ Do you use Instrumental with verbs of being/working?
+
+> [!important] ⚡ Остання порада
+> Не бійтеся помилок. Вони показують, що ви вчитеся! Носії мови оцінять ваші зусилля. Вони зрозуміють вас, навіть з помилками. Практикуйтеся і спілкуйтеся!
+
+---
+
+## Інтеграційне завдання
+
+Прочитайте історію та визначте граматичні моменти (1-9).
+
+> Майкл приїхав у **Київ** (1) минулого тижня. Він дуже хотів побачити **місто** (2), **яке** (3) має таку давню історію. **Хоча** (4) він ще не дуже добре знав мову, він купив **розмовник** (5) і говорив. Вчора він довго **гуляв** (6) центром і випадково **зустрів** (7) друга. Друг допоміг **йому** (8) знайти метро. Тепер Майкл **щасливий** (9), що має таких друзів.
+
+1. **Київ** - Accusative (Motion/Direction)
+2. **місто** - Accusative (Direct Object)
+3. **яке** - Relative Pronoun (Description)
+4. **Хоча** - Connector (Contrast)
+5. **розмовник** - Accusative (Direct Object)
+6. **гуляв** - Imperfective Verb (Process)
+7. **зустрів** - Perfective Verb (Result)
+8. **йому** - Dative Case (Recipient)
+9. **щасливий** - Adjective (Agreement)
+
+---
+
+# Підсумок
+
+Вітаємо! Ви успішно повторили граматику рівня А2. Тепер ви можете краще висловлювати думки та описувати дії. Ви створили фундамент для рівня В1.
+
+| Skill | Key Concept | Mastery Level |
+| ----- | ----------- | ------------- |
+| **Cases** | 7 Syntactic Roles | High |
+| **Aspect** | Process vs. Result | High |
+| **Syntax** | Logical Connectors | High |
+| **Accuracy** | Error Detection | High |
+
+**Наступні кроки:**
+Ви опанували граматику А2! Тепер ви готові до рівня В1. Там ми вивчимо синоніми та складні розповіді. Також ми дізнаємося більше про культуру України.
+
+---
+
+## Need More Practice?
+
+Повторіть словник усього курсу А2 у Модулі 56 та практикуйте письмо! Використовуйте слова зі списку, щоб практикувати нові слова в контексті!
+`
+2. **Activities**: `---
+- type: quiz
+  title: Grammar Master
+  items:
+  - question: Which grammatical case is primarily used for indicating a location in Ukrainian?
+    options:
+    - text: Locative
+      correct: true
+    - text: Accusative
+      correct: false
+    - text: Dative
+      correct: false
+    - text: Genitive
+      correct: false
+  - question: Which case correctly completes the phrase «Я працюю...» to mean "I work as"?
+    options:
+    - text: Instrumental (менеджером)
+      correct: true
+    - text: Nominative (менеджер)
+      correct: false
+    - text: Genitive (менеджера)
+      correct: false
+    - text: Locative (менеджері)
+      correct: false
+  - question: Which case is required after the phrase «У мене немає...» (I don't have)?
+    options:
+    - text: Genitive (часу)
+      correct: true
+    - text: Accusative (час)
+      correct: false
+    - text: Instrumental (часом)
+      correct: false
+    - text: Dative (часу)
+      correct: false
+  - question: Which case is used for the direct object in the phrase «Я бачу...»?
+    options:
+    - text: Accusative (сестру)
+      correct: true
+    - text: Nominative (сестра)
+      correct: false
+    - text: Dative (сестрі)
+      correct: false
+    - text: Locative (сестрі)
+      correct: false
+  - question: What does the "Imperfective" verb aspect typically describe in a sentence?
+    options:
+    - text: Process / Habit / Duration
+      correct: true
+    - text: Result / Completion
+      correct: false
+    - text: Command / Order
+      correct: false
+    - text: Wish / Desire
+      correct: false
+  - question: What is the meaning and function of the connector «щоб» in a complex sentence?
+    options:
+    - text: In order to / Purpose
+      correct: true
+    - text: Because / Reason
+      correct: false
+    - text: But / Contrast
+      correct: false
+    - text: And / Addition
+      correct: false
+  - question: Which case is used for the recipient in the phrase «Я даю подарунок...»?
+    options:
+    - text: Dative (мамі)
+      correct: true
+    - text: Nominative (мама)
+      correct: false
+    - text: Genitive (мами)
+      correct: false
+    - text: Accusative (маму)
+      correct: false
+  - question: Which case is used to describe the tool in the phrase «Я пишу...»?
+    options:
+    - text: Instrumental (олівцем)
+      correct: true
+    - text: Nominative (олівець)
+      correct: false
+    - text: Genitive (олівця)
+      correct: false
+    - text: Accusative (олівець)
+      correct: false
+  - question: Which case is used with the preposition «з» meaning "from" in «Він прийшов з...»?
+    options:
+    - text: Genitive (магазину)
+      correct: true
+    - text: Nominative (магазин)
+      correct: false
+    - text: Locative (магазині)
+      correct: false
+    - text: Instrumental (магазином)
+      correct: false
+  - question: Which case follows the preposition «про» in the phrase «Ми говоримо про...»?
+    options:
+    - text: Accusative (політику)
+      correct: true
+    - text: Nominative (політика)
+      correct: false
+    - text: Genitive (політики)
+      correct: false
+    - text: Instrumental (політикою)
+      correct: false
+  - question: Which case is used for location in the phrase «Я живу в...»?
+    options:
+    - text: Locative (Україні)
+      correct: true
+    - text: Nominative (Україна)
+      correct: false
+    - text: Genitive (України)
+      correct: false
+    - text: Accusative (Україну)
+      correct: false
+  - question: Which special case form is used when addressing someone directly, like «Привіт, ...»?
+    options:
+    - text: Vocative (друже)
+      correct: true
+    - text: Nominative (друг)
+      correct: false
+    - text: Genitive (друга)
+      correct: false
+    - text: Dative (другу)
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: match-up
+  title: Case Functions
+  pairs:
+  - left: Студент читає книгу
+    right: Називний (Суб'єкт)
+  - left: Немає вільного часу
+    right: Родовий (Відсутність)
+  - left: Даю подарунок мамі
+    right: Давальний (Адресат)
+  - left: Бачу гарну дівчину
+    right: Знахідний (Об'єкт)
+  - left: Пишу гострою ручкою
+    right: Орудний (Інструмент)
+  - left: Я працюю інженером
+    right: Орудний (Роль)
+  - left: Живу в центрі міста
+    right: Місцевий (Місце)
+  - left: Привіт, мій друже!
+    right: Кличний (Звертання)
+  - left: Машина стоїть біля
+    right: Родовий (Прийменник)
+  - left: Ми йдемо до театру
+    right: Родовий (Напрямок)
+  - left: Їду автобусом на
+    right: Орудний (Транспорт)
+  - left: Мрію про відпустку
+    right: Місцевий (Об'єкт думки)
+  instruction: З'єднайте відповідні елементи.
+- type: cloze
+  title: Case Challenge
+  passage: 'Я йду в {парк|парку|парком|паркі}_. Я гуляю в {парку|парк|парком|парка}_. Я не бачу {автобуса|автобус|автобусом|автобусі}_.
+
+    Я їм {суп|супу|супом|супі}_. Я їм суп {ложкою|ложка|ложку|ложці}_. Я телефоную {татові|тато|тата|татом}_.
+
+    Ми з {братом|брат|брата|брату}_. Книга лежить на {столі|стіл|столу|столом}_. У {мене|мені|я|мною}_ є ідея.
+
+    Це подарунок для {сестри|сестрі|сестру|сестра}_. Я хочу стати {художником|художник|художника|художнику}_. Привіт, {Іване|Іван|Івана|Іваном}_!'
+  instruction: Заповніть пропуски, обравши правильні слова.
+- type: true-false
+  title: Grammar Truths
+  items:
+  - statement: '"Dative" case is used for "Where?".'
+    correct: false
+    explanation: Locative is for Where.
+  - statement: '"Accusative" is used for Direct Object.'
+    correct: true
+    explanation: Yes.
+  - statement: Negative sentences (Немає...) usually take Genitive.
+    correct: true
+    explanation: Yes.
+  - statement: '"With my friend" uses Instrumental.'
+    correct: true
+    explanation: З другом.
+  - statement: «Я працюю...» takes Instrumental case.
+    correct: true
+    explanation: Я працюю лікарем.
+  - statement: Perfective verbs explain a process.
+    correct: false
+    explanation: Imperfective explain process.
+  - statement: «Тому що» means "Although".
+    correct: false
+    explanation: Because.
+  - statement: Neuter nouns end in -а usually.
+    correct: false
+    explanation: -о or -е. -а is Feminine.
+  - statement: '"Vocative" is for calling someone.'
+    correct: true
+    explanation: Yes.
+  - statement: Adjectives agree with nouns in gender/number/case.
+    correct: true
+    explanation: Yes.
+  - statement: «Мені треба» uses Nominative «Я».
+    correct: false
+    explanation: Dative «Мені».
+  - statement: «У мене є» uses Genitive «мене».
+    correct: true
+    explanation: Yes.
+  instruction: Визначте, чи твердження правильне.
+- type: group-sort
+  title: Aspect Sort
+  groups:
+  - name: Groups
+    items:
+    - Imperfective (Process)
+    - Perfective (Result)
+    - Connectors
+  - name: Items
+    items:
+    - 'писав: Imperfective (Process)'
+    - 'читав: Imperfective (Process)'
+    - 'робив: Imperfective (Process)'
+    - 'написав: Perfective (Result)'
+    - 'прочитав: Perfective (Result)'
+    - 'зробив: Perfective (Result)'
+    - 'купував: Imperfective (Process)'
+    - 'купив: Perfective (Result)'
+    - 'тому що: Connectors'
+    - 'якщо: Connectors'
+    - 'коли: Connectors'
+    - 'щоб: Connectors'
+  instruction: Розподіліть елементи за групами.
+- type: unjumble
+  title: Sentence Builder
+  items:
+  - words:
+    - Я
+    - не
+    - пішов
+    - у
+    - кіно
+    - тому
+    - що
+    - працював
+    answer: Я не пішов у кіно тому що працював
+  - words:
+    - Коли
+    - ми
+    - прийшли
+    - додому
+    - він
+    - вже
+    - давно
+    - спав
+    answer: Коли ми прийшли додому він вже давно спав
+  - words:
+    - Я
+    - дуже
+    - хочу
+    - щоб
+    - ти
+    - купив
+    - свіжий
+    - хліб
+    answer: Я дуже хочу щоб ти купив свіжий хліб
+  - words:
+    - Цей
+    - молодий
+    - студент
+    - який
+    - читає
+    - книгу
+    - мій
+    - друг
+    answer: Цей молодий студент який читає книгу мій друг
+  - words:
+    - Якщо
+    - завтра
+    - буде
+    - гарне
+    - сонце
+    - ми
+    - підемо
+    - гуляти
+    answer: Якщо завтра буде гарне сонце ми підемо гуляти
+  - words:
+    - Він
+    - мені
+    - сказав
+    - що
+    - дуже
+    - сильно
+    - любить
+    - Україну
+    answer: Він мені сказав що дуже сильно любить Україну
+  - words:
+    - Я
+    - зараз
+    - пишу
+    - довгого
+    - листа
+    - своєму
+    - найкращому
+    - другу
+    answer: Я зараз пишу довгого листа своєму найкращому другу
+  - words:
+    - Ми
+    - їдемо
+    - цим
+    - великим
+    - автобусом
+    - до
+    - міста
+    - Львова
+    answer: Ми їдемо цим великим автобусом до міста Львова
+  - words:
+    - На
+    - жаль
+    - у
+    - мене
+    - сьогодні
+    - немає
+    - вільного
+    - часу
+    answer: На жаль у мене сьогодні немає вільного часу
+  - words:
+    - Мені
+    - дуже
+    - подобається
+    - ця
+    - весела
+    - українська
+    - народна
+    - музика
+    answer: Мені дуже подобається ця весела українська народна музика
+  - words:
+    - Скажи
+    - мені
+    - де
+    - ти
+    - був
+    - вчора
+    - пізно
+    - ввечері
+    answer: Скажи мені де ти був вчора пізно ввечері
+  - words:
+    - Мамо
+    - скажи
+    - де
+    - лежать
+    - мої
+    - теплі
+    - зимові
+    - шкарпетки
+    answer: Мамо скажи де лежать мої теплі зимові шкарпетки
+  instruction: Розташуйте слова у правильному порядку.
+- type: error-correction
+  title: Fix the Letter
+  items:
+  - sentence: Привіт мама!
+    error: мама
+    answer: мамо
+    options:
+    - мамо
+    - мама
+    - маму
+    - мами
+    explanation: 'Vocative: Мамо.'
+  - sentence: Я живу в Київ.
+    error: Київ
+    answer: Києві
+    options:
+    - Києві
+    - Київ
+    - Києва
+    - Києвом
+    explanation: 'Locative: в Києві.'
+  - sentence: Я працюю програміст.
+    error: програміст
+    answer: програмістом
+    options:
+    - програмістом
+    - програміст
+    - програміста
+    - програмісту
+    explanation: 'Instrumental: працюю програмістом.'
+  - sentence: Я люблю Україна.
+    error: Україна
+    answer: Україну
+    options:
+    - Україну
+    - Україна
+    - України
+    - Україні
+    explanation: 'Accusative: люблю Україну.'
+  - sentence: Машина червоний.
+    error: червоний
+    answer: червона
+    options:
+    - червона
+    - червоний
+    - червоне
+    - червоні
+    explanation: 'Gender agreement (Fem): червона машина.'
+  - sentence: 'Вчора я купував машину. (Context: completed)'
+    error: купував
+    answer: купив
+    options:
+    - купив
+    - купував
+    - купую
+    - буду купувати
+    explanation: 'Result (bought): купив.'
+  - sentence: Я не маю гроші.
+    error: гроші
+    answer: грошей
+    options:
+    - гроші
+    - грошей
+    - грошам
+    - грошима
+    explanation: 'Genitive Negation: не маю грошей.'
+  - sentence: Ми йдемо з друг.
+    error: друг
+    answer: другом
+    options:
+    - другом
+    - друг
+    - друга
+    - другу
+    explanation: Instrumental.
+  - sentence: Дай мені вода.
+    error: вода
+    answer: воду
+    options:
+    - воду
+    - вода
+    - води
+    - водою
+    explanation: Accusative.
+  - sentence: Я в кімнату. (Location)
+    error: кімнату
+    answer: кімнаті
+    options:
+    - кімнаті
+    - кімнату
+    - кімната
+    - кімнатою
+    explanation: 'Locative (Where?): в кімнаті.'
+  - sentence: Я дякую вас.
+    error: вас
+    answer: вам
+    options:
+    - вам
+    - вас
+    - ви
+    - вами
+    explanation: 'Dative: дякую *кому?* вам.'
+  - sentence: Я чекаю автобус.
+    error: автобус
+    answer: автобуса
+    options:
+    - автобуса
+    - автобус
+    - автобусі
+    - автобусом
+    explanation: Genitive after «чекати». Or Accusative «автобус». Both are used.
+  - sentence: Я пишу ручка.
+    error: ручка
+    answer: ручкою
+    options:
+    - ручкою
+    - ручка
+    - ручку
+    - ручки
+    explanation: Instrumental.
+  instruction: Знайдіть і виправте помилку в реченні.
+- type: cloze
+  title: Grammar Fill
+  passage: 'Я {новий|нова|нове} студент. Я {навчаюся|навчаюсь|вчу} в університеті.
+
+    Вчора я {купив|купував|куплю} книгу.
+
+    Книга {була|був|було} дуже цікава.
+
+    Я читав її {весь|все|всі} вечір.
+
+    Мій друг {ніколи|завжди|часто} не читає книги.
+
+    Він любить {грати|граю|грав} у футбол.
+
+    Ми з {ним|він|його} різні, але ми друзі.
+
+    У нас є спільна {мрія|мета|ціль}.
+
+    Ми разом {вивчаємо|вчимо|знаємо} англійську.
+
+    Я {думаю|знаю|бачу}, що це важливо.
+
+    Ми хочемо {побачити|бачити|дивитися} світ.'
+  instruction: Заповніть пропуски, обравши правильні слова.
+- type: mark-the-words
+  title: Identification
+  text: Вчора я встав о 7:00. Я поснідав і випив каву. Потім я пішов на роботу. Я зробив важливий звіт. Ввечері я купив продукти і приготував вечерю. Я швидко заснув.
+  answers:
+  - встав
+  - поснідав
+  - випив
+  - пішов
+  - зробив
+  - купив
+  - приготував
+  - заснув
+  instruction: Клацніть на слова, що відповідають критерію.
+- type: select
+  title: Case Detector
+  items:
+  - question: «Мамо!»
+    options:
+    - text: Vocative
+      correct: true
+    - text: Nominative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: Calling mom.
+  - question: «У Києві»
+    options:
+    - text: Locative
+      correct: true
+    - text: Dative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: In Kyiv.
+  - question: «З другом»
+    options:
+    - text: Instrumental
+      correct: true
+    - text: Genitive
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: With friend.
+  - question: «Немає води»
+    options:
+    - text: Genitive
+      correct: true
+    - text: Accusative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: No water.
+  - question: «Пишу листа»
+    options:
+    - text: Accusative
+      correct: true
+    - text: Nominative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: Writing a letter.
+  - question: «Даю брату»
+    options:
+    - text: Dative
+      correct: true
+    - text: Locative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: Giving to brother.
+  - question: «Я - студент»
+    options:
+    - text: Nominative
+      correct: true
+    - text: Instrumental
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: Subject.
+  - question: «Працюю лікарем»
+    options:
+    - text: Instrumental
+      correct: true
+    - text: Accusative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: Working as.
+  - question: «Після уроку»
+    options:
+    - text: Genitive
+      correct: true
+    - text: Dative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: After lesson.
+  - question: «Через ліс»
+    options:
+    - text: Accusative
+      correct: true
+    - text: Locative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: Through forest.
+  - question: «На столі»
+    options:
+    - text: Locative
+      correct: true
+    - text: Nominative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: On table.
+  - question: «Бачу маму»
+    options:
+    - text: Accusative
+      correct: true
+    - text: Genitive
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: See mom.
+  instruction: Оберіть усі правильні відповіді.
+- type: fill-in
+  title: Grammar Practice Fill-In
+  instruction: Заповніть пропуски правильним словом.
+  items:
+    - sentence: 'Я даю книгу [___].'
+      answer: другові
+      options: [другові, друг, друга, другом]
+    - sentence: 'Ми їдемо [___] Львова.'
+      answer: до
+      options: [до, на, в, у]
+    - sentence: 'Він [___] лист учора.'
+      answer: написав
+      options: [написав, писав, пише, напише]
+    - sentence: 'Вона працює [___].'
+      answer: лікаркою
+      options: [лікаркою, лікарка, лікарку, лікарці]
+    - sentence: 'Я телефоную [___].'
+      answer: мамі
+      options: [мамі, маму, мама, мамою]
+    - sentence: 'Діти [___] у парку щодня.'
+      answer: гралися
+      options: [гралися, пограли, грають, погралися]
+    - sentence: 'Машина стоїть біля [___].'
+      answer: будинку
+      options: [будинку, будинок, будинком, будинки]
+    - sentence: 'Я [___] українську мову три роки.'
+      answer: вивчаю
+      options: [вивчаю, вивчив, вивчу, вивчати]
+`
+3. **Vocabulary**: `---
+module: 57-practical-intro
+level: A2
+version: '2.0'
+items:
+- lemma: виправлення
+  ipa: /ʋˈɪpraʋlɛnnja/
+  translation: correction
+  pos: noun
+  gender: n
+- lemma: майкл
+  ipa: /majkl/
+  translation: Michael (name)
+  pos: noun
+  gender: m
+- lemma: оренда
+  ipa: /ɔrˈɛnda/
+  translation: rent, lease
+  pos: noun
+  gender: f
+- lemma: оцінити
+  ipa: /ɔt͡sinˈɪtɪ/
+  translation: to evaluate, to appreciate
+  pos: verb
+- lemma: розмовник
+  ipa: /rɔzmˈɔʋnɪk/
+  translation: phrasebook
+  pos: noun
+  gender: m
+- lemma: шліфування
+  ipa: /ʃlifuʋˈannja/
+  translation: grinding, polishing
+  pos: noun
+  gender: n
+`
+4. **Plan** (source of truth for scope): `module: a2-57
+level: A2
+sequence: 57
+slug: practical-intro
+version: '2.0'
+title: Practical Intro
+subtitle: Real World Ukrainian
+content_outline:
+- section: Огляд
+  words: 100
+  points:
+  - From theory to practice
+  - Real-world communication
+- section: 'Skill 1: The 7 Cases (Сім відмінків)'
+  words: 306
+  points:
+  - All cases overview
+  - When to use each case
+- section: 'Skill 2: Verb Aspect (Вид дієслова)'
+  words: 163
+  points:
+  - Perfective vs imperfective
+  - Aspect in context
+- section: 'Skill 3: Complex Sentences (Складні речення)'
+  words: 173
+  points:
+  - Conjunctions and connectors
+  - Building complex sentences
+- section: 'Skill 4: Common Mistakes (Типові помилки)'
+  words: 133
+  points:
+  - Case confusion
+  - Aspect errors
+- section: Інтеграційне завдання
+  words: 100
+  points:
+  - Integration challenge
+  - Apply all skills
+- section: Підсумок
+  words: 25
+  points:
+  - Summary and next steps
+word_target: 1000
+vocabulary_hints:
+  required:
+  - речення (sentence)
+  - слово (word)
+  - граматика (grammar)
+  - правило (rule)
+  - помилка (mistake)
+  - правильно (correctly)
+  - неправильно (incorrectly)
+  - контекст (context)
+  recommended:
+  - відмінок (case)
+  - вид (aspect)
+  - сполучник (conjunction)
+  - порядок (order)
+activity_hints:
+- type: fill-in
+  focus: Case selection in context
+  items: 20
+- type: error-correction
+  focus: Fix grammar mistakes
+  items: 20
+- type: unjumble
+  focus: Build complex sentences
+  items: 15
+- type: quiz
+  focus: Grammar rules review
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-56 (Checkpoint Full Grammar)
+connects_to:
+- a2-58 (Practical Warm-up)
+objectives:
+- Learner can identify all 7 cases in context
+- Learner can choose correct verb aspect
+- Learner can fix common grammar mistakes
+- Learner can build complex sentences
+grammar:
+- Case system review in practical contexts
+- Verb aspect review for real situations
+- Sentence structure and common errors
+register: розмовний
+phase: A2.6 [Practical]
+`
+5. **Meta** (build config): `---
+module: a2-57
+level: A2
+slug: practical-intro
+version: '2.0'
+id: a2-57
+naturalness:
+  score: 9
+  status: PASS
+  justification: Bridge to practical application
+duration: 60
+transliteration: none
+word_target: 980
+build:
+  last_modified: '2026-01-26'
+`
+6. **Research notes** (if exists): `# Research Notes: Practical Intro (Real World Ukrainian)
+
+**Track**: Core A
+**Module**: A2 M57 "Practical Intro"
+**Researched**: 2026-02-08
+**Level**: A2 (Elementary II)
+
+## 1. Grammar: State Standard 2024 Reference
+
+This module serves as a consolidation and "bridge" from theoretical grammar (A2.1-A2.5) to practical application (A2.6). It aligns with the **Державний стандарт української мови як іноземної (2024)** for the **Elementary Level II (A2)** (Початковий рівень другого ступеня).
+
+### Relevant Sections:
+- **§ 4.2.2. Уживання відмінкових форм іменників**: Covers the functional use of all 7 cases (Nominative to Vocative) in practical contexts like identification, location, and object relations.
+- **§ 4.3.2. Видові пари дієслів**: Focuses on the functional distinction between imperfective and perfective aspects in real situations (making, doing vs. finished/result).
+- **§ 4.4.2. Складне речення**: Requirements for complex sentences using conjunctions: *і, але, що, тому що, бо, щоб*.
+
+**Quote (ДСТУ 2024, Section 4, Level A2):**
+> "Обсяг граматичних умінь рівня А2 охоплює усі аспекти, що перелічені на рівні А1, але з розширенням лексичного матеріалу, зростанням діапазону синтаксичних структур та ситуацій комунікації."
+> *(The scope of A2 grammar skills covers all A1 aspects but with expanded lexical material, a wider range of syntactic structures, and communication situations.)*
+
+## 2. Vocabulary Frequency
+
+At this stage, the student needs "metalinguistic" vocabulary to discuss their own learning and common practical words for communication.
+
+### High-Frequency "Grammar & Practice" Words:
+- **речення** (sentence) — *Essential for following instructions.*
+- **слово** (word) — *High frequency.*
+- **правило** (rule) — *Common in learning contexts.*
+- **помилка** (mistake) — *High frequency in feedback.*
+- **правильно/неправильно** (correct/incorrect) — *Core adverbs.*
+- **відмінок** (case) — *Technical but necessary for A2 review.*
+- **вид** (aspect) — *Technical.*
+
+### Practical "Real World" Connectors (High Frequency):
+- **сполучник** (conjunction) — *Used to explain complex sentences.*
+- **контекст** (context) — *Crucial for shifting from drills to usage.*
+- **значить** (it means) — *Conversational filler and clarification tool.*
+- **наприклад** (for example) — *Universal frequency.*
+
+## 3. Cultural Hook: Politeness and Register in Modern Ukraine
+
+### The "Доброго дня" vs "Добрий день" Debate:
+While the standard grammar suggests **"Добрий день"** (Nominative) as the primary greeting, the Genitive form **"Доброго дня"** is ubiquitously used in modern service industries (cafes, shops, emails) as a "politeness marker." Introducing students to the fact that "natural" Ukrainian often includes these variations helps them transition to the "Real World" subtitle of this module.
+
+### "Ви" vs "Ти" in Service:
+In Ukraine, even young people in service positions will strictly use **"Ви"** (the formal you) with customers. A common "practical" error for English speakers is defaulting to the informal "ти" because they feel friendly. This module emphasizes the formal register (**розмовний офіційний**) for the upcoming "Practical" phase (doctor, hotel, etc.).
+
+## 4. Pedagogical Notes
+
+### Shifting from Drills to Intuition:
+Students have just passed a massive grammar checkpoint (M56). They likely feel "overloaded" with rules. 
+- **The "Rule of 70%":** At this stage, learners often know the rules intellectually but only apply them correctly 70% of the time in spontaneous speech. The goal here is "Harmonization"—recognizing the *rhythm* of the cases rather than just the charts.
+- **Common Error: Case Attrition.** Under pressure, students often "lose" the Accusative or Genitive endings and default to the Nominative.
+- **Common Error: Aspectual Tunnel Vision.** Using perfective verbs for every past action because they want to show "result," even when describing a process.
+
+### Teaching Sequence:
+1. **Diagnosis:** Use error-correction activities to see which of the 7 cases is weakest.
+2. **Expansion:** Move from simple sentences (*Я бачу парк*) to complex ones (*Я бачу парк, який мені подобається*).
+3. **Feedback:** Focus on "global" errors (meaning-breaking) before "local" errors (small ending mistakes).
+
+## 5. Scope Boundaries
+
+### IN Scope (A2 Mastery):
+- **Cases:** All 7 cases (singular/plural) for basic nouns and pronouns.
+- **Aspect:** Basic prefixes (*про-*, *на-*, *по-*) and suffixes (*-ува-*, *-а-*).
+- **Sentence Structure:** Coordination (*і, але*) and Subordination (*що, бо, тому що, щоб, який*).
+- **Register:** Distinction between formal and informal "you."
+
+### OUT of Scope (B1+):
+- **Participles & Gerunds:** *читаючий, прочитавши* (strictly B2).
+- **Passive Voice:** *будинок будується* (B1/B2 focus).
+- **Complex Numerals:** Agreement with numbers above 5 in indirect cases (*п'яти студентів*) is still too complex; keep to Nominative/Accusative.
+- **Subjunctive Mood beyond basic "якби":** Keep conditionals simple.
+
+---
+**Data Source:** docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
+**Track:** A2.6 [Practical]
+`
+
+**Do not proceed until you have read every line of the content and every activity item.**
+
+> **ANTI-STALE-REVIEW RULE**: This file may have been fixed since a previous review. You MUST review the CURRENT state of the files, not repeat findings from a prior review. If an issue was cited before but is now fixed, it must NOT appear in your review. Every finding must be verifiable by quoting the actual current content.
+
+## Audit Metrics (Facts from Claude)
+
+```
+Word count:       1323 / 1000 (132%)
+Activities:       11
+Vocabulary items: 0
+Engagement boxes: 2
+Immersion:        varies% (target: varies)
+Audit status:     pending review
+```
+
+---
+
+## STEP 1: PLAN VERIFICATION
+
+Cross-check content against the plan file:
+
+1. **Outline compliance**: Is every section from `content_outline` present as an H2/H3?
+2. **Vocabulary scope**: List every Ukrainian vocabulary word taught in the content. Compare against `vocabulary_hints.required` in the plan. Flag any word NOT in the plan.
+3. **Grammar scope**: What grammar does this module teach? What grammar from LATER modules appears in examples or dialogues? (This is scope creep — flag it.)
+4. **Objectives**: Are all learning objectives from the plan addressed in the content?
+
+Report findings as:
+```
+Plan-Content Alignment: [PASS/FAIL]
+- Sections: [all present / missing: X, Y]
+- Vocabulary: [X/Y from plan used, Z extra words found]
+- Grammar scope: [clean / scope creep: specific items]
+- Objectives: [all covered / missing: X]
+```
+
+---
+
+## STEP 2: DEEP VERIFICATION (Line by Line)
+
+### Ukrainian Sentences
+Go through the file section by section. For EACH Ukrainian sentence:
+- Is grammar correct? (cases, verb forms, agreement)
+- Does it sound natural? (not robotic, not calqued from English)
+- Are there Russianisms? (check against list below)
+- Is vocabulary appropriate for the level?
+
+### English Sentences
+- Is it clear and accessible?
+- Warm tutor voice or cold textbook?
+- Over-explaining simple things? Under-explaining complex ones?
+
+### IPA Transcriptions (if present)
+- Every transcription must be checked for correct stress placement
+- Ukrainian stress is unpredictable — verify each one
+- Watch for English approximations instead of Ukrainian phonemes
+
+### Activities (EVERY ITEM)
+
+**CRITICAL: Read the actual YAML file line by line.** Do NOT assume what the file contains — read it. If a previous review said "add English cues" but the file already has them, acknowledge the fix is present. Never cite an issue that doesn't exist in the CURRENT file.
+
+Check each activity item individually:
+- **quiz**: Grammatically correct? Exactly one correct answer? Options plausible?
+- **fill-in**: Sentence correct with answer filled in? Only ONE valid answer given the context/cues? Distractors plausible?
+- **match-up**: All pairs correct? No duplicates?
+- **true-false**: True statements actually true? False clearly false?
+- **unjumble**: Answer forms a correct, natural sentence?
+- **group-sort**: Items correctly categorized?
+- **anagram**: Solution correct? Hint clear?
+
+Count as you go. You MUST report how many items you checked.
+
+**Verification rule**: For EVERY issue you cite, quote the EXACT line from the file. If you cannot quote it, the issue does not exist.
+
+---
+
+## STEP 3: AUTO-FAIL CHECKLIST
+
+Check EVERY category. Report "[CLEAN]" or list specific findings.
+
+### Russianisms
+| Wrong | Correct |
+|-------|---------|
+| кушать | їсти |
+| приймати участь | брати участь |
+| самий кращий | найкращий |
+| слідуючий | наступний |
+| на протязі | протягом |
+| любий (any) | будь-який |
+| отвічати | відповідати |
+| вообще | взагалі |
+| получати | отримувати |
+| відноситися | ставитися |
+
+**Finding:** [CLEAN] or [list with line numbers]
+
+### Calques
+| Wrong | Correct |
+|-------|---------|
+| робити сенс | мати сенс |
+| брати місце | відбуватися |
+| це є | це (usually) |
+
+**Finding:** [CLEAN] or [list with line numbers]
+
+### Grammar Scope Violations
+At module 57, students know ONLY modules 1-56. Any grammar from later modules is scope creep.
+- Past tense (if not yet taught)
+- Cases not yet introduced
+- Verb forms not yet taught
+
+**Finding:** [CLEAN] or [list specific violations with line numbers]
+
+### Activity Errors
+- Wrong answer marked as correct
+- Multiple valid answers but only one accepted
+- Grammatically incorrect sentences
+- Duplicate items
+
+**Finding:** [CLEAN] or [list with activity number and item number]
+
+### Beginner Safety ("Would I Continue?" Test)
+| Question | Result |
+|----------|--------|
+| Did I feel overwhelmed? | [Pass/Fail] |
+| Were instructions clear? | [Pass/Fail] |
+| Did I get quick wins? | [Pass/Fail] |
+| Was Ukrainian scary? | [Pass/Fail] |
+| Would I come back tomorrow? | [Pass/Fail] |
+| **Total** | **X/5** |
+
+Emotional beats found:
+- Welcome/orientation: [yes/no, where]
+- Curiosity trigger: [yes/no, where]
+- Quick wins: [count, where]
+- Encouragement: [count, where]
+- Progress marker: [yes/no, where]
+
+---
+
+## STEP 4: SCORE DIMENSIONS
+
+**Score ONLY after completing Steps 1-3.** Each score must link to specific findings.
+
+### Scoring Rules
+- **9-10**: Excellent — no issues found in this dimension
+- **7-8**: Good — minor issues found
+- **5-6**: Needs work — multiple issues
+- **<5**: Serious problems — major rewrite needed
+- **If you found 3 grammar errors, Language cannot be 9**
+- **If scope creep found, Relevance and Pedagogy cannot be 8+**
+
+### Auto-Fail Thresholds
+| Dimension | Auto-fail if below |
+|-----------|-------------------|
+| Experience Quality | <7 |
+| Coherence | <7 |
+| Relevance | <7 |
+| Educational | <7 |
+| Language | <8 |
+| Pedagogy | <7 |
+| Immersion | <6 |
+| Activities | <7 |
+| Richness | <6 |
+| Beginner Safety | <7 |
+| LLM Fingerprint | <7 |
+| Linguistic Accuracy | <9 |
+
+### Weighted Overall Score
+```
+Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 +
+          Language × 1.1 + Pedagogy × 1.2 + Immersion × 1.0 + Activities × 1.3 +
+          Richness × 0.9 + Beginner_Safety × 1.3 + LLM × 1.0 + Linguistic_Accuracy × 1.5) / 14.0
+```
+
+**Quality target: 9.0+ overall AND no dimension below its auto-fail threshold.**
+**If the score is below 9.0, you MUST provide a Fix Plan (see output format) with specific actions to reach 9/10.** The fix plan drives the iteration loop — Claude will send fixes to Gemini until the module reaches 9.0+.
+
+---
+
+## OUTPUT FORMAT
+
+Wrap your ENTIRE review in these delimiters (REQUIRED for parsing):
+
+```
+===REVIEW_START===
+# Рецензія: Practical Intro
+
+**Level:** A2 | **Module:** 57
+**Overall Score:** {X.X}/10
+**Status:** PASS / FAIL
+**Reviewed:** {date}
+
+## Plan Verification
+
+```
+Plan-Content Alignment: [PASS/FAIL]
+- Sections: [status]
+- Vocabulary: [X/Y from plan, Z extra]
+- Grammar scope: [status]
+- Objectives: [status]
+```
+
+## Scores
+
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | X/10 | <7 | [specific finding] |
+| 2 | Coherence | X/10 | <7 | [specific finding] |
+| 3 | Relevance | X/10 | <7 | [specific finding] |
+| 4 | Educational | X/10 | <7 | [specific finding] |
+| 5 | Language | X/10 | <8 | [specific finding] |
+| 6 | Pedagogy | X/10 | <7 | [specific finding] |
+| 7 | Immersion | X/10 | <6 | [actual % vs target] |
+| 8 | Activities | X/10 | <7 | [specific finding] |
+| 9 | Richness | X/10 | <6 | [specific finding] |
+| 10 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
+| 11 | LLM Fingerprint | X/10 | <7 | [specific finding] |
+| 12 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
+
+**Weighted Overall:** {show calculation} = **X.X/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN] or [list]
+- Calques: [CLEAN] or [list]
+- Grammar scope: [CLEAN] or [list]
+- Activity errors: [CLEAN] or [list]
+- Beginner safety: X/5
+
+## Critical Issues Found
+
+### Issue 1: {Category}
+- **Location**: Line {N} / Section "{name}"
+- **Original**: "{exact text}"
+- **Problem**: {why it's wrong}
+- **Fix**: {concrete replacement}
+
+[... more issues ...]
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| {N} | "{original}" | "{fixed}" | Russianisms / Calque / Scope / Grammar |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: X/5
+- Overwhelmed? [Pass/Fail]
+- Instructions clear? [Pass/Fail]
+- Quick wins? [Pass/Fail]
+- Ukrainian scary? [Pass/Fail]
+- Come back tomorrow? [Pass/Fail]
+
+Emotional beats: X found
+- Welcome: [location or "missing"]
+- Curiosity: [location or "missing"]
+- Quick wins: [count + locations]
+- Encouragement: [count + locations]
+- Progress: [location or "missing"]
+
+## Strengths
+- [Specific strength with evidence from content]
+
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+For EACH dimension scoring below 9, provide a concrete action plan:
+
+### {Dimension Name}: {current}/10 → 9/10
+
+**What to fix:**
+1. Line {N}: Change "{current text}" → "{replacement text}" — {why this raises the score}
+2. Section "{name}": {specific action} — {expected impact}
+3. ...
+
+**Expected score after fix:** {X}/10
+
+[Repeat for every dimension below 9. Be specific — line numbers, exact replacements, section names.]
+
+### Projected Overall After Fixes
+
+```
+{Recalculate weighted overall with projected dimension scores}
+```
+
+## Verification Summary
+
+- Content lines read: {X}
+- Activity items checked: {X}
+- Ukrainian sentences verified: {X}
+- IPA transcriptions checked: {X}
+- Issues found: {X}
+- Naturalness score recommendation: {X}/10
+
+## Verdict
+
+**PASS** or **FAIL**
+
+{1-3 sentences linking verdict to specific findings. If FAIL, list the blocking issues.}
+
+===REVIEW_END===
+```
+
+## Boundaries
+
+- Do NOT modify any files OTHER than the output file
+- Do NOT score generously — honesty prevents bad curriculum
+- Do NOT skip any step or dimension
+- Do NOT fabricate issues — every critique must cite a specific line number
+- Do NOT give vague feedback like "could be improved" — say exactly what and where
+
+## ANTI-GAMING ENFORCEMENT (CRITICAL — AUTOMATED DETECTION ACTIVE)
+
+**The audit system has AUTOMATED anti-gaming detection. The following will cause your review to be REJECTED and regenerated from scratch:**
+
+1. **Gaming language detected** → REJECTED. Phrases like "ensuring a high score", "reflecting the fixes", "designed to pass", "clean audit" trigger automated rejection. Write an honest evaluation, not a review designed to pass.
+
+2. **All scores ≥ 9/10 with no issues** → REJECTED. No module is perfect. If you score every dimension 9+, you MUST list at least 2 concrete, non-trivial issues with line numbers and proposed fixes.
+
+3. **Praise-only citations** → REJECTED. If every Ukrainian quote is used to praise the content and none highlight problems, the review is flagged as uncritical.
+
+4. **Fabricated citations** → REJECTED. Every quoted Ukrainian sentence is cross-checked against the actual source file. Quotes not found in the source trigger immediate rejection.
+
+**Your review scores DO NOT determine whether the module passes.** The automated audit gates (word count, structure, activities, vocabulary, naturalness) are the real quality check. Your review exists to identify issues the automated system cannot catch — linguistic nuance, pedagogical depth, semantic accuracy. If you rubber-stamp everything, your review adds zero value and wastes compute.
+
+**Be the skeptic. Find real problems. That is your only purpose.**

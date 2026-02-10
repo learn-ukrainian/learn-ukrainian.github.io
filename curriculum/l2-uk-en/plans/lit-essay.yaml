@@ -1,0 +1,133 @@
+---
+# Level Plan: LIT-ESSAY (Ukrainian Intellectual Essay Track)
+# Post-C1 specialization: The Mind of the Nation
+
+level: lit-essay
+track: literature-essay
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 49
+  description: "The intellectual history of Ukraine through essays, pamphlets, and critical thought — from 19th-century polemics to 21st-century decolonization theory"
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners seeking mastery of Ukrainian non-fiction, political thought, and identity discourse"
+  decolonization_mission: "Documents three centuries of Ukrainian intellectual resistance to imperial erasure"
+
+sources:
+  primary: "Original Ukrainian essay texts (ukrlib.com.ua, Litopys, Krytyka)"
+  supplementary:
+    - "Ukrainian literary criticism and historiography"
+    - "Diaspora scholarship (Harvard Ukrainian Research Institute, Canadian Institute of Ukrainian Studies)"
+  note: "All analysis from Ukrainian perspective. Russian/Soviet interpretations used only as objects of critique."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 800
+  focus_areas:
+    - "Political/philosophical terminology (суверенітет, самовизначення, ідентичність)"
+    - "Literary-critical vocabulary (деконструкція, наратив, дискурс)"
+    - "Historical terminology (колоніалізм, імперіалізм, русифікація)"
+    - "Academic register (тезис, аргументація, контр-аргумент)"
+
+grammar:
+  - "Complex argumentation structures"
+  - "Academic Ukrainian register"
+  - "Rhetorical devices in Ukrainian essay tradition"
+  - "Archaic forms in 19th-century polemics"
+
+phases:
+  - id: ESSAY.1
+    name: "Витоки: Полеміка та Пробудження"
+    name_en: "Origins: Polemics and Awakening"
+    modules: "[1, 5]"
+    focus: "19th-century foundations of Ukrainian political thought"
+    era: "1846-1900"
+    key_authors:
+      - "Костомаров — Дві руські народності (1861)"
+      - "Драгоманов — Чудацькі думки (1891)"
+      - "Франко — Що таке поступ? (1903)"
+      - "Леся Українка — голос жіночої інтелектуальної традиції"
+      - "Міхновський — Самостійна Україна (1900)"
+
+  - id: ESSAY.2
+    name: "Ідеологічний Вибух"
+    name_en: "The Ideological Explosion"
+    modules: "[6, 12]"
+    focus: "Competing visions for Ukraine's future — conservatism, nationalism, Europeanism"
+    era: "1900-1933"
+    key_authors:
+      - "Липинський — Листи до братів-хліборобів (1926)"
+      - "Донцов — Націоналізм (1926), critical analysis"
+      - "Хвильовий — Україна чи Малоросія? (1926)"
+      - "Зеров — Ad fontes (1920s)"
+      - "Маланюк — Малоросійство (1920s-30s)"
+
+  - id: ESSAY.3
+    name: "Діаспорна Інтелектуальна Традиція"
+    name_en: "The Diaspora Intellectual Tradition"
+    modules: "[13, 20]"
+    focus: "Preservation and evolution of Ukrainian thought in exile"
+    era: "1945-1991"
+    key_authors:
+      - "Шерех/Шевельов — П'ятий Харків (1977)"
+      - "Шевельов — Москва, Марос... (1954)"
+      - "Дзюба — Інтернаціоналізм чи русифікація? (1965)"
+      - "Стус — феномен морального імунітету"
+      - "Сверстюк — Блудні сини (1965)"
+      - "Лисяк-Рудницький — Нариси з історії (1973)"
+      - "Грабович — Поет як міфотворець (1982)"
+
+  - id: ESSAY.4
+    name: "Деколонізація та Нова Україна"
+    name_en: "Decolonization and New Ukraine"
+    modules: "[21, 35]"
+    focus: "Post-independence intellectual revolution"
+    era: "1991-2022"
+    key_authors:
+      - "Забужко — Fortinbras, Notre Dame d'Ukraine, Найдовша подорож"
+      - "Рябчук — Дві України (2003)"
+      - "Грицак — Нарис історії (1996), Подолання минулого"
+      - "Прохасько — FM Галичина"
+      - "Портніков — ессеїстика"
+      - "Єрмоленко — Fluid Ideologies"
+      - "Плохій — Брама Європи (2015), Фронтлайн"
+      - "Снайдер — діалоги про Україну"
+
+  - id: ESSAY.5
+    name: "Голос Опору: 2014-Сьогодні"
+    name_en: "Voice of Resistance: 2014-Present"
+    modules: "[36, 49]"
+    focus: "War-era intellectual production — journalism, testimony, analysis"
+    era: "2014-present"
+    key_authors:
+      - "Берлінська — Гідність (активізм та технології)"
+      - "Чмут — Інституційна розбудова"
+      - "Коцюбайло — Спадщина (символ опору)"
+      - "Кіпіані — Справа Василя Стуса (2019)"
+      - "Асєєв — Ізоляція (2020), Табір (2021)"
+      - "Маринович — Всесвіт за колючим дротом"
+      - "Чижевський — Нариси барокової історії"
+      - "Луцький — Діаспорний міст"
+
+constraints:
+  min_word_target: 4000
+  max_word_target: 5500
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Primary source excerpt with glossary"
+    - "Intellectual context: what question is the author answering?"
+    - "Argument analysis in Ukrainian"
+    - "Counter-arguments and debate"
+    - "Contemporary relevance"
+  decolonization:
+    - "Frame Ukrainian thought as independent intellectual tradition, not 'response to Russia'"
+    - "Highlight how each thinker advanced Ukrainian self-understanding"
+    - "Show continuity from Kostomarov to Zabuzhko — the unbroken thread"
+    - "Critical analysis of ALL ideologies, including Ukrainian nationalism (Dontsov)"

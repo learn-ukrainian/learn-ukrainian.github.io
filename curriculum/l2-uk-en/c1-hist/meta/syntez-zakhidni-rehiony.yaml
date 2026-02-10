@@ -1,8 +1,8 @@
 ---
-module: syntez-zakhidni-rehiony
+module: c1-hist-075
 level: C1-HIST
 slug: syntez-zakhidni-rehiony
 version: '1.0'
-id: c1-hist-75
+id: c1-hist-075
 build:
   last_modified: '2026-01-26'

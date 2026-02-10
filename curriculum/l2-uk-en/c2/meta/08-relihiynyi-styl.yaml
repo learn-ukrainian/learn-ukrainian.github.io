@@ -1,9 +1,9 @@
 ---
-module: relihiynyi-styl
+module: c2-008
 level: C2
 slug: relihiynyi-styl
 version: '2.0'
-id: c2-08
+id: c2-008
 naturalness:
   score: 1
   status: PENDING

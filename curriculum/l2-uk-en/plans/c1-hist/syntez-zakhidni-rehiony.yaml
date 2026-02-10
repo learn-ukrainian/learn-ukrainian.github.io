@@ -1,5 +1,5 @@
 ---
-module: syntez-zakhidni-rehiony
+module: c1-hist-075
 level: c1-hist
 sequence: 75
 version: '1.0'

@@ -1,8 +1,8 @@
 ---
-module: halychyna-natsionalnyi-rukh
+module: c1-hist-071
 level: C1-HIST
 slug: halychyna-natsionalnyi-rukh
 version: '1.0'
-id: c1-hist-71
+id: c1-hist-071
 build:
   last_modified: '2026-01-26'

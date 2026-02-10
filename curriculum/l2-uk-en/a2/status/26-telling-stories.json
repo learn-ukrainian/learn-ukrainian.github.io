@@ -2,14 +2,14 @@
   "module": "26-telling-stories",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:41.686202Z",
+  "last_audit": "2026-02-10T10:45:24.784458Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.363196Z",
-    "meta": "2026-01-29T07:39:04.598272Z",
-    "activities": "2026-01-12T13:54:28.611658Z",
-    "vocabulary": "2026-01-25T21:04:54.273895Z",
-    "plan": "2026-01-30T12:31:49.597189Z"
+    "meta": "2026-02-07T10:03:50.714834Z",
+    "activities": "2026-02-07T10:03:50.740652Z",
+    "vocabulary": "2026-02-07T10:03:50.781557Z",
+    "plan": "2026-02-09T12:52:14.217299Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

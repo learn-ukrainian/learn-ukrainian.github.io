@@ -1,9 +1,9 @@
 ---
-module: literary-theory
+module: c2-026
 level: C2
 slug: literary-theory
 version: '2.0'
-id: c2-26
+id: c2-026
 naturalness:
   score: 1
   status: PENDING

@@ -1,0 +1,14 @@
+{
+  "slug": "food-and-cooking",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T10:54:40.510874Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T10:54:40.510856Z",
+  "result": "success"
+}

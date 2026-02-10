@@ -1,7 +1,7 @@
 ---
-module: c1-bio-110
+module: c1-bio-113
 level: C1-BIO
-sequence: 110
+sequence: 113
 slug: heo-shkurupii
 version: '2.0'
 title: 'Гео Шкурупій: <!-- Title -->'

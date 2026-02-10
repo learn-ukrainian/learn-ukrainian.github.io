@@ -1,0 +1,14 @@
+{
+  "slug": "emotions-personality",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T10:54:42.047199Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T10:54:42.047173Z",
+  "result": "success"
+}

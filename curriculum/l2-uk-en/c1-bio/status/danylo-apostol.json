@@ -2,13 +2,13 @@
   "module": "danylo-apostol",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:34.580803Z",
+  "last_audit": "2026-02-10T10:47:48.547912Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T23:37:00.528090Z",
-    "meta": "2026-02-07T15:13:22.012738Z",
-    "activities": "2026-02-07T10:03:51.579472Z",
-    "vocabulary": "2026-02-07T10:03:51.632552Z",
+    "md": "2026-02-09T23:30:02.583544Z",
+    "meta": "2026-02-09T15:59:44.193438Z",
+    "activities": "2026-02-09T23:29:18.240627Z",
+    "vocabulary": "2026-02-09T23:28:52.083747Z",
     "plan": null
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4327/4300 (raw: 4398) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4589/4300 (raw: 4660)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

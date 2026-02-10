@@ -1,8 +1,8 @@
 ---
-module: pereiaslav-alternatyvy
+module: c1-hist-089
 level: C1-HIST
 slug: pereiaslav-alternatyvy
 version: '1.0'
-id: c1-hist-89
+id: c1-hist-089
 build:
   last_modified: '2026-01-26'

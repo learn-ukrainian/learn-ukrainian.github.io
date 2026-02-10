@@ -2,14 +2,14 @@
   "module": "41-phone-basics",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T21:45:57.215313Z",
+  "last_audit": "2026-02-10T10:54:04.926779Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T02:07:33.766574Z",
     "meta": "2026-02-07T10:03:51.778127Z",
     "activities": "2026-02-07T21:44:23.797614Z",
     "vocabulary": "2026-02-07T21:44:19.808107Z",
-    "plan": "2026-02-07T10:05:59.911191Z"
+    "plan": "2026-02-09T12:52:14.112393Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

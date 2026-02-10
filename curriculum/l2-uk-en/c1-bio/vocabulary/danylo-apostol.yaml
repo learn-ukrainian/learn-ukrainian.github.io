@@ -1,144 +1,144 @@
 ---
 - lemma: гетьман
-  ipa: /ˈɦɛtʲmɐn/
+  ipa: ˈɦɛtʲmɐn
   translation: hetman
   pos: noun
   gender: m
   note: глава держави
 - lemma: пункти
-  ipa: /ˈpunktɪ/
+  ipa: ˈpunktɪ
   translation: points / articles
   pos: noun
   gender: m
   note: Рішительні пункти
 - lemma: петиція
-  ipa: /petˈɪt͡sʲijɐ/
+  ipa: petˈɪt͡sʲijɐ
   translation: petition
   pos: noun
   gender: f
   note: колективне прохання
 - lemma: реформа
-  ipa: /reˈfɔrmɐ/
+  ipa: reˈfɔrmɐ
   translation: reform
   pos: noun
   gender: f
   note: перетворення
 - lemma: бюджет
-  ipa: /bʲuˈdʒɛt/
+  ipa: bʲuˈdʒɛt
   translation: budget
   pos: noun
   gender: m
   note: державний кошторис
 - lemma: суд
-  ipa: /sud/
+  ipa: sud
   translation: court
   pos: noun
   gender: m
   note: орган правосуддя
 - lemma: кодекс
-  ipa: /ˈkɔdeks/
+  ipa: ˈkɔdeks
   translation: code (of laws)
   pos: noun
   gender: m
   note: збірка законів
 - lemma: автономія
-  ipa: /ɐu̯toˈnɔmʲijɐ/
+  ipa: ɐu̯tɔˈnɔmʲijɐ
   translation: autonomy
   pos: noun
   gender: f
   note: самоврядування
 - lemma: колегія
-  ipa: /koˈlɛɦʲijɐ/
+  ipa: kɔˈlɛɦʲijɐ
   translation: collegium / board
   pos: noun
   gender: f
   note: Малоросійська колегія
 - lemma: стабільність
-  ipa: /stɐˈbʲilʲnʲisʲtʲ/
+  ipa: stɐˈbʲilʲnʲisʲtʲ
   translation: stability
   pos: noun
   gender: f
   note: стійкість
 - lemma: компроміс
-  ipa: /kɔmproˈmʲis/
+  ipa: kɔmprɔˈmʲis
   translation: compromise
   pos: noun
   gender: m
   note: угода
 - lemma: дипломатія
-  ipa: /dɪplɔˈmɑtʲijɐ/
+  ipa: dɪplɔˈmɑtʲijɐ
   translation: diplomacy
   pos: noun
   gender: f
   note: зовнішня політика
 - lemma: маєток
-  ipa: /mɐˈjɛtɔk/
+  ipa: mɐˈjɛtɔk
   translation: estate
   pos: noun
   gender: m
   note: земельна власність
 - lemma: полковник
-  ipa: /pɔlˈkɔu̯nɪk/
+  ipa: pɔlˈkɔu̯nɪk
   translation: colonel
   pos: noun
   gender: m
   note: військовий чин
 - lemma: старшина
-  ipa: /stɐrʃɪˈnɑ/
+  ipa: stɐrʃɪˈnɑ
   translation: starshyna
   pos: noun
   gender: f
   note: еліта
 - lemma: дозвіл
-  ipa: /ˈdɔzʋʲil/
+  ipa: ˈdɔzʋʲil
   translation: permission
   pos: noun
   gender: m
   note: право на дію
 - lemma: торгівля
-  ipa: /tɔrˈɦʲiʋlʲɐ/
+  ipa: tɔrˈɦʲiʋlʲɐ
   translation: trade
   pos: noun
   gender: f
   note: обмін товарами
 - lemma: спадщина
-  ipa: /ˈspɑdʃt͡ʃɪnɐ/
+  ipa: ˈspɑdʃt͡ʃɪnɐ
   translation: heritage
   pos: noun
   gender: f
   note: те, що залишилося
 - lemma: вибори
-  ipa: /ˈʋɪborɪ/
+  ipa: ˈʋɪbɔrɪ
   translation: elections
   pos: noun
   gender: m
   note: процес обрання
 - lemma: конституція
-  ipa: /konstɪˈtut͡sʲijɐ/
+  ipa: kɔnstɪˈtut͡sʲijɐ
   translation: constitution
   pos: noun
   gender: f
   note: основний закон
 - lemma: стабілізація
-  ipa: /stɐbʲilʲizˈɑt͡sʲijɐ/
+  ipa: stɐbʲilʲizˈɑt͡sʲijɐ
   translation: stabilization
   pos: noun
   gender: f
   note: приведення до ладу
 - lemma: чолобитна
-  ipa: /t͡ʃolɔˈbɪtnɐ/
+  ipa: t͡ʃɔlɔˈbɪtnɐ
   translation: humble petition
   pos: noun
   gender: f
   note: архаїчне звернення
 - lemma: казначейство
-  ipa: /kɐznɐˈt͡ʃɛi̯stʋɔ/
+  ipa: kɐznɐˈt͡ʃɛi̯stʋɔ
   translation: treasury
   pos: noun
   gender: n
   note: державна скарбниця
 - lemma: реорганізація
-  ipa: /reɔrɦɐnʲizˈɑt͡sʲijɐ/
+  ipa: reɔrɦɐnʲizˈɑt͡sʲijɐ
   translation: reorganization
   pos: noun
   gender: f

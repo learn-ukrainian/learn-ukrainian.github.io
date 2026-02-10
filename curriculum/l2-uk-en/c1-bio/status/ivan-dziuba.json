@@ -2,11 +2,11 @@
   "module": "ivan-dziuba",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:32.288422Z",
+  "last_audit": "2026-02-09T23:25:10.527557Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.207453Z",
-    "meta": "2026-02-07T15:13:22.027113Z",
+    "meta": "2026-02-09T15:59:44.235148Z",
     "activities": null,
     "vocabulary": null,
     "plan": null
@@ -36,6 +36,11 @@
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

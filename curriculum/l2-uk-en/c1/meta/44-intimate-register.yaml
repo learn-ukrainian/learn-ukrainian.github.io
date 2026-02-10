@@ -1,5 +1,6 @@
 ---
-module: c1-44
+id: c1-044
+module: c1-044
 level: C1
 slug: 44-intimate-register
 version: '1.0'

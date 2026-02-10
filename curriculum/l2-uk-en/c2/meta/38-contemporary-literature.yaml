@@ -1,9 +1,9 @@
 ---
-module: contemporary-literature
+module: c2-038
 level: C2
 slug: contemporary-literature
 version: '2.0'
-id: c2-38
+id: c2-038
 naturalness:
   score: 1
   status: PENDING

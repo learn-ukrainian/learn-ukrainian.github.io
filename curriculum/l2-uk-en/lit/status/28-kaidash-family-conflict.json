@@ -2,25 +2,25 @@
   "module": "28-kaidash-family-conflict",
   "level": "LIT",
   "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:26.257793Z",
+  "last_audit": "2026-02-09T12:31:46.079024Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349727Z",
-    "meta": "2026-01-29T07:39:04.975945Z",
-    "activities": "2026-01-18T15:51:05.429538Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.614805Z"
+    "md": "2026-02-09T12:26:15.699146Z",
+    "meta": "2026-02-09T12:20:02.830317Z",
+    "activities": "2026-02-09T12:20:05.964166Z",
+    "vocabulary": "2026-02-09T12:18:25.938073Z",
+    "plan": "2026-02-07T10:06:50.456693Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3444/4500 (raw: 3786)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5344/4500 (raw: 5463)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "12/0"
     },
     "naturalness": {
       "status": "pass",
@@ -39,12 +39,9 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0
   }
 }

@@ -1,12 +1,67 @@
----
-module: c1-bio-147
-level: C1-BIO
+id: c1-bio-158
 slug: oleksandra-matviichuk
-version: '2.0'
-id: c1-bio-155
-naturalness:
-  score: 1
-  status: PENDING
+title: "Олександра Матвійчук: Право на справедливість та Нобелівський голос"
+level: C1
+track: c1-bio
+goal: "Дослідити роль Олександри Матвійчук у формуванні сучасного правозахисного руху України, документуванні воєнних злочинів та адвокації міжнародного правосуддя на найвищому рівні."
+focus:
+  - "Нобелівська премія миру 2022"
+  - "Євромайдан SOS як модель кризового правозахисту"
+  - "Документування злочинів проти людяності"
+  - "Адвокація Спеціального трибуналу"
 word_target: 4000
-build:
-  last_modified: '2026-01-26'
+content_outline:
+  - section: "Вступ — Обличчя українського правосуддя у світі"
+    words: 600
+  - section: "Життєпис: Від юридичного факультету до Нобелівської трибуни"
+    words: 1600
+  - section: "Історичний контекст: Революція Гідності та народження «Євромайдан SOS»"
+    words: 600
+  - section: "Правозахисна архітектура: Центр громадянських свобод та документування злочинів"
+    words: 400
+  - section: "Сучасний етап: «Трибунал для Путіна» та адвокація Спеціального трибуналу"
+    words: 400
+  - section: "Вплив: Переосмислення глобальної безпеки через права людини"
+    words: 400
+naturalness:
+  status: "PASS"
+  score: 10
+  last_checked: "2026-02-09"
+activities:
+  - critical-analysis
+  - essay-response
+  - authorial-intent
+  - reading
+sources:
+  - "https://uk.wikipedia.org/wiki/Матвійчук_Олександра_В'ячеславівна"
+  - "https://ccl.org.ua"
+  - "https://www.nobelprize.org"
+prerequisites:
+  - "c1-bio-157"
+audio:
+  status: "PENDING"
+  last_updated: "2026-02-09"
+visuals:
+  - "Фото Олександри Матвійчук під час Нобелівської промови"
+  - "Логотип Центру громадянських свобод"
+  - "Мапа документування воєнних злочинів"
+  - "Виступ у Раді Безпеки ООН"
+tags:
+  - "Правозахист"
+  - "Нобелівська премія"
+  - "Правосуддя"
+  - "Трибунал"
+  - "Євромайдан"
+  - "Деколонізація"
+vocabulary_count: 25
+activity_density: 8
+immersion_target: 100
+richness_target: 95
+decolonization_focus: true
+primary_source_quotes: true
+history_bite_count: 1
+myth_buster_count: 1
+model_answer_required: true
+vital_status: "LIVING"
+curriculum_index: 158
+manifest_id: "M158"

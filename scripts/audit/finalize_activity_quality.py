@@ -20,6 +20,9 @@ import yaml
 from typing import Dict, List, Any
 from datetime import datetime
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from slug_utils import quality_path as _quality_path
+
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
@@ -387,9 +390,8 @@ def finalize_quality(
     report = generate_report(queue_data, quality_scores, gate_evaluation)
 
     # Write report
-    audit_dir = level_dir / 'audit'
-    audit_dir.mkdir(exist_ok=True)
-    report_file = audit_dir / f'{module_slug}-quality.md'
+    report_file = _quality_path(level_dir, module_slug)
+    report_file.parent.mkdir(exist_ok=True)
 
     with open(report_file, 'w', encoding='utf-8') as f:
         f.write(report)

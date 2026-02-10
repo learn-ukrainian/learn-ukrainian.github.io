@@ -1,9 +1,9 @@
 ---
-module: danylo-apostol
+module: b2-hist-070
 level: B2-HIST
 slug: danylo-apostol
 version: '2.0'
-id: b2-hist-70
+id: b2-hist-070
 naturalness:
   score: 9
   status: PASS

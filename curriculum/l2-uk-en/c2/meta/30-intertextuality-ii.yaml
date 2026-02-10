@@ -1,9 +1,9 @@
 ---
-module: intertextuality-ii
+module: c2-030
 level: C2
 slug: intertextuality-ii
 version: '2.0'
-id: c2-30
+id: c2-030
 naturalness:
   score: 1
   status: PENDING

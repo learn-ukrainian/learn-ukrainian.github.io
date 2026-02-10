@@ -2,11 +2,11 @@
   "module": "kateryna-yushchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:28.385982Z",
+  "last_audit": "2026-02-09T23:25:06.886735Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T12:11:03.889749Z",
-    "meta": "2026-02-07T15:13:22.026353Z",
+    "meta": "2026-02-09T15:59:44.233312Z",
     "activities": "2026-02-07T11:56:05.137434Z",
     "vocabulary": "2026-02-07T11:55:37.575861Z",
     "plan": null
@@ -36,6 +36,11 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

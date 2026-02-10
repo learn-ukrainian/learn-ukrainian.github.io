@@ -1,0 +1,52 @@
+{
+  "module": "krytyka-dzherel",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-10T17:46:15.633505Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-10T17:44:50.440814Z",
+    "meta": "2026-02-10T16:58:24.057758Z",
+    "activities": "2026-02-10T17:00:08.154200Z",
+    "vocabulary": "2026-02-09T21:15:10.786163Z",
+    "plan": "2026-02-09T12:52:16.687040Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4502/4000 (raw: 4665)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "15 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0
+  }
+}

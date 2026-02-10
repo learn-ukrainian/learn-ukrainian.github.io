@@ -2,14 +2,14 @@
   "module": "40-taking-transport",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T00:24:20.789372Z",
+  "last_audit": "2026-02-10T10:54:04.464600Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T00:20:40.252992Z",
     "meta": "2026-02-07T10:03:51.776040Z",
     "activities": "2026-02-09T00:23:01.327692Z",
     "vocabulary": "2026-02-09T00:20:40.253474Z",
-    "plan": "2026-02-07T10:05:59.907429Z"
+    "plan": "2026-02-09T12:52:14.109211Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

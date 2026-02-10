@@ -1,9 +1,9 @@
 ---
-module: style-transformation-i
+module: c2-010
 level: C2
 slug: style-transformation-i
 version: '2.0'
-id: c2-10
+id: c2-010
 naturalness:
   score: 1
   status: PENDING

@@ -1,4 +1,6 @@
 ---
+sequence: 21
+module: oes-021
 module_number: 17
 slug: dual-number-intro
 title_uk: 'Двоїна: Вступ'

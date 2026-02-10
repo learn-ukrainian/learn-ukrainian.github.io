@@ -1,8 +1,8 @@
 ---
-module: universaly-unr
+module: c1-hist-034
 level: C1-HIST
 slug: universaly-unr
 version: '1.0'
-id: c1-hist-34
+id: c1-hist-034
 build:
   last_modified: '2026-01-26'

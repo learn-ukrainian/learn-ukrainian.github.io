@@ -2,14 +2,14 @@
   "module": "56-checkpoint-full-grammar",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:55.782678Z",
+  "last_audit": "2026-02-10T11:07:54.780477Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.363286Z",
-    "meta": "2026-01-26T17:21:18.965538Z",
-    "activities": "2026-01-27T13:04:01.182234Z",
-    "vocabulary": "2026-01-25T01:40:11.939211Z",
-    "plan": "2026-01-30T12:31:49.660318Z"
+    "meta": "2026-02-07T10:03:50.708264Z",
+    "activities": "2026-02-10T11:07:54.254920Z",
+    "vocabulary": "2026-02-07T10:03:50.758334Z",
+    "plan": "2026-02-07T10:38:52.472505Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

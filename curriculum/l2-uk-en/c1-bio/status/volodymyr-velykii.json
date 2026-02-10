@@ -2,13 +2,13 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:19:13.721123Z",
+  "last_audit": "2026-02-09T23:23:55.684611Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T23:19:13.058118Z",
-    "meta": "2026-02-07T21:21:34.461010Z",
-    "activities": "2026-02-07T20:07:23.367087Z",
-    "vocabulary": "2026-02-08T23:18:28.137655Z",
+    "md": "2026-02-09T22:47:00.990687Z",
+    "meta": "2026-02-09T21:46:50.065463Z",
+    "activities": "2026-02-09T22:44:25.964423Z",
+    "vocabulary": "2026-02-09T22:44:25.948520Z",
     "plan": null
   },
   "gates": {
@@ -18,24 +18,29 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "5609/5000 (raw: 5696)"
+      "message": "4923/5000 (raw: 5011) (77 short)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "8/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "33/24"
+      "message": "24/24"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

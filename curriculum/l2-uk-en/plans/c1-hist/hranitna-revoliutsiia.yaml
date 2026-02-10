@@ -1,5 +1,5 @@
 ---
-module: hranitna-revoliutsiia
+module: c1-hist-128
 level: c1-hist
 sequence: 128
 version: '1.0'

@@ -15,7 +15,9 @@
 - **Architecture v2.0 (Plan-Build-Status)**:
   - **Plans** (Immutable): `plans/{level}/{slug}.yaml`. Defines _what_ to build (outline, targets).
   - **Build** (Mutable): `meta/{slug}.yaml`, `{slug}.md`, `activities/`, `vocabulary/`. The actual content.
-  - **Status** (Cached): `status/{slug}.json`. Auto-generated audit results.
+  - **Review**: `review/{bare_slug}-review.md`. LLM-generated reviews go here (NOT in `audit/`).
+  - **Audit**: `audit/{bare_slug}-audit.md`, `-grammar.yaml`, `-quality.md`. Machine-generated audit artifacts only.
+  - **Status** (Cached): `status/{bare_slug}.json`. Auto-generated audit results.
 - **Pedagogy**:
   - **A1-A2**: PPP (Present-Practice-Produce). Focus on clarity and building blocks.
   - **B1+ Grammar**: TTT (Test-Teach-Test). Guided discovery from context.
@@ -96,6 +98,8 @@ You operate in **two distinct modes**. Your behavior MUST match the active mode.
 
 **Why this restriction**: Auto-starting work causes rogue agent cascades — you pick up stale broker messages or old GitHub issues and start unintended work that conflicts with what Claude is orchestrating. Always wait for explicit instructions.
 
+**Work dispatch uses GitHub labels** (not static files). When the user assigns you work, they will reference an issue number. Use `gh issue view {N}` to read the full specification. See CLAUDE.md "Work Dispatch" section for the label taxonomy (`priority:*`, `area:*`, `working:*`, `review:*`).
+
 ### How to Tell Which Mode You're In
 
 | Signal | Mode |
@@ -109,46 +113,94 @@ You operate in **two distinct modes**. Your behavior MUST match the active mode.
 
 ---
 
+## Module Ordering & Sequencing
+
+### The Source of Truth
+The **`curriculum/l2-uk-en/curriculum.yaml`** file is the absolute source of truth for the ordering of all modules. Filenames and `sequence` fields in plan YAMLs are legacy or secondary; always defer to the manifest.
+
+### How to Calculate "Module N"
+To identify a module by its number (e.g., "C1-BIO Module 1"):
+1.  Open `curriculum/l2-uk-en/curriculum.yaml`.
+2.  Locate the specific level or track (e.g., `levels: c1-bio:`).
+3.  The list of slugs under `modules:` is the ordered sequence.
+4.  **Module N** corresponds to the slug at **Index N-1** in that list.
+
+### Quick Commands
+```bash
+# Find Module 5 of B2-HIST
+yq '.levels.b2-hist.modules[4]' curriculum/l2-uk-en/curriculum.yaml
+
+# List all modules in order for C1
+yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
+```
+
 ## Critical Workflow Rules (Gemini)
 
-0. **Plan Immutability (CRITICAL)**: Plans in `plans/` are IMMUTABLE source of truth.
-1. **Meta is Build Config**: `meta/{slug}.yaml` stores mutable build data (`naturalness`, `timestamps`).
-2. **Audit & Status**: Always run `audit_module.py` and `npm run generate` before considering a task done.
-3. **Vital Status (Biographies)**: **CRITICAL**: Check if the subject is ALIVE.
+0. **Read Before Edit (CRITICAL)**: ALWAYS `read_file` the target file IMMEDIATELY before ANY edit.
+   - Copy the `old_string` EXACTLY from the read output — never reconstruct from memory.
+   - Match whitespace, indentation, and YAML formatting character-for-character.
+   - If the edit fails with "0 occurrences found": re-read the file, find the actual text, retry.
+   - **NEVER guess what a file contains.** Read it, then edit it.
+   - **NEVER use `cat -A`, `sed -n`, `head`, or `tail` to read files.** These destroy UTF-8 Ukrainian text — `cat -A` turns `Полуботок` into `M-PM-^_M-PM->...` garbage. Use `read_file` or `bat` ONLY.
+1. **Debugging Schema Errors (CRITICAL)**: When audit shows `YAML_SCHEMA_VIOLATION`:
+   - **MANDATORY**: Read the schema file: `schemas/activities-{level}.schema.json`
+   - Find the definition for your activity type (e.g., `true-false-{level}`)
+   - Check `minItems` (item count): e.g., `true-false` often requires **12 items** for C1.
+   - Check `required` fields and `additionalProperties`: if `additionalProperties: false`, extra fields like `tasks` in a `reading` activity or `id` in a `critical-analysis` activity will fail.
+   - Check `id` patterns: many tracks enforce `^reading-[a-z0-9-]+$` even for non-reading activities IF the schema defines an `id` field for them.
+   - **NEVER guess** — always read the schema definition to understand what's expected.
+2. **Plan Immutability (CRITICAL)**: Plans in `plans/` are IMMUTABLE source of truth.
+2. **Meta is Build Config**: `meta/{slug}.yaml` stores mutable build data (`naturalness`, `timestamps`).
+3. **Audit & Status**: Always run `audit_module.py` and `npm run generate` before considering a task done.
+4. **Vital Status (Biographies)**: **CRITICAL**: Check if the subject is ALIVE.
    - **Living**: Do NOT use "Legacy" or "Last Years". Use "Modern Period" or "Impact".
    - **Deceased**: Standard biography headers apply.
-4. **Communication with Claude**: Use `scripts/ai_agent_bridge.py` (See "Inter-Agent Communication" section).
-5. **Batch Operations**: For large refactors, prefer creating disposable `fix_batch_*.py` scripts over manual editing.
-6. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
-7. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
-8. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity.
-9. **GitHub Issue Tracking**: Use `/task` skill for complex multi-step work.
-10. **Virtual Environment**: Always use `.venv/bin/python`.
-11. **BROKEN TOOL AVOIDANCE (CRITICAL)**: The `search_file_content` tool is BROKEN. It produces `--threads` argument errors. **ALWAYS** use `run_shell_command("rg ...")` instead.
-12. **Typography**: ALWAYS use Ukrainian angular quotes `«...»`.
-13. **Research-First Workflow**: MANDATORY for seminar tracks (`b2-hist`, `c1-bio`, `lit`, etc.).
-14. **Ukrainian-Only Research**: Russian-language sources are STRICTLY PROHIBITED. All searches must be in Ukrainian.
-15. **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
-16. **Seminar Batch Limit (CRITICAL)**: For Seminar Tracks (`c1-bio`, `b2-hist`, `lit`), the optimal processing batch is 2 modules. This ensures high linguistic quality and prevents context exhaustion or output truncation.
-17. **Sniper Search Strategy (MANDATORY)**: Always include `site:esu.com.ua OR site:history.org.ua OR site:elib.nlu.org.ua` in research queries to ensure C1-level academic accuracy and decolonized narratives.
-18. **Historiographical Mapping (Phase 0.5)**: For high-tension modules, include a "Contested Terms" table in research notes comparing Polish/Ukrainian/Russian terminology.
-19. **Propaganda Filter**: Reviewers must explicitly check if phrasing echoes Russian dezinformatsiia framing (especially for Volhynia, Holodomor, OUN/UPA).
-20. **Semantic Nuance Gate (C1+)**: Ensure sufficient usage of modal hedging markers («можливо», «ймовірно», «з одного боку», «водночас») to reflect complexity.
-21. **Brutally Honest Self-Review**: You are the final gatekeeper. Reviews must be brutally honest and critical. If content is "trash" or doesn't meet the "Theory-First" depth, reject and fix it immediately. No sugarcoating.
+5. **Communication with Claude**: Use `scripts/ai_agent_bridge.py` (See "Inter-Agent Communication" section).
+6. **Batch Operations**: For large refactors, prefer creating disposable `fix_batch_*.py` scripts over manual editing.
+7. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
+8. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
+9. **Decolonization & Patriotism (MANDATORY)**: Include Myth Buster, History Bite, and celebrate Ukrainian identity.
+10. **GitHub Issue Tracking**: Use `/task` skill for complex multi-step work.
+11. **Virtual Environment**: Always use `.venv/bin/python`.
+12. **BROKEN TOOL AVOIDANCE (CRITICAL)**: The `search_file_content` tool is BROKEN. It produces `--threads` argument errors. **ALWAYS** use `run_shell_command("rg ...")` instead.
+13. **Typography**: ALWAYS use Ukrainian angular quotes `«...»`.
+14. **Research-First Workflow**: MANDATORY for seminar tracks (`b2-hist`, `c1-bio`, `lit`, etc.).
+15. **Ukrainian-Only Research**: Russian-language sources are STRICTLY PROHIBITED. All searches must be in Ukrainian.
+16. **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
+17. **Seminar Batch Limit (CRITICAL)**: For Seminar Tracks (`c1-bio`, `b2-hist`, `lit`), the optimal processing batch is 2 modules. This ensures high linguistic quality and prevents context exhaustion or output truncation.
+18. **Sniper Search Strategy (MANDATORY)**: Always include `site:esu.com.ua OR site:history.org.ua OR site:elib.nlu.org.ua` in research queries to ensure C1-level academic accuracy and decolonized narratives.
+19. **Historiographical Mapping (Phase 0.5)**: For high-tension modules, include a "Contested Terms" table in research notes comparing Polish/Ukrainian/Russian terminology.
+20. **Propaganda Filter**: Reviewers must explicitly check if phrasing echoes Russian dezinformatsiia framing (especially for Volhynia, Holodomor, OUN/UPA).
+21. **Semantic Nuance Gate (C1+)**: Ensure sufficient usage of modal hedging markers («можливо», «ймовірно», «з одного боку», «водночас») to reflect complexity.
+22. **Brutally Honest Self-Review**: You are the final gatekeeper. Reviews must be brutally honest and critical. If content is "trash" or doesn't meet the "Theory-First" depth, reject and fix it immediately. No sugarcoating.
+23. **ANTI-GAMING ENFORCEMENT (CRITICAL — AUTOMATED DETECTION ACTIVE)**:
+    - Your review scores **DO NOT** determine whether a module passes or fails. The automated audit gates (word count, structure, activities, vocabulary, naturalness) are the real quality check.
+    - **Automated detectors** scan your reviews for gaming patterns. The following cause **immediate rejection**:
+      - Gaming language ("ensuring a high score", "reflecting the fixes", "designed to pass")
+      - All scores ≥ 9/10 with no substantive issues listed
+      - All Ukrainian citations used for praise only, none highlighting problems
+      - Fabricated citations (quoted text not found in the source module)
+    - Your review exists to find problems the automated system cannot catch — linguistic nuance, pedagogical depth, semantic accuracy. If you rubber-stamp everything, you add zero value.
+    - **Adopting a "red team persona" is NOT the fix.** Artificially finding fake problems is as bad as hiding real ones. Just be honest.
+    - **Caught cheating = all work from that session is discarded.**
 
 ## macOS Environment & Tool Usage
 
 This development environment is a **macOS (Darwin)** system optimized for Linux compatibility and modern CLI workflows.
 
-### Linux Compatibility (GNU Tools)
+### 🛑 CRITICAL: Banned vs. Mandatory Tools
 
-The system has GNU utilities prioritized in the `PATH`. You can safely use standard Linux syntax for core commands:
+You MUST use the **Mandatory** tools. They are guaranteed to be installed.
+Using **Banned** tools wastes tokens and risks UTF-8 corruption.
 
-- **`sed`**: GNU version is active. Use standard `sed -i 's/pattern/replacement/' file` (no need for empty quotes `''` as in BSD `sed`).
-- **`grep`**: GNU version is active.
-- **`find`**: GNU version (`findutils`) is active.
-- **`awk`**: GNU `gawk` is active.
-- **`coreutils`**: Standard GNU core utilities are active.
+| Feature | 🔴 BANNED (Do Not Use) | 🟢 MANDATORY (Use This) | Why? |
+| :--- | :--- | :--- | :--- |
+| **Search** | `grep`, `find . -exec grep` | **`rg` (ripgrep)** | 10x faster, respects `.gitignore`, better context. |
+| **Find Files** | `find` | **`fd`** | Simpler syntax, faster, ignores node_modules. |
+| **Read File** | `cat`, `head`, `tail`, `sed` | **`read_file`** tool | **`cat -A` DESTROYS Ukrainian UTF-8 text.** |
+| **List Dir** | `ls -la` | **`eza -l`** | Better formatting, icons, git status integration. |
+| **JSON/YAML** | `python -c ...`, `cat` | **`jq`, `yq`** | Structured parsing, reliable queries. |
+| **Archives** | `tar`, `zip` | `tar`, `zip` | (Standard tools are fine here). |
 
 ### Modern CLI Tools (Preferred)
 
@@ -156,7 +208,7 @@ The following modern tools are installed and should be used for better performan
 
 - **Search**: Always use **`ripgrep` (`rg`)** via `run_shell_command("rg ...")`. It is significantly faster and respects `.gitignore`.
 - **File Finding**: Use **`fd`** instead of `find` for quick file location.
-- **File Viewing**: Use **`bat`** for syntax-highlighted file reading (though `read_file` is preferred for agent logic).
+- **File Viewing**: Use **`read_file`** (preferred) or **`bat`** for file reading. **NEVER** use `cat -A`, `sed -n '..p'`, `head`, or `tail` — these destroy UTF-8 Ukrainian text and produce unreadable `M-` byte sequences.
 - **Directory Listing**: Use **`eza`** instead of `ls`.
 - **JSON/YAML**: Use **`jq`** and **`yq`** for command-line processing of structured data.
 
@@ -216,6 +268,21 @@ The environment is tuned for AI agents:
 **Problem**: The richness score is a weighted combination of metrics. Check the breakdown in the audit review file to see which component is low.
 
 **Common cause**: Low `engagement` score (see above).
+
+### YAML_SCHEMA_VIOLATION
+
+**Error**: `YAML schema violation in .../activities/...yaml`
+
+**Problem**: The activity YAML structure does not match the track's JSON schema.
+
+**Common Causes & Fixes**:
+- **Item Count**: `true-false` often requires **12 items** (check `minItems`).
+- **Forbidden Fields**: `reading` activities often forbid a `tasks` field; use `instruction` instead.
+- **Extra IDs**: `critical-analysis` or `essay-response` might forbid an `id` field (check `additionalProperties: false`).
+- **ID Regex**: If an `id` is required/allowed, it must often match `^reading-[a-z0-9-]+$` regardless of activity type.
+- **Explanation Field**: For `true-false`, `explanation` is allowed but `instruction` at the item level might be banned.
+
+**CORRECT FIX**: Run `.venv/bin/python -c "import json; print(json.dumps(json.load(open('schemas/activities-c1-hist.schema.json')), indent=2))" | jq '.definitions."true-false-c1-hist"'` (adjust path/type) to see the exact requirements.
 
 ### search_file_content Tool Broken
 
@@ -477,13 +544,20 @@ gh issue view 506
 
 ### Task Labels Reference
 
-| Label            | Meaning               |
-| ---------------- | --------------------- |
-| `working:claude` | Claude is working     |
-| `working:gemini` | YOU are working       |
-| `review:gemini`  | Ready for your review |
-| `review:human`   | Needs human review    |
-| `blocked`        | Waiting on something  |
+| Label               | Meaning                          |
+| ------------------- | -------------------------------- |
+| `priority:blocking`  | Blocks other work — do first    |
+| `priority:high`      | High priority work              |
+| `area:infra`         | Infrastructure tasks            |
+| `area:tooling`       | Scripts, CLI, developer tools   |
+| `area:content`       | Curriculum content work         |
+| `area:docs`          | Documentation                   |
+| `working:claude`     | Claude is working               |
+| `working:gemini`     | YOU are working                 |
+| `review:gemini`      | Ready for your review           |
+| `review:human`       | Needs human review              |
+| `agent:claude`       | Preferred assignee: Claude      |
+| `agent:gemini`       | Preferred assignee: Gemini      |
 
 ### Your Handoff Response Flow
 

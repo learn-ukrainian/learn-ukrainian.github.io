@@ -1,8 +1,8 @@
 ---
-module: hreko-katolytska-tserkva
+module: c1-hist-061
 level: C1-HIST
 slug: hreko-katolytska-tserkva
 version: '1.0'
-id: c1-hist-61
+id: c1-hist-061
 build:
   last_modified: '2026-01-26'

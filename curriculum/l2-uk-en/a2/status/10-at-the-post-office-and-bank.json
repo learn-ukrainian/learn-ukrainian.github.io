@@ -2,14 +2,14 @@
   "module": "10-at-the-post-office-and-bank",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:34.213185Z",
+  "last_audit": "2026-02-10T10:45:17.237440Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-25T09:43:07.126121Z",
-    "meta": "2026-01-29T07:39:04.584855Z",
-    "activities": "2026-01-17T21:45:15.602062Z",
-    "vocabulary": "2026-01-25T09:42:40.535941Z",
-    "plan": "2026-01-30T12:31:49.564694Z"
+    "meta": "2026-02-07T10:03:50.712836Z",
+    "activities": "2026-02-07T10:03:50.734339Z",
+    "vocabulary": "2026-02-07T10:03:50.777910Z",
+    "plan": "2026-02-09T12:52:14.161499Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0
   }
 }

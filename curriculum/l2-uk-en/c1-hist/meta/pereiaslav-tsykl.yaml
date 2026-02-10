@@ -1,8 +1,8 @@
 ---
-module: pereiaslav-tsykl
+module: c1-hist-082
 level: C1-HIST
 slug: pereiaslav-tsykl
 version: '1.0'
-id: c1-hist-82
+id: c1-hist-082
 build:
   last_modified: '2026-01-26'

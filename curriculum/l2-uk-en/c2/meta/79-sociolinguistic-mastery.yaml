@@ -1,9 +1,9 @@
 ---
-module: sociolinguistic-mastery
+module: c2-079
 level: C2
 slug: sociolinguistic-mastery
 version: '2.0'
-id: c2-79
+id: c2-079
 naturalness:
   score: 1
   status: PENDING

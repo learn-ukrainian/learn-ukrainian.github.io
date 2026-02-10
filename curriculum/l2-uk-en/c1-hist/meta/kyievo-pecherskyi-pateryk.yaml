@@ -1,8 +1,8 @@
 ---
-module: kyievo-pecherskyi-pateryk
+module: c1-hist-013
 level: C1-HIST
 slug: kyievo-pecherskyi-pateryk
 version: '1.0'
-id: c1-hist-13
+id: c1-hist-013
 build:
   last_modified: '2026-01-26'

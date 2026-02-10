@@ -1,50 +1,52 @@
 {
   "module": "29-language-of-realism",
   "level": "LIT",
-  "plan_version": "2.0",
-  "last_audit": "2026-01-30T21:16:27.441627Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-09T14:09:35.781722Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349802Z",
-    "meta": "2026-01-29T07:39:04.976653Z",
-    "activities": "2026-01-27T15:34:57.213226Z",
-    "vocabulary": null,
-    "plan": "2026-01-27T15:19:02.618850Z"
+    "md": "2026-02-09T13:30:58.532238Z",
+    "meta": "2026-02-09T13:31:52.404351Z",
+    "activities": "2026-02-09T14:09:06.873006Z",
+    "vocabulary": "2026-02-09T12:46:57.689083Z",
+    "plan": "2026-02-09T12:52:17.975299Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "3557/4500 (raw: 4274) | pedagogy: 1 violations | richness: 89% < 90% min (literature)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4021/4000 (raw: 4122)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "3/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "0/0"
+      "message": "12/0"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "5 Outline Compliance Errors",
-      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
-    ],
-    "pass_count": 3,
-    "fail_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

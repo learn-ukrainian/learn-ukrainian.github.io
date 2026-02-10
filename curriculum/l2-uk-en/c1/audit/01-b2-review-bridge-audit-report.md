@@ -1,0 +1,95 @@
+# Audit Report: M01 — 01-b2-review-bridge.md
+**Level:** C1 | **Module:** M01 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-09 21:12:39
+
+## Configuration
+**Type:** C1-grammar
+**Word Target:** 4000 words
+**Activities:** 12-16 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** error-correction, fill-in, unjumble
+**Required Types:** cloze, error-correction, fill-in, group-sort, match-up, quiz
+**Engagement:** ≥7 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть відповідність: терміни з Тексту 1 | 16 | 6 | ✅ |
+| 2 | quiz | Розуміння Тексту 1 | 12 | 5 | ✅ |
+| 3 | match-up | Синоніми: Загальні vs Академічні | 16 | 6 | ✅ |
+| 4 | quiz | Розуміння Тексту 2 | 12 | 5 | ✅ |
+| 5 | group-sort | Розподіліть фрази за стилем | 19 | 12 | ✅ |
+| 6 | fill-in | Академічні звороти | 12 | 6 | ✅ |
+| 7 | error-correction | Виправте стилістичні помилки | 10 | 5 | ✅ |
+| 8 | cloze | Академічна доброчесність | 18 | 12 | ✅ |
+| 9 | unjumble | Побудова складних речень | 10 | 5 | ✅ |
+| 10 | mark-the-words | Знайдіть пасивні конструкції | 12 | 5 | ✅ |
+| 11 | fill-in | Логічні конектори | 10 | 6 | ✅ |
+| 12 | select | Дієслова для тези | 6 | 5 | ✅ |
+| 13 | quiz | Деталі порівняльного аналізу | 8 | 5 | ✅ |
+| 14 | true-false | Аналіз тверджень | 8 | 5 | ✅ |
+| 15 | match-up | Ідентифікація регістру | 14 | 6 | ✅ |
+| 16 | fill-in | Трансформація у пасивний стан | 8 | 6 | ✅ |
+| 17 | essay-response | Виклики переходу до рівня C1 | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 17 (target: 12-16) ❌
+- Unique types: 11 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 6/6 (cloze, error-correction, fill-in, group-sort, match-up, quiz) ✅
+- Low density activities: 0
+
+## Gates
+- **Words:** ✅ 5139/4000 (raw: 5823)
+- **Activities:** ✅ 17/12
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 11/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 14/7
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 34/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.5% (target 90-100% (grammar))
+- **Richness:** ✅ 96% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ✅ 10/10 (High)
+
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 34 | 24 | 100% | 20% | 20.0% |
+| engagement | 13 | 5 | 100% | 15% | 15.0% |
+| dialogues | 6 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 11 | 3 | 100% | 10% | 10.0% |
+| visual | 22 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 28 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.4%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 84 | Included in Core |
+| **Вступ — Від B2 до C1** | ✅ | 666 | Included in Core |
+| **Пасивний стан — повна система** | ⚪️ | 953 | Skipped |
+| **Дієприкметники — активні та пасивні** | ⚪️ | 950 | Skipped |
+| **Складнопідрядні речення** | ⚪️ | 829 | Skipped |
+| **П'ять функціональних стилів** | ⚪️ | 786 | Skipped |
+| **Фразеологія в контексті** | ✅ | 555 | Included in Core |
+| **Підсумок і шлях уперед** | ✅ | 316 | Included in Core |

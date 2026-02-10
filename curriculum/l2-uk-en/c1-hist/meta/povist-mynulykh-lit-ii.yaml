@@ -1,8 +1,8 @@
 ---
-module: povist-mynulykh-lit-ii
+module: c1-hist-012
 level: C1-HIST
 slug: povist-mynulykh-lit-ii
 version: '1.0'
-id: c1-hist-12
+id: c1-hist-012
 build:
   last_modified: '2026-01-26'

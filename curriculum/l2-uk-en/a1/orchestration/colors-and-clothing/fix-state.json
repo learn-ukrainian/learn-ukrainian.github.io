@@ -1,0 +1,15 @@
+{
+  "slug": "colors-and-clothing",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T21:25:59.861013Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T21:25:59.860991Z",
+  "result": "success"
+}

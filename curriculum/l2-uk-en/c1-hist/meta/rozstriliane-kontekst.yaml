@@ -1,8 +1,8 @@
 ---
-module: rozstriliane-kontekst
+module: c1-hist-052
 level: C1-HIST
 slug: rozstriliane-kontekst
 version: '1.0'
-id: c1-hist-52
+id: c1-hist-052
 build:
   last_modified: '2026-01-26'

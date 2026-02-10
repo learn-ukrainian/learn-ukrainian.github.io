@@ -1,0 +1,15 @@
+{
+  "slug": "the-best-the-worst",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T22:37:55.065666Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T22:37:55.065645Z",
+  "result": "success"
+}

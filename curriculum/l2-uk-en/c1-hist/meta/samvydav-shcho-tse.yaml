@@ -1,8 +1,8 @@
 ---
-module: samvydav-shcho-tse
+module: c1-hist-039
 level: C1-HIST
 slug: samvydav-shcho-tse
 version: '1.0'
-id: c1-hist-39
+id: c1-hist-039
 build:
   last_modified: '2026-01-26'

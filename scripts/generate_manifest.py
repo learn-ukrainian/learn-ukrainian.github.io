@@ -8,6 +8,8 @@ import re
 from pathlib import Path
 import yaml
 
+from slug_utils import to_bare_slug
+
 
 def extract_module_info(meta_file: Path) -> dict:
     """Extract slug and title from a meta YAML file."""
@@ -17,9 +19,7 @@ def extract_module_info(meta_file: Path) -> dict:
     slug = content.get('slug')
     if not slug:
         # Derive from filename: 01-some-name.yaml -> some-name
-        slug = meta_file.stem
-        # Strip leading number prefix if present
-        slug = re.sub(r'^\d+-', '', slug)
+        slug = to_bare_slug(meta_file.stem)
 
     return {
         'slug': slug,

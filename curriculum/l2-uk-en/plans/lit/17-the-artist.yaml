@@ -1,5 +1,6 @@
 ---
-module: the-artist
+sequence: 17
+module: lit-17
 level: LIT
 slug: the-artist
 version: '2.0'

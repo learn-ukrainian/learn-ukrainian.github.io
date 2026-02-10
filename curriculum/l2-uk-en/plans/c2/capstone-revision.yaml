@@ -1,5 +1,5 @@
 ---
-module: capstone-revision
+module: c2-092
 level: c2
 sequence: 92
 version: '2.0'

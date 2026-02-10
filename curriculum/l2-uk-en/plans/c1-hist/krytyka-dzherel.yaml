@@ -1,5 +1,5 @@
 ---
-module: krytyka-dzherel
+module: c1-hist-009
 level: c1-hist
 sequence: 9
 version: '1.0'

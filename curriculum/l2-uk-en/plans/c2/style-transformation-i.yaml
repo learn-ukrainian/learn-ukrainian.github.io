@@ -1,5 +1,5 @@
 ---
-module: style-transformation-i
+module: c2-010
 level: c2
 sequence: 10
 version: '2.0'

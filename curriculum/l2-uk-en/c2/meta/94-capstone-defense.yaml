@@ -1,9 +1,9 @@
 ---
-module: capstone-defense
+module: c2-094
 level: C2
 slug: capstone-defense
 version: '2.0'
-id: c2-94
+id: c2-094
 naturalness:
   score: 1
   status: PENDING

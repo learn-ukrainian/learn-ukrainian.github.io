@@ -1,7 +1,7 @@
 ---
-module: c1-bio-053
+module: c1-bio-052
 level: C1-BIO
-sequence: 53
+sequence: 52
 slug: ivan-franko
 version: '2.0'
 title: 'Іван Франко: Каменяр'

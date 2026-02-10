@@ -1,0 +1,15 @@
+{
+  "slug": "root-families-ii",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-09T23:08:47.306993Z",
+      "audit_passed": false,
+      "action": "regenerate_review",
+      "post_review_audit_passed": true,
+      "result": "success_after_review"
+    }
+  ],
+  "started": "2026-02-09T23:08:47.306955Z",
+  "result": "success"
+}

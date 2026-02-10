@@ -1,9 +1,9 @@
 ---
-module: b2-hist-80
+module: b2-hist-080
 level: B2-HIST
 slug: kyrylo-mefodiivtsi
 version: '2.0'
-id: b2-hist-80
+id: b2-hist-080
 title: Кирило-Мефодіївське братство
 subtitle: The Cyril and Methodius Brotherhood
 phase: HIST.8

@@ -1,9 +1,9 @@
 ---
-module: individual-voice-ii
+module: c2-015
 level: C2
 slug: individual-voice-ii
 version: '2.0'
-id: c2-15
+id: c2-015
 naturalness:
   score: 1
   status: PENDING

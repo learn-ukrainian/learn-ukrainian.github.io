@@ -1,5 +1,6 @@
 ---
-module: the-testament
+sequence: 15
+module: lit-15
 level: LIT
 slug: the-testament
 version: '2.0'

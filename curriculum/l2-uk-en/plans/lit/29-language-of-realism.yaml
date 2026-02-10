@@ -1,5 +1,6 @@
 ---
-module: language-of-realism
+sequence: 29
+module: lit-29
 level: LIT
 slug: language-of-realism
 version: '2.0'

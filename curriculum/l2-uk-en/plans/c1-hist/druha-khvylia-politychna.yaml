@@ -1,5 +1,5 @@
 ---
-module: druha-khvylia-politychna
+module: c1-hist-065
 level: c1-hist
 sequence: 65
 version: '1.0'

@@ -1,9 +1,9 @@
 ---
-module: terminology-acquisition-i
+module: c2-047
 level: C2
 slug: terminology-acquisition-i
 version: '2.0'
-id: c2-47
+id: c2-047
 naturalness:
   score: 1
   status: PENDING

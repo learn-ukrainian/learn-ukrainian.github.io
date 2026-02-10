@@ -1,4 +1,7 @@
----
+module: c1-bio-031
+level: C1-BIO
+version: '2.0'
+items:
 - lemma: канцелярист
   ipa: /kɐnt͡selʲɐˈrɪst/
   translation: chancellor / scribe
@@ -78,7 +81,7 @@
   gender: m
   note: випадок у минулому
 - lemma: асиміляція
-  ipa: /sɪmʲilʲˈɑt͡sʲijɐ/
+  ipa: /ɐsɪmʲilʲˈɑt͡sʲijɐ/
   translation: assimilation
   pos: noun
   gender: f
@@ -138,7 +141,7 @@
   gender: m
   note: акт гетьманської влади
 - lemma: писар
-  ipa: [ˈpɪsɐr]
+  ipa: /ˈpɪsɐr/
   translation: scribe / clerk
   pos: noun
   gender: m

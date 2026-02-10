@@ -1,8 +1,8 @@
 ---
-module: syntez-serednovichni-dzherela
+module: c1-hist-018
 level: C1-HIST
 slug: syntez-serednovichni-dzherela
 version: '1.0'
-id: c1-hist-18
+id: c1-hist-018
 build:
   last_modified: '2026-01-26'

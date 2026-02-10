@@ -1,0 +1,55 @@
+{
+  "module": "kateryna-handziuk",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-09T23:25:23.652747Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-09T16:03:00.994890Z",
+    "meta": "2026-02-09T15:59:44.244551Z",
+    "activities": "2026-02-09T16:03:29.464525Z",
+    "vocabulary": "2026-02-09T16:03:55.759164Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 5,
+      "message": "18/4000 (raw: 71) | engagement: 0/5 | pedagogy: 2 violations | immersion: 47.5% LOW (target 95-100% (biography)) | richness: 15% < 95% min (biography) - REWRITE needed"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

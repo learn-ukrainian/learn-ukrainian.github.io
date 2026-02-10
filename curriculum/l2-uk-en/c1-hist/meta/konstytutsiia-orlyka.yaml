@@ -1,8 +1,8 @@
 ---
-module: konstytutsiia-orlyka
+module: c1-hist-025
 level: C1-HIST
 slug: konstytutsiia-orlyka
 version: '1.0'
-id: c1-hist-25
+id: c1-hist-025
 build:
   last_modified: '2026-01-26'

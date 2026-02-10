@@ -15,6 +15,8 @@ import argparse
 import sys
 from pathlib import Path
 
+from slug_utils import to_bare_slug
+
 import yaml
 
 # Add project root to path
@@ -44,8 +46,7 @@ def find_plan_file(level: str, slug: str) -> Path | None:
     plan_dir = Path(__file__).parent.parent / "curriculum" / "l2-uk-en" / "plans" / level
 
     # Remove leading number from slug
-    import re
-    clean_slug = re.sub(r"^\d+-", "", slug)
+    clean_slug = to_bare_slug(slug)
 
     plan_path = plan_dir / f"{clean_slug}.yaml"
     if plan_path.exists():

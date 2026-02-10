@@ -1023,6 +1023,103 @@ LEVEL_CONFIG = {
         'required_types': {'reading', 'essay-response', 'critical-analysis'},  # Must have all three
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
     },
+    # --- Literature variant tracks (inherit LIT config with minor adjustments) ---
+    'LIT-ESSAY': {
+        # Essay/non-fiction track: longer analytical pieces
+        'target_words': 4500,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-HIST-FIC': {
+        # Historical fiction: narrative analysis focus
+        'target_words': 4500,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-FANTASTIKA': {
+        # Sci-fi/fantasy: genre analysis
+        'target_words': 4000,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-WAR': {
+        # War literature: urgent, contemporary focus
+        'target_words': 4500,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response', 'critical-analysis'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-HUMOR': {
+        # Humor/satire: shorter modules, lighter touch
+        'target_words': 3500,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-JUVENILE': {
+        # Children's/YA lit: slightly shorter, accessible
+        'target_words': 3500,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
     'OES': {
         # OES Track: Historical Linguistics (post-B2)
         # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501

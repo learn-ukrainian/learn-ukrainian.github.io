@@ -1,9 +1,9 @@
 ---
-module: creative-writing-prose
+module: c2-037
 level: C2
 slug: creative-writing-prose
 version: '2.0'
-id: c2-37
+id: c2-037
 naturalness:
   score: 1
   status: PENDING

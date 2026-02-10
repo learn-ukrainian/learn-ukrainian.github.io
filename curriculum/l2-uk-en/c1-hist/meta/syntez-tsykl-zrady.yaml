@@ -1,8 +1,8 @@
 ---
-module: syntez-tsykl-zrady
+module: c1-hist-088
 level: C1-HIST
 slug: syntez-tsykl-zrady
 version: '1.0'
-id: c1-hist-88
+id: c1-hist-088
 build:
   last_modified: '2026-01-26'

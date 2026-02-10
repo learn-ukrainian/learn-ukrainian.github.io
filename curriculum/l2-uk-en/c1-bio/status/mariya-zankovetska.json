@@ -2,11 +2,11 @@
   "module": "mariya-zankovetska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:13:47.444606Z",
+  "last_audit": "2026-02-09T23:24:24.181012Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T18:45:19.727658Z",
-    "meta": "2026-02-07T15:13:22.016406Z",
+    "meta": "2026-02-09T15:59:44.203551Z",
     "activities": "2026-02-07T10:03:51.602950Z",
     "vocabulary": "2026-02-07T10:03:51.645530Z",
     "plan": null
@@ -36,12 +36,19 @@
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 3 (Seminar) review file at l2-uk-en/c1-bio/review/mariya-zankovetska-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly \u2014 if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 3 (Seminar) review file at l2-uk-en/c1-bio/review/mariya-zankovetska-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly \u2014 if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources."
+    ],
     "pass_count": 5,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

@@ -1,30 +1,66 @@
----
 - type: reading
-  id: reading-mykola-escape
-  title: 'Уривок: Рішення про втечу'
-  resource:
-    type: Novel Key Excerpt
-    url: https://www.ukrlib.com.ua/books/printit.php?tid=908
-    title: Іван Нечуй-Левицький. Микола Джеря
+  id: reading-mykola-dzherya-themes
+  title: "Analyze the Main Themes"
   tasks:
-  - Які метафори використовує Микола для опису своєї неволі?
-  - Чому він порівнює себе з волом?
-  - Яку роль у його рішенні відіграє почуття гідності?
+    - "Read the assigned text and analyze the main themes present in 'Mykola Dzherya'."
+    - "Identify the key conflict between Mykola and Pan Bzhozovsky."
+    - "Examine the role of the steppe landscape in the narrative."
+  text: "Микола Джеря — це не просто історія одного втікача. Це глибоке дослідження соціальних та екзистенційних проблем того часу. Ключовою темою є боротьба людської гідності проти системи приниження. Кріпацтво показане не лише як економічна експлуатація, а як механізм знищення особистості. Іншою важливою темою є ціна свободи: Микола здобуває волю, але платить за неї щастям своєї родини. Також автор піднімає проблему розчарування: втеча від пана до 'вільного' капіталістичного світу рибальських артілей показує, що експлуатація змінює форму, але не зникає."
+- type: true-false
+  title: "True or False Statements"
+  items:
+    - statement: "Микола Джеря був покірним кріпаком, який боявся пана."
+      correct: false
+    - statement: "Втеча Миколи була спричинена бажанням побачити море."
+      correct: false
+    - statement: "Життя на лимані виявилося легким і безтурботним."
+      correct: false
+    - statement: "Нимидора чекала на Миколу все життя."
+      correct: true
+    - statement: "Микола повернувся додому багатим чоловіком."
+      correct: false
+    - statement: "Донька Любка одразу впізнала і пробачила батька."
+      correct: false
+    - statement: "Повість присвячена Миколі Лисенку."
+      correct: true
+    - statement: "Микола Джеря змирився з несправедливістю у старості."
+      correct: false
+    - statement: "Твір засуджує як кріпацтво, так і капіталістичну експлуатацію."
+      correct: true
+    - statement: "Іван Франко високо оцінив повість 'Микола Джеря'."
+      correct: true
+    - statement: "Микола Джеря помер на чужині, так і не побачивши рідного села."
+      correct: false
+    - statement: "Образ Миколи — це символ незламності українського духу."
+      correct: true
 - type: essay-response
-  title: Ціна Свободи
-  source_reading: reading-mykola-escape
-  prompt: 'Напишіть есе (300-400 слів): "Чи була втеча Миколи Джері виправданою? Чи знайшов він ту свободу, яку шукав?" Проаналізуйте
-    моральний аспект покинутої родини та соціальний аспект "вільного" найманця.'
-  model_answer: 'Втеча Миколи Джері — це складний етичний вибір.
-
-    З одного боку, це акт найвищої гідності. Залишитися означало б зламатися, стати рабом не лише юридично, а й ментально.
-    Микола обирає невідомість і ризик, аби не бути "бидлом". Це героїчний вчинок, який підносить його над пасивною масою.
-
-    З іншого боку, його свобода куплена дорогою ціною — стражданням його найближчих. Нимидора прожила життя вдови при живому
-    чоловікові. Чи має право людина на особисту свободу за рахунок інших? Нечуй-Левицький не дає однозначної відповіді, але
-    фінальна самотність Миколи натякає на трагічність такого вибору.
-
-    Щодо соціального аспекту, то Микола зрозумів, що "воля" в умовах дикого капіталізму — це фікція. Він змінив одного пана
-    (поміщика) на іншого (фабриканта), але зберіг головне — відчуття, що він сам керує своєю долею.
-
-    '
+  title: "Critical Reflection"
+  prompt: "Write a short essay reflecting on the moral dilemma of Mykola's escape. Was he justified in leaving his family to save his own dignity and freedom? Discuss the price of liberty portrayed in the novella."
+  source_reading: "reading-mykola-dzherya-themes"
+  rubric:
+    - criteria: "Argumentation"
+      description: "Clearly states a position on Mykola's decision."
+      points: 4
+    - criteria: "Textual Evidence"
+      description: "Uses examples from the text to support the argument."
+      points: 3
+    - criteria: "Nuance"
+      description: "Acknowledges the complexity of the situation (freedom vs. duty)."
+      points: 3
+  model_answer: |
+    > [!model-answer]
+    > **Model Answer:**
+    >
+    > Микола Джеря опинився перед трагічним вибором, де не було "правильного" рішення. З одного боку, залишитися означало б духовну смерть і фізичне рабство (рекрутчину), що зрештою теж розлучило б його з сім'єю. З іншого боку, втеча зберегла його гідність, але прирекла його дружину та доньку на страждання без годувальника.
+    >
+    > Вчинок Миколи можна виправдати тим, що він боровся за своє фундаментальне право бути людиною, а не річчю. Його бунт — це протест проти системи, яка ставила селянина в такі нелюдські умови. Однак автор не приховує високу ціну цього вибору: смерть Нимидори і відчуження доньки. Це показує, що в умовах тотального гноблення індивідуальна свобода часто досягається ціною особистого щастя і щастя близьких.
+- type: critical-analysis
+  title: "Analyzing the Cost of Freedom"
+  source_reading: "reading-mykola-dzherya-themes"
+  target_text: "Вчинок Миколи можна виправдати тим, що він боровся за своє фундаментальне право бути людиною..."
+  questions:
+    - "How does the author portray the conflict between individual freedom and family duty?"
+    - "What is the symbolic significance of the 'lost paradise' in Mykola's psychology?"
+  model_answers:
+    - "The author portrays this conflict as a tragedy where any choice leads to suffering. Staying means slavery, leaving means abandoning the family."
+    - "The lost paradise represents the idealized past that Mykola clings to, which no longer exists in reality. It symbolizes the irreversible nature of his sacrifice."

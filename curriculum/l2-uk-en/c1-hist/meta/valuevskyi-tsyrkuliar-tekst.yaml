@@ -1,8 +1,8 @@
 ---
-module: valuevskyi-tsyrkuliar-tekst
+module: c1-hist-031
 level: C1-HIST
 slug: valuevskyi-tsyrkuliar-tekst
 version: '1.0'
-id: c1-hist-31
+id: c1-hist-031
 build:
   last_modified: '2026-01-26'

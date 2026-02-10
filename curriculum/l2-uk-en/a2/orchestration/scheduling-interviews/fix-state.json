@@ -1,0 +1,14 @@
+{
+  "slug": "scheduling-interviews",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:23:19.658906Z",
+      "audit_passed": false,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-10T11:23:19.658891Z",
+  "result": "success"
+}

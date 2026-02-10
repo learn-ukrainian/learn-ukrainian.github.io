@@ -1,5 +1,6 @@
 ---
-module: marusya
+sequence: 7
+module: lit-07
 level: LIT
 slug: marusya
 version: '2.0'

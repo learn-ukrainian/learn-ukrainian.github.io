@@ -6,8 +6,13 @@ Also validates activity_hints types against VALID_ACTIVITY_TYPES for all modules
 
 import json
 import os
+import sys
 from pathlib import Path
 import jsonschema
+
+# Ensure scripts/ is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+from slug_utils import to_bare_slug
 
 from ..config import VALID_ACTIVITY_TYPES
 
@@ -83,8 +88,7 @@ def check_research_file(file_path: str) -> list[dict]:
         return []
 
     # Fallback: strip number prefix (e.g., "04-slug" → "slug") and try again
-    import re
-    base_slug = re.sub(r'^\d+-', '', stem)
+    base_slug = to_bare_slug(stem)
     if base_slug != stem:
         fallback_file = research_dir / f"{base_slug}-research.md"
         if fallback_file.exists():

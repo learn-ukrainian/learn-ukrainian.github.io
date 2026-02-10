@@ -13,6 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from slug_utils import to_bare_slug
+
 REPO = Path(__file__).parent.parent
 
 
@@ -24,7 +26,7 @@ def find_module_files(level: str, num: int) -> dict | None:
         return None
 
     content_path = content_files[0]
-    slug = content_path.stem[3:]
+    slug = to_bare_slug(content_path.stem)
     full_stem = content_path.stem
 
     meta_path = level_dir / f"meta/{full_stem}.yaml"

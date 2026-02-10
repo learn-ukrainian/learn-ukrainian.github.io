@@ -1,9 +1,9 @@
 ---
-module: regional-varieties
+module: c2-078
 level: C2
 slug: regional-varieties
 version: '2.0'
-id: c2-78
+id: c2-078
 naturalness:
   score: 1
   status: PENDING

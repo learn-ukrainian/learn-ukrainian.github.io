@@ -2,11 +2,11 @@
   "module": "serhii-plokhy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T23:14:37.566623Z",
+  "last_audit": "2026-02-09T23:25:15.762289Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.342399Z",
-    "meta": "2026-02-07T15:13:22.028143Z",
+    "meta": "2026-02-09T15:59:44.239872Z",
     "activities": "2026-02-07T10:03:51.562800Z",
     "vocabulary": "2026-02-07T10:03:51.615651Z",
     "plan": null
@@ -36,6 +36,11 @@
       "status": "info",
       "violations": 0,
       "message": "1/10 (PENDING \u2014 awaiting review)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {

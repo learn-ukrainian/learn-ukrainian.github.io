@@ -1,8 +1,8 @@
 ---
-module: lysty-stusa
+module: c1-hist-040
 level: C1-HIST
 slug: lysty-stusa
 version: '1.0'
-id: c1-hist-40
+id: c1-hist-040
 build:
   last_modified: '2026-01-26'

@@ -1,8 +1,8 @@
 ---
-module: syntez-rozstriliane
+module: c1-hist-057
 level: C1-HIST
 slug: syntez-rozstriliane
 version: '1.0'
-id: c1-hist-57
+id: c1-hist-057
 build:
   last_modified: '2026-01-26'

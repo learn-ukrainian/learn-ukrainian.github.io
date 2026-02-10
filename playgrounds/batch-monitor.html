@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Batch Monitor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .status-pass { @apply bg-green-100 text-green-800 border-green-200; }
+        .status-fail { @apply bg-red-100 text-red-800 border-red-200; }
+        .status-running { @apply bg-blue-100 text-blue-800 border-blue-200; }
+        .status-pending { @apply bg-gray-100 text-gray-800 border-gray-200; }
+        .status-retry { @apply bg-yellow-100 text-yellow-800 border-yellow-200; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-fast {
+            animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Gemini Batch Monitor</h1>
+                <p id="batch-info" class="text-gray-600 mt-1">Loading state...</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right">
+                    <p id="last-update" class="text-sm text-gray-500">Last updated: -</p>
+                    <div class="flex items-center mt-1">
+                        <span id="refresh-indicator" class="h-2 w-2 rounded-full bg-green-500 mr-2"></span>
+                        <span class="text-xs text-gray-400">Auto-refreshing (5s)</span>
+                    </div>
+                </div>
+                <select id="track-selector" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <option value="c1-bio">c1-bio</option>
+                    <option value="b2-hist">b2-hist</option>
+                    <option value="c1-hist">c1-hist</option>
+                    <option value="lit">lit</option>
+                    <option value="a1">a1</option>
+                    <option value="a2">a2</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-sm font-medium text-gray-500 mb-1">Total Progress</p>
+                <div class="flex items-baseline">
+                    <h3 id="stat-progress" class="text-2xl font-bold text-gray-900">-</h3>
+                    <p id="stat-total" class="ml-2 text-sm text-gray-500">/ - modules</p>
+                </div>
+                <div class="mt-4 w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-sm font-medium text-gray-500 mb-1">Success Rate</p>
+                <h3 id="stat-success" class="text-2xl font-bold text-green-600">-%</h3>
+                <p id="stat-pass-fail" class="mt-1 text-sm text-gray-500">- pass, - fail</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-sm font-medium text-gray-500 mb-1">Average Duration</p>
+                <h3 id="stat-avg-time" class="text-2xl font-bold text-gray-900">-</h3>
+                <p class="mt-1 text-sm text-gray-500">per module</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-sm font-medium text-gray-500 mb-1">Est. Remaining</p>
+                <h3 id="stat-remaining" class="text-2xl font-bold text-gray-900">-</h3>
+                <p id="stat-eta" class="mt-1 text-sm text-gray-500">ETA: -</p>
+            </div>
+        </div>
+
+        <!-- Current Module Details -->
+        <div id="active-module-container" class="hidden mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Active Module</h2>
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4">
+                    <span class="flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                    </span>
+                </div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between">
+                    <div>
+                        <h4 id="active-slug" class="text-xl font-bold text-indigo-900">-</h4>
+                        <div class="flex space-x-4 mt-2">
+                            <span class="text-sm text-indigo-700 font-medium">Phase: <span id="active-phase" class="font-bold">-</span></span>
+                            <span class="text-sm text-indigo-700 font-medium">Retry: <span id="active-retry" class="font-bold">0</span></span>
+                            <span class="text-sm text-indigo-700 font-medium">Started: <span id="active-start" class="font-bold">-</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Module List -->
+            <div class="lg:col-span-2">
+                <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-900">Module Log</h2>
+                        <div class="flex space-x-2">
+                            <span class="px-2 py-1 text-xs font-medium rounded bg-green-50 text-green-700 border border-green-100">Pass</span>
+                            <span class="px-2 py-1 text-xs font-medium rounded bg-red-50 text-red-700 border border-red-100">Fail</span>
+                            <span class="px-2 py-1 text-xs font-medium rounded bg-blue-50 text-blue-700 border border-blue-100">Running</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Module</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phases</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody id="module-list" class="bg-white divide-y divide-gray-200">
+                                <!-- Modules dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Failure Queue -->
+            <div class="lg:col-span-1">
+                <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden mb-8">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-red-50">
+                        <h2 class="text-lg font-semibold text-red-900">Failure Queue</h2>
+                        <span id="failure-count" class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded-full">0</span>
+                    </div>
+                    <div id="failure-list" class="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
+                        <!-- Failures dynamic -->
+                    </div>
+                </div>
+
+                <!-- Recent Errors -->
+                <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                        <h2 class="text-lg font-semibold text-gray-900">Recent Errors</h2>
+                    </div>
+                    <div id="error-log" class="p-4 text-xs font-mono text-red-600 bg-gray-900 h-[300px] overflow-y-auto">
+                        <!-- Errors dynamic -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const trackSelector = document.getElementById('track-selector');
+        let currentTrack = trackSelector.value;
+
+        // State files are now in batch_state/ directory
+        const STATE_BASE = '../batch_state';
+
+        // Load track from URL param if present
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('track')) {
+            currentTrack = urlParams.get('track');
+            trackSelector.value = currentTrack;
+        }
+
+        trackSelector.addEventListener('change', () => {
+            currentTrack = trackSelector.value;
+            updateDashboard();
+        });
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch(`${STATE_BASE}/state_${currentTrack}.json`);
+                if (!response.ok) throw new Error('State file not found');
+                const state = await response.json();
+
+                // Load failure queue
+                let failures = [];
+                try {
+                    const failRes = await fetch(`${STATE_BASE}/failure_queue.json`);
+                    if (failRes.ok) failures = await failRes.json();
+                } catch (e) { /* no failure queue yet */ }
+
+                // Load global error log
+                try {
+                    const errRes = await fetch(`${STATE_BASE}/errors_${currentTrack}.log`);
+                    if (errRes.ok) {
+                        const errText = await errRes.text();
+                        document.getElementById('error-log').textContent = errText;
+                        const logElem = document.getElementById('error-log');
+                        logElem.scrollTop = logElem.scrollHeight;
+                    }
+                } catch (e) { /* no error log yet */ }
+
+                renderStats(state);
+                renderModuleList(state);
+                renderActiveModule(state);
+                renderFailureQueue(failures.filter(f =>
+                    f.slug.includes(currentTrack) || state.modules[f.slug]
+                ));
+
+                document.getElementById('last-update').textContent =
+                    `Last updated: ${new Date().toLocaleTimeString()}`;
+                document.getElementById('batch-info').textContent =
+                    `Batch: ${state.batch} | Range: ${state.range || 'all'} | Started: ${new Date(state.started).toLocaleString()}`;
+            } catch (error) {
+                console.error('Error loading state:', error);
+                document.getElementById('batch-info').textContent =
+                    'Error: State file not found for ' + currentTrack;
+            }
+        }
+
+        function renderStats(state) {
+            const modules = Object.values(state.modules);
+            const totalCount = modules.length;
+            const failCount = modules.filter(m => m.status === 'fail').length;
+            const passCount = modules.filter(m => m.status === 'pass').length;
+
+            // Progress
+            const completedCount = passCount + failCount;
+            document.getElementById('stat-progress').textContent = completedCount;
+            document.getElementById('stat-total').textContent = `/ ${totalCount} modules`;
+            const progressPct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+
+            // Success
+            const successPct = completedCount > 0 ? Math.round((passCount / completedCount) * 100) : 0;
+            document.getElementById('stat-success').textContent = `${successPct}%`;
+            document.getElementById('stat-pass-fail').textContent = `${passCount} pass, ${failCount} fail`;
+
+            // Timing
+            const timedModules = modules.filter(m => m.duration);
+            const avgDuration = timedModules.length > 0
+                ? timedModules.reduce((acc, m) => acc + m.duration, 0) / timedModules.length
+                : 0;
+
+            document.getElementById('stat-avg-time').textContent = formatDuration(avgDuration);
+
+            const remainingCount = totalCount - completedCount;
+            const remainingTime = remainingCount * avgDuration;
+            document.getElementById('stat-remaining').textContent = formatDuration(remainingTime);
+
+            if (avgDuration > 0 && remainingCount > 0) {
+                const eta = new Date(Date.now() + remainingTime * 1000);
+                document.getElementById('stat-eta').textContent = `ETA: ${eta.toLocaleTimeString()}`;
+            } else {
+                document.getElementById('stat-eta').textContent = 'ETA: -';
+            }
+        }
+
+        function renderModuleList(state) {
+            const list = document.getElementById('module-list');
+            list.innerHTML = '';
+
+            // Sort modules by start_time descending
+            const sortedModules = Object.entries(state.modules).sort((a, b) => {
+                return new Date(b[1].start_time) - new Date(a[1].start_time);
+            });
+
+            sortedModules.forEach(([slug, data]) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-colors';
+
+                const statusClass = `status-${data.status}`;
+                const duration = data.duration ? formatDuration(data.duration) : '-';
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${slug}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusClass}">
+                            ${data.status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Phase ${data.phase || '-'} ${data.retry ? `(Retry ${data.retry})` : ''}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${duration}</td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        function renderActiveModule(state) {
+            const container = document.getElementById('active-module-container');
+            const activeModule = Object.entries(state.modules).find(([slug, data]) => data.status === 'running');
+
+            if (activeModule) {
+                const [slug, data] = activeModule;
+                container.classList.remove('hidden');
+                document.getElementById('active-slug').textContent = slug;
+                document.getElementById('active-phase').textContent = data.phase || '-';
+                document.getElementById('active-retry').textContent = data.retry || '0';
+                document.getElementById('active-start').textContent = new Date(data.start_time).toLocaleTimeString();
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function renderFailureQueue(failures) {
+            const list = document.getElementById('failure-list');
+            list.innerHTML = '';
+            document.getElementById('failure-count').textContent = failures.length;
+
+            if (failures.length === 0) {
+                list.innerHTML = '<div class="p-6 text-center text-sm text-gray-500">No unresolved failures</div>';
+                return;
+            }
+
+            failures.forEach(fail => {
+                const div = document.createElement('div');
+                div.className = 'p-4 hover:bg-gray-50';
+                const escapedError = (fail.last_error || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const escapedPath = (fail.prompt_file || '').replace(/'/g, "\\'");
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <h4 class="text-sm font-bold text-gray-900">${fail.slug}</h4>
+                        <span class="text-[10px] text-gray-400 font-mono">PHASE ${fail.phase}</span>
+                    </div>
+                    <p class="text-xs text-red-600 mt-1 line-clamp-2">${escapedError}</p>
+                    <div class="mt-2 flex space-x-2">
+                        <button onclick="copyToClipboard('${escapedPath}')" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-medium">Copy Prompt Path</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds) return '0s';
+            if (seconds < 60) return `${Math.round(seconds)}s`;
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.round(seconds % 60);
+            return `${mins}m ${secs}s`;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+        }
+
+        // Initial load
+        updateDashboard();
+        // Refresh every 5s
+        setInterval(updateDashboard, 5000);
+    </script>
+</body>
+</html>

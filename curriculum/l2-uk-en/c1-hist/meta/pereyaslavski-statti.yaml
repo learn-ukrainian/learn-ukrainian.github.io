@@ -1,8 +1,8 @@
 ---
-module: pereyaslavski-statti
+module: c1-hist-024
 level: C1-HIST
 slug: pereyaslavski-statti
 version: '1.0'
-id: c1-hist-24
+id: c1-hist-024
 build:
   last_modified: '2026-01-26'

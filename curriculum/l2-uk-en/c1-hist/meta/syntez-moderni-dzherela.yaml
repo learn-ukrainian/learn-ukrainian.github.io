@@ -1,8 +1,8 @@
 ---
-module: syntez-moderni-dzherela
+module: c1-hist-038
 level: C1-HIST
 slug: syntez-moderni-dzherela
 version: '1.0'
-id: c1-hist-38
+id: c1-hist-038
 build:
   last_modified: '2026-01-26'

@@ -1,9 +1,9 @@
 ---
-module: rozmovnyi-styl
+module: c2-007
 level: C2
 slug: rozmovnyi-styl
 version: '2.0'
-id: c2-07
+id: c2-007
 naturalness:
   score: 1
   status: PENDING

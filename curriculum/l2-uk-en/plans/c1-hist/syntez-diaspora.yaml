@@ -1,5 +1,5 @@
 ---
-module: syntez-diaspora
+module: c1-hist-069
 level: c1-hist
 sequence: 69
 version: '1.0'

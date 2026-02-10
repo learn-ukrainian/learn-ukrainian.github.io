@@ -1,5 +1,5 @@
 ---
-module: holodomor-svidky
+module: c1-hist-049
 level: c1-hist
 sequence: 49
 version: '1.0'

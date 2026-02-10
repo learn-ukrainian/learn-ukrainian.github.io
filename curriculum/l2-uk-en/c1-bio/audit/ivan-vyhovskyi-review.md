@@ -1,84 +1,111 @@
-# Audit Report: M24 — ivan-vyhovskyi.md
-**Level:** C1-BIO | **Module:** M24 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-08 23:49:54
+# Рецензія: Іван Виговський: Гетьман-дипломат
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4300 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** essay-response, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 24
+**Overall Score:** 9.0/10
+**Status:** FAIL
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Аналіз первинного джерела: Гадяцький договір | 4 | 1 | ✅ |
-| 2 | reading | Риторика гетьмана: Маніфест до володарів Європи | 4 | 1 | ✅ |
-| 3 | essay-response | Есе: Альтернативна історія | 1 | 1 | ✅ |
-| 4 | critical-analysis | Критичний аналіз: Образ Виговського | 1 | 1 | ✅ |
-| 5 | comparative-study | Порівняльний аналіз: Хмельницький та Виговський | 1 | 1 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: [PASS]
+- Sections: [all present]
+- Vocabulary: [24/24 from plan matches required hints]
+- Grammar scope: [clean]
+- Objectives: [all covered]
+```
 
-## Gates
-- **Words:** ✅ 4479/4300 (raw: 4634)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** biography
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 10/10 | <7 | Strong narrative arc, engaging style. |
+| 2 | Coherence | 10/10 | <7 | Logical flow, clear transitions between biography and context. |
+| 3 | Relevance | 10/10 | <7 | Highly relevant to Ukrainian statehood history. |
+| 4 | Educational | 10/10 | <7 | Deep analysis of Gadych Union and Ruin. |
+| 5 | Language | 10/10 | <8 | Excellent C1 level vocabulary and stylistics. |
+| 6 | Pedagogy | 9/10 | <7 | Good scaffolding, clear learning outcomes. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian, authentic context. |
+| 8 | Activities | 6/10 | <7 | **CRITICAL FAILURE**: Reading activity asks questions impossible to answer from the provided text snippet. |
+| 9 | Richness | 9/10 | <6 | Good use of engagement boxes and quotes. |
+| 10 | Beginner Safety | 9/10 | <7 | C1 level appropriate, not overwhelming for advanced learners. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Feels curated and specific, not generic. |
+| 12 | Linguistic Accuracy | 10/10 | <9 | No major errors found. |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 9 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 13 | 3 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 5% | 4.8% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.6%** |
+**Weighted Overall:** (10*1.5 + 10*1 + 10*1 + 10*1.2 + 10*1.1 + 9*1.2 + 10*1 + 6*1.3 + 9*0.9 + 9*1.3 + 9*1 + 10*1.5) / 14.0 = **129.0 / 14 = 9.21/10**
+*Note: Overall score is >9.0, but Status is FAIL because Activities dimension (6) is below auto-fail threshold (7).*
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 97 | Included in Core |
-| **Вступ — Архітектор Гадяцької унії** | ✅ | 690 | Included in Core |
-| **Життєпис** | ⚪️ | 1477 | Skipped |
-| **Історичний контекст** | ✅ | 537 | Included in Core |
-| **Внесок** | ⚪️ | 484 | Skipped |
-| **Останні роки** | ⚪️ | 428 | Skipped |
-| **Спадщина** | ⚪️ | 399 | Skipped |
-| **Підсумок** | ✅ | 271 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 96 | Skipped |
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: **[FAIL]** - reading-24-01 tasks unsupported by text.
+- Beginner safety: 5/5
+
+## Critical Issues Found
+
+### Issue 1: Impossible Reading Tasks
+- **Location**: Activity `reading-24-01` / tasks
+- **Original**:
+  - Task 3: `'Проаналізуйте стиль документа: які слова вказують на "вічний" характер угоди?'`
+  - Task 4: `'Як у тексті вирішується питання власності на землю (реституція)?'`
+- **Problem**: The provided text snippet (`...Велике Князівство Руське... вживатиме всіх вольностей...`) contains **zero** mentions of "eternity" or "land restitution". The student cannot answer these questions based on the provided source. This induces hallucination or frustration.
+- **Fix**: Align questions with the actual text snippet provided.
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| - | - | - | [CLEAN] |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? [No]
+- Instructions clear? [Yes]
+- Quick wins? [Yes]
+- Ukrainian scary? [No]
+- Come back tomorrow? [Yes]
+
+Emotional beats: 4 found
+- Welcome: Intro is strong.
+- Curiosity: `[!history-bite]` about Konotop.
+- Quick wins: Clear structure.
+- Encouragement: "Потрібно більше практики?" section.
+
+## Strengths
+- **Narrative Depth**: The comparison of Vyhovskyi as an "intellectual alternative" vs Khmelnytskyi's "force" is excellent historiography.
+- **Vocabulary**: "Колоніальний зашморг", "архітектор унії", "право помсти" — excellent C1 collocations.
+- **Structure**: Clear chronological and thematic division.
+
+## Fix Plan to Reach 9/10
+
+### Activities: 6/10 → 9/10
+
+**What to fix:**
+1. **Activity `reading-24-01`**:
+   - Change Task 3: "'Проаналізуйте стиль документа: які слова вказують на "вічний" характер угоди?'" → "'Проаналізуйте стиль: які слова вказують на рівноправність сторін?'" (Targeting "рівним у правах", "у тій же честі").
+   - Change Task 4: "'Як у тексті вирішується питання власності на землю (реституція)?'" → "'Які освітні заклади передбачено створити згідно з текстом?'" (Targeting "дві Академії").
+
+**Expected score after fix:** 10/10
+
+### Projected Overall After Fixes
+
+Recalculating with Activities = 10:
+(129.0 + (10-6)*1.3) / 14 = (129.0 + 5.2) / 14 = 134.2 / 14 = **9.58/10**
+
+## Verification Summary
+
+- Content lines read: ~200
+- Activity items checked: 5 activities (18 items)
+- Ukrainian sentences verified: ~120
+- IPA transcriptions checked: 24
+- Issues found: 1 critical (Activities)
+- Naturalness score recommendation: 10/10
+
+## Verdict
+
+**FAIL**
+
+The module is excellent in content and language, but the **Reading Activity (reading-24-01)** is broken. The questions ask for information (land restitution, eternity clauses) that is completely absent from the provided text snippet. This must be fixed to pass.

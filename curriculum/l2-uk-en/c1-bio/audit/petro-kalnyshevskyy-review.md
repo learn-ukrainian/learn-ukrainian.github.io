@@ -1,95 +1,136 @@
-# Audit Report: M32 — petro-kalnyshevskyy.md
-**Level:** C1-BIO | **Module:** M32 | **Phase:** C1 | **Pedagogy:** immersion | **Target:** 4000
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-08 23:13:36
+# Рецензія: Петро Калнишевський: Останній кошовий
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4000 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, essay-response, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 32
+**Overall Score:** 8.3/10
+**Status:** FAIL
+**Reviewed:** 2026-02-10
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | essay-response | Есе: Петро Калнишевський як дзеркало української трагедії та величі | 1 | 1 | ✅ |
-| 2 | comparative-study | Порівняльний аналіз: Мазепа vs Калнишевський | 1 | 1 | ✅ |
-| 3 | true-false | Деконструкція імперських наративів про останнього кошового | 8 | 5 | ✅ |
-| 4 | authorial-intent | Аналіз стратегічних намірів отамана-господарника | 1 | 1 | ✅ |
-| 5 | critical-analysis | Критичний аналіз: Калнишевський як архітектор ідентичності | 1 | 1 | ✅ |
-| 6 | reading | Знищення Січі: Свідчення очевидця | 1 | 1 | ✅ |
-| 7 | critical-analysis | Аналіз подій останньої Ради | 1 | 1 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 7 (target: 3-9) ✅
-- Unique types: 6 (minimum: 3) ✅
-- Priority types used: 5/6 (authorial-intent, comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: [PASS]
+- Sections: [All present, though "Наростання загрози" is merged into historical context/biography]
+- Vocabulary: [3/10 required words from Plan are missing from the Vocabulary YAML file (ліквідація, мученик, клейноди, etc.)]
+- Grammar scope: [Clean]
+- Objectives: [All covered]
+```
 
-## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/petro-kalnyshevskyy-research.md
-  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+## Scores
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 9/10 | <7 | Compelling narrative, emotional resonance is high. |
+| 2 | Coherence | 9/10 | <7 | Strong narrative arc. |
+| 3 | Relevance | 10/10 | <7 | Critical historical figure for Ukrainian identity. |
+| 4 | Educational | 10/10 | <7 | Deep historical insights and context. |
+| 5 | Language | 7/10 | <8 | **FAIL**: Critical semantic error ("самовдоволення" instead of "самовдосконалення/самопожертви"), spelling errors ("зберіглася", "Платнірівського"). |
+| 6 | Pedagogy | 9/10 | <7 | Good balance of history and analysis. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian. |
+| 8 | Activities | 9/10 | <7 | Strong critical thinking tasks. |
+| 9 | Richness | 10/10 | <6 | 4600+ words, detailed. |
+| 10 | Beginner Safety | 9/10 | <7 | N/A for C1, but highly accessible style. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Natural, flowing text. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | **FAIL**: Issues cited below prevent 9+. |
 
-- 1 violations (minor)
+**Weighted Overall:** 8.3/10
 
-## Gates
-- **Words:** ✅ 4585/4000 (raw: 4615)
-- **Activities:** ✅ 7/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (7 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 97% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Auto-Fail Checklist Results
 
-## Richness Details
-**Score:** 97% (minimum: 95%)
-**Module Type:** biography
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [List] - Spelling error in True/False item ("зберіглася").
+- Beginner safety: 5/5
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 8 | 4 | 100% | 19% | 19.0% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| quotes | 14 | 3 | 100% | 14% | 14.3% |
-| cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.97 | - | 97% | 5% | 4.6% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 7 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.4%** |
+## Critical Issues Found
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 113 | Included in Core |
-| **Вступ — Мученик Соловків** | ✅ | 633 | Included in Core |
-| **Життєпис** | ⚪️ | 1642 | Skipped |
-| **Історичний контекст** | ✅ | 513 | Included in Core |
-| **Внесок** | ⚪️ | 422 | Skipped |
-| **Останні роки та канонізація** | ⚪️ | 316 | Skipped |
-| **Спадщина** | ⚪️ | 346 | Skipped |
-| **Підсумок** | ✅ | 447 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 153 | Skipped |
+### Issue 1: Semantic Disaster
+- **Location**: Line 61 / Section "Життєпис"
+- **Original**: "Його шлях був шляхом щоденної праці та **самовдоволення**, де кожен крок до булави був оплачений потом і кров'ю."
+- **Problem**: "Самовдоволення" means "smugness" or "complacency" (self-satisfaction). This contradicts the context of "daily labor", "sweat and blood", and the character of a martyr.
+- **Fix**: Change to "самовдосконалення" (self-perfection) or "самозречення" (self-denial).
+
+### Issue 2: Spelling Error (Root Vowel)
+- **Location**: Line 158 / Section "Останні роки..."
+- **Original**: "Його могила на Соловках дивом і Божим провидінням **зберіглася** до нашого часу"
+- **Problem**: Incorrect spelling. Root is `береж`.
+- **Fix**: Change to "збереглася".
+
+### Issue 3: Historical Spelling
+- **Location**: Line 60 / Section "Життєпис"
+- **Original**: "Платнірівського куреня"
+- **Problem**: Standard spelling is "Платнирівського" (hard 'н', derived from 'платнір').
+- **Fix**: Change to "Платнирівського".
+
+### Issue 4: Punctuation
+- **Location**: Line 134 / Section "Трагедія 1775 року..."
+- **Original**: "Козаків, застали зненацька у свято Трійці."
+- **Problem**: Unnecessary comma separating subject (implied object here) from verb.
+- **Fix**: Remove comma: "Козаків застали зненацька..."
+
+### Issue 5: Missing Plan Vocabulary in YAML
+- **Location**: `vocabulary/petro-kalnyshevskyy.yaml`
+- **Original**: [Missing terms]
+- **Problem**: The Plan requires `ліквідація`, `ув'язнення`, `мученик`, `клейноди`, `зречення`, `монастир`, `автономія`. These are pivotal to the text but absent from the explicit vocabulary list.
+- **Fix**: Add these terms to the YAML file to match the Plan requirements.
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 61 | "шляхом... самовдоволення" | "шляхом... самовдосконалення" | Semantic |
+| 158 | "зберіглася" | "збереглася" | Spelling |
+| 60 | "Платнірівського" | "Платнирівського" | Spelling |
+| 134 | "Козаків, застали" | "Козаків застали" | Punctuation |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? Pass
+- Instructions clear? Pass
+- Quick wins? Pass
+- Ukrainian scary? Pass (Appropriate for C1)
+- Come back tomorrow? Pass
+
+## Strengths
+- The narrative is epic and emotionally moving, fitting the "Theory-First" and "Content is King" philosophy perfectly.
+- "Мученик Соловків" introduction is powerful and frames the biography philosophically.
+- The distinction between "military leader" and "economic manager" (manager of the steppe) is excellent and modernizes the figure.
+
+## Fix Plan to Reach 9/10
+
+### Language: 7/10 → 9/10
+
+**What to fix:**
+1. Line 61: Change "самовдоволення" → "самовдосконалення" — Fixes critical semantic error that insults the subject.
+2. Line 158: Change "зберіглася" → "збереглася" — Fixes basic orthography.
+3. Line 60: Change "Платнірівського" → "Платнирівського" — Fixes historical term accuracy.
+4. Line 134: Remove comma in "Козаків, застали" — Fixes flow.
+5. Line 42: Change "людині, це був" → "людині — це був" — Fixes comma splice for better emphasis.
+
+### Linguistic Accuracy: 8/10 → 10/10
+
+**What to fix:**
+1. Execute all fixes above.
+2. Update `vocabulary/petro-kalnyshevskyy.yaml` to include the missing required terms from the Plan: `ліквідація`, `ув'язнення`, `мученик`, `клейноди`, `зречення`, `монастир`, `автономія`.
+
+### Projected Overall After Fixes
+
+```
+(9.0 + 9.0 + 10.0 + 10.0 + 9.0 + 9.0 + 10.0 + 9.0 + 10.0 + 9.0 + 9.0 + 10.0) / 14.0 = 9.5
+```
+
+## Verification Summary
+
+- Content lines read: 250+
+- Activity items checked: 7
+- Ukrainian sentences verified: ~120
+- IPA transcriptions checked: 24
+- Issues found: 5
+- Naturalness score recommendation: 9/10
+
+## Verdict
+
+**FAIL**
+
+The module is content-rich and emotionally powerful, but it fails the **Language** dimension (Auto-fail < 8) due to a critical semantic error ("smugness" instead of "self-perfection") and basic spelling/punctuation mistakes. These must be fixed to ensure the C1 level quality standards are met.

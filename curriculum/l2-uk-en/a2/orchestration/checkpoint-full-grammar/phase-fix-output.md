@@ -1,0 +1,574 @@
+===ACTIVITIES_START===
+- type: match-up
+  title: Vocabulary Categories
+  pairs:
+  - left: квартира
+    right: Daily Life
+  - left: вітальня
+    right: Daily Life
+  - left: лікар
+    right: Work
+  - left: програміст
+    right: Work
+  - left: голова
+    right: Health
+  - left: горло
+    right: Health
+  - left: гроші
+    right: Shopping
+  - left: квиток
+    right: Travel
+  - left: прокидатися
+    right: Daily Life
+  - left: вчитися
+    right: Education
+  - left: температура
+    right: Health
+  - left: знижка
+    right: Shopping
+  instruction: З'єднайте відповідні елементи.
+- type: cloze
+  title: Vocabulary Test
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
+    У мене болить {голова|голову|голові}. (head)
+
+    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}?
+    Я хочу купити {квиток|квитка|квитку}. (ticket)
+
+    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську
+    мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
+
+    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
+    (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+  instruction: Заповніть пропуски, обравши правильні слова.
+- type: quiz
+  title: A2 Vocabulary Quiz
+  items:
+  - question: What is the meaning of the reflexive verb «прокидатися» in English?
+    options:
+    - text: To wake up
+      correct: true
+    - text: To fall asleep
+      correct: false
+    - text: To eat breakfast
+      correct: false
+    - text: To get dressed
+      correct: false
+  - question: Which grammatical case is used in the phrase «працювати лікарем»?
+    options:
+    - text: Instrumental case
+      correct: true
+    - text: Accusative case
+      correct: false
+    - text: Nominative case
+      correct: false
+    - text: Genitive case
+      correct: false
+  - question: In the phrase «У мене болить голова», what is the grammatical role of
+      «голова»?
+    options:
+    - text: Nominative (subject)
+      correct: true
+    - text: Accusative (object)
+      correct: false
+    - text: Genitive
+      correct: false
+    - text: Dative
+      correct: false
+  - question: In the phrase «Заплатити карткою», what case is «карткою» in?
+    options:
+    - text: Instrumental (means)
+      correct: true
+    - text: Accusative
+      correct: false
+    - text: Dative
+      correct: false
+    - text: Locative
+      correct: false
+  - question: What is the primary meaning of the verb «вчитися» in an educational
+      context?
+    options:
+    - text: To study
+      correct: true
+    - text: To teach a class
+      correct: false
+    - text: To learn a subject
+      correct: false
+    - text: To read a book
+      correct: false
+  - question: What does the verb «вивчати» specifically mean when talking about education?
+    options:
+    - text: To learn
+      correct: true
+    - text: To be a student
+      correct: false
+    - text: To teach
+      correct: false
+    - text: To write
+      correct: false
+  - question: What is the English translation of the travel word «квиток»?
+    options:
+    - text: Ticket
+      correct: true
+    - text: Key
+      correct: false
+    - text: Bag
+      correct: false
+    - text: Map
+      correct: false
+  - question: What does the shopping word «знижка» mean in a store?
+    options:
+    - text: Discount
+      correct: true
+    - text: Receipt
+      correct: false
+    - text: Price
+      correct: false
+    - text: Change
+      correct: false
+  - question: What part of the body is «горло» in English?
+    options:
+    - text: Throat
+      correct: true
+    - text: Head
+      correct: false
+    - text: Leg
+      correct: false
+    - text: Arm
+      correct: false
+  - question: What is the correct translation for the word «подорож»?
+    options:
+    - text: Trip/journey
+      correct: true
+    - text: Work/job
+      correct: false
+    - text: Food/meal
+      correct: false
+    - text: Rest/sleep
+      correct: false
+  - question: What kind of establishment is a «готель» for travelers?
+    options:
+    - text: Hotel
+      correct: true
+    - text: House
+      correct: false
+    - text: Restaurant
+      correct: false
+    - text: Hospital
+      correct: false
+  - question: Which room in the house is called «вітальня» in Ukrainian?
+    options:
+    - text: Living room
+      correct: true
+    - text: Bedroom
+      correct: false
+    - text: Kitchen
+      correct: false
+    - text: Bathroom
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: group-sort
+  title: Vocabulary Domains
+  groups:
+  - name: Daily Life
+    items:
+    - квартира
+    - вітальня
+    - прокидатися
+    - снідати
+  - name: Work & Education
+    items:
+    - лікар
+    - програміст
+    - вчитися
+    - університет
+  - name: Health
+    items:
+    - голова
+    - горло
+    - температура
+    - аптека
+  - name: Shopping & Travel
+    items:
+    - гроші
+    - квиток
+    - готель
+    - знижка
+  instruction: Розподіліть елементи за групами.
+- type: true-false
+  title: Vocabulary Rules
+  items:
+  - statement: «Працювати + Instrumental» describes profession.
+    correct: true
+    explanation: Correct! Працювати лікарем.
+  - statement: «У мене болить» = my... hurts.
+    correct: true
+    explanation: Yes! У мене болить голова.
+  - statement: «Голову» is correct after «болить».
+    correct: false
+    explanation: No! «Голова» — it's the subject.
+  - statement: «Вчитися» = to be a student.
+    correct: true
+    explanation: Correct! Вона вчиться в університеті.
+  - statement: «Вивчати» = to learn a subject.
+    correct: true
+    explanation: Yes! Я вивчаю українську.
+  - statement: «Картка» in Instrumental is «картку».
+    correct: false
+    explanation: No! Instrumental is «карткою».
+  - statement: «Знижка» means discount.
+    correct: true
+    explanation: Correct!
+  - statement: Reflexive verbs end in "-ся".
+    correct: true
+    explanation: Yes! Прокидатися, вмиватися.
+  - statement: «Квиток» and «готель» are health vocabulary.
+    correct: false
+    explanation: No! They are travel vocabulary.
+  - statement: «Скільки це коштує?» asks the price.
+    correct: true
+    explanation: Correct!
+  - statement: «Поїзд» means train.
+    correct: true
+    explanation: Yes!
+  - statement: «Вітальня» is the kitchen.
+    correct: false
+    explanation: No! Вітальня = living room, кухня = kitchen.
+  instruction: Визначте, чи твердження правильне.
+- type: cloze
+  title: A Day in Life
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00.
+
+    Потім я {снідаю|вечеряю|сплю} і йду на роботу.
+
+    Я працюю {менеджером|менеджер|менеджера} в офісі.
+
+    Вчора у мене боліла {голова|голову|голові}.
+
+    Я пішов до {аптеки|аптека|аптеку} і купив ліки.
+
+    У вихідні я хочу поїхати в {подорож|роботу|аптеку}.
+
+    Я вже купив {квитки|квиток|квитку} на поїзд.
+
+    Я забронював {готель|парк|вокзал} у центрі.
+
+    Там я буду {гуляти|працювати|хворіти} і відпочивати.
+
+    Ввечері я піду в {ресторан|магазин|банк} на вечерю.
+
+    Я люблю {вивчати|забувати|втрачати} нові місця.
+
+    Це буде чудова {поїздка|робота|хвороба}!'
+  instruction: Заповніть пропуски, обравши правильні слова.
+- type: unjumble
+  title: Daily Routines
+  items:
+  - words:
+    - Вранці
+    - я
+    - завжди
+    - прокидаюся
+    - дуже
+    - рано
+    - о
+    - сьомій
+    answer: Вранці я завжди прокидаюся дуже рано о сьомій
+  - words:
+    - Мій
+    - старший
+    - брат
+    - зараз
+    - успішно
+    - працює
+    - програмістом
+    answer: Мій старший брат зараз успішно працює програмістом
+  - words:
+    - Сьогодні
+    - у
+    - мене
+    - дуже
+    - сильно
+    - болить
+    - голова
+    answer: Сьогодні у мене дуже сильно болить голова
+  - words:
+    - Скажіть
+    - будь ласка
+    - чи
+    - можна
+    - тут
+    - заплатити
+    - карткою
+    answer: Скажіть будь ласка чи можна тут заплатити карткою
+  - words:
+    - Вона
+    - зараз
+    - дуже
+    - старанно
+    - вчиться
+    - в
+    - національному
+    - університеті
+    answer: Вона зараз дуже старанно вчиться в національному університеті
+  - words:
+    - Вибачте
+    - скажіть
+    - де
+    - тут
+    - є
+    - найближча
+    - аптека
+    answer: Вибачте скажіть де тут є найближча аптека
+  instruction: Розташуйте слова у правильному порядку.
+- type: mark-the-words
+  title: Find the Vocabulary
+  text: Вранці я прокидаюся о 7:00 і йду на кухню, щоб снідати. --- Моя сестра працює
+    лікаркою. Вона вчилася в університеті 6 років. --- У мене болить голова і горло.
+    Де тут аптека?
+  answers:
+  - прокидаюся
+  - кухню
+  - снідати
+  - працює
+  - лікаркою
+  - вчилася
+  - університеті
+  - голова
+  - горло
+  - аптека
+  instruction: Клацніть на слова, що відповідають критерію.
+- type: translate
+  title: English to Ukrainian
+  items:
+  - source: I wake up at 7:00.
+    options:
+    - text: Я прокидаюся о сьомій годині.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: He works as a programmer.
+    options:
+    - text: Він працює програмістом.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: My head hurts.
+    options:
+    - text: У мене болить голова.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: I want to buy a ticket.
+    options:
+    - text: Я хочу купити квиток.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: She studies at the university.
+    options:
+    - text: Вона вчиться в університеті.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: Can I pay by card?
+    options:
+    - text: Можна заплатити карткою?
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  instruction: Оберіть правильний переклад.
+- type: translate
+  title: Vocabulary Review Translation
+  items:
+  - source: Kitchen
+    options:
+    - text: Кухня
+      correct: true
+    - text: Кімната
+      correct: false
+    - text: Коридор
+      correct: false
+  - source: Weather
+    options:
+    - text: Погода
+      correct: true
+    - text: Природа
+      correct: false
+    - text: Пора
+      correct: false
+  - source: To cook
+    options:
+    - text: Готувати
+      correct: true
+    - text: Варити
+      correct: false
+    - text: Смажити
+      correct: false
+  - source: Mountain
+    options:
+    - text: Гора
+      correct: true
+    - text: Долина
+      correct: false
+    - text: Ріка
+      correct: false
+  - source: Summer
+    options:
+    - text: Літо
+      correct: true
+    - text: Зима
+      correct: false
+    - text: Весна
+      correct: false
+  - source: Furniture
+    options:
+    - text: Меблі
+      correct: true
+    - text: Одяг
+      correct: false
+    - text: Посуд
+      correct: false
+  instruction: Оберіть правильний переклад.
+- type: error-correction
+  title: Grammar Errors
+  items:
+  - sentence: Я йду до парк.
+    error: парк
+    answer: парку
+    options:
+    - парку
+    - парк
+    - парка
+    - парком
+    explanation: Genitive of парк is парку (spatial concept -у).
+  - sentence: Вона читає книга.
+    error: книга
+    answer: книгу
+    options:
+    - книгу
+    - книга
+    - книги
+    - книгою
+    explanation: Accusative feminine -а → -у.
+  - sentence: Я люблю слухати музика.
+    error: музика
+    answer: музику
+    options:
+    - музику
+    - музика
+    - музики
+    - музикою
+    explanation: Accusative case is required for the object (музика → музику).
+  - sentence: Він працюють у банку.
+    error: працюють
+    answer: працює
+    options:
+    - працює
+    - працюють
+    - працюємо
+    - працюєш
+    explanation: Third person singular needs -є ending.
+  - sentence: Ми їхали до Львова вчора.
+    error: їхали
+    answer: поїхали
+    options:
+    - поїхали
+    - їхали
+    - їдемо
+    - їздили
+    explanation: Single completed action requires perfective поїхали.
+  - sentence: Діти грають на футбол.
+    error: на
+    answer: у
+    options:
+    - у
+    - на
+    - в
+    - до
+    explanation: Play football = грати у/в футбол.
+  instruction: Знайдіть і виправте помилку в реченні.
+- type: fill-in
+  title: Grammar Fill-In
+  instruction: Заповніть пропуски правильним словом.
+  items:
+  - sentence: Я іду [___] роботу.
+    answer: на
+    options:
+    - на
+    - до
+    - в
+    - від
+  - sentence: Вона живе [___] Києві.
+    answer: у
+    options:
+    - у
+    - на
+    - до
+    - від
+  - sentence: Він [___] українську мову щодня.
+    answer: вивчає
+    options:
+    - вивчає
+    - вчиться
+    - навчає
+    - вивчати
+  - sentence: Ми [___] в кіно вчора ввечері.
+    answer: ходили
+    options:
+    - ходили
+    - ходимо
+    - йшли
+    - піти
+  - sentence: Мені [___] допомога.
+    answer: потрібна
+    options:
+    - потрібна
+    - потрібно
+    - потрібні
+    - потрібний
+  - sentence: Вони [___] на концерт наступної суботи.
+    answer: підуть
+    options:
+    - підуть
+    - йдуть
+    - ходять
+    - піти
+  - sentence: Я [___] каву без цукру.
+    answer: п'ю
+    options:
+    - п'ю
+    - їм
+    - пити
+    - випити
+  - sentence: Студенти [___] іспит завтра.
+    answer: складатимуть
+    options:
+    - складатимуть
+    - склали
+    - складають
+    - здавати
+===ACTIVITIES_END===
+
+===CHANGES_START===
+## Applied Fixes
+
+1. [File: activities] Activity "Grammar Errors", Item 1: Changed "Я йду до магазина" to "Я йду до парк" to fix incorrect Genitive enforcement ("магазина" is standard).
+2. [File: activities] Activity "Grammar Errors", Item 3: Changed "Я купила новий сумка" to "Я люблю слухати музика" to resolve double error confusion.
+3. [File: activities] Activity "Find the Vocabulary", text: Changed "йду до кухні" to "йду на кухню" for better naturalness.
+
+## Files Changed: activities
+## Files Unchanged: content, vocabulary
+===CHANGES_END===

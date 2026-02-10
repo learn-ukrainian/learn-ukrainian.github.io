@@ -1,7 +1,7 @@
 ---
-module: c1-bio-002
+module: c1-bio-001
 level: C1-BIO
-sequence: 2
+sequence: 1
 slug: knyahynia-olha
 version: '2.0'
 title: 'Княгиня Ольга: Дипломатія та реформи'

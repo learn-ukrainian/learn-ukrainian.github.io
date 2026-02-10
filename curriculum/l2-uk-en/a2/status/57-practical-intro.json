@@ -2,14 +2,14 @@
   "module": "57-practical-intro",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T23:58:56.261625Z",
+  "last_audit": "2026-02-10T11:23:16.817492Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.363293Z",
-    "meta": "2026-01-26T17:21:18.968584Z",
-    "activities": "2026-01-27T13:05:30.884844Z",
-    "vocabulary": "2026-01-25T01:42:21.136687Z",
-    "plan": "2026-01-30T12:31:49.662248Z"
+    "md": "2026-02-10T11:23:16.301677Z",
+    "meta": "2026-02-07T10:03:50.713339Z",
+    "activities": "2026-02-07T10:03:50.737020Z",
+    "vocabulary": "2026-02-07T10:03:50.779653Z",
+    "plan": "2026-02-07T10:38:52.480689Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1184/980 (raw: 1323)"
+      "message": "1196/980 (raw: 1335)"
     },
     "activities": {
       "status": "pass",
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

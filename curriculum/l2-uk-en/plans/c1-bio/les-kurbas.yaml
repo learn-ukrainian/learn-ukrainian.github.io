@@ -1,7 +1,7 @@
 ---
-module: c1-bio-088
+module: c1-bio-086
 level: C1-BIO
-sequence: 88
+sequence: 86
 slug: les-kurbas
 version: '2.0'
 title: 'Лесь Курбас: Реформатор театру'

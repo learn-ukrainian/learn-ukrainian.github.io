@@ -1,0 +1,55 @@
+{
+  "module": "mykhailo-yangel",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-09T23:25:04.336256Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-09T16:03:16.662478Z",
+    "meta": "2026-02-09T15:59:44.231573Z",
+    "activities": "2026-02-09T16:03:46.195971Z",
+    "vocabulary": "2026-02-09T16:03:55.759205Z",
+    "plan": null
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 5,
+      "message": "18/4000 (raw: 79) | engagement: 0/5 | pedagogy: 2 violations | immersion: 48.5% LOW (target 95-100% (biography)) | richness: 12% < 95% min (biography) - REWRITE needed"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors",
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 2,
+    "fail_count": 2
+  }
+}

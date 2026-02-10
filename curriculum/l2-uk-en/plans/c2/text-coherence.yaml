@@ -1,5 +1,5 @@
 ---
-module: text-coherence
+module: c2-016
 level: c2
 sequence: 16
 version: '2.0'

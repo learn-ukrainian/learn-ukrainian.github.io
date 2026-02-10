@@ -1,13 +1,68 @@
----
-module: c1-bio-140
-level: C1-BIO
+id: c1-bio-150
 slug: vitaly-portnikov
-version: '2.0'
-id: c1-bio-148
-naturalness:
-  score: 1
-  status: PENDING
+title: "Віталій Портников: Деколонізатор смислів та голос політичної нації"
+level: C1
+track: c1-bio
+goal: "Дослідити інтелектуальний внесок Віталія Портникова у формування сучасної української ідентичності, аналіз геополітичних процесів та деколонізацію українського інформаційного простору."
+focus:
+  - "Прогноз війни 1991 року"
+  - "Концепція політичної нації"
+  - "Єврейсько-український діалог"
+  - "Публіцистика як інструмент спротиву"
 word_target: 4000
-vital_status: living
-build:
-  last_modified: '2026-01-26'
+content_outline:
+  - section: "Вступ — Інтелектуальний вартовий української незалежності"
+    words: 600
+  - section: "Життєпис: Від київського дитинства до Шевченківської премії"
+    words: 1600
+  - section: "Історичний контекст: Геополітичні розломи та «прокляття 1991 року»"
+    words: 600
+  - section: "Філософія суб'єктності: Творення політичної нації через діалог"
+    words: 400
+  - section: "Сучасний етап: Публіцистика великої війни та стоїцизм вибору"
+    words: 400
+  - section: "Вплив: Деколонізація свідомості та європейське майбутнє"
+    words: 400
+naturalness:
+  status: "PASS"
+  score: 10
+  last_checked: "2026-02-09"
+activities:
+  - reading
+  - critical-analysis
+  - essay-response
+  - authorial-intent
+sources:
+  - "https://uk.wikipedia.org/wiki/Портников_Віталій_Едуардович"
+  - "https://detector.media"
+  - "https://www.radiosvoboda.org"
+  - "https://zbruc.eu"
+prerequisites:
+  - "c1-bio-149"
+audio:
+  status: "PENDING"
+  last_updated: "2026-02-09"
+visuals:
+  - "Портрет Віталія Портников під час ефіру Радіо Свобода"
+  - "Фото вручення Шевченківської премії (2023)"
+  - "Виступ на Політклубі"
+  - "Книжкова полиця: 'Дзвони Майдану', 'Еревани', 'Богородиця у синагозі'"
+tags:
+  - "Журналістика"
+  - "Публіцистика"
+  - "Політична нація"
+  - "Радіо Свобода"
+  - "Шевченківська премія"
+  - "Деколонізація"
+vocabulary_count: 25
+activity_density: 8
+immersion_target: 100
+richness_target: 95
+decolonization_focus: true
+primary_source_quotes: true
+history_bite_count: 1
+myth_buster_count: 1
+model_answer_required: true
+vital_status: "LIVING"
+curriculum_index: 150
+manifest_id: "M150"

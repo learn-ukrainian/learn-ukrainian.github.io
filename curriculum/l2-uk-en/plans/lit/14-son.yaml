@@ -1,4 +1,5 @@
-module: son
+sequence: 14
+module: lit-14
 level: LIT
 slug: son
 version: '2.0'

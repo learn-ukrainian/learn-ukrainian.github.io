@@ -1,0 +1,117 @@
+---
+# Level Plan: LIT-JUVENILE (Ukrainian Children's & Young Adult Literature Track)
+# Post-C1 specialization: The Golden Age of Ukrainian Kids' Lit
+
+level: lit-juvenile
+track: literature-juvenile
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 30
+  description: "Ukrainian children's and young adult literature — from Franko's Fox Mykyta to the modern A-BA-BA-HA-LA-MA-HA revolution. The books that shape how Ukrainian children see their nation."
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners, future parents raising Ukrainian-speaking children, teachers, and anyone interested in how identity forms through childhood reading"
+  decolonization_mission: "For decades, Ukrainian children read mostly in Russian. The post-independence explosion of Ukrainian children's literature is a cultural miracle — and this track documents it."
+
+sources:
+  primary: "Ukrainian children's publishers (A-BA-BA-HA-LA-MA-HA, Vivat, Старий Лев)"
+  supplementary:
+    - "BBC Book of the Year Ukraine selections"
+    - "Ukrainian children's literature criticism"
+  note: "Ukrainian-language works only. Soviet-era authors included only when they wrote in Ukrainian."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 400
+  focus_areas:
+    - "Children's vocabulary (казка, пригоди, дружба, сміливість)"
+    - "Fantasy/adventure terminology"
+    - "School/youth vocabulary"
+    - "Folklore vocabulary (лісовик, відьма, козак)"
+
+phases:
+  - id: JUV.1
+    name: "Класики: Франко, Пчілка, Завадович"
+    name_en: "Classics: Franko, Pchilka, Zavadovych"
+    modules: "[1, 3]"
+    focus: "Foundations of Ukrainian children's literature"
+    key_works:
+      - "Франко — Лис Микита (1890) — THE Ukrainian animal tale"
+      - "Пчілка — Байки та казки"
+      - "Завадович — Пригоди"
+
+  - id: JUV.2
+    name: "Нестайко: Український Том Сойєр"
+    name_en: "Nestayko: The Ukrainian Tom Sawyer"
+    modules: "[4, 8]"
+    focus: "Vsevolod Nestayko — the single most important Ukrainian children's author"
+    key_works:
+      - "Тореадори з Васюківки (1964-69) — THE Ukrainian childhood"
+      - "Лісова школа (school adventures)"
+      - "Фантастичні пригоди"
+    note: "Nestayko wrote in Ukrainian during Russification. His books kept Ukrainian alive in children's minds."
+
+  - id: JUV.3
+    name: "Радянська Доба: Хто Писав Українською"
+    name_en: "Soviet Era: Who Wrote in Ukrainian"
+    modules: "[9, 12]"
+    focus: "Soviet-era children's authors who chose Ukrainian"
+    key_works:
+      - "Близнець — Земляничка"
+      - "Малик — Аліса"
+      - "Рутківський — Джури (козацькі пригоди)"
+      - "Забіла — вірші для дітей"
+
+  - id: JUV.4
+    name: "Революція A-BA-BA-HA-LA-MA-HA"
+    name_en: "The A-BA-BA-HA-LA-MA-HA Revolution"
+    modules: "[13, 20]"
+    focus: "Ivan Malkovych's publishing house changed everything — Ukrainian children's books became beautiful, modern, and competitive"
+    key_works:
+      - "Малкович — поезія для дітей"
+      - "Дерманський — Монстри, Чу-Дрово"
+      - "Винничук — Львівські казки"
+      - "Старовойт — Мій Київ"
+      - "Оксенюк — Лісова долина"
+      - "Бачинський — 140 децибелів"
+
+  - id: JUV.5
+    name: "Нове Покоління"
+    name_en: "The New Generation"
+    modules: "[21, 30]"
+    focus: "Contemporary Ukrainian YA and children's lit — global quality, Ukrainian soul"
+    key_works:
+      - "Павлюк — Ритм"
+      - "Андрусяк — Кролики, Пригоди"
+      - "Луцишина — Кит (young adult)"
+      - "Воронина — Агент 000"
+      - "Рутківський — нові Джури"
+      - "Поетична антологія для дітей"
+      - "Фольклор для дітей"
+      - "Підсумковий модуль"
+
+constraints:
+  min_word_target: 3000
+  max_word_target: 4500
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Text excerpt with glossary (accessible excerpts)"
+    - "Literary analysis: how does this work build Ukrainian identity in children?"
+    - "Publishing context: who made these books possible?"
+    - "Discussion: childhood reading as nation-building"
+  decolonization:
+    - "For decades, Russian-language books dominated Ukrainian bookstores"
+    - "Nestayko, Malkovych, and modern authors are cultural warriors"
+    - "A-BA-BA-HA-LA-MA-HA proved Ukrainian children's books can be world-class"
+    - "Every Ukrainian child who reads in Ukrainian is a victory"
+  practical_value:
+    - "Learners raising bilingual children will find direct pedagogical resources"
+    - "Simplified language makes these texts accessible reading practice"
+    - "Cultural fluency: knowing Nestayko is like knowing Roald Dahl for English speakers"

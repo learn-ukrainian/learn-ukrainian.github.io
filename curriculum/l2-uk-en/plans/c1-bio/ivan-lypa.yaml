@@ -1,7 +1,7 @@
 ---
-module: c1-bio-060
+module: c1-bio-061
 level: C1-BIO
-sequence: 60
+sequence: 61
 slug: ivan-lypa
 version: '2.0'
 title: 'Іван Липа: Лікар і письменник'

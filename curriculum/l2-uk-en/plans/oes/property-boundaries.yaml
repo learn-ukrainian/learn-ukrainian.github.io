@@ -1,4 +1,6 @@
 ---
+sequence: 64
+module: oes-064
 module_number: 52
 slug: property-boundaries
 title_uk: Межі власності

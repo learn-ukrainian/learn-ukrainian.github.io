@@ -1,8 +1,8 @@
 ---
-module: diaspora-naukovtsi
+module: c1-hist-068
 level: C1-HIST
 slug: diaspora-naukovtsi
 version: '1.0'
-id: c1-hist-68
+id: c1-hist-068
 build:
   last_modified: '2026-01-26'

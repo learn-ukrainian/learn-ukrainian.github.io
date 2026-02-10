@@ -3,6 +3,8 @@
 # Track: OES
 # Module: 009
 # Generated: 2026-02-04
+id: oes-009
+module: oes-009
 
 module_number: 9
 slug: pronouns-self-other

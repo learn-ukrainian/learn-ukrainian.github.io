@@ -1,5 +1,5 @@
 ---
-module: diaspora-ta-zakhidni-istoriky
+module: c1-hist-006
 level: c1-hist
 sequence: 6
 version: '1.0'

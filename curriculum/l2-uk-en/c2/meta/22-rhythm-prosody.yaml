@@ -1,9 +1,9 @@
 ---
-module: rhythm-prosody
+module: c2-022
 level: C2
 slug: rhythm-prosody
 version: '2.0'
-id: c2-22
+id: c2-022
 naturalness:
   score: 1
   status: PENDING

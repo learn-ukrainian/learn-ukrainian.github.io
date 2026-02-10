@@ -1,0 +1,42 @@
+{
+  "slug": "practical-intro",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-10T11:07:54.798231Z",
+      "audit_passed": false,
+      "action": "generate_fix_plan",
+      "result": "fix_plan_generated"
+    },
+    {
+      "iteration": 2,
+      "started": "2026-02-10T11:09:42.260310Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 3,
+      "started": "2026-02-10T11:13:41.923172Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 4,
+      "started": "2026-02-10T11:19:27.952574Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    },
+    {
+      "iteration": 5,
+      "started": "2026-02-10T11:21:37.573869Z",
+      "audit_passed": false,
+      "action": "apply_fixes",
+      "result": "fixes_applied"
+    }
+  ],
+  "started": "2026-02-10T11:07:54.798217Z",
+  "result": "exhausted"
+}

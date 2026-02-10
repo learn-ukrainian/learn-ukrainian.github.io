@@ -1,5 +1,5 @@
 ---
-module: regional-varieties
+module: c2-078
 level: c2
 sequence: 78
 version: '2.0'

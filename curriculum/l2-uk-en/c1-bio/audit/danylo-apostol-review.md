@@ -1,93 +1,116 @@
-# Audit Report: M29 — danylo-apostol.md
-**Level:** C1-BIO | **Module:** M29 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 4300
-**Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-08 23:13:34
+# Рецензія: Данило Апостол: Останній обраний гетьман
 
-## Configuration
-**Type:** C1-biography
-**Word Target:** 4300 words
-**Activities:** 3-9 required
-**Items per Activity:** ≥1 items
-**Unique Types:** ≥3 types required
-**Priority Types:** authorial-intent, comparative-study, critical-analysis, essay-response, quiz, reading
-**Required Types:** critical-analysis, reading
-**Engagement:** ≥5 callouts
-**Immersion:** 95-100%
-**Vocab Target:** ≥24 words
-**Transliteration:** Not allowed
+**Level:** C1-BIO | **Module:** 29
+**Overall Score:** 8.9/10
+**Status:** FAIL
+**Reviewed:** 2026-02-09
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Аналіз первинного джерела: "Рішительні пункти" (1728) | 3 | 1 | ✅ |
-| 2 | essay-response | Есе: Гетьман компромісу чи борець? | 1 | 1 | ✅ |
-| 3 | critical-analysis | Аналіз реформаторської діяльності | 1 | 1 | ✅ |
-| 4 | quiz | Реформи Данила Апостола | 5 | 5 | ✅ |
-| 5 | comparative-study | Порівняння: Конституція Орлика vs Рішительні пункти | 1 | 1 | ✅ |
+## Plan Verification
 
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 2/2 (critical-analysis, reading) ✅
-- Low density activities: 0
+```
+Plan-Content Alignment: PASS
+- Sections: all present
+- Vocabulary: 24/24 from plan, 0 extra
+- Grammar scope: clean (appropriate C1 academic style)
+- Objectives: all covered
+```
 
-## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESEARCH]** No research file found for seminar module. Expected: research/danylo-apostol-research.md
-  - FIX: Run /full-rebuild c1-bio or /research to create research notes before content generation.
+## Scores
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 10/10 | <7 | Excellent decolonized narrative and deep historical insight. |
+| 2 | Coherence | 10/10 | <7 | Logical progression from military career to legislative reforms. |
+| 3 | Relevance | 10/10 | <7 | Perfectly aligned with C1-BIO requirements for 18th-century political history. |
+| 4 | Educational | 10/10 | <7 | High density of facts regarding financial and judicial institutions. |
+| 5 | Language | 7/10 | <8 | Systemic usage of the Russian preposition "под" instead of Ukrainian "під". |
+| 6 | Pedagogy | 10/10 | <7 | Seminar-style analysis and comparative activities are level-appropriate. |
+| 7 | Immersion | 10/10 | <6 | 100% Ukrainian immersion. |
+| 8 | Activities | 10/10 | <7 | 5 diverse activities with strong critical thinking components. |
+| 9 | Richness | 10/10 | <6 | 4398 words (102% of target), 2 engagement callouts, high complexity. |
+| 10 | Beginner Safety | 10/10 | <7 | "Would I Continue?" 5/5. Excellent tutor voice for a C1 student. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Generally natural, but the "pod" repetition is a robotic artifact. |
+| 12 | Linguistic Accuracy | 7/10 | <9 | Systemic error with "под/під" prevents a passing score. |
 
-- 1 violations (minor)
+**Weighted Overall:** (10×1.5 + 10×1.0 + 10×1.0 + 10×1.2 + 7×1.1 + 10×1.2 + 10×1.0 + 10×1.3 + 10×0.9 + 10×1.3 + 9×1.0 + 7×1.5) / 14.0 = **124.2 / 14.0 = 8.87/10**
 
-## Gates
-- **Words:** ✅ 4327/4300 (raw: 4398)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/24
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
-- **Immersion:** 🇺🇦 99.8% (target 95-100% (biography))
-- **Richness:** ✅ 99% (biography)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+## Auto-Fail Checklist Results
 
-## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** biography
+- Russianisms: [FAIL] - Systemic use of "под" instead of "під".
+- Calques: [CLEAN]
+- Grammar scope: [CLEAN]
+- Activity errors: [CLEAN]
+- Beginner safety: 5/5
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| primary_sources | 10 | 4 | 100% | 19% | 19.0% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
-| quotes | 9 | 3 | 100% | 14% | 14.3% |
-| cultural | 5 | 4 | 100% | 10% | 9.5% |
-| visual | 5 | 4 | 100% | 10% | 9.5% |
-| timeline_markers | 30 | 8 | 100% | 10% | 9.5% |
-| legacy | 15 | 2 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 8 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **99.8%** |
+## Critical Issues Found
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 130 | Included in Core |
-| **Вступ — Гетьман стабілізації** | ✅ | 618 | Included in Core |
-| **Життєпис** | ⚪️ | 1359 | Skipped |
-| **Історичний контекст** | ✅ | 710 | Included in Core |
-| **Внесок** | ⚪️ | 361 | Skipped |
-| **Останні роки** | ⚪️ | 358 | Skipped |
-| **Спадщина** | ⚪️ | 391 | Skipped |
-| **Підсумок** | ✅ | 281 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 119 | Skipped |
+### Issue 1: Linguistic Accuracy (Russianism)
+- **Location**: Multiple lines (28, 46, 83, 88, 112, 122, 158, 178, 206)
+- **Original**: "...вигнання под російський протекторат", "...под пильним наглядом", "...міною под стабільність", "...права под назвою", "...под булавою", "...орган под повним контролем", "...права под його впливом", "...под тиском"
+- **Problem**: The word "под" is Russian. In Ukrainian, the preposition "under" is always "під".
+- **Fix**: Replace all instances of "под" with "під".
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 28 | "под російський" | "під російський" | Russianism |
+| 46 | "под пильним" | "під пильним" | Russianism |
+| 83 | "под стабільність" | "під стабільність" | Russianism |
+| 88 | "под назвою" | "під назвою" | Russianism |
+| 112 | "под назвою" | "під назвою" | Russianism |
+| 122 | "под булавою" | "під булавою" | Russianism |
+| 158 | "под повним" | "під повним" | Russianism |
+| 178 | "под його" | "під його" | Russianism |
+| 206 | "под тиском" | "під тиском" | Russianism |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: 5/5
+- Overwhelmed? [Pass] - Level-appropriate complexity.
+- Instructions clear? [Pass]
+- Quick wins? [Pass] - Clear section summaries.
+- Ukrainian scary? [Pass] - Encouraging tone.
+- Come back tomorrow? [Pass]
+
+Emotional beats: 4 found
+- Welcome: Section "Вступ"
+- Curiosity: Callout [!history-bite]
+- Quick wins: Activity "Quiz"
+- Encouragement: Final paragraph of "Підсумок"
+
+## Strengths
+- Deep historiographical mapping that contrasts legal realism with revolutionary idealism.
+- Excellent integration of cultural artifacts (Sorochyntsi church) with political legacy.
+- High-quality model answer for the comparative activity.
+
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+### Linguistic Accuracy: 7/10 → 10/10
+
+**What to fix:**
+1. Global: Replace all "под" with "під". This is the only barrier to a 10/10 score.
+2. Line 88 & 112: Ensure "Малоросійський народ" is capitalized only where appropriate (usually small letter in this context unless part of a specific title, which it is here).
+
+**Expected score after fix:** 10/10
+
+### Projected Overall After Fixes
+
+```
+(10*1.5 + 10*1.0 + 10*1.0 + 10*1.2 + 10*1.1 + 10*1.2 + 10*1.0 + 10*1.3 + 10*0.9 + 10*1.3 + 10*1.0 + 10*1.5) / 14.0 = 10.0/10
+```
+
+## Verification Summary
+
+- Content lines read: 215
+- Activity items checked: 14
+- Ukrainian sentences verified: ~110
+- IPA transcriptions checked: 24
+- Issues found: 1 (systemic)
+- Naturalness score recommendation: 10/10 (after "pod" fix)
+
+## Verdict
+
+**FAIL**
+
+The module is historically and pedagogically excellent, meeting all word count and complexity targets. However, the systemic use of the Russian preposition "под" (under) instead of the Ukrainian "під" is a critical linguistic error that violates the C1-level standard and triggers an auto-fail for Linguistic Accuracy. Once these 9 instances are corrected, the module will be a perfect 10/10.
