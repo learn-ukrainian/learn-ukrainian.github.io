@@ -83,7 +83,25 @@ def get_json_cache(level: str, slug: str, md_file: Path) -> dict | None:
             
         if last_audit_dt.timestamp() < md_mtime:
             return None # Stale
-            
+
+        # Check other source files for staleness
+        audit_ts = last_audit_dt.timestamp()
+        slug_stem = md_file.stem
+        for subdir in ('meta', 'activities', 'vocabulary'):
+            source_file = md_file.parent / subdir / f"{slug_stem}.yaml"
+            if source_file.exists() and source_file.stat().st_mtime > audit_ts:
+                return None  # Stale
+
+        # Check plan file staleness (plans/{track_dir}/{slug}.yaml)
+        track_dir_name = md_file.parent.name
+        plan_file = md_file.parent.parent / 'plans' / track_dir_name / f"{slug_stem}.yaml"
+        if not plan_file.exists():
+            # Try bare slug (strip numeric prefix)
+            bare = re.sub(r'^\d+-', '', slug_stem)
+            plan_file = md_file.parent.parent / 'plans' / track_dir_name / f"{bare}.yaml"
+        if plan_file.exists() and plan_file.stat().st_mtime > audit_ts:
+            return None  # Stale
+
         # Map cache to status format
         overall = cache.get('overall', {})
         gates = cache.get('gates', {})

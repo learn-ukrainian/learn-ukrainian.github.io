@@ -11,9 +11,14 @@ from typing import Optional
 
 import json
 import os
+import sys
 from datetime import datetime
 from typing import Optional
 from pathlib import Path
+
+# Ensure scripts/ is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from slug_utils import to_bare_slug, audit_report_path as _audit_report_path, status_path as _status_path
 
 
 def save_status_cache(
@@ -23,11 +28,13 @@ def save_status_cache(
     results: dict,
     has_critical_failure: bool,
     critical_failure_reasons: list[str],
-    plan_version: str = "2.0"
+    plan_version: str = "2.0",
+    review_violations: list = None,
+    review_gate_status: str = "skipped",
 ) -> str:
     """
     Save status cache to {level}/status/{slug}.json.
-    
+
     Args:
         file_path: Path to the markdown source file
         level_code: Level identifier (b1, b2, etc.)
@@ -36,6 +43,8 @@ def save_status_cache(
         has_critical_failure: Overall pass/fail status
         critical_failure_reasons: List of blocking issues
         plan_version: Version of the plan
+        review_violations: List of review validation violations (or None)
+        review_gate_status: "pass", "fail", or "skipped"
     """
     
     # 1. Gather Source Mtimes
@@ -46,14 +55,17 @@ def save_status_cache(
     activities_path = base_path / 'activities' / f"{module_slug}.yaml"
     vocab_path = base_path / 'vocabulary' / f"{module_slug}.yaml"
     
-    # Try to find plan path
-    # Check if level_code is a track (b2-hist) or simple (b1)
-    # curriculum/l2-uk-en/plans/{level}/{slug}.yaml
-    plan_path = base_path.parent / 'plans' / level_code / f"{module_slug}.yaml"
+    # Derive track directory from file path for plan lookup
+    # base_path is e.g. curriculum/l2-uk-en/b2-hist — use its name directly
+    # so seminar tracks (b2-hist, c1-bio, etc.) resolve correctly
+    track_dir_name = base_path.name  # e.g., "b2-hist", "a1", "b1"
+    plan_path = base_path.parent / 'plans' / track_dir_name / f"{module_slug}.yaml"
     if not plan_path.exists():
-        # Try numeric prefix check if slug doesn't have it but filename does
-        # or vice versa. But for now, simple check.
-        pass
+        # Try bare slug (strip numeric prefix) for seminar tracks
+        bare = to_bare_slug(module_slug)
+        alt_path = base_path.parent / 'plans' / track_dir_name / f"{bare}.yaml"
+        if alt_path.exists():
+            plan_path = alt_path
 
     source_mtimes = {}
     
@@ -140,6 +152,16 @@ def save_status_cache(
     
     gates['naturalness'] = serialize_gate(results.get('naturalness'))
 
+    # Review gate (final gate — only checked when content gates pass)
+    if review_violations is None:
+        review_violations = []
+    review_criticals = [v for v in review_violations if v.get('severity') == 'critical']
+    gates['review'] = {
+        "status": review_gate_status,
+        "violations": len(review_criticals),
+        "message": review_criticals[0]['message'] if review_criticals else "",
+    }
+
     # 3. Overall Status
     overall = {
         "status": "fail" if has_critical_failure else "pass",
@@ -165,9 +187,8 @@ def save_status_cache(
     }
     
     # 5. Save File (merge with existing to preserve verification data)
-    status_dir = base_path / 'status'
-    status_dir.mkdir(parents=True, exist_ok=True)
-    status_file = status_dir / f"{module_slug}.json"
+    status_file = _status_path(base_path, module_slug)
+    status_file.parent.mkdir(parents=True, exist_ok=True)
 
     # Merge with existing data to preserve verification block
     existing_data = {}
@@ -493,25 +514,38 @@ def generate_report(
 
                 'REPETITIVE_STARTERS': 'Vary sentence starters. Instead of repeating "Доконаний вид...", use: "Коли...", "Якщо...", "Зверніть увагу:", "Порівняйте:", questions, examples.',
 
-                'NO_DIALOGUE': '''Add 4+ mini-dialogues. Use this exact format:
+                'NO_DIALOGUE': '''Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
 
-**Діалог: [Location in Ukraine]**
+Use ONE of these formats (blockquote is required for detection):
 
-> — [Speaker 1 line with **bolded** grammar examples]
-> — [Speaker 2 response with **bolded** grammar examples]
-> — [Speaker 1 continuation]
-> — [Speaker 2 conclusion]
+Format 1 — Bold speaker in blockquote (PREFERRED):
+> **Студент:** Чому тут знахідний відмінок?
+> **Викладач:** Бо дієслово «бачити» вимагає знахідного.
+> **Студент:** А якщо це заперечення?
+> **Викладач:** Тоді родовий: «не бачу **книжки**».
 
-Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі''',
+Format 2 — Em-dash in blockquote:
+> — Чому тут знахідний?
+> — Бо дієслово вимагає знахідного.
 
-                'LOW_DIALOGUE': '''Add more mini-dialogues (need 4+ total). Use this exact format:
+Format 3 — Plain А:/Б: speakers:
+А: Чому тут знахідний?
+Б: Бо дієслово вимагає знахідного.
 
-**Діалог: [Location in Ukraine]**
+IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
+Place dialogues inside [!dialogue] callouts or blockquotes.''',
 
-> — [Speaker 1 line with **bolded** grammar examples]
-> — [Speaker 2 response with **bolded** grammar examples]
-> — [Speaker 1 continuation]
-> — [Speaker 2 conclusion]''',
+                'LOW_DIALOGUE': '''Add more mini-dialogues (need 4+ total). The detector counts lines in blockquotes with bold speaker names.
+
+Use this format (blockquote required):
+> **Студент:** Як правильно сказати?
+> **Викладач:** Вживайте форму «збігатися», а не «співпадати».
+
+Or em-dash format:
+> — Як правильно сказати?
+> — Вживайте «збігатися».
+
+IMPORTANT: **Speaker:** lines NOT inside blockquotes (>) are ignored by the detector.''',
 
                 'NO_EXAMPLES': 'Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.',
 
@@ -626,41 +660,37 @@ Example: «Не кажи гоп, поки не перескочиш» — **пе
 
 def save_report(file_path: str, report_content: str) -> str:
     """
-    Save report to audit/ subdirectory.
+    Save report to audit/ subdirectory as {bare_slug}-audit.md.
 
     Returns the report file path.
     """
-    file_dir = os.path.dirname(os.path.abspath(file_path))
-    file_name = os.path.basename(file_path)
-    base_name = os.path.splitext(file_name)[0]
+    md_path = Path(os.path.abspath(file_path))
+    report_dest = _audit_report_path(md_path.parent, md_path.stem)
+    report_dest.parent.mkdir(parents=True, exist_ok=True)
 
-    if not file_dir.endswith('audit'):
-        target_dir = os.path.join(file_dir, 'audit')
-    else:
-        target_dir = file_dir
+    # Also check legacy name for manual content preservation
+    legacy_path = report_dest.parent / f"{md_path.stem}-audit-report.md"
 
-    os.makedirs(target_dir, exist_ok=True)
-    report_path = os.path.join(target_dir, f"{base_name}-review.md")
-
-    # Preserve manual content if exists
+    # Preserve manual content if exists (check both new and legacy paths)
     manual_content = ""
-    if os.path.exists(report_path):
-        try:
-            with open(report_path, 'r', encoding='utf-8') as f:
-                existing_report = f.read()
+    for check_path in (report_dest, legacy_path):
+        if check_path.exists():
+            try:
+                existing_report = check_path.read_text(encoding='utf-8')
                 if "<!-- MANUAL_NOTES -->" in existing_report:
                     parts = existing_report.split("<!-- MANUAL_NOTES -->")
                     if len(parts) > 1:
                         manual_content = "<!-- MANUAL_NOTES -->" + parts[1]
-        except Exception:
-            pass
+                        break
+            except Exception:
+                pass
 
-    with open(report_path, 'w', encoding='utf-8') as f:
+    with open(report_dest, 'w', encoding='utf-8') as f:
         f.write(report_content)
         if manual_content:
             f.write("\n\n" + manual_content)
 
-    return report_path
+    return str(report_dest)
 
 
 def print_gates(results: dict, level_code: str) -> None:
