@@ -2,7 +2,7 @@
 **Level:** C1-HIST | **Module:** M08 | **Phase:** c1 | **Pedagogy:** seminar | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-10 17:46:16
+**Generated:** 2026-02-10 19:28:43
 
 ## Configuration
 **Type:** C1-history
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4737/4000 (raw: 4929)
+- **Words:** ✅ 4788/4000 (raw: 4980)
 - **Activities:** ✅ 6/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 6/3 types
@@ -47,7 +47,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 98.3% (target 95-100% (history))
+- **Immersion:** 🇺🇦 98.1% (target 95-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -64,11 +64,11 @@
 | timeline_markers | 26 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 10 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 36 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| questions | 39 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -79,5 +79,5 @@
 | **Українська постколоніальна критика** | ⚪️ | 659 | Skipped |
 | **Методи деколоніального аналізу** | ✅ | 769 | Included in Core |
 | **Практичне застосування** | ⚪️ | 584 | Skipped |
-| **Критика і межі методу** | ⚪️ | 476 | Skipped |
+| **Критика і межі методу** | ⚪️ | 527 | Skipped |
 | **Підсумок** | ✅ | 437 | Included in Core |

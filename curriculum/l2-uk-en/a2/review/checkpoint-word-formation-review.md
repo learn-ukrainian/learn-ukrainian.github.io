@@ -1,5 +1,3 @@
-```
-===REVIEW_START===
 # Рецензія: Checkpoint: Word Formation
 
 **Level:** A2 | **Module:** 44
@@ -134,6 +132,3 @@ Blocking issues:
 2.  **Pedagogically broken activity** (`mark-the-words` asking for substrings).
 3.  **Vocabulary metadata error** (verb labeled as noun).
 4.  **Activity count mismatches** against plan.
-
-===REVIEW_END===
-```

@@ -3,39 +3,40 @@
   "iterations": [
     {
       "iteration": 1,
-      "started": "2026-02-10T10:48:37.723962Z",
+      "started": "2026-02-10T19:11:12.770013Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "generate_fix_plan",
+      "result": "fix_plan_generated"
     },
     {
       "iteration": 2,
-      "started": "2026-02-10T10:52:23.586902Z",
+      "started": "2026-02-10T19:12:53.424566Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 3,
-      "started": "2026-02-10T10:57:37.101236Z",
+      "started": "2026-02-10T19:14:49.238680Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 4,
-      "started": "2026-02-10T11:01:23.959661Z",
+      "started": "2026-02-10T19:16:15.637866Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 5,
-      "started": "2026-02-10T11:03:18.479508Z",
+      "started": "2026-02-10T19:17:57.174116Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fix_phase_failed"
+      "action": "fix_content",
+      "result": "content_fixed"
     }
   ],
-  "started": "2026-02-10T10:48:37.723940Z"
+  "started": "2026-02-10T19:11:12.769982Z",
+  "result": "exhausted"
 }
