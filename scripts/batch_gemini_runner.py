@@ -34,6 +34,10 @@ from gemini_output import (
     extract_delimited, extract_yaml, has_any_end_marker,
     find_complete_pairs,
 )
+from batch_utils import (
+    atomic_write, atomic_write_json, ExponentialBackoff,
+    BatchLock, LockConflictError, classify_error, ErrorCategory,
+)
 
 # Constants
 GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
@@ -44,14 +48,23 @@ MAX_FIX_ITERATIONS = 5
 TIMEOUT_SECONDS = 900  # 15 minutes
 FAILURES_DIR = PROJECT_ROOT / "batch_state" / "failures"
 API_USAGE_DIR = PROJECT_ROOT / "batch_state" / "api_usage"
+LOCK_DIR = PROJECT_ROOT / "batch_state" / "locks"
 
-# Logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%H:%M:%S",
-)
+# Logging (configured by setup_logging, defaults to human-readable)
 log = logging.getLogger("batch")
+
+
+def setup_logging(json_mode: bool = False):
+    """Configure logging format. Call before any log output."""
+    if json_mode:
+        fmt = '{"time":"%(asctime)s","level":"%(levelname)s","msg":"%(message)s"}'
+    else:
+        fmt = "%(asctime)s [%(levelname)s] %(message)s"
+    logging.basicConfig(
+        level=logging.INFO,
+        format=fmt,
+        datefmt="%H:%M:%S",
+    )
 
 
 GEMINI_ACCOUNTS_FILE = Path.home() / ".gemini" / "google_accounts.json"
@@ -83,8 +96,26 @@ def _get_all_gemini_accounts() -> list[str]:
 
 
 def _switch_gemini_account(new_account: str) -> bool:
-    """Switch active Gemini account by updating the config file."""
+    """Switch active Gemini account by updating the config file.
+
+    Uses a lock file to prevent concurrent read-modify-write races when
+    multiple batch runners for different tracks hit quota simultaneously.
+    """
+    lock_file = GEMINI_ACCOUNTS_FILE.with_suffix(".lock")
+    fd = None
     try:
+        # Acquire lock (spin with short sleep for up to 10s)
+        for _ in range(100):
+            try:
+                fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+                break
+            except FileExistsError:
+                time.sleep(0.1)
+        else:
+            # Timeout — force acquire (stale lock from crashed process)
+            lock_file.unlink(missing_ok=True)
+            fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+
         data = json.loads(GEMINI_ACCOUNTS_FILE.read_text(encoding="utf-8"))
         old_active = data.get("active", "")
         if old_active == new_account:
@@ -100,15 +131,17 @@ def _switch_gemini_account(new_account: str) -> bool:
         data["active"] = new_account
         data["old"] = old_list
 
-        tmp = GEMINI_ACCOUNTS_FILE.with_suffix(".tmp")
-        tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
-        tmp.rename(GEMINI_ACCOUNTS_FILE)
+        atomic_write_json(GEMINI_ACCOUNTS_FILE, data)
 
         log.info(f"  Switched Gemini account: {old_active} → {new_account}")
         return True
     except (OSError, json.JSONDecodeError) as e:
         log.error(f"  Failed to switch account: {e}")
         return False
+    finally:
+        if fd is not None:
+            os.close(fd)
+        lock_file.unlink(missing_ok=True)
 
 
 def _log_api_usage(track: str, slug: str, phase, retry: int, gemini_json: dict, elapsed_ms: int):
@@ -153,39 +186,43 @@ def _log_api_usage(track: str, slug: str, phase, retry: int, gemini_json: dict, 
     }
 
     # Append to daily JSONL log (one JSON object per line)
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    log_file = API_USAGE_DIR / f"usage_{track}_{date_str}.jsonl"
-    with open(log_file, "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    try:
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        log_file = API_USAGE_DIR / f"usage_{track}_{date_str}.jsonl"
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except OSError as e:
+        logging.getLogger("batch").warning(f"Failed to write API usage log: {e}")
 
     # Update running totals in summary file
-    summary_file = API_USAGE_DIR / f"summary_{track}.json"
-    summary = {}
-    if summary_file.exists():
-        try:
-            summary = json.loads(summary_file.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            summary = {}
+    try:
+        summary_file = API_USAGE_DIR / f"summary_{track}.json"
+        summary = {}
+        if summary_file.exists():
+            try:
+                summary = json.loads(summary_file.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                summary = {}
 
-    summary.setdefault("track", track)
-    summary["total_calls"] = summary.get("total_calls", 0) + 1
-    summary["total_input_tokens"] = summary.get("total_input_tokens", 0) + total_input
-    summary["total_output_tokens"] = summary.get("total_output_tokens", 0) + total_output
-    summary["total_cached_tokens"] = summary.get("total_cached_tokens", 0) + total_cached
-    summary["total_latency_ms"] = summary.get("total_latency_ms", 0) + total_latency
-    summary["last_updated"] = datetime.now().isoformat() + "Z"
+        summary.setdefault("track", track)
+        summary["total_calls"] = summary.get("total_calls", 0) + 1
+        summary["total_input_tokens"] = summary.get("total_input_tokens", 0) + total_input
+        summary["total_output_tokens"] = summary.get("total_output_tokens", 0) + total_output
+        summary["total_cached_tokens"] = summary.get("total_cached_tokens", 0) + total_cached
+        summary["total_latency_ms"] = summary.get("total_latency_ms", 0) + total_latency
+        summary["last_updated"] = datetime.now().isoformat() + "Z"
 
-    # Per-account breakdown
-    account = entry["account"]
-    by_account = summary.setdefault("by_account", {})
-    acct = by_account.setdefault(account, {"calls": 0, "input_tokens": 0, "output_tokens": 0})
-    acct["calls"] += 1
-    acct["input_tokens"] += total_input
-    acct["output_tokens"] += total_output
+        # Per-account breakdown
+        account = entry["account"]
+        by_account = summary.setdefault("by_account", {})
+        acct = by_account.setdefault(account, {"calls": 0, "input_tokens": 0, "output_tokens": 0})
+        acct["calls"] += 1
+        acct["input_tokens"] += total_input
+        acct["output_tokens"] += total_output
 
-    tmp = summary_file.with_suffix(".tmp")
-    tmp.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.rename(summary_file)
+        atomic_write_json(summary_file, summary)
+    except OSError as e:
+        logging.getLogger("batch").warning(f"Failed to write API usage summary: {e}")
 
 
 def _get_seminar_activity_examples(track: str) -> str:
@@ -399,6 +436,8 @@ class BatchRunner:
 
         self.state = self._load_state()
         self.checkpoint = self._load_checkpoint()
+        self._abort = False
+        self._abort_reason = ""
 
     def _load_state(self):
         if self.state_file.exists():
@@ -413,8 +452,7 @@ class BatchRunner:
         }
 
     def _save_state(self):
-        with open(self.state_file, "w", encoding="utf-8") as f:
-            json.dump(self.state, f, indent=2)
+        atomic_write_json(self.state_file, self.state)
 
     def _load_checkpoint(self):
         if self.checkpoint_file.exists() and self.resume:
@@ -423,8 +461,7 @@ class BatchRunner:
         return {"completed": [], "failed": []}
 
     def _save_checkpoint(self):
-        with open(self.checkpoint_file, "w", encoding="utf-8") as f:
-            json.dump(self.checkpoint, f, indent=2)
+        atomic_write_json(self.checkpoint_file, self.checkpoint)
 
     def _log_failure(self, slug, phase, error, prompt_file, output_file):
         failure = {
@@ -438,19 +475,22 @@ class BatchRunner:
             "timestamp": datetime.now().isoformat() + "Z",
         }
 
-        failures = []
-        if self.failure_queue_file.exists():
-            with open(self.failure_queue_file, "r", encoding="utf-8") as f:
-                failures = json.load(f)
+        try:
+            failures = []
+            if self.failure_queue_file.exists():
+                failures = json.loads(
+                    self.failure_queue_file.read_text(encoding="utf-8")
+                )
 
-        # Avoid duplicates — replace existing entry for same slug+phase
-        failures = [
-            f for f in failures if not (f["slug"] == slug and f["phase"] == phase)
-        ]
-        failures.append(failure)
+            # Avoid duplicates — replace existing entry for same slug+phase
+            failures = [
+                f for f in failures if not (f["slug"] == slug and f["phase"] == phase)
+            ]
+            failures.append(failure)
 
-        with open(self.failure_queue_file, "w", encoding="utf-8") as f:
-            json.dump(failures, f, indent=2)
+            atomic_write_json(self.failure_queue_file, failures)
+        except (OSError, json.JSONDecodeError) as e:
+            log.warning(f"Failed to write failure queue: {e}")
 
     def _get_modules_to_process(self):
         """Get modules from curriculum.yaml (the source of truth for ordering).
@@ -517,10 +557,13 @@ class BatchRunner:
         return all_plans
 
     def _read_file_safe(self, path):
-        """Read a file, returning empty string if missing."""
+        """Read a file, returning empty string if missing or unreadable."""
         if path and Path(path).exists():
-            with open(path, "r", encoding="utf-8") as f:
-                return f.read()
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    return f.read()
+            except (OSError, UnicodeDecodeError) as e:
+                log.warning(f"Failed to read {path}: {e}")
         return ""
 
     def _generate_prompt(self, phase, slug, paths, error_msg=None):
@@ -722,6 +765,15 @@ Please fix these issues and regenerate the content."""
 
     def run_batch(self):
         """Main entry point: process all modules in the batch."""
+        try:
+            with BatchLock(self.track, LOCK_DIR):
+                self._run_batch_inner()
+        except LockConflictError as e:
+            log.error(f"Cannot start batch: {e}")
+            return
+
+    def _run_batch_inner(self):
+        """Inner batch loop (called under lock)."""
         modules = self._get_modules_to_process()
         total = len(modules)
         log.info(f"Starting batch for {total} modules in {self.track} (mode={self.mode})")
@@ -769,6 +821,13 @@ Please fix these issues and regenerate the content."""
             self._save_state()
             self._save_checkpoint()
 
+            # --- Graceful abort (e.g., all accounts exhausted) ---
+            if self._abort:
+                log.error(f"ABORT: {self._abort_reason}")
+                self.state["abort_reason"] = self._abort_reason
+                self._save_state()
+                break
+
             # --- Error rate abort checks ---
             if self._should_abort_batch(idx, total):
                 break
@@ -805,6 +864,8 @@ Please fix these issues and regenerate the content."""
             failures_path = FAILURES_DIR / self.track
             log.info(f"  Failures saved to: {failures_path}")
             log.info(f"  Review with: .venv/bin/python scripts/batch_gemini_runner.py --failures {self.track}")
+
+        self._generate_summary_report(passed, failed, total, durations)
 
     def _should_abort_batch(self, current_idx, total):
         """Check if batch should abort due to excessive failures."""
@@ -843,6 +904,56 @@ Please fix these issues and regenerate the content."""
 
         return False
 
+    def _generate_summary_report(self, passed, failed, total, durations):
+        """Generate and save a JSON summary report for the batch run."""
+        report_dir = PROJECT_ROOT / "batch_state"
+        report_dir.mkdir(parents=True, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_file = report_dir / f"report_{self.track}_{timestamp}.json"
+
+        # Find slowest modules
+        module_durations = [
+            (slug, info.get("duration", 0))
+            for slug, info in self.state.get("modules", {}).items()
+            if info.get("duration")
+        ]
+        module_durations.sort(key=lambda x: x[1], reverse=True)
+        slowest_5 = [
+            {"slug": slug, "duration_s": round(dur, 1)}
+            for slug, dur in module_durations[:5]
+        ]
+
+        # Failed module list
+        failed_modules = [
+            slug for slug, info in self.state.get("modules", {}).items()
+            if info.get("status") == "fail"
+        ]
+
+        processed = passed + failed
+        report = {
+            "track": self.track,
+            "mode": self.mode,
+            "timestamp": datetime.now().isoformat() + "Z",
+            "results": {
+                "passed": passed,
+                "failed": failed,
+                "processed": processed,
+                "total": total,
+                "pass_rate": round(passed / processed * 100, 1) if processed else 0,
+            },
+            "timing": {
+                "total_s": round(sum(durations), 1) if durations else 0,
+                "avg_s": round(sum(durations) / len(durations), 1) if durations else 0,
+                "slowest_5": slowest_5,
+            },
+            "failed_modules": failed_modules,
+            "abort_reason": self.state.get("abort_reason"),
+        }
+
+        atomic_write_json(report_file, report)
+        log.info(f"  Summary report: {report_file}")
+
     def _handle_quota_error(self, slug, phase, stderr):
         """Handle 429/quota errors with wait-retry and account rotation.
 
@@ -852,12 +963,15 @@ Please fix these issues and regenerate the content."""
         all_accounts = _get_all_gemini_accounts()
         current = _get_active_gemini_account()
 
-        # First: try waiting (transient server overload)
+        # First: try waiting (transient server overload) with exponential backoff
+        backoff = ExponentialBackoff(
+            base=QUOTA_RETRY_WAIT_SECONDS, max_wait=600, jitter=0.2
+        )
         for attempt in range(1, QUOTA_MAX_RETRIES + 1):
-            wait = QUOTA_RETRY_WAIT_SECONDS * attempt
+            wait = backoff.wait_time(attempt)
             log.warning(
                 f"  Quota/capacity error on {current}. "
-                f"Waiting {wait}s before retry ({attempt}/{QUOTA_MAX_RETRIES})..."
+                f"Waiting {wait:.0f}s before retry ({attempt}/{QUOTA_MAX_RETRIES})..."
             )
             time.sleep(wait)
 
@@ -1241,8 +1355,7 @@ Please fix these issues and regenerate the content."""
     def _save_fix_state(self, orch_dir, fix_state):
         """Save fix tracking state to orchestration dir."""
         fix_state_file = orch_dir / "fix-state.json"
-        with open(fix_state_file, "w", encoding="utf-8") as f:
-            json.dump(fix_state, f, indent=2)
+        atomic_write_json(fix_state_file, fix_state)
 
     def _save_failure(self, slug, fix_state, last_status):
         """Save failure details for Claude review.
@@ -1298,8 +1411,7 @@ Please fix these issues and regenerate the content."""
         }
 
         failure_file = failures_dir / f"{slug}.json"
-        with open(failure_file, "w", encoding="utf-8") as f:
-            json.dump(failure, f, indent=2, ensure_ascii=False)
+        atomic_write_json(failure_file, failure)
         log.info(f"  Failure saved: {failure_file}")
 
     def run_phase(self, phase, slug, paths, error_msg=None):
@@ -1331,21 +1443,28 @@ Please fix these issues and regenerate the content."""
 
             if result["returncode"] != 0:
                 stderr = result["stderr"]
-                is_quota = any(
-                    kw in stderr.lower()
-                    for kw in ["quota", "limit", "resource_exhausted", "capacity"]
-                ) or "429" in stderr
+                category = classify_error(
+                    result["returncode"], stderr,
+                    result.get("elapsed_ms", 0), TIMEOUT_SECONDS * 1000,
+                )
 
-                if is_quota:
+                if category == ErrorCategory.QUOTA:
                     resolved = self._handle_quota_error(slug, phase, stderr)
                     if resolved:
                         # Retry this phase with (potentially new) account
                         retry_count += 1
                         continue
                     else:
-                        # All accounts exhausted — save and exit
+                        # All accounts exhausted — graceful abort
                         self._save_checkpoint()
-                        sys.exit(1)
+                        self._abort = True
+                        self._abort_reason = "All Gemini accounts exhausted"
+                        return False
+
+                if category == ErrorCategory.PERMANENT:
+                    log.error(f"    Permanent error (no retry): {stderr[:300]}")
+                    self._log_failure(slug, phase, stderr[:500], prompt_file, output_file)
+                    return False
 
                 error_msg = f"Gemini exit code {result['returncode']}.\nStderr: {stderr[:500]}"
                 self._append_log(
@@ -1698,8 +1817,13 @@ if __name__ == "__main__":
         "--retry-failures", action="store_true",
         help="Re-run only failed/stuck modules from the state file",
     )
+    parser.add_argument(
+        "--json-log", action="store_true",
+        help="Use JSON structured logging instead of human-readable format",
+    )
 
     args = parser.parse_args()
+    setup_logging(json_mode=args.json_log)
 
     if args.failures:
         show_failures(args.track)
