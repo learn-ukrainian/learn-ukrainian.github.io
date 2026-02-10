@@ -42,10 +42,30 @@ Templates use `{PLACEHOLDER}` syntax. Claude replaces these before writing the p
 | `phase-fix.md` | Fix | Apply review fix plan to reach 9.0+ |
 | `help-response.md` | — | Template for Claude's NEEDS_HELP responses |
 
+## Delimiter Convention
+
+All phase templates use `===TAG_START===` / `===TAG_END===` delimiters to wrap structured output. Content outside delimiters (thinking tokens, commentary) is **automatically discarded** by `scripts/gemini_output.py`.
+
+| Phase | Tags | Content Type |
+|-------|------|-------------|
+| 0 (Research) | `RESEARCH` | Markdown |
+| 1 (Meta) | `META_OUTLINE` | YAML |
+| 2 (Content) | `CONTENT` | Markdown |
+| 3 (Activities) | `ACTIVITIES`, `VOCABULARY` | YAML |
+| 5 (Review) | `REVIEW` | Markdown |
+| Fix | `CONTENT`, `ACTIVITIES`, `VOCABULARY`, `CHANGES` | Mixed |
+
+**Extraction utility:** `scripts/gemini_output.py` — pure functions, no I/O:
+- `extract_delimited(text, tag)` — extract content between delimiters
+- `extract_yaml(text, tag)` — extract + parse YAML
+- `validate_output(text, expected_tags)` — check for complete/missing/truncated tags
+- `PHASE_TAGS` — phase-to-tag mapping constant
+
 ## Adding New Templates
 
 1. Create `phase-{N}-{name}.md` in this directory
 2. Use `{PLACEHOLDER}` syntax for module-specific data
 3. Include explicit output format with delimiters
-4. Add anti-pattern warnings relevant to the phase
-5. Update the orchestrate-rebuild.md skill to reference the new template
+4. Add the delimiter enforcement callout: `> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.`
+5. Add anti-pattern warnings relevant to the phase
+6. Update the orchestrate-rebuild.md skill to reference the new template

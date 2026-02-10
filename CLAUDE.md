@@ -241,9 +241,16 @@ curriculum/l2-uk-en/
     ├── {num}-{slug}.md           # Content prose
     ├── activities/{slug}.yaml    # Activities (bare list at root)
     ├── vocabulary/{slug}.yaml    # Vocabulary data
-    ├── audit/                    # Review reports
-    └── status/{slug}.json        # LAYER 3: CACHED AUDIT RESULTS
+    ├── audit/                    # Machine-generated audit artifacts
+    │   ├── {bare_slug}-audit.md      # Audit report
+    │   ├── {bare_slug}-grammar.yaml  # Grammar validation
+    │   └── {bare_slug}-quality.md    # Activity quality report
+    ├── review/                   # LLM-generated reviews
+    │   └── {bare_slug}-review.md
+    └── status/{bare_slug}.json   # LAYER 3: CACHED AUDIT RESULTS
 ```
+
+**Bare slug** = filename stem with numeric prefix removed (via `scripts/slug_utils.py`)
 
 **Module counts**: A1 (44), A2 (70), B1 (92), B2 (94), C1 (106), C2 (100)
 **Track counts**: B2-HIST (140), C1-BIO (128), LIT (30)
@@ -666,6 +673,17 @@ mcp__message-broker__check_inbox(for_llm="claude")
 mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
 ```
 
+### Gemini Output Handling
+
+Gemini outputs verbose thinking tokens (10-100K chars) that pollute context. All structured output uses `===TAG_START===` / `===TAG_END===` delimiters. Content outside delimiters is noise.
+
+- **Batch pipeline** (`batch_gemini_runner.py`): Uses `scripts/gemini_output.py` for extraction
+- **Ad-hoc broker calls**: Use `--extract` flag to strip thinking tokens:
+  ```bash
+  .venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id task --extract CONTENT
+  ```
+- **Extraction utility**: `scripts/gemini_output.py` — `extract_delimited()`, `extract_yaml()`, `validate_output()`
+
 ### When to Contact Gemini
 
 - **Ukrainian content writing** - Gemini excels at natural Ukrainian
@@ -738,6 +756,104 @@ Database: `.mcp/servers/message-broker/messages.db`
 
 ---
 
+## Anti-Gaming Architecture (Review Integrity)
+
+<critical>
+
+**RULE: An LLM must NEVER review its own work.** Self-review produces inflated scores — this was observed and confirmed in production. Gemini writing content then reviewing it gave 9.9/10 scores with language like "ensuring a high score" and "reflecting the fixes made."
+
+### Three-Layer Defense
+
+**Layer 1 — Architectural (batch runner, `scripts/batch_gemini_runner.py`):**
+- In fix mode, review scores DO NOT determine pass/fail
+- The 5 automated content gates (meta, lesson, activities, vocabulary, naturalness) are the quality check
+- When all content gates pass → module is "done" regardless of review gate
+- Phase 5 (review) is only generated to produce a Fix Plan when content gates fail
+- `_diagnose_module()` ignores the review gate entirely
+
+**Layer 2 — Automated detection (`scripts/audit/checks/review_validation.py`):**
+- `GAMING_LANGUAGE_DETECTED` (critical) — catches "ensuring a high score", "reflecting the fixes", "designed to pass"
+- `SUSPICIOUSLY_HIGH_SCORES` (warning) — all dimensions ≥ 9/10 with no substantive issues
+- `PRAISE_ONLY_CITATIONS` (warning) — all Ukrainian quotes used positively, none highlighting problems
+- `FABRICATED_CITATIONS` (critical) — quoted text not found in source module
+- `RUBBER_STAMP_REVIEW` (critical) — all 10/10 with no evidence
+- `EMPTY_ISSUES_SECTION` (warning) — claims zero issues (no module is perfect)
+
+**Layer 3 — Prompt-level (`claude_extensions/phases/gemini/phase-5-review.md`):**
+- Explicitly states automated detection is active
+- Lists what triggers rejection
+- States review scores don't affect pass/fail — removes incentive to inflate
+- "Be the skeptic. Find real problems. That is your only purpose."
+
+### When Reviews ARE Valid
+
+Reviews are valuable when done by a **different agent** than the content author:
+- Claude reviews Gemini's content → valid (via `/review-content`)
+- Gemini reviews Claude's content → valid
+- Gemini reviews Gemini's own content → **INVALID (self-grading)**
+- Automated audit gates → always valid (no LLM bias)
+
+### Key Principle
+
+**Remove the incentive, don't rely on promises.** Prompt-level rules ("be honest", "red team persona") don't work against self-grading bias. Architectural separation does — when review scores don't affect outcomes, there's no reason to game them.
+
+</critical>
+
+---
+
+## Work Dispatch (GitHub Labels)
+
+**Labels are the API. Issues are the database. No static priority files.**
+
+### Label Taxonomy
+
+| Prefix | Labels | Purpose |
+|--------|--------|---------|
+| `priority:` | `blocking`, `high` | Urgency (no label = normal) |
+| `area:` | `infra`, `tooling`, `content`, `docs` | What kind of work |
+| `working:` | `claude`, `gemini` | Who's actively working (no label = unclaimed) |
+| `review:` | `gemini`, `human` | Ready for review |
+| `agent:` | `claude`, `gemini` | Preferred assignee |
+
+### Dispatch Queries
+
+```bash
+# Critical blockers
+gh issue list --label priority:blocking --state open
+
+# High-priority infra
+gh issue list --label priority:high --label area:infra --state open
+
+# Unclaimed work (no working:* label)
+gh issue list --state open --json number,title,labels \
+  --jq '[.[] | select(.labels | map(.name) | all(startswith("working:") | not))] | .[:10]'
+
+# My area (content work not claimed)
+gh issue list --label area:content --state open --json number,title,labels \
+  --jq '[.[] | select(.labels | map(.name) | all(startswith("working:") | not))]'
+```
+
+### Agent Claim Protocol
+
+**Agents NEVER self-assign. Only the user or orchestrator assigns work.**
+
+When starting work on an issue:
+```bash
+gh issue edit {N} --add-label "working:claude"
+gh issue comment {N} --body "Starting work"
+```
+
+When done:
+```bash
+gh issue edit {N} --remove-label "working:claude"
+# Then either:
+gh issue edit {N} --add-label "review:human"   # Needs human review
+gh issue edit {N} --add-label "review:gemini"   # Needs Gemini review
+gh issue close {N}                              # Done, no review needed
+```
+
+---
+
 ## Documentation Index
 
 | Topic | Location |
@@ -766,6 +882,7 @@ Database: `.mcp/servers/message-broker/messages.db`
 | **Task workflow (GH Issues)** | `docs/TASK-WORKFLOW.md` ⭐ NEW |
 | **Orchestrated rebuild** | `claude_extensions/commands/orchestrate-rebuild.md` ⭐ NEW |
 | **Gemini phase templates** | `claude_extensions/phases/gemini/README.md` |
+| **Slug utilities** | `scripts/slug_utils.py` (single source of truth for slug stripping) |
 
 ---
 

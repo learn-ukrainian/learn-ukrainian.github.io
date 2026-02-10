@@ -47,6 +47,19 @@ Read these files from disk:
 2. For each fix listed, apply it to the correct file
 3. Output the COMPLETE fixed files (not diffs, not partial)
 
+### OUTPUT SIZE WARNING
+
+Your output has a token limit. For large modules, you CANNOT output all files in one response.
+**Priority order** (output in this order, STOP before truncation):
+1. **Content** (most important — always output this first)
+2. **Activities** (output only if content fits AND activities need changes)
+3. **Vocabulary** (output only if both above fit)
+4. **Changes report** (output only if everything above fits)
+
+If the module content is over 2000 words, you will likely only fit the content section.
+**It is better to output one COMPLETE file than two TRUNCATED files.**
+The system will re-run for any remaining fixes in the next iteration.
+
 ### Rules
 
 1. **Apply EVERY fix** from the Fix Plan — do not skip any, even if they require adding substantial content
@@ -69,6 +82,8 @@ Read these files from disk:
 - Do NOT add commentary — just output the fixed files
 
 ## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
 
 **CRITICAL: You MUST output fixed files between delimiter lines. Delimiters must appear on their own line, NOT inside code blocks.**
 

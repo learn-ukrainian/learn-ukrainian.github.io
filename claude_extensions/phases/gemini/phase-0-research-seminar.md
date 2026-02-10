@@ -50,6 +50,8 @@ If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish
 
 ## Output Format
 
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
 Return your research as structured markdown. Use these exact section headers:
 
 ```

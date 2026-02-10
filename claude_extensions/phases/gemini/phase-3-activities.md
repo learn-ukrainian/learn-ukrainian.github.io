@@ -47,6 +47,14 @@ Generate two YAML blocks: activities and vocabulary.
 7. **`essay-response` rubric fields**: `criteria` / `description` / `points` (NOT `criterion` / `weight`)
 8. **`mark-the-words` format**: Use `text` (no asterisks) + `answers` array
 
+### CRITICAL: Activity Type Constraints for {TRACK}
+
+**ALLOWED types (use ONLY these):** {ALLOWED_ACTIVITY_TYPES}
+
+**FORBIDDEN types (audit will auto-FAIL if you use these):** {FORBIDDEN_ACTIVITY_TYPES}
+
+Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
+
 ### Vocabulary YAML Rules
 
 1. **BARE LIST at root** — no `vocabulary:` wrapper
@@ -55,69 +63,13 @@ Generate two YAML blocks: activities and vocabulary.
 4. **IPA must have correct stress** — verify stress placement
 5. **Count target**: {VOCAB_COUNT_TARGET} items
 
-### mark-the-words Example
-
-```yaml
-- type: mark-the-words
-  title: "Визначте ключові терміни"
-  text: "Гарний день приніс радість у серце."
-  answers:
-    - день
-    - радість
-    - серце
-```
-
-### essay-response Rubric Example
-
-```yaml
-- type: essay-response
-  title: "Аналітичне есе"
-  prompt: "Проаналізуйте значення..."
-  model_answer: "Detailed model answer in Ukrainian..."
-  rubric:
-    - criteria: "Аргументація"
-      description: "Наявність тези та аргументів"
-      points: 3
-    - criteria: "Мовна якість"
-      description: "Граматична правильність"
-      points: 2
-```
-
 ## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
 
 Return TWO YAML blocks with clear delimiters:
 
-```
-===ACTIVITIES_START===
-- type: reading
-  id: {slug}-reading-1
-  title: "..."
-  text: "..."
-  questions:
-    - question: "..."
-      answer: "..."
-
-- type: quiz
-  title: "..."
-  questions:
-    - question: "..."
-      options:
-        - "..."
-        - "..."
-      correct: 0
-
-# ... more activities
-===ACTIVITIES_END===
-
-===VOCABULARY_START===
-- term: "слово"
-  translation: "word"
-  ipa: "/ˈslɔwɔ/"
-  pos: "noun"
-
-# ... more vocabulary items
-===VOCABULARY_END===
-```
+{ACTIVITY_EXAMPLES}
 
 ## Boundaries
 

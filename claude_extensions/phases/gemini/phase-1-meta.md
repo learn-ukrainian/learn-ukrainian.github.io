@@ -43,6 +43,8 @@ Refine the `content_outline` in the meta file so that:
 
 ### Output Format
 
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
 Return the refined content_outline as YAML:
 
 ```

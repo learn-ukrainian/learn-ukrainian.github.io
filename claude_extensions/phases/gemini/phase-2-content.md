@@ -58,6 +58,8 @@ The audit counts ~100-150 fewer words than raw `wc -w` due to excluding blockquo
 
 ### Output Format
 
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
 Return the full lesson content as markdown:
 
 ```

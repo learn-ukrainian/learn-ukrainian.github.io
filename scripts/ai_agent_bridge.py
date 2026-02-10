@@ -46,7 +46,9 @@ CLAUDE_CLI = shutil.which("claude") or "claude"
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 
 # Snapshot environment for passing to detached children
+# Set GEMINI_SESSION so .bashrc disables hostile aliases (eza, bat, zoxide)
 _PARENT_ENV = os.environ.copy()
+_PARENT_ENV["GEMINI_SESSION"] = "1"
 
 
 def _git_status_snapshot() -> set[str]:
@@ -473,7 +475,7 @@ def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", d
     return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -486,6 +488,8 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
                     orchestrated rebuilds where Claude captures stdout directly.
         output_path: If set, Gemini writes output to this file instead of stdout.
                     Enables -y mode with post-validation (only this file may be written).
+        extract_tags: If set, extract delimited content from output after Gemini finishes.
+                     Empty list = auto-detect all complete pairs. Discards thinking tokens.
     """
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
@@ -526,7 +530,24 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
         print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
+        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
+
+        # Post-process: extract delimited content if --extract was used
+        if extract_tags is not None and response:
+            from gemini_output import extract_delimited as _extract, find_complete_pairs, ALL_TAGS
+            tags = extract_tags if extract_tags else find_complete_pairs(response, ALL_TAGS)
+            if tags:
+                print(f"\n{'═' * 40}")
+                print(f"EXTRACTED ({', '.join(tags)}):")
+                print(f"{'═' * 40}")
+                for tag in tags:
+                    extracted = _extract(response, tag)
+                    if extracted is not None:
+                        print(f"\n--- {tag} ---")
+                        print(extracted)
+                print(f"\n{'═' * 40}")
+            else:
+                print("\n⚠️  No complete delimiter pairs found in output.")
 
     return msg_id
 
@@ -893,7 +914,7 @@ Format your response clearly.
 
                     # Acknowledge original message
                     acknowledge(message_id)
-                    break  # Success — exit retry loop
+                    return response  # Return for callers that need post-processing
 
                 except subprocess.TimeoutExpired:
                     proc.kill()
@@ -1388,6 +1409,9 @@ def main():
                                    help="Don't route full response through broker. Output goes to stdout only. Broker gets short summary.")
     ask_gemini_parser.add_argument("--output-path", dest="output_path",
                                    help="Gemini writes output to this file (uses -y mode with post-validation).")
+    ask_gemini_parser.add_argument("--extract", nargs="*", metavar="TAG",
+                                   help="Extract delimited content from output. Tags: CONTENT, ACTIVITIES, VOCABULARY, etc. "
+                                        "Discards thinking tokens. No args = auto-detect all complete pairs.")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1434,7 +1458,7 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

@@ -43,6 +43,8 @@ Research **{TOPIC_TITLE}** for the **{LEVEL}** core track. Core tracks need ligh
 
 ## Output Format
 
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
 Return your research as structured markdown:
 
 ```
