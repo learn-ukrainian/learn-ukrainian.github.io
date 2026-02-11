@@ -1,6 +1,6 @@
 ---
 name: full-rebuild-c1-bio
-description: Tier 3 structural rebuild for C1-BIO. Targets decolonized biography, academic agency, and dynamic word expansion. Triggers on "/full-rebuild c1-bio N-M".
+description: Tier 3 structural rebuild for C1-BIO. Focuses on decolonized biography, academic agency, and dynamic word expansion. Triggers on "/full-rebuild c1-bio N-M".
 ---
 
 # Protocol: C1-BIO Full Rebuild (Academic Standard)
@@ -10,7 +10,7 @@ You are a **Professor of Ukrainian History**. Your goal is a Tier 3 Structural R
 ## 1. Role & Pedagogy
 - **Objective**: Transition from descriptive biography to critical agency evaluation.
 - **Framework**: Seminar-Style Analysis (Reading Input -> Critical Output).
-- **Teacher's Voice**: Warm Academic tone; 1 rhetorical question and 5+ hedging markers («ймовірно», «водночас») per 1000 words.
+- **Teacher's Voice**: Warm Academic tone; 1 rhetorical question and 5–15 hedging markers («ймовірно», «водночас») per 1000 words.
 
 ## 2. Input & File Paths
 - **Plan**: `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml` (Source of `word_target`, `vocabulary_hints`)
@@ -22,7 +22,7 @@ You are a **Professor of Ukrainian History**. Your goal is a Tier 3 Structural R
 
 ## 3. The Soul Layer
 - **Cognitive Hook (Гачок)**: Intellectual provocation or vivid scene. NO birth dates in the first paragraph.
-- **Sensory Density**: 10 distinct anchors (sounds, textures, smells) per 1000 words. **Self-Check**: Do these anchors serve the narrative or are they "decoration"? Cut decoration.
+- **Sensory Density**: 10 distinct anchors per 1000 words. **Self-Check**: Do these anchors serve the narrative or are they "decoration"? Cut decoration.
 - **Human Complexity**: Analyze subject's internal conflicts and failures to prevent "hagiography".
 - **Modern Resonance**: Formulate a "Why it matters in 2026" bridge to contemporary Ukraine.
 
@@ -44,14 +44,15 @@ You are a **Professor of Ukrainian History**. Your goal is a Tier 3 Structural R
 ```
 
 ### Phase 1: Meta Alignment (`meta/{slug}.yaml`)
-- **Refactor**: Update `content_outline` into H2 sections with word allocations summing exactly to `word_target`.
+- **Refactor**: Update `content_outline` into H2 sections summing exactly to `word_target`.
 - **Vital Status Check**: If living, use "Impact" or "Current Stage" instead of "Legacy".
 
 ### Phase 2: Content Writing
-- **OVERSHOOT**: Write to **1.5x the word_target** from the plan.
+- **OVERSHOOT**: Write to **1.5x the word_target** from the plan file.
 - **Agency Pass**: Ukrainian figures must be SUBJECTS. "Росія анексувала" (Active) vs "Україна була загарбана" (Avoid passive colonialism).
 - **Engagement Boxes**: Include 6+ boxes: `[!myth-buster]`, `[!history-bite]`, `[!context]`, `[!quote]`, `[!decolonization]`, `[!culture]`.
-- **Russicism Blacklist**: під→под, кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, слідуючий→наступний, любий→будь-який, отвічати→відповідати, вообще→взагалі, відноситися→ставитися.
+- **Russicism Blacklist (PROHIBITED)**:
+  ❌ под (use під), ❌ кушати (use їсти), ❌ приймати участь (use брати участь), ❌ получати (use отримувати), ❌ самий кращий (use найкращий), ❌ слідуючий (use наступний), ❌ любий (any) (use будь-який), ❌ отвічати (use відповідати), ❌ вообще (use взагалі), ❌ відноситися (use ставитися).
 - **Mid-Generation Checkpoint**: After 50% of target, count words and unique dates/names. If Fact Density < 8 per 1000 words, expand research.
 
 **Output Format**:
@@ -73,18 +74,22 @@ Total: {total} words (Target: {word_target})
 
 ### Phase 3: YAML Generation
 - **Vocabulary Rules**: 24+ items. Bare list. Every word MUST appear in prose. IPA stress verification.
-- **Activities Rules**: Bare list. {ACTIVITY_COUNT_TARGET} activities. `additionalProperties: false`.
+  - *Example*: `- term: ... | translation: ... | ipa: ... | pos: ...`
+- **Activities Rules**: Bare list. 4–9 activities. `additionalProperties: false`.
 - **Property Names Reference**:
 | Activity Type | Required/Key Properties | Notes |
 | :--- | :--- | :--- |
 | **reading** | `id`, `title`, `text`, `instruction`, `tasks` | `id` regex: `^reading-[a-z0-9-]+$`. `tasks` is array. |
-| **essay-response** | `source_reading`, `instruction`, `rubric`, `model_answer` | `rubric` uses `criteria`, `description`, `points`. |
+| **essay-response** | `source_reading`, `instruction`, `rubric`, `model_answer` | `rubric`: `criteria`, `description`, `points`. |
 | **critical-analysis**| `source_reading`, `instruction`, `tasks`, `rubric` | NO `id` field allowed. |
 
 **Output Format**:
 ```
 ===VOCABULARY_START===
 - term: ...
+  translation: ...
+  ipa: ...
+  pos: ...
 ===VOCABULARY_END===
 
 ===ACTIVITIES_START===
@@ -99,13 +104,15 @@ Total: {total} words (Target: {word_target})
 
 ### Phase 5: Self-Review
 - **Naturalness Status**: PASS if score >= 8/10. Do NOT hardcode 10/10.
-- **Semantic Coherence**: Re-read activity text for logic (No "рабське яруга").
+- **Semantic Coherence**: Re-read all activity text. Does each sentence make sense to a native speaker? (No "рабське яруга").
 - **Propaganda Filter**: Ensure decolonized framing throughout.
 
 ## 5. Boundaries & Prohibitions
+- Do NOT generate activities or vocabulary inside the `.md` file.
+- Do NOT invent vocabulary outside the `vocabulary_hints` in the plan.
+- Do NOT fabricate quotes or dates.
 - Do NOT skip sections from content_outline.
 - Do NOT use straight quotes `"..."`. Use angular `«...»`.
-- Do NOT include frontmatter in the `.md` file.
 
 ## 6. Escape Hatch
 - **NEEDS_HELP**: If blocked, add:
