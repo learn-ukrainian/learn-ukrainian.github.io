@@ -24,22 +24,12 @@ Skills that generate content MUST include a self-audit checklist:
 
 ### 2. Linguistic Integrity (The Blacklist)
 Skills MUST include the inline Russicism blacklist to prevent contamination:
-- під → под (pod)
-- кушати → їсти
-- приймати участь → брати участь
-- самий кращий → найкращий
-- слідуючий → наступний
-- на протязі → протягом
-- любий (any) → будь-який
-- отвічати → відповідати
-- вообще → взагалі
-- получати → отримувати
-- відноситися → ставитися
+- під → под (pod), кушати → їсти, приймати участь → брати участь, получати → отримувати, самий кращий → найкращий, слідуючий → наступний, на протязі → протягом, любий (any) → будь-який, отвічати → відповідати, вообще → взагалі, відноситися → ставитися.
 
 ### 3. Structural Enforcement
 - **Delimiters**: Use `===CONTENT_START===` / `===CONTENT_END===` for orchestration compatibility.
-- **YAML Format**: Always enforce "Bare List at root" for activities and vocabulary.
-- **Checkpoints**: Mandatory "STOP and COUNT" gates at logical intervals (e.g., 2000 words).
+- **YAML Format**: Always enforce "Bare List at root" for activities and vocabulary. No wrapper keys.
+- **Property Names Reference**: Include a table defining exactly which fields are allowed/required per YAML type to prevent schema violations.
 
 ## Skill Creation Process
 
@@ -62,8 +52,9 @@ Skills MUST include the inline Russicism blacklist to prevent contamination:
 2. **Research & Mapping**: Define sniper search site filters.
 3. **The Soul Layer**: Plan emotional hooks and sensory density.
 4. **Workflow Phases**: Explicitly define Phase 0 to Phase N.
-5. **Pre-Submit Checklist**: Paste the Project-Specific Guardrails here.
-6. **Output Format**: Define delimiter tags.
+5. **Property Names Reference**: Table of YAML fields per type.
+6. **Pre-Submit Checklist**: Paste the Project-Specific Guardrails here.
+7. **Output Format**: Define delimiter tags and provide self-contained examples.
 
 ---
 *Note: This workspace-specific skill-creator overrides the global one to ensure project consistency.*

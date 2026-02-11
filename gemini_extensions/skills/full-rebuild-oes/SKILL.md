@@ -25,11 +25,11 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 - **Cognitive Hook**: Start with a scribe's marginal note, a mystery of sound change, or a discovery of a manuscript.
 - **Sensory Anchoring**: 10 distinct anchors per 1000 words (smell of vellum, golden leaf of the psalter). **Self-Check**: Do these anchors serve the paleographic analysis or are they "decoration"?
 - **Human Flaws**: Identify "human errors" (scribal errors) in manuscripts to humanize the history of language.
-- **Modern Resonance**: Connect OES features to modern Ukrainian regional dialects or standard features.
+- **Modern Resonance**: Connect OES features to modern Ukrainian regional dialects.
 
 ### 3.2. Quantitative Quality (Fact Density & Nuance)
 - **Fact-to-Word Density**: 8+ unique linguistic examples, manuscript citations, or phonetic rules per 1000 words.
-- **Semantic Nuance Gate**: 5–15 hedging markers («ймовірно», «водночас») per 1000 words to reflect scholarly uncertainty in reconstruction.
+- **Semantic Nuance Gate**: 5–15 hedging markers («ймовірно», «водночас») per 1000 words.
 
 ### 3.3. Linguistic Integrity (The Russicism Blacklist)
 **STRICT PROHIBITION** on these patterns:
@@ -65,16 +65,47 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### Phase 2: Content Hydration (`{slug}.md`)
 - **Overshoot Rule**: Write 5500–6000 words raw to clear 4000 audit target.
-- **Checkpoints**: Stop at 2000 and 4000 words to verify Example Density and Humanity.
+- **Mid-Generation Checkpoint**: After 2000 words, count linguistic examples. If < 15, add manuscript excerpts.
 - **Format**: Use `===CONTENT_START===` and `===CONTENT_END===`.
 
 ### Phase 3: YAML Generation (Vocabulary & Activities)
-- **Activities**: Focus on `reading`, `transcription` (if available), and `essay-response`. NO simplified quizzes.
-- **Vocabulary**: 24+ items. Include OES terms with IPA and etymology traces.
-- **Semantic Sync**: Verify OES examples match the phonetic rules described in the content. NO "рабське яруга" (semantic/linguistic nonsense).
+
+#### Vocabulary Rules
+- **Bare list** at root level.
+- **Etymology**: Include OES terms with IPA and etymology traces.
+- **Sync**: Cross-check YAML vs Prose.
+
+#### Activities Rules
+- **Bare list** at root level.
+- **Property Names Reference**:
+| Activity Type | Required/Key Properties | Notes |
+| :--- | :--- | :--- |
+| **reading** | `id`, `title`, `text`, `instruction` | `id` regex: `^reading-[a-z0-9-]+$` |
+| **essay-response** | `source_reading`, `rubric`, `model_answer` | `rubric`: `criteria`, `description`, `points` |
+| **transcription** | `id`, `text`, `answer` | Ensure scholarly IPA correctness |
+
+#### Activity Example (Self-Contained)
+```yaml
+===ACTIVITY_START===
+- type: reading
+  id: reading-pleophony-ostromir
+  title: Повноголосся в Остромировому євангелії
+  text: |
+    В уривку від Луки спостерігаємо написання...
+  instruction: Вивчіть вживання повноголосих форм у рукописі.
+
+- type: essay-response
+  source_reading: reading-pleophony-ostromir
+  instruction: Поясніть причину збереження старослов'янізмів поруч із повноголосими формами.
+  rubric:
+    criteria:
+      - description: Знання фонетичних законів
+        points: 5
+===ACTIVITY_END===
+```
 
 ### Phase 4: Technical Audit & Review
-- Run `scripts/audit_module.py`.
+- Run `scripts/audit_module.py`. collect ALL errors, fix in ONE pass.
 - Apply `review-content-v4` scoring. Be brutally honest.
 
 ## 5. Review Protocol (v4 Enforcement)

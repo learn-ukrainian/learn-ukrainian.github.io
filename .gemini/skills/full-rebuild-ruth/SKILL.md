@@ -25,11 +25,11 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 - **Cognitive Hook**: Start with a heated polemical debate, a printer's struggle at the press, or a vivid Baroque metaphor.
 - **Sensory Anchoring**: 10 distinct anchors per 1000 words (clatter of the press, smell of church incense). **Self-Check**: Do these anchors serve the stylistic analysis or are they "decoration"?
 - **Human Flaws**: Showcase the fiery tempers or internal doubts of polemicists.
-- **Modern Resonance**: Connect Baroque rhetorical patterns to modern Ukrainian polemics or public discourse.
+- **Modern Resonance**: Connect Baroque rhetorical patterns to modern Ukrainian discourse.
 
 ### 3.2. Quantitative Quality (Fact Density & Nuance)
 - **Fact-to-Word Density**: 8+ unique rhetorical terms, primary text excerpts, or named figures per 1000 words.
-- **Semantic Nuance Gate**: 5–15 hedging markers («можливо», «ймовірно», «водночас») per 1000 words to reflect the complexity of Baroque thought.
+- **Semantic Nuance Gate**: 5–15 hedging markers («можливо», «ймовірно», «водночас») per 1000 words.
 
 ### 3.3. Linguistic Integrity (The Russicism Blacklist)
 **STRICT PROHIBITION** on these patterns:
@@ -65,16 +65,49 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### Phase 2: Content Hydration (`{slug}.md`)
 - **Overshoot Rule**: Write 5500–6000 words raw to clear 4000 audit target.
-- **Checkpoints**: Stop at 2000 and 4000 words to verify Stylistic Depth and Fact Density.
+- **Mid-Generation Checkpoint**: After 2000 words, count unique dates/names. If < 15, expand research.
 - **Format**: Use `===CONTENT_START===` and `===CONTENT_END===`.
 
 ### Phase 3: YAML Generation (Vocabulary & Activities)
-- **Activities**: Focus on `reading`, `essay-response`, and `critical-analysis`.
-- **Vocabulary**: 24+ items. Include Ruthenian terms with IPA and etymological traces.
-- **Semantic Sync**: Ensure activity tasks reflect the "Human Soul" layer planned in Phase 1.5.
+
+#### Vocabulary Rules
+- **Bare list** at root level.
+- **Etymology**: Include Ruthenian terms with IPA and etymological traces.
+- **Sync**: Cross-check YAML vs Prose.
+
+#### Activities Rules
+- **Bare list** at root level.
+- **Property Names Reference**:
+| Activity Type | Required/Key Properties | Notes |
+| :--- | :--- | :--- |
+| **reading** | `id`, `title`, `text`, `instruction` | `id` regex: `^reading-[a-z0-9-]+$` |
+| **essay-response** | `source_reading`, `rubric`, `model_answer` | `rubric`: `criteria`, `description`, `points` |
+| **critical-analysis**| `source_reading`, `tasks`, `rubric` | Focus on polemical devices |
+
+#### Activity Example (Self-Contained)
+```yaml
+===ACTIVITY_START===
+- type: reading
+  id: reading-vyshensky-polemic
+  title: Стиль Івана Вишенського
+  text: |
+    Вишенський використовує засіб нанизування синонімів для...
+  instruction: Опрацюйте текст про риторику полеміста.
+
+- type: critical-analysis
+  source_reading: reading-vyshensky-polemic
+  instruction: Проаналізуйте емоційний вплив Вишенського на читача.
+  tasks:
+    - Виділіть ключові інвективи...
+  rubric:
+    criteria:
+      - description: Глибина аналізу риторики
+        points: 5
+===ACTIVITY_END===
+```
 
 ### Phase 4: Technical Audit & Review
-- Run `scripts/audit_module.py`.
+- Run `scripts/audit_module.py`. collect ALL errors, fix in ONE pass.
 - Apply `review-content-v4` scoring. Be brutally honest.
 
 ## 5. Review Protocol (v4 Enforcement)

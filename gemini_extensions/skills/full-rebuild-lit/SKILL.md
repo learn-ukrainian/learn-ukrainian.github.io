@@ -29,7 +29,7 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### 3.2. Quantitative Quality (Fact Density & Nuance)
 - **Fact-to-Word Density**: 8+ unique literary terms, primary quotes, or named influences per 1000 words.
-- **Semantic Nuance Gate**: Mandatory 5–15 hedging markers («ймовірно», «водночас») per 1000 words to reflect analytical complexity.
+- **Semantic Nuance Gate**: Mandatory 5–15 hedging markers («ймовірно», «водночас», «утім», «проте») per 1000 words.
 
 ### 3.3. Linguistic Integrity (The Russicism Blacklist)
 **STRICT PROHIBITION** on these patterns:
@@ -50,7 +50,7 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 - брати місце → відбуватися
 
 ### 3.4. Intertextuality & Agency
-- **Intertextuality**: Mandatory mapping of tropes/themes to European counterparts (e.g., Kotliarevsky vs. Virgil/Blumauer).
+- **Intertextuality**: Mandatory mapping of tropes/themes to European counterparts (e.g., Kotliarevsky vs. Virgil).
 - **Agency Pass**: The author and the text are SUBJECTS. "Текст був написаний під впливом" (Passive) → "Автор переосмислює вплив..." (Active/Agency).
 
 ## 4. Workflow Phases
@@ -65,16 +65,50 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### Phase 2: Content Hydration (`{slug}.md`)
 - **Overshoot Rule**: Write 6000–6500 words raw to clear 4500 target.
-- **Checkpoints**: Stop at 2500 and 4500 words to verify Nuance and Fact Density.
+- **Mid-Generation Checkpoint**: After 2500 words, count hedging markers. If < 15, increase analytical complexity.
 - **Format**: Use `===CONTENT_START===` and `===CONTENT_END===`.
 
 ### Phase 3: YAML Generation (Vocabulary & Activities)
-- **Activities**: Use ONLY `reading`, `essay-response`, and `critical-analysis`. Strictly block `quiz`.
-- **Vocabulary**: 24+ items. Verify IPA stress for literary terms.
-- **Semantic Sync**: Ensure critical analysis tasks require deep engagement with the text, not just recognition.
+
+#### Vocabulary Rules
+- **Bare list** at root level.
+- **IPA Stress**: Verify stress placement for literary terms.
+- **Sync**: Cross-check YAML vs Prose.
+
+#### Activities Rules
+- **Bare list** at root level.
+- **Forbidden Patterns**: Strictly block `quiz`, `match-up`, `fill-in`.
+- **Property Names Reference**:
+| Activity Type | Required/Key Properties | Notes |
+| :--- | :--- | :--- |
+| **reading** | `id`, `title`, `text`, `instruction` | `id` regex: `^reading-[a-z0-9-]+$` |
+| **essay-response** | `source_reading`, `rubric`, `model_answer` | `rubric`: `criteria`, `description`, `points` |
+| **critical-analysis**| `source_reading`, `tasks`, `rubric` | Focus on stylistic devices |
+
+#### Activity Example (Self-Contained)
+```yaml
+===ACTIVITY_START===
+- type: reading
+  id: reading-kotliarevsky-style
+  title: Травестійний стиль «Енеїди»
+  text: |
+    Котляревський використовує бурлеск для...
+  instruction: Опрацюйте текст про стилістичні новації автора.
+
+- type: critical-analysis
+  source_reading: reading-kotliarevsky-style
+  instruction: Знайдіть приклади низького бароко в уривку.
+  tasks:
+    - Поясніть роль просторіч...
+  rubric:
+    criteria:
+      - description: Аналіз лексичних пластів
+        points: 5
+===ACTIVITY_END===
+```
 
 ### Phase 4: Technical Audit & Review
-- Run `scripts/audit_module.py`.
+- Run `scripts/audit_module.py`. collect ALL errors, fix in ONE pass.
 - Apply `review-content-v4` scoring. Be brutally honest.
 
 ## 5. Review Protocol (v4 Enforcement)

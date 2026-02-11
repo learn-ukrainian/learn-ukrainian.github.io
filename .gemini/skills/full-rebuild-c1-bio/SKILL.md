@@ -29,7 +29,7 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### 3.2. Quantitative Quality (Fact Density & Nuance)
 - **Fact-to-Word Density**: Aim for 8+ unique dates, named figures, or primary quotes per 1000 words. If lower, expand research.
-- **Semantic Nuance Gate**: Use 5–15 hedging markers («можливо», «ймовірно», «водночас») per 1000 words. Under 5 is flat; over 15 is noise.
+- **Semantic Nuance Gate**: Use 5–15 hedging markers («можливо», «ймовірно», «водночас», «утім», «проте», «з одного боку») per 1000 words. Under 5 is flat; over 15 is noise.
 
 ### 3.3. Linguistic Integrity (The Russicism Blacklist)
 **STRICT PROHIBITION** on these patterns:
@@ -67,16 +67,50 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### Phase 2: Content Hydration (`{slug}.md`)
 - **Overshoot Rule**: Write to 6000-6500 words raw to safely clear the 5000 audit threshold.
-- **Checkpoints**: Stop at 2500 words and 4500 words to verify Fact Density and Humanity targets.
+- **Mid-Generation Checkpoint**: After writing 50% of sections, count words. If > 3500, tighten remaining. If < 2000, expand research.
 - **Format**: Use `===CONTENT_START===` and `===CONTENT_END===`.
 
 ### Phase 3: YAML Generation (Vocabulary & Activities)
-- **Vocabulary**: 24+ items. **Self-Check**: Are all vocabulary items actually present in the lesson content?
-- **Activities**: 8+ activities. **Schema Rules**: Bare list at root. `additionalProperties: false`. Only `reading` has `id`.
-- **Semantic Sync**: Verify activity quotes make sense and distractors are plausible. NO "рабське яруга" (semantic nonsense).
+
+#### Vocabulary Rules
+- **Bare list** at root level (no wrapper key).
+- **IPA Stress**: Verify every transcription. Common errors: те**о**рія (not **те**орія).
+- **Sync**: Every YAML item MUST appear in the prose.
+
+#### Activities Rules
+- **Bare list** at root level (no wrapper key).
+- **Property Names Reference**:
+| Activity Type | Required/Key Properties | Notes |
+| :--- | :--- | :--- |
+| **reading** | `id`, `title`, `text`, `instruction` | `id` MUST match `^reading-[a-z0-9-]+$` |
+| **essay-response** | `source_reading`, `rubric`, `model_answer` | `rubric` uses `criteria`, `description`, `points` |
+| **critical-analysis**| `source_reading`, `tasks`, `rubric` | NO `id` field allowed |
+| **mark-the-words** | `text`, `answers` | `text` has NO asterisks; `answers` is array |
+
+#### Activity Example (Self-Contained)
+```yaml
+===ACTIVITY_START===
+- type: reading
+  id: reading-ivan-puliui-x-rays
+  title: Відкриття «Х-променів»
+  text: |
+    Іван Пулюй ще задовго до Рентгена...
+  instruction: Прочитайте текст про науковий пріоритет Пулюя.
+
+- type: critical-analysis
+  source_reading: reading-ivan-puliui-x-rays
+  instruction: Проаналізуйте аргументи на користь першості Пулюя.
+  tasks:
+    - Порівняйте дати публікацій...
+  rubric:
+    criteria:
+      - description: Глибина аналізу джерел
+        points: 5
+===ACTIVITY_END===
+```
 
 ### Phase 4: Technical Audit & Review
-- Run `scripts/audit_module.py`.
+- Run `scripts/audit_module.py`. collect ALL errors, fix in ONE pass.
 - Apply `review-content-v4` scoring (14 dimensions). Be brutally honest.
 
 ## 5. Review Protocol (v4 Enforcement)

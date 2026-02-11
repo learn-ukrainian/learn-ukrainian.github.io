@@ -23,13 +23,13 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### 3.1. Humanity & Hook (Гачок)
 - **Cognitive Hook**: Start with a historical mystery, a vivid battle/assembly scene, or a moral dilemma.
-- **Sensory Anchoring**: 10 distinct anchors per 1000 words (smell of parchment, cold of the steppe). **Self-Check**: Do these anchors help the reader FEEL the moment, or are they "decoration"?
+- **Sensory Anchoring**: 10 distinct anchors per 1000 words (smell of parchment, cold of the steppe). **Self-Check**: Do these anchors serve the narrative or are they "decoration"?
 - **Human Flaws**: Identify the historical figures' internal conflicts or political miscalculations.
 - **Modern Resonance**: Formulate a "Why it matters in 2026" bridge to contemporary Ukraine.
 
 ### 3.2. Quantitative Quality (Fact Density & Nuance)
-- **Fact-to-Word Density**: 8+ unique dates, named figures, or primary quotes per 1000 words.
-- **Semantic Nuance Gate**: 5–15 hedging markers («можливо», «ймовірно», «водночас») per 1000 words.
+- **Fact-to-Word Density**: Aim for 8+ unique dates, named figures, or primary quotes per 1000 words.
+- **Semantic Nuance Gate**: Use 5–15 hedging markers («можливо», «ймовірно», «водночас», «утім», «проте», «з одного боку») per 1000 words.
 
 ### 3.3. Linguistic Integrity (The Russicism Blacklist)
 **STRICT PROHIBITION** on these patterns:
@@ -67,16 +67,50 @@ Before declaring any phase done, you MUST perform a self-audit against these cri
 
 ### Phase 2: Content Hydration (`{slug}.md`)
 - **Overshoot Rule**: Write 5500–6000 words raw to clear 4000 audit target.
-- **Checkpoints**: Stop at 2000 and 4000 words to verify Fact Density and Agency.
+- **Mid-Generation Checkpoint**: After 2000 words, count unique dates/names. If < 15, expand research.
 - **Format**: Use `===CONTENT_START===` and `===CONTENT_END===`.
 
 ### Phase 3: YAML Generation (Vocabulary & Activities)
-- **Vocabulary**: 24+ items with IPA stress verification.
-- **Activities**: Reading Input -> Analytical Output. Bare list at root. `additionalProperties: false`.
-- **Semantic Sync**: Ensure activity distractors are plausible and quotes are accurate.
+
+#### Vocabulary Rules
+- **Bare list** at root level.
+- **IPA Stress**: Verify stress placement. Example: те**о**рія.
+- **Sync**: Cross-check every word against prose.
+
+#### Activities Rules
+- **Bare list** at root level.
+- **Property Names Reference**:
+| Activity Type | Required/Key Properties | Notes |
+| :--- | :--- | :--- |
+| **reading** | `id`, `title`, `text`, `instruction` | `id` regex: `^reading-[a-z0-9-]+$` |
+| **essay-response** | `source_reading`, `rubric`, `model_answer` | `rubric`: `criteria`, `description`, `points` |
+| **critical-analysis**| `source_reading`, `tasks`, `rubric` | NO `id` allowed |
+
+#### Activity Example (Self-Contained)
+```yaml
+===ACTIVITY_START===
+- type: reading
+  id: reading-hetmanat-economy
+  title: Економіка Гетьманщини
+  text: |
+    Господарство козацької держави базувалося на...
+  instruction: Вивчіть структуру експорту Гетьманщини.
+
+- type: essay-response
+  source_reading: reading-hetmanat-economy
+  instruction: Опишіть вплив війни на торговельні зв'язки.
+  rubric:
+    criteria:
+      - description: Використання фактів з тексту
+        points: 5
+  model_answer: |
+    > [!model-answer]
+    Війна призвела до блокування традиційних шляхів...
+===ACTIVITY_END===
+```
 
 ### Phase 4: Technical Audit & Review
-- Run `scripts/audit_module.py`.
+- Run `scripts/audit_module.py`. collect ALL errors, fix in ONE pass.
 - Apply `review-content-v4` scoring. Be brutally honest.
 
 ## 5. Review Protocol (v4 Enforcement)
