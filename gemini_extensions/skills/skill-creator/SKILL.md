@@ -15,46 +15,41 @@ Skills are modular, self-contained packages that extend Gemini CLI's capabilitie
 
 Every new skill created for this project MUST incorporate the following "Quality Layer" instructions in its body:
 
-### 1. Pre-Submit Verification Checklist
-Skills that generate content MUST include a self-audit checklist:
-- **Fact-to-Word Density**: Aim for 8+ unique entities (dates, names, quotes) per 1000 words.
-- **Semantic Nuance**: Use 5–15 hedging markers per 1000 words for C1+.
-- **Agency Pass**: Ensure active decolonized framing (Ukrainian entities as Subjects).
-- **Linguistic Scan**: Verify against the Russicism Blacklist.
+### 1. Workflow Phases (Full Fidelity)
+Skills MUST define a complete workflow from Phase 0 to Phase 5:
+- **Phase 0: Research**: Mandatory academic source verification.
+- **Phase 1: Meta**: alignment of content_outline with word targets.
+- **Phase 2: Content**: Prose writing with overshoot and agency rules.
+- **Phase 3: YAML**: Generation of sidecar files with strict schema rules.
+- **Phase 4: Audit**: Machine validation step.
+- **Phase 5: Self-Review**: Naturalness and semantic coherence check.
 
-### 2. Linguistic Integrity (The Blacklist)
-Skills MUST include the inline Russicism blacklist to prevent contamination:
-- під → под (pod), кушати → їсти, приймати участь → брати участь, получати → отримувати, самий кращий → найкращий, слідуючий → наступний, на протязі → протягом, любий (any) → будь-який, отвічати → відповідати, вообще → взагалі, відноситися → ставитися.
+### 2. Output Formatting (Delimiters)
+Skills MUST specify delimiter tags for pipeline compatibility:
+- `===RESEARCH_START===` / `===RESEARCH_END===`
+- `===CONTENT_START===` / `===CONTENT_END===`
+- `===ACTIVITIES_START===` / `===ACTIVITIES_END===`
+- `===VOCABULARY_START===` / `===VOCABULARY_END===`
+- `===WORD_COUNTS===` (For Phase 2)
 
-### 3. Structural Enforcement
-- **Delimiters**: Use `===CONTENT_START===` / `===CONTENT_END===` for orchestration compatibility.
-- **YAML Format**: Always enforce "Bare List at root" for activities and vocabulary. No wrapper keys.
-- **Property Names Reference**: Include a table defining exactly which fields are allowed/required per YAML type to prevent schema violations.
+### 3. YAML Property Reference
+Skills that generate YAML MUST include a property table per activity type to prevent schema violations (e.g., `tasks` array for `reading`, `rubric` fields for `essay-response`).
 
-## Skill Creation Process
+### 4. Linguistic Integrity
+Skills MUST include the inline Russicism blacklist and "Agency Pass" rules.
 
-1. Understand the skill with concrete examples
-2. Plan reusable skill contents (scripts, references, assets)
-3. **Initialize**: `node scripts/init_skill.cjs <name>`
-4. **Edit**: Implement resources and write SKILL.md (Incorporate Project-Specific Guardrails!)
-5. **Package**: `node scripts/package_skill.cjs <folder>`
-6. **Install**: `gemini skills install <name>.skill --scope workspace`
-7. **Reload**: Ask user to run `/skills reload`
-
-## Writing the SKILL.md
+## Writing the SKILL.md Template
 
 ### Frontmatter
-- `name`: hyphen-case (e.g., `feature-rebuild`)
-- `description`: Single-line trigger context.
+- `name`: hyphen-case.
+- `description`: Single-line trigger context. No hardcoded word counts here.
 
-### Body (Hardened Pattern)
-1. **Role & Pedagogy**: Define the persona (e.g., "Professor of History").
-2. **Research & Mapping**: Define sniper search site filters.
-3. **The Soul Layer**: Plan emotional hooks and sensory density.
-4. **Workflow Phases**: Explicitly define Phase 0 to Phase N.
-5. **Property Names Reference**: Table of YAML fields per type.
-6. **Pre-Submit Checklist**: Paste the Project-Specific Guardrails here.
-7. **Output Format**: Define delimiter tags and provide self-contained examples.
+### Body Pattern
+1. **Input & File Paths**: Define absolute paths for plan/meta/research.
+2. **Phase Definitions**: Detailed Phase 0-5.
+3. **Property Reference**: Table of YAML fields.
+4. **Verification Checklist**: Pre-submit self-audit.
+5. **Escape Hatch**: `NEEDS_HELP` signal.
 
 ---
-*Note: This workspace-specific skill-creator overrides the global one to ensure project consistency.*
+*Note: This workspace-specific skill-creator ensures consistency across all rebuild tracks.*
