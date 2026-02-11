@@ -2,14 +2,14 @@
   "module": "roman-mstyslavych",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T10:35:24.718267Z",
+  "last_audit": "2026-02-11T00:43:12.906817Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T11:18:17.354805Z",
+    "md": "2026-02-10T20:27:14.176849Z",
     "meta": "2026-02-09T15:59:44.181576Z",
     "activities": "2026-02-08T00:34:12.018217Z",
     "vocabulary": "2026-02-07T10:03:51.644362Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.181241Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5681/4400 (raw: 5942)"
+      "message": "5718/4400 (raw: 5979)"
     },
     "activities": {
       "status": "pass",

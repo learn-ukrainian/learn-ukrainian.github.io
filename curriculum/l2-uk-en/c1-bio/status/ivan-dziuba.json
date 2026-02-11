@@ -2,14 +2,14 @@
   "module": "ivan-dziuba",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:10.527557Z",
+  "last_audit": "2026-02-11T00:44:24.454024Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.207453Z",
     "meta": "2026-02-09T15:59:44.235148Z",
     "activities": null,
     "vocabulary": null,
-    "plan": null
+    "plan": "2026-02-09T15:59:44.235008Z"
   },
   "gates": {
     "meta": {

@@ -3,27 +3,47 @@ module: 44-checkpoint-word-formation
 level: A2
 version: '2.0'
 items:
-- lemma: вбачати
-  ipa: /ʋbat͡ʃˈatɪ/
-  translation: to see, to perceive
-  pos: verb
-- lemma: сильність
-  ipa: /sɪlʲnistʲ/
-  translation: strength
-  pos: noun
-  gender: f
-- lemma: спів
-  ipa: /spiʋ/
-  translation: singing
+- lemma: корінь
+  ipa: /kɔˈrinʲ/
+  translation: root (of a word)
   pos: noun
   gender: m
-- lemma: читати
-  ipa: /t͡ʃɪtˈa/
-  translation: to read
-  pos: noun
-  gender: f
-- lemma: інсайт
-  ipa: /insˈajt/
-  translation: insight
+- lemma: префікс
+  ipa: /prɛˈfiks/
+  translation: prefix
   pos: noun
   gender: m
+- lemma: суфікс
+  ipa: /ˈsufiks/
+  translation: suffix
+  pos: noun
+  gender: m
+- lemma: морфема
+  ipa: /mɔrˈfɛma/
+  translation: morpheme
+  pos: noun
+  gender: f
+- lemma: словотвір
+  ipa: /slɔwɔˈtwir/
+  translation: word formation
+  pos: noun
+  gender: m
+- lemma: значення
+  ipa: /znɑˈt͡ʃɛnʲːa/
+  translation: meaning
+  pos: noun
+  gender: n
+- lemma: утворення
+  ipa: /utwɔˈrɛnʲːa/
+  translation: formation, creation
+  pos: noun
+  gender: n
+- lemma: помилка
+  ipa: /pɔˈmɪlka/
+  translation: mistake, error
+  pos: noun
+  gender: f
+- lemma: правильний
+  ipa: /prɑˈwɪlʲnɪj/
+  translation: correct
+  pos: adj

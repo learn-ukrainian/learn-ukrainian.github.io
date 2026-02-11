@@ -142,6 +142,8 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
    - If the edit fails with "0 occurrences found": re-read the file, find the actual text, retry.
    - **NEVER guess what a file contains.** Read it, then edit it.
    - **NEVER use `cat -A`, `sed -n`, `head`, or `tail` to read files.** These destroy UTF-8 Ukrainian text — `cat -A` turns `Полуботок` into `M-PM-^_M-PM->...` garbage. Use `read_file` or `bat` ONLY.
+   - **RE-READ BETWEEN SEQUENTIAL EDITS**: After editing a file, the file content has CHANGED. You MUST `read_file` again before the next edit to the same file. Your context still holds the OLD content — it is now STALE.
+   - **PREFER `write_file` FOR MULTI-CHANGE FIXES**: When you need to make 2+ changes to the same file, it is FASTER and MORE RELIABLE to: (1) `read_file` the entire file, (2) mentally apply all changes, (3) `write_file` the complete new content. This avoids sequential `edit_file` failures from stale `old_string` matching.
 1. **Debugging Schema Errors (CRITICAL)**: When audit shows `YAML_SCHEMA_VIOLATION`:
    - **MANDATORY**: Read the schema file: `schemas/activities-{level}.schema.json`
    - Find the definition for your activity type (e.g., `true-false-{level}`)
@@ -183,6 +185,10 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
     - Your review exists to find problems the automated system cannot catch — linguistic nuance, pedagogical depth, semantic accuracy. If you rubber-stamp everything, you add zero value.
     - **Adopting a "red team persona" is NOT the fix.** Artificially finding fake problems is as bad as hiding real ones. Just be honest.
     - **Caught cheating = all work from that session is discarded.**
+24. **Transliteration Ban (C1+)**: Latin transliteration (e.g., `(gloria)`, `(morale)`) is STRICTLY PROHIBITED in C1-HIST/C1-BIO tracks. Maintain 100% immersion.
+25. **Review Regeneration (MANDATORY)**: If you significantly rewrite module content (>20% change), you MUST delete and regenerate the `review-*-review.md` file. Stale reviews citing deleted text cause audit failures.
+26. **Redundancy Check**: The "Purity" audit is extremely strict. Ensure no sentence in the Summary or Conclusion is a verbatim copy of a sentence in the main body.
+27. **Massive Academic Expansion**: When rebuilding seminar modules, do not "pad" text. Add entire new layers of analysis (e.g., soundscapes, theology, western parallels) to reach word counts naturally.
 
 ## macOS Environment & Tool Usage
 

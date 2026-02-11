@@ -2,14 +2,14 @@
   "module": "54-expressing-opinions",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:37.944016Z",
+  "last_audit": "2026-02-10T23:31:01.844933Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-11T19:41:30.991473Z",
-    "meta": "2026-02-01T17:22:45.872491Z",
-    "activities": "2026-01-11T19:45:24.944618Z",
-    "vocabulary": "2026-01-25T16:02:18.579620Z",
-    "plan": "2026-01-31T21:00:31.187279Z"
+    "meta": "2026-02-07T10:03:51.664293Z",
+    "activities": "2026-02-07T10:03:51.707823Z",
+    "vocabulary": "2026-02-07T10:03:51.748308Z",
+    "plan": "2026-02-07T10:03:51.062207Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1632/1600 (raw: 2348)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1632/3000 (raw: 2348)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

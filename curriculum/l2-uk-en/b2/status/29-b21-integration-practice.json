@@ -1,15 +1,15 @@
 {
-  "module": "29-b21-integration-practice",
+  "module": "69-integration-practice",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T01:06:27.993435Z",
+  "last_audit": "2026-02-10T23:30:10.228112Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T01:04:17.917755Z",
-    "meta": "2026-02-07T01:04:21.230675Z",
-    "activities": "2026-02-07T01:04:17.937972Z",
-    "vocabulary": "2026-01-21T22:54:29.127361Z",
-    "plan": "2026-01-30T15:04:49.249992Z"
+    "md": "2026-02-07T01:04:17.926971Z",
+    "meta": "2026-02-07T10:03:50.522890Z",
+    "activities": "2026-02-07T10:03:50.608479Z",
+    "vocabulary": "2026-02-07T10:03:50.649166Z",
+    "plan": "2026-02-07T10:38:53.220618Z"
   },
   "gates": {
     "meta": {
@@ -20,27 +20,34 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2194/2000 (raw: 2301)"
+      "message": "2027/2000 (raw: 2112)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "15/10"
+      "message": "16/10"
     },
     "vocabulary": {
       "status": "warn",
       "violations": 0,
-      "message": "2 < 25 (soft target)"
+      "message": "5 < 35 (soft target)"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
     "pass_count": 4,
     "fail_count": 0
   }

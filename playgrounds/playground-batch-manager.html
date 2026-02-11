@@ -56,6 +56,18 @@
       animation: pulse 2s infinite;
     }
 
+    .refresh-dot.api { background: #3b82f6; }
+    .refresh-dot.fallback { background: #f59e0b; }
+
+    .api-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .api-badge.api-mode { background: #1e3a5f; color: #60a5fa; }
+    .api-badge.file-mode { background: #3b2f1f; color: #f59e0b; }
+
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
@@ -74,52 +86,6 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-
-    /* Track Tabs */
-    .track-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 24px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-    }
-
-    .track-tab {
-      padding: 8px 16px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s;
-      position: relative;
-    }
-
-    .track-tab:hover { border-color: #475569; }
-    .track-tab.active { background: #3b82f6; border-color: #3b82f6; color: white; }
-    .track-tab.has-data { border-color: #475569; }
-    .track-tab.has-data::after {
-      content: '';
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #10b981;
-    }
-    .track-tab.has-running::after { background: #3b82f6; animation: pulse 1s infinite; }
-    .track-tab.no-data { opacity: 0.4; }
-
-    .track-tab .tab-count {
-      font-size: 10px;
-      color: #94a3b8;
-      margin-left: 4px;
-    }
-
-    .track-tab.active .tab-count { color: #dbeafe; }
 
     /* Stats Row */
     .stats-row {
@@ -178,6 +144,33 @@
     .progress-bar-fill.green { background: #10b981; }
     .progress-bar-fill.blue { background: #3b82f6; }
 
+    /* Live Activity Banner */
+    .live-banner {
+      background: linear-gradient(135deg, #0f2027, #1e293b);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 14px;
+    }
+    .live-banner.active { border-color: #3b82f6; }
+    .live-banner.idle { border-color: #334155; }
+    .live-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #64748b;
+      flex-shrink: 0;
+    }
+    .live-banner.active .live-dot {
+      background: #3b82f6;
+      animation: pulse 1.5s infinite;
+    }
+    .live-title { font-weight: 600; }
+    .live-detail { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
     /* Active Module Banner */
     .active-banner {
       background: linear-gradient(135deg, #1e3a5f, #1e293b);
@@ -217,9 +210,7 @@
       margin-top: 4px;
     }
 
-    .active-meta span {
-      margin-right: 16px;
-    }
+    .active-meta span { margin-right: 16px; }
 
     .active-elapsed {
       font-size: 22px;
@@ -228,6 +219,158 @@
       font-family: ui-monospace, monospace;
       flex-shrink: 0;
     }
+
+    /* Multi-track Overview */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .overview-card {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .overview-card:hover { border-color: #475569; transform: translateY(-2px); }
+    .overview-card.active { border-color: #3b82f6; }
+    .overview-card.no-data { opacity: 0.3; cursor: default; }
+    .overview-card.no-data:hover { transform: none; border-color: #334155; }
+
+    /* Dispatcher state glow on cards */
+    .overview-card.state-ELIGIBLE { border-color: #22c55e40; }
+    .overview-card.state-RUNNING { border-color: #3b82f680; box-shadow: 0 0 12px #3b82f630; }
+    .overview-card.state-COOLDOWN { border-color: #f59e0b60; }
+    .overview-card.state-STALLED { border-color: #f9731660; }
+    .overview-card.state-DONE { border-color: #22c55e80; box-shadow: 0 0 8px #22c55e20; }
+    .overview-card.state-BLOCKED { border-color: #64748b40; opacity: 0.6; }
+
+    .overview-track {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .state-badge {
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .state-badge.ELIGIBLE { background: #166534; color: #bbf7d0; }
+    .state-badge.RUNNING { background: #1e40af; color: #bfdbfe; }
+    .state-badge.COOLDOWN { background: #92400e; color: #fde68a; }
+    .state-badge.STALLED { background: #9a3412; color: #fed7aa; }
+    .state-badge.DONE { background: #065f46; color: #6ee7b7; }
+    .state-badge.BLOCKED { background: #334155; color: #94a3b8; }
+    .state-badge.PENDING { background: #1e293b; color: #64748b; }
+
+    .overview-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .overview-stats .green { color: #10b981; }
+    .overview-stats .red { color: #f43f5e; }
+    .overview-stats .gray { color: #64748b; }
+
+    .mini-progress {
+      width: 100%;
+      background: #334155;
+      border-radius: 3px;
+      height: 4px;
+      overflow: hidden;
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      background: #10b981;
+      transition: width 0.5s;
+    }
+
+    /* Dispatcher Panel */
+    .dispatcher-panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .dispatcher-panel .panel-header {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .dispatcher-panel .panel-header:hover { background: #1e293b80; }
+
+    .dispatcher-toggle { font-size: 12px; color: #64748b; }
+
+    .dispatcher-content { display: none; }
+    .dispatcher-content.visible { display: block; }
+
+    .dispatcher-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .dispatcher-stats .ds-item {
+      text-align: center;
+    }
+
+    .dispatcher-stats .ds-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+
+    .dispatcher-stats .ds-label {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .dispatcher-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .dispatcher-table th {
+      text-align: left;
+      padding: 8px 12px;
+      color: #64748b;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .dispatcher-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid #1e293b;
+      color: #cbd5e1;
+    }
+
+    .dispatcher-table tr:hover { background: #1e293b80; }
 
     /* Main Grid */
     .main-grid {
@@ -256,7 +399,7 @@
       font-weight: 600;
     }
 
-    /* Module Grid - visual heatmap */
+    /* Module Grid */
     .module-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
@@ -278,47 +421,14 @@
       line-height: 1.3;
     }
 
-    .module-cell:hover {
-      transform: scale(1.05);
-      z-index: 1;
-    }
+    .module-cell:hover { transform: scale(1.05); z-index: 1; }
+    .module-cell.pass { background: #166534; color: #bbf7d0; border-color: #22863a; }
+    .module-cell.fail { background: #991b1b; color: #fecaca; border-color: #dc2626; }
+    .module-cell.running { background: #1e40af; color: #bfdbfe; border-color: #3b82f6; animation: pulse 1.5s infinite; }
+    .module-cell.pending { background: #1e293b; color: #475569; border-color: #334155; }
 
-    .module-cell.pass {
-      background: #166534;
-      color: #bbf7d0;
-      border-color: #22863a;
-    }
-
-    .module-cell.fail {
-      background: #991b1b;
-      color: #fecaca;
-      border-color: #dc2626;
-    }
-
-    .module-cell.running {
-      background: #1e40af;
-      color: #bfdbfe;
-      border-color: #3b82f6;
-      animation: pulse 1.5s infinite;
-    }
-
-    .module-cell.pending {
-      background: #1e293b;
-      color: #475569;
-      border-color: #334155;
-    }
-
-    .module-cell .cell-slug {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .module-cell .cell-time {
-      font-size: 9px;
-      opacity: 0.7;
-      margin-top: 2px;
-    }
+    .module-cell .cell-slug { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .module-cell .cell-time { font-size: 9px; opacity: 0.7; margin-top: 2px; }
 
     /* Module Detail Popover */
     .module-detail {
@@ -351,21 +461,21 @@
 
     .module-detail .detail-row .val { color: #e2e8f0; font-weight: 500; }
 
-    /* Sidebar panels */
+    /* Sidebar */
     .sidebar { display: flex; flex-direction: column; gap: 24px; }
 
     /* Failure Queue */
-    .failure-list {
-      max-height: 300px;
-      overflow-y: auto;
-    }
+    .failure-list { max-height: 300px; overflow-y: auto; }
 
     .failure-item {
       padding: 12px;
       border-bottom: 1px solid #334155;
+      cursor: pointer;
+      transition: background 0.15s;
     }
 
     .failure-item:last-child { border-bottom: none; }
+    .failure-item:hover { background: #0f172a; }
 
     .failure-slug {
       font-size: 13px;
@@ -379,6 +489,42 @@
       color: #64748b;
       margin-top: 4px;
     }
+
+    .escalation-list { max-height: 300px; overflow-y: auto; }
+
+    .escalation-item {
+      padding: 12px;
+      border-bottom: 1px solid #334155;
+      transition: background 0.15s;
+    }
+
+    .escalation-item:last-child { border-bottom: none; }
+    .escalation-item:hover { background: #0f172a; }
+
+    .escalation-slug {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: ui-monospace, monospace;
+      color: #fde68a;
+    }
+
+    .escalation-meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .escalation-status {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+
+    .escalation-status.pending { background: #854d0e; color: #fde68a; }
+    .escalation-status.seen { background: #14532d; color: #86efac; }
 
     .failure-gates {
       display: flex;
@@ -415,17 +561,13 @@
     .log-line.diag { color: #f59e0b; }
 
     /* CLI Panel */
-    .cli-panel {
-      grid-column: 1 / -1;
-    }
+    .cli-panel { grid-column: 1 / -1; }
 
-    .cli-content {
-      padding: 16px;
-    }
+    .cli-content { padding: 16px; }
 
     .cli-form {
       display: grid;
-      grid-template-columns: 1fr 1fr 80px 80px auto;
+      grid-template-columns: 1fr 1fr 1fr 80px 80px auto;
       gap: 12px;
       align-items: end;
     }
@@ -449,10 +591,7 @@
       font-size: 13px;
     }
 
-    select:focus, input:focus {
-      outline: none;
-      border-color: #3b82f6;
-    }
+    select:focus, input:focus { outline: none; border-color: #3b82f6; }
 
     .btn {
       padding: 8px 16px;
@@ -510,59 +649,207 @@
       color: #10b981;
     }
 
-    /* Multi-track Overview */
-    .overview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
+    /* Failure Detail Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
     }
 
-    .overview-card {
+    .modal-overlay.visible { display: flex; }
+
+    .modal {
       background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      padding: 14px;
+      border: 1px solid #475569;
+      border-radius: 12px;
+      max-width: 650px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #334155;
+      border: none;
+      color: #e2e8f0;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover { background: #475569; }
+
+    .modal h3 {
+      font-size: 18px;
+      font-family: ui-monospace, monospace;
+      margin-bottom: 16px;
+      color: #fca5a5;
+    }
+
+    .modal-section {
+      margin-bottom: 16px;
+    }
+
+    .modal-section h4 {
+      font-size: 12px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .modal-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .modal-meta-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 8px;
+      background: #0f172a;
+      border-radius: 4px;
+    }
+
+    .modal-meta-item .label { color: #64748b; }
+    .modal-meta-item .value { color: #e2e8f0; font-weight: 500; }
+
+    .gates-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .gates-table th {
+      text-align: left;
+      padding: 6px 8px;
+      color: #64748b;
+      font-size: 10px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #334155;
+    }
+
+    .gates-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #0f172a;
+    }
+
+    .timeline-item {
+      padding: 6px 0;
+      border-left: 2px solid #334155;
+      padding-left: 12px;
+      margin-left: 4px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .timeline-item.success { border-left-color: #10b981; }
+    .timeline-item.failure { border-left-color: #f43f5e; }
+
+    .blocking-issue {
+      padding: 6px 10px;
+      background: #1a0a0a;
+      border: 1px solid #991b1b;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #fca5a5;
+      margin-bottom: 6px;
+    }
+
+    /* Dispatcher subcommand fields */
+    .cli-dispatcher-fields {
+      display: none;
+      grid-column: 1 / -1;
+      gap: 12px;
+    }
+
+    .cli-dispatcher-fields.visible {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    /* Dispatcher Control */
+    .dispatcher-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-dispatcher {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 11px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.15s;
     }
 
-    .overview-card:hover { border-color: #475569; transform: translateY(-2px); }
-    .overview-card.active { border-color: #3b82f6; }
-    .overview-card.no-data { opacity: 0.3; cursor: default; }
-    .overview-card.no-data:hover { transform: none; border-color: #334155; }
+    .btn-dispatcher.start { background: #166534; color: #bbf7d0; }
+    .btn-dispatcher.start:hover { background: #15803d; }
+    .btn-dispatcher.stop { background: #991b1b; color: #fecaca; }
+    .btn-dispatcher.stop:hover { background: #b91c1c; }
+    .btn-dispatcher:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .overview-track {
-      font-size: 14px;
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    .dispatcher-pid {
+      font-size: 10px;
+      color: #64748b;
+      font-family: ui-monospace, monospace;
     }
 
-    .overview-stats {
-      display: flex;
-      gap: 12px;
+    /* Scan button */
+    .btn-scan {
+      background: #1e3a5f;
+      color: #60a5fa;
+      border: 1px solid #1d4ed8;
+      border-radius: 6px;
+      padding: 4px 10px;
       font-size: 12px;
-      margin-bottom: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-scan:hover { background: #1e40af; }
+    .btn-scan:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-scan.scanning { animation: pulse 1s infinite; }
+
+    /* Notification bell */
+    .notif-bell {
+      cursor: pointer;
+      font-size: 16px;
+      opacity: 0.5;
+      transition: opacity 0.15s;
     }
 
-    .overview-stats .green { color: #10b981; }
-    .overview-stats .red { color: #f43f5e; }
-    .overview-stats .gray { color: #64748b; }
+    .notif-bell.enabled { opacity: 1; }
+    .notif-bell:hover { opacity: 0.8; }
 
-    .mini-progress {
-      width: 100%;
-      background: #334155;
-      border-radius: 3px;
-      height: 4px;
-      overflow: hidden;
+    /* WebSocket indicator */
+    .ws-badge {
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 600;
     }
 
-    .mini-progress-fill {
-      height: 100%;
-      background: #10b981;
-      transition: width 0.5s;
-    }
+    .ws-badge.connected { background: #166534; color: #bbf7d0; }
+    .ws-badge.disconnected { background: #334155; color: #64748b; }
   </style>
 </head>
 <body>
@@ -571,21 +858,62 @@
   <div class="header">
     <h1>Batch Manager</h1>
     <div class="header-right">
+      <div class="dispatcher-ctrl" id="dispatcher-ctrl" style="display:none;">
+        <button class="btn-dispatcher start" id="btn-dispatcher" onclick="toggleDispatcherProcess()">Start Dispatcher</button>
+        <span class="dispatcher-pid" id="dispatcher-pid-label"></span>
+      </div>
+      <button class="btn-scan" id="btn-scan" onclick="triggerScan()" title="Re-scan all tracks">&#8635; Scan</button>
+      <span class="notif-bell" id="notif-bell" title="Enable browser notifications" onclick="requestNotifPermission()">&#128276;</span>
+      <span class="ws-badge disconnected" id="ws-badge">WS OFF</span>
+      <span class="api-badge" id="api-mode-badge">...</span>
       <div class="refresh-status">
-        <div class="refresh-dot"></div>
+        <div class="refresh-dot" id="refresh-dot"></div>
         <span id="last-refresh">Auto-refresh 5s</span>
       </div>
     </div>
   </div>
 
   <div id="server-note" class="server-note" style="display:none;">
-    Serve files with: <code>cd /Users/krisztiankoos/projects/learn-ukrainian && python3 -m http.server 8080</code>
-    then open <code>http://localhost:8080/playgrounds/playground-batch-manager.html</code>
+    Start API server: <code>.venv/bin/python -m uvicorn scripts.api.main:app --port 8090</code>
+    then open <code>http://localhost:8090/playground-batch-manager.html</code>
+  </div>
+
+  <!-- Live Activity Banner -->
+  <div class="live-banner" id="live-banner" style="display:none;">
+    <div class="live-dot"></div>
+    <div class="live-content">
+      <div class="live-title" id="live-title">Idle</div>
+      <div class="live-detail" id="live-detail"></div>
+    </div>
   </div>
 
   <!-- Multi-Track Overview -->
   <div id="overview-section">
     <div class="overview-grid" id="overview-grid"></div>
+  </div>
+
+  <!-- Dispatcher Panel (collapsible) -->
+  <div class="dispatcher-panel" id="dispatcher-panel" style="display:none;">
+    <div class="panel-header" onclick="toggleDispatcher()">
+      <h2>Dispatcher State</h2>
+      <span class="dispatcher-toggle" id="dispatcher-toggle">&#9654; Show</span>
+    </div>
+    <div class="dispatcher-content" id="dispatcher-content">
+      <div class="dispatcher-stats" id="dispatcher-stats"></div>
+      <table class="dispatcher-table">
+        <thead>
+          <tr>
+            <th>Track</th>
+            <th>State</th>
+            <th>Pass Rate</th>
+            <th>Dispatches</th>
+            <th>Last Result</th>
+            <th>Blocked By</th>
+          </tr>
+        </thead>
+        <tbody id="dispatcher-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Stats Row -->
@@ -661,6 +989,17 @@
         </div>
       </div>
 
+      <!-- Escalations (Claude handoffs) -->
+      <div class="panel">
+        <div class="panel-header" style="background:#1a1a0a;">
+          <h2 style="color:#fde68a;">Escalations</h2>
+          <span id="escalation-badge" style="font-size:11px;font-weight:700;color:#fde68a;">0</span>
+        </div>
+        <div class="escalation-list" id="escalation-list">
+          <div class="empty-state">No escalations</div>
+        </div>
+      </div>
+
       <!-- Event Log -->
       <div class="panel">
         <div class="panel-header">
@@ -678,10 +1017,10 @@
   <div class="panel" style="margin-top:24px;">
     <div class="panel-header" style="background:#0a1628;">
       <h2>Gemini API Usage</h2>
-      <span style="font-size:10px;color:#64748b;" id="usage-updated">—</span>
+      <span style="font-size:10px;color:#64748b;" id="usage-updated">&mdash;</span>
     </div>
     <div id="api-usage-content" style="padding:16px;">
-      <div class="empty-state" style="color:#475569;font-size:12px;">No usage data yet. Runs with updated runner will log here.</div>
+      <div class="empty-state" style="color:#475569;font-size:12px;">No usage data yet.</div>
     </div>
   </div>
 
@@ -691,23 +1030,19 @@
       <h2>CLI Command Generator</h2>
     </div>
     <div class="cli-content">
-      <div class="cli-form">
+      <div class="cli-form" id="cli-form">
         <div class="form-group">
-          <label>Track</label>
-          <select id="cli-track">
-            <option value="a1">a1</option>
-            <option value="a2">a2</option>
-            <option value="b1">b1</option>
-            <option value="b2">b2</option>
-            <option value="c1">c1</option>
-            <option value="c2">c2</option>
-            <option value="b2-hist">b2-hist</option>
-            <option value="c1-bio">c1-bio</option>
-            <option value="c1-hist">c1-hist</option>
-            <option value="lit">lit</option>
+          <label>Tool</label>
+          <select id="cli-tool" onchange="onToolChange()">
+            <option value="runner">batch_gemini_runner.py</option>
+            <option value="dispatcher">batch_dispatcher.py</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="cli-track-group">
+          <label>Track</label>
+          <select id="cli-track"></select>
+        </div>
+        <div class="form-group" id="cli-mode-group">
           <label>Mode</label>
           <select id="cli-mode">
             <option value="fix">fix (audit-driven)</option>
@@ -715,17 +1050,46 @@
             <option value="auto">auto (detect)</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="cli-from-group">
           <label>From</label>
           <input type="number" id="cli-from" min="1" value="1" placeholder="1">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="cli-to-group">
           <label>To</label>
           <input type="number" id="cli-to" min="1" value="10" placeholder="10">
         </div>
         <div class="form-group">
           <label>&nbsp;</label>
           <button class="btn btn-primary" onclick="generateCmd()">Generate</button>
+        </div>
+      </div>
+      <!-- Dispatcher-specific fields -->
+      <div class="cli-dispatcher-fields" id="cli-dispatcher-fields">
+        <div class="form-group">
+          <label>Subcommand</label>
+          <select id="cli-subcmd">
+            <option value="run">run (continuous)</option>
+            <option value="run --one-shot">run --one-shot</option>
+            <option value="scan">scan (dry-run)</option>
+            <option value="status">status</option>
+            <option value="dispatch-one">dispatch-one</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Flags</label>
+          <select id="cli-flags">
+            <option value="">none</option>
+            <option value="--dry-run">--dry-run</option>
+            <option value="--max-runtime-hours 12">--max-runtime-hours 12</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Track Filter</label>
+          <select id="cli-track-filter">
+            <option value="">all tracks</option>
+            <option value="include">--include-tracks</option>
+            <option value="exclude">--exclude-tracks</option>
+          </select>
         </div>
       </div>
       <div class="cli-output" id="cli-output" style="display:none;">
@@ -741,47 +1105,141 @@
     <div id="detail-rows"></div>
   </div>
 
+  <!-- Failure Detail Modal -->
+  <div class="modal-overlay" id="failure-modal" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="document.getElementById('failure-modal').classList.remove('visible')">&times;</button>
+      <h3 id="modal-slug">-</h3>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
   <script>
     // ========== CONFIG ==========
-    const ALL_TRACKS = ['a1','a2','b1','b2','c1','c2','b2-hist','c1-bio','c1-hist','lit'];
-    const STATE_BASE = '../batch_state';
+    const ALL_TRACKS = [
+      'a1','a2','b1','b2','c1','c2',
+      'b2-hist','c1-bio','c1-hist','lit',
+      'lit-essay','lit-hist-fic','lit-fantastika','lit-war','lit-humor','lit-juvenile',
+      'oes','ruth','b2-pro','c1-pro'
+    ];
+
     const REFRESH_INTERVAL = 5000;
 
+    let apiMode = false;       // true = FastAPI, false = relative file paths
+    let apiBase = '';          // '/api/batch' when in API mode
+    let fileBase = '../batch_state';
+
     let currentTrack = null;
-    let trackStates = {};  // track -> state JSON
-    let trackFailures = {};  // track -> [failure objects]
+    let trackStates = {};
+    let dispatcherState = null;
+    let escalationsByTrack = {};  // track → count of escalated modules
+    let trackFailureDetails = {};  // track -> [failure detail objects]
     let logEntries = [];
-    let previousModuleCount = {};  // track -> count of completed modules
+    let previousModuleCount = {};
     let activeStartTime = null;
     let elapsedTimer = null;
+
+    // ========== API DETECTION ==========
+    async function detectApiMode() {
+      try {
+        const res = await fetch('/api/batch/health', { signal: AbortSignal.timeout(2000) });
+        if (res.ok) {
+          apiMode = true;
+          apiBase = '/api/batch';
+          document.getElementById('api-mode-badge').textContent = 'API';
+          document.getElementById('api-mode-badge').className = 'api-badge api-mode';
+          document.getElementById('refresh-dot').className = 'refresh-dot api';
+          return;
+        }
+      } catch {}
+      apiMode = false;
+      document.getElementById('api-mode-badge').textContent = 'FILE';
+      document.getElementById('api-mode-badge').className = 'api-badge file-mode';
+      document.getElementById('refresh-dot').className = 'refresh-dot fallback';
+    }
 
     // ========== DATA LOADING ==========
     async function loadTrackState(track) {
       try {
-        const res = await fetch(`${STATE_BASE}/state_${track}.json?_=${Date.now()}`);
+        const url = apiMode
+          ? `${apiBase}/state/${track}`
+          : `${fileBase}/state_${track}.json?_=${Date.now()}`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch { return null; }
+    }
+
+    async function loadDispatcherState() {
+      try {
+        const url = apiMode
+          ? `${apiBase}/dispatcher`
+          : `${fileBase}/dispatcher_state.json?_=${Date.now()}`;
+        const res = await fetch(url);
         if (!res.ok) return null;
         return await res.json();
       } catch { return null; }
     }
 
     async function loadTrackFailures(track) {
-      // Try per-track failures directory first (new format)
-      try {
-        const res = await fetch(`${STATE_BASE}/failures/${track}/index.json?_=${Date.now()}`);
-        if (res.ok) return await res.json();
-      } catch {}
-
-      // Scan individual failure files (fallback - won't work without server-side listing)
-      // For now, we'll track failures from the state file
+      if (apiMode) {
+        try {
+          const res = await fetch(`${apiBase}/failures/${track}`);
+          if (res.ok) return await res.json();
+        } catch {}
+      }
       return [];
     }
 
+    async function loadFailureQueue() {
+      try {
+        const url = apiMode
+          ? `${apiBase}/failures`
+          : `${fileBase}/failure_queue.json?_=${Date.now()}`;
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        return await res.json();
+      } catch { return []; }
+    }
+
+    async function loadEscalations() {
+      // API mode: dedicated escalations endpoint; file mode: scan each track's failures
+      if (apiMode) {
+        try {
+          const res = await fetch(`${apiBase}/escalations`);
+          if (res.ok) return await res.json();
+        } catch {}
+        return [];
+      }
+      // File mode fallback: load failure files per track, filter escalated
+      const escalations = [];
+      const promises = ALL_TRACKS.map(async (track) => {
+        try {
+          const res = await fetch(`${fileBase}/failures/${track}/_index.json?_=${Date.now()}`);
+          if (!res.ok) return;
+          const failures = await res.json();
+          for (const f of failures) {
+            if (f.escalated) escalations.push(f);
+          }
+        } catch {}
+      });
+      await Promise.all(promises);
+      return escalations;
+    }
+
     async function loadApiUsage() {
+      if (apiMode) {
+        try {
+          const res = await fetch(`${apiBase}/usage`);
+          if (res.ok) return await res.json();
+        } catch {}
+        return {};
+      }
+      // Fallback: fetch each track individually
       const summaries = {};
       const promises = ALL_TRACKS.map(async (track) => {
         try {
-          const url = `${STATE_BASE}/api_usage/summary_${track}.json?t=${Date.now()}`;
-          const res = await fetch(url);
+          const res = await fetch(`${fileBase}/api_usage/summary_${track}.json?t=${Date.now()}`);
           if (res.ok) summaries[track] = await res.json();
         } catch {}
       });
@@ -789,126 +1247,121 @@
       return summaries;
     }
 
-    function renderApiUsage(summaries) {
-      const el = document.getElementById('api-usage-content');
-      const tracks = Object.entries(summaries);
-      if (tracks.length === 0) {
-        el.innerHTML = '<div class="empty-state" style="color:#475569;font-size:12px;">No usage data yet. Runs with updated runner will log here.</div>';
-        return;
-      }
-
-      let totalCalls = 0, totalInput = 0, totalOutput = 0, totalCached = 0, totalLatency = 0;
-      tracks.forEach(([_, s]) => {
-        totalCalls += s.total_calls || 0;
-        totalInput += s.total_input_tokens || 0;
-        totalOutput += s.total_output_tokens || 0;
-        totalCached += s.total_cached_tokens || 0;
-        totalLatency += s.total_latency_ms || 0;
-      });
-
-      const fmtTokens = (n) => n > 1000000 ? `${(n/1000000).toFixed(1)}M` : n > 1000 ? `${(n/1000).toFixed(1)}K` : n.toString();
-      const avgLatency = totalCalls > 0 ? Math.round(totalLatency / totalCalls) : 0;
-
-      let html = `
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;">
-          <div style="text-align:center;">
-            <div style="font-size:20px;font-weight:700;color:#3b82f6;">${totalCalls}</div>
-            <div style="font-size:10px;color:#64748b;">API Calls</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:20px;font-weight:700;color:#8b5cf6;">${fmtTokens(totalInput)}</div>
-            <div style="font-size:10px;color:#64748b;">Input Tokens</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:20px;font-weight:700;color:#f59e0b;">${fmtTokens(totalOutput)}</div>
-            <div style="font-size:10px;color:#64748b;">Output Tokens</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:20px;font-weight:700;color:#10b981;">${fmtTokens(totalCached)}</div>
-            <div style="font-size:10px;color:#64748b;">Cached</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:20px;font-weight:700;color:#64748b;">${(avgLatency/1000).toFixed(1)}s</div>
-            <div style="font-size:10px;color:#64748b;">Avg Latency</div>
-          </div>
-        </div>
-        <table style="width:100%;font-size:11px;border-collapse:collapse;">
-          <tr style="color:#64748b;border-bottom:1px solid #1e293b;">
-            <th style="text-align:left;padding:4px;">Track</th>
-            <th style="text-align:right;padding:4px;">Calls</th>
-            <th style="text-align:right;padding:4px;">Input</th>
-            <th style="text-align:right;padding:4px;">Output</th>
-            <th style="text-align:right;padding:4px;">Cached</th>
-          </tr>`;
-
-      tracks.sort((a,b) => (b[1].total_calls||0) - (a[1].total_calls||0));
-      tracks.forEach(([track, s]) => {
-        html += `<tr style="border-bottom:1px solid #0f172a;">
-          <td style="padding:4px;color:#94a3b8;">${track}</td>
-          <td style="text-align:right;padding:4px;">${s.total_calls||0}</td>
-          <td style="text-align:right;padding:4px;color:#8b5cf6;">${fmtTokens(s.total_input_tokens||0)}</td>
-          <td style="text-align:right;padding:4px;color:#f59e0b;">${fmtTokens(s.total_output_tokens||0)}</td>
-          <td style="text-align:right;padding:4px;color:#10b981;">${fmtTokens(s.total_cached_tokens||0)}</td>
-        </tr>`;
-      });
-      html += '</table>';
-
-      // Per-account breakdown (aggregate from all tracks)
-      const accounts = {};
-      tracks.forEach(([_, s]) => {
-        Object.entries(s.by_account || {}).forEach(([acct, data]) => {
-          if (!accounts[acct]) accounts[acct] = {calls:0, input:0, output:0};
-          accounts[acct].calls += data.calls || 0;
-          accounts[acct].input += data.input_tokens || 0;
-          accounts[acct].output += data.output_tokens || 0;
-        });
-      });
-      const acctEntries = Object.entries(accounts);
-      if (acctEntries.length > 0) {
-        html += `<div style="margin-top:12px;padding-top:8px;border-top:1px solid #1e293b;">
-          <div style="font-size:10px;color:#64748b;margin-bottom:6px;">By Account</div>`;
-        acctEntries.sort((a,b) => b[1].calls - a[1].calls);
-        acctEntries.forEach(([acct, data]) => {
-          const short = acct.split('@')[0];
-          html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:#94a3b8;">
-            <span>${short}</span>
-            <span>${data.calls} calls &middot; ${fmtTokens(data.input)} in &middot; ${fmtTokens(data.output)} out</span>
-          </div>`;
-        });
-        html += '</div>';
-      }
-      el.innerHTML = html;
-
-      const lastUpdate = tracks.map(([_,s]) => s.last_updated).filter(Boolean).sort().pop();
-      document.getElementById('usage-updated').textContent = lastUpdate
-        ? `Last: ${new Date(lastUpdate).toLocaleTimeString()}`
-        : '—';
-    }
-
+    // ========== REFRESH ALL ==========
     async function refreshAll() {
       const promises = ALL_TRACKS.map(async (track) => {
         const state = await loadTrackState(track);
         if (state) {
           trackStates[track] = state;
-          // Detect changes and log them
           detectChanges(track, state);
         }
       });
 
-      await Promise.all(promises);
+      const [_, dState, escalations, apiSummaries] = await Promise.all([
+        Promise.all(promises),
+        loadDispatcherState(),
+        loadEscalations(),
+        loadApiUsage(),
+      ]);
+
+      if (dState) {
+        dispatcherState = dState;
+        renderDispatcher(dState);
+      }
+
+      // Build per-track escalation counts from live data
+      escalationsByTrack = {};
+      for (const esc of escalations) {
+        const t = esc.track || '?';
+        escalationsByTrack[t] = (escalationsByTrack[t] || 0) + 1;
+      }
 
       renderOverview();
+      updateLiveBanner();
 
       if (currentTrack && trackStates[currentTrack]) {
         renderTrackDetail(currentTrack);
       }
 
-      // Refresh API usage
-      const apiSummaries = await loadApiUsage();
       renderApiUsage(apiSummaries);
+      renderEscalations(escalations);
 
       document.getElementById('last-refresh').textContent =
         `Updated ${new Date().toLocaleTimeString()}`;
+    }
+
+    function updateLiveBanner() {
+      const banner = document.getElementById('live-banner');
+      const title = document.getElementById('live-title');
+      const detail = document.getElementById('live-detail');
+      banner.style.display = 'flex';
+
+      // Find running tracks from dispatcher state
+      const tracks = dispatcherState?.tracks || {};
+      const runningTracks = Object.entries(tracks).filter(([_,t]) => t.state === 'RUNNING');
+
+      // Find running modules from batch runner states (ignore stale >2h)
+      let runningModules = [];
+      for (const [track, state] of Object.entries(trackStates)) {
+        const mods = Object.entries(state.modules || {});
+        const running = mods.filter(([_,m]) => {
+          if (m.status !== 'running') return false;
+          if (m.start_time) {
+            const elapsed = now - new Date(m.start_time).getTime();
+            if (elapsed > 2 * 3600 * 1000) return false; // >2h = stale
+          }
+          return true;
+        });
+        running.forEach(([slug, m]) => runningModules.push({ track, slug, start: m.start_time }));
+      }
+
+      // Find recently completed (last 60s)
+      let recentDone = [];
+      const now = Date.now();
+      for (const [track, state] of Object.entries(trackStates)) {
+        const mods = Object.entries(state.modules || {});
+        mods.forEach(([slug, m]) => {
+          if (m.end_time) {
+            const endMs = new Date(m.end_time).getTime();
+            if (now - endMs < 60000) {
+              recentDone.push({ track, slug, status: m.status, duration: m.duration, endMs });
+            }
+          }
+        });
+      }
+      recentDone.sort((a,b) => b.endMs - a.endMs);
+
+      if (runningModules.length > 0) {
+        banner.className = 'live-banner active';
+        const rm = runningModules[0];
+        title.textContent = `Processing: ${rm.track} / ${rm.slug}`;
+        const elapsed = rm.start ? Math.round((now - new Date(rm.start).getTime()) / 1000) : 0;
+        const recent = recentDone.length > 0
+          ? ` | Last: ${recentDone[0].slug} ${recentDone[0].status === 'pass' ? '\u2705' : '\u274C'} (${Math.round(recentDone[0].duration)}s)`
+          : '';
+        detail.textContent = `Running ${elapsed}s${recent}`;
+      } else if (runningTracks.length > 0) {
+        banner.className = 'live-banner active';
+        const rt = runningTracks[0];
+        const trackInfo = tracks[rt[0]];
+        const passed = trackInfo.passed || 0;
+        const total = trackInfo.total || 0;
+        title.textContent = `Dispatched: ${rt[0]} (${passed}/${total} passed)`;
+        const recent = recentDone.length > 0
+          ? `Last completed: ${recentDone[0].slug} ${recentDone[0].status === 'pass' ? '\u2705' : '\u274C'}`
+          : 'Waiting for module updates...';
+        detail.textContent = recent;
+      } else if (dispatcherRunning) {
+        banner.className = 'live-banner active';
+        title.textContent = 'Dispatcher running — scanning for eligible tracks';
+        detail.textContent = `${Object.values(tracks).filter(t => t.state === 'DONE').length} done, ${Object.values(tracks).filter(t => t.state === 'ELIGIBLE').length} eligible, ${Object.values(tracks).filter(t => t.state === 'BLOCKED').length} blocked`;
+      } else {
+        banner.className = 'live-banner idle';
+        const done = Object.values(tracks).filter(t => t.state === 'DONE').length;
+        const total = Object.keys(tracks).length;
+        title.textContent = done === total && total > 0 ? 'All tracks complete!' : 'Dispatcher idle';
+        detail.textContent = total > 0 ? `${done}/${total} tracks done` : 'Run a scan to see track status';
+      }
     }
 
     function detectChanges(track, newState) {
@@ -917,7 +1370,6 @@
       const prevCount = previousModuleCount[track] || 0;
 
       if (completed.length > prevCount) {
-        // Find newly completed modules
         const sorted = completed.sort((a,b) =>
           new Date(b[1].end_time || 0) - new Date(a[1].end_time || 0)
         );
@@ -926,11 +1378,74 @@
           const [slug, data] = sorted[i];
           const dur = data.duration ? formatDuration(data.duration) : '';
           const type = data.status === 'pass' ? 'pass' : 'fail';
-          addLog(`[${track}] ${slug} → ${data.status.toUpperCase()} ${dur}`, type);
+          addLog(`[${track}] ${slug} -> ${data.status.toUpperCase()} ${dur}`, type);
         }
       }
 
       previousModuleCount[track] = completed.length;
+    }
+
+    // ========== DISPATCHER PANEL ==========
+    function renderDispatcher(dState) {
+      const panel = document.getElementById('dispatcher-panel');
+      if (!dState || !dState.tracks) { panel.style.display = 'none'; return; }
+      panel.style.display = 'block';
+
+      // Auto-expand on first load with data
+      const content = document.getElementById('dispatcher-content');
+      if (!content.classList.contains('visible') && !content.dataset.userToggled) {
+        content.classList.add('visible');
+        document.getElementById('dispatcher-toggle').innerHTML = '&#9660; Hide';
+      }
+
+      const stats = dState.stats || {};
+      const statsEl = document.getElementById('dispatcher-stats');
+      statsEl.innerHTML = `
+        <div class="ds-item"><div class="ds-value">${stats.total_dispatches || 0}</div><div class="ds-label">Dispatches</div></div>
+        <div class="ds-item"><div class="ds-value" style="color:#f59e0b;">${stats.total_cooldowns || 0}</div><div class="ds-label">Cooldowns</div></div>
+        <div class="ds-item"><div class="ds-value" style="color:#f97316;">${stats.total_stalls || 0}</div><div class="ds-label">Stalls</div></div>
+        <div class="ds-item"><div class="ds-value" style="color:#8b5cf6;">${stats.total_rotations || 0}</div><div class="ds-label">Rotations</div></div>
+        <div class="ds-item"><div class="ds-value" style="color:#10b981;">${Object.values(dState.tracks).filter(t => t.state === 'DONE').length}</div><div class="ds-label">Done</div></div>
+      `;
+
+      const tbody = document.getElementById('dispatcher-tbody');
+      const trackEntries = Object.entries(dState.tracks).sort((a,b) => {
+        const order = ALL_TRACKS;
+        return order.indexOf(a[0]) - order.indexOf(b[0]);
+      });
+
+      tbody.innerHTML = trackEntries.map(([track, info]) => {
+        const state = info.state || 'PENDING';
+        const dispatches = info.dispatches || 0;
+        const lastResult = info.last_result || '-';
+        const passed = info.passed ?? 0;
+        const total = info.total ?? 0;
+        const passRate = info.pass_rate ?? 0;
+        const pct = Math.round(passRate * 100);
+        const blockedBy = info.blocked_by || [];
+
+        const rateColor = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#64748b';
+        const blockedHtml = blockedBy.length > 0
+          ? `<span style="color:#94a3b8;font-size:11px;">${blockedBy.join(', ')}</span>`
+          : (state === 'BLOCKED' ? '<span style="color:#64748b;font-size:11px;">deps</span>' : '-');
+
+        return `<tr>
+          <td style="font-family:ui-monospace,monospace;font-weight:600;">${track}</td>
+          <td><span class="state-badge ${state}">${state}</span></td>
+          <td><span style="color:${rateColor};font-weight:600;">${pct}%</span> <span style="color:#64748b;font-size:11px;">${passed}/${total}</span></td>
+          <td>${dispatches}</td>
+          <td>${lastResult}</td>
+          <td>${blockedHtml}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function toggleDispatcher() {
+      const content = document.getElementById('dispatcher-content');
+      const toggle = document.getElementById('dispatcher-toggle');
+      content.dataset.userToggled = 'true';
+      const visible = content.classList.toggle('visible');
+      toggle.innerHTML = visible ? '&#9660; Hide' : '&#9654; Show';
     }
 
     // ========== OVERVIEW RENDERING ==========
@@ -940,33 +1455,65 @@
 
       ALL_TRACKS.forEach(track => {
         const state = trackStates[track];
+        const dTrack = dispatcherState?.tracks?.[track];
+        // Fix stale COOLDOWN: if cooldown_until is in the past, show as ELIGIBLE
+        let dState = dTrack?.state || '';
+        if (dState === 'COOLDOWN' && dTrack?.cooldown_until) {
+          try {
+            if (new Date(dTrack.cooldown_until) < new Date()) dState = 'ELIGIBLE';
+          } catch {}
+        }
+
         const card = document.createElement('div');
-        card.className = `overview-card ${state ? '' : 'no-data'} ${track === currentTrack ? 'active' : ''}`;
+        let classes = 'overview-card';
+        if (track === currentTrack) classes += ' active';
+        if (dState) classes += ` state-${dState}`;
+
+        // Use batch runner state if available, otherwise fall back to dispatcher scan data
+        let pass = 0, fail = 0, total = 0, running = 0, hasData = false;
 
         if (state) {
           const modules = Object.values(state.modules || {});
-          const total = modules.length;
-          const pass = modules.filter(m => m.status === 'pass').length;
-          const fail = modules.filter(m => m.status === 'fail').length;
-          const running = modules.filter(m => m.status === 'running').length;
-          const pct = total > 0 ? Math.round(((pass + fail) / total) * 100) : 0;
+          total = modules.length;
+          pass = modules.filter(m => m.status === 'pass').length;
+          fail = modules.filter(m => m.status === 'fail').length;
+          running = modules.filter(m => m.status === 'running').length;
+          hasData = true;
+        } else if (dTrack && dTrack.total > 0) {
+          // Fallback: use dispatcher's scan data (from status JSONs)
+          pass = dTrack.passed || 0;
+          fail = dTrack.failed || 0;
+          total = dTrack.total || 0;
+          hasData = true;
+        }
+
+        if (!hasData) classes += ' no-data';
+        card.className = classes;
+
+        if (hasData) {
+          const pct = total > 0 ? Math.round((pass / total) * 100) : 0;
+          const unbuilt = dTrack?.unbuilt || (total - pass - fail);
+          const badgeHtml = dState ? `<span class="state-badge ${dState}">${dState}</span>` : '';
+          const esc = escalationsByTrack[track] || 0;
+          const escHtml = esc > 0 ? `<span style="color:#fde68a;font-size:10px;font-weight:700;margin-left:4px;" title="${esc} escalated to Claude">${esc} esc</span>` : '';
 
           card.innerHTML = `
-            <div class="overview-track">${track} ${running > 0 ? '<span class="spinner"></span>' : ''}</div>
+            <div class="overview-track">${track} ${badgeHtml} ${escHtml} ${running > 0 ? '<span class="spinner"></span>' : ''}</div>
             <div class="overview-stats">
               <span class="green">${pass} pass</span>
               <span class="red">${fail} fail</span>
-              <span class="gray">${total - pass - fail} left</span>
+              <span class="gray">${unbuilt} new</span>
             </div>
             <div class="mini-progress">
               <div class="mini-progress-fill" style="width:${pct}%"></div>
             </div>
           `;
-          card.onclick = () => selectTrack(track);
+          card.onclick = () => { if (state) selectTrack(track); };
         } else {
+          const badgeHtml = dState ? `<span class="state-badge ${dState}">${dState}</span>` : '';
           card.innerHTML = `
-            <div class="overview-track">${track}</div>
-            <div class="overview-stats"><span class="gray">No batch data</span></div>
+            <div class="overview-track">${track} ${badgeHtml}</div>
+            <div class="overview-stats"><span class="gray">No data</span></div>
             <div class="mini-progress"><div class="mini-progress-fill" style="width:0%"></div></div>
           `;
         }
@@ -983,8 +1530,13 @@
       document.getElementById('stats-row').style.display = 'grid';
       document.getElementById('main-content').style.display = 'grid';
 
-      renderOverview();  // Update active state
+      renderOverview();
       renderTrackDetail(track);
+
+      // Load detailed failures for this track
+      loadTrackFailures(track).then(failures => {
+        trackFailureDetails[track] = failures;
+      });
     }
 
     // ========== TRACK DETAIL ==========
@@ -1018,7 +1570,6 @@
         failEl.textContent = `${total - completed} remaining`;
         failEl.style.color = '';
       }
-      // Show abort reason if present
       if (state.abort_reason) {
         failEl.textContent = `ABORTED: ${state.abort_reason}`;
         failEl.style.color = '#ef4444';
@@ -1053,8 +1604,6 @@
         document.getElementById('active-mode').textContent = data.mode || 'fix';
         document.getElementById('active-start').textContent =
           new Date(data.start_time).toLocaleTimeString();
-
-        // Elapsed timer
         activeStartTime = new Date(data.start_time);
         updateElapsed();
         if (elapsedTimer) clearInterval(elapsedTimer);
@@ -1064,15 +1613,12 @@
         if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null; }
       }
 
-      // Module grid
       renderModuleGrid(modules);
-
-      // Module count
       document.getElementById('module-count').textContent = `(${total} total)`;
 
-      // Failures - check for failed modules
+      // Failures
       const failures = modules.filter(([_,m]) => m.status === 'fail');
-      renderFailures(failures);
+      renderFailures(failures, track);
     }
 
     function updateElapsed() {
@@ -1089,7 +1635,6 @@
       const grid = document.getElementById('module-grid');
       grid.innerHTML = '';
 
-      // Sort by start_time to show in processing order
       const sorted = modules.sort((a, b) => {
         const ta = new Date(a[1].start_time || '2099-01-01');
         const tb = new Date(b[1].start_time || '2099-01-01');
@@ -1099,7 +1644,6 @@
       sorted.forEach(([slug, data]) => {
         const cell = document.createElement('div');
         cell.className = `module-cell ${data.status || 'pending'}`;
-
         const shortSlug = slug.length > 14 ? slug.slice(0, 12) + '..' : slug;
         const dur = data.duration ? formatDuration(data.duration) : '';
 
@@ -1110,7 +1654,6 @@
 
         cell.addEventListener('mouseenter', (e) => showDetail(e, slug, data));
         cell.addEventListener('mouseleave', hideDetail);
-
         grid.appendChild(cell);
       });
     }
@@ -1123,16 +1666,9 @@
       let rows = '';
       rows += detailRow('Status', data.status?.toUpperCase() || 'PENDING');
       rows += detailRow('Mode', data.mode || '-');
-      if (data.start_time) {
-        rows += detailRow('Started', new Date(data.start_time).toLocaleTimeString());
-      }
-      if (data.end_time) {
-        rows += detailRow('Ended', new Date(data.end_time).toLocaleTimeString());
-      }
-      if (data.duration) {
-        rows += detailRow('Duration', formatDuration(data.duration));
-      }
-
+      if (data.start_time) rows += detailRow('Started', new Date(data.start_time).toLocaleTimeString());
+      if (data.end_time) rows += detailRow('Ended', new Date(data.end_time).toLocaleTimeString());
+      if (data.duration) rows += detailRow('Duration', formatDuration(data.duration));
       document.getElementById('detail-rows').innerHTML = rows;
 
       const rect = event.target.getBoundingClientRect();
@@ -1150,7 +1686,7 @@
     }
 
     // ========== FAILURE QUEUE ==========
-    function renderFailures(failures) {
+    function renderFailures(failures, track) {
       const list = document.getElementById('failure-list');
       document.getElementById('failure-badge').textContent = failures.length;
 
@@ -1160,14 +1696,215 @@
       }
 
       list.innerHTML = failures.map(([slug, data]) => `
-        <div class="failure-item">
+        <div class="failure-item" onclick="showFailureDetail('${track}', '${slug}')">
           <div class="failure-slug">${slug}</div>
           <div class="failure-meta">
-            ${data.duration ? formatDuration(data.duration) : '-'} ·
+            ${data.duration ? formatDuration(data.duration) : '-'} &middot;
             Mode: ${data.mode || 'fix'}
           </div>
         </div>
       `).join('');
+    }
+
+    // ========== ESCALATIONS ==========
+    function renderEscalations(escalations) {
+      const list = document.getElementById('escalation-list');
+      document.getElementById('escalation-badge').textContent = escalations.length.toString();
+
+      if (escalations.length === 0) {
+        list.innerHTML = '<div class="empty-state">No escalations</div>';
+        return;
+      }
+
+      list.innerHTML = escalations.map(esc => {
+        const track = esc.track || '?';
+        const slug = esc.slug || '?';
+        const iters = esc.iterations_used || '?';
+        const gates = Object.keys(esc.failed_gates || {});
+        const gateStr = gates.length > 0 ? gates.join(', ') : 'content gates';
+        const blocking = (esc.blocking_issues || []).join(', ') || 'none';
+        const wc = esc.word_count || {};
+        const wcStr = wc.actual ? `${wc.actual}/${wc.target}` : '';
+        const ts = esc.timestamp ? new Date(esc.timestamp).toLocaleString() : '';
+
+        return `
+          <div class="escalation-item" onclick="showFailureDetail('${track}', '${slug}')">
+            <div>
+              <span class="escalation-slug">${track}/${slug}</span>
+              <span class="escalation-status pending">Waiting for Claude</span>
+            </div>
+            <div class="escalation-meta">
+              Gates: ${gateStr} &middot; ${iters} iters${wcStr ? ` &middot; WC: ${wcStr}` : ''}
+            </div>
+            <div class="escalation-meta">
+              ${blocking !== 'none' ? `Blocking: ${blocking} &middot; ` : ''}${ts}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ========== FAILURE DETAIL MODAL ==========
+    function showFailureDetail(track, slug) {
+      const details = trackFailureDetails[track] || [];
+      const detail = details.find(d => d.slug === slug);
+
+      document.getElementById('modal-slug').textContent = `${track} / ${slug}`;
+
+      if (!detail) {
+        document.getElementById('modal-body').innerHTML = `
+          <div class="empty-state">
+            No detailed failure data available.<br>
+            <span style="font-size:11px;color:#64748b;">Detailed failures are written to batch_state/failures/${track}/${slug}.json</span>
+          </div>`;
+        document.getElementById('failure-modal').classList.add('visible');
+        return;
+      }
+
+      let html = '';
+
+      // Meta
+      html += '<div class="modal-section"><h4>Details</h4><div class="modal-meta">';
+      html += metaItem('Track', detail.track || track);
+      html += metaItem('Slug', detail.slug || slug);
+      html += metaItem('Iterations', detail.iterations_used || '-');
+      html += metaItem('Word Count', detail.word_count || '-');
+      if (detail.timestamp) html += metaItem('Timestamp', new Date(detail.timestamp).toLocaleString());
+      if (detail.dryness_flags?.length) html += metaItem('Dryness Flags', detail.dryness_flags.length);
+      html += '</div></div>';
+
+      // Failed gates
+      const gates = detail.failed_gates || {};
+      const gateEntries = Object.entries(gates);
+      if (gateEntries.length > 0) {
+        html += '<div class="modal-section"><h4>Failed Gates</h4>';
+        html += '<table class="gates-table"><thead><tr><th>Gate</th><th>Status</th><th>Message</th></tr></thead><tbody>';
+        gateEntries.forEach(([gate, info]) => {
+          const status = info.status || 'fail';
+          const badge = `<span class="gate-badge ${status}">${status}</span>`;
+          const msg = info.message || info.violations?.join(', ') || '-';
+          html += `<tr><td style="font-family:ui-monospace,monospace;">${gate}</td><td>${badge}</td><td style="font-size:11px;color:#94a3b8;">${msg}</td></tr>`;
+        });
+        html += '</tbody></table></div>';
+      }
+
+      // Actions tried
+      const actions = detail.actions_tried || [];
+      if (actions.length > 0) {
+        html += '<div class="modal-section"><h4>Actions Tried</h4>';
+        actions.forEach((action, i) => {
+          const cls = action.result === 'success' ? 'success' : 'failure';
+          html += `<div class="timeline-item ${cls}">
+            <strong>Iteration ${i + 1}:</strong> ${action.action || action.description || JSON.stringify(action)}
+          </div>`;
+        });
+        html += '</div>';
+      }
+
+      // Blocking issues
+      const issues = detail.blocking_issues || [];
+      if (issues.length > 0) {
+        html += '<div class="modal-section"><h4>Blocking Issues</h4>';
+        issues.forEach(issue => {
+          html += `<div class="blocking-issue">${typeof issue === 'string' ? issue : JSON.stringify(issue)}</div>`;
+        });
+        html += '</div>';
+      }
+
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('failure-modal').classList.add('visible');
+    }
+
+    function metaItem(label, value) {
+      return `<div class="modal-meta-item"><span class="label">${label}</span><span class="value">${value}</span></div>`;
+    }
+
+    function closeModal(e) {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.remove('visible');
+      }
+    }
+
+    // ========== API USAGE ==========
+    function renderApiUsage(summaries) {
+      const el = document.getElementById('api-usage-content');
+      const tracks = Object.entries(summaries);
+      if (tracks.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="color:#475569;font-size:12px;">No usage data yet.</div>';
+        return;
+      }
+
+      let totalCalls = 0, totalInput = 0, totalOutput = 0, totalCached = 0, totalLatency = 0;
+      tracks.forEach(([_, s]) => {
+        totalCalls += s.total_calls || 0;
+        totalInput += s.total_input_tokens || 0;
+        totalOutput += s.total_output_tokens || 0;
+        totalCached += s.total_cached_tokens || 0;
+        totalLatency += s.total_latency_ms || 0;
+      });
+
+      const fmtTokens = (n) => n > 1000000 ? `${(n/1000000).toFixed(1)}M` : n > 1000 ? `${(n/1000).toFixed(1)}K` : n.toString();
+      const avgLatency = totalCalls > 0 ? Math.round(totalLatency / totalCalls) : 0;
+
+      let html = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;">
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#3b82f6;">${totalCalls}</div><div style="font-size:10px;color:#64748b;">API Calls</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#8b5cf6;">${fmtTokens(totalInput)}</div><div style="font-size:10px;color:#64748b;">Input Tokens</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#f59e0b;">${fmtTokens(totalOutput)}</div><div style="font-size:10px;color:#64748b;">Output Tokens</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#10b981;">${fmtTokens(totalCached)}</div><div style="font-size:10px;color:#64748b;">Cached</div></div>
+          <div style="text-align:center;"><div style="font-size:20px;font-weight:700;color:#64748b;">${(avgLatency/1000).toFixed(1)}s</div><div style="font-size:10px;color:#64748b;">Avg Latency</div></div>
+        </div>
+        <table style="width:100%;font-size:11px;border-collapse:collapse;">
+          <tr style="color:#64748b;border-bottom:1px solid #1e293b;">
+            <th style="text-align:left;padding:4px;">Track</th>
+            <th style="text-align:right;padding:4px;">Calls</th>
+            <th style="text-align:right;padding:4px;">Input</th>
+            <th style="text-align:right;padding:4px;">Output</th>
+            <th style="text-align:right;padding:4px;">Cached</th>
+          </tr>`;
+
+      tracks.sort((a,b) => (b[1].total_calls||0) - (a[1].total_calls||0));
+      tracks.forEach(([track, s]) => {
+        html += `<tr style="border-bottom:1px solid #0f172a;">
+          <td style="padding:4px;color:#94a3b8;">${track}</td>
+          <td style="text-align:right;padding:4px;">${s.total_calls||0}</td>
+          <td style="text-align:right;padding:4px;color:#8b5cf6;">${fmtTokens(s.total_input_tokens||0)}</td>
+          <td style="text-align:right;padding:4px;color:#f59e0b;">${fmtTokens(s.total_output_tokens||0)}</td>
+          <td style="text-align:right;padding:4px;color:#10b981;">${fmtTokens(s.total_cached_tokens||0)}</td>
+        </tr>`;
+      });
+      html += '</table>';
+
+      // Per-account breakdown
+      const accounts = {};
+      tracks.forEach(([_, s]) => {
+        Object.entries(s.by_account || {}).forEach(([acct, data]) => {
+          if (!accounts[acct]) accounts[acct] = {calls:0, input:0, output:0};
+          accounts[acct].calls += data.calls || 0;
+          accounts[acct].input += data.input_tokens || 0;
+          accounts[acct].output += data.output_tokens || 0;
+        });
+      });
+      const acctEntries = Object.entries(accounts);
+      if (acctEntries.length > 0) {
+        html += `<div style="margin-top:12px;padding-top:8px;border-top:1px solid #1e293b;">
+          <div style="font-size:10px;color:#64748b;margin-bottom:6px;">By Account</div>`;
+        acctEntries.sort((a,b) => b[1].calls - a[1].calls);
+        acctEntries.forEach(([acct, data]) => {
+          const short = acct.split('@')[0];
+          html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:#94a3b8;">
+            <span>${short}</span>
+            <span>${data.calls} calls &middot; ${fmtTokens(data.input)} in &middot; ${fmtTokens(data.output)} out</span>
+          </div>`;
+        });
+        html += '</div>';
+      }
+      el.innerHTML = html;
+
+      const lastUpdate = tracks.map(([_,s]) => s.last_updated).filter(Boolean).sort().pop();
+      document.getElementById('usage-updated').textContent = lastUpdate
+        ? `Last: ${new Date(lastUpdate).toLocaleTimeString()}`
+        : '\u2014';
     }
 
     // ========== EVENT LOG ==========
@@ -1188,21 +1925,54 @@
 
       document.getElementById('log-count').textContent = `${logEntries.length} events`;
 
-      if (wasAtBottom) {
-        output.scrollTop = output.scrollHeight;
-      }
+      if (wasAtBottom) output.scrollTop = output.scrollHeight;
     }
 
     // ========== CLI COMMAND GENERATOR ==========
-    function generateCmd() {
-      const track = document.getElementById('cli-track').value;
-      const mode = document.getElementById('cli-mode').value;
-      const from = document.getElementById('cli-from').value;
-      const to = document.getElementById('cli-to').value;
+    function populateTrackDropdown() {
+      const sel = document.getElementById('cli-track');
+      sel.innerHTML = ALL_TRACKS.map(t => `<option value="${t}">${t}</option>`).join('');
+    }
 
-      let cmd = `.venv/bin/python scripts/batch_gemini_runner.py ${track}`;
-      cmd += ` --range ${from}-${to}`;
-      cmd += ` --mode ${mode}`;
+    function onToolChange() {
+      const tool = document.getElementById('cli-tool').value;
+      const isDispatcher = tool === 'dispatcher';
+
+      // Show/hide runner-specific fields
+      document.getElementById('cli-mode-group').style.display = isDispatcher ? 'none' : '';
+      document.getElementById('cli-from-group').style.display = isDispatcher ? 'none' : '';
+      document.getElementById('cli-to-group').style.display = isDispatcher ? 'none' : '';
+
+      // Show/hide dispatcher-specific fields
+      document.getElementById('cli-dispatcher-fields').classList.toggle('visible', isDispatcher);
+
+      // Adjust grid columns
+      document.getElementById('cli-form').style.gridTemplateColumns = isDispatcher
+        ? '1fr 1fr auto'
+        : '1fr 1fr 1fr 80px 80px auto';
+    }
+
+    function generateCmd() {
+      const tool = document.getElementById('cli-tool').value;
+      const track = document.getElementById('cli-track').value;
+
+      let cmd;
+      if (tool === 'dispatcher') {
+        const subcmd = document.getElementById('cli-subcmd').value;
+        const flags = document.getElementById('cli-flags').value;
+        const trackFilter = document.getElementById('cli-track-filter').value;
+
+        cmd = `.venv/bin/python scripts/batch_dispatcher.py ${subcmd}`;
+        if (subcmd === 'dispatch-one') cmd += ` --track ${track}`;
+        if (trackFilter === 'include') cmd += ` --include-tracks ${track}`;
+        else if (trackFilter === 'exclude') cmd += ` --exclude-tracks ${track}`;
+        if (flags) cmd += ` ${flags}`;
+      } else {
+        const mode = document.getElementById('cli-mode').value;
+        const from = document.getElementById('cli-from').value;
+        const to = document.getElementById('cli-to').value;
+        cmd = `.venv/bin/python scripts/batch_gemini_runner.py ${track} --range ${from}-${to} --mode ${mode}`;
+      }
 
       document.getElementById('cli-cmd').textContent = cmd;
       document.getElementById('cli-output').style.display = 'flex';
@@ -1214,10 +1984,7 @@
         const btn = document.getElementById('copy-btn');
         btn.textContent = 'Copied!';
         btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 2000);
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
       });
     }
 
@@ -1233,17 +2000,304 @@
       return `${hrs}h ${rmins}m`;
     }
 
-    // ========== INIT ==========
-    async function init() {
-      // Check if fetch works (are we served by HTTP?)
-      try {
-        await fetch(`${STATE_BASE}/state_a1.json`);
-      } catch (e) {
-        document.getElementById('server-note').style.display = 'block';
+    // ========== BROWSER NOTIFICATIONS ==========
+    let notificationsEnabled = false;
+
+    function requestNotifPermission() {
+      if (!('Notification' in window)) {
+        addLog('Browser notifications not supported', 'fail');
+        return;
       }
 
+      if (Notification.permission === 'granted') {
+        notificationsEnabled = !notificationsEnabled;
+        updateNotifBell();
+        addLog(`Notifications ${notificationsEnabled ? 'enabled' : 'disabled'}`, 'info');
+        return;
+      }
+
+      Notification.requestPermission().then(perm => {
+        if (perm === 'granted') {
+          notificationsEnabled = true;
+          updateNotifBell();
+          addLog('Browser notifications enabled', 'pass');
+        } else {
+          addLog('Notification permission denied', 'fail');
+        }
+      });
+    }
+
+    function updateNotifBell() {
+      const bell = document.getElementById('notif-bell');
+      bell.classList.toggle('enabled', notificationsEnabled);
+      bell.title = notificationsEnabled ? 'Notifications ON (click to disable)' : 'Enable browser notifications';
+    }
+
+    function sendNotification(title, body) {
+      if (!notificationsEnabled || Notification.permission !== 'granted') return;
+      try {
+        new Notification(title, {
+          body,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🇺🇦</text></svg>',
+        });
+      } catch {}
+    }
+
+    // Track completion tracking for notifications
+    let prevTrackCompletion = {};
+
+    function checkTrackCompletion() {
+      ALL_TRACKS.forEach(track => {
+        const state = trackStates[track];
+        if (!state) return;
+        const modules = Object.values(state.modules || {});
+        const total = modules.length;
+        if (total === 0) return;
+        const completed = modules.filter(m => m.status === 'pass' || m.status === 'fail').length;
+        const pct = Math.round((completed / total) * 100);
+        const prevPct = prevTrackCompletion[track] || 0;
+
+        if (pct === 100 && prevPct < 100) {
+          const pass = modules.filter(m => m.status === 'pass').length;
+          sendNotification(`${track.toUpperCase()} Complete!`, `${pass}/${total} passed, ${total - pass} failed`);
+          addLog(`[${track}] TRACK COMPLETE: ${pass}/${total} passed`, 'pass');
+        } else if (pct >= 50 && prevPct < 50) {
+          sendNotification(`${track.toUpperCase()} 50%`, `${completed}/${total} modules processed`);
+        }
+
+        prevTrackCompletion[track] = pct;
+      });
+    }
+
+    // ========== WEBSOCKET ==========
+    let ws = null;
+    let wsReconnectTimer = null;
+    let wsConnected = false;
+
+    function connectWebSocket() {
+      if (!apiMode) return;
+
+      const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${location.host}/ws/batch`;
+
+      try {
+        ws = new WebSocket(wsUrl);
+      } catch {
+        return;
+      }
+
+      ws.onopen = () => {
+        wsConnected = true;
+        updateWsBadge();
+        addLog('WebSocket connected', 'pass');
+        if (wsReconnectTimer) { clearTimeout(wsReconnectTimer); wsReconnectTimer = null; }
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === 'changes' && msg.changed?.length) {
+            handleWsChanges(msg.changed);
+          }
+        } catch {}
+      };
+
+      ws.onclose = () => {
+        wsConnected = false;
+        updateWsBadge();
+        // Reconnect after 5s
+        if (!wsReconnectTimer) {
+          wsReconnectTimer = setTimeout(connectWebSocket, 5000);
+        }
+      };
+
+      ws.onerror = () => {
+        wsConnected = false;
+        updateWsBadge();
+      };
+    }
+
+    function updateWsBadge() {
+      const badge = document.getElementById('ws-badge');
+      if (wsConnected) {
+        badge.textContent = 'WS';
+        badge.className = 'ws-badge connected';
+      } else {
+        badge.textContent = 'WS OFF';
+        badge.className = 'ws-badge disconnected';
+      }
+    }
+
+    async function handleWsChanges(changed) {
+      // Refresh only changed tracks
+      for (const item of changed) {
+        if (item === 'dispatcher') {
+          const dState = await loadDispatcherState();
+          if (dState) { dispatcherState = dState; renderDispatcher(dState); }
+        } else if (item === 'failures') {
+          // Failure queue changed - reload if viewing a track
+          if (currentTrack) {
+            const failures = await loadTrackFailures(currentTrack);
+            trackFailureDetails[currentTrack] = failures;
+          }
+        } else {
+          // Track state changed
+          const state = await loadTrackState(item);
+          if (state) {
+            trackStates[item] = state;
+            detectChanges(item, state);
+          }
+        }
+      }
+
+      renderOverview();
+      if (currentTrack && trackStates[currentTrack]) {
+        renderTrackDetail(currentTrack);
+      }
+      checkTrackCompletion();
+
+      document.getElementById('last-refresh').textContent =
+        `Updated ${new Date().toLocaleTimeString()} (ws)`;
+    }
+
+    // ========== DISPATCHER CONTROL ==========
+    let dispatcherRunning = false;
+    let dispatcherPid = null;
+
+    async function checkDispatcherRunning() {
+      if (!apiMode) return;
+      try {
+        const res = await fetch('/api/batch/dispatcher/running');
+        if (res.ok) {
+          const data = await res.json();
+          dispatcherRunning = data.running;
+          dispatcherPid = data.pid || null;
+          updateDispatcherButton();
+        }
+      } catch {}
+    }
+
+    function updateDispatcherButton() {
+      const btn = document.getElementById('btn-dispatcher');
+      const pidLabel = document.getElementById('dispatcher-pid-label');
+
+      if (dispatcherRunning) {
+        btn.textContent = 'Stop Dispatcher';
+        btn.className = 'btn-dispatcher stop';
+        pidLabel.textContent = `PID ${dispatcherPid}`;
+      } else {
+        btn.textContent = 'Start Dispatcher';
+        btn.className = 'btn-dispatcher start';
+        pidLabel.textContent = '';
+      }
+    }
+
+    async function toggleDispatcherProcess() {
+      const btn = document.getElementById('btn-dispatcher');
+      btn.disabled = true;
+
+      try {
+        if (dispatcherRunning) {
+          const res = await fetch('/api/batch/dispatcher/stop', { method: 'POST' });
+          if (res.ok) {
+            const data = await res.json();
+            addLog(`Dispatcher stopped (PID ${data.pid})`, 'diag');
+            dispatcherRunning = false;
+            dispatcherPid = null;
+          }
+        } else {
+          const res = await fetch('/api/batch/dispatcher/start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ one_shot: false }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'already_running') {
+              addLog(`Dispatcher already running (PID ${data.pid})`, 'diag');
+            } else {
+              addLog(`Dispatcher started (PID ${data.pid})`, 'pass');
+            }
+            dispatcherRunning = true;
+            dispatcherPid = data.pid;
+          }
+        }
+      } catch (err) {
+        addLog(`Dispatcher control error: ${err.message}`, 'fail');
+      }
+
+      btn.disabled = false;
+      updateDispatcherButton();
+    }
+
+    async function triggerScan() {
+      if (!apiMode) return;
+      const btn = document.getElementById('btn-scan');
+      btn.disabled = true;
+      btn.classList.add('scanning');
+      btn.textContent = 'Cleaning...';
+
+      try {
+        // Step 1: Cleanup stale state first
+        const cleanRes = await fetch('/api/batch/cleanup', { method: 'POST' });
+        if (cleanRes.ok) {
+          const cleanData = await cleanRes.json();
+          const c = cleanData.cleaned || {};
+          const total = (c.stale_modules?.length || 0) + (c.stale_locks?.length || 0);
+          if (total > 0) {
+            addLog(`Cleaned ${total} stale items: ${c.stale_modules?.join(', ') || ''} ${c.stale_locks?.join(', ') || ''}`, 'diag');
+          }
+        }
+
+        // Step 2: Run scan
+        btn.textContent = 'Scanning...';
+        addLog('Triggering dispatcher scan...', 'diag');
+        const res = await fetch('/api/batch/dispatcher/scan', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.state) {
+            dispatcherState = data.state;
+            renderDispatcher(data.state);
+          }
+          addLog('Scan complete — dispatcher state updated', 'pass');
+          await refreshAll();
+        } else {
+          addLog('Scan failed: ' + res.statusText, 'fail');
+        }
+      } catch (err) {
+        addLog('Scan error: ' + err.message, 'fail');
+      }
+
+      btn.disabled = false;
+      btn.classList.remove('scanning');
+      btn.textContent = '\u21BB Scan';
+    }
+
+    // ========== INIT ==========
+    async function init() {
+      await detectApiMode();
+
+      if (!apiMode) {
+        document.getElementById('server-note').style.display = 'block';
+        document.getElementById('btn-scan').style.display = 'none';
+      } else {
+        // Show dispatcher controls only in API mode
+        document.getElementById('dispatcher-ctrl').style.display = 'flex';
+        document.getElementById('btn-scan').style.display = 'inline-block';
+        await checkDispatcherRunning();
+      }
+
+      // Enable notifications if already permitted
+      if ('Notification' in window && Notification.permission === 'granted') {
+        notificationsEnabled = true;
+        updateNotifBell();
+      }
+
+      populateTrackDropdown();
       addLog('Batch Monitor started. Scanning for track state files...', 'info');
+      addLog(`Mode: ${apiMode ? 'API (FastAPI)' : 'File (direct)'}`, 'info');
       await refreshAll();
+      checkTrackCompletion();
 
       // Auto-select first track with data
       const firstTrack = ALL_TRACKS.find(t => trackStates[t]);
@@ -1252,8 +2306,17 @@
         addLog(`Auto-selected track: ${firstTrack}`, 'info');
       }
 
-      // Auto-refresh
-      setInterval(refreshAll, REFRESH_INTERVAL);
+      // Connect WebSocket (supplements polling, doesn't replace it)
+      connectWebSocket();
+
+      // Always poll — WS supplements but doesn't replace polling
+      // When WS is connected, poll less frequently (15s); otherwise every 5s
+      setInterval(() => {
+        refreshAll().then(checkTrackCompletion);
+      }, REFRESH_INTERVAL);
+
+      // Periodic dispatcher status check
+      setInterval(checkDispatcherRunning, 10000);
     }
 
     init();

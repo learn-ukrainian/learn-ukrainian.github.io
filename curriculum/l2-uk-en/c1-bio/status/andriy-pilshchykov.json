@@ -2,14 +2,14 @@
   "module": "andriy-pilshchykov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:24.889951Z",
+  "last_audit": "2026-02-11T00:44:38.938688Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T12:29:13.794226Z",
     "meta": "2026-02-09T15:59:44.245498Z",
     "activities": "2026-02-09T11:18:21.132658Z",
     "vocabulary": "2026-02-09T12:25:33.309380Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.245220Z"
   },
   "gates": {
     "meta": {

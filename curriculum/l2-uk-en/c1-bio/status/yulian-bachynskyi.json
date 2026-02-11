@@ -2,14 +2,14 @@
   "module": "yulian-bachynskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:35.481276Z",
+  "last_audit": "2026-02-11T00:43:50.178571Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.310026Z",
     "meta": "2026-02-09T15:59:44.213792Z",
     "activities": "2026-02-07T10:03:51.565211Z",
     "vocabulary": "2026-02-07T10:03:51.617210Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.213684Z"
   },
   "gates": {
     "meta": {

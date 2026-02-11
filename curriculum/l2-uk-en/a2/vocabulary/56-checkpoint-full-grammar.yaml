@@ -13,3 +13,13 @@ items:
   translation: living room (traditional), light room
   pos: noun
   gender: f
+- lemma: орудний
+  ipa: /ɔrˈudnɪj/
+  translation: instrumental (grammatical case)
+  pos: adj
+  gender: m
+- lemma: називний
+  ipa: /nɐzɪwnˈɪj/
+  translation: nominative (grammatical case)
+  pos: adj
+  gender: m

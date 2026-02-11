@@ -2,14 +2,14 @@
   "module": "pavlo-sheremet",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:20.423265Z",
+  "last_audit": "2026-02-11T00:44:34.440072Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T16:03:05.498530Z",
     "meta": "2026-02-09T15:59:44.242586Z",
     "activities": "2026-02-09T16:03:35.007831Z",
     "vocabulary": "2026-02-09T16:03:55.759181Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.242423Z"
   },
   "gates": {
     "meta": {

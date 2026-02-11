@@ -2,14 +2,14 @@
   "module": "87-novyny-yak-chytaty",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:56.548141Z",
+  "last_audit": "2026-02-10T23:31:19.901514Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T01:08:11.875840Z",
-    "meta": "2026-01-26T15:44:41.731443Z",
-    "activities": "2026-01-27T20:13:18.389718Z",
-    "vocabulary": "2026-01-25T18:00:40.754182Z",
-    "plan": "2026-01-30T01:08:08.064627Z"
+    "meta": "2026-02-07T10:03:51.674458Z",
+    "activities": "2026-02-07T10:03:51.730565Z",
+    "vocabulary": "2026-02-07T10:03:51.761199Z",
+    "plan": "2026-02-07T10:38:52.899636Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

@@ -17,13 +17,14 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from .config import (
+    BATCH_STATE_DIR,
     CURRICULUM_ROOT,
     MESSAGE_DB,
     PLAYGROUNDS_DIR,
@@ -76,6 +77,15 @@ def validate_slug(slug: str) -> bool:
 class ActivitySave(BaseModel):
     """Request to save activities to a module."""
     activities: list
+
+
+class DispatcherStartRequest(BaseModel):
+    """Request to start the batch dispatcher."""
+    one_shot: bool = False
+    dry_run: bool = False
+    track: Optional[str] = None
+    include_tracks: Optional[str] = None
+    exclude_tracks: Optional[str] = None
 
 
 # ==================== HELPERS ====================
@@ -604,6 +614,392 @@ async def save_activities(level: str, slug: str, request: ActivitySave):
         raise HTTPException(status_code=500, detail=f"Error saving activities: {e}")
 
 
+# ==================== BATCH ENDPOINTS ====================
+
+
+VALID_TRACKS = {
+    "a1", "a2", "b1", "b2", "c1", "c2",
+    "b2-hist", "c1-bio", "c1-hist", "lit",
+    "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
+    "oes", "ruth", "b2-pro", "c1-pro",
+}
+
+
+def validate_track(track: str) -> bool:
+    """Validate track name."""
+    return track in VALID_TRACKS
+
+
+@app.get("/api/batch/dispatcher")
+async def get_dispatcher_state():
+    """Get full dispatcher state (tracks, stats, history)."""
+    state_file = BATCH_STATE_DIR / "dispatcher_state.json"
+    if not state_file.exists():
+        raise HTTPException(status_code=404, detail="Dispatcher state not found")
+    try:
+        with open(state_file) as f:
+            return json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading dispatcher state: {e}")
+
+
+@app.get("/api/batch/state/{track}")
+async def get_batch_track_state(track: str):
+    """Get batch state for a specific track."""
+    if not validate_track(track):
+        raise HTTPException(status_code=400, detail=f"Invalid track: {track}")
+    state_file = BATCH_STATE_DIR / f"state_{track}.json"
+    if not state_file.exists():
+        raise HTTPException(status_code=404, detail=f"No batch state for track '{track}'")
+    try:
+        with open(state_file) as f:
+            return json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading track state: {e}")
+
+
+@app.get("/api/batch/failures")
+async def get_failure_queue():
+    """Get the global failure queue."""
+    queue_file = BATCH_STATE_DIR / "failure_queue.json"
+    if not queue_file.exists():
+        return []
+    try:
+        with open(queue_file) as f:
+            return json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading failure queue: {e}")
+
+
+@app.get("/api/batch/failures/{track}")
+async def get_track_failures(track: str):
+    """Get detailed failure records for a specific track."""
+    if not validate_track(track):
+        raise HTTPException(status_code=400, detail=f"Invalid track: {track}")
+    failures_dir = BATCH_STATE_DIR / "failures" / track
+    if not failures_dir.exists():
+        return []
+    results = []
+    for f in sorted(failures_dir.glob("*.json")):
+        try:
+            with open(f) as fh:
+                results.append(json.load(fh))
+        except Exception:
+            pass
+    return results
+
+
+@app.get("/api/batch/escalations")
+async def get_escalations():
+    """Get all modules escalated to Claude across all tracks."""
+    failures_dir = BATCH_STATE_DIR / "failures"
+    if not failures_dir.exists():
+        return []
+    results = []
+    for track_dir in sorted(failures_dir.iterdir()):
+        if not track_dir.is_dir():
+            continue
+        for f in sorted(track_dir.glob("*.json")):
+            try:
+                with open(f) as fh:
+                    data = json.load(fh)
+                    if data.get("escalated"):
+                        results.append(data)
+            except Exception:
+                pass
+    return results
+
+
+@app.get("/api/batch/usage")
+async def get_batch_usage():
+    """Get API usage summaries for all tracks."""
+    usage_dir = BATCH_STATE_DIR / "api_usage"
+    if not usage_dir.exists():
+        return {}
+    summaries = {}
+    for f in sorted(usage_dir.glob("summary_*.json")):
+        track = f.stem.replace("summary_", "")
+        try:
+            with open(f) as fh:
+                summaries[track] = json.load(fh)
+        except Exception:
+            pass
+    return summaries
+
+
+@app.get("/api/batch/health")
+async def get_batch_health():
+    """Get batch system health: lock status, running tracks, last activity."""
+    locks_dir = BATCH_STATE_DIR / "locks"
+    running_tracks = []
+    if locks_dir.exists():
+        for lock_file in locks_dir.glob("*.lock"):
+            track = lock_file.stem
+            try:
+                pid = lock_file.read_text().strip()
+                running_tracks.append({"track": track, "pid": pid})
+            except Exception:
+                pass
+
+    # Find last activity across all state files
+    last_activity = None
+    for state_file in BATCH_STATE_DIR.glob("state_*.json"):
+        try:
+            mtime = state_file.stat().st_mtime
+            ts = datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat()
+            if last_activity is None or ts > last_activity:
+                last_activity = ts
+        except Exception:
+            pass
+
+    # Check dispatcher state exists
+    dispatcher_exists = (BATCH_STATE_DIR / "dispatcher_state.json").exists()
+
+    return {
+        "status": "ok",
+        "dispatcher_state_exists": dispatcher_exists,
+        "running_tracks": running_tracks,
+        "last_activity": last_activity,
+        "batch_state_dir_exists": BATCH_STATE_DIR.exists(),
+    }
+
+
+# ==================== DISPATCHER CONTROL ====================
+
+
+# Track running dispatcher process
+_dispatcher_process = None
+
+
+@app.post("/api/batch/dispatcher/start")
+async def start_dispatcher(request: DispatcherStartRequest):
+    """Start the batch dispatcher as a background process."""
+    global _dispatcher_process
+    if _dispatcher_process and _dispatcher_process.poll() is None:
+        return {"status": "already_running", "pid": _dispatcher_process.pid}
+
+    cmd = [".venv/bin/python", "scripts/batch_dispatcher.py", "run"]
+    if request.one_shot:
+        cmd.append("--one-shot")
+    if request.dry_run:
+        cmd.append("--dry-run")
+    if request.track:
+        cmd.extend(["--track", request.track])
+    if request.include_tracks:
+        cmd.extend(["--include-tracks", request.include_tracks])
+    if request.exclude_tracks:
+        cmd.extend(["--exclude-tracks", request.exclude_tracks])
+
+    # Log dispatcher output to file so it's observable
+    log_dir = PROJECT_ROOT / "logs"
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / "dispatcher.log"
+    fh = open(log_file, "a")
+    fh.write(f"\n{'='*60}\n")
+    fh.write(f"Started: {datetime.now(timezone.utc).isoformat()}\n")
+    fh.write(f"Command: {' '.join(cmd)}\n")
+    fh.write(f"{'='*60}\n")
+    fh.flush()
+
+    _dispatcher_process = subprocess.Popen(
+        cmd,
+        cwd=PROJECT_ROOT,
+        stdout=fh,
+        stderr=subprocess.STDOUT,
+    )
+
+    return {
+        "status": "started",
+        "pid": _dispatcher_process.pid,
+        "cmd": " ".join(cmd),
+        "log_file": str(log_file),
+    }
+
+
+@app.post("/api/batch/dispatcher/stop")
+async def stop_dispatcher():
+    """Stop the running batch dispatcher."""
+    global _dispatcher_process
+    if not _dispatcher_process or _dispatcher_process.poll() is not None:
+        return {"status": "not_running"}
+
+    pid = _dispatcher_process.pid
+    _dispatcher_process.terminate()
+    try:
+        _dispatcher_process.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        _dispatcher_process.kill()
+
+    _dispatcher_process = None
+    return {"status": "stopped", "pid": pid}
+
+
+@app.get("/api/batch/dispatcher/running")
+async def dispatcher_running():
+    """Check if the dispatcher is currently running."""
+    if _dispatcher_process and _dispatcher_process.poll() is None:
+        return {"running": True, "pid": _dispatcher_process.pid}
+    return {"running": False}
+
+
+@app.post("/api/batch/cleanup")
+async def cleanup_stale_state():
+    """Clean up stale running modules, dead locks, and orphaned processes."""
+    cleaned = {"stale_modules": [], "stale_locks": [], "orphaned_pids": []}
+
+    # 1. Fix stale "running" modules (>2 hours old)
+    if BATCH_STATE_DIR.exists():
+        for sf in BATCH_STATE_DIR.glob("state_*.json"):
+            try:
+                data = json.loads(sf.read_text(encoding="utf-8"))
+                changed = False
+                for slug, mod in data.get("modules", {}).items():
+                    if mod.get("status") == "running" and mod.get("start_time"):
+                        start = datetime.fromisoformat(mod["start_time"].replace("Z", "+00:00"))
+                        elapsed = (datetime.now(timezone.utc) - start).total_seconds()
+                        if elapsed > 7200:  # 2 hours
+                            track = sf.stem.replace("state_", "")
+                            mod["status"] = "fail"
+                            mod["end_time"] = mod["start_time"]
+                            changed = True
+                            cleaned["stale_modules"].append(f"{track}/{slug}")
+                if changed:
+                    sf.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+            except Exception:
+                pass
+
+    # 2. Remove stale lock files (PID not running)
+    lock_dir = BATCH_STATE_DIR / "locks"
+    if lock_dir.exists():
+        for lf in lock_dir.glob("*.lock"):
+            try:
+                lock_data = json.loads(lf.read_text())
+                pid = lock_data.get("pid")
+                if pid:
+                    try:
+                        import os
+                        os.kill(pid, 0)  # Check if process exists
+                    except OSError:
+                        cleaned["stale_locks"].append(lf.name)
+                        lf.unlink()
+            except Exception:
+                pass
+
+    return {"cleaned": cleaned, "timestamp": datetime.now(timezone.utc).isoformat()}
+
+
+@app.post("/api/batch/dispatcher/scan")
+async def run_dispatcher_scan():
+    """Trigger a dispatcher scan (updates dispatcher_state.json with fresh data)."""
+    try:
+        cmd = [str(PROJECT_ROOT / ".venv" / "bin" / "python"),
+               str(PROJECT_ROOT / "scripts" / "batch_dispatcher.py"), "scan"]
+        result = subprocess.run(
+            cmd, cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=120
+        )
+        # Read back the updated state
+        state_file = BATCH_STATE_DIR / "dispatcher_state.json"
+        state = {}
+        if state_file.exists():
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+        return {
+            "success": result.returncode == 0,
+            "output": result.stdout[-2000:] if result.stdout else "",
+            "state": state,
+        }
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="Scan timed out")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Scan failed: {e}")
+
+
+@app.get("/api/batch/dispatcher/logs")
+async def get_dispatcher_logs(lines: int = 50):
+    """Get the last N lines from the dispatcher log file."""
+    log_file = PROJECT_ROOT / "logs" / "dispatcher.log"
+    if not log_file.exists():
+        return {"lines": [], "exists": False}
+    try:
+        text = log_file.read_text()
+        all_lines = text.splitlines()
+        tail = all_lines[-lines:] if len(all_lines) > lines else all_lines
+        return {"lines": tail, "exists": True, "total_lines": len(all_lines)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading log: {e}")
+
+
+# ==================== WEBSOCKET ====================
+
+
+_ws_clients: list[WebSocket] = []
+
+
+@app.websocket("/ws/batch")
+async def batch_websocket(websocket: WebSocket):
+    """WebSocket endpoint for real-time batch state updates.
+
+    Pushes change notifications when state files are modified.
+    Clients should fetch full data via REST for changed tracks.
+    """
+    await websocket.accept()
+    _ws_clients.append(websocket)
+    last_mtimes: dict[str, float] = {}
+
+    try:
+        while True:
+            changes = []
+
+            # Check dispatcher state
+            ds_file = BATCH_STATE_DIR / "dispatcher_state.json"
+            if ds_file.exists():
+                try:
+                    mtime = ds_file.stat().st_mtime
+                    if last_mtimes.get("dispatcher") != mtime:
+                        last_mtimes["dispatcher"] = mtime
+                        changes.append("dispatcher")
+                except OSError:
+                    pass
+
+            # Check track states
+            if BATCH_STATE_DIR.exists():
+                for sf in BATCH_STATE_DIR.glob("state_*.json"):
+                    try:
+                        track = sf.stem.replace("state_", "")
+                        mtime = sf.stat().st_mtime
+                        if last_mtimes.get(track) != mtime:
+                            last_mtimes[track] = mtime
+                            changes.append(track)
+                    except OSError:
+                        pass
+
+            # Check failure queue
+            fq_file = BATCH_STATE_DIR / "failure_queue.json"
+            if fq_file.exists():
+                try:
+                    mtime = fq_file.stat().st_mtime
+                    if last_mtimes.get("failures") != mtime:
+                        last_mtimes["failures"] = mtime
+                        changes.append("failures")
+                except OSError:
+                    pass
+
+            if changes:
+                await websocket.send_json({
+                    "type": "changes",
+                    "changed": changes,
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                })
+            else:
+                await websocket.send_json({"type": "heartbeat"})
+
+            await asyncio.sleep(2)
+    except WebSocketDisconnect:
+        pass
+    finally:
+        if websocket in _ws_clients:
+            _ws_clients.remove(websocket)
+
+
 # ==================== STATIC FILES ====================
 
 
@@ -617,6 +1013,9 @@ async def serve_index():
 @app.get("/{filename:path}")
 async def serve_static(filename: str):
     """Serve static files from playgrounds directory."""
+    # Skip WebSocket paths (handled by websocket route)
+    if filename.startswith("ws/"):
+        raise HTTPException(status_code=404, detail="Not a static file")
     file_path = PLAYGROUNDS_DIR / filename
     if file_path.exists() and file_path.is_file():
         return FileResponse(file_path)

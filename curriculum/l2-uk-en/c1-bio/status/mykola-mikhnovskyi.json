@@ -2,14 +2,14 @@
   "module": "mykola-mikhnovskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:38.299376Z",
+  "last_audit": "2026-02-11T00:43:53.076972Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.344133Z",
     "meta": "2026-02-09T15:59:44.215632Z",
     "activities": "2026-02-07T10:03:51.556847Z",
     "vocabulary": null,
-    "plan": null
+    "plan": "2026-02-09T15:59:44.215476Z"
   },
   "gates": {
     "meta": {

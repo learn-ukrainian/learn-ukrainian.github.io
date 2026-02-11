@@ -2,14 +2,14 @@
   "module": "oleksander-potebnya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:26.694800Z",
+  "last_audit": "2026-02-11T00:43:41.297353Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.241613Z",
     "meta": "2026-02-09T15:59:44.205521Z",
     "activities": "2026-02-07T10:03:51.599159Z",
     "vocabulary": "2026-02-07T10:03:51.644659Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.205334Z"
   },
   "gates": {
     "meta": {

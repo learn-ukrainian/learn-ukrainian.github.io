@@ -1,0 +1,52 @@
+{
+  "module": "halytsko-volynskyi-litopys-ii",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-11T00:45:32.884690Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-10T22:10:21.018293Z",
+    "meta": "2026-02-10T22:07:49.218633Z",
+    "activities": "2026-02-10T22:08:03.695817Z",
+    "vocabulary": "2026-02-10T21:23:03.887641Z",
+    "plan": "2026-02-09T12:52:16.719406Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4047/4000 (raw: 4343)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0
+  }
+}

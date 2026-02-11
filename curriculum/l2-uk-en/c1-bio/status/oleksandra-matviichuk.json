@@ -2,14 +2,14 @@
   "module": "oleksandra-matviichuk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:23.171622Z",
+  "last_audit": "2026-02-11T00:44:37.213117Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T15:11:53.602529Z",
     "meta": "2026-02-09T15:59:44.244188Z",
     "activities": "2026-02-09T14:26:22.420928Z",
     "vocabulary": "2026-02-09T14:25:58.265523Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.244011Z"
   },
   "gates": {
     "meta": {

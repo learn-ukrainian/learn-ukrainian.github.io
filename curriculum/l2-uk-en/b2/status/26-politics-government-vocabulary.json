@@ -2,14 +2,14 @@
   "module": "26-politics-government-vocabulary",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T01:06:26.094998Z",
+  "last_audit": "2026-02-10T23:29:44.680598Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.917288Z",
-    "meta": "2026-02-07T01:04:21.229159Z",
-    "activities": "2026-02-07T01:04:17.937545Z",
-    "vocabulary": "2026-01-21T22:54:28.403923Z",
-    "plan": "2026-01-30T15:04:49.242311Z"
+    "meta": "2026-02-07T10:03:50.517090Z",
+    "activities": "2026-02-07T10:03:50.601310Z",
+    "vocabulary": "2026-02-07T10:03:50.645732Z",
+    "plan": "2026-02-07T10:03:50.839090Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,19 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 3 (Seminar) review file at l2-uk-en/b2/review/politics-government-vocabulary-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly \u2014 if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 3 (Seminar) review file at l2-uk-en/b2/review/politics-government-vocabulary-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly \u2014 if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources."
+    ],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

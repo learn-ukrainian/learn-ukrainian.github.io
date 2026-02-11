@@ -1,0 +1,50 @@
+- word: хронограф
+  translation: chronograph
+  ipa: xrɔnɔˈɦrɑf
+  definition: "A type of historical writing that describes events in chronological order but often includes literary or biographical elements, distinct from the strict year-by-year annulistic structure."
+  usage: "Галицька частина літопису за своєю структурою нагадує візантійський хронограф, а не класичний руський літопис."
+- word: панегірик
+  translation: panegyric
+  ipa: pɐneˈɦɪrɪk
+  definition: "A public speech or published text in praise of someone or something; here referring to the praise of Prince Danylo."
+  usage: "Автор створює літературний панегірик Данилові Галицькому, ідеалізуючи його образ."
+- word: риторика
+  translation: rhetoric
+  ipa: rɪˈtɔrɪkɐ
+  definition: "The art of effective or persuasive speaking or writing, especially the use of figures of speech and other compositional techniques."
+  usage: "Політична риторика літопису спрямована на обґрунтування суверенності Галицько-Волинської держави."
+- word: легітимація
+  translation: legitimation
+  ipa: leɦitɪˈmɑt͡s⁽ʲ⁾ijɐ
+  definition: "The act of providing legitimacy; justifying the right to rule or a specific political status."
+  usage: "Опис коронації Данила слугував легітимацією його влади в очах європейських монархів."
+- word: інтерполяція
+  translation: interpolation
+  ipa: interpɔˈlʲɑt͡s⁽ʲ⁾ijɐ
+  definition: "The insertion of something of a different nature into something else; in textology, a passage inserted into a text by a later author."
+  usage: "Пізніші переписувачі внесли в текст численні інтерполяції, що ускладнює відновлення первісного змісту."
+- word: компіляція
+  translation: compilation
+  ipa: kɔmpiˈlʲɑt͡s⁽ʲ⁾ijɐ
+  definition: "A work formed by gathering material from other sources."
+  usage: "Літопис є складною компіляцією різних джерел, включаючи військові повісті та церковні сказання."
+- word: скрипторій
+  translation: scriptorium
+  ipa: skrɪpˈtɔr⁽ʲ⁾ij
+  definition: "A room set apart for writing, especially one in a monastery where manuscripts were copied."
+  usage: "При дворі Володимира Васильковича діяв потужний скрипторій, де переписувалися книги."
+- word: провіденціалізм
+  translation: providentialism
+  ipa: prɔvident͡s⁽ʲ⁾iɐˈlʲizm
+  definition: "The belief that all events on Earth are controlled by God."
+  usage: "Світогляд літописця пронизаний провіденціалізмом: усі перемоги і поразки пояснюються Божою волею."
+- word: усобиця
+  translation: internecine strife
+  ipa: uˈsɔbɪt͡sʲɐ
+  definition: "Internal conflict or war between princes."
+  usage: "Значна частина тексту присвячена опису князівських усобиць за галицький престол."
+- word: ординське іго
+  translation: Golden Horde yoke
+  ipa: ɔrˈdɪnʲsʲke ˈiɦɔ
+  definition: "The period of Mongol-Tatar dminance over Rus lands."
+  usage: "Літопис фіксує перші десятиліття ординського іга та спроби Данила протистояти йому."

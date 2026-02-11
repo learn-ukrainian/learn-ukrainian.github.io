@@ -2,14 +2,14 @@
   "module": "48-set-expressions-ii-objects-abstract",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T01:06:40.121658Z",
+  "last_audit": "2026-02-10T23:29:58.367323Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.923470Z",
-    "meta": "2026-02-07T01:04:21.233196Z",
-    "activities": "2026-02-07T01:04:17.942539Z",
-    "vocabulary": "2026-01-21T22:54:31.729629Z",
-    "plan": "2026-01-30T15:04:49.300718Z"
+    "meta": "2026-02-07T10:03:50.527776Z",
+    "activities": "2026-02-07T10:03:50.618424Z",
+    "vocabulary": "2026-02-07T10:03:50.658441Z",
+    "plan": "2026-02-07T10:38:53.129778Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors"
+    ],
     "pass_count": 4,
     "fail_count": 0
   }

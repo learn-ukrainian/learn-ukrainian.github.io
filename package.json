@@ -64,7 +64,11 @@
     "watcher:start": "bin/agent-watcher start",
     "watcher:stop": "bin/agent-watcher stop",
     "watcher:status": "bin/agent-watcher status",
-    "watcher:logs": "bin/agent-watcher logs"
+    "watcher:logs": "bin/agent-watcher logs",
+    "api": ".venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8090 2>&1 | tee logs/api.log",
+    "api:reload": ".venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8090 --reload 2>&1 | tee logs/api.log",
+    "api:bg": ".venv/bin/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8090 >> logs/api.log 2>&1 & echo \"PID: $!\" | tee -a logs/api.log",
+    "api:logs": "tail -f logs/api.log"
   },
   "repository": {
     "type": "git",

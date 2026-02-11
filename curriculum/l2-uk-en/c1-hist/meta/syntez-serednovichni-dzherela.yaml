@@ -5,4 +5,55 @@ slug: syntez-serednovichni-dzherela
 version: '1.0'
 id: c1-hist-018
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-10'
+pedagogy: seminar
+word_target: 5000
+content_outline:
+- section: "Вступ: Архітектура пам'яті"
+  words: 500
+  points: []
+- section: "Еволюція жанрів: Від літопису до документа"
+  words: 600
+  points: []
+- section: "Трансформація образу влади"
+  words: 500
+  points: []
+- section: "Деколонізаційна оптика: Русь vs Московія"
+  words: 500
+  points: []
+- section: "Мовний ландшафт: Народження української мови"
+  words: 400
+  points: []
+- section: "Синтез етичних систем"
+  words: 300
+  points: []
+- section: "Жінка в середньовічних джерелах"
+  words: 400
+  points: []
+- section: "Географія та ментальні мапи"
+  words: 300
+  points: []
+- section: "Матеріальність тексту"
+  words: 250
+  points: []
+- section: "Богослов'я історії: Гріх і покарання"
+  words: 230
+  points: []
+- section: "Соціальна історія в джерелах"
+  words: 300
+  points: []
+- section: "Військова справа в джерелах"
+  words: 300
+  points: []
+- section: "Методологія джерелознавчого аналізу: Як ми читаємо минуле?"
+  words: 250
+  points: []
+- section: Підсумок
+  words: 200
+  points: []
+- section: "Майбутнє джерелознавства: Нові горизонти"
+  words: 200
+  points: []
+naturalness:
+  score: 10
+  status: PASS

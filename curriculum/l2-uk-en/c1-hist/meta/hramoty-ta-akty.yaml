@@ -5,4 +5,31 @@ slug: hramoty-ta-akty
 version: '1.0'
 id: c1-hist-017
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-10'
+pedagogy: seminar
+word_target: 4000
+content_outline:
+- section: "Вступ — Документи vs. літописи"
+  words: 457
+  points: []
+- section: Типологія документів
+  words: 686
+  points: []
+- section: "Дипломатика — наука про документи"
+  words: 686
+  points: []
+- section: Ключові документи
+  words: 800
+  points: []
+- section: "Фрагмент — Грамота Мстислава"
+  words: 571
+  points: []
+- section: "Берестяні грамоти — особливий випадок"
+  words: 457
+  points: []
+- section: Підсумок
+  words: 343
+  points: []
+naturalness:
+  score: 10
+  status: PASS

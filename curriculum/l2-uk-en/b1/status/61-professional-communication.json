@@ -2,14 +2,14 @@
   "module": "61-professional-communication",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T17:52:41.868891Z",
+  "last_audit": "2026-02-10T23:31:05.653516Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-31T22:51:20.000187Z",
-    "meta": "2026-02-01T17:19:07.302994Z",
-    "activities": "2026-01-27T18:56:02.642597Z",
-    "vocabulary": "2026-01-25T18:00:40.572326Z",
-    "plan": "2026-01-31T22:11:45.558064Z"
+    "meta": "2026-02-07T10:03:51.672138Z",
+    "activities": "2026-02-07T10:03:51.722312Z",
+    "vocabulary": "2026-02-07T10:03:51.756293Z",
+    "plan": "2026-02-07T10:38:52.753923Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "1865/1900 (raw: 2978) (35 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "1865/2250 (raw: 2978)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

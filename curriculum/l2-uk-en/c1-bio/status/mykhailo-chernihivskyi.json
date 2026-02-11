@@ -2,14 +2,14 @@
   "module": "mykhailo-chernihivskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T10:35:25.373408Z",
+  "last_audit": "2026-02-11T00:43:13.546439Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T11:56:27.887674Z",
     "meta": "2026-02-09T15:59:44.182302Z",
     "activities": "2026-02-07T10:03:51.608524Z",
     "vocabulary": "2026-02-07T10:03:51.647286Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.182125Z"
   },
   "gates": {
     "meta": {

@@ -2,14 +2,14 @@
   "module": "vasyl-stefanyk",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:37.226999Z",
+  "last_audit": "2026-02-11T00:43:51.986645Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T17:13:18.194925Z",
     "meta": "2026-02-09T15:59:44.214841Z",
     "activities": "2026-02-07T17:08:42.046858Z",
     "vocabulary": "2026-02-07T12:46:49.184152Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.214715Z"
   },
   "gates": {
     "meta": {

@@ -2,14 +2,14 @@
   "module": "hryhorii-kosynka",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-09T23:24:57.066706Z",
+  "last_audit": "2026-02-11T00:44:11.773560Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349148Z",
     "meta": "2026-02-09T15:59:44.225728Z",
     "activities": "2026-02-07T10:03:51.600940Z",
     "vocabulary": "2026-02-07T10:03:51.644837Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.225629Z"
   },
   "gates": {
     "meta": {

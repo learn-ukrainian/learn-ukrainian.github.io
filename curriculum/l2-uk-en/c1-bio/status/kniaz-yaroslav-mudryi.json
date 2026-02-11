@@ -2,14 +2,14 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T10:35:22.142409Z",
+  "last_audit": "2026-02-11T00:43:10.300341Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T23:03:34.172493Z",
     "meta": "2026-02-09T22:59:47.634514Z",
     "activities": "2026-02-09T21:55:30.637990Z",
     "vocabulary": "2026-02-09T22:56:09.332178Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.177814Z"
   },
   "gates": {
     "meta": {

@@ -2,14 +2,14 @@
   "module": "borys-hrinchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:27.307155Z",
+  "last_audit": "2026-02-11T00:43:41.919415Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T16:53:18.194504Z",
     "meta": "2026-02-09T15:59:44.206378Z",
     "activities": "2026-02-07T16:48:00.597756Z",
     "vocabulary": "2026-02-07T15:31:52.109162Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.206267Z"
   },
   "gates": {
     "meta": {

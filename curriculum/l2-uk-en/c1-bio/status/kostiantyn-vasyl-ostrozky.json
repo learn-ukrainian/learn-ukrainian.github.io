@@ -2,14 +2,14 @@
   "module": "kostiantyn-vasyl-ostrozky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:03.456215Z",
+  "last_audit": "2026-02-11T00:43:17.745742Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T23:33:32.488412Z",
     "meta": "2026-02-09T15:59:44.186226Z",
     "activities": "2026-02-07T10:03:51.584797Z",
     "vocabulary": "2026-02-07T10:03:51.636275Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.185553Z"
   },
   "gates": {
     "meta": {

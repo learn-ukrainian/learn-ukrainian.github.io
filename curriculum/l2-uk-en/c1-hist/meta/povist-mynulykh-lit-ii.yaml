@@ -13,43 +13,111 @@ writers:
 auditors:
 - gemini-2-flash
 content_outline:
-- section: "Вступ — Читаємо первинне джерело"
-  words: 400
-- section: "Текстологія: Хто і коли написав ПВЛ? (Гіпотеза Шахматова)"
-  words: 500
-- section: "Фрагмент 1 — Сакральна географія (Апостол Андрій)"
-  words: 500
-- section: "Фрагмент 2 — Заснування Києва (Кий, Щек, Хорив)"
-  words: 500
-- section: "Фрагмент 3 — Покликання варягів (862)"
-  words: 800
-- section: "Фрагмент 4 — Смерть Олега (Віщий і Змія)"
-  words: 500
-- section: "Фрагмент 5 — Святослав Хоробрий («Іду на ви!»)"
-  words: 500
-- section: "Фрагмент 6 — Хрещення Володимира (988)"
-  words: 800
-- section: "Фрагмент 7 — Ярослав Мудрий і Книжність"
-  words: 500
-- section: "Фрагмент 8 — Повчання Володимира Мономаха"
-  words: 600
-- section: "Фрагмент 9 — Половецька загроза (Бонняк Шолудивий)"
-  words: 500
-- section: "Фрагмент 10 — Любецький з'їзд і осліплення Василька"
-  words: 600
-- section: "Фрагмент 11 — Помста Ольги"
-  words: 600
-- section: "Літературний аналіз: Стиль монументального історизму"
-  words: 500
-- section: "Порівняльний аналіз: Історія ідей"
-  words: 400
-- section: "Практикум — Ваш аналіз"
-  words: 300
+- section: "Вступ"
+  words: 184
+  points:
+  - "Reading primary sources"
+  - "Literary nature of the text"
+  - "Constructed reality"
+- section: "Текстологія"
+  words: 270
+  points:
+  - "Shakhmatov's hypothesis"
+  - "Three redactions"
+  - "Nestor vs Sylvester"
+- section: "Сакральна географія"
+  words: 402
+  points:
+  - "Vaticinium ex eventu"
+  - "Apostolic succession"
+  - "Kyiv vs Rome"
+- section: "Заснування Києва"
+  words: 342
+  points:
+  - "Founding myth"
+  - "Kyi as prince vs boatman"
+  - "Archaeological evidence"
+- section: "Покликання варягів"
+  words: 469
+  points:
+  - "Calling of Varangians"
+  - "Etymology of Rus"
+  - "Normanist debate"
+- section: "Смерть Олега"
+  words: 324
+  points:
+  - "Legend of Oleg's death"
+  - "Scandinavian saga parallels"
+  - "Fate vs Will"
+- section: "Святослав Хоробрий"
+  words: 342
+  points:
+  - "Sviatoslav's character"
+  - "Knightly code"
+  - "Leo the Deacon's description"
+- section: "Хрещення Володимира"
+  words: 432
+  points:
+  - "Choice of Faith"
+  - "Philosopher's Speech"
+  - "Aesthetics of Orthodoxy"
+- section: "Ярослав Мудрий і Книжність"
+  words: 301
+  points:
+  - "Yaroslav's library"
+  - "Translation project"
+  - "Books as rivers"
+- section: "Повчання Володимира Мономаха"
+  words: 321
+  points:
+  - "Instruction to Children"
+  - "Ideal Prince image"
+  - "Social responsibility"
+- section: "Половецька загроза"
+  words: 235
+  points:
+  - "Polovtsian raids"
+  - "Demonization of the enemy"
+  - "Bonnyak the Mangy"
+- section: "Любецький з'їзд і осліплення Василька"
+  words: 289
+  points:
+  - "Lyubech Congress 1097"
+  - "Patrimonial principle"
+  - "Blinding of Vasylko"
+- section: "Помста Ольги"
+  words: 257
+  points:
+  - "Olga's revenge"
+  - "Marriage/Funeral inversion"
+  - "State interest vs Ethics"
+- section: "Літературний аналіз"
+  words: 121
+  points:
+  - "Dmytro Chyzhevsky"
+  - "Monumental historicism"
+  - "Sub specie aeternitatis"
+- section: "Порівняльний аналіз"
+  words: 107
+  points:
+  - "Kyiv-centrism"
+  - "Dynastic unity"
+  - "Providentialism"
+- section: "Практикум"
+  words: 143
+  points:
+  - "Source reading task"
+  - "5 questions of historian"
+  - "Vocabulary check"
 - section: "Підсумок"
-  words: 200
+  words: 77
+  points:
+  - "PVL as cultural DNA"
+  - "Future-building text"
+  - "Final reflection"
 naturalness:
-  score: 1 
-  status: CHECKED
+  score: 10
+  status: PASS
 timestamps:
   created: 2026-02-10T17:00:00Z
   updated: 2026-02-10T17:00:00Z

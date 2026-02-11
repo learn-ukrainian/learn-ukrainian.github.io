@@ -2,14 +2,14 @@
   "module": "maik-yohansen",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-09T23:24:53.979204Z",
+  "last_audit": "2026-02-11T00:44:08.670011Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.349065Z",
     "meta": "2026-02-09T15:59:44.224413Z",
     "activities": "2026-02-07T10:03:51.563425Z",
     "vocabulary": "2026-02-07T10:03:51.616224Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.224324Z"
   },
   "gates": {
     "meta": {

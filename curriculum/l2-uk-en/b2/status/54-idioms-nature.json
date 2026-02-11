@@ -2,14 +2,14 @@
   "module": "54-idioms-nature",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T01:06:43.524686Z",
+  "last_audit": "2026-02-10T23:30:01.715705Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.924242Z",
-    "meta": "2026-02-07T01:04:21.233776Z",
-    "activities": "2026-02-07T01:04:17.944171Z",
-    "vocabulary": "2026-01-21T22:54:32.515660Z",
-    "plan": "2026-01-30T15:05:14.164508Z"
+    "meta": "2026-02-07T10:03:50.524196Z",
+    "activities": "2026-02-07T10:03:50.610073Z",
+    "vocabulary": "2026-02-07T10:03:50.650834Z",
+    "plan": "2026-02-07T10:38:53.166854Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
     "pass_count": 4,
     "fail_count": 0
   }

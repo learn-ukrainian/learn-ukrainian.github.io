@@ -1501,6 +1501,170 @@ Full technical documentation: `scripts/scoring/README.md`
 
 ---
 
+## Batch Dispatcher (Autonomous Scheduler)
+
+**Purpose:** Autonomous scheduler that processes all 20 tracks (~1,250 modules) in priority order, dispatching to `batch_gemini_runner.py`, handling quota/failures, and rotating between tracks.
+
+**Philosophy:** Slow but steady. Run continuously, one track at a time, hammering Gemini until everything is done. On quota hit → pause 30min, switch track, come back later. On stall → try once more, then move on, revisit later.
+
+### Quick Start
+
+```bash
+# Continuous mode — process everything until done
+.venv/bin/python scripts/batch_dispatcher.py run
+
+# Single cycle — pick one track, dispatch, exit
+.venv/bin/python scripts/batch_dispatcher.py run --one-shot
+
+# Dry run — show priorities without dispatching
+.venv/bin/python scripts/batch_dispatcher.py scan
+
+# Show current dispatcher state
+.venv/bin/python scripts/batch_dispatcher.py status
+
+# Force a specific track
+.venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio
+
+# Focus on specific tracks
+.venv/bin/python scripts/batch_dispatcher.py run --include-tracks b2-hist c1-bio lit
+
+# Exclude tracks
+.venv/bin/python scripts/batch_dispatcher.py run --exclude-tracks a1 b1 b2
+
+# Safety timeout (stop after 12 hours)
+.venv/bin/python scripts/batch_dispatcher.py run --max-runtime-hours 12
+```
+
+### Track Priority Order
+
+| # | Track | Modules | Type | Prerequisites |
+|---|-------|---------|------|---------------|
+| 1 | a1 | 44 | core | — |
+| 2 | a2 | 70 | core | a1 ≥80% |
+| 3 | b1 | 92 | core | a2 ≥80% |
+| 4 | b2 | 94 | core | b1 ≥80% |
+| 5 | c1 | 106 | core | b2 ≥80% |
+| 6 | b2-hist | 140 | seminar | b1 ≥80% |
+| 7 | c1-bio | 128 | seminar | b2 ≥80% |
+| 8 | c1-hist | 98 | seminar | b2-hist ≥80%, c1 ≥30% |
+| 9 | lit | 30 | seminar | b2 ≥80% |
+| 10-15 | lit-* | varies | seminar | lit ≥80% |
+| 16 | oes | 102 | seminar | c1 ≥80% |
+| 17 | ruth | 79 | seminar | c1 ≥80% |
+| 18 | b2-pro | 15 | core | b1 ≥80% |
+| 19 | c1-pro | 48 | core | c1 ≥80% |
+| 20 | c2 | 100 | core | c1 ≥80% |
+
+Dependencies are satisfied at **80% pass rate** — don't block on a few stalled modules.
+
+### Dependency Graph
+
+```
+A1 → A2 → B1 → B2 → C1 → C2
+               │      │     ├→ OES
+               │      │     ├→ RUTH
+               │      │     └→ C1-PRO
+               │      ├→ C1-BIO
+               │      ├→ LIT → lit-essay, lit-hist-fic, lit-fantastika,
+               │      │        lit-war, lit-humor, lit-juvenile
+               │      └→ B2-HIST → C1-HIST (also needs C1 ≥30%)
+               └→ B2-PRO
+```
+
+### State Machine (per track)
+
+```
+PENDING → ELIGIBLE → RUNNING → DONE
+                ↑        ↓
+                ← COOLDOWN (quota hit, 30min pause)
+                ↑        ↓
+                ← STALLED (2x zero-progress, revisit later)
+```
+
+- **PENDING**: Not yet evaluated
+- **ELIGIBLE**: Dependencies met, ready to dispatch
+- **RUNNING**: Currently dispatched as subprocess
+- **COOLDOWN**: Quota hit or timeout, waiting 30min before retry
+- **STALLED**: 2 consecutive dispatches with zero progress; revisited after all other eligible tracks processed
+- **DONE**: All modules passing audit
+- **BLOCKED**: Prerequisites not met
+
+### Execution Strategy
+
+| Condition | Strategy |
+|-----------|----------|
+| Track has unbuilt modules (no .md or <500 bytes) | `--mode auto` (builds new, fixes existing) |
+| Track has content, some failing | `--mode fix --retry-failures` |
+| Track 100% done | Skip (DONE) |
+
+### Monitoring
+
+**State file:** `batch_state/dispatcher_state.json`
+
+Contains per-track state, stall counts, cooldowns, dispatch history, and global stats.
+
+```bash
+# Quick status check
+.venv/bin/python scripts/batch_dispatcher.py status
+
+# Full scan with priorities
+.venv/bin/python scripts/batch_dispatcher.py scan
+```
+
+### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Track stuck in STALLED | Will auto-promote to ELIGIBLE after full rotation. Or use `dispatch-one --track X` to force |
+| All tracks BLOCKED | Check dependency pass rates with `scan`. Build prerequisite tracks first |
+| Quota hits every dispatch | Normal — dispatcher auto-rotates to other tracks and retries after cooldown |
+| Want to focus on specific tracks | Use `--include-tracks` or `--exclude-tracks` |
+| Need to stop safely | Ctrl+C (SIGINT) — finishes current module, saves state, exits cleanly |
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `scripts/batch_dispatcher.py` | Main dispatcher (entry point) |
+| `scripts/batch_dispatcher_config.py` | Track definitions, deps, weights, constants |
+| `batch_state/dispatcher_state.json` | Persistent state (tracks, history, stats) |
+
+### Batch API Endpoints (Web UI)
+
+The FastAPI server (`scripts/api/main.py`) exposes batch state as REST endpoints for the Batch Manager playground (`playground-batch-manager.html`).
+
+**Start the server:**
+
+```bash
+npm run api            # Start on port 8090
+npm run api:reload     # Start with auto-reload (development)
+```
+
+**Endpoints:**
+
+| Endpoint | Method | Returns |
+|----------|--------|---------|
+| `/api/batch/dispatcher` | GET | Full dispatcher state (tracks, stats, history) |
+| `/api/batch/state/{track}` | GET | Batch state for a specific track |
+| `/api/batch/failures` | GET | Global failure queue array |
+| `/api/batch/failures/{track}` | GET | Detailed failure records for a track |
+| `/api/batch/usage` | GET | API usage summaries merged across all tracks |
+| `/api/batch/health` | GET | Health check: lock status, running tracks, last activity |
+| `/api/batch/dispatcher/start` | POST | Start dispatcher process (body: `{one_shot, dry_run, track, include_tracks, exclude_tracks}`) |
+| `/api/batch/dispatcher/stop` | POST | Stop running dispatcher process |
+| `/api/batch/dispatcher/running` | GET | Check if dispatcher is running |
+| `/ws/batch` | WS | Real-time change notifications (pushes changed track names every 2s) |
+
+**Data sources:** Read endpoints use `batch_state/` directory (pure file reads). Dispatcher start/stop uses `subprocess.Popen` to manage the dispatcher process.
+
+**Real-time updates:** The WebSocket endpoint at `/ws/batch` pushes lightweight change notifications by monitoring file mtimes. Clients fetch full data via REST only for changed tracks, reducing polling overhead.
+
+**Browser notifications:** The Batch Manager UI can send browser notifications when tracks reach 50% or 100% completion. Click the bell icon in the header to enable.
+
+**Playground:** The Batch Manager auto-detects whether the API server is running. If available, uses API endpoints + WebSocket; otherwise falls back to direct file fetches via `../batch_state/` with 5s polling.
+
+---
+
 ## Level Status Generation
 
 ### generate_level_status.py

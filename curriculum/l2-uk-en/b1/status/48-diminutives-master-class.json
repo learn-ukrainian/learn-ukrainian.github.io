@@ -2,14 +2,14 @@
   "module": "48-diminutives-master-class",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:34.511062Z",
+  "last_audit": "2026-02-10T23:30:58.476832Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-31T20:56:24.538909Z",
-    "meta": "2026-02-01T17:10:44.573330Z",
-    "activities": "2026-01-10T23:40:48.334760Z",
-    "vocabulary": "2026-01-25T18:00:40.485972Z",
-    "plan": "2026-01-29T07:45:40.412831Z"
+    "meta": "2026-02-07T10:03:51.676766Z",
+    "activities": "2026-02-07T10:03:51.736347Z",
+    "vocabulary": "2026-02-07T10:03:51.764273Z",
+    "plan": "2026-02-07T10:03:51.070084Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "1761/1854 (raw: 2167) (93 short)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1761/3000 (raw: 2167) | richness: 84% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

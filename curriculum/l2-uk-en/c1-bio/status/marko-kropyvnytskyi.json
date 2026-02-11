@@ -2,14 +2,14 @@
   "module": "marko-kropyvnytskyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:20.449866Z",
+  "last_audit": "2026-02-11T00:47:25.914566Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T01:04:17.213166Z",
-    "meta": "2026-02-09T15:59:44.199787Z",
-    "activities": "2026-02-07T10:03:51.567163Z",
-    "vocabulary": "2026-02-07T10:03:51.618672Z",
-    "plan": null
+    "md": "2026-02-11T00:39:09.186527Z",
+    "meta": "2026-02-11T00:34:52.854301Z",
+    "activities": "2026-02-11T00:39:47.367446Z",
+    "vocabulary": "2026-02-11T00:36:18.151566Z",
+    "plan": "2026-02-09T15:59:44.199627Z"
   },
   "gates": {
     "meta": {
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3959/4000 (raw: 4034) (41 short) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5749/5000 (raw: 5826)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "7/3"
+      "message": "9/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "24/24"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "pass",
@@ -38,15 +38,15 @@
       "message": "10/10 (High)"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

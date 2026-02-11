@@ -2,14 +2,14 @@
   "module": "50-integrated-grammar-lab",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T17:52:35.650547Z",
+  "last_audit": "2026-02-10T23:30:59.578923Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-31T21:02:09.417234Z",
-    "meta": "2026-02-01T17:13:38.677207Z",
-    "activities": "2026-01-11T22:51:43.254389Z",
-    "vocabulary": "2026-01-25T18:00:40.508987Z",
-    "plan": "2026-01-31T21:02:18.671113Z"
+    "meta": "2026-02-07T10:03:51.672834Z",
+    "activities": "2026-02-07T10:03:51.724942Z",
+    "vocabulary": "2026-02-07T10:03:51.757645Z",
+    "plan": "2026-02-07T10:03:51.067092Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "1743/1500 (raw: 2365)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1743/3000 (raw: 2365) | richness: 81% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

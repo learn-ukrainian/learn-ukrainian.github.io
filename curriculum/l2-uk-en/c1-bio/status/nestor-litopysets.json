@@ -2,14 +2,14 @@
   "module": "nestor-litopysets",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T10:35:24.045627Z",
+  "last_audit": "2026-02-11T00:43:12.233689Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T00:26:11.145766Z",
+    "md": "2026-02-10T20:21:58.516338Z",
     "meta": "2026-02-09T15:59:44.180853Z",
     "activities": "2026-02-07T11:06:37.412015Z",
     "vocabulary": "2026-02-07T11:10:15.904862Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.180507Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "4616/4700 (raw: 4826) (84 short)"
+      "message": "4658/4700 (raw: 4868) (42 short)"
     },
     "activities": {
       "status": "pass",

@@ -2,14 +2,14 @@
   "module": "milena-rudnytska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:49.960599Z",
+  "last_audit": "2026-02-11T00:44:04.559680Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.356173Z",
     "meta": "2026-02-09T15:59:44.222651Z",
     "activities": "2026-02-07T10:03:51.560689Z",
     "vocabulary": "2026-02-07T10:03:51.611230Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.222562Z"
   },
   "gates": {
     "meta": {

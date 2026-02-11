@@ -2,14 +2,14 @@
   "module": "26-relative-clauses-yakyi",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:21.866193Z",
+  "last_audit": "2026-02-10T23:30:46.160723Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350025Z",
-    "meta": "2026-02-01T17:02:22.410935Z",
-    "activities": "2026-01-27T16:22:48.718702Z",
-    "vocabulary": "2026-01-25T18:00:40.282904Z",
-    "plan": "2026-01-29T07:45:40.350352Z"
+    "meta": "2026-02-07T10:03:51.649318Z",
+    "activities": "2026-02-07T10:03:51.698689Z",
+    "vocabulary": "2026-02-07T10:03:51.744419Z",
+    "plan": "2026-02-07T10:03:51.058588Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "1573/1599 (raw: 1948) (26 short)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1573/3000 (raw: 1948) | richness: 80% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

@@ -2,13 +2,13 @@
   "module": "44-checkpoint-word-formation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T19:19:10.912530Z",
+  "last_audit": "2026-02-11T01:22:40.768045Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-10T19:19:10.311321Z",
+    "md": "2026-02-11T01:20:06.760645Z",
     "meta": "2026-02-07T10:03:50.720382Z",
-    "activities": "2026-02-07T10:03:50.752556Z",
-    "vocabulary": "2026-02-07T10:03:50.797844Z",
+    "activities": "2026-02-11T01:20:18.123746Z",
+    "vocabulary": "2026-02-11T01:19:59.890556Z",
     "plan": "2026-02-07T10:51:26.507307Z"
   },
   "gates": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "1667/855 (raw: 2126) | engagement: 2/3 | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1904/855 (raw: 2276)"
     },
     "activities": {
       "status": "pass",
@@ -30,7 +30,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "5/1"
+      "message": "9/1"
     },
     "naturalness": {
       "status": "pass",
@@ -38,17 +38,15 @@
       "message": "10/10 (High)"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Checkpoint Format Errors"
-    ],
-    "pass_count": 4,
-    "fail_count": 1
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

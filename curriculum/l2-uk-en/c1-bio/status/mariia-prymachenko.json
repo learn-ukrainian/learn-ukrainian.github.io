@@ -2,14 +2,14 @@
   "module": "mariia-prymachenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:03.850913Z",
+  "last_audit": "2026-02-11T00:44:17.744583Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.352224Z",
     "meta": "2026-02-09T15:59:44.231224Z",
     "activities": "2026-02-07T10:03:51.574432Z",
     "vocabulary": null,
-    "plan": null
+    "plan": "2026-02-09T15:59:44.230993Z"
   },
   "gates": {
     "meta": {

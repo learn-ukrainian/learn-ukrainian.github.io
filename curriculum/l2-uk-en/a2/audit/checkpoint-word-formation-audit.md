@@ -1,8 +1,8 @@
 # Audit Report: M44 — 44-checkpoint-word-formation.md
 **Level:** A2 | **Module:** M44 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 855
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-10 19:19:10
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-11 01:22:40
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -40,29 +40,20 @@
 - Required types used: 8/8 (cloze, error-correction, fill-in, group-sort, match-up, quiz, translate, unjumble) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Використовуйте слова зі списку для...'
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1667/855 (raw: 2126)
+- **Words:** ✅ 1904/855 (raw: 2276)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 2/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 9/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 47.4% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 45.7% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 
@@ -70,11 +61,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Огляд** | ⚪️ | 159 | Skipped |
-| **Skill 1: Verb Prefixes** | ⚪️ | 426 | Skipped |
-| **Skill 2: Noun Suffixes** | ⚪️ | 299 | Skipped |
-| **Skill 3: Adjective Suffixes** | ⚪️ | 211 | Skipped |
-| **Skill 4: Root Families** | ⚪️ | 294 | Skipped |
-| **Integration Challenge** | ⚪️ | 174 | Skipped |
-| **Підсумок** | ✅ | 54 | Included in Core |
-| **Need More Practice?** | ⚪️ | 50 | Skipped |
+| **Огляд** | ⚪️ | 184 | Skipped |
+| **Skill 1: Verb Prefixes** | ⚪️ | 386 | Skipped |
+| **Skill 2: Noun Suffixes** | ⚪️ | 390 | Skipped |
+| **Skill 3: Adjective Suffixes** | ⚪️ | 176 | Skipped |
+| **Skill 4: Root Families** | ⚪️ | 432 | Skipped |
+| **Integration Challenge** | ⚪️ | 185 | Skipped |
+| **Підсумок** | ✅ | 93 | Included in Core |
+| **Need More Practice?** | ⚪️ | 58 | Skipped |

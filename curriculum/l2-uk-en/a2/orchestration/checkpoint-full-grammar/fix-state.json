@@ -3,40 +3,19 @@
   "iterations": [
     {
       "iteration": 1,
-      "started": "2026-02-10T10:54:46.186255Z",
+      "started": "2026-02-10T23:14:02.812670Z",
       "audit_passed": false,
       "action": "generate_fix_plan",
       "result": "fix_plan_generated"
     },
     {
       "iteration": 2,
-      "started": "2026-02-10T10:56:09.629795Z",
+      "started": "2026-02-10T23:14:58.007911Z",
       "audit_passed": false,
-      "action": "generate_fix_plan",
-      "result": "fix_plan_generated"
-    },
-    {
-      "iteration": 3,
-      "started": "2026-02-10T11:03:13.142552Z",
-      "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
-    },
-    {
-      "iteration": 4,
-      "started": "2026-02-10T11:04:32.293807Z",
-      "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
-    },
-    {
-      "iteration": 5,
-      "started": "2026-02-10T11:06:16.915767Z",
-      "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "success_after_content_fix"
     }
   ],
-  "started": "2026-02-10T10:54:46.186237Z",
-  "result": "exhausted"
+  "started": "2026-02-10T23:14:02.812654Z",
+  "result": "success"
 }

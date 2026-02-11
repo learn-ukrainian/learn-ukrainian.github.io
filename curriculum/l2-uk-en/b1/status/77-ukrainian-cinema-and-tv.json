@@ -2,14 +2,14 @@
   "module": "77-ukrainian-cinema-and-tv",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-01T19:05:42.611674Z",
+  "last_audit": "2026-02-10T23:31:14.439783Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-24T22:47:27.831262Z",
-    "meta": "2026-02-01T17:50:49.640660Z",
-    "activities": "2026-01-27T19:07:31.831762Z",
-    "vocabulary": "2026-01-25T18:00:40.678993Z",
-    "plan": "2026-01-30T10:40:45.469310Z"
+    "meta": "2026-02-07T10:03:51.680294Z",
+    "activities": "2026-02-07T10:03:51.742880Z",
+    "vocabulary": "2026-02-07T10:03:51.768037Z",
+    "plan": "2026-02-07T10:38:52.830320Z"
   },
   "gates": {
     "meta": {
@@ -20,7 +20,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1708/1400 (raw: 1931)"
+      "message": "1708/1648 (raw: 1931)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,19 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+    ],
     "pass_count": 5,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

@@ -1,0 +1,52 @@
+{
+  "module": "syntez-serednovichni-dzherela",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-11T00:45:34.127019Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-10T23:54:02.872355Z",
+    "meta": "2026-02-10T23:54:58.791583Z",
+    "activities": "2026-02-10T23:37:57.419501Z",
+    "vocabulary": "2026-02-10T23:01:57.413706Z",
+    "plan": "2026-02-09T12:52:16.728346Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5004/5000 (raw: 5375)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/25"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0
+  }
+}

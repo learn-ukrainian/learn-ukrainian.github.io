@@ -1,0 +1,120 @@
+- word: екзиль
+  ipa: /ɛkˈzɪlʲ/
+  translation: exile
+  context: "Статус уряду в екзилі дозволив мазепинцям сформулювати ідеальну модель держави."
+- word: легітимація
+  ipa: /leɦetɪmɐˈtsʲijɐ/
+  translation: legitimation
+  context: "Обрання нового гетьмана потребувало правової легітимації через письмовий договір."
+- word: обмеження влади
+  ipa: /ɔbˈmɛʒenʲːɐ ˈwladɪ/
+  translation: limitation of power
+  context: "Головною ідеєю Конституції було обмеження влади гетьмана на користь Ради."
+- word: рада старшин
+  ipa: /ˈradɐ stɐrˈʃɪn/
+  translation: council of officers
+  context: "Рада старшин ставала законодавчим органом козацької держави."
+- word: підзвітність
+  ipa: /pʲidˈzwʲitnʲistʲ/
+  translation: accountability
+  context: "Підзвітність правителя закону — ключовий принцип республіканізму."
+- word: розподіл влади
+  ipa: /rɔzˈpɔdʲil ˈwladɪ/
+  translation: separation of powers
+  context: "Орлик реалізував розподіл влади задовго до Монтеск'є."
+- word: республіка
+  ipa: /resˈpublʲikɐ/
+  translation: republic
+  context: "Конституція проголошувала Україну вільною козацькою республікою."
+- word: тиранія
+  ipa: /tɪrɐˈnʲijɐ/
+  translation: tyranny
+  context: "Кожна стаття Конституції спрямована на захист від тиранії."
+- word: вибори
+  ipa: /ˈwɪborɪ/
+  translation: elections
+  context: "Процедура виборів на всі посади була жорстко регламентована."
+- word: конституціоналізм
+  ipa: /konstɪtutsʲionɐˈlʲizm/
+  translation: constitutionalism
+  context: "Український конституціоналізм має глибоке коріння у XVIII столітті."
+- word: преамбула
+  ipa: /preɐmˈbulɐ/
+  translation: preamble
+  context: "Преамбула Конституції містить історичне обґрунтування незалежності."
+- word: артикул
+  ipa: /ɐrˈtɪkul/
+  translation: article
+  context: "Шістнадцять артикулів документа охоплюють усі сфери державного життя."
+- word: клятва
+  ipa: /ˈklʲatwɐ/
+  translation: oath
+  context: "Гетьман складав урочисту клятву дотримуватися встановлених вольностей."
+- word: суверенітет
+  ipa: /suwerenɪˈtɛt/
+  translation: sovereignty
+  context: "Конституція була актом утвердження національного суверенітету."
+- word: протекторат
+  ipa: /prɔtektɔˈrɐt/
+  translation: protectorate
+  context: "Протекторат Швеції мислився як рівноправний військовий союз."
+- word: посполиті
+  ipa: /pɔspɔˈlɪtʲi/
+  translation: common people
+  context: "Конституція захищала посполитих від надмірних поборів старшини."
+- word: підскарбій
+  ipa: /pʲidˈskarbʲij/
+  translation: treasurer
+  context: "Генеральний підскарбій керував державною скарбницею."
+- word: вольності
+  ipa: /ˈwɔlʲnɔstʲi/
+  translation: liberties
+  context: "Збереження прав і вольностей Війська Запорозького було основною метою договору."
+- word: мазепинці
+  ipa: /mɐˈzɛpɪntsʲi/
+  translation: Mazepists
+  context: "Мазепинці в еміграції продовжували боротьбу за незалежну Україну."
+- word: отчизна
+  ipa: /ɔtˈtʃɪznɐ/
+  translation: fatherland
+  context: "Поняття Отчизни в Конституції визначало простір національного суверенітету."
+- word: суб'єктність
+  ipa: /subjekˈtnʲistʲ/
+  translation: agency
+  context: "Конституція була маніфестом національної суб'єктності."
+- word: деколонізація
+  ipa: /dekɔlɔnʲizɐˈtsʲijɐ/
+  translation: decolonization
+  context: "Документ 1710 року є прикладом успішної правової деколонізації."
+- word: абсолютизм
+  ipa: /ɐbsɔlʲutˈɪzm/
+  translation: absolutism
+  context: "Українська модель протистояла московському абсолютизму."
+- word: монархомахи
+  ipa: /mɔnɐrxɔˈmɑxɪ/
+  translation: monarchomachs
+  context: "Орлик поділяв ідеї європейських монархомахів про право на опір."
+- word: публічне добро
+  ipa: /pubˈlʲitʃne ˈdɔбrɔ/
+  translation: public good
+  context: "Стаття 6 вводить поняття публічного добра як мети влади."
+- word: еміграція
+  ipa: /emʲiˈɦrɑtsʲijɐ/
+  translation: emigration
+  context: "Переселення зі своєї батьківщини в іншу країну з політичних причин."
+- word: договір
+  ipa: /ˈdɔɦɔwʲir/
+  translation: agreement
+  context: "Домовленість сторін, спрямована на встановлення прав та обов'язків."
+- word: аристократія
+  ipa: /ɐrɪstɔˈkrɑtʲijɐ/
+  translation: aristocracy
+  context: "Привілейований стан суспільства, родова знать або еліта."
+- word: маніфест
+  ipa: /mɐnʲiˈfɛst/
+  translation: manifesto
+  context: "Декларація політичних принципів або звернення до народу."
+- word: суб'єкт права
+  ipa: /subˈjekt ˈprɑwɐ/
+  translation: subject of law
+  context: "Особа або організація, що має юридичні права та обов'язки."

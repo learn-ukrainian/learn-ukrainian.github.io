@@ -2,14 +2,14 @@
   "module": "41-aspect-nuances-secondary-imperfectivization",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-07T01:06:35.940446Z",
+  "last_audit": "2026-02-10T23:29:54.213892Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.922110Z",
-    "meta": "2026-02-07T01:04:21.232268Z",
-    "activities": "2026-02-07T01:04:17.941252Z",
-    "vocabulary": "2026-01-21T22:54:30.549566Z",
-    "plan": "2026-01-30T15:04:49.282677Z"
+    "meta": "2026-02-07T10:03:50.477314Z",
+    "activities": "2026-02-07T10:03:50.541721Z",
+    "vocabulary": "2026-02-07T10:03:50.632061Z",
+    "plan": "2026-02-07T10:03:50.824389Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2054/2000 (raw: 2836)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2054/2000 (raw: 2836) | richness: 81% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "pass_count": 3,
+    "fail_count": 1
   }
 }

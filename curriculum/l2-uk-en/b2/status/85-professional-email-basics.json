@@ -2,14 +2,14 @@
   "module": "85-professional-email-basics",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T01:07:01.566436Z",
+  "last_audit": "2026-02-10T23:30:19.475971Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.929437Z",
-    "meta": "2026-02-07T01:04:21.236803Z",
-    "activities": "2026-02-07T01:04:17.956182Z",
-    "vocabulary": "2026-01-21T22:54:36.899354Z",
-    "plan": "2026-01-30T15:04:49.359746Z"
+    "meta": "2026-02-07T10:03:50.523569Z",
+    "activities": "2026-02-07T10:03:50.609213Z",
+    "vocabulary": "2026-02-07T10:03:50.649391Z",
+    "plan": "2026-02-09T12:52:14.971584Z"
   },
   "gates": {
     "meta": {
@@ -36,12 +36,19 @@
       "status": "pass",
       "violations": 0,
       "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 2 (Core) review file at l2-uk-en/b2/review/professional-email-basics-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 2 (Core) review file at l2-uk-en/b2/review/professional-email-basics-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+    ],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

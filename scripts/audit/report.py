@@ -206,7 +206,34 @@ def save_status_cache(
     with open(status_file, 'w', encoding='utf-8') as f:
         json.dump(cache_data, f, indent=2)
 
+    # 6. Sync batch_state if it exists (keeps batch manager dashboard in sync)
+    _sync_batch_state(base_path, module_slug, overall.get("status", "fail"))
+
     return str(status_file)
+
+
+def _sync_batch_state(base_path: Path, module_slug: str, status: str):
+    """Update batch_state/state_{track}.json if it exists.
+
+    Keeps the batch manager dashboard in sync when audits run outside batch.
+    """
+    try:
+        track = base_path.name  # e.g., "a1", "b2-hist"
+        batch_state_file = base_path.parent.parent.parent / "batch_state" / f"state_{track}.json"
+        if not batch_state_file.exists():
+            return
+
+        with open(batch_state_file, 'r', encoding='utf-8') as f:
+            state = json.load(f)
+
+        bare = to_bare_slug(module_slug)
+        modules = state.get("modules", {})
+        if bare in modules:
+            modules[bare]["status"] = status
+            with open(batch_state_file, 'w', encoding='utf-8') as f:
+                json.dump(state, f, indent=2)
+    except Exception:
+        pass  # Non-critical — don't break audit if batch_state sync fails
 
 
 def set_verification(

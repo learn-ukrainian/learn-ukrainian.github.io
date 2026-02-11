@@ -2,7 +2,7 @@
   "module": "06-aspect-complete-system",
   "level": "B1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-09T15:56:37.126527Z",
+  "last_audit": "2026-02-10T23:30:34.615710Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.349952Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3213/3000 (raw: 3608)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3213/3000 (raw: 3608) | richness: 83% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -38,15 +38,15 @@
       "message": "9/10 (High)"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1
   }
 }

@@ -47,39 +47,6 @@ python3 scripts/audit_module.py {path}           # WRONG - missing deps
 
 Prefer fast tools: `rg` (grep), `fd` (find), `bat` (cat), `sd` (sed), `yq` (yaml), `jq` (json).
 
-### 3a. Terminal Emulator (Ghostty)
-
-**[Ghostty](https://ghostty.org/)** is a fast, GPU-accelerated terminal with native UI and zero-config setup.
-
-**Key Benefits for This Workflow:**
-- **GPU Acceleration**: Smooth rendering for long audit outputs and logs
-- **Native macOS UI**: Better system integration (Quick Look, Force Touch, window state recovery)
-- **Zero Configuration**: Works perfectly out-of-box with sensible defaults
-- **Split Windows**: Run audit in one pane while editing in another (⌘+D horizontal, ⌘+Shift+D vertical)
-- **Tab Auto-Naming**: Tabs auto-name based on recent commands (e.g., "audit_module.sh M15")
-- **Nerd Fonts Built-in**: Starship prompts and CLI tools work without setup
-- **Terminal Inspector**: Real-time debugging tool for terminal activity
-
-**Optional Configuration** (if desired):
-```bash
-# Config location: ~/.config/ghostty/config
-# View all defaults: ghostty +show-config --default --docs | less
-
-# Example config (optional):
-theme = dark:Moonkai Pro,light:Catppuccin Latte
-font-family = JetBrains Mono
-```
-
-**Productivity Tips:**
-- Use Vim-style keybindings: Create trigger sequences like `ctrl+a>o` for tab overview
-- Tab search: When managing multiple modules, use searchable tab overview
-- Built-in themes: 20+ pre-installed (no external searching needed)
-
-**Resources:**
-- [Ghostty Documentation](https://ghostty.org/docs)
-- [Feature Overview](https://itsfoss.com/ghostty-terminal-features/)
-- [GitHub Repository](https://github.com/ghostty-org/ghostty)
-
 ### 4. Fix Source, Not Symptoms
 
 When issues occur: fix documentation/tools **first**, then validate with manual fix.
@@ -97,39 +64,6 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - Call directly via Bash when needed for grammar validation
 - Python scripts can also invoke gemini-cli via subprocess
 - See issue #412 for content naturalness detection extension
-
-### 6a. Jules (Google AI Coding Agent)
-
-**Jules** is an async coding agent (base model: Gemini 3 Flash). Used for CODE tasks only (features, bugs, refactoring, tests, CI/CD). **NOT** for content/research.
-
-**CLI:** `/opt/homebrew/bin/jules`
-```bash
-# List all sessions (see status: Completed, Awaiting User Feedback, etc.)
-jules remote list --session
-
-# Create new task (uses current repo by default)
-jules remote new --session "task description"
-
-# Create task from file
-cat task.md | jules remote new
-
-# Create parallel sessions
-jules remote new --session "task" --parallel 3
-
-# Pull result (patch/diff)
-jules remote pull --session <session-id>
-
-# Pull and apply patch locally
-jules remote pull --session <session-id> --apply
-```
-
-**Key facts:**
-- Works in **feature branches**, creates PRs on GitHub
-- Can handle ~300 tasks/day
-- "Awaiting User Feedback" = respond via [jules.google.com](https://jules.google.com) UI (CLI has no respond command)
-- Some tasks show on GitHub (PRs), others only on Jules UI
-- Label GitHub issues with `jules` for tracking
-- Jules also self-reviews PRs via Gemini Code Assist
 
 ### 7. Word Targets Are Minimums
 
@@ -221,6 +155,12 @@ npm run claude:deploy
 
 # Vocabulary rebuild
 npm run vocab:rebuild
+
+# Autonomous batch dispatcher
+.venv/bin/python scripts/batch_dispatcher.py run          # Continuous — hammer Gemini until done
+.venv/bin/python scripts/batch_dispatcher.py scan         # Show priorities (no dispatch)
+.venv/bin/python scripts/batch_dispatcher.py status       # Show current state
+.venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio  # Force single track
 ```
 
 See `docs/SCRIPTS.md` for complete reference.
@@ -290,209 +230,9 @@ See `docs/ACTIVITY-YAML-REFERENCE.md` for all activity types.
 
 </critical>
 
-### Interview Protocol (Specification Before Building)
+### Interview Protocol
 
-**Reduce rework through comprehensive upfront questioning.**
-
-**When to use `/interview` skill:**
-
-✅ **Required for:**
-- Complex features (>30 min work)
-- Unclear requirements
-- Multiple valid approaches
-- Broad requests ("improve X", "add Y")
-- New module types or workflows
-
-❌ **Skip for:**
-- Trivial fixes (< 5 min)
-- Crystal-clear specifications
-- Simple bug fixes
-- User says "just do it"
-
-**Interview Process (60-question framework)**:
-
-1. **Phase 1: Understand the Goal** (10-15 questions)
-   - What are we building and why?
-   - Who benefits?
-   - What does success/failure look like?
-   - Scope and boundaries?
-
-2. **Phase 2: Technical Requirements** (15-20 questions)
-   - Functional requirements (what it does)
-   - Non-functional requirements (quality, performance)
-   - Constraints (technical, time, resources)
-
-3. **Phase 3: Preferences & Alternatives** (10-15 questions)
-   - Design preferences
-   - Approaches to avoid
-   - Alternatives considered
-   - Examples and anti-patterns
-
-4. **Phase 4: Success Criteria** (5-10 questions)
-   - How we verify completion
-   - Acceptance criteria
-   - Follow-up plans
-
-**Output**: Complete specification document + recommendation (Proceed/Clarify/Revise/Block)
-
-**Benefits**:
-- Build once instead of iterating 5 times
-- Aligned expectations upfront
-- Documented decisions
-- Learn specification skills together
-
-**Example**:
-```
-/interview Create integrated checkpoint activities for B1 grammar
-
-[40-60 questions about scope, requirements, examples, success criteria]
-
-→ Complete specification
-→ Get approval
-→ Build with confidence
-```
-
-**Time Investment**: 10-20 min interview vs. hours of rework
-
----
-
-### Enhanced Prompting Patterns
-
-**Get better output through better prompts. Learn these patterns.**
-
-#### Pattern 1: Self-Review
-
-**Instead of accepting first draft:**
-```
-"Review your own work on M15:
-1. Does it match the plan outline exactly?
-2. Are there any sections that feel thin or robotic?
-3. Are all Ukrainian sentences natural (no calques)?
-4. Would a Ukrainian teacher approve this?
-5. What would make it pedagogically stronger?"
-```
-
-**Why it works:** I catch my own mistakes before you have to point them out.
-
-#### Pattern 2: Elegant Solutions
-
-**When first attempt is functional but mediocre:**
-```
-"That's functional, but let's make it pedagogically excellent.
-
-Current issue: The examples feel disconnected from real life.
-
-Make it better:
-- Use authentic scenarios Ukrainian B1 learners face
-- Add cultural context where appropriate
-- Make transitions smoother between examples
-- Ensure engaging progression"
-```
-
-**Why it works:** Specific direction > vague "make it better".
-
-#### Pattern 3: Upfront Specifications
-
-**Before I start generating:**
-```
-"Before you write M20, confirm you've read:
-1. curriculum/l2-uk-en/plans/b1/motion-approaching-departing.yaml
-2. curriculum/l2-uk-en/b1/meta/motion-approaching-departing.yaml
-3. claude_extensions/quick-ref/B1.md
-4. docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md
-
-Tell me:
-- Word target?
-- Key grammar focus?
-- Required activity types?
-- Any special considerations?"
-```
-
-**Why it works:** Forces me to load context before generating, prevents waste.
-
-#### Pattern 4: Constraints Upfront
-
-**Define limits and priorities clearly:**
-```
-"Generate B1 M25 checkpoint with these constraints:
-
-MUST:
-- Test modules 16-24 (all motion verbs)
-- 3000 words minimum
-- Use TTT approach for checkpoints
-- All activities must be checkpoint-style (testing, not teaching)
-
-MUST NOT:
-- Introduce new grammar (test only)
-- Use vocabulary outside M16-24 range
-- Include teaching explanations (this tests, doesn't teach)
-
-Priority: Comprehensive testing > engagement > word count"
-```
-
-**Why it works:** Clear boundaries = less back-and-forth.
-
-#### Pattern 5: Comparative Examples
-
-**Show what you want vs. what you don't:**
-```
-"M18 feel too robotic. Here's an example:
-
-❌ Current (robotic):
-'Тепер ми розглянемо дієслово "переходити"...'
-
-✅ Better (natural):
-'Уявіть: ви стоїте на одному боці вулиці. Щоб потрапити на другий бік, ви...'
-
-Apply this pattern: start with scenario, then introduce grammar.
-Fix M18 using this approach."
-```
-
-**Why it works:** Concrete examples > abstract instructions.
-
-#### Pattern 6: Explain Your Reasoning
-
-**Ask me to explain decisions:**
-```
-"Explain why you structured M12 aspect pairs this way:
-- Why this grouping?
-- Why this sequence?
-- What's the pedagogical rationale?
-- Are there alternatives we should consider?"
-```
-
-**Why it works:** You learn the methodology, catch issues I might miss.
-
-#### Pattern 7: Iterative Refinement
-
-**Build in stages with checkpoints:**
-```
-"Generate M30 outline only (no content yet).
-
-Include:
-- All sections from plan
-- Word allocation per section
-- Key points to cover in each
-
-Wait for my approval before writing content."
-```
-
-**Why it works:** Catch structural issues before investing in full content.
-
-#### Pattern 8: Reference Previous Success
-
-**Point to what worked:**
-```
-"M87 and M88 passed with high scores. Use those as templates for M89.
-
-Specifically:
-- Same engagement level
-- Similar activity density
-- Natural Ukrainian like M87
-- Cultural references like M88"
-```
-
-**Why it works:** Concrete benchmarks > vague quality standards.
+Use `/interview` for complex features, unclear requirements, or broad requests. Full 60-question framework is in the skill. Skip for trivial fixes.
 
 ---
 
@@ -580,7 +320,7 @@ Specifically:
 
 ## Inter-Agent Communication (Claude <-> Gemini)
 
-**Gemini is your colleague.** You can communicate via a shared SQLite message queue.
+**Gemini is your colleague.** Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
 
 > **CHECK INBOX AT SESSION START!**
 > ```python
@@ -589,170 +329,39 @@ Specifically:
 > Gemini may have sent you messages. Don't wait for the user to tell you - check proactively!
 
 > **HEADLESS SESSION AWARENESS!**
-> Multiple Claude sessions may run in parallel. A **headless session** might have already:
-> - Picked up Gemini's message and acknowledged it (marking as read)
-> - Completed the work without your knowledge
->
-> **When resuming collaborative work:**
+> Multiple Claude sessions may run in parallel. When resuming collaborative work, check FULL conversation history first (not just unread):
 > ```python
-> # Check FULL conversation history first (not just unread!)
 > mcp__message-broker__get_conversation(task_id="the-task-id")
 > ```
-> Look for responses from other Claude sessions before assuming work is pending.
-
-> **BATCH PROCESSING (catch up on missed messages):**
-> ```bash
-> # Process ALL unread messages for Gemini
-> .venv/bin/python scripts/ai_agent_bridge.py process-all
->
-> # Process ALL unread messages for Claude (headless)
-> .venv/bin/python scripts/ai_agent_bridge.py process-claude-all
-> ```
-
-> **AGENT WATCHER DAEMON (optional auto-trigger):**
-> ```bash
-> # Check daemon status
-> .venv/bin/python scripts/agent_watcher.py --status
->
-> # Start daemon (background) - auto-triggers agents on new messages
-> .venv/bin/python scripts/agent_watcher.py --daemon
->
-> # Stop daemon
-> .venv/bin/python scripts/agent_watcher.py --stop
-> ```
-> The watcher polls `messages.db` every 5s and triggers agents automatically. Has loop prevention (max 10 turns/task) and user session awareness.
 
 ### How to Contact Gemini (PREFERRED: One-Step)
 
 ```bash
 # ONE COMMAND: Send message + invoke Gemini automatically
-Bash('.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id your-task')
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id your-task
 
 # Then check inbox for response
 mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
 ```
 
-**Session tracking:** Same task-id = same conversation context across calls.
-
-### Alternative: Two-Step Method
-
-```python
-# 1. Send message via MCP
-mcp__message-broker__send_message(
-    to="gemini",
-    from_llm="claude",
-    content="Your message",
-    message_type="query",  # query, request, handoff, context, feedback
-    task_id="your-task-id"  # REQUIRED for session tracking
-)
-
-# 2. Trigger processing via Bash
-Bash(".venv/bin/python scripts/ai_agent_bridge.py process <msg_id>")
-
-# 3. Read response
-mcp__message-broker__receive_messages(for_llm="claude")
-```
-
-### Message Types
-
-| Type | When to Use |
-|------|-------------|
-| `query` | Ask Gemini a question |
-| `request` | Request Gemini to do work |
-| `handoff` | Transfer task with full context |
-| `context` | Share state/decisions |
-| `feedback` | Comment on Gemini's work |
-
-### Check for Messages from Gemini
-
-```python
-# Quick check
-mcp__message-broker__check_inbox(for_llm="claude")
-
-# Get unread messages
-mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
-```
+Use `--extract CONTENT` flag to strip Gemini's verbose thinking tokens. Session tracking: same task-id = same conversation context.
 
 ### Gemini Output Handling
 
-Gemini outputs verbose thinking tokens (10-100K chars) that pollute context. All structured output uses `===TAG_START===` / `===TAG_END===` delimiters. Content outside delimiters is noise.
-
-- **Batch pipeline** (`batch_gemini_runner.py`): Uses `scripts/gemini_output.py` for extraction
-- **Ad-hoc broker calls**: Use `--extract` flag to strip thinking tokens:
-  ```bash
-  .venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id task --extract CONTENT
-  ```
-- **Extraction utility**: `scripts/gemini_output.py` — `extract_delimited()`, `extract_yaml()`, `validate_output()`
+Gemini outputs verbose thinking tokens (10-100K chars). All structured output uses `===TAG_START===` / `===TAG_END===` delimiters. Content outside delimiters is noise. Extraction utility: `scripts/gemini_output.py`.
 
 ### When to Contact Gemini
 
-- **Ukrainian content writing** - Gemini excels at natural Ukrainian
-- **Code logic review** - Use Gemini Pro for review
-- **Second opinion** - Cross-review improves quality
-- **Parallel work** - Gemini can work on tasks while you do other things
-
-**Proactive Collaboration (DO THIS MORE):**
-- Before writing biography content: Ask Gemini for research on the historical figure
-- After writing Ukrainian prose: Send to Gemini for naturalness review
-- For complex modules: Split work (Claude structures, Gemini writes Ukrainian)
-- Working together saves context - one agent researches while other writes
-
-### Handling Gemini Cooldown
-
-Gemini has rate limits. When you get a cooldown/quota error:
-
-1. **Check the error message** for retry time (usually 60 seconds)
-2. **Queue the message** - send via MCP but don't invoke bridge immediately
-3. **Continue other work** while waiting
-4. **Retry after cooldown** - use `scripts/ai_agent_bridge.py process-all` to catch up
-
-```bash
-# If Gemini is on cooldown, queue message and continue:
-mcp__message-broker__send_message(to="gemini", content="...", task_id="...")
-# Don't call bridge immediately - let it queue
-# Later: .venv/bin/python scripts/ai_agent_bridge.py process-all
-```
-
-### MCP Tool Retry Logic
-
-If an MCP tool fails to connect:
-1. Retry once automatically before reporting failure
-2. If still failing, check `~/.config/claude-code/settings.json` for MCP config
-3. Restart the MCP server if needed: check `ps aux | grep mcp`
-
-### Message Archive
-
-View all communication: `http://localhost:5055` (run `scripts/message_viewer.py`)
-
-Database: `.mcp/servers/message-broker/messages.db`
+- **Ukrainian content writing** — Gemini excels at natural Ukrainian
+- **Cross-review** — An LLM must never review its own work; use the other agent
+- **Parallel work** — Gemini can research while you write
+- **Cooldown?** Queue via MCP, continue other work, retry with `process-all` later
 
 ---
 
 ## Orchestrated Rebuild (Claude → Gemini)
 
-**`/orchestrate-rebuild {track} {num}`** — Claude orchestrates phase-by-phase, Gemini executes focused tasks. Claude validates between phases and writes all files.
-
-**When to use instead of solo `/full-rebuild`:**
-- Gemini skips steps or produces thin content in solo mode
-- You need maximum control over each phase
-- Content quality from solo runs isn't meeting standards
-
-**How it works:**
-1. Claude reads phase templates from `claude_extensions/phases/gemini/`
-2. Claude assembles a prompt file with module data, writes to `orchestration/{slug}/`
-3. Claude sends Gemini a SHORT broker message referencing the prompt file on disk
-4. Gemini reads the file, executes, returns text output
-5. Claude validates, writes to disk, moves to next phase
-6. Phase 4 (Audit) is Claude-only — runs `scripts/audit_module.sh` directly
-
-**Quick usage:**
-```bash
-/orchestrate-rebuild c1-bio 48              # Seminar: 6-phase pipeline
-/orchestrate-rebuild a1 5                   # Core: 4-phase pipeline
-/orchestrate-rebuild b2-hist 5 --from=content  # Resume from content phase
-```
-
-**Key design:** Shared filesystem is the data transport. Broker carries only ~100-300 char signals. Each Gemini call is a fresh session — files on disk are shared state.
+**`/orchestrate-rebuild {track} {num}`** — Claude orchestrates phase-by-phase, Gemini executes. Claude validates between phases and writes all files. Shared filesystem is data transport; broker carries only short signals. Full details: `claude_extensions/commands/orchestrate-rebuild.md`
 
 ---
 
@@ -854,320 +463,30 @@ gh issue close {N}                              # Done, no review needed
 
 ---
 
-## Documentation Index
-
-| Topic | Location |
-|-------|----------|
-| **Developer guide (human)** | `docs/DEVELOPER-GUIDE.md` ⭐ |
-| **Claude-Gemini cooperation** | `docs/CLAUDE-GEMINI-COOPERATION.md` ⭐ NEW |
-| **Module plans (source)** | `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` ⭐ |
-| **Module status (cache)** | `curriculum/l2-uk-en/{level}/status/{slug}.json` ⭐ |
-| **Level status (human)** | `docs/{LEVEL}-STATUS.md` (auto-generated) |
-| **Architecture v2** | `docs/ARCHITECTURE-PLANS.md` ⭐ |
-| **Status caching system** | `docs/STATUS-SYSTEM.md` ⭐ |
-| **Planning guide** | `docs/PLANNING-GUIDE.md` ⭐ |
-| **Core A workflow** | `docs/CORE-A-WORKFLOW.md` (A1/A2/B1.0 mixed-language) |
-| **Core B workflow** | `docs/CORE-B-WORKFLOW.md` (B1.1+/B2/C1/C2/PRO immersion) |
-| **Research workflow** | `docs/RESEARCH-FIRST-WORKFLOW.md` (seminar tracks) |
-| **YAML activities** | `docs/ACTIVITY-YAML-REFERENCE.md` |
-| **Quality standards** | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` |
-| **Subsection flexibility** | `docs/SUBSECTION-FLEXIBILITY-GUIDE.md` |
-| **Markdown format** | `docs/MARKDOWN-FORMAT.md` |
-| **Scripts reference** | `docs/SCRIPTS.md` |
-| **Architecture (legacy)** | `docs/ARCHITECTURE.md` |
-| **Grammar validation** | `scripts/audit/ukrainian_grammar_validator_prompt.md` |
-| **Level quick-refs** | `claude_extensions/quick-ref/{level}.md` |
-| **Phase workflows** | `claude_extensions/phases/module-*.md` |
-| **Track scoring system** | `scripts/scoring/README.md` ⭐ NEW |
-| **Task workflow (GH Issues)** | `docs/TASK-WORKFLOW.md` ⭐ NEW |
-| **Orchestrated rebuild** | `claude_extensions/commands/orchestrate-rebuild.md` ⭐ NEW |
-| **Gemini phase templates** | `claude_extensions/phases/gemini/README.md` |
-| **Slug utilities** | `scripts/slug_utils.py` (single source of truth for slug stripping) |
-
----
-
 ## Task Workflow (GitHub Issues)
 
-**Purpose:** Track complex multi-step tasks via GitHub Issues with full integration.
-
-### When to Use
-
-- **Complex work:** Batch operations (3+ modules), research-first writing, multi-phase work
-- **Cross-agent:** Work requiring Claude ↔ Gemini handoffs
-- **Skip for:** Single module fixes, quick edits
-
-### Quick Commands
-
-```bash
-/task create "Title"           # Create GH issue, set as active
-/task update #N "Progress"     # Add progress comment
-/task close #N                 # Close with summary
-/task list                     # Show active tasks
-/task handoff #N gemini "assigned"  # Hand to Gemini (SHORT msg only!)
-```
-
-### CRITICAL: Handoff Pattern
-
-**Issue is source of truth. Message should be SHORT (issue reference only).**
-
-```
-✅ CORRECT: /task handoff #506 gemini "assigned"
-   → Gemini reads issue for details, checks configs himself
-
-❌ WRONG: /task handoff #506 gemini "Process 19 modules, word target 3500..."
-   → Duplicates issue content, errors propagate
-```
-
-**Validation:** If message > 200 chars, put details in issue instead.
-
-### Full Integration
-
-When active task is set, other skills auto-update the issue:
-- `/research` → 📚 Research completed
-- `/expand` → 📝 Expanded {file}
-- `/module-fix` → 🔨 Fixed issues
-- Commits → Suggests adding (#N)
-
-### Labels
-
-| Label | Purpose |
-|-------|---------|
-| `working:claude` | Claude actively working |
-| `review:gemini` | Ready for Gemini review |
-| `task` | Base task label |
-
-**Full documentation:** `docs/TASK-WORKFLOW.md`
+Use `/task` commands for complex multi-step or cross-agent work. **Handoff pattern:** issue is source of truth — keep broker messages SHORT (issue reference only, < 200 chars). Full docs: `docs/TASK-WORKFLOW.md`
 
 ---
 
-## Track Scoring Verification System
+## Track Scoring
 
-**Purpose:** Automated, objective 10/10 scoring for curriculum tracks without manual estimation.
-
-### When to Use
-
-- Verify track quality before claiming "10/10" in improvement plans
-- Identify specific gaps in track coverage (e.g., missing cross-references)
-- Generate evidence-backed scores for stakeholder reports
-
-### Quick Usage
-
-```bash
-npm run score:b2-hist     # Score B2-HIST track (full report)
-npm run score:all         # Score all tracks (summary table)
-npm run metrics:extract b2-hist  # Extract raw metrics only
-```
-
-### Key Concepts
-
-1. **Two-Layer Architecture:**
-   - **Layer 1 (metrics.py):** Extracts countable metrics (callouts, agency markers, toponyms)
-   - **Layer 2 (aggregator.py):** Applies weighted criteria and critical caps
-
-2. **Critical Caps:** Certain conditions cap scores regardless of other criteria:
-   - 0 `[!myth-buster]` callouts → Decolonization ≤ 4/10 (HIST tracks)
-   - 0 `[!quote]` blocks → Primary sources ≤ 3/10 (HIST/BIO tracks)
-   - Citation ratio < 5% → Authentic engagement ≤ 5/10 (LIT track)
-
-3. **Deterministic:** All measurements are automated (no LLM calls), ensuring reproducible results.
-
-### Track-Specific Criteria
-
-| Track | Key Criteria |
-|-------|--------------|
-| `b2-hist` | Historical accuracy, primary sources, decolonization perspective |
-| `c1-bio` | Biographical accuracy, legacy sections, cultural context |
-| `lit` | Literary depth, authentic text engagement, stylistic devices |
-| Standard | Grammar/content coverage, skills balance, CEFR alignment |
-
-### Documentation
-
-- **Full technical docs:** `scripts/scoring/README.md`
-- **Scripts reference:** `docs/SCRIPTS.md` (Track Scoring section)
+Automated, deterministic 10/10 scoring (no LLM calls). Commands in Quick Commands above. Full docs: `scripts/scoring/README.md`
 
 ---
 
-## Historical Context
+## Common Failure Modes (Checklist)
 
-Previous failures (Dec 2024) stemmed from ignoring documented workflows. Key lessons:
-- **Read before writing** - Never generate from memory
-- **Follow vocabulary exactly** - No "helpful additions"
-- **Run validation** - Don't skip audit steps
-- **Fix source first** - Update docs/tools before manual fixes
+- **Outline compliance**: Create EVERY subsection from `plan.content_outline` — #1 cause of audit failures
+- **Word count shortfalls**: Run word count during generation; expand explanations/examples to meet target
+- **Activity gaps**: Check `MODULE-RICHNESS-GUIDELINES-v2.md` for minimum counts per concept
+- **Checkpoint confusion**: Checkpoints test ALL prior modules in phase (TTT approach), not just one
 
-**Following instructions > Being "helpful"**
+### Ukrainian Quality Standards
 
----
-
-## Lessons Learned
-
-**This section documents recurring issues and patterns to avoid.**
-
-### Module Generation
-
-❌ **DON'T:**
-- Generate content before reading plan file
-- Add vocabulary not in the plan ("helpful" additions)
-- Write from memory or general knowledge
-- Skip reading meta, quick-ref, or templates
-- Create activities below minimum item counts
-- Ignore outline structure from plan
-
-✅ **DO:**
-- Always read plan → meta → quick-ref → templates → generate
-- Use ONLY vocabulary from the plan
-- Follow outline structure exactly (all subsections required)
-- Meet word count targets (95%+ minimum)
-- Generate activities meeting richness guidelines
-- Verify every Ukrainian sentence is natural
-
-### Common Module Failures
-
-**#1 Issue: Outline Compliance** (69/92 B1 modules failing)
-- **Problem**: Missing subsections from plan outline
-- **Cause**: Not reading plan carefully, or skipping subsections
-- **Fix**: Read plan.content_outline, create EVERY subsection listed
-- **Prevention**: Check outline compliance before declaring "done"
-
-**#2 Issue: Word Count Shortfalls**
-- **Problem**: Modules at 1500-2500 words vs 3000 target
-- **Cause**: Insufficient detail, examples, or practice sections
-- **Fix**: Expand explanations, add more examples, develop practice sections
-- **Prevention**: Run word count during generation, not just at end
-
-**#3 Issue: Activity Gaps**
-- **Problem**: Missing required activity types
-- **Cause**: Not reading activity requirements or richness guidelines
-- **Fix**: Check MODULE-RICHNESS-GUIDELINES-v2.md for minimum counts
-- **Prevention**: Generate activities for EACH major concept taught
-
-**#4 Issue: Checkpoint Confusion**
-- **Problem**: Checkpoint modules missing checkpoint-specific activities
-- **Cause**: Treating checkpoints like regular modules
-- **Fix**: Checkpoints test ALL prior modules in phase, not just one module
-- **Prevention**: Read checkpoint template, use TTT approach
-
-### Quality Standards
-
-**Ukrainian Language:**
-- Every sentence must sound natural, not translated
 - No Russianisms (кушать→їсти, приймати участь→брати участь)
 - No calques (робити сенс→мати сенс, брати місце→відбуватися)
 - Case agreement, verb aspects, gender agreement must be perfect
-- **Standard**: This is for a nation's education - accept nothing less than native quality
-
-**Pedagogical Approach:**
-- Scaffolding: simple → complex
-- Context before rules
-- Examples before practice
-- Warm, encouraging tone (not robotic)
-- Cultural references appropriate to level
-- **Mission**: We're fighting for Ukrainian language and culture - quality matters
-
-### Process Discipline
-
-**Before generating ANY content:**
-1. Read plan file completely
-2. Read meta file for pedagogy notes
-3. Read level quick-ref for constraints
-4. Read template for required sections
-5. Confirm vocabulary list
-
-**After generating content:**
-1. Self-review: Does it match the plan outline?
-2. Word count: Meet target?
-3. Activities: All required types?
-4. Audit: Run audit_module.sh
-5. Fix issues until audit passes
-
-**Never:**
-- Declare "done" without running audit
-- Ignore audit failures ("close enough")
-- Skip reading source files
-- Add unapproved vocabulary
-- Compromise on Ukrainian language quality
-
-### Workflow Optimizations
-
-**What works:**
-- Reading all source files in parallel (plan, meta, quick-ref, template)
-- Generating outline first, then filling sections
-- Running audit during generation (not just at end)
-- Fixing issues immediately (not batching)
-- Using exact vocabulary from plan (prevents scope creep)
-
-**What doesn't work:**
-- Generating from memory
-- "Quick drafts" that need complete rewrites
-- Batching fixes (lose context between modules)
-- Approximating word counts ("around 3000")
-- Skipping self-review before audit
-
-### Bug Fix Protocol
-
-**How to give me issues for efficient fixes:**
-
-❌ **Don't say:**
-```
-"M09 has outline compliance errors"
-"The module failed audit"
-"Fix the word count issue"
-```
-
-✅ **Do say:**
-```
-"Fix M09. Here's the full audit log:
-
-[paste curriculum/l2-uk-en/b1/audit/aspect-future-audit.log]
-
-Fix all issues:
-1. Read plan file first to see what's missing
-2. Add missing subsections from outline
-3. Expand content to meet word target (3000)
-4. Re-audit until pass
-
-Use the plan as source of truth."
-```
-
-**Why this works:**
-- I have exact errors (no guessing)
-- I know what "success" looks like
-- I have clear steps
-- I can work autonomously until audit passes
-
-**For multiple module fixes:**
-```
-"Fix B1 modules 9-12. For each:
-1. Read audit log from curriculum/l2-uk-en/b1/audit/{slug}-audit.log
-2. Read plan file
-3. Fix outline compliance (add missing subsections)
-4. Expand to meet word targets
-5. Re-audit
-6. Continue to next module
-
-Stop only when all 4 modules pass audit."
-```
-
-**Self-review before asking me:**
-
-Before saying "module failed", always provide:
-- ✅ Audit log (run `scripts/audit_module.sh {path}`)
-- ✅ What specifically failed (outline? word count? activities?)
-- ✅ What the target/goal is
-- ✅ Any constraints I should know
-
-**Batch fixing pattern:**
-```
-"Batch fix outline compliance for B1 modules 15-20.
-
-For each module:
-- Read plan outline
-- Compare to actual sections in .md
-- Add any missing subsections
-- Ensure each subsection has content
-- Re-audit
-
-Work systematically, don't skip any."
-```
+- This is for a nation's education — accept nothing less than native quality
 
 ---

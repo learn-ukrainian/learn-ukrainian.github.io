@@ -2,14 +2,14 @@
   "module": "mykola-vasylenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:33.045845Z",
+  "last_audit": "2026-02-11T00:43:47.649991Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T12:37:27.480330Z",
     "meta": "2026-02-09T15:59:44.212350Z",
     "activities": "2026-02-07T16:54:06.742311Z",
     "vocabulary": "2026-02-07T10:03:51.634567Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.212045Z"
   },
   "gates": {
     "meta": {

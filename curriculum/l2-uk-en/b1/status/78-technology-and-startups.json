@@ -2,14 +2,14 @@
   "module": "78-technology-and-startups",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:51.521525Z",
+  "last_audit": "2026-02-10T23:31:14.981895Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:44:55.942863Z",
-    "meta": "2026-01-27T18:55:08.902943Z",
-    "activities": "2026-01-27T19:07:32.132303Z",
-    "vocabulary": "2026-01-25T16:02:18.732536Z",
-    "plan": "2026-01-30T00:44:05.172722Z"
+    "meta": "2026-02-07T10:03:51.664141Z",
+    "activities": "2026-02-07T10:03:51.707262Z",
+    "vocabulary": "2026-02-07T10:03:51.748122Z",
+    "plan": "2026-02-07T10:38:52.838305Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "3 Outline Compliance Errors"
+    ],
     "pass_count": 4,
     "fail_count": 0
   }

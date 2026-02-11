@@ -2,14 +2,14 @@
   "module": "roman-ratushny",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:26.119404Z",
+  "last_audit": "2026-02-11T00:44:40.213491Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T14:00:35.108885Z",
     "meta": "2026-02-09T15:59:44.246557Z",
     "activities": "2026-02-09T12:38:28.820021Z",
     "vocabulary": "2026-02-09T12:30:50.739111Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.246371Z"
   },
   "gates": {
     "meta": {

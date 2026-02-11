@@ -2,14 +2,14 @@
   "module": "31-conditionals-real-yakshcho",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:24.718003Z",
+  "last_audit": "2026-02-10T23:30:48.987891Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350165Z",
-    "meta": "2026-02-01T17:02:22.422529Z",
-    "activities": "2026-01-11T22:51:42.730768Z",
-    "vocabulary": "2026-01-25T15:44:16.904723Z",
-    "plan": "2026-01-29T07:45:40.366152Z"
+    "meta": "2026-02-07T10:03:51.666203Z",
+    "activities": "2026-02-07T10:03:51.711174Z",
+    "vocabulary": "2026-02-07T10:03:51.749998Z",
+    "plan": "2026-02-07T10:03:51.063347Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "1589/1607 (raw: 1978) (18 short)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1589/3000 (raw: 1978) | richness: 83% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

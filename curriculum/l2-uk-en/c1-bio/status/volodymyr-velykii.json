@@ -2,14 +2,14 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:23:55.684611Z",
+  "last_audit": "2026-02-11T00:43:09.715147Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T22:47:00.990687Z",
     "meta": "2026-02-09T21:46:50.065463Z",
     "activities": "2026-02-09T22:44:25.964423Z",
     "vocabulary": "2026-02-09T22:44:25.948520Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.177136Z"
   },
   "gates": {
     "meta": {

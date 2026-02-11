@@ -2,15 +2,17 @@
 
 ## Огляд
 
-**Вітаємо на контрольному етапі!** Ви успішно пройшли шлях вивчення основ словотвору. Word formation (словотвір) is one of the most powerful tools in Ukrainian. It allows you to expand your vocabulary exponentially by recognizing patterns rather than memorizing every single word as a unique entity.
+**Вітаємо на контрольному етапі!** Ви успішно пройшли шлях вивчення словотвору. Word formation (словотвір) is one of the most powerful tools in the Ukrainian language. It lets you expand your vocabulary by recognizing patterns and logical structures. At this stage of your A2 journey, mastering these building blocks separates a beginner from a confident learner.
 
-Українська мова має дуже багату та логічну систему словотвору. Знання того, як корінь, префікс та суфікс взаємодіють між собою, дає вам «лінгвістичний рентген» — здатність бачити структуру слова та розуміти його значення, навіть якщо ви бачите його вперше. У цьому модулі ми систематизуємо ваші знання та підготуємо вас до активного використання цих інструментів у мовленні.
+Українська мова має багату систему **словотвору**. Корінь, префікс та суфікс працюють разом як одна система. Знання цих елементів дає вам «лінгвістичний рентген». Ви зможете бачити структуру слова. Ви зрозумієте **значення**, навіть якщо бачите слово вперше. Кожна **морфема** несе своє смислове навантаження. **Аналіз** — це розкладання слова на частини. **Синтез** — це творення нових слів з відомих елементів.
+
+У цьому модулі ми систематизуємо ваші знання. Ми перетворимо теорію на активну навичку.
 
 **Skills tested in this checkpoint:**
-1. **Verb Prefixes** - Mastery of direction (при-, ви-, пере-) and aspectual changes.
-2. **Noun Suffixes** - Formation of actions (-ння), qualities (-ість), and agents (-ач, -ар).
-3. **Adjective Suffixes** - Understanding relational (-ний), material (-овий), and identity (-ський) markers.
-4. **Root Families** - Recognizing core meanings across different parts of speech (ход-, пис-, бач-).
+1. **Verb Prefixes** — Mastery of direction (при-, ви-, пере-) and aspectual changes.
+2. **Noun Suffixes** — Formation of actions (-ння), qualities (-ість), and agents (-ач, -ар).
+3. **Adjective Suffixes** — Understanding relational (-ний), material (-овий), and identity (-ський) markers.
+4. **Root Families** — Recognizing core meanings across different parts of speech (ход-, пис-, бач-).
 
 ---
 
@@ -18,7 +20,7 @@
 
 **Can you use prefixes to change verb meaning?**
 
-In Ukrainian, a prefix (префікс) is not just a grammatical marker; it is a «semantic compass» that points to the direction or nature of an action.
+In Ukrainian, a prefix (префікс) is a «semantic compass». It points to the direction or nature of an action. Whether you are arriving, crossing, or finishing, the prefix signals what is happening. Understanding these directionals is key to navigating space and time.
 
 ### Model: Direction and Logic Prefixes
 
@@ -26,82 +28,72 @@ In Ukrainian, a prefix (префікс) is not just a grammatical marker; it is 
 > **ви-** = exit, movement out of: вийти (to go out)
 > **у-/в-** = entering: увійти (to enter)
 > **пере-** = crossing or repeating: перейти (to cross), переписати (to rewrite)
-> **від-** = moving away from or opening: відійти (to step away), відкрити (to open)
-> **роз-** = spreading, unfolding, or separating: розійтися (to disperse)
+> **від-** = moving away or opening: відійти (to step away), відкрити (to open)
+> **роз-** = spreading or separating: розійтися (to disperse)
+> **на-** = completion of an action: написати (to finish writing)
 
-**Detailed patterns:**
+**Semantic Opposites:**
 
-| Prefix | Primary Meaning | Example | Context |
-|--------|-----------------|---------|---------|
-| **при-** | Arrival / Attachment | прийти, приїхати | Coming home or to class |
-| **ви-** | Exit / Outward | вийти, винести | Leaving a room or taking out trash |
-| **у-/в-** | Entering / Into | увійти, в'їхати | Entering a building or a city |
-| **пере-** | Across / Re-doing | перейти, переробити | Crossing a street or fixing a mistake |
-| **від-** | Away / Detachment | відійти, відсунути | Stepping back or moving something away |
-| **на-** | Onto / Accumulation | написати, наклеїти | Writing something down or sticking a label |
-| **з-/с-** | Down / Together | зійти, скласти | Coming down or putting things together |
+| Prefix (Toward/In) | Meaning | Prefix (Away/Out) | Meaning |
+|-------------------|---------|-------------------|---------|
+| **при-** | Arrival | **від-** | Departure |
+| **у- / в-** | Entering | **ви-** | Exiting |
+| **на-** | Onto | **з-** | Off / Down |
+
+> [!myth-buster]
+> **Myth:** Every prefix creates a completely new word.
+> **Fact:** Some prefixes mainly change the **aspect** (perfective vs. imperfective). For example, **писати** and **написати** describe the same action. The prefix **на-** only signals completion.
+
+> [!history-bite]
+> Most Ukrainian prefixes evolved from prepositions! This is why **в-** (into) looks like **в** (in), and **на-** (onto) looks like **на** (on). Their spatial logic is preserved in the verb!
 
 ### Practice: Choose the Right Prefix
 
-1. Він **при**йшов до класу вчасно. (arrived)
+1. Він **прийшов** до класу вчасно.
 > [!solution] Перевірити
 > **прийшов** — arrival = при-
 
-2. Вона **ви**йшла з кімнати дуже швидко. (exited)
+2. Вона **вийшла** з кімнати швидко.
 > [!solution] Перевірити
 > **вийшла** — exit = ви-
 
-3. Я **пере**писав цей текст ще раз. (rewrote/redid)
+3. Я **переписав** цей текст ще раз.
 > [!solution] Перевірити
 > **переписав** — re-do = пере-
 
-4. Ми **пере**йшли через старий міст. (crossed)
+4. Ми **перейшли** через старий міст.
 > [!solution] Перевірити
 > **перейшли** — across = пере-
 
-5. Сонце **зі**йшло рано вранці. (rose/came up)
+5. Сонце **зійшло** рано вранці.
 > [!solution] Перевірити
-> **зійшло** — movement up/out = з- (with euphonic vowel і)
+> **зійшло** — movement up = з-
 
-6. Ми **в**війшли до музею. (entered)
+6. Ми **увійшли** до музею.
 > [!solution] Перевірити
-> **ввійшли** — entering = в- (variant of у-)
+> **увійшли** — entering = у-
 
-7. Він **від**ійшов від вікна. (stepped away)
+7. Він **відійшов** від вікна.
 > [!solution] Перевірити
 > **відійшов** — movement away = від-
 
-8. Студент **на**писав емейл професору. (wrote down)
+8. Студент **написав** емейл професору.
 > [!solution] Перевірити
 > **написав** — completion of writing = на-
 
-9. Ми **за**йшли до кафе на каву. (dropped in)
+9. Ми **зайшли** до кафе на каву.
 > [!solution] Перевірити
 > **зайшли** — short stop / drop-in = за-
 
-10. Автобус **від**'їхав від зупинки. (drove away)
+10. Автобус **від'їхав** від зупинки.
 > [!solution] Перевірити
-> **від'їхав** — departure / away = від-
+> **від'їхав** — departure = від-
 
-11. Він **з**ійшов зі сходів дуже обережно. (came down)
-> [!solution] Перевірити
-> **зійшов** — movement down = з- (with euphonic і)
+### Самоперевірка
 
-12. Птах **ви**летів з вікна. (flew out)
-> [!solution] Перевірити
-> **вилетів** — outward movement = ви-
-
-### Self-Check
-
-- Do you distinguish between **при-** (arrival) and **ви-** (exit)?
-- Can you use **пере-** for both «across» and «re-do»?
-- Do you understand that **від-** implies moving away or opening a boundary?
-
-> [!myth-buster] 🔍 Myth Buster
->
-> **Myth:** «Ukrainian prefixes are identical to those in all other Slavic languages.»
->
-> **Truth:** While Slavic languages share a common heritage, Ukrainian has unique prefixal nuances and specific phonological rules. For example, the Ukrainian **від-** (away) preserves the ancient dental 'д', and forms like **відійти** showcase the authentic Ukrainian «ікавізм» (the shift to soft і), which is a hallmark of the language's development since the 12th century.
+- ☐ Can you name the meaning of при-, ви-, пере-, від-, у-?
+- ☐ Can you distinguish direction prefixes from aspect-only prefixes?
+- ☐ Can you match opposite prefix pairs (при- ↔ від-, у- ↔ ви-)?
 
 ---
 
@@ -109,7 +101,7 @@ In Ukrainian, a prefix (префікс) is not just a grammatical marker; it is 
 
 **Can you form nouns from verbs and adjectives?**
 
-Suffixes (суфікси) in Ukrainian often determine the «category» of a noun—whether it is an action, a quality, or a person who performs a task.
+Suffixes (суфікси) determine the «category» of a noun. They show whether a word is an action, a quality, or a person. By learning one root and a few suffixes, you can unlock a whole family of words.
 
 ### Model: Suffixes That Create Nouns
 
@@ -121,61 +113,74 @@ Suffixes (суфікси) in Ukrainian often determine the «category» of a nou
 
 | Suffix | Function | Example | Base Word |
 |--------|----------|---------|-----------|
-| **-ння** | Action/Result | писання, навчання | писати, вчити |
-| **-ість** | Quality/State | важливість, радість | важливий, радий |
-| **-ач** | Person (agent) | викладач, слухач | викладати, слухати |
-| **-ар / -яр** | Profession/Skill | лікар, школяр, кухар | ліки, школа, кухня |
-| **-тель** | Person (doer) | вчитель, вихователь | вчити, виховувати |
+| **-ння** | Action/Result (Neuter) | писання, навчання | писати, вчити |
+| **-ість** | Quality/State (Feminine) | важливість, радість | важливий, радий |
+| **-ач** | Person / Agent (Masculine) | викладач, слухач | викладати, слухати |
+| **-ар / -яр** | Profession / Skill | лікар, кухар, школяр | ліки, кухня, школа |
+| **-тель** | Person / Instructor | вчитель, вихователь | вчити, виховувати |
+
+> [!cultural]
+> **Diminutives and Warmth**
+> Ukrainian has productive diminutive suffixes. The suffix **-ик** works for masculine nouns. The suffix **-к-** works for feminine nouns. They express warmth, not just "smallness." Calling coffee *кавуся* or a friend *Оленка* creates a friendly atmosphere (*затишок*).
+
+### Subsection: Diminutives (Пестливі слова)
+
+Diminutive suffixes shift the emotional register. They make a word "softer" or more affectionate.
+
+*   **-ик / -ок** (Masculine): *кіт* → *котик*, *стіл* → *столик*.
+*   **-к- / -иц-** (Feminine): *книга* → *книжка*, *вода* → *водичка*.
+*   **-ц- / -чк-** (Neuter): *вікно* → *віконце*, *сонце* → *сонечко*.
+
+> [!history-bite]
+> Many Ukrainian surnames show word formation! The suffix **-енко** means "son of" (like *Шевченко*). The suffix **-ук/-юк** is common in Western Ukraine (like *Бондарчук*).
 
 ### Practice: Form the Noun
 
-1. говорити (to speak) → **говоріння** (speaking)
+1. говорити → **говоріння** (speaking)
 > [!solution] Перевірити
-> **говоріння** — verb + -ння = verbal noun (action)
+> **говоріння** — verb + -ння. All -ння nouns are Neuter.
 
-2. сміливий (brave) → **сміливість** (bravery)
+2. сміливий → **сміливість** (bravery)
 > [!solution] Перевірити
-> **сміливість** — adjective + -ість = abstract quality
+> **сміливість** — adjective + -ість. All -ість nouns are Feminine.
 
-3. слухати (to listen) → **слухач** (listener)
+3. слухати → **слухач** (listener)
 > [!solution] Перевірити
-> **слухач** — verb + -ач = agent noun (person)
+> **слухач** — verb + -ач.
 
-4. лікувати (to treat/heal) → **лікар** (doctor)
+4. лікувати → **лікар** (doctor)
 > [!solution] Перевірити
-> **лікар** — root + -ар = professional agent
+> **лікар** — root + -ар.
 
-5. малювати (to draw) → **малювання** (drawing)
+5. малювати → **малювання** (drawing)
 > [!solution] Перевірити
-> **малювання** — verb + -ння = verbal noun (action)
+> **малювання** — verb + -ння.
 
-6. чесний (honest) → **чесність** (honesty)
+6. чесний → **чесність** (honesty)
 > [!solution] Перевірити
-> **чесність** — adjective + -ість = abstract quality
+> **чесність** — adjective + -ість.
 
-7. вчити (to teach) → **вчитель** (teacher)
+7. вчити → **вчитель** (teacher)
 > [!solution] Перевірити
-> **вчитель** — verb + -тель = person (doer)
+> **вчитель** — verb + -тель.
 
-8. кухня (kitchen) → **кухар** (cook)
+8. кухня → **кухар** (cook)
 > [!solution] Перевірити
-> **кухар** — noun + -ар = professional agent
+> **кухар** — noun + -ар.
 
-9. знати (to know) → **знання** (knowledge)
+9. знати → **знання** (knowledge)
 > [!solution] Перевірити
-> **знання** — verb + -ння = result of action
+> **знання** — verb + -ння.
 
-10. викладати (to lecture/teach) → **викладач** (lecturer)
+10. мудрий → **мудрість** (wisdom)
 > [!solution] Перевірити
-> **викладач** — verb + -ач = agent noun
+> **мудрість** — adjective + -ість.
 
-11. мудрий (wise) → **мудрість** (wisdom)
-> [!solution] Перевірити
-> **мудрість** — adjective + -ість = abstract quality
+### Самоперевірка
 
-12. писати (to write) → **писання** (the act of writing)
-> [!solution] Перевірити
-> **писання** — verb + -ння = verbal noun
+- ☐ Can you form a verbal noun with -ння from any verb?
+- ☐ Do you know that -ння nouns are Neuter and -ість nouns are Feminine?
+- ☐ Can you choose the right agent suffix: -ач, -ар, or -тель?
 
 ---
 
@@ -185,67 +190,44 @@ Suffixes (суфікси) in Ukrainian often determine the «category» of a nou
 
 ### Model: Suffixes That Create Adjectives
 
+Ukrainian adjectives use specific suffixes. Each suffix shows a relationship to a noun, a material, or an origin.
+
 > **-ний** = general relationship: музика → **музичний** (musical)
 > **-овий / -евий** = material or type: слово → **словниковий** (vocabulary-related)
-> **-ський** = origin, identity, or place: Україна → **український** (Ukrainian)
+> **-ський** = origin or place: Україна → **український** (Ukrainian)
 
-**Key Suffixes:**
+**Common Patterns:**
 
-| Suffix | Meaning | Examples |
-|--------|---------|----------|
-| **-ний** | General relation | цікавий, корисний, музичний |
-| **-овий** | Material / Character | кольоровий, паперовий, лісовий |
-| **-ський** | Place / Identity | київський, студентський, морський |
+| Suffix | Function | Example | Base Word |
+|--------|----------|---------|-----------|
+| **-ний** | General relation | нічний, залізний | ніч, залізо |
+| **-овий** | Material / Type | кольоровий, лісовий | колір, ліс |
+| **-ський** | Place / Origin | київський, одеський | Київ, Одеса |
+| **-яний** | Material (Special) | дерев'яний, скляний | дерево, скло |
 
 ### Practice: Form the Adjective
 
-1. Київ → **київський**
-> [!solution] Перевірити
-> **київський** — place + -ський
+1. Київ → **київський** (from Kyiv)
+2. музика → **музичний** (musical)
+3. колір → **кольоровий** (colorful)
+4. Європа → **європейський** (European)
+5. студент → **студентський** (student-related)
+6. ліс → **лісовий** (forest-related)
+7. папір → **паперовий** (made of paper)
+8. море → **морський** (sea-related)
+9. дерево → **дерев'яний** (wooden)
+10. сонце → **сонячний** (sunny)
+11. ніч → **нічний** (nightly)
+12. Одеса → **одеський** (from Odesa)
 
-2. музика → **музичний**
-> [!solution] Перевірити
-> **музичний** — noun + -ний
+> [!tip]
+> Note consonant changes: сонце → **сонячний** (ц → ч). This is common in Ukrainian word formation.
 
-3. колір → **кольоровий**
-> [!solution] Перевірити
-> **кольоровий** — noun + -овий
+### Самоперевірка
 
-4. Європа → **європейський**
-> [!solution] Перевірити
-> **європейський** — place + -ський
-
-5. студент → **студентський**
-> [!solution] Перевірити
-> **студентський** — person + -ський
-
-6. ліс → **лісовий**
-> [!solution] Перевірити
-> **лісовий** — noun + -овий
-
-7. папір → **паперовий**
-> [!solution] Перевірити
-> **паперовий** — material + -овий
-
-8. море → **морський**
-> [!solution] Перевірити
-> **морський** — place + -ський
-
-9. дерево (wood) → **дерев'яний** (wooden)
-> [!solution] Перевірити
-> **дерев'яний** — material + -яний (suffix variation)
-
-10. сонце (sun) → **сонячний** (sunny)
-> [!solution] Перевірити
-> **сонячний** — nature + -ний (with consonant shift ц/ч)
-
-11. ніч (night) → **нічний** (nightly)
-> [!solution] Перевірити
-> **нічний** — time + -ний
-
-12. Одеса (Odesa) → **одеський** (of Odesa)
-> [!solution] Перевірити
-> **одеський** — city + -ський
+- ☐ Can you choose between -ний, -овий, and -ський for a given noun?
+- ☐ Do you recognize consonant changes (ц → ч, к → ч)?
+- ☐ Can you form place/nationality adjectives with -ський?
 
 ---
 
@@ -253,126 +235,159 @@ Suffixes (суфікси) in Ukrainian often determine the «category» of a nou
 
 **Can you recognize related words from the same root?**
 
-The root (корінь) is the semantic heart of the word. Identifying it allows you to decipher related words across different parts of speech.
+The root (**корінь**) is the semantic heart of the word. Identifying it lets you decode the core meaning across different parts of speech.
 
-### Model: Root = Core Meaning
+### Model: The "Word Tree" (Root = Core Meaning)
 
-> **Root ход- / хід-** (walk / movement):
-> вхід (entrance), вихід (exit), перехід (crossing), ходити (to walk), прийти (to arrive).
+Consider the root **ход- / хід-** (movement on foot). From this one root, we build a large family:
 
-> **Root пис-** (write):
-> писати (to write), написати (to write down), письменник (writer), писання (writing), переписати (to rewrite).
+*   **ход**ити — to walk
+*   **вхід** — entrance
+*   **вихід** — exit
+*   **перехід** — crossing
+*   **прихід** — arrival
+*   **захід** — sunset / the West
 
-> **Root чит-** (read):
-> читати (to read), читач (reader), читанка (reader book), читання (reading), перечитати (to reread).
+> [!tip]
+> **Vowel Shifts (Чергування)**
+> Notice **о / і** in the root: **ход-** becomes **хід-**. This is very common in Ukrainian word formation. It happens in closed syllables.
 
-**Common Root Families:**
+### Practice: Identify Word Families
 
-| Root | Core Meaning | Family Words |
-|------|--------------|--------------|
-| **ход-** | movement | вхід, вихід, поїзд, хід |
-| **пис-** | writing | писати, письменник, лист |
-| **бач-** | vision | бачити, побачення, бачення |
-| **чит-** | reading | читати, читач, читанка |
-| **мов-** | speech | мова, розмова, промовець |
-
-### Practice: Identify the Core Meaning
-
-1. вхід, вихід, перехід — what is the shared concept?
+1. Які слова мають корінь **ход- / хід-**? (вхід, вихід, перехід, поїзд).
 > [!solution] Перевірити
-> **ход- / хід-** — All relate to the act of walking or moving through a space. Note the vowel shift (о/і).
+> **вхід, вихід, перехід** — all relate to movement.
 
-2. письменник, писання, переписати — what is the shared concept?
+2. Знайдіть слова з коренем **пис-**: (письменник, писання, переписати, папір).
 > [!solution] Перевірити
-> **пис-** — All relate to the act of writing or creating text.
+> **письменник, писання, переписати** — all relate to writing.
 
-3. слухач, слухати, послухати — what is the shared concept?
+3. Яке поняття об'єднує **слухач, слухати, послухати**?
 > [!solution] Перевірити
-> **слух-** — All relate to the sense of hearing or listening.
+> Слух (the sense of hearing).
 
-4. Український письменник написав цікаву книгу. — which words share a root?
+4. Які слова у реченні мають корінь **пис-**? «Він написав коротку записку».
 > [!solution] Перевірити
-> **письменник** and **написав** — both share the root **пис-**.
+> **написав** та **записку** (корінь **пис-**).
 
-5. читати, читанка, читач — what is the shared concept?
+5. Який корінь мають **читати, читанка, читач**?
 > [!solution] Перевірити
-> **чит-** — All relate to the act of reading.
+> Корінь **чит-** (reading).
 
-6. мова, розмова, перемовини — what is the shared concept?
+6. Знайдіть слова з коренем **мов-** у списку: (мова, розмова, море, мовець).
 > [!solution] Перевірити
-> **мов-** — All relate to speech or language.
+> **мова, розмова, мовець**.
 
-7. бачити, побачення, передбачити — what is the shared concept?
+7. Яке слово має корінь **бач-**? (бачити, побачення, будівля)
 > [!solution] Перевірити
-> **бач-** — All relate to the sense of vision or seeing.
+> **бачити, побачення**.
 
-8. ходити, вхід, перехід — identify the prefix in the last word.
+8. Визначте префікс у слові **перехід**.
 > [!solution] Перевірити
-> **пере-** — meaning «across».
+> **пере-** (meaning «across»).
+
+9. Яке слово має корінь **клад-** у реченні: «Викладач пояснив тему»?
+> [!solution] Перевірити
+> **Викладач** (корінь клад-).
+
+10. Визначте слово з коренем **бач-** у реченні: «Чекаємо на побачення».
+> [!solution] Перевірити
+> **побачення** (корінь бач-).
+
+### Extended Root Families
+
+Now try analyzing more complex words. Break them into parts (Prefix + Root + Suffix):
+
+1. **передбачити** (to foresee) → **перед** (prefix) + **бач** (root) + **ити** (ending).
+2. **письменник** (writer) → **пис** (root) + **мен** (inter-suffix) + **ник** (agent suffix).
+3. **важливість** (importance) → **важ** (root) + **лив** (suffix) + **ість** (suffix).
+4. **український** (Ukrainian) → **україн** (base) + **ський** (suffix).
+5. **безкоштовний** (free) → **без** (prefix) + **кошт** (root) + **овний** (suffix).
+6. **неможливий** (impossible) → **не** (prefix) + **мож** (root) + **ливий** (suffix).
+7. **робітник** (worker) → **робіт** (root) + **ник** (suffix).
+8. **школяр** (schoolboy) → **школ** (root) + **яр** (suffix).
+
+### Самоперевірка
+
+- ☐ Can you identify the root in a word you see for the first time?
+- ☐ Do you recognize vowel shifts (о/і) in root families?
+- ☐ Can you break a word into prefix + root + suffix?
 
 ---
 
 ## Integration Challenge
 
-Analyze these complex words by breaking them into their logical parts (Prefix + Root + Suffix):
+**Can you spot and fix incorrect word forms?**
 
-1. **передбачити** (to foresee)
-> [!solution] Перевірити
-> **перед** (prefix: before) + **бач** (root: see) + **ити** (infinitive suffix)
+Analyze these sentences and fix the word formation error.
 
-2. **письменник** (writer)
+1. Вчора я **вийшов** до школи вчасно. (should mean: arrived)
 > [!solution] Перевірити
-> **пис** (root: write) + **мен** (inter-suffix) + **ник** (agent suffix)
+> **прийшов** — arrival = при-, not ви-.
 
-3. **важливість** (importance)
+2. Мені подобається це **читач**. (should mean: the act of reading)
 > [!solution] Перевірити
-> **важлив** (base: important) + **ість** (suffix: quality)
+> **читання** — use -ння for action, not -ач for person.
 
-4. **український** (Ukrainian)
+3. Він хороший **читання**. (should mean: person who reads)
 > [!solution] Перевірити
-> **україн** (base: Ukraine) + **ський** (suffix: identity/nationality)
+> **читач** — use -ач for person, not -ння for action.
 
-5. **читання** (reading)
+4. Я **перейшов** з кімнати швидко. (should mean: exited)
 > [!solution] Перевірити
-> **чит** (root: read) + **ання** (suffix: action)
+> **вийшов** — exit = ви-, not пере-.
 
-6. **безкоштовний** (free of charge)
+5. Це цікавий **музикальний** інструмент. (should mean: musical)
 > [!solution] Перевірити
-> **без** (prefix: without) + **кошт** (root: cost) + **овний** (adjective suffix)
+> **музичний** — standard adjective from музика.
 
-7. **неможливий** (impossible)
+6. Він **відійшов** до музею вранці. (should mean: entered)
 > [!solution] Перевірити
-> **не** (prefix: negation) + **мож** (root: can/able) + **ливий** (adjective suffix)
+> **увійшов** — entering = у-, not від-.
 
-8. **робітник** (worker)
+7. Ця подія має велику **важливий**. (should mean: importance)
 > [!solution] Перевірити
-> **робіт** (root: work) + **ник** (suffix: agent)
+> **важливість** — noun formed with -ість, not adjective.
 
-9. **вихід** (exit)
+8. Я **увійшов** від вікна. (should mean: stepped away)
 > [!solution] Перевірити
-> **ви** (prefix: out) + **хід** (root: walk/move)
-
-10. **школяр** (schoolboy)
-> [!solution] Перевірити
-> **школ** (root: school) + **яр** (suffix: person/agent)
+> **відійшов** — away = від-, not у-.
 
 ---
 
 # Підсумок
 
-| Skill | Pattern / Marker | Function | Example |
-|-------|------------------|----------|---------|
-| **Prefixes** | при-, ви-, пере- | Change direction/nature | прийти, вийти |
-| **Noun Suffixes** | -ння, -ість, -ач | Define category (action/quality) | читання, радість |
-| **Adj Suffixes** | -ний, -овий, -ський | Define relationship/origin | музичний, київський |
-| **Roots** | пис-, ход-, бач- | Provide core meaning | письменник, вихід |
+Словотвір — це **утворення** нових слів за допомогою морфем.
 
-> 💡 **Лінгвістичний Інсайт**
+| Element | Pattern / Marker | Function | Example |
+|---------|------------------|----------|---------|
+| **Prefixes** | при-, ви-, пере-, у-, від- | Direction / Aspect | прийти, вийти, переписати |
+| **Noun Suffixes** | -ння, -ість, -ач, -ар | Action / Quality / Person | читання, радість, слухач, лікар |
+| **Adj Suffixes** | -ний, -овий, -ський | Relationship / Origin | музичний, кольоровий, київський |
+| **Roots** | пис-, ход-, бач-, мов- | Core Meaning | написав, перехід, побачення, розмова |
+
+> [!important]
+> **Linguistic Insight**
 >
-> Словотвір — це «конструктор» мови. Якщо ви знаєте 50 коренів та 10 префіксів/суфіксів, ви потенційно знаєте 5000 слів! Пам'ятайте про пунктуацію: у складних реченнях перед сполучниками **що**, **яка**, **який** або **як** майже завжди ставиться кома. Наприклад: «Я знаю, **що** словотвір — це логічна система, **яка** допомагає вивчати мову».
+> Словотвір — це логічна система. Вона перетворює вивчення мови на процес відкриттів. Розуміння структури слова дозволяє відчувати логіку мови.
+>
+> **Уникайте помилок:**
+> 1. **Prefix confusion:** Не плутайте при- (arrival) та від- (departure).
+> 2. **Suffix confusion:** Do not confuse -ння for actions and -ач for people.
+> 3. **Пунктуація:** Перед **що**, **щоб**, **який** ставте кому.
+>
+> *Наприклад:*
+> - «Я знаю письменника, **який** написав п'єсу.»
+> - «Я бачу, **що** ви добре розумієте словотвір.»
 
 ---
 
 ## Need More Practice?
 
-Щоб закріпити знання, спробуйте знайти 5 нових слів у словнику та проаналізуйте їхню структуру. Використовуйте слова зі списку (vocabulary sidecar) для створення власних речень, звертаючи увагу на те, як суфікси змінюють значення слова. Зверніть особливу увагу на дієслово **читати** (to read) — це дієслово є основою для багатьох похідних слів.
+Щоб закріпити знання, знайдіть 5 нових слів у тексті. Проаналізуйте їхню структуру. Визначте корінь, префікс і суфікс кожного слова.
+
+**Struggling with a skill?** Go back to:
+- Skill 1 (Verb Prefixes) → Module 35-36
+- Skill 2 (Noun Suffixes) → Module 37-38
+- Skill 3 (Adjective Suffixes) → Module 39-40
+- Skill 4 (Root Families) → Module 41-42

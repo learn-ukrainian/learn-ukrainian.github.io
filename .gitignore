@@ -36,6 +36,7 @@ output/json/
 *.swo
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 

@@ -2,14 +2,14 @@
   "module": "dmytro-kotsyubailo",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:25.488398Z",
+  "last_audit": "2026-02-11T00:44:39.543710Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T10:54:47.617762Z",
     "meta": "2026-02-09T15:59:44.245879Z",
     "activities": "2026-02-09T11:03:58.322280Z",
     "vocabulary": "2026-02-09T11:01:47.695231Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.245683Z"
   },
   "gates": {
     "meta": {

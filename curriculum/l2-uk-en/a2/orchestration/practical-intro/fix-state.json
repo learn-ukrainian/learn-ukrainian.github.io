@@ -3,40 +3,33 @@
   "iterations": [
     {
       "iteration": 1,
-      "started": "2026-02-10T11:07:54.798231Z",
+      "started": "2026-02-11T00:34:00.217935Z",
       "audit_passed": false,
-      "action": "generate_fix_plan",
-      "result": "fix_plan_generated"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 2,
-      "started": "2026-02-10T11:09:42.260310Z",
+      "started": "2026-02-11T00:35:02.476047Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 3,
-      "started": "2026-02-10T11:13:41.923172Z",
+      "started": "2026-02-11T00:36:13.371752Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 4,
-      "started": "2026-02-10T11:19:27.952574Z",
+      "started": "2026-02-11T00:37:22.932031Z",
       "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
-    },
-    {
-      "iteration": 5,
-      "started": "2026-02-10T11:21:37.573869Z",
-      "audit_passed": false,
-      "action": "apply_fixes",
-      "result": "fixes_applied"
+      "action": "fix_content",
+      "result": "stall_detected"
     }
   ],
-  "started": "2026-02-10T11:07:54.798217Z",
+  "started": "2026-02-11T00:34:00.217888Z",
   "result": "exhausted"
 }

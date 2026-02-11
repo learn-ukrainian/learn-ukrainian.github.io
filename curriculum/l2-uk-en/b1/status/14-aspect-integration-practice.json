@@ -2,14 +2,14 @@
   "module": "14-aspect-integration-practice",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:15.019586Z",
+  "last_audit": "2026-02-10T23:30:39.349907Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-01T16:16:40.761941Z",
-    "meta": "2026-01-29T07:39:04.638441Z",
-    "activities": "2026-01-11T10:24:11.988847Z",
-    "vocabulary": "2026-01-25T16:02:18.169216Z",
-    "plan": "2026-01-29T07:45:40.305086Z"
+    "meta": "2026-02-07T10:03:51.672257Z",
+    "activities": "2026-02-07T10:03:51.722833Z",
+    "vocabulary": "2026-02-07T10:03:51.756480Z",
+    "plan": "2026-02-09T12:52:14.410661Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "2991/3000 (raw: 3544) (9 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2991/3000 (raw: 3544) (9 short) | richness: 84% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

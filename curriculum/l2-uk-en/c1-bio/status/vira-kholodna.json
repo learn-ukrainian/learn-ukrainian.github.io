@@ -2,14 +2,14 @@
   "module": "vira-kholodna",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:52.044939Z",
+  "last_audit": "2026-02-11T00:44:06.710601Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.348758Z",
     "meta": "2026-02-09T15:59:44.223524Z",
     "activities": "2026-02-07T10:03:51.580579Z",
     "vocabulary": null,
-    "plan": null
+    "plan": "2026-02-09T15:59:44.223433Z"
   },
   "gates": {
     "meta": {

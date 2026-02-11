@@ -2,14 +2,14 @@
   "module": "mykola-kulish",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:50.429750Z",
+  "last_audit": "2026-02-11T00:44:05.051410Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-04T22:30:45.361088Z",
     "meta": "2026-02-09T15:59:44.222837Z",
     "activities": "2026-02-07T10:03:51.583037Z",
     "vocabulary": "2026-02-07T10:03:51.634713Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.222751Z"
   },
   "gates": {
     "meta": {

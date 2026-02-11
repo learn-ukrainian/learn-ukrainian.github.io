@@ -3,40 +3,40 @@
   "iterations": [
     {
       "iteration": 1,
-      "started": "2026-02-10T19:11:12.770013Z",
+      "started": "2026-02-11T00:37:29.007915Z",
       "audit_passed": false,
-      "action": "generate_fix_plan",
-      "result": "fix_plan_generated"
+      "action": "fix_content",
+      "result": "content_fixed"
     },
     {
       "iteration": 2,
-      "started": "2026-02-10T19:12:53.424566Z",
+      "started": "2026-02-11T00:39:53.557073Z",
       "audit_passed": false,
       "action": "fix_content",
       "result": "content_fixed"
     },
     {
       "iteration": 3,
-      "started": "2026-02-10T19:14:49.238680Z",
+      "started": "2026-02-11T00:41:56.663974Z",
       "audit_passed": false,
       "action": "fix_content",
       "result": "content_fixed"
     },
     {
       "iteration": 4,
-      "started": "2026-02-10T19:16:15.637866Z",
+      "started": "2026-02-11T00:43:44.155034Z",
       "audit_passed": false,
       "action": "fix_content",
       "result": "content_fixed"
     },
     {
       "iteration": 5,
-      "started": "2026-02-10T19:17:57.174116Z",
+      "started": "2026-02-11T00:45:24.290555Z",
       "audit_passed": false,
       "action": "fix_content",
       "result": "content_fixed"
     }
   ],
-  "started": "2026-02-10T19:11:12.769982Z",
+  "started": "2026-02-11T00:37:29.007895Z",
   "result": "exhausted"
 }

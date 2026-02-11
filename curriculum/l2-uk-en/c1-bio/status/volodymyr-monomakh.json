@@ -2,14 +2,14 @@
   "module": "volodymyr-monomakh",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T10:35:23.427594Z",
+  "last_audit": "2026-02-11T00:43:11.620527Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T00:20:47.082014Z",
     "meta": "2026-02-09T15:59:44.180254Z",
     "activities": "2026-02-08T00:20:05.091574Z",
     "vocabulary": "2026-02-07T11:10:05.861381Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.179792Z"
   },
   "gates": {
     "meta": {

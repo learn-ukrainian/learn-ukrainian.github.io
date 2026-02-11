@@ -2,14 +2,14 @@
   "module": "80-active-lifestyle",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:52.695616Z",
+  "last_audit": "2026-02-10T23:31:16.069381Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:44:38.695147Z",
-    "meta": "2026-01-27T18:55:12.113148Z",
-    "activities": "2026-01-27T19:07:32.783897Z",
-    "vocabulary": "2026-01-25T16:02:18.763826Z",
-    "plan": "2026-01-30T00:44:14.177731Z"
+    "meta": "2026-02-07T10:03:51.679575Z",
+    "activities": "2026-02-07T10:03:51.740922Z",
+    "vocabulary": "2026-02-07T10:03:51.766890Z",
+    "plan": "2026-02-07T10:38:52.852133Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

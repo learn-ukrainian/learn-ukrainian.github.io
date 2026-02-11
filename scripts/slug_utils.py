@@ -52,5 +52,20 @@ def quality_path(track_dir: Path, slug: str) -> Path:
 
 
 def status_path(track_dir: Path, slug: str) -> Path:
-    """Return canonical status file path: {track_dir}/status/{bare_slug}.json"""
-    return track_dir / "status" / f"{to_bare_slug(slug)}.json"
+    """Return status file path, checking bare slug first then numeric-prefixed.
+
+    Canonical form is bare slug ({track_dir}/status/{bare_slug}.json).
+    Falls back to numeric-prefixed form (e.g., 01-slug.json) for core tracks
+    that haven't been migrated yet.
+    """
+    bare = to_bare_slug(slug)
+    canonical = track_dir / "status" / f"{bare}.json"
+    if canonical.exists():
+        return canonical
+    # Fallback: try numeric-prefixed (e.g., "01-the-cyrillic-code-i.json")
+    status_dir = track_dir / "status"
+    if status_dir.exists():
+        matches = list(status_dir.glob(f"*-{bare}.json"))
+        if matches:
+            return matches[0]
+    return canonical  # Return canonical even if missing (for creation)

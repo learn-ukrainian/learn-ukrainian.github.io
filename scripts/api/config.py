@@ -35,6 +35,9 @@ LEVELS = [
     {"id": "ruth", "name": "RUTH - Ruthenian", "path": "ruth"},
 ]
 
+# Batch state directory
+BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
+
 # Server settings
 API_HOST = "0.0.0.0"
 API_PORT = 8765

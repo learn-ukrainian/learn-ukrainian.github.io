@@ -2,14 +2,14 @@
   "module": "oleg-sentsov",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:25:21.530701Z",
+  "last_audit": "2026-02-11T00:44:35.559834Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-09T14:21:55.742038Z",
     "meta": "2026-02-09T15:59:44.243425Z",
     "activities": "2026-02-09T14:02:32.711828Z",
     "vocabulary": "2026-02-09T14:02:09.551688Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.243134Z"
   },
   "gates": {
     "meta": {

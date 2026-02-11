@@ -38,6 +38,7 @@ from batch_utils import (
     atomic_write, atomic_write_json, ExponentialBackoff,
     BatchLock, LockConflictError, classify_error, ErrorCategory,
 )
+from ai_agent_bridge import send_message as broker_send
 
 # Constants
 GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
@@ -783,6 +784,17 @@ Please fix these issues and regenerate the content."""
             if self.from_idx:
                 idx += self.from_idx - 1
 
+            # Skip modules already escalated to Claude — don't waste Gemini cycles
+            esc_file = FAILURES_DIR / self.track / f"{slug}.json"
+            if esc_file.exists():
+                try:
+                    esc_data = json.loads(esc_file.read_text(encoding="utf-8"))
+                    if esc_data.get("escalated"):
+                        log.info(f"[{idx}/{total}] Skipping {slug} — escalated to Claude")
+                        continue
+                except Exception:
+                    pass
+
             paths = get_module_paths(self.track, slug)
             effective_mode = self._resolve_mode_for_module(slug, paths)
 
@@ -1411,8 +1423,47 @@ Please fix these issues and regenerate the content."""
         }
 
         failure_file = failures_dir / f"{slug}.json"
+
+        # Check if already escalated — don't spam the broker on re-failures
+        already_escalated = False
+        if failure_file.exists():
+            try:
+                prev = json.loads(failure_file.read_text(encoding="utf-8"))
+                already_escalated = prev.get("escalated", False)
+            except Exception:
+                pass
+
+        failure["escalated"] = True
         atomic_write_json(failure_file, failure)
         log.info(f"  Failure saved: {failure_file}")
+
+        if already_escalated:
+            log.info(f"  Already escalated to Claude — skipping duplicate broker message")
+            return
+
+        # Escalate to Claude via message broker (first time only)
+        task_id = f"escalate-{self.track}-{slug}"
+        gate_names = ", ".join(failed_gates.keys()) if failed_gates else "content gates"
+        blocking = ", ".join(failure.get("blocking_issues", [])) or "none"
+        msg_content = (
+            f"Module escalation: {self.track}/{slug}\n"
+            f"Failed gates: {gate_names}\n"
+            f"Blocking issues: {blocking}\n"
+            f"Gemini iterations: {failure['iterations_used']}\n"
+            f"Please review and fix this module."
+        )
+        try:
+            broker_send(
+                content=msg_content,
+                task_id=task_id,
+                msg_type="handoff",
+                data=json.dumps(failure, ensure_ascii=False),
+                from_llm="gemini",
+                to_llm="claude",
+            )
+            log.info(f"  Escalated to Claude via broker: {task_id}")
+        except Exception as e:
+            log.warning(f"  Failed to send escalation to broker: {e}")
 
     def run_phase(self, phase, slug, paths, error_msg=None):
         """Run a single phase with retries."""

@@ -2,14 +2,14 @@
   "module": "51-idioms-body",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T01:06:41.839949Z",
+  "last_audit": "2026-02-10T23:30:00.043118Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.923861Z",
-    "meta": "2026-02-07T01:04:21.233444Z",
-    "activities": "2026-02-07T01:04:17.943745Z",
-    "vocabulary": "2026-01-21T22:54:32.144704Z",
-    "plan": "2026-01-30T15:04:49.308454Z"
+    "meta": "2026-02-07T10:03:50.524686Z",
+    "activities": "2026-02-07T10:03:50.611541Z",
+    "vocabulary": "2026-02-07T10:03:50.651216Z",
+    "plan": "2026-02-07T10:38:53.147759Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 0
   }

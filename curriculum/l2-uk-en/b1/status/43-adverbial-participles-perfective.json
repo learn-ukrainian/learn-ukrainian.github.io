@@ -2,14 +2,14 @@
   "module": "43-adverbial-participles-perfective",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:31.623532Z",
+  "last_audit": "2026-02-10T23:30:55.670372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-27T15:24:10.350095Z",
-    "meta": "2026-02-01T17:10:44.564417Z",
-    "activities": "2026-01-11T10:24:12.833791Z",
-    "vocabulary": "2026-01-25T15:45:32.772749Z",
-    "plan": "2026-01-29T07:45:40.398726Z"
+    "meta": "2026-02-07T10:03:51.673321Z",
+    "activities": "2026-02-07T10:03:51.725808Z",
+    "vocabulary": "2026-02-07T10:03:51.758253Z",
+    "plan": "2026-02-07T10:03:51.067272Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "1577/1626 (raw: 1990) (49 short)"
+      "status": "fail",
+      "violations": 2,
+      "message": "1577/3000 (raw: 1990) | richness: 88% < 95% min (grammar)"
     },
     "activities": {
       "status": "pass",
@@ -36,12 +36,17 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1
   }
 }

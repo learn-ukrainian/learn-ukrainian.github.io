@@ -51,6 +51,14 @@ For each message from Gemini:
    - Pick up where Gemini left off
    - Continue the task
 
+4. **If it's an escalation handoff** (task_id starts with `escalate-`):
+   - Gemini exhausted fix iterations on this module
+   - Parse the failure data (failed gates, blocking issues, iterations tried)
+   - Show the user a summary table of all escalated modules
+   - Offer to run `/module-fix {track} {num}` for each
+   - After fixing, delete the failure file: `batch_state/failures/{track}/{slug}.json`
+   - Acknowledge the broker message
+
 ### Step 4: Acknowledge
 
 After processing a message:

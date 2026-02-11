@@ -2,14 +2,14 @@
   "module": "01-passive-voice-system",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-08T21:47:01.918696Z",
+  "last_audit": "2026-02-10T23:29:27.918745Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T21:46:57.994884Z",
     "meta": "2026-02-08T21:44:00.984353Z",
     "activities": "2026-02-07T10:03:50.600133Z",
-    "vocabulary": "2026-02-07T10:03:50.645417Z",
-    "plan": "2026-02-07T10:03:50.838525Z"
+    "vocabulary": "2026-02-08T21:47:15.160193Z",
+    "plan": "2026-02-09T12:52:14.688645Z"
   },
   "gates": {
     "meta": {
@@ -28,20 +28,27 @@
       "message": "14/10"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "5 < 25 (soft target)"
+      "message": "25/25"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "8/10 (High)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 2 (Core) review file at l2-uk-en/b2/review/passive-voice-system-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0
+    "status": "fail",
+    "blocking_issues": [
+      "No Tier 2 (Core) review file at l2-uk-en/b2/review/passive-voice-system-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+    ],
+    "pass_count": 5,
+    "fail_count": 1
   }
 }

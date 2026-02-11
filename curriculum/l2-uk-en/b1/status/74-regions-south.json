@@ -2,14 +2,14 @@
   "module": "74-regions-south",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-01T17:52:49.253923Z",
+  "last_audit": "2026-02-10T23:31:12.781514Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-01-30T00:30:21.810380Z",
-    "meta": "2026-01-27T18:54:49.304924Z",
-    "activities": "2026-01-27T19:08:23.168673Z",
-    "vocabulary": "2026-01-25T16:02:18.707556Z",
-    "plan": "2026-01-30T00:31:39.608614Z"
+    "meta": "2026-02-07T10:03:51.674361Z",
+    "activities": "2026-02-07T10:03:51.730065Z",
+    "vocabulary": "2026-02-07T10:03:51.760904Z",
+    "plan": "2026-02-07T10:38:52.810326Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "4 Outline Compliance Errors"
+    ],
     "pass_count": 5,
     "fail_count": 0
   }

@@ -2,14 +2,14 @@
   "module": "hryhoriy-skovoroda",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:13.717952Z",
+  "last_audit": "2026-02-11T00:43:28.189255Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-04T22:30:45.351203Z",
+    "md": "2026-02-10T21:42:48.021044Z",
     "meta": "2026-02-09T15:59:44.194925Z",
     "activities": "2026-02-07T10:03:51.586020Z",
     "vocabulary": "2026-02-07T10:03:51.636548Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.194756Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4803/4300 (raw: 4831) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5252/4300 (raw: 5280)"
     },
     "activities": {
       "status": "pass",
@@ -38,15 +38,15 @@
       "message": "10/10 (High)"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

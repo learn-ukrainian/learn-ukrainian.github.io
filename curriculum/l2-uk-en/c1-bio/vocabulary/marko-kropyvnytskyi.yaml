@@ -2,7 +2,7 @@
 items:
 - lemma: корифей
   ipa: /korɪˈfɛi̯/
-  translation: coryphaeus
+  translation: coryphaeus / leading figure
   pos: noun
   gender: m
 - lemma: трупа
@@ -120,3 +120,33 @@ items:
   translation: canon
   pos: noun
   gender: m
+- lemma: деколонізація
+  ipa: /dekɔlɔnʲizˈat͡sʲijɐ/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subˈjɛktnʲisʲtʲ/
+  translation: agency / subjectivity
+  pos: noun
+  gender: f
+- lemma: ансамблевість
+  ipa: /ɐnsˈɑmblɛʋʲistʲ/
+  translation: ensemble interplay
+  pos: noun
+  gender: f
+- lemma: глитай
+  ipa: /ɦlɪˈtɑi̯/
+  translation: village exploiter / usurer
+  pos: noun
+  gender: m
+- lemma: хутір
+  ipa: /ˈxutʲir/
+  translation: khutir / isolated farmstead
+  pos: noun
+  gender: m
+- lemma: маніфестація
+  ipa: /mɐnʲifestˈat͡sʲijɐ/
+  translation: manifestation / protest
+  pos: noun
+  gender: f

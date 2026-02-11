@@ -5,4 +5,31 @@ slug: halytsko-volynskyi-litopys-ii
 version: '1.0'
 id: c1-hist-016
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-10'
+pedagogy: seminar
+word_target: 4000
+content_outline:
+- section: "Вступ — Література як історія"
+  words: 457
+  points: []
+- section: Літературні особливості
+  words: 686
+  points: []
+- section: Західні впливи
+  words: 686
+  points: []
+- section: Світогляд літописця
+  words: 686
+  points: []
+- section: "Фрагмент — Опис битви"
+  words: 571
+  points: []
+- section: Волинська частина
+  words: 571
+  points: []
+- section: Підсумок
+  words: 343
+  points: []
+naturalness:
+  score: 10
+  status: PASS

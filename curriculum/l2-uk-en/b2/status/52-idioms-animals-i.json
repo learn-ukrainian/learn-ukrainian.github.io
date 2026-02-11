@@ -2,14 +2,14 @@
   "module": "52-idioms-animals-i",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-07T01:06:42.404044Z",
+  "last_audit": "2026-02-10T23:30:00.591221Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-07T01:04:17.923990Z",
-    "meta": "2026-02-07T01:04:21.233527Z",
-    "activities": "2026-02-07T01:04:17.943891Z",
-    "vocabulary": "2026-01-21T22:54:32.303021Z",
-    "plan": "2026-01-30T15:05:14.159650Z"
+    "meta": "2026-02-07T10:03:50.525655Z",
+    "activities": "2026-02-07T10:03:50.614001Z",
+    "vocabulary": "2026-02-07T10:03:50.653597Z",
+    "plan": "2026-02-07T10:38:53.154651Z"
   },
   "gates": {
     "meta": {
@@ -36,11 +36,18 @@
       "status": "pass",
       "violations": 0,
       "message": "9/10 (High)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
     "pass_count": 3,
     "fail_count": 0
   }

@@ -2,14 +2,14 @@
   "module": "yevhen-paton",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:34.896406Z",
+  "last_audit": "2026-02-11T00:43:49.581662Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-08T00:07:58.076286Z",
     "meta": "2026-02-09T15:59:44.213526Z",
     "activities": "2026-02-07T20:43:23.288753Z",
     "vocabulary": "2026-02-07T10:03:51.641565Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.213416Z"
   },
   "gates": {
     "meta": {

@@ -2,14 +2,14 @@
   "module": "maksym-berezovskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-09T23:24:14.340020Z",
+  "last_audit": "2026-02-11T00:43:28.804480Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-05T00:18:59.201949Z",
+    "md": "2026-02-10T21:59:41.371805Z",
     "meta": "2026-02-09T15:59:44.195216Z",
     "activities": "2026-02-07T10:03:51.564147Z",
     "vocabulary": "2026-02-07T10:03:51.616988Z",
-    "plan": null
+    "plan": "2026-02-09T15:59:44.195109Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4748/4000 (raw: 4782) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4830/4000 (raw: 4864)"
     },
     "activities": {
       "status": "pass",
@@ -38,15 +38,15 @@
       "message": "10/10 (High)"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 6,
+    "fail_count": 0
   }
 }

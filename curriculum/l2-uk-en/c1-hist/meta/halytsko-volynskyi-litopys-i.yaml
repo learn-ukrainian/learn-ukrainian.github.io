@@ -2,7 +2,60 @@
 module: c1-hist-015
 level: C1-HIST
 slug: halytsko-volynskyi-litopys-i
-version: '1.0'
+version: '2.0'
 id: c1-hist-015
+title: 'Галицько-Волинський літопис I: Джерелознавчий аналіз'
+focus: history
+pedagogy: seminar
+word_target: 4000
+naturalness:
+  score: null
+  status: PENDING
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-10'
+content_outline:
+- section: "Вступ — Унікальність пам'ятки та історія тексту"
+  words: 400
+  points:
+    - "Discovery and preservation (Hypatian, Khlebnikov)"
+    - "Chronological framework (1201-1292)"
+    - "Difference from Kyiv tradition"
+- section: "Частина Галицька: Хронограф без дат та \"Похвала Данилу\""
+  words: 800
+  points:
+    - "Absence of dates in original"
+    - "Chronological chaos and Hrushevsky's revolution"
+    - "Literary portrait of Danylo (Second Solomon)"
+    - "Epic of struggle with boyars (Yaroslav)"
+- section: "Частина Волинська: Класичний літопис та Скрипторій"
+  words: 800
+  points:
+    - "Restoration of precise chronology"
+    - "Volodymyr Vasylkovych as philosopher-king"
+    - "The 'Testament' document"
+    - "Scriptorium and library"
+- section: "Авторство"
+  words: 700
+  points:
+    - "Hypotheses on Galician authors (Secular, Tymofii, Kyrylo)"
+    - "Volyn authors (Yevhraf)"
+    - "Ideological program (Legitimation, Western alliance)"
+- section: "Текстологія та джерельна база: Пазл без оригіналу"
+  words: 400
+  points:
+    - "Military tales as sources"
+    - "Diplomatic documents"
+    - "Eyewitness accounts"
+    - "Language of the frontier"
+- section: "Ідеологія"
+  words: 500
+  points:
+    - "Change of paradigm (Rex Rusiae)"
+    - "Coronation in Dorohychyn (1253)"
+    - "Decolonization: Sovereign Kingdom, not province"
+- section: "Підсумок"
+  words: 400
+  points:
+    - "Mirror of the 13th century"
+    - "Refutation of 'decline' myth"
+    - "Vitality of Ukrainian political nation"
