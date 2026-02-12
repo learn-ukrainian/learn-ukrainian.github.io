@@ -1,4 +1,3 @@
----
 module: c1-bio-054
 level: C1-BIO
 sequence: 54
@@ -6,7 +5,7 @@ slug: oleksander-potebnya
 version: '2.0'
 title: 'Олександр Потебня: Філософ мови'
 content_outline:
-- section: "Вступ — Український Гумбольдт"
+- section: Вступ — Український Гумбольдт
   words: 444
   points:
   - Потебня як найвидатніший український мовознавець XIX ст.
@@ -68,7 +67,7 @@ vocabulary_hints:
   - діалектологія (dialectology)
 activity_hints:
 - type: reading
-  focus: "Excerpts from \"Думка і мова\""
+  focus: Excerpts from "Думка і мова"
   source: Original texts (adapted)
   items: 3 passages
 - type: essay-response
@@ -87,19 +86,19 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Потебня (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович"
+  url: https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович
   type: primary
   notes: Biography, linguistic theories, works
 - name: Інститут мовознавства ім. О. О. Потебні
-  url: "https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України"
+  url: https://uk.wikipedia.org/wiki/Інститут_мовознавства_імені_О._О._Потебні_НАН_України
   type: reference
   notes: His legacy in modern linguistics
 - name: Харківська філологічна школа
-  url: "https://uk.wikipedia.org/wiki/Харківська_філологічна_школа"
+  url: https://uk.wikipedia.org/wiki/Харківська_філологічна_школа
   type: reference
   notes: The school he founded
 - name: '"Думка і мова" (праця)'
-  url: "https://uk.wikipedia.org/wiki/Думка_і_мова"
+  url: https://uk.wikipedia.org/wiki/Думка_і_мова
   type: reference
   notes: His seminal work
 immersion: 100% Ukrainian
@@ -108,3 +107,6 @@ objectives:
 - 'Analyze the life and legacy of олександр потебня: філософ мови'
 - Evaluate the contributions of український гумбольдт
 - Trace the career and influence of спадщина та визнання
+persona:
+  voice: Senior Biographer
+  role: Language Psychologist

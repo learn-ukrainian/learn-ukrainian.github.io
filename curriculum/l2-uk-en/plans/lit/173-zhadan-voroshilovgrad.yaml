@@ -1,4 +1,3 @@
----
 sequence: 173
 module: lit-173
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zhadan Voroshilovgrad у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Steppe Rider

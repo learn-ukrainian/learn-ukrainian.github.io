@@ -1,4 +1,3 @@
----
 sequence: 89
 module: lit-89
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zerov Criticism у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: High Critic

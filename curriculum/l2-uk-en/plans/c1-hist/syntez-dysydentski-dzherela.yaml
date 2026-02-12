@@ -1,4 +1,3 @@
----
 module: c1-hist-044
 level: c1-hist
 sequence: 44
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: голоси опору'
 - Evaluate the historical significance of від самвидаву до незалежності
 content_outline:
-- section: "Вступ — Від самвидаву до незалежності"
+- section: Вступ — Від самвидаву до незалежності
   words: 457
   subsections:
   - Огляд модулів 39-43
@@ -25,7 +24,7 @@ content_outline:
   - Офіційні документи (УГГ)
   - Літературні твори
   - Таблиця порівняння
-- section: "Голоси опору — хто говорив?"
+- section: Голоси опору — хто говорив?
   words: 686
   subsections:
   - Інтелігенція — письменники, вчені
@@ -89,7 +88,7 @@ activities:
   focus: Як дисидентський рух підготував незалежність?
 sources:
 - name: Дисидентський рух в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
   type: reference
   notes: Overview
 vocabulary_hints:
@@ -112,3 +111,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: KGB Archives Researcher

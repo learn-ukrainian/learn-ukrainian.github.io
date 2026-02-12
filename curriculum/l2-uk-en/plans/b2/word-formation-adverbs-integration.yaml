@@ -1,4 +1,3 @@
----
 module: b2-37
 level: B2
 sequence: 37
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Словотворення: прислівники та інтеграція'
 subtitle: Творення прислівників від прикметників і повторення словотвірних моделей
 content_outline:
-- section: "Розминка — Від прикметника до прислівника"
+- section: Розминка — Від прикметника до прислівника
   words: 400
   points:
   - Три моделі утворення прислівників (-о, -е, по-...-ськи)
@@ -27,7 +26,7 @@ content_outline:
   - донька → донечка (dear daughter)
   - вітер → вітрище (strong wind)
   - великий → величезний (huge)
-- section: "Практика — інтеграція словотвору"
+- section: Практика — інтеграція словотвору
   words: 400
   points:
   - Утворити прислівники від заданих прикметників
@@ -48,7 +47,7 @@ grammar:
 - Зменшувально-пестливі та збільшувальні суфікси
 - Інтеграція всіх словотвірних моделей
 register: науковий
-phase: "B2.1b [Grammar Completion]"
+phase: B2.1b [Grammar Completion]
 vocabulary_hints:
   required:
   - термін (term)
@@ -69,3 +68,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Translator (Перекладач)

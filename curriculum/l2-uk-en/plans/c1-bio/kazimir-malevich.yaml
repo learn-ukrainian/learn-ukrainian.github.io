@@ -1,4 +1,3 @@
----
 module: c1-bio-076
 level: C1-BIO
 sequence: 76
@@ -6,7 +5,7 @@ slug: kazimir-malevich
 version: '2.0'
 title: 'Казимир Малевич: Революція в мистецтві'
 content_outline:
-- section: "Вступ — Чорний квадрат і нуль форми"
+- section: Вступ — Чорний квадрат і нуль форми
   words: 400
   points:
   - Творець супрематизму
@@ -40,7 +39,7 @@ content_outline:
   - Повернення до фігуративності
   - Тиск соцреалізму
   - Смерть у Ленінграді
-- section: "Спадщина — Українець у світовому мистецтві"
+- section: Спадщина — Українець у світовому мистецтві
   words: 700
   points:
   - Вплив на XX століття
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Казимир Малевич (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович"
+  url: https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович
   type: primary
   notes: Biography covering Ukrainian roots and artistic revolution
 - name: MoMA - Kazimir Malevich
-  url: "https://www.moma.org/artists/3710"
+  url: https://www.moma.org/artists/3710
   type: reference
   notes: International context of Malevich's work
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of казимир малевич: революція в мистецтві'
 - Evaluate the contributions of чорний квадрат і нуль форми
 - Trace the career and influence of українець у світовому мистецтві
+persona:
+  voice: Senior Biographer
+  role: Suprematist

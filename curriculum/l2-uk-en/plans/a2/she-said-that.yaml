@@ -1,4 +1,3 @@
----
 module: a2-28
 level: A2
 sequence: 28
@@ -45,12 +44,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Indirect Speech
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Standards for speech reporting and indirect questions for A2
 - name: Grammar of Ukrainian Language - Reported Statements
-  url: "https://uk.wikipedia.org/wiki/Непряма_мова"
+  url: https://uk.wikipedia.org/wiki/Непряма_мова
   type: reference
   notes: Rules for tense retention and pronoun shifts
 immersion: 40-50% Ukrainian
 phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Gossip Columnist

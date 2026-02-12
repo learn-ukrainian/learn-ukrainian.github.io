@@ -1,4 +1,3 @@
----
 module: a2-58
 level: A2
 sequence: 58
@@ -82,4 +81,7 @@ grammar:
 - Listening for gist and detail
 - Vocabulary activation in context
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Morning Show Host

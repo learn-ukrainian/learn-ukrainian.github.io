@@ -1,4 +1,3 @@
----
 module: c1-bio-128
 level: C1-BIO
 sequence: 128
@@ -6,7 +5,7 @@ slug: mykola-pohribnyi
 version: '2.0'
 title: 'Микола Погрібний: Українська редакторська школа'
 content_outline:
-- section: "Вступ — Голос української вимови"
+- section: Вступ — Голос української вимови
   words: 400
   points:
   - Микола Погрібний — легендарний диктор і редактор
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Погрібний (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович"
+  url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
   type: primary
   notes: Біографія, професійна діяльність, внесок у мовну культуру
 - name: Українське радіомовлення
-  url: "https://uk.wikipedia.org/wiki/Українське_радіо"
+  url: https://uk.wikipedia.org/wiki/Українське_радіо
   type: reference
   notes: Контекст роботи на радіо
 - name: Культура української мови
-  url: "https://uk.wikipedia.org/wiki/Культура_мови"
+  url: https://uk.wikipedia.org/wiki/Культура_мови
   type: reference
   notes: Норми літературної мови та орфоепія
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of микола погрібний: українська редакторська школа'
 - Evaluate the contributions of голос української вимови
 - Trace the career and influence of останні роки та спадщина (1990-2003)
+persona:
+  voice: Senior Biographer
+  role: Textbook Editor

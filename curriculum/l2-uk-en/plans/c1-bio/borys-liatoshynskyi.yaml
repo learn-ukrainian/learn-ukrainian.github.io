@@ -1,4 +1,3 @@
----
 module: c1-bio-102
 level: C1-BIO
 sequence: 102
@@ -6,7 +5,7 @@ slug: borys-liatoshynskyi
 version: '2.0'
 title: 'Борис Лятошинський: Симфоніст'
 content_outline:
-- section: "Вступ — Голос української симфонії"
+- section: Вступ — Голос української симфонії
   words: 400
   points:
   - Найвидатніший український симфоніст XX століття
@@ -40,7 +39,7 @@ content_outline:
   - П'ята симфонія «Слов'янська»
   - Педагогічна діяльність
   - Учні та послідовники
-- section: "Спадщина — Батько української симфонії"
+- section: Спадщина — Батько української симфонії
   words: 700
   points:
   - Вплив на українську музику
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Борис Лятошинський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович"
+  url: https://uk.wikipedia.org/wiki/Лятошинський_Борис_Миколайович
   type: primary
   notes: Biography of the leading Ukrainian symphonic composer
 - name: Національна музична академія України
-  url: "https://knmau.com.ua/"
+  url: https://knmau.com.ua/
   type: reference
   notes: Archives of the academy where Lyatoshynsky taught
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of борис лятошинський: симфоніст'
 - Evaluate the contributions of голос української симфонії
 - Trace the career and influence of батько української симфонії
+persona:
+  voice: Senior Biographer
+  role: Symphony Conductor

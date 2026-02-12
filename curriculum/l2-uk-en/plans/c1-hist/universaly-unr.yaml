@@ -1,4 +1,3 @@
----
 module: c1-hist-034
 level: c1-hist
 sequence: 34
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of універсали унр
 - Evaluate the historical significance of чотири кроки до незалежності
 content_outline:
-- section: "Вступ — Чотири кроки до незалежності"
+- section: Вступ — Чотири кроки до незалежності
   words: 457
   subsections:
   - 1917-1918 — революційний рік
@@ -89,15 +88,15 @@ activities:
   focus: Чому Центральна Рада так повільно йшла до незалежності?
 sources:
 - name: Універсали Центральної Ради (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради"
+  url: https://uk.wikipedia.org/wiki/Універсали_Центральної_Ради
   type: reference
   notes: Overview of four Universals
 - name: Перший універсал
-  url: "https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради"
+  url: https://uk.wikisource.org/wiki/Перший_Універсал_Української_Центральної_Ради
   type: primary
   notes: First Universal text
 - name: Четвертий універсал
-  url: "https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради"
+  url: https://uk.wikisource.org/wiki/Четвертий_Універсал_Української_Центральної_Ради
   type: primary
   notes: Fourth Universal text
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Constitutional Law Historian

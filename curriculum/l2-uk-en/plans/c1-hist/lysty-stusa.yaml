@@ -1,4 +1,3 @@
----
 module: c1-hist-040
 level: c1-hist
 sequence: 40
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of листи василя стуса з таборів
 - Evaluate the historical significance of голос із гулагу
 content_outline:
-- section: "Вступ — Голос із ГУЛАГу"
+- section: Вступ — Голос із ГУЛАГу
   words: 457
   subsections:
   - Стус — поет і дисидент
@@ -80,7 +79,7 @@ activities:
 - type: reading
   focus: Letter to son with glosses
 - type: critical-analysis
-  focus: "Read a censored letter — what might have been cut?"
+  focus: Read a censored letter — what might have been cut?
 - type: comparative-study
   focus: Compare letter tone to poetry on same themes
 - type: comparative-study
@@ -89,15 +88,15 @@ activities:
   focus: Як Стус зберігав людяність у нелюдських умовах?
 sources:
 - name: Василь Стус (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Василь_Стус"
+  url: https://uk.wikipedia.org/wiki/Василь_Стус
   type: reference
   notes: Biography
 - name: Листи Стуса
-  url: "https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса"
+  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
   type: primary
   notes: Letters collection
 - name: Табори для політв'язнів
-  url: "https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР"
+  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
   type: reference
   notes: Gulag context
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Prison Literature Scholar

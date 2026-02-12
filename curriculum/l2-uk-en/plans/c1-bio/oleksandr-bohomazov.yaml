@@ -1,4 +1,3 @@
----
 module: c1-bio-078
 level: C1-BIO
 sequence: 78
@@ -6,7 +5,7 @@ slug: oleksandr-bohomazov
 version: '2.0'
 title: 'Олександр Богомазов: Український футурист'
 content_outline:
-- section: "Вступ — Український Пікассо"
+- section: Вступ — Український Пікассо
   words: 400
   points:
   - Богомазов як один із найяскравіших представників українського авангарду
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Богомазов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Богомазов_Олександр_Костянтинович"
+  url: https://uk.wikipedia.org/wiki/Богомазов_Олександр_Костянтинович
   type: primary
   notes: Біографія, творчість, теоретичні праці
 - name: Національний художній музей України
-  url: "https://namu.kyiv.ua"
+  url: https://namu.kyiv.ua
   type: reference
   notes: Колекція робіт та виставки
 - name: «Живопис та елементи» (трактат)
-  url: "https://archives.gov.ua"
+  url: https://archives.gov.ua
   type: reference
   notes: Теоретична спадщина
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of олександр богомазов: український футурист'
 - Evaluate the contributions of український пікассо
 - Trace the career and influence of останні роки та спадщина (1922-1930)
+persona:
+  voice: Senior Biographer
+  role: Art Theorist

@@ -1,4 +1,3 @@
----
 sequence: 34
 module: oes-034
 module_number: 28
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Court Scribe

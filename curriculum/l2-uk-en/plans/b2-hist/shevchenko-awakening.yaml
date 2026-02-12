@@ -1,4 +1,3 @@
----
 module: b2-hist-081
 level: B2-HIST
 sequence: 81
@@ -91,4 +90,7 @@ grammar:
 - Цитати та пряма мова
 - Дієприкметникові звороти
 register: публіцистичний
-phase: "HIST.8 [Imperial Era]"
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Brotherhood Member

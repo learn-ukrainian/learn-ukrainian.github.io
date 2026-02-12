@@ -1,4 +1,3 @@
----
 module: b2-hist-076
 level: B2-HIST
 sequence: 76
@@ -92,4 +91,7 @@ grammar:
 - Порівняльні конструкції
 - Адміністративна лексика
 register: публіцистичний
-phase: "HIST.8 [Imperial Era]"
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Diet Deputy

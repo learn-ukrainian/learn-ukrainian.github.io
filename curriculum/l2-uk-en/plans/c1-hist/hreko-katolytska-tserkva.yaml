@@ -1,4 +1,3 @@
----
 module: c1-hist-061
 level: c1-hist
 sequence: 61
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
 - Evaluate the historical significance of унікальна церква
 content_outline:
-- section: "Вступ — Унікальна церква"
+- section: Вступ — Унікальна церква
   words: 457
   subsections:
   - УГКЦ — що це
@@ -80,26 +79,26 @@ vocabulary:
 - примас
 activities:
 - type: reading
-  focus: "Sheptytsky — complex figure analysis"
+  focus: Sheptytsky — complex figure analysis
 - type: comparative-study
-  focus: "Analyze 1946 pseudo-council — how liquidation worked"
+  focus: Analyze 1946 pseudo-council — how liquidation worked
 - type: comparative-study
   focus: UGCC vs. Orthodox in identity formation
 - type: critical-analysis
-  focus: "UGCC role in 2022 — what changed?"
+  focus: UGCC role in 2022 — what changed?
 - type: essay-response
   focus: Чому УГКЦ стала символом галицької української ідентичності?
 sources:
 - name: УГКЦ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква"
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
   type: reference
   notes: Church history
 - name: Андрей Шептицький (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Шептицький_Андрей"
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
   type: reference
   notes: Key 20th century figure
 - name: Львівський собор 1946
-  url: "https://uk.wikipedia.org/wiki/Львівський_собор_(1946)"
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
   type: reference
   notes: Soviet liquidation
 vocabulary_hints:
@@ -122,3 +121,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Church Union Historian

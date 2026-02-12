@@ -1,4 +1,3 @@
----
 module: c1-hist-123
 level: c1-hist
 sequence: 123
@@ -10,21 +9,21 @@ objectives:
 - 'Analyze the causes and consequences of після емса: галицький розквіт'
 - Evaluate the historical significance of культура переїжджає
 content_outline:
-- section: "Вступ — Культура переїжджає"
+- section: Вступ — Культура переїжджає
   words: 515
   subsections:
   - 1876 — Емський указ
   - Заборона української мови
   - Галичина — рятівний острів
   - Структура модуля
-- section: "Емський указ — що заборонили"
+- section: Емський указ — що заборонили
   words: 774
   subsections:
   - Текст указу
   - Що неможливо було друкувати
   - Освіта — закрита
   - Наслідки для Наддніпрянщини
-- section: "Галичина — інший світ"
+- section: Галичина — інший світ
   words: 903
   subsections:
   - Австрія — відносна свобода
@@ -70,26 +69,26 @@ vocabulary:
 - українофіли
 activities:
 - type: critical-analysis
-  focus: "What Ems Decree prohibited — text analysis"
+  focus: What Ems Decree prohibited — text analysis
 - type: comparative-study
   focus: Galician institution building 1876-1914
 - type: critical-analysis
   focus: How Galicia influenced all of Ukraine
 - type: comparative-study
-  focus: "Galicia vs. Russian Empire — cultural freedom"
+  focus: Galicia vs. Russian Empire — cultural freedom
 - type: essay-response
   focus: Чому Галичина стала 'українським П'ємонтом'?
 sources:
 - name: Емський указ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Емський_указ"
+  url: https://uk.wikipedia.org/wiki/Емський_указ
   type: reference
   notes: Ems Decree
 - name: Галицьке українство (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Галичина"
+  url: https://uk.wikipedia.org/wiki/Галичина
   type: reference
   notes: Galician Ukrainians
 - name: НТШ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка"
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
   type: reference
   notes: Shevchenko Scientific Society
 vocabulary_hints:
@@ -112,3 +111,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Austro-Hungarian Specialist

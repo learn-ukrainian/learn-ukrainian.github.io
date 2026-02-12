@@ -1,4 +1,3 @@
----
 module: c1-hist-007
 level: c1-hist
 sequence: 7
@@ -11,7 +10,7 @@ objectives:
 - Evaluate the historical significance of історія для нової держави
 - Trace the development of виклики і перспективи
 content_outline:
-- section: "Вступ — Історія для нової держави"
+- section: Вступ — Історія для нової держави
   words: 457
   subsections:
   - 1991 — що змінилося?
@@ -84,28 +83,28 @@ vocabulary:
 - пострадянський
 activities:
 - type: reading
-  focus: "Excerpt from decommunization law (2015) — key provisions"
+  focus: Excerpt from decommunization law (2015) — key provisions
 - type: reading
-  focus: "Explore UINP website — what current projects exist?"
+  focus: Explore UINP website — what current projects exist?
 - type: critical-analysis
-  focus: "Analyze renaming of a street/city — what was the historical reasoning?"
+  focus: Analyze renaming of a street/city — what was the historical reasoning?
 - type: essay-response
   focus: Чи є декомунізація переписуванням історії?
 sources:
 - name: Інститут історії України НАНУ
-  url: "http://history.org.ua/"
+  url: http://history.org.ua/
   type: reference
   notes: Main academic institution
 - name: Український інститут національної пам'яті
-  url: "https://uinp.gov.ua/"
+  url: https://uinp.gov.ua/
   type: reference
   notes: State memory policy institution
 - name: Декомунізація в Україні
-  url: "https://uk.wikipedia.org/wiki/Декомунізація_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
   type: reference
   notes: Legal framework for historical revision
 - name: Закони про декомунізацію (2015)
-  url: "https://zakon.rada.gov.ua/laws/show/317-19"
+  url: https://zakon.rada.gov.ua/laws/show/317-19
   type: primary
   notes: Decommunization law text
 vocabulary_hints:
@@ -128,3 +127,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Academic Reformer

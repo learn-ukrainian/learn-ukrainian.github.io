@@ -1,4 +1,3 @@
----
 sequence: 137
 module: lit-137
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Stus Vertical Of Spirit у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Spiritual Ascetic

@@ -1,4 +1,3 @@
----
 module: b2-hist-019
 level: B2-HIST
 sequence: 19
@@ -6,7 +5,7 @@ slug: rus-ta-susidy
 version: '2.0'
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
 content_outline:
-- section: "Вступ — Русь у міжнародному контексті"
+- section: Вступ — Русь у міжнародному контексті
   words: 529
   points:
   - Геополітичне положення Русі
@@ -94,16 +93,19 @@ grammar:
 - Diplomatic and international relations terminology
 sources:
 - name: Зовнішня політика Київської Русі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі"
+  url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
   type: reference
   notes: Overview of foreign relations
 - name: Русько-візантійські договори
-  url: "https://uk.wikipedia.org/wiki/Русько-візантійські_договори"
+  url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
   type: reference
   notes: Treaties with Byzantium
-- name: "Повість минулих літ — дипломатичні місії"
-  url: "https://litopys.org.ua/pvl/pvl.htm"
+- name: Повість минулих літ — дипломатичні місії
+  url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Diplomatic Envoy

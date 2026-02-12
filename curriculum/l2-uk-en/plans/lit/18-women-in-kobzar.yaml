@@ -1,10 +1,9 @@
----
 sequence: 18
 module: lit-18
 level: LIT
 slug: women-in-kobzar
 version: '2.0'
-title: "Жіноча доля в \"Кобзарі\""
+title: Жіноча доля в "Кобзарі"
 subtitle: 'Women in Kobzar: The Tragic Archetype'
 content_outline:
 - section: Вступ
@@ -89,17 +88,20 @@ grammar:
 - Diminutives usage
 module_type: literature
 sources:
-- name: "Катерина — поема"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=6"
+- name: Катерина — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=6
   type: primary
   notes: Рання поема про покритку
-- name: "Наймичка — поема"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=30"
+- name: Наймичка — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=30
   type: primary
   notes: Зріла поема про матір
 - name: Жіночі образи у Шевченка
-  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=6"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=6
   type: secondary
   notes: Літературознавчий аналіз
 immersion: 100% Ukrainian
 phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Women's Advocate

@@ -38,6 +38,7 @@ from batch_utils import (
     atomic_write, atomic_write_json, ExponentialBackoff,
     BatchLock, LockConflictError, classify_error, ErrorCategory,
 )
+from audit.status_cache import read_status
 from ai_agent_bridge import send_message as broker_send
 
 # Constants
@@ -45,7 +46,7 @@ GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "audit_module.sh"
 VENV_PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
 MAX_RETRIES = 3
-MAX_FIX_ITERATIONS = 5
+MAX_FIX_ITERATIONS = 8
 TIMEOUT_SECONDS = 900  # 15 minutes
 FAILURES_DIR = PROJECT_ROOT / "batch_state" / "failures"
 API_USAGE_DIR = PROJECT_ROOT / "batch_state" / "api_usage"
@@ -1352,17 +1353,16 @@ Please fix these issues and regenerate the content."""
         return "generate_fix_plan"
 
     def _read_status_json(self, paths, slug):
-        """Read the status JSON for a module."""
-        # Status JSON uses the md stem (which may have numeric prefix)
+        """Read the status JSON for a module via the shared status cache layer.
+
+        Returns the raw data dict (for backward compatibility with callers
+        that access gates directly), or None if not found.
+        """
         status_dir = paths["md"].parent / "status"
         status_file = status_dir / f"{paths['md'].stem}.json"
-        if status_file.exists():
-            try:
-                with open(status_file, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except (json.JSONDecodeError, IOError) as e:
-                log.warning(f"  Failed to read status JSON: {e}")
-        return None
+        # No source_paths → skip freshness check (runner always re-audits anyway)
+        result = read_status(status_file)
+        return result.data if result else None
 
     def _save_fix_state(self, orch_dir, fix_state):
         """Save fix tracking state to orchestration dir."""
@@ -1433,37 +1433,21 @@ Please fix these issues and regenerate the content."""
             except Exception:
                 pass
 
-        failure["escalated"] = True
+        # Disable automatic escalation — stay in Gemini fix loop
+        failure["escalated"] = False 
+        
+        # Diagnostic print
+        log.error(f"  GIVING UP on {slug} after {failure['iterations_used']} iterations.")
+        log.error(f"  Reason: Failed gates: {', '.join(failed_gates.keys())}")
+        for g, info in failed_gates.items():
+            log.error(f"    - {g}: {info.get('message')}")
+        if failure.get("blocking_issues"):
+            log.error(f"  Blocking issues: {failure['blocking_issues']}")
+
         atomic_write_json(failure_file, failure)
         log.info(f"  Failure saved: {failure_file}")
 
-        if already_escalated:
-            log.info(f"  Already escalated to Claude — skipping duplicate broker message")
-            return
-
-        # Escalate to Claude via message broker (first time only)
-        task_id = f"escalate-{self.track}-{slug}"
-        gate_names = ", ".join(failed_gates.keys()) if failed_gates else "content gates"
-        blocking = ", ".join(failure.get("blocking_issues", [])) or "none"
-        msg_content = (
-            f"Module escalation: {self.track}/{slug}\n"
-            f"Failed gates: {gate_names}\n"
-            f"Blocking issues: {blocking}\n"
-            f"Gemini iterations: {failure['iterations_used']}\n"
-            f"Please review and fix this module."
-        )
-        try:
-            broker_send(
-                content=msg_content,
-                task_id=task_id,
-                msg_type="handoff",
-                data=json.dumps(failure, ensure_ascii=False),
-                from_llm="gemini",
-                to_llm="claude",
-            )
-            log.info(f"  Escalated to Claude via broker: {task_id}")
-        except Exception as e:
-            log.warning(f"  Failed to send escalation to broker: {e}")
+        return # Stop here — do not send broker message to Claude
 
     def run_phase(self, phase, slug, paths, error_msg=None):
         """Run a single phase with retries."""

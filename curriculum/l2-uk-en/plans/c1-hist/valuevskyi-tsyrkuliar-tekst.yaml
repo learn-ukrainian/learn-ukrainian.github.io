@@ -1,4 +1,3 @@
----
 module: c1-hist-031
 level: c1-hist
 sequence: 31
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of валуєвський циркуляр: повний текст'
 - Evaluate the historical significance of заборона мови
 content_outline:
-- section: "Вступ — Заборона мови"
+- section: Вступ — Заборона мови
   words: 457
   subsections:
   - 1863 рік — контекст
@@ -24,7 +23,7 @@ content_outline:
   - Українофільство — що це?
   - Загроза для імперії
   - Валуєв — хто він
-- section: "Текст циркуляра — повний аналіз"
+- section: Текст циркуляра — повний аналіз
   words: 914
   subsections:
   - Текст (з глосами)
@@ -79,7 +78,7 @@ activities:
 - type: reading
   focus: Full text with glosses
 - type: critical-analysis
-  focus: "How does Valuev argue that Ukrainian \"doesn't exist\"?"
+  focus: How does Valuev argue that Ukrainian "doesn't exist"?
 - type: comparative-study
   focus: Compare with colonial language policies elsewhere
 - type: critical-analysis
@@ -88,15 +87,15 @@ activities:
   focus: Чому імперія боялася української мови?
 sources:
 - name: Валуєвський циркуляр (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Валуєвський_циркуляр"
+  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
   type: reference
   notes: Overview
 - name: Текст циркуляра
-  url: "https://uk.wikisource.org/wiki/Циркуляр_Валуєва"
+  url: https://uk.wikisource.org/wiki/Циркуляр_Валуєва
   type: primary
   notes: Full text
 - name: Петро Валуєв
-  url: "https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович"
+  url: https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Documentary Linguist

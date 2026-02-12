@@ -1,4 +1,3 @@
----
 module: a2-70
 level: A2
 sequence: 70
@@ -84,4 +83,7 @@ grammar:
 - Verb aspect mastery
 - Complex sentence structures
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: University Dean

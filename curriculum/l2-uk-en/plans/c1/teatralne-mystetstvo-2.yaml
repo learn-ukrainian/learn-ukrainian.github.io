@@ -1,13 +1,12 @@
----
 module: c1-085
 level: C1
 sequence: 85
 slug: 85-teatralne-mystetstvo-2
 version: '2.0'
 title: Театральне мистецтво II
-subtitle: "Theater Arts II — Contemporary Stage"
+subtitle: Theater Arts II — Contemporary Stage
 content_outline:
-- section: "Розминка — Сучасний український театр"
+- section: Розминка — Сучасний український театр
   words: 700
   points:
   - Головні театри України — Франка, Молодий, Лівий берег
@@ -20,7 +19,7 @@ content_outline:
   - 'Contemporary directors: Сучасна режисура, нові імена'
   - 'Experimental: Dakh Daughters, театр-перформанс'
   - 'War and theater: Театр під час війни, cultural resistance'
-- section: "Практика — театральна критика"
+- section: Практика — театральна критика
   words: 1050
   points:
   - Написати рецензію на уявну виставу театру Франка
@@ -38,3 +37,6 @@ grammar:
 - Theater criticism terminology
 - Reviewing a performance
 phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Драматург

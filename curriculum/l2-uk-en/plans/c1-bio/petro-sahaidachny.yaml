@@ -1,4 +1,3 @@
----
 module: c1-bio-019
 level: C1-BIO
 sequence: 19
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Петро Сагайдачний: Гетьман-Державник'
 subtitle: 'Petro Sahaidachny: The Statesman Hetman'
 content_outline:
-- section: "Вступ — Меч і Хрест"
+- section: Вступ — Меч і Хрест
   words: 615
   points:
   - Найвидатніший гетьман до Хмельницького
@@ -69,10 +68,13 @@ grammar:
 - Military strategy terms
 sources:
 - name: Петро Конашевич-Сагайдачний (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний"
+  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
   type: primary
 - name: Хотинська битва 1621
-  url: "https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)"
+  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Naval Commander

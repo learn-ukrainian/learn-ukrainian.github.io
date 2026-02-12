@@ -10,6 +10,13 @@
 
 ## Gemini Memory Context
 
+### Team Naming Convention (Permanent)
+
+- 💙 **Синя команда (Blue / Claude)** — architectural review, quality gate, won't approve until bar is met
+- 💛 **Жовта команда (Gold / Gemini)** — content builder, implements, iterates toward passing
+
+**Usage**: First mention in any issue/prompt uses full form. After that, shorthand "💙 Синя" / "💛 Жовта" is enough.
+
 ### Strategic Decisions
 
 - **Architecture v2.0 (Plan-Build-Status)**:
@@ -132,6 +139,10 @@ yq '.levels.b2-hist.modules[4]' curriculum/l2-uk-en/curriculum.yaml
 
 # List all modules in order for C1
 yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
+
+# Broker maintenance (fix stuck messages)
+.venv/bin/python scripts/ai_agent_bridge.py cleanup              # Clean stale PIDs + ancient messages
+.venv/bin/python scripts/ai_agent_bridge.py cleanup --dry-run    # Preview what would be cleaned
 ```
 
 ## Critical Workflow Rules (Gemini)
@@ -183,7 +194,7 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
       - All Ukrainian citations used for praise only, none highlighting problems
       - Fabricated citations (quoted text not found in the source module)
     - Your review exists to find problems the automated system cannot catch — linguistic nuance, pedagogical depth, semantic accuracy. If you rubber-stamp everything, you add zero value.
-    - **Adopting a "red team persona" is NOT the fix.** Artificially finding fake problems is as bad as hiding real ones. Just be honest.
+    - **Adopting an adversarial reviewer persona is NOT the fix.** Artificially finding fake problems is as bad as hiding real ones. Just be honest.
     - **Caught cheating = all work from that session is discarded.**
 24. **Transliteration Ban (C1+)**: Latin transliteration (e.g., `(gloria)`, `(morale)`) is STRICTLY PROHIBITED in C1-HIST/C1-BIO tracks. Maintain 100% immersion.
 25. **Review Regeneration (MANDATORY)**: If you significantly rewrite module content (>20% change), you MUST delete and regenerate the `review-*-review.md` file. Stale reviews citing deleted text cause audit failures.
@@ -370,117 +381,94 @@ run_shell_command("rg 'somepattern' .")
 
 ## Inter-Agent Communication (Claude <-> Gemini)
 
-### Architecture
+### Team Structure (Permanent)
 
-All communication goes through SQLite Event Bus at `.mcp/servers/message-broker/messages.db`
+- 💙 **Синя команда (Blue / Claude)** — architect, reviewer, quality gate. Won't approve until the bar is met.
+- 💛 **Жовта команда (Gold / Gemini)** — content builder, implementer, iterates toward passing.
 
-**Session tracking:** The `sessions` table stores CLI session IDs per task for multi-turn conversations with full context.
+**Both teams critique each other.** The purpose is quality through adversarial review — not rubber-stamping. An LLM must NEVER review its own work. Stay in separate groups so you find each other's mistakes.
 
-### How to Send Messages to Claude
+### GitHub-First Protocol (PRIMARY — MANDATORY)
 
-**⚠️ CRITICAL: When responding to a message, use the SAME task-id from the original message!**
+**GitHub issues and comments are the primary communication channel.** All substantive discussion — reviews, proposals, implementation plans, architectural feedback, disagreements — happens on GitHub where it's persistent, searchable, and visible to the human.
+
+**The message broker is a NOTIFICATION layer ONLY.** Broker messages must be SHORT (< 200 chars) and only reference a GitHub issue/comment. Never put substantive content in broker messages.
+
+**The pattern:**
+
+1. **Post your work/review/proposal as a GitHub issue comment**
+2. **Send a SHORT broker ping to Claude** pointing to it
+3. **Claude reads the GitHub comment and responds there**
 
 ```bash
-# Send a query (ask Claude a question)
-.venv/bin/python scripts/ai_agent_bridge.py send "Your question here" --type query --task-id your-task
+# Step 1: Post your work on GitHub
+gh issue comment 559 --body "## 💛 Жовта — Implementation complete ..."
 
-# Send a response (answer Claude's question)
-# ⚠️ Use the SAME task-id from Claude's message you're replying to!
-.venv/bin/python scripts/ai_agent_bridge.py send "Your answer" --type response --task-id original-task-id
-
-# Send a handoff (transfer task with context)
-.venv/bin/python scripts/ai_agent_bridge.py send "Task context here" --type handoff --task-id task-id
-
-# Send with attached data file
-.venv/bin/python scripts/ai_agent_bridge.py send "Message" --type handoff --data path/to/file.yaml --task-id task-id
+# Step 2: Ping Claude via broker (NOTIFICATION ONLY — < 200 chars)
+.venv/bin/python scripts/ai_agent_bridge.py send \
+  "Implementation posted on #559. Please review." \
+  --type feedback --task-id issue-559
 ```
 
-### How to INVOKE Claude (Headless) - PREFERRED METHOD
+**What goes WHERE:**
 
-**Use `ask-claude` for one-step communication - sends AND invokes Claude automatically:**
+| Channel | Use For | Max Length |
+|---------|---------|------------|
+| **GitHub issues** | Task specs, proposals, architecture plans | Unlimited |
+| **GitHub comments** | Reviews, feedback, progress updates, disagreements | Unlimited |
+| **Broker messages** | Notifications only: "read #559", "work posted on #558" | < 200 chars |
+
+**What NEVER goes in broker messages:**
+- Full reviews or feedback
+- Code snippets or file contents
+- Implementation proposals
+- Architectural discussion
+
+### Cross-Review Protocol
+
+**Both agents must critique each other's work.** The goal is catching mistakes and improving quality — not agreement.
+
+When Claude posts a review of your work:
+- Read the GitHub comment carefully
+- If you disagree, respond ON GITHUB with a counter-argument
+- If you agree, fix the issues and post an update ON GITHUB
+- Then ping Claude via broker: "Fixes posted on #559, please re-review"
+
+When you finish work that needs Claude's review:
+- Post a summary ON GITHUB with what you did and what to review
+- Ping Claude via broker: "Work complete on #558, please review"
+
+### Session Start Protocol
 
 ```bash
-# ONE COMMAND: Send message + invoke Claude (auto-resumes session if exists)
-.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Your question or request" --task-id my-task
+# 1. Check broker for notifications from Claude
+.venv/bin/python scripts/ai_agent_bridge.py inbox
 
-# With message type
-.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Review this code" --task-id code-review --type request
+# 2. For each notification, read the referenced GitHub issue
+gh issue view <N>
 
-# Force new session (ignore existing session for task)
-.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Start fresh analysis" --task-id my-task --new-session
+# 3. Respond ON GITHUB, then ping back via broker
 ```
 
-**Batch Operations (NEW):**
+### Legacy: Direct Broker Commands
+
+For quick operational pings (not substantive discussion):
 
 ```bash
-# Process ALL unread messages for Gemini
-.venv/bin/python scripts/ai_agent_bridge.py process-all
+# Send notification to Claude
+.venv/bin/python scripts/ai_agent_bridge.py send "Quick note" --type feedback --task-id task-id
 
-# Process ALL unread messages for Claude (headless)
-.venv/bin/python scripts/ai_agent_bridge.py process-claude-all
+# Check inbox
+.venv/bin/python scripts/ai_agent_bridge.py inbox
 
-# Acknowledge multiple messages
-.venv/bin/python scripts/ai_agent_bridge.py ack 49 50 51 52
+# Acknowledge messages
+.venv/bin/python scripts/ai_agent_bridge.py ack <message_id>
 
-# Acknowledge ALL unread for an agent
+# Acknowledge ALL unread
 .venv/bin/python scripts/ai_agent_bridge.py ack-all gemini
 ```
 
-### How to Check for Messages from Claude
-
-```bash
-# Check inbox (DO THIS AT START OF EVERY SESSION)
-.venv/bin/python scripts/ai_agent_bridge.py inbox
-
-# Read specific message
-.venv/bin/python scripts/ai_agent_bridge.py read <message_id>
-
-# Get full conversation
-.venv/bin/python scripts/ai_agent_bridge.py conversation <task_id>
-
-# Acknowledge a message
-.venv/bin/python scripts/ai_agent_bridge.py ack <message_id>
-```
-
-### Message Types
-
-| Type       | When to Use                     |
-| ---------- | ------------------------------- |
-| `query`    | Ask Claude a question           |
-| `response` | Answer Claude's question        |
-| `request`  | Request Claude to do work       |
-| `handoff`  | Transfer task with full context |
-| `context`  | Share state/decisions           |
-| `feedback` | Comment on Claude's work        |
-
-### When to Contact Claude
-
-- Need clarification on requirements
-- Hit a blocker and need help
-- Finished a task and need review
-- Want to discuss an approach
-- Have a question about the codebase
-
-### Important
-
-- **Headless Session Awareness**: When using `ask-claude` or `process-claude`, a **headless Claude session** (different from the user's active session) may handle the request. Responses are still valid and stored in the inbox/conversation history, but the user's active session might not be immediately aware of them unless checking the full `conversation` for the `task_id`.
-- **Use `process-claude` for seamless invocation** - Claude runs headlessly and responds
-- **Always use task_id** - enables session tracking for multi-turn conversations
-- **Check inbox ONLY when asked** - do not auto-check on session start
-- **Sessions are per-task** - same task_id = same conversation context
-- **PRESERVE task_id when responding** - When you reply to a message, use the SAME task_id from the incoming message. Don't create your own task_id. Example: if Claude's message has `task_id: tooling-feedback`, your response MUST use `--task-id tooling-feedback`
-- **Symmetric Response Routing**: `process_for_claude` now routes responses back via `send_message()` (matching the Gemini-side workflow).
-- **Error Handling**: If the Claude CLI crashes or times out, an `error` type message will be received instead of silence.
-- **Agent Watcher Daemon (Auto-Trigger)**: Polls `messages.db` and auto-triggers agents. Includes loop prevention (max 8 turns/task). When limit is hit, a stuck report is saved to `{track}/stuck/{slug}.md`.
-  ```bash
-  # Check status
-  .venv/bin/python scripts/agent_watcher.py --status
-  # Start daemon (background)
-  .venv/bin/python scripts/agent_watcher.py --daemon
-  # Stop daemon
-  .venv/bin/python scripts/agent_watcher.py --stop
-  ```
-- **Documentation**: See `docs/SCRIPTS.md` (Inter-Agent Communication section) for full technical reference.
+**Do NOT use broker for:** reviews, proposals, implementation details, or anything that benefits from persistence and searchability. Use GitHub for those.
 
 ## Gemini Self-Review Protocol (MANDATORY)
 

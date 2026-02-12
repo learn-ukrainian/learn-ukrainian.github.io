@@ -1,4 +1,3 @@
----
 module: b2-hist-056
 level: B2-HIST
 sequence: 56
@@ -88,12 +87,15 @@ grammar:
 - Passive voice in official documents
 sources:
 - name: Treaty of Pereyaslav - Encyclopedia of Ukraine
-  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPereyaslavTreatyof1654.htm"
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPereyaslavTreatyof1654.htm
   type: reference
   notes: Academic overview
 - name: Breznevi statti
-  url: "http://litopys.org.ua/volosh/volosh60.htm"
+  url: http://litopys.org.ua/volosh/volosh60.htm
   type: primary
   notes: Text of the March Articles
 register: публіцистичний
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: General Scribe

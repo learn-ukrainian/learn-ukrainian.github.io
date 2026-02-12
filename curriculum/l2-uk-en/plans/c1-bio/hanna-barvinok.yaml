@@ -1,4 +1,3 @@
----
 module: c1-bio-041
 level: C1-BIO
 sequence: 41
@@ -6,7 +5,7 @@ slug: hanna-barvinok
 version: '2.0'
 title: 'Ганна Барвінок: Письменниця і етнографка'
 content_outline:
-- section: "Вступ — Перша з жінок української літератури"
+- section: Вступ — Перша з жінок української літератури
   words: 400
   points:
   - Одна з перших українських письменниць
@@ -40,7 +39,7 @@ content_outline:
   - Спогади про Куліша
   - Останні твори
   - Смерть у Мотронівці
-- section: "Спадщина — Голос селянської України"
+- section: Спадщина — Голос селянської України
   words: 700
   points:
   - Внесок в українську етнографію
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Ганна Барвінок (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Ганна_Барвінок"
+  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
   type: primary
   notes: Biography of the pioneering woman writer
 - name: Інститут літератури ім. Т.Г. Шевченка
-  url: "https://ilnan.gov.ua/"
+  url: https://ilnan.gov.ua/
   type: reference
   notes: Literary archive materials
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of ганна барвінок: письменниця і етнографка'
 - Evaluate the contributions of перша з жінок української літератури
 - Trace the career and influence of голос селянської україни
+persona:
+  voice: Senior Biographer
+  role: Folklorist

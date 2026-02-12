@@ -1,4 +1,3 @@
----
 sequence: 39
 module: a1-39
 level: A1
@@ -26,7 +25,7 @@ content_outline:
   - Діалог 1: Купівля квитка на поїзд до Львова
   - Діалог 2: Запитання про розклад автобусів
   - Діалог 3: Зміна квитка
-- section: "Warm-up 2"
+- section: Warm-up 2
   words: 138
   points:
   - Наратив про подорож у Карпати
@@ -76,4 +75,7 @@ grammar:
 - Time expressions for schedules
 - Numbers for platforms and seats
 register: розмовний
-phase: "A1.4 [Practical Scenarios]"
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Theater Box Office Manager

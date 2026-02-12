@@ -1,19 +1,26 @@
 ---
 module: b1-10
 level: B1
-slug: 10-aspect-negation
-version: '1.0'
+slug: aspect-negation
+version: '2.0'
+id: b1-10
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: Essential aspect patterns in negative sentences.
 duration: 90
 transliteration: none
-tags:
-- grammar
-- aspect
-- negation
-- imperatives
-word_target: 3000
 build:
-  last_modified: '2026-01-26'
-id: b1-10
+  last_modified: '2026-02-11'
+word_target: 3000
+content_outline:
+- section: Тест
+  words: 500
+- section: Пояснення
+  words: 850
+- section: Практика
+  words: 550
+- section: Діалоги
+  words: 650
+- section: Підсумок
+  words: 450

@@ -119,3 +119,6 @@ sources:
 phase: B2-HIST.1 [Kyivan Rus]
 module_type: history
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Cathedral Mosaicist

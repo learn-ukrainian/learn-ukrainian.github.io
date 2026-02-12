@@ -1,4 +1,3 @@
----
 module: c1-bio-006
 level: C1-BIO
 sequence: 6
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Володимир Мономах: Укріплювач Русі'
 word_target: 4300
 content_outline:
-- section: "Вступ — Останній великий самодержець Києва"
+- section: Вступ — Останній великий самодержець Києва
   words: 600
   points:
   - Мономах як ідеал руського князя
@@ -64,11 +63,11 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Мономах (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Володимир_Мономах"
+  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
   type: primary
   notes: Детальний життєпис
 - name: '"Повчання" Володимира Мономаха'
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Оригінальний текст та коментарі
 immersion: 100% Ukrainian
@@ -80,7 +79,10 @@ vocabulary_hints:
   - статут (statute)
 activity_hints:
 - type: reading
-  focus: 'Аналіз "Повчання дітям"'
+  focus: Аналіз "Повчання дітям"
   source: Primary sources (adapted)
 - type: critical-analysis
   focus: Причини київського повстання 1113 р.
+persona:
+  voice: Senior Biographer
+  role: Instruction Writer

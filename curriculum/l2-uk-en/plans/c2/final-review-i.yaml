@@ -1,34 +1,33 @@
----
 module: c2-095
 level: c2
 sequence: 95
 version: '2.0'
-title: "Фінальне повторення I — Граматична консолідація"
+title: Фінальне повторення I — Граматична консолідація
 focus: integration
 pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: "Ukrainian State Standard 2024 — Повна граматика C2"
-  url: "https://mon.gov.ua/"
+- name: Ukrainian State Standard 2024 — Повна граматика C2
+  url: https://mon.gov.ua/
   type: reference
   notes: Complete C2 grammar requirements
-- name: "Сучасна українська літературна мова — Повний курс"
-  url: "https://lcorp.ulif.org.ua/"
+- name: Сучасна українська літературна мова — Повний курс
+  url: https://lcorp.ulif.org.ua/
   type: primary
   notes: Comprehensive Ukrainian grammar reference
 - name: CEFR C2 Grammar Inventory
-  url: "https://www.coe.int/"
+  url: https://www.coe.int/
   type: secondary
   notes: C2 grammatical competence requirements
 content_outline:
-- section: "Вступ — Граматична досконалість C2"
+- section: Вступ — Граматична досконалість C2
   words: 444
   points:
   - Огляд граматичних компетенцій C2
   - Самооцінка сильних і слабких сторін
   - Стратегія повторення
-- section: "Морфологічна система — Повторення"
+- section: Морфологічна система — Повторення
   words: 778
   points:
   - Іменник (усі типи відмінювання)
@@ -36,7 +35,7 @@ content_outline:
   - Дієслово (вид, час, спосіб, стан)
   - Числівник (кількісні, порядкові, збірні)
   - Займенник (усі розряди)
-- section: "Синтаксична система — Повторення"
+- section: Синтаксична система — Повторення
   words: 778
   points:
   - Просте речення (усі типи)
@@ -84,7 +83,7 @@ vocabulary:
   - експліцитне знання (explicit knowledge)
   - металінгвістична свідомість (metalinguistic awareness)
   - граматикалізація (grammaticalization)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - match-up
@@ -118,3 +117,6 @@ activity_hints:
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: State Examiner

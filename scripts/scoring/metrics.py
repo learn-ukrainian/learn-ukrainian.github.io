@@ -7,9 +7,14 @@ They extract quantitative metrics from module content files.
 
 import re
 import json
+import sys
 from pathlib import Path
 from typing import Optional
 from dataclasses import dataclass, field
+
+# Ensure scripts/ is importable for audit.status_cache
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from audit.status_cache import read_status
 
 
 @dataclass
@@ -538,7 +543,7 @@ def analyze_vocabulary(vocab_path: Path) -> dict:
 
 def parse_status_json(status_path: Path) -> dict:
     """
-    Parse status JSON file for audit results.
+    Parse status JSON file for audit results via shared status cache layer.
 
     Args:
         status_path: Path to status JSON file
@@ -553,12 +558,13 @@ def parse_status_json(status_path: Path) -> dict:
         'target_word_count': 0,
     }
 
-    if not status_path.exists():
+    # Use shared access layer (no freshness check — scoring is informational)
+    status_result = read_status(status_path)
+    if status_result is None:
         return result
 
     try:
-        with open(status_path, 'r', encoding='utf-8') as f:
-            status = json.load(f)
+        status = status_result.data
 
         # Overall status
         overall = status.get('overall', {})

@@ -1,4 +1,3 @@
----
 module: c1-bio-016
 level: C1-BIO
 sequence: 16
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Костянтин-Василь Острозький: Князь-Просвітник'
 subtitle: 'Kostiantyn-Vasyl Ostrozky: The Enlightener Prince'
 content_outline:
-- section: "Вступ — Некоронований король Русі"
+- section: Вступ — Некоронований король Русі
   words: 615
   points:
   - Найбагатший магнат Речі Посполитої
@@ -66,13 +65,16 @@ grammar:
 - Academic register (Renaissance)
 sources:
 - name: Костянтин-Василь Острозький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький"
+  url: https://uk.wikipedia.org/wiki/Костянтин-Василь_Острозький
   type: primary
 - name: Острозька академія
-  url: "https://uk.wikipedia.org/wiki/Острозька_академія"
+  url: https://uk.wikipedia.org/wiki/Острозька_академія
   type: primary
 - name: Острозька Біблія
-  url: "https://uk.wikipedia.org/wiki/Острозька_Біблія"
+  url: https://uk.wikipedia.org/wiki/Острозька_Біблія
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Prince Enlightener

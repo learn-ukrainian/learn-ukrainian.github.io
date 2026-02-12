@@ -1,4 +1,3 @@
----
 module: a2-08
 level: A2
 sequence: 8
@@ -61,7 +60,7 @@ activity_hints:
   focus: Abstract context sentences
   items: 12+
 - type: fill-in
-  focus: "Translation - \"because of\", \"instead of\", \"about\""
+  focus: Translation - "because of", "instead of", "about"
   items: 10+
 - type: quiz
   focus: Time preposition selection
@@ -92,12 +91,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Prepositions
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Abstract and temporal preposition requirements
 - name: Ukrainian Grammar - Prepositions
-  url: "https://uk.wikipedia.org/wiki/Прийменник"
+  url: https://uk.wikipedia.org/wiki/Прийменник
   type: reference
   notes: Full preposition inventory with case government
 immersion: 40-50% Ukrainian
 phase: A2.1
+persona:
+  voice: Encouraging Cultural Guide
+  role: Chess Grandmaster

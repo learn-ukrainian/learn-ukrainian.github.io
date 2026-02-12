@@ -1,4 +1,3 @@
----
 module: c1-hist-113
 level: c1-hist
 sequence: 113
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: хто виграє війну наративів?'
 - Evaluate the historical significance of війна за правду
 content_outline:
-- section: "Вступ — Війна за правду"
+- section: Вступ — Війна за правду
   words: 515
   subsections:
   - Огляд модулів 108-112
@@ -74,18 +73,18 @@ activities:
 - type: critical-analysis
   focus: Where each side wins/loses information war
 - type: critical-analysis
-  focus: "AI and deepfakes — future information war"
+  focus: AI and deepfakes — future information war
 - type: essay-response
   focus: What 2022 taught about information warfare
 - type: essay-response
   focus: Чи може правда перемогти пропаганду?
 sources:
 - name: Інформаційна війна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Інформаційна_війна"
+  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
   type: reference
   notes: Information warfare overview
 - name: Російсько-українська війна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)"
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
   type: reference
   notes: Current war context
 vocabulary_hints:
@@ -108,3 +107,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Media Archaeologist

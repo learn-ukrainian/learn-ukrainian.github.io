@@ -1,4 +1,3 @@
----
 module: c1-hist-011
 level: c1-hist
 sequence: 11
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of повість минулих літ i: структура та автори'
 - Evaluate the historical significance of найстаріший літопис русі
 content_outline:
-- section: "Вступ — Найстаріший літопис Русі"
+- section: Вступ — Найстаріший літопис Русі
   words: 457
   subsections:
   - Що таке Повість минулих літ (ПМЛ)?
@@ -80,7 +79,7 @@ vocabulary:
 - інтерполяція
 activities:
 - type: reading
-  focus: 'Opening passage \"Откуда есть пошла Руская земля\" — modern translation'
+  focus: Opening passage \"Откуда есть пошла Руская земля\" — modern translation
 - type: critical-analysis
   focus: Who benefits from specific passages? Identify political purpose
 - type: comparative-study
@@ -89,15 +88,15 @@ activities:
   focus: Чи можна довіряти Повісті минулих літ як історичному джерелу?
 sources:
 - name: Повість минулих літ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Повість_минулих_літ"
+  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
   type: reference
   notes: Overview of the chronicle
 - name: Повість минулих літ (повний текст)
-  url: "https://litopys.org.ua/pvlyar/yar.htm"
+  url: https://litopys.org.ua/pvlyar/yar.htm
   type: primary
   notes: Full text of Laurentian redaction
 - name: Нестор Літописець
-  url: "https://uk.wikipedia.org/wiki/Нестор_Літописець"
+  url: https://uk.wikipedia.org/wiki/Нестор_Літописець
   type: reference
   notes: Traditional attribution
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Monastic Chronicler

@@ -1,4 +1,3 @@
----
 sequence: 121
 module: lit-121
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Сандармох: Трагедія знищеного покоління у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Sandarmokh Witness

@@ -1,4 +1,3 @@
----
 module: c1-hist-037
 level: c1-hist
 sequence: 37
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of свідчення голодомору ii: документи'
 - Evaluate the historical significance of документальні докази
 content_outline:
-- section: "Вступ — Документальні докази"
+- section: Вступ — Документальні докази
   words: 457
   subsections:
   - Від свідчень до документів
@@ -39,7 +38,7 @@ content_outline:
   - Документальні свідчення
   - Приклад — постанова про село
   - Наслідки для населення
-- section: "Фрагмент — Телеграма про хлібозаготівлі"
+- section: Фрагмент — Телеграма про хлібозаготівлі
   words: 571
   subsections:
   - Текст (з глосами)
@@ -89,15 +88,15 @@ activities:
   focus: Як радянські документи доводять намір знищити?
 sources:
 - name: Архівні документи Голодомору
-  url: "https://cdiak.archives.gov.ua/"
+  url: https://cdiak.archives.gov.ua/
   type: primary
   notes: Central State Archive
 - name: Чорні дошки
-  url: "https://uk.wikipedia.org/wiki/Чорні_дошки"
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
   type: reference
   notes: Blacklists
 - name: Закон про п'ять колосків
-  url: "https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків"
+  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
   type: reference
   notes: August 7, 1932 law
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Forensic Archivist

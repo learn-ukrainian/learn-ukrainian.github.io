@@ -1,4 +1,3 @@
----
 sequence: 40
 module: ruth-040
 module_number: 32
@@ -25,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - parallel-text
+persona:
+  voice: Baroque Scholar
+  role: Greek-Slavonic Translator

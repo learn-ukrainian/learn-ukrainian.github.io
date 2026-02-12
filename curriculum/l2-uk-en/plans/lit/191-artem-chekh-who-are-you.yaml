@@ -1,4 +1,3 @@
----
 sequence: 191
 module: lit-191
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Artem Chekh Who Are You у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Soldier Memoirist

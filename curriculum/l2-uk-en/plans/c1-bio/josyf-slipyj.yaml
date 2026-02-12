@@ -1,4 +1,3 @@
----
 module: c1-bio-094
 level: C1-BIO
 sequence: 94
@@ -6,7 +5,7 @@ slug: josyf-slipyj
 version: '2.0'
 title: 'Патріарх Йосиф Сліпий: Незламний сповідник віри'
 content_outline:
-- section: "Вступ — 18 років у ГУЛАЗі"
+- section: Вступ — 18 років у ГУЛАЗі
   words: 457
   points:
   - Сліпий як символ незламності
@@ -68,7 +67,7 @@ vocabulary_hints:
   - канонізація (canonization)
 activity_hints:
 - type: reading
-  focus: "Excerpts from Slipyj's \"Заповіт\""
+  focus: Excerpts from Slipyj's "Заповіт"
   source: Historical documents
   items: 3 passages
 - type: essay-response
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Йосиф Сліпий (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Йосиф_Сліпий"
+  url: https://uk.wikipedia.org/wiki/Йосиф_Сліпий
   type: primary
   notes: Biography, imprisonment, diaspora leadership
 - name: УГКЦ - Патріарх Йосиф Сліпий
-  url: "https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/"
+  url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
   type: reference
   notes: Official church biography
 - name: Український Католицький Університет
-  url: "https://ucu.edu.ua/"
+  url: https://ucu.edu.ua/
   type: reference
   notes: Institution he founded
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of патріарх йосиф сліпий: незламний сповідник віри'
 - Evaluate the contributions of 18 років у гулазі
 - Trace the career and influence of спадщина сповідника
+persona:
+  voice: Senior Biographer
+  role: Confessor of Faith

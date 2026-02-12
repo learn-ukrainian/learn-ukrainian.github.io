@@ -1,4 +1,3 @@
----
 module: b2-hist-088
 level: B2-HIST
 sequence: 88
@@ -89,4 +88,7 @@ grammar:
 - Військова лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.9 [WWI & Revolution]"
+phase: HIST.9 [WWI & Revolution]
+persona:
+  voice: Senior Professor of History
+  role: Sich Rifleman

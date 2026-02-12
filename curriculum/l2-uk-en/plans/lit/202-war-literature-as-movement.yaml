@@ -1,4 +1,3 @@
----
 sequence: 202
 module: lit-202
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір War Literature As Movement у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Veteran Writer

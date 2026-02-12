@@ -1,4 +1,3 @@
----
 module: c1-bio-144
 level: C1-BIO
 sequence: 144
@@ -6,7 +5,7 @@ slug: serhii-plokhy
 version: '2.0'
 title: 'Сергій Плохій: Історик, який пояснив Україну світові'
 content_outline:
-- section: "Вступ — Голос України в Гарварді"
+- section: Вступ — Голос України в Гарварді
   words: 470
   points:
   - Плохій як найвпливовіший історик України у світі
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Сергій Плохій (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович"
+  url: https://uk.wikipedia.org/wiki/Плохій_Сергій_Миколайович
   type: primary
   notes: Biography, academic career, books
 - name: Harvard Ukrainian Research Institute
-  url: "https://huri.harvard.edu/"
+  url: https://huri.harvard.edu/
   type: reference
   notes: Institute he directs
 - name: Брама Європи
-  url: "https://uk.wikipedia.org/wiki/Брама_Європи"
+  url: https://uk.wikipedia.org/wiki/Брама_Європи
   type: reference
   notes: His major work on Ukrainian history
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of сергій плохій: історик, який пояснив україну світові'
 - Evaluate the contributions of голос україни в гарварді
 - Trace the career and influence of значення для україни
+persona:
+  voice: Senior Biographer
+  role: Archival Detective

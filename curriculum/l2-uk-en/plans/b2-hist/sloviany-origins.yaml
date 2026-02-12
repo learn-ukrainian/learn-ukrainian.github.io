@@ -1,4 +1,3 @@
----
 module: b2-hist-004
 level: B2-HIST
 sequence: 4
@@ -97,18 +96,21 @@ grammar:
 - Минулий час у науковому тексті
 sources:
 - name: Слов'яни (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Слов%27яни"
+  url: https://uk.wikipedia.org/wiki/Слов%27яни
   type: reference
   notes: Overview of Slavic origins
 - name: Праслов'яни (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Праслов%27яни"
+  url: https://uk.wikipedia.org/wiki/Праслов%27яни
   type: reference
   notes: Proto-Slavic homeland theories
 - name: Повість минулих літ
-  url: "https://litopys.org.ua/pvl/pvl.htm"
+  url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Primary Chronicle on Slavic origins
 register: публіцистичний
-phase: "B2-HIST.1 [Витоки]"
+phase: B2-HIST.1 [Витоки]
 module_type: history
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Paleolinguist

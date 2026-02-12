@@ -1,4 +1,3 @@
----
 module: a1-10
 level: A1
 sequence: 10
@@ -86,4 +85,7 @@ grammar:
 - Present tense conjugation
 - Questions and negation
 register: розмовний
-phase: "A1.1 [First Contact]"
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Friendly Hostel Host

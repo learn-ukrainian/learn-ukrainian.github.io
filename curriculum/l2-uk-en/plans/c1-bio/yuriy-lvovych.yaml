@@ -1,4 +1,3 @@
----
 module: c1-bio-012
 level: C1-BIO
 sequence: 12
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Юрій I Львович: Останній Король Русі'
 subtitle: 'Yuriy I Lvovych: The Last King of Rus'''
 content_outline:
-- section: "Вступ — Король Русі"
+- section: Вступ — Король Русі
   words: 421
   points:
   - Титул "Rex Russiae" на печатці
@@ -47,7 +46,7 @@ content_outline:
   - Данницька залежність при Тохті
   - Три шлюби та династичні зв'язки
   - Смерть та криза престолонаслідування
-- section: "Підсумок — Завершення королівської епохи"
+- section: Підсумок — Завершення королівської епохи
   words: 319
   points:
   - Сини Андрій та Лев II — останні Романовичі
@@ -105,16 +104,19 @@ grammar:
 module_type: biography
 sources:
 - name: Юрій I Львович (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Юрій_I_Львович"
+  url: https://uk.wikipedia.org/wiki/Юрій_I_Львович
   type: primary
   notes: Biography, royal title, Galician Metropolitanate
 - name: Галицька митрополія
-  url: "https://uk.wikipedia.org/wiki/Галицька_митрополія"
+  url: https://uk.wikipedia.org/wiki/Галицька_митрополія
   type: primary
   notes: Ecclesiastical organization
 - name: Королівство Русі
-  url: "https://uk.wikipedia.org/wiki/Королівство_Русі"
+  url: https://uk.wikipedia.org/wiki/Королівство_Русі
   type: reference
   notes: Royal tradition context
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Royal Seal Keeper

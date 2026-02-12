@@ -42,6 +42,8 @@ _LEGACY_END_MARKERS = ["---END---"]
 def extract_delimited(text: str, tag: str) -> Optional[str]:
     """Extract content between ===TAG_START=== and ===TAG_END=== delimiters.
 
+    Also supports ===ARTIFACT_START=== as a fallback if the specific tag is missing.
+
     Args:
         text: Raw Gemini output (may contain thinking tokens, noise).
         tag: Delimiter tag name (e.g., "CONTENT", "ACTIVITIES").
@@ -49,6 +51,7 @@ def extract_delimited(text: str, tag: str) -> Optional[str]:
     Returns:
         Stripped content between delimiters, or None if not found.
     """
+    # 1. Try specific semantic tag (preferred)
     pattern = re.compile(
         rf"==={re.escape(tag)}_START===(.*?)==={re.escape(tag)}_END===",
         re.DOTALL,
@@ -56,6 +59,16 @@ def extract_delimited(text: str, tag: str) -> Optional[str]:
     match = pattern.search(text)
     if match:
         return match.group(1).strip()
+
+    # 2. Try generic ARTIFACT tag (fallback)
+    pattern_artifact = re.compile(
+        rf"===ARTIFACT_START===(.*?)===ARTIFACT_END===",
+        re.DOTALL,
+    )
+    match_artifact = pattern_artifact.search(text)
+    if match_artifact:
+        return match_artifact.group(1).strip()
+
     return None
 
 
@@ -79,11 +92,13 @@ def extract_yaml(text: str, tag: str) -> Optional[dict | list]:
 
 
 def has_complete_pair(text: str, tag: str) -> bool:
-    """Check if text contains a complete START/END delimiter pair for tag."""
-    return (
-        f"==={tag}_START===" in text
-        and f"==={tag}_END===" in text
-    )
+    """Check if text contains a complete START/END delimiter pair for tag.
+    
+    Checks for both specific ===TAG_START=== and generic ===ARTIFACT_START===.
+    """
+    if f"==={tag}_START===" in text and f"==={tag}_END===" in text:
+        return True
+    return "===ARTIFACT_START===" in text and "===ARTIFACT_END===" in text
 
 
 def find_complete_pairs(text: str, tags: list[str]) -> list[str]:

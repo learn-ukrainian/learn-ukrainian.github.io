@@ -25,3 +25,6 @@ activity_types:
 - grammar-identify
 - grammar-lab
 - parallel-text
+persona:
+  voice: Baroque Scholar
+  role: Textual Critic

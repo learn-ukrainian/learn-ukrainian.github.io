@@ -101,3 +101,6 @@ grammar:
 - Comparison structures (порівняно з..., на відміну від...)
 register: напівформальний
 phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Creative Director

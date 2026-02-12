@@ -1,28 +1,27 @@
----
 module: c2-068
 level: c2
 sequence: 68
 version: '2.0'
-title: "Медична українська III — Медична документація"
+title: Медична українська III — Медична документація
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Накази МОЗ щодо медичної документації
-  url: "https://moz.gov.ua/dokumenti"
+  url: https://moz.gov.ua/dokumenti
   type: primary
   notes: Форми медичної документації
 - name: Електронна система охорони здоров'я
-  url: "https://ehealth.gov.ua/"
+  url: https://ehealth.gov.ua/
   type: primary
   notes: Електронна медична документація
 - name: Національний класифікатор захворювань
-  url: "https://moz.gov.ua/"
+  url: https://moz.gov.ua/
   type: reference
   notes: МКХ-10 українською
 content_outline:
-- section: "Вступ — Система медичної документації в Україні"
+- section: Вступ — Система медичної документації в Україні
   words: 500
   points:
   - Правові основи ведення документації
@@ -64,7 +63,7 @@ content_outline:
   - Кодування діагнозів за МКХ-10
   - Звіти про надані послуги
   - Контроль якості даних
-- section: "Практикум — Заповнення медичної документації"
+- section: Практикум — Заповнення медичної документації
   words: 500
   points:
   - Ведення записів у медичній карті
@@ -89,7 +88,7 @@ vocabulary:
   - кодування (coding)
   - статистична звітність (statistical reporting)
   - форма (form)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - reading
@@ -126,3 +125,6 @@ activity_hints:
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Medical Registrar

@@ -1,4 +1,3 @@
----
 sequence: 53
 module: lit-53
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Lesia Cassandra у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Ignored Prophet

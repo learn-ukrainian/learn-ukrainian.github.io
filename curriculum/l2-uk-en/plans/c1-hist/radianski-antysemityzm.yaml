@@ -1,4 +1,3 @@
----
 module: c1-hist-120
 level: c1-hist
 sequence: 120
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of радянський антисемітизм
 - Evaluate the historical significance of антисемітизм «без антисемітів»
 content_outline:
-- section: "Вступ — Антисемітизм «без антисемітів»"
+- section: Вступ — Антисемітизм «без антисемітів»
   words: 515
   subsections:
   - СРСР — «інтернаціоналізм»
@@ -72,24 +71,24 @@ activities:
 - type: critical-analysis
   focus: How Babi Yar was erased from Soviet memory
 - type: critical-analysis
-  focus: "«Rootless cosmopolitans» — coded antisemitism"
+  focus: «Rootless cosmopolitans» — coded antisemitism
 - type: comparative-study
-  focus: "«Fifth paragraph» — practical discrimination"
+  focus: «Fifth paragraph» — practical discrimination
 - type: critical-analysis
   focus: Soviet antisemitism legacy today
 - type: essay-response
   focus: Чому СРСР заперечував свій антисемітизм?
 sources:
 - name: Антисемітизм в СРСР (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Антисемітизм_в_СРСР"
+  url: https://uk.wikipedia.org/wiki/Антисемітизм_в_СРСР
   type: reference
   notes: Soviet antisemitism
 - name: Бабин Яр (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Бабин_Яр"
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
   type: reference
   notes: Babi Yar memory suppression
 - name: «Справа лікарів» (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Справа_лікарів"
+  url: https://uk.wikipedia.org/wiki/Справа_лікарів
   type: reference
   notes: Doctors' plot
 vocabulary_hints:
@@ -112,3 +111,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Human Rights Historian

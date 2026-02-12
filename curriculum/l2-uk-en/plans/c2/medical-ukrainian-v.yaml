@@ -1,28 +1,27 @@
----
 module: c2-070
 level: c2
 sequence: 70
 version: '2.0'
-title: "Медична українська V — Медичні дослідження"
+title: Медична українська V — Медичні дослідження
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Український медичний часопис
-  url: "https://www.umj.com.ua/"
+  url: https://www.umj.com.ua/
   type: primary
   notes: Наукові публікації українською
 - name: Вимоги ДАК до дисертацій
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Вимоги до наукових робіт у медицині
 - name: Етичні комітети та дослідження
-  url: "https://moz.gov.ua/"
+  url: https://moz.gov.ua/
   type: reference
   notes: Правила проведення клінічних досліджень
 content_outline:
-- section: "Вступ — Наукова медична діяльність в Україні"
+- section: Вступ — Наукова медична діяльність в Україні
   words: 500
   points:
   - Система медичної науки в Україні
@@ -64,7 +63,7 @@ content_outline:
   - Постерна презентація
   - Захист дисертації
   - Відповіді на запитання
-- section: "Практикум — Наукове медичне письмо"
+- section: Практикум — Наукове медичне письмо
   words: 400
   points:
   - Написання анотації дослідження
@@ -89,7 +88,7 @@ vocabulary:
   - метааналіз (meta-analysis)
   - систематичний огляд (systematic review)
   - довірчий інтервал (confidence interval)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - reading
@@ -126,3 +125,6 @@ activity_hints:
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Clinical Investigator

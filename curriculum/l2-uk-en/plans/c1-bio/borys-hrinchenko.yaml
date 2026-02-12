@@ -1,4 +1,3 @@
----
 module: c1-bio-055
 level: C1-BIO
 sequence: 55
@@ -6,7 +5,7 @@ slug: borys-hrinchenko
 version: '2.0'
 title: 'Борис Грінченко: Лексикограф і просвітник'
 content_outline:
-- section: "Вступ — Вартовий українського слова"
+- section: Вступ — Вартовий українського слова
   words: 400
   points:
   - Автор першого повного словника української мови
@@ -40,7 +39,7 @@ content_outline:
   - Методологія збору матеріалу
   - Чотири томи та їхній зміст
   - Значення для стандартизації мови
-- section: "Спадщина — Каменяр словникарства"
+- section: Спадщина — Каменяр словникарства
   words: 700
   points:
   - Останні роки та смерть (1910)
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Борис Грінченко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович"
+  url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
   type: primary
   notes: Comprehensive biography of lexicographer and educator
 - name: Словник Грінченка онлайн
-  url: "https://hrinchenko.com/"
+  url: https://hrinchenko.com/
   type: reference
   notes: Digital version of the famous dictionary
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of борис грінченко: лексикограф і просвітник'
 - Evaluate the contributions of вартовий українського слова
 - Trace the career and influence of каменяр словникарства
+persona:
+  voice: Senior Biographer
+  role: Dictionary Compiler

@@ -90,3 +90,6 @@ grammar:
 - Business communication patterns
 register: розмовний
 phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Corporate HR Manager

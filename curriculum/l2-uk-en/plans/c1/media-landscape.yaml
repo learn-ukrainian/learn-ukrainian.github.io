@@ -1,4 +1,3 @@
----
 module: c1-026
 level: C1
 sequence: 26
@@ -6,7 +5,7 @@ slug: 26-media-landscape
 version: '2.0'
 title: 'Медіаландшафт: Як не потонути в інформації'
 content_outline:
-- section: "Вступ — Медіа в Україні"
+- section: Вступ — Медіа в Україні
   words: 400
   points:
   - Огляд медіаландшафту
@@ -99,11 +98,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Інститут масової інформації
-  url: "https://imi.org.ua/"
+  url: https://imi.org.ua/
   type: reference
   notes: Media monitoring and analysis
 - name: StopFake
-  url: "https://www.stopfake.org/"
+  url: https://www.stopfake.org/
   type: secondary
   notes: Fact-checking resources
 immersion: 100% Ukrainian
@@ -112,3 +111,6 @@ objectives:
 - 'Understand and apply медіаландшафт: як не потонути в інформації'
 - Analyze and evaluate медіа в україні
 - Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Медіа-експерт

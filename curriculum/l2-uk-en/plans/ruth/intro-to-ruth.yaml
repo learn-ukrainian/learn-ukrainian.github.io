@@ -1,4 +1,3 @@
----
 sequence: 1
 module: ruth-001
 module_number: 1
@@ -70,3 +69,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Ruthenian Philologist

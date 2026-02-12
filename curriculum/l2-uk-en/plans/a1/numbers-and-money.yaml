@@ -1,4 +1,3 @@
----
 module: a1-17
 level: A1
 sequence: 17
@@ -79,4 +78,7 @@ grammar:
 - Number agreement (1=nom, 2-4=nom.pl, 5+=gen.pl)
 - Genitive plural with numbers
 register: розмовний
-phase: "A1.2 [Navigation]"
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Bazaar Accountant

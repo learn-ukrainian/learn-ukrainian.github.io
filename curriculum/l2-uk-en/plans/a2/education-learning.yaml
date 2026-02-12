@@ -1,4 +1,3 @@
----
 module: a2-52
 level: A2
 sequence: 52
@@ -75,4 +74,7 @@ grammar:
 - School subjects vocabulary
 - Grades, exams, and academic terms
 register: розмовний
-phase: "A2.5 [Vocabulary Expansion]"
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: School Principal

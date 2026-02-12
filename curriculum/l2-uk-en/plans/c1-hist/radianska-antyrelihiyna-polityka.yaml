@@ -1,4 +1,3 @@
----
 module: c1-hist-062
 level: c1-hist
 sequence: 62
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of радянська антирелігійна політика
 - Evaluate the historical significance of війна з богом
 content_outline:
-- section: "Вступ — Війна з Богом"
+- section: Вступ — Війна з Богом
   words: 457
   subsections:
   - Більшовики і релігія
@@ -91,15 +90,15 @@ activities:
   focus: Чому радянська влада так агресивно боролася з релігією?
 sources:
 - name: Антирелігійна кампанія в СРСР
-  url: "https://uk.wikipedia.org/wiki/Антирелігійна_кампанія_в_СРСР"
+  url: https://uk.wikipedia.org/wiki/Антирелігійна_кампанія_в_СРСР
   type: reference
   notes: Campaign overview
 - name: Руйнування храмів в Україні
-  url: "https://uk.wikipedia.org/wiki/Руйнування_храмів_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Руйнування_храмів_в_Україні
   type: reference
   notes: Church destruction
 - name: Підпільна церква в СРСР
-  url: "https://uk.wikipedia.org/wiki/Підпільна_церква_в_СРСР"
+  url: https://uk.wikipedia.org/wiki/Підпільна_церква_в_СРСР
   type: reference
   notes: Underground church
 vocabulary_hints:
@@ -122,3 +121,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Archive Researcher of Repressions

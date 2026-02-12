@@ -1,4 +1,3 @@
----
 module: b2-hist-048
 level: B2-HIST
 sequence: 48
@@ -83,12 +82,15 @@ grammar:
 - Historical narrative register
 sources:
 - name: Military Art of Ukrainian Cossacks
-  url: "https://resource.history.org.ua/item/0002345"
+  url: https://resource.history.org.ua/item/0002345
   type: academic
   notes: Detailed analysis of tactics
 - name: Cossack Weaponry - Museum Project
-  url: "https://warmuseum.kyiv.ua"
+  url: https://warmuseum.kyiv.ua
   type: reference
   notes: Visual and technical details
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
+persona:
+  voice: Senior Professor of History
+  role: Artillery Master

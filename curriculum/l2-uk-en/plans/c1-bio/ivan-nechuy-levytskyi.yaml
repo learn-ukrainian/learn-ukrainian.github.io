@@ -1,4 +1,3 @@
----
 module: c1-bio-043
 level: C1-BIO
 sequence: 43
@@ -6,7 +5,7 @@ slug: ivan-nechuy-levytskyi
 version: '2.0'
 title: 'Іван Нечуй-Левицький: Майстер українського реалізму'
 content_outline:
-- section: "Вступ — Великий оповідач"
+- section: Вступ — Великий оповідач
   words: 400
   points:
   - Нечуй-Левицький як вершина українського реалізму
@@ -77,11 +76,11 @@ vocabulary_hints:
   - мовна полеміка (language polemic)
 activity_hints:
 - type: reading
-  focus: "Excerpts from \"Кайдашева сім'я\" and \"Микола Джеря\""
+  focus: Excerpts from "Кайдашева сім'я" and "Микола Джеря"
   source: UkrLib
   items: 4 passages
 - type: essay-response
-  focus: "Why is \"Кайдашева сім'я\" still relevant today?"
+  focus: Why is "Кайдашева сім'я" still relevant today?
   word_target: 300
   output: Social analysis with modern parallels
 - type: critical-analysis
@@ -99,23 +98,23 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Нечуй-Левицький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький"
+  url: https://uk.wikipedia.org/wiki/Іван_Нечуй-Левицький
   type: primary
   notes: Biography, works, literary significance
 - name: Кайдашева сім'я
-  url: "https://uk.wikipedia.org/wiki/Кайдашева_сім%27я"
+  url: https://uk.wikipedia.org/wiki/Кайдашева_сім%27я
   type: reference
   notes: His most famous novel
 - name: Микола Джеря
-  url: "https://uk.wikipedia.org/wiki/Микола_Джеря"
+  url: https://uk.wikipedia.org/wiki/Микола_Джеря
   type: reference
   notes: Novel about serfdom and industrialization
 - name: Український реалізм
-  url: "https://uk.wikipedia.org/wiki/Реалізм_(література)"
+  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
   type: reference
   notes: Literary movement context
 - name: UkrLib - Нечуй-Левицький
-  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1646"
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
   type: reference
   notes: Full texts and analysis
 immersion: 100% Ukrainian
@@ -124,3 +123,6 @@ objectives:
 - 'Analyze the life and legacy of іван нечуй-левицький: майстер українського реалізму'
 - Evaluate the contributions of великий оповідач
 - Trace the career and influence of останні роки та спадщина
+persona:
+  voice: Senior Biographer
+  role: Ethnographic Observer

@@ -1,4 +1,3 @@
----
 module: c1-hist-055
 level: c1-hist
 sequence: 55
@@ -10,14 +9,14 @@ objectives:
 - 'Analyze the causes and consequences of театр курбаса: реформа і знищення'
 - Evaluate the historical significance of революціонер сцени
 content_outline:
-- section: "Вступ — Революціонер сцени"
+- section: Вступ — Революціонер сцени
   words: 457
   subsections:
   - Курбас — хто він
   - Театральна революція
   - Чому театр — політика
   - Структура модуля
-- section: "Шлях до \"Березоля\""
+- section: Шлях до "Березоля"
   words: 571
   subsections:
   - Ранні роки і навчання
@@ -85,20 +84,20 @@ activities:
 - type: comparative-study
   focus: Compare Kurbas with European avant-garde (Meyerhold)
 - type: comparative-study
-  focus: "How was \"formalism\" used to attack artists?"
+  focus: How was "formalism" used to attack artists?
 - type: essay-response
   focus: Чому радянська влада знищила авангардний театр?
 sources:
 - name: Лесь Курбас (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Курбас_Лесь"
+  url: https://uk.wikipedia.org/wiki/Курбас_Лесь
   type: reference
   notes: Biography
 - name: Березіль (театр)
-  url: "https://uk.wikipedia.org/wiki/Березіль_(театр)"
+  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
   type: reference
   notes: Theater history
 - name: Український театральний авангард
-  url: "https://uk.wikipedia.org/wiki/Авангардизм"
+  url: https://uk.wikipedia.org/wiki/Авангардизм
   type: reference
   notes: Avant-garde context
 vocabulary_hints:
@@ -121,3 +120,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Theater Historian

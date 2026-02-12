@@ -1,4 +1,3 @@
----
 module: c1-hist-041
 level: c1-hist
 sequence: 41
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of «український вісник» чорновола
 - Evaluate the historical significance of хроніка опору
 content_outline:
-- section: "Вступ — Хроніка опору"
+- section: Вступ — Хроніка опору
   words: 457
   subsections:
   - Що таке «Український вісник»?
@@ -39,7 +38,7 @@ content_outline:
   - Протести
   - Літературні твори
   - Статті про культуру
-- section: "Фрагмент — Хроніка репресій"
+- section: Фрагмент — Хроніка репресій
   words: 800
   subsections:
   - Текст (з глосами)
@@ -82,22 +81,22 @@ activities:
 - type: critical-analysis
   focus: How does Chornovil document without editorializing?
 - type: comparative-study
-  focus: "Compare \"Visnyk\" with Russian \"Хроника текущих событий\""
+  focus: Compare "Visnyk" with Russian "Хроника текущих событий"
 - type: critical-analysis
   focus: How did the publication affect the movement?
 - type: essay-response
   focus: Яку роль відіграв 'Український вісник' у дисидентському русі?
 sources:
 - name: Український вісник (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)"
+  url: https://uk.wikipedia.org/wiki/Український_вісник_(самвидав)
   type: reference
   notes: Publication overview
 - name: В'ячеслав Чорновіл
-  url: "https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович"
+  url: https://uk.wikipedia.org/wiki/Чорновіл_В'ячеслав_Максимович
   type: reference
   notes: Editor biography
 - name: Архів Чорновола
-  url: "https://khpg.org/"
+  url: https://khpg.org/
   type: primary
   notes: Kharkiv Human Rights Group archive
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Underground Editor

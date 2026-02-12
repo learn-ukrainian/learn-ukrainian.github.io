@@ -1,4 +1,3 @@
----
 module: c1-hist-105
 level: c1-hist
 sequence: 105
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of голодомор як економічна зброя
 - Evaluate the historical significance of голод як інструмент
 content_outline:
-- section: "Вступ — Голод як інструмент"
+- section: Вступ — Голод як інструмент
   words: 515
   subsections:
   - Голодомор — не природна катастрофа
@@ -70,7 +69,7 @@ vocabulary:
 - деселянізація
 activities:
 - type: critical-analysis
-  focus: "Grain export during famine — numbers and destinations"
+  focus: Grain export during famine — numbers and destinations
 - type: comparative-study
   focus: How confiscation system worked economically
 - type: critical-analysis
@@ -81,11 +80,11 @@ activities:
   focus: Чи Голодомор був 'раціональним' з точки зору Сталіна?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Голодомор"
+  url: https://uk.wikipedia.org/wiki/Голодомор
   type: reference
   notes: Holodomor overview
 - name: Експорт зерна під час голоду (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Експорт_зерна_під_час_Голодомору"
+  url: https://uk.wikipedia.org/wiki/Експорт_зерна_під_час_Голодомору
   type: reference
   notes: Grain export during famine
 vocabulary_hints:
@@ -108,3 +107,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Economic Historian

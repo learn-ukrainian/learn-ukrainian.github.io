@@ -87,3 +87,6 @@ grammar:
 - Verb aspect review (perfective/imperfective)
 register: розмовний
 phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Literary Editor

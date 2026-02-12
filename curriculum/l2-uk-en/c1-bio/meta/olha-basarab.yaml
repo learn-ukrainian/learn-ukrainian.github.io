@@ -1,4 +1,3 @@
----
 module: c1-bio-089
 level: C1-BIO
 slug: olha-basarab
@@ -8,5 +7,18 @@ naturalness:
   score: 1
   status: PENDING
 word_target: 4000
+content_outline:
+  - section: "Вступ: Незламна розвідниця та символ жертовності"
+    words: 400
+  - section: "Родинне коріння та формування особистості (1889–1914)"
+    words: 600
+  - section: "Перша світова війна: Від жіночої чоти до дипломатії"
+    words: 700
+  - section: "Підпільна діяльність та розвідувальна мережа УВО (1920–1924)"
+    words: 800
+  - section: "Арешт, тортури та мученицька смерть у «Бригідках»"
+    words: 800
+  - section: "Культ героїні: Посмертна слава та сучасна пам'ять"
+    words: 700
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-11'

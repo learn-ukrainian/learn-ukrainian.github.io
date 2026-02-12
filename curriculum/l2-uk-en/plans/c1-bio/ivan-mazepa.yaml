@@ -1,4 +1,3 @@
----
 module: c1-bio-027
 level: C1-BIO
 sequence: 27
@@ -6,7 +5,7 @@ slug: ivan-mazepa
 version: '2.0'
 title: 'Іван Мазепа: Меценат і трагічний герой'
 content_outline:
-- section: "Вступ — Між зрадою та героїзмом"
+- section: Вступ — Між зрадою та героїзмом
   words: 400
   points:
   - Суперечливість постаті Мазепи
@@ -48,7 +47,7 @@ content_outline:
   - Байрон, Пушкін, Словацький
   - Реабілітація в незалежній Україні
   - Мазепа на банкноті
-- section: "Підсумок — Трагічний вибір"
+- section: Підсумок — Трагічний вибір
   words: 300
   points:
   - Мазепа як символ боротьби за незалежність
@@ -96,15 +95,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Мазепа (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
   type: primary
   notes: Biography, hetmanate, Poltava
 - name: Полтавська битва (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
   type: reference
   notes: Military context and consequences
 - name: Мазепинське бароко
-  url: "https://uk.wikipedia.org/wiki/Мазепинське_бароко"
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
   type: reference
   notes: Cultural patronage
 immersion: 100% Ukrainian
@@ -112,3 +111,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of іван мазепа: меценат і трагічний герой'
 - Evaluate the contributions of між зрадою та героїзмом
+persona:
+  voice: Senior Biographer
+  role: Patron of Arts

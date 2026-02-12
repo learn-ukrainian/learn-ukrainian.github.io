@@ -1,4 +1,3 @@
----
 module: c1-bio-001
 level: C1-BIO
 sequence: 1
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Княгиня Ольга: Дипломатія та реформи'
 word_target: 4300
 content_outline:
-- section: "Вступ — Мудра володарка Києва"
+- section: Вступ — Мудра володарка Києва
   words: 600
   points:
   - Ольга як символ державної мудрості
@@ -63,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Княгиня Ольга (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Княгиня_Ольга"
+  url: https://uk.wikipedia.org/wiki/Княгиня_Ольга
   type: primary
   notes: Основне джерело фактів
 - name: Повість минулих літ
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Літописні легенди
 immersion: 100% Ukrainian
@@ -83,3 +82,6 @@ activity_hints:
   source: Повість минулих літ (адаптовано)
 - type: critical-analysis
   focus: Сутність податкової реформи
+persona:
+  voice: Senior Biographer
+  role: Regent

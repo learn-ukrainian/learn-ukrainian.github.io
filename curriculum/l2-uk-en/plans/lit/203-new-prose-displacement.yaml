@@ -1,4 +1,3 @@
----
 sequence: 203
 module: lit-203
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір New Prose Displacement у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Displaced Narrator

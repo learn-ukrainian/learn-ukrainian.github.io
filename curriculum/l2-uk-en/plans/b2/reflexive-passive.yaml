@@ -1,4 +1,3 @@
----
 module: b2-04
 level: B2
 sequence: 4
@@ -6,7 +5,7 @@ slug: 04-reflexive-passive
 version: '2.0'
 title: Зворотний пасив із -ся
 content_outline:
-- section: "Вступ — Зворотний пасив"
+- section: Вступ — Зворотний пасив
   words: 400
   points:
   - Концепція зворотності в українських дієсловах
@@ -79,7 +78,7 @@ activity_hints:
   focus: Process description identification
   items: 12+
 - type: group-sort
-  focus: "-ся vs -но/-то — choose appropriate form"
+  focus: -ся vs -но/-то — choose appropriate form
   items: 10+
 - type: match-up
   focus: Context → appropriate -ся verb
@@ -105,19 +104,22 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Reflexive Verbs
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official requirements for -ся passive usage
 - name: Науковий стиль української мови
-  url: "https://uk.wikipedia.org/wiki/Науковий_стиль"
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
   type: secondary
   notes: Scientific writing conventions
 - name: Технічна документація українською
-  url: "https://uk.wikipedia.org/wiki/Технічна_документація"
+  url: https://uk.wikipedia.org/wiki/Технічна_документація
   type: secondary
   notes: Technical writing patterns
 immersion: 100% Ukrainian
-phase: "B2.1a [Passive Voice]"
+phase: B2.1a [Passive Voice]
 objectives:
 - Identify and correctly use зворотний пасив із -ся
 - Form and apply зворотний пасив
+persona:
+  voice: Professional Language Coach
+  role: Nature Documentary Narrator (Оповідач документального фільму)

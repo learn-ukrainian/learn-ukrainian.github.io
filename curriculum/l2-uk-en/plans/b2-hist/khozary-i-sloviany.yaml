@@ -1,4 +1,3 @@
----
 module: b2-hist-007
 level: B2-HIST
 sequence: 7
@@ -77,10 +76,13 @@ grammar:
 - Вживання термінології на позначення ієрархії та залежності
 sources:
 - name: Повість минулих літ
-  url: "https://litopys.org.ua/pvl/pvl01.htm"
+  url: https://litopys.org.ua/pvl/pvl01.htm
   type: primary
 - name: Лист царя Йосипа
-  url: "http://litopys.org.ua/khazar/kh02.htm"
+  url: http://litopys.org.ua/khazar/kh02.htm
   type: primary
 register: публіцистичний
-phase: "B2-HIST.1 [Origins]"
+phase: B2-HIST.1 [Origins]
+persona:
+  voice: Senior Professor of History
+  role: Silk Road Trader

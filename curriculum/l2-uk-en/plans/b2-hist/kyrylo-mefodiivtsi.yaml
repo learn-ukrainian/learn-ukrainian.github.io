@@ -1,4 +1,3 @@
----
 module: b2-hist-080
 level: B2-HIST
 sequence: 80
@@ -92,4 +91,7 @@ grammar:
 - Політична та філософська лексика
 - Непряма мова для передачі ідей
 register: публіцистичний
-phase: "HIST.8 [Imperial Era]"
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Bratstvo Conspirator

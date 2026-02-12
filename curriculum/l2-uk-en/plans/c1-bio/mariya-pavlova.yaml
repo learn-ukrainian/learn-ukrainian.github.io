@@ -1,4 +1,3 @@
----
 module: c1-bio-049
 level: C1-BIO
 sequence: 49
@@ -6,7 +5,7 @@ slug: mariya-pavlova
 version: '2.0'
 title: 'Марія Павлова: Видатний палеонтолог'
 content_outline:
-- section: "Вступ — Жінка, що читала кістки"
+- section: Вступ — Жінка, що читала кістки
   words: 400
   points:
   - Марія Павлова — перша жінка-палеонтолог світового рівня
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Павлова (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова"
+  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
   type: primary
   notes: Біографія, наукова діяльність, внесок у палеонтологію
 - name: Палеонтологія
-  url: "https://uk.wikipedia.org/wiki/Палеонтологія"
+  url: https://uk.wikipedia.org/wiki/Палеонтологія
   type: reference
   notes: Наукова галузь та її методи
 - name: Жінки в науці XIX століття
-  url: "https://uk.wikipedia.org/wiki/Жінки_в_науці"
+  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
   type: reference
   notes: Контекст жіночої участі у науці
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
 - Evaluate the contributions of жінка, що читала кістки
 - Trace the career and influence of останні роки та спадщина (1920-1938)
+persona:
+  voice: Senior Biographer
+  role: Fossil Hunter

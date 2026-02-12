@@ -1,4 +1,3 @@
----
 sequence: 44
 module: a1-44
 level: A1
@@ -20,13 +19,13 @@ content_outline:
   - Дієслова (теперішній, минулий, майбутній час)
   - Відмінки (називний, знахідний, родовий, місцевий)
   - Узгодження прикметників та займенників
-- section: "Presentation 2"
+- section: Presentation 2
   words: 100
   points:
   - Тематичні групи (їжа, транспорт, покупки)
   - Базові фрази для спілкування
   - Числа та час
-- section: "Presentation 3"
+- section: Presentation 3
   words: 100
   points:
   - Аудіювання (розуміння простих діалогів)
@@ -37,7 +36,7 @@ content_outline:
   points:
   - Інтеграційні завдання
   - Практичні сценарії
-- section: "Warm-up 2"
+- section: Warm-up 2
   words: 189
   points:
   - Фінальний наратив про подорож Україною
@@ -85,4 +84,7 @@ grammar:
 - All four cases
 - All verb tenses
 register: розмовний
-phase: "A1.4 [Practical Scenarios]"
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Language Olympiad Judge

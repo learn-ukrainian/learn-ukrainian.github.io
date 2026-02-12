@@ -1,4 +1,3 @@
----
 sequence: 153
 module: lit-153
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Sverstiuk Moral Resistance у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Philosopher of Dignity

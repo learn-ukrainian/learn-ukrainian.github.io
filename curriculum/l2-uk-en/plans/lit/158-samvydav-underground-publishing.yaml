@@ -1,4 +1,3 @@
----
 sequence: 158
 module: lit-158
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Samvydav Underground Publishing у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Underground Publisher

@@ -1,4 +1,3 @@
----
 module: a1-03
 level: A1
 sequence: 3
@@ -87,4 +86,7 @@ grammar:
 - Declension families overview
 - Gender prediction rules
 register: розмовний
-phase: "A1.1 [First Contact]"
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Linguistic Taxonomist

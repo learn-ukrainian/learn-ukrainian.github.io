@@ -1,4 +1,3 @@
----
 sequence: 59
 module: lit-59
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kobylianska Tsarivna у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Diary Keeper

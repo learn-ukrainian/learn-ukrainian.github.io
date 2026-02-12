@@ -1,39 +1,42 @@
----
 module: c1-095
 level: C1
 sequence: 95
 slug: shevchenko-poeziia
 version: '2.0'
-title: "Шевченко: Поезія та її форми"
+title: 'Шевченко: Поезія та її форми'
 word_target: 3000
 content_outline:
-  - section: "Розминка — Поетичний світ Кобзаря"
-    words: 700
-    points:
-      - Жанрова різноманітність (балади, думи, лірика)
-      - Шевченко і народна пісенна традиція
-      - Образ Матері та Жінки в поезії
-  - section: Content Areas
-    words: 1250
-    points:
-      - '**"Катерина", "Наймичка"**: Трагічна доля жінки — female tragedy theme'
-      - '**"Заповіт", "Кавказ", "І мертвим, і живим..."**: Political and prophetic poetry'
-      - '**"Садок вишневий коло хати"**: The idyll and the ideal of Ukraine'
-      - '**"Гайдамаки"**: Historical epic and collective memory'
-  - section: "Практика — Аналіз тексту"
-    words: 1050
-    points:
-      - Порівняти образи Катерини та Наймички
-      - Проаналізувати ритміку та фоніку "Заповіту"
-      - Написати есе про біблійні мотиви в поезії Шевченка
-      - Обговорити вплив Шевченка на сучасний рок та реп
+- section: Розминка — Поетичний світ Кобзаря
+  words: 700
+  points:
+  - Жанрова різноманітність (балади, думи, лірика)
+  - Шевченко і народна пісенна традиція
+  - Образ Матері та Жінки в поезії
+- section: Content Areas
+  words: 1250
+  points:
+  - '**"Катерина", "Наймичка"**: Трагічна доля жінки — female tragedy theme'
+  - '**"Заповіт", "Кавказ", "І мертвим, і живим..."**: Political and prophetic poetry'
+  - '**"Садок вишневий коло хати"**: The idyll and the ideal of Ukraine'
+  - '**"Гайдамаки"**: Historical epic and collective memory'
+- section: Практика — Аналіз тексту
+  words: 1050
+  points:
+  - Порівняти образи Катерини та Наймички
+  - Проаналізувати ритміку та фоніку "Заповіту"
+  - Написати есе про біблійні мотиви в поезії Шевченка
+  - Обговорити вплив Шевченка на сучасний рок та реп
 focus: literature
 pedagogy: CBI
 objectives:
-  - Learner can analyze various poetic genres used by Shevchenko.
-  - Learner understands the political and social significance of Shevchenko''s major poems.
-  - Learner masters literary terms for verse analysis.
+- Learner can analyze various poetic genres used by Shevchenko.
+- Learner understands the political and social significance of Shevchenko''s major
+  poems.
+- Learner masters literary terms for verse analysis.
 grammar:
-  - Poetic syntax and archaisms
-  - Analysis of metaphor and allegory
+- Poetic syntax and archaisms
+- Analysis of metaphor and allegory
 phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Шевченкознавець

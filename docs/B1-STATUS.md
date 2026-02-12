@@ -1,111 +1,111 @@
 # B1 Module Status
 
-**Generated:** 2026-02-08 00:03:59
+**Generated:** 2026-02-11 12:35:37
 **Total Modules:** 92
-**Status:** 92 passing, 0 failing, 0 stubs, 0 errors
+**Status:** 0 passing, 92 failing, 0 stubs, 0 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 92/92 (100%)
-- ❌ **Failing:** 0/92
+- ✅ **Passing:** 0/92 (0%)
+- ❌ **Failing:** 92/92
 - 📝 **Stubs:** 0/92
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-how-to-talk-about-grammar | ✅ PASS | 3543/3000 | - |
-| 002 | 02-language-about-verbs | ✅ PASS | 3080/3000 | - |
-| 003 | 03-reading-grammar-rules | ✅ PASS | 3064/3000 | - |
-| 004 | 04-sentence-structure | ✅ PASS | 3041/3000 | - |
-| 005 | 05-ready-for-immersion | ✅ PASS | 3410/3000 | - |
-| 006 | 06-aspect-complete-system | ✅ PASS | 3213/3000 | - |
-| 007 | 07-aspect-past-single-repeated | ✅ PASS | 3353/3000 | - |
-| 008 | 08-aspect-past-result-process | ✅ PASS | 3446/3000 | - |
-| 009 | 09-aspect-future | ✅ PASS | 3375/3000 | - |
-| 010 | 10-aspect-negation | ✅ PASS | 3529/3000 | - |
-| 011 | 11-aspect-in-imperatives | ✅ PASS | 4046/3000 | - |
-| 012 | 12-aspect-pairs-essential-40 | ✅ PASS | 3668/3000 | - |
-| 013 | 13-work-week-aspect-in-action | ✅ PASS | 3280/3000 | - |
-| 014 | 14-aspect-integration-practice | ✅ PASS | 2991/3000 | - |
-| 015 | 15-checkpoint-aspect-mastery | ✅ PASS | 3025/3000 | - |
-| 016 | 16-motion-verbs-full-system | ✅ PASS | 2064/2000 | - |
-| 017 | 17-motion-coming-going | ✅ PASS | 1742/1800 | - |
-| 018 | 18-motion-passing-crossing | ✅ PASS | 1756/1700 | - |
-| 019 | 19-motion-starting-returning | ✅ PASS | 1720/1800 | - |
-| 020 | 20-motion-approaching-departing | ✅ PASS | 2047/2000 | - |
-| 021 | 21-motion-figurative-uses | ✅ PASS | 2209/2197 | - |
-| 022 | 22-motion-full-prefix-integration | ✅ PASS | 1813/1800 | - |
-| 023 | 23-motion-patterns-other-verbs | ✅ PASS | 2081/1963 | - |
-| 024 | 24-motion-practice-integration | ✅ PASS | 2346/2433 | - |
-| 025 | 25-checkpoint-motion-verbs | ✅ PASS | 2817/2451 | - |
-| 026 | 26-relative-clauses-yakyi | ✅ PASS | 1573/1599 | - |
-| 027 | 27-relative-clauses-de-kudy-zvidky | ✅ PASS | 1788/1712 | - |
-| 028 | 28-relative-clauses-koly-shcho | ✅ PASS | 2037/2000 | - |
-| 029 | 29-purpose-shchob-infinitive | ✅ PASS | 1676/1645 | - |
-| 030 | 30-purpose-shchob-past-form | ✅ PASS | 1725/1700 | - |
-| 031 | 31-conditionals-real-yakshcho | ✅ PASS | 1589/1607 | - |
-| 032 | 32-conditionals-unreal-yakby | ✅ PASS | 1725/1767 | - |
-| 033 | 33-conditionals-mixed-complex | ✅ PASS | 1767/1700 | - |
-| 034 | 34-checkpoint-complex-sentences-1 | ✅ PASS | 1271/1250 | - |
-| 035 | 35-concessive-khocha | ✅ PASS | 1727/1755 | - |
-| 036 | 36-causal-result-clauses | ✅ PASS | 1826/1800 | - |
-| 037 | 37-temporal-clauses | ✅ PASS | 1573/1500 | - |
-| 038 | 38-complex-sentence-integration | ✅ PASS | 1581/1576 | - |
-| 039 | 39-reported-statements | ✅ PASS | 1646/1744 | - |
-| 040 | 40-reported-questions-commands | ✅ PASS | 1645/1600 | - |
-| 041 | 41-checkpoint-complex-sentences-2 | ✅ PASS | 2114/1803 | - |
-| 042 | 42-adverbial-participles-imperfective | ✅ PASS | 1705/1736 | - |
-| 043 | 43-adverbial-participles-perfective | ✅ PASS | 1577/1626 | - |
-| 044 | 44-active-participles-phrases | ✅ PASS | 1623/1702 | - |
-| 045 | 45-past-passive-participles-1 | ✅ PASS | 1674/1500 | - |
-| 046 | 46-past-passive-participles-2 | ✅ PASS | 1586/1659 | - |
-| 047 | 47-passive-constructions | ✅ PASS | 1673/1741 | - |
-| 048 | 48-diminutives-master-class | ✅ PASS | 1761/1854 | - |
-| 049 | 49-numerals-collectives-fractions | ✅ PASS | 1733/1500 | - |
-| 050 | 50-integrated-grammar-lab | ✅ PASS | 1743/1500 | - |
-| 051 | 51-checkpoint-advanced-grammar | ✅ PASS | 2246/1853 | - |
-| 052 | 52-abstract-concepts-ideas | ✅ PASS | 1815/1600 | - |
-| 053 | 53-abstract-concepts-processes | ✅ PASS | 1818/1600 | - |
-| 054 | 54-expressing-opinions | ✅ PASS | 1632/1600 | - |
-| 055 | 55-agreement-disagreement | ✅ PASS | 1693/1600 | - |
-| 056 | 56-discourse-markers-basic | ✅ PASS | 1660/1600 | - |
-| 057 | 57-discourse-markers-advanced | ✅ PASS | 1874/1600 | - |
-| 058 | 58-describing-changes | ✅ PASS | 1742/1600 | - |
-| 059 | 59-media-news | ✅ PASS | 1721/1600 | - |
-| 060 | 60-society-politics | ✅ PASS | 1823/1600 | - |
-| 061 | 61-professional-communication | ✅ PASS | 1865/1900 | - |
-| 062 | 62-environment-ecology | ✅ PASS | 1844/1700 | - |
-| 063 | 63-health-wellness | ✅ PASS | 1734/1650 | - |
-| 064 | 64-emotions-deep-dive | ✅ PASS | 1694/1600 | - |
-| 065 | 65-relationships | ✅ PASS | 1750/1700 | - |
-| 066 | 66-business-basics | ✅ PASS | 1755/1600 | - |
-| 067 | 67-travel-geography | ✅ PASS | 1736/1700 | - |
-| 068 | 68-synonymy-thinking-verbs | ✅ PASS | 1765/1788 | - |
-| 069 | 69-synonymy-speaking-verbs | ✅ PASS | 1745/1828 | - |
-| 070 | 70-collocations-expressions | ✅ PASS | 1750/1550 | - |
-| 071 | 71-emotional-intelligence | ✅ PASS | 2810/1600 | - |
-| 072 | 72-regions-west | ✅ PASS | 1795/1530 | - |
-| 073 | 73-regions-east | ✅ PASS | 1891/1552 | - |
-| 074 | 74-regions-south | ✅ PASS | 1699/1563 | - |
-| 075 | 75-regions-center | ✅ PASS | 1793/1494 | - |
-| 076 | 76-ukrainian-music-today | ✅ PASS | 1730/1400 | - |
-| 077 | 77-ukrainian-cinema-and-tv | ✅ PASS | 1708/1400 | - |
-| 078 | 78-technology-and-startups | ✅ PASS | 1657/1667 | - |
-| 079 | 79-sports-in-ukraine | ✅ PASS | 1844/1400 | - |
-| 080 | 80-active-lifestyle | ✅ PASS | 2085/1833 | - |
-| 081 | 81-running-in-ukraine | ✅ PASS | 1627/1571 | - |
-| 082 | 82-mountains-trail | ✅ PASS | 1808/1737 | - |
-| 083 | 83-cycling-water | ✅ PASS | 1800/1717 | - |
-| 084 | 84-winter-sports | ✅ PASS | 1724/1640 | - |
-| 085 | 85-ukrainian-cuisine | ✅ PASS | 1855/1778 | - |
-| 086 | 86-ukrainski-sviata-ta-festyvali | ✅ PASS | 2176/1800 | - |
-| 087 | 87-novyny-yak-chytaty | ✅ PASS | 2359/2327 | - |
-| 088 | 88-interviu-ta-podkasty | ✅ PASS | 2162/1751 | - |
-| 089 | 89-communication-channels | ✅ PASS | 1753/1750 | - |
-| 090 | 90-presentations-visuals | ✅ PASS | 2120/1900 | - |
-| 091 | 91-feedback-negotiation-complaints | ✅ PASS | 1984/1750 | - |
-| 092 | 92-b1-final-exam | ✅ PASS | 2070/1600 | - |
+| 001 | how-to-talk-about-grammar | ❌ FAIL | 3543/3000 | - |
+| 002 | language-about-verbs | ❌ FAIL | 3080/3000 | - |
+| 003 | reading-grammar-rules | ❌ FAIL | 3064/3000 | - |
+| 004 | sentence-structure | ❌ FAIL | 3041/3000 | - |
+| 005 | ready-for-immersion | ❌ FAIL | 3410/3000 | - |
+| 006 | aspect-complete-system | ❌ FAIL | 3213/3000 | - |
+| 007 | aspect-past-single-repeated | ❌ FAIL | 3353/3000 | - |
+| 008 | aspect-past-result-process | ❌ FAIL | 3446/3000 | - |
+| 009 | aspect-future | ❌ FAIL | 3375/3000 | - |
+| 010 | aspect-negation | ❌ FAIL | 3529/3000 | - |
+| 011 | aspect-in-imperatives | ❌ FAIL | 4046/3000 | - |
+| 012 | aspect-pairs-essential-40 | ❌ FAIL | 3668/3000 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 013 | work-week-aspect-in-action | ❌ FAIL | 3280/3000 | - |
+| 014 | aspect-integration-practice | ❌ FAIL | 2991/3000 | - |
+| 015 | checkpoint-aspect-mastery | ❌ FAIL | 3025/3000 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 016 | motion-verbs-full-system | ❌ FAIL | 2064/3000 | - |
+| 017 | motion-coming-going | ❌ FAIL | 1742/3000 | - |
+| 018 | motion-passing-crossing | ❌ FAIL | 1756/3000 | - |
+| 019 | motion-starting-returning | ❌ FAIL | 1720/3000 | - |
+| 020 | motion-approaching-departing | ❌ FAIL | 2047/3000 | - |
+| 021 | motion-figurative-uses | ❌ FAIL | 2209/3000 | - |
+| 022 | motion-full-prefix-integration | ❌ FAIL | 1813/3000 | - |
+| 023 | motion-patterns-other-verbs | ❌ FAIL | 2081/3000 | - |
+| 024 | motion-practice-integration | ❌ FAIL | 2346/3000 | - |
+| 025 | checkpoint-motion-verbs | ❌ FAIL | 2817/3000 | - |
+| 026 | relative-clauses-yakyi | ❌ FAIL | 1573/3000 | - |
+| 027 | relative-clauses-de-kudy-zvidky | ❌ FAIL | 1788/3000 | - |
+| 028 | relative-clauses-koly-shcho | ❌ FAIL | 2037/3000 | - |
+| 029 | purpose-shchob-infinitive | ❌ FAIL | 1676/3000 | - |
+| 030 | purpose-shchob-past-form | ❌ FAIL | 1725/3000 | - |
+| 031 | conditionals-real-yakshcho | ❌ FAIL | 1589/3000 | - |
+| 032 | conditionals-unreal-yakby | ❌ FAIL | 1725/3000 | - |
+| 033 | conditionals-mixed-complex | ❌ FAIL | 1767/3000 | - |
+| 034 | checkpoint-complex-sentences-1 | ❌ FAIL | 1271/3000 | - |
+| 035 | concessive-khocha | ❌ FAIL | 1727/3000 | - |
+| 036 | causal-result-clauses | ❌ FAIL | 1826/3000 | - |
+| 037 | temporal-clauses | ❌ FAIL | 1573/3000 | - |
+| 038 | complex-sentence-integration | ❌ FAIL | 1581/3000 | - |
+| 039 | reported-statements | ❌ FAIL | 1646/3000 | - |
+| 040 | reported-questions-commands | ❌ FAIL | 1645/3000 | - |
+| 041 | checkpoint-complex-sentences-2 | ❌ FAIL | 2114/3000 | - |
+| 042 | adverbial-participles-imperfective | ❌ FAIL | 1705/3000 | - |
+| 043 | adverbial-participles-perfective | ❌ FAIL | 1577/3000 | - |
+| 044 | active-participles-phrases | ❌ FAIL | 1623/3000 | - |
+| 045 | past-passive-participles-1 | ❌ FAIL | 1674/3000 | - |
+| 046 | past-passive-participles-2 | ❌ FAIL | 1586/3000 | - |
+| 047 | passive-constructions | ❌ FAIL | 1673/3000 | - |
+| 048 | diminutives-master-class | ❌ FAIL | 1761/3000 | - |
+| 049 | numerals-collectives-fractions | ❌ FAIL | 1733/3000 | - |
+| 050 | integrated-grammar-lab | ❌ FAIL | 1743/3000 | - |
+| 051 | checkpoint-advanced-grammar | ❌ FAIL | 2246/3000 | - |
+| 052 | abstract-concepts-ideas | ❌ FAIL | 1815/3000 | - |
+| 053 | abstract-concepts-processes | ❌ FAIL | 1818/3000 | - |
+| 054 | expressing-opinions | ❌ FAIL | 1632/3000 | - |
+| 055 | agreement-disagreement | ❌ FAIL | 1693/3000 | - |
+| 056 | discourse-markers-basic | ❌ FAIL | 1660/3000 | - |
+| 057 | discourse-markers-advanced | ❌ FAIL | 1874/3000 | - |
+| 058 | describing-changes | ❌ FAIL | 1742/3000 | - |
+| 059 | media-news | ❌ FAIL | 1721/3000 | - |
+| 060 | society-politics | ❌ FAIL | 1823/3000 | - |
+| 061 | professional-communication | ❌ FAIL | 1865/2250 | - |
+| 062 | environment-ecology | ❌ FAIL | 1844/3000 | - |
+| 063 | health-wellness | ❌ FAIL | 1734/3000 | - |
+| 064 | emotions-deep-dive | ❌ FAIL | 1694/3000 | - |
+| 065 | relationships | ❌ FAIL | 1750/3000 | - |
+| 066 | business-basics | ❌ FAIL | 1755/3000 | - |
+| 067 | travel-geography | ❌ FAIL | 1736/3000 | - |
+| 068 | synonymy-thinking-verbs | ❌ FAIL | 1765/3000 | - |
+| 069 | synonymy-speaking-verbs | ❌ FAIL | 1745/3000 | - |
+| 070 | collocations-expressions | ❌ FAIL | 1750/3000 | - |
+| 071 | emotional-intelligence | ❌ FAIL | 2810/1900 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 072 | regions-west | ❌ FAIL | 1795/1530 | 3 Outline Compliance Errors |
+| 073 | regions-east | ❌ FAIL | 1891/1552 | 4 Outline Compliance Errors |
+| 074 | regions-south | ❌ FAIL | 1699/1563 | 4 Outline Compliance Errors |
+| 075 | regions-center | ❌ FAIL | 1793/1494 | 4 Outline Compliance Errors |
+| 076 | ukrainian-music-today | ❌ FAIL | 1730/1672 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 077 | ukrainian-cinema-and-tv | ❌ FAIL | 1708/1648 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 078 | technology-and-startups | ❌ FAIL | 1657/1667 | 3 Outline Compliance Errors |
+| 079 | sports-in-ukraine | ❌ FAIL | 1844/1710 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 080 | active-lifestyle | ❌ FAIL | 2085/1833 | 4 Outline Compliance Errors |
+| 081 | running-in-ukraine | ❌ FAIL | 1627/1571 | 4 Outline Compliance Errors |
+| 082 | mountains-trail | ❌ FAIL | 1808/1737 | 5 Outline Compliance Errors |
+| 083 | cycling-water | ❌ FAIL | 1800/1717 | 5 Outline Compliance Errors |
+| 084 | winter-sports | ❌ FAIL | 1724/1640 | 5 Outline Compliance Errors |
+| 085 | ukrainian-cuisine | ❌ FAIL | 1855/1778 | 5 Outline Compliance Errors |
+| 086 | ukrainski-sviata-ta-festyvali | ❌ FAIL | 2176/1900 | Review missing required sections: Scores/Assessment, Issues/Critique, Summary/Verification, Recommendation/Verdict. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 087 | novyny-yak-chytaty | ❌ FAIL | 2359/2327 | 2 Outline Compliance Errors |
+| 088 | interviu-ta-podkasty | ❌ FAIL | 2162/1751 | 3 Outline Compliance Errors |
+| 089 | communication-channels | ❌ FAIL | 1753/1750 | 5 Outline Compliance Errors |
+| 090 | presentations-visuals | ❌ FAIL | 2120/1900 | 6 Outline Compliance Errors |
+| 091 | feedback-negotiation-complaints | ❌ FAIL | 1984/1750 | 5 Outline Compliance Errors |
+| 092 | b1-final-exam | ❌ FAIL | 2070/1600 | 11 Outline Compliance Errors |
 
 ---
 

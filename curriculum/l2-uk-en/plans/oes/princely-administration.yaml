@@ -1,4 +1,3 @@
----
 sequence: 61
 module: oes-061
 module_number: 49
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Tiun (Steward)

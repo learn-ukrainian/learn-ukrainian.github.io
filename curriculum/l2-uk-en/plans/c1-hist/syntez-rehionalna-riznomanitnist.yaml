@@ -1,4 +1,3 @@
----
 module: c1-hist-080
 level: c1-hist
 sequence: 80
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: регіональна різноманітність'
 - Evaluate the historical significance of єдність у різноманітності
 content_outline:
-- section: "Вступ — Єдність у різноманітності"
+- section: Вступ — Єдність у різноманітності
   words: 457
   subsections:
   - Огляд модулів 70-79
@@ -39,7 +38,7 @@ content_outline:
   - Міф «русифікованого сходу»
   - Реальність — спектр
   - Ідентичність — процес
-- section: "2014 і 2022 — перевірка"
+- section: 2014 і 2022 — перевірка
   words: 571
   subsections:
   - Майдан — не тільки Київ
@@ -82,16 +81,16 @@ activities:
 - type: critical-analysis
   focus: How regions responded to crises
 - type: essay-response
-  focus: "Regional Ukraine after victory — what model?"
+  focus: Regional Ukraine after victory — what model?
 - type: essay-response
   focus: Чи регіональні відмінності загрожують єдності України?
 sources:
 - name: Регіони України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Регіони_України"
+  url: https://uk.wikipedia.org/wiki/Регіони_України
   type: reference
   notes: Regional overview
 - name: Українська ідентичність (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_ідентичність"
+  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
   type: reference
   notes: Identity studies
 vocabulary_hints:
@@ -114,3 +113,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Human Geographer

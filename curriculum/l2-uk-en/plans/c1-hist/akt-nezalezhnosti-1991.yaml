@@ -1,4 +1,3 @@
----
 module: c1-hist-043
 level: c1-hist
 sequence: 43
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of акт проголошення незалежності: текст і контекст'
 - Evaluate the historical significance of найважливіший документ
 content_outline:
-- section: "Вступ — Найважливіший документ"
+- section: Вступ — Найважливіший документ
   words: 457
   subsections:
   - 24 серпня 1991
@@ -24,7 +23,7 @@ content_outline:
   - Верховна Рада УРСР
   - Хто голосував — комуністи!
   - Чому раптом підтримали
-- section: "Текст Акту — детальний аналіз"
+- section: Текст Акту — детальний аналіз
   words: 800
   subsections:
   - Повний текст (з коментарями)
@@ -80,22 +79,22 @@ activities:
 - type: critical-analysis
   focus: Who voted yes and why? Analyze motivations
 - type: critical-analysis
-  focus: "Map regional referendum results — what patterns?"
+  focus: Map regional referendum results — what patterns?
 - type: comparative-study
   focus: Compare with Baltic independence declarations
 - type: essay-response
   focus: Чому 90% українців проголосували за незалежність?
 sources:
 - name: Акт проголошення незалежності України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України"
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
   type: reference
   notes: Overview
 - name: Текст Акту
-  url: "https://zakon.rada.gov.ua/laws/show/1427-12"
+  url: https://zakon.rada.gov.ua/laws/show/1427-12
   type: primary
   notes: Official text
 - name: Референдум 1991
-  url: "https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991"
+  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
   type: reference
   notes: Confirmation referendum
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Parliamentary Chronicler

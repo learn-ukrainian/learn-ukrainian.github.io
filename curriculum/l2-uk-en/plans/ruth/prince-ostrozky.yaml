@@ -1,4 +1,3 @@
----
 sequence: 36
 module: ruth-036
 module_number: 30
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Grand Hetman

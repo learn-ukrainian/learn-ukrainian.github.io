@@ -1,4 +1,3 @@
----
 module: c1-bio-150
 level: C1-BIO
 sequence: 150
@@ -6,7 +5,7 @@ slug: vitaly-portnikov
 version: '2.0'
 title: 'Віталій Портников: Журналіст і аналітик'
 content_outline:
-- section: "Вступ — Голос української журналістики"
+- section: Вступ — Голос української журналістики
   words: 400
   points:
   - Портников як один із найвпливовіших аналітиків
@@ -42,7 +41,7 @@ content_outline:
   - Робота під час повномасштабної війни
   - Пояснення України світові
   - Роль публічного інтелектуала
-- section: "Дискусія — Журналістика як місія"
+- section: Дискусія — Журналістика як місія
   words: 200
   points:
   - Обов'язок журналіста в час війни
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Віталій Портников (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Портников_Віталій_Янович"
+  url: https://uk.wikipedia.org/wiki/Портников_Віталій_Янович
   type: primary
   notes: Основна біографічна інформація
 - name: Espreso.TV
-  url: "https://espreso.tv/"
+  url: https://espreso.tv/
   type: reference
   notes: Публікації та виступи
 - name: Радіо Свобода
-  url: "https://www.radiosvoboda.org/"
+  url: https://www.radiosvoboda.org/
   type: reference
   notes: Архів публікацій
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of віталій портников: журналіст і аналітик'
 - Evaluate the contributions of голос української журналістики
 - Trace the career and influence of журналістика як місія
+persona:
+  voice: Senior Biographer
+  role: Political Analyst

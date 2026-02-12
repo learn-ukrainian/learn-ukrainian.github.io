@@ -1,4 +1,3 @@
----
 sequence: 36
 module: a1-36
 level: A1
@@ -27,7 +26,7 @@ content_outline:
   - Діалог 1: Замовлення повної вечері
   - Діалог 2: Скарга на страву (ввічливо)
   - Діалог 3: Розподіл рахунку між друзями
-- section: "Warm-up 2"
+- section: Warm-up 2
   words: 137
   points:
   - Наратив про вечерю в українському ресторані
@@ -80,4 +79,7 @@ grammar:
 - Polite requests and questions
 - Future tense for ordering
 register: розмовний
-phase: "A1.4 [Practical Scenarios]"
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Maître d'hôtel

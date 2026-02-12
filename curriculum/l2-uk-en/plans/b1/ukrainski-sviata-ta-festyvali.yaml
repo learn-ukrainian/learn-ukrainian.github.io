@@ -91,3 +91,6 @@ grammar:
 - Calendar and date expressions
 register: розмовний
 phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Ethno-Festival Organizer

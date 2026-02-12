@@ -1,4 +1,3 @@
----
 module: c1-hist-059
 level: c1-hist
 sequence: 59
@@ -10,14 +9,14 @@ objectives:
 - 'Analyze the causes and consequences of берестейська унія: глибокий аналіз'
 - Evaluate the historical significance of розкол, що визначив історію
 content_outline:
-- section: "Вступ — Розкол, що визначив історію"
+- section: Вступ — Розкол, що визначив історію
   words: 457
   subsections:
   - 1596 рік — що відбулося
   - Чому це важливо
   - Наслідки на століття
   - Структура модуля
-- section: "Контекст — чому унія стала можливою"
+- section: Контекст — чому унія стала можливою
   words: 686
   subsections:
   - Криза православної церкви
@@ -92,15 +91,15 @@ activities:
   focus: Чи була Берестейська унія 'зрадою' чи 'порятунком'?
 sources:
 - name: Берестейська унія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Берестейська_унія"
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
   type: reference
   notes: Overview
 - name: Греко-католицька церква (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква"
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
   type: reference
   notes: UGCC history
 - name: Православна опозиція унії
-  url: "https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії"
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
   type: reference
   notes: Opposition
 vocabulary_hints:
@@ -123,3 +122,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Ecclesiastical Historian

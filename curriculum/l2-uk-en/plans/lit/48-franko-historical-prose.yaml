@@ -1,4 +1,3 @@
----
 sequence: 48
 module: lit-48
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Franko Historical Prose у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Historical Novelist

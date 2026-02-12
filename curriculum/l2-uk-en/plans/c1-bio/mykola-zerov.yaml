@@ -1,4 +1,3 @@
----
 module: c1-bio-090
 level: C1-BIO
 sequence: 90
@@ -6,7 +5,7 @@ slug: mykola-zerov
 version: '2.0'
 title: 'Микола Зеров: <!-- Title -->'
 content_outline:
-- section: "Вступ — Poet, translator, Neoclassicist leader"
+- section: Вступ — Poet, translator, Neoclassicist leader
   words: 400
   points:
   - <!-- point -->
@@ -61,7 +60,7 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Куліш (Енциклопедія історії України)
-  url: "https://esu.com.ua/article-7980"
+  url: https://esu.com.ua/article-7980
   type: primary
   notes: Академічна біографія
 - name: Куліш М. П'єси
@@ -88,3 +87,6 @@ notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20t
   the same day (November 3, 1937) in the Sandarmokh mass execution.
 
   '
+persona:
+  voice: Senior Biographer
+  role: Latinist Translator

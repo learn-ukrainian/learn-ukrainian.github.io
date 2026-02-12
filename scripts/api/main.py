@@ -12,16 +12,22 @@ import asyncio
 import json
 import sqlite3
 import subprocess
+import sys
 from datetime import datetime, timezone
+from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Dict, Any
+
+# Ensure scripts/ is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from audit.status_cache import read_status
 
 import yaml
 from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .config import (
     BATCH_STATE_DIR,
@@ -48,15 +54,38 @@ app.add_middleware(
 )
 
 
+# ==================== ENUMS & CONSTANTS ====================
+
+class AgentName(str, Enum):
+    CLAUDE = "claude"
+    GEMINI = "gemini"
+
+class MessageType(str, Enum):
+    MESSAGE = "message"
+    QUERY = "query"
+    RESPONSE = "response"
+    REQUEST = "request"
+    HANDOFF = "handoff"
+    CONTEXT = "context"
+    FEEDBACK = "feedback"
+    ERROR = "error"
+
+VALID_TRACKS = {
+    "a1", "a2", "b1", "b2", "c1", "c2",
+    "b2-hist", "c1-bio", "c1-hist", "lit",
+    "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
+    "oes", "ruth", "b2-pro", "c1-pro",
+}
+
 # ==================== MODELS ====================
 
 
 class MessageSend(BaseModel):
     """Message to send between agents."""
-    to: str  # "claude" or "gemini"
-    from_llm: str  # "claude" or "gemini"
+    to: AgentName
+    from_llm: AgentName
     content: str
-    message_type: str = "message"
+    message_type: MessageType = MessageType.MESSAGE
     task_id: Optional[str] = None
     data: Optional[str] = None
 
@@ -76,7 +105,7 @@ def validate_slug(slug: str) -> bool:
 
 class ActivitySave(BaseModel):
     """Request to save activities to a module."""
-    activities: list
+    activities: List[Dict[str, Any]]
 
 
 class DispatcherStartRequest(BaseModel):
@@ -131,15 +160,18 @@ def extract_module_number(module_id: str) -> int:
 
 
 def load_module_status(status_file: Path, level_path: Optional[Path] = None) -> dict:
-    """Load a single module's status from JSON file.
+    """Load a single module's status from JSON file via shared status cache layer.
 
     Args:
         status_file: Path to the status JSON file
         level_path: Optional path to the level directory (for loading meta files)
     """
     try:
-        with open(status_file) as f:
-            data = json.load(f)
+        # Use shared access layer (no freshness check — API is informational)
+        result = read_status(status_file)
+        if result is None:
+            return {"error": f"Status file not found: {status_file}"}
+        data = result.data
 
         gates = data.get("gates", {})
         overall = data.get("overall", {})
@@ -361,6 +393,11 @@ audit_status = {}  # Track running audits
 @app.post("/api/audit/module")
 async def trigger_audit(request: AuditRequest, background_tasks: BackgroundTasks):
     """Trigger an audit on a module."""
+    if request.level not in VALID_TRACKS:
+        raise HTTPException(status_code=400, detail=f"Invalid level: {request.level}")
+    if not validate_slug(request.slug):
+        raise HTTPException(status_code=400, detail="Invalid slug")
+
     level_info = next((l for l in LEVELS if l["id"] == request.level), None)
     if not level_info:
         raise HTTPException(status_code=404, detail=f"Level '{request.level}' not found")
@@ -395,8 +432,8 @@ async def trigger_audit(request: AuditRequest, background_tasks: BackgroundTasks
             audit_status[audit_key] = {
                 "status": "completed",
                 "exit_code": result.returncode,
-                "stdout": result.stdout[-5000:] if len(result.stdout) > 5000 else result.stdout,
-                "stderr": result.stderr[-1000:] if len(result.stderr) > 1000 else result.stderr,
+                "stdout": result.stdout[-5000:] if result.stdout else "",
+                "stderr": result.stderr[-1000:] if result.stderr else "",
                 "completed": datetime.now(timezone.utc).isoformat(),
             }
         except subprocess.TimeoutExpired:
@@ -464,11 +501,6 @@ async def get_inbox(agent: str, unread_only: bool = True, limit: int = 50, task_
 @app.post("/api/messages/send")
 async def send_message(msg: MessageSend):
     """Send a message between agents."""
-    if msg.to not in ("claude", "gemini"):
-        raise HTTPException(status_code=400, detail="'to' must be 'claude' or 'gemini'")
-    if msg.from_llm not in ("claude", "gemini"):
-        raise HTTPException(status_code=400, detail="'from_llm' must be 'claude' or 'gemini'")
-
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -479,7 +511,7 @@ async def send_message(msg: MessageSend):
         INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
-        (msg.task_id, msg.from_llm, msg.to, msg.message_type, msg.content, msg.data, timestamp),
+        (msg.task_id, msg.from_llm.value, msg.to.value, msg.message_type.value, msg.content, msg.data, timestamp),
     )
 
     message_id = cursor.lastrowid
@@ -617,14 +649,6 @@ async def save_activities(level: str, slug: str, request: ActivitySave):
 # ==================== BATCH ENDPOINTS ====================
 
 
-VALID_TRACKS = {
-    "a1", "a2", "b1", "b2", "c1", "c2",
-    "b2-hist", "c1-bio", "c1-hist", "lit",
-    "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
-    "oes", "ruth", "b2-pro", "c1-pro",
-}
-
-
 def validate_track(track: str) -> bool:
     """Validate track name."""
     return track in VALID_TRACKS
@@ -736,8 +760,10 @@ async def get_batch_health():
         for lock_file in locks_dir.glob("*.lock"):
             track = lock_file.stem
             try:
-                pid = lock_file.read_text().strip()
-                running_tracks.append({"track": track, "pid": pid})
+                # Locks might be directory or file, handle both
+                if lock_file.is_file():
+                    pid = lock_file.read_text().strip()
+                    running_tracks.append({"track": track, "pid": pid})
             except Exception:
                 pass
 
@@ -873,13 +899,19 @@ async def cleanup_stale_state():
     if lock_dir.exists():
         for lf in lock_dir.glob("*.lock"):
             try:
-                lock_data = json.loads(lf.read_text())
-                pid = lock_data.get("pid")
+                # Lock could be a JSON file with pid, or just a pid file
+                content = lf.read_text().strip()
+                try:
+                    lock_data = json.loads(content)
+                    pid = lock_data.get("pid")
+                except json.JSONDecodeError:
+                    pid = int(content) if content.isdigit() else None
+                
                 if pid:
                     try:
                         import os
                         os.kill(pid, 0)  # Check if process exists
-                    except OSError:
+                    except (OSError, ValueError):
                         cleaned["stale_locks"].append(lf.name)
                         lf.unlink()
             except Exception:

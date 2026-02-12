@@ -1,4 +1,3 @@
----
 module: b2-hist-010
 level: B2-HIST
 sequence: 10
@@ -8,7 +7,7 @@ title: Ольга та Святослав
 content_outline:
 - section: Вступ
   words: 100
-  points: "[]"
+  points: '[]'
 - section: Читання
   words: 900
   points:
@@ -75,10 +74,10 @@ activity_hints:
   focus: Chronicle accounts of Olha's revenge
   source: Provide in module
 - type: comparative-study
-  focus: "Olha vs Sviatoslav — governance approaches"
+  focus: Olha vs Sviatoslav — governance approaches
   output: Two-column comparison
 - type: essay-response
-  focus: "Хто більше вплинув на розвиток Русі — Ольга чи Святослав?"
+  focus: Хто більше вплинув на розвиток Русі — Ольга чи Святослав?
 focus: history
 pedagogy: CBI
 prerequisites:
@@ -96,16 +95,19 @@ grammar:
 - Action verbs
 sources:
 - name: Ольга (княгиня київська) (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)"
+  url: https://uk.wikipedia.org/wiki/Ольга_(княгиня_київська)
   type: reference
   notes: Overview of Princess Olha
 - name: Святослав Ігорович (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Святослав_Ігорович"
+  url: https://uk.wikipedia.org/wiki/Святослав_Ігорович
   type: reference
   notes: Overview of Sviatoslav
 - name: Повість минулих літ
-  url: "https://litopys.org.ua/pvl/pvl.htm"
+  url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
 register: публіцистичний
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
+persona:
+  voice: Senior Professor of History
+  role: Kyivan Boyar

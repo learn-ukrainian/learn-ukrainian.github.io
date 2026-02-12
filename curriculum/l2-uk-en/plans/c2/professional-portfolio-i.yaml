@@ -1,28 +1,27 @@
----
 module: c2-071
 level: c2
 sequence: 71
 version: '2.0'
-title: "Професійне портфоліо I — Демонстрація компетентності"
+title: Професійне портфоліо I — Демонстрація компетентності
 focus: domain
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Державна служба зайнятості
-  url: "https://www.dcz.gov.ua/"
+  url: https://www.dcz.gov.ua/
   type: reference
   notes: Вимоги ринку праці
 - name: Профстандарти України
-  url: "https://www.me.gov.ua/"
+  url: https://www.me.gov.ua/
   type: reference
   notes: Професійні стандарти
-- name: "Резюме та портфоліо — best practices"
-  url: "https://work.ua/"
+- name: Резюме та портфоліо — best practices
+  url: https://work.ua/
   type: reference
   notes: Українські стандарти оформлення
 content_outline:
-- section: "Вступ — Професійне портфоліо в українському контексті"
+- section: Вступ — Професійне портфоліо в українському контексті
   words: 500
   points:
   - Що таке професійне портфоліо
@@ -64,7 +63,7 @@ content_outline:
   - PDF-версія
   - Усна презентація
   - Адаптація для різних авдиторій
-- section: "Практикум — Створення власного портфоліо"
+- section: Практикум — Створення власного портфоліо
   words: 500
   points:
   - Аудит власних досягнень
@@ -89,7 +88,7 @@ vocabulary:
   - вакансія (job opening)
   - кар'єра (career)
   - потенційний роботодавець (potential employer)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - reading
@@ -126,3 +125,6 @@ activity_hints:
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Talent Scout

@@ -1,4 +1,3 @@
----
 module: c1-hist-001
 level: c1-hist
 sequence: 1
@@ -10,7 +9,7 @@ objectives:
 - Analyze the difference between history and historiography
 - Evaluate the impact of bias and narrative on historical writing
 content_outline:
-- section: "Вступ — Історія vs. Історіографія"
+- section: Вступ — Історія vs. Історіографія
   words: 485
   subsections:
   - Що таке історія? Що таке історіографія?
@@ -33,7 +32,7 @@ content_outline:
   - Держава як автор історії — офіційні наративи
   - Еміграція та діаспора — альтернативні голоси
   - Сучасність — public history, Wikipedia, соцмережі
-- section: "Українська історіографічна традиція — огляд"
+- section: Українська історіографічна традиція — огляд
   words: 727
   subsections:
   - Від літописів до Грушевського
@@ -87,15 +86,15 @@ activities:
   focus: Чому важливо знати, хто написав історію?
 sources:
 - name: Історіографія України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історіографія_України"
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
   type: reference
   notes: Overview of Ukrainian historiographical tradition
-- name: "Грушевський — Історія України-Руси (вступ)"
-  url: "https://litopys.org.ua/hrushukr/ihu.htm"
+- name: Грушевський — Історія України-Руси (вступ)
+  url: https://litopys.org.ua/hrushukr/ihu.htm
   type: primary
   notes: Hrushevsky's methodological introduction
 - name: What is Historiography? (academic intro)
-  url: "https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography"
+  url: https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography
   type: reference
   notes: English reference for conceptual framework
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Methodologist

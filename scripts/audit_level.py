@@ -97,13 +97,9 @@ def parse_module_filter(filter_str: str) -> list[int]:
 def find_module_files(level: str, module_filter: str | None = None) -> tuple[list[Path], list[str]]:
     """Find module markdown files for the given level and optional filter.
 
-    Supports two patterns:
-    - Numbered modules: 01-slug.md, 02-slug.md (A1, A2, B1, B2, C1, C2)
-    - Slug-only modules: slug.md (B2-HIST, C1-BIO, LIT, etc.)
+    All tracks use bare slug filenames (slug.md).
+    Filter can be: numeric (5, 1-10, 1,3,5) for positional access, or slug name/glob.
 
-    For numbered modules, filter can be: 5, 1-10, 1,3,5
-    For slug-only modules, filter can be: slug name or glob pattern
-    
     Returns (found_files, missing_slugs)
     """
     base_path = Path(f"curriculum/l2-uk-en/{level}")
@@ -113,42 +109,6 @@ def find_module_files(level: str, module_filter: str | None = None) -> tuple[lis
         print(f"Error: Level directory not found: {base_path}")
         sys.exit(1)
 
-    # Try numbered pattern first (e.g., 01-slug.md)
-    numbered_pattern = str(base_path / "[0-9]*-*.md")
-    numbered_files = sorted(glob.glob(numbered_pattern))
-
-    if numbered_files:
-        # Numbered modules - use numeric filtering
-        if module_filter is None:
-            # Check for missing numbered files if curriculum.yaml exists
-            canonical = get_module_order_from_curriculum(level)
-            if canonical:
-                for slug in canonical:
-                    # Find any file starting with [0-9]*-slug.md
-                    found = list(base_path.glob(f"[0-9]*-{slug}.md"))
-                    if not found:
-                        # Try exact slug.md just in case
-                        if not (base_path / f"{slug}.md").exists():
-                            missing_slugs.append(slug)
-            return [Path(f) for f in numbered_files], missing_slugs
-
-        # Parse numeric filter
-        module_nums = parse_module_filter(module_filter)
-        if not module_nums:
-            print(f"Error: No valid module numbers found in filter: {module_filter}")
-            sys.exit(1)
-
-        filtered_files = []
-        for file_path in numbered_files:
-            filename = Path(file_path).name
-            match = re.match(r'^(\d+)-', filename)
-            if match:
-                num = int(match.group(1))
-                if num in module_nums:
-                    filtered_files.append(Path(file_path))
-        return filtered_files, []
-
-    # Try slug-only pattern (e.g., slug.md - no number prefix)
     # Get canonical order from curriculum.yaml
     canonical_order = get_module_order_from_curriculum(level)
 

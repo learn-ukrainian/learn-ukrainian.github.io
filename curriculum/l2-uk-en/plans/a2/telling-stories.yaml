@@ -1,4 +1,3 @@
----
 module: a2-26
 level: A2
 sequence: 26
@@ -45,12 +44,15 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Narration
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Narrative and sequence requirements for A2
 - name: Stylistics of Ukrainian Language - Narrative Flow
-  url: "https://uk.wikipedia.org/wiki/Оповідь"
+  url: https://uk.wikipedia.org/wiki/Оповідь
   type: reference
   notes: Logical connectors in Ukrainian prose
 immersion: 40-50% Ukrainian
 phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Village Storyteller

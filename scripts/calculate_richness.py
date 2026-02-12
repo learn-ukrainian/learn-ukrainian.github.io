@@ -70,6 +70,9 @@ MODULE_TYPE_MAP = {
     'literature': 'literature',
     'literary': 'literature',
     'lit': 'literature',
+    # Bridge types (Metalanguage)
+    'bridge': 'bridge',
+    'metalanguage': 'bridge',
     # Checkpoint types
     'checkpoint': 'checkpoint',
     'review': 'checkpoint',
@@ -165,6 +168,15 @@ MODULE_TYPE_TARGETS = {
         'scenarios': 3,
         'visual': 3,
         'threshold': 95,
+    },
+    'bridge': {
+        'engagement': 5,
+        'examples': 20,
+        'cultural': 2,
+        'realworld': 2,
+        'questions': 4,
+        'visual': 4,
+        'threshold': 90,
     },
     'literature': {
         'engagement': 4,
@@ -313,6 +325,15 @@ MODULE_TYPE_WEIGHTS = {
         'visual': 0.15,
         'variety': 0.10,
         'paragraph_var': 0.05,
+    },
+    'bridge': {
+        'engagement': 0.20,
+        'examples': 0.30,
+        'cultural': 0.10,
+        'realworld': 0.10,
+        'visual': 0.10,
+        'variety': 0.10,
+        'paragraph_var': 0.10,
     },
 }
 
@@ -547,6 +568,14 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
 
     # Process frontmatter (from either source)
     if fm:
+        # Check for bridge indicator in tags or module_type
+        tags = fm.get('tags', [])
+        if isinstance(tags, list) and 'bridge' in [t.lower() for t in tags]:
+            return 'bridge'
+        
+        if fm.get('module_type') == 'bridge':
+            return 'bridge'
+
         # Check focus field FIRST (highest priority)
         focus = str(fm.get('focus', '')).lower().strip()
         if focus in MODULE_TYPE_MAP:
@@ -581,6 +610,27 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
 
     # Default to grammar for B1-B2, content for others
     level = extract_level(file_path)
+    
+    # Special Case: B1 Bridge Modules (M01-05)
+    if level == 'B1' and file_path:
+        slug = Path(file_path).stem
+        # Bridge modules usually have slugs like 'how-to-talk-about-grammar'
+        # or numeric prefixes if not yet migrated.
+        bridge_slugs = [
+            'how-to-talk-about-grammar',
+            'language-about-verbs',
+            'sentence-structure',
+            'parts-of-speech-depth',
+            'case-system-logic',
+            'verb-categories-metalanguage',
+            'syntax-and-sentence-structure'
+        ]
+        # Also check for numeric prefix 01-05
+        num_prefix_match = re.match(r'^0?([1-5])-([a-z-]+)', slug)
+        
+        if any(bs in slug for bs in bridge_slugs) or num_prefix_match:
+            return 'bridge'
+
     if level in ('B1', 'B2'):
         return 'grammar'
     elif level in ('C1', 'C2'):
@@ -1218,7 +1268,15 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
         flags.append('REPETITIVE_STARTERS')
 
     # Type-specific flags - use 50% of target as threshold
-    if module_type == 'grammar':
+    if module_type == 'bridge':
+        # Bridge modules: examples (target 20), cultural (target 2), realworld (target 2)
+        # NO dialogues or proverbs required
+        if count_examples(prose) < 10:
+            flags.append('NO_EXAMPLES')
+        if count_realworld(prose) < 1:
+            flags.append('ABSTRACT_ONLY')
+
+    elif module_type == 'grammar':
         # Grammar modules: dialogues (target 4), examples (target 24), realworld (target 3), cultural (target 3), proverbs (target 1)
         dialogue_count = count_dialogues(prose)
         if level in ('B1', 'B2', 'C1', 'C2') and dialogue_count < 2:  # < 50% of target 4

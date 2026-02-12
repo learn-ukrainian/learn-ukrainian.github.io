@@ -1,4 +1,3 @@
----
 module: a2-69
 level: A2
 sequence: 69
@@ -79,4 +78,7 @@ grammar:
 - Banking terms (картка, переказ, баланс)
 - Customer support phrases
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: IT Support Specialist

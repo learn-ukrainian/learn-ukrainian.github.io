@@ -1,4 +1,3 @@
----
 module: c1-hist-102
 level: c1-hist
 sequence: 102
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: 2022 — зміна парадигми?'
 - Evaluate the historical significance of щось змінилося?
 content_outline:
-- section: "Вступ — Щось змінилося?"
+- section: Вступ — Щось змінилося?
   words: 457
   subsections:
   - Огляд модулів 95-101
@@ -91,11 +90,11 @@ activities:
   focus: Чи 2022 рік став справжнім переломом у західній політиці щодо України?
 sources:
 - name: Вторгнення Росії в Україну (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)"
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
   type: reference
   notes: War context
 - name: Допомога Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Допомога_Україні"
+  url: https://uk.wikipedia.org/wiki/Допомога_Україні
   type: reference
   notes: Western aid
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: International Relations Analyst

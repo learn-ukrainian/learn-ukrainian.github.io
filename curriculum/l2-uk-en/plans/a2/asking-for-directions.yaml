@@ -1,4 +1,3 @@
----
 module: a2-66
 level: A2
 sequence: 66
@@ -79,4 +78,7 @@ grammar:
 - Prepositions of movement (до, повз, через)
 - Imperative for directions
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Lost Tourist in Odesa

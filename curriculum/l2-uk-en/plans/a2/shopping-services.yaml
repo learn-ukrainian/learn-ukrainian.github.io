@@ -1,4 +1,3 @@
----
 module: a2-53
 level: A2
 sequence: 53
@@ -76,4 +75,7 @@ grammar:
 - Accusative for prices and objects
 - Instrumental for means (карткою, готівкою)
 register: розмовний
-phase: "A2.5 [Vocabulary Expansion]"
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Bessarabka Market Vendor

@@ -1,4 +1,3 @@
----
 module: b2-hist-098
 level: B2-HIST
 sequence: 98
@@ -89,4 +88,7 @@ grammar:
 - Літературна та мистецька лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.10 [WWII & Soviet Terror]"
+phase: HIST.10 [WWII & Soviet Terror]
+persona:
+  voice: Senior Professor of History
+  role: Avant-garde Director

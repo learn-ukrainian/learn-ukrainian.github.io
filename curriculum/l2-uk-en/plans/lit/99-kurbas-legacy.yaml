@@ -1,4 +1,3 @@
----
 sequence: 99
 module: lit-99
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kurbas Legacy у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Theater Historian

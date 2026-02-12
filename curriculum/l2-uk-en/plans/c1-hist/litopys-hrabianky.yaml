@@ -1,4 +1,3 @@
----
 module: c1-hist-021
 level: c1-hist
 sequence: 21
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of літопис грабянки: козацький патріотизм'
 - Evaluate the historical significance of патріотичний літопис
 content_outline:
-- section: "Вступ — Патріотичний літопис"
+- section: Вступ — Патріотичний літопис
   words: 457
   subsections:
   - Григорій Грабянка — автор і діяч
@@ -39,7 +38,7 @@ content_outline:
   - Козаки як захисники православ'я
   - Критика Москви — закамуфльована
   - Ідеал козацької «республіки»
-- section: "Фрагмент — Козацьке походження"
+- section: Фрагмент — Козацьке походження
   words: 686
   subsections:
   - Текст (з глосами)
@@ -80,7 +79,7 @@ activities:
 - type: reading
   focus: Cossack origin myth passage
 - type: critical-analysis
-  focus: "Identify ideological claims — what does author want readers to believe?"
+  focus: Identify ideological claims — what does author want readers to believe?
 - type: comparative-study
   focus: Compare Hrabianka's Khmelnytsky with Samovydets'
 - type: critical-analysis
@@ -89,15 +88,15 @@ activities:
   focus: Чому Грабянка створив міфічну генеалогію козаків?
 sources:
 - name: Літопис Григорія Граб'янки (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки"
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
   type: reference
   notes: Overview
 - name: Літопис Грабянки (текст)
-  url: "https://litopys.org.ua/grab/hrab.htm"
+  url: https://litopys.org.ua/grab/hrab.htm
   type: primary
   notes: Full text
 - name: Граб'янка Григорій Іванович
-  url: "https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович"
+  url: https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cossack Officer-Historian

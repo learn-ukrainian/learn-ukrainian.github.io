@@ -1,4 +1,3 @@
----
 module: b2-hist-035
 level: B2-HIST
 sequence: 35
@@ -96,9 +95,12 @@ grammar:
 - Passive voice in historical narrative
 sources:
 - name: Історія України-Руси
-  url: "http://litopys.org.ua/hrushrus/iur.htm"
+  url: http://litopys.org.ua/hrushrus/iur.htm
   type: secondary
 - name: Petro Mohyla (Encyclopedia of Ukraine)
-  url: "http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm"
+  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
   type: reference
-phase: "HIST.4 [Lithuanian-Polish Era]"
+phase: HIST.4 [Lithuanian-Polish Era]
+persona:
+  voice: Senior Professor of History
+  role: Academy Professor

@@ -1,4 +1,3 @@
----
 sequence: 131
 module: lit-131
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Dovzhenko Cinema As Literature у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Screenwriter

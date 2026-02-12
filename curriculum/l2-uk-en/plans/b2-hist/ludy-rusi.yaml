@@ -1,4 +1,3 @@
----
 module: b2-hist-018
 level: B2-HIST
 sequence: 18
@@ -72,19 +71,19 @@ grammar:
 - Social and economic vocabulary
 sources:
 - name: Суспільство Київської Русі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі"
+  url: https://uk.wikipedia.org/wiki/Суспільство_Київської_Русі
   type: reference
   notes: Social structure overview
 - name: Побут населення Київської Русі
-  url: "https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі"
+  url: https://uk.wikipedia.org/wiki/Побут_населення_Київської_Русі
   type: reference
   notes: Everyday life
-- name: "Руська Правда — соціальні норми"
-  url: "https://litopys.org.ua/oldukr2/oldukr51.htm"
+- name: Руська Правда — соціальні норми
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
   type: primary
   notes: Legal text on social classes
 immersion: 100% Ukrainian
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
 word_target: 4000
 activity_hints:
 - type: reading
@@ -99,3 +98,6 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Kyivan Merchant

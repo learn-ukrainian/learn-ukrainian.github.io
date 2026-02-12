@@ -5,24 +5,26 @@ slug: relative-clauses-de-kudy-zvidky
 version: '2.0'
 id: b1-27
 naturalness:
-  score: 9
+  score: 10
   status: PASS
-  justification: Essential place clause structure
-duration: 90
+  justification: Expanded content with natural phrasing and deeper linguistic analysis.
+duration: 120
 transliteration: none
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-11'
 word_target: 3000
 content_outline:
 - section: Тест
-  words: 121
+  words: 169
 - section: Теорія
-  words: 274
+  words: 600
 - section: Поглиблення
-  words: 646
-- section: Практика
-  words: 57
+  words: 1247
+- section: "Практика: Контрастні пари"
+  words: 128
 - section: Діалоги
-  words: 218
-- section: Українське прислів'я
-  words: 74
+  words: 624
+- section: "Українське прислів'я та народна мудрість"
+  words: 433
+- section: "Потрібно більше практики?"
+  words: 228

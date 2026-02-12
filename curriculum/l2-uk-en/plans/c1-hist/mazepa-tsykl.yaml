@@ -1,4 +1,3 @@
----
 module: c1-hist-083
 level: c1-hist
 sequence: 83
@@ -10,35 +9,35 @@ objectives:
 - 'Analyze the causes and consequences of мазепинський цикл: 20 років вірності → анафема'
 - Evaluate the historical significance of вірний слуга стає «зрадником»
 content_outline:
-- section: "Вступ — Вірний слуга стає «зрадником»"
+- section: Вступ — Вірний слуга стає «зрадником»
   words: 457
   subsections:
   - Мазепа — 20 років гетьманства
   - Вірність царю — і результат
   - Чому це цикл кооптації
   - Структура модуля
-- section: "Фаза 1 — Кооптація (1687-1700)"
+- section: Фаза 1 — Кооптація (1687-1700)
   words: 800
   subsections:
   - Отримання гетьманства — як
   - Вірність Петру I
   - Участь у війнах царя
   - Нагороди і титули
-- section: "Фаза 2 — Залежність (1700-1708)"
+- section: Фаза 2 — Залежність (1700-1708)
   words: 686
   subsections:
   - Північна війна — тягар
   - Козацькі втрати
   - Петро ігнорує попередження
   - Наростання конфлікту
-- section: "Фаза 3 — Точка невповернення (1708)"
+- section: Фаза 3 — Точка невповернення (1708)
   words: 686
   subsections:
   - Батурин — загроза
   - Рішення про союз зі Швецією
   - Логіка Мазепи
   - Що він сподівався отримати
-- section: "Фаза 4 — Знищення (1708-...)"
+- section: Фаза 4 — Знищення (1708-...)
   words: 571
   subsections:
   - Батуринська різанина
@@ -79,24 +78,24 @@ activities:
 - type: critical-analysis
   focus: Map Mazepa's path through co-optation cycle
 - type: critical-analysis
-  focus: "«Traitor» narrative — construction and persistence"
+  focus: «Traitor» narrative — construction and persistence
 - type: critical-analysis
-  focus: "1708 decision — what were Mazepa's options?"
+  focus: 1708 decision — what were Mazepa's options?
 - type: comparative-study
-  focus: "Mazepa vs. Khmelnytsky — different choices, same cycle"
+  focus: Mazepa vs. Khmelnytsky — different choices, same cycle
 - type: essay-response
-  focus: "Хто кого зрадив — Мазепа Петра чи Петро Україну?"
+  focus: Хто кого зрадив — Мазепа Петра чи Петро Україну?
 sources:
 - name: Іван Мазепа (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
   type: reference
   notes: Biography
 - name: Анафема Мазепі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі"
+  url: https://uk.wikipedia.org/wiki/Анафема_гетьману_Івану_Мазепі
   type: reference
   notes: Church anathema
 - name: Полтавська битва (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
   type: reference
   notes: Battle of Poltava
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Hetmanate Biographer

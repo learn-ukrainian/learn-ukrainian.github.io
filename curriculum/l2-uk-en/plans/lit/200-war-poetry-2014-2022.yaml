@@ -1,4 +1,3 @@
----
 sequence: 200
 module: lit-200
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір War Poetry 2014 2022 у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Frontline Voice

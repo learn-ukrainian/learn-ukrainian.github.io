@@ -1,7 +1,7 @@
 ---
 module: b1-04
 level: B1
-slug: 04-sentence-structure
+slug: sentence-structure
 version: '1.0'
 id: b1-04
 naturalness:
@@ -14,6 +14,28 @@ tags:
 - metalanguage
 - syntax
 - bridge
-word_target: 3000
+word_target: 3654
+content_outline:
+- section: "Introduction - Understanding Sentence Structure"
+  words: 534
+- section: "Sentence Parts (Члени речення)"
+  words: 764
+- section: "Sentence Types"
+  words: 399
+- section: "Clause Types"
+  words: 276
+- section: "Conjunctions"
+  words: 220
+- section: "Punctuation Terms"
+  words: 379
+- section: "Additional Syntax Terms"
+  words: 211
+- section: "Practice Analyzing Sentences"
+  words: 312
+- section: "Dialogues"
+  words: 282
+- section: "Summary"
+  words: 277
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-11'
+module_type: bridge

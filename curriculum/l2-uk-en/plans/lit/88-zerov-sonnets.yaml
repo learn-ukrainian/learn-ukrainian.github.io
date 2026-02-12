@@ -1,4 +1,3 @@
----
 sequence: 88
 module: lit-88
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zerov Sonnets у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Sonnet Master

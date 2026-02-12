@@ -1,4 +1,3 @@
----
 sequence: 167
 module: lit-167
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Andrukhovych Essays у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Central European

@@ -1,4 +1,3 @@
----
 sequence: 64
 module: oes-064
 module_number: 52
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Land Surveyor

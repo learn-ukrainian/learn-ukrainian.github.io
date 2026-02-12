@@ -1,4 +1,3 @@
----
 sequence: 179
 module: lit-179
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Izdryk Votsatsek у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Labyrinth Guide

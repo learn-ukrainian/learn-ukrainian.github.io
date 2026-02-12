@@ -1,4 +1,3 @@
----
 module: b2-hist-022
 level: B2-HIST
 sequence: 22
@@ -36,13 +35,13 @@ content_outline:
 word_target: 4000
 focus: history
 pedagogy: CBI
-prerequisites: "[]"
+prerequisites: '[]'
 objectives:
 - 'Analyze the causes and consequences of михайло чернігівський: опір орді'
 - Evaluate the historical significance of вступ
 - Trace the development of потрібно більше практики?
-phase: "HIST.3 [Mongol Era & Galicia-Volhynia]"
-learning_outcomes: "[]"
+phase: HIST.3 [Mongol Era & Galicia-Volhynia]
+learning_outcomes: '[]'
 vocabulary_hints:
   required:
   - Михайло Всеволодович
@@ -69,3 +68,6 @@ activity_hints:
 - type: critical-analysis
   focus: 'Критична оцінка: '
   items: 4
+persona:
+  voice: Senior Professor of History
+  role: Orthodox Bishop

@@ -1,4 +1,3 @@
----
 module: b2-hist-115
 level: B2-HIST
 sequence: 115
@@ -89,4 +88,7 @@ grammar:
 - Правозахисна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.11 [Post-War Soviet Ukraine]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Human Rights Defender

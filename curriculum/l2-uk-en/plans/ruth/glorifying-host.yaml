@@ -1,4 +1,3 @@
----
 sequence: 78
 module: ruth-078
 module_number: 78
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Military Chaplain

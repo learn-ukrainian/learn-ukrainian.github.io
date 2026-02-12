@@ -1,4 +1,3 @@
----
 module: c1-bio-135
 level: C1-BIO
 sequence: 135
@@ -6,7 +5,7 @@ slug: vasyl-symonenko
 version: '2.0'
 title: 'Василь Симоненко: Ніжний бунтар'
 content_outline:
-- section: "Вступ — Поет, який не встиг постаріти"
+- section: Вступ — Поет, який не встиг постаріти
   words: 400
   points:
   - Трагічна коротка доля (1935-1963)
@@ -42,7 +41,7 @@ content_outline:
   - Побиття та хвороба
   - Смерть у 28 років
   - Канонізація в незалежній Україні
-- section: "Дискусія — Чому молоді поети стають символами?"
+- section: Дискусія — Чому молоді поети стають символами?
   words: 200
   points:
   - Феномен ранньої смерті митця
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Симоненко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович"
+  url: https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович
   type: primary
   notes: Основна біографічна інформація
 - name: Літературний музей
-  url: "https://litmuseum.org.ua/"
+  url: https://litmuseum.org.ua/
   type: reference
   notes: Архівні матеріали
 - name: Збірки поезій
-  url: "https://ukrlib.com.ua/"
+  url: https://ukrlib.com.ua/
   type: reference
   notes: Повні тексти творів
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of василь симоненко: ніжний бунтар'
 - Evaluate the contributions of поет, який не встиг постаріти
 - Trace the career and influence of чому молоді поети стають символами?
+persona:
+  voice: Senior Biographer
+  role: Investigative Journalist

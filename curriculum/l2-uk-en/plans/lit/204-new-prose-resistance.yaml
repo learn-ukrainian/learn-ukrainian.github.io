@@ -1,4 +1,3 @@
----
 sequence: 204
 module: lit-204
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір New Prose Resistance у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Cultural Resister

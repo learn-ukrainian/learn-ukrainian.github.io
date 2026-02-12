@@ -86,3 +86,6 @@ grammar:
 - Sentence structure and common errors
 register: розмовний
 phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Camp Counselor

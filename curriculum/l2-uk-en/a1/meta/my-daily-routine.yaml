@@ -1,17 +1,33 @@
----
 module: a1-25
 level: A1
 slug: my-daily-routine
-version: '2.0'
+version: '2.2'
 id: a1-25
 naturalness:
   score: 10
   status: PASS
-  justification: Practical daily routine skills
-duration: 60
+  justification: Practical daily routine skills with helpful neighbor persona.
+duration: 90
 transliteration: none
-word_target: 750
+word_target: 1125
+content_outline:
+- section: Warm
+  words: 170
+- section: Presentation
+  words: 301
+- section: Grammar
+  words: 156
+- section: Cultural Context
+  words: 142
+- section: Practice
+  words: 233
+- section: Practice 2
+  words: 118
+- section: Підсумок
+  words: 65
+- section: Більше практики? (Need More Practice?)
+  words: 28
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-12'
 title: My Daily Routine
 subtitle: Reflexive Verbs and Daily Activities

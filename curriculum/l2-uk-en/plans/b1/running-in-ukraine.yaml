@@ -82,3 +82,6 @@ grammar:
 - Event registration language
 register: розмовний
 phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Kyiv Marathon Organizer

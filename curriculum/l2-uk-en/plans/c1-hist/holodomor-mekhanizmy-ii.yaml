@@ -1,4 +1,3 @@
----
 module: c1-hist-047
 level: c1-hist
 sequence: 47
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of механізми голодомору ii: чорні дошки'
 - Evaluate the historical significance of механізм знищення
 content_outline:
-- section: "Вступ — Механізм знищення"
+- section: Вступ — Механізм знищення
   words: 457
   subsections:
   - Від колективізації до активного терору
@@ -82,24 +81,24 @@ activities:
 - type: critical-analysis
   focus: Create detailed diagram of blacklist system
 - type: critical-analysis
-  focus: "Analyze a \"black board\" decree"
+  focus: Analyze a "black board" decree
 - type: critical-analysis
   focus: Match mechanisms to genocide convention criteria
 - type: comparative-study
-  focus: "Compare with other genocides — mechanism parallels"
+  focus: Compare with other genocides — mechanism parallels
 - type: essay-response
   focus: Чому система чорних дошок є доказом навмисності?
 sources:
 - name: Чорні дошки (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Чорні_дошки"
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
   type: reference
   notes: Blacklist system
 - name: Постанова про натуральні штрафи
-  url: "https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи"
+  url: https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи
   type: reference
   notes: Natural penalties decree
 - name: Блокада сіл (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933"
+  url: https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933
   type: reference
   notes: Village blockades
 vocabulary_hints:
@@ -122,3 +121,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Archive Detective

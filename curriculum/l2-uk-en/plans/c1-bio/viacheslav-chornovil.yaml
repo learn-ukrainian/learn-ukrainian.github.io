@@ -1,4 +1,3 @@
----
 module: c1-bio-136
 level: C1-BIO
 sequence: 136
@@ -6,7 +5,7 @@ slug: viacheslav-chornovil
 version: '2.0'
 title: 'В''ячеслав Чорновіл: Незламний правозахисник'
 content_outline:
-- section: "Вступ — Людина, яка не схилялася"
+- section: Вступ — Людина, яка не схилялася
   words: 400
   points:
   - Чорновіл як символ української незламності
@@ -86,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: В'ячеслав Чорновіл (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович"
+  url: https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович
   type: primary
   notes: Основна біографічна інформація
 - name: Український Гельсінський союз
-  url: "https://helsinki.org.ua/"
+  url: https://helsinki.org.ua/
   type: reference
   notes: Історія правозахисного руху
 - name: Народний Рух України
-  url: "https://nru.org.ua/"
+  url: https://nru.org.ua/
   type: reference
   notes: Політична діяльність
 immersion: 100% Ukrainian
@@ -103,3 +102,6 @@ objectives:
 - 'Analyze the life and legacy of в''ячеслав чорновіл: незламний правозахисник'
 - Evaluate the contributions of людина, яка не схилялася
 - Trace the career and influence of загибель та спадщина
+persona:
+  voice: Senior Biographer
+  role: Samizdat Editor

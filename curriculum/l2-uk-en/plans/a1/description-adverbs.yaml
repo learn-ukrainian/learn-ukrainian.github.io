@@ -91,3 +91,6 @@ grammar:
 - Adverb placement in sentences
 register: розмовний
 phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Food Critic

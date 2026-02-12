@@ -1,4 +1,3 @@
----
 module: c1-hist-087
 level: c1-hist
 sequence: 87
@@ -10,35 +9,35 @@ objectives:
 - 'Analyze the causes and consequences of янукович: сучасна версія циклу'
 - Evaluate the historical significance of цикл у xxi столітті
 content_outline:
-- section: "Вступ — Цикл у XXI столітті"
+- section: Вступ — Цикл у XXI столітті
   words: 457
   subsections:
   - Янукович — не перший і не останній
   - Чому це кооптація
   - Сучасна версія старого паттерну
   - Структура модуля
-- section: "Фаза 1 — Підкуп (2010-2013)"
+- section: Фаза 1 — Підкуп (2010-2013)
   words: 800
   subsections:
   - 15 мільярдів від Путіна
   - Харківські угоди — флот
   - Знижка на газ
   - Що обіцяли натомість
-- section: "Фаза 2 — Залежність"
+- section: Фаза 2 — Залежність
   words: 686
   subsections:
   - Газова залежність
   - Кредитна залежність
   - Політичний тиск
   - Шлях до ЄС — закритий
-- section: "Фаза 3 — Вілнюс 2013"
+- section: Фаза 3 — Вілнюс 2013
   words: 686
   subsections:
   - Угода про асоціацію — готова
   - Відмова — чому
   - Тиск Росії
   - Точка неповернення
-- section: "Фаза 4 — Крах"
+- section: Фаза 4 — Крах
   words: 571
   subsections:
   - Майдан
@@ -79,24 +78,24 @@ activities:
 - type: critical-analysis
   focus: Map Yanukovych through co-optation cycle
 - type: critical-analysis
-  focus: "2010-2014 — how Russia's cycle worked"
+  focus: 2010-2014 — how Russia's cycle worked
 - type: critical-analysis
   focus: Why did the cycle break in 2014?
 - type: comparative-study
-  focus: "Yanukovych vs. historical figures — same pattern"
+  focus: Yanukovych vs. historical figures — same pattern
 - type: essay-response
   focus: Чим Янукович схожий на Хмельницького, Мазепу, Розумовського?
 sources:
 - name: Віктор Янукович (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Віктор_Янукович"
+  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
   type: reference
   notes: Biography
 - name: Революція гідності (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Революція_гідності"
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
   type: reference
   notes: 2014 revolution
 - name: Харківські угоди (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Харківські_угоди"
+  url: https://uk.wikipedia.org/wiki/Харківські_угоди
   type: reference
   notes: 2010 agreements
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Kleptocracy Researcher

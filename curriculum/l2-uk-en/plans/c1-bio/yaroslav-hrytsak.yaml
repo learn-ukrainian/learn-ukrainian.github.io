@@ -1,4 +1,3 @@
----
 module: c1-bio-148
 level: C1-BIO
 sequence: 148
@@ -6,7 +5,7 @@ slug: yaroslav-hrytsak
 version: '2.0'
 title: 'Ярослав Грицак: Публічний історик'
 content_outline:
-- section: "Вступ — Історик, який говорить з людьми"
+- section: Вступ — Історик, який говорить з людьми
   words: 400
   points:
   - Грицак як найвпливовіший публічний історик України
@@ -42,7 +41,7 @@ content_outline:
   - Реакція на російську агресію
   - Переосмислення деяких позицій
   - Роль інтелектуала під час війни
-- section: "Дискусія — Обов'язок історика"
+- section: Дискусія — Обов'язок історика
   words: 200
   points:
   - Об'єктивність vs громадянська позиція
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ярослав Грицак (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович"
+  url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
   type: primary
   notes: Основна біографічна інформація
 - name: Український католицький університет
-  url: "https://ucu.edu.ua/"
+  url: https://ucu.edu.ua/
   type: reference
   notes: Академічна діяльність
 - name: Книги та публікації
-  url: "https://krytyka.com/"
+  url: https://krytyka.com/
   type: reference
   notes: Наукові праці
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of ярослав грицак: публічний історик'
 - Evaluate the contributions of історик, який говорить з людьми
 - Trace the career and influence of обов'язок історика
+persona:
+  voice: Senior Biographer
+  role: Public Historian

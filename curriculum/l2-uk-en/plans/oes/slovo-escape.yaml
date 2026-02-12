@@ -1,4 +1,3 @@
----
 sequence: 84
 module: oes-084
 module_number: 84
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Guide of the Steppe

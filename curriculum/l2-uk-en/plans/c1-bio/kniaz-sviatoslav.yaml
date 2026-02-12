@@ -129,3 +129,6 @@ sources:
 immersion: 100% Ukrainian
 phase: C1.3 Biographies
 word_target: 4000
+persona:
+  voice: Senior Biographer
+  role: Conqueror

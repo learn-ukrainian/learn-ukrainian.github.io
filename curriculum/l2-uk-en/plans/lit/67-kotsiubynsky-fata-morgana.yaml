@@ -1,4 +1,3 @@
----
 sequence: 67
 module: lit-67
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kotsiubynsky Fata Morgana у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Revolt Leader

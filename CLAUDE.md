@@ -161,6 +161,11 @@ npm run vocab:rebuild
 .venv/bin/python scripts/batch_dispatcher.py scan         # Show priorities (no dispatch)
 .venv/bin/python scripts/batch_dispatcher.py status       # Show current state
 .venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio  # Force single track
+
+# Broker maintenance
+.venv/bin/python scripts/ai_agent_bridge.py cleanup              # Clean stale PIDs + ancient messages
+.venv/bin/python scripts/ai_agent_bridge.py cleanup --dry-run    # Preview what would be cleaned
+.venv/bin/python scripts/ai_agent_bridge.py cleanup --max-age 6  # Force-ack messages older than 6h
 ```
 
 See `docs/SCRIPTS.md` for complete reference.
@@ -322,40 +327,109 @@ Use `/interview` for complex features, unclear requirements, or broad requests. 
 
 **Gemini is your colleague.** Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
 
-> **CHECK INBOX AT SESSION START!**
-> ```python
-> mcp__message-broker__check_inbox(for_llm="claude")
-> ```
-> Gemini may have sent you messages. Don't wait for the user to tell you - check proactively!
+### Team Structure (Permanent)
 
-> **HEADLESS SESSION AWARENESS!**
-> Multiple Claude sessions may run in parallel. When resuming collaborative work, check FULL conversation history first (not just unread):
-> ```python
-> mcp__message-broker__get_conversation(task_id="the-task-id")
-> ```
+- 💙 **Синя команда (Blue / Claude)** — architect, reviewer, quality gate. Won't approve until the bar is met.
+- 💛 **Жовта команда (Gold / Gemini)** — content builder, implementer, iterates toward passing.
 
-### How to Contact Gemini (PREFERRED: One-Step)
+**Both teams critique each other.** The purpose is quality through adversarial review — not rubber-stamping. An LLM must NEVER review its own work. Stay in separate groups so you find each other's mistakes.
+
+### GitHub-First Protocol (PRIMARY)
+
+<critical>
+
+**GitHub issues and comments are the primary communication channel.** All substantive discussion — reviews, proposals, implementation plans, architectural feedback, disagreements — happens on GitHub where it's persistent, searchable, and visible to the human.
+
+**The message broker is a notification layer ONLY.** Broker messages must be SHORT (< 200 chars) and only reference a GitHub issue/comment. Never put substantive content in broker messages.
+
+**The pattern:**
+
+1. **Post your work/review/proposal as a GitHub issue comment**
+2. **Send a SHORT broker ping to the other agent** pointing them to it
+3. **The other agent reads the GitHub comment** and responds there
 
 ```bash
-# ONE COMMAND: Send message + invoke Gemini automatically
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "Your message" --task-id your-task
+# Step 1: Post review on GitHub
+gh issue comment 559 --body "## 💙 Синя — Review ..."
 
-# Then check inbox for response
-mcp__message-broker__receive_messages(for_llm="claude", unread_only=True)
+# Step 2: Ping Gemini via broker (NOTIFICATION ONLY)
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+  "Review posted on #559. Please read and respond." \
+  --task-id issue-559
 ```
 
-Use `--extract CONTENT` flag to strip Gemini's verbose thinking tokens. Session tracking: same task-id = same conversation context.
+**What goes WHERE:**
+
+| Channel | Use For | Max Length |
+|---------|---------|------------|
+| **GitHub issues** | Task specs, proposals, architecture plans | Unlimited |
+| **GitHub comments** | Reviews, feedback, progress updates, disagreements | Unlimited |
+| **Broker messages** | Notifications only: "read #559", "review posted on #558" | < 200 chars |
+
+**What NEVER goes in broker messages:**
+- Full reviews or feedback
+- Code snippets or file contents
+- Implementation proposals
+- Architectural discussion
+
+</critical>
+
+### Session Start Checklist
+
+> **AT SESSION START:**
+> 1. Check broker inbox for notifications:
+>    ```python
+>    mcp__message-broker__check_inbox(for_llm="claude")
+>    ```
+> 2. For each notification, read the referenced GitHub issue/comment
+> 3. Respond ON GITHUB, then ping back via broker
+
+### Cross-Review Protocol
+
+**Both agents must critique each other's work.** The goal is catching mistakes and improving quality — not agreement.
+
+| Scenario | Action |
+|----------|--------|
+| Gemini posts content | Claude reviews it critically on the GitHub issue. Finds real problems. |
+| Claude posts architecture | Gemini reviews it on GitHub. Challenges assumptions. |
+| Either agent disagrees | Post the counter-argument as a GitHub comment. Don't just accept. |
+| Either agent finds a bug | File it on the issue. Don't fix silently — document the finding. |
+
+**Review responses must:**
+- Point out specific problems (not vague "looks good")
+- Quote the problematic content
+- Suggest concrete fixes
+- Score honestly (never rubber-stamp)
+
+### Skill-Based Dispatch (for content work)
+
+**Use Gemini's `.skill` files instead of writing verbose prompts.** Each skill encodes the full protocol.
+
+```bash
+# Seminar tracks
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-c1-bio 5" --task-id rebuild-c1-bio-5
+
+# Core tracks
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-core-a a1 3" --task-id rebuild-a1-3
+```
+
+**Skill mapping:**
+
+| Skill | Tracks | Trigger |
+|-------|--------|---------|
+| `full-rebuild-core-a` | a1, a2, b1 (M01-05) | `/full-rebuild-core-a {level} {num}` |
+| `full-rebuild-core-b` | b1 (M06+), b2, c1, c2 | `/full-rebuild-core-b {level} {num}` |
+| `full-rebuild-c1-bio` | c1-bio | `/full-rebuild-c1-bio {num}` |
+| `full-rebuild-c1-hist` | c1-hist | `/full-rebuild-c1-hist {num}` |
+| `full-rebuild-b2-hist` | b2-hist | `/full-rebuild-b2-hist {num}` |
+| `full-rebuild-lit` | lit (generic) | `/full-rebuild-lit {num}` |
+| `full-rebuild-lit-*` | lit sub-genres | `/full-rebuild-lit-{genre} {num}` |
+| `full-rebuild-oes` | oes | `/full-rebuild-oes {num}` |
+| `full-rebuild-ruth` | ruth | `/full-rebuild-ruth {num}` |
 
 ### Gemini Output Handling
 
 Gemini outputs verbose thinking tokens (10-100K chars). All structured output uses `===TAG_START===` / `===TAG_END===` delimiters. Content outside delimiters is noise. Extraction utility: `scripts/gemini_output.py`.
-
-### When to Contact Gemini
-
-- **Ukrainian content writing** — Gemini excels at natural Ukrainian
-- **Cross-review** — An LLM must never review its own work; use the other agent
-- **Parallel work** — Gemini can research while you write
-- **Cooldown?** Queue via MCP, continue other work, retry with `process-all` later
 
 ---
 
@@ -404,7 +478,7 @@ Reviews are valuable when done by a **different agent** than the content author:
 
 ### Key Principle
 
-**Remove the incentive, don't rely on promises.** Prompt-level rules ("be honest", "red team persona") don't work against self-grading bias. Architectural separation does — when review scores don't affect outcomes, there's no reason to game them.
+**Remove the incentive, don't rely on promises.** Prompt-level rules ("be honest", "adversarial reviewer persona") don't work against self-grading bias. Architectural separation does — when review scores don't affect outcomes, there's no reason to game them.
 
 </critical>
 

@@ -1,4 +1,3 @@
----
 module: c1-bio-154
 level: C1-BIO
 sequence: 154
@@ -6,7 +5,7 @@ slug: serhiy-zhadan
 version: '2.0'
 title: 'Сергій Жадан: Голос Донбасу'
 content_outline:
-- section: "Вступ — Поет війни та миру"
+- section: Вступ — Поет війни та миру
   words: 400
   points:
   - Жадан як найпопулярніший український письменник сучасності
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Сергій Жадан (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович"
+  url: https://uk.wikipedia.org/wiki/Жадан_Сергій_Вікторович
   type: primary
   notes: Біографія, творчість, громадська діяльність
 - name: Meridian Czernowitz
-  url: "https://meridiancz.com"
+  url: https://meridiancz.com
   type: reference
   notes: Літературні фестивалі та інтерв'ю
 - name: Гурт «Собаки в космосі»
-  url: "https://sobakyvkosmosi.com.ua"
+  url: https://sobakyvkosmosi.com.ua
   type: reference
   notes: Музична діяльність
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of сергій жадан: голос донбасу'
 - Evaluate the contributions of поет війни та миру
 - Trace the career and influence of повномасштабна війна та сьогодення (2022-)
+persona:
+  voice: Senior Biographer
+  role: Voice of the East

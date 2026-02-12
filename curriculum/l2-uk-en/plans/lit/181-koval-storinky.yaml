@@ -1,4 +1,3 @@
----
 sequence: 181
 module: lit-181
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Koval Storinky у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Ironical Diarist

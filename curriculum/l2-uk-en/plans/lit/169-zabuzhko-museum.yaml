@@ -1,4 +1,3 @@
----
 sequence: 169
 module: lit-169
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zabuzhko Museum у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Museum Archivist

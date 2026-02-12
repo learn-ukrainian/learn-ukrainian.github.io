@@ -1,4 +1,3 @@
----
 sequence: 107
 module: lit-107
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Domontovych Dr Seraphicus у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Rational Lover

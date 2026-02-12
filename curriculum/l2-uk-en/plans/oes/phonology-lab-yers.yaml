@@ -24,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - phonology-lab
+persona:
+  voice: Senior Paleographer
+  role: Cryptographer of Sounds

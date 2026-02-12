@@ -1,4 +1,3 @@
----
 module: c1-hist-088
 level: c1-hist
 sequence: 88
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of синтез: чому цикл повторюється?'
 - Evaluate the historical significance of паттерн через віки
 content_outline:
-- section: "Вступ — Паттерн через віки"
+- section: Вступ — Паттерн через віки
   words: 457
   subsections:
   - Огляд модулів 81-87
@@ -90,11 +89,11 @@ activities:
   focus: Як Україна може назавжди вийти з циклу кооптації?
 sources:
 - name: Російський імперіалізм (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російський_імперіалізм"
+  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
   type: reference
   notes: Imperial patterns
 - name: Українсько-російські відносини (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українсько-російські_відносини"
+  url: https://uk.wikipedia.org/wiki/Українсько-російські_відносини
   type: reference
   notes: Bilateral history
 vocabulary_hints:
@@ -117,3 +116,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Analyst of Historical Cycles

@@ -1,4 +1,3 @@
----
 module: b2-hist-065
 level: B2-HIST
 sequence: 65
@@ -57,7 +56,7 @@ learning_outcomes:
 - Учень розуміє роль Костя Гордієнка в союзі з Іваном Мазепою та Карлом XII
 - Учень може пояснити ідеологію Запорозької Січі як автономної республіки
 - Учень знає про трагедію Чортомлицької Січі 1709 року
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
+phase: HIST.7 [Mazepa & End of Hetmanate]
 objectives:
 - Analyze the causes and consequences of кость гордієнко та січ
 - Evaluate the historical significance of непримиренний кошовий
@@ -90,3 +89,6 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Zaporozhian Envoy

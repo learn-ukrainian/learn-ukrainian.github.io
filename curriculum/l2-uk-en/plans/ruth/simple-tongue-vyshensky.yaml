@@ -1,4 +1,3 @@
----
 sequence: 66
 module: ruth-066
 module_number: 54
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Defender of the Simple Tongue

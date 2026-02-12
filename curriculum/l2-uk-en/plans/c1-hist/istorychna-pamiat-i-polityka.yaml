@@ -1,4 +1,3 @@
----
 module: c1-hist-010
 level: c1-hist
 sequence: 10
@@ -11,7 +10,7 @@ objectives:
 - Evaluate the historical significance of пам'ять як поле битви
 - Trace the development of виклики і перспективи
 content_outline:
-- section: "Вступ — Пам'ять як поле битви"
+- section: Вступ — Пам'ять як поле битви
   words: 457
   subsections:
   - Що таке історична пам'ять?
@@ -35,7 +34,7 @@ content_outline:
   - Музеї та виставки
   - Підручники і освіта
   - Топоніміка — назви вулиць як пам'ять
-- section: "Війни пам'яті — Україна vs. Росія"
+- section: Війни пам'яті — Україна vs. Росія
   words: 686
   subsections:
   - Переяслав 1654 — два наративи
@@ -85,30 +84,30 @@ vocabulary:
 - злочинець
 activities:
 - type: reading
-  focus: "Article 1 of the Holodomor Law (2006) — what does it declare?"
+  focus: Article 1 of the Holodomor Law (2006) — what does it declare?
 - type: reading
-  focus: 'Find a \"lieu de mémoire\" in your area — describe its significance'
+  focus: Find a \"lieu de mémoire\" in your area — describe its significance
 - type: comparative-study
-  focus: "Compare Ukraine and Poland memory laws — what's similar/different?"
+  focus: Compare Ukraine and Poland memory laws — what's similar/different?
 - type: critical-analysis
-  focus: "Analyze a monument — what does it remember, what does it forget?"
+  focus: Analyze a monument — what does it remember, what does it forget?
 - type: essay-response
   focus: Чи повинна держава законодавчо регулювати історичну пам'ять?
 sources:
 - name: Історична пам'ять (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історична_пам'ять"
+  url: https://uk.wikipedia.org/wiki/Історична_пам'ять
   type: reference
   notes: Concept overview
 - name: Політика пам'яті
-  url: "https://uk.wikipedia.org/wiki/Політика_пам'яті"
+  url: https://uk.wikipedia.org/wiki/Політика_пам'яті
   type: reference
   notes: Memory politics
-- name: "П'єр Нора — Місця пам'яті"
-  url: "https://uk.wikipedia.org/wiki/Нора_П'єр"
+- name: П'єр Нора — Місця пам'яті
+  url: https://uk.wikipedia.org/wiki/Нора_П'єр
   type: reference
   notes: Key theorist of memory
 - name: Закон про Голодомор (2006)
-  url: "https://zakon.rada.gov.ua/laws/show/376-16"
+  url: https://zakon.rada.gov.ua/laws/show/376-16
   type: primary
   notes: Example of memory legislation
 vocabulary_hints:
@@ -131,3 +130,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Memory Politics Analyst

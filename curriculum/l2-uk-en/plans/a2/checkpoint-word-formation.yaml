@@ -103,3 +103,6 @@ grammar:
 - Prefix/suffix application
 register: розмовний
 phase: A2.4 [Word Formation]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Linguistics Professor

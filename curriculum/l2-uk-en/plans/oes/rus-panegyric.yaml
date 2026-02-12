@@ -1,4 +1,3 @@
----
 sequence: 97
 module: oes-097
 module_number: 97
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Court Poet

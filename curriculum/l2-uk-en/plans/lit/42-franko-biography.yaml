@@ -1,4 +1,3 @@
----
 sequence: 42
 module: lit-42
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Іван Франко: Титан праці у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Intellectual Titan

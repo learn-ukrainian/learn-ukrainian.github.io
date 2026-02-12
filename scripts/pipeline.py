@@ -94,24 +94,24 @@ def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -
     if level and module_num:
         # Find the specific module file
         level_path = CURRICULUM_DIR / lang_pair / level
-        module_files = list(level_path.glob(f"{module_num:02d}-*.md")) + list(level_path.glob(f"{module_num}-*.md"))
-        
-        # Support module-LEVEL-NUM format (e.g. module-LIT-005.md)
-        module_files += list(level_path.glob(f"module-{level.upper()}-{module_num:03d}*.md"))
-        
-        # Support track-based slug resolution (RFC #410)
+        module_files = []
+
+        # Primary: resolve via manifest (slug-based)
+        try:
+            sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+            from manifest_utils import get_module_by_number
+            mod = get_module_by_number(level, module_num)
+            if mod:
+                md_file = level_path / f"{mod.slug}.md"
+                if md_file.exists():
+                    module_files = [md_file]
+        except Exception as e:
+            print(f"  ⚠️ Manifest lookup failed: {e}")
+
+        # Fallback: glob patterns
         if not module_files:
-            try:
-                # Use manifest_utils to find module by level and number
-                sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
-                from manifest_utils import get_module_by_number
-                mod = get_module_by_number(level, module_num)
-                if mod:
-                    md_file = level_path / f"{mod.slug}.md"
-                    if md_file.exists():
-                        module_files = [md_file]
-            except Exception as e:
-                print(f"  ⚠️ Manifest lookup failed: {e}")
+            module_files = list(level_path.glob(f"{module_num:02d}-*.md")) + list(level_path.glob(f"{module_num}-*.md"))
+            module_files += list(level_path.glob(f"module-{level.upper()}-{module_num:03d}*.md"))
 
         if module_files:
             cmd.append(str(module_files[0]))

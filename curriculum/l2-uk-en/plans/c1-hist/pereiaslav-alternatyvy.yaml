@@ -1,4 +1,3 @@
----
 module: c1-hist-089
 level: c1-hist
 sequence: 89
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of переяслав 1654: які були альтернативи?'
 - Evaluate the historical significance of «що якби...»
 content_outline:
-- section: "Вступ — «Що якби...»"
+- section: Вступ — «Що якби...»
   words: 457
   subsections:
   - Переяслав — не єдиний варіант
@@ -77,26 +76,26 @@ vocabulary:
 - стратегічний
 activities:
 - type: essay-response
-  focus: "Swedish alternative — what if scenario"
+  focus: Swedish alternative — what if scenario
 - type: critical-analysis
   focus: Map Khmelnytsky's options in 1654
 - type: comparative-study
-  focus: "Compare four alternatives — pros and cons"
+  focus: Compare four alternatives — pros and cons
 - type: critical-analysis
   focus: Why was independence difficult?
 - type: essay-response
   focus: Чи був Переяслав найкращим вибором з наявних?
 sources:
 - name: Переяславська рада (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Переяславська_рада"
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
   type: reference
   notes: 1654 context
 - name: Хмельниччина (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Хмельниччина"
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
   type: reference
   notes: War context
 - name: Богдан Хмельницький (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
   type: reference
   notes: Decision-maker
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Diplomatic Scenario Analyst

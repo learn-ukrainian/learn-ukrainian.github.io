@@ -1,4 +1,3 @@
----
 module: b2-hist-064
 level: B2-HIST
 sequence: 64
@@ -85,7 +84,7 @@ grammar:
 - Історичний наратив
 - Культурна термінологія
 register: публіцистичний
-phase: "B2.3b [Українська історія]"
+phase: B2.3b [Українська історія]
 vocabulary_hints:
   required:
   - меценат (patron)
@@ -109,8 +108,12 @@ activity_hints:
   focus: Decolonizing the narrative about Mazepa
   items: 1
 - type: critical-analysis
-  focus: 'Критичний аналіз послідовності: Major cultural projects during Mazepa''s rule'
+  focus: 'Критичний аналіз послідовності: Major cultural projects during Mazepa''s
+    rule'
   items: 1
 - type: critical-analysis
   focus: 'Критична оцінка: Baroque architecture and art'
   items: 1
+persona:
+  voice: Senior Professor of History
+  role: Baroque Architect

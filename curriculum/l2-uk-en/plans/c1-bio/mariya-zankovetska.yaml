@@ -1,4 +1,3 @@
----
 module: c1-bio-050
 level: C1-BIO
 sequence: 50
@@ -6,7 +5,7 @@ slug: mariya-zankovetska
 version: '2.0'
 title: 'Марія Заньковецька: Перша леді сцени'
 content_outline:
-- section: "Вступ — Королева українського театру"
+- section: Вступ — Королева українського театру
   words: 400
   points:
   - Марія Заньковецька — найвидатніша українська актриса XIX століття
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Заньковецька (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Марія_Заньковецька"
+  url: https://uk.wikipedia.org/wiki/Марія_Заньковецька
   type: primary
   notes: Біографія, театральна кар'єра, вплив на культуру
 - name: Театр корифеїв
-  url: "https://uk.wikipedia.org/wiki/Театр_корифеїв"
+  url: https://uk.wikipedia.org/wiki/Театр_корифеїв
   type: reference
   notes: Український театр XIX століття
 - name: Микола Садовський
-  url: "https://uk.wikipedia.org/wiki/Микола_Садовський"
+  url: https://uk.wikipedia.org/wiki/Микола_Садовський
   type: reference
   notes: Партнер по сцені та засновник театру
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of марія заньковецька: перша леді сцени'
 - Evaluate the contributions of королева українського театру
 - Trace the career and influence of спадщина та пам'ять
+persona:
+  voice: Senior Biographer
+  role: Stage Diva

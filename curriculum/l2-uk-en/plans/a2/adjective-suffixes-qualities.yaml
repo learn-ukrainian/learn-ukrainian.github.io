@@ -1,10 +1,9 @@
----
 module: a2-39
 level: A2
 sequence: 39
 slug: 39-adjective-suffixes-qualities
 version: '2.0'
-title: "Adjective Suffixes — Qualities"
+title: Adjective Suffixes — Qualities
 subtitle: Making Descriptions Richer
 content_outline:
 - section: Introduction / Вступ
@@ -41,13 +40,16 @@ objectives:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Adjective Morphology
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Standards for suffixal adjective formation and emotional-expressive nuances
     at A2
 - name: Word Formation in Ukrainian Language - Suffixes
-  url: "https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові"
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
   type: reference
   notes: Rules for diminutive and intensive adjective suffixes
 immersion: 65-75% Ukrainian
 phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Character Witness

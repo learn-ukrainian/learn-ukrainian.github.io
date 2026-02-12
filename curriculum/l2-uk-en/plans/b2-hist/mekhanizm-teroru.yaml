@@ -1,4 +1,3 @@
----
 module: b2-hist-103
 level: B2-HIST
 sequence: 103
@@ -73,7 +72,7 @@ activity_hints:
   focus: 'Спростування міфів: Міфи про «ворогів народу»'
   items: 5
 - type: essay-response
-  focus: "Чому знищення української інтелігенції — це геноцид?"
+  focus: Чому знищення української інтелігенції — це геноцид?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -92,4 +91,7 @@ grammar:
 - Юридична та репресивна лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.10 [Soviet Terror]"
+phase: HIST.10 [Soviet Terror]
+persona:
+  voice: Senior Professor of History
+  role: Investigative Archivist

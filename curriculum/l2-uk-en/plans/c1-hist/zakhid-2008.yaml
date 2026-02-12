@@ -1,4 +1,3 @@
----
 module: c1-hist-100
 level: c1-hist
 sequence: 100
@@ -10,14 +9,14 @@ objectives:
 - 'Analyze the causes and consequences of бухарест 2008: nato каже «ні»'
 - Evaluate the historical significance of вето на безпеку
 content_outline:
-- section: "Вступ — Вето на безпеку"
+- section: Вступ — Вето на безпеку
   words: 457
   subsections:
   - Квітень 2008 — Бухарест
   - Україна і Грузія — просять MAP
   - Меркель і Саркозі — «ні»
   - Структура модуля
-- section: "Контекст — Що таке MAP"
+- section: Контекст — Що таке MAP
   words: 571
   subsections:
   - План дій щодо членства
@@ -31,14 +30,14 @@ content_outline:
   - Німеччина, Франція — проти
   - Аргументи проти
   - «Провокація Росії»
-- section: "Компроміс — гірший за відмову"
+- section: Компроміс — гірший за відмову
   words: 800
   subsections:
   - «Колись стануть членами»
   - Але без MAP зараз
   - Найгірший варіант
   - Сигнал для Росії
-- section: "Серпень 2008 — Грузія"
+- section: Серпень 2008 — Грузія
   words: 571
   subsections:
   - Війна через 4 місяці
@@ -87,15 +86,15 @@ activities:
   focus: Чи Бухарест 2008 спровокував агресію Росії?
 sources:
 - name: Бухарестський саміт (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО"
+  url: https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО
   type: reference
   notes: Summit decisions
 - name: План дій щодо членства (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО"
+  url: https://uk.wikipedia.org/wiki/План_дій_щодо_членства_в_НАТО
   type: reference
   notes: MAP explanation
 - name: Розширення НАТО (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Розширення_НАТО"
+  url: https://uk.wikipedia.org/wiki/Розширення_НАТО
   type: reference
   notes: Enlargement context
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: NATO Relations Scholar

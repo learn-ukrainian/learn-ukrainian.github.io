@@ -1,4 +1,3 @@
----
 module: b2-hist-028
 level: B2-HIST
 sequence: 28
@@ -52,7 +51,7 @@ grammar:
 - Historical narrative synthesis
 - Argumentative writing structures
 register: публіцистичний
-phase: "B2.3 [Ukrainian History] Synthesis"
+phase: B2.3 [Ukrainian History] Synthesis
 vocabulary_hints:
   required:
   - монгольська навала
@@ -79,3 +78,6 @@ activity_hints:
 - type: critical-analysis
   focus: 'Критична оцінка: '
   items: 4
+persona:
+  voice: Senior Professor of History
+  role: Borderland Governor

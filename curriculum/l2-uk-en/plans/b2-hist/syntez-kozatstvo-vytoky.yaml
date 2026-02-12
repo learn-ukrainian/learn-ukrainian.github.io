@@ -1,4 +1,3 @@
----
 module: b2-hist-050
 level: B2-HIST
 sequence: 50
@@ -70,12 +69,15 @@ grammar:
 - Advanced analytical structures
 sources:
 - name: History of Ukrainian Statehood
-  url: "https://history.org.ua/uk/lib/54321"
+  url: https://history.org.ua/uk/lib/54321
   type: reference
   notes: General synthesis of the era
 - name: Zaporozhian Cossackdom in the Context of European History
-  url: "https://litopys.org.ua/cossack/coss.htm"
+  url: https://litopys.org.ua/cossack/coss.htm
   type: academic
   notes: Comparative analysis
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
+persona:
+  voice: Senior Professor of History
+  role: Steppe Scout

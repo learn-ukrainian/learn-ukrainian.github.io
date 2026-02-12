@@ -1,4 +1,3 @@
----
 module: c1-bio-151
 level: C1-BIO
 sequence: 151
@@ -6,7 +5,7 @@ slug: taras-prokhasko
 version: '2.0'
 title: 'Тарас Прохасько: Станіславівський феномен'
 content_outline:
-- section: "Вступ — Письменник як ботанік і філософ"
+- section: Вступ — Письменник як ботанік і філософ
   words: 400
   points:
   - Унікальний стиль Прохаська в українській літературі
@@ -42,7 +41,7 @@ content_outline:
   - Особливості стилю Прохаська
   - Теми спостереження та споглядання
   - Есеїстика та малі форми
-- section: "Дискусія — Література як спосіб бачити світ"
+- section: Дискусія — Література як спосіб бачити світ
   words: 200
   points:
   - Як науковий погляд збагачує художню прозу
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Тарас Прохасько (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович"
+  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
   type: primary
   notes: Основна біографічна інформація
 - name: Видавництво Кальварія
-  url: "https://www.calvaria.com.ua/"
+  url: https://www.calvaria.com.ua/
   type: reference
   notes: Бібліографія та видання
 - name: Літературна критика
-  url: "https://litakcent.com/"
+  url: https://litakcent.com/
   type: reference
   notes: Аналіз творчості
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of тарас прохасько: станіславівський феномен'
 - Evaluate the contributions of письменник як ботанік і філософ
 - Trace the career and influence of література як спосіб бачити світ
+persona:
+  voice: Senior Biographer
+  role: Carpathian Philosopher

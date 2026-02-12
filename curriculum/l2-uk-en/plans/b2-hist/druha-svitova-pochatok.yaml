@@ -1,4 +1,3 @@
----
 module: b2-hist-105
 level: B2-HIST
 sequence: 105
@@ -70,7 +69,7 @@ activity_hints:
   source: Архівні документи
   items: 4
 - type: essay-response
-  focus: "Чому «возз'єднання» 1939 року — це окупація?"
+  focus: Чому «возз'єднання» 1939 року — це окупація?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -90,4 +89,7 @@ grammar:
 - Пасивні конструкції для опису подій
 - Хронологічні конструкції
 register: публіцистичний
-phase: "HIST.10 [Soviet Period & Tragedies]"
+phase: HIST.10 [Soviet Period & Tragedies]
+persona:
+  voice: Senior Professor of History
+  role: War Diarist

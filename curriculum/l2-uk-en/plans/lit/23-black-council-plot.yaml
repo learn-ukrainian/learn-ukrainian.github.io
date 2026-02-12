@@ -1,4 +1,3 @@
----
 sequence: 23
 module: lit-23
 level: LIT
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Чорна рада: Роман'
 subtitle: 'The Black Council: The Novel'
 content_outline:
-- section: "Вступ — Перший український історичний роман"
+- section: Вступ — Перший український історичний роман
   words: 625
   points:
   - Значення "Чорної ради" для літератури
@@ -38,7 +37,7 @@ content_outline:
   - Мова роману (архаїзація)
   - Пейзаж і його функція
   - Діалоги vs авторські описи
-- section: "Підсумок — Роман як історична філософія"
+- section: Підсумок — Роман як історична філософія
   words: 500
   points:
   - Погляд Куліша на "народ"
@@ -65,11 +64,11 @@ vocabulary_hints:
   - експозиція (exposition)
 activity_hints:
 - type: reading
-  focus: "Ключові епізоди \"Чорної ради\""
+  focus: Ключові епізоди "Чорної ради"
   source: UkrLib tid=263
   items: 5+
 - type: essay-response
-  focus: "Шрам vs Череваний — два погляди на Україну"
+  focus: Шрам vs Череваний — два погляди на Україну
   word_target: 300
   output: Компаративне есе
 focus: literature
@@ -84,16 +83,16 @@ grammar:
 - Literary Archetypes
 module_type: literature
 sources:
-- name: "Чорна рада — повний текст"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=263"
+- name: Чорна рада — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
   type: primary
   notes: Роман для детального аналізу
-- name: "Аналіз \"Чорної ради\""
-  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=263"
+- name: Аналіз "Чорної ради"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=263
   type: secondary
   notes: Літературознавчий аналіз
-- name: "Вальтер Скотт — вплив"
-  url: "https://uk.wikipedia.org/wiki/Вальтер_Скотт"
+- name: Вальтер Скотт — вплив
+  url: https://uk.wikipedia.org/wiki/Вальтер_Скотт
   type: reference
   notes: Літературний контекст
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
 objectives:
 - 'Analyze literary techniques in чорна рада: роман'
 - Interpret themes and motifs of перший український історичний роман
+persona:
+  voice: Senior Philologist & Critic
+  role: Cossack Chronicler

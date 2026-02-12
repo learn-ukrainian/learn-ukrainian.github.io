@@ -1,4 +1,3 @@
----
 module: b2-01
 level: B2
 sequence: 1
@@ -6,34 +5,34 @@ slug: 01-passive-voice-system
 version: '2.0'
 title: 'Пасивний стан: повна система'
 content_outline:
-- section: "Вступ — Що таке пасивний стан?"
+- section: Вступ — Що таке пасивний стан?
   words: 500
   points:
   - Різниця між активним і пасивним станом
   - Чому пасив важливий для офіційного та наукового стилю
   - Огляд чотирьох форм пасиву в українській мові
-- section: "Форма 1 — Дієприкметники на -ний/-тий"
+- section: Форма 1 — Дієприкметники на -ний/-тий
   words: 700
   points:
   - Утворення від дієслова (написати → написаний)
   - Узгодження з іменником (рід, число, відмінок)
   - Вживання з допоміжним дієсловом бути
   - Регістр — літературний, академічний, формальний
-- section: "Форма 2 — Безособові конструкції на -но/-то"
+- section: Форма 2 — Безособові конструкції на -но/-то
   words: 700
   points:
   - Утворення від дієприкметника (написаний → написано)
   - Об'єкт у знахідному відмінку (Книгу написано)
   - Відсутність агента — безособовість
   - Регістр — офіційно-діловий, юридичний, бюрократичний
-- section: "Форма 3 — Зворотний пасив із -ся"
+- section: Форма 3 — Зворотний пасив із -ся
   words: 600
   points:
   - Утворення (будуватися, писатися)
   - Акцент на процесі, а не на результаті
   - Можливість вираження агента (орудний відмінок)
   - Регістр — науковий, технічний, процедурний
-- section: "Форма 4 — Третя особа множини"
+- section: Форма 4 — Третя особа множини
   words: 600
   points:
   - Конструкція без явного підмета (Мені сказали)
@@ -108,19 +107,22 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Passive Voice
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official B2 passive voice requirements, all 4 forms
 - name: CEFR B2 Grammar Descriptors
-  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
   type: reference
   notes: B2 grammar complexity expectations
 - name: Сучасна українська мова - Пономарів
-  url: "https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович"
+  url: https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович
   type: secondary
   notes: Academic reference for passive voice usage and register
 immersion: 100% Ukrainian
-phase: "B2.1a [Passive Voice]"
+phase: B2.1a [Passive Voice]
 objectives:
 - 'Identify and correctly use пасивний стан: повна система'
 - Form and apply що таке пасивний стан?
+persona:
+  voice: Professional Language Coach
+  role: Laboratory Scientist (Лаборант)

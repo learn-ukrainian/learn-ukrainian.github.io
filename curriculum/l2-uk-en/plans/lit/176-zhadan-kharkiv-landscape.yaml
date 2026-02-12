@@ -1,4 +1,3 @@
----
 sequence: 176
 module: lit-176
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zhadan Kharkiv Landscape у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: City Defender

@@ -1,41 +1,28 @@
----
-# Module Plan: Chancery Formulae II
-# Track: RUTH
-# Module: 014
-# Source: Gemini Research (ISSUE-493)
-# Generated: 2026-02-04
 sequence: 16
 module: ruth-016
-
 module_number: 14
 slug: chancery-formulae-dating
-title_uk: "Канцелярські формули: Датування"
-title_en: "Chancery Formulae II"
-
+title_uk: 'Канцелярські формули: Датування'
+title_en: Chancery Formulae II
 phase: 1
 phase_id: chancery-legal
-phase_name: "Chancery & Legal"
-
-focus: 'Dating clauses — "Pisan u Vilni..."'
-
+phase_name: Chancery & Legal
+focus: Dating clauses — "Pisan u Vilni..."
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Chancery Formulae II"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: "[]"
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Chancery Formulae II
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Chronicler of Acts

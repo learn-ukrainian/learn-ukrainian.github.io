@@ -1,4 +1,3 @@
----
 module: b1-25
 level: B1
 sequence: 25
@@ -9,7 +8,7 @@ subtitle: 'Checkpoint: Motion Verbs'
 content_outline:
 - section: Огляд
   words: 106
-  points: "[]"
+  points: '[]'
 - section: 'Навичка 1: Пари дієслів руху'
   words: 310
   points:
@@ -137,12 +136,15 @@ grammar:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - Assessment
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official assessment criteria for B1 motion verbs
 - name: CEFR B1 Descriptors
-  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
   type: reference
   notes: Can-do statements for B1 movement description
 immersion: 100% Ukrainian
 phase: B1.2 Motion Verbs Checkpoint
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Transport Logistics Manager

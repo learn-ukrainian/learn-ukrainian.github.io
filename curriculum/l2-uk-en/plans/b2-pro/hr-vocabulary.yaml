@@ -1,4 +1,3 @@
----
 module: b2-pro-25
 level: B2-PRO
 sequence: 25
@@ -7,7 +6,7 @@ version: '2.0'
 title: HR-лексика
 subtitle: HR Vocabulary
 content_outline:
-- section: "Розминка — Кадрова справа по-українськи"
+- section: Розминка — Кадрова справа по-українськи
   words: 350
   points:
   - HR vs кадри — сучасна та радянська термінологія
@@ -38,7 +37,7 @@ content_outline:
   - Типовий опис вакансії з аналізом
   - Вимоги до кандидата та умови праці
   - Як читати між рядками
-- section: "Практика — HR-документи"
+- section: Практика — HR-документи
   words: 450
   points:
   - 'Завдання: Скласти резюме або проаналізувати вакансію'
@@ -64,7 +63,7 @@ vocabulary_hints:
   - скорочення штату (staff reduction)
 activity_hints:
 - type: document-analysis
-  focus: "Проаналізувати опис вакансії — визначити вимоги та обов'язки"
+  focus: Проаналізувати опис вакансії — визначити вимоги та обов'язки
   items: 1
 - type: writing-task
   focus: Скласти резюме на задану вакансію
@@ -98,3 +97,6 @@ grammar:
 - Прийменники у трудовому контексті (на посаду, з посади, за контрактом)
 register: офіційно-діловий
 phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: HR Business Partner

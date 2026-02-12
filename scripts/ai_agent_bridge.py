@@ -168,6 +168,78 @@ def _remove_pid_file(agent: str, task_id: str):
     pid_file.unlink(missing_ok=True)
 
 
+def broker_cleanup(max_age_hours: int = 24, dry_run: bool = False):
+    """Clean up stuck broker state: stale PIDs, ancient unacked messages, orphaned locks.
+
+    Args:
+        max_age_hours: Messages older than this that are still unacknowledged get force-acked.
+        dry_run: If True, report what would be cleaned but don't do it.
+    """
+    action = "Would clean" if dry_run else "Cleaning"
+    cleaned = 0
+
+    # 1. Clean stale PID files
+    if PID_DIR.exists():
+        for pid_file in PID_DIR.glob("*.json"):
+            try:
+                data = json.loads(pid_file.read_text())
+                pid = data.get("pid", 0)
+                try:
+                    os.kill(pid, 0)
+                    # Process alive — check age
+                    started = data.get("started", "")
+                    if started:
+                        start_time = datetime.fromisoformat(started)
+                        age_h = (datetime.now(timezone.utc) - start_time).total_seconds() / 3600
+                        if age_h > max_age_hours:
+                            print(f"  {action} stale PID: {pid_file.name} (alive but {age_h:.1f}h old)")
+                            if not dry_run:
+                                pid_file.unlink(missing_ok=True)
+                            cleaned += 1
+                except (ProcessLookupError, PermissionError):
+                    # Process dead
+                    print(f"  {action} dead PID: {pid_file.name} (process gone)")
+                    if not dry_run:
+                        pid_file.unlink(missing_ok=True)
+                    cleaned += 1
+            except Exception:
+                print(f"  {action} corrupt PID: {pid_file.name}")
+                if not dry_run:
+                    pid_file.unlink(missing_ok=True)
+                cleaned += 1
+
+    # 2. Force-ack ancient unacknowledged messages
+    if DB_PATH.exists():
+        db = sqlite3.connect(str(DB_PATH))
+        db.row_factory = sqlite3.Row
+        cutoff = datetime.now(timezone.utc).isoformat()
+        rows = db.execute(
+            "SELECT id, task_id, from_llm, to_llm, timestamp FROM messages WHERE acknowledged=0"
+        ).fetchall()
+        for row in rows:
+            try:
+                ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
+                age_h = (datetime.now(timezone.utc) - ts).total_seconds() / 3600
+                if age_h > max_age_hours:
+                    print(f"  {action} stuck msg #{row['id']}: {row['from_llm']}→{row['to_llm']} "
+                          f"task={row['task_id']} ({age_h:.1f}h old)")
+                    if not dry_run:
+                        db.execute("UPDATE messages SET acknowledged=1 WHERE id=?", (row["id"],))
+                    cleaned += 1
+            except (ValueError, TypeError):
+                pass
+        if not dry_run:
+            db.commit()
+        db.close()
+
+    # 3. Summary
+    mode = " (DRY RUN)" if dry_run else ""
+    if cleaned == 0:
+        print(f"✅ Broker is clean — nothing to do{mode}")
+    else:
+        print(f"\n🧹 {cleaned} items cleaned{mode}")
+
+
 def bridge_status():
     """Show status of all running bridge processes."""
     if not PID_DIR.exists():
@@ -470,9 +542,19 @@ def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data:
     return msg_id
 
 
+def detect_sender() -> str:
+    """Detect if the current process is running as Gemini or Claude."""
+    # Check for Gemini environment markers
+    if (os.environ.get("GEMINI_SESSION") or 
+        os.environ.get("GOOGLE_API_KEY") or 
+        Path(".gemini").exists()):
+        return "gemini"
+    return "claude"
+
+
 def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, from_model: str = None, to_model: str = None):
-    """Send a message from Claude to Gemini."""
-    return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
+    """Send a message to Gemini with auto-detected sender."""
+    return send_message(content, task_id, msg_type, data, from_llm=detect_sender(), to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
 def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None):
@@ -1422,6 +1504,11 @@ def main():
     proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                         help="Force new sessions for each message")
 
+    # cleanup
+    cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state (stale PIDs, ancient messages)")
+    cleanup_parser.add_argument("--max-age", type=int, default=24, help="Force-ack messages older than N hours (default: 24)")
+    cleanup_parser.add_argument("--dry-run", action="store_true", help="Report what would be cleaned without doing it")
+
     # status
     subparsers.add_parser("status", help="Show running bridge processes")
 
@@ -1463,6 +1550,8 @@ def main():
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
         process_all_claude(args.new_session)
+    elif args.command == "cleanup":
+        broker_cleanup(args.max_age, args.dry_run)
     elif args.command == "status":
         bridge_status()
     elif args.command == "interactive":

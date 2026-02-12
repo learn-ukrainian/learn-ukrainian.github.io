@@ -1,4 +1,3 @@
----
 sequence: 138
 module: lit-138
 level: LIT
@@ -82,3 +81,6 @@ objectives:
   епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Historical Judge

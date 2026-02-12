@@ -25,3 +25,6 @@ activity_types:
 - grammar-identify
 - grammar-lab
 - paleography-analysis
+persona:
+  voice: Baroque Scholar
+  role: Manuscript Decipherer

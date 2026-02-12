@@ -1,4 +1,3 @@
----
 sequence: 101
 module: lit-101
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kulish Pathetique у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Musical Dramatist

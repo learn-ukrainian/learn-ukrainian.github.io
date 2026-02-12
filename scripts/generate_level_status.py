@@ -18,6 +18,10 @@ import yaml
 from pathlib import Path
 from datetime import datetime
 
+# Ensure scripts/ is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from audit.status_cache import read_status, get_source_paths
+
 # Project root
 ROOT = Path(__file__).parent.parent
 
@@ -52,73 +56,44 @@ def find_md_file(level: str, slug: str) -> Path | None:
     slug_only = level_dir / f"{slug}.md"
     if slug_only.exists():
         return slug_only
-    numbered = list(level_dir.glob(f"*-{slug}.md"))
-    if numbered:
-        return numbered[0]
-    matches = list(level_dir.glob(f"*{slug}*.md"))
-    if matches:
-        return matches[0]
     return None
 
 
 def get_json_cache(level: str, slug: str, md_file: Path) -> dict | None:
-    """Read audit result from JSON cache if it exists and is fresh."""
+    """Read audit result from JSON cache if it exists and is fresh.
+
+    Uses the shared status cache layer (scripts/audit/status_cache.py) for
+    freshness detection via relative mtime comparison (#561).
+    """
     status_dir = md_file.parent / "status"
     cache_file = status_dir / f"{slug}.json"
-    
-    if not cache_file.exists():
-        return None
-        
+
+    # Build source paths for freshness check
+    track_dir = md_file.parent
+    source_paths = get_source_paths(track_dir, md_file.stem)
+
+    result = read_status(cache_file, source_paths=source_paths)
+    if result is None or not result.is_fresh:
+        return None  # Missing or stale
+
     try:
-        with cache_file.open('r', encoding='utf-8') as f:
-            cache = json.load(f)
-            
-        # Check freshness: md mtime vs last_audit
-        md_mtime = md_file.stat().st_mtime
-        last_audit_str = cache.get('last_audit', '1970-01-01T00:00:00Z').replace('Z', '')
-        if '.' in last_audit_str:
-            last_audit_dt = datetime.fromisoformat(last_audit_str)
-        else:
-            last_audit_dt = datetime.strptime(last_audit_str, '%Y-%m-%dT%H:%M:%S')
-            
-        if last_audit_dt.timestamp() < md_mtime:
-            return None # Stale
-
-        # Check other source files for staleness
-        audit_ts = last_audit_dt.timestamp()
-        slug_stem = md_file.stem
-        for subdir in ('meta', 'activities', 'vocabulary'):
-            source_file = md_file.parent / subdir / f"{slug_stem}.yaml"
-            if source_file.exists() and source_file.stat().st_mtime > audit_ts:
-                return None  # Stale
-
-        # Check plan file staleness (plans/{track_dir}/{slug}.yaml)
-        track_dir_name = md_file.parent.name
-        plan_file = md_file.parent.parent / 'plans' / track_dir_name / f"{slug_stem}.yaml"
-        if not plan_file.exists():
-            # Try bare slug (strip numeric prefix)
-            bare = re.sub(r'^\d+-', '', slug_stem)
-            plan_file = md_file.parent.parent / 'plans' / track_dir_name / f"{bare}.yaml"
-        if plan_file.exists() and plan_file.stat().st_mtime > audit_ts:
-            return None  # Stale
-
         # Map cache to status format
-        overall = cache.get('overall', {})
-        gates = cache.get('gates', {})
-        
+        overall = result.data.get('overall', {})
+        gates = result.gates
+
         status = "✅ PASS" if overall.get('status') == 'pass' else "❌ FAIL"
-        
+
         # Word counts
         lesson_msg = gates.get('lesson', {}).get('message', '')
         word_match = re.search(r'(\d+)/(\d+)', lesson_msg)
         actual_words = int(word_match.group(1)) if word_match else 0
         target_words = int(word_match.group(2)) if word_match else 0
-        
+
         if actual_words < 100:
             status = "📝 STUB"
-            
+
         issues = overall.get('blocking_issues', [])
-        
+
         return {
             "status": status,
             "actual_words": actual_words,

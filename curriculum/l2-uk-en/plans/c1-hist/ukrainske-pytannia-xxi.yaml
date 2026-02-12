@@ -1,4 +1,3 @@
----
 module: c1-hist-134
 level: c1-hist
 sequence: 134
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of українське питання xxi століття
 - Evaluate the historical significance of українське питання
 content_outline:
-- section: "Вступ — Українське питання"
+- section: Вступ — Українське питання
   words: 515
   subsections:
   - «Українське питання» — історичний термін
@@ -79,11 +78,11 @@ activities:
   focus: Чи 'українське питання' вирішене?
 sources:
 - name: Україна у XXI столітті (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історія_України#XXI_століття"
+  url: https://uk.wikipedia.org/wiki/Історія_України#XXI_століття
   type: reference
   notes: 21st century Ukraine
 - name: Російсько-українська війна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російсько-українська_війна"
+  url: https://uk.wikipedia.org/wiki/Російсько-українська_війна
   type: reference
   notes: Current war
 vocabulary_hints:
@@ -106,3 +105,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Contemporary Ukraine Analyst

@@ -79,3 +79,6 @@ grammar:
 - Understanding medical advice
 register: розмовний
 phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Emergency Dispatcher

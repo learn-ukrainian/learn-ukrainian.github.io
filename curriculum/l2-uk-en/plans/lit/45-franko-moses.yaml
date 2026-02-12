@@ -1,4 +1,3 @@
----
 sequence: 45
 module: lit-45
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір «Мойсей»: Філософська поема про пророка у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: People's Leader

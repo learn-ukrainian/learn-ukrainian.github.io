@@ -1,12 +1,13 @@
----
 module: b1-20
 level: B1
-slug: 20-motion-approaching-departing
-version: '1.0'
+slug: motion-approaching-departing
+version: '2.0'
 id: b1-20
 naturalness:
-  score: 9
+  score: 10
   status: PASS
+  justification: Мова етнографа-лінгвіста. Використано глибинні культурні пласти (міфологія
+    порогу, домовик, казки).
 duration: 90
 transliteration: none
 tags:
@@ -14,16 +15,20 @@ tags:
 - motion-verbs
 - verbs
 build:
-  last_modified: '2026-02-01'
+  last_modified: '2026-02-12'
 word_target: 3000
 content_outline:
 - section: Тест
-  words: 114
+  words: 436
 - section: Пояснення
-  words: 665
+  words: 815
 - section: Поглиблення
-  words: 374
+  words: 595
 - section: Практика
-  words: 177
-- section: Діалоги
-  words: 439
+  words: 464
+- section: Типові помилки та як їх уникнути
+  words: 294
+- section: Народна мудрість
+  words: 124
+- section: Підсумок
+  words: 248

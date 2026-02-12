@@ -1,4 +1,3 @@
----
 module: b2-hist-054
 level: B2-HIST
 sequence: 54
@@ -85,12 +84,15 @@ grammar:
 - Conditional sentences in negotiations
 sources:
 - name: History of Ukraine-Rus
-  url: "http://litopys.org.ua/hrushrus/iur.htm"
+  url: http://litopys.org.ua/hrushrus/iur.htm
   type: reference
   notes: Detailed analysis of treaties
 - name: Diplomacy of Bohdan Khmelnytsky
-  url: "https://history.org.ua"
+  url: https://history.org.ua
   type: reference
   notes: International context
 register: публіцистичний
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: Treaty Negotiator

@@ -1,4 +1,3 @@
----
 module: c1-hist-128
 level: c1-hist
 sequence: 128
@@ -10,14 +9,14 @@ objectives:
 - Analyze the causes and consequences of гранітна революція 1990
 - Evaluate the historical significance of забута революція
 content_outline:
-- section: "Вступ — Забута революція"
+- section: Вступ — Забута революція
   words: 515
   subsections:
   - Жовтень 1990 — студенти
   - Перша українська революція
   - Чому забули
   - Структура модуля
-- section: "Контекст — 1990 рік"
+- section: Контекст — 1990 рік
   words: 774
   subsections:
   - СРСР ще існує
@@ -70,22 +69,22 @@ vocabulary:
 - ненасильницький спротив
 activities:
 - type: critical-analysis
-  focus: "October 1990 — day-by-day reconstruction"
+  focus: October 1990 — day-by-day reconstruction
 - type: critical-analysis
-  focus: "Five demands — what they meant"
+  focus: Five demands — what they meant
 - type: comparative-study
-  focus: "Who were the students — where are they now"
+  focus: Who were the students — where are they now
 - type: critical-analysis
-  focus: "Granite → Orange → Dignity — continuity"
+  focus: Granite → Orange → Dignity — continuity
 - type: essay-response
   focus: Чому Гранітну революцію забули?
 sources:
 - name: Революція на граніті (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Революція_на_граніті"
+  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
   type: reference
   notes: Granite Revolution
 - name: Студентське голодування 1990 (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Студентське_голодування_1990"
+  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
   type: reference
   notes: Student hunger strike
 vocabulary_hints:
@@ -108,3 +107,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Student Movement Historian

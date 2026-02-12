@@ -1,4 +1,3 @@
----
 module: b2-hist-100
 level: B2-HIST
 sequence: 100
@@ -92,4 +91,7 @@ grammar:
 - Політична та ідеологічна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.10 [Soviet Terror]"
+phase: HIST.10 [Soviet Terror]
+persona:
+  voice: Senior Professor of History
+  role: Political Analyst

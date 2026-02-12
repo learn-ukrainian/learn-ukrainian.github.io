@@ -1,4 +1,3 @@
----
 module: c1-bio-140
 level: C1-BIO
 sequence: 140
@@ -6,7 +5,7 @@ slug: leonid-kadenyuk
 version: '2.0'
 title: 'Леонід Каденюк: Перший космонавт незалежної України'
 content_outline:
-- section: "Вступ — Український прапор у космосі"
+- section: Вступ — Український прапор у космосі
   words: 400
   points:
   - Перший космонавт незалежної України
@@ -40,7 +39,7 @@ content_outline:
   - Громадська та політична діяльність
   - Популяризація космонавтики
   - Смерть у 2018 році
-- section: "Спадщина — Зірка України"
+- section: Спадщина — Зірка України
   words: 700
   points:
   - Значення для української космічної програми
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Леонід Каденюк (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович"
+  url: https://uk.wikipedia.org/wiki/Каденюк_Леонід_Костянтинович
   type: primary
   notes: Biography of Ukraine's first astronaut
 - name: NASA - STS-87
-  url: "https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html"
+  url: https://www.nasa.gov/mission_pages/shuttle/shuttlemissions/archives/sts-87.html
   type: reference
   notes: Mission information
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of леонід каденюк: перший космонавт незалежної україни'
 - Evaluate the contributions of український прапор у космосі
 - Trace the career and influence of зірка україни
+persona:
+  voice: Senior Biographer
+  role: Mission Specialist

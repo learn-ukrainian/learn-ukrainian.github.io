@@ -1,4 +1,3 @@
----
 module: c1-bio-067
 level: C1-BIO
 sequence: 67
@@ -6,7 +5,7 @@ slug: yevhen-paton
 version: '2.0'
 title: 'Євген Патон: Батько українського мостобудування'
 content_outline:
-- section: "Вступ — Інженер, який з'єднав береги"
+- section: Вступ — Інженер, який з'єднав береги
   words: 457
   points:
   - Патон як засновник української школи зварювання
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Патон (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович"
+  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
   type: primary
   notes: Biography, engineering achievements, institute
 - name: Інститут електрозварювання
-  url: "https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона"
+  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
   type: reference
   notes: Institute he founded
 - name: Міст Патона
-  url: "https://uk.wikipedia.org/wiki/Міст_Патона"
+  url: https://uk.wikipedia.org/wiki/Міст_Патона
   type: reference
   notes: Kyiv bridge named after him
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of євген патон: батько українського мостобудування'
 - Evaluate the contributions of інженер, який з'єднав береги
 - Trace the career and influence of спадщина двох поколінь
+persona:
+  voice: Senior Biographer
+  role: Bridge Engineer

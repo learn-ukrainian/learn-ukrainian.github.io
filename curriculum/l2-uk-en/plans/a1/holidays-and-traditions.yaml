@@ -92,3 +92,6 @@ grammar:
 - Wish expressions (Бажаю + Genitive)
 register: розмовний
 phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Folklore Keeper from Pyrohiv

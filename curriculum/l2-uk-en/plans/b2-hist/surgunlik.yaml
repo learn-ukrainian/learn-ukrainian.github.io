@@ -1,4 +1,3 @@
----
 module: b2-hist-111
 level: B2-HIST
 sequence: 111
@@ -113,4 +112,7 @@ grammar:
 - Лексика репресій та депортацій
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.11 [Post-War Soviet Ukraine]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Elder Witness

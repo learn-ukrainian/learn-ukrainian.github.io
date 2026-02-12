@@ -1,4 +1,3 @@
----
 sequence: 7
 module: oes-007
 module_number: 7
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Grammarian

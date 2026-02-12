@@ -1,4 +1,3 @@
----
 sequence: 15
 module: lit-15
 level: LIT
@@ -7,7 +6,7 @@ version: '2.0'
 title: Заповіт
 subtitle: The Testament
 content_outline:
-- section: "Вступ — Найвідоміший вірш України"
+- section: Вступ — Найвідоміший вірш України
   words: 625
   points:
   - Історія написання (1845)
@@ -37,7 +36,7 @@ content_outline:
   - '"Заповіт" у радянській ідеології'
   - '"Заповіт" у діаспорі'
   - Сучасне прочитання
-- section: "Підсумок — Текст як нація"
+- section: Підсумок — Текст як нація
   words: 500
   points:
   - Чому цей вірш став символом
@@ -64,7 +63,7 @@ vocabulary_hints:
   - сім'я (family)
 activity_hints:
 - type: reading
-  focus: "Повний текст \"Заповіту\" з граматичним розбором"
+  focus: Повний текст "Заповіту" з граматичним розбором
   source: UkrLib tid=2
   items: '1'
 - type: essay-response
@@ -90,13 +89,16 @@ grammar:
 - Conditional Sentences
 module_type: literature
 sources:
-- name: "Заповіт — повний текст"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=2"
+- name: Заповіт — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=2
   type: primary
   notes: Вірш для детального аналізу
-- name: "Аналіз \"Заповіту\""
-  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=2"
+- name: Аналіз "Заповіту"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
   type: secondary
   notes: Літературознавчий аналіз
 immersion: 100% Ukrainian
 phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: National Prophet

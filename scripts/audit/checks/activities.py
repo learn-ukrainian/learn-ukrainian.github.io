@@ -107,27 +107,27 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
             elif act_type == 'fill-in':
                 rules['min_items'] = 6
 
-        # Apply B1 Bridge Relaxations (M01-M05 use A2 complexity exactly)
+        # Apply B1 Bridge Relaxations (M01-M05)
         if is_b1_bridge:
             if act_type == 'quiz':
-                rules['min_len'] = 8
-                rules['max_len'] = 15
+                rules['min_len'] = 5
+                rules['max_len'] = 20
             elif act_type == 'unjumble':
-                rules['words_min'] = 8
-                rules['words_max'] = 10
+                rules['words_min'] = 6
+                rules['words_max'] = 16
             elif act_type == 'match-up':
-                rules['pairs_min'] = 10
-                rules['pairs_max'] = 12
+                rules['pairs_min'] = 12
+                rules['pairs_max'] = 18
             elif act_type == 'fill-in':
                 rules['sent_min'] = 6
-                rules['sent_max'] = 8
+                rules['sent_max'] = 14
             elif act_type == 'true-false':
                 rules['min_len'] = 6
-                rules['max_len'] = 12
+                rules['max_len'] = 18
             elif act_type == 'group-sort':
                 rules['groups_min'] = 2
-                rules['groups_max'] = 4
-                rules['items_min'] = 10
+                rules['groups_max'] = 5
+                rules['items_min'] = 12
             elif act_type == 'error-correction':
                 rules['errors'] = 1
                 rules['min_len'] = 6

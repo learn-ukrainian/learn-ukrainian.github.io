@@ -1,4 +1,3 @@
----
 module: c1-bio-118
 level: C1-BIO
 sequence: 118
@@ -6,7 +5,7 @@ slug: serhiy-korolyov
 version: '2.0'
 title: 'Сергій Корольов: Батько космічної ери'
 content_outline:
-- section: "Вступ — Українець, який відкрив космос"
+- section: Вступ — Українець, який відкрив космос
   words: 444
   points:
   - Корольов як творець радянської космічної програми
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Сергій Корольов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович"
+  url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
   type: primary
   notes: Biography, space achievements, Ukrainian origins
 - name: Музей космонавтики Корольова в Житомирі
-  url: "https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова"
+  url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
   type: reference
   notes: Museum in his birthplace
 - name: ГУЛАГ
-  url: "https://uk.wikipedia.org/wiki/ГУЛАГ"
+  url: https://uk.wikipedia.org/wiki/ГУЛАГ
   type: reference
   notes: His imprisonment
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of сергій корольов: батько космічної ери'
 - Evaluate the contributions of українець, який відкрив космос
 - Trace the career and influence of спадщина та повернення в україну
+persona:
+  voice: Senior Biographer
+  role: Chief Constructor

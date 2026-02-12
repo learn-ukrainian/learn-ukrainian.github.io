@@ -1,4 +1,3 @@
----
 sequence: 62
 module: lit-62
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Stefanyk Blue Book у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Tragedy Witness

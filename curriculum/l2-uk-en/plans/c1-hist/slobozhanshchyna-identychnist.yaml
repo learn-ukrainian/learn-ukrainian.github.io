@@ -1,4 +1,3 @@
----
 module: c1-hist-076
 level: c1-hist
 sequence: 76
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
 - Evaluate the historical significance of вільні землі
 content_outline:
-- section: "Вступ — «Слободи» — вільні землі"
+- section: Вступ — «Слободи» — вільні землі
   words: 457
   subsections:
   - Слобожанщина — де це
@@ -31,7 +30,7 @@ content_outline:
   - Відмінності від Запорожжя
   - Служба Росії
   - Скасування — 1765
-- section: "Харків — культурний центр"
+- section: Харків — культурний центр
   words: 800
   subsections:
   - Заснування — 1654
@@ -80,24 +79,24 @@ activities:
 - type: critical-analysis
   focus: Who settled Slobozhanshchyna and why
 - type: critical-analysis
-  focus: "Kharkiv as Ukrainian cultural center — key figures"
+  focus: Kharkiv as Ukrainian cultural center — key figures
 - type: comparative-study
   focus: Slobozhanshchyna vs. Zaporozhian Cossacks
 - type: critical-analysis
-  focus: "Kharkiv 2022 — Ukrainian identity under siege"
+  focus: Kharkiv 2022 — Ukrainian identity under siege
 - type: essay-response
   focus: Чому Харків став культурною столицею України у XIX ст.?
 sources:
 - name: Слобідська Україна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Слобідська_Україна"
+  url: https://uk.wikipedia.org/wiki/Слобідська_Україна
   type: reference
   notes: Regional overview
 - name: Слобідські козацькі полки (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки"
+  url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
   type: reference
   notes: Cossack regiments
 - name: Харків (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Харків"
+  url: https://uk.wikipedia.org/wiki/Харків
   type: reference
   notes: City history
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Frontier Identity Scholar

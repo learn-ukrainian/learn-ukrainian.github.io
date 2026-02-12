@@ -1,4 +1,3 @@
----
 module: c1-bio-129
 level: C1-BIO
 sequence: 129
@@ -6,7 +5,7 @@ slug: levko-lukyanenko
 version: '2.0'
 title: 'Левко Лук''яненко: Автор Акту незалежності'
 content_outline:
-- section: "Вступ — Людина, що написала свободу"
+- section: Вступ — Людина, що написала свободу
   words: 400
   points:
   - Левко Лук'яненко — автор тексту Акту незалежності України
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Левко Лук'яненко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Левко_Лук%27яненко"
+  url: https://uk.wikipedia.org/wiki/Левко_Лук%27яненко
   type: primary
   notes: Біографія, дисидентська діяльність, роль у незалежності
 - name: Українська Гельсінська спілка
-  url: "https://uk.wikipedia.org/wiki/Українська_Гельсінська_спілка"
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_спілка
   type: reference
   notes: Правозахисний рух та роль Лук'яненка
 - name: Акт проголошення незалежності України
-  url: "https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України"
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
   type: reference
   notes: Історичний контекст та авторство
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of левко лук''яненко: автор акту незалежності'
 - Evaluate the contributions of людина, що написала свободу
 - Trace the career and influence of державна діяльність та спадщина (1991-2018)
+persona:
+  voice: Senior Biographer
+  role: Legal Draftsman

@@ -1,4 +1,3 @@
----
 module: c1-009
 level: C1
 sequence: 9
@@ -6,7 +5,7 @@ slug: 09-thesis-development
 version: '2.0'
 title: Розвиток наукової тези
 content_outline:
-- section: "Вступ — Що таке теза?"
+- section: Вступ — Що таке теза?
   words: 400
   points:
   - Визначення наукової тези
@@ -97,11 +96,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Academic Argumentation in Ukrainian
-  url: "https://mova.info/"
+  url: https://mova.info/
   type: reference
   notes: Thesis formulation standards
 - name: Логіка наукового дослідження
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: secondary
   notes: Research logic and hypothesis development
 immersion: 100% Ukrainian
@@ -110,3 +109,6 @@ objectives:
 - Identify and correctly use розвиток наукової тези
 - Form and apply що таке теза?
 - Distinguish between практика формулювання
+persona:
+  voice: Senior Specialist
+  role: Науковий керівник

@@ -1,4 +1,3 @@
----
 sequence: 65
 module: lit-65
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір «Тіні забутих предків»: Гуцульський міф у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Hutsul Mystic

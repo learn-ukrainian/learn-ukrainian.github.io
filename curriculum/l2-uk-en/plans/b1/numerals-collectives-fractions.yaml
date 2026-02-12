@@ -1,4 +1,3 @@
----
 module: b1-49
 level: B1
 sequence: 49
@@ -81,4 +80,7 @@ grammar:
 - Дробові числівники (половина, третина, чверть)
 - Вживання збірних з різними типами іменників
 register: розмовний
-phase: "B1.4b [Word Formation]"
+phase: B1.4b [Word Formation]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Accountant

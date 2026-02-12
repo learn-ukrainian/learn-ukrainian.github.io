@@ -1,4 +1,3 @@
----
 module: c1-bio-146
 level: C1-BIO
 sequence: 146
@@ -6,7 +5,7 @@ slug: mariya-matios
 version: '2.0'
 title: 'Марія Матіос: Буковинський голос'
 content_outline:
-- section: "Вступ — Голос гірського краю"
+- section: Вступ — Голос гірського краю
   words: 400
   points:
   - Марія Матіос — найвідоміша буковинська письменниця сучасності
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Матіос (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Марія_Матіос"
+  url: https://uk.wikipedia.org/wiki/Марія_Матіос
   type: primary
   notes: Біографія, творчість, громадська позиція
 - name: Солодка Даруся
-  url: "https://uk.wikipedia.org/wiki/Солодка_Даруся"
+  url: https://uk.wikipedia.org/wiki/Солодка_Даруся
   type: reference
   notes: Найвідоміший роман письменниці
 - name: Буковина
-  url: "https://uk.wikipedia.org/wiki/Буковина"
+  url: https://uk.wikipedia.org/wiki/Буковина
   type: reference
   notes: Регіональний контекст творчості
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of марія матіос: буковинський голос'
 - Evaluate the contributions of голос гірського краю
 - Trace the career and influence of поетика та мова
+persona:
+  voice: Senior Biographer
+  role: Family Chronicler

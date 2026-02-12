@@ -1,4 +1,3 @@
----
 module: c1-bio-081
 level: C1-BIO
 sequence: 81
@@ -6,7 +5,7 @@ slug: viacheslav-lypynskyi
 version: '2.0'
 title: 'В''ячеслав Липинський: Консерватор-державник'
 content_outline:
-- section: "Вступ — Український консерватизм як ідея"
+- section: Вступ — Український консерватизм як ідея
   words: 400
   points:
   - Липинський як найоригінальніший український мислитель XX ст.
@@ -42,7 +41,7 @@ content_outline:
   - Життя в Австрії та Чехословаччині
   - Важка хвороба (туберкульоз)
   - Смерть та інтелектуальна спадщина
-- section: "Дискусія — Консерватизм vs народництво"
+- section: Дискусія — Консерватизм vs народництво
   words: 200
   points:
   - Два шляхи українського державотворення
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: В'ячеслав Липинський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович"
+  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
   type: primary
   notes: Основна біографічна інформація
 - name: Інститут В'ячеслава Липинського
-  url: "https://lipynsky.org/"
+  url: https://lipynsky.org/
   type: reference
   notes: Наукова спадщина та дослідження
 - name: Твори Липинського
-  url: "https://diasporiana.org.ua/"
+  url: https://diasporiana.org.ua/
   type: reference
   notes: Повні тексти праць
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
 - Evaluate the contributions of український консерватизм як ідея
 - Trace the career and influence of консерватизм vs народництво
+persona:
+  voice: Senior Biographer
+  role: Monarchist Philosopher

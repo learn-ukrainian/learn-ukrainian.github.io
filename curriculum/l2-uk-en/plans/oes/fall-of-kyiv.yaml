@@ -1,4 +1,3 @@
----
 sequence: 48
 module: oes-048
 module_number: 48
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Defender of the Tithe Church

@@ -1,4 +1,3 @@
----
 sequence: 41
 module: oes-041
 module_number: 33
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Dynastic Analyst

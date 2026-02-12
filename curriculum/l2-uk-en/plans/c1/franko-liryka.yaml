@@ -1,4 +1,3 @@
----
 module: c1-097
 level: C1
 sequence: 97
@@ -7,13 +6,13 @@ version: '2.0'
 title: 'Франко: Громадянська та філософська лірика'
 subtitle: Franko's Civic and Philosophical Lyric
 content_outline:
-- section: "Розминка — Каменяр української поезії"
+- section: Розминка — Каменяр української поезії
   words: 700
   points:
   - '"Каменярі" — революційний дух та образи праці'
   - '"Зів''яле листя" — трагічне кохання'
   - '"Мойсей" — філософська поема про вождя та народ'
-- section: "Content Areas"
+- section: Content Areas
   words: 1250
   points:
   - 'Каменярі: revolutionary spirit and labor imagery'
@@ -21,10 +20,10 @@ content_outline:
   - 'Мойсей: philosophical poem analysis'
   - 'Вічний революціонер: anthem of progress'
   - Scientific realism in poetry
-- section: "Практика — поезія Франка"
+- section: Практика — поезія Франка
   words: 1050
   points:
-  - 'Проаналізувати "Каменярі" — алегорія та революційний пафос'
+  - Проаналізувати "Каменярі" — алегорія та революційний пафос
   - Порівняти ліричну драму "Зів'яле листя" з Шевченком
   - Написати есе про філософські теми "Мойсея"
   - Обговорити науковий реалізм у поезії Франка
@@ -40,3 +39,6 @@ grammar:
 - Literary syntax
 - Rhetorical figures
 phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Філософ

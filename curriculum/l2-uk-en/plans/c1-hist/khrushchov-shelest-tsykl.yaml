@@ -1,44 +1,43 @@
----
 module: c1-hist-086
 level: c1-hist
 sequence: 86
 version: '1.0'
-title: "Хрущов — Шелест — Щербицький"
+title: Хрущов — Шелест — Щербицький
 focus: history
 pedagogy: seminar
 objectives:
 - Analyze the causes and consequences of хрущов — шелест — щербицький
 - Evaluate the historical significance of ще один цикл
 content_outline:
-- section: "Вступ — Ще один цикл"
+- section: Вступ — Ще один цикл
   words: 457
   subsections:
   - Після Сталіна — надія
   - Хрущовська відлига
   - Шелест — «свій» у владі
   - Структура модуля
-- section: "Фаза 1 — Відлига (1953-1964)"
+- section: Фаза 1 — Відлига (1953-1964)
   words: 800
   subsections:
   - Десталінізація
   - Реабілітації — частково
   - Шістдесятники
   - Культурне пожвавлення
-- section: "Фаза 2 — Шелест при владі (1963-1972)"
+- section: Фаза 2 — Шелест при владі (1963-1972)
   words: 686
   subsections:
   - Перший секретар України
   - Захист української мови
   - «Україна наша радянська»
   - Конфлікт з Москвою
-- section: "Фаза 3 — Знищення відлиги"
+- section: Фаза 3 — Знищення відлиги
   words: 686
   subsections:
   - 1972 — арешти шістдесятників
   - Шелеста знято
   - «Націоналізм» — звинувачення
   - Щербицький — русифікатор
-- section: "Фаза 4 — 17 років русифікації"
+- section: Фаза 4 — 17 років русифікації
   words: 571
   subsections:
   - Щербицький — 1972-1989
@@ -78,24 +77,24 @@ activities:
 - type: critical-analysis
   focus: Map Shelest's career through co-optation cycle
 - type: comparative-study
-  focus: "1920s vs. 1960s — same trap different packaging"
+  focus: 1920s vs. 1960s — same trap different packaging
 - type: critical-analysis
-  focus: "Shcherbytsky's Russification — methods and results"
+  focus: Shcherbytsky's Russification — methods and results
 - type: essay-response
   focus: What if Shelest stayed in power?
 - type: essay-response
   focus: Чому Шелеста усунули, а Щербицького ні?
 sources:
 - name: Петро Шелест (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Петро_Шелест"
+  url: https://uk.wikipedia.org/wiki/Петро_Шелест
   type: reference
   notes: Ukrainian leader
 - name: Володимир Щербицький (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Володимир_Щербицький"
+  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
   type: reference
   notes: Successor
 - name: Десталінізація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Десталінізація"
+  url: https://uk.wikipedia.org/wiki/Десталінізація
   type: reference
   notes: Thaw period
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Sovietologist

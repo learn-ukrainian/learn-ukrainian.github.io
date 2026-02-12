@@ -1,4 +1,3 @@
----
 module: c1-bio-152
 level: C1-BIO
 sequence: 152
@@ -6,7 +5,7 @@ slug: tamara-horikha-zernya
 version: '2.0'
 title: 'Тамара Горіха Зерня: Голос опору'
 content_outline:
-- section: "Вступ — Коли війна стає літературою"
+- section: Вступ — Коли війна стає літературою
   words: 400
   points:
   - Феномен роману Доця як літературного документа
@@ -42,7 +41,7 @@ content_outline:
   - Нові проекти після Доці
   - Громадська позиція
   - Вплив на українську літературу війни
-- section: "Дискусія — Література як документ епохи"
+- section: Дискусія — Література як документ епохи
   words: 200
   points:
   - Як волонтерський досвід формує нову літературу
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Тамара Горіха Зерня (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Горіха_Зерня_Тамара"
+  url: https://uk.wikipedia.org/wiki/Горіха_Зерня_Тамара
   type: primary
   notes: Основна біографічна інформація
 - name: Інтервью та публікації
-  url: "https://chytomo.com/"
+  url: https://chytomo.com/
   type: reference
   notes: Інтервю про волонтерство та творчість
 - name: Видавництво Клуб сімейного дозвілля
-  url: "https://www.bookclub.ua/"
+  url: https://www.bookclub.ua/
   type: reference
   notes: Інформація про публікації
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of тамара горіха зерня: голос опору'
 - Evaluate the contributions of коли війна стає літературою
 - Trace the career and influence of література як документ епохи
+persona:
+  voice: Senior Biographer
+  role: Frontline Volunteer

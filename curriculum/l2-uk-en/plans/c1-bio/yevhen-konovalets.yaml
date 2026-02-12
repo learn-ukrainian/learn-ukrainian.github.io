@@ -1,4 +1,3 @@
----
 module: c1-bio-093
 level: C1-BIO
 sequence: 93
@@ -6,7 +5,7 @@ slug: yevhen-konovalets
 version: '2.0'
 title: 'Євген Коновалець: Полковник і організатор'
 content_outline:
-- section: "Вступ — Архітектор національного руху"
+- section: Вступ — Архітектор національного руху
   words: 457
   points:
   - Коновалець як творець організованого опору
@@ -87,19 +86,19 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Коновалець (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович"
+  url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
   type: primary
   notes: Military career, OUN leadership, assassination
 - name: Січові Стрільці
-  url: "https://uk.wikipedia.org/wiki/Січові_стрільці"
+  url: https://uk.wikipedia.org/wiki/Січові_стрільці
   type: reference
   notes: Military formation he led
 - name: Організація українських націоналістів
-  url: "https://uk.wikipedia.org/wiki/Організація_українських_націоналістів"
+  url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
   type: reference
   notes: Organization he founded
 - name: СЗР України - Коновалець
-  url: "https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets"
+  url: https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
   type: reference
   notes: Intelligence service historical page
 immersion: 100% Ukrainian
@@ -108,3 +107,6 @@ objectives:
 - 'Analyze the life and legacy of євген коновалець: полковник і організатор'
 - Evaluate the contributions of архітектор національного руху
 - Trace the career and influence of вбивство та спадщина
+persona:
+  voice: Senior Biographer
+  role: Underground Commander

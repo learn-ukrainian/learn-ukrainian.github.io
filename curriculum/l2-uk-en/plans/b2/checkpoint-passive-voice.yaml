@@ -1,39 +1,38 @@
----
 module: b2-10
 level: B2
 sequence: 10
 slug: 10-checkpoint-passive-voice
 version: '2.0'
-title: "Контрольний модуль B2.1a — Система пасивного стану"
+title: Контрольний модуль B2.1a — Система пасивного стану
 content_outline:
-- section: "Вступ — Що ми вивчили"
+- section: Вступ — Що ми вивчили
   words: 318
   points:
   - Огляд модулів 01-09
   - Структура контрольного модуля
   - Критерії оцінювання
-- section: "Огляд — Чотири форми пасиву"
+- section: Огляд — Чотири форми пасиву
   words: 530
   points:
   - Дієприкметники на -ний/-тий
   - Безособові конструкції -но/-то
   - Зворотний пасив -ся
   - Третя особа множини
-- section: "Огляд — Вибір форми за регістром"
+- section: Огляд — Вибір форми за регістром
   words: 530
   points:
   - Юридичний контекст → -но/-то
   - Науковий контекст → -ся
   - Літературний контекст → -ний/-тий
   - Розмовний контекст → 3-я особа множини
-- section: "Огляд — Активні дієприкметники"
+- section: Огляд — Активні дієприкметники
   words: 530
   points:
   - Теперішній час (-учий/-ючий) — розпізнавання
   - Минулий час (-лий) — лексикалізовані форми
   - Русизми та їх уникання
   - Трансформація в підрядні речення
-- section: "Огляд — Дієприкметники vs підрядні речення"
+- section: Огляд — Дієприкметники vs підрядні речення
   words: 424
   points:
   - Стилістичний вибір
@@ -94,7 +93,7 @@ activity_hints:
   focus: Fix register-inappropriate passive usage
   items: 12+
 - type: essay-response
-  focus: "Diagnostic writing — use all 4 passive forms"
+  focus: Diagnostic writing — use all 4 passive forms
   word_target: 200
   output: Self-evaluate against rubric
 focus: checkpoint
@@ -107,11 +106,11 @@ connects_to:
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - B2 Assessment
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: B2 assessment criteria for passive voice
 - name: CEFR B2 Can-Do Statements
-  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
   type: reference
   notes: B2 grammar proficiency descriptors
 - name: B2 Checkpoint Module Template
@@ -119,8 +118,11 @@ sources:
   type: reference
   notes: Checkpoint structure and requirements
 immersion: 100% Ukrainian
-phase: "B2.1a [Passive Voice]"
+phase: B2.1a [Passive Voice]
 objectives:
 - Understand and apply контрольний модуль b2.1a — система пасивного стану
 - Analyze and evaluate що ми вивчили
 - Identify key concepts of самооцінка і план
+persona:
+  voice: Professional Language Coach
+  role: Auditor (Аудитор)

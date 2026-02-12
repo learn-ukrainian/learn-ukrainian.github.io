@@ -1,4 +1,3 @@
----
 module: c1-hist-114
 level: c1-hist
 sequence: 114
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of польща і україна: симбіоз і конфлікт'
 - Evaluate the historical significance of 600 років разом
 content_outline:
-- section: "Вступ — 600 років разом"
+- section: Вступ — 600 років разом
   words: 515
   subsections:
   - Найскладніші відносини в Європі
@@ -81,15 +80,15 @@ activities:
   focus: Чи Польща була колонізатором України?
 sources:
 - name: Польсько-українські відносини (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Польсько-українські_відносини"
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
   type: reference
   notes: Relations overview
 - name: Річ Посполита (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Річ_Посполита"
+  url: https://uk.wikipedia.org/wiki/Річ_Посполита
   type: reference
   notes: Commonwealth period
 - name: Козацько-польські війни (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Козацько-польські_війни"
+  url: https://uk.wikipedia.org/wiki/Козацько-польські_війни
   type: reference
   notes: Cossack-Polish wars
 vocabulary_hints:
@@ -112,3 +111,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Polish-Ukrainian Relations Expert

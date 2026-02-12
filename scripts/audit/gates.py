@@ -125,6 +125,17 @@ def evaluate_structure(
     return GateResult('PASS', '✅', "Valid Structure")
 
 
+def evaluate_persona(has_persona: bool, has_voice: bool, has_role: bool) -> GateResult:
+    """Evaluate persona gate (Deterministic Curriculum Standard v2.2)."""
+    if not has_persona:
+        return GateResult('FAIL', '❌', "Missing 'persona' in plan YAML")
+    if not has_voice:
+        return GateResult('FAIL', '❌', "Missing 'persona.voice' in plan YAML")
+    if not has_role:
+        return GateResult('FAIL', '❌', "Missing 'persona.role' in plan YAML")
+    return GateResult('PASS', '✅', "Persona Defined")
+
+
 def evaluate_lint(error_count: int) -> GateResult:
     """Evaluate lint errors gate."""
     if error_count == 0:

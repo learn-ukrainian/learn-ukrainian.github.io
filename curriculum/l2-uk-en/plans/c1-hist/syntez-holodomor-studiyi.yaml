@@ -1,4 +1,3 @@
----
 module: c1-hist-051
 level: c1-hist
 sequence: 51
@@ -10,14 +9,14 @@ objectives:
 - 'Analyze the causes and consequences of синтез: голодомор як об''єкт дослідження'
 - Evaluate the historical significance of що ми дізналися
 content_outline:
-- section: "Вступ — Що ми дізналися"
+- section: Вступ — Що ми дізналися
   words: 457
   subsections:
   - Огляд модулів 45-50
   - Голодомор як комплексний об'єкт
   - Мета синтезу
   - Від знання до розуміння
-- section: "Інтеграція — історіографія + джерела + механізми"
+- section: Інтеграція — історіографія + джерела + механізми
   words: 686
   subsections:
   - Як різні підходи доповнюють
@@ -79,7 +78,7 @@ activities:
 - type: essay-response
   focus: Create integrated Holodomor knowledge map
 - type: critical-analysis
-  focus: "Evaluate main scholarly debates — where do you stand?"
+  focus: Evaluate main scholarly debates — where do you stand?
 - type: critical-analysis
   focus: What questions remain unanswered?
 - type: critical-analysis
@@ -88,11 +87,11 @@ activities:
   focus: Що означає 'знати' Голодомор для сучасного українця?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Голодомор"
+  url: https://uk.wikipedia.org/wiki/Голодомор
   type: reference
   notes: Comprehensive overview
-- name: "Harvard Ukrainian Research Institute — Holodomor"
-  url: "https://huri.harvard.edu/"
+- name: Harvard Ukrainian Research Institute — Holodomor
+  url: https://huri.harvard.edu/
   type: reference
   notes: Research center
 vocabulary_hints:
@@ -115,3 +114,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Genocide Studies Scholar

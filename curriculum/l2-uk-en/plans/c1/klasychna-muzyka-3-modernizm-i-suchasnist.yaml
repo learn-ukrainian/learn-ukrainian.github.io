@@ -1,13 +1,12 @@
----
 module: c1-078
 level: C1
 sequence: 78
 slug: 78-klasychna-muzyka-3-modernizm-i-suchasnist
 version: '2.0'
-title: "Класична музика III — Модернізм і сучасність"
-subtitle: "Classical Music III — Modernism & Contemporary"
+title: Класична музика III — Модернізм і сучасність
+subtitle: Classical Music III — Modernism & Contemporary
 content_outline:
-- section: "Розминка — Українська музика XX-XXI ст."
+- section: Розминка — Українська музика XX-XXI ст.
   words: 700
   points:
   - Від пізнього романтизму до авангарду
@@ -23,7 +22,7 @@ content_outline:
     composer'
   - 'Валентин Сильвестров: "Тихі пісні" — avant-garde master'
   - 'Євген Станкович: Симфонії, балети — living legend'
-- section: "Практика — сучасна класика"
+- section: Практика — сучасна класика
   words: 1050
   points:
   - Прослухати "Мелодію" Скорика — описати емоційний вплив
@@ -41,3 +40,6 @@ grammar:
 - Comparative stylistic analysis
 - Register of academic critique
 phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Куратор філармонії

@@ -1,4 +1,3 @@
----
 sequence: 86
 module: b2-86
 level: B2
@@ -81,3 +80,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Key Account Manager (Менеджер по роботі з клієнтами)

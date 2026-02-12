@@ -1,4 +1,3 @@
----
 module: c1-hist-056
 level: c1-hist
 sequence: 56
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of механізм знищення: 1930-1937'
 - Evaluate the historical significance of як знищували культуру
 content_outline:
-- section: "Вступ — Як знищували культуру"
+- section: Вступ — Як знищували культуру
   words: 457
   subsections:
   - Від дискусій до репресій
@@ -34,7 +33,7 @@ content_outline:
   - Арешт
   - Табір або розстріл
   - Паттерн — як повторювався
-- section: "Звинувачення — словник терору"
+- section: Звинувачення — словник терору
   words: 686
   subsections:
   - «Націоналізм» — що означало
@@ -42,7 +41,7 @@ content_outline:
   - «Шпигунство» — абсурдні звинувачення
   - Троцькізм
   - Як звинувачення конструювалися
-- section: "Долі — приклади"
+- section: Долі — приклади
   words: 571
   subsections:
   - Курбас — розстріл
@@ -84,7 +83,7 @@ activities:
 - type: critical-analysis
   focus: Map the stages of persecution
 - type: comparative-study
-  focus: "Analyze terror vocabulary — how accusations work"
+  focus: Analyze terror vocabulary — how accusations work
 - type: critical-analysis
   focus: Numbers of repressions by year/type
 - type: comparative-study
@@ -93,15 +92,15 @@ activities:
   focus: Чи було знищення Розстріляного відродження культурним геноцидом?
 sources:
 - name: Великий терор в Україні
-  url: "https://uk.wikipedia.org/wiki/Великий_терор"
+  url: https://uk.wikipedia.org/wiki/Великий_терор
   type: reference
   notes: Great Terror overview
 - name: Сталінські репресії
-  url: "https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Сталінські_репресії_в_Україні
   type: reference
   notes: Ukrainian repressions
 - name: Список жертв Розстріляного відродження
-  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
   type: reference
   notes: Victims list
 vocabulary_hints:
@@ -124,3 +123,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Totalitarianism Scholar

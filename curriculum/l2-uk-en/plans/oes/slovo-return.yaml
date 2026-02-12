@@ -1,4 +1,3 @@
----
 sequence: 85
 module: oes-085
 module_number: 85
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: City Gatekeeper

@@ -1,4 +1,3 @@
----
 module: c1-bio-008
 level: C1-BIO
 sequence: 8
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
 subtitle: 'Roman the Great: Founder of the Galicia-Volhynia State'
 content_outline:
-- section: "Вступ — Самодержець усієї Русі"
+- section: Вступ — Самодержець усієї Русі
   words: 421
   points:
   - Титул "великий князь, самодержець усієї Русі" у літописі
@@ -47,7 +46,7 @@ content_outline:
   - Польська засідка та смерть
   - Криза після смерті Романа
   - Значення для нащадків
-- section: "Підсумок — Будівничий держави"
+- section: Підсумок — Будівничий держави
   words: 318
   points:
   - Роман як об'єднувач земель
@@ -105,16 +104,19 @@ grammar:
 module_type: biography
 sources:
 - name: Роман Мстиславич (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Роман_Мстиславич"
+  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
   type: primary
   notes: Biography, military campaigns, unification of principalities
 - name: Галицько-Волинське князівство
-  url: "https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство"
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
   type: primary
   notes: Context for state formation
 - name: Галицько-Волинський літопис
-  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
   type: reference
   notes: Primary chronicle source
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Autocrat

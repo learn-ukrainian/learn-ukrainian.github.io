@@ -2,7 +2,78 @@
 module: c1-hist-059
 level: C1-HIST
 slug: beresteyska-uniia-analiz
-version: '1.0'
+version: '2.0'
 id: c1-hist-059
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-12'
+  status: IN_PROGRESS
+  word_target: 4000
+  complexity: C1
+  naturalness: CHECKED
+params:
+  persona_flavor: The Decolonizer
+  citation_style: academic-embedded
+content_outline:
+  - section: 'Криза ідентичності: Руська церква в XVI столітті'
+    words: 500
+    points: []
+  - section: 'Генеза Унії: Від таємних переговорів до Риму'
+    words: 450
+    points: []
+  - section: 'Берестейський собор 1596 року: Анатомія розколу'
+    words: 300
+    points: []
+  - section: 'Криза 1620 року: Таємна хіротонія'
+    words: 200
+    points: []
+  - section: 'Трагедія у Вітебську: Вбивство Кунцевича'
+    words: 230
+    points: []
+  - section: 'Полемічна література: Війна слів та ідей'
+    words: 370
+    points: []
+  - section: 'Геополітичний вимір: Між Римом, Варшавою та Москвою'
+    words: 120
+    points: []
+  - section: 'Регіональна специфіка: Галичина vs Волинь'
+    words: 100
+    points: []
+  - section: 'Спадщина: Василіанський прорив і Петро Могила'
+    words: 140
+    points: []
+  - section: 'Анатомія документів: Що написано дрібним шрифтом?'
+    words: 320
+    points: []
+  - section: 'Богословське поле битви: Чотири стовпи розбрату'
+    words: 340
+    points: []
+  - section: 'Культурна революція: Бароко як синтез'
+    words: 160
+    points: []
+  - section: 'Братства: "Республіка" мирян'
+    words: 100
+    points: []
+  - section: 'Драма Мелетія Смотрицького: "Туди і назад"'
+    words: 100
+    points: []
+  - section: 'Людський вимір: Життя в розколотому світі'
+    words: 220
+    points: []
+  - section: 'Хронологія подій (Детальна)'
+    words: 180
+    points: []
+  - section: 'Історіографічний аналіз: Від "зради" до "модернізації"'
+    words: 110
+    points: []
+  - section: 'Summary'
+    words: 100
+    points: []
+grammar_focus:
+  - modal_hedging
+  - complex_syntax
+  - historical_terminology
+engagement_markers:
+  myth_buster: true
+  history_bite: true
+  primary_quote: true
+  contested_terms: true

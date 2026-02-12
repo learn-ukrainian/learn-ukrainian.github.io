@@ -1,4 +1,3 @@
----
 module: c1-hist-130
 level: c1-hist
 sequence: 130
@@ -10,21 +9,21 @@ objectives:
 - 'Analyze the causes and consequences of жінки в революціях: прихована історія'
 - Evaluate the historical significance of невидимі героїні
 content_outline:
-- section: "Вступ — Невидимі героїні"
+- section: Вступ — Невидимі героїні
   words: 515
   subsections:
   - Жінки в українській історії — де вони?
   - Прихована агентність
   - Від 1917 до 2022
   - Структура модуля
-- section: "1917-1921 — Революція і війна"
+- section: 1917-1921 — Революція і війна
   words: 774
   subsections:
   - Жіночі організації УНР
   - Олена Теліга — символ
   - Медицина і тил
   - Чому забули
-- section: "1990 — Гранітна революція"
+- section: 1990 — Гранітна революція
   words: 645
   subsections:
   - Студентки — половина учасників
@@ -38,7 +37,7 @@ content_outline:
   - Євромайдан — жінки в бою
   - «Жіноча сотня»
   - Волонтерство — переважно жіноче
-- section: "2022 — Нова видимість"
+- section: 2022 — Нова видимість
   words: 774
   subsections:
   - Жінки в ЗСУ
@@ -74,18 +73,18 @@ activities:
 - type: critical-analysis
   focus: Why women disappeared from revolutionary history
 - type: critical-analysis
-  focus: "Women at Euromaidan — roles and recognition"
+  focus: Women at Euromaidan — roles and recognition
 - type: critical-analysis
   focus: How 2022 changed women's visibility
 - type: essay-response
   focus: Чому жінок 'забули' в українській революційній історії?
 sources:
 - name: Жіночий рух в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
   type: reference
   notes: Women's movement
 - name: Євромайдан (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Євромайдан"
+  url: https://uk.wikipedia.org/wiki/Євромайдан
   type: reference
   notes: Women at Euromaidan
 vocabulary_hints:
@@ -108,3 +107,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Gender History Scholar

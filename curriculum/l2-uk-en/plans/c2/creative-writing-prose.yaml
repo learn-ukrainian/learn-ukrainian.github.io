@@ -1,28 +1,27 @@
----
 module: c2-037
 level: c2
 sequence: 37
 version: '2.0'
-title: "Творче письмо — проза"
+title: Творче письмо — проза
 focus: literature
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Майстерність прозаїка
-  url: "https://uk.wikipedia.org/wiki/Проза"
+  url: https://uk.wikipedia.org/wiki/Проза
   type: reference
   notes: Prose writing craft
 - name: Сучасна українська проза
-  url: "https://ukrlib.com.ua/"
+  url: https://ukrlib.com.ua/
   type: primary
   notes: Contemporary Ukrainian prose examples
 - name: Творчі майстерні
-  url: "https://uk.wikipedia.org/wiki/Творче_письмо"
+  url: https://uk.wikipedia.org/wiki/Творче_письмо
   type: reference
   notes: Creative writing workshop tradition
 content_outline:
-- section: "Вступ — Проза як мистецтво"
+- section: Вступ — Проза як мистецтво
   words: 500
   points:
   - Від споживача до творця прози
@@ -88,7 +87,7 @@ vocabulary:
   - кульмінація (climax)
   - зав'язка (exposition)
   - флешбек (flashback)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - essay-response
@@ -122,3 +121,6 @@ activity_hints:
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Novelist

@@ -1,4 +1,3 @@
----
 module: c1-bio-083
 level: C1-BIO
 sequence: 83
@@ -6,7 +5,7 @@ slug: petro-bolbochan
 version: '2.0'
 title: 'Петро Болбочан: Полковник-герой'
 content_outline:
-- section: "Вступ — Герой Криму"
+- section: Вступ — Герой Криму
   words: 400
   points:
   - Болбочан як один із найталановитіших полководців УНР
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Петро Болбочан (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович"
+  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
   type: primary
   notes: Біографія, Кримський похід, трагічна доля
 - name: Інститут історії України НАНУ
-  url: "https://www.history.org.ua"
+  url: https://www.history.org.ua
   type: reference
   notes: Дослідження Української революції
 - name: Музей визвольної боротьби України
-  url: "https://mvbu.org.ua"
+  url: https://mvbu.org.ua
   type: reference
   notes: Військова історія УНР
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of петро болбочан: полковник-герой'
 - Evaluate the contributions of герой криму
 - Trace the career and influence of страта та реабілітація
+persona:
+  voice: Senior Biographer
+  role: Liberator of Crimea

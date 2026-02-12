@@ -1,4 +1,3 @@
----
 module: b2-hist-112
 level: B2-HIST
 sequence: 112
@@ -73,7 +72,7 @@ activity_hints:
   focus: 'Спростування міфів: Міфи про «подарунок» Криму'
   items: 5
 - type: essay-response
-  focus: "Чому російська міфологія про «подарунок» Криму — це пропаганда?"
+  focus: Чому російська міфологія про «подарунок» Криму — це пропаганда?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -92,4 +91,7 @@ grammar:
 - Юридична та політична лексика
 - Непряма мова для передачі аргументів
 register: публіцистичний
-phase: "HIST.11 [Post-War Soviet Ukraine]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Hydrological Engineer

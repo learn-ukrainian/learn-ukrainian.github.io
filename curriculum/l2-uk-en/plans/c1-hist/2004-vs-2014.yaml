@@ -1,4 +1,3 @@
----
 module: c1-hist-093
 level: c1-hist
 sequence: 93
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
 - Evaluate the historical significance of дві революції, різні наслідки
 content_outline:
-- section: "Вступ — Дві революції, різні наслідки"
+- section: Вступ — Дві революції, різні наслідки
   words: 457
   subsections:
   - 2004 — перемога, потім розчарування
@@ -76,7 +75,7 @@ vocabulary:
 - люстрація
 activities:
 - type: comparative-study
-  focus: "2004 vs. 2014 — systematic comparison"
+  focus: 2004 vs. 2014 — systematic comparison
 - type: critical-analysis
   focus: Why did 2004 fail and 2014 succeed?
 - type: critical-analysis
@@ -87,15 +86,15 @@ activities:
   focus: Чому Помаранчева революція не принесла тривалих змін?
 sources:
 - name: Помаранчева революція (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Помаранчева_революція"
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
   type: reference
   notes: 2004 events
 - name: Революція гідності (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Революція_гідності"
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
   type: reference
   notes: 2014 events
 - name: Віктор Ющенко (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Віктор_Ющенко"
+  url: https://uk.wikipedia.org/wiki/Віктор_Ющенко
   type: reference
   notes: 2004 leader
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Revolution Comparative Analyst

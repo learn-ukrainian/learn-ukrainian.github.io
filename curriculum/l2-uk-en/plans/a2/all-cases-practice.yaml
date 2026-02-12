@@ -1,4 +1,3 @@
----
 module: a2-09
 level: A2
 sequence: 9
@@ -92,12 +91,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Case System
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Complete 7-case paradigm requirements for A2
 - name: Ukrainian Case System Reference
-  url: "https://uk.wikipedia.org/wiki/Відмінок"
+  url: https://uk.wikipedia.org/wiki/Відмінок
   type: reference
   notes: Complete declension tables
 immersion: 40-50% Ukrainian
 phase: A2.1
+persona:
+  voice: Encouraging Cultural Guide
+  role: Court Translator

@@ -1,4 +1,3 @@
----
 sequence: 132
 module: lit-132
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Symonenko Knights у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Knight of Truth

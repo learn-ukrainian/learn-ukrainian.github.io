@@ -1,4 +1,3 @@
----
 module: a2-48
 level: A2
 sequence: 48
@@ -76,4 +75,7 @@ grammar:
 - Describing feelings (мені сумно)
 - Dative for emotional states
 register: розмовний
-phase: "A2.5 [Vocabulary Expansion]"
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Drama Teacher

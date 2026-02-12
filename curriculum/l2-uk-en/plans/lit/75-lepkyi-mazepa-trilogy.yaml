@@ -1,4 +1,3 @@
----
 sequence: 75
 module: lit-75
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Lepkyi Mazepa Trilogy у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Hetman's Advisor

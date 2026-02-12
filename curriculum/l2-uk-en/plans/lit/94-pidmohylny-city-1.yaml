@@ -1,4 +1,3 @@
----
 sequence: 94
 module: lit-94
 level: LIT
@@ -82,3 +81,6 @@ objectives:
   епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Urban Aspirant

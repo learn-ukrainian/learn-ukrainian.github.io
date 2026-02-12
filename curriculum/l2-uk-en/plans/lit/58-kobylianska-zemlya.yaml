@@ -1,4 +1,3 @@
----
 sequence: 58
 module: lit-58
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Ольга Кобилянська: «Земля» як фатум у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Land Keeper

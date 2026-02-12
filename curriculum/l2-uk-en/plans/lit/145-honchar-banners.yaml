@@ -1,4 +1,3 @@
----
 sequence: 145
 module: lit-145
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Honchar Banners у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Standard Bearer

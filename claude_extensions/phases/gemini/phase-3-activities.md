@@ -71,6 +71,21 @@ Return TWO YAML blocks with clear delimiters:
 
 {ACTIVITY_EXAMPLES}
 
+## Friction Report (MANDATORY)
+
+After your YAML blocks, include:
+
+```
+===FRICTION_START===
+**Phase**: Phase 3: Activities + Vocabulary
+**Step**: {what you were doing when friction occurred, or "Full YAML generation"}
+**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
 ## Boundaries
 
 - Do NOT modify lesson content — only generate activities and vocabulary

@@ -1,4 +1,3 @@
----
 module: b2-hist-016
 level: B2-HIST
 sequence: 16
@@ -10,7 +9,7 @@ content_outline:
   words: 100
   points:
   - Огляд основних тем культурного розвитку Київської Русі
-- section: "Вступ — Культурний світ Русі"
+- section: Вступ — Культурний світ Русі
   words: 425
   points:
   - Культурне багатство Київської Русі як синтез візантійських та місцевих традицій
@@ -27,7 +26,7 @@ content_outline:
   words: 618
   points:
   - Літописання як головний жанр історичної прози
-  - "«Слово о полку Ігоревім» як шедевр давньоруської літератури"
+  - «Слово о полку Ігоревім» як шедевр давньоруської літератури
   - Житійна література та її роль у духовному житті
   - Перекладна література та культурний обмін з Візантією
 - section: Архітектура
@@ -61,7 +60,7 @@ content_outline:
   words: 193
   points:
   - Тексти літописів як історичні свідчення
-  - "Рукописи «Слова о полку Ігоревім»"
+  - Рукописи «Слова о полку Ігоревім»
   - Археологічні знахідки - берестяні грамоти, ювелірні вироби
 - section: Потрібно більше практики?
   words: 15
@@ -114,17 +113,20 @@ grammar:
 - Art and culture vocabulary
 sources:
 - name: Культура Київської Русі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Культура_Київської_Русі"
+  url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
   type: reference
   notes: Comprehensive overview
 - name: Літописання Київської Русі
-  url: "https://uk.wikipedia.org/wiki/Літописання_Київської_Русі"
+  url: https://uk.wikipedia.org/wiki/Літописання_Київської_Русі
   type: reference
   notes: Chronicle tradition
 - name: Слово о полку Ігоревім
-  url: "https://litopys.org.ua/slovo/slovo.htm"
+  url: https://litopys.org.ua/slovo/slovo.htm
   type: primary
   notes: Epic poem text
 immersion: 100% Ukrainian
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
 word_target: 4000
+persona:
+  voice: Senior Professor of History
+  role: Master Iconographer

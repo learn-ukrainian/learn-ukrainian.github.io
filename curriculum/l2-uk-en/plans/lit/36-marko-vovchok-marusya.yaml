@@ -1,4 +1,3 @@
----
 sequence: 36
 module: lit-36
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір «Маруся»: Українська легенда в Європі у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Legend Teller

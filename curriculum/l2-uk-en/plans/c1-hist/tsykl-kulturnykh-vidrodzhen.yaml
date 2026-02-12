@@ -1,4 +1,3 @@
----
 module: c1-hist-122
 level: c1-hist
 sequence: 122
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
 - Evaluate the historical significance of пригнічення → відродження
 content_outline:
-- section: "Вступ — Пригнічення → Відродження"
+- section: Вступ — Пригнічення → Відродження
   words: 515
   subsections:
   - Український культурний цикл
@@ -81,11 +80,11 @@ activities:
   focus: Чи українська культура 'вмирала' і 'відроджувалась'?
 sources:
 - name: Українське національне відродження (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українське_національне_відродження"
+  url: https://uk.wikipedia.org/wiki/Українське_національне_відродження
   type: reference
   notes: National revival overview
 - name: Культурна політика (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Культурна_політика"
+  url: https://uk.wikipedia.org/wiki/Культурна_політика
   type: reference
   notes: Cultural policy context
 vocabulary_hints:
@@ -108,3 +107,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cultural Cycles Theorist

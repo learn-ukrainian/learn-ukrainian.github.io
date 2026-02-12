@@ -1,4 +1,3 @@
----
 sequence: 40
 module: oes-040
 module_number: 32
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Royal Physician

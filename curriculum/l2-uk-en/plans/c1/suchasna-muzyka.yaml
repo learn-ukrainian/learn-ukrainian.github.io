@@ -1,13 +1,12 @@
----
 module: c1-087
 level: C1
 sequence: 87
 slug: 87-suchasna-muzyka
 version: '2.0'
 title: Сучасна музика
-subtitle: "Contemporary Music — The Sound of Freedom"
+subtitle: Contemporary Music — The Sound of Freedom
 content_outline:
-- section: "Розминка — Звуки свободи"
+- section: Розминка — Звуки свободи
   words: 700
   points:
   - Український рок — ВВ, Океан Ельзи, символи покоління
@@ -21,7 +20,7 @@ content_outline:
   - 'Фолк-рок: ДахаБраха, ONUKA fusion'
   - 'War-era music: patriotic revival'
   - Music as identity and resistance
-- section: "Практика — музичний дискурс"
+- section: Практика — музичний дискурс
   words: 1050
   points:
   - Проаналізувати текст пісні Океану Ельзи — мова, образи
@@ -39,3 +38,6 @@ grammar:
 - Music genres terminology
 - Expressing musical preferences
 phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Музичний продюсер

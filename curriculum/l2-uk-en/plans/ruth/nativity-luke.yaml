@@ -1,4 +1,3 @@
----
 sequence: 28
 module: ruth-028
 module_number: 28
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Vertep Director

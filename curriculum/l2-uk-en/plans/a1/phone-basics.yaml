@@ -1,4 +1,3 @@
----
 sequence: 41
 module: a1-41
 level: A1
@@ -27,7 +26,7 @@ content_outline:
   - Діалог 1: Дзвінок другу
   - Діалог 2: Дзвінок на рецепцію готелю
   - Діалог 3: Помилковий номер
-- section: "Warm-up 2"
+- section: Warm-up 2
   words: 189
   points:
   - Наратив про телефонну розмову з кур'єром
@@ -79,4 +78,7 @@ grammar:
 - Imperative for requests
 - Could you... (Чи могли б ви...)
 register: розмовний
-phase: "A1.4 [Practical Scenarios]"
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Tech Support Specialist

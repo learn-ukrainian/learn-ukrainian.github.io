@@ -1,4 +1,3 @@
----
 module: c1-bio-110
 level: C1-BIO
 sequence: 110
@@ -6,7 +5,7 @@ slug: kateryna-bilokur
 version: '2.0'
 title: 'Катерина Білокур: Геній наївного мистецтва'
 content_outline:
-- section: "Вступ — Квіти, народжені геєм"
+- section: Вступ — Квіти, народжені геєм
   words: 400
   points:
   - Самоук з Полтавщини, що здивувала світ
@@ -40,7 +39,7 @@ content_outline:
   - Натюрморти світового рівня
   - Зустріч з Пабло Пікассо (легенда)
   - Смерть у бідності
-- section: "Спадщина — Геній із села"
+- section: Спадщина — Геній із села
   words: 700
   points:
   - Визнання після смерті
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Катерина Білокур (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна"
+  url: https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна
   type: primary
   notes: Biography of the self-taught folk artist
 - name: Національний музей українського народного декоративного мистецтва
-  url: "https://mundm.kiev.ua/"
+  url: https://mundm.kiev.ua/
   type: reference
   notes: Major collection of Bilokur's works
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of катерина білокур: геній наївного мистецтва'
 - Evaluate the contributions of квіти, народжені геєм
 - Trace the career and influence of геній із села
+persona:
+  voice: Senior Biographer
+  role: Garden Painter

@@ -1,4 +1,3 @@
----
 sequence: 69
 module: ruth-069
 module_number: 69
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Ecclesiastical Apologist

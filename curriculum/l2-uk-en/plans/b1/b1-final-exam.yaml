@@ -103,3 +103,6 @@ grammar:
 - Communication skills from M87-91
 register: нейтральний
 phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Certification Examiner

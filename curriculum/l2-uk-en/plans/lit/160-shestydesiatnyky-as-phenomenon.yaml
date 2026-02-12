@@ -1,4 +1,3 @@
----
 sequence: 160
 module: lit-160
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Shestydesiatnyky As Phenomenon у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Sixties Activist

@@ -1,4 +1,3 @@
----
 module: c1-hist-096
 level: c1-hist
 sequence: 96
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of 1945: ялта і зрада'
 - Evaluate the historical significance of друга зрада
 content_outline:
-- section: "Вступ — Друга зрада"
+- section: Вступ — Друга зрада
   words: 457
   subsections:
   - 1945 — новий світовий порядок
@@ -78,24 +77,24 @@ activities:
 - type: critical-analysis
   focus: What was decided at Yalta about Ukraine?
 - type: critical-analysis
-  focus: "Forced repatriation — Western responsibility"
+  focus: Forced repatriation — Western responsibility
 - type: comparative-study
   focus: DP experiences with repatriation threat
 - type: comparative-study
-  focus: "1918 vs. 1945 — patterns of Western betrayal"
+  focus: 1918 vs. 1945 — patterns of Western betrayal
 - type: essay-response
   focus: Чи мав Захід моральне право видавати біженців СРСР?
 sources:
 - name: Ялтинська конференція (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Ялтинська_конференція"
+  url: https://uk.wikipedia.org/wiki/Ялтинська_конференція
   type: reference
   notes: Yalta conference
 - name: Примусова репатріація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян"
+  url: https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян
   type: reference
   notes: Forced repatriation
 - name: Операція «Кіл Хаул» (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Операція_«Кілгаул»"
+  url: https://uk.wikipedia.org/wiki/Операція_«Кілгаул»
   type: reference
   notes: Operation Keelhaul
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cold War Historian

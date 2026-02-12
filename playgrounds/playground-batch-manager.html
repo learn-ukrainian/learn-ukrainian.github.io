@@ -145,80 +145,249 @@
     .progress-bar-fill.blue { background: #3b82f6; }
 
     /* Live Activity Banner */
-    .live-banner {
-      background: linear-gradient(135deg, #0f2027, #1e293b);
+    /* Command Bar — always-visible summary strip */
+    .command-bar {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
       border: 1px solid #334155;
       border-radius: 12px;
-      padding: 14px 20px;
-      margin-bottom: 16px;
-      display: flex;
+      padding: 16px 24px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
       align-items: center;
-      gap: 14px;
-      font-size: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-    .live-banner.active { border-color: #3b82f6; }
-    .live-banner.idle { border-color: #334155; }
-    .live-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: #64748b;
-      flex-shrink: 0;
-    }
-    .live-banner.active .live-dot {
-      background: #3b82f6;
-      animation: pulse 1.5s infinite;
-    }
-    .live-title { font-weight: 600; }
-    .live-detail { font-size: 12px; color: #94a3b8; margin-top: 2px; }
 
-    /* Active Module Banner */
-    .active-banner {
-      background: linear-gradient(135deg, #1e3a5f, #1e293b);
-      border: 1px solid #1d4ed8;
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      display: none;
+    .cmd-progress {
+      display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    .active-banner.visible { display: flex; }
+    .cmd-pct {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      font-family: ui-monospace, monospace;
+    }
 
-    .active-banner .spinner-large {
-      width: 24px;
-      height: 24px;
-      border: 3px solid #334155;
-      border-top-color: #3b82f6;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    .cmd-pct.green { color: #10b981; }
+    .cmd-pct.yellow { color: #f59e0b; }
+    .cmd-pct.red { color: #f43f5e; }
+
+    .cmd-stats {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    .cmd-stats strong { color: #e2e8f0; font-weight: 600; }
+
+    .cmd-bar-fill {
+      width: 100%;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 3px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .cmd-bar-fill-inner {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s;
+    }
+
+    /* Agent cards in command bar center */
+    .cmd-agents {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .agent-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 180px;
+    }
+
+    .agent-card.active { border-color: #3b82f640; }
+
+    .agent-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
       flex-shrink: 0;
     }
 
-    .active-info { flex: 1; }
+    .agent-icon.gemini { background: #1e3a5f; color: #60a5fa; }
+    .agent-icon.claude { background: #3b1f0e; color: #fb923c; }
 
-    .active-slug {
-      font-size: 16px;
+    .agent-detail { line-height: 1.4; }
+    .agent-detail .agent-slug { font-weight: 600; color: #e2e8f0; font-family: ui-monospace, monospace; }
+    .agent-detail .agent-sub { color: #64748b; font-size: 11px; }
+
+    /* System status badge */
+    .cmd-system {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .system-badge {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .system-badge.running { background: #1e40af; color: #bfdbfe; }
+    .system-badge.idle { background: #334155; color: #94a3b8; }
+    .system-badge.cooldown { background: #92400e; color: #fde68a; }
+
+    /* Agent Activity Panel — two columns */
+    .agent-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .agent-panel.visible { display: grid; }
+
+    .agent-col {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .agent-col.gemini-col { border-color: #1e40af40; }
+    .agent-col.claude-col { border-color: #ea580c40; }
+
+    .agent-col-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .agent-col-header .agent-icon { width: 24px; height: 24px; font-size: 11px; }
+
+    .agent-status-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-left: auto;
+    }
+
+    .agent-status-badge.active { background: #166534; color: #bbf7d0; }
+    .agent-status-badge.idle { background: #334155; color: #94a3b8; }
+    .agent-status-badge.queued { background: #92400e; color: #fde68a; }
+
+    .agent-current {
+      font-family: ui-monospace, monospace;
+      font-size: 14px;
       font-weight: 600;
       color: #93c5fd;
-      font-family: ui-monospace, monospace;
+      margin-bottom: 4px;
     }
 
-    .active-meta {
-      font-size: 12px;
+    .agent-col.claude-col .agent-current { color: #fdba74; }
+
+    .agent-timer {
+      font-size: 11px;
       color: #64748b;
-      margin-top: 4px;
+      margin-bottom: 10px;
     }
 
-    .active-meta span { margin-right: 16px; }
+    .agent-history {
+      font-size: 11px;
+      color: #94a3b8;
+      border-top: 1px solid #334155;
+      padding-top: 8px;
+    }
 
-    .active-elapsed {
-      font-size: 22px;
-      font-weight: 700;
-      color: #60a5fa;
-      font-family: ui-monospace, monospace;
+    .agent-history-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+    }
+
+    .agent-history-item .slug { color: #e2e8f0; font-family: ui-monospace, monospace; }
+    .agent-history-item .result { font-weight: 600; }
+    .agent-history-item .result.pass { color: #10b981; }
+    .agent-history-item .result.fail { color: #f43f5e; }
+
+    /* Dispatch Timeline */
+    .timeline-panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .timeline-panel h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .timeline-entry {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1e293b;
+      font-size: 12px;
+      align-items: flex-start;
+    }
+
+    .timeline-entry:last-child { border-bottom: none; }
+
+    .timeline-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 4px;
       flex-shrink: 0;
     }
+
+    .timeline-dot.progress { background: #10b981; }
+    .timeline-dot.stall { background: #f59e0b; }
+    .timeline-dot.fail { background: #f43f5e; }
+    .timeline-dot.quota { background: #3b82f6; }
+
+    .timeline-content { flex: 1; }
+    .timeline-track { font-weight: 600; color: #e2e8f0; }
+    .timeline-time { color: #64748b; font-size: 11px; }
+    .timeline-result { font-size: 11px; color: #94a3b8; }
 
     /* Multi-track Overview */
     .overview-grid {
@@ -236,12 +405,52 @@
       cursor: pointer;
       transition: all 0.15s;
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
     .overview-card:hover { border-color: #475569; transform: translateY(-2px); }
     .overview-card.active { border-color: #3b82f6; }
     .overview-card.no-data { opacity: 0.3; cursor: default; }
     .overview-card.no-data:hover { transform: none; border-color: #334155; }
+
+    .card-pct {
+      font-size: 28px;
+      font-weight: 800;
+      font-family: ui-monospace, monospace;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .card-pct.high { color: #10b981; }
+    .card-pct.mid { color: #f59e0b; }
+    .card-pct.low { color: #f43f5e; }
+
+    .card-state-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 16px;
+    }
+
+    .card-model-tag {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .card-model-tag.gemini { background: #1e3a5f; color: #60a5fa; }
+    .card-model-tag.claude { background: #3b1f0e; color: #fb923c; }
+
+    .card-cooldown {
+      font-size: 10px;
+      color: #fde68a;
+      margin-top: 4px;
+    }
 
     /* Dispatcher state glow on cards */
     .overview-card.state-ELIGIBLE { border-color: #22c55e40; }
@@ -402,7 +611,7 @@
     /* Module Grid */
     .module-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
       gap: 4px;
       padding: 12px;
       max-height: 500px;
@@ -419,7 +628,22 @@
       transition: all 0.15s;
       border: 1px solid transparent;
       line-height: 1.3;
+      position: relative;
     }
+
+    .cell-model-badge {
+      position: absolute;
+      top: 2px;
+      right: 3px;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 0px 3px;
+      border-radius: 3px;
+      line-height: 1.3;
+    }
+
+    .cell-model-badge.g { background: #1e3a5f; color: #60a5fa; }
+    .cell-model-badge.c { background: #3b1f0e; color: #fb923c; }
 
     .module-cell:hover { transform: scale(1.05); z-index: 1; }
     .module-cell.pass { background: #166534; color: #bbf7d0; border-color: #22863a; }
@@ -878,12 +1102,34 @@
     then open <code>http://localhost:8090/playground-batch-manager.html</code>
   </div>
 
-  <!-- Live Activity Banner -->
-  <div class="live-banner" id="live-banner" style="display:none;">
-    <div class="live-dot"></div>
-    <div class="live-content">
-      <div class="live-title" id="live-title">Idle</div>
-      <div class="live-detail" id="live-detail"></div>
+  <!-- Command Bar — always-visible summary strip -->
+  <div class="command-bar" id="command-bar">
+    <div class="cmd-progress">
+      <div class="cmd-pct green" id="cmd-pct">0%</div>
+      <div class="cmd-stats">
+        <div><strong id="cmd-passed">0</strong> / <strong id="cmd-total">0</strong> modules passed</div>
+        <div><strong id="cmd-tracks-done">0</strong> / <strong id="cmd-tracks-total">0</strong> tracks done</div>
+        <div class="cmd-bar-fill"><div class="cmd-bar-fill-inner" id="cmd-bar" style="width:0%; background:#10b981;"></div></div>
+      </div>
+    </div>
+    <div class="cmd-agents" id="cmd-agents">
+      <div class="agent-card" id="cmd-gemini-card">
+        <div class="agent-icon gemini">G</div>
+        <div class="agent-detail">
+          <div class="agent-slug" id="cmd-gemini-slug">Idle</div>
+          <div class="agent-sub" id="cmd-gemini-sub">-</div>
+        </div>
+      </div>
+      <div class="agent-card" id="cmd-claude-card">
+        <div class="agent-icon claude">C</div>
+        <div class="agent-detail">
+          <div class="agent-slug" id="cmd-claude-slug">0 queued</div>
+          <div class="agent-sub" id="cmd-claude-sub">escalation queue</div>
+        </div>
+      </div>
+    </div>
+    <div class="cmd-system">
+      <span class="system-badge idle" id="cmd-status">Idle</span>
     </div>
   </div>
 
@@ -947,17 +1193,33 @@
     </div>
   </div>
 
-  <!-- Active Module Banner -->
-  <div class="active-banner" id="active-banner">
-    <div class="spinner-large"></div>
-    <div class="active-info">
-      <div class="active-slug" id="active-slug">-</div>
-      <div class="active-meta">
-        <span>Mode: <strong id="active-mode">fix</strong></span>
-        <span>Started: <strong id="active-start">-</strong></span>
+  <!-- Agent Activity Panel — two columns -->
+  <div class="agent-panel" id="agent-panel">
+    <div class="agent-col gemini-col">
+      <div class="agent-col-header">
+        <div class="agent-icon gemini">G</div>
+        Gemini
+        <span class="agent-status-badge idle" id="gemini-status">Idle</span>
+      </div>
+      <div class="agent-current" id="gemini-current">-</div>
+      <div class="agent-timer" id="gemini-timer">-</div>
+      <div class="agent-timer" id="gemini-queue">Queue: 0</div>
+      <div class="agent-history" id="gemini-history">
+        <div style="color:#64748b;font-size:10px;margin-bottom:4px;">Recent completions</div>
       </div>
     </div>
-    <div class="active-elapsed" id="active-elapsed">0:00</div>
+    <div class="agent-col claude-col">
+      <div class="agent-col-header">
+        <div class="agent-icon claude">C</div>
+        Claude
+        <span class="agent-status-badge idle" id="claude-status">Idle</span>
+      </div>
+      <div class="agent-current" id="claude-current">-</div>
+      <div class="agent-timer" id="claude-timer">Escalation queue</div>
+      <div class="agent-history" id="claude-history">
+        <div style="color:#64748b;font-size:10px;margin-bottom:4px;">By-track breakdown</div>
+      </div>
+    </div>
   </div>
 
   <!-- Main Content -->
@@ -997,6 +1259,17 @@
         </div>
         <div class="escalation-list" id="escalation-list">
           <div class="empty-state">No escalations</div>
+        </div>
+      </div>
+
+      <!-- Dispatch Timeline -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Dispatch Timeline</h2>
+          <span style="font-size:10px;color:#64748b;" id="timeline-count">0 events</span>
+        </div>
+        <div class="timeline-panel" id="dispatch-timeline">
+          <div class="empty-state">No dispatch history</div>
         </div>
       </div>
 
@@ -1136,8 +1409,8 @@
     let trackFailureDetails = {};  // track -> [failure detail objects]
     let logEntries = [];
     let previousModuleCount = {};
-    let activeStartTime = null;
-    let elapsedTimer = null;
+    // (activeStartTime removed — agent panel handles elapsed display)
+    // (elapsedTimer removed — agent panel handles elapsed display)
 
     // ========== API DETECTION ==========
     async function detectApiMode() {
@@ -1277,7 +1550,8 @@
       }
 
       renderOverview();
-      updateLiveBanner();
+      updateCommandBar();
+      updateAgentPanel();
 
       if (currentTrack && trackStates[currentTrack]) {
         renderTrackDetail(currentTrack);
@@ -1285,45 +1559,115 @@
 
       renderApiUsage(apiSummaries);
       renderEscalations(escalations);
+      renderTimeline();
 
       document.getElementById('last-refresh').textContent =
         `Updated ${new Date().toLocaleTimeString()}`;
     }
 
-    function updateLiveBanner() {
-      const banner = document.getElementById('live-banner');
-      const title = document.getElementById('live-title');
-      const detail = document.getElementById('live-detail');
-      banner.style.display = 'flex';
-
-      // Find running tracks from dispatcher state
+    function updateCommandBar() {
       const tracks = dispatcherState?.tracks || {};
-      const runningTracks = Object.entries(tracks).filter(([_,t]) => t.state === 'RUNNING');
+      const now = Date.now();
 
-      // Find running modules from batch runner states (ignore stale >2h)
+      // Aggregate progress across all tracks
+      let totalPassed = 0, totalModules = 0, tracksDone = 0, tracksTotal = 0;
+      for (const [track, tData] of Object.entries(tracks)) {
+        tracksTotal++;
+        const state = trackStates[track];
+        if (state) {
+          const mods = Object.values(state.modules || {});
+          totalModules += mods.length;
+          totalPassed += mods.filter(m => m.status === 'pass').length;
+        } else if (tData.total > 0) {
+          totalModules += tData.total || 0;
+          totalPassed += tData.passed || 0;
+        }
+        if (tData.state === 'DONE') tracksDone++;
+      }
+
+      const pct = totalModules > 0 ? Math.round((totalPassed / totalModules) * 100) : 0;
+      const pctEl = document.getElementById('cmd-pct');
+      pctEl.textContent = `${pct}%`;
+      pctEl.className = `cmd-pct ${pct >= 80 ? 'green' : pct >= 40 ? 'yellow' : 'red'}`;
+
+      document.getElementById('cmd-passed').textContent = totalPassed.toLocaleString();
+      document.getElementById('cmd-total').textContent = totalModules.toLocaleString();
+      document.getElementById('cmd-tracks-done').textContent = tracksDone;
+      document.getElementById('cmd-tracks-total').textContent = tracksTotal;
+
+      const bar = document.getElementById('cmd-bar');
+      bar.style.width = `${pct}%`;
+      bar.style.background = pct >= 80 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#f43f5e';
+
+      // Find running modules (Gemini)
       let runningModules = [];
       for (const [track, state] of Object.entries(trackStates)) {
         const mods = Object.entries(state.modules || {});
-        const running = mods.filter(([_,m]) => {
+        mods.filter(([_,m]) => {
           if (m.status !== 'running') return false;
-          if (m.start_time) {
-            const elapsed = now - new Date(m.start_time).getTime();
-            if (elapsed > 2 * 3600 * 1000) return false; // >2h = stale
-          }
+          if (m.start_time && (now - new Date(m.start_time).getTime()) > 2 * 3600 * 1000) return false;
           return true;
-        });
-        running.forEach(([slug, m]) => runningModules.push({ track, slug, start: m.start_time }));
+        }).forEach(([slug, m]) => runningModules.push({ track, slug, start: m.start_time }));
       }
 
-      // Find recently completed (last 60s)
-      let recentDone = [];
+      // Gemini agent card
+      const geminiCard = document.getElementById('cmd-gemini-card');
+      if (runningModules.length > 0) {
+        const rm = runningModules[0];
+        const elapsed = rm.start ? formatDuration(Math.round((now - new Date(rm.start).getTime()) / 1000)) : '';
+        document.getElementById('cmd-gemini-slug').textContent = `${rm.track}/${rm.slug}`;
+        document.getElementById('cmd-gemini-sub').textContent = elapsed;
+        geminiCard.classList.add('active');
+      } else {
+        document.getElementById('cmd-gemini-slug').textContent = 'Idle';
+        document.getElementById('cmd-gemini-sub').textContent = '-';
+        geminiCard.classList.remove('active');
+      }
+
+      // Claude agent card (escalation queue)
+      const totalEsc = Object.values(escalationsByTrack).reduce((s, n) => s + n, 0);
+      document.getElementById('cmd-claude-slug').textContent = totalEsc > 0 ? `${totalEsc} queued` : 'Idle';
+      document.getElementById('cmd-claude-sub').textContent = totalEsc > 0 ? 'escalation queue' : '-';
+      const claudeCard = document.getElementById('cmd-claude-card');
+      if (totalEsc > 0) claudeCard.classList.add('active');
+      else claudeCard.classList.remove('active');
+
+      // System status badge
+      const badge = document.getElementById('cmd-status');
+      const runningTracks = Object.values(tracks).filter(t => t.state === 'RUNNING');
+      const cooldownTracks = Object.values(tracks).filter(t => t.state === 'COOLDOWN');
+      if (runningModules.length > 0 || runningTracks.length > 0 || dispatcherRunning) {
+        badge.className = 'system-badge running';
+        badge.textContent = 'Running';
+      } else if (cooldownTracks.length > 0) {
+        badge.className = 'system-badge cooldown';
+        badge.textContent = 'Cooldown';
+      } else {
+        badge.className = 'system-badge idle';
+        badge.textContent = tracksDone === tracksTotal && tracksTotal > 0 ? 'Complete' : 'Idle';
+      }
+    }
+
+    function updateAgentPanel() {
+      const tracks = dispatcherState?.tracks || {};
       const now = Date.now();
+      const panel = document.getElementById('agent-panel');
+
+      // Find running modules (Gemini)
+      let runningModules = [];
+      let recentDone = [];
       for (const [track, state] of Object.entries(trackStates)) {
         const mods = Object.entries(state.modules || {});
         mods.forEach(([slug, m]) => {
+          if (m.status === 'running' && m.start_time) {
+            const elapsed = now - new Date(m.start_time).getTime();
+            if (elapsed < 2 * 3600 * 1000) {
+              runningModules.push({ track, slug, start: m.start_time });
+            }
+          }
           if (m.end_time) {
             const endMs = new Date(m.end_time).getTime();
-            if (now - endMs < 60000) {
+            if (now - endMs < 300000) { // last 5 min
               recentDone.push({ track, slug, status: m.status, duration: m.duration, endMs });
             }
           }
@@ -1331,37 +1675,66 @@
       }
       recentDone.sort((a,b) => b.endMs - a.endMs);
 
+      // Show panel if there's activity
+      const hasActivity = runningModules.length > 0 || recentDone.length > 0 || Object.keys(escalationsByTrack).length > 0;
+      if (hasActivity) panel.classList.add('visible');
+      else panel.classList.remove('visible');
+
+      // Gemini column
+      const geminiStatus = document.getElementById('gemini-status');
       if (runningModules.length > 0) {
-        banner.className = 'live-banner active';
         const rm = runningModules[0];
-        title.textContent = `Processing: ${rm.track} / ${rm.slug}`;
-        const elapsed = rm.start ? Math.round((now - new Date(rm.start).getTime()) / 1000) : 0;
-        const recent = recentDone.length > 0
-          ? ` | Last: ${recentDone[0].slug} ${recentDone[0].status === 'pass' ? '\u2705' : '\u274C'} (${Math.round(recentDone[0].duration)}s)`
-          : '';
-        detail.textContent = `Running ${elapsed}s${recent}`;
-      } else if (runningTracks.length > 0) {
-        banner.className = 'live-banner active';
-        const rt = runningTracks[0];
-        const trackInfo = tracks[rt[0]];
-        const passed = trackInfo.passed || 0;
-        const total = trackInfo.total || 0;
-        title.textContent = `Dispatched: ${rt[0]} (${passed}/${total} passed)`;
-        const recent = recentDone.length > 0
-          ? `Last completed: ${recentDone[0].slug} ${recentDone[0].status === 'pass' ? '\u2705' : '\u274C'}`
-          : 'Waiting for module updates...';
-        detail.textContent = recent;
-      } else if (dispatcherRunning) {
-        banner.className = 'live-banner active';
-        title.textContent = 'Dispatcher running — scanning for eligible tracks';
-        detail.textContent = `${Object.values(tracks).filter(t => t.state === 'DONE').length} done, ${Object.values(tracks).filter(t => t.state === 'ELIGIBLE').length} eligible, ${Object.values(tracks).filter(t => t.state === 'BLOCKED').length} blocked`;
+        const elapsed = rm.start ? formatDuration(Math.round((now - new Date(rm.start).getTime()) / 1000)) : '';
+        document.getElementById('gemini-current').textContent = `${rm.track}/${rm.slug}`;
+        document.getElementById('gemini-timer').textContent = `Elapsed: ${elapsed}`;
+        geminiStatus.className = 'agent-status-badge active';
+        geminiStatus.textContent = 'Active';
       } else {
-        banner.className = 'live-banner idle';
-        const done = Object.values(tracks).filter(t => t.state === 'DONE').length;
-        const total = Object.keys(tracks).length;
-        title.textContent = done === total && total > 0 ? 'All tracks complete!' : 'Dispatcher idle';
-        detail.textContent = total > 0 ? `${done}/${total} tracks done` : 'Run a scan to see track status';
+        document.getElementById('gemini-current').textContent = '-';
+        document.getElementById('gemini-timer').textContent = '-';
+        geminiStatus.className = 'agent-status-badge idle';
+        geminiStatus.textContent = 'Idle';
       }
+
+      // Gemini queue depth
+      const eligible = Object.values(tracks).filter(t => t.state === 'ELIGIBLE').length;
+      document.getElementById('gemini-queue').textContent = `Queue: ${eligible} tracks eligible`;
+
+      // Gemini recent completions
+      const histEl = document.getElementById('gemini-history');
+      const histItems = recentDone.slice(0, 5).map(d => `
+        <div class="agent-history-item">
+          <span class="slug">${d.slug}</span>
+          <span class="result ${d.status}">${d.status === 'pass' ? '\u2705' : '\u274C'} ${d.duration ? formatDuration(d.duration) : ''}</span>
+        </div>
+      `).join('');
+      histEl.innerHTML = `<div style="color:#64748b;font-size:10px;margin-bottom:4px;">Recent completions</div>${histItems || '<div style="color:#475569;font-size:11px;">None yet</div>'}`;
+
+      // Claude column
+      const totalEsc = Object.values(escalationsByTrack).reduce((s, n) => s + n, 0);
+      const claudeStatus = document.getElementById('claude-status');
+      if (totalEsc > 0) {
+        document.getElementById('claude-current').textContent = `${totalEsc} modules escalated`;
+        claudeStatus.className = 'agent-status-badge queued';
+        claudeStatus.textContent = `${totalEsc} Queued`;
+      } else {
+        document.getElementById('claude-current').textContent = 'No escalations';
+        claudeStatus.className = 'agent-status-badge idle';
+        claudeStatus.textContent = 'Idle';
+      }
+      document.getElementById('claude-timer').textContent = totalEsc > 0 ? 'Awaiting manual processing' : '-';
+
+      // Claude by-track breakdown
+      const claudeHist = document.getElementById('claude-history');
+      const breakdownHtml = Object.entries(escalationsByTrack)
+        .filter(([_, count]) => count > 0)
+        .map(([track, count]) => `
+          <div class="agent-history-item">
+            <span class="slug">${track}</span>
+            <span class="result fail">${count} pending</span>
+          </div>
+        `).join('');
+      claudeHist.innerHTML = `<div style="color:#64748b;font-size:10px;margin-bottom:4px;">By-track breakdown</div>${breakdownHtml || '<div style="color:#475569;font-size:11px;">All clear</div>'}`;
     }
 
     function detectChanges(track, newState) {
@@ -1493,12 +1866,31 @@
         if (hasData) {
           const pct = total > 0 ? Math.round((pass / total) * 100) : 0;
           const unbuilt = dTrack?.unbuilt || (total - pass - fail);
-          const badgeHtml = dState ? `<span class="state-badge ${dState}">${dState}</span>` : '';
+          const pctClass = pct >= 80 ? 'high' : pct >= 40 ? 'mid' : 'low';
+
+          // State icon
+          const stateIcons = { RUNNING: '\u25B6', DONE: '\u2714', COOLDOWN: '\u23F8', STALLED: '\u26A0', ELIGIBLE: '\u25CF', BLOCKED: '\u1F512' };
+          const stateIcon = stateIcons[dState] || '';
+
+          // Model tag (Gemini = G blue, Claude escalated = C orange)
           const esc = escalationsByTrack[track] || 0;
-          const escHtml = esc > 0 ? `<span style="color:#fde68a;font-size:10px;font-weight:700;margin-left:4px;" title="${esc} escalated to Claude">${esc} esc</span>` : '';
+          const isRunning = running > 0;
+          const modelTag = isRunning ? '<span class="card-model-tag gemini">G</span>' :
+                           esc > 0 ? `<span class="card-model-tag claude">${esc}C</span>` : '';
+
+          // Cooldown countdown
+          let cooldownHtml = '';
+          if (dState === 'COOLDOWN' && dTrack?.cooldown_until) {
+            try {
+              const remaining = Math.max(0, Math.round((new Date(dTrack.cooldown_until) - new Date()) / 60000));
+              if (remaining > 0) cooldownHtml = `<div class="card-cooldown">Unfreezes in ${remaining}m</div>`;
+            } catch {}
+          }
 
           card.innerHTML = `
-            <div class="overview-track">${track} ${badgeHtml} ${escHtml} ${running > 0 ? '<span class="spinner"></span>' : ''}</div>
+            <span class="card-state-icon">${stateIcon}${isRunning ? ' <span class="spinner"></span>' : ''}</span>
+            <div class="card-pct ${pctClass}">${pct}%</div>
+            <div class="overview-track">${track}</div>
             <div class="overview-stats">
               <span class="green">${pass} pass</span>
               <span class="red">${fail} fail</span>
@@ -1507,12 +1899,17 @@
             <div class="mini-progress">
               <div class="mini-progress-fill" style="width:${pct}%"></div>
             </div>
+            ${cooldownHtml}
+            ${modelTag}
           `;
           card.onclick = () => { if (state) selectTrack(track); };
         } else {
-          const badgeHtml = dState ? `<span class="state-badge ${dState}">${dState}</span>` : '';
+          const stateIcons = { BLOCKED: '\uD83D\uDD12', ELIGIBLE: '\u25CF' };
+          const stateIcon = stateIcons[dState] || '';
           card.innerHTML = `
-            <div class="overview-track">${track} ${badgeHtml}</div>
+            <span class="card-state-icon">${stateIcon}</span>
+            <div class="card-pct low">-</div>
+            <div class="overview-track">${track}</div>
             <div class="overview-stats"><span class="gray">No data</span></div>
             <div class="mini-progress"><div class="mini-progress-fill" style="width:0%"></div></div>
           `;
@@ -1595,39 +1992,12 @@
         document.getElementById('stat-remaining').textContent = `${remaining} modules left`;
       }
 
-      // Active module
-      const banner = document.getElementById('active-banner');
-      if (running) {
-        const [slug, data] = running;
-        banner.classList.add('visible');
-        document.getElementById('active-slug').textContent = slug;
-        document.getElementById('active-mode').textContent = data.mode || 'fix';
-        document.getElementById('active-start').textContent =
-          new Date(data.start_time).toLocaleTimeString();
-        activeStartTime = new Date(data.start_time);
-        updateElapsed();
-        if (elapsedTimer) clearInterval(elapsedTimer);
-        elapsedTimer = setInterval(updateElapsed, 1000);
-      } else {
-        banner.classList.remove('visible');
-        if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null; }
-      }
-
       renderModuleGrid(modules);
       document.getElementById('module-count').textContent = `(${total} total)`;
 
       // Failures
       const failures = modules.filter(([_,m]) => m.status === 'fail');
       renderFailures(failures, track);
-    }
-
-    function updateElapsed() {
-      if (!activeStartTime) return;
-      const elapsed = Math.max(0, Math.floor((Date.now() - activeStartTime.getTime()) / 1000));
-      const mins = Math.floor(elapsed / 60);
-      const secs = elapsed % 60;
-      document.getElementById('active-elapsed').textContent =
-        `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
     // ========== MODULE GRID ==========
@@ -1647,7 +2017,14 @@
         const shortSlug = slug.length > 14 ? slug.slice(0, 12) + '..' : slug;
         const dur = data.duration ? formatDuration(data.duration) : '';
 
+        // Model badge: G for Gemini-processed, C for Claude-escalated
+        const model = data.model || (data.mode === 'escalated' ? 'claude' : 'gemini');
+        const modelBadge = data.status === 'pass' || data.status === 'fail'
+          ? `<span class="cell-model-badge ${model === 'claude' ? 'c' : 'g'}">${model === 'claude' ? 'C' : 'G'}</span>`
+          : '';
+
         cell.innerHTML = `
+          ${modelBadge}
           <div class="cell-slug" title="${slug}">${shortSlug}</div>
           ${dur ? `<div class="cell-time">${dur}</div>` : ''}
         `;
@@ -1666,6 +2043,8 @@
       let rows = '';
       rows += detailRow('Status', data.status?.toUpperCase() || 'PENDING');
       rows += detailRow('Mode', data.mode || '-');
+      const model = data.model || (data.mode === 'escalated' ? 'Claude' : 'Gemini');
+      rows += detailRow('Model', model);
       if (data.start_time) rows += detailRow('Started', new Date(data.start_time).toLocaleTimeString());
       if (data.end_time) rows += detailRow('Ended', new Date(data.end_time).toLocaleTimeString());
       if (data.duration) rows += detailRow('Duration', formatDuration(data.duration));
@@ -1716,28 +2095,88 @@
         return;
       }
 
-      list.innerHTML = escalations.map(esc => {
+      // Sort oldest-first
+      const sorted = [...escalations].sort((a, b) => {
+        const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+        const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+        return ta - tb;
+      });
+
+      list.innerHTML = sorted.map(esc => {
         const track = esc.track || '?';
         const slug = esc.slug || '?';
         const iters = esc.iterations_used || '?';
         const gates = Object.keys(esc.failed_gates || {});
         const gateStr = gates.length > 0 ? gates.join(', ') : 'content gates';
-        const blocking = (esc.blocking_issues || []).join(', ') || 'none';
         const wc = esc.word_count || {};
         const wcStr = wc.actual ? `${wc.actual}/${wc.target}` : '';
-        const ts = esc.timestamp ? new Date(esc.timestamp).toLocaleString() : '';
+
+        // Time in queue
+        let queueTimeStr = '';
+        if (esc.timestamp) {
+          const queueMs = Date.now() - new Date(esc.timestamp).getTime();
+          const queueHrs = Math.floor(queueMs / 3600000);
+          const queueMin = Math.floor((queueMs % 3600000) / 60000);
+          queueTimeStr = queueHrs > 0 ? `${queueHrs}h ${queueMin}m` : `${queueMin}m`;
+        }
+
+        // Status steps
+        const statusSteps = `<span style="font-size:10px;color:#64748b;">[Queued] \u2192 [Pending] \u2192 [Done]</span>`;
 
         return `
           <div class="escalation-item" onclick="showFailureDetail('${track}', '${slug}')">
             <div>
               <span class="escalation-slug">${track}/${slug}</span>
               <span class="escalation-status pending">Waiting for Claude</span>
+              ${queueTimeStr ? `<span style="font-size:10px;color:#fde68a;margin-left:8px;" title="Time in queue">\u23F1 ${queueTimeStr}</span>` : ''}
             </div>
             <div class="escalation-meta">
               Gates: ${gateStr} &middot; ${iters} iters${wcStr ? ` &middot; WC: ${wcStr}` : ''}
             </div>
-            <div class="escalation-meta">
-              ${blocking !== 'none' ? `Blocking: ${blocking} &middot; ` : ''}${ts}
+            <div class="escalation-meta">${statusSteps}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ========== DISPATCH TIMELINE ==========
+    function renderTimeline() {
+      const container = document.getElementById('dispatch-timeline');
+      const countEl = document.getElementById('timeline-count');
+
+      // Gather dispatch history from dispatcher state
+      const history = dispatcherState?.dispatch_history || [];
+      countEl.textContent = `${history.length} events`;
+
+      if (history.length === 0) {
+        container.innerHTML = '<div class="empty-state">No dispatch history</div>';
+        return;
+      }
+
+      // Show last 30, newest first
+      const recent = history.slice(-30).reverse();
+
+      container.innerHTML = recent.map(entry => {
+        const track = entry.track || '?';
+        const ts = entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString() : '';
+        const dur = entry.duration ? formatDuration(entry.duration) : '';
+        const result = entry.result || entry.outcome || 'unknown';
+
+        // Color-code by result
+        let dotClass = 'progress';
+        if (result === 'fail' || result === 'error') dotClass = 'fail';
+        else if (result === 'stall' || result === 'stalled') dotClass = 'stall';
+        else if (result === 'quota' || result === 'cooldown') dotClass = 'quota';
+
+        const detail = entry.detail || entry.slug || '';
+
+        return `
+          <div class="timeline-entry">
+            <div class="timeline-dot ${dotClass}"></div>
+            <div class="timeline-content">
+              <div><span class="timeline-track">${track}</span> ${detail ? `<span style="color:#94a3b8;">/ ${detail}</span>` : ''}</div>
+              <div class="timeline-time">${ts}${dur ? ` \u00B7 ${dur}` : ''}</div>
+              <div class="timeline-result">${result}</div>
             </div>
           </div>
         `;

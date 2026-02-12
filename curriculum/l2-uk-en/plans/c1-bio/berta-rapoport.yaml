@@ -1,4 +1,3 @@
----
 module: c1-bio-105
 level: C1-BIO
 sequence: 105
@@ -6,7 +5,7 @@ slug: berta-rapoport
 version: '2.0'
 title: 'Берта Рапопорт: Лікарка і громадська діячка'
 content_outline:
-- section: "Вступ — Жінка, що лікувала і надихала"
+- section: Вступ — Жінка, що лікувала і надихала
   words: 400
   points:
   - Одна з перших жінок-лікарів в Україні
@@ -40,7 +39,7 @@ content_outline:
   - Ставлення до революційних змін
   - Останні роки життя
   - Смерть та забуття в радянський час
-- section: "Спадщина — Повернення з небуття"
+- section: Спадщина — Повернення з небуття
   words: 700
   points:
   - Дослідження істориків
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Берта Рапопорт (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна"
+  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
   type: primary
   notes: Biography of the pioneering woman doctor and activist
 - name: Одеська медична спадщина
-  url: "https://omu.odessa.ua/"
+  url: https://omu.odessa.ua/
   type: reference
   notes: Historical medical archives of Odesa
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of берта рапопорт: лікарка і громадська діячка'
 - Evaluate the contributions of жінка, що лікувала і надихала
 - Trace the career and influence of повернення з небуття
+persona:
+  voice: Senior Biographer
+  role: Chief Physician

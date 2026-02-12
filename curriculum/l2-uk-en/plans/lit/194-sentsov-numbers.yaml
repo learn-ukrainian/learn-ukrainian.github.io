@@ -1,4 +1,3 @@
----
 sequence: 194
 module: lit-194
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Sentsov Numbers у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Dystopian Prisoner

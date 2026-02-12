@@ -1,4 +1,3 @@
----
 module: a1-11
 level: A1
 sequence: 11
@@ -77,4 +76,7 @@ grammar:
 - 'Feminine: -а → -у, -я → -ю'
 - 'Masculine/Neuter: no change'
 register: розмовний
-phase: "A1.2 [Navigation]"
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Logistics Expert

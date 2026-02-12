@@ -1,4 +1,3 @@
----
 module: c1-100
 level: C1
 sequence: 100
@@ -7,13 +6,13 @@ version: '2.0'
 title: 'Леся Українка: Драма'
 subtitle: Lesya Ukrainka's Drama
 content_outline:
-- section: "Розминка — Лісова пісня душі"
+- section: Розминка — Лісова пісня душі
   words: 700
   points:
   - '"Лісова пісня" — Мавка, Лукаш, духи лісу'
   - '"Кассандра" — грецька міфологія та пророцтво'
-  - 'Неоромантична драма — символізм та версифікація'
-- section: "Content Areas"
+  - Неоромантична драма — символізм та версифікація
+- section: Content Areas
   words: 1250
   points:
   - 'Лісова пісня: forest spirits, love, sacrifice'
@@ -21,11 +20,11 @@ content_outline:
   - 'Камінний господар: Don Juan retelling'
   - 'Dramatic techniques: verse drama, symbolism'
   - Mythological and historical settings
-- section: "Практика — драматургія Лесі"
+- section: Практика — драматургія Лесі
   words: 1050
   points:
   - Проаналізувати конфлікт духовного та матеріального у "Лісовій пісні"
-  - 'Порівняти образи Мавки та Килини — два світи'
+  - Порівняти образи Мавки та Килини — два світи
   - Написати есе про міфологічні мотиви у "Кассандрі"
   - Обговорити "Камінного господаря" як переосмислення Дон Жуана
 word_target: 3000
@@ -40,3 +39,6 @@ grammar:
 - Dramatic syntax
 - Symbolic imagery
 phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Театрознавець

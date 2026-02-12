@@ -1,4 +1,3 @@
----
 module: c1-pro-22
 level: C1-PRO
 sequence: 22
@@ -7,7 +6,7 @@ version: '2.0'
 title: Тези конференцій
 subtitle: Conference Abstracts
 content_outline:
-- section: "Розминка — Роль тез у наукових конференціях"
+- section: Розминка — Роль тез у наукових конференціях
   words: 400
   points:
   - Тези як форма наукової комунікації
@@ -40,7 +39,7 @@ content_outline:
   - Зразок тез для наукової конференції
   - Аналіз сильних та слабких тез
   - Типові формулювання для кожного розділу тез
-- section: "Практика — Написання тез"
+- section: Практика — Написання тез
   words: 400
   points:
   - 'Завдання: Написати тези на задану тему для конференції'
@@ -66,7 +65,7 @@ vocabulary_hints:
   - лист прийняття (acceptance letter)
 activity_hints:
 - type: document-analysis
-  focus: "Проаналізувати тези — оцінити структуру та повноту"
+  focus: Проаналізувати тези — оцінити структуру та повноту
   items: 2
 - type: writing-task
   focus: Написати тези для конференції за вимогами
@@ -97,3 +96,6 @@ grammar:
 - Майбутній час для мети (Буде проаналізовано... / Планується дослідити...)
 register: науковий
 phase: C1-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Секретар оргкомітету

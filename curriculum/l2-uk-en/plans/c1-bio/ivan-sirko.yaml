@@ -1,4 +1,3 @@
----
 module: c1-bio-025
 level: C1-BIO
 sequence: 25
@@ -7,11 +6,11 @@ version: '2.0'
 title: 'Іван Сірко: Легендарний кошовий отаман'
 word_target: 4300
 content_outline:
-- section: "Вступ — Легенда Запорозької Січі"
+- section: Вступ — Легенда Запорозької Січі
   words: 600
   points:
   - Сірко як символ непереможності
-  - "Урус-Шайтан": образ у ворогів
+  - Урус-Шайтан: образ у ворогів
   - Феномен характерництва
 - section: Життєпис
   words: 1600
@@ -63,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Іван Сірко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Іван_Сірко"
+  url: https://uk.wikipedia.org/wiki/Іван_Сірко
   type: primary
   notes: Біографія та походи
-- name: "Дмитро Яворницький \"Історія запорозьких козаків\""
-  url: "http://izbornyk.org.ua/"
+- name: Дмитро Яворницький "Історія запорозьких козаків"
+  url: http://izbornyk.org.ua/
   type: reference
   notes: Класичне дослідження
 immersion: 100% Ukrainian
@@ -83,3 +82,6 @@ activity_hints:
   source: Folklore (adapted)
 - type: essay-response
   focus: Феномен непереможності Сірка
+persona:
+  voice: Senior Biographer
+  role: Kish Otaman

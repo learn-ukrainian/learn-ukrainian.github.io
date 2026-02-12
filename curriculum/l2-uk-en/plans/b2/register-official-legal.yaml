@@ -1,4 +1,3 @@
----
 module: b2-19
 level: B2
 sequence: 19
@@ -6,7 +5,7 @@ slug: 19-register-official-legal
 version: '2.0'
 title: 'Офіційно-діловий стиль: документи, закони, заяви'
 content_outline:
-- section: "Вступ — Офіційно-діловий стиль"
+- section: Вступ — Офіційно-діловий стиль
   words: 400
   points:
   - Визначення та сфера застосування
@@ -107,19 +106,22 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Official Style
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official document standards
 - name: Офіційно-діловий стиль
-  url: "https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль"
+  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
   type: secondary
   notes: Official-business style conventions
 - name: CEFR B2 Formal Writing
-  url: "https://www.coe.int/en/web/common-european-framework-reference-languages"
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
   type: reference
   notes: B2 formal document comprehension
 immersion: 100% Ukrainian
-phase: "B2.1b [Participles & Register Intro]"
+phase: B2.1b [Participles & Register Intro]
 objectives:
 - 'Understand and apply офіційно-діловий стиль: документи, закони, заяви'
 - Analyze and evaluate офіційно-діловий стиль
+persona:
+  voice: Professional Language Coach
+  role: Notary (Нотаріус)

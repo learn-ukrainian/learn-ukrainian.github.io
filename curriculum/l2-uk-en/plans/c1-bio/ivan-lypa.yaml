@@ -1,4 +1,3 @@
----
 module: c1-bio-061
 level: C1-BIO
 sequence: 61
@@ -6,7 +5,7 @@ slug: ivan-lypa
 version: '2.0'
 title: 'Іван Липа: Лікар і письменник'
 content_outline:
-- section: "Вступ — Лікар душ українських"
+- section: Вступ — Лікар душ українських
   words: 400
   points:
   - Лікар, письменник, громадський діяч
@@ -40,7 +39,7 @@ content_outline:
   - Робота в УНР
   - Еміграція
   - Загибель у 1923 році
-- section: "Спадщина — Пророк незалежності"
+- section: Спадщина — Пророк незалежності
   words: 700
   points:
   - Вплив на український націоналізм
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Липа (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Липа_Іван_Львович"
+  url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
   type: primary
   notes: Biography of the doctor, writer, and patriot
 - name: Братство тарасівців
-  url: "https://uk.wikipedia.org/wiki/Братство_тарасівців"
+  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
   type: reference
   notes: Information about the organization Lypa co-founded
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of іван липа: лікар і письменник'
 - Evaluate the contributions of лікар душ українських
 - Trace the career and influence of пророк незалежності
+persona:
+  voice: Senior Biographer
+  role: Field Doctor

@@ -24,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - grammar-lab
+persona:
+  voice: Senior Paleographer
+  role: Archaeologist

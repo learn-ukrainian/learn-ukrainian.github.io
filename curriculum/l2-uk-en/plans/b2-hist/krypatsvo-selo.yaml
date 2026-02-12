@@ -1,4 +1,3 @@
----
 module: b2-hist-079
 level: B2-HIST
 sequence: 79
@@ -89,4 +88,7 @@ grammar:
 - Соціально-економічна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.8 [Imperial Era]"
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Ethnographer of the South

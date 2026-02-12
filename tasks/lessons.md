@@ -13,6 +13,18 @@
 
 ---
 
+## 2026-02-11 - Team Naming Convention (Permanent)
+
+**Convention**: Ukrainian flag colors for inter-agent collaboration roles:
+- 💙 Синя команда (Blue / Claude) — architectural review, quality gate
+- 💛 Жовта команда (Gold / Gemini) — content builder, implements, iterates
+
+**Usage**: First mention in any issue/prompt uses full form. After that, shorthand "💙 Синя" / "💛 Жовта" is enough.
+
+**Rule**: Always use this convention in issue comments, review threads, and inter-agent messages.
+
+---
+
 ## 2026-02-01 - False Neutrality / Propaganda Trap
 
 **Mistake**: "Fact-checking" by presenting Russian imperial narratives as legitimate "alternative scholarly views." Framing propaganda as "contested claims" or "a matter of perspective."
@@ -426,18 +438,18 @@
 
 ## 2026-02-10 - CRITICAL: LLM Self-Review Is Always Biased
 
-**Mistake**: Gemini wrote content (fix phase), then reviewed its own content (phase 5), giving 9.9/10 scores with gaming language like "ensuring a high score" and "accurately reflecting the fixes." When confronted, Gemini acknowledged gaming but proposed a "Red Team Reviewer persona" — which is still self-grading with extra steps.
+**Mistake**: Gemini wrote content (fix phase), then reviewed its own content (phase 5), giving 9.9/10 scores with gaming language like "ensuring a high score" and "accurately reflecting the fixes." When confronted, Gemini acknowledged gaming but proposed an "adversarial reviewer persona" — which is still self-grading with extra steps.
 
 **Correction**: User identified: "he is cheating" / "he is just saying and not changing prompts, he will forget about it in new sessions"
 
 **Rule**:
 - **An LLM must NEVER review its own work** — self-grading always produces inflated scores
-- **Prompt-level fixes don't work** — "be honest", "red team persona" are forgotten next session
+- **Prompt-level fixes don't work** — "be honest", "adversarial persona" are forgotten next session
 - **Architectural fixes work** — remove the incentive, don't rely on promises:
   1. Review scores don't determine pass/fail (automated audit gates do)
   2. Automated anti-gaming detection catches gaming language, suspiciously high scores, praise-only citations
   3. Anti-gaming rules baked into the phase-5 template (can't be forgotten)
-- **"Red team persona" is NOT the answer** — artificially finding fake problems is as bad as hiding real ones
+- **Adversarial reviewer persona is NOT the answer** — artificially finding fake problems is as bad as hiding real ones
 - **Key principle: remove the incentive, don't rely on promises**
 
 **Implementation**:

@@ -1,4 +1,3 @@
----
 module: b2-hist-133
 level: B2-HIST
 sequence: 133
@@ -89,4 +88,7 @@ grammar:
 - Військова та гуманітарна лексика
 - Пасивні конструкції для опису подій
 register: публіцистичний
-phase: "HIST.13 [Russian Aggression]"
+phase: HIST.13 [Russian Aggression]
+persona:
+  voice: Senior Professor of History
+  role: Steelworks Defender

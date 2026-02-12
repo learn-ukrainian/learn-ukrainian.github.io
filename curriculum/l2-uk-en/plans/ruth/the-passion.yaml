@@ -1,4 +1,3 @@
----
 sequence: 33
 module: ruth-033
 module_number: 27
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Lenten Preacher

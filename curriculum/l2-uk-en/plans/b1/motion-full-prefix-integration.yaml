@@ -1,4 +1,3 @@
----
 module: b1-22
 level: B1
 sequence: 22
@@ -9,7 +8,7 @@ subtitle: 'Motion: Full Prefix Integration'
 content_outline:
 - section: Тест
   words: 254
-  points: "[]"
+  points: '[]'
 - section: Пояснення
   words: 1303
   points:
@@ -30,7 +29,7 @@ content_outline:
   - 'Діалог 3: Загублений гаманець'
 - section: Підсумок
   words: 244
-  points: "[]"
+  points: '[]'
 - section: Потрібно більше практики?
   words: 212
   points:
@@ -95,16 +94,19 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Motion Prefixes
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official prefix system for motion verbs
 - name: Ukrainian Verbal Prefixes
-  url: "https://uk.wikipedia.org/wiki/Дієслівні_префікси"
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
   type: reference
   notes: Complete prefix reference with all meanings
 - name: Ukrainian Motion Verbs (Academic)
-  url: "https://uk.wikipedia.org/wiki/Дієслова_руху"
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
   type: reference
   notes: Academic treatment of motion verb system
 immersion: 100% Ukrainian
 phase: B1.3 Motion Verbs
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Urban Explorer

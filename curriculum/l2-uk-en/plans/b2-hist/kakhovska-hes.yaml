@@ -1,4 +1,3 @@
----
 module: b2-hist-135
 level: B2-HIST
 sequence: 135
@@ -71,7 +70,7 @@ activity_hints:
   source: Українські медіа
   items: 4
 - type: essay-response
-  focus: "Чому знищення Каховської ГЕС — це екоцид?"
+  focus: Чому знищення Каховської ГЕС — це екоцид?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -90,4 +89,7 @@ grammar:
 - Теперішній час для наслідків
 - Екологічна та юридична лексика
 register: публіцистичний
-phase: "HIST.13 [Russian Aggression]"
+phase: HIST.13 [Russian Aggression]
+persona:
+  voice: Senior Professor of History
+  role: Environmental Inspector

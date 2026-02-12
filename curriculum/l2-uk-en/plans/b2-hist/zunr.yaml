@@ -1,4 +1,3 @@
----
 module: b2-hist-092
 level: B2-HIST
 sequence: 92
@@ -89,4 +88,7 @@ grammar:
 - Політична та юридична лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.9 [WWI & Revolution]"
+phase: HIST.9 [WWI & Revolution]
+persona:
+  voice: Senior Professor of History
+  role: State Secretary

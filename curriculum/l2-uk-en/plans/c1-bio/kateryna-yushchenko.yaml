@@ -1,4 +1,3 @@
----
 module: c1-bio-127
 level: C1-BIO
 sequence: 127
@@ -6,7 +5,7 @@ slug: kateryna-yushchenko
 version: '2.0'
 title: 'Катерина Ющенко: Піонерка кібернетики'
 content_outline:
-- section: "Вступ — Мати мови програмування"
+- section: Вступ — Мати мови програмування
   words: 400
   points:
   - Піонерка програмування в СРСР
@@ -40,7 +39,7 @@ content_outline:
   - Наукові праці
   - Визнання та нагороди
   - Смерть у Києві
-- section: "Спадщина — Забутий геній"
+- section: Спадщина — Забутий геній
   words: 700
   points:
   - Значення для світової інформатики
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Катерина Ющенко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна"
+  url: https://uk.wikipedia.org/wiki/Ющенко_Катерина_Логвинівна
   type: primary
   notes: Biography of the pioneering computer scientist
 - name: Інститут кібернетики ім. В.М. Глушкова НАН України
-  url: "https://icyb.kiev.ua/"
+  url: https://icyb.kiev.ua/
   type: reference
   notes: Institute where Yushchenko worked
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of катерина ющенко: піонерка кібернетики'
 - Evaluate the contributions of мати мови програмування
 - Trace the career and influence of забутий геній
+persona:
+  voice: Senior Biographer
+  role: Algorithm Creator

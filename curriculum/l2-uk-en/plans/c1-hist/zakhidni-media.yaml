@@ -1,4 +1,3 @@
----
 module: c1-hist-111
 level: c1-hist
 sequence: 111
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of західні медіа: сліпі плями'
 - Evaluate the historical significance of ненавмисна допомога
 content_outline:
-- section: "Вступ — Ненавмисна допомога"
+- section: Вступ — Ненавмисна допомога
   words: 457
   subsections:
   - Західні медіа — не вороги
@@ -77,22 +76,22 @@ vocabulary:
 - московський кореспондент
 activities:
 - type: critical-analysis
-  focus: "«Both sides» coverage — examples and analysis"
+  focus: «Both sides» coverage — examples and analysis
 - type: critical-analysis
   focus: How Kremlin talking points appear in Western media
 - type: critical-analysis
-  focus: "Who are \"Ukraine experts\" in Western media?"
+  focus: Who are "Ukraine experts" in Western media?
 - type: critical-analysis
   focus: How same event covered in different outlets
 - type: essay-response
   focus: Чи західні медіа об'єктивні щодо України?
 sources:
 - name: Висвітлення України в західних ЗМІ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ"
+  url: https://uk.wikipedia.org/wiki/Висвітлення_України_в_західних_ЗМІ
   type: reference
   notes: Western media coverage
 - name: Російська дезінформація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російська_дезінформація"
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
   type: reference
   notes: How disinformation spreads
 vocabulary_hints:
@@ -115,3 +114,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Media Bias Researcher

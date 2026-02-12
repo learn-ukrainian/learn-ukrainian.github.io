@@ -1,4 +1,3 @@
----
 module: b2-hist-021
 level: B2-HIST
 sequence: 21
@@ -81,11 +80,14 @@ grammar:
 - Passive voice in historical writing
 sources:
 - name: Іпатіївський літопис
-  url: "http://litopys.org.ua/ipatlet/ipat.htm"
+  url: http://litopys.org.ua/ipatlet/ipat.htm
   type: primary
   notes: Основне джерело про події 1240 року
 - name: Джованні да Плано Карпіні. Історія Монгалів
-  url: "http://litopys.org.ua/travelj/travelj.htm"
+  url: http://litopys.org.ua/travelj/travelj.htm
   type: primary
   notes: Свідчення європейського мандрівника
-phase: "B2-HIST.2 [Fragmentation]"
+phase: B2-HIST.2 [Fragmentation]
+persona:
+  voice: Senior Professor of History
+  role: Chief Archaeologist of Medieval Kyiv

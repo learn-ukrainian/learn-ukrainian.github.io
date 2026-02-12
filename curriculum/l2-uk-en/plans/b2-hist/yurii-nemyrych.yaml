@@ -1,4 +1,3 @@
----
 module: b2-hist-057
 level: B2-HIST
 sequence: 57
@@ -93,12 +92,15 @@ grammar:
 - 'Historical conditionals: ''what if'' scenarios'
 sources:
 - name: The Treaty of Hadiach - Encyclopedia of Ukraine
-  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm"
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm
   type: reference
   notes: Academic summary
 - name: Yurii Nemyrych's Speech
-  url: "http://litopys.org.ua/"
+  url: http://litopys.org.ua/
   type: primary
   notes: Original text of the speech
 register: публіцистичний
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: Protestant Noble

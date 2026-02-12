@@ -1,4 +1,3 @@
----
 sequence: 195
 module: lit-195
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Sentsov Stories у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Prison Scribe

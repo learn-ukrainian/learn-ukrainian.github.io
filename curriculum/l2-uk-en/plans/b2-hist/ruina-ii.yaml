@@ -1,4 +1,3 @@
----
 module: b2-hist-059
 level: B2-HIST
 sequence: 59
@@ -87,12 +86,15 @@ grammar:
 - 'Political terminology: protectorate vs. alliance'
 sources:
 - name: Petro Doroshenko - Encyclopedia of Ukraine
-  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDoroshenkoPetro.htm"
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDoroshenkoPetro.htm
   type: reference
   notes: Academic biography
 - name: Chyhyryn Campaigns
-  url: "http://litopys.org.ua/"
+  url: http://litopys.org.ua/
   type: primary
   notes: Chronicles about the siege
 register: публіцистичний
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: Foreign Envoy

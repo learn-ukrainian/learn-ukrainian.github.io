@@ -1,4 +1,3 @@
----
 sequence: 46
 module: lit-46
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Franko Lviv Period у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Lviv Journalist

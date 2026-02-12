@@ -1,4 +1,3 @@
----
 module: c1-hist-039
 level: c1-hist
 sequence: 39
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of самвидав: що це було?'
 - Evaluate the historical significance of підпільна література
 content_outline:
-- section: "Вступ — Підпільна література"
+- section: Вступ — Підпільна література
   words: 457
   subsections:
   - Що таке самвидав?
@@ -40,14 +39,14 @@ content_outline:
   - Звернення і петиції
   - Переклади
   - Історичні дослідження
-- section: "Український самвидав — особливості"
+- section: Український самвидав — особливості
   words: 686
   subsections:
   - Національне питання — центральне
   - Мова як опір
   - «Український вісник» Чорновола
   - Зв'язок із загальносоюзним
-- section: "Фрагмент — Перший номер"
+- section: Фрагмент — Перший номер
   words: 571
   subsections:
   - Текст (з глосами)
@@ -79,7 +78,7 @@ vocabulary:
 - обшук
 activities:
 - type: reading
-  focus: "Sample samvydav text — introduction to a publication"
+  focus: Sample samvydav text — introduction to a publication
 - type: critical-analysis
   focus: Map the samvydav production and distribution network
 - type: critical-analysis
@@ -90,15 +89,15 @@ activities:
   focus: Чому самвидав був ефективним способом опору?
 sources:
 - name: Самвидав (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Самвидав"
+  url: https://uk.wikipedia.org/wiki/Самвидав
   type: reference
   notes: Overview
 - name: Український самвидав
-  url: "https://uk.wikipedia.org/wiki/Український_самвидав"
+  url: https://uk.wikipedia.org/wiki/Український_самвидав
   type: reference
   notes: Ukrainian samizdat specifically
 - name: Архів самвидаву
-  url: "https://diasporiana.org.ua/"
+  url: https://diasporiana.org.ua/
   type: primary
   notes: Diaspora digital archive
 vocabulary_hints:
@@ -121,3 +120,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Underground Press Researcher

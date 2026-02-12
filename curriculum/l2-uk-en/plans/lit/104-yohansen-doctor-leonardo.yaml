@@ -1,4 +1,3 @@
----
 sequence: 104
 module: lit-104
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Yohansen Doctor Leonardo у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Landscape Traveler

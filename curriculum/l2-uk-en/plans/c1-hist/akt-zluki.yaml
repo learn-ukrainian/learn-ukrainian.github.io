@@ -1,4 +1,3 @@
----
 module: c1-hist-035
 level: c1-hist
 sequence: 35
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of акт злуки 1919: символ єдності'
 - Evaluate the historical significance of найважливіший день
 content_outline:
-- section: "Вступ — Найважливіший день"
+- section: Вступ — Найважливіший день
   words: 457
   subsections:
   - 22 січня 1919 — що відбулося
@@ -88,15 +87,15 @@ activities:
   focus: Чому Акт Злуки став найважливішим символом української єдності?
 sources:
 - name: Акт Злуки (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Акт_Злуки"
+  url: https://uk.wikipedia.org/wiki/Акт_Злуки
   type: reference
   notes: Overview
 - name: Текст Акту Злуки
-  url: "https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР"
+  url: https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР
   type: primary
   notes: Full text
 - name: День Соборності
-  url: "https://uk.wikipedia.org/wiki/День_Соборності_України"
+  url: https://uk.wikipedia.org/wiki/День_Соборності_України
   type: reference
   notes: Modern commemoration
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Unity Symbolism Researcher

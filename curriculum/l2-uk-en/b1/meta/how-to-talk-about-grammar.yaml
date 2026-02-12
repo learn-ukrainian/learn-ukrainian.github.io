@@ -15,5 +15,41 @@ tags:
 - terminology
 - bridge
 word_target: 3000
+content_outline:
+- section: "Introduction: The Power of Metalanguage"
+  words: 450
+  points:
+  - Benefits of learning grammar terminology in target language
+  - Preparation for full immersion in B1.1+
+- section: "Parts of Speech: The Content Categories"
+  words: 550
+  points:
+  - іменник, дієслово, прикметник, прислівник, займенник, числівник
+  - Questions and grammatical features for each
+- section: "Parts of Speech: The Functional Glue"
+  words: 500
+  points:
+  - сполучник, прийменник, частка, вигук
+  - Role in sentence structure
+- section: "Case Names: The Seven Keys"
+  words: 600
+  points:
+  - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
+  - Questions and logic for each case
+- section: "Basic Sentence Terms & Grammatical Categories"
+  words: 500
+  points:
+  - морфеміка (корінь, суфікс тощо)
+  - рід, число, особа, час, вид
+- section: "Practice Reading Grammar Explanations"
+  words: 300
+  points:
+  - Simple grammar explanations in Ukrainian
+  - Recognizing patterns in textbook language
+- section: "Summary and Self-Assessment"
+  words: 100
+  points:
+  - Key terms review
+  - Readiness check for M02
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-11'

@@ -1,4 +1,3 @@
----
 module: c1-bio-082
 level: C1-BIO
 sequence: 82
@@ -6,7 +5,7 @@ slug: dmytro-dontsov
 version: '2.0'
 title: 'Дмитро Донцов: Ідеолог націоналізму'
 content_outline:
-- section: "Вступ — Апостол волюнтаризму"
+- section: Вступ — Апостол волюнтаризму
   words: 400
   points:
   - Найвпливовіший ідеолог українського націоналізму
@@ -40,7 +39,7 @@ content_outline:
   - Еміграція до Канади
   - Подальша публіцистика
   - Смерть у Монреалі
-- section: "Спадщина — Між генієм і демоном"
+- section: Спадщина — Між генієм і демоном
   words: 700
   points:
   - Вплив на українську політичну думку
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Дмитро Донцов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Донцов_Дмитро_Іванович"
+  url: https://uk.wikipedia.org/wiki/Донцов_Дмитро_Іванович
   type: primary
   notes: Biography of the controversial nationalist ideologue
 - name: Енциклопедія українознавства
-  url: "http://esu.com.ua/"
+  url: http://esu.com.ua/
   type: reference
   notes: Academic analysis of Dontsov's ideology
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of дмитро донцов: ідеолог націоналізму'
 - Evaluate the contributions of апостол волюнтаризму
 - Trace the career and influence of між генієм і демоном
+persona:
+  voice: Senior Biographer
+  role: Nationalist Editor

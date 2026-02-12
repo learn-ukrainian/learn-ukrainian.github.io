@@ -1,4 +1,3 @@
----
 module: b2-76
 level: B2
 sequence: 76
@@ -7,7 +6,7 @@ version: '2.0'
 title: Релігія в Україні
 subtitle: Religion in Ukraine
 content_outline:
-- section: "Розминка — Релігійний ландшафт України"
+- section: Розминка — Релігійний ландшафт України
   words: 200
   points:
   - Конфесійне різноманіття — православ'я, греко-католицизм, протестантизм
@@ -79,3 +78,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Religious Scholar (Релігієзнавець)

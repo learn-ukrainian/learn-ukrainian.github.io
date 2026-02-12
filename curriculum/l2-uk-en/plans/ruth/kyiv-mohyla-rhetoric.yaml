@@ -1,4 +1,3 @@
----
 sequence: 72
 module: ruth-072
 module_number: 58
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Professor of Rhetoric

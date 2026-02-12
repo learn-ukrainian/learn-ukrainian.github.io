@@ -1,4 +1,3 @@
----
 module: c1-bio-085
 level: C1-BIO
 sequence: 85
@@ -6,7 +5,7 @@ slug: valentyna-radzymovska
 version: '2.0'
 title: 'Валентина Радзимовська: Жертва терору'
 content_outline:
-- section: "Вступ — Наука як жертва режиму"
+- section: Вступ — Наука як жертва режиму
   words: 400
   points:
   - Доля української науки в 1930-х роках
@@ -42,7 +41,7 @@ content_outline:
   - Реабілітація в незалежній Україні
   - Значення для історії української науки
   - Уроки для сучасності
-- section: "Дискусія — Ціна репресій для нації"
+- section: Дискусія — Ціна репресій для нації
   words: 200
   points:
   - Втрачені покоління науковців
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Валентина Радзимовська (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна"
+  url: https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Павлівна
   type: primary
   notes: Основна біографічна інформація
 - name: Меморіал жертв репресій
-  url: "https://www.reabit.org.ua/"
+  url: https://www.reabit.org.ua/
   type: reference
   notes: База даних репресованих
 - name: Історія української біохімії
-  url: "https://biochemistry.org.ua/"
+  url: https://biochemistry.org.ua/
   type: reference
   notes: Науковий контекст
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of валентина радзимовська: жертва терору'
 - Evaluate the contributions of наука як жертва режиму
 - Trace the career and influence of ціна репресій для нації
+persona:
+  voice: Senior Biographer
+  role: Biochemist

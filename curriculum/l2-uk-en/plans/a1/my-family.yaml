@@ -1,4 +1,3 @@
----
 module: a1-32
 level: A1
 sequence: 32
@@ -18,7 +17,7 @@ content_outline:
   - Близька родина (батьки, діти, брати, сестри)
   - Розширена родина (дідусь, бабуся, дядько, тітка)
   - Родинні стосунки (чоловік, дружина, онук, онука)
-- section: "Presentation 2"
+- section: Presentation 2
   words: 255
   points:
   - Вік (Моєму братові 25 років)
@@ -30,13 +29,13 @@ content_outline:
   points:
   - Представлення своєї сім'ї
   - Розповідь про родину
-- section: "Practice 2"
+- section: Practice 2
   words: 294
   points:
   - Діалог про сім'ю друга
   - Діалог про родинне свято
   - Показ сімейних фото
-- section: "Practice 3"
+- section: Practice 3
   words: 13
   points:
   - Опис своєї сім'ї
@@ -97,4 +96,7 @@ grammar:
 - Genitive for relationships (батько + name)
 - Basic vocative forms (мамо, тату, бабусю, дідусю)
 register: розмовний
-phase: "A1.3 [Consolidation]"
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Family Genealogist

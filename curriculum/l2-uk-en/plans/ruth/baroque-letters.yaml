@@ -1,4 +1,3 @@
----
 sequence: 81
 module: ruth-081
 module_number: 81
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Epistolary Master

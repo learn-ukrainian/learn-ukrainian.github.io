@@ -1,4 +1,3 @@
----
 module: c1-hist-027
 level: c1-hist
 sequence: 27
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of документи січі: козацьке самоврядування'
 - Evaluate the historical significance of січ як держава
 content_outline:
-- section: "Вступ — Січ як держава"
+- section: Вступ — Січ як держава
   words: 457
   subsections:
   - Запорозька Січ — що це було?
@@ -41,7 +40,7 @@ content_outline:
   - Покарання — жорстокі
   - Захист власності
   - Рівність? — для кого
-- section: "Фрагмент — Судова справа"
+- section: Фрагмент — Судова справа
   words: 686
   subsections:
   - Текст (з глосами)
@@ -82,22 +81,22 @@ activities:
 - type: reading
   focus: Sich rada protocol excerpt
 - type: critical-analysis
-  focus: "Analyze a court case — procedure and verdict"
+  focus: Analyze a court case — procedure and verdict
 - type: comparative-study
   focus: Compare Sich governance with Polish Sejm
 - type: essay-response
   focus: Чи можна назвати Січ демократичною державою?
 sources:
 - name: Запорозька Січ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Запорозька_Січ"
+  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
   type: reference
   notes: Overview
 - name: Козацьке право
-  url: "https://uk.wikipedia.org/wiki/Козацьке_право"
+  url: https://uk.wikipedia.org/wiki/Козацьке_право
   type: reference
   notes: Cossack law
 - name: Козацька рада
-  url: "https://uk.wikipedia.org/wiki/Козацька_рада"
+  url: https://uk.wikipedia.org/wiki/Козацька_рада
   type: reference
   notes: Cossack council
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Zaporozhian Archivist

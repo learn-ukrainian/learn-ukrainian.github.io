@@ -1,4 +1,3 @@
----
 module: c1-bio-034
 level: C1-BIO
 sequence: 34
@@ -6,7 +5,7 @@ slug: maksym-berezovskyy
 version: '2.0'
 title: 'Максим Березовський: Композитор барокко'
 content_outline:
-- section: "Вступ — Трагічний геній"
+- section: Вступ — Трагічний геній
   words: 400
   points:
   - Березовський як перший український оперний композитор
@@ -47,7 +46,7 @@ content_outline:
   - Забуття за життя
   - Відкриття у XX столітті
   - Місце в українській музичній культурі
-- section: "Підсумок — Втрачений геній"
+- section: Підсумок — Втрачений геній
   words: 300
   points:
   - Березовський як символ імперського поглинання талантів
@@ -95,15 +94,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Максим Березовський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Максим_Березовський"
+  url: https://uk.wikipedia.org/wiki/Максим_Березовський
   type: primary
   notes: Biography, musical works, tragic death
 - name: Українське барокове мистецтво
-  url: "https://uk.wikipedia.org/wiki/Українське_бароко"
+  url: https://uk.wikipedia.org/wiki/Українське_бароко
   type: reference
   notes: Cultural context
 - name: Глухівська музична школа
-  url: "https://uk.wikipedia.org/wiki/Глухівська_співацька_школа"
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
   type: reference
   notes: Musical education context
 immersion: 100% Ukrainian
@@ -111,3 +110,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of максим березовський: композитор барокко'
 - Evaluate the contributions of трагічний геній
+persona:
+  voice: Senior Biographer
+  role: Court Composer

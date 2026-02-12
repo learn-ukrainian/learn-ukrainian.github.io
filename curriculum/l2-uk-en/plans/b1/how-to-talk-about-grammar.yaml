@@ -1,4 +1,3 @@
----
 module: b1-01
 level: B1
 sequence: 1
@@ -103,12 +102,15 @@ grammar:
 module_type: bridge
 sources:
 - name: Ukrainian State Standard 2024 - Grammar Terminology
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official metalanguage terms for Ukrainian grammar education
 - name: Ukrainian Grammar (Wikipedia)
-  url: "https://uk.wikipedia.org/wiki/Граматика_української_мови"
+  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
   type: reference
   notes: Overview of Ukrainian grammatical terminology
 immersion: 75% Ukrainian
 phase: B1.0 Bridge
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Linguistics Professor

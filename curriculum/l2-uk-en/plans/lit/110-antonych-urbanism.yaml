@@ -1,4 +1,3 @@
----
 sequence: 110
 module: lit-110
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Antonych Urbanism у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Urban Mystic

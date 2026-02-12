@@ -1,4 +1,3 @@
----
 module: b2-92
 level: B2
 sequence: 92
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Презентації: Поглиблено'
 subtitle: Advanced Presentation Skills
 content_outline:
-- section: "Розминка — Від базових до професійних навичок"
+- section: Розминка — Від базових до професійних навичок
   words: 200
   points:
   - Перехід від структури (М91) до майстерності
@@ -81,3 +80,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Startup Founder (Засновник стартапу)

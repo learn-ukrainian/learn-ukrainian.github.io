@@ -1,4 +1,3 @@
----
 sequence: 88
 module: oes-088
 module_number: 88
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Volkhv (Pagan Priest)

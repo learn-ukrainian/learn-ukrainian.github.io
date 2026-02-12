@@ -1,10 +1,9 @@
----
 module: b2-hist-029
 level: B2-HIST
 sequence: 29
 slug: velyke-kniazivstvo-lytovske
 version: '2.0'
-title: "Велике князівство Литовське — Руська держава"
+title: Велике князівство Литовське — Руська держава
 subtitle: Спадщина Gediminids та руська мова
 content_outline:
 - section: Вступ
@@ -36,7 +35,7 @@ content_outline:
   words: 406
   points:
   - Приклад виконання завдання
-- section: "Підсумок — Спільна спадщина"
+- section: Підсумок — Спільна спадщина
   words: 136
   points:
   - Литва, Білорусь, Україна — три народи однієї держави
@@ -54,7 +53,7 @@ objectives:
 grammar:
 - Passive voice in historical texts
 - Analytical structures
-phase: "B2.3a [Українська історія]"
+phase: B2.3a [Українська історія]
 vocabulary_hints:
   required:
   - історія (history)
@@ -83,3 +82,6 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Ruthenian Noble

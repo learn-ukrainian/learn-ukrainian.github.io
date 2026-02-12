@@ -1,0 +1,49 @@
+id: lit-031
+slug: panas-myrny-intro
+version: '2.0'
+level: LIT
+type: literature
+title: 'Панас Мирний: Анатомія українського бунту'
+subtitle: Від "Хіба ревуть воли..." до "Повії"
+status: REVIEW
+timestamp: '2026-02-12T12:00:00Z'
+authors:
+- Gemini
+- Claude
+content_outline:
+- section: Вступ
+  words: 505
+  points: []
+- section: Архітектура трагедії
+  words: 917
+  points: []
+- section: Естетичний аналіз
+  words: 1174
+  points: []
+- section: Роман «Повія»
+  words: 529
+  points: []
+- section: Лінгвістичний мікроаналіз
+  words: 622
+  points: []
+- section: Інтертекстуальність
+  words: 525
+  points: []
+- section: Історія публікації
+  words: 376
+  points: []
+- section: Методичні рекомендації
+  words: 260
+  points: []
+- section: Підсумок
+  words: 511
+  points: []
+word_target: 5000
+naturalness:
+  score: 10
+  status: PASS
+audio:
+  status: MISSING
+richness:
+  meter: 100
+  verdict: ELITE

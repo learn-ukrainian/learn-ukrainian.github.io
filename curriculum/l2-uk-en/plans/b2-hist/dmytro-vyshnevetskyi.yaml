@@ -1,4 +1,3 @@
----
 module: b2-hist-043
 level: B2-HIST
 sequence: 43
@@ -56,14 +55,15 @@ activity_hints:
 focus: history
 pedagogy: CBI
 objectives:
-- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first Sich
+- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first
+  Sich
 - Learner can analyze the geopolitical significance of the Khortytsia fortress
 - Learner can understand the legendary status of Baida in Ukrainian folklore
 grammar:
 - 'Historical narrative: past perfective'
 - Passive voice in historical descriptions
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
 vocabulary_hints:
   required:
   - історія (history)
@@ -79,3 +79,6 @@ vocabulary_hints:
   - контекст (context)
   - вплив (influence)
   - наслідки (consequences)
+persona:
+  voice: Senior Professor of History
+  role: Fortress Builder

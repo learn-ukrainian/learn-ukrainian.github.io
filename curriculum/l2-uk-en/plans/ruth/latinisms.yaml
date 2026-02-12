@@ -1,4 +1,3 @@
----
 sequence: 21
 module: ruth-021
 module_number: 17
@@ -25,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - loanword-trace
+persona:
+  voice: Baroque Scholar
+  role: Latin Secretary

@@ -1,4 +1,3 @@
----
 module: c1-hist-042
 level: c1-hist
 sequence: 42
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of меморандум української гельсінської групи
 - Evaluate the historical significance of права людини як зброя
 content_outline:
-- section: "Вступ — Права людини як зброя"
+- section: Вступ — Права людини як зброя
   words: 457
   subsections:
   - 1976 рік — контекст
@@ -31,7 +30,7 @@ content_outline:
   - Руденко, Лук'яненко, Тихий
   - Мотивація — чому ризикували
   - Перші дії
-- section: "Меморандум — аналіз тексту"
+- section: Меморандум — аналіз тексту
   words: 914
   subsections:
   - Текст (фрагменти з глосами)
@@ -89,15 +88,15 @@ activities:
   focus: Як Гельсінські угоди стали зброєю дисидентів?
 sources:
 - name: Українська Гельсінська група (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_Гельсінська_група"
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
   type: reference
   notes: Group overview
 - name: Установчий документ УГГ
-  url: "https://khpg.org/"
+  url: https://khpg.org/
   type: primary
   notes: Founding documents
 - name: Гельсінські угоди
-  url: "https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт"
+  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
   type: reference
   notes: Helsinki Accords context
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Human Rights Archivist

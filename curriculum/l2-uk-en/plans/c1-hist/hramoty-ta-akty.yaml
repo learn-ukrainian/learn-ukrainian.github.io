@@ -1,4 +1,3 @@
----
 module: c1-hist-017
 level: c1-hist
 sequence: 17
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of грамоти та акти: княжі документи'
 - Evaluate the historical significance of документи vs. літописи
 content_outline:
-- section: "Вступ — Документи vs. літописи"
+- section: Вступ — Документи vs. літописи
   words: 457
   subsections:
   - Що таке грамота?
@@ -25,7 +24,7 @@ content_outline:
   - Уставні грамоти — закони
   - Духовні грамоти — заповіти
   - Церковні акти
-- section: "Дипломатика — наука про документи"
+- section: Дипломатика — наука про документи
   words: 686
   subsections:
   - Що таке дипломатика?
@@ -40,14 +39,14 @@ content_outline:
   - Руська Правда — збірник законів
   - Церковний устав Володимира
   - Договори з Візантією
-- section: "Фрагмент — Грамота Мстислава"
+- section: Фрагмент — Грамота Мстислава
   words: 571
   subsections:
   - Текст (з глосами)
   - Формуляр — як побудовано
   - Що дізнаємося про суспільство?
   - Мова документа
-- section: "Берестяні грамоти — особливий випадок"
+- section: Берестяні грамоти — особливий випадок
   words: 457
   subsections:
   - Новгородські знахідки
@@ -81,7 +80,7 @@ activities:
 - type: reading
   focus: Mstislav's Charter with glosses
 - type: critical-analysis
-  focus: "Apply diplomatic method — analyze formulary"
+  focus: Apply diplomatic method — analyze formulary
 - type: comparative-study
   focus: Compare Kyivan charter with Western European charter
 - type: reading
@@ -90,15 +89,15 @@ activities:
   focus: Чому документи важливіші за літописи для соціальної історії?
 sources:
 - name: Грамота (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Грамота"
+  url: https://uk.wikipedia.org/wiki/Грамота
   type: reference
   notes: Document types
 - name: Давньоруські грамоти
-  url: "https://uk.wikipedia.org/wiki/Давньоруські_грамоти"
+  url: https://uk.wikipedia.org/wiki/Давньоруські_грамоти
   type: reference
   notes: Overview of princely documents
 - name: Берестяні грамоти
-  url: "https://uk.wikipedia.org/wiki/Берестяні_грамоти"
+  url: https://uk.wikipedia.org/wiki/Берестяні_грамоти
   type: reference
   notes: Birch bark letters
 vocabulary_hints:
@@ -121,3 +120,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Medieval Paleographer

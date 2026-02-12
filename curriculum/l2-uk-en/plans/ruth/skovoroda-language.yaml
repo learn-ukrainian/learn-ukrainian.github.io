@@ -1,4 +1,3 @@
----
 sequence: 97
 module: ruth-097
 module_number: 97
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Vernacular Innovator

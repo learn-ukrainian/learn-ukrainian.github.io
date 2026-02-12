@@ -53,6 +53,13 @@ from .checks import (
     check_activity_header_format,
 )
 from .checks.content_purity import check_content_purity
+from .checks.content_quality import (
+    ACADEMIC_LATIN_ALLOWLIST,
+    HISTORICAL_TRACKS,
+    BIBLIOGRAPHY_HEADINGS,
+    is_academic_latin_context,
+    detect_track_from_path,
+)
 from .checks.outline_compliance import print_section_summary
 from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence, check_forbidden_activity_types
 from .checks.vocabulary_integration import check_vocabulary_integration
@@ -109,6 +116,7 @@ from .gates import (
     evaluate_activity_quality,
     evaluate_content_heavy,
     evaluate_naturalness,
+    evaluate_persona,
     compute_recommendation,
 )
 from .checks.content_recall_detection import (
@@ -625,15 +633,16 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
         return None
 
     # Construct plan path: curriculum/l2-uk-en/plans/{level}/{slug}.yaml
-    # We assume 'plans' is a sibling of 'a1', 'b1', etc. if structure is standard
-    # OR 'plans' is at curriculum/l2-uk-en/plans
-    
     # Base is curriculum/l2-uk-en
-    base_dir = md_path.parent.parent 
-    plan_path = base_dir / 'plans' / level / (md_path.stem + '.yaml')
-    
+    base_dir = md_path.parent.parent
+    slug = to_bare_slug(md_path.stem)
+    plan_path = base_dir / 'plans' / level / (slug + '.yaml')
+
     if not plan_path.exists():
-        return None
+        # Fallback: try with stem directly (already bare after migration)
+        plan_path = base_dir / 'plans' / level / (md_path.stem + '.yaml')
+        if not plan_path.exists():
+            return None
         
     try:
         with open(plan_path, 'r', encoding='utf-8') as f:
@@ -1349,14 +1358,11 @@ def audit_module(file_path: str) -> bool:
                     is_excluded = True
                     break
 
+            # NEW LOGIC: If not activity and not explicitly excluded, it IS core content.
+            # This enables creative/thematic H2 headers.
             if not is_excluded:
-                for core in CORE_KEYWORDS:
-                    if core in title_lower:
-                        is_core = True
-                        break
-                if title == 'Intro/Narrative':
-                    is_core = True
-
+                is_core = True
+                
         cleaned_stats = clean_for_stats(text)
         count = len(cleaned_stats.split())
 
@@ -1492,6 +1498,14 @@ def audit_module(file_path: str) -> bool:
 
     results['structure'] = structure_gate
     if results['structure'].status == 'FAIL':
+        has_critical_failure = True
+
+    # Persona Gate (Deterministic Curriculum Standard v2.2)
+    has_persona = plan_data is not None and 'persona' in plan_data
+    has_voice = has_persona and 'voice' in plan_data['persona']
+    has_role = has_persona and 'role' in plan_data['persona']
+    results['persona'] = evaluate_persona(has_persona, has_voice, has_role)
+    if results['persona'].status == 'FAIL':
         has_critical_failure = True
 
     # Run lint checks
@@ -1898,6 +1912,8 @@ def audit_module(file_path: str) -> bool:
     results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
 
     # Naturalness validation (Issue #415)
+    # DECOMMISSIONED: Automated LLM check during audit is redundant and wastes resources.
+    # Naturalness is now verified during the Phase 5 Review (review-content-v4).
     nat_score = 0
     nat_status = "PENDING"
 
@@ -1906,15 +1922,9 @@ def audit_module(file_path: str) -> bool:
         nat_score = meta_data['naturalness'].get('score', 0) or 0
         nat_status = meta_data['naturalness'].get('status', 'PENDING') or 'PENDING'
 
-    # Auto-check naturalness via Gemini if PENDING and --naturalness flag provided
-    # Or if environment variable AUDIT_AUTO_NATURALNESS=1
-    auto_naturalness = os.environ.get('AUDIT_AUTO_NATURALNESS', '0') == '1'
-    if nat_status == "PENDING" and auto_naturalness:
-        try:
-            from .naturalness_check import check_naturalness
-            nat_score, nat_status = check_naturalness(file_path, update_meta=True)
-        except Exception as e:
-            print(f"  ⚠️ Auto naturalness check failed: {e}")
+    # Auto-check naturalness logic REMOVED.
+    # We no longer trigger external LLM calls for naturalness during the structural audit.
+
 
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if results['naturalness'].status == 'FAIL':
@@ -1997,13 +2007,23 @@ def audit_module(file_path: str) -> bool:
             print(f"❌ AUDIT FAILED: Level {level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
             has_critical_failure = True
 
-        for line in content.split('\n'):
+        # Detect track for academic context exemptions (Issue #557)
+        track_for_translit = detect_track_from_path(file_path)
+        content_lines = content.split('\n')
+        for line_idx, line in enumerate(content_lines):
             if '___' in line or '[___:' in line:
                 continue
             if re.search(r'\((Dat|Acc|Gen|Loc|Ins|Nom|Voc)\)', line):
                 continue
-            translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\([A-Za-z]+\)', line)
+            translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\(([A-Za-z]+)\)', line)
             if translit_pattern:
+                latin_part = translit_pattern.group(1)
+                # Allow if the Latin part is an allowlisted acronym (Issue #557)
+                if latin_part.upper() in ACADEMIC_LATIN_ALLOWLIST:
+                    continue
+                # Allow if the line is in a legitimate academic context (Issue #557)
+                if is_academic_latin_context(line, content_lines, line_idx, track_for_translit):
+                    continue
                 print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
                 has_critical_failure = True
                 break
@@ -2086,7 +2106,11 @@ def audit_module(file_path: str) -> bool:
             for v in warnings:
                 print(f"     ⚠️  [{v['type']}] {v['message']}")
             if criticals:
-                has_critical_failure = True
+                # NOTE: Review gate does NOT set has_critical_failure.
+                # Per Anti-Gaming Architecture: the 5 content gates (meta, lesson,
+                # activities, vocabulary, naturalness) determine pass/fail.
+                # Review gate is informational — it tells the batch runner what
+                # needs cross-agent review, but doesn't block overall status.
                 review_gate_status = "fail"
             else:
                 review_gate_status = "pass"

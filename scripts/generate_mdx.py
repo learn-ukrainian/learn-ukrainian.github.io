@@ -1704,11 +1704,8 @@ def main():
             output_dir.mkdir(parents=True, exist_ok=True)
 
         # Find the physical file
-        # Try slug-only first, then numbered slug (migration period)
         level_dir = CURRICULUM_DIR / lang_pair / mod.level
         md_file = level_dir / f"{mod.slug}.md"
-        if not md_file.exists():
-            md_file = level_dir / f"{mod.local_num:02d}-{mod.slug}.md"
         
         if not md_file.exists():
             print(f"  ⚠️  Physical file not found for slug '{mod.slug}' in {mod.level}")
@@ -1719,8 +1716,6 @@ def main():
         
         # Load META
         meta_file = level_dir / 'meta' / f"{mod.slug}.yaml"
-        if not meta_file.exists():
-            meta_file = level_dir / 'meta' / f"{mod.local_num:02d}-{mod.slug}.yaml"
             
         meta_data = None
         if meta_file.exists():
@@ -1732,10 +1727,7 @@ def main():
                 sys.exit(1)
 
         # Load PLAN file for title/subtitle (Architecture v2.0: title lives in plan, not meta)
-        # Try both slug-only and numbered formats
         plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
-        if not plan_file.exists():
-            plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.local_num:02d}-{mod.slug}.yaml"
         if plan_file.exists():
             try:
                 with open(plan_file, 'r', encoding='utf-8') as f:
@@ -1755,8 +1747,6 @@ def main():
                 
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
-        if not vocab_file.exists():
-            vocab_file = level_dir / 'vocabulary' / f"{mod.local_num:02d}-{mod.slug}.yaml"
             
         vocab_items = None
         if vocab_file.exists():
@@ -1771,10 +1761,6 @@ def main():
 
         # Load ACTIVITIES
         yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"
-        if not yaml_file.exists():
-            yaml_file = level_dir / 'activities' / f"{mod.local_num:02d}-{mod.slug}.yaml"
-        if not yaml_file.exists():
-            yaml_file = level_dir / f"{mod.local_num:02d}-{mod.slug}.activities.yaml"
         
         yaml_activities = None
         if yaml_file.exists():
@@ -1791,13 +1777,8 @@ def main():
 
         mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level)
 
-        # Write output
-        # Use slug-based filenames for tracks (b2-hist, c1-bio, etc.)
-        # Use numbered format for core levels (a1-c2) for backward compatibility
-        if mod.track and mod.track != 'core':
-            output_file = output_dir / f'{mod.slug}.mdx'
-        else:
-            output_file = output_dir / f'module-{mod.local_num:02d}.mdx'
+        # Write output — all tracks use slug-based filenames
+        output_file = output_dir / f'{mod.slug}.mdx'
         output_file.write_text(mdx_content, encoding='utf-8')
 
     print('\n✅ MDX generation complete!')

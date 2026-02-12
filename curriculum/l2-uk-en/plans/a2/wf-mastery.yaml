@@ -85,3 +85,6 @@ grammar:
 - Productive patterns
 register: розмовний
 phase: A2.4 [Word Formation]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Scrabble Champion

@@ -1,13 +1,12 @@
 ---
 module: b1-05
 level: B1
-slug: 05-ready-for-immersion
+slug: ready-for-immersion
 version: '1.0'
 id: b1-05
 naturalness:
   score: 9
   status: PASS
-template: b1-metalanguage-module-template.md
 duration: 75
 transliteration: none
 tags:
@@ -16,5 +15,23 @@ tags:
 - checkpoint
 - bridge
 word_target: 3000
+content_outline:
+- section: "Presentation: The Gateway to Mastery"
+  words: 364
+- section: "Diagnostic Assessment: Testing the Foundation"
+  words: 400
+- section: "Comprehensive Review: Parts of Speech and Morphology"
+  words: 392
+- section: "Analytical Deep Dive: Verb Categories and Aspect"
+  words: 369
+- section: "The Logic of Rules: Reading Grammar Explanation Patterns"
+  words: 366
+- section: "Syntax and Sentence Structure: The Final Architectural Check"
+  words: 347
+- section: "Integrated Practice: Real-World Grammar Analysis"
+  words: 536
+- section: "Summary: Readiness for Full Immersion"
+  words: 226
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-11'
+module_type: checkpoint

@@ -1,4 +1,3 @@
----
 module: c1-bio-069
 level: C1-BIO
 sequence: 69
@@ -6,7 +5,7 @@ slug: ahatanhel-krymskyi
 version: '2.0'
 title: 'Агатангел Кримський: Поліглот і мученик науки'
 content_outline:
-- section: "Вступ — Людина тридцяти мов"
+- section: Вступ — Людина тридцяти мов
   words: 400
   points:
   - Феноменальні мовні здібності (понад 30 мов)
@@ -40,7 +39,7 @@ content_outline:
   - Арешт у 1930-х роках
   - Заслання до Казахстану
   - Смерть у засланні (1942)
-- section: "Спадщина — Повернення імені"
+- section: Спадщина — Повернення імені
   words: 700
   points:
   - Реабілітація в період «відлиги»
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Агатангел Кримський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Кримський_Агатангел_Юхимович"
+  url: https://uk.wikipedia.org/wiki/Кримський_Агатангел_Юхимович
   type: primary
   notes: Comprehensive biography covering life, scholarship, and tragic fate
 - name: Національна академія наук України
-  url: "https://www.nas.gov.ua/"
+  url: https://www.nas.gov.ua/
   type: reference
   notes: Academy founding documents and Krymsky's role
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of агатангел кримський: поліглот і мученик науки'
 - Evaluate the contributions of людина тридцяти мов
 - Trace the career and influence of повернення імені
+persona:
+  voice: Senior Biographer
+  role: Orientalist

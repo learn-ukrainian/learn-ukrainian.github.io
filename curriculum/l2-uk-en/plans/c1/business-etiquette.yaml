@@ -1,4 +1,3 @@
----
 module: c1-023
 level: C1
 sequence: 23
@@ -6,7 +5,7 @@ slug: 23-business-etiquette
 version: '2.0'
 title: Діловий етикет в Україні
 content_outline:
-- section: "Вступ — Ділова культура України"
+- section: Вступ — Ділова культура України
   words: 400
   points:
   - Особливості українського бізнес-середовища
@@ -97,11 +96,11 @@ connects_to:
 module_type: cultural
 sources:
 - name: Ukrainian Business Culture
-  url: "https://chamber.ua/"
+  url: https://chamber.ua/
   type: reference
   notes: Chamber of Commerce business guidelines
 - name: Ukrainian State Standard C1 (2024)
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: C1 cultural competency requirements
 immersion: 100% Ukrainian
@@ -110,3 +109,6 @@ objectives:
 - Understand and apply діловий етикет в україні
 - Analyze and evaluate ділова культура україни
 - Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Експерт з протоколу

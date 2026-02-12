@@ -1,4 +1,3 @@
----
 module: c1-hist-106
 level: c1-hist
 sequence: 106
@@ -10,28 +9,28 @@ objectives:
 - 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
 - Evaluate the historical significance of газ як зброя
 content_outline:
-- section: "Вступ — Газ як зброя"
+- section: Вступ — Газ як зброя
   words: 457
   subsections:
   - Енергетична залежність
   - Росія — постачальник
   - Газ як інструмент тиску
   - Структура модуля
-- section: "1990-ті — Борги і залежність"
+- section: 1990-ті — Борги і залежність
   words: 686
   subsections:
   - Успадкована залежність
   - Накопичення боргів
   - Бартерні схеми
   - Корупція — з обох сторін
-- section: "2006 і 2009 — Газові війни"
+- section: 2006 і 2009 — Газові війни
   words: 800
   subsections:
   - Відключення газу
   - Вплив на Європу
   - Україна — «ненадійний транзитер»
   - Хто виграв
-- section: "Nord Stream — обхід України"
+- section: Nord Stream — обхід України
   words: 686
   subsections:
   - Навіщо Росії
@@ -76,26 +75,26 @@ vocabulary:
 - санкції
 activities:
 - type: critical-analysis
-  focus: "2006 and 2009 gas wars — causes and outcomes"
+  focus: 2006 and 2009 gas wars — causes and outcomes
 - type: critical-analysis
   focus: Nord Stream as geopolitical weapon
 - type: critical-analysis
   focus: How gas dependence limited Ukraine's choices
 - type: critical-analysis
-  focus: "Post-2022 — end of gas dependence?"
+  focus: Post-2022 — end of gas dependence?
 - type: essay-response
   focus: Як Україна звільнилася від газової залежності?
 sources:
 - name: Газові конфлікти Росія-Україна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Газові_конфлікти_між_Росією_та_Україною"
+  url: https://uk.wikipedia.org/wiki/Газові_конфлікти_між_Росією_та_Україною
   type: reference
   notes: Gas conflicts
 - name: Газопроводи через Україну (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Газотранспортна_система_України"
+  url: https://uk.wikipedia.org/wiki/Газотранспортна_система_України
   type: reference
   notes: Transit system
 - name: Nord Stream (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Nord_Stream"
+  url: https://uk.wikipedia.org/wiki/Nord_Stream
   type: reference
   notes: Bypass pipelines
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Energy Security Historian

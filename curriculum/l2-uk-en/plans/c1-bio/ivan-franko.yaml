@@ -1,4 +1,3 @@
----
 module: c1-bio-052
 level: C1-BIO
 sequence: 52
@@ -6,7 +5,7 @@ slug: ivan-franko
 version: '2.0'
 title: 'Іван Франко: Каменяр'
 content_outline:
-- section: "Вступ — Титан праці"
+- section: Вступ — Титан праці
   words: 400
   points:
   - Письменник, поет, вчений, громадський діяч
@@ -40,7 +39,7 @@ content_outline:
   - Продовження творчої роботи
   - Перша світова війна
   - Смерть у Львові
-- section: "Спадщина — Вічний каменяр"
+- section: Спадщина — Вічний каменяр
   words: 700
   points:
   - Вплив на українську літературу
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Франко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Франко_Іван_Якович"
+  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
   type: primary
   notes: Comprehensive biography of the titan of Ukrainian culture
 - name: Інститут Івана Франка НАН України
-  url: "https://ifnan.gov.ua/"
+  url: https://ifnan.gov.ua/
   type: reference
   notes: Academic institution dedicated to Franko studies
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of іван франко: каменяр'
 - Evaluate the contributions of титан праці
 - Trace the career and influence of вічний каменяр
+persona:
+  voice: Senior Biographer
+  role: Intellectual Titan

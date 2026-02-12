@@ -1,4 +1,3 @@
----
 module: c1-bio-132
 level: C1-BIO
 sequence: 132
@@ -6,7 +5,7 @@ slug: dmytro-pavlychko
 version: '2.0'
 title: 'Дмитро Павличко: Поет і дипломат'
 content_outline:
-- section: "Вступ — Два кольори однієї душі"
+- section: Вступ — Два кольори однієї душі
   words: 400
   points:
   - Поет, перекладач, політик, дипломат
@@ -40,7 +39,7 @@ content_outline:
   - Співавтор Акту незалежності
   - Посол України в Польщі та Словаччині
   - Політичні позиції та суперечки
-- section: "Спадщина — Голос України"
+- section: Спадщина — Голос України
   words: 700
   points:
   - Вплив на українську поезію
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Дмитро Павличко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович"
+  url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
   type: primary
   notes: Biography of the poet, translator, and diplomat
 - name: Національна спілка письменників України
-  url: "https://nspu.org.ua/"
+  url: https://nspu.org.ua/
   type: reference
   notes: Literary biography and works
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of дмитро павличко: поет і дипломат'
 - Evaluate the contributions of два кольори однієї душі
 - Trace the career and influence of голос україни
+persona:
+  voice: Senior Biographer
+  role: Poet Diplomat

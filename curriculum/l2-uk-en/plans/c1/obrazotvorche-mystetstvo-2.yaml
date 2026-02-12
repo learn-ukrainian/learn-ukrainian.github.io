@@ -1,13 +1,12 @@
----
 module: c1-082
 level: C1
 sequence: 82
 slug: 82-obrazotvorche-mystetstvo-2
 version: '2.0'
 title: Образотворче мистецтво II
-subtitle: "Visual Arts II — From Socialist Realism to Present"
+subtitle: Visual Arts II — From Socialist Realism to Present
 content_outline:
-- section: "Розминка — Мистецтво під тиском"
+- section: Розминка — Мистецтво під тиском
   words: 700
   points:
   - Репресії проти митців — Бойчук, Горська
@@ -20,7 +19,7 @@ content_outline:
   - 'Dissidents: **Алла Горська**, Стус (visual works) — art as resistance'
   - 'Folk masters: **Марія Примаченко**, **Катерина Білокур** — naive art tradition'
   - 'Contemporary: Пінзель revival, сучасне мистецтво — today''s vibrant scene'
-- section: "Практика — мистецтво та історія"
+- section: Практика — мистецтво та історія
   words: 1050
   points:
   - Проаналізувати картину Примаченко — стиль, символіка
@@ -38,3 +37,6 @@ grammar:
 - Describing artistic style
 - Narrative of resistance
 phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Арт-дилер

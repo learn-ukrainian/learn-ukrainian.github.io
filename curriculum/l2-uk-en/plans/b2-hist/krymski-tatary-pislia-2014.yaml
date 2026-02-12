@@ -1,4 +1,3 @@
----
 module: b2-hist-128
 level: B2-HIST
 sequence: 128
@@ -89,4 +88,7 @@ grammar:
 - Юридична та правозахисна лексика
 - Пасивні конструкції для опису репресій
 register: публіцистичний
-phase: "HIST.12 [Independence & Modern Era]"
+phase: HIST.12 [Independence & Modern Era]
+persona:
+  voice: Senior Professor of History
+  role: Human Rights Lawyer

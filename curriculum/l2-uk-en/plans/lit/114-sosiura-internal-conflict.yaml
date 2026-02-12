@@ -1,4 +1,3 @@
----
 sequence: 114
 module: lit-114
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Sosiura Internal Conflict у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Torn Soul

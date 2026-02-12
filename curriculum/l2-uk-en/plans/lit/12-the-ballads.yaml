@@ -1,4 +1,3 @@
----
 sequence: 12
 module: lit-12
 level: LIT
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Балади: Між Світами'
 subtitle: 'LIT-012: Містика і Метаморфози у Раннього Шевченка'
 content_outline:
-- section: "Вступ — Жанр романтичної балади"
+- section: Вступ — Жанр романтичної балади
   words: 625
   points:
   - Що таке балада (європейський контекст)
@@ -37,7 +36,7 @@ content_outline:
   - Русалки, відьми, мавки
   - Функція фантастичного
   - Зв'язок з європейським романтизмом
-- section: "Підсумок — Фатум і доля"
+- section: Підсумок — Фатум і доля
   words: 500
   points:
   - Концепція долі у раннього Шевченка
@@ -90,20 +89,23 @@ grammar:
 module_type: literature
 sources:
 - name: Причинна
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=3"
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=3
   type: primary
   notes: Балада для аналізу
 - name: Тополя
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=4"
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=4
   type: primary
   notes: Балада для аналізу
 - name: Утоплена
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=5"
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=5
   type: primary
   notes: Балада для аналізу
-- name: "Кобзар — повний текст"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=1"
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
   type: secondary
   notes: Контекст ранньої поезії
 immersion: 100% Ukrainian
 phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Ballad Singer

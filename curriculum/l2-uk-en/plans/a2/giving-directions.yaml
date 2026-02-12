@@ -1,4 +1,3 @@
----
 module: a2-65
 level: A2
 sequence: 65
@@ -79,4 +78,7 @@ grammar:
 - Giving instructions (йдіть прямо, поверніть)
 - Prepositions of place and movement
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Kyiv Metro Navigator

@@ -1,4 +1,3 @@
----
 module: c1-bio-115
 level: C1-BIO
 sequence: 115
@@ -6,7 +5,7 @@ slug: olena-teliha
 version: '2.0'
 title: 'Олена Теліга: Поетка-патріотка'
 content_outline:
-- section: "Вступ — Вогняна муза"
+- section: Вступ — Вогняна муза
   words: 400
   points:
   - Теліга як символ поєднання поезії та чину
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олена Теліга (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Теліга_Олена_Іванівна"
+  url: https://uk.wikipedia.org/wiki/Теліга_Олена_Іванівна
   type: primary
   notes: Біографія, творчість, загибель
 - name: Музей Олени Теліги (Київ)
-  url: "https://teliha.kyiv.ua"
+  url: https://teliha.kyiv.ua
   type: reference
   notes: Архів та експозиція
 - name: Бабин Яр
-  url: "https://babynyar.org"
+  url: https://babynyar.org
   type: reference
   notes: Місце розстрілу
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of олена теліга: поетка-патріотка'
 - Evaluate the contributions of вогняна муза
 - Trace the career and influence of арешт та загибель (1942)
+persona:
+  voice: Senior Biographer
+  role: Underground Poet

@@ -1,4 +1,3 @@
----
 module: b2-hist-127
 level: B2-HIST
 sequence: 127
@@ -72,11 +71,14 @@ grammar:
 - Official vs. Informal register
 sources:
 - name: Резолюція ГА ООН 68/262
-  url: "https://undocs.org/ua/A/RES/68/262"
+  url: https://undocs.org/ua/A/RES/68/262
   type: primary
   notes: Офіційний міжнародний документ
 - name: КримSOS
-  url: "https://krymsos.com"
+  url: https://krymsos.com
   type: secondary
   notes: Свідчення очевидців та звіти про порушення прав людини
-phase: "B2-HIST.12 [Independence]"
+phase: B2-HIST.12 [Independence]
+persona:
+  voice: Senior Professor of History
+  role: Crimean Journalist

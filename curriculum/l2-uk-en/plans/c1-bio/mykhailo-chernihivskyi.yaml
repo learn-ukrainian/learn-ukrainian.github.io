@@ -1,4 +1,3 @@
----
 module: c1-bio-009
 level: C1-BIO
 sequence: 9
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Михайло Чернігівський: Князь-мученик'
 word_target: 4300
 content_outline:
-- section: "Вступ — Вибір між життям і вірою"
+- section: Вступ — Вибір між життям і вірою
   words: 600
   points:
   - Михайло як символ духовного опору Орді
@@ -38,7 +37,7 @@ content_outline:
   - Канонізація та перенесення мощів
   - Іконографія та культ святого в Україні
   - Михайлівський Золотоверхий монастир
-- section: 'Підсумок — Віра вища за життя'
+- section: Підсумок — Віра вища за життя
   words: 300
   points:
   - Моральна перемога над загарбником
@@ -61,12 +60,15 @@ grammar:
 module_type: biography
 sources:
 - name: Михайло Всеволодович (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Михайло_Всеволодович"
+  url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
   type: primary
   notes: Життєпис та канонізація
 - name: Сказання про вбивство в Орді
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Оригінальне джерело
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Martyr Prince

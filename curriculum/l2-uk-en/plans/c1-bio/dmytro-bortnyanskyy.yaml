@@ -1,4 +1,3 @@
----
 module: c1-bio-035
 level: C1-BIO
 sequence: 35
@@ -6,7 +5,7 @@ slug: dmytro-bortnyanskyy
 version: '2.0'
 title: 'Дмитро Бортнянський: Придворний маестро'
 content_outline:
-- section: "Вступ — Між Україною та імперією"
+- section: Вступ — Між Україною та імперією
   words: 400
   points:
   - Бортнянський як найвідоміший український композитор XVIII століття
@@ -48,7 +47,7 @@ content_outline:
   - Українське коріння та традиція
   - Сучасні дискусії про привласнення
   - Його місце в українській культурі
-- section: "Підсумок — Між світами"
+- section: Підсумок — Між світами
   words: 300
   points:
   - Успіх ціною ідентичності
@@ -96,15 +95,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Дмитро Бортнянський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Дмитро_Бортнянський"
+  url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
   type: primary
   notes: Biography, court career, choral works
 - name: Придворна співацька капела
-  url: "https://uk.wikipedia.org/wiki/Придворна_співацька_капела"
+  url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
   type: reference
   notes: Institutional context
 - name: Глухівська співацька школа
-  url: "https://uk.wikipedia.org/wiki/Глухівська_співацька_школа"
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
   type: reference
   notes: Early education
 immersion: 100% Ukrainian
@@ -112,3 +111,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of дмитро бортнянський: придворний маестро'
 - Evaluate the contributions of між україною та імперією
+persona:
+  voice: Senior Biographer
+  role: Choir Master

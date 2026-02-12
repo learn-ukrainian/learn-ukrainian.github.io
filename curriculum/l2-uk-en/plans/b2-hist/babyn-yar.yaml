@@ -1,4 +1,3 @@
----
 module: b2-hist-106
 level: B2-HIST
 sequence: 106
@@ -86,4 +85,7 @@ grammar:
 - Пасивні конструкції для опису злочинів
 - Лексика пам'яті та меморіалізації
 register: публіцистичний
-phase: "HIST.10 [Soviet Period & Tragedies]"
+phase: HIST.10 [Soviet Period & Tragedies]
+persona:
+  voice: Senior Professor of History
+  role: Local Witness

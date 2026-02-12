@@ -1,4 +1,3 @@
----
 sequence: 115
 module: lit-115
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Pluzhnyk Galileo у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Silent Observer

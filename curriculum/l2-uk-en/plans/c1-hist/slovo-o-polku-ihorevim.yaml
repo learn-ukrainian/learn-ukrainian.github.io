@@ -1,4 +1,3 @@
----
 module: c1-hist-014
 level: c1-hist
 sequence: 14
@@ -11,7 +10,7 @@ objectives:
   значення'
 - Evaluate the historical significance of найзагадковіша пам'ятка
 content_outline:
-- section: "Вступ — Найзагадковіша пам'ятка"
+- section: Вступ — Найзагадковіша пам'ятка
   words: 457
   subsections:
   - Що таке Слово?
@@ -40,7 +39,7 @@ content_outline:
   - Структура — вступ, похід, поразка, плач, втеча
   - Плач Ярославни — найвідоміший фрагмент
   - Язичницькі та християнські елементи
-- section: "Фрагмент — Плач Ярославни"
+- section: Фрагмент — Плач Ярославни
   words: 571
   subsections:
   - Текст (з глосами)
@@ -89,15 +88,15 @@ activities:
   focus: Яке значення має Слово о полку Ігоревім для української культури?
 sources:
 - name: Слово о полку Ігоревім (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім"
+  url: https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім
   type: reference
   notes: Overview and debates
 - name: Слово о полку Ігоревім (текст)
-  url: "https://litopys.org.ua/slovo/slov.htm"
+  url: https://litopys.org.ua/slovo/slov.htm
   type: primary
   notes: Full text with translation
 - name: Ігор Святославич
-  url: "https://uk.wikipedia.org/wiki/Ігор_Святославич"
+  url: https://uk.wikipedia.org/wiki/Ігор_Святославич
   type: reference
   notes: Historical context of 1185 campaign
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Epic Poetry Scholar

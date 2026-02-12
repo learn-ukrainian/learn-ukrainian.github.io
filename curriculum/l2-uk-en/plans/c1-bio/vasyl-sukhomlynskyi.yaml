@@ -1,4 +1,3 @@
----
 module: c1-bio-126
 level: C1-BIO
 sequence: 126
@@ -6,7 +5,7 @@ slug: vasyl-sukhomlynskyi
 version: '2.0'
 title: 'Василь Сухомлинський: Педагог серця'
 content_outline:
-- section: "Вступ — Найвидатніший педагог України"
+- section: Вступ — Найвидатніший педагог України
   words: 457
   points:
   - Сухомлинський як реформатор радянської освіти
@@ -68,7 +67,7 @@ vocabulary_hints:
   - природничий (nature-based)
 activity_hints:
 - type: reading
-  focus: "Excerpts from \"Серце віддаю дітям\""
+  focus: Excerpts from "Серце віддаю дітям"
   source: Educational texts
   items: 3 passages
 - type: essay-response
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Сухомлинський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович"
+  url: https://uk.wikipedia.org/wiki/Сухомлинський_Василь_Олександрович
   type: primary
   notes: Biography, educational philosophy, works
 - name: Павлиська школа
-  url: "https://uk.wikipedia.org/wiki/Павлиська_середня_школа"
+  url: https://uk.wikipedia.org/wiki/Павлиська_середня_школа
   type: reference
   notes: School he directed for 22 years
 - name: '"Серце віддаю дітям"'
-  url: "https://uk.wikipedia.org/wiki/Серце_віддаю_дітям"
+  url: https://uk.wikipedia.org/wiki/Серце_віддаю_дітям
   type: reference
   notes: His most famous work
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of василь сухомлинський: педагог серця'
 - Evaluate the contributions of найвидатніший педагог україни
 - Trace the career and influence of спадщина та вплив
+persona:
+  voice: Senior Biographer
+  role: School Principal

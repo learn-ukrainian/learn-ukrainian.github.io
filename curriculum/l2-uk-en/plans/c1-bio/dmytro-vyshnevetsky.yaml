@@ -1,4 +1,3 @@
----
 module: c1-bio-015
 level: C1-BIO
 sequence: 15
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Дмитро Вишневецький: Байда — Перший Гетьман'
 subtitle: 'Dmytro Vyshnevetsky: Baida — The First Hetman'
 content_outline:
-- section: "Вступ — Князь і Козак"
+- section: Вступ — Князь і Козак
   words: 615
   points:
   - Аристократ, що став козаком
@@ -65,10 +64,13 @@ grammar:
 - Historical present tense
 sources:
 - name: Дмитро Вишневецький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Дмитро_Вишневецький"
+  url: https://uk.wikipedia.org/wiki/Дмитро_Вишневецький
   type: primary
 - name: Пісня про Байду
-  url: "https://uk.wikipedia.org/wiki/Пісня_про_Байду"
+  url: https://uk.wikipedia.org/wiki/Пісня_про_Байду
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Fortress Builder

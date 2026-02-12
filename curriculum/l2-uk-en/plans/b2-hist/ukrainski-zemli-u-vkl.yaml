@@ -1,4 +1,3 @@
----
 module: b2-hist-030
 level: B2-HIST
 sequence: 30
@@ -36,7 +35,7 @@ content_outline:
   words: 422
   points:
   - Приклад виконання завдання
-- section: "Підсумок — Напередодні Люблінської унії"
+- section: Підсумок — Напередодні Люблінської унії
   words: 170
   points:
   - 1569 рік як переломний момент
@@ -55,7 +54,7 @@ objectives:
 grammar:
 - Administrative terminology
 - Regional descriptions
-phase: "B2.3b [Українська історія]"
+phase: B2.3b [Українська історія]
 vocabulary_hints:
   required:
   - історія (history)
@@ -84,3 +83,6 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Land Surveyor

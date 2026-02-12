@@ -1,4 +1,3 @@
----
 module: b2-hist-077
 level: B2-HIST
 sequence: 77
@@ -73,7 +72,7 @@ activity_hints:
   focus: 'Спростування міфів: Міфи «Новоросії»'
   items: 5
 - type: essay-response
-  focus: "Чому російський міф «Новоросія» — це пропаганда?"
+  focus: Чому російський міф «Новоросія» — це пропаганда?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -92,4 +91,7 @@ grammar:
 - Топоніміка та етимологія
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.8 [Imperial Era]"
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Steppe Cartographer

@@ -1,4 +1,3 @@
----
 module: c1-bio-119
 level: C1-BIO
 sequence: 119
@@ -6,7 +5,7 @@ slug: george-shevelov
 version: '2.0'
 title: 'Юрій Шевельов: Архітектор української лінгвістики'
 content_outline:
-- section: "Вступ — Голос української мови у світі"
+- section: Вступ — Голос української мови у світі
   words: 457
   points:
   - Шевельов як найвидатніший українознавець діаспори
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Юрій Шевельов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович"
+  url: https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович
   type: primary
   notes: Biography, academic career, works
 - name: Encyclopedia of Ukraine - Shevelov
-  url: "https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm"
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CH%5CShevelovGeorgeYurii.htm
   type: reference
   notes: Detailed academic biography
 - name: Історична фонологія української мови
-  url: "https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)"
+  url: https://uk.wikipedia.org/wiki/Історична_фонологія_української_мови_(Шевельов)
   type: reference
   notes: His magnum opus
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of юрій шевельов: архітектор української лінгвістики'
 - Evaluate the contributions of голос української мови у світі
 - Trace the career and influence of спадщина та повернення в україну
+persona:
+  voice: Senior Biographer
+  role: Philologist

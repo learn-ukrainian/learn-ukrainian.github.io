@@ -1,4 +1,3 @@
----
 module: a2-32
 level: A2
 sequence: 32
@@ -46,12 +45,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Relative Clauses
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Standards for complex sentence structures and relative pronouns at A2
 - name: Grammar of Ukrainian Language - Relative Pronouns
-  url: "https://uk.wikipedia.org/wiki/Відносні_займенники"
+  url: https://uk.wikipedia.org/wiki/Відносні_займенники
   type: reference
   notes: Declension rules for 'який' and its role in subordinate clauses
 immersion: 40-50% Ukrainian
 phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Competition Judge

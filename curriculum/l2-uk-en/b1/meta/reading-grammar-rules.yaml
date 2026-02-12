@@ -1,7 +1,7 @@
 ---
 module: b1-03
 level: B1
-slug: 03-reading-grammar-rules
+slug: reading-grammar-rules
 version: '1.0'
 id: b1-03
 naturalness:
@@ -12,8 +12,45 @@ transliteration: none
 tags:
 - grammar
 - metalanguage
-- patterns
+- reading
+- instructions
 - bridge
 word_target: 3000
+content_outline:
+- section: "Introduction: Deciphering the Language of Rules"
+  words: 400
+  points:
+  - Why academic Ukrainian is a distinct skill
+  - The structure of a standard grammar point
+- section: "Grammar Explanation Patterns: The Logic of Definitions"
+  words: 500
+  points:
+  - Functional and descriptive explanations
+  - Analyzing complex definitions in textbooks
+- section: "The Language of Instructions: Imperatives and Guidance"
+  words: 500
+  points:
+  - Зверніть увагу та Порівняйте
+  - Logical connectors like otzhe and tobto
+- section: "Activity Instruction Verbs: Action in the Classroom"
+  words: 500
+  points:
+  - Знайдіть та Виберіть
+  - Technological verbs
+- section: "Analytical and Contextual Terminology"
+  words: 500
+  points:
+  - Контекст та маркер
+  - Style and frequency markers
+- section: "Word Formation and Morphology Terms (Review & Depth)"
+  words: 500
+  points:
+  - Корінь та суфікс
+  - Using morphology to guess meaning
+- section: "Summary and Self-Assessment"
+  words: 100
+  points:
+  - Integration of instruction patterns
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-11'
+module_type: bridge

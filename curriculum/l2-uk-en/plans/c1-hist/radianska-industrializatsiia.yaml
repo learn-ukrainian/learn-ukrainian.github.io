@@ -1,4 +1,3 @@
----
 module: c1-hist-104
 level: c1-hist
 sequence: 104
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of радянська індустріалізація: хто платив?'
 - Evaluate the historical significance of для кого будували
 content_outline:
-- section: "Вступ — Для кого будували"
+- section: Вступ — Для кого будували
   words: 457
   subsections:
   - 1930-ті — індустріалізація
@@ -24,7 +23,7 @@ content_outline:
   - Металургійні гіганти
   - Шахти Донбасу
   - Масштаби будівництва
-- section: "Ціна — Голодомор"
+- section: Ціна — Голодомор
   words: 800
   subsections:
   - Зв'язок колективізації та індустріалізації
@@ -87,15 +86,15 @@ activities:
   focus: Чи радянська індустріалізація розвивала Україну?
 sources:
 - name: Індустріалізація УРСР (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Індустріалізація_УРСР"
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_УРСР
   type: reference
   notes: Soviet industrialization
 - name: Донбас (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Донбас"
+  url: https://uk.wikipedia.org/wiki/Донбас
   type: reference
   notes: Industrial region
 - name: Колективізація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Колективізація_в_УРСР"
+  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
   type: reference
   notes: Collectivization context
 vocabulary_hints:
@@ -118,3 +117,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Industrial Heritage Expert

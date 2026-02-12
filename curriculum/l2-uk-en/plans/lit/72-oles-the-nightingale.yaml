@@ -1,4 +1,3 @@
----
 sequence: 72
 module: lit-72
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Oles The Nightingale у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Nightingale

@@ -1,4 +1,3 @@
----
 module: a1-24
 level: A1
 sequence: 24
@@ -17,30 +16,30 @@ content_outline:
   - Могти — фізична можливість (Я можу бігати)
   - Вміти — навичка (Я вмію плавати)
   - Дієвідміна могти (можу, можеш, може...)
-- section: "Presentation 2"
+- section: Presentation 2
   words: 159
   points:
   - Треба/потрібно + інфінітив (Треба працювати)
   - Повинен узгоджується з родом (Він повинен / Вона повинна)
   - Мусити як сильний обов'язок
-- section: "Presentation 3"
+- section: Presentation 3
   words: 48
   points:
   - Можна + інфінітив (Можна увійти?)
   - Не можна — заборона
-- section: "Presentation 4"
+- section: Presentation 4
   words: 23
   points:
   - Варто + інфінітив (Варто спробувати)
-- section: "Presentation 5"
+- section: Presentation 5
   words: 61
   points:
   - Пробувати, намагатися, вдаватися
-- section: "Presentation 6"
+- section: Presentation 6
   words: 60
   points:
   - Необхідний, обов'язковий, можливий
-- section: "Presentation 7"
+- section: Presentation 7
   words: 188
   points:
   - Правила в школі/офісі (Не можна курити)
@@ -50,7 +49,7 @@ content_outline:
   points:
   - Діалог про дозвіл (Можна взяти?)
   - Діалог про обов'язки на роботі
-- section: "Practice 2"
+- section: Practice 2
   words: 18
   points:
   - Опис своїх обов'язків та можливостей
@@ -97,4 +96,7 @@ grammar:
 - Impersonal modals (треба, можна, потрібно)
 - Modal + infinitive structure
 register: розмовний
-phase: "A1.3 [Consolidation]"
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Career Counselor

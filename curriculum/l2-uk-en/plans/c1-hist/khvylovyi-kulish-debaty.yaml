@@ -1,4 +1,3 @@
----
 module: c1-hist-054
 level: c1-hist
 sequence: 54
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
 - Evaluate the historical significance of найсміливіший голос
 content_outline:
-- section: "Вступ — Найсміливіший голос"
+- section: Вступ — Найсміливіший голос
   words: 457
   subsections:
   - Хвильовий — хто він
@@ -80,24 +79,24 @@ vocabulary:
 - інтернаціоналізм
 activities:
 - type: reading
-  focus: "Key passages from \"Kamo hriadeshi\""
+  focus: Key passages from "Kamo hriadeshi"
 - type: critical-analysis
   focus: Reconstruct Khvylovyi's main argument
 - type: critical-analysis
-  focus: "Analyze suicide note — what does it mean?"
+  focus: Analyze suicide note — what does it mean?
 - type: essay-response
   focus: Чому ідеї Хвильового актуальні й сьогодні?
 sources:
-- name: "Хвильовий Микола — памфлети"
-  url: "https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола"
+- name: Хвильовий Микола — памфлети
+  url: https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола
   type: primary
   notes: Pamphlet texts
 - name: Микола Хвильовий (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович"
+  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
   type: reference
   notes: Biography
 - name: «Камо грядеши» та інші памфлети
-  url: "https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)"
+  url: https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)
   type: reference
   notes: Key work
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Literary Critic

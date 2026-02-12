@@ -1,4 +1,3 @@
----
 module: c1-bio-106
 level: C1-BIO
 sequence: 106
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Юрій Кондратюк: Пророк космічних трас'
 word_target: 4300
 content_outline:
-- section: "Вступ — Забутий геній космонавтики"
+- section: Вступ — Забутий геній космонавтики
   words: 600
   points:
   - Кондратюк (Шаргей) як піонер освоєння космосу
@@ -63,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Юрій Кондратюк (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович"
+  url: https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович
   type: primary
   notes: Біографія та теорія польотів
 - name: Траса Кондратюка
-  url: "https://space.com.ua/"
+  url: https://space.com.ua/
   type: reference
   notes: Науковий контекст
 immersion: 100% Ukrainian
@@ -83,3 +82,6 @@ activity_hints:
   source: Original text (adapted)
 - type: critical-analysis
   focus: Доля вченого в тоталітарній системі
+persona:
+  voice: Senior Biographer
+  role: Trajectory Calculator

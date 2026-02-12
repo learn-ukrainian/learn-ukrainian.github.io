@@ -1,4 +1,3 @@
----
 module: c1-bio-014
 level: C1-BIO
 sequence: 14
@@ -6,7 +5,7 @@ slug: roksolana
 version: '2.0'
 title: 'Роксолана: Від рабині до султанші'
 content_outline:
-- section: "Вступ — Найвпливовіша жінка Османської імперії"
+- section: Вступ — Найвпливовіша жінка Османської імперії
   words: 400
   points:
   - Унікальність долі Роксолани
@@ -47,7 +46,7 @@ content_outline:
   - Образ у літературі та мистецтві
   - Українська та турецька пам'ять
   - Сучасні серіали та суперечки
-- section: "Підсумок — Жінка, що змінила імперію"
+- section: Підсумок — Жінка, що змінила імперію
   words: 300
   points:
   - Роксолана як символ сили волі
@@ -104,16 +103,19 @@ grammar:
 module_type: biography
 sources:
 - name: Роксолана (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Роксолана"
+  url: https://uk.wikipedia.org/wiki/Роксолана
   type: primary
   notes: Biography, rise to power, influence
 - name: Сулейман I (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Сулейман_I"
+  url: https://uk.wikipedia.org/wiki/Сулейман_I
   type: reference
   notes: Context of Ottoman court
 - name: Гарем (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Гарем"
+  url: https://uk.wikipedia.org/wiki/Гарем
   type: reference
   notes: Structure of Ottoman harem system
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Imperial Consort

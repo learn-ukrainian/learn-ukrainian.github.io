@@ -1,4 +1,3 @@
----
 sequence: 157
 module: lit-157
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Holodomor In Literature у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Famine Chronicler

@@ -1,4 +1,3 @@
----
 module: c1-bio-156
 level: C1-BIO
 sequence: 156
@@ -6,7 +5,7 @@ slug: kateryna-kalytko
 version: '2.0'
 title: 'Катерина Калитко: Поезія війни'
 content_outline:
-- section: "Вступ — Голос тіла і війни"
+- section: Вступ — Голос тіла і війни
   words: 400
   points:
   - Одна з найяскравіших сучасних українських письменниць
@@ -40,7 +39,7 @@ content_outline:
   - Нова поезія та проза
   - Міжнародне визнання
   - Переклади іноземними мовами
-- section: "Спадщина — Голос покоління"
+- section: Спадщина — Голос покоління
   words: 700
   points:
   - Місце в сучасній літературі
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Катерина Калитко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Калитко_Катерина_Вікторівна"
+  url: https://uk.wikipedia.org/wiki/Калитко_Катерина_Вікторівна
   type: primary
   notes: Biography of the contemporary poet and novelist
 - name: Видавництво «Видавництво Старого Лева»
-  url: "https://starylev.com.ua/"
+  url: https://starylev.com.ua/
   type: reference
   notes: Publisher of Kalytko's major works
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of катерина калитко: поезія війни'
 - Evaluate the contributions of голос тіла і війни
 - Trace the career and influence of голос покоління
+persona:
+  voice: Senior Biographer
+  role: War Poet

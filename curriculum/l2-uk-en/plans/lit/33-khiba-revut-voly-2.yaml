@@ -1,4 +1,3 @@
----
 sequence: 33
 module: lit-33
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Хіба ревуть воли...: Образ Чіпки у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Fallen Rebel

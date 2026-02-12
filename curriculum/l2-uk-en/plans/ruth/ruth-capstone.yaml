@@ -24,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - historical-writing
+persona:
+  voice: Baroque Scholar
+  role: Ruthenian Polymath

@@ -1,4 +1,3 @@
----
 module: c1-bio-098
 level: C1-BIO
 sequence: 98
@@ -6,7 +5,7 @@ slug: mykola-khvylovyi
 version: '2.0'
 title: 'Микола Хвильовий: Геть від Москви!'
 content_outline:
-- section: "Вступ — Бунтар, що обрав смерть"
+- section: Вступ — Бунтар, що обрав смерть
   words: 400
   points:
   - Микола Хвильовий — найяскравіша постать Розстріляного відродження
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Хвильовий (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Микола_Хвильовий"
+  url: https://uk.wikipedia.org/wiki/Микола_Хвильовий
   type: primary
   notes: Біографія, творчість, літературна дискусія
 - name: Літературна дискусія 1925-1928
-  url: "https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років"
+  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років
   type: reference
   notes: Контекст полеміки «Геть від Москви!»
 - name: Розстріляне відродження
-  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
   type: reference
   notes: Доля української інтелігенції 1920-30-х
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of микола хвильовий: геть від москви!'
 - Evaluate the contributions of бунтар, що обрав смерть
 - Trace the career and influence of спадщина та реабілітація
+persona:
+  voice: Senior Biographer
+  role: Pamphleteer

@@ -1,41 +1,28 @@
----
-# Module Plan: "PVL: The Varangians"
-# Track: OES
-# Module: 023
-# Source: Gemini Research (ISSUE-501)
-# Generated: 2026-02-04
 sequence: 27
 module: oes-027
-
 module_number: 23
 slug: pvl-varangians
-title_uk: "ПВЛ: Варяги"
-title_en: "PVL: The Varangians"
-
+title_uk: 'ПВЛ: Варяги'
+title_en: 'PVL: The Varangians'
 phase: 1
 phase_id: vernacular-foundations
-phase_name: "Vernacular Foundations"
-
-focus: 'Aorist intro — "Riksha" (They said)'
-
+phase_name: Vernacular Foundations
+focus: Aorist intro — "Riksha" (They said)
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to PVL: The Varangians"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: "[]"
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to PVL: The Varangians'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Trade Route Guide

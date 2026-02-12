@@ -1,4 +1,3 @@
----
 module: b2-hist-099
 level: B2-HIST
 sequence: 99
@@ -92,4 +91,7 @@ grammar:
 - Юридична та військова лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.10 [Soviet Terror]"
+phase: HIST.10 [Soviet Terror]
+persona:
+  voice: Senior Professor of History
+  role: Village Teacher

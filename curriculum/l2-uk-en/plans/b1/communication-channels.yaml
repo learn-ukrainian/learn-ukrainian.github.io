@@ -90,3 +90,6 @@ grammar:
 - Conditional politeness (Був би вдячний, Я хотів би...)
 register: різні (formal, informal, semi-formal)
 phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: SMM Manager

@@ -1,4 +1,3 @@
----
 sequence: 35
 module: oes-035
 module_number: 29
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Genealogist

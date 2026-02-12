@@ -1,4 +1,3 @@
----
 module: c1-hist-126
 level: c1-hist
 sequence: 126
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of культурна резистенція: стратегії виживання'
 - Evaluate the historical significance of як виживає культура
 content_outline:
-- section: "Вступ — Як виживає культура"
+- section: Вступ — Як виживає культура
   words: 515
   subsections:
   - Культурна резистенція — що це
@@ -72,7 +71,7 @@ activities:
 - type: critical-analysis
   focus: Map cultural survival strategies
 - type: critical-analysis
-  focus: "Aesopian language — examples and decoding"
+  focus: Aesopian language — examples and decoding
 - type: comparative-study
   focus: How samvydav networks functioned
 - type: critical-analysis
@@ -81,11 +80,11 @@ activities:
   focus: Яка стратегія культурного виживання була найефективнішою?
 sources:
 - name: Самвидав (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Самвидав"
+  url: https://uk.wikipedia.org/wiki/Самвидав
   type: reference
   notes: Samvydav
 - name: Культурний спротив (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Культурний_спротив"
+  url: https://uk.wikipedia.org/wiki/Культурний_спротив
   type: reference
   notes: Cultural resistance
 vocabulary_hints:
@@ -108,3 +107,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cultural Anthropologist

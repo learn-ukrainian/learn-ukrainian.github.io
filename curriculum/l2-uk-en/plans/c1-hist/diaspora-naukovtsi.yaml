@@ -1,4 +1,3 @@
----
 module: c1-hist-068
 level: c1-hist
 sequence: 68
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
 - Evaluate the historical significance of наука в еміграції
 content_outline:
-- section: "Вступ — Наука в еміграції"
+- section: Вступ — Наука в еміграції
   words: 457
   subsections:
   - Чому потрібні наукові інституції
@@ -25,7 +24,7 @@ content_outline:
   - Кафедра українознавства
   - Видання — Harvard Ukrainian Studies
   - Вплив на західну науку
-- section: "УВАН — Українська вільна академія наук"
+- section: УВАН — Українська вільна академія наук
   words: 686
   subsections:
   - Заснування — 1945, Аугсбург
@@ -80,7 +79,7 @@ vocabulary:
 - рецепція
 activities:
 - type: comparative-study
-  focus: "Compare HURI, UVAN, NTSh — missions and methods"
+  focus: Compare HURI, UVAN, NTSh — missions and methods
 - type: reading
   focus: Pritsak's vision for Ukrainian studies
 - type: critical-analysis
@@ -91,15 +90,15 @@ activities:
   focus: Що українська наука втратила б без діаспори?
 sources:
 - name: Український науковий інститут Гарварду (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету"
+  url: https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету
   type: reference
   notes: HURI history
 - name: УВАН (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук"
+  url: https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук
   type: reference
   notes: UVAN history
 - name: НТШ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка"
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
   type: reference
   notes: Shevchenko Society
 vocabulary_hints:
@@ -122,3 +121,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: History of Science Scholar

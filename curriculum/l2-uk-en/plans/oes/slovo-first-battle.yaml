@@ -1,4 +1,3 @@
----
 sequence: 79
 module: oes-079
 module_number: 79
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Vanguard Captain

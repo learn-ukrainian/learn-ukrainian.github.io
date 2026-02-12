@@ -1,4 +1,3 @@
----
 module: c1-hist-045
 level: c1-hist
 sequence: 45
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of голодомор: історіографія теми'
 - Evaluate the historical significance of як вивчають голодомор
 content_outline:
-- section: "Вступ — Як вивчають Голодомор"
+- section: Вступ — Як вивчають Голодомор
   words: 457
   subsections:
   - Від замовчування до визнання
@@ -79,24 +78,24 @@ activities:
 - type: comparative-study
   focus: Compare Conquest, Mace, Kulchytsky interpretations
 - type: critical-analysis
-  focus: "Evaluate one denial argument — how to counter?"
+  focus: Evaluate one denial argument — how to counter?
 - type: essay-response
   focus: Чому Голодомор так довго замовчувався?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Голодомор"
+  url: https://uk.wikipedia.org/wiki/Голодомор
   type: reference
   notes: Overview
 - name: Роберт Конквест
-  url: "https://uk.wikipedia.org/wiki/Роберт_Конквест"
+  url: https://uk.wikipedia.org/wiki/Роберт_Конквест
   type: reference
   notes: «Harvest of Sorrow» author
 - name: Джеймс Мейс
-  url: "https://uk.wikipedia.org/wiki/Мейс_Джеймс"
+  url: https://uk.wikipedia.org/wiki/Мейс_Джеймс
   type: reference
   notes: US Commission researcher
 - name: Станіслав Кульчицький
-  url: "https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович"
+  url: https://uk.wikipedia.org/wiki/Кульчицький_Станіслав_Владиславович
   type: reference
   notes: Ukrainian scholar
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historiographical Debate Moderator

@@ -1,4 +1,3 @@
----
 sequence: 73
 module: ruth-073
 module_number: 59
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Court Orator

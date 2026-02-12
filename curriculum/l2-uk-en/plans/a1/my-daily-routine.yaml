@@ -1,4 +1,3 @@
----
 module: a1-25
 level: A1
 sequence: 25
@@ -26,7 +25,7 @@ content_outline:
   - Діалог про типовий день (О котрій ти встаєш?)
   - Діалог про вихідні (Що ти робиш у суботу?)
   - Порівняння робочого дня та вихідного
-- section: "Practice 2"
+- section: Practice 2
   words: 16
   points:
   - Опис свого типового дня
@@ -79,4 +78,7 @@ grammar:
 - Sequence adverbs (спочатку, потім, нарешті)
 - Daily routine expressions
 register: розмовний
-phase: "A1.3 [Consolidation]"
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Time Management Coach

@@ -1,4 +1,3 @@
----
 module: b1-21
 level: B1
 sequence: 21
@@ -9,7 +8,7 @@ subtitle: Figurative uses of motion verbs
 content_outline:
 - section: Тест
   words: 338
-  points: "[]"
+  points: '[]'
 - section: Пояснення
   words: 1191
   points:
@@ -24,7 +23,7 @@ content_outline:
   - 'Діалог: Культурні плани'
 - section: 'Читання: Метафори в нашому житті'
   words: 748
-  points: "[]"
+  points: '[]'
 - section: Потрібно більше практики?
   words: 164
   points:
@@ -88,16 +87,19 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Figurative Language
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official guidance on idiomatic expressions
 - name: Ukrainian Idioms with Motion Verbs
-  url: "https://uk.wikipedia.org/wiki/Фразеологізми"
+  url: https://uk.wikipedia.org/wiki/Фразеологізми
   type: reference
   notes: Common figurative expressions with motion verbs
 - name: Slovnyk.UA - Motion Verb Idioms
-  url: "https://slovnyk.ua/"
+  url: https://slovnyk.ua/
   type: reference
   notes: Dictionary entries with figurative meanings
 immersion: 100% Ukrainian
 phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Lviv Poet

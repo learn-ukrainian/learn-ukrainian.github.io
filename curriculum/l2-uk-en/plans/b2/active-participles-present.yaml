@@ -1,4 +1,3 @@
----
 module: b2-07
 level: B2
 sequence: 7
@@ -6,7 +5,7 @@ slug: 07-active-participles-present
 version: '2.0'
 title: Активні дієприкметники теперішнього часу (-учий/-ючий)
 content_outline:
-- section: "Вступ — Активні дієприкметники"
+- section: Вступ — Активні дієприкметники
   words: 400
   points:
   - Різниця між активними та пасивними дієприкметниками
@@ -106,19 +105,22 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Active Participles
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Recognition requirements for active participles
 - name: Літературна мова та її стилі
-  url: "https://uk.wikipedia.org/wiki/Літературна_мова"
+  url: https://uk.wikipedia.org/wiki/Літературна_мова
   type: secondary
   notes: Literary usage of participles
 - name: Правопис української мови 2019
-  url: "https://uk.wikipedia.org/wiki/Український_правопис"
+  url: https://uk.wikipedia.org/wiki/Український_правопис
   type: reference
   notes: Official orthography rules for participles
 immersion: 100% Ukrainian
-phase: "B2.1a [Passive Voice]"
+phase: B2.1a [Passive Voice]
 objectives:
 - Identify and correctly use активні дієприкметники теперішнього часу (-учий/-ючий)
 - Form and apply активні дієприкметники
+persona:
+  voice: Professional Language Coach
+  role: Old-School Grammarian (Граматист старої школи)

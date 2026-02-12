@@ -1,4 +1,3 @@
----
 module: a2-10
 level: A2
 sequence: 10
@@ -88,12 +87,15 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Services Theme
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Required service vocabulary for A2
 - name: Ukrposhta Official
-  url: "https://www.ukrposhta.ua/"
+  url: https://www.ukrposhta.ua/
   type: reference
   notes: Authentic postal service terminology
 immersion: 40-50% Ukrainian
 phase: A2.1
+persona:
+  voice: Encouraging Cultural Guide
+  role: Service Clerk

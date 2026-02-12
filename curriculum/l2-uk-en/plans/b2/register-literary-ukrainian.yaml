@@ -1,13 +1,12 @@
----
 module: b2-22
 level: B2
 sequence: 22
 slug: 22-register-literary-ukrainian
 version: '2.0'
-title: "Регістр — Літературна українська"
+title: Регістр — Літературна українська
 subtitle: Мова художньої літератури
 content_outline:
-- section: "Розминка — Художній стиль"
+- section: Розминка — Художній стиль
   words: 300
   points:
   - Де зустрічається (проза, поезія, драматургія, есеїстика)
@@ -34,7 +33,7 @@ content_outline:
   - Повтори та анафори (Я бачив... Я чув...)
   - Риторичні запитання та оклики
   - Різноманітність довжини речень
-- section: "Практика — аналіз літературного тексту"
+- section: Практика — аналіз літературного тексту
   words: 450
   points:
   - Виділення художніх засобів у тексті Шевченка чи Франка
@@ -73,3 +72,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Novelist (Письменник-романіст)

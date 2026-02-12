@@ -1,4 +1,3 @@
----
 sequence: 20
 module: lit-20
 level: LIT
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Культ Шевченка: Рецепція і Міфи'
 subtitle: 'The Cult of Shevchenko: Modern Reception'
 content_outline:
-- section: "Вступ — Від Пророка до Ікони"
+- section: Вступ — Від Пророка до Ікони
   words: 625
   points:
   - Еволюція образу Шевченка
@@ -31,13 +30,13 @@ content_outline:
   - Андрій Грехов і "Кобзар 2.0"
   - Шевченко в мемах і поп-культурі
   - Деканонізація vs нова канонізація
-- section: "Концепція \"Національного Батька\""
+- section: Концепція "Національного Батька"
   words: 625
   points:
   - Ризики сакралізації
   - Шевченко як "шкільний тягар"
   - Як читати класика по-новому
-- section: "Підсумок — Живий чи бронзовий?"
+- section: Підсумок — Живий чи бронзовий?
   words: 500
   points:
   - Шевченко для XXI століття
@@ -68,7 +67,7 @@ activity_hints:
   source: Wikipedia and academic sources
   items: 4+
 - type: essay-response
-  focus: 'Концепція \"Національного Батька\" — ризики і переваги'
+  focus: Концепція \"Національного Батька\" — ризики і переваги
   word_target: 300
   output: Критичне есе
 focus: culture
@@ -88,17 +87,20 @@ grammar:
 - Modern essayistic style
 module_type: culture
 sources:
-- name: "Шевченко — Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко"
+- name: Шевченко — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
   type: primary
   notes: Загальна інформація та рецепція
 - name: Пам'ятники Шевченку
-  url: "https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку"
+  url: https://uk.wikipedia.org/wiki/Пам'ятники_Тарасові_Шевченку
   type: secondary
   notes: Меморіальна культура
 - name: Шевченко в поп-культурі
-  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі"
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко_в_культурі
   type: reference
   notes: Сучасні інтерпретації
 immersion: 100% Ukrainian
 phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Myth Deconstructor

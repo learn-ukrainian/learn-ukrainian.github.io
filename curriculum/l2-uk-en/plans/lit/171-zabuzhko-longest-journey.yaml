@@ -1,4 +1,3 @@
----
 sequence: 171
 module: lit-171
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zabuzhko Longest Journey у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Historical Analyst

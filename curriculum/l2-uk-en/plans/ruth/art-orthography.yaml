@@ -1,4 +1,3 @@
----
 sequence: 35
 module: ruth-035
 module_number: 29
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Master Calligrapher

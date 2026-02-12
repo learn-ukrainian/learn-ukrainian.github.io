@@ -1,4 +1,3 @@
----
 module: c1-bio-075
 level: C1-BIO
 sequence: 75
@@ -6,7 +5,7 @@ slug: mykola-leontovych
 version: '2.0'
 title: 'Микола Леонтович: Автор «Щедрика»'
 content_outline:
-- section: "Вступ — Пісня, що підкорила світ"
+- section: Вступ — Пісня, що підкорила світ
   words: 400
   points:
   - Микола Леонтович — автор «Щедрика», відомого як Carol of the Bells
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Леонтович (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Микола_Леонтович"
+  url: https://uk.wikipedia.org/wiki/Микола_Леонтович
   type: primary
   notes: Біографія, музична діяльність, загибель
 - name: Щедрик
-  url: "https://uk.wikipedia.org/wiki/Щедрик_(пісня)"
+  url: https://uk.wikipedia.org/wiki/Щедрик_(пісня)
   type: reference
   notes: Найвідоміший твір та його всесвітнє поширення
 - name: Українська хорова музика
-  url: "https://uk.wikipedia.org/wiki/Українська_хорова_музика"
+  url: https://uk.wikipedia.org/wiki/Українська_хорова_музика
   type: reference
   notes: Контекст розвитку хорового мистецтва
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of микола леонтович: автор «щедрика»'
 - Evaluate the contributions of пісня, що підкорила світ
 - Trace the career and influence of світове визнання «щедрика»
+persona:
+  voice: Senior Biographer
+  role: Choir Arranger

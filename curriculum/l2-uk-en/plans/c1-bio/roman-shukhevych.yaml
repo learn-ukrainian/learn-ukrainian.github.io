@@ -1,4 +1,3 @@
----
 module: c1-bio-117
 level: C1-BIO
 sequence: 117
@@ -6,7 +5,7 @@ slug: roman-shukhevych
 version: '2.0'
 title: 'Роман Шухевич: Головний командир УПА'
 content_outline:
-- section: "Вступ — Легенда УПА"
+- section: Вступ — Легенда УПА
   words: 457
   points:
   - Шухевич як символ збройного опору
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Роман Шухевич (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович"
+  url: https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович
   type: primary
   notes: Biography, UPA command, death
 - name: Українська повстанська армія
-  url: "https://uk.wikipedia.org/wiki/Українська_повстанська_армія"
+  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
   type: reference
   notes: Organization he led
-- name: "Герой України — Шухевич"
-  url: "https://uk.wikipedia.org/wiki/Герой_України"
+- name: Герой України — Шухевич
+  url: https://uk.wikipedia.org/wiki/Герой_України
   type: reference
   notes: State recognition
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of роман шухевич: головний командир упа'
 - Evaluate the contributions of легенда упа
 - Trace the career and influence of спадщина та визнання
+persona:
+  voice: Senior Biographer
+  role: Insurgent General

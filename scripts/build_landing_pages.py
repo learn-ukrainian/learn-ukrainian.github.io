@@ -68,32 +68,23 @@ def load_level_status():
 
 
 def get_module_files(level):
-    """Get existing module files for a level (core levels with numbered files)."""
+    """Get existing module files for a level (core levels with slug-based files)."""
     meta_dir = CURRICULUM_DIR / level / "meta"
     mdx_dir = DOCS_DIR / level
 
     meta_files = {}
     mdx_files = {}
 
-    # Scan meta files
-    if meta_dir.exists():
-        for f in meta_dir.glob("*.yaml"):
-            # Extract module number from filename (e.g., "01-something.yaml" -> 1)
-            try:
-                num = int(f.stem.split("-")[0])
-                meta_files[num] = f
-            except (ValueError, IndexError):
-                continue
+    # Use manifest for module lookup
+    modules = get_modules_for_level(level)
+    for mod in modules:
+        meta_file = meta_dir / f"{mod.slug}.yaml"
+        if meta_file.exists():
+            meta_files[mod.local_num] = meta_file
 
-    # Scan MDX files
-    if mdx_dir.exists():
-        for f in mdx_dir.glob("module-*.mdx"):
-            # Extract module number from filename (e.g., "module-01.mdx" -> 1)
-            try:
-                num = int(f.stem.replace("module-", ""))
-                mdx_files[num] = f
-            except ValueError:
-                continue
+        mdx_file = mdx_dir / f"{mod.slug}.mdx"
+        if mdx_file.exists():
+            mdx_files[mod.local_num] = mdx_file
 
     return meta_files, mdx_files
 
@@ -160,40 +151,20 @@ def build_level_landing(level, config, is_track=False):
     # Build module table rows
     rows = []
 
-    # For tracks, get module list from manifest
-    if is_track:
-        modules = get_modules_for_level(level)
-        for mod in modules:
-            num = mod.local_num
-            if num in mdx_files:
-                status = "✅"
-                link = f"[{mod.title}](./{mod.slug})"
-            elif num in meta_files:
-                status = "🚧"
-                link = f"{mod.title}"
-            else:
-                status = "📋"
-                link = f"Модуль {num:02d}"
-            rows.append(f"| {num} | {link} | {status} |")
-    else:
-        for num in range(1, planned + 1):
-            if num in mdx_files:
-                status = "✅"
-                title, subtitle = get_module_title(meta_files.get(num)) if num in meta_files else ('', '')
-                link = f"[{title}](./module-{num:02d})"
-                if subtitle:
-                    link += f" <small>({subtitle})</small>"
-            elif num in meta_files:
-                status = "🚧"
-                title, subtitle = get_module_title(meta_files[num])
-                link = f"{title}"
-                if subtitle:
-                    link += f" <small>({subtitle})</small>"
-            else:
-                status = "📋"
-                link = f"Модуль {num:02d}"
-
-            rows.append(f"| {num} | {link} | {status} |")
+    # Build module rows from manifest
+    modules = get_modules_for_level(level)
+    for mod in modules:
+        num = mod.local_num
+        if num in mdx_files:
+            status = "✅"
+            link = f"[{mod.title}](./{mod.slug})"
+        elif num in meta_files:
+            status = "🚧"
+            link = f"{mod.title}"
+        else:
+            status = "📋"
+            link = f"Модуль {num:02d}"
+        rows.append(f"| {num} | {link} | {status} |")
 
     # Build introduction section
     intro_section = ""

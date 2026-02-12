@@ -1,4 +1,3 @@
----
 module: c1-bio-124
 level: C1-BIO
 sequence: 124
@@ -6,7 +5,7 @@ slug: borys-paton
 version: '2.0'
 title: 'Борис Патон: Академік століття'
 content_outline:
-- section: "Вступ — Найдовше президентство в історії науки"
+- section: Вступ — Найдовше президентство в історії науки
   words: 457
   points:
   - Борис Патон — 58 років на чолі НАН України
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Борис Патон (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Патон_Борис_Євгенович"
+  url: https://uk.wikipedia.org/wiki/Патон_Борис_Євгенович
   type: primary
   notes: Biography, scientific achievements, NAS presidency
 - name: Національна академія наук України
-  url: "https://uk.wikipedia.org/wiki/Національна_академія_наук_України"
+  url: https://uk.wikipedia.org/wiki/Національна_академія_наук_України
   type: reference
   notes: Institution he led for 58 years
 - name: Зварювання в космосі
-  url: "https://uk.wikipedia.org/wiki/Зварювання_в_космосі"
+  url: https://uk.wikipedia.org/wiki/Зварювання_в_космосі
   type: reference
   notes: His pioneering space technology
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of борис патон: академік століття'
 - Evaluate the contributions of найдовше президентство в історії науки
 - Trace the career and influence of спадщина столітнього академіка
+persona:
+  voice: Senior Biographer
+  role: Institute President

@@ -1,4 +1,3 @@
----
 module: b2-hist-013
 level: B2-HIST
 sequence: 13
@@ -122,17 +121,20 @@ grammar:
 - Conditional sentences
 sources:
 - name: Руська Правда (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Руська_Правда"
+  url: https://uk.wikipedia.org/wiki/Руська_Правда
   type: reference
   notes: Overview of the legal code
 - name: Текст Руської Правди
-  url: "https://litopys.org.ua/oldukr2/oldukr51.htm"
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
   type: primary
   notes: Original text with translation
 - name: Правда Ярослава (Коротка редакція)
-  url: "https://uk.wikipedia.org/wiki/Правда_Ярослава"
+  url: https://uk.wikipedia.org/wiki/Правда_Ярослава
   type: reference
   notes: First version of the code
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
 module_type: history
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Prince's Judge

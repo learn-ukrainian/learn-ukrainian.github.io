@@ -1,4 +1,3 @@
----
 module: a2-47
 level: A2
 sequence: 47
@@ -80,4 +79,7 @@ grammar:
 - Nature vocabulary
 - Seasons and describing landscapes
 register: розмовний
-phase: "A2.5 [Vocabulary Expansion]"
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Carpathian Forester

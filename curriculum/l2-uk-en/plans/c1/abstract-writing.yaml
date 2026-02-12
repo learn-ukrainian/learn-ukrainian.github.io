@@ -1,12 +1,11 @@
----
 module: c1-013
 level: C1
 sequence: 13
 slug: 13-abstract-writing
 version: '2.0'
-title: "Жанр — Анотація та реферат"
+title: Жанр — Анотація та реферат
 content_outline:
-- section: "Вступ — Роль анотації"
+- section: Вступ — Роль анотації
   words: 400
   points:
   - Визначення та функції анотації
@@ -38,7 +37,7 @@ content_outline:
   - Різниця в структурі та змісті
   - Коли використовувати яку
   - Переваги та недоліки
-- section: "Реферат — розширена форма"
+- section: Реферат — розширена форма
   words: 600
   points:
   - Різниця між анотацією та рефератом
@@ -99,11 +98,11 @@ connects_to:
 module_type: grammar
 sources:
 - name: Вимоги до анотацій наукових статей
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official abstract formatting requirements
 - name: Academic Abstract Writing Guidelines
-  url: "https://mova.info/"
+  url: https://mova.info/
   type: secondary
   notes: Structure and content of effective abstracts
 immersion: 100% Ukrainian
@@ -112,3 +111,6 @@ objectives:
 - Identify and correctly use жанр — анотація та реферат
 - Form and apply роль анотації
 - Distinguish between практика написання
+persona:
+  voice: Senior Specialist
+  role: Секретар наукової ради

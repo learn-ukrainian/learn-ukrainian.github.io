@@ -1,4 +1,3 @@
----
 module: a2-67
 level: A2
 sequence: 67
@@ -82,4 +81,7 @@ grammar:
 - Verbs for digital actions (постити, лайкати)
 - Commenting and messaging etiquette
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Community Manager

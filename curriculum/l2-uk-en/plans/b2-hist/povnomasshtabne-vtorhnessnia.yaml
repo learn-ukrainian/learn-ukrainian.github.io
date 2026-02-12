@@ -1,4 +1,3 @@
----
 module: b2-hist-132
 level: B2-HIST
 sequence: 132
@@ -89,4 +88,7 @@ grammar:
 - Військова та надзвичайна лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.13 [Russian Aggression]"
+phase: HIST.13 [Russian Aggression]
+persona:
+  voice: Senior Professor of History
+  role: Territorial Defense Fighter

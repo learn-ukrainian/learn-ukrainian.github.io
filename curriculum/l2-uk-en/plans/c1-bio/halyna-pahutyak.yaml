@@ -1,4 +1,3 @@
----
 module: c1-bio-145
 level: C1-BIO
 sequence: 145
@@ -6,7 +5,7 @@ slug: halyna-pahutyak
 version: '2.0'
 title: 'Галина Пагутяк: Містична письменниця'
 content_outline:
-- section: "Вступ — Голос з іншого світу"
+- section: Вступ — Голос з іншого світу
   words: 400
   points:
   - Майстриня химерного реалізму
@@ -40,7 +39,7 @@ content_outline:
   - Екологічна тематика
   - Есеїстика та публіцистика
   - Вплив на молодих письменників
-- section: "Спадщина — Архітекторка світів"
+- section: Спадщина — Архітекторка світів
   words: 700
   points:
   - Місце в сучасній літературі
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Галина Пагутяк (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна"
+  url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
   type: primary
   notes: Biography of the mystical prose writer
 - name: Видавництво «Піраміда»
-  url: "https://www.pyramida.kiev.ua/"
+  url: https://www.pyramida.kiev.ua/
   type: reference
   notes: Publisher of Pahutyak's major works
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of галина пагутяк: містична письменниця'
 - Evaluate the contributions of голос з іншого світу
 - Trace the career and influence of архітекторка світів
+persona:
+  voice: Senior Biographer
+  role: Gothic Novelist

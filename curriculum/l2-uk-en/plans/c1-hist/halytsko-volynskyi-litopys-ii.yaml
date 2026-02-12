@@ -1,4 +1,3 @@
----
 module: c1-hist-016
 level: c1-hist
 sequence: 16
@@ -11,7 +10,7 @@ objectives:
   світогляд'
 - Evaluate the historical significance of література як історія
 content_outline:
-- section: "Вступ — Література як історія"
+- section: Вступ — Література як історія
   words: 457
   subsections:
   - Від змісту до форми
@@ -39,7 +38,7 @@ content_outline:
   - Політичні ідеали — єдність, сила
   - Відношення до «поганих» — татар, литовців
   - Руська ідентичність — що це означало?
-- section: "Фрагмент — Опис битви"
+- section: Фрагмент — Опис битви
   words: 571
   subsections:
   - Текст (з глосами)
@@ -80,7 +79,7 @@ activities:
 - type: reading
   focus: Analyze stylistic features of a battle description
 - type: comparative-study
-  focus: "Compare GVL style with PVL style — what's different?"
+  focus: Compare GVL style with PVL style — what's different?
 - type: reading
   focus: Find parallels with Western European chronicles
 - type: essay-response
@@ -89,15 +88,15 @@ activities:
   focus: Чим Галицько-Волинський літопис відрізняється від Повісті минулих літ?
 sources:
 - name: Галицько-Волинський літопис (текст)
-  url: "https://litopys.org.ua/hvlitop/hvl.htm"
+  url: https://litopys.org.ua/hvlitop/hvl.htm
   type: primary
   notes: Full text
 - name: Лев Данилович
-  url: "https://uk.wikipedia.org/wiki/Лев_I_Данилович"
+  url: https://uk.wikipedia.org/wiki/Лев_I_Данилович
   type: reference
   notes: Danylo's successor
 - name: Середньовічна українська література
-  url: "https://uk.wikipedia.org/wiki/Українська_середньовічна_література"
+  url: https://uk.wikipedia.org/wiki/Українська_середньовічна_література
   type: reference
   notes: Literary context
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Medieval Chronicler

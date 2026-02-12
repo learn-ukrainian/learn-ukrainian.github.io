@@ -1,4 +1,3 @@
----
 sequence: 150
 module: lit-150
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Drach Knife Sun у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Sun Chaser

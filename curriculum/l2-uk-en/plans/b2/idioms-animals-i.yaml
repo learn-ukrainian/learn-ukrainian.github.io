@@ -64,3 +64,6 @@ activity_hints:
 - type: true-false
   focus: Розуміння значень
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Folklore Ethnographer (Етнограф)

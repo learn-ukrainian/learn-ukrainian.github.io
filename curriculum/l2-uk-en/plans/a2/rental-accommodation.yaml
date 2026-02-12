@@ -87,3 +87,6 @@ grammar:
 - Contract and lease terms
 register: розмовний
 phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Landlord

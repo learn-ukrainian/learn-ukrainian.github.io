@@ -1,4 +1,3 @@
----
 sequence: 38
 module: a1-38
 level: A1
@@ -26,7 +25,7 @@ content_outline:
   - Діалог 1: Пошук товару в магазині
   - Діалог 2: Оплата на касі
   - Діалог 3: Повернення товару
-- section: "Warm-up 2"
+- section: Warm-up 2
   words: 125
   points:
   - Наратив про похід у супермаркет
@@ -76,4 +75,7 @@ grammar:
 - Accusative for shopping
 - Quantity expressions
 register: розмовний
-phase: "A1.4 [Practical Scenarios]"
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Supermarket Manager

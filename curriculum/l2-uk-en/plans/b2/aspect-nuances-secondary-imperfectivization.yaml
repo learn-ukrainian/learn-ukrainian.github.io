@@ -1,4 +1,3 @@
----
 module: b2-41
 level: B2
 sequence: 41
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Видові нюанси I: Вторинна імперфективація'
 subtitle: Secondary Imperfectivization - Deriving Imperfective from Perfective
 content_outline:
-- section: "Розминка — Навіщо два недоконані види?"
+- section: Розминка — Навіщо два недоконані види?
   words: 400
   points:
   - Базова пара (читати → прочитати) vs трійка (читати → прочитати → перечитувати)
@@ -24,7 +23,7 @@ content_outline:
   points:
   - '"I used to do this repeatedly" (Iterative)'
   - '"I was in the middle of re-doing it" (Process)'
-- section: "Практика — утворення вторинних НДВ"
+- section: Практика — утворення вторинних НДВ
   words: 400
   points:
   - Утворити вторинний НДВ від заданих ДВ (переписати → ?)
@@ -44,7 +43,7 @@ grammar:
 - 'Suffix patterns: -ува-/-юва-, -ва-, -а-/-я-'
 - Vowel alternation in roots
 - Aspectual pairs with prefixes
-phase: "B2.2 [Phraseology & Synonymy]"
+phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
   - термін (term)
@@ -65,3 +64,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Videographer (Відеограф)

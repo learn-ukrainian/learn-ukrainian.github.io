@@ -1,4 +1,3 @@
----
 sequence: 98
 module: ruth-098
 module_number: 98
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Cultural Bridge-Builder

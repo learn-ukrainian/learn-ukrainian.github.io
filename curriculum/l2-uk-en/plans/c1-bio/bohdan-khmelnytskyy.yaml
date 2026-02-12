@@ -1,4 +1,3 @@
----
 module: c1-bio-022
 level: C1-BIO
 sequence: 22
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Богдан Хмельницький: Гетьман-державотворець'
 word_target: 4300
 content_outline:
-- section: "Вступ — Творець козацької держави"
+- section: Вступ — Творець козацької держави
   words: 600
   points:
   - Хмельницький як символ суб'єктності
@@ -63,11 +62,11 @@ grammar:
 module_type: biography
 sources:
 - name: Богдан Хмельницький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
   type: primary
   notes: Фундаментальна біографія
 - name: Документи Богдана Хмельницького
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Тексти універсалів та листів
 immersion: 100% Ukrainian
@@ -83,3 +82,6 @@ activity_hints:
   source: Primary sources (adapted)
 - type: comparative-study
   focus: Хмельницький vs Кромвель
+persona:
+  voice: Senior Biographer
+  role: Rebellion Leader

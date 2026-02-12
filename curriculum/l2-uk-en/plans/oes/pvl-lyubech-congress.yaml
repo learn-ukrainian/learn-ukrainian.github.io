@@ -1,41 +1,28 @@
----
-# Module Plan: "PVL: Lyubech Congress"
-# Track: OES
-# Module: 031
-# Source: Gemini Research (ISSUE-490)
-# Generated: 2026-02-04
 sequence: 37
 module: oes-037
-
 module_number: 31
 slug: pvl-lyubech-congress
-title_uk: "ПВЛ: Любецький з'їзд"
-title_en: "PVL: Lyubech Congress"
-
+title_uk: 'ПВЛ: Любецький з''їзд'
+title_en: 'PVL: Lyubech Congress'
 phase: 2
 phase_id: literary-tradition
-phase_name: "Literary Tradition"
-
+phase_name: Literary Tradition
 focus: '"Let us not ruin the Rus land" — Hortative mood'
-
 word_target: 4000
-
-# Content outline to be expanded during content generation
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to PVL: Lyubech Congress"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: "[]"
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to PVL: Lyubech Congress'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Council Secretary

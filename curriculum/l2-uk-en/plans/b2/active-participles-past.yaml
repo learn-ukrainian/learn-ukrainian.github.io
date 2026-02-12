@@ -1,4 +1,3 @@
----
 module: b2-08
 level: B2
 sequence: 8
@@ -6,7 +5,7 @@ slug: 08-active-participles-past
 version: '2.0'
 title: Активні дієприкметники минулого часу (-лий)
 content_outline:
-- section: "Вступ — Минулі активні дієприкметники"
+- section: Вступ — Минулі активні дієприкметники
   words: 400
   points:
   - Теоретична можливість утворення
@@ -72,7 +71,7 @@ vocabulary_hints:
   - альтернатива (alternative)
 activity_hints:
 - type: quiz
-  focus: "Legitimate vs russism participles — identification"
+  focus: Legitimate vs russism participles — identification
   items: 15+
 - type: fill-in
   focus: Russism participle → relative clause
@@ -105,19 +104,22 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Participles
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Recognition of -лий forms, russism awareness
 - name: Антисуржик
-  url: "https://uk.wikipedia.org/wiki/Антисуржик"
+  url: https://uk.wikipedia.org/wiki/Антисуржик
   type: secondary
   notes: Distinguishing Ukrainian from Russian-influenced forms
 - name: Правопис української мови 2019
-  url: "https://uk.wikipedia.org/wiki/Український_правопис"
+  url: https://uk.wikipedia.org/wiki/Український_правопис
   type: reference
   notes: Official position on -лий participles
 immersion: 100% Ukrainian
-phase: "B2.1a [Passive Voice]"
+phase: B2.1a [Passive Voice]
 objectives:
 - Identify and correctly use активні дієприкметники минулого часу (-лий)
 - Form and apply минулі активні дієприкметники
+persona:
+  voice: Professional Language Coach
+  role: Historian (Історик)

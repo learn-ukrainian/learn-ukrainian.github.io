@@ -1,4 +1,3 @@
----
 module: c1-hist-070
 level: c1-hist
 sequence: 70
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of галичина під австрією: особлива доля'
 - Evaluate the historical significance of інший шлях
 content_outline:
-- section: "Вступ — Інший шлях"
+- section: Вступ — Інший шлях
   words: 457
   subsections:
   - Галичина — не під Росією
@@ -88,15 +87,15 @@ activities:
   focus: Чому Галичину називали 'українським П'ємонтом'?
 sources:
 - name: Галичина (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Галичина"
+  url: https://uk.wikipedia.org/wiki/Галичина
   type: reference
   notes: Regional overview
 - name: Королівство Галичини та Володимирії (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії"
+  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
   type: reference
   notes: Habsburg period
 - name: Українці в Австро-Угорщині (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині"
+  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
   type: reference
   notes: Ukrainian status
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Habsburg Era Historian

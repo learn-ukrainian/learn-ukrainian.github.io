@@ -1,4 +1,3 @@
----
 module: c1-bio-030
 level: C1-BIO
 sequence: 30
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Павло Полуботок: Мученик за автономію'
 word_target: 4300
 content_outline:
-- section: "Вступ — Символ нескореності"
+- section: Вступ — Символ нескореності
   words: 600
   points:
   - Полуботок як символ морального та правового опору
@@ -62,11 +61,11 @@ grammar:
 module_type: biography
 sources:
 - name: Павло Полуботок (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Павло_Полуботок"
+  url: https://uk.wikipedia.org/wiki/Павло_Полуботок
   type: primary
   notes: Біографія та діяльність
 - name: Малоросійська колегія (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Малоросійська_колегія"
+  url: https://uk.wikipedia.org/wiki/Малоросійська_колегія
   type: reference
   notes: Контекст імперської політики
 immersion: 100% Ukrainian
@@ -82,3 +81,6 @@ activity_hints:
   source: Primary sources (adapted)
 - type: essay-response
   focus: Ціна гідності
+persona:
+  voice: Senior Biographer
+  role: Prisoner of State

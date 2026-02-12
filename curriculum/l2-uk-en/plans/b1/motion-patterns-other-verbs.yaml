@@ -1,4 +1,3 @@
----
 module: b1-23
 level: B1
 sequence: 23
@@ -9,7 +8,7 @@ subtitle: Motion prefixes in non-motion verbs
 content_outline:
 - section: Тест
   words: 121
-  points: "[]"
+  points: '[]'
 - section: Пояснення
   words: 1375
   points:
@@ -92,16 +91,19 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Word Formation
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official guidance on prefix patterns in word formation
 - name: Ukrainian Verbal Prefixes
-  url: "https://uk.wikipedia.org/wiki/Дієслівні_префікси"
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
   type: reference
   notes: Prefix meanings across verb categories
 - name: Ukrainian Word Formation (Academic)
-  url: "https://uk.wikipedia.org/wiki/Словотвір"
+  url: https://uk.wikipedia.org/wiki/Словотвір
   type: reference
   notes: Systematic treatment of derivation
 immersion: 100% Ukrainian
 phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Dance Choreographer

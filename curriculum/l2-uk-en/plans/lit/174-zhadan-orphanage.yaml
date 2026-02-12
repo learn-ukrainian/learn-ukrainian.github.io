@@ -1,4 +1,3 @@
----
 sequence: 174
 module: lit-174
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Сергій Жадан: «Інтернат» — література війни у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Grey Zone Walker

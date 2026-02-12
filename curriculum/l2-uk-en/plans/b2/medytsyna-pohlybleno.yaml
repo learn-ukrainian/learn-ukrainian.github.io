@@ -1,4 +1,3 @@
----
 module: b2-71
 level: B2
 sequence: 71
@@ -7,7 +6,7 @@ version: '2.0'
 title: Медицина (поглиблено)
 subtitle: Medicine (Advanced)
 content_outline:
-- section: "Розминка — Медична система України"
+- section: Розминка — Медична система України
   words: 200
   points:
   - Структура охорони здоров'я — первинна, вторинна, третинна ланка
@@ -78,3 +77,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Chief Surgeon (Головний хірург)

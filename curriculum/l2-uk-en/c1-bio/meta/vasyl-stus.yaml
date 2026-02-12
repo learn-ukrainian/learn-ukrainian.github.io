@@ -1,12 +1,38 @@
----
-module: c1-bio-137
-level: C1-BIO
+module: c1-bio-020
+level: C1
 slug: vasyl-stus
 version: '2.0'
-id: c1-bio-137
+id: c1-bio-020
 naturalness:
-  score: 1
-  status: PENDING
-word_target: 4000
+  score: 10
+  status: PASS
+  justification: Мова інтелектуальна, насичена термінологією шістдесятництва та юридичним аналізом.
+duration: 120
+transliteration: none
+tags:
+- biography
+- dissident
+- literature
+- c1
 build:
-  last_modified: '2026-01-26'
+  last_modified: '2026-02-12'
+word_target: 4500
+content_outline:
+- section: Вступ
+  words: 349
+- section: Донбаський міф
+  words: 354
+- section: Феномен доби
+  words: 668
+- section: Шістдесятництво та акція в кінотеатрі «Україна»
+  words: 505
+- section: Етика болю
+  words: 473
+- section: Справа №...
+  words: 679
+- section: Птах душі
+  words: 636
+- section: Загибель та безсмертя
+  words: 618
+- section: Підсумок
+  words: 106

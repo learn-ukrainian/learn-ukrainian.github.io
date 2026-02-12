@@ -79,3 +79,6 @@ grammar:
 - Spoken discourse markers
 register: розмовний
 phase: B1.8 [Skills & Integration]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Podcast Host

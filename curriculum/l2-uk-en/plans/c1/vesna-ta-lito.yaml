@@ -1,4 +1,3 @@
----
 module: c1-061
 level: C1
 sequence: 61
@@ -7,7 +6,7 @@ version: '2.0'
 title: Весна та літо
 subtitle: Spring and Summer Calendar Rituals
 content_outline:
-- section: "Розминка — Весняно-літній цикл"
+- section: Розминка — Весняно-літній цикл
   words: 700
   points:
   - Весна — пробудження природи, аграрна магія
@@ -27,7 +26,7 @@ content_outline:
   - 'Петра і Павла: кінець весняного циклу'
   - 'Жнива: обжинки, дожинки, перший сніп'
   - Спас (Маковія, Яблучний, Горіховий)
-- section: "Практика — аналіз свят"
+- section: Практика — аналіз свят
   words: 500
   points:
   - Проаналізувати купальські пісні — символіка
@@ -45,3 +44,6 @@ grammar:
 - Ethnographic terminology
 - Narrative and ritual registers
 phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Календарник

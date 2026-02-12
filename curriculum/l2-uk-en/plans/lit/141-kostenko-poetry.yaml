@@ -1,4 +1,3 @@
----
 sequence: 141
 module: lit-141
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kostenko Poetry у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Nation's Conscience

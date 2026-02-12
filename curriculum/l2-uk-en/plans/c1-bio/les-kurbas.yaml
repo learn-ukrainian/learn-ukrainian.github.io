@@ -1,4 +1,3 @@
----
 module: c1-bio-086
 level: C1-BIO
 sequence: 86
@@ -6,7 +5,7 @@ slug: les-kurbas
 version: '2.0'
 title: 'Лесь Курбас: Реформатор театру'
 content_outline:
-- section: "Вступ — Людина, що перевернула театр"
+- section: Вступ — Людина, що перевернула театр
   words: 400
   points:
   - Лесь Курбас як найвпливовіший український режисер XX століття
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Лесь Курбас (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Лесь_Курбас"
+  url: https://uk.wikipedia.org/wiki/Лесь_Курбас
   type: primary
   notes: Основна біографія, театральна діяльність, репресії
 - name: Театр «Березіль»
-  url: "https://uk.wikipedia.org/wiki/Березіль_(театр)"
+  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
   type: reference
   notes: Історія театру та його інноваційні постановки
 - name: Розстріляне відродження
-  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
   type: reference
   notes: Контекст репресій проти української інтелігенції
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of лесь курбас: реформатор театру'
 - Evaluate the contributions of людина, що перевернула театр
 - Trace the career and influence of спадщина та реабілітація
+persona:
+  voice: Senior Biographer
+  role: Theatre Reformer

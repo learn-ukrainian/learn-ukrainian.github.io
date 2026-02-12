@@ -1,4 +1,3 @@
----
 sequence: 47
 module: lit-47
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Franko Social Poetry у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Revolutionary Agitator

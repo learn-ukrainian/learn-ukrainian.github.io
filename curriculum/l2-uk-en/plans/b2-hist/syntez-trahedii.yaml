@@ -1,4 +1,3 @@
----
 module: b2-hist-108
 level: B2-HIST
 sequence: 108
@@ -89,4 +88,7 @@ grammar:
 - Причинно-наслідкові конструкції
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.10 [WWII & Soviet Terror]"
+phase: HIST.10 [WWII & Soviet Terror]
+persona:
+  voice: Senior Professor of History
+  role: Historical Archivist

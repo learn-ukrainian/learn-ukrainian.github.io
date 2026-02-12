@@ -1,4 +1,3 @@
----
 module: c1-hist-108
 level: c1-hist
 sequence: 108
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of «малоросія»: як створювався міф'
 - Evaluate the historical significance of назви мають силу
 content_outline:
-- section: "Вступ — Назви мають силу"
+- section: Вступ — Назви мають силу
   words: 457
   subsections:
   - «Малоросія» — не географія
@@ -24,21 +23,21 @@ content_outline:
   - Церковне значення
   - Імперське переосмислення
   - «Мала» = «менша»
-- section: "XVIII століття — Закріплення"
+- section: XVIII століття — Закріплення
   words: 800
   subsections:
   - Скасування гетьманщини
   - «Малоросійська колегія»
   - Офіційний статус терміна
   - Інтеграція еліти
-- section: "XIX століття — Теоретизація"
+- section: XIX століття — Теоретизація
   words: 686
   subsections:
   - «Велика, Мала, Біла Русь»
   - Погодін, Уваров — теоретики
   - «Триєдиний народ»
   - Наукове обґрунтування міфу
-- section: "Протидія — Українофільство"
+- section: Протидія — Українофільство
   words: 571
   subsections:
   - Шевченко — «Україна»
@@ -77,26 +76,26 @@ vocabulary:
 - контрнаратив
 activities:
 - type: critical-analysis
-  focus: "How \"Little Russia\" term evolved over 300 years"
+  focus: How "Little Russia" term evolved over 300 years
 - type: critical-analysis
-  focus: "Imperial texts that constructed \"Little Russia\""
+  focus: Imperial texts that constructed "Little Russia"
 - type: comparative-study
   focus: «Little Russia» vs. other colonial naming
 - type: critical-analysis
   focus: How the same logic appears today
 - type: essay-response
-  focus: "Чому 'Малоросія' — не географічний, а політичний термін?"
+  focus: Чому 'Малоросія' — не географічний, а політичний термін?
 sources:
 - name: Малоросія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Малоросія"
+  url: https://uk.wikipedia.org/wiki/Малоросія
   type: reference
   notes: Term history
 - name: Малоросійська ідентичність (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Малоросійська_ідентичність"
+  url: https://uk.wikipedia.org/wiki/Малоросійська_ідентичність
   type: reference
   notes: Identity construction
 - name: Русифікація України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Русифікація_України"
+  url: https://uk.wikipedia.org/wiki/Русифікація_України
   type: reference
   notes: Russification policies
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Semiotics Expert

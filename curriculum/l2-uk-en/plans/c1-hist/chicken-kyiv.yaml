@@ -1,4 +1,3 @@
----
 module: c1-hist-097
 level: c1-hist
 sequence: 97
@@ -10,14 +9,14 @@ objectives:
 - 'Analyze the causes and consequences of 1991: промова «курча по-київськи»'
 - Evaluate the historical significance of «суїцидальний націоналізм»
 content_outline:
-- section: "Вступ — «Суїцидальний націоналізм»"
+- section: Вступ — «Суїцидальний націоналізм»
   words: 457
   subsections:
   - 1 серпня 1991 — Буш у Києві
   - Що він сказав
   - Чому це називають «Курча по-київськи»
   - Структура модуля
-- section: "Контекст — Горбачов і Буш"
+- section: Контекст — Горбачов і Буш
   words: 686
   subsections:
   - Буш вірить Горбачову
@@ -45,7 +44,7 @@ content_outline:
   - Ставка на Москву
   - Страх невідомого
   - Традиційна політика
-- section: "«Chicken Kyiv» — ярлик"
+- section: «Chicken Kyiv» — ярлик
   words: 571
   subsections:
   - Як виник термін
@@ -88,15 +87,15 @@ activities:
   focus: Чому Буш попереджав українців проти незалежності?
 sources:
 - name: Chicken Kiev speech (Wikipedia EN)
-  url: "https://en.wikipedia.org/wiki/Chicken_Kiev_speech"
+  url: https://en.wikipedia.org/wiki/Chicken_Kiev_speech
   type: reference
   notes: Speech context
 - name: Джордж Буш-старший (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Джордж_Герберт_Вокер_Буш"
+  url: https://uk.wikipedia.org/wiki/Джордж_Герберт_Вокер_Буш
   type: reference
   notes: Speaker
 - name: Незалежність України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Проголошення_незалежності_України"
+  url: https://uk.wikipedia.org/wiki/Проголошення_незалежності_України
   type: reference
   notes: Independence context
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: US-Soviet Relations Expert

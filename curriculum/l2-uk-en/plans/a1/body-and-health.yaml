@@ -1,4 +1,3 @@
----
 module: a1-31
 level: A1
 sequence: 31
@@ -25,12 +24,12 @@ content_outline:
   - Хворий ↔ здоровий
   - Почувати себе добре/погано
   - Мені потрібно до лікаря
-- section: "Presentation 2"
+- section: Presentation 2
   words: 75
   points:
   - Купівля ліків без рецепту
   - Запитання про ліки від...
-- section: "Presentation 3"
+- section: Presentation 3
   words: 56
   points:
   - Розмова з лікарем
@@ -41,7 +40,7 @@ content_outline:
   - Діалог у лікаря (Що вас турбує?)
   - Діалог в аптеці (Мені потрібно щось від головного болю)
   - Діалог з другом про самопочуття
-- section: "Practice 2"
+- section: Practice 2
   words: 13
   points:
   - Опис симптомів хвороби
@@ -93,4 +92,7 @@ grammar:
 - Health vocabulary
 - Impersonal necessity (треба + infinitive)
 register: розмовний
-phase: "A1.3 [Consolidation]"
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Polyclinic Nurse

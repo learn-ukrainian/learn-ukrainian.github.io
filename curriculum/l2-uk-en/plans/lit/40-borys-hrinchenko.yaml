@@ -1,4 +1,3 @@
----
 sequence: 40
 module: lit-40
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Борис Грінченко: Вартовий рідного слова у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Lexicographer

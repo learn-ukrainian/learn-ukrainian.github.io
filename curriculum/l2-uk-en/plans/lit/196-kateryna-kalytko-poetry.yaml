@@ -1,4 +1,3 @@
----
 sequence: 196
 module: lit-196
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kateryna Kalytko Poetry у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: War Poetess

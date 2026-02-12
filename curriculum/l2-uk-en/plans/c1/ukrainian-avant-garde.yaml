@@ -1,4 +1,3 @@
----
 module: c1-065
 level: C1
 sequence: 65
@@ -7,7 +6,7 @@ version: '2.0'
 title: Український авангард
 subtitle: Ukrainian Avant-Garde
 content_outline:
-- section: "Розминка — Українські модерністи"
+- section: Розминка — Українські модерністи
   words: 700
   points:
   - Український авангард 1910-1930-х років
@@ -28,7 +27,7 @@ content_outline:
   - Репресії "Розстріляного відродження"
   - Сучасне перевідкриття та музеї
   - Вплив на світове мистецтво
-- section: "Практика — аналіз мистецтва"
+- section: Практика — аналіз мистецтва
   words: 500
   points:
   - Проаналізувати твір Малевича — форма, колір, ідея
@@ -47,3 +46,6 @@ grammar:
 - art analysis vocabulary
 - stylistic descriptions
 phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Футурист

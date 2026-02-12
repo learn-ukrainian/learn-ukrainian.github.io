@@ -1,4 +1,3 @@
----
 module: b2-hist-037
 level: B2-HIST
 sequence: 37
@@ -70,7 +69,7 @@ grammar:
 - Історичний наратив
 - Порівняння історичних процесів
 register: публіцистичний
-phase: "B2.3a [Українська історія]"
+phase: B2.3a [Українська історія]
 vocabulary_hints:
   required:
   - регіон
@@ -99,3 +98,6 @@ activity_hints:
   true-false:
     count: 2
     focus: Факти про історію регіонів, мультикультурне життя
+persona:
+  voice: Senior Professor of History
+  role: Regional Ethnographer

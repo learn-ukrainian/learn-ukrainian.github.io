@@ -1,4 +1,3 @@
----
 module: b2-hist-067
 level: B2-HIST
 sequence: 67
@@ -56,7 +55,7 @@ learning_outcomes:
 - Учень розуміє значення Конституції Пилипа Орлика 1710 року
 - Учень може описати структуру та основні ідеї документа
 - Учень знає біографію Пилипа Орлика як наступника Мазепи
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
+phase: HIST.7 [Mazepa & End of Hetmanate]
 objectives:
 - Analyze the causes and consequences of пилип орлик і перша конституція
 - Evaluate the historical significance of гетьман у вигнанні
@@ -89,3 +88,6 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Constitutional Scribe

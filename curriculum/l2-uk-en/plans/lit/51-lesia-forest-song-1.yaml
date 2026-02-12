@@ -1,4 +1,3 @@
----
 sequence: 51
 module: lit-51
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір «Лісова пісня»: Світ природи та духу у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Nature Guardian

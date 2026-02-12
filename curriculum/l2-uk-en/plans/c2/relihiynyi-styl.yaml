@@ -1,28 +1,27 @@
----
 module: c2-008
 level: c2
 sequence: 8
 version: '2.0'
-title: "Релігійний стиль — Сакральна мова"
+title: Релігійний стиль — Сакральна мова
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Біблія українською мовою (Огієнко)
-  url: "https://bible.ua/"
+  url: https://bible.ua/
   type: primary
   notes: Standard Ukrainian Bible translation by Ivan Ohienko
 - name: Літургійні тексти УПЦ
-  url: "https://liturgia.cerkva.info/"
+  url: https://liturgia.cerkva.info/
   type: reference
   notes: Liturgical texts and prayers in Ukrainian
-- name: "Ukrainian State Standard 2024 — Confessional style"
-  url: "https://mon.gov.ua/"
+- name: Ukrainian State Standard 2024 — Confessional style
+  url: https://mon.gov.ua/
   type: reference
   notes: C2 requirements for understanding religious register
 content_outline:
-- section: "Вступ — Релігійний стиль в українській мові"
+- section: Вступ — Релігійний стиль в українській мові
   words: 400
   points:
   - Історія релігійної мови в Україні
@@ -63,7 +62,7 @@ content_outline:
   - Релігійна образність у Франка
   - Сучасні автори та сакральне
   - Секуляризація релігійної мови
-- section: "Практикум — Аналіз та інтерпретація"
+- section: Практикум — Аналіз та інтерпретація
   words: 500
   points:
   - Читання біблійного уривка
@@ -89,7 +88,7 @@ vocabulary:
   - благословення (blessing)
   - покаяння (repentance)
   - причастя (communion)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - reading
@@ -124,3 +123,6 @@ activity_hints:
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Theologian

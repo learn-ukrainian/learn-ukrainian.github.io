@@ -1,4 +1,3 @@
----
 module: b2-46
 level: B2
 sequence: 46
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Прислів''я II: Природа, час і обережність'
 subtitle: 'Proverbs II: Nature, Time & Caution'
 content_outline:
-- section: "Розминка — Природа як вчитель"
+- section: Розминка — Природа як вчитель
   words: 300
   points:
   - Природа в українській культурі — джерело мудрості
@@ -36,7 +35,7 @@ content_outline:
   - Обережного Бог береже
   - Краще синиця в руках, ніж журавель у небі
   - Скупий платить двічі
-- section: "Практика — прислів'я у контексті"
+- section: Практика — прислів'я у контексті
   words: 300
   points:
   - Обрати прислів'я для поради в ситуації
@@ -58,7 +57,7 @@ grammar:
 - Proverb structure and variation
 immersion: 100
 register: varies
-phase: "B2.2 [Phraseology & Synonymy]"
+phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
   - термін (term)
@@ -79,3 +78,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Agronomist (Агроном)

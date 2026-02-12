@@ -38,6 +38,12 @@ Skills that generate YAML MUST include a property table per activity type to pre
 ### 4. Linguistic Integrity
 Skills MUST include the inline Russicism blacklist and "Agency Pass" rules.
 
+### 5. Seminar Activity Rules (For Tier 3 Tracks)
+For seminar-style tracks (C1+, B2-HIST, LIT), skills MUST enforce:
+- **CRITICAL FORBIDDEN TYPES**: quiz, fill-in, cloze, match-up, group-sort, unjumble, error-correction, select, translate, anagram
+- **ALLOWED TYPES**: Only reading, essay-response, critical-analysis, comparative-study, authorial-intent, true-false
+- **Boundary**: Do NOT follow activity_hints in the plan if they contain forbidden types.
+
 ## Writing the SKILL.md Template
 
 ### Frontmatter

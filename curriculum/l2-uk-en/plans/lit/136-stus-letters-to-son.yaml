@@ -1,4 +1,3 @@
----
 sequence: 136
 module: lit-136
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Stus Letters To Son у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Stoic Father

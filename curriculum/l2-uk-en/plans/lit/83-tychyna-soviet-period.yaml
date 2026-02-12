@@ -1,4 +1,3 @@
----
 sequence: 83
 module: lit-83
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Tychyna Soviet Period у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: State Bard

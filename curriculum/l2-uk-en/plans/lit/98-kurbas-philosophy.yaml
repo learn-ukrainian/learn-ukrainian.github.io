@@ -1,4 +1,3 @@
----
 sequence: 98
 module: lit-98
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kurbas Philosophy у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Avant-Garde Theorist

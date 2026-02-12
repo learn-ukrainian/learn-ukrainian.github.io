@@ -1,4 +1,3 @@
----
 module: a1-30
 level: A1
 sequence: 30
@@ -36,12 +35,12 @@ content_outline:
   - Прийменник з + родовий відмінок
   - Прийменник від + родовий відмінок
   - Різниця між з та від
-- section: "Presentation 2"
+- section: Presentation 2
   words: 38
   points:
   - у школі → до школи / в школу
   - на роботі → на роботу
-- section: "Presentation 3"
+- section: Presentation 3
   words: 139
   points:
   - Маршрут по місту (з дому в метро)
@@ -52,7 +51,7 @@ content_outline:
   - Як дістатися до...?
   - Звідки ви приїхали?
   - Де знаходиться...?
-- section: "Practice 2"
+- section: Practice 2
   words: 13
   points:
   - Інтеграційні вправи
@@ -103,4 +102,7 @@ grammar:
 - Prepositions with correct cases
 - Movement verbs with prepositions
 register: розмовний
-phase: "A1.3 [Consolidation]"
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Set Designer

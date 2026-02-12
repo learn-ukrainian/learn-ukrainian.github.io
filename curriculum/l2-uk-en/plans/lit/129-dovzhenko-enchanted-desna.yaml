@@ -1,4 +1,3 @@
----
 sequence: 129
 module: lit-129
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Dovzhenko Enchanted Desna у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Cinematic Memoirist

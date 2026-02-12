@@ -1,4 +1,3 @@
----
 sequence: 31
 module: ruth-031
 module_number: 25
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Didactic Teacher

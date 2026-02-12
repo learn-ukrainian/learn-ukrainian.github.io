@@ -1,4 +1,3 @@
----
 module: b1-13
 level: B1
 sequence: 13
@@ -77,12 +76,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian Business Communication
-  url: "https://uk.wikipedia.org/wiki/Ділове_мовлення"
+  url: https://uk.wikipedia.org/wiki/Ділове_мовлення
   type: reference
   notes: Work-related vocabulary and contexts
 - name: Ukrainian State Standard 2024 - Professional Communication
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Aspect in workplace scenarios
 immersion: 100% Ukrainian
 phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Productivity Coach

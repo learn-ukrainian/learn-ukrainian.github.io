@@ -1,4 +1,3 @@
----
 sequence: 184
 module: lit-184
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Prokhasko Magical Carpathians у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Carpathian Mage

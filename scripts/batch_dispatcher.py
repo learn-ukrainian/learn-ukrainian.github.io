@@ -50,6 +50,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from batch_utils import atomic_write_json, BatchLock, LockConflictError, classify_error, ErrorCategory
 from batch_gemini_config import get_module_index, get_module_paths, PROJECT_ROOT, SEMINAR_TRACKS
+from audit.status_cache import read_status, get_source_paths
 from batch_dispatcher_config import (
     TRACKS, TRACK_BY_NAME, TRACK_NAMES,
     SCORING_WEIGHTS, COST_ESTIMATES,
@@ -87,21 +88,36 @@ def _signal_handler(signum, frame):
 # Track scanning — read status JSONs to compute pass rates
 # ---------------------------------------------------------------------------
 
-def scan_track(track_name: str) -> dict:
-    """Scan a track's modules and return pass/fail/total counts.
+def scan_track(track_name: str, trust_cache: bool = False) -> dict:
+    """Scan a track's modules and return pass/fail/stale/total counts.
 
-    Reads per-module status JSON cache files. Modules without a status file
-    or without content (.md < 500 bytes) are counted as unbuilt.
+    Reads per-module status JSON via read_status() with freshness checking.
+    Three-way classification (from #561):
+        - passed: fresh cache with PASS status
+        - failed: fresh cache with FAIL status, or has content but no status
+        - stale: cache exists and shows PASS but source files are newer
+        - unbuilt: no content (.md < 500 bytes) and no status
+
+    Stale PASS modules count toward dependency thresholds (pass_rate) to avoid
+    oscillation, but are flagged for cheap re-audit before Gemini dispatch.
+
+    Args:
+        track_name: Track identifier (e.g., 'a1', 'b2-hist')
+        trust_cache: If True, skip freshness checks (treat all caches as fresh)
     """
     try:
         idx = get_module_index(track_name)
     except ValueError:
-        return {"total": 0, "passed": 0, "failed": 0, "unbuilt": 0, "error": f"Track not in curriculum.yaml"}
+        return {"total": 0, "passed": 0, "failed": 0, "stale": 0, "unbuilt": 0,
+                "error": f"Track not in curriculum.yaml"}
 
     total = idx["total"]
     passed = 0
     failed = 0
+    stale = 0
     unbuilt = 0
+
+    track_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / track_name
 
     for num in range(1, total + 1):
         slug = idx["num_to_slug"][num]
@@ -115,37 +131,37 @@ def scan_track(track_name: str) -> dict:
         md_path = paths["md"]
         has_content = md_path.exists() and md_path.stat().st_size >= 500
 
-        # Check status JSON
+        # Read status with freshness check
         status_path = paths["status"]
-        if status_path.exists():
-            try:
-                status_data = json.loads(status_path.read_text(encoding="utf-8"))
-                # Support both formats: top-level "overall_status" and nested "overall.status"
-                overall = status_data.get("overall_status", "")
-                if not overall:
-                    overall = status_data.get("overall", {}).get("status", "")
-                if overall.upper() == "PASS":
-                    passed += 1
-                elif has_content:
-                    failed += 1
-                else:
-                    unbuilt += 1
-            except (json.JSONDecodeError, OSError):
-                if has_content:
-                    failed += 1
-                else:
-                    unbuilt += 1
+        source_paths = get_source_paths(track_dir, slug) if not trust_cache else None
+        result = read_status(status_path, source_paths=source_paths)
+
+        if result is None:
+            # No status file
+            if has_content:
+                failed += 1  # Has content but never audited
+            else:
+                unbuilt += 1
+        elif result.status.upper() == "PASS":
+            if result.is_fresh:
+                passed += 1
+            else:
+                stale += 1
+                log.debug(f"  Stale PASS: {slug} (changed: {','.join(result.stale_sources)})")
         elif has_content:
-            failed += 1  # Has content but never audited
+            failed += 1
         else:
             unbuilt += 1
 
+    # Stale PASS counts toward pass_rate for dependency checks (avoids oscillation)
+    effective_passed = passed + stale
     return {
         "total": total,
         "passed": passed,
         "failed": failed,
+        "stale": stale,
         "unbuilt": unbuilt,
-        "pass_rate": passed / total if total > 0 else 0,
+        "pass_rate": effective_passed / total if total > 0 else 0,
     }
 
 
@@ -201,7 +217,7 @@ def compute_priority_score(track_name: str, scan: dict, track_scans: dict[str, d
     Primary order is user-specified (TRACKS list). This score is secondary.
     """
     total = scan.get("total", 1)
-    passed = scan.get("passed", 0)
+    passed = scan.get("passed", 0) + scan.get("stale", 0)  # stale PASS counts (#561)
     failed = scan.get("failed", 0)
     unbuilt = scan.get("unbuilt", 0)
 
@@ -259,16 +275,18 @@ def select_strategy(track_name: str, scan: dict) -> tuple[str, list[str]]:
     """Determine execution strategy for a track.
 
     Returns (mode, extra_args) for batch_gemini_runner.
+
+    Always uses 'auto' mode which scans all modules and decides per-module
+    whether to build or fix. The old 'fix --retry-failures' approach only
+    retried modules that failed in the batch runner's own state file, which
+    missed tracks that were never processed or whose state was reset.
     """
     unbuilt = scan.get("unbuilt", 0)
     failed = scan.get("failed", 0)
 
-    if unbuilt > 0:
-        # Has unbuilt modules — use auto mode (builds new, fixes existing)
+    if unbuilt > 0 or failed > 0:
+        # Has work to do — auto mode handles both build and fix per-module
         return "auto", []
-    elif failed > 0:
-        # All built, some failing — use fix mode with retry-failures
-        return "fix", ["--retry-failures"]
     else:
         # Everything passes
         return "fix", []  # Will be skipped as DONE anyway
@@ -530,13 +548,15 @@ class BatchDispatcher:
 
     def __init__(self, *, one_shot=False, dry_run=False,
                  include_tracks=None, exclude_tracks=None,
-                 max_runtime_hours=None, force_track=None):
+                 max_runtime_hours=None, force_track=None,
+                 trust_cache=False):
         self.one_shot = one_shot
         self.dry_run = dry_run
         self.include_tracks = set(include_tracks) if include_tracks else None
         self.exclude_tracks = set(exclude_tracks) if exclude_tracks else set()
         self.max_runtime_hours = max_runtime_hours
         self.force_track = force_track
+        self.trust_cache = trust_cache
         self.start_time = time.monotonic()
 
         self.state_file = PROJECT_ROOT / DISPATCHER_STATE_FILE
@@ -563,7 +583,7 @@ class BatchDispatcher:
         for priority, track_name, expected, ttype, deps in TRACKS:
             if not self._should_include_track(track_name):
                 continue
-            scans[track_name] = scan_track(track_name)
+            scans[track_name] = scan_track(track_name, trust_cache=self.trust_cache)
         return scans
 
     def _update_track_states(self, track_scans: dict[str, dict]):
@@ -589,25 +609,43 @@ class BatchDispatcher:
             dstate["escalated_to_claude"] = self._count_escalated(track_name)
 
             # Already DONE? Check if still done
+            # Use passed + stale for completion (stale PASS still counts — #561)
             if dstate["state"] == TrackState.DONE:
-                if scan["passed"] < scan["total"]:
+                effective = scan["passed"] + scan.get("stale", 0)
+                if effective < scan["total"]:
                     # Regression — something changed
                     dstate["state"] = TrackState.PENDING
                     log.info(f"  {track_name}: Regression detected, re-evaluating")
+                elif scan.get("stale", 0) > 0:
+                    log.debug(f"  {track_name}: DONE but {scan['stale']} stale (re-audit recommended)")
                 continue
 
-            # RUNNING tracks: verify they're actually running (lock file exists)
+            # RUNNING tracks: verify they're actually running (lock file + live PID)
             if dstate["state"] == TrackState.RUNNING:
                 lock_file = BATCH_STATE_DIR / "locks" / f"batch_{track_name}.lock"
                 if lock_file.exists():
-                    continue  # Actually running
+                    # Lock exists — but is the PID actually alive?
+                    try:
+                        lock_data = json.loads(lock_file.read_text(encoding="utf-8"))
+                        pid = lock_data.get("pid", 0)
+                        os.kill(pid, 0)  # Signal 0 = check if process exists
+                        continue  # PID alive — actually running
+                    except (ProcessLookupError, PermissionError):
+                        # PID is dead — stale lock from crashed process
+                        lock_file.unlink(missing_ok=True)
+                        log.info(f"  {track_name}: Stale lock (PID {pid} dead), cleaned up")
+                    except (json.JSONDecodeError, OSError, KeyError):
+                        # Corrupt lock file — remove it
+                        lock_file.unlink(missing_ok=True)
+                        log.info(f"  {track_name}: Corrupt lock file, cleaned up")
                 # Orphaned RUNNING state — process was killed or crashed
-                log.info(f"  {track_name}: Orphaned RUNNING (no lock), resetting to PENDING")
+                log.info(f"  {track_name}: Orphaned RUNNING, resetting to PENDING")
                 dstate["state"] = TrackState.PENDING
                 # Fall through to re-evaluate
 
-            # Check for DONE
-            if scan["passed"] >= scan["total"] and scan["total"] > 0:
+            # Check for DONE (passed + stale counts — #561)
+            effective = scan["passed"] + scan.get("stale", 0)
+            if effective >= scan["total"] and scan["total"] > 0:
                 dstate["state"] = TrackState.DONE
                 continue
 
@@ -789,8 +827,8 @@ class BatchDispatcher:
     def _format_track_table(self, track_scans: dict[str, dict]) -> str:
         """Format a readable table of all tracks and their status."""
         lines = []
-        lines.append(f"{'#':>2}  {'Track':<16}  {'State':<10}  {'Pass':>5}  {'Fail':>5}  {'New':>5}  {'Total':>5}  {'Rate':>6}  {'Esc':>4}  {'Score':>6}")
-        lines.append("-" * 90)
+        lines.append(f"{'#':>2}  {'Track':<16}  {'State':<10}  {'Pass':>5}  {'Fail':>5}  {'Stale':>5}  {'New':>5}  {'Total':>5}  {'Rate':>6}  {'Esc':>4}  {'Score':>6}")
+        lines.append("-" * 98)
 
         for priority, track_name, expected, ttype, deps in TRACKS:
             if not self._should_include_track(track_name):
@@ -802,6 +840,7 @@ class BatchDispatcher:
             total = scan.get("total", 0)
             passed = scan.get("passed", 0)
             failed = scan.get("failed", 0)
+            stale = scan.get("stale", 0)
             unbuilt = scan.get("unbuilt", 0)
             rate = f"{scan.get('pass_rate', 0):.0%}"
             state = dstate["state"]
@@ -809,7 +848,7 @@ class BatchDispatcher:
             esc = self._count_escalated(track_name)
 
             lines.append(
-                f"{priority:>2}  {track_name:<16}  {state:<10}  {passed:>5}  {failed:>5}  {unbuilt:>5}  {total:>5}  {rate:>6}  {esc:>4}  {score:>6.2f}"
+                f"{priority:>2}  {track_name:<16}  {state:<10}  {passed:>5}  {failed:>5}  {stale:>5}  {unbuilt:>5}  {total:>5}  {rate:>6}  {esc:>4}  {score:>6.2f}"
             )
 
         return "\n".join(lines)
@@ -850,9 +889,14 @@ class BatchDispatcher:
             # Step 2: Update states
             self._update_track_states(track_scans)
 
-            # Step 3: Show status table
+            # Step 3: Show status table + one-line summary
             table = self._format_track_table(track_scans)
-            log.info(f"\n{table}\n")
+            done_count = sum(1 for _, n, _, _, _ in TRACKS if self._should_include_track(n) and get_track_dstate(self.state, n)["state"] == TrackState.DONE)
+            total_tracks = sum(1 for _, n, _, _, _ in TRACKS if self._should_include_track(n))
+            total_passed = sum(s.get("passed", 0) for s in track_scans.values())
+            total_modules = sum(s.get("total", 0) for s in track_scans.values())
+            log.info(f"\n{table}")
+            log.info(f"\n  >>> {done_count}/{total_tracks} tracks done | {total_passed}/{total_modules} modules passing ({total_passed/total_modules*100:.0f}%)\n")
 
             # Step 4: Pick track
             track_name = self._pick_track(track_scans)
@@ -897,12 +941,12 @@ class BatchDispatcher:
             result = dispatch_track(track_name, mode, extra_args)
 
             # Step 7: Analyze result
-            log.info(f"  Dispatch complete: rc={result['returncode']}, duration={result['duration_s']}s, quota_hit={result['quota_hit']}")
+            log.info(f"  Done in {result['duration_s']}s {'(QUOTA HIT)' if result['quota_hit'] else ''}")
 
             # Re-scan to measure progress
             scan_after = scan_track(track_name)
             progress = detect_progress(track_name, scan_before, scan_after)
-            log.info(f"  Progress: +{progress['delta_passed']} passed, {progress['delta_failed']:+d} failed, {progress['delta_unbuilt']:+d} unbuilt")
+            log.info(f"  {track_name}: {scan_after['passed']}/{scan_after['total']} passing ({scan_after['passed']/scan_after['total']*100:.0f}%) — {scan_after['failed']} failing, {scan_after['unbuilt']} unbuilt")
 
             # Record dispatch history
             dispatch_record = {
@@ -935,8 +979,9 @@ class BatchDispatcher:
             dstate["last_passed"] = scan_after["passed"]
             dstate["last_failed"] = scan_after["failed"]
 
-            # Step 7.5: Process escalated modules (Claude fixes, one at a time)
-            esc_fixed = self._process_escalations(track_name, track_scans)
+            # Step 7.5: Process escalated modules (DISABLED - Claude not available)
+            # esc_fixed = self._process_escalations(track_name, track_scans)
+            esc_fixed = 0
             if esc_fixed > 0:
                 # Re-scan after Claude fixes to get accurate counts
                 scan_after = scan_track(track_name)
@@ -949,9 +994,10 @@ class BatchDispatcher:
                 dstate["last_failed"] = scan_after["failed"]
 
             # Step 8: State transitions
-            if scan_after["passed"] >= scan_after["total"] and scan_after["total"] > 0:
+            effective_after = scan_after["passed"] + scan_after.get("stale", 0)
+            if effective_after >= scan_after["total"] and scan_after["total"] > 0:
                 dstate["state"] = TrackState.DONE
-                log.info(f"  {track_name}: DONE ({scan_after['passed']}/{scan_after['total']})")
+                log.info(f"  {track_name}: DONE ({scan_after['passed']}/{scan_after['total']}, {scan_after.get('stale', 0)} stale)")
             elif result["quota_hit"]:
                 # Quota hit → COOLDOWN
                 cooldown_until = datetime.fromtimestamp(
@@ -1051,6 +1097,7 @@ def cmd_scan(args):
         dry_run=True,
         include_tracks=args.include_tracks,
         exclude_tracks=args.exclude_tracks or [],
+        trust_cache=getattr(args, 'trust_cache', False),
     )
 
     track_scans = dispatcher._scan_all_tracks()
@@ -1142,6 +1189,7 @@ def cmd_run(args):
         include_tracks=args.include_tracks,
         exclude_tracks=args.exclude_tracks or [],
         max_runtime_hours=args.max_runtime_hours,
+        trust_cache=getattr(args, 'trust_cache', False),
     )
 
     dispatcher.run()
@@ -1185,6 +1233,7 @@ def main():
     p_scan = subparsers.add_parser("scan", help="Scan tracks, show priorities (no dispatch)")
     p_scan.add_argument("--include-tracks", nargs="+", metavar="TRACK", help="Only include these tracks")
     p_scan.add_argument("--exclude-tracks", nargs="+", metavar="TRACK", help="Exclude these tracks")
+    p_scan.add_argument("--trust-cache", action="store_true", help="Skip freshness checks on status cache")
 
     # --- status ---
     p_status = subparsers.add_parser("status", help="Show current dispatcher state")
@@ -1196,6 +1245,7 @@ def main():
     p_run.add_argument("--include-tracks", nargs="+", metavar="TRACK", help="Only include these tracks")
     p_run.add_argument("--exclude-tracks", nargs="+", metavar="TRACK", help="Exclude these tracks")
     p_run.add_argument("--max-runtime-hours", type=float, metavar="HOURS", help="Stop after N hours")
+    p_run.add_argument("--trust-cache", action="store_true", help="Skip freshness checks on status cache")
 
     # --- dispatch-one ---
     p_one = subparsers.add_parser("dispatch-one", help="Force-dispatch a specific track")

@@ -1,4 +1,3 @@
----
 module: c1-bio-060
 level: C1-BIO
 sequence: 60
@@ -6,7 +5,7 @@ slug: andrey-sheptytsky
 version: '2.0'
 title: 'Митрополит Андрей Шептицький: Пастир і рятівник'
 content_outline:
-- section: "Вступ — Найвеличніший українець XX століття"
+- section: Вступ — Найвеличніший українець XX століття
   words: 444
   points:
   - Шептицький як духовний лідер і рятівник
@@ -68,7 +67,7 @@ vocabulary_hints:
   - екуменізм (ecumenism)
 activity_hints:
 - type: reading
-  focus: "Excerpts from \"Не вбий\" pastoral letter"
+  focus: Excerpts from "Не вбий" pastoral letter
   source: Historical documents
   items: 3 passages
 - type: essay-response
@@ -87,19 +86,19 @@ connects_to:
 module_type: biography
 sources:
 - name: Андрей Шептицький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Шептицький_Андрей"
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
   type: primary
   notes: Biography, church leadership, rescue activities
 - name: УГКЦ - Митрополит Шептицький
-  url: "https://ugcc.ua/en/church/history/metropolitan-andrey-sheptytsky/"
+  url: https://ugcc.ua/en/church/history/metropolitan-andrey-sheptytsky/
   type: reference
   notes: Official church biography
 - name: Yad Vashem documentation
-  url: "https://www.yadvashem.org/"
+  url: https://www.yadvashem.org/
   type: reference
   notes: Holocaust rescue documentation
 - name: Національний музей у Львові
-  url: "https://uk.wikipedia.org/wiki/Національний_музей_у_Львові_імені_Андрея_Шептицького"
+  url: https://uk.wikipedia.org/wiki/Національний_музей_у_Львові_імені_Андрея_Шептицького
   type: reference
   notes: Museum he founded
 immersion: 100% Ukrainian
@@ -108,3 +107,6 @@ objectives:
 - 'Analyze the life and legacy of митрополит андрей шептицький: пастир і рятівник'
 - Evaluate the contributions of найвеличніший українець xx століття
 - Trace the career and influence of смерть і спадщина
+persona:
+  voice: Senior Biographer
+  role: Spiritual Protector

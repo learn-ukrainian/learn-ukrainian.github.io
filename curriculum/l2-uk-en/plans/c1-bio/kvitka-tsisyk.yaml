@@ -1,4 +1,3 @@
----
 module: c1-bio-143
 level: C1-BIO
 sequence: 143
@@ -6,7 +5,7 @@ slug: kvitka-tsisyk
 version: '2.0'
 title: 'Квітка Цісик: Голос української діаспори'
 content_outline:
-- section: "Вступ — Голос, що повернув Україну американцям"
+- section: Вступ — Голос, що повернув Україну американцям
   words: 400
   points:
   - Американська співачка українського походження
@@ -40,7 +39,7 @@ content_outline:
   - Продовження творчості
   - Остання платівка
   - Смерть у Нью-Йорку
-- section: "Спадщина — Голос української душі"
+- section: Спадщина — Голос української душі
   words: 700
   points:
   - Вплив на українську музику
@@ -84,11 +83,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Квітка Цісик (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Цісик_Квітка"
+  url: https://uk.wikipedia.org/wiki/Цісик_Квітка
   type: primary
   notes: Biography of the Ukrainian-American singer
 - name: Kvitka Cisyk Official
-  url: "https://www.kvitka.com/"
+  url: https://www.kvitka.com/
   type: reference
   notes: Official site with discography and biography
 immersion: 100% Ukrainian
@@ -97,3 +96,6 @@ objectives:
 - 'Analyze the life and legacy of квітка цісик: голос української діаспори'
 - Evaluate the contributions of голос, що повернув україну американцям
 - Trace the career and influence of голос української душі
+persona:
+  voice: Senior Biographer
+  role: Diaspora Muse

@@ -1,4 +1,3 @@
----
 module: b2-hist-005
 level: B2-HIST
 sequence: 5
@@ -105,17 +104,20 @@ grammar:
 - Passive voice in archaeology
 sources:
 - name: Східнослов'янські племена (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Східнослов%27янські_племена"
+  url: https://uk.wikipedia.org/wiki/Східнослов%27янські_племена
   type: reference
   notes: Overview of East Slavic tribes
 - name: Повість минулих літ
-  url: "https://litopys.org.ua/pvl/pvl.htm"
+  url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Primary source on tribal locations
 - name: Поляни (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Поляни_(плем%27я)"
+  url: https://uk.wikipedia.org/wiki/Поляни_(плем%27я)
   type: reference
   notes: Detailed article on Polyany tribe
-phase: "B2-HIST.1 [Витоки]"
+phase: B2-HIST.1 [Витоки]
 module_type: history
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Tribal Elder

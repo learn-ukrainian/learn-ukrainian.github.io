@@ -1,4 +1,3 @@
----
 sequence: 170
 module: lit-170
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Zabuzhko Notre Dame Lit у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Cultural Critic

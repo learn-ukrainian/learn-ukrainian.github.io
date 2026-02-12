@@ -1,4 +1,3 @@
----
 module: c1-bio-045
 level: C1-BIO
 sequence: 45
@@ -6,7 +5,7 @@ slug: mykhailo-drahomanov
 version: '2.0'
 title: 'Михайло Драгоманов: Політичний мислитель'
 content_outline:
-- section: "Вступ — Архітектор європейської України"
+- section: Вступ — Архітектор європейської України
   words: 400
   points:
   - Михайло Драгоманов — найвпливовіший український політичний мислитель XIX ст.
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Михайло Драгоманов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Михайло_Драгоманов"
+  url: https://uk.wikipedia.org/wiki/Михайло_Драгоманов
   type: primary
   notes: Біографія, політичні погляди, вплив на культуру
 - name: Федералізм
-  url: "https://uk.wikipedia.org/wiki/Федералізм"
+  url: https://uk.wikipedia.org/wiki/Федералізм
   type: reference
   notes: Політична концепція Драгоманова
 - name: Українофільство
-  url: "https://uk.wikipedia.org/wiki/Українофільство"
+  url: https://uk.wikipedia.org/wiki/Українофільство
   type: reference
   notes: Рух національного пробудження
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of михайло драгоманов: політичний мислитель'
 - Evaluate the contributions of архітектор європейської україни
 - Trace the career and influence of останні роки та спадщина (1889-1895)
+persona:
+  voice: Senior Biographer
+  role: Political Exile

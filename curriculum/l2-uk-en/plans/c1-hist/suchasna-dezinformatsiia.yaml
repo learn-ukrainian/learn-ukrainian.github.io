@@ -1,4 +1,3 @@
----
 module: c1-hist-110
 level: c1-hist
 sequence: 110
@@ -10,7 +9,7 @@ objectives:
 - Analyze the causes and consequences of сучасна російська дезінформація
 - Evaluate the historical significance of війна без зброї
 content_outline:
-- section: "Вступ — Війна без зброї"
+- section: Вступ — Війна без зброї
   words: 457
   subsections:
   - Інформаційна війна — реальна війна
@@ -79,7 +78,7 @@ activities:
 - type: critical-analysis
   focus: Map Russian disinformation infrastructure
 - type: comparative-study
-  focus: "«Firehose of falsehood» — how it works"
+  focus: «Firehose of falsehood» — how it works
 - type: comparative-study
   focus: MH17 disinformation campaign analysis
 - type: critical-analysis
@@ -88,15 +87,15 @@ activities:
   focus: Чому 'пожежний шланг брехні' ефективний?
 sources:
 - name: Російська дезінформація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російська_дезінформація"
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
   type: reference
   notes: Disinformation overview
 - name: Russia Today (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Russia_Today"
+  url: https://uk.wikipedia.org/wiki/Russia_Today
   type: reference
   notes: RT network
 - name: Тролі з Ольгіна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень"
+  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
   type: reference
   notes: Troll farms
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Information Warfare Specialist

@@ -1,4 +1,3 @@
----
 module: b2-hist-118
 level: B2-HIST
 sequence: 118
@@ -94,4 +93,7 @@ grammar:
 - Теперішній час для опису сучасного стану
 - Географічні назви та їх відмінювання
 register: публіцистичний
-phase: "HIST.11 [Post-War Soviet Ukraine]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Cultural Archivist

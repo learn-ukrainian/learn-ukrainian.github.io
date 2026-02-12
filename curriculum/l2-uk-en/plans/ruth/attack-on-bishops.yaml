@@ -1,4 +1,3 @@
----
 sequence: 62
 module: ruth-062
 module_number: 50
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Polemical Firebrand

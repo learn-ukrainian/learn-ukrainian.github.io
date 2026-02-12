@@ -1,4 +1,3 @@
----
 module: c1-hist-030
 level: c1-hist
 sequence: 30
@@ -10,14 +9,14 @@ objectives:
 - Analyze the causes and consequences of «заповіт» і листи шевченка
 - Evaluate the historical significance of шевченко як джерело
 content_outline:
-- section: "Вступ — Шевченко як джерело"
+- section: Вступ — Шевченко як джерело
   words: 457
   subsections:
   - Поезія vs. історичне джерело
   - Листи — приватний голос
   - «Заповіт» — політичний маніфест
   - Як читати Шевченка критично
-- section: "«Заповіт» — аналіз тексту"
+- section: «Заповіт» — аналіз тексту
   words: 800
   subsections:
   - Текст із коментарями
@@ -40,7 +39,7 @@ content_outline:
   - Приватні думки
   - Мова листів — українська vs. російська
   - Що дізнаємося про людину
-- section: "Фрагмент — Лист із заслання"
+- section: Фрагмент — Лист із заслання
   words: 571
   subsections:
   - Текст (з глосами)
@@ -79,26 +78,26 @@ vocabulary:
 - ідол
 activities:
 - type: reading
-  focus: "Line-by-line analysis of \"Zapovit\""
+  focus: Line-by-line analysis of "Zapovit"
 - type: reading
   focus: Letter from exile with glosses
 - type: comparative-study
-  focus: "Compare \"Zapovit\" in Soviet vs. diaspora interpretations"
+  focus: Compare "Zapovit" in Soviet vs. diaspora interpretations
 - type: critical-analysis
   focus: What can letters tell us that poems cannot?
 - type: essay-response
   focus: Чи можна використовувати поезію як історичне джерело?
 sources:
 - name: Заповіт (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)"
+  url: https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)
   type: reference
   notes: Poem overview
 - name: Тарас Шевченко (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Тарас_Шевченко"
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
   type: reference
   notes: Biography
 - name: Листування Шевченка
-  url: "https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка"
+  url: https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка
   type: primary
   notes: Letters collection
 vocabulary_hints:
@@ -121,3 +120,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Shevchenko Studies Expert

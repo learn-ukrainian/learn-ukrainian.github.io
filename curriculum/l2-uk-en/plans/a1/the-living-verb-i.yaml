@@ -1,4 +1,3 @@
----
 module: a1-06
 level: A1
 sequence: 6
@@ -74,4 +73,7 @@ grammar:
 - Personal verb endings
 - Imperfective aspect introduction
 register: розмовний
-phase: "A1.1 [First Contact]"
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Sports Commentator

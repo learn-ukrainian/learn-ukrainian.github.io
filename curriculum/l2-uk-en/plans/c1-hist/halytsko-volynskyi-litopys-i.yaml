@@ -1,4 +1,3 @@
----
 module: c1-hist-015
 level: c1-hist
 sequence: 15
@@ -10,14 +9,14 @@ objectives:
 - 'Analyze the causes and consequences of галицько-волинський літопис i: про данила'
 - Evaluate the historical significance of літопис королівства
 content_outline:
-- section: "Вступ — Літопис королівства"
+- section: Вступ — Літопис королівства
   words: 457
   subsections:
   - Що таке Галицько-Волинський літопис?
   - Чому це інший літопис ніж ПМЛ?
   - Західна Русь — окрема традиція
   - Хронологія — XIII ст.
-- section: "Контекст — Галицько-Волинське князівство"
+- section: Контекст — Галицько-Волинське князівство
   words: 571
   subsections:
   - Географія — західні землі
@@ -39,7 +38,7 @@ content_outline:
   - Монгольське підкорення
   - Королівська коронація 1253
   - Дипломатія — Папа, Угорщина, Польща
-- section: "Фрагмент — Коронація Данила"
+- section: Фрагмент — Коронація Данила
   words: 686
   subsections:
   - Текст (з глосами)
@@ -88,15 +87,15 @@ activities:
   focus: Чому Данило Галицький важливий для української історії?
 sources:
 - name: Галицько-Волинський літопис (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
   type: reference
   notes: Overview
 - name: Галицько-Волинський літопис (текст)
-  url: "https://litopys.org.ua/hvlitop/hvl.htm"
+  url: https://litopys.org.ua/hvlitop/hvl.htm
   type: primary
   notes: Full text
 - name: Данило Галицький
-  url: "https://uk.wikipedia.org/wiki/Данило_Романович"
+  url: https://uk.wikipedia.org/wiki/Данило_Романович
   type: reference
   notes: King Danylo biography
 vocabulary_hints:
@@ -119,3 +118,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Royal Biographer

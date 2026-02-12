@@ -1,4 +1,3 @@
----
 module: b2-23
 level: B2
 sequence: 23
@@ -7,7 +6,7 @@ version: '2.0'
 title: Медійний та журналістський регістр
 subtitle: Мова новин і преси
 content_outline:
-- section: "Розминка — Публіцистичний стиль"
+- section: Розминка — Публіцистичний стиль
   words: 300
   points:
   - Де зустрічається (газети, телебачення, онлайн-медіа)
@@ -53,7 +52,7 @@ grammar:
 - Lead paragraph structure (5W)
 - Attribution and quoting conventions
 - Bias markers and objectivity
-phase: "B2.1c [Register System]"
+phase: B2.1c [Register System]
 vocabulary_hints:
   required:
   - термін (term)
@@ -74,3 +73,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Editor-in-Chief (Головний редактор)

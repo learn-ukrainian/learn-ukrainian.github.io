@@ -1,4 +1,3 @@
----
 sequence: 139
 module: lit-139
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Kostenko Marusia Churai 2 у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Court Chronicler

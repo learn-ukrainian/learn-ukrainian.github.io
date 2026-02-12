@@ -1,4 +1,3 @@
----
 module: b1-45
 level: B1
 sequence: 45
@@ -92,4 +91,7 @@ grammar:
 - Суфікси -ний/-тий selection
 - Узгодження з іменником
 register: розмовний
-phase: "B1.4a [Participles]"
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Museum Archivist

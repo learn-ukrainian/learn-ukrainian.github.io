@@ -1,10 +1,9 @@
----
 module: b2-hist-032
 level: B2-HIST
 sequence: 32
 slug: rich-pospolyta
 version: '2.0'
-title: "Річ Посполита — полонізація та кріпацтво"
+title: Річ Посполита — полонізація та кріпацтво
 content_outline:
 - section: Вступ
   words: 410
@@ -81,7 +80,7 @@ grammar:
 - Історичний наратив
 - Пасивний стан у науковому тексті
 register: публіцистичний
-phase: "B2.3a [Українська історія]"
+phase: B2.3a [Українська історія]
 vocabulary_hints:
   required:
   - Люблінська унія
@@ -108,3 +107,6 @@ activity_hints:
 - type: critical-analysis
   focus: 'Критична оцінка: '
   items: 4
+persona:
+  voice: Senior Professor of History
+  role: Estate Manager

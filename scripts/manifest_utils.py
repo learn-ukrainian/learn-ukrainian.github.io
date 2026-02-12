@@ -57,9 +57,7 @@ class Module:
     @property
     def path(self) -> str:
         """URL path for this module."""
-        if self.track and self.track != 'core':
-            return f"/{self.level}/{self.slug}"
-        return f"/{self.level}/module-{self.local_num:02d}"
+        return f"/{self.level}/{self.slug}"
 
     @property
     def numbered_slug(self) -> str:
@@ -317,18 +315,10 @@ def validate_filesystem_match(level: str = None) -> list[str]:
                 _, base_slug = parse_numbered_slug(mod_slug)
                 manifest_slugs.add(base_slug)
 
-        # Get filesystem slugs
+        # Get filesystem slugs (all tracks use bare slug filenames)
         filesystem_slugs = set()
-
-        # Check for numbered files (core levels): 01-slug.md
-        for md_file in level_dir.glob('[0-9]*-*.md'):
-            match = re.match(r'^\d+-(.+)\.md$', md_file.name)
-            if match:
-                filesystem_slugs.add(match.group(1))
-
-        # Check for slug-only files (tracks): slug.md
         for md_file in level_dir.glob('*.md'):
-            if not md_file.name[0].isdigit() and not md_file.name.startswith('_'):
+            if not md_file.name.startswith('_'):
                 filesystem_slugs.add(md_file.stem)
 
         # Find mismatches

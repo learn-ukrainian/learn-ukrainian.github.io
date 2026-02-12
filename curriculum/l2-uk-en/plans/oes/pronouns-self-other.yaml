@@ -1,4 +1,3 @@
----
 sequence: 9
 module: oes-009
 module_number: 9
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Philosopher

@@ -1,4 +1,3 @@
----
 module: c1-hist-009
 level: c1-hist
 sequence: 9
@@ -11,7 +10,7 @@ objectives:
 - Evaluate the historical significance of чому джерела брешуть
 - Trace the development of особливості українських джерел
 content_outline:
-- section: "Вступ — Чому джерела брешуть"
+- section: Вступ — Чому джерела брешуть
   words: 457
   subsections:
   - Кожне джерело має автора з інтересами
@@ -55,7 +54,7 @@ content_outline:
   - ЧОМУ? — інтереси автора
   - ЩО ОПУЩЕНО? — аналіз мовчання
   - Практичний чекліст
-- section: "Практикум — аналіз джерела"
+- section: Практикум — аналіз джерела
   words: 571
   subsections:
   - Вибране джерело (Universal Хмельницького або інше)
@@ -92,26 +91,26 @@ activities:
 - type: critical-analysis
   focus: Apply 5 questions to the provided source
 - type: comparative-study
-  focus: "Compare two sources describing the same event — what differs?"
+  focus: Compare two sources describing the same event — what differs?
 - type: reading
-  focus: "Evaluate a Wikipedia article as a source — strengths and weaknesses"
+  focus: Evaluate a Wikipedia article as a source — strengths and weaknesses
 - type: essay-response
   focus: Чи може історик бути об'єктивним?
 sources:
 - name: Джерелознавство (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
   type: reference
   notes: Source studies overview
 - name: Історичне джерело
-  url: "https://uk.wikipedia.org/wiki/Історичне_джерело"
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
   type: reference
   notes: Types of historical sources
 - name: Критика джерел
-  url: "https://uk.wikipedia.org/wiki/Критика_джерел"
+  url: https://uk.wikipedia.org/wiki/Критика_джерел
   type: reference
   notes: Source criticism methods
 - name: Леопольд фон Ранке
-  url: "https://uk.wikipedia.org/wiki/Ранке_Леопольд_фон"
+  url: https://uk.wikipedia.org/wiki/Ранке_Леопольд_фон
   type: reference
   notes: Founder of modern source criticism
 vocabulary_hints:
@@ -134,3 +133,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Forensic Source Critic

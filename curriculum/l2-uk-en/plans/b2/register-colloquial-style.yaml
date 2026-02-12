@@ -1,4 +1,3 @@
----
 module: b2-24
 level: B2
 sequence: 24
@@ -7,7 +6,7 @@ version: '2.0'
 title: Розмовний стиль
 subtitle: Ну, типу, як говорити по-справжньому
 content_outline:
-- section: "Розминка — Розмовний стиль"
+- section: Розминка — Розмовний стиль
   words: 300
   points:
   - Де зустрічається (повсякденне спілкування, чати, неформальні листи)
@@ -53,7 +52,7 @@ grammar:
 - 'Particles: ж/же, бо, таки'
 - 'Наповнювачі: типу, ну, от, та'
 - 'Informal interjections: ого, класно, жесть'
-phase: "B2.1b [Grammar Completion]"
+phase: B2.1b [Grammar Completion]
 vocabulary_hints:
   required:
   - термін (term)
@@ -74,3 +73,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Stand-up Comedian (Стендап-комік)

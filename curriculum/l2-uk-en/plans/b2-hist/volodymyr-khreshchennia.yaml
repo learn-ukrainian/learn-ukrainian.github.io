@@ -1,4 +1,3 @@
----
 module: b2-hist-011
 level: B2-HIST
 sequence: 11
@@ -8,7 +7,7 @@ title: Володимир і Хрещення Русі
 content_outline:
 - section: Розминка
   words: 142
-  points: "[]"
+  points: '[]'
 - section: 'Читання: Князь Володимир: від язичника до святого'
   words: 700
   points:
@@ -95,17 +94,20 @@ grammar:
 - Religious terminology
 sources:
 - name: Володимир Великий (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Володимир_Великий"
+  url: https://uk.wikipedia.org/wiki/Володимир_Великий
   type: reference
   notes: Overview of Volodymyr the Great
 - name: Хрещення Русі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
   type: reference
   notes: Overview of Christianization
-- name: "Повість минулих літ — про хрещення"
-  url: "https://litopys.org.ua/pvl/pvl.htm"
+- name: Повість минулих літ — про хрещення
+  url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle account of baptism
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
 module_type: history
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Byzantine Priest

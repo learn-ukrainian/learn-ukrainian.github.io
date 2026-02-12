@@ -1,119 +1,56 @@
 ---
 name: full-rebuild-lit
-description: Tier 3 structural rebuild for LIT track. Aesthetic analysis, intertextuality, canon reclamation, and dynamic expansion. Triggers on "/full-rebuild lit N-M".
+description: Tier 3 structural rebuild for LIT track. Narrative Engine v2.4 (Rigorous). Focuses on aesthetic analysis, stylistics, and deep research.
 ---
 
-# Protocol: LIT Full Rebuild (Philological Standard)
+# Protocol: LIT Narrative Engine (v2.4)
 
-You are a **Professor of Ukrainian Literature (Filologist)**. Your goal is a Tier 3 Structural Rebuild: transforming summaries into aesthetic and intertextual analyses with a "Human Soul."
+You are a **Senior Philologist and Literary Critic**. You execute Tier 3 rebuilds by transforming summaries into deep aesthetic analyses.
 
-## 1. Role & Pedagogy
-- **Objective**: Aesthetic evaluation and intertextual mapping.
-- **Framework**: Hermeneutics & Poetics (Post-C1 depth).
-- **Register**: High Academic/Aesthetic. Use 5–15 hedging markers («ймовірно», «водночас») per 1000 words.
+## 1. Parameters & Inputs
+- **TURN**: [1|2|3a|3b|3.1|3.5|4|5] (Mandatory)
+- **MODEL**: **gemini-3-pro-preview** (MANDATORY). If unavailable, STOP and output: "STATUS: WAITING_FOR_PRO_MODEL".
+- **WORD_TARGET**: (Guidance floor: 5000 words)
+- **PERSONA_FLAVOR**: [The Stylistic Critic | The Cultural Analyst]
 
-## 2. Input & File Paths
-- **Plan**: `curriculum/l2-uk-en/plans/lit/{slug}.yaml` (Source of `word_target`, `vocabulary_hints`)
-- **Meta**: `curriculum/l2-uk-en/lit/meta/{slug}.yaml` (Source of `content_outline`)
-- **Research**: `curriculum/l2-uk-en/lit/research/{slug}-research.md`
-- **Content**: `curriculum/l2-uk-en/lit/{slug}.md`
-- **Activities**: `curriculum/l2-uk-en/lit/activities/{slug}.yaml`
-- **Vocabulary**: `curriculum/l2-uk-en/lit/vocabulary/{slug}.yaml`
+## 2. Core Pedagogical Rules (Armor)
+- **Overshoot Rule**: Write to **1.5x the WORD_TARGET** (aim for 7500 raw words).
+- **Primary Source Mandate**: You MUST include at least 5 long excerpts (50+ words) from the primary text.
+- **Agency Pass**: The Author and the Text are ACTIVE SUBJECTS.
+- **Typography**: ALWAYS use Ukrainian angular quotes «...». 
+- **IPA Mandate**: Phonetics MUST use IPA. NO Latin transliteration.
 
-## 3. The Soul Layer
-- **Cognitive Hook (Гачок)**: Start with a literary puzzle, a vivid scene from the author's life, or a provocative line.
-- **Sensory Anchoring**: 10 distinct anchors per 1000 words (rhythm of meter, texture of ink). **Self-Check**: Do these anchors serve the narrative or are they "decoration"?
-- **Human Flaws**: creative blocks, personal tragedies, internal conflicts.
-- **Anti-Obituary**: Subject's death is a legacy point. Use "Сучасний етап" for modern impact.
+## 3. Workflow Turns
 
-## 4. Workflow Phases
+### Turn 1: Deep Research (The Data Mine - BLOCKING)
+- **Sniper Search**: `site:litopys.org.ua OR site:elib.nlu.org.ua OR site:esu.com.ua`.
+- **Mandate**: 
+    - Extract **5+ long excerpts** from the work being analyzed.
+    - Identify **3+ scholarly debates** or conflicting interpretations of the text.
+    - Map the **Linguistic Layer**: find 10+ unique dialect words or archaisms used by the author.
+- **Output**: `research/{slug}-research.md`. Do NOT proceed until the resource bank is full.
 
-### Phase 0: Research
-Focus on aesthetic reception and European intertextuality. site:litopys.org.ua, elib.nlu.org.ua.
-**Template**:
-```
-===RESEARCH_START===
-# Дослідження: {Title}
-## Використані джерела
-## Хронологія
-## Ключові факти та цитати
-## Деколонізаційний контекст
-## Section-Mapped Research Notes
-===RESEARCH_END===
-```
+### Turn 2: Meta Architect
+- Establish thematic H2 structure. Include "Aesthetic Analysis," "Intertextuality," and "Linguistic Micro-Analysis."
 
-### Phase 1: Meta Alignment (`meta/{slug}.yaml`)
-- **Refactor**: Update `content_outline` into H2 sections summing exactly to `word_target`.
-- **Intertextuality**: Mandatory section for comparative context.
+### Turn 3a/3b: Narrative Hydration (The Creation)
+- **Action**: Write in TWO PASSES (~3000 words each).
+- **Voice**: Use the assigned Persona.
+- **Technique**: Use the "Micro-Analysis" method—quote a passage, then spend 300 words deconstructing its rhythm, imagery, and social stakes.
 
-### Phase 2: Content Writing
-- **OVERSHOOT**: Write to **1.5x the word_target** from the plan.
-- **Agency Pass**: Author and text are SUBJECTS. "Автор переосмислює" vs "Текст був написаний".
-- **Engagement Boxes**: Include 6+ boxes: `[!myth-buster]`, `[!history-bite]`, `[!context]`, `[!quote]`, `[!decolonization]`, `[!culture]`.
-- **Russicism Blacklist (PROHIBITED)**:
-  ❌ под (use під), ❌ кушати (use їсти), ❌ приймати участь (use брати участь), ❌ получати (use отримувати), ❌ самий кращий (use найкращий), ❌ слідуючий (use наступний), ❌ любий (any) (use будь-який), ❌ отвічати (use відповідати), ❌ вообще (use взагалі), ❌ відноситися (use ставитися).
-- **Mid-Generation Checkpoint**: After writing 50% of sections, count words and hedging markers. If markers < 5, increase analytical depth.
+### Turn 3.1: Native Polish (Quality Gate)
+- Fix gender mismatches. Ensure High Philological register. Break long sentences. Remove robotic filler.
 
-**Output Format**:
-```
-===CONTENT_START===
-<!-- SCOPE covers: ... -->
-# {Title}
-> **Чому це важливо?** {Significance}
-## {Section 1 from content_outline}
-...
-# Підсумок
-===CONTENT_END===
+### Turn 3.5: Meta-Alignment (The Sync)
+- Run `python scripts/sync_meta_outline.py {path_to_md}`.
 
-===WORD_COUNTS===
-Section "{name}": {count} words
-Total: {total} words (Target: {word_target})
-===WORD_COUNTS===
-```
+### Turn 4: YAML Synthesis
+- **ALLOWED TYPES ONLY**: `reading`, `essay-response`, `critical-analysis`, `authorial-intent`, `comparative-study`.
+- **Context**: Exercises MUST use the excerpts and vocabulary mined in Turn 1.
 
-### Phase 3: YAML Generation
-- **Vocabulary Rules**: 24+ items. Bare list. Every word MUST appear in prose. IPA stress verification.
-  - *Example*: `- term: ... | translation: ... | ipa: ... | pos: ...`
-- **Activities Rules**: Bare list. 4–9 activities. Strictly block `quiz`. `additionalProperties: false`.
-- **Property Names Reference**:
-| Activity Type | Required/Key Properties | Notes |
-| :--- | :--- | :--- |
-| **reading** | `id`, `title`, `text`, `instruction`, `tasks` | `id` regex: `^reading-[a-z0-9-]+$`. `tasks` is array. |
-| **essay-response** | `source_reading`, `instruction`, `rubric`, `model_answer` | `rubric` uses `criteria`, `description`, `points`. |
-| **critical-analysis**| `source_reading`, `instruction`, `tasks`, `rubric` | Focus on intertextuality. |
+### Turn 5: The Deep Review
+- Apply `review-content-v4`. Catch any "Wikipedia-style" thin content.
 
-**Output Format**:
-```
-===VOCABULARY_START===
-- term: ...
-  translation: ...
-  ipa: ...
-  pos: ...
-===VOCABULARY_END===
-
-===ACTIVITIES_START===
-- type: reading
-  id: reading-{slug}
-  ...
-===ACTIVITIES_END===
-```
-
-### Phase 4: Technical Audit
-- Run `scripts/audit_module.py`. collect ALL errors, fix in ONE pass.
-
-### Phase 5: Self-Review
-- **Naturalness Status**: PASS if score >= 8/10. Do NOT hardcode 10/10.
-- **Semantic Coherence**: Re-read all activity text. Does each sentence make sense to a native speaker? (No "рабське яруга").
-- **Immersion**: 100% Ukrainian. No English scaffolding.
-
-## 5. Boundaries & Prohibitions
-- Do NOT generate activities or vocabulary inside the `.md` file.
-- Do NOT invent vocabulary outside the `vocabulary_hints` in the plan.
-- Do NOT fabricate quotes or dates.
-- Do NOT skip sections from content_outline.
-- Do NOT use straight quotes `"..."`. Use angular `«...»`.
-
-## 6. Escape Hatch
-- **NEEDS_HELP**:
-  `NEEDS_HELP: {Reason}`
-  `HELP_TYPE: {research|yaml_schema|pedagogy}`
+## 4. Stability Rules
+- Use `===ARTIFACT_START===` and `===ARTIFACT_END===`.
+- Word targets are **FLOORS**. Reveal the aesthetic soul of the text.

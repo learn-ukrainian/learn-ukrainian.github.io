@@ -1,4 +1,3 @@
----
 module: c1-bio-042
 level: C1-BIO
 sequence: 42
@@ -6,7 +5,7 @@ slug: marko-vovchok
 version: '2.0'
 title: 'Марко Вовчок: Голос пригноблених'
 content_outline:
-- section: "Вступ — Росіянка, що стала українською письменницею"
+- section: Вступ — Росіянка, що стала українською письменницею
   words: 400
   points:
   - Марко Вовчок — псевдонім Марії Вілінської
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марко Вовчок (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Марко_Вовчок"
+  url: https://uk.wikipedia.org/wiki/Марко_Вовчок
   type: primary
   notes: Біографія, літературна діяльність, псевдонім
 - name: Народні оповідання
-  url: "https://uk.wikipedia.org/wiki/Народні_оповідання_(Марко_Вовчок)"
+  url: https://uk.wikipedia.org/wiki/Народні_оповідання_(Марко_Вовчок)
   type: reference
   notes: Головний твір та його значення
 - name: Український реалізм
-  url: "https://uk.wikipedia.org/wiki/Реалізм_(література)"
+  url: https://uk.wikipedia.org/wiki/Реалізм_(література)
   type: reference
   notes: Літературний контекст творчості
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of марко вовчок: голос пригноблених'
 - Evaluate the contributions of росіянка, що стала українською письменницею
 - Trace the career and influence of спадщина та значення
+persona:
+  voice: Senior Biographer
+  role: Social Critic

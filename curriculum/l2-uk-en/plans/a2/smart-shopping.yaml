@@ -1,4 +1,3 @@
----
 module: a2-24
 level: A2
 sequence: 24
@@ -45,12 +44,15 @@ grammar:
 module_type: vocabulary
 sources:
 - name: Ukrainian State Standard 2024 - Shopping
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Communicative requirements for shopping and negotiation
 - name: Cultural Guide to Ukrainian Markets
-  url: "https://uk.wikipedia.org/wiki/Ринок"
+  url: https://uk.wikipedia.org/wiki/Ринок
   type: reference
   notes: Social etiquette of bargaining in Ukraine
 immersion: 40-50% Ukrainian
 phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Personal Shopper

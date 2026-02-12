@@ -1,4 +1,3 @@
----
 module: c1-bio-147
 level: C1-BIO
 sequence: 147
@@ -6,7 +5,7 @@ slug: oksana-zabuzhko
 version: '2.0'
 title: 'Оксана Забужко: Інтелектуал і феміністка'
 content_outline:
-- section: "Вступ — Голос українського інтелектуалізму"
+- section: Вступ — Голос українського інтелектуалізму
   words: 400
   points:
   - Забужко як найвпливовіша українська письменниця сучасності
@@ -86,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Оксана Забужко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна"
+  url: https://uk.wikipedia.org/wiki/Забужко_Оксана_Стефанівна
   type: primary
   notes: Біографія, літературна діяльність, філософія
 - name: Офіційний сайт Оксани Забужко
-  url: "https://zabuzhko.com"
+  url: https://zabuzhko.com
   type: reference
   notes: Бібліографія та есеїстика
 - name: PEN Ukraine
-  url: "https://pen.org.ua"
+  url: https://pen.org.ua
   type: reference
   notes: Громадська позиція та правозахисна діяльність
 immersion: 100% Ukrainian
@@ -103,3 +102,6 @@ objectives:
 - 'Analyze the life and legacy of оксана забужко: інтелектуал і феміністка'
 - Evaluate the contributions of голос українського інтелектуалізму
 - Trace the career and influence of громадська позиція та сучасність
+persona:
+  voice: Senior Biographer
+  role: Public Intellectual

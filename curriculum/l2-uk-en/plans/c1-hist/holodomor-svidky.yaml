@@ -1,4 +1,3 @@
----
 module: c1-hist-049
 level: c1-hist
 sequence: 49
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of свідки і свідчення: усна історія'
 - Evaluate the historical significance of голоси тих, хто пережив
 content_outline:
-- section: "Вступ — Голоси тих, хто пережив"
+- section: Вступ — Голоси тих, хто пережив
   words: 457
   subsections:
   - Повернення до усної історії
@@ -89,15 +88,15 @@ activities:
   focus: Яке місце мають свідчення вижилих у дослідженні Голодомору?
 sources:
 - name: Усна історія Голодомору
-  url: "https://ucrdc.org/"
+  url: https://ucrdc.org/
   type: primary
   notes: UCRDC testimony archive
-- name: "Проєкт \"Голодомор у людських долях\""
-  url: "https://archive.khpg.org/"
+- name: Проєкт "Голодомор у людських долях"
+  url: https://archive.khpg.org/
   type: primary
   notes: Memorial project
 - name: Усна історія (методологія)
-  url: "https://uk.wikipedia.org/wiki/Усна_історія"
+  url: https://uk.wikipedia.org/wiki/Усна_історія
   type: reference
   notes: Methodology
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Oral History Interviewer

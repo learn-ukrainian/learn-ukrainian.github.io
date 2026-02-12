@@ -1,4 +1,3 @@
----
 sequence: 56
 module: ruth-056
 module_number: 46
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Master of Eloquence

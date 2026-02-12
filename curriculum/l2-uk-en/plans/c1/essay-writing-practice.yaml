@@ -1,12 +1,11 @@
----
 module: c1-018
 level: C1
 sequence: 18
 slug: 18-essay-writing-practice
 version: '2.0'
-title: "Практикум — Написання есе"
+title: Практикум — Написання есе
 content_outline:
-- section: "Вступ — Інтеграція навичок"
+- section: Вступ — Інтеграція навичок
   words: 267
   points:
   - Огляд академічного письма M01-M17
@@ -97,11 +96,11 @@ connects_to:
 module_type: practice
 sources:
 - name: C1 Writing Assessment Criteria
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Essay evaluation rubrics
 - name: Academic Essay Models
-  url: "https://mova.info/"
+  url: https://mova.info/
   type: secondary
   notes: Sample essays with analysis
 immersion: 100% Ukrainian
@@ -110,3 +109,6 @@ objectives:
 - Understand and apply практикум — написання есе
 - Analyze and evaluate інтеграція навичок
 - Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Тьютор з письма

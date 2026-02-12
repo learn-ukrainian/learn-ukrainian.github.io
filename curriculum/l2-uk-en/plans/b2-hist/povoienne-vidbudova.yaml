@@ -1,4 +1,3 @@
----
 module: b2-hist-109
 level: B2-HIST
 sequence: 109
@@ -92,4 +91,7 @@ grammar:
 - Економічна та соціальна лексика
 - Пасивні конструкції
 register: публіцистичний
-phase: "HIST.11 [Post-War Soviet Ukraine]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Chief Architect

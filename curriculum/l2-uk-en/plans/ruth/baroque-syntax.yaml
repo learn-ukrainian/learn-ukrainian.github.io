@@ -1,4 +1,3 @@
----
 sequence: 71
 module: ruth-071
 module_number: 57
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Period Constructor

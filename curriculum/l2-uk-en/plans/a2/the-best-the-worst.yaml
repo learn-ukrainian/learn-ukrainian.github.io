@@ -1,4 +1,3 @@
----
 module: a2-19
 level: A2
 sequence: 19
@@ -44,12 +43,15 @@ grammar:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Superlatives
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Superlative requirements for A2
 - name: Ukrainian Adjective Masterclass
-  url: "https://uk.wikipedia.org/wiki/Прикметник"
+  url: https://uk.wikipedia.org/wiki/Прикметник
   type: reference
   notes: Superlative formation and usage
 immersion: 40-50% Ukrainian
 phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Restaurant Critic

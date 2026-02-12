@@ -1,4 +1,3 @@
----
 module: c1-hist-025
 level: c1-hist
 sequence: 25
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of конституція орлика: перша європейська'
 - Evaluate the historical significance of конституція в екзилі
 content_outline:
-- section: "Вступ — Конституція в екзилі"
+- section: Вступ — Конституція в екзилі
   words: 457
   subsections:
   - 1710 рік — контекст
@@ -39,14 +38,14 @@ content_outline:
   - Рада старшин — законодавча влада
   - Права козаків
   - Захист від тиранії
-- section: "Фрагмент — Обмеження гетьманської влади"
+- section: Фрагмент — Обмеження гетьманської влади
   words: 686
   subsections:
   - Текст (з глосами)
   - Розподіл влади
   - Вибори — процедура
   - Підзвітність гетьмана
-- section: "Чому \"конституція\"?"
+- section: Чому "конституція"?
   words: 571
   subsections:
   - Порівняння з іншими документами
@@ -89,15 +88,15 @@ activities:
   focus: Чи можна назвати документ Орлика 'конституцією'?
 sources:
 - name: Конституція Пилипа Орлика (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика"
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
   type: reference
   notes: Overview
 - name: Текст Конституції
-  url: "https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика"
+  url: https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика
   type: primary
   notes: Full text
 - name: Пилип Орлик
-  url: "https://uk.wikipedia.org/wiki/Пилип_Орлик"
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Early Modern Legal Historian

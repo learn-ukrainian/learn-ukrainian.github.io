@@ -1,4 +1,3 @@
----
 sequence: 15
 module: ruth-015
 module_number: 13
@@ -25,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - loanword-trace
+persona:
+  voice: Baroque Scholar
+  role: Chancery Clerk

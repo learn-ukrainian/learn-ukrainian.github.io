@@ -1,4 +1,3 @@
----
 module: b2-hist-114
 level: B2-HIST
 sequence: 114
@@ -6,7 +5,7 @@ slug: shistdesiatnyky
 version: '2.0'
 title: 'Шістдесятники: Бунт проти сірості'
 content_outline:
-- section: "Вступ — Хрущовська відлига"
+- section: Вступ — Хрущовська відлига
   words: 615
   points:
   - The death of Stalin and the partial liberalization of the regime
@@ -37,13 +36,13 @@ content_outline:
 word_target: 4000
 focus: history
 pedagogy: CBI
-prerequisites: "[]"
+prerequisites: '[]'
 objectives:
 - 'Analyze the causes and consequences of шістдесятники: бунт проти сірості'
 - Evaluate the historical significance of хрущовська відлига
 - Trace the development of деколонізаційний погляд
-phase: "HIST.11 [Post-War Soviet Ukraine]"
-learning_outcomes: "[]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+learning_outcomes: '[]'
 vocabulary_hints:
   required:
   - історія (history)
@@ -72,3 +71,6 @@ activity_hints:
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Samvydav Editor

@@ -1,4 +1,3 @@
----
 module: c1-bio-010
 level: C1-BIO
 sequence: 10
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Данило Галицький: Король Русі'
 word_target: 4300
 content_outline:
-- section: "Вступ — Єдиний коронований король Русі"
+- section: Вступ — Єдиний коронований король Русі
   words: 600
   points:
   - Унікальність постаті Данила
@@ -38,7 +37,7 @@ content_outline:
   - Значення титулу Rex Russiae
   - Галицько-Волинський літопис
   - Порівняння з Олександром Невським
-- section: 'Підсумок — Король без королівства?'
+- section: Підсумок — Король без королівства?
   words: 300
   points:
   - Моральна перемога над Ордою
@@ -61,12 +60,15 @@ grammar:
 module_type: biography
 sources:
 - name: Данило Галицький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Данило_Галицький"
+  url: https://uk.wikipedia.org/wiki/Данило_Галицький
   type: primary
   notes: Біографія та діяльність
 - name: Галицько-Волинський літопис (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
   type: primary
   notes: Основне джерело
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: State Builder

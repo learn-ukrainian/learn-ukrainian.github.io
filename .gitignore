@@ -104,5 +104,11 @@ issue_*_body.md
 # Batch runner state (generated at runtime)
 batch_state/
 
+# Orchestration build artifacts (intermediate prompts, outputs, friction reports)
+**/orchestration/
+
+# Archive of old content (pre-rebuild snapshots)
+_archive/
+
 # MCP broker PID files
 .mcp/servers/message-broker/pids/

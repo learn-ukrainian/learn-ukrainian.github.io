@@ -1,4 +1,3 @@
----
 module: c1-bio-017
 level: C1-BIO
 sequence: 17
@@ -6,7 +5,7 @@ slug: iov-boretskyi
 version: '2.0'
 title: 'Йов Борецький: Захисник православ''я'
 content_outline:
-- section: "Вступ — Відновлення православної ієрархії"
+- section: Вступ — Відновлення православної ієрархії
   words: 414
   points:
   - Значення 1620 року для православ'я
@@ -39,7 +38,7 @@ content_outline:
   - Полемічна література
   - Смерть та канонізація
   - Вплив на подальший церковний розвиток
-- section: "Підсумок — Віра як опір"
+- section: Підсумок — Віра як опір
   words: 275
   points:
   - Йов як символ духовного спротиву
@@ -94,16 +93,19 @@ grammar:
 module_type: biography
 sources:
 - name: Йов Борецький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Йов_Борецький"
+  url: https://uk.wikipedia.org/wiki/Йов_Борецький
   type: primary
   notes: Biography, revival of Orthodox hierarchy
 - name: Берестейська унія (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Берестейська_унія"
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
   type: reference
   notes: Context of religious conflict
 - name: Київська братська школа
-  url: "https://uk.wikipedia.org/wiki/Київська_братська_школа"
+  url: https://uk.wikipedia.org/wiki/Київська_братська_школа
   type: reference
   notes: Educational activities
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Orthodox Defender

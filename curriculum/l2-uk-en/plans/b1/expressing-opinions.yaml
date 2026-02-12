@@ -1,11 +1,10 @@
----
 module: b1-54
 level: B1
 sequence: 54
 slug: expressing-opinions
 version: '2.0'
 title: Вираження думок та поглядів
-subtitle: "Expressing Opinions — Vocabulary & Phrases"
+subtitle: Expressing Opinions — Vocabulary & Phrases
 content_outline:
 - section: Вступ
   words: 179
@@ -87,4 +86,7 @@ grammar:
 - Opinion phrase patterns
 - Hedging and intensifying expressions
 register: розмовний
-phase: "B1.5 [Vocabulary Expansion I]"
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Talk Show Guest

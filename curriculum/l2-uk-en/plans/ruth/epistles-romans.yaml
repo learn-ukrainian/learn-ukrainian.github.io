@@ -1,4 +1,3 @@
----
 sequence: 41
 module: ruth-041
 module_number: 33
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Pauline Exegete

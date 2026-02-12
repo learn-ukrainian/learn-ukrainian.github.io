@@ -1,4 +1,3 @@
----
 sequence: 58
 module: ruth-058
 module_number: 58
@@ -25,3 +24,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - register-identify
+persona:
+  voice: Baroque Scholar
+  role: Lector

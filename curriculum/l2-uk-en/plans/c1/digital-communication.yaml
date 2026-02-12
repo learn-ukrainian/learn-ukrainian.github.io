@@ -1,4 +1,3 @@
----
 module: c1-024
 level: C1
 sequence: 24
@@ -6,7 +5,7 @@ slug: 24-digital-communication
 version: '2.0'
 title: Цифрова комунікація
 content_outline:
-- section: "Вступ — Регістри цифрової комунікації"
+- section: Вступ — Регістри цифрової комунікації
   words: 400
   points:
   - Формальний vs неформальний регістр
@@ -100,11 +99,11 @@ connects_to:
 module_type: skills
 sources:
 - name: Ukrainian Digital Etiquette
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Guidelines for professional digital communication
 - name: Business Email Standards
-  url: "https://chamber.ua/"
+  url: https://chamber.ua/
   type: secondary
   notes: Ukrainian business correspondence norms
 immersion: 100% Ukrainian
@@ -113,3 +112,6 @@ objectives:
 - Understand and apply цифрова комунікація
 - Analyze and evaluate регістри цифрової комунікації
 - Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: SMM-стратег

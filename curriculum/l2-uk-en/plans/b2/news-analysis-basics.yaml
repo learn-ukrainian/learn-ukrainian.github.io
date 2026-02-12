@@ -1,4 +1,3 @@
----
 module: b2-89
 level: B2
 sequence: 89
@@ -128,3 +127,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Fact-Checker (Фактчекер)

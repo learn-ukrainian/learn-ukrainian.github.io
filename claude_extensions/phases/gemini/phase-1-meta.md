@@ -74,6 +74,21 @@ Before returning, verify:
 - [ ] Points reflect research findings
 - [ ] Section order follows logical narrative flow
 
+## Friction Report (MANDATORY)
+
+After your meta outline output, include:
+
+```
+===FRICTION_START===
+**Phase**: Phase 1: Meta Outline
+**Step**: {what you were doing when friction occurred, or "Full outline"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
 ## Boundaries
 
 - Do NOT write lesson content

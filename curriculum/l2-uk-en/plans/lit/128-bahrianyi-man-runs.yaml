@@ -1,4 +1,3 @@
----
 sequence: 128
 module: lit-128
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Bahrianyi Man Runs у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Escape Artist

@@ -1,4 +1,3 @@
----
 module: b2-03
 level: B2
 sequence: 3
@@ -6,7 +5,7 @@ slug: 03-impersonal-passive
 version: '2.0'
 title: Безособові конструкції на -но/-то
 content_outline:
-- section: "Вступ — Безособовість в українській мові"
+- section: Вступ — Безособовість в українській мові
   words: 400
   points:
   - Концепція безособових конструкцій
@@ -107,19 +106,22 @@ connects_to:
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Impersonal Constructions
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Official requirements for -но/-то usage
 - name: Юридична мова України
-  url: "https://uk.wikipedia.org/wiki/Юридична_мова"
+  url: https://uk.wikipedia.org/wiki/Юридична_мова
   type: secondary
   notes: Examples of -но/-то in legal documents
 - name: Офіційно-діловий стиль
-  url: "https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль"
+  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
   type: secondary
   notes: Register characteristics and examples
 immersion: 100% Ukrainian
-phase: "B2.1a [Passive Voice]"
+phase: B2.1a [Passive Voice]
 objectives:
 - Identify and correctly use безособові конструкції на -но/-то
 - Form and apply безособовість в українській мові
+persona:
+  voice: Professional Language Coach
+  role: Event Organizer (Організатор подій)

@@ -1,4 +1,3 @@
----
 module: c1-bio-123
 level: C1-BIO
 sequence: 123
@@ -6,7 +5,7 @@ slug: mykola-amosov
 version: '2.0'
 title: 'Микола Амосов: Хірург і філософ здоров''я'
 content_outline:
-- section: "Вступ — Лікар, який лікував Україну"
+- section: Вступ — Лікар, який лікував Україну
   words: 457
   points:
   - Амосов як піонер кардіохірургії
@@ -68,7 +67,7 @@ vocabulary_hints:
   - пацієнт (patient)
 activity_hints:
 - type: reading
-  focus: "Excerpts from \"Роздуми про здоров'я\""
+  focus: Excerpts from "Роздуми про здоров'я"
   source: Medical and philosophical texts
   items: 3 passages
 - type: essay-response
@@ -87,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Амосов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Амосов_Микола_Михайлович"
+  url: https://uk.wikipedia.org/wiki/Амосов_Микола_Михайлович
   type: primary
   notes: Biography, medical achievements, philosophy
 - name: Інститут серцево-судинної хірургії
-  url: "https://uk.wikipedia.org/wiki/Національний_інститут_серцево-судинної_хірургії_імені_М._М._Амосова"
+  url: https://uk.wikipedia.org/wiki/Національний_інститут_серцево-судинної_хірургії_імені_М._М._Амосова
   type: reference
   notes: Institute he led
 - name: Роздуми про здоров'я
-  url: "https://uk.wikipedia.org/wiki/Роздуми_про_здоров%27я"
+  url: https://uk.wikipedia.org/wiki/Роздуми_про_здоров%27я
   type: reference
   notes: His famous book
 immersion: 100% Ukrainian
@@ -104,3 +103,6 @@ objectives:
 - 'Analyze the life and legacy of микола амосов: хірург і філософ здоров''я'
 - Evaluate the contributions of лікар, який лікував україну
 - Trace the career and influence of спадщина лікаря-мислителя
+persona:
+  voice: Senior Biographer
+  role: Cardiac Surgeon

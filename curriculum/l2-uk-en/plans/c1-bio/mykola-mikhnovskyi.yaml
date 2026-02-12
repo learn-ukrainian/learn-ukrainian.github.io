@@ -1,4 +1,3 @@
----
 module: c1-bio-073
 level: C1-BIO
 sequence: 73
@@ -6,7 +5,7 @@ slug: mykola-mikhnovskyi
 version: '2.0'
 title: 'Микола Міхновський: Ідеолог самостійництва'
 content_outline:
-- section: "Вступ — Голос української незалежності"
+- section: Вступ — Голос української незалежності
   words: 400
   points:
   - Микола Міхновський — перший ідеолог повної незалежності України
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Микола Міхновський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Микола_Міхновський"
+  url: https://uk.wikipedia.org/wiki/Микола_Міхновський
   type: primary
   notes: Біографія, політична діяльність, ідеологія
 - name: Самостійна Україна (брошура)
-  url: "https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)"
+  url: https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)
   type: reference
   notes: Програмний документ українського самостійництва
 - name: Братство тарасівців
-  url: "https://uk.wikipedia.org/wiki/Братство_тарасівців"
+  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
   type: reference
   notes: Перша політична організація Міхновського
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of микола міхновський: ідеолог самостійництва'
 - Evaluate the contributions of голос української незалежності
 - Trace the career and influence of останні роки та загибель (1918-1924)
+persona:
+  voice: Senior Biographer
+  role: Independence Ideologue

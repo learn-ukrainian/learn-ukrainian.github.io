@@ -1,4 +1,3 @@
----
 module: a1-35
 level: A1
 sequence: 35
@@ -27,7 +26,7 @@ content_outline:
   - Діалог 1: Замовлення кави та круасана
   - Діалог 2: Питання про Wi-Fi та розетку
   - Діалог 3: Оплата рахунку
-- section: "Warm-up 2"
+- section: Warm-up 2
   words: 137
   points:
   - Наратив про візит до львівської кав'ярні
@@ -79,4 +78,7 @@ grammar:
 - Accusative for ordering
 - Questions (Можна...?, Скільки?)
 register: розмовний
-phase: "A1.4 [Practical Scenarios]"
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Lviv Coffee Connoisseur

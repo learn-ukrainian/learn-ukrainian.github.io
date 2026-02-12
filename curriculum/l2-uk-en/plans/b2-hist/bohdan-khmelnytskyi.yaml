@@ -1,4 +1,3 @@
----
 module: b2-hist-052
 level: B2-HIST
 sequence: 52
@@ -83,12 +82,15 @@ grammar:
 - Verbs of political action
 sources:
 - name: History of Ukraine-Rus
-  url: "http://litopys.org.ua/hrushrus/iur.htm"
+  url: http://litopys.org.ua/hrushrus/iur.htm
   type: reference
   notes: Classic historical account
 - name: The Khmelnytsky Uprising
-  url: "https://encyclopediaofukraine.com"
+  url: https://encyclopediaofukraine.com
   type: secondary
   notes: Modern analysis
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
+persona:
+  voice: Senior Professor of History
+  role: Hetman

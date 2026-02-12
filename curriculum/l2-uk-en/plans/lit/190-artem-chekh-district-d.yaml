@@ -1,4 +1,3 @@
----
 sequence: 190
 module: lit-190
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Artem Chekh District D у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: District Chronicler

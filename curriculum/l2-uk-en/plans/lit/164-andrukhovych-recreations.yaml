@@ -1,4 +1,3 @@
----
 sequence: 164
 module: lit-164
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Юрій Андрухович: «Рекреації» у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Festival Organizer

@@ -1,13 +1,12 @@
----
 module: c1-081
 level: C1
 sequence: 81
 slug: 81-obrazotvorche-mystetstvo-1
 version: '2.0'
 title: Образотворче мистецтво I
-subtitle: "Visual Arts I — From Icon to Avant-garde"
+subtitle: Visual Arts I — From Icon to Avant-garde
 content_outline:
-- section: "Розминка — Від ікони до авангарду"
+- section: Розминка — Від ікони до авангарду
   words: 700
   points:
   - Київська школа іконопису — світове значення
@@ -20,7 +19,7 @@ content_outline:
   - '19th century: Шевченко (as artist!), реалісти — national awakening'
   - 'Avant-garde: **Олександр Богомазов**, **Олександр Архипенко**, Олександра Екстер,
     **Казимир Малевич** — world-class innovators'
-- section: "Практика — аналіз мистецтва"
+- section: Практика — аналіз мистецтва
   words: 1050
   points:
   - Проаналізувати ікону Київської школи — композиція, кольори
@@ -38,3 +37,6 @@ grammar:
 - Art criticism terminology
 - Describing visual composition
 phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Реставратор

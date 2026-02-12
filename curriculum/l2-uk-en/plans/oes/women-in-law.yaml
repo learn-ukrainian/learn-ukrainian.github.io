@@ -1,4 +1,3 @@
----
 sequence: 66
 module: oes-066
 module_number: 54
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Widow's Advocate

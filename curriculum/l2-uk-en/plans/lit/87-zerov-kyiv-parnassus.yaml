@@ -1,4 +1,3 @@
----
 sequence: 87
 module: lit-87
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - 'Проаналізувати твір Микола Зеров: Київський Парнас у контексті епохи'
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Kyiv Parnassian

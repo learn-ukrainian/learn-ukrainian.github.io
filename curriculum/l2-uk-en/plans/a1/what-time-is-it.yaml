@@ -1,4 +1,3 @@
----
 module: a1-23
 level: A1
 sequence: 23
@@ -37,7 +36,7 @@ content_outline:
   - о + locative (at a time)
   - до + genitive (until)
   - після + genitive (after)
-- section: "Presentation 2"
+- section: Presentation 2
   words: 260
   points:
   - Розклад дня (О восьмій ранку я прокидаюся)
@@ -47,7 +46,7 @@ content_outline:
   points:
   - Діалог про час (Котра година? — П'ята година)
   - Діалог про плани на тиждень
-- section: "Practice 2"
+- section: Practice 2
   words: 19
   points:
   - Складання розкладу українською
@@ -100,4 +99,7 @@ grammar:
 - Time prepositions (о, до, після)
 - Days and months in context
 register: розмовний
-phase: "A1.3 [Consolidation]"
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Ukrzaliznytsia Conductor

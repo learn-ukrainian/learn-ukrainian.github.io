@@ -1,4 +1,3 @@
----
 module: b2-hist-138
 level: B2-HIST
 sequence: 138
@@ -70,7 +69,7 @@ activity_hints:
   source: Офіційні джерела
   items: 4
 - type: essay-response
-  focus: "Чому підтримка України — це захист демократії у світі?"
+  focus: Чому підтримка України — це захист демократії у світі?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -89,4 +88,7 @@ grammar:
 - Дипломатична та економічна лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.13 [Russian Aggression]"
+phase: HIST.13 [Russian Aggression]
+persona:
+  voice: Senior Professor of History
+  role: Foreign Affairs Minister

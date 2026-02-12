@@ -1,4 +1,3 @@
----
 sequence: 187
 module: lit-187
 level: LIT
@@ -81,3 +80,6 @@ objectives:
 - Проаналізувати твір Tanja Maljartschuk Biography у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Time Weaver

@@ -1,4 +1,3 @@
----
 module: b2-hist-053
 level: B2-HIST
 sequence: 53
@@ -89,12 +88,15 @@ grammar:
 - Cause and effect in historical context
 sources:
 - name: History of Ukraine-Rus
-  url: "http://litopys.org.ua/hrushrus/iur.htm"
+  url: http://litopys.org.ua/hrushrus/iur.htm
   type: reference
   notes: Detailed reconstruction of the battle
 - name: Military Art of Ukraine
-  url: "https://history.org.ua"
+  url: https://history.org.ua
   type: secondary
   notes: Tactical analysis
 register: публіцистичний
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: Cossack Colonel

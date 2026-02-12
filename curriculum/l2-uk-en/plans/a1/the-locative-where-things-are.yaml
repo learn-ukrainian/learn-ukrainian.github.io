@@ -1,4 +1,3 @@
----
 module: a1-13
 level: A1
 sequence: 13
@@ -79,4 +78,7 @@ grammar:
 - Prepositions в/у and на
 - Location expressions
 register: розмовний
-phase: "A1.2 [Navigation]"
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Kyiv City Guide

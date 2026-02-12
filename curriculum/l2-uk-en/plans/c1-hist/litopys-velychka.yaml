@@ -1,4 +1,3 @@
----
 module: c1-hist-022
 level: c1-hist
 sequence: 22
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of літопис величка: барокова історія'
 - Evaluate the historical significance of найповніший козацький літопис
 content_outline:
-- section: "Вступ — Найповніший козацький літопис"
+- section: Вступ — Найповніший козацький літопис
   words: 457
   subsections:
   - Самійло Величко — канцелярист
@@ -40,7 +39,7 @@ content_outline:
   - Договори
   - Чому це революційний підхід
   - Верифікація — чи автентичні?
-- section: "Фрагмент — Переяславська рада"
+- section: Фрагмент — Переяславська рада
   words: 686
   subsections:
   - Текст (з глосами)
@@ -81,7 +80,7 @@ activities:
 - type: reading
   focus: Pereiaslav Council passage with inserted documents
 - type: critical-analysis
-  focus: "Verify one inserted document — is it authentic?"
+  focus: Verify one inserted document — is it authentic?
 - type: comparative-study
   focus: Compare Velychko's Pereiaslav with Samovydets and Hrabianka
 - type: critical-analysis
@@ -90,15 +89,15 @@ activities:
   focus: Чому Величко вставляв документи в літопис?
 sources:
 - name: Літопис Самійла Величка (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка"
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
   type: reference
   notes: Overview
 - name: Літопис Величка (текст)
-  url: "https://litopys.org.ua/velichko/vel.htm"
+  url: https://litopys.org.ua/velichko/vel.htm
   type: primary
   notes: Full text (partial)
 - name: Величко Самійло Васильович
-  url: "https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович"
+  url: https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -121,3 +120,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Baroque Cancellist

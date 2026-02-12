@@ -79,6 +79,21 @@ Alignment: {how this module addresses the standard}
 ===RESEARCH_END===
 ```
 
+## Friction Report (MANDATORY)
+
+After your research output, include:
+
+```
+===FRICTION_START===
+**Phase**: Phase 0: Research (Core)
+**Step**: {what you were doing when friction occurred, or "Full research"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
 ## Boundaries
 
 - Do NOT write lesson content — only research notes

@@ -1,4 +1,3 @@
----
 module: b2-67
 level: B2
 sequence: 67
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Складні Сполучники I: Причина та Допуск'
 subtitle: Advanced Conjunctions I - Causal and Concessive
 content_outline:
-- section: "Розминка — Чому і незважаючи на"
+- section: Розминка — Чому і незважаючи на
   words: 350
   points:
   - Причинові сполучники — бо (розм.) vs тому що (нейтр.) vs оскільки (офіц.)
@@ -29,7 +28,7 @@ content_outline:
   - попри те що (in spite of)
   - дарма що (even though)
   - хай (let/even if)
-- section: "Практика — складні речення"
+- section: Практика — складні речення
   words: 400
   points:
   - Об'єднати прості речення складним причиновим сполучником
@@ -50,7 +49,7 @@ grammar:
 - Concessive conjunctions (хоча vs незважаючи на)
 immersion: 100
 register: публіцистичний
-phase: "B2.2 [Phraseology & Synonymy]"
+phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
   - термін (term)
@@ -71,3 +70,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Legal Analyst (Юридичний аналітик)

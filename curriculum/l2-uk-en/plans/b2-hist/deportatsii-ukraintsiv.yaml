@@ -1,4 +1,3 @@
----
 module: b2-hist-110
 level: B2-HIST
 sequence: 110
@@ -69,7 +68,7 @@ activity_hints:
   source: Усна історія
   items: 4
 - type: essay-response
-  focus: "Чому операція «Вісла» — це етнічна чистка?"
+  focus: Чому операція «Вісла» — це етнічна чистка?
   word_target: 250
 focus: history
 pedagogy: CBI
@@ -88,4 +87,7 @@ grammar:
 - Пасивні конструкції для опису насильства
 - Числівники та статистика
 register: публіцистичний
-phase: "HIST.11 [Post-War Soviet Ukraine]"
+phase: HIST.11 [Post-War Soviet Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Oral Historian

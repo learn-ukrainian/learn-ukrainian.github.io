@@ -1,4 +1,3 @@
----
 module: c1-hist-020
 level: c1-hist
 sequence: 20
@@ -10,7 +9,7 @@ objectives:
 - 'Analyze the causes and consequences of літопис самовидця: голос очевидця'
 - Evaluate the historical significance of найстаріший козацький літопис
 content_outline:
-- section: "Вступ — Найстаріший козацький літопис"
+- section: Вступ — Найстаріший козацький літопис
   words: 457
   subsections:
   - Чому «Самовидець» — очевидець
@@ -39,7 +38,7 @@ content_outline:
   - Мінімум риторики
   - Фактографічність
   - Мова — українська канцелярська
-- section: "Фрагмент — Початок повстання 1648"
+- section: Фрагмент — Початок повстання 1648
   words: 800
   subsections:
   - Текст (з глосами)
@@ -89,15 +88,15 @@ activities:
   focus: Чи означає 'очевидець' об'єктивність?
 sources:
 - name: Літопис Самовидця (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Літопис_Самовидця"
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
   type: reference
   notes: Overview
 - name: Літопис Самовидця (текст)
-  url: "https://litopys.org.ua/samovyd/sam.htm"
+  url: https://litopys.org.ua/samovyd/sam.htm
   type: primary
   notes: Full text
 - name: Хмельниччина
-  url: "https://uk.wikipedia.org/wiki/Хмельниччина"
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
   type: reference
   notes: Historical context
 vocabulary_hints:
@@ -120,3 +119,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Eyewitness Chronicler

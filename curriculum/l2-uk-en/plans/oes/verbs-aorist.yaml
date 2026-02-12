@@ -1,4 +1,3 @@
----
 sequence: 11
 module: oes-011
 module_number: 9
@@ -24,3 +23,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Chronicler of Moments

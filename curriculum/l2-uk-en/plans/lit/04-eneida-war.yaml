@@ -1,4 +1,3 @@
----
 sequence: 4
 module: lit-04
 level: LIT
@@ -7,19 +6,19 @@ version: '2.0'
 title: 'Енеїда: Словник Війни'
 subtitle: 'LIT-004: Анатомія Козацького Бою'
 content_outline:
-- section: "Вступ — Війна як ремесло"
+- section: Вступ — Війна як ремесло
   words: 625
   points:
   - '"Енеїда" як поема про війну'
   - Третина тексту — описи битв
   - Феномен "смішної смерті"
-- section: "Арсенал Енея — зброя та спорядження"
+- section: Арсенал Енея — зброя та спорядження
   words: 875
   points:
   - Холодна зброя (шабля, спис, сокира)
   - Вогнепальна зброя (гармата, мортира, рушниця)
   - Козацьке vs римське озброєння
-- section: "Анатомія бою — тактика і стратегія"
+- section: Анатомія бою — тактика і стратегія
   words: 875
   points:
   - Описи битв (з рутульцями, турнами)
@@ -37,7 +36,7 @@ content_outline:
   - Війна як повсякденне ремесло нації
   - Жарт як спосіб впоратися з травмою
   - Порівняння з сучасною воєнною сатирою
-- section: "Підсумок — Від бою до сентименту"
+- section: Підсумок — Від бою до сентименту
   words: 500
   points:
   - Вичерпання бурлескного жанру
@@ -68,7 +67,7 @@ activity_hints:
   source: UkrLib tid=51
   items: 4+
 - type: essay-response
-  focus: "Естетика смішної смерті — етика чи мистецтво?"
+  focus: Естетика смішної смерті — етика чи мистецтво?
   word_target: 300
   output: Критичне есе
 focus: literature
@@ -89,17 +88,20 @@ grammar:
 - Burlesque metaphors
 module_type: literature
 sources:
-- name: "Енеїда — повний текст"
-  url: "https://www.ukrlib.com.ua/books/printit.php?tid=51"
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
   type: primary
   notes: Частини IV-VI для аналізу батальних сцен
-- name: "Аналіз \"Енеїди\""
-  url: "https://www.ukrlib.com.ua/analiz/printit.php?tid=51"
+- name: Аналіз "Енеїди"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
   type: secondary
   notes: Військова тематика
 - name: Козацьке військо
-  url: "https://uk.wikipedia.org/wiki/Запорозьке_військо"
+  url: https://uk.wikipedia.org/wiki/Запорозьке_військо
   type: reference
   notes: Історичний контекст озброєння
 immersion: 100% Ukrainian
 phase: LIT.1 Burlesque & Folk Origins
+persona:
+  voice: Senior Philologist & Critic
+  role: Trojan General

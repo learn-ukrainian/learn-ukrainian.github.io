@@ -1,4 +1,3 @@
----
 module: c1-bio-089
 level: C1-BIO
 sequence: 89
@@ -6,7 +5,7 @@ slug: olha-basarab
 version: '2.0'
 title: 'Ольга Басараб: Розвідниця і мучениця'
 content_outline:
-- section: "Вступ — Незламна розвідниця"
+- section: Вступ — Незламна розвідниця
   words: 400
   points:
   - Басараб як символ жіночого героїзму в підпіллі
@@ -85,15 +84,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ольга Басараб (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна"
+  url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
   type: primary
   notes: Біографія, розвідницька діяльність, загибель
 - name: Музей визвольної боротьби України
-  url: "https://mvbu.org.ua"
+  url: https://mvbu.org.ua
   type: reference
   notes: УВО та розвідка
 - name: Центр досліджень визвольного руху
-  url: "https://cdvr.org.ua"
+  url: https://cdvr.org.ua
   type: reference
   notes: Дослідження підпільної діяльності
 immersion: 100% Ukrainian
@@ -102,3 +101,6 @@ objectives:
 - 'Analyze the life and legacy of ольга басараб: розвідниця і мучениця'
 - Evaluate the contributions of незламна розвідниця
 - Trace the career and influence of посмертна слава та пам'ять
+persona:
+  voice: Senior Biographer
+  role: Underground Liaison

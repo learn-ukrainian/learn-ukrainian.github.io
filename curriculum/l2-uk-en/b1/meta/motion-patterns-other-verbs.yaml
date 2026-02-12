@@ -1,28 +1,12 @@
----
-module: b1-23
-level: B1
-slug: 23-motion-patterns-other-verbs
-version: '3.0'
-id: b1-23
-naturalness:
-  score: 9
-  status: PASS
-duration: 90
-transliteration: none
-tags:
-- grammar
-- prefixes
-- word-formation
-- verbs
-build:
-  last_modified: '2026-01-26'
 word_target: 3000
 content_outline:
 - section: Тест
   words: 74
 - section: Пояснення
-  words: 879
+  words: 1850
 - section: Практика
-  words: 195
+  words: 350
 - section: Діалоги
-  words: 221
+  words: 600
+- section: Потрібно більше практики?
+  words: 500

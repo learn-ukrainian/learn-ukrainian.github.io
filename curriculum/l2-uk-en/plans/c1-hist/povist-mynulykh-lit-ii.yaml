@@ -1,4 +1,3 @@
----
 module: c1-hist-012
 level: c1-hist
 sequence: 12
@@ -11,13 +10,13 @@ objectives:
 - Evaluate the historical significance of читаємо первинне джерело
 - Trace the development of ваш аналіз
 content_outline:
-- section: "Вступ — Читаємо первинне джерело"
+- section: Вступ — Читаємо первинне джерело
   words: 343
   subsections:
   - Від теорії до практики
   - Три ключові фрагменти
   - Як будемо аналізувати
-- section: "Фрагмент 1 — Покликання варягів (862)"
+- section: Фрагмент 1 — Покликання варягів (862)
   words: 800
   subsections:
   - Текст (з глосами)
@@ -25,7 +24,7 @@ content_outline:
   - Історичність — що з цього правда?
   - Норманська теорія — політичні імплікації
   - Чому літописець включив цю історію?
-- section: "Фрагмент 2 — Хрещення Володимира (988)"
+- section: Фрагмент 2 — Хрещення Володимира (988)
   words: 800
   subsections:
   - Текст вибору вір (з глосами)
@@ -33,7 +32,7 @@ content_outline:
   - Легенда vs. реальна політика
   - Візантійський союз
   - Пропаганда чи історія?
-- section: "Фрагмент 3 — Помста Ольги"
+- section: Фрагмент 3 — Помста Ольги
   words: 800
   subsections:
   - Текст (з глосами)
@@ -48,7 +47,7 @@ content_outline:
   - Наративні техніки літописця
   - Що підкреслено, що замовчано
   - Ідеологічна програма ПМЛ
-- section: "Практикум — ваш аналіз"
+- section: Практикум — ваш аналіз
   words: 571
   subsections:
   - Застосування 5 питань до джерела
@@ -85,15 +84,15 @@ activities:
   focus: Яка ідеологічна програма Повісті минулих літ?
 sources:
 - name: Повість минулих літ (повний текст)
-  url: "https://litopys.org.ua/pvlyar/yar.htm"
+  url: https://litopys.org.ua/pvlyar/yar.htm
   type: primary
   notes: Full text with fragments
 - name: Покликання варягів
-  url: "https://uk.wikipedia.org/wiki/Покликання_варягів"
+  url: https://uk.wikipedia.org/wiki/Покликання_варягів
   type: reference
   notes: Varangian calling legend
 - name: Хрещення Русі
-  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
   type: reference
   notes: Baptism narrative
 vocabulary_hints:
@@ -116,3 +115,6 @@ activity_hints:
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Old Rus Philologist

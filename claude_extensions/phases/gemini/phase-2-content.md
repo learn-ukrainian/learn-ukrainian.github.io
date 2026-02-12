@@ -111,6 +111,21 @@ Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
 ===WORD_COUNTS===
 ```
 
+## Friction Report (MANDATORY)
+
+After your content and word counts, output a friction report. This is required even if nothing went wrong:
+
+```
+===FRICTION_START===
+**Phase**: Phase 2: Content
+**Step**: {what you were doing when friction occurred, or "Full content generation"}
+**Friction Type**: YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | NONE
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed to work around it, or "N/A"}
+**Proposed Tooling Fix**: {if the friction is a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
 ## Boundaries
 
 - Do NOT generate activities, exercises, or vocabulary tables — those are Phase 3

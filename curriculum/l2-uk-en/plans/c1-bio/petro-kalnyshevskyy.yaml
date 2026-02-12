@@ -1,4 +1,3 @@
----
 module: c1-bio-032
 level: C1-BIO
 sequence: 32
@@ -6,7 +5,7 @@ slug: petro-kalnyshevskyy
 version: '2.0'
 title: 'Петро Калнишевський: Останній кошовий'
 content_outline:
-- section: "Вступ — Останній лицар степу"
+- section: Вступ — Останній лицар степу
   words: 400
   points:
   - Калнишевський як символ кінця козацької епохи
@@ -48,7 +47,7 @@ content_outline:
   - Умови ув'язнення
   - Смерть у 112 років (?)
   - Канонізація
-- section: "Підсумок — Мученик за волю"
+- section: Підсумок — Мученик за волю
   words: 300
   points:
   - Калнишевський як символ опору імперії
@@ -97,15 +96,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Петро Калнишевський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Петро_Калнишевський"
+  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
   type: primary
   notes: Biography, last koshovyi, imprisonment
 - name: Знищення Запорозької Січі
-  url: "https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі"
+  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
   type: primary
   notes: Events of 1775
 - name: Соловецький монастир
-  url: "https://uk.wikipedia.org/wiki/Соловецький_монастир"
+  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
   type: reference
   notes: Place of imprisonment
 immersion: 100% Ukrainian
@@ -113,3 +112,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of петро калнишевський: останній кошовий'
 - Evaluate the contributions of останній лицар степу
+persona:
+  voice: Senior Biographer
+  role: Solovky Exile

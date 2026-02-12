@@ -1,4 +1,3 @@
----
 module: c1-bio-084
 level: C1-BIO
 sequence: 84
@@ -6,7 +5,7 @@ slug: nataliia-polonska-vasylenko
 version: '2.0'
 title: 'Наталія Полонська-Василенко: Історикиня'
 content_outline:
-- section: "Вступ — Жінка, яка написала історію України"
+- section: Вступ — Жінка, яка написала історію України
   words: 400
   points:
   - Полонська-Василенко як видатна історикиня XX століття
@@ -84,15 +83,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Наталія Полонська-Василенко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна"
+  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
   type: primary
   notes: Біографія, наукова діяльність, еміграція
 - name: Інститут історії України НАНУ
-  url: "https://www.history.org.ua"
+  url: https://www.history.org.ua
   type: reference
   notes: Наукова спадщина та оцінка
 - name: Українська Вільна Академія Наук
-  url: "https://uvan.org"
+  url: https://uvan.org
   type: reference
   notes: Діяльність в еміграції
 immersion: 100% Ukrainian
@@ -101,3 +100,6 @@ objectives:
 - 'Analyze the life and legacy of наталія полонська-василенко: історикиня'
 - Evaluate the contributions of жінка, яка написала історію україни
 - Trace the career and influence of наукова спадщина та значення
+persona:
+  voice: Senior Biographer
+  role: Archeologist

@@ -1,4 +1,3 @@
----
 module: b2-hist-123
 level: B2-HIST
 sequence: 123
@@ -88,4 +87,7 @@ activity_hints:
   focus: 'Верифікація фактів: Факти про фальсифікації та судові рішення'
   items: 5
 register: публіцистичний
-phase: "HIST.12 [Independence & Modern Ukraine]"
+phase: HIST.12 [Independence & Modern Ukraine]
+persona:
+  voice: Senior Professor of History
+  role: Field Commander

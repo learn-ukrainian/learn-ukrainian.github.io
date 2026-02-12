@@ -1,4 +1,3 @@
----
 module: b2-hist-084
 level: B2-HIST
 sequence: 84
@@ -89,4 +88,7 @@ grammar:
 - Непряма мова для передачі ідей
 - Політична та філософська лексика
 register: публіцистичний
-phase: "HIST.8 [Imperial Era]"
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Political Philosopher

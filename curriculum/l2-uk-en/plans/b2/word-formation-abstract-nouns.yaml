@@ -1,4 +1,3 @@
----
 module: b2-34
 level: B2
 sequence: 34
@@ -7,7 +6,7 @@ version: '2.0'
 title: 'Словотворення: абстрактні іменники'
 subtitle: Word Formation - Abstract Nouns
 content_outline:
-- section: "Розминка — Абстрактна лексика"
+- section: Розминка — Абстрактна лексика
   words: 300
   points:
   - Що таке абстрактні іменники (дія, якість, стан)
@@ -34,7 +33,7 @@ content_outline:
   - -ка для дії та її наслідків (помилка, оцінка, знахідка)
   - -ство для сфери, статусу (громадянство, керівництво, суспільство)
   - Відмінність від -ння (показ vs показування)
-- section: "Практика — номіналізація"
+- section: Практика — номіналізація
   words: 450
   points:
   - Перетворити дієслівні конструкції в іменникові
@@ -53,7 +52,7 @@ grammar:
 - Суфікс -ість для позначення властивості чи якості
 - Суфікси -ок, -ка для позначення результату дії
 register: науковий
-phase: "B2.1c [Register & Word Formation]"
+phase: B2.1c [Register & Word Formation]
 vocabulary_hints:
   required:
   - термін (term)
@@ -74,3 +73,6 @@ activity_hints:
 - type: true-false
   focus: Перевірка розуміння
   items: 8
+persona:
+  voice: Professional Language Coach
+  role: Marketer (Маркетолог)

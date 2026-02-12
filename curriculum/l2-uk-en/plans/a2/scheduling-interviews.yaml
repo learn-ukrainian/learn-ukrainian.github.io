@@ -1,4 +1,3 @@
----
 module: a2-64
 level: A2
 sequence: 64
@@ -77,4 +76,7 @@ grammar:
 - Describing experience and skills
 - Formal business language
 register: розмовний
-phase: "A2.6 [Practical]"
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: HR Recruiter
