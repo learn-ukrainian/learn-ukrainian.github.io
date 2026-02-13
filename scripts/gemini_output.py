@@ -25,6 +25,7 @@ PHASE_TAGS: dict[int | str, list[str]] = {
     2: ["CONTENT"],
     3: ["ACTIVITIES", "VOCABULARY"],
     5: ["REVIEW"],
+    6: ["REVIEW"],
     "fix": ["CONTENT", "ACTIVITIES", "VOCABULARY", "CHANGES"],
     "fix-content": ["CONTENT", "CHANGES"],
     "fix-activities": ["ACTIVITIES", "VOCABULARY", "CHANGES"],
@@ -52,22 +53,25 @@ def extract_delimited(text: str, tag: str) -> Optional[str]:
         Stripped content between delimiters, or None if not found.
     """
     # 1. Try specific semantic tag (preferred)
+    # Use findall + take LAST match: Gemini often echoes the template's
+    # delimiters before producing its own output, so the first match may
+    # be the template echo rather than the real content.
     pattern = re.compile(
         rf"==={re.escape(tag)}_START===(.*?)==={re.escape(tag)}_END===",
         re.DOTALL,
     )
-    match = pattern.search(text)
-    if match:
-        return match.group(1).strip()
+    matches = pattern.findall(text)
+    if matches:
+        return matches[-1].strip()
 
-    # 2. Try generic ARTIFACT tag (fallback)
+    # 2. Try generic ARTIFACT tag (fallback) — also take last match
     pattern_artifact = re.compile(
-        rf"===ARTIFACT_START===(.*?)===ARTIFACT_END===",
+        r"===ARTIFACT_START===(.*?)===ARTIFACT_END===",
         re.DOTALL,
     )
-    match_artifact = pattern_artifact.search(text)
-    if match_artifact:
-        return match_artifact.group(1).strip()
+    artifact_matches = pattern_artifact.findall(text)
+    if artifact_matches:
+        return artifact_matches[-1].strip()
 
     return None
 

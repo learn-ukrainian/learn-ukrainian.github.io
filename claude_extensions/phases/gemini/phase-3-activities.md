@@ -3,6 +3,21 @@
 > **You are Gemini, executing Phase 3 of an orchestrated rebuild.**
 > **Your ONLY task: Generate activities YAML and vocabulary YAML.**
 
+## Pre-flight Checklist
+
+Before writing ANY YAML, confirm these targets:
+
+| Target | Value |
+|--------|-------|
+| Persona | {PERSONA_VOICE}, acting as {PERSONA_ROLE} |
+| Activities required | {ACTIVITY_MIN}–{ACTIVITY_MAX} |
+| Items per activity | ≥{ITEMS_MIN} |
+| Required types | {REQUIRED_TYPES} |
+| Priority types | {PRIORITY_TYPES} |
+| Vocabulary items | {VOCAB_COUNT_TARGET} |
+
+Keep this table visible as you write. Every activity and vocab item must serve these targets.
+
 ## Your Input
 
 Read these files from disk:

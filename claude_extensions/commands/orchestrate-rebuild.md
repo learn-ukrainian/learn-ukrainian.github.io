@@ -185,6 +185,8 @@ Save audit log to `orchestration/{slug}/audit-attempt-{N}.log` (increment N for 
 6. Loop max 3 iterations
 7. **If still failing after 3 retries: STOP. Report to human.** Do NOT attempt to fix it as Claude.
 
+> **CONTEXT ALIGNMENT RULE**: After all Phase 4 fixes are applied and audit passes, verify the **canonical content file** (`curriculum/l2-uk-en/{track}/{slug}.md`) is the final version. All subsequent phases (5, 6, 6b) must reference files at their canonical paths — never intermediate orchestration artifacts. If content was patched during fix iterations, the canonical `.md`, `activities/*.yaml`, and `vocabulary/*.yaml` files must reflect all applied fixes before proceeding.
+
 ### Phase 5: Archive Comparison + Status
 
 **After audit passes:**
@@ -312,16 +314,24 @@ Gemini streams 10-100K chars of thinking tokens. Never read raw output.
   --model {model} \
   > /tmp/gemini-output-{slug}-phase-{N}.txt 2>&1
 
-# 2. Extract delimited content only
-sed -n '/===TAG_START===/,/===TAG_END===/p' /tmp/gemini-output-{slug}-phase-{N}.txt \
-  > /tmp/gemini-extracted-{slug}-phase-{N}.txt
+# 2. Extract all delimited content for this phase (uses LAST match — handles template echo)
+.venv/bin/python scripts/extract_phase.py \
+  /tmp/gemini-output-{slug}-phase-{N}.txt \
+  --phase {N} \
+  --output-dir curriculum/l2-uk-en/{track}/orchestration/{slug}/ \
+  --attempt 1
 
-# 3. Check extraction succeeded
-wc -l /tmp/gemini-extracted-{slug}-phase-{N}.txt
-# If 0 lines → Gemini didn't produce delimited output → retry
-
-# 4. Read ONLY the extracted file
+# 3. Read the extracted file(s) from orchestration dir
+# Output files: phase-{N}-{tag}.md (e.g., phase-2-content.md)
+# Friction report: friction-attempt-1.md (if present)
 ```
+
+> **Fallback (if extract_phase.py is unavailable):**
+> ```bash
+> sed -n '/===TAG_START===/,/===TAG_END===/p' /tmp/gemini-output-{slug}-phase-{N}.txt \
+>   > /tmp/gemini-extracted-{slug}-phase-{N}.txt
+> wc -l /tmp/gemini-extracted-{slug}-phase-{N}.txt
+> ```
 
 **Model selection:**
 - Core tracks (A1-B2): `gemini-3-flash-preview`
@@ -332,6 +342,7 @@ wc -l /tmp/gemini-extracted-{slug}-phase-{N}.txt
 - No broker messages during orchestration — prompt file on disk is the only channel
 - Never fix Gemini's output yourself — send retry/fix prompts back to Gemini
 - Max 3 retries per phase. After that → stop, report to human.
+- **Canonical path rule:** Phases 3, 6, and 6b must always reference the **final validated** content files at their canonical paths (`{track}/{slug}.md`, `activities/{slug}.yaml`, `vocabulary/{slug}.yaml`) — never intermediate orchestration artifacts. This ensures Gemini reads the current state, not stale snapshots.
 
 ---
 
