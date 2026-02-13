@@ -438,3 +438,7 @@ After each module:
 | `{ENGAGEMENT_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{EXAMPLE_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{IMMERSION_RULE}` | From quick-ref |
+| `{SKILL_IDENTITY}` | From `.gemini/skills/full-rebuild-{skill}/SKILL.md` opening line (e.g., "Senior Biographer and Historian") |
+| `{PERSONA_FLAVOR}` | From skill's Persona Registry (e.g., "Investigative Journalist", "The Ethnographer") |
+| `{PERSONA_VOICE}` | From plan `persona.voice` |
+| `{PERSONA_ROLE}` | From plan `persona.role` |

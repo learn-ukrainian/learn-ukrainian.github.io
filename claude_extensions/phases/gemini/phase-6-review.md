@@ -23,6 +23,9 @@ Read ALL of these files from disk before writing anything:
 ## Audit Metrics (Facts — from automated audit)
 
 ```
+Skill identity:   {SKILL_IDENTITY}
+Persona flavor:   {PERSONA_FLAVOR}
+Module persona:   {PERSONA_VOICE}, acting as {PERSONA_ROLE}
 Word count:       {AUDIT_WORD_COUNT} / {WORD_TARGET} ({WORD_PERCENT}%)
 Activities:       {ACTIVITY_COUNT}
 Vocabulary items: {VOCAB_COUNT}
