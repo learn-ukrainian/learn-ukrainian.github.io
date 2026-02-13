@@ -191,6 +191,10 @@ def load_module_status(status_file: Path, level_path: Optional[Path] = None) -> 
         num = 0
         title = filename.replace("-", " ").title()
 
+        # Get file mtime for staleness detection
+        mtime = status_file.stat().st_mtime
+        last_updated = datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat()
+
         # Try to extract number from filename like "04-this-is-i-am"
         try:
             num = int(filename.split("-")[0])
@@ -203,11 +207,9 @@ def load_module_status(status_file: Path, level_path: Optional[Path] = None) -> 
                     try:
                         with open(meta_file) as f:
                             meta_data = yaml.safe_load(f)
-                        # Extract number from module ID like "c1-bio-053" or "b2-hist-116"
-                        # Prefer 'id' over 'module' since 'module' is sometimes just the slug
+                        # Prefer 'id' over 'module'
                         module_id = meta_data.get("id") or meta_data.get("module", "")
                         num = extract_module_number(module_id)
-                        # Use title from meta if available
                         if meta_data.get("title"):
                             title = meta_data["title"]
                     except Exception:
@@ -222,6 +224,7 @@ def load_module_status(status_file: Path, level_path: Optional[Path] = None) -> 
             "wordTarget": word_target or 3000,
             "activityCount": activity_count,
             "naturalness": naturalness,
+            "last_updated": last_updated,
             "gates": {
                 gate: info.get("status", "pending")
                 for gate, info in gates.items()
@@ -713,6 +716,36 @@ async def get_track_failures(track: str):
     return results
 
 
+@app.get("/api/batch/checkpoints")
+async def get_all_checkpoints():
+    """Get checkpoint data for all tracks (orchestrated rebuild model)."""
+    results = {}
+    if BATCH_STATE_DIR.exists():
+        for f in sorted(BATCH_STATE_DIR.glob("checkpoint_*.json")):
+            track = f.stem.replace("checkpoint_", "")
+            try:
+                with open(f) as fh:
+                    results[track] = json.load(fh)
+            except Exception:
+                pass
+    return results
+
+
+@app.get("/api/batch/checkpoint/{track}")
+async def get_track_checkpoint(track: str):
+    """Get checkpoint data for a specific track (orchestrated rebuild model)."""
+    if not validate_track(track):
+        raise HTTPException(status_code=400, detail=f"Invalid track: {track}")
+    cp_file = BATCH_STATE_DIR / f"checkpoint_{track}.json"
+    if not cp_file.exists():
+        return {"completed": [], "failed": []}
+    try:
+        with open(cp_file) as f:
+            return json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reading checkpoint: {e}")
+
+
 @app.get("/api/batch/escalations")
 async def get_escalations():
     """Get all modules escalated to Claude across all tracks."""
@@ -751,6 +784,152 @@ async def get_batch_usage():
     return summaries
 
 
+@app.get("/api/batch/timeline/{track}")
+async def get_batch_timeline(track: str):
+    """Get per-module timeline for a track from checkpoint + failure queue data."""
+    if not validate_track(track):
+        raise HTTPException(status_code=400, detail=f"Invalid track: {track}")
+
+    cp_file = BATCH_STATE_DIR / f"checkpoint_{track}.json"
+    fq_file = BATCH_STATE_DIR / "failure_queue.json"
+
+    timeline = []
+
+    # Completed modules from checkpoint
+    if cp_file.exists():
+        try:
+            with open(cp_file) as f:
+                cp = json.load(f)
+            for slug in cp.get("completed", []):
+                timeline.append({"slug": slug, "status": "completed", "track": track})
+            for slug in cp.get("failed", []):
+                timeline.append({"slug": slug, "status": "failed", "track": track})
+        except Exception:
+            pass
+
+    # Enrich with failure queue details
+    if fq_file.exists():
+        try:
+            with open(fq_file) as f:
+                fq = json.load(f)
+            for entry in fq:
+                if entry.get("slug") in [t["slug"] for t in timeline if t["status"] == "failed"]:
+                    for t in timeline:
+                        if t["slug"] == entry["slug"] and t["status"] == "failed":
+                            t["phase"] = entry.get("phase")
+                            t["retries"] = entry.get("retries")
+                            t["timestamp"] = entry.get("timestamp")
+                            t["last_error"] = entry.get("last_error")
+                            break
+        except Exception:
+            pass
+
+    return timeline
+
+
+@app.get("/api/batch/history")
+async def get_batch_history():
+    """Get previous batch run summaries."""
+    results = []
+    # Dispatcher history
+    state_file = BATCH_STATE_DIR / "dispatcher_state.json"
+    if state_file.exists():
+        try:
+            with open(state_file) as f:
+                data = json.load(f)
+                results = data.get("dispatch_history", [])
+        except Exception:
+            pass
+    
+    # Also look for report_*.json files
+    reports = []
+    for f in sorted(BATCH_STATE_DIR.glob("report_*.json"), key=lambda x: x.stat().st_mtime, reverse=True):
+        try:
+            with open(f) as fh:
+                reports.append(json.load(fh))
+        except Exception:
+            pass
+            
+    return {"dispatch_history": results, "reports": reports[:20]}
+
+
+@app.get("/api/batch/metrics")
+async def get_batch_metrics():
+    """Get performance aggregates and metrics."""
+    # Compute from reports and state
+    state_file = BATCH_STATE_DIR / "dispatcher_state.json"
+    history = []
+    if state_file.exists():
+        try:
+            with open(state_file) as f:
+                history = json.load(f).get("dispatch_history", [])
+        except Exception:
+            pass
+
+    # Basic metrics
+    total_processed = sum(h.get("modules_processed", 0) for h in history)
+    total_duration = sum(h.get("duration_s", 0) for h in history)
+    
+    avg_velocity = (total_processed / (total_duration / 3600)) if total_duration > 0 else 0
+    
+    # Recent velocity (last 5 runs)
+    recent = history[-5:] if len(history) >= 5 else history
+    recent_processed = sum(h.get("modules_processed", 0) for h in recent)
+    recent_duration = sum(h.get("duration_s", 0) for h in recent)
+    recent_velocity = (recent_processed / (recent_duration / 3600)) if recent_duration > 0 else 0
+
+    return {
+        "avg_velocity": avg_velocity,
+        "recent_velocity": recent_velocity,
+        "total_processed": total_processed,
+        "total_duration_s": total_duration,
+        "run_count": len(history)
+    }
+
+
+@app.get("/api/batch/active")
+async def get_active_orchestration():
+    """Scan all orchestration folders for active module builds."""
+    active = []
+    # Only scan recently modified dirs to keep it fast
+    now = datetime.now(timezone.utc)
+    
+    # We scan all track directories for an 'orchestration' folder
+    for track_dir in CURRICULUM_ROOT.iterdir():
+        if not track_dir.is_dir():
+            continue
+        
+        orch_dir = track_dir / "orchestration"
+        if not orch_dir.exists():
+            continue
+            
+        for module_dir in orch_dir.iterdir():
+            if not module_dir.is_dir():
+                continue
+                
+            # Get last modified file in this module dir
+            latest_mtime = 0
+            latest_file = ""
+            for f in module_dir.iterdir():
+                if f.is_file():
+                    mtime = f.stat().st_mtime
+                    if mtime > latest_mtime:
+                        latest_mtime = mtime
+                        latest_file = f.name
+            
+            # If modified in the last 15 minutes, consider it potentially active
+            if (datetime.now().timestamp() - latest_mtime) < 900:
+                active.append({
+                    "slug": module_dir.name,
+                    "track": track_dir.name,
+                    "last_file": latest_file,
+                    "last_update": datetime.fromtimestamp(latest_mtime, tz=timezone.utc).isoformat(),
+                    "seconds_ago": int(datetime.now().timestamp() - latest_mtime)
+                })
+                
+    return active
+
+
 @app.get("/api/batch/health")
 async def get_batch_health():
     """Get batch system health: lock status, running tracks, last activity."""
@@ -787,6 +966,211 @@ async def get_batch_health():
         "running_tracks": running_tracks,
         "last_activity": last_activity,
         "batch_state_dir_exists": BATCH_STATE_DIR.exists(),
+    }
+
+
+@app.get("/api/batch/live-status")
+async def get_live_status():
+    """Scan the filesystem for actual module file existence per track.
+
+    This is the ground truth — checks what files actually exist on disk
+    regardless of what checkpoint/dispatcher files say.
+    """
+    results = {}
+    for level_cfg in LEVELS:
+        track = level_cfg["id"]
+        level_dir = CURRICULUM_ROOT / level_cfg["path"]
+        if not level_dir.exists():
+            continue
+
+        meta_dir = level_dir / "meta"
+        activities_dir = level_dir / "activities"
+        vocab_dir = level_dir / "vocabulary"
+        status_dir = level_dir / "status"
+
+        modules = []
+        # Discover modules from meta files (most reliable source)
+        if meta_dir.exists():
+            for meta_file in sorted(meta_dir.glob("*.yaml")):
+                slug = meta_file.stem
+                # Check what files exist for this module
+                has_meta = True
+                has_lesson = any(level_dir.glob(f"*-{slug}.md")) or (level_dir / f"{slug}.md").exists()
+                has_activities = (activities_dir / f"{slug}.yaml").exists()
+                has_vocab = (vocab_dir / f"{slug}.yaml").exists()
+
+                # Check status JSON if it exists
+                status_data = None
+                status_file = status_dir / f"{slug}.json"
+                if status_file.exists():
+                    try:
+                        with open(status_file) as f:
+                            status_data = json.load(f)
+                    except Exception:
+                        pass
+
+                # Determine module state
+                file_count = sum([has_meta, has_lesson, has_activities, has_vocab])
+                if status_data and status_data.get("overall", {}).get("status") == "pass":
+                    state = "pass"
+                elif file_count == 4:
+                    state = "built"  # All files exist but no passing audit
+                elif file_count > 1:
+                    state = "partial"
+                else:
+                    state = "skeleton"
+
+                modules.append({
+                    "slug": slug,
+                    "state": state,
+                    "files": {
+                        "meta": has_meta,
+                        "lesson": has_lesson,
+                        "activities": has_activities,
+                        "vocabulary": has_vocab,
+                    },
+                    "audit_status": status_data.get("overall", {}).get("status") if status_data else None,
+                })
+
+        results[track] = {
+            "module_count": len(modules),
+            "states": {
+                "pass": sum(1 for m in modules if m["state"] == "pass"),
+                "built": sum(1 for m in modules if m["state"] == "built"),
+                "partial": sum(1 for m in modules if m["state"] == "partial"),
+                "skeleton": sum(1 for m in modules if m["state"] == "skeleton"),
+            },
+            "modules": modules,
+        }
+
+    return results
+
+
+@app.get("/api/batch/freshness")
+async def get_data_freshness():
+    """Return modification times for all data sources so the dashboard can show staleness."""
+    sources = {}
+
+    # Checkpoint files
+    for cp_file in BATCH_STATE_DIR.glob("checkpoint_*.json"):
+        track = cp_file.stem.replace("checkpoint_", "")
+        try:
+            mtime = cp_file.stat().st_mtime
+            sources[f"checkpoint_{track}"] = {
+                "path": str(cp_file.relative_to(PROJECT_ROOT)),
+                "mtime": datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat(),
+                "age_seconds": int(datetime.now().timestamp() - mtime),
+            }
+        except Exception:
+            pass
+
+    # Dispatcher state
+    ds_file = BATCH_STATE_DIR / "dispatcher_state.json"
+    if ds_file.exists():
+        try:
+            mtime = ds_file.stat().st_mtime
+            sources["dispatcher_state"] = {
+                "path": str(ds_file.relative_to(PROJECT_ROOT)),
+                "mtime": datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat(),
+                "age_seconds": int(datetime.now().timestamp() - mtime),
+            }
+        except Exception:
+            pass
+
+    # Failure queue
+    fq_file = BATCH_STATE_DIR / "failure_queue.json"
+    if fq_file.exists():
+        try:
+            mtime = fq_file.stat().st_mtime
+            sources["failure_queue"] = {
+                "path": str(fq_file.relative_to(PROJECT_ROOT)),
+                "mtime": datetime.fromtimestamp(mtime, tz=timezone.utc).isoformat(),
+                "age_seconds": int(datetime.now().timestamp() - mtime),
+            }
+        except Exception:
+            pass
+
+    # Find most recent status JSON across all levels
+    newest_status = None
+    newest_status_age = None
+    for level_cfg in LEVELS:
+        status_dir = CURRICULUM_ROOT / level_cfg["path"] / "status"
+        if not status_dir.exists():
+            continue
+        for sf in status_dir.glob("*.json"):
+            try:
+                mtime = sf.stat().st_mtime
+                age = int(datetime.now().timestamp() - mtime)
+                if newest_status_age is None or age < newest_status_age:
+                    newest_status = str(sf.relative_to(PROJECT_ROOT))
+                    newest_status_age = age
+            except Exception:
+                pass
+
+    if newest_status:
+        sources["newest_status_json"] = {
+            "path": newest_status,
+            "age_seconds": newest_status_age,
+        }
+
+    return sources
+
+
+@app.get("/api/batch/resolved-failures")
+async def get_resolved_failures():
+    """Cross-reference failure queue against checkpoint completed lists.
+
+    A failure is 'resolved' if its slug now appears in the checkpoint's
+    completed list for the corresponding track.
+    """
+    fq_file = BATCH_STATE_DIR / "failure_queue.json"
+    if not fq_file.exists():
+        return {"resolved": [], "unresolved": [], "total": 0}
+
+    try:
+        with open(fq_file) as f:
+            failures = json.load(f)
+    except Exception:
+        return {"resolved": [], "unresolved": [], "total": 0}
+
+    # Load all checkpoints
+    checkpoints = {}
+    for cp_file in BATCH_STATE_DIR.glob("checkpoint_*.json"):
+        track = cp_file.stem.replace("checkpoint_", "")
+        try:
+            with open(cp_file) as f:
+                checkpoints[track] = json.load(f)
+        except Exception:
+            pass
+
+    resolved = []
+    unresolved = []
+
+    for entry in failures:
+        slug = entry.get("slug", "")
+        # Infer track from prompt_file path
+        track = None
+        pf = entry.get("prompt_file", "")
+        m = __import__("re").search(r"curriculum/l2-uk-en/([^/]+)/", pf)
+        if m:
+            track = m.group(1)
+
+        is_resolved = False
+        if track and track in checkpoints:
+            completed = checkpoints[track].get("completed", [])
+            if slug in completed:
+                is_resolved = True
+
+        enriched = {**entry, "inferred_track": track, "resolved": is_resolved}
+        if is_resolved:
+            resolved.append(enriched)
+        else:
+            unresolved.append(enriched)
+
+    return {
+        "resolved": resolved,
+        "unresolved": unresolved,
+        "total": len(failures),
     }
 
 
@@ -1001,6 +1385,19 @@ async def batch_websocket(websocket: WebSocket):
                         if last_mtimes.get(track) != mtime:
                             last_mtimes[track] = mtime
                             changes.append(track)
+                    except OSError:
+                        pass
+
+            # Check checkpoint files (orchestrated rebuild model)
+            if BATCH_STATE_DIR.exists():
+                for cf in BATCH_STATE_DIR.glob("checkpoint_*.json"):
+                    try:
+                        track = cf.stem.replace("checkpoint_", "")
+                        key = f"cp_{track}"
+                        mtime = cf.stat().st_mtime
+                        if last_mtimes.get(key) != mtime:
+                            last_mtimes[key] = mtime
+                            changes.append(f"checkpoint:{track}")
                     except OSError:
                         pass
 

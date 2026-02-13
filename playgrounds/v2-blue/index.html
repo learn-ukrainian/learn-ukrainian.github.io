@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playground v2 — Blue Team</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0b1120;
+      color: #e8edf5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container { max-width: 600px; text-align: center; padding: 40px; }
+    h1 {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .subtitle { color: #556b8e; font-size: 14px; margin-bottom: 40px; }
+    .card {
+      display: block;
+      background: #131c31;
+      border: 1px solid #1e2d4a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+      text-decoration: none;
+      color: #e8edf5;
+      transition: all 150ms;
+    }
+    .card:hover { border-color: #3b82f6; transform: translateY(-2px); }
+    .card h2 { font-size: 16px; margin-bottom: 4px; }
+    .card p { font-size: 12px; color: #556b8e; }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+    .badge.done { background: #166534; color: #bbf7d0; }
+    .badge.wip { background: #1e40af; color: #bfdbfe; }
+    .badge.planned { background: #1e2d4a; color: #556b8e; }
+    .back { display: block; margin-top: 30px; color: #3b82f6; text-decoration: none; font-size: 13px; }
+    .back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Blue Team</h1>
+    <div class="subtitle">Playground v2 — Competition Entry</div>
+
+    <a href="batch-monitor.html" class="card">
+      <h2>Batch Monitor</h2>
+      <p>Real-time batch operations dashboard with track grid, heatmap drill-down, log viewer, and keyboard shortcuts.</p>
+      <span class="badge done">Round 1 — Built</span>
+    </a>
+
+    <a href="#" class="card" style="opacity:0.4;pointer-events:none;">
+      <h2>Communication Hub</h2>
+      <p>Live message broker dashboard with task threads and GitHub integration.</p>
+      <span class="badge planned">Round 2 — Planned</span>
+    </a>
+
+    <a href="#" class="card" style="opacity:0.4;pointer-events:none;">
+      <h2>Module Status</h2>
+      <p>Heatmap dashboard with trend tracking and bulk operations.</p>
+      <span class="badge planned">Round 3 — Planned</span>
+    </a>
+
+    <a href="../index.html" class="back">&larr; Back to Playgrounds</a>
+  </div>
+</body>
+</html>

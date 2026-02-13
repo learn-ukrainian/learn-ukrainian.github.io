@@ -1,0 +1,121 @@
+items:
+  - lemma: іменник
+    ipa: /iˈmɛnːɪk/
+    translation: noun
+    pos: noun
+  - lemma: дієслово
+    ipa: /dʲijeˈslɔwɔ/
+    translation: verb
+    pos: noun
+  - lemma: прикметник
+    ipa: /prɪˈkmɛtnɪk/
+    translation: adjective
+    pos: noun
+  - lemma: прислівник
+    ipa: /prɪˈslʲiu̯nɪk/
+    translation: adverb
+    pos: noun
+  - lemma: займенник
+    ipa: /zɐi̯ˈmɛnːɪk/
+    translation: pronoun
+    pos: noun
+  - lemma: числівник
+    ipa: /t͡ʃɪˈslʲiu̯nɪk/
+    translation: numeral
+    pos: noun
+  - lemma: сполучник
+    ipa: /spɔˈlut͡ʃnɪk/
+    translation: conjunction
+    pos: noun
+  - lemma: прийменник
+    ipa: /prɪi̯ˈmɛnːɪk/
+    translation: preposition
+    pos: noun
+  - lemma: частка
+    ipa: /ˈt͡ʃɑstkɐ/
+    translation: particle
+    pos: noun
+  - lemma: вигук
+    ipa: /ˈwɪɦuk/
+    translation: interjection
+    pos: noun
+  - lemma: називний відмінок
+    ipa: /nɐzɪu̯ˈnɪi̯ widˈmʲinɔk/
+    translation: nominative case
+    pos: noun
+  - lemma: родовий відмінок
+    ipa: /rɔdɔˈwɪi̯ widˈmʲinɔk/
+    translation: genitive case
+    pos: noun
+  - lemma: давальний відмінок
+    ipa: /dɐˈwɐlʲnɪi̯ widˈmʲinɔk/
+    translation: dative case
+    pos: noun
+  - lemma: знахідний відмінок
+    ipa: /znɐˈxʲidnɪi̯ widˈmʲinɔk/
+    translation: accusative case
+    pos: noun
+  - lemma: орудний відмінок
+    ipa: /ɔˈrudnɪi̯ widˈmʲinɔk/
+    translation: instrumental case
+    pos: noun
+  - lemma: місцевий відмінок
+    ipa: /mʲisˈt͡sɛwɪi̯ widˈmʲinɔk/
+    translation: locative case
+    pos: noun
+  - lemma: кличний відмінок
+    ipa: /ˈklɪt͡ʃnɪi̯ widˈmʲinɔk/
+    translation: vocative case
+    pos: noun
+  - lemma: граматика
+    ipa: /ɦrɐˈmɑtɪkɐ/
+    translation: grammar
+    pos: noun
+  - lemma: правило
+    ipa: /ˈprɑwɪlɔ/
+    translation: rule
+    pos: noun
+  - lemma: корінь
+    ipa: /ˈkɔrʲinʲ/
+    translation: root
+    pos: noun
+  - lemma: суфікс
+    ipa: /ˈsufʲiks/
+    translation: suffix
+    pos: noun
+  - lemma: префікс
+    ipa: /ˈprɛfʲiks/
+    translation: prefix
+    pos: noun
+  - lemma: закінчення
+    ipa: /zɐˈkʲint͡ʃɛnʲːɐ/
+    translation: ending
+    pos: noun
+  - lemma: підмет
+    ipa: /ˈpidmɛt/
+    translation: subject
+    pos: noun
+  - lemma: присудок
+    ipa: /ˈprɪsudɔk/
+    translation: predicate
+    pos: noun
+  - lemma: рід
+    ipa: /rid/
+    translation: gender
+    pos: noun
+  - lemma: число
+    ipa: /t͡ʃɪsˈlɔ/
+    translation: number
+    pos: noun
+  - lemma: особа
+    ipa: /ɔˈsɔbɐ/
+    translation: person
+    pos: noun
+  - lemma: час
+    ipa: /t͡ʃɑs/
+    translation: tense
+    pos: noun
+  - lemma: вид
+    ipa: /wɪd/
+    translation: aspect
+    pos: noun

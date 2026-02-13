@@ -102,7 +102,9 @@ orchestration/{slug}/
   phase-2-output.md
   audit-attempt-1.log        # First audit run
   audit-attempt-2.log        # After Gemini fix
-  review-attempt-1.md        # First review
+  phase-6-review-prompt.md   # Green Team review prompt (NEW session)
+  phase-6-review-output.md   # Green Team review extracted
+  phase-6b-fixes.md          # Log of which review issues were fixed/skipped
   friction-attempt-1.md      # Gemini's friction report (structured)
 ```
 
@@ -210,6 +212,89 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 
 4. Print completion report.
 
+### Phase 6: Green Team Review (Gemini — NEW session)
+
+**Anti-self-review architecture.** Gemini built the content in Phases 2-3. To avoid self-review bias, Phase 6 sends the review to Gemini in a **completely new session** (different task-id) where it has no memory of building the content. We frame it as "Green Team" — an independent quality reviewer.
+
+**Why this works:** Session isolation means Gemini genuinely doesn't know it authored the content. Combined with adversarial prompting, this produces honest reviews instead of rubber-stamps.
+
+**What Claude does:**
+
+1. Write adversarial review prompt to `orchestration/{slug}/phase-6-review-prompt.md`
+2. The prompt must include:
+   - Green Team framing (independent reviewer, no prior relationship)
+   - Anti-gaming rules (automated detection will reject rubber-stamps)
+   - Minimum requirements: ≥3 real issues, ≥2 dimensions below 9, specific «» quotes
+   - The 14-dimension scoring protocol from `review-content-v4.md`
+   - Tier-specific guidance from `review-tiers/tier-{N}-{tier}.md`
+   - Specific areas to scrutinize (historical claims, etymologies, IPA stress)
+   - References to content files at their canonical paths (NOT orchestration/)
+3. Send to Gemini with a **NEW task-id** (e.g., `green-review-{slug}`, NOT `orchestrate-{slug}`):
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+  "Read and execute the review at $(pwd)/curriculum/l2-uk-en/{track}/orchestration/{slug}/phase-6-review-prompt.md" \
+  --task-id green-review-{slug} \
+  --stdout-only \
+  --model {model} \
+  > /tmp/gemini-output-green-review-{slug}.txt 2>&1
+```
+
+4. Extract `===REVIEW_START===` ... `===REVIEW_END===` (use LAST block — template echo pattern)
+5. Validate review against anti-gaming checks:
+   - Not all dimensions ≥ 9/10
+   - At least 1 real issue with «» quoted Ukrainian
+   - No gaming language ("ensuring a high score", etc.)
+   - **If rubber-stamp detected: retry with stronger adversarial prompt (max 2 retries)**
+6. Write passing review to `review/{slug}-review.md`
+7. Re-run audit to verify review gate passes:
+
+```bash
+scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
+```
+
+**Team identity:**
+- 💙 Blue = Claude (architect, quality gate)
+- 💛 Yellow/Gold = Gemini builder session (Phases 0-3)
+- 💚 Green = Gemini reviewer session (Phase 6 — NEW session, no memory of building)
+
+**Key rules:**
+- NEVER use the same task-id as the build phases
+- The review prompt must NOT reference orchestration artifacts or mention that Gemini built it
+- If review is rubber-stamped after 2 retries: save as-is and flag for human review
+- Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
+
+### Phase 6b: Fix Review Findings (Claude)
+
+**After Phase 6 review passes, Claude fixes actionable issues found by the Green Team.**
+
+This step ensures review findings don't just sit in a report — they get applied to the content.
+
+**What Claude does:**
+
+1. Read the review file at `review/{slug}-review.md`
+2. For each issue in the "Issues Found" section, classify:
+   - **Quick fix** (single word/sentence change): Fix directly in the content file
+   - **Gemini fix** (needs new content, >50 words): Send to Gemini as a fix prompt
+   - **Skip** (requires major structural rewrite): Document why and skip
+3. Apply all quick fixes directly to `.md` and/or activities `.yaml`
+4. For Gemini fixes: assemble a fix prompt, send to Gemini (use builder task-id), apply changes
+5. Re-run audit to verify all gates still pass after fixes:
+
+```bash
+scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
+```
+
+6. Update the review file's "Issues fixed" count
+7. If audit fails after fixes: revert and report to human
+
+**Classification guidelines:**
+- Word substitutions, added sentences, expanded examples → Quick fix (Claude)
+- New paragraphs, alternative explanations, structural changes → Gemini fix
+- "Vary the presentation style across sections" → Skip (too broad)
+
+**Key rule:** Fixing review findings is NOT optional. Every actionable issue must be addressed before the module is marked complete. Only "Skip" items (requiring major rewrites) can be deferred.
+
 ---
 
 ## Sending to Gemini
@@ -311,6 +396,8 @@ After each module:
   Phase 3 (Activities):  ✅ {activity_count} activities, {vocab_count} vocab items
   Phase 4 (Audit):       ✅ All gates PASS
   Phase 5 (MDX):         ✅ Generated
+  Phase 6 (Review):      ✅ Green Team review — {overall_score}/10 ({issue_count} issues found)
+  Phase 6b (Fixes):      ✅ {fixed_count}/{fixable_count} review issues fixed ({skipped_count} skipped)
 
   Archive comparison:
     Words:     {old_words} → {new_words} ({delta})
