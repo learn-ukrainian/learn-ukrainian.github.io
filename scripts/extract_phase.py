@@ -27,7 +27,34 @@ from pathlib import Path
 # Add project root so we can import gemini_output
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import yaml
+
 from gemini_output import PHASE_TAGS, extract_delimited, validate_output
+
+# Tags whose content should be valid YAML (bare list at root)
+YAML_TAGS = {"ACTIVITIES", "VOCABULARY"}
+
+
+def _strip_code_fences(text: str) -> str:
+    """Remove ```yaml ... ``` wrappers that Gemini sometimes adds."""
+    import re
+    # Remove opening ```yaml or ``` at start of content
+    text = re.sub(r'^```(?:ya?ml)?\s*\n', '', text)
+    # Remove closing ``` at end
+    text = re.sub(r'\n```\s*$', '', text)
+    return text
+
+
+def _validate_yaml(text: str, tag: str) -> str | None:
+    """Try to parse YAML text, return error string or None if valid."""
+    try:
+        yaml.safe_load(text)
+        return None
+    except yaml.YAMLError as e:
+        if hasattr(e, 'problem_mark'):
+            mark = e.problem_mark
+            return f"line {mark.line + 1}, col {mark.column + 1}: {e.problem}"
+        return str(e)
 
 
 def extract_friction(text: str) -> str | None:
@@ -98,17 +125,41 @@ def main() -> int:
     result = validate_output(raw_text, expected_tags)
 
     # Extract and write each tag
+    yaml_errors: list[str] = []
     for tag in expected_tags:
         content = extract_delimited(raw_text, tag)
         if content:
+            # Strip code fences that Gemini sometimes wraps around YAML
+            cleaned = content
+            if tag in YAML_TAGS:
+                cleaned = _strip_code_fences(content)
+
             # Determine output filename based on phase
+            ext = ".yaml" if tag in YAML_TAGS else ".md"
             if args.phase is not None:
-                out_file = args.output_dir / f"phase-{args.phase}-{tag.lower()}.md"
+                out_file = args.output_dir / f"phase-{args.phase}-{tag.lower()}{ext}"
             else:
-                out_file = args.output_dir / f"{tag.lower()}.md"
-            out_file.write_text(content + "\n", encoding="utf-8")
-            lines = content.count("\n") + 1
+                out_file = args.output_dir / f"{tag.lower()}{ext}"
+            out_file.write_text(cleaned + "\n", encoding="utf-8")
+            lines = cleaned.count("\n") + 1
             print(f"  ✅ {tag}: {lines} lines → {out_file.name}")
+
+            # YAML validation for activity/vocabulary tags
+            if tag in YAML_TAGS:
+                err = _validate_yaml(cleaned, tag)
+                if err:
+                    yaml_errors.append(err)
+                    print(f"  ⚠️  {tag}: YAML PARSE ERROR — {err}")
+                else:
+                    data = yaml.safe_load(cleaned)
+                    if isinstance(data, list):
+                        print(f"     ✅ Valid YAML: {len(data)} items")
+                    elif isinstance(data, dict) and len(data) == 1:
+                        # Gemini wrapped in a key like `items:` — warn
+                        key = list(data.keys())[0]
+                        print(f"     ⚠️  YAML wrapped in '{key}:' — should be bare list")
+                    else:
+                        print(f"     ℹ️  YAML type: {type(data).__name__}")
         elif tag in result["truncated"]:
             print(f"  ⚠️  {tag}: TRUNCATED (START found, no END)")
         else:
@@ -122,15 +173,20 @@ def main() -> int:
         print(f"  📋 FRICTION: → {friction_file.name}")
 
     # Summary
-    if result["valid"]:
+    if result["valid"] and not yaml_errors:
         print(f"\n✅ All {len(expected_tags)} tag(s) extracted successfully.")
         return 0
     else:
-        missing = result["missing"]
-        truncated = result["truncated"]
-        print(f"\n❌ Missing tags: {missing}")
-        if truncated:
-            print(f"   Truncated (START without END): {truncated}")
+        if not result["valid"]:
+            missing = result["missing"]
+            truncated = result["truncated"]
+            print(f"\n❌ Missing tags: {missing}")
+            if truncated:
+                print(f"   Truncated (START without END): {truncated}")
+        if yaml_errors:
+            print(f"\n⚠️  YAML validation errors ({len(yaml_errors)}):")
+            for err in yaml_errors:
+                print(f"   • {err}")
         return 1
 
 

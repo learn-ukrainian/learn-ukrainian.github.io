@@ -7,16 +7,16 @@ title: Велосипед та водні види
 subtitle: Cycling and Water Sports
 content_outline:
 - section: Огляд
-  words: 100
+  words: 133
   points:
   - Цілі модуля
 - section: Вступ
-  words: 376
+  words: 501
   points:
   - Велосипед як транспорт і хобі
   - Водні види спорту в Україні
 - section: Інтеграція
-  words: 1237
+  words: 1649
   points:
   - Велодоріжки у великих містах
   - Прокат велосипедів (Nextbike та інші)
@@ -28,20 +28,20 @@ content_outline:
   - Українські змагання
   - Правила безпеки на воді і дорозі
 - section: Практика
-  words: 190
+  words: 253
   points:
   - Ключові концепції
 - section: Продукція
-  words: 741
+  words: 988
   points:
   - Діалоги про велосипед та водні види спорту
 - section: Підсумок — Активне літо
-  words: 238
+  words: 317
   points:
   - Як спланувати активний відпочинок
 - section: Потрібно більше практики?
-  words: 118
-word_target: 3000
+  words: 159
+word_target: 4000
 vocabulary_hints:
   required:
   - велосипед (bicycle)

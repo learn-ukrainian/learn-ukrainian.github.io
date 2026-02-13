@@ -7,19 +7,19 @@ title: 'Українські регіони: Південь'
 subtitle: Southern Ukraine - Black Sea Coast and Steppe Heritage
 content_outline:
 - section: 'Вступ — Південь: Вікно у світ'
-  words: 288
+  words: 384
   points:
   - Чорноморське узбережжя України
   - Степ і море як формотворчі елементи
 - section: Сучасність
-  words: 768
+  words: 1024
   points:
   - Одеса — перлина моря
   - Заснування міста (1794)
   - Одеський гумор і менталітет
   - Багатонаціональна спадщина
 - section: Історія та культура
-  words: 1344
+  words: 1792
   points:
   - Миколаїв і Херсон — міста-кораблі
   - Суднобудівна історія
@@ -27,15 +27,15 @@ content_outline:
   - Депортація 1944 року
   - Курорти та туризм
 - section: Практика
-  words: 384
+  words: 512
   points:
   - Ключові концепції
   - Закріплення лексики
 - section: Підсумок — Південь повернеться
-  words: 216
+  words: 288
   points:
   - Деокупація як національна мета
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - Одеса (Odesa)

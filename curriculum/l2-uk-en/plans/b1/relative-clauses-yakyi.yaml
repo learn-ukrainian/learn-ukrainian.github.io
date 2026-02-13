@@ -7,23 +7,23 @@ title: 'Підрядні означальні: який'
 subtitle: Relative Clauses with який
 content_outline:
 - section: Тест
-  words: 279
+  words: 372
   points: '[]'
 - section: Теорія
-  words: 181
+  words: 241
   points:
   - Принцип узгодження
   - Повна парадигма який у всіх відмінках
 - section: Поглиблення
-  words: 1205
+  words: 1607
   points:
   - Який у кожному відмінку з прикладами
   - Типові помилки та як їх уникнути
 - section: Практика
-  words: 100
+  words: 133
   points: '[]'
 - section: Діалоги
-  words: 1092
+  words: 1456
   points:
   - 'Діалог 1: Про нового колегу'
   - 'Діалог 2: Про подорож'
@@ -31,12 +31,12 @@ content_outline:
   - 'Діалог 4: Про навчання'
   - 'Діалог 5: Про ресторан'
 - section: Потрібно більше практики?
-  words: 143
+  words: 191
   points:
   - Інтеграція знань
   - Реальне застосування
   - Онлайн-ресурси
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - який (which/that/who)

@@ -7,19 +7,19 @@ title: 'Українські регіони: Схід'
 subtitle: Eastern Ukraine - Industrial Heritage and Academic Excellence
 content_outline:
 - section: 'Вступ — Схід: Промислове серце'
-  words: 290
+  words: 387
   points:
   - Географія Східної України
   - Від степу до мегаполісів
 - section: Сучасність
-  words: 773
+  words: 1031
   points:
   - Харків — перша столиця
   - Університетське місто з 1805 року
   - Харків як столиця УРСР (1919-1934)
   - Сучасний Харків під обстрілами
 - section: Історія та культура
-  words: 1450
+  words: 1933
   points:
   - Слобожанщина — земля вільних
   - Історія заселення козаками
@@ -27,15 +27,15 @@ content_outline:
   - Робітнича культура та ідентичність
   - Стійкість Сходу
 - section: Практика
-  words: 387
+  words: 516
   points:
   - Ключові концепції
   - Порівняльні таблиці
 - section: Підсумок — Схід це Україна
-  words: 100
+  words: 133
   points:
   - Єдність попри випробування
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - Харків (Kharkiv)

@@ -549,7 +549,7 @@ LEVEL_CONFIG = {
     },
     'B1-bridge': {
         # Bridge modules (M01-05) teach grammar metalanguage
-        'target_words': 1200,  # Lower target for metalanguage teaching
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 14,
         'min_types_unique': 5,
@@ -560,7 +560,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'match-up', 'fill-in', 'translate'}
     },
     'B1-grammar': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -572,7 +572,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
     'B1-vocab': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -584,7 +584,7 @@ LEVEL_CONFIG = {
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
     'B1': {
-        'target_words': 3000,  # Updated Jan 2026 - longer modules preferred
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -596,7 +596,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'B1-culture': {
-        'target_words': 1500,  # Cultural modules focus on authentic content
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -608,7 +608,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'match-up', 'reading', 'quiz'}  # Reading-focused
     },
     'B1-skills': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -620,7 +620,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
     },
     'B1-checkpoint': {
-        'target_words': 1200,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -631,7 +631,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction'}
     },
     'B1-capstone': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 5,  # Reduced from 12 (Jan 2026) - capstone has 5-8 traditional activities + 5 tasks
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -643,7 +643,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
     'B2-grammar': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -655,7 +655,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
     'B2-vocab': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -667,7 +667,7 @@ LEVEL_CONFIG = {
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
     'B2': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -697,7 +697,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 250
     },
     'B2-biography': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -709,7 +709,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
     },
     'B2-checkpoint': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 15,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -723,7 +723,7 @@ LEVEL_CONFIG = {
     'B2-skills': {
         # Communication skills modules (M85-94: B2.4 phase)
         # Focus on practical language use in professional/real-world contexts
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 14,  # Higher than base B2 (practical scenarios need variety)
         'min_items_per_activity': 14,
         'min_types_unique': 5,  # Variety important for skills practice
@@ -737,7 +737,7 @@ LEVEL_CONFIG = {
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Increased from 12 (Jan 2026) for consistency
         'min_types_unique': 4,
@@ -749,7 +749,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
     },
     'B2-capstone': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Kept at 14 (Jan 2026)
         'min_types_unique': 4,
@@ -763,7 +763,7 @@ LEVEL_CONFIG = {
     'B2-professional': {
         # B2-PRO Professional Track (M01-40) - Seminar style
         # ESP (English for Specific Purposes adapted for Ukrainian)
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -778,7 +778,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 300
     },
     'C1': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -790,7 +790,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'C1-academic': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -804,7 +804,7 @@ LEVEL_CONFIG = {
     'C1-professional': {
         # C1-PRO Professional Mastery Track (M01-50) - Seminar style
         # ESP + CLIL approach for executives, academics, specialists
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -819,7 +819,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 400
     },
     'C1-stylistics': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -831,7 +831,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'error-correction', 'cloze'}
     },
     'C1-folk': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -883,7 +883,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 500
     },
     'C1-literature': {
-        'target_words': 3500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -895,7 +895,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'quiz'}
     },
     'C1-checkpoint': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 14,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -907,7 +907,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'C1-capstone': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -920,7 +920,7 @@ LEVEL_CONFIG = {
     },
     'C2': {
         # C2 Track: Seminar style - production-focused
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -936,7 +936,7 @@ LEVEL_CONFIG = {
     },
     'C2-stylistic': {
         # C2 Stylistic Track: Seminar style - style mastery
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -952,7 +952,7 @@ LEVEL_CONFIG = {
     },
     'C2-literary': {
         # C2 Literary Track: Seminar style - literary production
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -968,7 +968,7 @@ LEVEL_CONFIG = {
     },
     'C2-professional': {
         # C2 Professional Track: Seminar style - professional mastery
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -983,7 +983,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 500
     },
     'C2-checkpoint': {
-        'target_words': 2000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -994,7 +994,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'C2-capstone': {
-        'target_words': 2000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -1089,8 +1089,8 @@ LEVEL_CONFIG = {
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
     },
     'LIT-HUMOR': {
-        # Humor/satire: shorter modules, lighter touch
-        'target_words': 3500,
+        # Humor/satire
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1105,8 +1105,8 @@ LEVEL_CONFIG = {
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
     },
     'LIT-JUVENILE': {
-        # Children's/YA lit: slightly shorter, accessible
-        'target_words': 3500,
+        # Children's/YA lit
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1175,7 +1175,7 @@ LEVEL_CONFIG = {
         # B2-HIST Track: Transitional seminar style (B2 level)
         # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
         # Easier than LIT: shorter essays, some factual checks allowed
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1195,7 +1195,7 @@ LEVEL_CONFIG = {
         # C1-HIST Track: Academic seminar style (C1 level)
         # Activities: reading + essay-response (full) + critical-analysis + comparative-study
         # Academic rigor: longer essays, source criticism, historiographical analysis
-        'target_words': 3500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,

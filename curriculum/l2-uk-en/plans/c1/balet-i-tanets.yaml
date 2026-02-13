@@ -7,13 +7,13 @@ title: Балет і танець
 subtitle: Ballet and Dance
 content_outline:
 - section: Розминка — Танець як мистецтво
-  words: 700
+  words: 933
   points:
   - Серж Лифар — українець, що змінив світовий балет
   - Від народного танцю до академічного балету
   - Сучасний танець в Україні
 - section: Content Areas
-  words: 1250
+  words: 1667
   points:
   - '**Серж Лифар** (1904-1986): Kyiv-born, Paris Opera director (1929-1958), transformed
     20th century ballet'
@@ -21,13 +21,13 @@ content_outline:
   - 'Folk dance: Гопак, Аркан, ансамблі (Вірський)'
   - 'Contemporary: Kyiv Modern Ballet, сучасний танець'
 - section: Практика — танцювальний дискурс
-  words: 1050
+  words: 1400
   points:
   - Написати біографію Сержа Лифаря
   - Порівняти гопак як народний танець та сценічну версію Вірського
   - Описати виставу Kyiv Modern Ballet
   - Обговорити зв'язок між народним та академічним танцем
-word_target: 3000
+word_target: 4000
 focus: fine-arts
 pedagogy: CBI
 objectives:

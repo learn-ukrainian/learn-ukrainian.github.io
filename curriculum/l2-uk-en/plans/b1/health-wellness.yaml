@@ -7,22 +7,22 @@ title: Здоров'я та самопочуття
 subtitle: Health and Wellness
 content_outline:
 - section: Вступ
-  words: 344
+  words: 459
   points:
   - Beyond basic illness words
   - Wellness concept
   - Ukrainian health context
 - section: Читання
-  words: 1125
+  words: 1500
   points:
   - Health texts
   - Wellness advice
 - section: Діалоги
-  words: 1531
+  words: 2041
   points:
   - Discuss wellness topics
   - Give health advice
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - здоров'я (health)

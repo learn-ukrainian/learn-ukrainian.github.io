@@ -1,0 +1,65 @@
+---
+module: b1-01
+level: B1
+slug: 01-how-to-talk-about-grammar
+version: '1.0'
+id: b1-01
+naturalness:
+  score: 9
+  status: PASS
+duration: 75
+transliteration: none
+tags:
+- grammar
+- metalanguage
+- terminology
+- bridge
+word_target: 4000
+immersion: 65%
+content_outline:
+- section: "Вступ: сила метамови"
+  words: 550
+  points:
+  - Benefits of learning grammar terminology in target language
+  - Preparation for full immersion in B1.1+
+  - Key structural terms (слово, речення, частина мови, граматика, правило, приклад)
+- section: "Частини мови: самостійні категорії"
+  words: 750
+  points:
+  - іменник, дієслово, прикметник, прислівник, займенник, числівник
+  - Each POS gets its own H3 with definition, questions, 2+ examples, usage note
+  - Equal depth for all 6 — no afterthoughts
+- section: "Частини мови: службові слова"
+  words: 600
+  points:
+  - сполучник, прийменник, частка, вигук
+  - Each gets its own H3 with role in sentence structure
+  - Equal depth for all 4 — same pattern as самостійні
+- section: "Відмінки: сім ключів"
+  words: 800
+  points:
+  - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
+  - Each case gets its own H3 with question, main role, 2+ examples
+  - Equal depth with Додаткова інформація for every case
+  - На Різдво Дід Загубив Горішки Між Ковбасками mnemonic (or verified equivalent)
+  - Etymology or mnemonic aids where helpful
+- section: "Граматичні категорії та будова слова"
+  words: 650
+  points:
+  - морфеміка (корінь, суфікс тощо)
+  - рід, число, особа, час, вид
+  - Syntactic roles (підмет, присудок, додаток, означення, обставина)
+- section: "Практика: читаємо граматику українською"
+  words: 400
+  points:
+  - Simple grammar explanations in Ukrainian
+  - Recognizing patterns in textbook language
+  - Cultural anchoring (Шевченко, Леся Українка, Франко quotes)
+- section: "Підсумок і самоперевірка"
+  words: 250
+  points:
+  - Key terms review
+  - Readiness check for M02
+  - Self-assessment questions (6+)
+build:
+  last_modified: '2026-02-11'

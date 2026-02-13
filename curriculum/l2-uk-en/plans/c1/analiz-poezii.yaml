@@ -7,13 +7,13 @@ title: Аналіз поезії
 subtitle: Analysis of Poetry
 content_outline:
 - section: Розминка — Інструменти аналізу
-  words: 700
+  words: 933
   points:
   - Версифікація — ямб, хорей, дактиль
   - Рими — парна, перехресна, кільцева
   - Звукопис — алітерація, асонанс
 - section: Content Areas
-  words: 1250
+  words: 1667
   points:
   - 'Версифікація: розмір, ритм, стопа'
   - 'Рими: парна, перехресна, кільцева'
@@ -21,13 +21,13 @@ content_outline:
   - 'Звукопис: алітерація, асонанс'
   - 'Практичний аналіз: step-by-step method'
 - section: Практика — філологічний аналіз
-  words: 1050
+  words: 1400
   points:
   - Визначити розмір вірша Шевченка — стопа, ритм
   - Проаналізувати римування у вірші Франка
   - Виявити звукопис у ліриці Лесі Українки
   - Написати повний аналіз вірша за методикою
-word_target: 3000
+word_target: 4000
 focus: literature
 pedagogy: Literary Analysis
 objectives:

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Batch Monitor v2 — Blue Team</title>
+  <title>Batch Monitor v2.3 — Blue Team</title>
   <style>
     /* ===== DESIGN TOKENS ===== */
     :root {
@@ -363,6 +363,8 @@
     .state-tag.BLOCKED { background: var(--bg-overlay); color: var(--text-muted); }
     .state-tag.PENDING { background: var(--bg-overlay); color: var(--text-dim); }
     .state-tag.HAS_FAILURES { background: var(--red-dim); color: #fecaca; }
+    .state-tag.BUILDING { background: var(--amber-dim); color: #fde68a; }
+    .state-tag.IN_PROGRESS { background: var(--blue-dim); color: #93c5fd; }
 
     .track-pct {
       font-size: 28px;
@@ -1368,6 +1370,7 @@
       letter-spacing: 0.3px;
     }
     .live-pill.pass { background: var(--green-dim); color: var(--green); }
+    .live-pill.stale-pass { background: var(--amber-dim); color: var(--amber); }
     .live-pill.built { background: var(--blue-dim); color: var(--blue); }
     .live-pill.partial { background: var(--amber-dim); color: var(--amber); }
     .live-pill.skeleton { background: rgba(85,107,142,0.2); color: var(--text-muted); }
@@ -1383,6 +1386,7 @@
     }
     .track-live-bar .seg { height: 100%; }
     .track-live-bar .seg-pass { background: var(--green); }
+    .track-live-bar .seg-stale-pass { background: var(--amber); opacity: 0.7; }
     .track-live-bar .seg-built { background: var(--blue); }
     .track-live-bar .seg-partial { background: var(--amber); }
     .track-live-bar .seg-skeleton { background: var(--text-dim); opacity: 0.3; }
@@ -1759,12 +1763,12 @@ const S = {
   dispatcherState: null,  // dispatcher_state.json
   failureQueue: [],       // failure_queue.json entries
   apiUsage: {},
-  metrics: null,          // /api/batch/metrics
-  health: null,           // /api/batch/health
-  history: null,          // /api/batch/history
-  liveStatus: null,       // /api/batch/live-status (filesystem ground truth)
-  freshness: null,        // /api/batch/freshness (data age info)
-  resolvedFailures: null, // /api/batch/resolved-failures
+  metrics: null,          // /api/blue/metrics
+  health: null,           // /api/blue/health
+  history: null,          // /api/blue/history
+  liveStatus: null,       // /api/blue/live-status (filesystem ground truth)
+  freshness: null,        // /api/blue/freshness (data age info)
+  resolvedFailures: null, // deprecated — kept for render compat
   logs: [],
   prevCompletedCounts: {},
   prevFailedCounts: {},
@@ -1802,7 +1806,7 @@ async function apiFetch(path, opts) {
 }
 
 async function detectApi() {
-  const health = await apiFetch('/api/batch/health');
+  const health = await apiFetch('/api/blue/health');
   S.apiMode = !!health;
   updateBadges();
   if (!S.apiMode) {
@@ -1839,45 +1843,55 @@ async function loadApiUsage() {
 }
 
 async function loadMetrics() {
-  if (S.apiMode) return apiFetch('/api/batch/metrics');
+  if (S.apiMode) return apiFetch('/api/blue/metrics');
   return null;
 }
 
 async function loadHealth() {
-  if (S.apiMode) return apiFetch('/api/batch/health');
+  if (S.apiMode) return apiFetch('/api/blue/health');
   return null;
 }
 
 async function loadHistory() {
-  if (S.apiMode) return apiFetch('/api/batch/history');
+  if (S.apiMode) return apiFetch('/api/blue/history');
   return null;
 }
 
 async function loadLiveStatus() {
-  if (S.apiMode) return apiFetch('/api/batch/live-status');
+  if (S.apiMode) return apiFetch('/api/blue/live-status');
   return null;
 }
 
 async function loadFreshness() {
-  if (S.apiMode) return apiFetch('/api/batch/freshness');
-  return null;
-}
-
-async function loadResolvedFailures() {
-  if (S.apiMode) return apiFetch('/api/batch/resolved-failures');
+  if (S.apiMode) return apiFetch('/api/blue/freshness');
   return null;
 }
 
 // ========== HELPERS ==========
 function getTrackProgress(track) {
-  const cp = S.checkpoints[track] || { completed: [], failed: [] };
   const dt = S.dispatcherState?.tracks?.[track];
+  const live = S.liveStatus?.[track];
+  const total = dt?.total || TRACK_TOTALS[track] || 0;
+
+  // LIVE STATUS is ground truth — filesystem scan, not stale checkpoints
+  if (live && live.module_count > 0) {
+    const pass = (live.states.pass || 0) + (live.states.stale_pass || 0);
+    const built = live.states.built || 0;
+    const partial = live.states.partial || 0;
+    const completed = pass;  // only audit-passing modules count
+    const inProgress = built + partial;
+    const pending = Math.max(0, total - completed - inProgress);
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return { completed, inProgress, failed: 0, total, pending, pct, source: 'live' };
+  }
+
+  // Fallback: checkpoints (may be stale)
+  const cp = S.checkpoints[track] || { completed: [], failed: [] };
   const completed = cp.completed?.length || 0;
   const failed = cp.failed?.length || 0;
-  const total = dt?.total || TRACK_TOTALS[track] || Math.max(completed + failed, 0);
   const pending = Math.max(0, total - completed - failed);
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-  return { completed, failed, total, pending, pct };
+  return { completed, inProgress: 0, failed, total, pending, pct, source: 'checkpoint' };
 }
 
 function inferTrack(entry) {
@@ -1892,7 +1906,7 @@ function getFailuresForTrack(track) {
 
 // ========== DATA REFRESH ==========
 async function refreshAll() {
-  const [cps, disp, failures, usage, metrics, health, history, liveStatus, freshness, resolvedFailures] = await Promise.all([
+  const [cps, disp, failures, usage, metrics, health, history, liveStatus, freshness] = await Promise.all([
     loadCheckpoints(),
     loadDispatcher(),
     loadFailureQueue(),
@@ -1902,7 +1916,6 @@ async function refreshAll() {
     loadHistory(),
     loadLiveStatus(),
     loadFreshness(),
-    loadResolvedFailures(),
   ]);
 
   for (const [track, cp] of Object.entries(cps)) {
@@ -1917,7 +1930,6 @@ async function refreshAll() {
   if (history) S.history = history;
   if (liveStatus) S.liveStatus = liveStatus;
   if (freshness) S.freshness = freshness;
-  if (resolvedFailures) S.resolvedFailures = resolvedFailures;
 
   renderAll();
   persistSettings();
@@ -1976,24 +1988,20 @@ function renderAll() {
 
 // ========== COMMAND STRIP ==========
 function renderCommandStrip() {
-  const tracks = S.dispatcherState?.tracks || {};
-  let totalCompleted = 0, totalModules = 0, tracksDone = 0, tracksTotal = 0;
+  // Use all known tracks (from dispatcher, live status, or TRACKS constant)
+  const allTracks = new Set([
+    ...Object.keys(S.dispatcherState?.tracks || {}),
+    ...Object.keys(S.liveStatus || {}),
+    ...TRACKS,
+  ]);
+  let totalCompleted = 0, totalInProgress = 0, totalModules = 0, tracksDone = 0;
 
-  for (const track of Object.keys(tracks)) {
-    tracksTotal++;
-    const { completed, total, pct } = getTrackProgress(track);
+  for (const track of allTracks) {
+    const { completed, inProgress, total, pct } = getTrackProgress(track);
     totalCompleted += completed;
+    totalInProgress += (inProgress || 0);
     totalModules += total;
     if (pct === 100) tracksDone++;
-  }
-
-  // Also count tracks with checkpoints not in dispatcher
-  for (const track of Object.keys(S.checkpoints)) {
-    if (!tracks[track]) {
-      const { completed, total } = getTrackProgress(track);
-      totalCompleted += completed;
-      totalModules += total;
-    }
   }
 
   const pct = totalModules > 0 ? Math.round((totalCompleted / totalModules) * 100) : 0;
@@ -2001,10 +2009,14 @@ function renderCommandStrip() {
   pctEl.textContent = `${pct}%`;
   pctEl.className = `cmd-pct ${pct >= 80 ? 'high' : pct >= 40 ? 'mid' : 'low'}`;
 
-  document.getElementById('cmd-passed').textContent = totalCompleted.toLocaleString();
+  // Show "passed (+ N building)" for clarity
+  const passedLabel = totalInProgress > 0
+    ? `${totalCompleted} (+${totalInProgress} building)`
+    : `${totalCompleted}`;
+  document.getElementById('cmd-passed').textContent = passedLabel;
   document.getElementById('cmd-total').textContent = totalModules.toLocaleString();
   document.getElementById('cmd-tracks-done').textContent = tracksDone;
-  document.getElementById('cmd-tracks-total').textContent = tracksTotal || Object.keys(S.checkpoints).length;
+  document.getElementById('cmd-tracks-total').textContent = allTracks.size;
 
   const bar = document.getElementById('cmd-bar');
   bar.style.width = `${pct}%`;
@@ -2040,7 +2052,7 @@ function renderCommandStrip() {
   if (S.dispatcherRunning) {
     sysEl.className = 'system-status running';
     sysEl.textContent = 'Running';
-  } else if (tracksDone === tracksTotal && tracksTotal > 0) {
+  } else if (tracksDone === allTracks.size && allTracks.size > 0) {
     sysEl.className = 'system-status complete';
     sysEl.textContent = 'Complete';
   } else {
@@ -2059,14 +2071,16 @@ function renderTrackGrid() {
     const hasCp = !!S.checkpoints[track];
     const hasData = hasCp || !!dTrack;
 
-    const { completed, failed, total, pending, pct } = getTrackProgress(track);
+    const { completed, inProgress, failed, total, pending, pct, source } = getTrackProgress(track);
     const pctClass = pct >= 80 ? 'high' : pct >= 40 ? 'mid' : pct > 0 ? 'low' : 'none';
 
-    // Infer display state
-    let dState = dTrack?.state || '';
-    if (hasCp && pct === 100 && failed === 0) dState = 'COMPLETE';
-    else if (hasCp && failed > 0) dState = 'HAS_FAILURES';
-    else if (hasCp && completed > 0 && (dState === 'ELIGIBLE' || !dState)) dState = 'ELIGIBLE';
+    // Infer display state from live data
+    let dState = '';
+    if (pct === 100) dState = 'COMPLETE';
+    else if (inProgress > 0) dState = 'BUILDING';
+    else if (completed > 0) dState = 'IN_PROGRESS';
+    else if (failed > 0) dState = 'HAS_FAILURES';
+    else dState = dTrack?.state || '';
 
     // Track failures badge
     const trackFailures = getFailuresForTrack(track);
@@ -2086,8 +2100,10 @@ function renderTrackGrid() {
     if (live && live.module_count > 0) {
       const st = live.states;
       const t = live.module_count;
-      liveHtml = `<div class="track-live-bar" title="Filesystem: ${st.pass} pass, ${st.built} built, ${st.partial} partial, ${st.skeleton} skeleton">
+      const sp = st.stale_pass || 0;
+      liveHtml = `<div class="track-live-bar" title="Filesystem: ${st.pass} pass, ${sp} stale-pass, ${st.built} built, ${st.partial} partial, ${st.skeleton} skeleton">
         ${st.pass > 0 ? `<div class="seg seg-pass" style="width:${(st.pass/t)*100}%"></div>` : ''}
+        ${sp > 0 ? `<div class="seg seg-stale-pass" style="width:${(sp/t)*100}%"></div>` : ''}
         ${st.built > 0 ? `<div class="seg seg-built" style="width:${(st.built/t)*100}%"></div>` : ''}
         ${st.partial > 0 ? `<div class="seg seg-partial" style="width:${(st.partial/t)*100}%"></div>` : ''}
         ${st.skeleton > 0 ? `<div class="seg seg-skeleton" style="width:${(st.skeleton/t)*100}%"></div>` : ''}
@@ -2106,9 +2122,7 @@ function renderTrackGrid() {
       </div>
       <div class="track-pct ${pctClass}">${hasData ? pct + '%' : '-'}</div>
       <div class="track-stats">
-        <span class="s-pass">${completed} done</span>
-        <span class="s-fail">${unresolvedFails > 0 ? unresolvedFails : failed} fail${resolvedCount > 0 ? ` <span class="resolved-badge">${resolvedCount} fixed</span>` : ''}</span>
-        <span class="s-new">${pending} pending</span>
+        <span class="s-pass">${completed}${inProgress > 0 ? ` <span style="color:var(--amber)">+${inProgress}</span>` : ''} / ${total}</span>
       </div>
       <div class="track-progress"><div class="track-progress-fill" style="width:${pct}%;background:${pct >= 80 ? 'var(--green)' : pct >= 40 ? 'var(--amber)' : 'var(--red)'}"></div></div>
       ${renderSparkline(track)}
@@ -2150,7 +2164,8 @@ function renderTrackDetail(track) {
 
   // Stats — include live status if available
   const live = getLiveTrackStatus(track);
-  const liveInfo = live ? ` <span class="live-pill built" title="Files on disk">${live.states.built + live.states.pass} built</span>` : '';
+  const liveBuilt = live ? (live.states.built || 0) + (live.states.pass || 0) + (live.states.stale_pass || 0) : 0;
+  const liveInfo = live && liveBuilt > 0 ? ` <span class="live-pill built" title="Files on disk (${live.states.pass || 0} fresh pass, ${live.states.stale_pass || 0} stale)">${liveBuilt} built</span>` : '';
   const resolvedInTrack = S.resolvedFailures?.resolved?.filter(r => r.inferred_track === track).length || 0;
 
   document.getElementById('detail-stats').innerHTML = `
@@ -2684,7 +2699,7 @@ let wsReconnect = null;
 function connectWS() {
   if (!S.apiMode) return;
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  try { ws = new WebSocket(`${proto}//${location.host}/ws/batch`); } catch { return; }
+  try { ws = new WebSocket(`${proto}//${location.host}/ws/batch`); } catch (e) { console.warn('[Blue] WS connect failed:', e.message); return; }
 
   ws.onopen = () => {
     S.wsConnected = true;
@@ -2705,7 +2720,7 @@ function connectWS() {
           document.getElementById('last-update').textContent = new Date().toLocaleTimeString() + ' (ws)';
         }
       }
-    } catch {}
+    } catch (e) { console.warn('[Blue] WS message parse error:', e.message); }
   };
 
   ws.onclose = () => {
@@ -3158,7 +3173,7 @@ async function init() {
   if (!hasApi) return;
 
   populateTrackDropdowns();
-  addLog('Batch Monitor v2.2 (Blue Team) — Orchestrated Rebuild Model', 'info');
+  addLog('Batch Monitor v2.3 (Blue Team) — Live Status + Freshness Tracking', 'info');
   addLog(`Mode: ${S.apiMode ? 'API (FastAPI)' : 'File fallback'}`, 'info');
 
   // Restore persisted UI state
@@ -3174,7 +3189,7 @@ async function init() {
       S.logSearch = saved.logSearch;
       document.getElementById('log-search').value = saved.logSearch;
     }
-  } catch {}
+  } catch (e) { console.warn('[Blue] init localStorage restore failed:', e); }
 
   await Promise.all([refreshAll(), checkDispatcher()]);
   connectWS();
@@ -3182,7 +3197,10 @@ async function init() {
   // Log initial checkpoint state
   const cpCount = Object.keys(S.checkpoints).length;
   const fqCount = S.failureQueue.length;
-  addLog(`Loaded ${cpCount} checkpoints, ${fqCount} failures in queue`, 'info');
+  const resolvedCount = S.resolvedFailures?.resolved?.length || 0;
+  const liveTrackCount = S.liveStatus ? Object.keys(S.liveStatus).length : 0;
+  addLog(`Loaded ${cpCount} checkpoints, ${fqCount} failures in queue${resolvedCount > 0 ? ` (${resolvedCount} resolved)` : ''}`, 'info');
+  if (liveTrackCount > 0) addLog(`Live scan: ${liveTrackCount} tracks with module data on disk`, 'info');
 
   // Restore selected track or auto-select first
   try {
@@ -3197,7 +3215,8 @@ async function init() {
         addLog(`Auto-selected: ${first}`, 'info');
       }
     }
-  } catch {
+  } catch (e) {
+    console.warn('[Blue] track restore failed:', e);
     const first = TRACKS.find(t => S.checkpoints[t]);
     if (first) selectTrack(first);
   }

@@ -7,7 +7,7 @@ title: 'Професійні звіти: Основи'
 subtitle: Basic report structure and writing
 content_outline:
 - section: Вступ
-  words: 197
+  words: 450
   points:
   - Роль професійних звітів у бізнесі та академічному середовищі
   - Відмінність звіту від листа - структура, об"єктивність, формальність
@@ -15,7 +15,7 @@ content_outline:
   - Цільова аудиторія звіту - керівництво, клієнти, партнери, регулятори
   - Перехід від електронної пошти (М85-86) до структурованої звітності
 - section: Імерсивна розповідь
-  words: 788
+  words: 1801
   subsections:
   - name: Структура базового звіту
     words: 450
@@ -51,7 +51,7 @@ content_outline:
     - 'Пріоритизація рекомендацій: термінові, важливі, довгострокові'
     - Уникайте нових даних у висновках
 - section: Аналіз
-  words: 525
+  words: 1200
   subsections:
   - name: Формальний регістр звітності
     words: 400
@@ -77,7 +77,7 @@ content_outline:
     - 'Точність vs округлення: коли наближені значення прийнятні'
     - Опис кореляцій та причинно-наслідкових зв'язків
 - section: Граматика в контексті
-  words: 197
+  words: 450
   subsections:
   - name: Безособові конструкції у звітах
     words: 225
@@ -94,7 +94,7 @@ content_outline:
     - 'Коли пасив доречний: фокус на об''єкті дослідження'
     - Баланс між активом та пасивом у тексті
 - section: Підсумок
-  words: 43
+  words: 100
   points:
   - 'Синтез навичок: від листування (М85-86) до структурованої звітності'
   - 'Ключові принципи звіту: структура, об''єктивність, формальність, візуалізація'
@@ -108,7 +108,7 @@ objectives:
 - Learner can use appropriate formal register for report writing
 - Learner can organize information logically in report format
 phase: B2.4 Communication Skills
-word_target: 1750
+word_target: 4000
 vocabulary_hints:
   required:
   - термін (term)

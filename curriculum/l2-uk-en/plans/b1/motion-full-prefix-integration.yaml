@@ -7,36 +7,36 @@ title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
 content_outline:
 - section: Тест
-  words: 254
+  words: 339
   points: '[]'
 - section: Пояснення
-  words: 1303
+  words: 1737
   points:
   - 1. Система просторових префіксів
   - '2. Аспект: Як префікси змінюють вид'
   - 3. Переносні (фігуральні) значення
   - Реальні приклади використання
 - section: Практика
-  words: 514
+  words: 685
   points:
   - Як обрати правильне слово? Алгоритм.
   - Типові помилки студентів
 - section: Діалоги
-  words: 473
+  words: 631
   points:
   - 'Діалог 1: Зустріч біля метро'
   - 'Діалог 2: Екскурсія замком'
   - 'Діалог 3: Загублений гаманець'
 - section: Підсумок
-  words: 244
+  words: 325
   points: '[]'
 - section: Потрібно більше практики?
-  words: 212
+  words: 283
   points:
   - Інтеграція знань
   - Реальне застосування
   - Онлайн-ресурси
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - при- (arrival)

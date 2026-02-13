@@ -118,6 +118,22 @@ Your review MUST contain:
 
 ---
 
+## REQUIRED SECTIONS (AUTOMATED VALIDATION)
+
+Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJECTION:
+
+| # | Required Header (exact) | What goes there |
+|---|------------------------|-----------------|
+| 1 | `## Scores` | 12-dimension score table |
+| 2 | `## Critical Issues Found` | ≥3 issues with «quoted Ukrainian» |
+| 3 | `## Verification Summary` | Counts: lines read, items checked, issues found |
+| 4 | `## Verdict` | PASS or FAIL with reasoning |
+
+**Do NOT rename these headers.** Do NOT use alternatives like "Conclusion" or "Assessment".
+**Do NOT skip `## Verification Summary`** — this is the #1 cause of review rejection.
+
+---
+
 ## OUTPUT FORMAT
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
@@ -143,7 +159,7 @@ Plan-Content Alignment: [PASS/FAIL]
 - Objectives: [status]
 ```
 
-## Scores
+## Scores    <!-- REQUIRED — rejection if missing -->
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
@@ -170,7 +186,7 @@ Plan-Content Alignment: [PASS/FAIL]
 - Activity errors: [CLEAN] or [list]
 - Beginner safety: X/5
 
-## Critical Issues Found
+## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
 
 ### Issue 1: {Category}
 - **Location**: Line {N} / Section "{name}"
@@ -212,7 +228,7 @@ Plan-Content Alignment: [PASS/FAIL]
 {Recalculate weighted overall with projected scores}
 ```
 
-## Verification Summary
+## Verification Summary    <!-- REQUIRED — rejection if missing -->
 
 - Content lines read: {X}
 - Activity items checked: {X}
@@ -220,7 +236,7 @@ Plan-Content Alignment: [PASS/FAIL]
 - IPA transcriptions checked: {X}
 - Issues found: {X}
 
-## Verdict
+## Verdict    <!-- REQUIRED — rejection if missing -->
 
 **PASS** or **FAIL**
 

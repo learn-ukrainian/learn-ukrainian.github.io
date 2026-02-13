@@ -90,6 +90,7 @@ MODULE_TYPE_TARGETS = {
         'questions': 5,
         'proverbs': 1,
         'visual': 3,
+        'tables': 2,
         'threshold': 95,
     },
     'vocabulary': {
@@ -176,6 +177,7 @@ MODULE_TYPE_TARGETS = {
         'realworld': 2,
         'questions': 4,
         'visual': 4,
+        'tables': 2,
         'threshold': 90,
     },
     'literature': {
@@ -224,9 +226,10 @@ MODULE_TYPE_WEIGHTS = {
         'cultural': 0.10,
         'realworld': 0.10,
         'questions': 0.05,
-        'proverbs': 0.05,
+        'proverbs': 0.03,
         'visual': 0.05,
-        'paragraph_var': 0.05,
+        'paragraph_var': 0.03,
+        'tables': 0.04,
     },
     'history': {
         'engagement': 0.15,
@@ -333,7 +336,8 @@ MODULE_TYPE_WEIGHTS = {
         'realworld': 0.10,
         'visual': 0.10,
         'variety': 0.10,
-        'paragraph_var': 0.10,
+        'paragraph_var': 0.05,
+        'tables': 0.05,
     },
 }
 
@@ -1022,21 +1026,22 @@ def count_resources(content: str) -> int:
 
 
 def count_visual_elements(content: str) -> int:
-    """Count visual elements (tables, callouts, boxes)."""
-    patterns = [
-        r'^\|[^|]+\|',  # Table rows
-        r'>\s*\[!',  # Callout boxes
-        r'```',  # Code blocks
-    ]
-    count = 0
-    for pattern in patterns:
-        matches = re.findall(pattern, content, re.MULTILINE)
-        count += len(matches)
-    # Tables count as 1 visual each (not per row)
-    table_markers = len(re.findall(r'^\|[-:| ]+\|', content, re.MULTILINE))
-    if table_markers > 0:
-        count = count - len(re.findall(r'^\|[^|]+\|', content, re.MULTILINE)) + table_markers
-    return count
+    """Count visual elements (callouts, code blocks, mermaid). Tables scored separately."""
+    callouts = len(re.findall(r'>\s*\[!', content, re.MULTILINE))
+    mermaid = len(re.findall(r'```mermaid', content))
+    code_fences = len(re.findall(r'```', content, re.MULTILINE))
+    code_blocks = max(0, (code_fences - mermaid * 2) // 2)
+    return callouts + code_blocks + mermaid
+
+
+def count_tables(content: str) -> int:
+    """Count distinct markdown tables (by separator rows)."""
+    return len(re.findall(r'^\|[-:| ]+\|', content, re.MULTILINE))
+
+
+def count_mermaid_diagrams(content: str) -> int:
+    """Count mermaid diagram blocks."""
+    return len(re.findall(r'```mermaid', content))
 
 
 def calculate_paragraph_variety(content: str) -> float:
@@ -1143,6 +1148,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
             'realworld': count_realworld(prose),
             'questions': count_questions(prose),
             'proverbs': count_proverbs(prose),
+            'tables': count_tables(prose),
         })
     elif module_type == 'vocabulary':
         raw.update({
@@ -1185,12 +1191,19 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
             'essays': count_essays(prose),
             'resources': count_resources(prose) + count_external_yaml_resources(file_path),
         })
+    elif module_type == 'bridge':
+        raw.update({
+            'examples': count_examples(prose),
+            'realworld': count_realworld(prose),
+            'questions': count_questions(prose),
+            'tables': count_tables(prose),
+        })
     elif module_type == 'checkpoint':
         # Use YAML activity types if provided (Preferred for YAML-First architecture)
         activity_type_count = 0
         if yaml_activity_types:
             activity_type_count = len(yaml_activity_types)
-        
+
         raw.update({
             'activity_types': activity_type_count,
             'review_sections': len(re.findall(r'^##\s*[^\n]+', prose, re.MULTILINE)),
@@ -1336,6 +1349,11 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
             flags.append('NO_EXAMPLES')
         if count_realworld(prose) == 0:
             flags.append('ABSTRACT_ONLY')
+
+    # Table check for grammar module types only (soft warning)
+    if module_type in ('grammar', 'bridge'):
+        if count_tables(prose) == 0:
+            flags.append('NO_TABLES')
 
     # Cultural anchor check (B1+ grammar/vocab/content types) - need 2+ (50% of target 3)
     if module_type in ('grammar', 'vocabulary', 'content', 'cultural'):

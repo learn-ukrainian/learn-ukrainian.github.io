@@ -7,15 +7,15 @@ title: 'Підрядні означальні: де, куди, звідки'
 subtitle: Place Relative Clauses
 content_outline:
 - section: Тест
-  words: 233
+  words: 311
   points: '[]'
 - section: Теорія
-  words: 427
+  words: 569
   points:
   - Три типи просторових відносин
   - Споріднені прислівники
 - section: Поглиблення
-  words: 1206
+  words: 1608
   points:
   - Де — статична локація
   - Куди — напрямок руху
@@ -23,10 +23,10 @@ content_outline:
   - Типові помилки та як їх уникнути
   - Невизначені та заперечні форми
 - section: Практика
-  words: 110
+  words: 147
   points: '[]'
 - section: Діалоги
-  words: 419
+  words: 559
   points:
   - 'Діалог 1: Про переїзд'
   - 'Діалог 2: Про подорож'
@@ -34,15 +34,15 @@ content_outline:
   - 'Діалог 4: Про навчання'
   - 'Діалог 5: Про походження'
 - section: Українське прислів'я
-  words: 396
+  words: 528
   points: '[]'
 - section: Потрібно більше практики?
-  words: 209
+  words: 278
   points:
   - Інтеграція знань
   - Реальне застосування
   - Онлайн-ресурси
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - де (where - location)

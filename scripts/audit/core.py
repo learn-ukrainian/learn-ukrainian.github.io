@@ -596,9 +596,13 @@ def load_yaml_meta(md_file_path: str) -> dict | None:
     """Load metadata from YAML sidecar if exists."""
     from pathlib import Path
     md_path = Path(md_file_path)
-    yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
+    bare = to_bare_slug(md_path.stem)
+    yaml_path = md_path.parent / 'meta' / (bare + '.yaml')
     if not yaml_path.exists():
-        return None
+        # Fallback: try with raw stem (legacy files without numeric prefix)
+        yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
+        if not yaml_path.exists():
+            return None
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
@@ -2009,6 +2013,8 @@ def audit_module(file_path: str) -> bool:
 
         # Detect track for academic context exemptions (Issue #557)
         track_for_translit = detect_track_from_path(file_path)
+        # Bridge modules (B1 M01-M05) use English glosses intentionally — skip transliteration check
+        is_bridge_module = (level_code == 'B1' and module_num <= 5)
         content_lines = content.split('\n')
         for line_idx, line in enumerate(content_lines):
             if '___' in line or '[___:' in line:
@@ -2023,6 +2029,9 @@ def audit_module(file_path: str) -> bool:
                     continue
                 # Allow if the line is in a legitimate academic context (Issue #557)
                 if is_academic_latin_context(line, content_lines, line_idx, track_for_translit):
+                    continue
+                # Allow in bridge modules where English glosses are intentional scaffolding
+                if is_bridge_module:
                     continue
                 print(f"❌ AUDIT FAILED: Transliteration detected: '{translit_pattern.group()}'. Remove Latin in parentheses.")
                 has_critical_failure = True

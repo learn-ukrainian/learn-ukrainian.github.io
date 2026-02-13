@@ -13,6 +13,23 @@
 
 ---
 
+## 2026-02-13 - Never Manually Fix Content
+
+**Mistake**: Directly edited M01 content file (added Давальний block, mnemonic, fixed heading) instead of sending fix prompts to Gemini through the workflow pipeline.
+
+**Correction**: User said "i told you to have it fixed with gemini" — the whole point of the workflow improvements is to eliminate manual fixes. Claude orchestrates, Gemini writes. Always.
+
+**Rule**:
+- NEVER edit `.md` content files or activity `.yaml` files directly
+- For content fixes: assemble a fix prompt → send to Gemini via `ask-gemini` → extract output → apply
+- Claude may only edit: plans, meta (structural fields), scripts, workflow docs, CLAUDE.md
+- The only content Claude writes is prompt files in `orchestration/`
+- If it feels faster to "just fix it manually" — that's the exact trap. The workflow must handle it.
+
+**Applied**:
+
+---
+
 ## 2026-02-11 - Team Naming Convention (Permanent)
 
 **Convention**: Ukrainian flag colors for inter-agent collaboration roles:

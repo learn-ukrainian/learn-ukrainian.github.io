@@ -1,0 +1,155 @@
+- term: дієслово
+  translation: verb
+  ipa: "[dʲijeˈsɫɔwɔ]"
+  pos: noun
+  grammatical_info: "n. o-declension"
+
+- term: іменник
+  translation: noun
+  ipa: "[iˈmɛnnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: прикметник
+  translation: adjective
+  ipa: "[prɪˈkmɛtnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: прислівник
+  translation: adverb
+  ipa: "[prɪˈsʲlʲiwnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: займенник
+  translation: pronoun
+  ipa: "[zajˈmɛnnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: числівник
+  translation: numeral
+  ipa: "[t͡ʃɪˈsʲlʲiwnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: називний відмінок
+  translation: nominative case
+  ipa: "[nazɪwˈnɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: родовий відмінок
+  translation: genitive case
+  ipa: "[rɔdɔˈwɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: давальний відмінок
+  translation: dative case
+  ipa: "[daˈwalʲnɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: знахідний відмінок
+  translation: accusative case
+  ipa: "[znaˈxʲidnɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: орудний відмінок
+  translation: instrumental case
+  ipa: "[ɔˈrudnɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: місцевий відмінок
+  translation: locative case
+  ipa: "[mʲisʲˈt͡sɛwɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: кличний відмінок
+  translation: vocative case
+  ipa: "[ˈklɪt͡ʃnɪj wʲidˈmʲinɔk]"
+  pos: noun
+  grammatical_info: "m. phrase"
+
+- term: сполучник
+  translation: conjunction
+  ipa: "[spɔˈɫut͡ʃnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: прийменник
+  translation: preposition
+  ipa: "[prɪˈjmɛnnɪk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: частка
+  translation: particle
+  ipa: "[ˈt͡ʃastka]"
+  pos: noun
+  grammatical_info: "f. a-declension"
+
+- term: вигук
+  translation: interjection
+  ipa: "[ˈwɪɦuk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: граматика
+  translation: grammar
+  ipa: "[ɦraˈmatɪka]"
+  pos: noun
+  grammatical_info: "f. a-declension"
+
+- term: правило
+  translation: rule
+  ipa: "[ˈprawɪɫɔ]"
+  pos: noun
+  grammatical_info: "n. o-declension"
+
+- term: приклад
+  translation: example
+  ipa: "[ˈprɪkɫad]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: метамова
+  translation: metalanguage
+  ipa: "[mɛtaˈmɔwa]"
+  pos: noun
+  grammatical_info: "f. a-declension"
+
+- term: підмет
+  translation: subject
+  ipa: "[ˈpʲidmɛt]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: присудок
+  translation: predicate
+  ipa: "[ˈprɪsudɔk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: додаток
+  translation: object
+  ipa: "[dɔˈdatɔk]"
+  pos: noun
+  grammatical_info: "m. o-declension"
+
+- term: означення
+  translation: attribute
+  ipa: "[ɔˈznat͡ʃɛnʲnʲa]"
+  pos: noun
+  grammatical_info: "n. o-declension (soft)"
+
+- term: обставина
+  translation: adverbial
+  ipa: "[ɔbˈstawɪna]"
+  pos: noun
+  grammatical_info: "f. a-declension"

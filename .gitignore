@@ -104,8 +104,9 @@ issue_*_body.md
 # Batch runner state (generated at runtime)
 batch_state/
 
-# Orchestration build artifacts (intermediate prompts, outputs, friction reports)
-**/orchestration/
+# Orchestration build artifacts — NOT gitignored during active rebuilds
+# so Gemini can read prompt files. Re-add '**/orchestration/' after track completion.
+# **/orchestration/
 
 # Archive of old content (pre-rebuild snapshots)
 _archive/

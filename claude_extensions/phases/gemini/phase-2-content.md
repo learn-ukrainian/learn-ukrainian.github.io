@@ -110,13 +110,39 @@ flowchart TD
 
 10. **Parallel Structure** — Matching sections in content_outline use identical internal pattern. If Section A = [intro → table → examples → callout], Section B = same.
 
-11. **Zero English Contamination (B1+)** — For immersion >= 85%: no parenthetical English, no code-switching, no English callout text. Only exception: vocabulary table "Переклад" column. Pre-output check: search for Latin characters outside proper nouns.
+11. **English Scaffolding by Immersion Level** — The plan's `immersion` field controls how much English is allowed:
+    - **Immersion ≥ 95%**: Zero English. No parenthetical translations, no code-switching. Only exception: vocabulary table "Переклад" column.
+    - **Immersion 85-94%**: English only for disambiguation of false friends or confusing term pairs. No English paragraphs.
+    - **Immersion 75-84%**: English in tip/note callouts for tricky abstract concepts. No inline English in prose.
+    - **Immersion 65-74% (bridge entry)**: English intro paragraph allowed (max 1). Parenthetical English equivalents on FIRST introduction of each new term. After first introduction → Ukrainian only. English explanatory text in callouts only, not mixed into Ukrainian prose.
+    - **All levels**: Ukrainian term comes FIRST, English follows in parentheses. Never English-first.
+    - Pre-output check: search for Latin characters outside proper nouns and verify they match the immersion rules above.
 
-12. **Section Title Language** — Immersion >= 85%: all H2/H3 titles in Ukrainian. Below 85%: English acceptable.
+12. **Section Title Language** — Immersion >= 85%: all H2/H3 titles in Ukrainian. Below 85%: Ukrainian preferred, English acceptable for clarity.
 
 13. **Example Variety** — FORBIDDEN: 5+ consecutive `_Приклад:_` lines. Mix formats: standalone examples (max 3-4 per section), comparison tables, inline examples within prose, mini-dialogues, callout boxes with examples.
 
 14. **Callout Formatting Precision** — Exact syntax: `> [!tip] Title` then `> text`. No dangling `**`. Spread callouts evenly across sections — not all bunched at the end.
+
+### Depth & Structure Standards (MANDATORY)
+
+15. **Each Concept Gets Its Own H3** — When teaching N items in a category (10 parts of speech, 7 cases, 5 tenses), EVERY item MUST get its own `### H3` subsection. NEVER group items in pairs, compress into a single table-only presentation, or mention items casually in prose. WRONG: "Прислівник і числівник" sharing one heading. RIGHT: `### Прислівник` then `### Числівник` as separate blocks.
+
+16. **Depth Over Compression** — Each H3 concept block must contain: (a) definition/explanation (2+ sentences), (b) the question it answers or its grammatical function, (c) 2+ example sentences, (d) a usage note or cultural context. Minimum ~80-100 words per concept block. WRONG: a 20-word table row. RIGHT: a full mini-lesson.
+
+17. **Syntactic Roles in Grammar Modules** — Grammar modules that cover sentence structure must include syntactic roles: підмет (subject), присудок (predicate), додаток (object), означення (attribute), обставина (adverbial). If the content_outline includes a section on sentence structure or word building, dedicate a subsection to syntactic roles.
+
+18. **English Bridging Budget (Bridge Modules)** — For modules with immersion < 90% (B1.0 bridge, M01-M05):
+    - **L1 scaffolding with L2 primacy**: Ukrainian term FIRST, English equivalent in parentheses on first introduction only. After that, Ukrainian exclusively.
+    - **English paragraphs**: MAX 1 short paragraph in the introduction explaining why this topic matters. All other content in Ukrainian.
+    - **English in callouts**: OK for `[!tip]` or `[!note]` that explain abstract concepts the learner hasn't encountered in Ukrainian yet. Keep brief (1-2 sentences).
+    - **Graduated fade**: M01 (65%) uses more scaffolding than M05 (90%). Check the plan's `immersion` field.
+    - WRONG: English scattered throughout sections, English-first term introductions, full English explanations mid-lesson.
+    - RIGHT: English intro paragraph → Ukrainian terms with (English) on first use → pure Ukrainian from section 2 onward.
+
+19. **Callout Type Variety** — Use at least 4 DIFFERENT callout types across the module. Available types: `[!tip]`, `[!warning]`, `[!context]`, `[!quote]`, `[!myth-buster]`, `[!observe]`, `[!analysis]`, `[!fact]`, `[!culture]`, `[!history-bite]`, `[!decolonization]`. WRONG: 8 callouts all `[!tip]`. RIGHT: mix of tip, warning, observe, quote, culture.
+
+20. **Self-Check Questions** — The Підсумок section must include 4-6 self-assessment questions that test whether the learner understood the key concepts. Format: numbered list of questions the learner should be able to answer. These are comprehension checks, not exercises.
 
 ### Pre-Output Checklist (verify BEFORE writing ===CONTENT_START===)
 
@@ -131,9 +157,13 @@ Before producing your final output, mentally verify each item:
 7. ☐ **Parallel structure**: matching sections follow identical internal pattern
 8. ☐ **Example variety**: no 5+ consecutive `_Приклад:_` — formats are mixed
 9. ☐ **Callout spread**: engagement boxes distributed evenly, not bunched
-10. ☐ **Zero English contamination**: no Latin characters in prose (except proper nouns / vocab table)
+10. ☐ **English scaffolding check**: Latin characters in prose match the immersion level rules (bridge modules allow controlled English; B1.6+ = zero English)
 11. ☐ **Section titles**: all H2/H3 in Ukrainian (if immersion >= 85%)
 12. ☐ **Pedagogical flow**: simple → complex within each section, concept before use
+13. ☐ **Each concept = own H3**: every item in a category has its own subsection (not grouped/compressed)
+14. ☐ **Depth per concept**: each H3 block has definition + questions + 2+ examples + usage note (~80-100 words)
+15. ☐ **Callout variety**: at least 4 different callout types used across the module
+16. ☐ **Self-check questions**: Підсумок has 4-6 self-assessment questions
 
 ### Section Word Buffer
 

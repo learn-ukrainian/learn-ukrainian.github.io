@@ -1,0 +1,155 @@
+items:
+  - lemma: дієслово
+    ipa: /dʲijeˈslɔwɔ/
+    translation: verb
+    pos: noun
+    gender: n
+    example: «Писати» — це дієслово недоконаного виду.
+  - lemma: іменник
+    ipa: /iˈmɛnːɪk/
+    translation: noun
+    pos: noun
+    gender: m
+    example: Іменник «Київ» є власною назвою.
+  - lemma: прикметник
+    ipa: /prɪˈkmɛtnɪk/
+    translation: adjective
+    pos: noun
+    gender: m
+    example: Прикметник узгоджується з іменником у роді.
+  - lemma: прислівник
+    ipa: /prɪˈslʲiwnɪк/
+    translation: adverb
+    pos: noun
+    gender: m
+    example: Прислівник «швидко» є незмінною частиною мови.
+  - lemma: займенник
+    ipa: /zɐjˈmɛnːɪk/
+    translation: pronoun
+    pos: noun
+    gender: m
+    example: Займенник «він» замінює іменник у реченні.
+  - lemma: числівник
+    ipa: /t͡ʃɪˈslʲiwnɪk/
+    translation: numeral
+    pos: noun
+    gender: m
+    example: Числівник «десять» означає кількість.
+  - lemma: сполучник
+    ipa: /spɔˈlut͡ʃnɪk/
+    translation: conjunction
+    pos: noun
+    gender: m
+    example: Сполучник «і» з’єднує два речення.
+  - lemma: прийменник
+    ipa: /prɪjˈmɛnːɪk/
+    translation: preposition
+    pos: noun
+    gender: m
+    example: Прийменник «на» вимагає місцевого відмінка.
+  - lemma: частка
+    ipa: /ˈt͡ʃastkɐ/
+    translation: particle
+    pos: noun
+    gender: f
+    example: Частка «не» виражає заперечення.
+  - lemma: вигук
+    ipa: /ˈvɪɦuk/
+    translation: interjection
+    pos: noun
+    gender: m
+    example: Вигук «ого» виражає сильне здивування.
+  - lemma: називний відмінок
+    ipa: /nɐzɪwˈnɪj wʲidˈmʲinɔk/
+    translation: nominative case
+    pos: noun phrase
+    example: Підмет завжди стоїть у називному відмінку.
+  - lemma: родовий відмінок
+    ipa: /rɔdɔˈwɪj wʲidˈmʲinɔk/
+    translation: genitive case
+    pos: noun phrase
+    example: Питання родового відмінка — кого? чого?.
+  - lemma: давальний відмінок
+    ipa: /dɐˈwalʲnɪj wʲidˈmʲinɔk/
+    translation: dative case
+    pos: noun phrase
+    example: Давальний відмінок вказує на адресата дії.
+  - lemma: знахідний відмінок
+    ipa: /znɐˈxʲidnɪj wʲidˈmʲinɔk/
+    translation: accusative case
+    pos: noun phrase
+    example: Знахідний відмінок вказує на об'єкт дії.
+  - lemma: орудний відмінок
+    ipa: /ɔˈrudnɪj wʲidˈmʲinɔk/
+    translation: instrumental case
+    pos: noun phrase
+    example: Орудний відмінок позначає засіб дії.
+  - lemma: місцевий відмінок
+    ipa: /mʲisʲˈt͡sɛwɪj wʲidˈmʲinɔk/
+    translation: locative case
+    pos: noun phrase
+    example: Місцевий відмінок вживається з прийменником.
+  - lemma: кличний відмінок
+    ipa: /ˈklɪt͡ʃnɪj wʲidˈmʲinɔk/
+    translation: vocative case
+    pos: noun phrase
+    example: Кличний відмінок служить для звертання.
+  - lemma: граматика
+    ipa: /ɦrɐˈmatɪkɐ/
+    translation: grammar
+    pos: noun
+    gender: f
+    example: Українська граматика має довгу історію.
+  - lemma: правило
+    ipa: /ˈprawɪlɔ/
+    translation: rule
+    pos: noun
+    gender: n
+    example: Це правило має кілька важливих винятків.
+  - lemma: приклад
+    ipa: /ˈprɪklɐd/
+    translation: example
+    pos: noun
+    gender: m
+    example: Наведіть приклад речення з додатком.
+  - lemma: метамова
+    ipa: /mɛtɐˈmɔwɐ/
+    translation: metalanguage
+    pos: noun
+    gender: f
+    example: Метамова дозволяє говорити про саму мову.
+  - lemma: частина мови
+    ipa: /t͡ʃɐsˈtɪnɐ ˈmɔwɪ/
+    translation: part of speech
+    pos: noun phrase
+    example: Скільки частин мови є в українській мові?
+  - lemma: підмет
+    ipa: /ˈpʲidmɛt/
+    translation: subject
+    pos: noun
+    gender: m
+    example: Підмет виконує головну дію в реченні.
+  - lemma: присудок
+    ipa: /ˈprɪsudɔk/
+    translation: predicate
+    pos: noun
+    gender: m
+    example: Присудок зазвичай виражається дієсловом.
+  - lemma: додаток
+    ipa: /dɔˈdɐtɔk/
+    translation: object
+    pos: noun
+    gender: m
+    example: Додаток є другорядним членом речення.
+  - lemma: означення
+    ipa: /ɔˈznɑt͡ʃenʲːɐ/
+    translation: attribute
+    pos: noun
+    gender: n
+    example: Означення описує якість або ознаку предмета.
+  - lemma: обставина
+    ipa: /ɔbˈstɑwɪnɐ/
+    translation: adverbial
+    pos: noun
+    gender: f
+    example: Обставина вказує на місце або час дії.

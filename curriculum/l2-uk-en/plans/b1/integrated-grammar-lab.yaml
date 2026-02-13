@@ -7,44 +7,44 @@ title: Інтегрована граматична лабораторія
 subtitle: Integrated Grammar Lab - B1.4 Synthesis
 content_outline:
 - section: Вступний тест
-  words: 420
+  words: 560
   points:
   - Why integration matters
   - Beyond isolated grammar
 - section: Пояснення
-  words: 164
+  words: 219
   points:
   - Synthesis overview
 - section: 'Сценарій 1: Офіційний звіт'
-  words: 281
+  words: 375
   points:
   - Formal register usage
   - Statistics and reports
 - section: 'Сценарій 2: Сімейна розмова'
-  words: 424
+  words: 565
   points:
   - Informal register
   - Emotional tone
 - section: 'Сценарій 3: Новини'
-  words: 279
+  words: 372
   points:
   - News register
   - Passive in journalism
 - section: 'Практика: Редагування стилю'
-  words: 464
+  words: 619
   points:
   - Identify style inconsistencies
   - Revise for target audience
 - section: Діалоги
-  words: 791
+  words: 1055
   points:
   - Multi-feature usage
   - Register switching
 - section: Потрібно більше практики?
-  words: 177
+  words: 235
   points:
   - Additional exercises
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - інтеграція (integration)

@@ -16,21 +16,21 @@ tags:
 - bridge
 word_target: 3000
 content_outline:
-- section: "Presentation: The Gateway to Mastery"
+- section: "Презентація: шлях до майстерності"
   words: 364
-- section: "Diagnostic Assessment: Testing the Foundation"
+- section: "Діагностичне оцінювання фундаменту"
   words: 400
-- section: "Comprehensive Review: Parts of Speech and Morphology"
+- section: "Комплексний огляд: частини мови та морфологія"
   words: 392
-- section: "Analytical Deep Dive: Verb Categories and Aspect"
+- section: "Категорії дієслова та аспект"
   words: 369
-- section: "The Logic of Rules: Reading Grammar Explanation Patterns"
+- section: "Логіка граматичних пояснень"
   words: 366
-- section: "Syntax and Sentence Structure: The Final Architectural Check"
+- section: "Синтаксис: фінальна перевірка структури"
   words: 347
-- section: "Integrated Practice: Real-World Grammar Analysis"
+- section: "Інтегрована практика граматичного аналізу"
   words: 536
-- section: "Summary: Readiness for Full Immersion"
+- section: "Підсумок: готовність до занурення"
   words: 226
 build:
   last_modified: '2026-02-11'

@@ -7,41 +7,41 @@ title: Медіа та новини
 subtitle: Media and News
 content_outline:
 - section: Вступ
-  words: 142
+  words: 189
   points:
   - Ukrainian media overview
   - Types of media
   - News vocabulary basics
 - section: Вживання
-  words: 600
+  words: 800
   points:
   - Collocations patterns
   - Register considerations
   - Application domains, key expressions
 - section: Читання
-  words: 433
+  words: 577
   points:
   - News article
   - Ukrainian media overview
   - Blog (informal)
 - section: Діалоги
-  words: 467
+  words: 623
   points:
   - News discussion (informal)
   - In the editorial office (formal)
   - Fact-checking, media expert interview
 - section: Лексика
-  words: 1142
+  words: 1523
   points:
   - Seven vocabulary groups
   - Content types, professionals
   - Media types, structure, sources
 - section: Підсумок
-  words: 216
+  words: 288
   points:
   - Key vocabulary recap
   - Practice recommendations
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - новини (news)

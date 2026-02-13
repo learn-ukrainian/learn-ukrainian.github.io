@@ -45,7 +45,32 @@ SEMINAR_TRACKS: b2-hist, c1-bio, c1-hist, lit, oes, ruth → 6 phases (0-5)
 CORE_TRACKS: a1, a2, b1, b2, c1, c2, b2-pro, c1-pro    → 4 phases (0, 2-4)
 ```
 
-Core tracks use `phase-0-research-core.md` (lightweight), skip Phase 1 (meta outline already exists).
+Core tracks use `phase-0-research-core.md` (lightweight). **Phase 1 (meta rebuild) is mandatory for ALL tracks** — existing meta may be from a weak/outdated prompt and must be regenerated from plan + research.
+
+---
+
+## Immersion Encoding (Bridge Modules)
+
+B1 M01-M05 are **bridge modules** — students just finished A2 and need English scaffolding to learn Ukrainian metalanguage. From M06 onward, it's full Ukrainian immersion.
+
+Each plan file must specify an `immersion` field (percentage). The orchestrator reads this and passes it to Phase 2's content prompt as `{IMMERSION_RULE}`.
+
+| Module | Immersion | English Use |
+|--------|-----------|-------------|
+| B1 M01 | 65% | English intro + parenthetical equivalents for ALL new terms |
+| B1 M02 | 75% | Parenthetical equivalents for new terms only, no English paragraphs |
+| B1 M03 | 80% | English only in tip/note callouts for tricky concepts |
+| B1 M04 | 85% | English only for disambiguation (false friends, confusing pairs) |
+| B1 M05 | 90% | Minimal English — checkpoint readiness |
+| B1 M06+ | 95% | Full immersion |
+
+**Scaffolding rules (L1 scaffolding with L2 primacy):**
+1. **Ukrainian term first**, English equivalent in parentheses on first introduction only
+2. After first introduction — Ukrainian term exclusively, no more English for that term
+3. Brief English explanations allowed for abstract concepts — but in clearly marked callouts, not mixed into Ukrainian prose
+4. Each module reduces English until M06 where immersion is full
+
+The Phase 2 content template enforces these rules based on the `immersion` value.
 
 ---
 
@@ -114,11 +139,13 @@ orchestration/{slug}/
 
 **A module is NOT complete until ALL of these are true:**
 
-1. ✅ Phase 4 audit passes (all strict gates green)
-2. ✅ Phase 5 status + MDX generated
-3. ✅ Phase 6 Green Team review generated (not rubber-stamped)
-4. ✅ Phase 6b review fixes applied (every actionable issue addressed)
-5. ✅ Final audit re-passes after Phase 6b fixes
+1. ✅ Phase 1 meta rebuilt from plan + research (not reusing old meta)
+2. ✅ Phase 4 audit passes (all strict gates green)
+3. ✅ Phase 5 status + MDX generated
+4. ✅ Phase 5b archive diff reviewed (regressions flagged)
+5. ✅ Phase 6 Green Team review generated (not rubber-stamped)
+6. ✅ Phase 6b review fixes applied (every actionable issue addressed)
+7. ✅ Final audit re-passes after Phase 6b fixes
 
 **Phase 6b is NOT optional. The workflow proceeds automatically from Phase 6 → Phase 6b → Final audit.** Do NOT skip Phase 6/6b. Do NOT report completion after Phase 5. Do NOT stop and wait for human instruction between Phase 6 and Phase 6b. The module is done when the review cycle is complete and the final audit passes.
 
@@ -140,17 +167,22 @@ orchestration/{slug}/
 7. Extract `===FRICTION_START===` ... `===FRICTION_END===` → save to `orchestration/{slug}/friction-attempt-1.md`
 8. Validate: file exists, has sources section
 
-### Phase 1: Meta Outline (seminar tracks only)
+### Phase 1: Meta Rebuild (ALL tracks — mandatory)
 
 **Template:** `claude_extensions/phases/gemini/phase-1-meta.md`
 
-**What Claude does:**
-1. Assemble prompt with research notes + meta + plan
-2. Send to Gemini, save output to `orchestration/{slug}/phase-1-output.md`
-3. Extract `===META_OUTLINE_START===` ... `===META_OUTLINE_END===`
-4. Update `content_outline` in `meta/{slug}.yaml`
-5. Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
-6. Validate: YAML parses, word allocations sum to word_target
+**Why mandatory:** Existing meta files may be the product of a weak or outdated prompt. The meta's `content_outline` dictates the entire content structure — if it's wrong, everything downstream is wrong. Always regenerate from plan + research.
+
+**What the orchestrator does:**
+1. Archive current meta: `cp meta/{slug}.yaml orchestration/{slug}/meta-old.yaml`
+2. Assemble prompt with research notes + plan (NOT the old meta — the plan is source of truth)
+3. Include the plan's `immersion` field in the prompt (controls English scaffolding level)
+4. Send to Gemini, save output to `orchestration/{slug}/phase-1-output.md`
+5. Extract `===META_OUTLINE_START===` ... `===META_OUTLINE_END===`
+6. Update `content_outline` in `meta/{slug}.yaml` (preserve other meta fields: module, level, slug, etc.)
+7. Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
+8. Validate: YAML parses, word allocations sum to word_target, section names are Ukrainian
+9. Diff old vs new meta: `diff orchestration/{slug}/meta-old.yaml meta/{slug}.yaml` — log changes
 
 ### Phase 2: Content
 
@@ -229,6 +261,43 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 ```
 
 4. Print completion report.
+
+### Phase 5b: Archive Diff (orchestrator-only)
+
+**No Gemini call.** The orchestrator compares the new module against the archived version to catch content regression.
+
+**What the orchestrator does:**
+1. If archive exists (`_archive/{track}/.../{slug}.md`), diff old vs new:
+
+```bash
+# Extract key elements from old version
+rg -c '###' _archive/{track}/*/{slug}.md         # heading count
+rg -ic 'мнемон|пам.ятка|формула' _archive/{track}/*/{slug}.md  # mnemonics
+rg -ic 'шевченк|франк|українк|смотрицьк' _archive/{track}/*/{slug}.md  # cultural refs
+wc -w < _archive/{track}/*/{slug}.md              # word count
+```
+
+2. Compare against new version:
+
+```bash
+rg -c '###' curriculum/l2-uk-en/{track}/{slug}.md
+rg -ic 'мнемон|пам.ятка|формула' curriculum/l2-uk-en/{track}/{slug}.md
+rg -ic 'шевченк|франк|українк|смотрицьк' curriculum/l2-uk-en/{track}/{slug}.md
+wc -w < curriculum/l2-uk-en/{track}/{slug}.md
+```
+
+3. **Flag regressions:**
+   - Heading count dropped >20% → "Structural flattening — review H3 density"
+   - Mnemonic/formula present in old but missing in new → "Cultural anchor lost — consider restoring"
+   - Cultural references dropped → "Cultural reference regression"
+   - Activity total items dropped >15% → "Practice volume regression"
+
+4. Save diff report to `orchestration/{slug}/archive-diff.md`
+5. If critical regressions found: add them to the Phase 6 review prompt so the Green Team reviewer is aware
+
+**If no archive exists:** Skip this phase (first-time build).
+
+---
 
 ### Phase 6: Green Team Review (Gemini — NEW session)
 
@@ -421,10 +490,12 @@ After each module:
   Track:   {track}
 
   Phase 0 (Research):    ✅ {sources} sources
+  Phase 1 (Meta):        ✅ Rebuilt from plan + research ({sections} sections, {word_target} words)
   Phase 2 (Content):     ✅ {new_words} words (was: {old_words} in archive)
   Phase 3 (Activities):  ✅ {activity_count} activities, {vocab_count} vocab items
   Phase 4 (Audit):       ✅ All gates PASS
   Phase 5 (MDX):         ✅ Generated
+  Phase 5b (Diff):       ✅ Archive comparison — {regressions} regressions flagged
   Phase 6 (Review):      ✅ Green Team review — {overall_score}/10 ({issue_count} issues found)
   Phase 6b (Fixes):      ✅ {fixed_count}/{fixable_count} review issues fixed ({skipped_count} skipped)
 

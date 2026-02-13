@@ -16,25 +16,25 @@ tags:
 - bridge
 word_target: 3654
 content_outline:
-- section: "Introduction - Understanding Sentence Structure"
+- section: "Вступ: розуміння структури речення"
   words: 534
-- section: "Sentence Parts (Члени речення)"
+- section: "Члени речення"
   words: 764
-- section: "Sentence Types"
+- section: "Типи речень"
   words: 399
-- section: "Clause Types"
+- section: "Типи підрядних речень"
   words: 276
-- section: "Conjunctions"
+- section: "Сполучники"
   words: 220
-- section: "Punctuation Terms"
+- section: "Пунктуаційні терміни"
   words: 379
-- section: "Additional Syntax Terms"
+- section: "Додаткові синтаксичні терміни"
   words: 211
-- section: "Practice Analyzing Sentences"
+- section: "Практика аналізу речень"
   words: 312
-- section: "Dialogues"
+- section: "Діалоги"
   words: 282
-- section: "Summary"
+- section: "Підсумок"
   words: 277
 build:
   last_modified: '2026-02-11'

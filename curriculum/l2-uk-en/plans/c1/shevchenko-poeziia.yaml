@@ -4,23 +4,23 @@ sequence: 95
 slug: shevchenko-poeziia
 version: '2.0'
 title: 'Шевченко: Поезія та її форми'
-word_target: 3000
+word_target: 4000
 content_outline:
 - section: Розминка — Поетичний світ Кобзаря
-  words: 700
+  words: 933
   points:
   - Жанрова різноманітність (балади, думи, лірика)
   - Шевченко і народна пісенна традиція
   - Образ Матері та Жінки в поезії
 - section: Content Areas
-  words: 1250
+  words: 1667
   points:
   - '**"Катерина", "Наймичка"**: Трагічна доля жінки — female tragedy theme'
   - '**"Заповіт", "Кавказ", "І мертвим, і живим..."**: Political and prophetic poetry'
   - '**"Садок вишневий коло хати"**: The idyll and the ideal of Ukraine'
   - '**"Гайдамаки"**: Historical epic and collective memory'
 - section: Практика — Аналіз тексту
-  words: 1050
+  words: 1400
   points:
   - Порівняти образи Катерини та Наймички
   - Проаналізувати ритміку та фоніку "Заповіту"

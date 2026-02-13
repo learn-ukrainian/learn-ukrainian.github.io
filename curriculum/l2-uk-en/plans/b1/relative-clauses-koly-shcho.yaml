@@ -7,15 +7,15 @@ title: 'Підрядні означальні: коли, що'
 subtitle: Time and Fact Relative Clauses
 content_outline:
 - section: Тест
-  words: 293
+  words: 391
   points: '[]'
 - section: Теорія (Аналіз)
-  words: 435
+  words: 580
   points:
   - Коли — для часових відносин
   - Що — для фактів та ідей
 - section: Поглиблення
-  words: 1357
+  words: 1809
   points:
   - Коли в часових підрядних реченнях
   - Складені вирази з коли
@@ -24,11 +24,11 @@ content_outline:
   - Що (відносний займенник) vs Що (сполучник)
   - Типові помилки та як їх уникнути
 - section: Практика
-  words: 100
+  words: 133
   points:
   - Типові ситуації для вибору
 - section: Діалоги
-  words: 688
+  words: 917
   points:
   - 'Діалог 1: Про спогади'
   - 'Діалог 2: Про історію'
@@ -36,12 +36,12 @@ content_outline:
   - 'Діалог 4: Про відносини'
   - 'Діалог 5: Про майбутнє'
 - section: Потрібно більше практики?
-  words: 127
+  words: 170
   points:
   - Інтеграція знань
   - Реальне застосування
   - Онлайн-ресурси
-word_target: 3000
+word_target: 4000
 vocabulary_hints:
   required:
   - коли (when)

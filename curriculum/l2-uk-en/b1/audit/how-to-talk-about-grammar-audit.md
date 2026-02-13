@@ -1,12 +1,12 @@
 # Audit Report: M01 — how-to-talk-about-grammar.md
-**Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
+**Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Naturalness:** 9/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-13 01:11:15
+**Generated:** 2026-02-13 21:41:07
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 3000 words
+**Word Target:** 4000 words
 **Activities:** 12-16 required
 **Items per Activity:** ≥14 items
 **Unique Types:** ≥5 types required
@@ -20,71 +20,71 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Термінологія: Частини мови | 12 | 8 | ✅ |
-| 2 | quiz | Визначення частини мови | 10 | 8 | ✅ |
-| 3 | fill-in | Граматичні терміни в контексті | 8 | 8 | ✅ |
-| 4 | group-sort | Класифікація термінів | 15 | 14 | ✅ |
-| 5 | true-false | Правда чи брехня: Граматика | 8 | 8 | ✅ |
-| 6 | unjumble | Складіть термін | 6 | 6 | ✅ |
-| 7 | translate | Переклад термінів | 6 | 6 | ✅ |
-| 8 | match-up | Функції відмінків | 12 | 8 | ✅ |
-| 9 | quiz | Граматичні категорії | 8 | 8 | ✅ |
-| 10 | fill-in | Будова слова | 8 | 8 | ✅ |
-| 11 | true-false | Головні та другорядні члени речення | 8 | 8 | ✅ |
-| 12 | match-up | Службові частини мови та вигуки | 12 | 8 | ✅ |
-| 13 | mark-the-words | Пошук частин мови | 13 | 6 | ✅ |
+| 1 | match-up | Українські терміни та їхні англійські відповідники | 12 | 8 | ✅ |
+| 2 | quiz | Визначення частин мови | 10 | 8 | ✅ |
+| 3 | fill-in | Граматична анатомія | 12 | 8 | ✅ |
+| 4 | group-sort | Класифікація термінів | 16 | 14 | ✅ |
+| 5 | true-false | Правда чи неправда про граматику | 12 | 8 | ✅ |
+| 6 | unjumble | Порядок слів у граматичних правилах | 8 | 6 | ✅ |
+| 7 | mark-the-words | Пошук іменників | 6 | 6 | ✅ |
+| 8 | error-correction | Виправлення граматичних термінів | 8 | 6 | ✅ |
+| 9 | translate | Переклад граматичних термінів | 8 | 6 | ✅ |
+| 10 | cloze | Вибір граматичних термінів | 14 | 14 | ✅ |
+| 11 | select | Службові частини мови та члени речення | 8 | 6 | ✅ |
+| 12 | error-correction | Виправлення назв відмінків | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 13 (target: 12-16) ✅
-- Unique types: 9 (minimum: 5) ✅
+- Total activities: 12 (target: 12-16) ✅
+- Unique types: 11 (minimum: 5) ✅
 - Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
 - Required types used: 4/4 (fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3104/3000 (raw: 3265)
-- **Activities:** ✅ 13/12
+- **Words:** ✅ 5800/4000 (raw: 6122)
+- **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 9/5 types
+- **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/4
+- **Engagement:** ✅ 18/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/20
+- **Vocab:** ✅ 26/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 93.9% (B1.1 Aspect)
-- **Richness:** ✅ 94% (bridge)
+- **Immersion:** 🇺🇦 87.2% (B1.1 Aspect)
+- **Richness:** ✅ 99% (bridge)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 9/10 (High)
 
 ## Richness Details
-**Score:** 94% (minimum: 90%)
+**Score:** 99% (minimum: 90%)
 **Module Type:** bridge
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 20 | 100% | 29% | 28.6% |
-| engagement | 6 | 5 | 100% | 19% | 19.0% |
-| variety | 0.95 | - | 95% | 10% | 9.0% |
-| cultural | 1 | 2 | 50% | 10% | 4.8% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
-| paragraph_var | 0.93 | - | 93% | 10% | 8.9% |
-| realworld | 16 | 2 | 100% | 10% | 9.5% |
-| questions | 50 | 4 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **94.1%** |
+| examples | 91 | 20 | 100% | 29% | 28.6% |
+| engagement | 18 | 5 | 100% | 19% | 19.0% |
+| variety | 0.90 | - | 90% | 10% | 8.6% |
+| cultural | 4 | 2 | 100% | 10% | 9.5% |
+| visual | 22 | 4 | 100% | 10% | 9.5% |
+| realworld | 18 | 2 | 100% | 10% | 9.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 124 | 4 | 100% | 5% | 4.8% |
+| tables | 2 | 2 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Як говорити про граматику** | ✅ | 43 | Included in Core |
-| **Introduction: The Power of Metalanguage** | ✅ | 392 | Included in Core |
-| **Parts of Speech: The Content Categories** | ✅ | 573 | Included in Core |
-| **Parts of Speech: The Functional Glue** | ✅ | 471 | Included in Core |
-| **Case Names: The Seven Keys** | ✅ | 642 | Included in Core |
-| **Basic Sentence Terms & Grammatical Categories** | ✅ | 412 | Included in Core |
-| **Practice Reading Grammar Explanations** | ⚪️ | 0 | Skipped (using YAML) |
-| **Summary and Self-Assessment** | ✅ | 231 | Included in Core |
+| **Як говорити про граматику** | ✅ | 248 | Included in Core |
+| **Вступ: психологія та логіка української метамови** | ✅ | 736 | Included in Core |
+| **Частини мови: самостійні категорії та їхні ролі** | ✅ | 1752 | Included in Core |
+| **Частини мови: службові слова та вигуки** | ✅ | 634 | Included in Core |
+| **Відмінки: сім ключів до системи відмінювання** | ✅ | 846 | Included in Core |
+| **Будова слова, граматичні категорії та синтаксис** | ✅ | 721 | Included in Core |
+| **Практика: дешифрування граматичних інструкцій** | ✅ | 604 | Included in Core |
+| **Підсумок: перевірка метамовної готовності** | ✅ | 259 | Included in Core |

@@ -1,7 +1,9 @@
-# Phase 1: Meta Alignment
+# Phase 1: Meta Rebuild
 
 > **You are Gemini, executing Phase 1 of an orchestrated rebuild.**
-> **Your ONLY task: Refine the content_outline with word allocations.**
+> **Your ONLY task: Rebuild the content_outline from the plan + research.**
+
+**Why this phase exists:** Existing meta files may be the product of a weak or outdated prompt. The plan is the source of truth. You rebuild the meta's content_outline fresh using the plan's structure + the research notes' depth.
 
 ## Your Input
 
@@ -11,35 +13,39 @@ Read the research notes from Phase 0:
 {RESEARCH_PATH}
 ```
 
-Read the current meta file:
-
-```
-{META_PATH}
-```
-
-Read the plan file (source of truth for word_target and objectives):
+Read the **plan file** (SOURCE OF TRUTH for structure, word_target, objectives, vocabulary):
 
 ```
 {PLAN_PATH}
 ```
 
+Read the **old meta file** (for reference only — you are REPLACING the content_outline):
+
+```
+{META_PATH}
+```
+
 ## Your Task
 
-Refine the `content_outline` in the meta file so that:
+**Rebuild** the `content_outline` in the meta file from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
 
 1. Every section has a `words` allocation
 2. Word allocations sum to **exactly {WORD_TARGET}** (the plan's word_target)
 3. Sections are informed by research notes (sections with richer research get more words)
 4. Section names are natural Ukrainian H2 headings
+5. Each section's `points` list is specific and actionable — not vague ("cover grammar" → bad; "Each POS gets its own H3 with definition, question, 2+ examples, usage note" → good)
 
 ### Rules
 
 - **Do NOT change `word_target`** — it comes from the plan and is immutable
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
 - Allocations must sum to `word_target` (not more, not less)
 - Minimum section allocation: 200 words (smaller sections should be merged)
 - Each section must have `section`, `words`, and `points` fields
 - Section names must be Ukrainian (this is the lesson content heading)
+- **Bridge modules (immersion < 90%):** Note the plan's `immersion` field in the outline. The intro section should explicitly list English scaffolding requirements.
 - Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
+- If the research found mnemonics, cultural anchors, or notable quotes: ensure the outline allocates space for them in the appropriate section's `points`
 
 ### Output Format
 

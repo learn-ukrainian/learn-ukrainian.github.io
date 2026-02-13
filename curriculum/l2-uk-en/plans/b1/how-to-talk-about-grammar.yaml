@@ -2,52 +2,59 @@ module: b1-01
 level: B1
 sequence: 1
 slug: 01-how-to-talk-about-grammar
-version: '2.0'
+version: '3.0'
 title: Як говорити про граматику
 subtitle: Learning grammar terminology in Ukrainian
 content_outline:
-- section: Introduction - Why Learn Grammar in Ukrainian?
-  words: 266
+- section: "Вступ: сила метамови"
+  words: 550
   points:
   - Benefits of learning grammar terminology in target language
-  - How native speakers learn grammar in school
   - Preparation for full immersion in B1.1+
-- section: Parts of Speech (Частини мови)
-  words: 887
+  - Key structural terms (слово, речення, частина мови, граматика, правило, приклад)
+  - English scaffolding paragraph (bridge module — immersion 65%)
+- section: "Частини мови: самостійні категорії"
+  words: 750
   points:
-  - дієслово, іменник, прикметник, прислівник, займенник
-  - сполучник, прийменник, частка
-  - Identifying parts of speech in sentences
-- section: Case Names (Відмінки)
-  words: 591
+  - іменник, дієслово, прикметник, прислівник, займенник, числівник
+  - Each POS gets its own H3 with definition, questions, 2+ examples, usage note
+  - Equal depth for all 6 — no afterthoughts
+- section: "Частини мови: службові слова"
+  words: 600
   points:
-  - називний, родовий, давальний, знахідний
-  - орудний, місцевий, кличний
-  - Questions for each case
-- section: Basic Sentence Terms
-  words: 739
+  - сполучник, прийменник, частка, вигук
+  - Each gets its own H3 with role in sentence structure
+  - Equal depth for all 4 — same pattern as самостійні
+- section: "Відмінки: сім ключів"
+  words: 800
   points:
-  - слово, речення, частина мови
-  - граматика, правило, приклад
-  - Basic structural vocabulary
-- section: Practice Reading Grammar Explanations
-  words: 148
+  - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
+  - Each case gets its own H3 with question, main role, 2+ examples
+  - Equal depth with Додаткова інформація for every case
+  - На Різдво Дід Загубив Горішки Між Ковбасками mnemonic (or verified equivalent)
+  - Etymology or mnemonic aids where helpful
+- section: "Граматичні категорії та будова слова"
+  words: 650
+  points:
+  - морфеміка (корінь, суфікс тощо) — own H3
+  - рід, число, особа, час, вид — own H3
+  - Syntactic roles (підмет, присудок, додаток, означення, обставина) — own H3
+  - Each sub-topic gets its own H3, not a wall of text
+- section: "Практика: читаємо граматику українською"
+  words: 400
   points:
   - Simple grammar explanations in Ukrainian
   - Recognizing patterns in textbook language
-  - Comprehension exercises
-- section: Mini-Dialogues
-  words: 296
-  points:
-  - Terminology in conversation
-  - Teacher-student dialogues
-  - Real-world usage scenarios
-- section: Summary and Self-Assessment
-  words: 73
+  - Cultural anchoring (Шевченко, Леся Українка, Франко quotes)
+  - Teacher-student dialogues woven into content
+- section: "Підсумок і самоперевірка"
+  words: 250
   points:
   - Key terms review
   - Readiness check for M02
-word_target: 3000
+  - Self-assessment questions (6+)
+word_target: 4000
+immersion: 65%
 vocabulary_hints:
   required:
   - дієслово (verb)
@@ -55,6 +62,7 @@ vocabulary_hints:
   - прикметник (adjective)
   - прислівник (adverb)
   - займенник (pronoun)
+  - числівник (numeral)
   - називний відмінок (nominative case)
   - родовий відмінок (genitive case)
   - давальний відмінок (dative case)
@@ -66,8 +74,16 @@ vocabulary_hints:
   - сполучник (conjunction)
   - прийменник (preposition)
   - частка (particle)
+  - вигук (interjection)
   - граматика (grammar)
   - правило (rule)
+  - приклад (example)
+  - метамова (metalanguage)
+  - підмет (subject)
+  - присудок (predicate)
+  - додаток (object)
+  - означення (attribute)
+  - обставина (adverbial)
 activity_hints:
 - type: match-up
   focus: Ukrainian term → English equivalent
@@ -109,7 +125,6 @@ sources:
   url: https://uk.wikipedia.org/wiki/Граматика_української_мови
   type: reference
   notes: Overview of Ukrainian grammatical terminology
-immersion: 75% Ukrainian
 phase: B1.0 Bridge
 persona:
   voice: Senior Language & Culture Specialist
