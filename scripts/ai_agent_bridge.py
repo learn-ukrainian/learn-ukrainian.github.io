@@ -557,7 +557,71 @@ def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", d
     return send_message(content, task_id, msg_type, data, from_llm=detect_sender(), to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None):
+# Model availability cache: {model: (available: bool, timestamp: float)}
+# Avoids burning API quota on repeated checks within the same session.
+_MODEL_CACHE: dict[str, tuple[bool, float]] = {}
+_MODEL_CACHE_TTL = 3600  # 1 hour — re-check after this
+
+
+def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:
+    """Check if a Gemini model is available by sending a trivial prompt.
+
+    Results are cached for 1 hour to avoid burning API quota.
+    Returns True if the model responds, False if unavailable or errors.
+    """
+    import time as _time
+
+    # Check cache first (saves an API call)
+    if not force and model in _MODEL_CACHE:
+        available, cached_at = _MODEL_CACHE[model]
+        age = _time.time() - cached_at
+        if age < _MODEL_CACHE_TTL:
+            status = "available" if available else "NOT available"
+            print(f"🔍 Model '{model}': {status} (cached {int(age)}s ago)")
+            return available
+
+    try:
+        result = subprocess.run(
+            [GEMINI_CLI, "-m", model, "-p", "Reply with exactly: MODEL_OK"],
+            capture_output=True, text=True, timeout=timeout,
+            cwd=str(Path(__file__).parent.parent),
+            env=_PARENT_ENV,
+        )
+        if result.returncode == 0 and "MODEL_OK" in result.stdout:
+            _MODEL_CACHE[model] = (True, _time.time())
+            return True
+        # Model responded but not as expected
+        stderr = result.stderr or ""
+        if "not found" in stderr.lower() or "not available" in stderr.lower() or "invalid model" in stderr.lower():
+            print(f"❌ Model '{model}' is not available on this account.")
+        elif "exhausted" in stderr.lower() or "429" in stderr or "quota" in stderr.lower():
+            print(f"⚠️  Model '{model}' exists but quota is exhausted.")
+        else:
+            print(f"⚠️  Model '{model}' check failed (exit {result.returncode}): {stderr[:200]}")
+        _MODEL_CACHE[model] = (False, _time.time())
+        return False
+    except subprocess.TimeoutExpired:
+        print(f"⚠️  Model '{model}' check timed out after {timeout}s.")
+        _MODEL_CACHE[model] = (False, _time.time())
+        return False
+    except FileNotFoundError:
+        print(f"❌ Gemini CLI not found at: {GEMINI_CLI}")
+        return False
+
+
+def _detect_model_error(stderr: str, model: str) -> str | None:
+    """Detect model-specific errors from Gemini CLI stderr.
+
+    Returns a user-friendly error message, or None if not a model error.
+    """
+    s = stderr.lower()
+    if "not found" in s or "not available" in s or "invalid model" in s:
+        _MODEL_CACHE[model] = (False, __import__("time").time())
+        return f"Model '{model}' is not available on this account. Switch accounts or use a different model."
+    return None
+
+
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -572,7 +636,22 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
                     Enables -y mode with post-validation (only this file may be written).
         extract_tags: If set, extract delimited content from output after Gemini finishes.
                      Empty list = auto-detect all complete pairs. Discards thinking tokens.
+        skip_model_check: If True, ignore cached model unavailability (retry anyway).
     """
+    # Model availability is detected from actual request errors (no pre-flight probe).
+    # If a previous request failed with model-not-available, the cache prevents retrying.
+    if skip_model_check and model in _MODEL_CACHE:
+        del _MODEL_CACHE[model]  # Clear cache — user wants to retry
+    elif not async_mode and model in _MODEL_CACHE:
+        available, cached_at = _MODEL_CACHE[model]
+        if not available:
+            import time as _time
+            age = _time.time() - cached_at
+            if age < _MODEL_CACHE_TTL:
+                print(f"❌ Model '{model}' was unavailable {int(age)}s ago (cached). Skipping.")
+                print(f"💡 To switch accounts: run 'gemini auth login' or ask the user to switch.")
+                print(f"   To retry: --skip-model-check (clears cache)")
+                return None
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
         async_mode = True
@@ -928,6 +1007,12 @@ Format your response clearly.
                     stderr = proc.stderr.read() if proc.stderr else ""
 
                     if proc.returncode != 0:
+                        # Detect model unavailability (fail fast, no retry)
+                        model_err = _detect_model_error(stderr, model)
+                        if model_err:
+                            print(f"\n❌ {model_err}")
+                            print(f"💡 To switch accounts: run 'gemini auth login'")
+                            return
                         # Detect quota/rate limit errors
                         if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
                             delay = base_delay * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
@@ -1494,6 +1579,8 @@ def main():
     ask_gemini_parser.add_argument("--extract", nargs="*", metavar="TAG",
                                    help="Extract delimited content from output. Tags: CONTENT, ACTIVITIES, VOCABULARY, etc. "
                                         "Discards thinking tokens. No args = auto-detect all complete pairs.")
+    ask_gemini_parser.add_argument("--skip-model-check", dest="skip_model_check", action="store_true",
+                                   help="Skip the model availability pre-flight check.")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1503,6 +1590,10 @@ def main():
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
     proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                         help="Force new sessions for each message")
+
+    # check-model (pre-flight model availability test)
+    check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
+    check_model_parser.add_argument("model", help="Model name (e.g., gemini-3-pro-preview)")
 
     # cleanup
     cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state (stale PIDs, ancient messages)")
@@ -1545,11 +1636,14 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
         process_all_claude(args.new_session)
+    elif args.command == "check-model":
+        ok = check_model(args.model, force=True)
+        sys.exit(0 if ok else 1)
     elif args.command == "cleanup":
         broker_cleanup(args.max_age, args.dry_run)
     elif args.command == "status":
