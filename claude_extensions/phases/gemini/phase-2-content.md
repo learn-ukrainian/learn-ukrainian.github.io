@@ -42,6 +42,38 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track, word target: {
 7. **Immersion**: {IMMERSION_RULE}
 8. **Ukrainian quotes**: Use angular quotes `«...»`, not straight quotes
 9. **No frontmatter**: Content starts with `<!-- SCOPE ... -->` comment, then `# Title`
+10. **Visual aids** (grammar modules): Use tables and mermaid flowcharts when they clarify a concept better than prose. Tables for comparing patterns, paradigms, categories. Mermaid for decision logic (aspect choice, case selection). Don't force them — use when pedagogically reasonable.
+
+### Pedagogical Visual Aids (Grammar Modules)
+
+Grammar modules benefit from visual structure. Use these tools when they ADD clarity — don't force them where prose works fine.
+
+**Tables** — Consider using for:
+- Part-of-speech summaries (term | function | example)
+- Conjugation/declension paradigms
+- Aspect pair comparisons (imperfective vs perfective)
+- Case function summaries (case | question | usage)
+
+**Mermaid flowcharts** — Consider using for:
+- "Which aspect do I use?" decision trees
+- "Which case after this preposition?" logic
+- Word formation processes (prefix + root → meaning)
+
+Example table:
+| Вид | Значення | Сигнальні слова |
+|-----|----------|----------------|
+| Недоконаний | процес, тривалість | завжди, часто, довго |
+| Доконаний | результат, завершення | вже, нарешті, раптом |
+
+Example mermaid:
+```mermaid
+flowchart TD
+  A[Яка дія?] --> B{Є результат?}
+  B -->|Так| C[Доконаний вид]
+  B -->|Ні| D[Недоконаний вид]
+```
+
+**Rule of thumb:** If you're comparing 2+ patterns or explaining a sequential decision, a table or flowchart is almost always better than a paragraph. But if the explanation is simple and linear, prose is fine.
 
 ### Anti-Patterns (DO NOT)
 
@@ -51,6 +83,57 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track, word target: {
 - **Template repetition**: Don't start 3+ sentences the same way
 - **Dry exposition**: Use storytelling, not textbook listing
 - **Fact duplication**: Each date/quote/statistic appears in ONE section only. Cross-reference with "Як зазначалося вище..." if needed.
+
+### Pedagogical Excellence Standards (MANDATORY)
+
+**This content teaches foreigners Ukrainian. Every section must help the learner UNDERSTAND, not just present information.**
+
+1. **Simple → Complex Progression** — Within each section, start with the simplest form/usage, then build to complex. Never introduce a complex concept before its foundation. WRONG: jump to exceptions before the rule. RIGHT: rule → examples → exceptions → edge cases.
+
+2. **Concept Before Use** — Every grammatical term, word class, or structure must be explicitly explained BEFORE it appears in examples or exercises. Never assume the learner already knows a term from a previous module unless the meta says so. WRONG: using "доконаний вид" in examples before explaining what aspect means. RIGHT: define aspect → explain доконаний → then use in examples.
+
+3. **Contextualized Grammar** — Grammar is a tool, not a list. Every rule must connect to real communication. For each grammar point: WHY does a Ukrainian speaker need this? WHEN do they use it? WRONG: "Давальний відмінок відповідає на питання «кому?»" (definition only). RIGHT: "Коли ви хочете подарувати щось другу — вам потрібен давальний відмінок" (real motivation, then formal definition).
+
+4. **Active Learning Prompts** — Every major section must include at least one moment where the learner pauses to think. Use callouts like `[!tip] Спробуйте самі`, `[!context] Подумайте`, or inline "Зверніть увагу:" prompts. These are NOT exercises (those are Phase 3) — they are cognitive checkpoints that deepen understanding.
+
+5. **Mnemonic Aids** — For complex patterns (case endings, aspect pairs, verb conjugations), provide memory aids: visual patterns, rhymes, analogies to familiar concepts, or comparison tables that reveal the underlying logic. WRONG: listing 7 case endings as raw data. RIGHT: showing the pattern/logic that connects them, with a mnemonic or analogy.
+
+6. **Cultural Anchoring** — Connect at least 2-3 grammar or vocabulary points to Ukrainian cultural context (literature, proverbs, songs, traditions). This makes abstract grammar memorable and grounds it in the living language. Reference real Ukrainian figures (Шевченко, Леся Українка, Франко) when their quotes illustrate the grammar point naturally.
+
+7. **Error Prevention** — Anticipate common learner mistakes (especially for speakers of English, Polish, Russian). For each major grammar point, include at least one "common mistake" callout: `[!warning]` with the wrong form and the correct alternative. This is especially critical for Russianisms that learners may encounter online.
+
+### Presentation Quality Standards (MANDATORY)
+
+8. **Presentation Consistency** — When explaining N items in a category (cases, POS, tenses): SAME format, SAME depth (±20%), SAME example count (±1). WRONG: 6 in table + 3 in list + 1 casual mention. RIGHT: all 10 in one consistent format.
+
+9. **Equal Treatment** — No category item as afterthought. If teaching 7 cases, each gets proportional depth. Even simpler items get a dedicated block with example + usage note.
+
+10. **Parallel Structure** — Matching sections in content_outline use identical internal pattern. If Section A = [intro → table → examples → callout], Section B = same.
+
+11. **Zero English Contamination (B1+)** — For immersion >= 85%: no parenthetical English, no code-switching, no English callout text. Only exception: vocabulary table "Переклад" column. Pre-output check: search for Latin characters outside proper nouns.
+
+12. **Section Title Language** — Immersion >= 85%: all H2/H3 titles in Ukrainian. Below 85%: English acceptable.
+
+13. **Example Variety** — FORBIDDEN: 5+ consecutive `_Приклад:_` lines. Mix formats: standalone examples (max 3-4 per section), comparison tables, inline examples within prose, mini-dialogues, callout boxes with examples.
+
+14. **Callout Formatting Precision** — Exact syntax: `> [!tip] Title` then `> text`. No dangling `**`. Spread callouts evenly across sections — not all bunched at the end.
+
+### Pre-Output Checklist (verify BEFORE writing ===CONTENT_START===)
+
+Before producing your final output, mentally verify each item:
+
+1. ☐ Every section from `content_outline` appears as H2/H3
+2. ☐ Total word count >= {WORD_TARGET} (overshoot to {OVERSHOOT_TARGET})
+3. ☐ {ENGAGEMENT_MIN}+ engagement callouts spread across sections
+4. ☐ {EXAMPLE_MIN}+ example sentences in varied formats
+5. ☐ Immersion matches {IMMERSION_RULE}
+6. ☐ **Consistency check**: all items in each category use same format and depth
+7. ☐ **Parallel structure**: matching sections follow identical internal pattern
+8. ☐ **Example variety**: no 5+ consecutive `_Приклад:_` — formats are mixed
+9. ☐ **Callout spread**: engagement boxes distributed evenly, not bunched
+10. ☐ **Zero English contamination**: no Latin characters in prose (except proper nouns / vocab table)
+11. ☐ **Section titles**: all H2/H3 in Ukrainian (if immersion >= 85%)
+12. ☐ **Pedagogical flow**: simple → complex within each section, concept before use
 
 ### Section Word Buffer
 

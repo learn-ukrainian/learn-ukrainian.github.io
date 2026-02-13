@@ -110,6 +110,20 @@ orchestration/{slug}/
 
 ---
 
+## Module Completion Criteria
+
+**A module is NOT complete until ALL of these are true:**
+
+1. ✅ Phase 4 audit passes (all strict gates green)
+2. ✅ Phase 5 status + MDX generated
+3. ✅ Phase 6 Green Team review generated (not rubber-stamped)
+4. ✅ Phase 6b review fixes applied (every actionable issue addressed)
+5. ✅ Final audit re-passes after Phase 6b fixes
+
+**Phase 6b is NOT optional. The workflow proceeds automatically from Phase 6 → Phase 6b → Final audit.** Do NOT skip Phase 6/6b. Do NOT report completion after Phase 5. Do NOT stop and wait for human instruction between Phase 6 and Phase 6b. The module is done when the review cycle is complete and the final audit passes.
+
+---
+
 ## Phases
 
 ### Phase 0: Research
@@ -149,6 +163,8 @@ orchestration/{slug}/
 4. Write to `{slug}.md`
 5. Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
 6. Validate: word count >= 90% of word_target, all H2 sections from outline present
+
+**Word target overshoot strategy:** Always ask Gemini for `word_target * 1.15` (15% overshoot) in the prompt. Gemini consistently underproduces, and audit trims raw words. Example: for a 3000-word target, ask for 3500 in the prompt.
 
 **For seminar tracks (word_target > 4000):** Content may need a 3a/3b split. If first output is under target, send a continuation prompt for the remaining sections.
 
@@ -266,7 +282,9 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 - If review is rubber-stamped after 2 retries: save as-is and flag for human review
 - Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
 
-### Phase 6b: Fix Review Findings (Claude)
+### Phase 6b: Fix Review Findings (Claude) — AUTO-PROCEEDS FROM PHASE 6
+
+> **After Phase 6 review is saved, IMMEDIATELY proceed to Phase 6b. Do NOT stop and wait for human instruction.**
 
 **After Phase 6 review passes, Claude fixes actionable issues found by the Green Team.**
 
@@ -369,10 +387,10 @@ Claude extracts this and saves to `orchestration/{slug}/friction-attempt-{N}.md`
 
 ## Retention Policy
 
-- **During rebuild**: Keep all `orchestration/` dirs on disk. Don't delete until the full track is done.
-- **After track completion**: Summarize unique frictions into `docs/rebuild-friction-log.md`, then purge `orchestration/` dirs.
+- **During rebuild**: Keep all `orchestration/` dirs on disk. Don't delete until the full track is done. **`**/orchestration/` must NOT be in `.gitignore` during active rebuilds** — Gemini cannot read gitignored files. The pattern is commented out in `.gitignore` by default.
+- **After track completion**: Uncomment `**/orchestration/` in `.gitignore`, summarize unique frictions into `docs/rebuild-friction-log.md`, then purge `orchestration/` dirs.
 - **Failed/abandoned modules**: Keep `orchestration/` dir for debugging.
-- **Git**: Add `**/orchestration/` to `.gitignore` — intermediate artifacts don't belong in version control.
+- **Staging prompt files**: Write all prompt files to `orchestration/{slug}/` — Gemini reads them from there directly. Do NOT use system `/tmp/` (outside Gemini's sandbox) or gitignored directories.
 
 ---
 

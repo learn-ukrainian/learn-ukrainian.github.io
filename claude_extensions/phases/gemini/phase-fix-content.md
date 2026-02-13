@@ -55,6 +55,19 @@ Read these files from disk:
 - Do NOT request skills, delegate to Claude, or skip fixes
 - Do NOT add commentary — just output the fixed content
 
+### Quality Verification (after applying fixes)
+
+After applying all fixes from the Fix Plan, verify the result does not INTRODUCE these problems:
+
+1. ☐ **Consistency**: If you changed how one item in a category is presented, update ALL items to match
+2. ☐ **Parallel structure**: If you restructured one section, matching sections must follow the same pattern
+3. ☐ **Example variety**: Fixes must not create 5+ consecutive `_Приклад:_` lines — vary the format
+4. ☐ **Callout spread**: New callouts should not bunch with existing ones — spread evenly across sections
+5. ☐ **English contamination**: Fixes must not introduce English text into immersion >= 85% content
+6. ☐ **Table narrative wrapping**: If you added a table, include 2+ sentences of context before and after it
+
+If applying fixes INTRODUCES any of these problems, fix them too before outputting.
+
 ## Output Format
 
 **CRITICAL: Output the COMPLETE fixed content between these delimiter lines.**
