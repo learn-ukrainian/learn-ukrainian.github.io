@@ -74,6 +74,7 @@ content_outline:
 
 Before returning, verify:
 - [ ] All section names are Ukrainian
+- [ ] **Section names match plan exactly** — If the plan has a `content_outline` with section names, your output MUST use those EXACT names (or very close Ukrainian equivalents). Do NOT invent new section names that diverge from the plan. The audit will fail if meta section names don't match the content's H2 headings, which must match the plan.
 - [ ] Each section has `words` and `points`
 - [ ] Sum of all `words` = {WORD_TARGET}
 - [ ] No section has fewer than 200 words

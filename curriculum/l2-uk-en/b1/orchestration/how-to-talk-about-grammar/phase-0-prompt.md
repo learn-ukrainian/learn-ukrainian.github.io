@@ -8,30 +8,38 @@
 Read the plan file:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/how-to-talk-about-grammar.yaml
-```
-
-Read the meta file:
-
-```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/how-to-talk-about-grammar.yaml
+curriculum/l2-uk-en/plans/b1/how-to-talk-about-grammar.yaml
 ```
 
 Read the level quick-ref for constraints:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/b1.md
+claude_extensions/quick-ref/b1.md
 ```
+
+Read the State Standard compliance mapping (small file — read this FIRST):
+
+```
+docs/l2-uk-en/state-standard-2024-mapping.yaml
+```
+
+The full State Standard 2024 is at `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt` (431KB, ~6000 lines). **Do NOT read the entire file.** Instead:
+1. Check the mapping file for the relevant B1 section — find the grammar topic that matches your module
+2. Use the `lines: [start, end]` coordinates to read ONLY that section from the full Standard (e.g., `read_file` with offset=start, limit=end-start+10)
+3. If the mapping has no entry for this specific topic, search the Standard by §number or topic keyword as fallback
+4. If you still can't find a relevant section, say so honestly — do NOT fabricate a §reference
 
 ## Your Task
 
 Research **Як говорити про граматику** for the **B1** core track. Core tracks need lighter research than seminar tracks — focus on accuracy and State Standard alignment.
 
+You have web search available — use it for vocabulary frequency, cultural facts, and teaching resources. Do NOT rely only on training data when you can verify with real sources.
+
 ### Research Requirements
 
-1. **State Standard Reference**: Find the §section in the Ukrainian State Standard 2024 that covers this grammar point or topic area. Quote the relevant requirement.
-2. **Vocabulary Frequency**: For key vocabulary items in the plan, verify frequency on lcorp.ulif.org.ua or similar corpus. Note high-frequency collocations.
-3. **Cultural Hook**: Find 1-2 verified cultural facts (NOT from memory) to anchor the lesson. These should be authentic, not generic.
+1. **State Standard Reference**: Look up the §section in the mapping file (`state-standard-2024-mapping.yaml`), then read ONLY that section from the full State Standard (`UKRAINIAN-STATE-STANDARD-2024.txt`). Quote the relevant requirement.
+2. **Vocabulary Frequency**: For key vocabulary items in the plan, search for frequency data and collocations. Use web search or corpus tools if available. Note high-frequency collocations.
+3. **Cultural Hook**: Find 1-2 verified cultural facts to anchor the lesson. Use web search to verify — do NOT rely on memory alone for dates, quotes, or historical claims.
 4. **Cross-References**: Note which modules this builds on and prepares for (check the plan's `connects_to` field).
 5. **Common Errors**: Identify 2-3 common learner mistakes for this grammar point/topic (from teaching resources, not guesses).
 
@@ -47,13 +55,13 @@ Return your research as structured markdown:
 # Дослідження: Як говорити про граматику
 
 ## State Standard Reference
-§{section_number}: "{quoted requirement}"
+§{section_number}: "{quoted requirement from UKRAINIAN-STATE-STANDARD-2024.txt}"
 Alignment: {how this module addresses the standard}
 
 ## Vocabulary Frequency
-| Word | Frequency rank | Key collocations |
-|------|---------------|------------------|
-| ...  | ...           | ...              |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| ...  | ...               | ...              |
 
 ## Cultural Hooks
 1. {Verified fact with source}

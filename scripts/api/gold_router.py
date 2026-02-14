@@ -189,26 +189,55 @@ async def plan_details(track_id: str):
 
 @router.get("/inspect/{track_id}/{slug}")
 async def inspect_module(track_id: str, slug: str):
-    """Deep dive into a specific module's actual file content."""
-    md_path = CURRICULUM_ROOT / track_id / f"{slug}.md"
-    if not md_path.exists():
-        return {"error": "Source file not found"}
-
-    content = md_path.read_text()
-    words = len(content.split())
-    
-    # Simple count of headers and callouts
-    h2_count = content.count("\n## ")
-    callout_count = content.count("> [!")
-    
-    return {
+    """Deep dive into a specific module's actual file content and its plan."""
+    res = {
         "slug": slug,
         "track": track_id,
-        "word_count": words,
-        "sections": h2_count,
-        "engagement_callouts": callout_count,
-        "last_modified": datetime.fromtimestamp(md_path.stat().st_mtime, tz=timezone.utc).isoformat()
+        "build": None,
+        "plan": None,
+        "phases": {"current": 0, "status": "pending"}
     }
+
+    # 1. Check Plan
+    plans_file = CURRICULUM_ROOT / "plans" / track_id / f"{slug}.yaml"
+    if plans_file.exists():
+        try:
+            with open(plans_file) as f:
+                res["plan"] = yaml.safe_load(f)
+        except: pass
+
+    # 2. Check Build
+    md_path = CURRICULUM_ROOT / track_id / f"{slug}.md"
+    if md_path.exists():
+        content = md_path.read_text()
+        res["build"] = {
+            "word_count": len(content.split()),
+            "sections": content.count("\n## "),
+            "callouts": content.count("> [!"),
+            "last_modified": datetime.fromtimestamp(md_path.stat().st_mtime, tz=timezone.utc).isoformat(),
+            "snippet": "\n".join(content.splitlines()[:15])
+        }
+
+    # 3. Determine Phase from orchestration
+    orch_dir = CURRICULUM_ROOT / track_id / "orchestration" / slug
+    if orch_dir.exists():
+        phase_files = list(orch_dir.glob("phase-*-output.md"))
+        if phase_files:
+            # Extract highest phase number
+            max_phase = 0
+            for pf in phase_files:
+                try:
+                    num = int(pf.name.split("-")[1])
+                    max_phase = max(max_phase, num)
+                except: pass
+            res["phases"]["current"] = max_phase
+            res["phases"]["status"] = "in-progress"
+            
+        if (orch_dir / "phase-6-review.md").exists():
+            res["phases"]["current"] = 6
+            res["phases"]["status"] = "review"
+
+    return res
 
 
 @router.get("/orchestration/{track_id}/{slug}")
@@ -231,22 +260,30 @@ async def orchestration_history(track_id: str, slug: str):
     return artifacts
 
 
+import sqlite3
+
 @router.get("/broker-messages")
 async def broker_messages():
-    """Read the live outbox/inbox for agent communication."""
-    outbox = PROJECT_ROOT / ".gemini" / "outbox"
-    messages = []
-    if outbox.exists():
-        for f in sorted(outbox.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True):
-            try:
-                with open(f) as fh:
-                    msg = json.load(fh)
-                    msg["id"] = f.stem
-                    msg["direction"] = "outbound"
-                    msg["time"] = datetime.fromtimestamp(f.stat().st_mtime, tz=timezone.utc).isoformat()
-                    messages.append(msg)
-            except: pass
-    return messages[:50]
+    """Read the live message stream from the SQLite broker."""
+    db_path = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
+    if not db_path.exists():
+        return []
+
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        # Get last 100 messages across all tasks
+        cur.execute("""
+            SELECT id, task_id, from_llm, to_llm, message_type, content, timestamp, status 
+            FROM messages 
+            ORDER BY id DESC LIMIT 100
+        """)
+        rows = [dict(row) for row in cur.fetchall()]
+        conn.close()
+        return rows
+    except Exception as e:
+        return {"error": str(e)}
 
 @router.get("/active-orchestration")
 async def active_orchestration():

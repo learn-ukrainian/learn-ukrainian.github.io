@@ -72,13 +72,84 @@ Generate two YAML blocks: activities and vocabulary.
 
 Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
 
+### Common Schema Mistakes (FIX BEFORE OUTPUT)
+
+**These mistakes caused audit failures in previous rebuilds. Check EVERY activity against these rules:**
+
+1. **Quiz `explanation` placement** — `explanation` goes at the QUESTION level, NOT inside an option. WRONG:
+```yaml
+options:
+  - text: "відповідь"
+    correct: true
+    explanation: "Пояснення"  # WRONG — explanation is not a valid option field
+```
+CORRECT:
+```yaml
+explanation: "Пояснення чому ця відповідь правильна"
+options:
+  - text: "відповідь"
+    correct: true
+```
+
+2. **Quiz question text length** — Every `question` field must be ≥5 words. WRONG: "Слово «хто» — це..." (3 words). RIGHT: "До якої частини мови належить слово «хто»?" (8 words). Short questions fail the pedagogy gate.
+
+3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
+
+4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `ipa`, `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary.
+
+### Activity Quality Standards (MANDATORY)
+
+**These rules prevent low-quality activities that waste learner time:**
+
+1. **Production over recognition** — At least 2 activities must require the learner to PRODUCE language, not just recognize it. Production types: `translate` (with free text, not multiple choice), `fill-in`, `unjumble`, `error-correction`, `cloze`. Recognition types: `quiz`, `true-false`, `select`, `match-up`, `group-sort`. A module with only recognition activities fails review.
+
+2. **Plausible example sentences** — Every sentence in every activity must be something a real Ukrainian speaker might actually say, write, or encounter. FORBIDDEN: philosophical/motivational statements ("Граматика — це музика мови"), meta-sentences about learning ("Ми спостерігаємо за тривалістю лінгвістичного експерименту"), or artificially constructed sentences that exist only to contain target vocabulary. GOOD: everyday speech, textbook excerpts, teacher instructions, realistic dialogues.
+
+3. **Unjumble quality** — Unjumble sentences must test grammar knowledge (word order rules, case agreement, verb placement). FORBIDDEN: reassembling motivational quotes or poetic metaphors. Each unjumble sentence should have exactly one correct grammatical order.
+
+4. **mark-the-words minimum** — `mark-the-words` activities must have at least 3 separate text passages (sentences or short paragraphs). One sentence with 6 targets is too thin for meaningful practice.
+
+5. **Error-correction precision** — Each item must have exactly one clear error with one correct fix. The error must be a plausible learner mistake (wrong case, wrong aspect, Russianism), not an obviously absurd mistake nobody would make.
+
+6. **Group-sort accuracy** — Every item must belong unambiguously to exactly one group. Do NOT include category labels (like "непрямий" meaning "indirect cases") as items — only include concrete instances.
+
+7. **Item count consistency** — Activities of the same type should have similar item counts (±2). Don't have one quiz with 4 items and another with 12.
+
+### YAML Formatting Rules (HARD FAIL if violated)
+
+**Do NOT use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when combined with colons.
+
+```yaml
+❌ WRONG (guillemets + colon = YAML parse error):
+  title: «Знайдіть пару: термін та його значення»
+  explanation: Термін «доконати» означає: завершити дію.
+
+✅ RIGHT (plain strings, quote with single quotes if value contains colon):
+  title: 'Знайдіть пару: термін та його значення'
+  explanation: Термін доконати означає завершити дію.
+```
+
+**Rules:**
+1. **Never use `«»` in YAML** — use plain text or single/double quotes
+2. **Quote any value containing `:`** with single quotes: `'text: with colon'`
+3. **In example sentences**, use plain quotes or omit decorative quotes entirely
+4. **Double-check** every `title`, `question`, `sentence`, `explanation`, and `text` field
+
+### Language Quality (applies to ALL Ukrainian text in activities)
+
+- **Typography in CONTENT files**: use Ukrainian angular quotes «...» — but **NOT in YAML** (see above)
+- **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий
+- **No Russian characters**: ы, э, ё, ъ must NEVER appear
+- **IPA**: Use IPA notation only (no Latin transliteration)
+
 ### Vocabulary YAML Rules
 
-1. **BARE LIST at root** — no `vocabulary:` wrapper
+1. **Object with `items:` wrapper** — NOT a bare list. Required structure: `items:` array
 2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
-3. **Each entry needs**: `term`, `translation`, `ipa`, `pos` (part of speech)
-4. **IPA must have correct stress** — verify stress placement
-5. **Count target**: {VOCAB_COUNT_TARGET} items
+3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos` (part of speech)
+4. **Optional fields**: `ipa`, `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
+5. **IPA must have correct stress** — verify stress placement
+6. **Count target**: {VOCAB_COUNT_TARGET} items
 
 ## Output Format
 
@@ -86,7 +157,169 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 
 Return TWO YAML blocks with clear delimiters:
 
-{ACTIVITY_EXAMPLES}
+### Correct YAML Examples (COPY THESE STRUCTURES EXACTLY)
+
+**These are the EXACT field structures from the schema. Using wrong fields = instant audit failure.**
+
+#### unjumble (CRITICAL — #1 schema failure in previous rebuilds)
+
+```yaml
+- type: unjumble
+  title: "Складіть речення"
+  items:  # minItems: 6
+    - words: ["мова", "українська", "красива"]  # Array of strings, NOT a single string
+      answer: "Українська мова красива"          # The correct sentence as one string
+    - words: ["граматику", "ми", "вивчаємо"]
+      answer: "Ми вивчаємо граматику"
+```
+
+❌ WRONG: `jumbled: "мова українська красива"` (string field does NOT exist in schema)
+❌ WRONG: `sentence: "..."` (field does NOT exist)
+✅ ONLY: `words` (array of strings) + `answer` (string)
+
+#### group-sort
+
+```yaml
+- type: group-sort
+  title: "Розподіліть за групами"
+  groups:  # minItems: 2, practical max: 4-5
+    - name: "Іменники"
+      items: ["книга", "стіл", "місто"]
+    - name: "Дієслова"
+      items: ["читати", "писати", "бігти"]
+```
+
+❌ WRONG: `items:` at root level — use `groups:` array with `name` + `items`
+❌ WRONG: 6+ groups — keep to 2-4 for usability
+
+#### mark-the-words (requires `instruction` — REQUIRED field)
+
+```yaml
+- type: mark-the-words
+  title: "Знайдіть іменники"
+  instruction: "Знайдіть і позначте всі іменники в тексті."  # REQUIRED
+  text: "Гарний день приніс радість у серце. Маленька дитина грала в парку. Сонячне світло освітлювало дорогу."
+  answers: ["день", "радість", "серце", "дитина", "парку", "світло", "дорогу"]
+```
+
+❌ WRONG: `items:` array — mark-the-words uses `text` (single string) + `answers`
+❌ WRONG: Missing `instruction` — it is REQUIRED for this type
+
+#### cloze (minItems: 14 blanks)
+
+```yaml
+- type: cloze
+  title: "Заповніть пропуски"
+  passage: "Це {{1}} з пропусками. Кожен {{2}} має номер."  # Use {{N}} markers
+  blanks:  # minItems: 14 — you need at least 14 blanks!
+    - id: 1
+      answer: "текст"
+      options: ["текст", "слово", "речення", "абзац"]  # exactly 4
+    - id: 2
+      answer: "пропуск"
+      options: ["пропуск", "елемент", "частина", "блок"]
+```
+
+❌ WRONG: `items:` — cloze uses `passage` + `blanks`
+❌ WRONG: Fewer than 14 blanks — schema requires minItems: 14
+
+#### error-correction (ALL 5 fields REQUIRED per item)
+
+```yaml
+- type: error-correction
+  title: "Виправте помилку"
+  items:  # minItems: 6
+    - sentence: "Я кушаю яблуко кожен день."
+      error: "кушаю"                            # REQUIRED
+      answer: "їм"                              # REQUIRED
+      options: ["їм", "їду", "їжу", "кусаю"]   # REQUIRED, exactly 4
+      explanation: "«Кушати» — русизм, правильно «їсти»."  # REQUIRED
+```
+
+❌ WRONG: Missing any of `sentence/error/answer/options/explanation` — ALL five are required
+✅ Optional: `error_type: "word"` (or "phrase", "register", "construction")
+
+#### select (multi-correct, min 4 options)
+
+```yaml
+- type: select
+  title: "Оберіть правильні відповіді"
+  items:  # minItems: 6
+    - question: "Які з цих слів є іменниками? Оберіть усі правильні."
+      options:  # minItems: 4, maxItems: 6
+        - text: "книга"
+          correct: true
+        - text: "читати"
+          correct: false
+        - text: "стіл"
+          correct: true
+        - text: "швидко"
+          correct: false
+```
+
+#### quiz (reminder — explanation goes at QUESTION level)
+
+```yaml
+- type: quiz
+  title: "Перевірте знання"
+  items:  # minItems: 8, question ≥5 words
+    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
+      explanation: "Дієслово позначає дію або стан."  # HERE at question level
+      options:  # exactly 4
+        - text: "дієслово"
+          correct: true
+        - text: "іменник"
+          correct: false
+        - text: "прикметник"
+          correct: false
+        - text: "прислівник"
+          correct: false
+```
+
+❌ WRONG: `explanation` inside an option object — it goes at the question level
+
+### Activity Count Check (MANDATORY)
+
+**Count your activities before outputting.** You MUST generate {ACTIVITY_COUNT_TARGET} activities. Previous rebuilds consistently underproduced (8 activities when 12-16 were needed). If under target, ADD MORE activities before submitting. Types to add when short: quiz (8+ items), fill-in (8+ items), match-up (8+ pairs).
+
+### Output Delimiters
+
+Activities block (BARE LIST — no wrapper):
+
+```
+===ACTIVITIES_START===
+
+- type: quiz
+  title: "..."
+  items:
+    ...
+
+- type: unjumble
+  title: "..."
+  items:
+    ...
+
+===ACTIVITIES_END===
+```
+
+Vocabulary block (OBJECT with `items:` wrapper):
+
+```
+===VOCABULARY_START===
+
+items:
+  - lemma: "іменник"
+    translation: "noun"
+    ipa: "/i.ˈmɛn.nɪk/"
+    pos: "noun"
+  - lemma: "дієслово"
+    translation: "verb"
+    ipa: "/di.jeˈslɔ.wɔ/"
+    pos: "noun"
+    notes: "describes the concept of a verb as a part of speech"
+
+===VOCABULARY_END===
+```
 
 ## Friction Report (MANDATORY)
 

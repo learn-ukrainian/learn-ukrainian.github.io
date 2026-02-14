@@ -23,174 +23,30 @@ Read ALL of these files from disk before writing anything:
 ## Audit Metrics (Facts — from automated audit)
 
 ```
-Skill identity:   Senior Language & Culture Specialist
-Persona flavor:   Linguistics Professor
+Skill identity:   Patient & Supportive Ukrainian Tutor
+Persona flavor:   The Helpful Neighbor
 Module persona:   Senior Language & Culture Specialist, acting as Linguistics Professor
-Word count:       4823 / 4000 (120%)
-Activities:       14
-Vocabulary items: 27
-Engagement boxes: 13
-Immersion:        96.4% (target: 75% — B1.0 bridge)
-Audit status:     PASS (all gates green)
+Word count:       4316 / 4000 (108%)
+Activities:       5
+Vocabulary items: 25
+Engagement boxes: 6
+Immersion:        86.7% (target: 70%)
+Audit status:     PASSED
 ```
 
 ---
 
 ## Tier-Specific Review Guidance
 
-# Tier 2: Core Levels (B1/B2 Core/B2-PRO)
-
-> **Target:** B1, B2 Core, and B2-PRO modules (NOT B2-HIST, NOT seminar tracks)
-> **Pedagogy:** TTT (Test-Teach-Test) for grammar; ESP for B2-PRO
-> **Immersion:** 85-100% Ukrainian
-> **Experience Goal:** Serious teaching — learner is challenged and grows
-
----
-
-### TEACHING EXPERIENCE AUDIT (Tier 2 Adaptation)
-
-> **Key Question:** "Is this effective, engaging Ukrainian teaching?"
->
-> At B1/B2 Core, learners are ready for:
-> - Full Ukrainian immersion (with occasional English for complex explanations)
-> - Challenging content that stretches them
-> - Real-world application
-> - Genuine insights about the language
-> - Teacher voice that guides without hand-holding
-
-#### The "Did I Learn?" Test
-
-**Read the module as an intermediate learner.** Ask:
-
-| Question | Pass | Fail |
-|----------|------|------|
-| Did I learn something new? | Clear "aha" moment | Just review or obvious content |
-| Was the explanation clear? | Understood without re-reading | Had to guess or puzzle |
-| Could I apply this in conversation? | Clear practical use | Abstract or disconnected |
-| Was I appropriately challenged? | Stretched but not broken | Too easy or too hard |
-| Did the teacher voice guide me? | Felt taught, not lectured at | Textbook or robotic |
-
-#### Teaching Arc (B1/B2 Adaptation)
-
-**Core modules need effective teaching structure:**
-
-```
-HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
-```
-
-| Element | What to Look For | Red Flag |
-|---------|------------------|----------|
-| **HOOK** | Why this matters, real-world need | Generic "Let's learn about X" |
-| **DISCOVER** | Test/examples before rules (TTT) | Rules dumped immediately |
-| **EXPLAIN** | Clear grammar/vocab explanation with "why" | Just "what" without "why" |
-| **PRACTICE** | Structured exercises with progression | Random or too easy exercises |
-| **APPLY** | Real-world context, production tasks | Only recognition, no production |
-| **SUMMARIZE** | Key takeaways, common mistakes | Abrupt ending |
-
-#### Weak Moment Categories (B1/B2 Core)
-
-| Category | Pattern | Example | Required Fix |
-|----------|---------|---------|--------------|
-| **RULE_DUMP** | Grammar rules without context | "Use accusative for direct objects" | Add real example first |
-| **MISSING_WHY** | What/how but no why | "Perfective = completed" (ok, but why care?) | Add "why this matters" |
-| **TEXTBOOK_EXAMPLES** | Generic, forgettable examples | "Іван читає книгу" | Use culturally rich example |
-| **NO_CHALLENGE** | Content too easy for level | B1 grammar at A2 difficulty | Increase complexity |
-| **ABSTRACT_GRAMMAR** | Rules without application | "Verbs agree in number and gender" | Show in real sentence |
-| **WALL_OF_EXPLANATION** | >500 words of explanation | Long prose about case usage | Break up with examples |
-| **PRACTICE_AFTERTHOUGHT** | Exercises seem tacked on | Random exercises at end | Integrate practice throughout |
-| **COLD_TEACHER** | No personality or warmth | "The rule is..." (flat) | Add teacher voice |
-
-#### A+ Teaching Lesson Checklist
-
-| Criterion | A+ Standard | B Standard | C or Below |
-|-----------|-------------|------------|------------|
-| **Opening** | Compelling "why this matters" | Clear topic intro | Generic start |
-| **TTT Structure** | Test before teach, clear progression | Some discovery elements | Lecture-style delivery |
-| **Explanations** | Clear, with "why" layer | Clear but shallow | Confusing or incomplete |
-| **Examples** | Rich, culturally embedded | Generic but correct | Missing or poor |
-| **Practice** | Progressive, integrated | Present but separate | Insufficient or disconnected |
-| **Teacher Voice** | Guiding, encouraging, anticipating confusion | Present sometimes | Absent or robotic |
-| **Closing** | Summarizes, warns of mistakes, looks forward | Basic summary | Abrupt end |
-| **Overall Feel** | "I really learned something" | "I covered the material" | "I'm confused" |
-
-#### Dimension Rubrics (Tier 2 Adaptations)
-
-**Immersion Targets (B1):**
-
-| Level | Target Range | Notes |
-|-------|--------------|-------|
-| B1.0 (bridge) | 70-85% | Transition module — more English OK |
-| B1.1 | 70-85% | Transition to full immersion |
-| B1.2 | 85-95% | High immersion |
-| B1.3 | 90-100% | Near full immersion |
-
-**Language Quality (Core Level):**
-- Native-level naturalness (>=8/10)
-- Appropriate register for teaching
-- No Russianisms or calques
-- Euphony respected (у/в, і/й alternations)
-
-**Activity Quality (Core Gates):**
-
-| Metric | B1/B2 Threshold |
-|--------|-----------------|
-| Naturalness | >=8.0 (native-level) |
-| Difficulty | appropriate (matches level) |
-| Distractor quality | >=4.0 (targets real errors) |
-| Variety | >=60% |
-| Engagement | >=3.5 |
-
-**Humanity & Warmth (Core Level):**
-
-| Marker | Minimum Count |
-|--------|---------------|
-| Direct address (ви, давайте) | >=10 |
-| Encouragement | >=2 |
-| Confusion anticipation | >=3 |
-| Real-world validation | >=2 |
-
-**LLM Fingerprint (Core Critical):**
-- No "It's important to note that..."
-- No "Let's dive into..."
-- No "Mastering X is crucial..."
-- No generic examples without Ukrainian specificity
-- No bullet-heavy without prose
-- No encyclopedic tone
-- Threshold: 3+ patterns = LLM_CLICHE_OVERUSE = Fix required
-
-#### Grammar Module Specific Checks
-
-**Aspectual Pair Verification:**
-If module claims aspectual pairs, both verbs share same core meaning, differ only in aspect.
-
-**Grammar Rule Accuracy:**
-- Verify case usage rules
-- Verify any verb conjugation patterns
-- Verify agreement rules
-- Flag unsupported claims
-
-**Linguistic Accuracy Score Impact:**
-Factual errors in grammar modules are AUTO-FAIL regardless of other scores.
-
----
-
-## AREAS TO SCRUTINIZE (B1 Grammar Module)
-
-This is a **bridge module** (B1.0) transitioning from A2 to full Ukrainian immersion. Pay special attention to:
-
-1. **Metalanguage accuracy** — Are all Ukrainian grammar terms correctly defined? Cross-check: називний asks "хто? що?", родовий asks "кого? чого?", давальний asks "кому? чому?", знахідний asks "кого? що?", орудний asks "ким? чим?", місцевий asks "на кому? на чому?", кличний is for direct address.
-2. **Equal treatment** — Do all 10 parts of speech get consistent depth and format? All 7 cases? Or are some afterthoughts?
-3. **Cultural anchoring** — Are grammar examples grounded in Ukrainian culture (Шевченко, Леся Українка, proverbs, real places)?
-4. **Presentation consistency** — Same format for all items in a category? No 6-in-table, 3-in-list, 1-casual?
-5. **Example variety** — Not 40+ consecutive `_Приклад:_` lines? Mixed formats (table, inline, dialogue, callout)?
-6. **English contamination** — For a module at 96.4% immersion, is there English leaking beyond the intro bridging paragraphs?
-7. **Historical claims** — If Smotrytsky's 1619 grammar is referenced, is it accurate?
+This is a **B1 bridge module** (Tier 2: Core). Key expectations:
+- Immersion target: 70% Ukrainian (English scaffolding allowed for metalanguage)
+- Pedagogy: PPP (Present-Practice-Produce)
+- Teaching arc: HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
+- "Did I Learn?" test: Read as an intermediate learner coming from A2
 
 ---
 
 ## Review Protocol
-
-Follow the full review protocol. In summary:
 
 ### STEP 1: Plan Verification
 - Outline compliance: every section from `content_outline` present as H2/H3?
@@ -201,18 +57,26 @@ Follow the full review protocol. In summary:
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
-- IPA: correct stress placement
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms
-- Calques
+- Russianisms (кушати→їсти, приймати участь→брати участь, etc.)
+- Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - Grammar scope violations
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
 
+### STEP 3b: LLM Fingerprint Scan (MANDATORY)
+
+**Structural monotony test**: Read the first 2 lines of each H2 section. Do 3+ sections start the same way?
+**Example batching test**: Search for consecutive `_Приклад:_` lines. If 3+ sections all have exactly 3-4 consecutive examples in the same position → flag.
+**Metaphor density test**: Count distinct metaphors. If >4 per module → flag.
+**Rhetoric pattern test**: Search for "це не просто" / "це не лише". If used 2+ times → flag.
+**Purple prose test**: Flag sentences with 3+ abstract nouns stacked.
+**Callout monotony test**: Are 3+ callouts using the same title?
+**Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence?
+
 ### STEP 4: Score 12 Dimensions
-Score ONLY after completing Steps 1-3. Each score linked to specific findings.
 
 | # | Dimension | Auto-fail |
 |---|-----------|-----------|
@@ -229,62 +93,23 @@ Score ONLY after completing Steps 1-3. Each score linked to specific findings.
 | 11 | LLM Fingerprint | <7 |
 | 12 | Linguistic Accuracy | <9 |
 
-**Weighted Overall:**
-```
-Overall = (Experience x 1.5 + Coherence x 1.0 + Relevance x 1.0 + Educational x 1.2 +
-          Language x 1.1 + Pedagogy x 1.2 + Immersion x 1.0 + Activities x 1.3 +
-          Richness x 0.9 + Beginner_Safety x 1.3 + LLM x 1.0 + Linguistic_Accuracy x 1.5) / 14.0
-```
-
----
-
 ## MINIMUM REQUIREMENTS
 
 Your review MUST contain:
-
-1. **>=3 real issues** with specific line numbers and quoted Ukrainian text in guillemets
-2. **>=2 dimensions scored below 9** (no module is perfect on first pass)
+1. **≥3 real issues** with specific line numbers and «quoted Ukrainian text»
+2. **≥2 dimensions scored below 9** (no module is perfect on first pass)
 3. **Specific evidence** for every score — not vague impressions
-4. **Fix Plan** for any dimension below 9 (concrete actions with line numbers)
-
----
+4. **Fix Plan** for any dimension below 9
 
 ## ANTI-GAMING ENFORCEMENT (AUTOMATED DETECTION ACTIVE)
 
-**The audit system has automated anti-gaming detection. The following trigger AUTOMATIC REJECTION:**
-
-1. **Gaming language** = REJECTED. Phrases: "ensuring a high score", "reflecting the fixes", "designed to pass", "clean audit".
-2. **All scores >= 9/10 with no issues** = REJECTED. No module is perfect.
-3. **Praise-only citations** = REJECTED. If every quote praises the content, it's uncritical.
-4. **Fabricated citations** = REJECTED. Every quoted sentence is cross-checked against the source file.
-
-**Your review scores DO NOT determine whether the module passes.** The automated audit gates are the real quality check. Your review catches issues automation cannot — linguistic nuance, pedagogical depth, semantic accuracy. A rubber-stamp review adds zero value and wastes compute.
+**Your review scores DO NOT determine whether the module passes.** The automated audit gates are the real quality check. Your review catches issues automation cannot. A rubber-stamp review adds zero value.
 
 **Be the skeptic. Find real problems. That is your only purpose.**
 
----
-
-## REQUIRED SECTIONS (AUTOMATED VALIDATION)
-
-Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJECTION:
-
-| # | Required Header (exact) | What goes there |
-|---|------------------------|-----------------|
-| 1 | `## Scores` | 12-dimension score table |
-| 2 | `## Critical Issues Found` | >=3 issues with quoted Ukrainian |
-| 3 | `## Verification Summary` | Counts: lines read, items checked, issues found |
-| 4 | `## Verdict` | PASS or FAIL with reasoning |
-
-**Do NOT rename these headers.** Do NOT use alternatives like "Conclusion" or "Assessment".
-**Do NOT skip `## Verification Summary`** — this is the #1 cause of review rejection.
-
----
-
 ## OUTPUT FORMAT
 
-> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
-
-Wrap your ENTIRE review in these delimiters:
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
 
 ```
 ===REVIEW_START===
@@ -293,53 +118,31 @@ Wrap your ENTIRE review in these delimiters:
 **Level:** B1 | **Module:** M01
 **Overall Score:** {X.X}/10
 **Status:** PASS / FAIL
-**Reviewed:** {date}
+**Reviewed:** 2026-02-14
 
 ## Plan Verification
-...
-
-## Scores    <!-- REQUIRED -->
-...
-
+## Scores
 ## Auto-Fail Checklist Results
-...
-
-## Critical Issues Found    <!-- REQUIRED -->
-...
-
+## Critical Issues Found
 ## Ukrainian Language Issues
-...
-
 ## Beginner Safety Audit
-...
-
 ## Strengths
-...
-
-## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
-...
-
-## Verification Summary    <!-- REQUIRED -->
-...
-
-## Verdict    <!-- REQUIRED -->
-...
-
+## Fix Plan to Reach 9/10
+## Verification Summary
+## Verdict
 ===REVIEW_END===
 ```
 
 ## Friction Report (MANDATORY)
 
-After your review, include:
-
 ```
 ===FRICTION_START===
 **Phase**: Phase 6: Green Team Review
-**Step**: {what you were doing when friction occurred, or "Full review"}
-**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
+**Step**: {what you were doing}
+**Friction Type**: NONE | ...
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
-**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+**Proposed Tooling Fix**: {if applicable, or "N/A"}
 ===FRICTION_END===
 ```
 
@@ -349,5 +152,4 @@ After your review, include:
 - Do NOT score generously — honesty prevents bad curriculum
 - Do NOT skip any step or dimension
 - Do NOT fabricate issues — every critique must cite a specific line number
-- Do NOT give vague feedback like "could be improved" — say exactly what and where
-- Do NOT reference orchestration artifacts or prior build phases
+- Do NOT give vague feedback — say exactly what and where

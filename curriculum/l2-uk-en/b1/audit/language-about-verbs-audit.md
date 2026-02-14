@@ -1,17 +1,16 @@
 # Audit Report: M02 — language-about-verbs.md
-**Level:** B1 | **Module:** M02 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
-**Naturalness:** 9/10 (PASS)
+**Level:** B1 | **Module:** M02 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-13 22:26:30
+**Generated:** 2026-02-14 14:13:57
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 3000 words
-**Activities:** 12-16 required
-**Items per Activity:** ≥14 items
-**Unique Types:** ≥5 types required
-**Priority Types:** fill-in, match-up, quiz, translate
-**Required Types:** fill-in, group-sort, match-up, quiz
+**Word Target:** 4000 words
+**Activities:** 4-8 required
+**Items per Activity:** ≥6 items
+**Unique Types:** ≥3 types required
+**Priority Types:** critical-analysis, error-correction, essay-response, fill-in, mark-the-words, match-up, quiz
+**Required Types:** error-correction, fill-in, match-up, quiz
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥20 words
@@ -20,77 +19,67 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | group-sort | Терміни дієслова: Категоризація | 25 | 14 | ✅ |
-| 2 | match-up | Дієслівні терміни та їхні визначення | 12 | 8 | ✅ |
-| 3 | fill-in | Опишіть дієслово: Вид та Час | 8 | 8 | ✅ |
-| 4 | unjumble | Розшифруйте терміни | 7 | 6 | ✅ |
-| 5 | error-correction | Виправте термінологічні помилки | 6 | 6 | ✅ |
-| 6 | quiz | Розуміння функцій дієслівних термінів | 8 | 8 | ✅ |
-| 7 | true-false | Правда чи Неправда: Дієслівні твердження | 8 | 8 | ✅ |
-| 8 | cloze | Вставте пропущені терміни | 15 | 14 | ✅ |
-| 9 | select | Оберіть дієслівні терміни | 6 | 6 | ✅ |
-| 10 | translate | Переклад граматичних термінів | 6 | 6 | ✅ |
-| 11 | mark-the-words | Знайдіть дієслівні терміни | 8 | 6 | ✅ |
-| 12 | mark-the-words | Виділіть форми дієслова | 7 | 6 | ✅ |
-| 13 | mark-the-words | Ідентифікуйте концепції дії | 6 | 6 | ✅ |
-| 14 | fill-in | Завершіть речення: Заперечення та Способи | 8 | 8 | ✅ |
+| 1 | match-up | Знайдіть пару: термін та його значення | 12 | 8 | ✅ |
+| 2 | quiz | Перевірка розуміння дієслівних категорій | 8 | 8 | ✅ |
+| 3 | fill-in | Опишіть властивості дієслова українською | 8 | 8 | ✅ |
+| 4 | error-correction | Виправте граматичні терміни та пояснення | 6 | 6 | ✅ |
+| 5 | mark-the-words | Знайдіть терміни в тексті | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 12-16) ✅
-- Unique types: 11 (minimum: 5) ✅
-- Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
-- Required types used: 4/4 (fill-in, group-sort, match-up, quiz) ✅
+- Total activities: 5 (target: 4-8) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (error-correction, fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3255/3000 (raw: 3494)
-- **Activities:** ✅ 14/12
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/5 types
+- **Words:** ✅ 4015/4000 (raw: 4691)
+- **Activities:** ✅ 5/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 5/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/4
+- **Engagement:** ✅ 10/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/20
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 91.4% (B1.1 Aspect)
-- **Richness:** ✅ 90% (bridge)
+- **Immersion:** 🇺🇦 94.2% (B1.1 Aspect)
+- **Richness:** ✅ 94% (bridge)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ℹ️ PENDING — awaiting review
 
 ## Richness Details
-**Score:** 90% (minimum: 90%)
+**Score:** 94% (minimum: 90%)
 **Module Type:** bridge
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 80 | 20 | 100% | 29% | 28.6% |
-| engagement | 8 | 5 | 100% | 19% | 19.0% |
-| variety | 0.96 | - | 96% | 10% | 9.1% |
-| cultural | 0 | 2 | 0% | 10% | 0.0% |
-| visual | 8 | 4 | 100% | 10% | 9.5% |
-| realworld | 15 | 2 | 100% | 10% | 9.5% |
+| examples | 93 | 20 | 100% | 29% | 28.6% |
+| engagement | 9 | 5 | 100% | 19% | 19.0% |
+| variety | 0.97 | - | 97% | 10% | 9.2% |
+| cultural | 1 | 2 | 50% | 10% | 4.8% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
+| realworld | 20 | 2 | 100% | 10% | 9.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 15 | 4 | 100% | 5% | 4.8% |
-| tables | 2 | 2 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **90.1%** |
+| questions | 39 | 4 | 100% | 5% | 4.8% |
+| tables | 4 | 2 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Мова про дієслова** | ✅ | 150 | Included in Core |
-| **Вступ: Чому термінологія дієслів важлива** | ✅ | 244 | Included in Core |
-| **Вид дієслова: Доконаний та недоконаний** | ✅ | 390 | Included in Core |
-| **Концепції дії: Дія, процес, результат** | ✅ | 353 | Included in Core |
-| **Часи дієслова: Теперішній, минулий, майбутній** | ✅ | 387 | Included in Core |
-| **Заперечення та його вираження** | ✅ | 350 | Included in Core |
-| **Додаткові дієслівні терміни: Спосіб, стан** | ✅ | 252 | Included in Core |
-| **Форми дієслова: Складна та синтетична** | ✅ | 288 | Included in Core |
-| **Практика читання граматичних пояснень** | ✅ | 250 | Included in Core |
-| **Діалоги та застосування термінів** | ✅ | 199 | Included in Core |
-| **Культурний контекст та підсумок** | ✅ | 190 | Included in Core |
-| **Підсумок** | ✅ | 202 | Included in Core |
+| **Мова про дієслова** | ✅ | 51 | Included in Core |
+| **Система дієслова: Вступ** | ✅ | 420 | Included in Core |
+| **Вид дієслова: Доконаний та недоконаний** | ✅ | 365 | Included in Core |
+| **Поняття дії: Процес та результат** | ✅ | 359 | Included in Core |
+| **Час дієслова: Граматична подорож** | ✅ | 580 | Included in Core |
+| **Заперечення та його вплив на вид** | ✅ | 296 | Included in Core |
+| **Додаткові дієслівні категорії** | ✅ | 300 | Included in Core |
+| **Форми дієслова: Синтетична та складена** | ✅ | 455 | Included in Core |
+| **Читання граматичних пояснень** | ✅ | 416 | Included in Core |
+| **Міні-діалоги: Обговорення граматики** | ✅ | 551 | Included in Core |
+| **Підсумок та практичні поради** | ✅ | 222 | Included in Core |

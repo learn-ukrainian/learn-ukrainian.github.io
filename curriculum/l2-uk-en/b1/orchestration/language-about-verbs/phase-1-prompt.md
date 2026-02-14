@@ -19,31 +19,26 @@ Read the **plan file** (SOURCE OF TRUTH for structure, word_target, objectives, 
 curriculum/l2-uk-en/plans/b1/language-about-verbs.yaml
 ```
 
-Read the **old meta file** (for reference only — you are REPLACING the content_outline):
-
-```
-curriculum/l2-uk-en/b1/orchestration/language-about-verbs/meta-old.yaml
-```
+Note: There is no existing meta file for this module. Build from plan + research only.
 
 ## Your Task
 
-**Rebuild** the `content_outline` in the meta file from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
+**Rebuild** the `content_outline` from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
 
 1. Every section has a `words` allocation
-2. Word allocations sum to **exactly 3000** (the plan's word_target)
+2. Word allocations sum to **exactly 4000** (the plan's word_target)
 3. Sections are informed by research notes (sections with richer research get more words)
 4. Section names are natural Ukrainian H2 headings
-5. Each section's `points` list is specific and actionable — not vague ("cover grammar" → bad; "Each POS gets its own H3 with definition, question, 2+ examples, usage note" → good)
+5. Each section's `points` list is specific and actionable — not vague ("cover grammar" → bad; "Each term gets definition, examples, English equivalent on first use" → good)
 
 ### Rules
 
 - **Do NOT change `word_target`** — it comes from the plan and is immutable
-- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
-- Allocations must sum to `word_target` (not more, not less)
+- Allocations must sum to `word_target` (not more, not less — exactly 4000)
 - Minimum section allocation: 200 words (smaller sections should be merged)
 - Each section must have `section`, `words`, and `points` fields
 - Section names must be Ukrainian (this is the lesson content heading)
-- **Bridge modules (immersion < 90%):** Note the plan's `immersion` field (75%). The intro section should explicitly list English scaffolding requirements: Ukrainian terms first with English equivalents in parentheses on first introduction, then Ukrainian only.
+- **Bridge module (immersion 70%):** The intro section should explicitly note English scaffolding requirements: Ukrainian term first, English equivalent in parentheses on first introduction only.
 - If the research found mnemonics, cultural anchors, or notable quotes: ensure the outline allocates space for them in the appropriate section's `points`
 
 ### Output Format
@@ -65,7 +60,7 @@ content_outline:
     points:
       - "..."
   # ... all sections
-  # Total: 3000 words
+  # Total: 4000 words
 ===META_OUTLINE_END===
 ```
 
@@ -73,8 +68,9 @@ content_outline:
 
 Before returning, verify:
 - [ ] All section names are Ukrainian
+- [ ] **Section names match plan exactly** — If the plan has a `content_outline` with section names, your output MUST use those EXACT names (or very close Ukrainian equivalents). Do NOT invent new section names that diverge from the plan. The audit will fail if meta section names don't match the content's H2 headings, which must match the plan.
 - [ ] Each section has `words` and `points`
-- [ ] Sum of all `words` = 3000
+- [ ] Sum of all `words` = 4000
 - [ ] No section has fewer than 200 words
 - [ ] Points reflect research findings
 - [ ] Section order follows logical narrative flow

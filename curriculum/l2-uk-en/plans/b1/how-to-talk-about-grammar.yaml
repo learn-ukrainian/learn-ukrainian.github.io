@@ -12,7 +12,7 @@ content_outline:
   - Benefits of learning grammar terminology in target language
   - Preparation for full immersion in B1.1+
   - Key structural terms (слово, речення, частина мови, граматика, правило, приклад)
-  - English scaffolding paragraph (bridge module — immersion 65%)
+  - English scaffolding paragraph (bridge module — immersion 70%)
 - section: "Частини мови: самостійні категорії"
   words: 750
   points:
@@ -54,7 +54,7 @@ content_outline:
   - Readiness check for M02
   - Self-assessment questions (6+)
 word_target: 4000
-immersion: 65%
+immersion: 70%
 vocabulary_hints:
   required:
   - дієслово (verb)
@@ -94,9 +94,9 @@ activity_hints:
 - type: fill-in
   focus: Complete sentences about grammar using Ukrainian terms
   items: 8+
-- type: group-sort
-  focus: Categorize terms by category (parts of speech vs cases)
-  items: 15+
+- type: error-correction
+  focus: Fix common metalanguage mistakes
+  items: 8+
 focus: integration
 pedagogy: PPP
 prerequisites:

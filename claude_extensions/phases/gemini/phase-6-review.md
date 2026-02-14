@@ -65,6 +65,26 @@ Follow the full review protocol from Phase 5 (Deep Review). In summary:
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
 
+### STEP 3b: LLM Fingerprint Scan (MANDATORY)
+
+This is the most commonly missed check. AI-generated content has distinctive patterns. Score dimension #11 based on these specific tests:
+
+**Structural monotony test**: Read the first 2 lines of each H2 section. Do 3+ sections start the same way (all with grand philosophical claims, all with "Ласкаво просимо", all with a definition)? If yes → LLM Fingerprint ≤ 7.
+
+**Example batching test**: Search for consecutive `_Приклад:_` lines. If 3+ sections all have exactly 3-4 consecutive examples in the same position → LLM Fingerprint ≤ 7.
+
+**Metaphor density test**: Count distinct metaphors (X is like Y, X is the Y of Z). If >4 per module → LLM Fingerprint ≤ 7. If metaphors include clichés like "діамант", "двигун", "душа мови", "дзеркало", "музика", "архітектура" → flag each.
+
+**Rhetoric pattern test**: Search for "це не просто" / "це не лише" / "не просто X, а Y" pattern. If used 2+ times → LLM Fingerprint ≤ 7.
+
+**Purple prose test**: Flag sentences with 3+ abstract nouns stacked ("будівельний блок мовної свідомості", "структурує сприйняття реальності через математичні параметри"). These are AI padding. If 3+ found → LLM Fingerprint ≤ 7.
+
+**Callout monotony test**: Are 3+ callouts using the same title (e.g., all `[!note] Особливість вживання`)? If yes → flag as repetitive, affects both LLM Fingerprint and Richness.
+
+**Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence? Flag absurd/contrived examples (e.g., "Ми спостерігаємо за тривалістю цього важливого лінгвістичного експерименту"). If 2+ implausible examples → LLM Fingerprint ≤ 8.
+
+Report ALL findings from these tests in the Scores table under dimension #11, and list specific flagged items in Critical Issues if score ≤ 7.
+
 ### STEP 4: Score 12 Dimensions
 Score ONLY after completing Steps 1-3. Each score linked to specific findings.
 

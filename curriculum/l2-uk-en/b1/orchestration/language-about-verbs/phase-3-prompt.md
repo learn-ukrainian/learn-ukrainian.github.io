@@ -9,13 +9,14 @@ Before writing ANY YAML, confirm these targets:
 
 | Target | Value |
 |--------|-------|
-| Skill identity | Senior Language & Culture Specialist |
+| Skill identity | Patient & Supportive Ukrainian Tutor |
+| Persona flavor | The Helpful Neighbor |
 | Module persona | Senior Language & Culture Specialist, acting as Ukrainian Tutor |
-| Activities required | 12–14 |
-| Items per activity | ≥8 (varies by type, see schema) |
-| Required types | fill-in, match-up, quiz, true-false, group-sort, unjumble, error-correction, cloze, mark-the-words, select, translate |
-| Priority types | fill-in (2+), unjumble (2+), error-correction (2+), cloze (1+) |
-| Vocabulary items | 25+ |
+| Activities required | 4–6 |
+| Items per activity | ≥6 |
+| Required types | quiz, match-up |
+| Priority types | quiz, match-up, fill-in, error-correction, mark-the-words, essay-response, critical-analysis |
+| Vocabulary items | 25 |
 
 Keep this table visible as you write. Every activity and vocab item must serve these targets.
 
@@ -56,89 +57,83 @@ Generate two YAML blocks: activities and vocabulary.
 
 1. **BARE LIST at root** — no `activities:` wrapper, no `module:` or `level:` headers
 2. **Schema compliance** — only use fields defined in the schema. `additionalProperties: false` means unlisted fields cause audit failure.
-3. **Core track style**: Focus on grammar terminology practice — matching terms to definitions, sorting by category, fill-in terminology, error correction of misused terms.
-4. **Activity count**: 12-14 activities
-5. **Type variety**: Use at least 5 different activity types
-6. **Item counts per type (B1 minimums)**:
-   - quiz: 8 items
-   - fill-in: 8 items (must have `options: [...]` with 4 per item)
-   - true-false: 8 items
-   - match-up: 8 pairs
-   - cloze: 14 blanks (use inline `{a|b|c}` format)
-   - unjumble: 6 items
-   - error-correction: 6 items
-   - select: 6 items
-   - translate: 6 items
-   - group-sort: no fixed minimum, use 15+ items for richness
-   - mark-the-words: use `text` (no asterisks) + `answers` array
+3. **Activity count**: 5 activities (minimum 4, maximum 6)
+4. **Type variety**: Use at least 3 different activity types
+5. **Only `reading` type has `id` field** — do NOT add `id` to other types
 
-7. **mark-the-words format example**:
-```yaml
-- type: mark-the-words
-  text: Гарний день приніс радість у серце.
-  answers:
-    - день
-    - радість
-    - серце
-```
+### CRITICAL: Activity Type Constraints
+
+**ALLOWED types (use ONLY these):** quiz, match-up, fill-in, error-correction, mark-the-words, essay-response, critical-analysis, true-false, translate, select
+
+**FORBIDDEN types (audit will auto-FAIL if you use these):** cloze, group-sort, unjumble, anagram, reading, comparative-study, authorial-intent
+
+Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
+
+### Common Schema Mistakes (FIX BEFORE OUTPUT)
+
+1. **Quiz `explanation` placement** — `explanation` goes at the QUESTION level, NOT inside an option.
+2. **Quiz question text length** — Every `question` field must be ≥5 words.
+3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure.
+4. **Vocabulary YAML structure** — Use object with `items:` array wrapper.
+5. **error-correction requires ALL 5 fields per item:** `sentence`, `error`, `answer`, `options` (4), `explanation`
+6. **mark-the-words requires `instruction` field** — it is REQUIRED, plus `text` + `answers`
+
+### Activity Quality Standards
+
+1. **Production over recognition** — At least 2 activities must require the learner to PRODUCE language (fill-in, error-correction, translate, mark-the-words).
+2. **Plausible example sentences** — Every sentence must be something a real Ukrainian speaker might say or encounter. FORBIDDEN: philosophical/motivational statements, meta-sentences about learning.
+3. **Error-correction precision** — Each item must have exactly one clear error with one correct fix. The error must be a plausible learner mistake.
+
+### Language Quality
+
+- **Typography**: ALWAYS use Ukrainian angular quotes «...» (never straight quotes "...")
+- **No Russianisms**: кушати→їсти, приймати участь→брати участь
+- **No Russian characters**: ы, э, ё, ъ must NEVER appear
 
 ### Vocabulary YAML Rules
 
-1. **Root structure**: `items:` key containing list of entries
-2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
-3. **Each entry needs**: `lemma`, `translation`, `ipa`, `pos` (part of speech)
-4. **IPA must have correct stress** — verify stress placement
-5. **Count target**: 25+ items
-6. **Gender field**: Include `gender` for nouns (m, f, n)
+1. **Object with `items:` wrapper** — NOT a bare list
+2. **Follow plan's vocabulary_hints** — include all required items (вид, доконаний вид, недоконаний вид, час, теперішній час, минулий час, майбутній час, дія, процес, результат, заперечення, наказова форма), plus recommended items
+3. **Each entry needs**: `lemma`, `translation`, `pos`
+4. **Optional fields**: `ipa`, `gender`, `aspect`, `notes`, `usage`, `example`
+5. **Count target**: 25 items
 
-### Output Format
+## Output Format
 
-> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
-
-Return TWO YAML blocks with clear delimiters:
+Activities block (BARE LIST — no wrapper):
 
 ```
 ===ACTIVITIES_START===
-- type: group-sort
-  title: "..."
-  instruction: "..."
-  groups:
-    - name: "..."
-      items: [...]
-    - name: "..."
-      items: [...]
 
 - type: match-up
   title: "..."
-  instruction: "..."
   pairs:
-    - left: "..."
-      right: "..."
-  # ... 8+ pairs
+    ...
 
-# ... more activities (12-14 total)
+- type: quiz
+  title: "..."
+  items:
+    ...
+
 ===ACTIVITIES_END===
 ```
 
+Vocabulary block (OBJECT with `items:` wrapper):
+
 ```
 ===VOCABULARY_START===
+
 items:
-  - lemma: вид
-    ipa: /wɪd/
-    translation: aspect
-    pos: noun
-    gender: m
-  - lemma: доконаний вид
-    ipa: /doˈkɔnɐnɪj wɪd/
-    translation: perfective aspect
-    pos: noun phrase
-  # ... 25+ items
+  - lemma: "вид"
+    translation: "aspect"
+    pos: "noun"
+    gender: "m"
+  ...
+
 ===VOCABULARY_END===
 ```
 
 ## Friction Report (MANDATORY)
-
-After your YAML blocks, include:
 
 ```
 ===FRICTION_START===
@@ -155,5 +150,6 @@ After your YAML blocks, include:
 
 - Do NOT modify lesson content — only generate activities and vocabulary
 - Do NOT add fields not in the schema (check schema carefully!)
-- Do NOT wrap in `activities:` or `vocabulary:` dictionary keys (activities are BARE LIST, vocabulary uses `items:`)
+- Do NOT wrap activities in `activities:` dictionary key
+- Do NOT add `id` field to non-reading activities
 - Do NOT request skills or delegate to Claude

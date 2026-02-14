@@ -10,7 +10,7 @@
 Read the research notes from Phase 0:
 
 ```
-curriculum/l2-uk-en/b1/orchestration/how-to-talk-about-grammar/phase-0-research.md
+curriculum/l2-uk-en/b1/research/how-to-talk-about-grammar-research.md
 ```
 
 Read the **plan file** (SOURCE OF TRUTH for structure, word_target, objectives, vocabulary):
@@ -19,21 +19,11 @@ Read the **plan file** (SOURCE OF TRUTH for structure, word_target, objectives, 
 curriculum/l2-uk-en/plans/b1/how-to-talk-about-grammar.yaml
 ```
 
-Read the **archive diff report** (what good content was lost in the previous rebuild — must be preserved):
-
-```
-curriculum/l2-uk-en/b1/orchestration/how-to-talk-about-grammar/archive-diff.md
-```
-
-Read the **old meta file** (for reference only — you are REPLACING the content_outline):
-
-```
-curriculum/l2-uk-en/b1/meta/how-to-talk-about-grammar.yaml
-```
+**Note:** No existing meta file — building fresh from plan only.
 
 ## Your Task
 
-**Rebuild** the `content_outline` in the meta file from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
+**Rebuild** the `content_outline` from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
 
 1. Every section has a `words` allocation
 2. Word allocations sum to **exactly 4000** (the plan's word_target)
@@ -44,18 +34,12 @@ curriculum/l2-uk-en/b1/meta/how-to-talk-about-grammar.yaml
 ### Rules
 
 - **Do NOT change `word_target`** — it comes from the plan and is immutable
-- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
 - Allocations must sum to `word_target` (not more, not less)
 - Minimum section allocation: 200 words (smaller sections should be merged)
 - Each section must have `section`, `words`, and `points` fields
 - Section names must be Ukrainian (this is the lesson content heading)
-- **Bridge module (immersion 65%):** The intro section should explicitly list English scaffolding requirements — Ukrainian term first, English in parentheses on first introduction only.
-- **CRITICAL: The archive diff report lists high-value content that was lost in the previous rebuild. Your outline MUST allocate space for these elements:**
-  - Case mnemonic (На Різдво Дід Загубив Орішки Між Ковбасками)
-  - Deverbal instruction keywords (Означає, Вказує на, etc.) in the Practice section
-  - Introduction sub-structure (psychological advantage + linguistic tradition)
-  - Section 5 MUST have 3 separate H3 subsections (морфеміка, граматичні категорії, синтаксичні ролі)
-  - Myth-buster and metacognitive callouts
+- **Bridge module (immersion 70%):** The intro section should explicitly list English scaffolding requirements. English parenthetical equivalents for ALL new terms on first use. Ukrainian term always comes first.
+- If the research found mnemonics, cultural anchors, or notable quotes: ensure the outline allocates space for them in the appropriate section's `points`
 
 ### Output Format
 
@@ -84,14 +68,12 @@ content_outline:
 
 Before returning, verify:
 - [ ] All section names are Ukrainian
+- [ ] **Section names match plan exactly** — the plan has these sections: "Вступ: сила метамови", "Частини мови: самостійні категорії", "Частини мови: службові слова", "Відмінки: сім ключів", "Граматичні категорії та будова слова", "Практика: читаємо граматику українською", "Підсумок і самоперевірка". Your output MUST use these EXACT names.
 - [ ] Each section has `words` and `points`
 - [ ] Sum of all `words` = 4000
 - [ ] No section has fewer than 200 words
-- [ ] Points reflect research findings AND archive diff requirements
+- [ ] Points reflect research findings
 - [ ] Section order follows logical narrative flow
-- [ ] Section 5 explicitly requires 3 H3 subsections
-- [ ] Case section includes mnemonic requirement
-- [ ] Practice section includes deverbal instruction keywords
 
 ## Friction Report (MANDATORY)
 

@@ -86,9 +86,9 @@ vocabulary_hints:
   - складна форма (compound form)
   - синтетична форма (synthetic form)
 activity_hints:
-- type: group-sort
-  focus: Sort terms by category (aspect vs tense vs action vs negation vs forms)
-  items: 15+
+- type: error-correction
+  focus: Correct mistakes in verb terminology usage (wrong aspect label, wrong tense name)
+  items: 8+
 - type: match-up
   focus: Ukrainian term → definition in Ukrainian
   items: 12+
@@ -130,7 +130,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Вид_дієслова
   type: reference
   notes: Overview of aspectual system terminology
-immersion: 75% Ukrainian
+immersion: 70% Ukrainian
 phase: B1.0 Bridge
 persona:
   voice: Senior Language & Culture Specialist

@@ -1,136 +1,151 @@
 items:
   - lemma: вид
-    ipa: /wɪd/
     translation: aspect
     pos: noun
     gender: m
+    ipa: [vɪd]
+    example: Вид дієслова — це важлива категорія.
   - lemma: доконаний вид
-    ipa: /doˈkɔnɐnɪj wɪd/
     translation: perfective aspect
-    pos: noun phrase
+    pos: phrase
+    gender: m
+    ipa: [doˈkɔnɐnɪj vɪd]
+    example: Доконаний вид вказує на результат.
   - lemma: недоконаний вид
-    ipa: /nedoˈkɔnɐnɪj wɪd/
     translation: imperfective aspect
-    pos: noun phrase
+    pos: phrase
+    gender: m
+    ipa: [nedoˈkɔnɐnɪj vɪd]
+    example: Недоконаний вид вказує на процес.
   - lemma: час
-    ipa: /t͡ʃas/
     translation: tense
     pos: noun
     gender: m
+    ipa: [t͡ʃas]
+    example: В українській мові є три часи.
   - lemma: теперішній час
-    ipa: /tepeˈrɪʃnɪj t͡ʃas/
     translation: present tense
-    pos: noun phrase
+    pos: phrase
+    gender: m
+    ipa: [teˈper⁽ʲ⁾iʃn⁽ʲ⁾ij t͡ʃas]
+    example: Я працюю зараз — це теперішній час.
   - lemma: минулий час
-    ipa: /mɪˈnulɪj t͡ʃas/
     translation: past tense
-    pos: noun phrase
+    pos: phrase
+    gender: m
+    ipa: [mɪˈnulɪj t͡ʃas]
+    example: Він працював учора — це минулий час.
   - lemma: майбутній час
-    ipa: /mɐjˈbutnɪj t͡ʃas/
     translation: future tense
-    pos: noun phrase
+    pos: phrase
+    gender: m
+    ipa: [mɐjˈbut⁽ʲ⁾n⁽ʲ⁾ij t͡ʃas]
+    example: Я буду працювати — це майбутній час.
   - lemma: дія
-    ipa: /ˈdijɐ/
     translation: action
     pos: noun
     gender: f
+    ipa: [ˈd⁽ʲ⁾ijɐ]
+    example: Дієслово називає дію.
   - lemma: процес
-    ipa: /ˈprɔt͡sɛs/
     translation: process
     pos: noun
     gender: m
+    ipa: [proˈt͡sɛs]
+    example: Дія може тривати як процес.
   - lemma: результат
-    ipa: /reˈzulʲtɐt/
     translation: result
     pos: noun
     gender: m
+    ipa: [rezulʲˈtɑt]
+    example: Ми бачимо результат роботи.
   - lemma: заперечення
-    ipa: /zɑpeˈrɛt͡ʃɛnʲɐ/
     translation: negation
     pos: noun
     gender: n
+    ipa: [zɐˈpɛret͡ʃenʲːɐ]
+    example: Частка не виражає заперечення.
   - lemma: наказова форма
-    ipa: /nɐˈkɑzɔwɐ ˈfɔrmɐ/
     translation: imperative form
-    pos: noun phrase
+    pos: phrase
+    gender: f
+    ipa: [nɐkɐˈzɔvɐ ˈfɔrmɐ]
+    example: Пиши! — це наказова форма.
   - lemma: тривалість
-    ipa: /trɪˈvɑlʲɪstʲ/
     translation: duration
     pos: noun
     gender: f
+    ipa: [trɪˈvɑl⁽ʲ⁾ist⁽ʲ⁾]
+    example: Слова довго або годину вказують на тривалість.
   - lemma: повторення
-    ipa: /pɔwˈtɔrɛnʲɐ/
     translation: repetition
     pos: noun
     gender: n
+    ipa: [pou̯ˈtɔrenʲːɐ]
+    example: Слово щодня вказує на повторення дії.
   - lemma: загальне заперечення
-    ipa: /zɑˈɦɑlʲnɛ zɑpeˈrɛt͡ʃɛnʲɐ/
     translation: general negation
-    pos: noun phrase
+    pos: phrase
+    gender: n
+    ipa: [zɐˈɦɑlʲne zɐˈpɛret͡ʃenʲːɐ]
+    example: Загальне заперечення позначає відсутність факту дії.
   - lemma: складна форма
-    ipa: /sklɐˈdnɑ ˈfɔrmɐ/
     translation: compound form
-    pos: noun phrase
+    pos: phrase
+    gender: f
+    ipa: [sklɐdˈnɑ ˈfɔrmɐ]
+    example: Складна форма майбутнього часу має два слова.
   - lemma: синтетична форма
-    ipa: /sɪnˈtɛtɪt͡ʃnɐ ˈfɔrmɐ/
     translation: synthetic form
-    pos: noun phrase
-  - lemma: дієслово
-    ipa: /dijɛˈslɔwɔ/
-    translation: verb
+    pos: phrase
+    gender: f
+    ipa: [sɪnteˈtɪt͡ʃnɐ ˈfɔrmɐ]
+    example: Синтетична форма (читатиму) є дуже лаконічною.
+  - lemma: застереження
+    translation: warning
     pos: noun
     gender: n
-  - lemma: граматика
-    ipa: /ˈɦrɑmɑtɪkɑ/
-    translation: grammar
+    ipa: [zɐsteˈrɛʒenʲːɐ]
+    example: Не впади! — це застереження.
+  - lemma: заборона
+    translation: prohibition
     pos: noun
     gender: f
-  - lemma: момент мовлення
-    ipa: /mɔˈmɛnt mɔwˈlɛnʲɐ/
-    translation: moment of speech
-    pos: noun phrase
-  - lemma: спосіб
-    ipa: /ˈspɔsib/
-    translation: mood
-    pos: noun
-    gender: m
-  - lemma: дійсний спосіб
-    ipa: /ˈdijsnɪj ˈspɔsib/
-    translation: indicative mood
-    pos: noun phrase
-  - lemma: наказовий спосіб
-    ipa: /nɐˈkɑzɔwɪj ˈspɔsib/
-    translation: imperative mood
-    pos: noun phrase
-  - lemma: умовний спосіб
-    ipa: /uˈmɔwnɪj ˈspɔsib/
-    translation: conditional mood
-    pos: noun phrase
-  - lemma: стан
-    ipa: /stɑn/
-    translation: voice
-    pos: noun
-    gender: m
-  - lemma: активний стан
-    ipa: /ɑkˈtɪwnɪj stɑn/
-    translation: active voice
-    pos: noun phrase
-  - lemma: пасивний стан
-    ipa: /pɐˈsɪwnɪj stɑn/
-    translation: passive voice
-    pos: noun phrase
-  - lemma: дієвідмінювання
-    ipa: /dijɛwɪdmʲiˈnʲuwɐnʲɐ/
-    translation: conjugation
-    pos: noun
-    gender: n
-  - lemma: парадигма
-    ipa: /pɐrɐˈdɪɦmɐ/
-    translation: paradigm
-    pos: noun
-    gender: f
+    ipa: [zɐboˈrɔnɐ]
+    example: Не розмовляй! — це сувора заборона.
   - lemma: інфінітив
-    ipa: /infʲiˈnɪtɪw/
     translation: infinitive
     pos: noun
     gender: m
+    ipa: [infinʲiˈtɪu̯]
+    example: Інфінітив відповідає на питання що робити?.
+  - lemma: дієвідмінювання
+    translation: conjugation
+    pos: noun
+    gender: n
+    ipa: [d⁽ʲ⁾ijewidʲˈm⁽ʲ⁾inʲuwɐnʲːɐ]
+    example: Система змін дієслова називається дієвідмінюванням.
+  - lemma: основа дієслова
+    translation: verb stem
+    pos: phrase
+    gender: f
+    ipa: [oˈsnɔvɐ d⁽ʲ⁾ijeˈslɔvɐ]
+    example: Ми додаємо закінчення до основи дієслова.
+  - lemma: закінчення
+    translation: ending
+    pos: noun
+    gender: n
+    ipa: [zɐˈkinʲt͡ʃenʲːɐ]
+    example: Змінювана частина слова називається закінченням.
+  - lemma: видова пара
+    translation: aspectual pair
+    pos: phrase
+    gender: f
+    ipa: [vɪdoˈvɑ ˈpɑrɐ]
+    example: Писати та написати — це видова пара.
+  - lemma: завершеність
+    translation: completion
+    pos: noun
+    gender: f
+    ipa: [zɐˈvɛrʃen⁽ʲ⁾ist⁽ʲ⁾]
+    example: Доконаний вид має значення завершеності.

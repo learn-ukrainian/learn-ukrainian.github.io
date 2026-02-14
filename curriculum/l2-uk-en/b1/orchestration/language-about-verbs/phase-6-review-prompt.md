@@ -12,41 +12,42 @@ Do not assume you wrote this content. Do not be generous.**
 
 Read ALL of these files from disk before writing anything:
 
-1. **Content** (the lesson you're reviewing): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/language-about-verbs.md`
-2. **Activities**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/language-about-verbs.yaml`
-3. **Vocabulary**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml`
-4. **Plan** (source of truth for scope): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/language-about-verbs.yaml`
-5. **Meta** (build config): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/language-about-verbs.yaml`
+1. **Content** (the lesson you're reviewing): `curriculum/l2-uk-en/b1/language-about-verbs.md`
+2. **Activities**: `curriculum/l2-uk-en/b1/activities/language-about-verbs.yaml`
+3. **Vocabulary**: `curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml`
+4. **Plan** (source of truth for scope): `curriculum/l2-uk-en/plans/b1/language-about-verbs.yaml`
+5. **Meta** (build config): `curriculum/l2-uk-en/b1/meta/language-about-verbs.yaml`
 
 **Do not proceed until you have read every line of the content and every activity item.**
 
 ## Audit Metrics (Facts — from automated audit)
 
 ```
-Skill identity:   Senior Language & Culture Specialist
-Persona flavor:   Ukrainian Tutor
+Skill identity:   Patient & Supportive Ukrainian Tutor
+Persona flavor:   The Helpful Neighbor
 Module persona:   Senior Language & Culture Specialist, acting as Ukrainian Tutor
-Word count:       3255 / 3000 (108%)
-Activities:       14
-Vocabulary items: 30
-Engagement boxes: 8
-Immersion:        91.4% (target: 75%)
-Audit status:     PASS (all gates green)
+Word count:       4014 / 4000 (100.4%)
+Activities:       5
+Vocabulary items: 25
+Engagement boxes: 10
+Immersion:        94.1% (target: 70%)
+Audit status:     PASSED (all strict gates green)
 ```
 
 ---
 
 ## Tier-Specific Review Guidance
 
-**Tier 2: Core Levels (B1/B2 Core/B2-PRO)**
+> **Target:** B1, B2 Core, and B2-PRO modules (NOT B2-HIST, NOT seminar tracks)
+> **Pedagogy:** TTT (Test-Teach-Test) for grammar; ESP for B2-PRO
+> **Immersion:** 85-100% Ukrainian
+> **Experience Goal:** Serious teaching — learner is challenged and grows
 
-This is a B1 bridge module (M02) — students just finished A2 and need English scaffolding to learn Ukrainian metalanguage about verbs. Immersion target is 75% but actual is 91.4%.
-
-**Key evaluation criteria for this tier:**
+**Note:** This is a B1 bridge module (M02 of 5). Immersion target is 70% Ukrainian with English scaffolding for new terminology. The tier-2 immersion targets (85-100%) apply from M06 onward.
 
 ### The "Did I Learn?" Test
 
-Read the module as an intermediate learner. Ask:
+**Read the module as an intermediate learner.** Ask:
 
 | Question | Pass | Fail |
 |----------|------|------|
@@ -56,42 +57,56 @@ Read the module as an intermediate learner. Ask:
 | Was I appropriately challenged? | Stretched but not broken | Too easy or too hard |
 | Did the teacher voice guide me? | Felt taught, not lectured at | Textbook or robotic |
 
-### Teaching Arc Check
+### Teaching Arc (B1/B2 Adaptation)
+
+**Core modules need effective teaching structure:**
 
 ```
 HOOK → DISCOVER → EXPLAIN → PRACTICE → APPLY → SUMMARIZE
 ```
 
-### Activity Quality (Core Gates)
+| Element | What to Look For | Red Flag |
+|---------|------------------|----------|
+| **HOOK** | Why this matters, real-world need | Generic "Let's learn about X" |
+| **DISCOVER** | Test/examples before rules (TTT) | Rules dumped immediately |
+| **EXPLAIN** | Clear grammar/vocab explanation with "why" | Just "what" without "why" |
+| **PRACTICE** | Structured exercises with progression | Random or too easy exercises |
+| **APPLY** | Real-world context, production tasks | Only recognition, no production |
+| **SUMMARIZE** | Key takeaways, common mistakes | Abrupt ending |
 
-| Metric | B1/B2 Threshold |
-|--------|-----------------|
-| Naturalness | ≥8.0 (native-level) |
-| Difficulty | appropriate (matches level) |
-| Distractor quality | ≥4.0 (targets real errors) |
-| Variety | ≥60% |
-| Engagement | ≥3.5 |
+### Pacing for Intermediate
 
-### Humanity & Warmth
+| Metric | A+ Standard | Fail |
+|--------|-------------|------|
+| Concept density | 3-5 concepts per section | >7 concepts without processing |
+| Example per concept | ≥2 examples | Concept without example |
+| Practice per concept | ≥1 exercise | Content-heavy, practice-light |
+| Section length | 300-500 words | >700 words without break |
 
-| Marker | Minimum Count |
-|--------|---------------|
-| Direct address (ви, давайте) | ≥10 |
-| Encouragement | ≥2 |
-| Confusion anticipation | ≥3 |
-| Real-world validation | ≥2 |
+### Grammar Module Specific Checks
 
-### LLM Fingerprint (Critical)
+For B1 grammar modules, additional checks:
 
-Strict detection at B1/B2:
-- "It's important to note that..."
-- "Let's dive into..."
-- "Mastering X is crucial..."
-- Generic examples without Ukrainian specificity
-- Bullet-heavy without prose
-- Encyclopedic tone
+**Aspectual Pair Verification:**
+If module claims aspectual pairs:
+1. Both verbs share same core meaning
+2. They differ only in aspect
+3. Cross-reference: Ohoiko "500+ Ukrainian Verbs", slovnyk.ua
 
-3+ patterns → LLM_CLICHE_OVERUSE → Fix required
+**Common Error Pattern:**
+| WRONG | CORRECT |
+|-------|---------|
+| шукати / знайти (different meanings) | шукати / пошукати |
+| питати / відповідати (different) | питати / запитати |
+
+**Grammar Rule Accuracy:**
+- Verify case usage rules
+- Verify verb conjugation patterns
+- Verify agreement rules
+- Flag unsupported claims
+
+**Linguistic Accuracy Score Impact:**
+Factual errors in grammar modules are AUTO-FAIL regardless of other scores.
 
 ---
 
@@ -110,11 +125,31 @@ Strict detection at B1/B2:
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
+- Russianisms (кушати→їсти, приймати участь→брати участь, etc.)
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - Grammar scope violations
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
+
+### STEP 3b: LLM Fingerprint Scan (MANDATORY)
+
+This is the most commonly missed check. AI-generated content has distinctive patterns. Score dimension #11 based on these specific tests:
+
+**Structural monotony test**: Read the first 2 lines of each H2 section. Do 3+ sections start the same way (all with grand philosophical claims, all with "Ласкаво просимо", all with a definition)? If yes → LLM Fingerprint ≤ 7.
+
+**Example batching test**: Search for consecutive `_Приклад:_` lines. If 3+ sections all have exactly 3-4 consecutive examples in the same position → LLM Fingerprint ≤ 7.
+
+**Metaphor density test**: Count distinct metaphors (X is like Y, X is the Y of Z). If >4 per module → LLM Fingerprint ≤ 7. If metaphors include clichés like "діамант", "двигун", "душа мови", "дзеркало", "музика", "архітектура" → flag each.
+
+**Rhetoric pattern test**: Search for "це не просто" / "це не лише" / "не просто X, а Y" pattern. If used 2+ times → LLM Fingerprint ≤ 7.
+
+**Purple prose test**: Flag sentences with 3+ abstract nouns stacked ("будівельний блок мовної свідомості", "структурує сприйняття реальності через математичні параметри"). These are AI padding. If 3+ found → LLM Fingerprint ≤ 7.
+
+**Callout monotony test**: Are 3+ callouts using the same title (e.g., all `[!note] Особливість вживання`)? If yes → flag as repetitive, affects both LLM Fingerprint and Richness.
+
+**Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence? Flag absurd/contrived examples (e.g., "Ми спостерігаємо за тривалістю цього важливого лінгвістичного експерименту"). If 2+ implausible examples → LLM Fingerprint ≤ 8.
+
+Report ALL findings from these tests in the Scores table under dimension #11, and list specific flagged items in Critical Issues if score ≤ 7.
 
 ### STEP 4: Score 12 Dimensions
 Score ONLY after completing Steps 1-3. Each score linked to specific findings.
@@ -191,13 +226,14 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 
 Wrap your ENTIRE review in these delimiters:
 
+```
 ===REVIEW_START===
 # Рецензія: Мова про дієслова
 
-**Level:** B1 | **Module:** M02
+**Level:** B1 | **Module:** 2
 **Overall Score:** {X.X}/10
 **Status:** PASS / FAIL
-**Reviewed:** 2026-02-13
+**Reviewed:** 2026-02-14
 
 ## Plan Verification
 
@@ -209,14 +245,24 @@ Plan-Content Alignment: [PASS/FAIL]
 - Objectives: [status]
 ```
 
-## Scores
+## Scores    <!-- REQUIRED — rejection if missing -->
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
 | 1 | Experience Quality | X/10 | <7 | [specific finding] |
-| ... | ... | ... | ... | ... |
+| 2 | Coherence | X/10 | <7 | [specific finding] |
+| 3 | Relevance | X/10 | <7 | [specific finding] |
+| 4 | Educational | X/10 | <7 | [specific finding] |
+| 5 | Language | X/10 | <8 | [specific finding] |
+| 6 | Pedagogy | X/10 | <7 | [specific finding] |
+| 7 | Immersion | X/10 | <6 | [actual % vs target] |
+| 8 | Activities | X/10 | <7 | [specific finding] |
+| 9 | Richness | X/10 | <6 | [specific finding] |
+| 10 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
+| 11 | LLM Fingerprint | X/10 | <7 | [specific finding] |
+| 12 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
 
-**Weighted Overall:** {calculation} = **X.X/10**
+**Weighted Overall:** {show calculation} = **X.X/10**
 
 ## Auto-Fail Checklist Results
 
@@ -226,7 +272,7 @@ Plan-Content Alignment: [PASS/FAIL]
 - Activity errors: [CLEAN] or [list]
 - Beginner safety: X/5
 
-## Critical Issues Found
+## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
 
 ### Issue 1: {Category}
 - **Location**: Line {N} / Section "{name}"
@@ -259,13 +305,16 @@ Plan-Content Alignment: [PASS/FAIL]
 ### {Dimension Name}: {current}/10 → 9/10
 **What to fix:**
 1. Line {N}: Change «{current}» → «{replacement}» — {why}
+2. Section "{name}": {action} — {impact}
+
+**Expected score after fix:** {X}/10
 
 ### Projected Overall After Fixes
 ```
 {Recalculate weighted overall with projected scores}
 ```
 
-## Verification Summary
+## Verification Summary    <!-- REQUIRED — rejection if missing -->
 
 - Content lines read: {X}
 - Activity items checked: {X}
@@ -273,16 +322,20 @@ Plan-Content Alignment: [PASS/FAIL]
 - IPA transcriptions checked: {X}
 - Issues found: {X}
 
-## Verdict
+## Verdict    <!-- REQUIRED — rejection if missing -->
 
 **PASS** or **FAIL**
 
 {1-3 sentences. If FAIL, list blocking issues.}
 
 ===REVIEW_END===
+```
 
 ## Friction Report (MANDATORY)
 
+After your review, include:
+
+```
 ===FRICTION_START===
 **Phase**: Phase 6: Green Team Review
 **Step**: {what you were doing when friction occurred, or "Full review"}
@@ -291,6 +344,7 @@ Plan-Content Alignment: [PASS/FAIL]
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
 
 ## Boundaries
 

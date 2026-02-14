@@ -42,7 +42,7 @@ Use the exact property names defined in `schemas/activities-{level}.schema.json`
 
 | Activity | Correct Property | Wrong Property |
 |----------|-----------------|----------------|
-| unjumble | `jumbled` | `scrambled`, `words` |
+| unjumble | `words` (array) + `answer` | `jumbled`, `scrambled`, `sentence` |
 | fill-in | `sentence` | `text`, `prompt` |
 | mark-the-words | `text` + `answers` | `passage` + `correct_words` |
 | cloze | `passage` | `text` |

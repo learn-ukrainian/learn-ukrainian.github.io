@@ -550,26 +550,26 @@ LEVEL_CONFIG = {
     'B1-bridge': {
         # Bridge modules (M01-05) teach grammar metalanguage
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
-        'min_items_per_activity': 14,
-        'min_types_unique': 5,
+        'min_activities': 4,   # Feb 2026: reduced — quality over quantity, 7 reliable types
+        'min_items_per_activity': 6,
+        'min_types_unique': 3,
         'min_vocab': 20,  # Metalanguage vocabulary
         'min_engagement': 4,
         # NO immersion gate - bridge modules teach terminology bilingually
         'transliteration_allowed': False,
-        'priority_types': {'quiz', 'match-up', 'fill-in', 'translate'}
+        'priority_types': {'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words', 'essay-response', 'critical-analysis'}
     },
     'B1-grammar': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
-        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
-        'min_types_unique': 4,
+        'min_activities': 4,   # Feb 2026: reduced — quality over quantity, 7 reliable types
+        'min_items_per_activity': 6,
+        'min_types_unique': 3,
         'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
-        'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
+        'priority_types': {'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words', 'essay-response', 'critical-analysis'}
     },
     'B1-vocab': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+

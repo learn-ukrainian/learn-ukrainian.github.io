@@ -57,11 +57,11 @@ Each plan file must specify an `immersion` field (percentage). The orchestrator 
 
 | Module | Immersion | English Use |
 |--------|-----------|-------------|
-| B1 M01 | 65% | English intro + parenthetical equivalents for ALL new terms |
-| B1 M02 | 75% | Parenthetical equivalents for new terms only, no English paragraphs |
+| B1 M01 | 70% | English intro + parenthetical equivalents for ALL new terms + English callouts for abstract concepts |
+| B1 M02 | 70% | Parenthetical equivalents for new terms only + English in tip/note callouts |
 | B1 M03 | 80% | English only in tip/note callouts for tricky concepts |
 | B1 M04 | 85% | English only for disambiguation (false friends, confusing pairs) |
-| B1 M05 | 90% | Minimal English — checkpoint readiness |
+| B1 M05 | 85% | Minimal English — disambiguation only, checkpoint readiness |
 | B1 M06+ | 95% | Full immersion |
 
 **Scaffolding rules (L1 scaffolding with L2 primacy):**
@@ -196,7 +196,7 @@ orchestration/{slug}/
 5. Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
 6. Validate: word count >= 90% of word_target, all H2 sections from outline present
 
-**Word target overshoot strategy:** Always ask Gemini for `word_target * 1.15` (15% overshoot) in the prompt. Gemini consistently underproduces, and audit trims raw words. Example: for a 3000-word target, ask for 3500 in the prompt.
+**Word target overshoot strategy:** Always ask Gemini for `word_target * 2.0` (100% overshoot) in the prompt. Gemini consistently underproduces by 30-40%, and audit trims raw words. Example: for a 4000-word target, ask for 8000 in the prompt. This reduces the need for expansion passes.
 
 **For seminar tracks (word_target > 4000):** Content may need a 3a/3b split. If first output is under target, send a continuation prompt for the remaining sections.
 
@@ -374,8 +374,14 @@ This step ensures review findings don't just sit in a report — they get applie
 scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 ```
 
-6. Update the review file's "Issues fixed" count
-7. If audit fails after fixes: revert and report to human
+6. **Regenerate MDX** (Phase 6b changes content files, so Phase 5 MDX is stale):
+
+```bash
+.venv/bin/python scripts/generate_mdx.py l2-uk-en {track} {module_num}
+```
+
+7. Update the review file's "Issues fixed" count
+8. If audit fails after fixes: revert and report to human
 
 **Classification guidelines:**
 - Word substitutions, added sentences, expanded examples → Quick fix (Claude)
@@ -421,8 +427,8 @@ Gemini streams 10-100K chars of thinking tokens. Never read raw output.
 > ```
 
 **Model selection:**
-- Core tracks (A1-B2): `gemini-3-flash-preview`
-- Scholar tracks (C1, C2, all seminar): `gemini-3-pro-preview`
+- ALL tracks: `gemini-3-pro-preview`
+- Flash is NOT used — it underproduces content and hallucinates word counts
 
 **Rules:**
 - `--stdout-only` is mandatory (Gemini runs read-only, can't write files)
@@ -523,7 +529,7 @@ After each module:
 | `{LEVEL}` | Uppercase level for quick-ref |
 | `{SLUG}` | Module slug |
 | `{WORD_TARGET}` | From plan `word_target` |
-| `{OVERSHOOT_TARGET}` | `word_target * 1.5` |
+| `{OVERSHOOT_TARGET}` | `word_target * 2.0` |
 | `{ENGAGEMENT_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{EXAMPLE_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{IMMERSION_RULE}` | From quick-ref |

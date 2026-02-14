@@ -1,15 +1,15 @@
 {
   "module": "how-to-talk-about-grammar",
   "level": "B1",
-  "plan_version": "1.0",
-  "last_audit": "2026-02-13T21:41:07.949233Z",
+  "plan_version": "3.0",
+  "last_audit": "2026-02-14T12:03:40.988390Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-13T21:39:35.590614Z",
-    "meta": "2026-02-13T21:06:33.699902Z",
-    "activities": "2026-02-13T21:25:02.516695Z",
-    "vocabulary": "2026-02-13T21:19:53.442317Z",
-    "plan": "2026-02-13T20:50:07.505870Z"
+    "md": "2026-02-14T12:03:34.464912Z",
+    "meta": "2026-02-14T11:39:38.077722Z",
+    "activities": "2026-02-14T12:00:30.718484Z",
+    "vocabulary": "2026-02-14T11:56:13.168573Z",
+    "plan": "2026-02-14T11:56:52.124335Z"
   },
   "gates": {
     "meta": {
@@ -20,22 +20,22 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5800/4000 (raw: 6122)"
+      "message": "4314/4000 (raw: 4480)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/12"
+      "message": "5/4"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "26/20"
+      "message": "25/20"
     },
     "naturalness": {
-      "status": "pass",
+      "status": "info",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "PENDING \u2014 awaiting review"
     },
     "review": {
       "status": "pass",
@@ -46,7 +46,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0
   }
 }

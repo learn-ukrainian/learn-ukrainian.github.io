@@ -1,78 +1,65 @@
 # Рецензія: Як говорити про граматику
 
 **Level:** B1 | **Module:** M01
-**Overall Score:** 8.2/10
-**Status:** FAIL (Linguistic Accuracy & Pedagogy)
-**Reviewed:** 2026-02-13
+**Overall Score:** 8.8/10
+**Status:** PASS
+**Reviewed:** 2026-02-14
+
+## Plan Verification
+- **Outline compliance:** Every section from the `content_outline` is present and well-developed. H3 headers are used effectively to organize the heavy terminology load.
+- **Vocabulary scope:** All 13 required terms and all recommended terms are integrated into the content and defined.
+- **Grammar scope:** No scope creep. The focus remains strictly on metalanguage.
+- **Objectives:** All three objectives (identifying POS, naming cases, describing elements) are explicitly addressed through definitions, examples, and practice.
 
 ## Scores
+| # | Dimension | Score | Justification |
+|---|-----------|-------|---------------|
+| 1 | Experience Quality | 9.0 | High-quality "Bridge" experience with warm tutoring voice. |
+| 2 | Coherence | 9.5 | Logical flow from building blocks (words) to architecture (sentences). |
+| 3 | Relevance | 10.0 | Essential for B1 autonomy; explains *why* it matters immediately. |
+| 4 | Educational | 9.0 | Excellent integration of history (Smotrytsky) and mnemonics. |
+| 5 | Language | 9.5 | Natural, sophisticated Ukrainian. Correct gender for «біль». |
+| 6 | Pedagogy | 9.0 | Classic PPP. "Discover" phase is well-supported by etymological notes. |
+| 7 | Immersion | 9.0 | Immersion is 86.7%, well above the 70% bridge target. |
+| 8 | Activities | 8.5 | High density (5 activities), items are pedagogically sound. |
+| 9 | Richness | 9.0 | 6 engagement boxes, high word count, authentic literary quotes. |
+| 10 | Beginner Safety | 9.0 | Clear English scaffolding prevents cognitive overload. |
+| 11 | LLM Fingerprint | 7.0 | Repetitive section starts; excessive metaphor density (Operating system, Skeleton, Bridge, Engine, Glue, Passport, Architecture). |
+| 12 | Linguistic Accuracy | 9.0 | Generally excellent, but one simplification in numerals is technically loose. |
 
-| # | Dimension | Score | Evidence / Justification |
-|---|-----------|-------|--------------------------|
-| 1 | Experience Quality | 8 | Extremely thorough and academically rigorous, but the sheer volume (132% of target) is overwhelming for an intro module. |
-| 2 | Coherence | 9 | Excellent structural flow from psychology to terminology to practical instructions. |
-| 3 | Relevance | 10 | This metalanguage is essential for the transition to B1.1 immersion. |
-| 4 | Educational | 10 | Exceptional historical depth (Smotrytskyi, Shevchenko, Ukrainka) and decolonization focus. |
-| 5 | Language | 8 | Natural academic voice, but marred by several Russianisms and agreement errors. |
-| 6 | Pedagogy | 7 | The jump in difficulty is too sharp. This is a "bridge" module, but the prose is university-level Ukrainian. |
-| 7 | Immersion | 6 | **Failed Target.** Immersion is 95.3% while the plan explicitly requested 65% for scaffolding. |
-| 8 | Activities | 10 | 12 diverse activities covering all terms from multiple angles. Very high quality. |
-| 9 | Richness | 10 | Integration of etymology, history, and decolonization is masterfully done. |
-| 10 | Beginner Safety | 7 | Lexical density and lack of planned English scaffolding make this unsafe for a fresh B1 learner. |
-| 11 | LLM Fingerprint | 9 | Strong persona, though repetitive "Це не просто... а..." structures appear. |
-| 12 | Linguistic Accuracy | 8 | Russianisms like «на то, що» and agreement errors in grammar definitions are unacceptable. |
-
-**Weighted Overall:** 8.2/10
-
----
+## Auto-Fail Checklist Results
+- **Russianisms:** None found. Correct usage of «брати участь» (not used, but no calques found), «біль» (masculine).
+- **Calques:** None found. Phrases like «має сенс» or «приймати участь» are absent.
+- **Grammar scope violations:** None.
+- **Activity errors:** None. Schema compliance is high.
 
 ## Critical Issues Found
+1. **Linguistic Oversimplification (Numerals):** In the "Числівник" section, it states: «після «два, три, чотири» — часто у називному множини». While this is true for feminine nouns (дві книги), for masculine and neuter nouns, the form matches the Genitive Singular (два брати́, три столи́). Saying it is "Nominative Plural" is technically incorrect for these genders and can confuse students when they encounter stress shifts.
+2. **Rhetorical Patterning:** The phrase «це не просто [X], а [Y]» appears multiple times (Intro: «це не просто набір...», Summary: «це не самоціль...»). This is a hallmark of LLM stylistic monotony.
+3. **Dialogue Accuracy:** In the dialogue, the teacher asks «пишеш що? — вправу». Pedagogically, it is better to provide the full case question pair «кого? що?» to distinguish it from the Nominative «хто? що?».
 
-1. **Russianism (Morphology/Syntax):** 
-   - **Line ~425:** «Деякі українські займенники мають особливу форму «себе», яка вказує на **то**, що дія повертається до самого виконавця.»
-   - **Critique:** «На то, що» is a direct calque from the Russian «на то, что». In Ukrainian, the demonstrative pronoun must be in the correct form: «вказує на **те**, що». This is a high-priority linguistic error in a grammar module.
+## Ukrainian Language Issues
+- **Issue:** Section "Числівник", line ~215: «...після «два, три, чотири» — часто у називному множини».
+  - *Fix:* Rephrase to mention that endings change according to gender and specific rules.
+- **Issue:** Section "Знахідний відмінок", line ~155: «Питання: Кого? Що?».
+  - *Fix:* In the dialogue, ensure the teacher uses the full pair «кого? що?» instead of just «що?».
 
-2. **Agreement Error (Grammar Definition):**
-   - **Line ~220:** «...які можуть змінювати значення дії з активного на **пасивний** або **зворотний**.»
-   - **Critique:** The adjectives modify «значення» (neuter). Therefore, they must agree: «з активного на **пасивне** або **зворотне**». Using masculine forms here is a basic grammatical error that undermines the module's authority.
+## Beginner Safety Audit
+The module is safe for a B1 learner. The English scaffolding in the introduction and the bilingual terminology in parentheses act as a "safety net." The use of mnemonics (Roman/Christmas) makes the daunting task of 7 cases feel achievable.
 
-3. **Russianism/Stylistic Calque:**
-   - **Line ~46:** «Ви **відчуваєте себе** не стороннім спостерігачем...»
-   - **Critique:** «Відчувати себе» is frequently a calque from «чувствовать себя». In Ukrainian, when describing one's state or self-perception, «**почуватися**» is the preferred and more natural verb: «Ви **почуваєтеся** не стороннім спостерігачем».
+## Strengths
+- **Cultural Depth:** The inclusion of Meletiy Smotrytsky adds academic prestige and decolonized historical context.
+- **Etymological Logic:** Explaining that «іменник» comes from «ім’я» and «дієслово» from «діяти» helps memory retention.
+- **Tone:** The "Helpful Neighbor" flavor shines through in the «Порада вчителя» and «Увага: пастка перекладу» boxes.
 
-4. **Syntax/Redundancy:**
-   - **Line ~560:** «...**на** кожну першу літеру слова у фразі відповідає першій літері назви відмінка.»
-   - **Critique:** The preposition «на» is redundant and grammatically incorrect here. The subject should be the letter itself: «**Кожна** перша літера слова у фразі відповідає першій літері...».
-
-5. **Immersion Violation (Pedagogy):**
-   - **Issue:** The module has 95.3% immersion, while the plan strictly required 65%. 
-   - **Critique:** For M01 (the very first B1 module), the goal was "bridge" scaffolding. By removing the planned English explanations and replacing them with dense Ukrainian prose about etymology and 17th-century linguistics, the module has become a barrier rather than a bridge.
-
----
+## Fix Plan to Reach 9/10
+1. **Refine Numeral Explanation:** Clarify that «два, три, чотири» trigger specific endings that vary by gender.
+2. **Diversify Rhetoric:** Rewrite sentences starting with «це не просто» to use more varied Ukrainian structures (e.g., «Замість сухого переліку правил ми бачимо...»).
+3. **Enhance Dialogue:** Update the teacher's responses to be more linguistically precise regarding case questions.
+4. **Reduce Metaphor Load:** Prune 1-2 metaphors (e.g., remove "operating system" or "operating apps" in the English intro) to make the text feel more human and less "GPT-polished."
 
 ## Verification Summary
-
-- **Lines read:** 840
-- **Items checked:** 12 activities, 26 vocabulary terms, 7 case descriptions, 10 POS descriptions.
-- **Issues found:** 5 critical issues (3 linguistic, 2 pedagogical).
-
----
+The module meets all technical requirements for a B1 Bridge module. It is rich, pedagogically sound, and hits the target word counts.
 
 ## Verdict
-
-**FAIL**
-
-**Reasoning:** While the content is intellectually brilliant and culturally rich, it fails as a "bridge" module. It ignores the 65% immersion target, making it too difficult for the intended audience. Furthermore, a module *teaching* grammar cannot afford Russianisms («на то, що») or agreement errors in its own definitions.
-
-### Fix Plan
-
-1. **Linguistic Correction:**
-   - Change «на то, що» to «на те, що» (Line 425).
-   - Fix agreement: «пасивне або зворотне» (Line 220).
-   - Replace «відчуваєте себе» with «почуваєтеся» (Line 46).
-   - Remove redundant «на» (Line 560).
-2. **Pedagogical Re-scaffolding:**
-   - Translate at least 30% of the dense prose in the first three sections back to English as per the 65% immersion target.
-   - Reduce total word count from 5270 to ~4200 to avoid cognitive overload.
-3. **Mnemonic Alignment:**
-   - Update the plan's mnemonic («Горішки») to match the content's correct version («Орішки»).
+**PASS**

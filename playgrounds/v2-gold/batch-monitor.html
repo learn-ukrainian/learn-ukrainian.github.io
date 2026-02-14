@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gold War Room [V6.0]</title>
+  <title>Gold Operations Center [V5.4]</title>
   <style>
     :root {
       --bg-deep: #05070a;
@@ -21,134 +21,210 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body { background: var(--bg-deep); color: var(--text-main); font-family: -apple-system, sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-    .app-layout { display: grid; grid-template-columns: 350px 1fr; grid-template-rows: 60px 1fr; height: 100vh; }
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: -apple-system, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .header { grid-column: 1 / -1; background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; z-index: 50; }
+    .app-layout {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      grid-template-rows: 60px 1fr;
+      height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      grid-column: 1 / -1;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 200;
+    }
+
     .brand { display: flex; align-items: center; gap: 1rem; }
     .brand-logo { width: 32px; height: 32px; background: var(--text-gold); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; }
-    
-    .sidebar { background: var(--bg-panel); border-right: 1px solid var(--border); overflow-y: auto; }
-    .track-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; margin: 0.5rem; cursor: pointer; }
-    .track-card.active { border-color: var(--text-gold); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1); }
+    .brand-name { font-weight: 800; font-size: 1.1rem; color: #fff; }
 
+    /* Side Inspector */
+    .inspector-panel {
+      position: fixed; top: 0; right: -500px; width: 500px; height: 100vh;
+      background: var(--bg-panel); border-left: 1px solid var(--border);
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; padding: 2rem;
+      box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+      overflow-y: auto;
+    }
+    .inspector-panel.open { right: 0; }
+    .inspector-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+
+    .inspector-section { margin-bottom: 2rem; }
+    .inspector-section h4 { font-size: 0.65rem; color: var(--text-gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .metric-box { background: var(--bg-card); padding: 1rem; border-radius: 6px; border: 1px solid var(--border); }
+    .metric-label { font-size: 0.6rem; color: var(--text-secondary); display: block; margin-bottom: 0.25rem; }
+    .metric-value { font-size: 1.1rem; font-weight: bold; color: #fff; font-family: var(--font-mono); }
+
+    .snippet-pre { background: #000; padding: 1rem; border-radius: 6px; font-size: 0.75rem; font-family: var(--font-mono); color: #888; overflow-x: auto; white-space: pre-wrap; line-height: 1.4; border: 1px solid var(--border); }
+
+    .phase-bar { display: flex; gap: 4px; margin-bottom: 1rem; }
+    .phase-step { flex: 1; height: 6px; background: #21262d; border-radius: 2px; }
+    .phase-step.active { background: var(--text-gold); box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+    .phase-step.done { background: var(--success); }
+
+    /* Sidebar */
+    .sidebar { background: var(--bg-panel); border-right: 1px solid var(--border); overflow-y: auto; }
+    .sidebar-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); font-size: 0.75rem; font-weight: bold; color: var(--text-gold); text-transform: uppercase; }
+
+    .track-list { padding: 0.5rem; }
+    .track-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      padding: 1rem; margin-bottom: 0.5rem; cursor: pointer; transition: 0.15s;
+    }
+    .track-card:hover { border-color: var(--text-gold); }
+    .track-card.active { border-color: var(--text-gold); background: var(--bg-hover); }
+
+    /* Main Area */
+    .main { overflow-y: auto; display: flex; flex-direction: column; }
     .nav { background: var(--bg-panel); border-bottom: 1px solid var(--border); display: flex; padding: 0 1.5rem; }
     .nav-link { padding: 1rem 1.5rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-main); border-bottom: 2px solid transparent; }
     .nav-link.active { color: var(--text-gold); border-color: var(--text-gold); }
 
-    .content-tab { display: none; padding: 2rem; flex: 1; overflow-y: auto; }
+    .content-tab { display: none; padding: 2rem; flex: 1; }
     .content-tab.active { display: block; }
 
-    /* Inspector */
-    .inspector { position: fixed; top: 60px; right: -450px; width: 450px; bottom: 0; background: var(--bg-panel); border-left: 1px solid var(--border); transition: right 0.3s; z-index: 100; padding: 2rem; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
-    .inspector.open { right: 0; }
+    /* Heatmap */
+    .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(12px, 1fr)); gap: 3px; margin-top: 1rem; }
+    .dot { width: 12px; height: 12px; border-radius: 2px; background: #21262d; cursor: pointer; }
+    .dot-pass { background: var(--success); }
+    .dot-fail { background: var(--danger); }
+    .dot-active { background: var(--info); animation: pulse 1s infinite; }
 
-    /* War Room Styles */
-    .msg-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
-    .msg-header { display: flex; justify-content: space-between; font-size: 0.7rem; font-family: var(--font-mono); margin-bottom: 0.5rem; }
-    .msg-body { font-size: 0.85rem; line-height: 1.4; color: #fff; }
-
-    .phase-line { display: flex; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; }
-    .phase-file { font-family: var(--font-mono); color: var(--text-gold); flex: 1; }
-    .phase-type { font-size: 0.6rem; padding: 2px 4px; border-radius: 3px; background: #000; color: var(--text-secondary); }
-
-    .btn { padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: #fff; font-size: 0.7rem; }
+    .btn { padding: 0.6rem 1.2rem; border-radius: 4px; font-weight: bold; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: #fff; font-size: 0.75rem; text-decoration: none; }
     .btn-gold { background: var(--text-gold); color: #000; border: none; }
-    .flex { display: flex; }
-    .flex-col { flex-direction: column; }
-    .gap-2 { gap: 0.5rem; }
-    .gap-4 { gap: 1rem; }
-    .justify-between { justify-content: space-between; }
-    .items-center { align-items: center; }
+
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
   </style>
 </head>
 <body>
 
   <div class="app-layout">
     <header class="header">
-      <div class="brand"><div class="brand-logo">Ж</div><div class="brand-name">WAR ROOM</div></div>
-      <div id="connection-status" class="text-xs font-mono text-green">● AGENT BROKER ONLINE</div>
-      <button class="btn btn-gold" onclick="refreshAll()">REFRESH ALL</button>
+      <div class="brand">
+        <div class="brand-logo">Ж</div>
+        <div class="brand-name">GOLD OPS CENTER</div>
+      </div>
+      <div class="flex items-center gap-4" style="display: flex; gap: 1rem;">
+        <div id="connection-status" class="text-xs font-mono text-green">● ENGINE ONLINE</div>
+        <a href="communication.html" class="btn">WAR ROOM</a>
+        <button class="btn btn-gold" onclick="refreshAll()">REFRESH</button>
+      </div>
     </header>
 
-    <div id="inspector" class="inspector">
-      <div class="flex justify-between items-center mb-6">
-        <h3 id="ins-slug" class="text-gold font-bold">Module</h3>
+    <div id="inspector" class="inspector-panel">
+      <div class="inspector-header">
+        <div>
+          <h3 id="ins-slug" style="font-weight: 800; color: #fff; font-size: 1.2rem;">Module-Slug</h3>
+          <div id="ins-track" style="font-size: 0.7rem; color: var(--text-gold); font-family: var(--font-mono); margin-top: 0.25rem;">TRACK: -</div>
+        </div>
         <button class="btn" onclick="closeInspector()">CLOSE</button>
       </div>
-      <div id="ins-body"></div>
-      <div class="mt-8">
-        <h4 class="text-xs font-bold text-secondary mb-4 uppercase">Orchestration Timeline</h4>
-        <div id="ins-phases"></div>
-      </div>
+      <div id="ins-content"></div>
     </div>
 
     <aside class="sidebar">
+      <div class="sidebar-header">Operational Tracks</div>
       <div id="track-list" class="track-list"></div>
     </aside>
 
     <main class="main">
       <nav class="nav">
         <div class="nav-link active" onclick="switchTab(event, 'intelligence')">Intelligence</div>
-        <div class="nav-link" onclick="switchTab(event, 'warroom')">War Room</div>
+        <div class="nav-link" onclick="switchTab(event, 'reconciliation')">Reconciliation</div>
         <div class="nav-link" onclick="switchTab(event, 'blueprints')">Blueprints</div>
       </nav>
 
       <section id="tab-intelligence" class="content-tab active">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-            <div class="msg-card"><span class="text-xs text-gold font-bold">VELOCITY</span><div id="stat-progress" style="font-size: 2rem; font-weight: 800;">0%</div></div>
-            <div class="msg-card"><span class="text-xs text-gold font-bold">PASS RATE</span><div id="stat-pass" style="font-size: 2rem; font-weight: 800;">0/0</div></div>
-            <div class="msg-card"><span class="text-xs text-gold font-bold">ACTIVE AGENTS</span><div id="stat-active" style="font-size: 2rem; font-weight: 800;">0</div></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          <div class="metric-box"><span class="metric-label">GLOBAL VELOCITY</span><div class="metric-value" id="stat-progress">0%</div></div>
+          <div class="metric-box"><span class="metric-label">VERIFIED WORDS</span><div class="metric-value" id="stat-words">0</div></div>
+          <div class="metric-box"><span class="metric-label">ACTIVE ENGINE</span><div class="metric-value text-gold" id="stat-active">0</div></div>
         </div>
-        <div class="msg-card">
-          <span class="text-xs text-gold font-bold mb-4 block">MANIFEST HEATMAP (CLICK TO INSPECT)</span>
-          <div id="heatmap" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(14px, 1fr)); gap: 3px;"></div>
+        <div class="metric-box">
+          <span class="metric-label">MANIFEST HEATMAP</span>
+          <div id="heatmap" class="heatmap"></div>
         </div>
       </section>
 
-      <section id="tab-warroom" class="content-tab">
-        <div id="broker-list"></div>
+      <section id="tab-reconciliation" class="content-tab">
+        <div class="metric-box">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+            <thead>
+              <tr style="color: var(--text-gold); border-bottom: 1px solid var(--border);">
+                <th style="padding: 1rem;">TRACK</th><th>MANIFEST</th><th>PLANNED</th><th>BUILT</th><th>PASSED</th><th>HEALTH</th>
+              </tr>
+            </thead>
+            <tbody id="union-body"></tbody>
+          </table>
+        </div>
       </section>
 
       <section id="tab-blueprints" class="content-tab">
-        <div id="plan-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;"></div>
+        <div id="plan-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+          <div class="p-8 text-center text-secondary">Select a track in the sidebar to inspect blueprints.</div>
+        </div>
       </section>
     </main>
   </div>
 
   <script>
-    const S = { tracks: [], truth: {}, union: null, active: [], selected: null, messages: [] };
-    const API = '/api/gold';
+    const S = { tracks: [], truth: {}, union: null, active: [], selected: null, plans: [] };
 
     async function req(path) {
-      try { const r = await fetch(path); return r.ok ? await r.json() : null; }
-      catch (e) { return null; }
+      try {
+        const response = await fetch(path);
+        return response.ok ? await response.json() : null;
+      } catch (e) { return null; }
     }
 
     async function refreshAll() {
-      const [config, truth, union, active, msgs] = await Promise.all([
-        req('/api/config'), req(`${API}/ground-truth`), req(`${API}/union-stats`),
-        req(`${API}/active-orchestration`), req(`${API}/broker-messages`)
-      ]);
+      const config = await req('/api/config');
       if (config) S.tracks = config.levels.map(l => l.id);
+
+      const [truth, union, active] = await Promise.all([
+        req('/api/gold/ground-truth'),
+        req('/api/gold/union-stats'),
+        req('/api/gold/active-orchestration')
+      ]);
+
       if (truth) S.truth = truth.modules;
       if (union) S.union = union;
       if (active) S.active = active;
-      if (msgs) S.messages = msgs;
+
       renderAll();
     }
 
     function renderAll() {
-      renderTrackList(); renderOverview(); renderWarRoom();
+      renderTrackList(); renderOverview(); renderUnion();
     }
 
     function renderTrackList() {
       const container = document.getElementById('track-list');
       container.innerHTML = S.tracks.map(id => `
         <div class="track-card ${id === S.selected ? 'active' : ''}" onclick="selectTrack('${id}')">
-          <div class="flex justify-between items-center">
-            <span style="font-weight: bold; font-size: 0.9rem;">${id.toUpperCase()}</span>
-            <span style="font-size: 0.7rem; color: var(--text-gold);">${S.union?.tracks[id]?.passed_count || 0} PASS</span>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: bold; color: #fff;">${id.toUpperCase()}</span>
+            <span style="font-size: 0.7rem; color: var(--text-gold); font-family: var(--font-mono);">
+              ${S.union?.tracks[id]?.passed_count || 0} PASS
+            </span>
           </div>
         </div>
       `).join('');
@@ -156,83 +232,138 @@
 
     async function selectTrack(id) {
       S.selected = id;
-      const plans = await req(`${API}/plan-details/${id}`);
+      const plans = await req(`/api/gold/plan-details/${id}`);
       if (plans) {
-        document.getElementById('plan-container').innerHTML = plans.map(p => `
-          <div class="msg-card" style="opacity: ${p.status === 'unplanned' ? 0.4 : 1}; cursor:pointer" onclick="inspectModule('${id}', '${p.slug}')">
-            <div style="font-weight: bold; color: var(--text-gold);">${p.title || p.slug}</div>
-            <div style="font-size: 0.7rem; opacity: 0.5;">${p.slug}</div>
-          </div>
-        `).join('');
+        S.plans = plans;
+        renderPlans();
         switchTab({target: document.querySelectorAll('.nav-link')[2]}, 'blueprints');
       }
       renderTrackList();
     }
 
+    function renderPlans() {
+      const container = document.getElementById('plan-container');
+      container.innerHTML = S.plans.map(p => `
+        <div class="metric-box" style="opacity: ${p.status === 'unplanned' ? 0.5 : 1}; cursor: pointer" onclick="inspectModule('${S.selected}', '${p.slug}')">
+          <div style="font-weight: bold; color: var(--text-gold); margin-bottom: 0.5rem;">${p.title || p.slug}</div>
+          <div style="font-size: 0.7rem; font-family: var(--font-mono); color: var(--text-main);">${p.slug}</div>
+        </div>
+      `).join('');
+    }
+
     function renderOverview() {
       if (!S.union) return;
       document.getElementById('stat-progress').textContent = Math.round(S.union.total_passed / S.union.total_manifest * 100) + '%';
-      document.getElementById('stat-pass').textContent = `${S.union.total_passed}/${S.union.total_manifest}`;
+      document.getElementById('stat-words').textContent = S.union.word_count_estimate.toLocaleString();
       document.getElementById('stat-active').textContent = S.active.length;
 
       const hm = document.getElementById('heatmap');
       hm.innerHTML = '';
       Object.entries(S.truth).forEach(([slug, m]) => {
+        const active = S.active.some(a => a.slug === slug);
         const d = document.createElement('div');
-        d.style.width = '14px'; d.style.height = '14px'; d.style.borderRadius = '2px';
-        d.style.background = m.status === 'pass' ? 'var(--success)' : (m.status === 'fail' ? 'var(--danger)' : '#21262d');
-        d.style.cursor = 'pointer';
+        d.className = `dot ${active ? 'dot-active' : (m.status === 'pass' ? 'dot-pass' : (m.status === 'fail' ? 'dot-fail' : ''))}`;
+        d.title = slug;
         d.onclick = () => inspectModule(m.level, slug);
         hm.appendChild(d);
       });
     }
 
-    function renderWarRoom() {
-      const container = document.getElementById('broker-list');
-      if (!S.messages.length) { container.innerHTML = '<div class="p-12 text-center opacity-30">NO ACTIVE TRANSMISSIONS</div>'; return; }
-      container.innerHTML = S.messages.map(m => `
-        <div class="msg-card">
-          <div class="msg-header">
-            <span>FROM: ${m.sender || 'AGENT'} • TYPE: ${m.type || 'SIGNAL'}</span>
-            <span>${new Date(m.time).toLocaleTimeString()}</span>
-          </div>
-          <div class="msg-body">${m.body || m.text}</div>
-          <div class="mt-2 text-[10px] opacity-30 font-mono">TASK_ID: ${m.task_id || 'N/A'}</div>
-        </div>
-      `).join('');
-    }
-
     async function inspectModule(track, slug) {
+      const ins = document.getElementById('inspector');
+      const content = document.getElementById('ins-content');
       document.getElementById('ins-slug').textContent = slug;
-      document.getElementById('inspector').classList.add('open');
-      document.getElementById('ins-body').innerHTML = '<div class="p-4 text-center text-gold">RECOVERING DATA...</div>';
-      document.getElementById('ins-phases').innerHTML = '';
+      document.getElementById('ins-track').textContent = `TRACK: ${track.toUpperCase()}`;
+      ins.classList.add('open');
+      content.innerHTML = '<div class="p-8 text-center text-gold">RECONSTRUCTING MODULE DATA...</div>';
 
-      const [data, phases] = await Promise.all([
-        req(`${API}/inspect/${track}/${slug}`),
-        req(`${API}/orchestration/${track}/${slug}`)
-      ]);
+      const data = await req(`/api/gold/inspect/${track}/${slug}`);
+      if (!data) {
+        content.innerHTML = '<div class="p-8 text-center text-red">FAILED TO ACCESS FILESYSTEM</div>';
+        return;
+      }
 
-      if (data) {
-        document.getElementById('ins-body').innerHTML = `
-          <div class="msg-card">
-            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span style="font-size:0.7rem; opacity:0.5;">WORD COUNT</span><span style="font-weight:bold;">${data.word_count}</span></div>
-            <div style="display:flex; justify-content:space-between;"><span style="font-size:0.7rem; opacity:0.5;">SECTIONS</span><span style="font-weight:bold;">${data.sections}</span></div>
+      let html = '';
+
+      // 1. Phases
+      const phaseLabels = ['0 (Research)', '2 (Draft)', '3 (Refine)', '5 (MDX)', '6 (Review)'];
+      const curPhase = data.phases.current;
+      html += `
+        <div class="inspector-section">
+          <h4>Orchestration Progress</h4>
+          <div class="phase-bar">
+            ${[0, 2, 3, 5, 6].map((p, i) => `<div class="phase-step ${p <= curPhase ? 'done' : (i === 0 && curPhase === 0 ? 'active' : '')}"></div>`).join('')}
+          </div>
+          <div style="font-size: 0.7rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+            <span>Current: Phase ${curPhase}</span>
+            <span>Status: ${data.phases.status.toUpperCase()}</span>
+          </div>
+        </div>
+      `;
+
+      // 2. Metrics
+      if (data.build) {
+        html += `
+          <div class="inspector-section">
+            <h4>Build Analytics</h4>
+            <div class="metric-grid">
+              <div class="metric-box"><span class="metric-label">WORDS</span><div class="metric-value">${data.build.word_count}</div></div>
+              <div class="metric-box"><span class="metric-label">SECTIONS</span><div class="metric-value">${data.build.sections}</div></div>
+              <div class="metric-box"><span class="metric-label">ENGAGEMENT</span><div class="metric-value">${data.build.callouts}</div></div>
+              <div class="metric-box"><span class="metric-label">LAST MOD</span><div class="metric-value" style="font-size: 0.7rem;">${new Date(data.build.last_modified).toLocaleDateString()}</div></div>
+            </div>
+          </div>
+          <div class="inspector-section">
+            <h4>Content Snippet</h4>
+            <pre class="snippet-pre">${data.build.snippet}...</pre>
           </div>
         `;
       }
-      if (phases) {
-        document.getElementById('ins-phases').innerHTML = phases.map(p => `
-          <div class="phase-line">
-            <span class="phase-type">${p.type}</span>
-            <span class="phase-file">${p.file}</span>
-            <span style="opacity:0.3;">${new Date(p.timestamp).toLocaleTimeString()}</span>
+
+      // 3. Plan
+      if (data.plan) {
+        html += `
+          <div class="inspector-section">
+            <h4>Blueprint Specifications</h4>
+            <div class="metric-box" style="margin-bottom: 1rem;">
+              <span class="metric-label">FOCUS</span>
+              <div style="font-size: 0.85rem; color: #fff;">${data.plan.focus || 'General'}</div>
+            </div>
+            <div class="metric-box" style="margin-bottom: 1rem;">
+              <span class="metric-label">GRAMMAR POINTS</span>
+              <div style="font-size: 0.75rem; color: var(--text-main); line-height: 1.4;">
+                ${(data.plan.grammar || []).map(g => `• ${g}`).join('<br>')}
+              </div>
+            </div>
           </div>
-        `).join('');
+        `;
       }
+
+      html += `<button class="btn btn-gold" style="width: 100%" onclick="copyAuditCmd('${track}', '${slug}')">COPY AUDIT COMMAND</button>`;
+      content.innerHTML = html;
     }
 
     function closeInspector() { document.getElementById('inspector').classList.remove('open'); }
+    function copyAuditCmd(track, slug) {
+      const cmd = `python scripts/audit_module.py curriculum/l2-uk-en/${track}/${slug}.md`;
+      navigator.clipboard.writeText(cmd);
+      alert('Audit command copied!');
+    }
+
+    function renderUnion() {
+      if (!S.union) return;
+      document.getElementById('union-body').innerHTML = Object.entries(S.union.tracks).map(([id, t]) => `
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+          <td style="padding: 1rem; font-weight: bold; color: #fff;">${id.toUpperCase()}</td>
+          <td>${t.manifest_count}</td>
+          <td>${t.planned_count}</td>
+          <td>${t.built_count}</td>
+          <td>${t.passed_count}</td>
+          <td style="color: ${t.gaps.length ? 'var(--danger)' : 'var(--success)'}">${t.gaps.length ? 'GAPS' : 'HEALTHY'}</td>
+        </tr>
+      `).join('');
+    }
+
     function switchTab(e, id) {
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));

@@ -970,15 +970,12 @@ Format your response clearly.
             for attempt in range(max_retries):
                 try:
                     # Stream stdout line-by-line so the log file updates in real-time
-                    # Mode selection:
-                    # - stdout_only (no output_path): --approval-mode plan (READ-ONLY)
-                    # - output_path: -y (needs write access) with post-validation
-                    # - standard: -y (YOLO, auto-approve all tools)
+                    # Mode selection: always -y (auto-approve all tools).
+                    # Gemini needs tool access for web search (Phase 0 research)
+                    # and local file reads. stdout_only controls output routing,
+                    # NOT Gemini's tool permissions.
                     gemini_cmd = [GEMINI_CLI, "-m", model]
-                    if stdout_only and not output_path:
-                        gemini_cmd += ["--approval-mode", "plan"]
-                    else:
-                        gemini_cmd += ["-y"]
+                    gemini_cmd += ["-y"]
                     gemini_cmd += ["-p", prompt]
 
                     # Snapshot for post-validation when output_path is set

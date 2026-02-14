@@ -1,155 +1,143 @@
-- term: дієслово
-  translation: verb
-  ipa: "[dʲijeˈsɫɔwɔ]"
-  pos: noun
-  grammatical_info: "n. o-declension"
-
-- term: іменник
-  translation: noun
-  ipa: "[iˈmɛnnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: прикметник
-  translation: adjective
-  ipa: "[prɪˈkmɛtnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: прислівник
-  translation: adverb
-  ipa: "[prɪˈsʲlʲiwnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: займенник
-  translation: pronoun
-  ipa: "[zajˈmɛnnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: числівник
-  translation: numeral
-  ipa: "[t͡ʃɪˈsʲlʲiwnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: називний відмінок
-  translation: nominative case
-  ipa: "[nazɪwˈnɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: родовий відмінок
-  translation: genitive case
-  ipa: "[rɔdɔˈwɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: давальний відмінок
-  translation: dative case
-  ipa: "[daˈwalʲnɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: знахідний відмінок
-  translation: accusative case
-  ipa: "[znaˈxʲidnɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: орудний відмінок
-  translation: instrumental case
-  ipa: "[ɔˈrudnɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: місцевий відмінок
-  translation: locative case
-  ipa: "[mʲisʲˈt͡sɛwɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: кличний відмінок
-  translation: vocative case
-  ipa: "[ˈklɪt͡ʃnɪj wʲidˈmʲinɔk]"
-  pos: noun
-  grammatical_info: "m. phrase"
-
-- term: сполучник
-  translation: conjunction
-  ipa: "[spɔˈɫut͡ʃnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: прийменник
-  translation: preposition
-  ipa: "[prɪˈjmɛnnɪk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: частка
-  translation: particle
-  ipa: "[ˈt͡ʃastka]"
-  pos: noun
-  grammatical_info: "f. a-declension"
-
-- term: вигук
-  translation: interjection
-  ipa: "[ˈwɪɦuk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: граматика
-  translation: grammar
-  ipa: "[ɦraˈmatɪka]"
-  pos: noun
-  grammatical_info: "f. a-declension"
-
-- term: правило
-  translation: rule
-  ipa: "[ˈprawɪɫɔ]"
-  pos: noun
-  grammatical_info: "n. o-declension"
-
-- term: приклад
-  translation: example
-  ipa: "[ˈprɪkɫad]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: метамова
-  translation: metalanguage
-  ipa: "[mɛtaˈmɔwa]"
-  pos: noun
-  grammatical_info: "f. a-declension"
-
-- term: підмет
-  translation: subject
-  ipa: "[ˈpʲidmɛt]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: присудок
-  translation: predicate
-  ipa: "[ˈprɪsudɔk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: додаток
-  translation: object
-  ipa: "[dɔˈdatɔk]"
-  pos: noun
-  grammatical_info: "m. o-declension"
-
-- term: означення
-  translation: attribute
-  ipa: "[ɔˈznat͡ʃɛnʲnʲa]"
-  pos: noun
-  grammatical_info: "n. o-declension (soft)"
-
-- term: обставина
-  translation: adverbial
-  ipa: "[ɔbˈstawɪna]"
-  pos: noun
-  grammatical_info: "f. a-declension"
+items:
+  - lemma: "граматика"
+    translation: "grammar"
+    ipa: "/ɦrɐ.ˈmɑ.tɪ.kɐ/"
+    pos: "noun"
+    gender: "f"
+    example: "Вивчення граматики допомагає зрозуміти логіку мови."
+  - lemma: "правило"
+    translation: "rule"
+    ipa: "/ˈprɑ.wɪ.lɔ/"
+    pos: "noun"
+    gender: "n"
+    example: "Я не розумію це граматичне правило."
+  - lemma: "приклад"
+    translation: "example"
+    ipa: "/ˈprɪ.klɐd/"
+    pos: "noun"
+    gender: "m"
+    example: "Наведіть, будь ласка, приклад речення з цим словом."
+  - lemma: "метамова"
+    translation: "metalanguage"
+    ipa: "/mɛ.tɐ.ˈmɔ.wɐ/"
+    pos: "noun"
+    gender: "f"
+    notes: "language used to describe another language"
+  - lemma: "частина мови"
+    translation: "part of speech"
+    ipa: "/t͡ʃɐs.ˈtɪ.nɐ ˈmɔ.wɪ/"
+    pos: "noun"
+    gender: "f"
+  - lemma: "іменник"
+    translation: "noun"
+    ipa: "/i.ˈmɛn.nɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Слово «Україна» — це власний іменник."
+  - lemma: "дієслово"
+    translation: "verb"
+    ipa: "/di.jeˈslɔ.wɔ/"
+    pos: "noun"
+    gender: "n"
+    example: "В українській мові дієслово має категорію виду."
+  - lemma: "прикметник"
+    translation: "adjective"
+    ipa: "/prɪ.ˈkmɛ.tnɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Прикметник завжди узгоджується з іменником."
+  - lemma: "прислівник"
+    translation: "adverb"
+    ipa: "/prɪ.ˈsl⁽ʲ⁾iw.nɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Прислівник — це незмінна частина мови."
+  - lemma: "займенник"
+    translation: "pronoun"
+    ipa: "/zɐj.ˈmɛn.nɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Займенник вказує на предмет, але не називає його."
+  - lemma: "числівник"
+    translation: "numeral"
+    ipa: "/t͡ʃɪ.ˈsl⁽ʲ⁾iw.nɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Відмінювання числівників є досить складним."
+  - lemma: "сполучник"
+    translation: "conjunction"
+    ipa: "/spɔ.ˈlut͡ʃ.nɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Сполучник «бо» вказує на причину дії."
+  - lemma: "прийменник"
+    translation: "preposition"
+    ipa: "/prɪ.ˈjmɛn.nɪk/"
+    pos: "noun"
+    gender: "m"
+    example: "Прийменник «в» вимагає місцевого відмінка."
+  - lemma: "частка"
+    translation: "particle"
+    ipa: "/ˈt͡ʃɑs.tkɐ/"
+    pos: "noun"
+    gender: "f"
+    example: "Частка «не» з дієсловами пишеться окремо."
+  - lemma: "вигук"
+    translation: "interjection"
+    ipa: "/ˈwɪ.ɦuk/"
+    pos: "noun"
+    gender: "m"
+    example: "Вигук «Ой!» виражає здивування або переляк."
+  - lemma: "відмінок"
+    translation: "case"
+    ipa: "/wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+    example: "В українській мові сім відмінків."
+  - lemma: "називний відмінок"
+    translation: "nominative case"
+    ipa: "/nɐ.zɪw.ˈnɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "родовий відмінок"
+    translation: "genitive case"
+    ipa: "/rɔ.dɔ.ˈwɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "давальний відмінок"
+    translation: "dative case"
+    ipa: "/dɐ.ˈwɑl⁽ʲ⁾.nɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "знахідний відмінок"
+    translation: "accusative case"
+    ipa: "/znɐ.ˈxid.nɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "орудний відмінок"
+    translation: "instrumental case"
+    ipa: "/ɔ.ˈrud.nɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "місцевий відмінок"
+    translation: "locative case"
+    ipa: "/m⁽ʲ⁾is.ˈt͡sɛ.wɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кличний відмінок"
+    translation: "vocative case"
+    ipa: "/ˈklɪt͡ʃ.nɪj wid.ˈmi.nɔk/"
+    pos: "noun"
+    gender: "m"
+  - lemma: "підмет"
+    translation: "subject"
+    ipa: "/ˈpid.mɛt/"
+    pos: "noun"
+    gender: "m"
+    example: "Підмет позначає головну особу в реченні."
+  - lemma: "присудок"
+    translation: "predicate"
+    ipa: "/ˈprɪ.su.dɔk/"
+    pos: "noun"
+    gender: "m"
+    example: "Присудок зазвичай виражений дієсловом."

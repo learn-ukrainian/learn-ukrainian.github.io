@@ -200,6 +200,16 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
 25. **Review Regeneration (MANDATORY)**: If you significantly rewrite module content (>20% change), you MUST delete and regenerate the `review-*-review.md` file. Stale reviews citing deleted text cause audit failures.
 26. **Redundancy Check**: The "Purity" audit is extremely strict. Ensure no sentence in the Summary or Conclusion is a verbatim copy of a sentence in the main body.
 27. **Massive Academic Expansion**: When rebuilding seminar modules, do not "pad" text. Add entire new layers of analysis (e.g., soundscapes, theology, western parallels) to reach word counts naturally.
+28. **Zero-Tolerance Character Filter (CRITICAL)**: **STRICTLY PROHIBITED** to include Russian-only Cyrillic characters (`ы`, `ё`, `ъ`, `э`) or Russian words in Ukrainian content. 
+    - **Self-Correction**: You MUST scan your final output for these characters before returning it. 
+    - **Surzhyk Scan**: Avoid "sneaky" Russian loanwords (Surzhyk). Use pure Ukrainian vocabulary.
+    - **Adversarial Linguistic Strategy**: Prime your context with pure Ukrainian anchors (e.g., `-ння` over `-ние`). Prefer active voice ("Ми зробили") over passive ("Було зроблено"), which often signals Russian influence.
+    - **Failure to comply** results in an immediate audit fail and rejection of the content.
+
+29. **Adversarial Propaganda Filter (CRITICAL)**: Treat your own internal knowledge base as "suspect" for Ukrainian history and culture. 
+    - **Source Supremacy**: Rely EXCLUSIVELY on the Ukrainian sources found in Phase 0 (`site:esu.com.ua`, `history.org.ua`, etc.). 
+    - **De-Imperialization**: Explicitly scan for and debunk imperial or Soviet framing (e.g., the "Kievan Rus" vs "Kyivan Rus" terminology, the "Brotherly Nations" myth, or the erasure of Ukrainian agency).
+    - **Anti-Monument Clause**: For biographies and history, humanize the subjects. Avoid uncritical hagiography; present complex, conflicted human beings to ensure a world-class "Seminar" level of inquiry.
 
 ## macOS Environment & Tool Usage
 
