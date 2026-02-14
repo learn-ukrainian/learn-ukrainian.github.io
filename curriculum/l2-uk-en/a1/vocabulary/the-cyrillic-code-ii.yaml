@@ -1,0 +1,99 @@
+- gender: m
+  ipa: /t͡sɛntr/
+  lemma: центр
+  pos: noun
+  translation: center
+- gender: m
+  ipa: /t͡ʃɑi̯/
+  lemma: чай
+  pos: noun
+  translation: tea
+- gender: f
+  ipa: /ˈʃkɔ.ɫɑ/
+  lemma: школа
+  pos: noun
+  translation: school
+- ipa: /ˈɦɑr.nɪi̯/
+  lemma: гарний
+  pos: adj
+  translation: beautiful / good
+- aspect: imp
+  ipa: /ˈʒɪ.tɪ/
+  lemma: жити
+  pos: verb
+  translation: to live
+- gender: m
+  ipa: /dɛnʲ/
+  lemma: день
+  pos: noun
+  translation: day
+- gender: f
+  ipa: /jɛu̯ˈrɔ.pɑ/
+  lemma: Європа
+  pos: noun
+  translation: Europe
+- gender: n
+  ipa: /ˈjɑ.bɫu.kɔ/
+  lemma: яблуко
+  pos: noun
+  translation: apple
+- ipa: /ʃt͡ʃɛ/
+  lemma: ще
+  pos: adv
+  translation: still / more / yet
+- gender: m
+  ipa: /ˈɡɑ.nɔk/
+  lemma: ґанок
+  pos: noun
+  translation: porch
+- gender: f
+  ipa: /ˈji.ʒɑ/
+  lemma: їжа
+  pos: noun
+  translation: food
+- gender: m
+  ipa: /juˈnɑk/
+  lemma: юнак
+  pos: noun
+  translation: young man
+- gender: f
+  ipa: /nʲit͡ʃ/
+  lemma: ніч
+  pos: noun
+  translation: night
+- gender: f
+  ipa: /sʲiˈmjɑ/
+  lemma: сім'я
+  pos: noun
+  translation: family
+- gender: m
+  ipa: /ˈɦɔ.ɫɔs/
+  lemma: голос
+  pos: noun
+  translation: voice
+- gender: m
+  ipa: /ʃo.koˈɫɑd/
+  lemma: шоколад
+  pos: noun
+  translation: chocolate
+- gender: m
+  ipa: /dɔʃt͡ʃ/
+  lemma: дощ
+  pos: noun
+  translation: rain
+- gender: m
+  ipa: /bɔrʃt͡ʃ/
+  lemma: борщ
+  pos: noun
+  translation: borscht
+- gender: m
+  ipa: /ˈbɑtʲ.kɔ/
+  lemma: батько
+  pos: noun
+  translation: father
+- gender: f
+  ipa: /sʲilʲ/
+  lemma: сіль
+  pos: noun
+  translation: salt
+

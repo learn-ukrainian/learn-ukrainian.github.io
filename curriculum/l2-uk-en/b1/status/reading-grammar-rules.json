@@ -1,15 +1,15 @@
 {
-  "module": "how-to-talk-about-grammar",
+  "module": "reading-grammar-rules",
   "level": "B1",
-  "plan_version": "3.0",
-  "last_audit": "2026-02-15T00:40:16.610852Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T00:40:52.631635Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-14T12:03:34.464912Z",
-    "meta": "2026-02-14T11:39:38.077722Z",
-    "activities": "2026-02-14T12:00:30.718484Z",
-    "vocabulary": "2026-02-15T00:40:05.760006Z",
-    "plan": "2026-02-14T20:37:54.929383Z"
+    "md": "2026-02-14T14:52:26.686608Z",
+    "meta": "2026-02-14T14:48:53.638579Z",
+    "activities": "2026-02-14T14:43:17.281221Z",
+    "vocabulary": "2026-02-14T14:38:44.603838Z",
+    "plan": "2026-02-14T20:37:54.929772Z"
   },
   "gates": {
     "meta": {
@@ -20,12 +20,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4314/4000 (raw: 4480)"
+      "message": "4107/4000 (raw: 4475)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/4"
+      "message": "6/4"
     },
     "vocabulary": {
       "status": "pass",

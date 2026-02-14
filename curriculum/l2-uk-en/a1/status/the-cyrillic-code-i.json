@@ -1,15 +1,15 @@
 {
-  "module": "how-to-talk-about-grammar",
-  "level": "B1",
-  "plan_version": "3.0",
-  "last_audit": "2026-02-15T00:40:16.610852Z",
+  "module": "the-cyrillic-code-i",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T00:40:22.692275Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-14T12:03:34.464912Z",
-    "meta": "2026-02-14T11:39:38.077722Z",
-    "activities": "2026-02-14T12:00:30.718484Z",
-    "vocabulary": "2026-02-15T00:40:05.760006Z",
-    "plan": "2026-02-14T20:37:54.929383Z"
+    "md": "2026-02-14T23:00:58.476583Z",
+    "meta": "2026-02-14T21:26:14.348345Z",
+    "activities": "2026-02-14T23:36:00.130276Z",
+    "vocabulary": "2026-02-15T00:39:59.014446Z",
+    "plan": "2026-02-14T15:15:44.389584Z"
   },
   "gates": {
     "meta": {
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4314/4000 (raw: 4480)"
+      "message": "2202/1019 (raw: 2433)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/4"
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/20"
+      "message": "37/1"
     },
     "naturalness": {
       "status": "info",
