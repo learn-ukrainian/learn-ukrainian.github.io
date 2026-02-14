@@ -1,0 +1,88 @@
+items:
+  - lemma: брат
+    ipa: /brɑt/
+    translation: brother
+    pos: noun
+    gender: m
+  - lemma: сестра
+    ipa: /seˈstrɑ/
+    translation: sister
+    pos: noun
+    gender: f
+  - lemma: мама
+    ipa: /ˈmɑmɑ/
+    translation: mother
+    pos: noun
+    gender: f
+  - lemma: тато
+    ipa: /ˈtɑtɔ/
+    translation: father
+    pos: noun
+    gender: m
+  - lemma: дім
+    ipa: /dim/
+    translation: house
+    pos: noun
+    gender: m
+  - lemma: вікно
+    ipa: /ʋikˈnɔ/
+    translation: window
+    pos: noun
+    gender: n
+  - lemma: книга
+    ipa: /ˈknɪɦɑ/
+    translation: book
+    pos: noun
+    gender: f
+  - lemma: місто
+    ipa: /ˈmistɔ/
+    translation: city
+    pos: noun
+    gender: n
+  - lemma: стіл
+    ipa: /stil/
+    translation: table
+    pos: noun
+    gender: m
+  - lemma: море
+    ipa: /ˈmɔre/
+    translation: sea
+    pos: noun
+    gender: n
+  - lemma: ніч
+    ipa: /nʲitʃ/
+    translation: night
+    pos: noun
+    gender: f
+  - lemma: день
+    ipa: /denʲ/
+    translation: day
+    pos: noun
+    gender: m
+  - lemma: земля
+    ipa: /zemˈlʲɑ/
+    translation: earth
+    pos: noun
+    gender: f
+  - lemma: серце
+    ipa: /ˈsɛrtse/
+    translation: heart
+    pos: noun
+    gender: n
+  - lemma: рід
+    ipa: /rid/
+    translation: gender
+    pos: noun
+    gender: m
+  - lemma: чоловічий
+    ipa: /tʃɔlɔˈʋitʃɪi/
+    translation: masculine
+    pos: adj
+  - lemma: жіночий
+    ipa: /ʒiˈnɔtʃɪi/
+    translation: feminine
+    pos: adj
+  - lemma: середній
+    ipa: /seˈrɛdnʲɪi/
+    translation: neuter
+    pos: adj

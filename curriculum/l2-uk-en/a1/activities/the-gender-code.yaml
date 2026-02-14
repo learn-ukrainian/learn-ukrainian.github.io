@@ -1,0 +1,343 @@
+- type: group-sort
+  title: 'Gender Sorting Hat'
+  instruction: 'Sort the nouns into the correct gender categories based on their endings.'
+  groups:
+    - name: 'Masculine (Він)'
+      items:
+        - 'брат'
+        - 'дім'
+        - 'стіл'
+        - 'парк'
+        - 'хліб'
+        - 'день'
+    - name: 'Feminine (Вона)'
+      items:
+        - 'мама'
+        - 'сестра'
+        - 'книга'
+        - 'земля'
+        - 'ніч'
+        - 'сіль'
+    - name: 'Neuter (Воно)'
+      items:
+        - 'вікно'
+        - 'місто'
+        - 'море'
+        - 'сонце'
+        - "ім'я"
+        - 'серце'
+
+- type: quiz
+  title: 'Identify the Gender'
+  instruction: 'Identify the correct gender for each Ukrainian noun.'
+  items:
+    - question: 'What is the gender of **вікно** (window)?'
+      options:
+        - text: 'Neuter'
+          correct: true
+        - text: 'Masculine'
+          correct: false
+        - text: 'Feminine'
+          correct: false
+        - text: 'Plural'
+          correct: false
+      explanation: 'Words ending in -о are neuter.'
+    - question: 'What is the gender of **книга** (book)?'
+      options:
+        - text: 'Feminine'
+          correct: true
+        - text: 'Masculine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'None'
+          correct: false
+      explanation: 'Words ending in -а are feminine.'
+    - question: 'What is the gender of **стіл** (table)?'
+      options:
+        - text: 'Masculine'
+          correct: true
+        - text: 'Feminine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'Both'
+          correct: false
+      explanation: 'Words ending in a consonant are masculine.'
+    - question: 'What is the gender of **тато** (dad)?'
+      options:
+        - text: 'Masculine'
+          correct: true
+        - text: 'Neuter'
+          correct: false
+        - text: 'Feminine'
+          correct: false
+        - text: 'None'
+          correct: false
+      explanation: 'Biological gender overrides the -o ending.'
+    - question: "What is the gender of **ім'я** (name)?"
+      options:
+        - text: 'Neuter'
+          correct: true
+        - text: 'Feminine'
+          correct: false
+        - text: 'Masculine'
+          correct: false
+        - text: 'Plural'
+          correct: false
+      explanation: "Even though it ends in -я, it is a neuter noun."
+    - question: 'What is the gender of **ніч** (night)?'
+      options:
+        - text: 'Feminine'
+          correct: true
+        - text: 'Masculine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'Both'
+          correct: false
+      explanation: 'This is a feminine noun ending in a consonant.'
+    - question: 'What is the gender of **день** (day)?'
+      options:
+        - text: 'Masculine'
+          correct: true
+        - text: 'Feminine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'None'
+          correct: false
+      explanation: 'Even with a soft sign, день is masculine.'
+    - question: 'What is the gender of **море** (sea)?'
+      options:
+        - text: 'Neuter'
+          correct: true
+        - text: 'Masculine'
+          correct: false
+        - text: 'Feminine'
+          correct: false
+        - text: 'Plural'
+          correct: false
+      explanation: 'Words ending in -e are neuter.'
+
+- type: match-up
+  title: 'Match Noun to Gender'
+  instruction: 'Connect the Ukrainian word to its grammatical gender.'
+  pairs:
+    - left: 'брат'
+      right: 'Masculine'
+    - left: 'сестра'
+      right: 'Feminine'
+    - left: 'місто'
+      right: 'Neuter'
+    - left: 'книга'
+      right: 'Feminine'
+    - left: 'дім'
+      right: 'Masculine'
+    - left: 'море'
+      right: 'Neuter'
+    - left: 'парк'
+      right: 'Masculine'
+    - left: 'мама'
+      right: 'Feminine'
+
+- type: true-false
+  title: 'Gender Rule Check'
+  instruction: 'Decide if the statement about Ukrainian gender is true or false.'
+  items:
+    - statement: 'Most nouns ending in -а are feminine.'
+      correct: true
+      explanation: 'Yes, -а is the standard feminine ending.'
+    - statement: 'All words ending in -о are neuter.'
+      correct: false
+      explanation: 'No, "тато" is masculine.'
+    - statement: 'Masculine nouns usually end in a consonant.'
+      correct: true
+      explanation: 'Consonant endings mark the masculine gender.'
+    - statement: 'The word "собака" is feminine.'
+      correct: false
+      explanation: 'No, "собака" is masculine.'
+    - statement: 'There are four genders in Ukrainian.'
+      correct: false
+      explanation: 'There are only three genders: M, F, and N.'
+    - statement: 'Adjectives must match the gender of the noun.'
+      correct: true
+      explanation: 'Yes, this is called agreement.'
+    - statement: 'The letter -я is a soft feminine ending.'
+      correct: true
+      explanation: 'Correct, -я is the soft version of -а.'
+    - statement: 'The soft sign always means a word is feminine.'
+      correct: false
+      explanation: 'No, "день" is masculine.'
+
+- type: fill-in
+  title: 'Gender Agreement'
+  instruction: 'Choose the correct possessive pronoun (мій, моя, моє) to match the noun.'
+  items:
+    - sentence: 'Це ... брат.'
+      answer: 'мій'
+      options: ['мій', 'моя', 'моє', 'мої']
+      explanation: 'Брат is masculine.'
+    - sentence: 'Це ... сестра.'
+      answer: 'моя'
+      options: ['моя', 'мій', 'моє', 'мої']
+      explanation: 'Сестра is feminine.'
+    - sentence: 'Це ... вікно.'
+      answer: 'моє'
+      options: ['моє', 'мій', 'моя', 'мої']
+      explanation: 'Вікно is neuter.'
+    - sentence: 'Це ... дім.'
+      answer: 'мій'
+      options: ['мій', 'моя', 'моє', 'мої']
+      explanation: 'Дім is masculine.'
+    - sentence: 'Це ... книга.'
+      answer: 'моя'
+      options: ['моя', 'мій', 'моє', 'мої']
+      explanation: 'Книга is feminine.'
+    - sentence: 'Це ... місто.'
+      answer: 'моє'
+      options: ['моє', 'мій', 'моя', 'мої']
+      explanation: 'Місто is neuter.'
+    - sentence: 'Це ... сонце.'
+      answer: 'моє'
+      options: ['моє', 'мій', 'моя', 'мої']
+      explanation: 'Сонце is neuter.'
+    - sentence: 'Це ... стіл.'
+      answer: 'мій'
+      options: ['мій', 'моя', 'моє', 'мої']
+      explanation: 'Стіл is masculine.'
+
+- type: anagram
+  title: 'Gender Vocabulary'
+  instruction: 'Unscramble the letters to find the Ukrainian nouns.'
+  items:
+    - scrambled: 'т б а р'
+      answer: 'брат'
+    - scrambled: 'а м а м'
+      answer: 'мама'
+    - scrambled: 'к н і о в'
+      answer: 'вікно'
+    - scrambled: 'т о с і м'
+      answer: 'місто'
+    - scrambled: 'р е о м'
+      answer: 'море'
+    - scrambled: 'ч і н'
+      answer: 'ніч'
+    - scrambled: 'м і д'
+      answer: 'дім'
+    - scrambled: 'л і с ь'
+      answer: 'сіль'
+
+- type: group-sort
+  title: 'Gender Challenge'
+  instruction: 'Sort these words into the correct gender boxes.'
+  groups:
+    - name: 'Masculine'
+      items:
+        - 'тато'
+        - 'дідусь'
+        - 'Микола'
+        - 'собака'
+        - 'дядько'
+        - 'Андрій'
+    - name: 'Neuter'
+      items:
+        - "ім'я"
+        - 'місто'
+        - 'вікно'
+        - 'сонце'
+        - 'море'
+        - 'серце'
+
+- type: quiz
+  title: 'Final Gender Review'
+  instruction: 'One last check on your gender pattern recognition.'
+  items:
+    - question: "How do you say 'My name' in Ukrainian?"
+      options:
+        - text: "Моє ім'я"
+          correct: true
+        - text: "Моя ім'я"
+          correct: false
+        - text: "Мій ім'я"
+          correct: false
+        - text: "Моє ім'я — це"
+          correct: false
+      explanation: "Ім'я is neuter, so it takes моє."
+    - question: 'What is the gender of "день" (day)?'
+      options:
+        - text: 'Masculine'
+          correct: true
+        - text: 'Feminine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'Plural'
+          correct: false
+      explanation: "Even with a soft sign, день is masculine."
+    - question: 'Which ending is most common for feminine nouns?'
+      options:
+        - text: '-а'
+          correct: true
+        - text: '-о'
+          correct: false
+        - text: '-е'
+          correct: false
+        - text: '-consonant'
+          correct: false
+      explanation: "The letter -а is the standard feminine marker."
+    - question: 'Which ending is most common for neuter nouns?'
+      options:
+        - text: '-о'
+          correct: true
+        - text: '-а'
+          correct: false
+        - text: '-consonant'
+          correct: false
+        - text: '-я'
+          correct: false
+      explanation: "The round -о is the most common neuter ending."
+    - question: 'How do you say "My house"?'
+      options:
+        - text: 'Мій дім'
+          correct: true
+        - text: 'Моя дім'
+          correct: false
+        - text: 'Моє дім'
+          correct: false
+        - text: 'Мій дома'
+          correct: false
+      explanation: "Дім is masculine, so it takes мій."
+    - question: 'Which of these nouns is feminine?'
+      options:
+        - text: 'сіль'
+          correct: true
+        - text: 'стіл'
+          correct: false
+        - text: 'тато'
+          correct: false
+        - text: 'сонце'
+          correct: false
+      explanation: "Сіль is a feminine noun."
+    - question: 'What is the gender of **Микола**?'
+      options:
+        - text: 'Masculine'
+          correct: true
+        - text: 'Feminine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'None'
+          correct: false
+      explanation: 'Biological male name.'
+    - question: 'What is the gender of **земля**?'
+      options:
+        - text: 'Feminine'
+          correct: true
+        - text: 'Masculine'
+          correct: false
+        - text: 'Neuter'
+          correct: false
+        - text: 'Both'
+          correct: false
+      explanation: 'Ends in -я.'

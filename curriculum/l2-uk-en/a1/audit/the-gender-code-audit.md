@@ -1,0 +1,63 @@
+# Audit Report: M03 — the-gender-code.md
+**Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 934
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-15 00:11:31
+
+## Configuration
+**Type:** A1-grammar
+**Word Target:** 934 words
+**Activities:** 8-12 required
+**Items per Activity:** ≥12 items
+**Unique Types:** ≥4 types required
+**Priority Types:** anagram, fill-in, match-up, quiz, unjumble
+**Required Types:** fill-in, match-up, quiz
+**Engagement:** ≥3 callouts
+**Immersion:** 0-100%
+**Vocab Target:** ≥1 words
+**Transliteration:** Allowed
+
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | group-sort | Gender Sorting Hat | 18 | 12 | ✅ |
+| 2 | quiz | Identify the Gender | 8 | 8 | ✅ |
+| 3 | match-up | Match Noun to Gender | 8 | 8 | ✅ |
+| 4 | true-false | Gender Rule Check | 8 | 8 | ✅ |
+| 5 | fill-in | Gender Agreement | 8 | 8 | ✅ |
+| 6 | anagram | Gender Vocabulary | 8 | 8 | ✅ |
+| 7 | group-sort | Gender Challenge | 12 | 12 | ✅ |
+| 8 | quiz | Final Gender Review | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## Gates
+- **Words:** ✅ 1147/934 (raw: 1289)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 3/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 18/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 12.3% (target 10-25% (M03))
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ℹ️ PENDING — awaiting review
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **The Gender Code** | ✅ | 0 | Included in Core |
+| **Презентація: Код роду (Presentation: The Gender Code)** | ✅ | 568 | Included in Core |
+| **Практика: Очікувані та неочікувані шаблони (Practice: Expected and Unexpected Patterns)** | ✅ | 286 | Included in Core |
+| **Культурний контекст (Cultural Context)** | ✅ | 248 | Included in Core |
+| **Summary** | ✅ | 45 | Included in Core |
