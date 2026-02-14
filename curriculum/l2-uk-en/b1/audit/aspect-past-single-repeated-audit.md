@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M07 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-15 00:27:22
+**Generated:** 2026-02-15 00:34:59
 
 ## Configuration
 **Type:** B1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4384/4000 (raw: 4917)
+- **Words:** ✅ 4359/4000 (raw: 4875)
 - **Activities:** ✅ 9/4
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 9/3 types
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.1% (target 85-100% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -82,6 +82,6 @@
 | **Вид у минулому: одного разу vs щодня** | ✅ | 0 | Included in Core |
 | **Тест** | ✅ | 432 | Included in Core |
 | **Пояснення** | ✅ | 1409 | Included in Core |
-| **Практика** | ✅ | 829 | Included in Core |
-| **Діалоги** | ✅ | 963 | Included in Core |
-| **Підсумок** | ✅ | 751 | Included in Core |
+| **Практика** | ✅ | 824 | Included in Core |
+| **Діалоги** | ✅ | 945 | Included in Core |
+| **Підсумок** | ✅ | 749 | Included in Core |

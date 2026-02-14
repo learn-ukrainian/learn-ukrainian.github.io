@@ -21,7 +21,7 @@ Read ALL four files before writing anything.
 Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 - **Total minimum**: {WORD_TARGET} words
-- **Write at least**: {OVERSHOOT_TARGET} words (2.0x — you consistently underwrite, so aim high)
+- **Write at least**: {OVERSHOOT_TARGET} words (1.5x — aim for depth, not padding)
 - **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: {ENGAGEMENT_MIN}+ across sections, at least 4 different types
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats (inline, standalone, tables, dialogues)
@@ -195,10 +195,37 @@ Before submitting, scan your ENTIRE output for these. They cause automatic audit
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
+### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
+
+**Level-gated IPA rules:**
+- **A1–A2**: Inline IPA transcriptions allowed in content (students learning pronunciation)
+- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file. Students at B1+ can read Cyrillic — cluttering prose with `[tʃɪˈtɑu̯]` breaks immersion and readability.
+
+**When IPA IS used (A1–A2 content, or any vocabulary file):**
+- ALL pronunciation MUST use IPA symbols. Latin transliterations are BANNED.
+
+```markdown
+❌ WRONG (Latin transliteration):
+"Х sounds like 'kh' in Scottish 'loch'"
+"хліб (khlib)"
+
+✅ RIGHT (IPA with English approximation):
+"**Х** — [x], like the «ch» in Scottish «loch»"
+"**хліб** — [xlʲib]"
+```
+
+**IPA Rules:**
+- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[tʃ]`, `[ʒ]`, `[ts]`, `[dʒ]`
+- Add English approximation for accessibility: `[ʃ] — like «sh» in «shoe»`
+- Mark palatalization: `[lʲ]`, `[dʲ]`, `[nʲ]`, `[tʲ]` (NOT just `[l]`, `[d]`)
+- Mark the soft Л correctly: `[lʲ]` vs hard `[l]`
+- Use `[ʋ]` for Ukrainian В (NOT `[v]` or `[w]` — it's a labiodental approximant)
+- Use `/u/` for Ukrainian у (NOT `/ʊ/` — Ukrainian has no lax /ʊ/ phoneme)
+- NEVER use Latin shortcuts: kh, sh, ch, zh, ts, ya, yu, ye, shch
+
 ### Typography
 
 - **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
-- IPA for all phonetics (no Latin transliteration like "khlib")
 - Use ONLY vocabulary from the plan's `vocabulary_hints` — do NOT invent new terms
 
 ---
