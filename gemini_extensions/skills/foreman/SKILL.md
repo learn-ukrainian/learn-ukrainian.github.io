@@ -10,6 +10,10 @@ description: Autonomous orchestrator for full module rebuilds. Manages the Phase
 > and Final Review Gemini via `ai_agent_bridge.py`, then run audits, manage fix loops, and persist state.
 > When done, you produce a completion report for Claude's final review.
 
+**GLOBAL RULES:**
+- **ALWAYS** use `.venv/bin/python` — NEVER bare `python` or `python3` (missing deps).
+- **ALWAYS** use `--phase` with numeric/string keys (`0`, `1`, `2-section`, `3`, `6`, `7-final-review`) — NEVER tag names (`RESEARCH`, `CONTENT`).
+
 ## 1. Parameters & Inputs
 
 **Invocation:** `/foreman {track} {num}`
@@ -89,7 +93,6 @@ done
 ```bash
 WORD_TARGET=$(yq '.word_target' "${PLAN_PATH}")
 TOPIC_TITLE=$(yq '.title' "${PLAN_PATH}")
-HARD_MINIMUM_WORD_COUNT=$((WORD_TARGET * 3 / 2))  # 1.5x overshoot
 IMMERSION=$(yq '.immersion // ""' "${PLAN_PATH}")
 ```
 
@@ -125,7 +128,6 @@ REVIEW_PATH: "${REVIEW_PATH}"
 QUICK_REF_PATH: "${QUICK_REF_PATH}"
 SCHEMA_PATH: "${SCHEMA_PATH}"
 WORD_TARGET: "${WORD_TARGET}"
-HARD_MINIMUM_WORD_COUNT: "${HARD_MINIMUM_WORD_COUNT}"
 SKILL_IDENTITY: "${SKILL_IDENTITY}"
 PERSONA_FLAVOR: "${PERSONA_FLAVOR}"
 PERSONA_VOICE: "$(yq '.persona.voice // ""' ${PLAN_PATH})"
@@ -134,7 +136,26 @@ IMMERSION_RULE: "${IMMERSION}"
 EOF
 ```
 
-Update these placeholders as phases produce new data (e.g., after Phase 1 rebuilds meta, re-read section allocations).
+> **WARNING:** `HARD_MINIMUM_WORD_COUNT` is NOT in the initial placeholders. It is computed PER-SECTION in Step 2d from the meta's section word allocation. Putting the total module target here causes every section to be written at full module length (8x overshoot).
+
+**Activity config** — read from quick-ref and add to placeholders before Phase 3:
+```bash
+# After Phase 2, before Phase 3 dispatch, add activity placeholders:
+# Read these from the quick-ref or hardcode per level:
+# A1: 8 activities, 6-10 range, 12+ items, no cloze
+# A2: 10 activities, 8-12 range, 12+ items
+# B1 bridge: 8 activities, 6-10 range, 10+ items
+# B1 M06+: 10 activities, 8-12 range, 12+ items
+yq -i '.ACTIVITY_COUNT_TARGET = "8"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.ACTIVITY_MIN = "6"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.ACTIVITY_MAX = "10"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.ITEMS_MIN = "12"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.VOCAB_COUNT_TARGET = "20"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.FORBIDDEN_ACTIVITY_TYPES = "cloze"' "${ORCH_DIR}/placeholders.yaml"  # A1 specific
+yq -i '.ALLOWED_ACTIVITY_TYPES = "quiz, fill-in, match-up, anagram, unjumble, mark-the-words, reorder"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.REQUIRED_TYPES = "quiz, fill-in, match-up"' "${ORCH_DIR}/placeholders.yaml"
+yq -i '.PRIORITY_TYPES = "anagram, unjumble"' "${ORCH_DIR}/placeholders.yaml"
+```
 
 ---
 
@@ -183,17 +204,18 @@ After every dispatch, extract delimited content:
   --attempt ${ATTEMPT}
 ```
 
-**Tag → File mapping (exact):**
+**Tag → File mapping (exact phase keys for `--phase` arg):**
 
-| Phase | Tag | Destination |
-|-------|-----|-------------|
-| Phase 0 | `RESEARCH` | `${RESEARCH_PATH}` |
-| Phase 1 | `META_OUTLINE` | Update `content_outline` in `${META_PATH}` |
-| Phase 2 (per section) | `SECTION_CONTENT` | Append to `${CONTENT_PATH}` |
-| Phase 3 | `ACTIVITIES` | `${ACTIVITIES_PATH}` |
-| Phase 3 | `VOCABULARY` | `${VOCAB_PATH}` |
-| Phase 6 | `REVIEW` | `${REVIEW_PATH}` |
-| Phase 7 | `FINAL_REVIEW` | `${ORCH_DIR}/final-review.md` |
+| Phase | `--phase` key | Tag | Destination |
+|-------|---------------|-----|-------------|
+| Phase 0 | `0` | `RESEARCH` | `${RESEARCH_PATH}` |
+| Phase 1 | `1` | `META_OUTLINE` | Update `content_outline` in `${META_PATH}` |
+| Phase 2 | `2-section` | `SECTION_CONTENT` | Append to `${CONTENT_PATH}` |
+| Phase 3 | `3` | `ACTIVITIES` + `VOCABULARY` | `${ACTIVITIES_PATH}`, `${VOCAB_PATH}` |
+| Phase 6 | `6` | `REVIEW` | `${REVIEW_PATH}` |
+| Phase 7 | `7-final-review` | `FINAL_REVIEW` | `${ORCH_DIR}/final-review.md` |
+
+> **Use numeric/string keys, NOT tag names.** `--phase 0` not `--phase RESEARCH`.
 
 ### Step 3.5: Stuck-Loop Watchdog
 
@@ -268,13 +290,18 @@ EXAMPLE_MIN=$(( $(yq '.example_min // 8' "${META_PATH}") ))
 
 **Step 2d: For EACH section** `${SECTION_TITLE}`:
 
-1. Update `placeholders.yaml` with:
-   ```yaml
-   SECTION_TITLE: "${SECTION_TITLE}"
-   HARD_MINIMUM_WORD_COUNT: "${SECTION_ALLOCATION * 3 / 2}"  # 1.5x overshoot
-   SECTION_ENGAGEMENT_MIN: "$(( ENGAGEMENT_MIN > NUM_SECTIONS ? ENGAGEMENT_MIN / NUM_SECTIONS : 1 ))"
-   SECTION_EXAMPLE_MIN: "$(( EXAMPLE_MIN > NUM_SECTIONS ? EXAMPLE_MIN / NUM_SECTIONS : 3 ))"
-   PREVIOUS_CONTENT_SUMMARY: "${H3_HEADERS_FROM_PREVIOUS_SECTIONS}"
+> **CRITICAL: Per-section word target.** Each section gets its OWN `HARD_MINIMUM_WORD_COUNT` computed from the meta's section allocation — NOT the total module target. Passing the total causes catastrophic overshoot (8x).
+
+1. **Compute and write per-section placeholders** (MUST override before each dispatch):
+   ```bash
+   SECTION_ALLOC=$(yq ".content_outline.\"${SECTION_TITLE}\"" "${META_PATH}")
+   SECTION_HARD_MIN=$((SECTION_ALLOC * 3 / 2))  # 1.5x overshoot of THIS section only
+   yq -i ".SECTION_TITLE = \"${SECTION_TITLE}\"" "${ORCH_DIR}/placeholders.yaml"
+   yq -i ".HARD_MINIMUM_WORD_COUNT = \"${SECTION_HARD_MIN}\"" "${ORCH_DIR}/placeholders.yaml"
+   yq -i ".SECTION_ENGAGEMENT_MIN = \"$(( ENGAGEMENT_MIN > NUM_SECTIONS ? ENGAGEMENT_MIN / NUM_SECTIONS : 1 ))\"" "${ORCH_DIR}/placeholders.yaml"
+   yq -i ".SECTION_EXAMPLE_MIN = \"$(( EXAMPLE_MIN > NUM_SECTIONS ? EXAMPLE_MIN / NUM_SECTIONS : 3 ))\"" "${ORCH_DIR}/placeholders.yaml"
+   yq -i ".PREVIOUS_CONTENT_SUMMARY = \"${PREVIOUS_CONTENT_SUMMARY}\"" "${ORCH_DIR}/placeholders.yaml"
+   yq -i ".CALLOUT_TYPES_USED = \"${CALLOUT_TYPES_USED}\"" "${ORCH_DIR}/placeholders.yaml"
    ```
 
 2. Fill template: `scripts/fill_template.py --template ... --placeholders ... --output ${ORCH_DIR}/phase-2-p2-${INDEX}-prompt.md --no-strict`
@@ -302,6 +329,9 @@ EXAMPLE_MIN=$(( $(yq '.example_min // 8' "${META_PATH}") ))
    # Extract H3 headers from this section for next section's context
    NEW_H3S=$(grep '^### ' "${ORCH_DIR}/phase-2-p2-${INDEX}-section_content.md" | head -10)
    PREVIOUS_CONTENT_SUMMARY="${PREVIOUS_CONTENT_SUMMARY}\n${NEW_H3S}"
+   # Track callout types used (prevent duplicate callout types across sections)
+   NEW_CALLOUTS=$(grep -oP '\[![\w-]+\]' "${ORCH_DIR}/phase-2-p2-${INDEX}-section_content.md" | sort -u | tr '\n' ', ')
+   CALLOUT_TYPES_USED="${CALLOUT_TYPES_USED}${NEW_CALLOUTS}"
    ```
 
 **Step 2e: Validate total**
