@@ -1501,6 +1501,117 @@ Full technical documentation: `scripts/scoring/README.md`
 
 ---
 
+## Foreman: Gemini-Orchestrated Rebuilds
+
+**Purpose:** The Foreman is a Gemini interactive-mode skill that autonomously orchestrates the full Phase 0-6b rebuild pipeline for a single module. It dispatches Yellow Gemini (builder) and Green Gemini (reviewer) sub-agents, runs audits, manages fix loops, and persists state for crash recovery. Claude only does a lightweight final review (~5 turns instead of 50+).
+
+**Architecture:**
+```
+User → /foreman {track} {num}  (Gemini interactive mode)
+         │
+    ┌────▼─────┐
+    │ FOREMAN  │  Orchestrates pipeline, runs audits
+    └────┬─────┘
+         │ dispatches via ai_agent_bridge.py
+    ┌────┼────────────┐
+    ▼                 ▼
+ YELLOW (yw-)      GREEN (gr-)        FR (fr-)
+ Builder           Reviewer           Final Review
+ --stdout-only     --stdout-only      --allow-write --delimiters
+    │                 │                   │
+    │    ┌────────────┘                   │
+    ▼    ▼                                ▼
+  Phases 0-3,4-fix               Phase 7 (adversarial)
+  Phase 6b fixes                 3rd session, no memory
+         │
+    ┌────▼─────┐
+    │ CLAUDE   │  Spot-check only (1 in 5 modules)
+    └──────────┘
+```
+
+### Usage
+
+```bash
+# In Gemini interactive mode:
+/foreman b1 5           # Full rebuild of B1 module 5
+/foreman c1-bio 12      # Full rebuild of C1-BIO module 12
+
+# After Foreman completes, in Claude:
+/final-review b1 5      # Claude final QA (~5 turns)
+```
+
+### Key Components
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| Foreman skill | `.gemini/skills/foreman/SKILL.md` | Full orchestration protocol (Phases 0-7) |
+| Final review skill (Gemini) | `.gemini/skills/final-review/SKILL.md` | Adversarial Phase 7 QA (separate session) |
+| Final review skill (Claude) | `claude_extensions/commands/final-review.md` | Claude spot-check QA (fallback) |
+| Phase 7 template | `claude_extensions/phases/gemini/phase-7-final-review.md` | Template filled by foreman for Phase 7 |
+| Template filler | `scripts/fill_template.py` | Fill phase templates with placeholders |
+| AI agent bridge | `scripts/ai_agent_bridge.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
+| State persistence | `orchestration/{slug}/state.json` | Crash recovery |
+
+### Pipeline Phases
+
+| Phase | Action | Agent | Mode |
+|-------|--------|-------|------|
+| 0 | Research | Yellow Gemini | `--stdout-only` |
+| 1 | Meta rebuild | Yellow Gemini | `--stdout-only` |
+| 2 | Content writing (sharded) | Yellow Gemini | `--stdout-only` |
+| 3 | Activities + vocabulary | Yellow Gemini | `--stdout-only` |
+| 4 | Audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
+| 5 | MDX generation + status | Local | — |
+| 5b | Archive diff | Local | — |
+| 6 | Independent review | Green Gemini (new session) | `--stdout-only` |
+| 6b | Apply review fixes | Yellow + local | `--allow-write` |
+| 7 | **Final review (adversarial)** | **FR Gemini (3rd session)** | `--allow-write --delimiters` |
+
+### Dispatch Modes
+
+The bridge (`ai_agent_bridge.py`) supports three execution modes:
+
+| Flag | Mode | Permissions | Used By |
+|------|------|------------|---------|
+| `--stdout-only` | READ-ONLY | Text output only, no file writes, no bash | Phases 0-3, 6 |
+| `--allow-write` | FULL-EXECUTION | Bash + file read/write | Phases 4 fixes, 6b, 7 |
+| `--allow-write --delimiters X,Y` | FULL-EXECUTION + specific tags | Same + model knows exact output delimiters | Phase 7 |
+
+**Silence Protocol:** In `--allow-write` mode, the system prompt enforces a **silence protocol** — the agent emits zero text between tool calls. Only the final delimited output is produced. This prevents the "planning loop" where the agent narrates instead of executing, wasting tokens and risking timeout.
+
+**Private Scratchpad:** Agents can use `<!-- thinking: ... -->` XML comments for internal reasoning (case endings, dates, IPA) without breaking the silence protocol. These don't count as narration and won't affect MDX builds or word counts.
+
+### Template Filling
+
+The Foreman uses `scripts/fill_template.py` to fill phase templates with computed placeholders:
+
+```bash
+.venv/bin/python scripts/fill_template.py \
+  --template claude_extensions/phases/gemini/phase-2-content.md \
+  --placeholders orchestration/{slug}/placeholders.yaml \
+  --output orchestration/{slug}/phase-2-prompt.md
+```
+
+Placeholders are computed once during pre-flight and stored in `orchestration/{slug}/placeholders.yaml`.
+
+### Crash Recovery
+
+State is persisted to `orchestration/{slug}/state.json` after every phase transition. On re-invocation, the Foreman reads the state file and resumes from the last incomplete phase.
+
+### Comparison with /orchestrate-rebuild
+
+| Feature | `/orchestrate-rebuild` | `/foreman` |
+|---------|----------------------|------------|
+| Orchestrator | Claude | Gemini |
+| Phases | 0-6b | 0-7 (includes adversarial final review) |
+| Claude turns per module | ~50 | ~0 (spot-check 1 in 5 only) |
+| Final QA | Claude `/final-review` | Gemini Phase 7 (3rd session, `--allow-write`) |
+| Crash recovery | None | state.json |
+| Template filling | In-memory | `fill_template.py` |
+| State tracking | None | Persistent JSON |
+
+---
+
 ## Batch Dispatcher (Autonomous Scheduler)
 
 **Purpose:** Autonomous scheduler that processes all 20 tracks (~1,250 modules) in priority order, dispatching to `batch_gemini_runner.py`, handling quota/failures, and rotating between tracks.
@@ -1944,7 +2055,25 @@ npm run sync:landing:dry      # Preview changes without applying
 
 # Interactive mode
 .venv/bin/python scripts/ai_agent_bridge.py interactive
+
+# Dispatch with full execution access (Foreman Phase 7)
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+  "Activate skill final-review. ..." \
+  --task-id fr-{slug} \
+  --allow-write \
+  --delimiters FINAL_REVIEW,FRICTION \
+  --model gemini-3-pro-preview
 ```
+
+**Key flags for `ask-gemini`:**
+
+| Flag | Purpose |
+|------|---------|
+| `--stdout-only` | READ-ONLY mode — text output only, no bash/writes |
+| `--allow-write` | FULL-EXECUTION mode — bash + file writes, silence protocol enforced |
+| `--delimiters X,Y` | Inject specific delimiter names into system prompt (e.g., `FINAL_REVIEW,FRICTION`) |
+| `--model` | Gemini model (always `gemini-3-pro-preview` for content) |
+| `--task-id` | Session isolation (prefix: `yw-` builder, `gr-` reviewer, `fr-` final review) |
 
 ### Signal Script (Gemini → Claude notification)
 

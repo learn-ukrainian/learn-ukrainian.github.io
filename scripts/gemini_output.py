@@ -23,12 +23,15 @@ PHASE_TAGS: dict[int | str, list[str]] = {
     0: ["RESEARCH"],
     1: ["META_OUTLINE"],
     2: ["CONTENT"],
+    "2-section": ["SECTION_CONTENT"],
+    "2-summary": ["SUMMARY"],
     3: ["ACTIVITIES", "VOCABULARY"],
     5: ["REVIEW"],
     6: ["REVIEW"],
     "fix": ["CONTENT", "ACTIVITIES", "VOCABULARY", "CHANGES"],
     "fix-content": ["CONTENT", "CHANGES"],
     "fix-activities": ["ACTIVITIES", "VOCABULARY", "CHANGES"],
+    "7-final-review": ["FINAL_REVIEW"],
 }
 
 # All known tags (union of all phase tags)
@@ -56,8 +59,10 @@ def extract_delimited(text: str, tag: str) -> Optional[str]:
     # Use findall + take LAST match: Gemini often echoes the template's
     # delimiters before producing its own output, so the first match may
     # be the template echo rather than the real content.
+    # Tolerate optional whitespace around delimiters (Gemini sometimes
+    # adds spaces or doesn't put them on a clean line).
     pattern = re.compile(
-        rf"==={re.escape(tag)}_START===(.*?)==={re.escape(tag)}_END===",
+        rf"\s*==={re.escape(tag)}_START===\s*\n?(.*?)\n?\s*==={re.escape(tag)}_END===\s*",
         re.DOTALL,
     )
     matches = pattern.findall(text)
@@ -66,7 +71,7 @@ def extract_delimited(text: str, tag: str) -> Optional[str]:
 
     # 2. Try generic ARTIFACT tag (fallback) — also take last match
     pattern_artifact = re.compile(
-        r"===ARTIFACT_START===(.*?)===ARTIFACT_END===",
+        r"\s*===ARTIFACT_START===\s*\n?(.*?)\n?\s*===ARTIFACT_END===\s*",
         re.DOTALL,
     )
     artifact_matches = pattern_artifact.findall(text)

@@ -621,7 +621,7 @@ def _detect_model_error(stderr: str, model: str) -> str | None:
     return None
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -637,6 +637,11 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         extract_tags: If set, extract delimited content from output after Gemini finishes.
                      Empty list = auto-detect all complete pairs. Discards thinking tokens.
         skip_model_check: If True, ignore cached model unavailability (retry anyway).
+        allow_write: If True, grant Gemini full bash + write access (for phases that need
+                    to run scripts like audit_module.sh, generate_mdx.py, apply fixes).
+                    Only Foreman should use this flag.
+        delimiters: Comma-separated delimiter names for --allow-write mode.
+                   E.g., "FINAL_REVIEW,FRICTION" → ===FINAL_REVIEW_START/END=== + ===FRICTION_START/END===
     """
     # Model availability is detected from actual request errors (no pre-flight probe).
     # If a previous request failed with model-not-available, the cache prevents retrying.
@@ -691,7 +696,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
         print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
+        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path, allow_write=allow_write, delimiters=delimiters)
 
         # Post-process: extract delimited content if --extract was used
         if extract_tags is not None and response:
@@ -804,7 +809,7 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -818,13 +823,60 @@ def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", 
             Used by fire-and-forget to re-invoke the bridge as a background process.
         output_path: If set, Gemini writes output to this file. Uses -y mode with
             post-validation instead of --approval-mode plan.
+        allow_write: If True, use FULL-EXECUTION prompt instead of READ-ONLY.
+            Grants bash + file write access. Used by Foreman for phases that need
+            to run audit scripts, apply fixes, and regenerate MDX.
+        delimiters: Comma-separated delimiter names (e.g., "FINAL_REVIEW,FRICTION").
+            Injected into system prompt so model knows exact output tags.
     """
     msg = read_message(message_id)
     if not msg:
         return
 
     # Prepare prompt for Gemini
-    if stdout_only or output_path:
+    if allow_write:
+        # FULL-EXECUTION MODE: Gemini has bash + write access.
+        # Used by Foreman for phases that need to run scripts (audit, MDX generation)
+        # and apply fixes to content/activity/vocabulary files.
+        # Build delimiter instruction from --delimiters arg or use generic fallback
+        if delimiters:
+            tag_list = [t.strip() for t in delimiters.split(",")]
+            delimiter_lines = "\n".join(
+                f"  - ==={tag}_START=== ... ==={tag}_END===" for tag in tag_list
+            )
+            delimiter_instruction = f"Your ONLY text output must be between these exact delimiters:\n{delimiter_lines}"
+        else:
+            delimiter_instruction = "Your ONLY text output must be between the ===TAG_START=== / ===TAG_END=== delimiters defined in your task."
+
+        prompt = f"""ROLE: You are a SILENT EXECUTION AGENT with FULL read-write access.
+
+TOOLS YOU MUST USE (not simulate):
+- run_shell_command: scripts/audit_module.sh, .venv/bin/python scripts/*.py, grep, wc
+- read_file / write_file: Read content, apply fixes directly
+
+SILENCE PROTOCOL (CRITICAL):
+- DO NOT narrate. DO NOT say "I will..." or "Let me..." or "First, I need to..."
+- DO NOT describe what you are about to do. Just invoke the tool.
+- Between tool calls, emit ZERO text. No commentary. No summaries. No reasoning.
+- {delimiter_instruction}
+- Every word you write that is NOT a tool call or the final delimited output is a WASTED TOKEN that risks timeout.
+
+PRIVATE SCRATCHPAD (allowed):
+- If you need to reason through complex logic (case endings, dates, IPA), use XML comments: <!-- thinking: your reasoning here -->
+- Scratchpad comments do NOT count as narration — they are your private workspace.
+- Keep scratchpad brief. Do NOT use it for narration or status updates.
+
+RULES:
+1. NO MESSAGES. Never use send_message, message broker, or any communication tool.
+2. NO EXPLORATION. Do not check GitHub, inbox, or broker. Stay on task.
+3. NO DELEGATION. Never say "Claude should..." or request skills/commands.
+4. NO SIMULATION. You MUST run_shell_command for every check. Never "remember" file contents — always read from disk. If you skip a bash command and guess the result, the review is INVALID.
+5. ALWAYS FINISH. Always produce output between the required delimiters, even on errors.
+
+TASK:
+{msg['content']}
+"""
+    elif stdout_only or output_path:
         # ORCHESTRATED MODE: Ultra-restrictive prompt for Gemini Pro/Flash.
         # Gemini Pro is especially prone to going off-script (editing files, sending broker
         # messages, running shell commands). This prompt must be explicit about every prohibition.
@@ -1578,6 +1630,12 @@ def main():
                                         "Discards thinking tokens. No args = auto-detect all complete pairs.")
     ask_gemini_parser.add_argument("--skip-model-check", dest="skip_model_check", action="store_true",
                                    help="Skip the model availability pre-flight check.")
+    ask_gemini_parser.add_argument("--allow-write", dest="allow_write", action="store_true",
+                                   help="Grant Gemini full bash + write access (for phases that run audit, apply fixes, generate MDX). Only Foreman should use this.")
+    ask_gemini_parser.add_argument("--delimiters", dest="delimiters",
+                                   help="Comma-separated delimiter names for --allow-write mode. "
+                                        "E.g., 'FINAL_REVIEW,FRICTION' → ===FINAL_REVIEW_START/END===. "
+                                        "Injected into system prompt so model knows exact output tags.")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1633,7 +1691,7 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False), getattr(args, 'allow_write', False), getattr(args, 'delimiters', None))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
