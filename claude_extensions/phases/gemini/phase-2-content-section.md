@@ -3,7 +3,8 @@
 > **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_FLAVOR}: {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
 
 > **Your #1 job: Write {HARD_MINIMUM_WORD_COUNT} words for the section "{SECTION_TITLE}".**
-> Every concept gets dedicated depth. Every H3 gets 100-150+ words. This is how you hit the target.
+> This is ONE section of a larger module — stay within your word budget.
+> **Do NOT exceed 2x your target.** If your target is 300, write 300-600. If 900, write 900-1400. Going over wastes tokens and bloats the module.
 
 ## Files to Read
 
@@ -20,7 +21,7 @@ Read ALL four files before writing anything.
 
 Write the section prose for **{SECTION_TITLE}** within the module **{TOPIC_TITLE}**.
 
-- **HARD MINIMUM**: {HARD_MINIMUM_WORD_COUNT} words — this is your word target. Do not write less than this.
+- **WORD BUDGET**: {HARD_MINIMUM_WORD_COUNT} words minimum, {HARD_MINIMUM_WORD_COUNT} × 2 maximum. Stay in this range.
 - **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: Include at least {SECTION_ENGAGEMENT_MIN} callout(s) in this section.
 - **Example sentences**: Include at least {SECTION_EXAMPLE_MIN} example sentences in this section.
@@ -89,23 +90,16 @@ All items in a category: SAME format, SAME depth (±20%), SAME example count (±
 
 ---
 
-## How to Hit {HARD_MINIMUM_WORD_COUNT} Words (Expansion Method)
+## How to Stay in Budget (Quality over Quantity)
 
-**Don't just write more — write deeper.** For EVERY concept you introduce:
+**Write to your word budget — not more, not less.**
 
-1. **Define it** (2+ sentences explaining what it is)
-2. **Show how it works** (pattern, rule, formation)
-3. **Give 2+ examples** in full sentences with context
-4. **Add a comparison** (table, before/after, correct vs incorrect)
-5. **Connect to real life** (when would a Ukrainian speaker use this?)
+- Target: {HARD_MINIMUM_WORD_COUNT} words. Ceiling: 2× that number.
+- If under target: add depth to existing concepts (examples, tables, callouts).
+- If OVER target: you are bloating. Cut filler, merge similar points, remove redundant examples.
+- **This is ONE section of a multi-section module.** The module has other sections covering other topics. Do not expand beyond your scope.
 
-**If the section is still under its target after this, add:**
-- A `[!warning]` with a common mistake and correct alternative
-- A `[!culture]` or `[!quote]` connecting to Ukrainian culture
-- A mini-dialogue showing the concept in conversation
-- A comparison table or mermaid flowchart
-
-**The math:** If your H2 teaches 5 concepts × 120 words each = 600 words. Add an intro paragraph (50w) + 2 callouts (60w each) + a comparison table (80w) = **850 words** for that section. This is how you hit big targets.
+**Per concept (each H3):** 2-3 sentences of explanation + 2-3 examples + 1 usage note = ~100-150 words. That's enough.
 
 ---
 
@@ -235,7 +229,7 @@ After the content block, report word count:
 
 ```
 ===WORD_COUNTS===
-Section "{SECTION_TITLE}": {count} words (hard minimum: {HARD_MINIMUM_WORD_COUNT})
+Section "{SECTION_TITLE}": {count} words (budget: {HARD_MINIMUM_WORD_COUNT}-{HARD_MINIMUM_WORD_COUNT}×2)
 ===WORD_COUNTS===
 ```
 
