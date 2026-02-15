@@ -95,7 +95,7 @@ options:
 
 3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
 
-4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `ipa`, `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary.
+4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary. Do NOT include `ipa` — IPA breaks YAML.
 
 ### Activity Quality Standards (MANDATORY)
 
@@ -140,15 +140,40 @@ options:
 - **Typography in CONTENT files**: use Ukrainian angular quotes «...» — but **NOT in YAML** (see above)
 - **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий
 - **No Russian characters**: ы, э, ё, ъ must NEVER appear
-- **IPA**: Use IPA notation only (no Latin transliteration)
+
+### Pronunciation in Activity Explanations (HARD FAIL)
+
+**In YAML explanations, use the Ukrainian word directly — NEVER Latin transliteration, NEVER IPA symbols.**
+
+IPA symbols (`[ʒ]`, `[ˈʃkɔ.lɑ]`) belong in markdown content only. YAML explanations should reference Ukrainian words in Cyrillic.
+
+```yaml
+❌ WRONG (Latin transliteration):
+  explanation: 'ZhYty uses the hard И sound.'
+  explanation: 'Dity uses the soft І sound.'
+  explanation: 'The first vowel in Kyiv is hard И (Ky-yiv).'
+
+❌ WRONG (IPA in YAML):
+  explanation: 'Жити [ˈʒɪ.tɪ] uses the hard И sound.'
+
+✅ RIGHT (Ukrainian word directly):
+  explanation: 'Жити uses the hard И sound.'
+  explanation: 'Діти uses the soft І sound.'
+  explanation: 'The first vowel in Київ is the hard И.'
+```
+
+**Rules:**
+1. Reference words in Cyrillic, not Latin transliteration (ZhYty → Жити)
+2. No IPA notation in YAML — keep explanations simple and readable
+3. English descriptions of sounds are fine ("hard И", "soft І", "the ch sound")
 
 ### Vocabulary YAML Rules
 
 1. **Object with `items:` wrapper** — NOT a bare list. Required structure: `items:` array
 2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
 3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos` (part of speech)
-4. **Optional fields**: `ipa`, `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
-5. **IPA must have correct stress** — verify stress placement
+4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
+5. **NO IPA in YAML** — IPA symbols (ˈ, ʃ, ʒ, t͡s, etc.) break YAML. Pronunciation goes in the markdown content ONLY. Do NOT include an `ipa` field.
 6. **Count target**: {VOCAB_COUNT_TARGET} items
 
 ## Output Format
@@ -176,6 +201,27 @@ Return TWO YAML blocks with clear delimiters:
 ❌ WRONG: `jumbled: "мова українська красива"` (string field does NOT exist in schema)
 ❌ WRONG: `sentence: "..."` (field does NOT exist)
 ✅ ONLY: `words` (array of strings) + `answer` (string)
+
+#### anagram (CRITICAL — scrambled MUST be space-separated)
+
+```yaml
+- type: anagram
+  title: "Розшифруйте слова"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:  # minItems: 8
+    - scrambled: "О М Т Е Р"    # SPACE-SEPARATED letters — NOT concatenated!
+      answer: "МЕТРО"
+    - scrambled: "а й ч"         # Lowercase is fine too
+      answer: "чай"
+    - scrambled: "к у б л о я"
+      answer: "яблуко"
+```
+
+❌ WRONG: `scrambled: "ОМТЕР"` (concatenated — React component splits on spaces, this produces 1 "letter")
+❌ WRONG: `scrambled: "ОМТЕР"` with 5 letters but answer "МЕТР" with 4 (letter count mismatch)
+✅ MUST: Every letter in `scrambled` separated by a space
+✅ MUST: Scrambled letters are EXACTLY the same letters as the answer (same count, same characters)
+✅ NOTE: A1 M01-M10 use anagram (letter scramble), A1 M11+ use unjumble (sentence reorder)
 
 #### group-sort
 
@@ -310,11 +356,9 @@ Vocabulary block (OBJECT with `items:` wrapper):
 items:
   - lemma: "іменник"
     translation: "noun"
-    ipa: "/i.ˈmɛn.nɪk/"
     pos: "noun"
   - lemma: "дієслово"
     translation: "verb"
-    ipa: "/di.jeˈslɔ.wɔ/"
     pos: "noun"
     notes: "describes the concept of a verb as a part of speech"
 

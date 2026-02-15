@@ -147,6 +147,10 @@ npm run metrics:extract {track}  # Extract raw metrics
 # Full rebuild for core tracks (research → build → review → verify)
 /full-rebuild-core {level} {num}   # a1, a2, b1, b2, c1, c2, b2-pro, c1-pro
 
+# Foreman: Gemini-orchestrated full rebuild (saves ~45 Claude turns per module)
+/foreman {track} {num}             # In Gemini interactive mode — autonomous Phase 0-6b
+/final-review {track} {num}        # Claude final QA after Foreman completes (~5 turns)
+
 # Full pipeline (lint → generate → validate)
 npm run pipeline l2-uk-en {level} {module_num}
 

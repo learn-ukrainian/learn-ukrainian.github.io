@@ -317,6 +317,14 @@ async def handle_receive_messages(args: dict) -> list[TextContent]:
 
     cursor.execute(query, params)
     rows = cursor.fetchall()
+
+    # Auto-acknowledge fetched messages
+    if rows:
+        ids = [row[0] for row in rows]
+        placeholders = ",".join("?" * len(ids))
+        cursor.execute(f"UPDATE messages SET acknowledged = 1 WHERE id IN ({placeholders})", ids)
+        conn.commit()
+
     conn.close()
 
     messages = []

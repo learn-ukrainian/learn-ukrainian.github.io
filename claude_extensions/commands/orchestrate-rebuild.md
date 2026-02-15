@@ -3,6 +3,8 @@
 > **Claude orchestrates. Gemini builds. Human resolves failures.**
 > Every module is built fresh from plan + meta. No resume logic. No Claude fallback.
 
+> **Foreman Alternative:** For fully autonomous Gemini-orchestrated rebuilds, use `/foreman {track} {num}` in Gemini interactive mode. The Foreman handles the full Phase 0-7 pipeline autonomously (including Phase 7 adversarial final review in a separate session). Claude spot-checks a random sample only. See `.gemini/skills/foreman/SKILL.md`.
+
 ## Usage
 
 ```
@@ -146,6 +148,7 @@ orchestration/{slug}/
 5. ✅ Phase 6 Green Team review generated (not rubber-stamped)
 6. ✅ Phase 6b review fixes applied (every actionable issue addressed)
 7. ✅ Final audit re-passes after Phase 6b fixes
+8. ✅ Phase 7 final review passes (adversarial QA in separate session) — **Foreman pipeline only**
 
 **Phase 6b is NOT optional. The workflow proceeds automatically from Phase 6 → Phase 6b → Final audit.** Do NOT skip Phase 6/6b. Do NOT report completion after Phase 5. Do NOT stop and wait for human instruction between Phase 6 and Phase 6b. The module is done when the review cycle is complete and the final audit passes.
 
@@ -186,7 +189,7 @@ orchestration/{slug}/
 
 ### Phase 2: Content
 
-**Template:** `claude_extensions/phases/gemini/phase-2-content.md`
+**Template:** `claude_extensions/phases/gemini/phase-2-content.md` (monolithic) or per-section dispatch (see below)
 
 **What Claude does:**
 1. Assemble prompt with research + meta + plan + quick-ref
@@ -196,9 +199,46 @@ orchestration/{slug}/
 5. Extract friction report → `orchestration/{slug}/friction-attempt-{N}.md`
 6. Validate: word count >= 90% of word_target, all H2 sections from outline present
 
-**Word target overshoot strategy:** Always ask Gemini for `word_target * 2.0` (100% overshoot) in the prompt. Gemini consistently underproduces by 30-40%, and audit trims raw words. Example: for a 4000-word target, ask for 8000 in the prompt. This reduces the need for expansion passes.
+**Word target overshoot strategy:** For monolithic dispatch, ask for `word_target * 1.5`. For section-by-section dispatch, ask for `section_allocation * 1.2` per section. Section dispatch is preferred for modules with word_target >= 4000 — individual sections are small enough that Gemini hits targets reliably without heavy overshoot. Heavy overshoot (2x+) causes bloated, repetitive content.
 
 **For seminar tracks (word_target > 4000):** Content may need a 3a/3b split. If first output is under target, send a continuation prompt for the remaining sections.
+
+#### Section-by-Section Dispatch (for word-count-challenged modules)
+
+When monolithic Phase 2 consistently undershoots word targets (common for modules with word_target >= 4000), the orchestrator may split Phase 2 into per-section dispatches. This sends one Gemini prompt per H2 section, then assembles the results.
+
+**Templates:**
+- Section: `claude_extensions/phases/gemini/phase-2-content-section.md`
+- Summary: `claude_extensions/phases/gemini/phase-2-summary.md`
+
+**Assembly:** `scripts/assemble_sections.py`
+
+**Workflow:**
+1. Read `content_outline` from meta — each entry becomes one dispatch
+2. For each section (sequential — coherence requires previous text):
+   - Fill `phase-2-content-section.md` with section-specific placeholders
+   - Include `{PREVIOUS_CONTENT_SUMMARY}` (condensed key points from prior sections)
+   - Include `{CALLOUT_TYPES_USED}` (callout types already used in prior sections)
+   - Send to Gemini, extract `===SECTION_CONTENT_START===` / `===SECTION_CONTENT_END===`
+   - Save to `orchestration/{slug}/section_{N}.md`
+3. After all sections: dispatch summary via `phase-2-summary.md`, save to `orchestration/{slug}/summary.md`
+4. Assemble:
+   ```bash
+   .venv/bin/python scripts/assemble_sections.py \
+     --sections-dir curriculum/l2-uk-en/{track}/orchestration/{slug}/ \
+     --output curriculum/l2-uk-en/{track}/{slug}.md \
+     --word-target {WORD_TARGET} \
+     --meta-path curriculum/l2-uk-en/{track}/meta/{slug}.yaml
+   ```
+5. Validate: assembly script checks word count (>= 80% of target) and H2 header presence
+
+**Key design decisions** (from #577):
+- **Sequential dispatch** — each section needs previous text for coherence (no parallel)
+- **First section** gets +200 words budget (carries the module intro), not a separate dispatch
+- **Callout tracking** — `{CALLOUT_TYPES_USED}` prevents type repetition across sections
+- **Seam prevention** — template instructs "continue seamlessly, no re-introductions"
+
+**The Foreman** (`.gemini/skills/foreman/SKILL.md`) implements its own inline assembly for this pattern. This script is for the Claude-orchestrated path only.
 
 ### Phase 3: Activities + Vocabulary
 
@@ -504,6 +544,7 @@ After each module:
   Phase 5b (Diff):       ✅ Archive comparison — {regressions} regressions flagged
   Phase 6 (Review):      ✅ Green Team review — {overall_score}/10 ({issue_count} issues found)
   Phase 6b (Fixes):      ✅ {fixed_count}/{fixable_count} review issues fixed ({skipped_count} skipped)
+  Phase 7 (Final Review): ✅ Adversarial QA — {verdict} ({fix_count} fixes applied)
 
   Archive comparison:
     Words:     {old_words} → {new_words} ({delta})
@@ -529,7 +570,7 @@ After each module:
 | `{LEVEL}` | Uppercase level for quick-ref |
 | `{SLUG}` | Module slug |
 | `{WORD_TARGET}` | From plan `word_target` |
-| `{OVERSHOOT_TARGET}` | `word_target * 2.0` |
+| `{OVERSHOOT_TARGET}` | `word_target * 1.5` (monolithic) or `section_allocation * 1.2` (section dispatch) |
 | `{ENGAGEMENT_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{EXAMPLE_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{IMMERSION_RULE}` | From quick-ref |
