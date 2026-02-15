@@ -1,7 +1,7 @@
 module: a2-31
 level: A2
 sequence: 31
-slug: 31-in-order-to
+slug: in-order-to
 version: '2.0'
 title: In Order To
 subtitle: Expressing Purpose with Щоб
@@ -53,7 +53,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_мети
   type: reference
   notes: Rules for mood and tense in purpose clauses
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

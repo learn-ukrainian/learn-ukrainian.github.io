@@ -1,0 +1,19 @@
+{
+  "track": "b1",
+  "module_num": 5,
+  "slug": "ready-for-immersion",
+  "status": "complete",
+  "current_phase": "6b",
+  "attempt": 1,
+  "history": [
+    {"phase": "0", "status": "complete", "task_id": "yw-ready-for-immersion-p0", "timestamp": "2026-02-14T15:25:00Z"},
+    {"phase": "1", "status": "complete", "task_id": "yw-ready-for-immersion-p1", "timestamp": "2026-02-14T15:35:00Z"},
+    {"phase": "2", "status": "complete", "task_id": "yw-ready-for-immersion-p2", "timestamp": "2026-02-14T15:45:00Z"},
+    {"phase": "3", "status": "complete", "task_id": "yw-ready-for-immersion-p3", "timestamp": "2026-02-14T15:55:00Z"},
+    {"phase": "4", "status": "complete", "attempt": 3, "timestamp": "2026-02-14T19:40:00Z"},
+    {"phase": "5", "status": "complete", "timestamp": "2026-02-14T19:45:00Z"},
+    {"phase": "6", "status": "complete", "task_id": "gr-ready-for-immersion", "timestamp": "2026-02-14T19:50:00Z"},
+    {"phase": "6b", "status": "complete", "timestamp": "2026-02-14T19:55:00Z"}
+  ],
+  "last_updated": "2026-02-14T19:55:00Z"
+}

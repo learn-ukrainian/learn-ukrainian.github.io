@@ -1,8 +1,0 @@
----
-module: c1-hist-132
-level: C1-HIST
-slug: ukrainska-m-iaka-syla
-version: '1.0'
-id: c1-hist-132
-build:
-  last_modified: '2026-01-26'

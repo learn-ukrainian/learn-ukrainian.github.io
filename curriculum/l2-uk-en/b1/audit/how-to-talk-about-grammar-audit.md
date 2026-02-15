@@ -1,7 +1,7 @@
 # Audit Report: M01 — how-to-talk-about-grammar.md
 **Level:** B1 | **Module:** M01 | **Phase:** B1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-15 00:40:16
+**Generated:** 2026-02-15 10:27:25
 
 ## Configuration
 **Type:** B1-bridge
@@ -33,7 +33,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4314/4000 (raw: 4480)
+- **Words:** ✅ 4324/4000 (raw: 4490)
 - **Activities:** ✅ 5/4
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/3 types
@@ -64,7 +64,7 @@
 | visual | 6 | 4 | 100% | 10% | 9.5% |
 | realworld | 20 | 2 | 100% | 10% | 9.5% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 111 | 4 | 100% | 5% | 4.8% |
+| questions | 112 | 4 | 100% | 5% | 4.8% |
 | tables | 1 | 2 | 50% | 5% | 2.4% |
 | **TOTAL** | | | | | **93.0%** |
 
@@ -72,11 +72,11 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Як говорити про граматику** | ✅ | 58 | Included in Core |
-| **Вступ: сила метамови** | ✅ | 472 | Included in Core |
+| **Як говорити про граматику** | ✅ | 60 | Included in Core |
+| **Вступ: сила метамови** | ✅ | 469 | Included in Core |
 | **Частини мови: самостійні категорії** | ✅ | 1015 | Included in Core |
 | **Частини мови: службові слова** | ✅ | 608 | Included in Core |
-| **Відмінки: сім ключів** | ✅ | 972 | Included in Core |
+| **Відмінки: сім ключів** | ✅ | 983 | Included in Core |
 | **Граматичні категорії та будова слова** | ✅ | 605 | Included in Core |
-| **Практика: читаємо граматику українською** | ✅ | 363 | Included in Core |
-| **Підсумок і самоперевірка** | ✅ | 221 | Included in Core |
+| **Практика: читаємо граматику українською** | ✅ | 364 | Included in Core |
+| **Підсумок і самоперевірка** | ✅ | 220 | Included in Core |

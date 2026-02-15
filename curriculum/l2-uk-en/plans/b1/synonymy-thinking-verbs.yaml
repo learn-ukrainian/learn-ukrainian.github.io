@@ -45,10 +45,10 @@ activity_hints:
 - type: fill-in
   focus: Choose correct thinking verb
   items: 20
-- type: cloze
+- type: fill-in
   focus: Replace with synonyms
   items: 15
-- type: cloze
+- type: fill-in
   focus: Express thoughts precisely
   items: 10
 focus: vocabulary

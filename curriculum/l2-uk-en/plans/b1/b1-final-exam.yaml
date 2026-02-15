@@ -76,7 +76,7 @@ activity_hints:
 - type: true-false
   focus: B1 level comprehension verification
   items: 16
-- type: cloze
+- type: fill-in
   focus: Grammar and vocabulary in context
   items: 25
 - type: fill-in

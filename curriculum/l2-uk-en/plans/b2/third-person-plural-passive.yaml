@@ -1,7 +1,7 @@
 module: b2-05
 level: B2
 sequence: 5
-slug: 05-third-person-plural-passive
+slug: third-person-plural-passive
 version: '2.0'
 title: Пасив третьою особою множини
 content_outline:

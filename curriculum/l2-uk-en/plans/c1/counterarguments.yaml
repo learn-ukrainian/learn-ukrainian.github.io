@@ -1,7 +1,7 @@
 module: c1-010
 level: C1
 sequence: 10
-slug: 10-counterarguments
+slug: counterarguments
 version: '2.0'
 title: Контраргументи та спростування
 content_outline:

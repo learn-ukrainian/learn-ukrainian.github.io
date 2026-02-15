@@ -1,7 +1,7 @@
 module: c1-054
 level: C1
 sequence: 54
-slug: 54-vyshyvanka
+slug: vyshyvanka
 version: '2.0'
 title: 'Вишиванка: Зашифрована доля'
 subtitle: 'Vyshyvanka: Encoded Destiny'

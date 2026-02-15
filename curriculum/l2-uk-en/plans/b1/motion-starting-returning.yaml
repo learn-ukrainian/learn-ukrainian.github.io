@@ -1,7 +1,7 @@
 module: b1-19
 level: B1
 sequence: 19
-slug: 19-motion-starting-returning
+slug: motion-starting-returning
 version: '2.0'
 title: 'Рух: початок і повернення'
 subtitle: Motion - Starting & Returning
@@ -59,7 +59,7 @@ activity_hints:
 - type: fill-in
   focus: Start → stop by → disperse sequence
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Story about a gathering
   items: 12+
 focus: grammar

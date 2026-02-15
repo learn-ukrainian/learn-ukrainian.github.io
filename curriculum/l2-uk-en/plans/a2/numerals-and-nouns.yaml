@@ -1,7 +1,7 @@
 module: a2-21
 level: A2
 sequence: 21
-slug: 21-numerals-and-nouns
+slug: numerals-and-nouns
 version: '2.0'
 title: Numerals and Nouns
 subtitle: Counting Things Correctly
@@ -58,7 +58,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Двоїна
   type: reference
   notes: Context for the 2-4 agreement pattern
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

@@ -1,7 +1,7 @@
 module: b1-01
 level: B1
 sequence: 1
-slug: 01-how-to-talk-about-grammar
+slug: how-to-talk-about-grammar
 version: '3.0'
 title: Як говорити про граматику
 subtitle: Learning grammar terminology in Ukrainian
@@ -54,7 +54,7 @@ content_outline:
   - Readiness check for M02
   - Self-assessment questions (6+)
 word_target: 4000
-immersion: 70%
+immersion: 70-85% Ukrainian
 vocabulary_hints:
   required:
   - дієслово (verb)

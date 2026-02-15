@@ -1,7 +1,7 @@
 module: b1-18
 level: B1
 sequence: 18
-slug: 18-motion-passing-crossing
+slug: motion-passing-crossing
 version: '2.0'
 title: 'Рух: перехід і обхід'
 subtitle: Motion - Passing & Crossing
@@ -59,7 +59,7 @@ activity_hints:
 - type: fill-in
   focus: Change movement type (cross → pass → around)
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Narrative describing a journey
   items: 12+
 - type: match-up

@@ -1,7 +1,7 @@
 module: a2-10
 level: A2
 sequence: 10
-slug: 10-at-the-post-office-and-bank
+slug: at-the-post-office-and-bank
 version: '2.0'
 title: At the Post Office and Bank
 subtitle: Services and Money
@@ -94,7 +94,7 @@ sources:
   url: https://www.ukrposhta.ua/
   type: reference
   notes: Authentic postal service terminology
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.1
 persona:
   voice: Encouraging Cultural Guide

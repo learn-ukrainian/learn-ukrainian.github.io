@@ -1,7 +1,7 @@
 module: a2-08
 level: A2
 sequence: 8
-slug: 08-logical-prepositions
+slug: logical-prepositions
 version: '2.0'
 title: Logical Prepositions
 subtitle: Reasons, Time, and Relationships
@@ -98,7 +98,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Прийменник
   type: reference
   notes: Full preposition inventory with case government
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.1
 persona:
   voice: Encouraging Cultural Guide

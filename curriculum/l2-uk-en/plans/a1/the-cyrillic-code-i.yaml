@@ -56,10 +56,10 @@ activity_hints:
 - type: quiz
   focus: Letter identification
   items: 20
-- type: group-sort
+- type: match-up
   focus: Sort True Friends vs False Friends
   items: 12
-- type: anagram
+- type: quiz
   focus: Unscramble simple words
   items: 10
 focus: grammar

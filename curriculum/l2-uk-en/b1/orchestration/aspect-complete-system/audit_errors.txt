@@ -1,0 +1,15 @@
+  ⚠️  Outline compliance: 0 errors, 1 warnings
+     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Вид дієслова' found in markdown but not in outline.
+❌ Structure check failed: Missing '## Summary'
+  ❌ Missing required activity types from meta.yaml: true-false
+⚠️  Richness below threshold (84% < 95% min)
+Vocab        ⚠️ 23 < 25 (soft target)
+Structure    ❌ Missing '## Summary'
+Pedagogy     ❌ 12 violations
+Richness     ❌ 84% < 95% min (grammar)
+  [COMPLEXITY] Sentence too long for B1: 29 words (max 25)
+  [COMPLEXITY] Sentence too long for B1: 26 words (max 25)
+  [COMPLEXITY] Sentence too long for B1: 30 words (max 25)
+  [COMPLEXITY] match-up 'Маркери часу та вид' has 10 pairs (target: 12-14)
+  [HEADING_LEVEL] Non-standard H1 heading: 'Вид дієслова: повна система' should be H2 (##)
+❌ AUDIT FAILED. Correct errors before proceeding.

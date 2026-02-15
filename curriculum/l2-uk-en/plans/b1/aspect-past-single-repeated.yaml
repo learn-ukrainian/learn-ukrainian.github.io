@@ -1,7 +1,7 @@
 module: b1-07
 level: B1
 sequence: 7
-slug: 07-aspect-past-single-repeated
+slug: aspect-past-single-repeated
 version: '2.0'
 title: 'Вид у минулому: одного разу vs щодня'
 subtitle: 'Aspect in Past: Single vs Repeated Actions'
@@ -64,7 +64,7 @@ activity_hints:
 - type: quiz
   focus: Which aspect for which context?
   items: 12+
-- type: cloze
+- type: fill-in
   focus: Narrative with aspect choices
   items: 10+
 - type: match-up

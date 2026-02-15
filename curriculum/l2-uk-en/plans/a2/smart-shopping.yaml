@@ -1,7 +1,7 @@
 module: a2-24
 level: A2
 sequence: 24
-slug: 24-smart-shopping
+slug: smart-shopping
 version: '2.0'
 title: Smart Shopping
 subtitle: Comparisons and Choices
@@ -51,7 +51,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Ринок
   type: reference
   notes: Social etiquette of bargaining in Ukraine
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

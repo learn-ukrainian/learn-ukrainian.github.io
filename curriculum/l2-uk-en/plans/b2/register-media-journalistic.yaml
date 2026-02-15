@@ -1,7 +1,7 @@
 module: b2-23
 level: B2
 sequence: 23
-slug: 23-register-media-journalistic
+slug: register-media-journalistic
 version: '2.0'
 title: Медійний та журналістський регістр
 subtitle: Мова новин і преси

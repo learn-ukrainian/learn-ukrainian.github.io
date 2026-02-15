@@ -1,7 +1,7 @@
 module: b1-22
 level: B1
 sequence: 22
-slug: 22-motion-full-prefix-integration
+slug: motion-full-prefix-integration
 version: '2.0'
 title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
@@ -65,7 +65,7 @@ activity_hints:
 - type: fill-in
   focus: Add prefix to change meaning
   items: 12+
-- type: cloze
+- type: fill-in
   focus: Story using 10+ prefixed motion verbs
   items: 15+
 - type: match-up

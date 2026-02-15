@@ -1,7 +1,7 @@
 module: b1-03
 level: B1
 sequence: 3
-slug: 03-reading-grammar-rules
+slug: reading-grammar-rules
 version: '2.0'
 title: Читаємо граматичні правила
 subtitle: Understanding grammar explanations in Ukrainian
@@ -92,7 +92,7 @@ activity_hints:
 - type: true-false
   focus: Statements about grammar patterns
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Complete grammar explanation passages
   items: 8+
 - type: match-up
@@ -101,9 +101,9 @@ activity_hints:
 - type: quiz
   focus: Identify analytical terms in grammar explanations (контекст, маркер, частота)
   items: 8+
-- type: group-sort
-  focus: Style types (розмовна vs літературна vs формальна)
-  items: 12+
+- type: error-correction
+  focus: Correct misused style/register terms in grammar explanations
+  items: 6+
 focus: integration
 pedagogy: PPP
 prerequisites:
@@ -133,7 +133,7 @@ sources:
   url: https://osvita.ua/
   type: reference
   notes: Common instructional language in educational materials
-immersion: 80% Ukrainian
+immersion: 70-85% Ukrainian
 phase: B1.0 Bridge
 persona:
   voice: Senior Language & Culture Specialist

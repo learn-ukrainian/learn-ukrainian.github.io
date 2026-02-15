@@ -80,6 +80,7 @@ grammar:
 - Informal syntax in chats
 - Polite vs informal messaging
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.6 [Practical]
 persona:
   voice: Encouraging Cultural Guide

@@ -102,6 +102,7 @@ grammar:
 - Root families review
 - Prefix/suffix application
 register: розмовний
+immersion: 60-75% Ukrainian
 phase: A2.4 [Word Formation]
 persona:
   voice: Encouraging Cultural Guide

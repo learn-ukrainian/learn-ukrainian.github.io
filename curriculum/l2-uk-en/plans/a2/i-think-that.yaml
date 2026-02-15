@@ -1,7 +1,7 @@
 module: a2-29
 level: A2
 sequence: 29
-slug: 29-i-think-that
+slug: i-think-that
 version: '2.0'
 title: I Think That...
 subtitle: Expressing Opinions
@@ -51,7 +51,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Дискусія
   type: reference
   notes: Social norms for agreement and disagreement
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

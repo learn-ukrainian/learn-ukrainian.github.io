@@ -1,7 +1,7 @@
 module: a2-19
 level: A2
 sequence: 19
-slug: 19-the-best-the-worst
+slug: the-best-the-worst
 version: '2.0'
 title: The Best, The Worst
 subtitle: The Superlative Degree
@@ -50,7 +50,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Прикметник
   type: reference
   notes: Superlative formation and usage
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

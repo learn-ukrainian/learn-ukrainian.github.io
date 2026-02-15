@@ -68,7 +68,7 @@ activity_hints:
 - type: fill-in
   focus: Use interpersonal vocabulary
   items: 20
-- type: cloze
+- type: fill-in
   focus: EQ scenarios
   items: 15
 - type: quiz

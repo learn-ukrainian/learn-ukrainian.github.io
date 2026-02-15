@@ -79,6 +79,7 @@ grammar:
 - Nature vocabulary
 - Seasons and describing landscapes
 register: розмовний
+immersion: 60-75% Ukrainian
 phase: A2.5 [Vocabulary Expansion]
 persona:
   voice: Encouraging Cultural Guide

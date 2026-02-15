@@ -1,7 +1,7 @@
 module: a2-28
 level: A2
 sequence: 28
-slug: 28-she-said-that
+slug: she-said-that
 version: '2.0'
 title: She Said That...
 subtitle: Reported Speech Basics
@@ -51,7 +51,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Непряма_мова
   type: reference
   notes: Rules for tense retention and pronoun shifts
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

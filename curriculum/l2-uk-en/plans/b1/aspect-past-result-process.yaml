@@ -1,7 +1,7 @@
 module: b1-08
 level: B1
 sequence: 8
-slug: 08-aspect-past-result-process
+slug: aspect-past-result-process
 version: '2.0'
 title: 'Вид у минулому: результат і процес'
 subtitle: 'Aspect in Past: Result vs Process'
@@ -68,7 +68,7 @@ activity_hints:
 - type: fill-in
   focus: Add result marker → change to perfective
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Narrative with result/process focus
   items: 10+
 focus: grammar

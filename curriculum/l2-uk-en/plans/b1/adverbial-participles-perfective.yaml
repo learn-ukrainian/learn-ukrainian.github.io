@@ -48,7 +48,7 @@ vocabulary_hints:
   - основа (stem)
   - закінчення (ending)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Perfective verb to participle
   items: 25
 - type: fill-in
@@ -57,7 +57,7 @@ activity_hints:
 - type: match-up
   focus: Match participle to meaning
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write sequential narratives
   items: 10
 focus: grammar

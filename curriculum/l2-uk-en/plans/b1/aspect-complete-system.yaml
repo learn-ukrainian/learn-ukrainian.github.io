@@ -1,7 +1,7 @@
 module: b1-06
 level: B1
 sequence: 6
-slug: 06-aspect-complete-system
+slug: aspect-complete-system
 version: '2.0'
 title: 'Вид дієслова: повна система'
 subtitle: Perfective vs Imperfective - The complete picture
@@ -63,7 +63,7 @@ activity_hints:
 - type: fill-in
   focus: Choose correct aspect
   items: 12+
-- type: group-sort
+- type: true-false
   focus: Sort contexts by aspect (process vs result vs repetition)
   items: 15+
 - type: fill-in

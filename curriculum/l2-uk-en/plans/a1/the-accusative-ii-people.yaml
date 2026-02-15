@@ -56,7 +56,7 @@ activity_hints:
 - type: fill-in
   focus: Change animate nouns to accusative
   items: 25
-- type: group-sort
+- type: match-up
   focus: Animate vs inanimate
   items: 20
 - type: fill-in

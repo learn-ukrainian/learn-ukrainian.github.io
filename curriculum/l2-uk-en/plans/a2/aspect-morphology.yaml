@@ -1,7 +1,7 @@
 module: a2-15
 level: A2
 sequence: 15
-slug: 15-aspect-morphology
+slug: aspect-morphology
 version: '2.0'
 title: Aspect Morphology
 subtitle: Prefixes and Suffixes
@@ -100,7 +100,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Словотвір
   type: reference
   notes: Aspect formation patterns
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

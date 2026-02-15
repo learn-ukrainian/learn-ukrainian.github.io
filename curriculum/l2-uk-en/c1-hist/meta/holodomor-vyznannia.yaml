@@ -1,8 +1,0 @@
----
-module: c1-hist-050
-level: C1-HIST
-slug: holodomor-vyznannia
-version: '1.0'
-id: c1-hist-050
-build:
-  last_modified: '2026-01-26'

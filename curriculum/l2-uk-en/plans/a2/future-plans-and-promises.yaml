@@ -1,7 +1,7 @@
 module: a2-14
 level: A2
 sequence: 14
-slug: 14-future-plans-and-promises
+slug: future-plans-and-promises
 version: '2.0'
 title: Future Plans and Promises
 subtitle: Simple Future vs. Compound Future
@@ -97,7 +97,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Дієслово
   type: reference
   notes: Future tense paradigms
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

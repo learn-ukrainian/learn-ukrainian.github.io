@@ -90,13 +90,13 @@ activity_hints:
 - type: quiz
   focus: B1.3b comprehensive test
   items: 30
-- type: cloze
+- type: fill-in
   focus: All speech type conversions
   items: 25
 - type: fill-in
   focus: Complete complex sentences
   items: 20
-- type: cloze
+- type: fill-in
   focus: Write complex paragraphs
   items: 10
 focus: checkpoint

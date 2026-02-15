@@ -56,7 +56,7 @@ activity_hints:
 - type: fill-in
   focus: Purpose clause completion
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Combine with purpose clauses
   items: 20
 - type: error-correction

@@ -51,7 +51,7 @@ activity_hints:
 - type: match-up
   focus: Food and drink names
   items: 30
-- type: group-sort
+- type: match-up
   focus: Sort food by type
   items: 20
 - type: fill-in

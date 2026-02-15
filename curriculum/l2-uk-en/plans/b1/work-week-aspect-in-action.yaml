@@ -1,7 +1,7 @@
 module: b1-13
 level: B1
 sequence: 13
-slug: 13-work-week-aspect-in-action
+slug: work-week-aspect-in-action
 version: '2.0'
 title: 'Робочий тиждень: вид у дії'
 subtitle: Work Week - Aspect in Real-Life Context
@@ -52,7 +52,7 @@ activity_hints:
 - type: fill-in
   focus: Work reports with correct aspect
   items: 12+
-- type: cloze
+- type: fill-in
   focus: Weekly report narrative
   items: 10+
 - type: fill-in

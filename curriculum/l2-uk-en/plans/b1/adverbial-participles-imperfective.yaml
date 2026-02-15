@@ -48,13 +48,13 @@ vocabulary_hints:
   - підрядне речення (subordinate clause)
   - замінювати (to replace)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Verb to participle conversion
   items: 25
 - type: fill-in
   focus: Complete sentences with participles
   items: 20
-- type: unjumble
+- type: error-correction
   focus: Combine with adverbial participles
   items: 15
 - type: error-correction

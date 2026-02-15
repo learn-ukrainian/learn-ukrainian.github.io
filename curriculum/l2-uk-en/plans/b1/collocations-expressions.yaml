@@ -48,7 +48,7 @@ activity_hints:
 - type: error-correction
   focus: Fix unnatural collocations
   items: 15
-- type: cloze
+- type: fill-in
   focus: Use collocations in context
   items: 10
 focus: vocabulary

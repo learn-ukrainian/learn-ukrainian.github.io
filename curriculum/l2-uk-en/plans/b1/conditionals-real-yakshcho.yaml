@@ -50,7 +50,7 @@ activity_hints:
 - type: fill-in
   focus: Complete conditionals
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Combine with якщо
   items: 20
 - type: error-correction

@@ -82,6 +82,7 @@ grammar:
 - Understanding dosage instructions
 - Side effects and warnings vocabulary
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.6 [Practical]
 persona:
   voice: Encouraging Cultural Guide

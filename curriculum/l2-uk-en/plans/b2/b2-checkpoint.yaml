@@ -1,7 +1,7 @@
 module: b2-70
 level: B2
 sequence: 70
-slug: 70-b2-checkpoint
+slug: b2-checkpoint
 version: '2.0'
 title: Контрольна точка B2.2
 subtitle: B2.2 Checkpoint

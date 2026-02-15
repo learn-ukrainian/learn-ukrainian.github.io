@@ -48,7 +48,7 @@ vocabulary_hints:
   - щодня (every day)
   - відпочивати (to rest)
 activity_hints:
-- type: unjumble
+- type: quiz
   focus: Order daily activities
   items: 20
 - type: fill-in

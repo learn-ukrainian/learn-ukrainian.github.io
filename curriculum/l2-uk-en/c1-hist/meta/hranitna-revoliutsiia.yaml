@@ -1,8 +1,0 @@
----
-module: c1-hist-128
-level: C1-HIST
-slug: hranitna-revoliutsiia
-version: '1.0'
-id: c1-hist-128
-build:
-  last_modified: '2026-01-26'

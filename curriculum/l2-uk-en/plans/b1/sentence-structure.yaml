@@ -1,7 +1,7 @@
 module: b1-04
 level: B1
 sequence: 4
-slug: 04-sentence-structure
+slug: sentence-structure
 version: '2.0'
 title: Структура речення
 subtitle: Sentence analysis terminology
@@ -89,9 +89,9 @@ activity_hints:
 - type: fill-in
   focus: Label sentence components
   items: 8+
-- type: group-sort
-  focus: Simple vs complex sentence examples
-  items: 12+
+- type: true-false
+  focus: Statements about sentence types and clause relationships
+  items: 8+
 focus: integration
 pedagogy: PPP
 prerequisites:
@@ -120,7 +120,7 @@ sources:
   url: https://mon.gov.ua/
   type: reference
   notes: Official terminology for sentence analysis
-immersion: 85% Ukrainian
+immersion: 70-85% Ukrainian
 phase: B1.0 Bridge
 persona:
   voice: Senior Language & Culture Specialist

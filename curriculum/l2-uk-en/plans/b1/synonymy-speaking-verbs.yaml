@@ -45,10 +45,10 @@ activity_hints:
 - type: fill-in
   focus: Choose correct speaking verb
   items: 20
-- type: cloze
+- type: fill-in
   focus: Vary reporting verbs
   items: 15
-- type: cloze
+- type: fill-in
   focus: Report dialogues
   items: 10
 focus: vocabulary

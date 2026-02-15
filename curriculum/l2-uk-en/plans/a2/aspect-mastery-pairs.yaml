@@ -1,7 +1,7 @@
 module: a2-16
 level: A2
 sequence: 16
-slug: 16-aspect-mastery-pairs
+slug: aspect-mastery-pairs
 version: '2.0'
 title: Aspect Mastery — Pairs
 subtitle: Automating Perfective and Imperfective
@@ -94,7 +94,7 @@ sources:
   url: https://uk.wiktionary.org/
   type: reference
   notes: Complete aspect pair listings
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

@@ -1,0 +1,72 @@
+content_outline:
+  - section: "Вступ: Метамова та ідентичність"
+    words: 250
+    points:
+      - "Why this module matters: Metalanguage as the 'survival kit' for upcoming 100% immersion modules."
+      - "Immersion Warning: Explicitly stating the shift to 85% Ukrainian in this module and 100% in the next."
+      - "Cultural Hook: The story of the letter 'Ґ' and its ban/restoration as a symbol of 'правопис' (orthography) and identity."
+      - "Proverb on precision: 'Слово — не горобець, вилетить — не спіймаєш' (focus on accuracy)."
+  - section: "Діагностичне оцінювання: Базова термінологія"
+    words: 400
+    points:
+      - "Diagnostic test: Checking retention of metalanguage from modules M01-04."
+      - "Identifying knowledge gaps in basic terminology (noun, verb, sentence)."
+      - "Phonetic distinction: Clarifying the confusion between 'звук' (sound) and 'буква' (letter)."
+      - "The importance of 'наголос' (stress) for meaning (e.g., 'пла́чу' vs 'плачу́')."
+  - section: "Частини мови: Огляд системи"
+    words: 220
+    points:
+      - "Systematic review of the 10 parts of speech in Ukrainian (identifying 'іменник', 'прикметник', etc.)."
+      - "Visualizing the system: Description of a 'Tree of Speech' or similar mental model."
+      - "Key morphological categories: 'рід' (gender), 'число' (number), 'відмінок' (case)."
+      - "Distinguishing functional vs. content parts of speech."
+  - section: "Дієслівна термінологія: Час та Вид"
+    words: 220
+    points:
+      - "Core verb categories: 'інфінітив' (infinitive), 'особа' (person), 'час' (tense)."
+      - "Introduction to Aspect terminology: 'доконаний' (perfective) vs 'недоконаний' (imperfective) - critical prep for M06."
+      - "Conjugation basics: Understanding the term 'дієвідміна'."
+      - "Usage of terms 'дія' (action) and 'стан' (state)."
+  - section: "Моделі граматичних пояснень"
+    words: 220
+    points:
+      - "Decoding instructions: Common imperative verbs used in exercises ('підкресліть', 'вставте', 'змініть')."
+      - "How to read a rule: Analyzing the structure of a standard Ukrainian grammar rule."
+      - "Example analysis: Reading a rule about 'вимова' (pronunciation) or spelling."
+      - "Identifying exceptions: The phrase 'виняток з правила'."
+  - section: "Будова речення: Синтаксис"
+    words: 400
+    points:
+      - "Primary sentence parts: 'підмет' (subject) and 'присудок' (predicate)."
+      - "Secondary members overview: 'додаток', 'обставина' (brief recognition)."
+      - "Sentence types: 'розповідне', 'питальне', 'спонукальне' (declarative, interrogative, imperative)."
+      - "Word order awareness: Emphasis and flexibility."
+  - section: "Розуміння граматичних пояснень"
+    words: 550
+    points:
+      - "Extended Reading: A full, authentic grammar explanation text in Ukrainian."
+      - "Identifying logical connectors in rules ('тому що', 'якщо... то')."
+      - "Comprehension check: Answering questions about the rule *in Ukrainian*."
+      - "False Friend Alert: Distinguishing 'правило' (rule) from 'право' (legal right/right to do something)."
+  - section: "Практичні вправи: Тест на виживання"
+    words: 650
+    points:
+      - "The Real Test: Solving complex tasks relying solely on Ukrainian instructions."
+      - "Error Correction: 'Виправлення помилок' exercises identifying grammar issues."
+      - "Term-to-Definition matching: Connecting concepts like 'морфологія' to their definitions."
+      - "Stress placement drill: 'Поставте наголос правильно'."
+  - section: "Міні-діалоги: Метамова в контексті"
+    words: 650
+    points:
+      - "Scenario 1: Asking a teacher for clarification ('Що означає це слово?')."
+      - "Scenario 2: Discussing a mistake with a peer ('Я зробив помилку в цьому реченні')."
+      - "Scenario 3: Explaining a simple rule to someone else."
+      - "Active usage of target vocab: 'значення', 'вимова', 'правило', 'помилка'."
+  - section: "Підсумок: Готовність до занурення"
+    words: 440
+    points:
+      - "Final Self-Assessment checklist: 'Can I understand grammatical instructions?'"
+      - "Confirmation of readiness for 100% Ukrainian immersion starting in M06."
+      - "Encouragement: 'You now have the language to learn the language'."
+      - "Look-ahead: Preview of the Aspect system in the next module."
+# Total: 4000 words

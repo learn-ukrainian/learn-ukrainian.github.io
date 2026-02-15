@@ -64,13 +64,13 @@ activity_hints:
 - type: match-up
   focus: Match phrase to channel and register
   items: 15
-- type: cloze
+- type: fill-in
   focus: Complete email and letter templates
   items: 14
 - type: quiz
   focus: Choose appropriate channel for situation
   items: 12
-- type: unjumble
+- type: error-correction
   focus: Reorder dialogue sentences
   items: 8
 focus: practical

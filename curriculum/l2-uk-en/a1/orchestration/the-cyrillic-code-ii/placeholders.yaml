@@ -1,0 +1,46 @@
+TRACK: "a1"
+LEVEL: "A1"
+SLUG: "the-cyrillic-code-ii"
+TOPIC_TITLE: "The Cyrillic Code II"
+PLAN_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-cyrillic-code-ii.yaml"
+META_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-cyrillic-code-ii.yaml"
+CONTENT_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md"
+ACTIVITIES_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-cyrillic-code-ii.yaml"
+VOCAB_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-ii.yaml"
+RESEARCH_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-cyrillic-code-ii-research.md"
+REVIEW_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-cyrillic-code-ii-review.md"
+QUICK_REF_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md"
+SCHEMA_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/schemas/activities-a1.schema.json"
+WORD_TARGET: "1531"
+OVERSHOOT_TARGET: "4593"
+SKILL_IDENTITY: "Patient & Supportive Ukrainian Tutor"
+PERSONA_FLAVOR: "The Helpful Neighbor"
+PERSONA_VOICE: "Patient Supportive Tutor"
+PERSONA_ROLE: "Ancient Manuscript Restorer"
+IMMERSION_RULE: "10-15% immersion target. Provide full transliteration in the format: слово (slovo)."
+IMMERSION_PERCENT: "5.4"
+IMMERSION_TARGET: "5-15"
+ENGAGEMENT_MIN: "3"
+EXAMPLE_MIN: "12"
+ACTIVITY_MIN: "8"
+ACTIVITY_MAX: "12"
+ACTIVITY_COUNT_TARGET: "8-12"
+ITEMS_MIN: "12"
+REQUIRED_TYPES: "fill-in, match-up, quiz, true-false, group-sort, anagram"
+PRIORITY_TYPES: "match-up, anagram"
+ALLOWED_ACTIVITY_TYPES: "quiz, fill-in, true-false, match-up, group-sort, anagram"
+FORBIDDEN_ACTIVITY_TYPES: "cloze, error-correction, select, translate, unjumble"
+VOCAB_COUNT_TARGET: "20"
+AUDIT_ERRORS: |
+  ❌ EXTREME VERBOSITY: Current word count is 5506. Target is 1531. Ruthlessly cut English prose by 50%.
+  ❌ LLM PATTERNS: Too many metaphors ("special forces", "soul of pronunciation", etc.). Reduce metaphors by 50%.
+  ❌ PEDAGOGY: Remove the "Warm-up: Your Foundation" philosophical intro. Start closer to the content.
+  ❌ NATURALNESS: Fix "Там тут" to "Там і тут", "Тут є гарний день" to "Сьогодні гарний день", "Це добра ніч" to "На добраніч".
+ACTIVITY_EXAMPLES: |
+  match-up:
+    - ["Г", "H-sound (as in 'hill')"]
+    - ["Ґ", "Hard G (as in 'go')"]
+  quiz:
+    - question: "Which letter is used for the 'sh' sound?"
+      options: ["Ш", "Ж", "Щ", "Ч"]
+      correct: "Ш"

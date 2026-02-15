@@ -45,7 +45,7 @@ vocabulary_hints:
   - умовляти (to persuade)
   - заборонити (to forbid)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Questions and commands to indirect
   items: 25
 - type: fill-in
@@ -54,7 +54,7 @@ activity_hints:
 - type: error-correction
   focus: Fix indirect speech errors
   items: 15
-- type: cloze
+- type: fill-in
   focus: Report conversations
   items: 10
 focus: grammar

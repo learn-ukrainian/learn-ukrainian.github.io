@@ -48,7 +48,7 @@ activity_hints:
 - type: match-up
   focus: Match terms to definitions
   items: 15
-- type: cloze
+- type: fill-in
   focus: Business scenarios
   items: 10
 focus: vocabulary

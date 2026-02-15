@@ -1,7 +1,7 @@
 module: b1-21
 level: B1
 sequence: 21
-slug: 21-motion-figurative-uses
+slug: motion-figurative-uses
 version: '2.0'
 title: Переносні значення дієслів руху
 subtitle: Figurative uses of motion verbs
@@ -59,10 +59,10 @@ activity_hints:
 - type: quiz
   focus: Literal vs figurative motion
   items: 15+
-- type: cloze
+- type: fill-in
   focus: Dialogue with figurative expressions
   items: 12+
-- type: group-sort
+- type: true-false
   focus: Literal motion vs figurative expression
   items: 14+
 focus: grammar

@@ -59,7 +59,7 @@ activity_hints:
 - type: match-up
   focus: Match unique sounds to letters
   items: 20
-- type: group-sort
+- type: match-up
   focus: Distinguish И/І, Г/Ґ
   items: 15
 - type: quiz

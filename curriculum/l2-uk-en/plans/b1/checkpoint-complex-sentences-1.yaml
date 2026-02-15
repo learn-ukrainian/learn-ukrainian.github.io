@@ -64,7 +64,7 @@ activity_hints:
 - type: error-correction
   focus: Fix sentence errors
   items: 20
-- type: unjumble
+- type: error-correction
   focus: Create complex sentences
   items: 15
 focus: checkpoint

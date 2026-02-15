@@ -64,7 +64,7 @@ activity_hints:
 - type: error-correction
   focus: Revise texts for style
   items: 20
-- type: cloze
+- type: fill-in
   focus: Create multi-feature paragraphs
   items: 15
 - type: error-correction

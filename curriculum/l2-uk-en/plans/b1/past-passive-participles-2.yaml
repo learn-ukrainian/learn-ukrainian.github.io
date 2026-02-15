@@ -49,7 +49,7 @@ vocabulary_hints:
   - агент (agent)
   - оголошення (announcement)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Full to short form
   items: 25
 - type: fill-in

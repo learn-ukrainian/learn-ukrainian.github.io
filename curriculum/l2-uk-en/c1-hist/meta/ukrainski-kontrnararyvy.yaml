@@ -1,8 +1,0 @@
----
-module: c1-hist-112
-level: C1-HIST
-slug: ukrainski-kontrnararyvy
-version: '1.0'
-id: c1-hist-112
-build:
-  last_modified: '2026-01-26'

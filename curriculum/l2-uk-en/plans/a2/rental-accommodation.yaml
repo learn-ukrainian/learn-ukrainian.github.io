@@ -86,6 +86,7 @@ grammar:
 - Discussing utilities (комунальні послуги)
 - Contract and lease terms
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.6 [Practical]
 persona:
   voice: Encouraging Cultural Guide

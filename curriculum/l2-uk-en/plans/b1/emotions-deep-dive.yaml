@@ -48,7 +48,7 @@ activity_hints:
 - type: match-up
   focus: Emotional expressions
   items: 15
-- type: cloze
+- type: fill-in
   focus: Describe emotional experiences
   items: 10
 focus: vocabulary

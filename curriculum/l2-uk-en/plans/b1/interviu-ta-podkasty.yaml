@@ -53,7 +53,7 @@ activity_hints:
 - type: quiz
   focus: Authentic interview excerpts
   items: 15
-- type: cloze
+- type: fill-in
   focus: Practice note-taking
   items: 15
 - type: match-up

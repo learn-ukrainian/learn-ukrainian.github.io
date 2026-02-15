@@ -58,7 +58,7 @@ activity_hints:
 - type: fill-in
   focus: Different-subject purpose clauses
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Combine with correct pattern
   items: 20
 - type: error-correction

@@ -49,7 +49,7 @@ activity_hints:
 - type: fill-in
   focus: Complete concessive sentences
   items: 25
-- type: cloze
+- type: fill-in
   focus: Convert sentences to concessive
   items: 20
 - type: error-correction

@@ -1,7 +1,7 @@
 module: b2-01
 level: B2
 sequence: 1
-slug: 01-passive-voice-system
+slug: passive-voice-system
 version: '2.0'
 title: 'Пасивний стан: повна система'
 content_outline:

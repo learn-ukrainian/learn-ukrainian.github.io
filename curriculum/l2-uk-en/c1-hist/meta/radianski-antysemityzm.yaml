@@ -1,8 +1,0 @@
----
-module: c1-hist-120
-level: C1-HIST
-slug: radianski-antysemityzm
-version: '1.0'
-id: c1-hist-120
-build:
-  last_modified: '2026-01-26'

@@ -50,7 +50,7 @@ activity_hints:
 - type: fill-in
   focus: Complete unreal conditionals
   items: 25
-- type: cloze
+- type: fill-in
   focus: Real to unreal conversion
   items: 20
 - type: error-correction

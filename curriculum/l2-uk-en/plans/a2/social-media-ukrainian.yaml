@@ -81,6 +81,7 @@ grammar:
 - Verbs for digital actions (постити, лайкати)
 - Commenting and messaging etiquette
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.6 [Practical]
 persona:
   voice: Encouraging Cultural Guide

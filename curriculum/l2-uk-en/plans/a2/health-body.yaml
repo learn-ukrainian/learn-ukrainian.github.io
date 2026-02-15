@@ -1,7 +1,7 @@
 module: a2-55
 level: A2
 sequence: 55
-slug: 55-health-body
+slug: health-body
 version: '2.0'
 title: Health and Body
 subtitle: Feeling Good
@@ -41,6 +41,7 @@ grammar:
 - medical advice (треба, можна)
 - body parts vocabulary
 - doctor's appointment
+immersion: 75-90% Ukrainian
 phase: A2.3
 word_target: 1000
 persona:

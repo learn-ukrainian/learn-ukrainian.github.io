@@ -77,10 +77,10 @@ activity_hints:
 - type: quiz
   focus: Choose correct phrase for situation
   items: 15
-- type: cloze
+- type: fill-in
   focus: Fill in presentation and summarizing phrases
   items: 12
-- type: unjumble
+- type: error-correction
   focus: Reorder presentation sentences
   items: 8
 focus: practical

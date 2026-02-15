@@ -57,7 +57,7 @@ vocabulary_hints:
   - земля (earth)
   - серце (heart)
 activity_hints:
-- type: group-sort
+- type: match-up
   focus: Sort nouns by gender
   items: 30
 - type: quiz

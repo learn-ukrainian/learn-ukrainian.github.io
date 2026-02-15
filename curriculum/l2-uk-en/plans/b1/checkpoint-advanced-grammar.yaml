@@ -94,13 +94,13 @@ activity_hints:
 - type: quiz
   focus: B1.4 comprehensive test
   items: 30
-- type: cloze
+- type: fill-in
   focus: All participle and passive conversions
   items: 25
 - type: fill-in
   focus: Complete with appropriate forms
   items: 20
-- type: cloze
+- type: fill-in
   focus: Write integrated paragraphs
   items: 10
 focus: checkpoint

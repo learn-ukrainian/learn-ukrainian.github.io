@@ -1,7 +1,7 @@
 module: a2-25
 level: A2
 sequence: 25
-slug: 25-checkpoint-aspect-comparison
+slug: checkpoint-aspect-comparison
 version: '2.0'
 title: 'Checkpoint: Aspect, Comparison & Modality'
 subtitle: Review of Modules 11-24
@@ -66,7 +66,7 @@ sources:
   url: https://mon.gov.ua/
   type: reference
   notes: Standards for integrating intermediate A2 skills
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

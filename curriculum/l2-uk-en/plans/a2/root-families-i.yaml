@@ -1,7 +1,7 @@
 module: a2-41
 level: A2
 sequence: 41
-slug: 41-root-families-i
+slug: root-families-i
 version: '2.0'
 title: Root Families I
 subtitle: The DNA of Vocabulary
@@ -51,7 +51,7 @@ sources:
   url: https://goroh.pp.ua/
   type: reference
   notes: Historical context for hod-, pys-, chyt-, bach- roots
-immersion: 65-75% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.4
 persona:
   voice: Encouraging Cultural Guide

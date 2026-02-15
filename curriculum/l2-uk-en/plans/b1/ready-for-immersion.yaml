@@ -1,7 +1,7 @@
 module: b1-05
 level: B1
 sequence: 5
-slug: 05-ready-for-immersion
+slug: ready-for-immersion
 version: '2.0'
 title: Готові до занурення
 subtitle: Metalanguage mastery checkpoint
@@ -73,7 +73,7 @@ vocabulary_hints:
   - значення (meaning)
   - функція (function)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Complete a full grammar explanation passage
   items: 15+
 - type: quiz
@@ -113,7 +113,7 @@ sources:
   url: https://www.coe.int/en/web/common-european-framework-reference-languages
   type: reference
   notes: Proficiency standards for checkpoint assessment
-immersion: 85% Ukrainian
+immersion: 70-85% Ukrainian
 phase: B1.0 Bridge
 persona:
   voice: Senior Language & Culture Specialist

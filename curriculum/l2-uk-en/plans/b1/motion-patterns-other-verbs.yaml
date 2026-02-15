@@ -1,7 +1,7 @@
 module: b1-23
 level: B1
 sequence: 23
-slug: 23-motion-patterns-other-verbs
+slug: motion-patterns-other-verbs
 version: '2.0'
 title: Префікси руху в інших дієсловах
 subtitle: Motion prefixes in non-motion verbs
@@ -70,7 +70,7 @@ activity_hints:
 - type: quiz
   focus: Predict verb meaning from prefix
   items: 15+
-- type: group-sort
+- type: true-false
   focus: Group verbs by prefix meaning
   items: 15+
 focus: grammar

@@ -55,13 +55,13 @@ activity_hints:
 - type: fill-in
   focus: Choose cardinal or collective
   items: 25
-- type: cloze
+- type: fill-in
   focus: Express as fractions
   items: 20
 - type: quiz
   focus: Select correct numeral form
   items: 15
-- type: cloze
+- type: fill-in
   focus: Express math in Ukrainian
   items: 10
 focus: grammar

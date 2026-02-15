@@ -1,7 +1,7 @@
 module: a2-18
 level: A2
 sequence: 18
-slug: 18-bigger-better-stronger
+slug: bigger-better-stronger
 version: '2.0'
 title: Bigger, Better, Stronger
 subtitle: The Comparative Degree
@@ -97,7 +97,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Прикметник
   type: reference
   notes: Complete comparison paradigms
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

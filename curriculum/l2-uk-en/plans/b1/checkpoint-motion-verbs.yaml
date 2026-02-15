@@ -1,7 +1,7 @@
 module: b1-25
 level: B1
 sequence: 25
-slug: 25-checkpoint-motion-verbs
+slug: checkpoint-motion-verbs
 version: '2.0'
 title: 'Контрольна точка: Дієслова руху'
 subtitle: 'Checkpoint: Motion Verbs'
@@ -93,7 +93,7 @@ activity_hints:
 - type: quiz
   focus: Diagnostic - 25 items covering all motion concepts
   items: 25+
-- type: group-sort
+- type: true-false
   focus: Prefix sorting - Group verbs by prefix meaning
   items: 15+
 - type: fill-in
@@ -102,7 +102,7 @@ activity_hints:
 - type: error-correction
   focus: 10 common motion verb mistakes
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Travel narrative with motion verb gaps
   items: 15+
 - type: match-up

@@ -75,7 +75,7 @@ activity_hints:
 - type: fill-in
   focus: Complete time expressions
   items: 20
-- type: unjumble
+- type: quiz
   focus: Order days and months
   items: 15
 - type: fill-in

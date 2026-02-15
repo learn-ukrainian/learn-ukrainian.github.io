@@ -1,7 +1,7 @@
 module: b2-20
 level: B2
 sequence: 20
-slug: 20-register-medical-ukrainian
+slug: register-medical-ukrainian
 version: '2.0'
 title: 'Медична українська: спілкування у сфері охорони здоров''я'
 content_outline:

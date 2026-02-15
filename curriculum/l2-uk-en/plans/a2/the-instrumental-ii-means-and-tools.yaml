@@ -1,7 +1,7 @@
 module: a2-05
 level: A2
 sequence: 5
-slug: 05-the-instrumental-ii-means-and-tools
+slug: the-instrumental-ii-means-and-tools
 version: '2.0'
 title: The Instrumental II — Means and Tools
 subtitle: How? By What Means?
@@ -96,7 +96,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Транспорт
   type: reference
   notes: Transport modes vocabulary
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.1
 persona:
   voice: Encouraging Cultural Guide

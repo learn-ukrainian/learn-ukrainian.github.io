@@ -56,7 +56,7 @@ activity_hints:
 - type: fill-in
   focus: який case selection
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Combine sentences with який
   items: 20
 - type: error-correction

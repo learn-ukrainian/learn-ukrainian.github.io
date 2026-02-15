@@ -1,7 +1,7 @@
 module: a2-36
 level: A2
 sequence: 36
-slug: 36-basic-motion-prefixes
+slug: basic-motion-prefixes
 version: '2.0'
 title: Basic Motion Prefixes
 subtitle: In and Out
@@ -52,7 +52,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
   type: reference
   notes: Structural rules for V- and VY- prefixes with motion stems
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.3
 persona:
   voice: Encouraging Cultural Guide

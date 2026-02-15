@@ -59,9 +59,6 @@ activity_hints:
 - type: fill-in
   focus: Complete news summaries
   items: 15
-- type: critical-analysis
-  focus: Analyze news for bias
-  items: 10
 focus: skills
 pedagogy: CBI
 prerequisites:

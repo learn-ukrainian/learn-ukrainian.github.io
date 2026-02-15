@@ -1,0 +1,339 @@
+- type: quiz
+  title: 'Identity of the Unique Seven'
+  instruction: 'Identify the letter based on its description or sound analogy.'
+  items:
+    - question: 'Which letter looks like a beetle and makes the sound "zh"?'
+      options:
+        - text: 'Ж'
+          correct: true
+        - text: 'Ш'
+          correct: false
+        - text: 'Щ'
+          correct: false
+        - text: 'Ч'
+          correct: false
+      explanation: 'Ж (Zhe) looks like a beetle with six legs and makes the buzzing sound "zh".'
+    - question: 'Which letter represents the sound "sh" as in "shoe"?'
+      options:
+        - text: 'Ш'
+          correct: true
+        - text: 'Щ'
+          correct: false
+        - text: 'Ц'
+          correct: false
+        - text: 'Ч'
+          correct: false
+      explanation: 'Ш (Sha) makes the quiet "sh" sound.'
+    - question: 'Which letter is described as a "chair" turned upside down?'
+      options:
+        - text: 'Ч'
+          correct: true
+        - text: 'Ц'
+          correct: false
+        - text: 'Г'
+          correct: false
+        - text: 'П'
+          correct: false
+      explanation: 'Ч (Che) looks like an upside-down chair (h) and makes the "ch" sound.'
+    - question: 'Which letter combines two sounds: Sh + Ch?'
+      options:
+        - text: 'Щ'
+          correct: true
+        - text: 'Ш'
+          correct: false
+        - text: 'Ц'
+          correct: false
+        - text: 'Ж'
+          correct: false
+      explanation: 'Щ (Shcha) combines "sh" and "ch" into one long sound.'
+    - question: 'Which letter represents the "ts" sound found in "cats" or "pizza"?'
+      options:
+        - text: 'Ц'
+          correct: true
+        - text: 'Ч'
+          correct: false
+        - text: 'С'
+          correct: false
+        - text: 'З'
+          correct: false
+      explanation: 'Ц (Tse) makes the "ts" sound.'
+    - question: 'Which letter was repressed and makes the hard "g" sound?'
+      options:
+        - text: 'Ґ'
+          correct: true
+        - text: 'Г'
+          correct: false
+        - text: 'К'
+          correct: false
+        - text: 'Х'
+          correct: false
+      explanation: 'Ґ (Ge) with the upturned tail makes the hard "g" sound.'
+    - question: 'Which letter is the "soul" of Ukrainian, making a soft "h" sound?'
+      options:
+        - text: 'Г'
+          correct: true
+        - text: 'Ґ'
+          correct: false
+        - text: 'Х'
+          correct: false
+        - text: 'К'
+          correct: false
+      explanation: 'Г (He) makes the soft, glottal "h" sound.'
+    - question: 'Which letter has no sound of its own but softens the previous consonant?'
+      options:
+        - text: 'Ь'
+          correct: true
+        - text: 'Ъ'
+          correct: false
+        - text: 'Й'
+          correct: false
+        - text: 'І'
+          correct: false
+      explanation: 'The soft sign (Ь) has no sound of its own; it only affects the previous letter.'
+
+- type: match-up
+  title: 'Sound Mathematics: Iotated Vowels'
+  instruction: 'Match the sound combination to the correct Ukrainian letter.'
+  pairs:
+    - left: 'Й + А'
+      right: 'Я'
+    - left: 'Й + У'
+      right: 'Ю'
+    - left: 'Й + Е'
+      right: 'Є'
+    - left: 'Й + І'
+      right: 'Ї'
+    - left: 'Soft "i" (ee)'
+      right: 'І'
+    - left: 'Hard "y" (bit)'
+      right: 'И'
+    - left: 'Sh + Ch'
+      right: 'Щ'
+    - left: 'T + S'
+      right: 'Ц'
+
+- type: group-sort
+  title: 'Categorize the Letters'
+  instruction: 'Sort the letters into their correct phonetic categories.'
+  groups:
+    - name: 'Unique Consonants'
+      items:
+        - 'Г'
+        - 'Ґ'
+        - 'Ж'
+        - 'Ш'
+        - 'Щ'
+        - 'Ч'
+        - 'Ц'
+        - 'Й'
+    - name: 'Iotated Vowels'
+      items:
+        - 'Я'
+        - 'Ю'
+        - 'Є'
+        - 'Ї'
+
+- type: true-false
+  title: 'Phonetic Concepts'
+  instruction: 'Decide if the statement about Ukrainian phonetics is true or false.'
+  items:
+    - statement: 'The letter Ї is unique to the Ukrainian alphabet among Slavic Cyrillic scripts.'
+      correct: true
+      explanation: 'Yes, Ї is a unique symbol of Ukrainian identity.'
+    - statement: 'The letter Г makes a hard "g" sound like in "go".'
+      correct: false
+      explanation: 'No, Г makes a soft "h" sound. The hard "g" is made by Ґ.'
+    - statement: 'The soft sign (Ь) is pronounced like a short "i".'
+      correct: false
+      explanation: 'The soft sign (Ь) has no sound of its own; it only affects the previous letter.'
+    - statement: 'You should smile when pronouncing the soft І.'
+      correct: true
+      explanation: 'Yes, І requires a "smile" mouth position, while И requires a relaxed jaw.'
+    - statement: 'The letter Щ represents a single sound "sh".'
+      correct: false
+      explanation: 'Щ represents two sounds combined: Sh + Ch.'
+    - statement: 'The letter Є sounds like "ye" in "yes".'
+      correct: true
+      explanation: 'Correct, Є is an iotated vowel sounding like "ye".'
+    - statement: 'In handwriting, the letter "т" can look like an English "m".'
+      correct: true
+      explanation: 'Yes, in standard Ukrainian cursive, the lowercase "т" resembles an "m".'
+    - statement: 'Kyiv is spelled with "ie" to reflect the Ukrainian pronunciation.'
+      correct: false
+      explanation: 'Kyiv is spelled with "yi" (Kyiv) to reflect the Ukrainian "Київ". "Kiev" is the Russian-derived spelling.'
+
+- type: fill-in
+  title: 'Complete the Words'
+  instruction: 'Choose the correct missing letter to complete the word.'
+  items:
+    - sentence: '...блуко (apple)'
+      answer: 'Я'
+      options: ['Я', 'Ю', 'Є', 'Ї']
+      explanation: 'Яблуко starts with Я (Ya).'
+    - sentence: '...жа (food)'
+      answer: 'Ї'
+      options: ['Ї', 'І', 'Й', 'Є']
+      explanation: 'Їжа starts with the unique letter Ї.'
+    - sentence: '...вропа (Europe)'
+      answer: 'Є'
+      options: ['Є', 'Е', 'Я', 'Ю']
+      explanation: 'Європа starts with Є (Ye).'
+    - sentence: '...ай (tea)'
+      answer: 'Ч'
+      options: ['Ч', 'Ц', 'Ш', 'Щ']
+      explanation: 'Чай starts with Ч (Ch).'
+    - sentence: '...кола (school)'
+      answer: 'Ш'
+      options: ['Ш', 'Щ', 'Ж', 'Ч']
+      explanation: 'Школа starts with Ш (Sh).'
+    - sentence: '...ентр (center)'
+      answer: 'Ц'
+      options: ['Ц', 'С', 'Ч', 'З']
+      explanation: 'Центр starts with Ц (Ts).'
+    - sentence: '...укор (sugar)'
+      answer: 'Ц'
+      options: ['Ц', 'С', 'З', 'К']
+      explanation: 'Цукор starts with Ц (Ts).'
+    - sentence: '...околад (chocolate)'
+      answer: 'Ш'
+      options: ['Ш', 'Ч', 'Ж', 'С']
+      explanation: 'Шоколад starts with Ш (Sh).'
+
+- type: anagram
+  title: 'Word Scramble'
+  instruction: 'Unscramble the letters to find the correct Ukrainian word.'
+  items:
+    - scrambled: 'айч'
+      answer: 'чай'
+    - scrambled: 'олакш'
+      answer: 'школа'
+    - scrambled: 'ньде'
+      answer: 'день'
+    - scrambled: 'наці'
+      answer: 'ціна'
+    - scrambled: 'лобокуя'
+      answer: 'яблуко'
+    - scrambled: 'кіс'
+      answer: 'сік'
+    - scrambled: 'щбор'
+      answer: 'борщ'
+    - scrambled: 'аїж'
+      answer: 'їжа'
+
+- type: match-up
+  title: 'Vocabulary Match'
+  instruction: 'Match the Ukrainian word to its English translation.'
+  pairs:
+    - left: 'гарний'
+      right: 'beautiful'
+    - left: 'жити'
+      right: 'to live'
+    - left: 'день'
+      right: 'day'
+    - left: 'ніч'
+      right: 'night'
+    - left: 'сім''я'
+      right: 'family'
+    - left: 'їжа'
+      right: 'food'
+    - left: 'дощ'
+      right: 'rain'
+    - left: 'батько'
+      right: 'father'
+    - left: 'діти'
+      right: 'children'
+    - left: 'сіль'
+      right: 'salt'
+
+- type: quiz
+  title: 'Hard or Soft?'
+  instruction: 'Determine if the vowel sound in the word is hard (И) or soft (І).'
+  items:
+    - question: 'Which vowel sound is heard in "жити" (zhyty - to live)?'
+      options:
+        - text: 'Hard И'
+          correct: true
+        - text: 'Soft І'
+          correct: false
+        - text: 'Soft Ь'
+          correct: false
+        - text: 'Iotated Ї'
+          correct: false
+      explanation: 'ZhYty uses the hard, deep И sound.'
+    - question: 'Which vowel sound is heard in "діти" (dity - children)?'
+      options:
+        - text: 'Soft І'
+          correct: true
+        - text: 'Hard И'
+          correct: false
+        - text: 'Hard Y'
+          correct: false
+        - text: 'Hard E'
+          correct: false
+      explanation: 'Dity uses the soft, smiling І sound.'
+    - question: 'Which vowel sound is heard in "ніч" (nich - night)?'
+      options:
+        - text: 'Soft І'
+          correct: true
+        - text: 'Hard И'
+          correct: false
+        - text: 'Hard O'
+          correct: false
+        - text: 'Soft Ь'
+          correct: false
+      explanation: 'Nich uses the soft І.'
+    - question: 'Which vowel sound is heard in "ми" (my - we)?'
+      options:
+        - text: 'Hard И'
+          correct: true
+        - text: 'Soft І'
+          correct: false
+        - text: 'Soft Я'
+          correct: false
+        - text: 'Soft Є'
+          correct: false
+      explanation: 'My uses the hard И.'
+    - question: 'Which vowel sound is heard in "сік" (sik - juice)?'
+      options:
+        - text: 'Soft І'
+          correct: true
+        - text: 'Hard И'
+          correct: false
+        - text: 'Hard A'
+          correct: false
+        - text: 'Soft Ю'
+          correct: false
+      explanation: 'Sik uses the soft І.'
+    - question: 'Which vowel sound is heard in "ти" (ty - you)?'
+      options:
+        - text: 'Hard И'
+          correct: true
+        - text: 'Soft І'
+          correct: false
+        - text: 'Soft Є'
+          correct: false
+        - text: 'Soft Ї'
+          correct: false
+      explanation: 'Ty uses the hard И.'
+    - question: 'Which vowel sound is heard in "жінка" (zhinka - woman)?'
+      options:
+        - text: 'Soft І'
+          correct: true
+        - text: 'Hard И'
+          correct: false
+        - text: 'Soft Є'
+          correct: false
+        - text: 'Hard Y'
+          correct: false
+      explanation: 'Zhinka uses the soft І.'
+    - question: 'Which vowel sound is heard in "Київ" (Kyiv - in the syllable "Ky")?'
+      options:
+        - text: 'Hard И'
+          correct: true
+        - text: 'Soft І'
+          correct: false
+        - text: 'Soft Ь'
+          correct: false
+        - text: 'Soft Я'
+          correct: false
+      explanation: 'The first vowel in Kyiv is hard И (Ky-yiv).'

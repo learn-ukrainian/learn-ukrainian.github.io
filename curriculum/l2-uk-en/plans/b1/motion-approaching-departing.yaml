@@ -1,7 +1,7 @@
 module: b1-20
 level: B1
 sequence: 20
-slug: 20-motion-approaching-departing
+slug: motion-approaching-departing
 version: '2.0'
 title: 'Рух: наближення і віддалення'
 subtitle: Motion - Approaching & Departing
@@ -59,7 +59,7 @@ activity_hints:
 - type: fill-in
   focus: Approach → depart → reach sequence
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Narrative about a journey
   items: 12+
 - type: match-up

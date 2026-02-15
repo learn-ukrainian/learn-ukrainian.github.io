@@ -1,7 +1,7 @@
 module: a2-06
 level: A2
 sequence: 6
-slug: 06-being-and-becoming
+slug: being-and-becoming
 version: '2.0'
 title: Being and Becoming
 subtitle: Professions and Instrumental Case
@@ -98,7 +98,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Орудний_відмінок
   type: reference
   notes: Predicate instrumental with бути/стати
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.1
 persona:
   voice: Encouraging Cultural Guide

@@ -49,7 +49,7 @@ vocabulary_hints:
   - регістр (register)
   - уникати (to avoid)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Active to three passive types
   items: 25
 - type: quiz
@@ -58,7 +58,7 @@ activity_hints:
 - type: fill-in
   focus: Complete passive sentences
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write using varied passives
   items: 10
 focus: grammar

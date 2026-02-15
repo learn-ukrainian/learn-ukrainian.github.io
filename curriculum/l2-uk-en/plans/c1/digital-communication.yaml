@@ -1,7 +1,7 @@
 module: c1-024
 level: C1
 sequence: 24
-slug: 24-digital-communication
+slug: digital-communication
 version: '2.0'
 title: Цифрова комунікація
 content_outline:

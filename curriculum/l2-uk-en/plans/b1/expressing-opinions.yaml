@@ -58,16 +58,16 @@ vocabulary_hints:
   - здаватися (to seem)
   - стверджувати (to claim)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Adjust opinion strength
   items: 25
 - type: fill-in
   focus: Complete opinion sentences
   items: 20
-- type: cloze
+- type: fill-in
   focus: Express opinions in scenarios
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write opinion paragraphs
   items: 10
 focus: vocabulary

@@ -45,7 +45,7 @@ activity_hints:
 - type: fill-in
   focus: Complete health sentences
   items: 20
-- type: cloze
+- type: fill-in
   focus: Health consultation scenarios
   items: 15
 - type: quiz

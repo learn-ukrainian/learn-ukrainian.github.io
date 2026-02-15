@@ -49,7 +49,7 @@ activity_hints:
 - type: fill-in
   focus: Complete mixed conditionals
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Create conditional chains
   items: 20
 - type: error-correction

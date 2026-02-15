@@ -49,7 +49,7 @@ vocabulary_hints:
   - зневажливий (dismissive)
   - інтенсифікація (intensification)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Create diminutives from base forms
   items: 25
 - type: quiz
@@ -58,7 +58,7 @@ activity_hints:
 - type: fill-in
   focus: Complete with appropriate diminutive
   items: 15
-- type: cloze
+- type: fill-in
   focus: Match diminutive to situation
   items: 10
 focus: grammar

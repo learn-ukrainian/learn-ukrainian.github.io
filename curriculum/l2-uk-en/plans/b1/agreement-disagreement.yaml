@@ -59,10 +59,10 @@ vocabulary_hints:
   - спростовувати (to refute)
   - підтримувати (to support)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Debate scenarios
   items: 20
-- type: cloze
+- type: fill-in
   focus: Adjust agreement intensity
   items: 20
 - type: fill-in

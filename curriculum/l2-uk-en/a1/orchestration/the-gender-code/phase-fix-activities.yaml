@@ -1,0 +1,167 @@
+- type: sorting
+  id: gender-sorting-hat
+  instruction: "Sort the following words into the correct gender box based on their endings."
+  groups:
+    - name: "Masculine (Він)"
+      items:
+        - "брат"
+        - "стіл"
+        - "дім"
+        - "день"
+        - "тато"
+        - "собака"
+    - name: "Feminine (Вона)"
+      items:
+        - "сестра"
+        - "мама"
+        - "книга"
+        - "земля"
+        - "ніч"
+    - name: "Neuter (Воно)"
+      items:
+        - "вікно"
+        - "місто"
+        - "море"
+        - "серце"
+        - "ім'я"
+
+- type: multiple-choice
+  id: identify-gender-ending
+  instruction: "Identify the gender of the word based on its ending."
+  items:
+    - question: "What is the gender of **вікно** (ends in -о)?"
+      options:
+        - "Neuter (Середній)"
+        - "Feminine (Жіночий)"
+        - "Masculine (Чоловічий)"
+      correct: "Neuter (Середній)"
+    - question: "What is the gender of **книга** (ends in -а)?"
+      options:
+        - "Feminine (Жіночий)"
+        - "Masculine (Чоловічий)"
+        - "Neuter (Середній)"
+      correct: "Feminine (Жіночий)"
+    - question: "What is the gender of **стіл** (ends in consonant)?"
+      options:
+        - "Masculine (Чоловічий)"
+        - "Feminine (Жіночий)"
+        - "Neuter (Середній)"
+      correct: "Masculine (Чоловічий)"
+
+- type: true-false
+  id: gender-rules-and-exceptions
+  instruction: "Decide if the statement about gender rules is True or False."
+  items:
+    - question: "Most words ending in a consonant are Masculine."
+      answer: true
+      explanation: "Consonant endings are the hallmark of the Masculine gender."
+    - question: "The word **тато** (dad) is Neuter because it ends in -o."
+      answer: false
+      explanation: "Biological gender overrides grammar. **Тато** is Masculine."
+    - question: "The word **собака** (dog) is Feminine because it ends in -a."
+      answer: false
+      explanation: "**Собака** is a tricky exception. It is Masculine."
+    - question: "Words ending in **-я** are usually Feminine."
+      answer: true
+      explanation: "-я is the soft version of -а, typical for Feminine nouns like **земля**."
+    - question: "Neuter nouns often end in **-о** or **-е**."
+      answer: true
+      explanation: "These round vowels are the signature of the Neuter gender."
+    - question: "The word **день** (day) is Masculine."
+      answer: true
+      explanation: "Even though it ends in a soft sign, **день** is Masculine."
+    - question: "The word **ніч** (night) is Masculine."
+      answer: false
+      explanation: "**Ніч** ends in a soft sign but is Feminine (Family 3)."
+    - question: "Words ending in **-а** are never Masculine."
+      answer: false
+      explanation: "Exceptions exist! **Тато** (dad) and **Микола** (Mykola) are Masculine."
+
+- type: match
+  id: match-family-examples
+  instruction: "Match the word to its Declension Family description."
+  pairs:
+    - item: "Мама (ends in -а)"
+      match: "Family 1 (Mostly Feminine)"
+    - item: "Дім (consonant)"
+      match: "Family 2 (Masculine)"
+    - item: "Вікно (ends in -о)"
+      match: "Family 2 (Neuter)"
+    - item: "Ніч (soft consonant)"
+      match: "Family 3 (Feminine)"
+    - item: "Ім'я (ends in -я, grows suffix)"
+      match: "Family 4 (Neuter)"
+
+- type: multiple-choice
+  id: exception-spotter
+  instruction: "Find the word that does NOT belong to the group (The Exception)."
+  items:
+    - question: "Which of these is NOT Feminine?"
+      options:
+        - "собака"
+        - "сестра"
+        - "мама"
+        - "земля"
+      correct: "собака"
+    - question: "Which of these is NOT Neuter?"
+      options:
+        - "тато"
+        - "вікно"
+        - "море"
+        - "місто"
+      correct: "тато"
+    - question: "Which of these is NOT Masculine?"
+      options:
+        - "ніч"
+        - "стіл"
+        - "дім"
+        - "день"
+      correct: "ніч"
+
+- type: multiple-choice
+  id: family-4-recognition
+  instruction: "Identify the unique trait of Family 4 (The 'Changelings')."
+  items:
+    - question: "What makes words like **ім'я** (name) and **теля** (calf) special?"
+      options:
+        - "They look Feminine (-a/-ya) but are Neuter."
+        - "They are always Masculine."
+        - "They never change their ending."
+      correct: "They look Feminine (-a/-ya) but are Neuter."
+    - question: "Which gender do Family 4 words belong to?"
+      options:
+        - "Neuter"
+        - "Feminine"
+        - "Masculine"
+      correct: "Neuter"
+
+- type: match
+  id: soft-sign-challenge
+  instruction: "Match the word ending in soft sign (-ь) to its correct gender."
+  pairs:
+    - item: "День (Day)"
+      match: "Masculine (Family 2)"
+    - item: "Ніч (Night)"
+      match: "Feminine (Family 3)"
+    - item: "Біль (Pain)"
+      match: "Masculine (Family 2)"
+    - item: "Сіль (Salt)"
+      match: "Feminine (Family 3)"
+
+- type: sorting
+  id: biological-vs-grammatical
+  instruction: "Sort these words based on whether their gender is determined by Ending Rules or Biological Meaning."
+  groups:
+    - name: "Grammatical Rule (Ending)"
+      items:
+        - "стіл"
+        - "вікно"
+        - "книга"
+        - "місто"
+        - "море"
+        - "ніч"
+    - name: "Biological Meaning (Override)"
+      items:
+        - "тато"
+        - "дідусь"
+        - "Микола"

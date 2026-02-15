@@ -1,8 +1,0 @@
----
-module: c1-hist-098
-level: C1-HIST
-slug: zakhid-1994
-version: '1.0'
-id: c1-hist-098
-build:
-  last_modified: '2026-01-26'

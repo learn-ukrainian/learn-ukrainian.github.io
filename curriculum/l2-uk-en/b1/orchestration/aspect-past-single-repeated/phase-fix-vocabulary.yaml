@@ -1,0 +1,136 @@
+- example: Одного разу ми пішли в ліс.
+  ipa: /ɔdˈnɔɦɔ ˈrɑzʊ/
+  lemma: одного разу
+  notes: Classic storytelling opener
+  pos: adverb
+  translation: once / one day
+- example: Я щодня читаю новини.
+  ipa: /ʃtʃɔˈdnʲɑ/
+  lemma: щодня
+  notes: Marker for imperfective aspect (routine)
+  pos: adverb
+  translation: every day
+- example: Ми часто гуляли в парку.
+  ipa: /ˈtʃɑstɔ/
+  lemma: часто
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: often
+- example: Іноді я люблю побути на самоті.
+  ipa: /ˈinɔdʲi/
+  lemma: іноді
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: sometimes
+- example: Зазвичай я снідаю вдома.
+  ipa: /zɑzʋɪˈtʃɑi̯/
+  lemma: зазвичай
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: usually
+- example: Того разу він переміг.
+  ipa: /ˈtɔɦɔ ˈrɑzʊ/
+  lemma: того разу
+  notes: Refers to a specific instance (perfective)
+  pos: adverb
+  translation: that time
+- example: Того дня йшов дощ.
+  ipa: /ˈtɔɦɔ ˈdnʲɑ/
+  lemma: того дня
+  notes: Refers to a specific day (perfective)
+  pos: adverb
+  translation: that day
+- example: Він завжди приходить вчасно.
+  ipa: /zɑu̯ˈʒdɪ/
+  lemma: завжди
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: always
+- example: Я ніколи не бачив слона.
+  ipa: /nʲiˈkɔlɪ/
+  lemma: ніколи
+  notes: Used with double negative (ніколи не...)
+  pos: adverb
+  translation: never
+- example: Ми рідко бачимося.
+  ipa: /ˈrʲidkɔ/
+  lemma: рідко
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: rarely
+- ipa: /reɦʊˈlʲɑrnɔ/
+  lemma: регулярно
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: regularly
+- ipa: /pɔsˈtʲii̯nɔ/
+  lemma: постійно
+  notes: Marker for imperfective aspect
+  pos: adverb
+  translation: constantly
+- example: Я вперше тут.
+  ipa: /ˈu̯pɛrʃe/
+  lemma: вперше
+  notes: Marker for perfective aspect
+  pos: adverb
+  translation: for the first time
+- ipa: /ʋɔsˈtɑnnʲe/
+  lemma: востаннє
+  notes: Marker for perfective aspect
+  pos: adverb
+  translation: for the last time
+- ipa: /neɔdnɔrɑˈzɔʋɔ/
+  lemma: неодноразово
+  notes: Formal marker for repeated action
+  pos: adverb
+  translation: repeatedly
+- ipa: /ʋʋɛˈtʃɛrʲi/
+  lemma: ввечері
+  notes: Time marker
+  pos: adverb
+  translation: in the evening
+- ipa: /ʋɪˈrʲiʃɪtɪ/
+  lemma: вирішити
+  notes: To decide (perfective)
+  pos: verb
+  translation: to decide
+- ipa: /ˈtʃɔrnɪi̯/
+  lemma: чорний
+  notes: Color
+  pos: adjective
+  translation: black
+- ipa: /rɔˈbɔtɑ/
+  lemma: робота
+  notes: Job / Work
+  pos: noun
+  translation: work
+- ipa: /ʋɑʒˈlɪʋɪi̯/
+  lemma: важливий
+  notes: Important
+  pos: adjective
+  translation: important
+- ipa: /zɑˈtɔr/
+  lemma: затор
+  notes: Traffic jam
+  pos: noun
+  translation: traffic jam
+- ipa: /zɑdɔˈʋɔlɛnnʲɑ/
+  lemma: задоволення
+  notes: Pleasure
+  pos: noun
+  translation: pleasure
+- ipa: /ˈsɔnʲɑtʃnɪi̯/
+  lemma: сонячний
+  notes: Sunny
+  pos: adjective
+  translation: sunny
+- ipa: /strɑʃˈnɪi̯/
+  lemma: страшний
+  notes: Scary / Terrible
+  pos: adjective
+  translation: terrible
+- ipa: /ˈsprau̯ʒnʲii̯/
+  lemma: справжній
+  notes: Real / Authentic
+  pos: adjective
+  translation: real

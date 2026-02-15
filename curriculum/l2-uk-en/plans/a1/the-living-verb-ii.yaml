@@ -53,7 +53,7 @@ activity_hints:
 - type: fill-in
   focus: Conjugate Second Conjugation verbs
   items: 30
-- type: group-sort
+- type: match-up
   focus: Sort verbs by conjugation type
   items: 20
 - type: fill-in

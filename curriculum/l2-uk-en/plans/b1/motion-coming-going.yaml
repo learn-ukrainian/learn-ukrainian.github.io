@@ -1,7 +1,7 @@
 module: b1-17
 level: B1
 sequence: 17
-slug: 17-motion-coming-going
+slug: motion-coming-going
 version: '2.0'
 title: 'Рух: Прибуття та вихід'
 subtitle: Motion - Coming & Going
@@ -55,7 +55,7 @@ activity_hints:
 - type: fill-in
   focus: Change direction (вхід → вихід)
   items: 10+
-- type: cloze
+- type: fill-in
   focus: Narrative with movement
   items: 12+
 - type: match-up

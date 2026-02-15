@@ -48,13 +48,13 @@ activity_hints:
 - type: fill-in
   focus: Complete temporal sentences
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Sequence events
   items: 20
 - type: error-correction
   focus: Fix temporal clause errors
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write temporal narratives
   items: 10
 focus: grammar

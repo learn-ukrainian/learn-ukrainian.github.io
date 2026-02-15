@@ -1,0 +1,60 @@
+TRACK: "b1"
+LEVEL: "B1"
+SLUG: "ready-for-immersion"
+TOPIC_TITLE: "Готові до занурення"
+PLAN_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/ready-for-immersion.yaml"
+META_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/ready-for-immersion.yaml"
+CONTENT_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/ready-for-immersion.md"
+ACTIVITIES_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/ready-for-immersion.yaml"
+VOCAB_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/vocabulary/ready-for-immersion.yaml"
+RESEARCH_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/research/ready-for-immersion-research.md"
+REVIEW_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/review/ready-for-immersion-review.md"
+QUICK_REF_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/B1.md"
+SCHEMA_PATH: "/Users/krisztiankoos/projects/learn-ukrainian/schemas/activities-b1.schema.json"
+WORD_TARGET: "4000"
+OVERSHOOT_TARGET: "8000"
+SKILL_IDENTITY: "Patient & Supportive Ukrainian Tutor"
+PERSONA_FLAVOR: "The Helpful Neighbor"
+PERSONA_VOICE: "Senior Language & Culture Specialist"
+PERSONA_ROLE: "Exchange Student Mentor"
+IMMERSION_RULE: "B1.0 Bridge (M01-05): 85% immersion target. English allowed for metalanguage explanations where pedagogical clarity is prioritized."
+IMMERSION_PERCENT: "85"
+IMMERSION_TARGET: "85"
+ENGAGEMENT_MIN: "6"
+EXAMPLE_MIN: "15"
+SECTION_BUDGET_TABLE: |
+  | Section | Target Words |
+  |---------|-------------|
+  | Вступ: Метамова та ідентичність | 250 |
+  | Діагностичне оцінювання: Базова термінологія | 400 |
+  | Частини мови: Огляд системи | 220 |
+  | Дієслівна термінологія: Час та Вид | 220 |
+  | Моделі граматичних пояснень | 220 |
+  | Будова речення: Синтаксис | 400 |
+  | Розуміння граматичних пояснень | 550 |
+  | Практичні вправи: Тест на виживання | 650 |
+  | Міні-діалоги: Метамова в контексті | 650 |
+  | Підсумок: Готовність до занурення | 440 |
+  | **TOTAL** | **4000** |
+ACTIVITY_MIN: "12"
+ACTIVITY_MAX: "16"
+ACTIVITY_COUNT_TARGET: "12-16"
+ITEMS_MIN: "6"
+REQUIRED_TYPES: "fill-in, quiz, match-up"
+PRIORITY_TYPES: "fill-in, quiz, match-up"
+ALLOWED_ACTIVITY_TYPES: "fill-in, quiz, match-up, true-false, select, essay-response, critical-analysis, error-correction"
+FORBIDDEN_ACTIVITY_TYPES: "none"
+VOCAB_COUNT_TARGET: "15"
+MODULE_NUM: "5"
+PREV_MODULE: "4"
+AUDIT_WORD_COUNT: "5236"
+WORD_PERCENT: "130"
+ACTIVITY_COUNT: "13"
+VOCAB_COUNT: "20"
+ENGAGEMENT_COUNT: "13"
+AUDIT_STATUS: "PASS"
+TIER_GUIDANCE: |
+  - Core level review (Tier 2).
+  - Check for pedagogical clarity in metalanguage explanations.
+  - Verify 85% immersion balance.
+  - Ensure activities are challenging but accessible for B1.

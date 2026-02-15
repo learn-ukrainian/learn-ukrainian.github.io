@@ -1,8 +1,0 @@
----
-module: c1-hist-110
-level: C1-HIST
-slug: suchasna-dezinformatsiia
-version: '1.0'
-id: c1-hist-110
-build:
-  last_modified: '2026-01-26'

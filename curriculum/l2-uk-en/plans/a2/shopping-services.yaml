@@ -75,6 +75,7 @@ grammar:
 - Accusative for prices and objects
 - Instrumental for means (карткою, готівкою)
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.5 [Vocabulary Expansion]
 persona:
   voice: Encouraging Cultural Guide

@@ -64,13 +64,13 @@ activity_hints:
 - type: match-up
   focus: Professional noun phrases
   items: 25
-- type: cloze
+- type: fill-in
   focus: Workplace scenarios
   items: 20
 - type: fill-in
   focus: Complete professional texts
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write professional messages
   items: 10
 focus: vocabulary

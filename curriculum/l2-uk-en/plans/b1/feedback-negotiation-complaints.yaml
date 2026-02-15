@@ -58,7 +58,7 @@ vocabulary_hints:
   - компенсація (compensation)
   - поступка (concession)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Complete feedback and complaint dialogues
   items: 12
 - type: fill-in

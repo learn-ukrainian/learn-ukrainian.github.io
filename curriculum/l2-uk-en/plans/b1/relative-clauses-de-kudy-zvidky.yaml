@@ -62,7 +62,7 @@ activity_hints:
 - type: fill-in
   focus: де/куди/звідки selection
   items: 25
-- type: unjumble
+- type: error-correction
   focus: Combine with place relatives
   items: 20
 - type: match-up

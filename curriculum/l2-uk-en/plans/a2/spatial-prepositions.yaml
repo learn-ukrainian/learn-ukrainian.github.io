@@ -1,7 +1,7 @@
 module: a2-07
 level: A2
 sequence: 7
-slug: 07-spatial-prepositions
+slug: spatial-prepositions
 version: '2.0'
 title: Spatial Prepositions
 subtitle: Location and Motion
@@ -97,7 +97,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Прийменник
   type: reference
   notes: Complete preposition system
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.1
 persona:
   voice: Encouraging Cultural Guide

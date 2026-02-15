@@ -67,7 +67,7 @@ activity_hints:
 - type: match-up
   focus: Match process word to context
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write about changes
   items: 10
 focus: vocabulary

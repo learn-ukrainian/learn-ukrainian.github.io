@@ -1,7 +1,7 @@
 module: a2-12
 level: A2
 sequence: 12
-slug: 12-aspect-introduction
+slug: aspect-introduction
 version: '2.0'
 title: Aspect Introduction
 subtitle: Process vs. Result
@@ -96,7 +96,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Вид_дієслова
   type: reference
   notes: Complete aspect system overview
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

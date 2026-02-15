@@ -1,7 +1,7 @@
 module: a2-35
 level: A2
 sequence: 35
-slug: 35-checkpoint
+slug: checkpoint
 version: '2.0'
 title: Checkpoint
 subtitle: Complex Sentences & Health
@@ -68,7 +68,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
   type: reference
   notes: Synthesized logic for coordinating multiple subordinate clauses
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

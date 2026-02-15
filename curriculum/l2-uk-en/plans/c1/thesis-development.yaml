@@ -1,7 +1,7 @@
 module: c1-009
 level: C1
 sequence: 9
-slug: 09-thesis-development
+slug: thesis-development
 version: '2.0'
 title: Розвиток наукової тези
 content_outline:

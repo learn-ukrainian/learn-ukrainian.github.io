@@ -74,6 +74,7 @@ grammar:
 - School subjects vocabulary
 - Grades, exams, and academic terms
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.5 [Vocabulary Expansion]
 persona:
   voice: Encouraging Cultural Guide

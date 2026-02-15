@@ -1,7 +1,7 @@
 module: c1-033
 level: C1
 sequence: 33
-slug: 33-case-studies
+slug: case-studies
 version: '2.0'
 title: Практичні кейси
 content_outline:

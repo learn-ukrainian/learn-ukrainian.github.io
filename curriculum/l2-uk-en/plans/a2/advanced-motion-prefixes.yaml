@@ -1,7 +1,7 @@
 module: a2-37
 level: A2
 sequence: 37
-slug: 37-advanced-motion-prefixes
+slug: advanced-motion-prefixes
 version: '2.0'
 title: Advanced Motion Prefixes
 subtitle: Crossing, Passing, and Approaching
@@ -57,7 +57,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Префікси_дієслів_руху
   type: reference
   notes: Detailed semantics of spatial prefixes with motion stems
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.3
 persona:
   voice: Encouraging Cultural Guide

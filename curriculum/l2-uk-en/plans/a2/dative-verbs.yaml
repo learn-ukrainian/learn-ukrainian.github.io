@@ -1,7 +1,7 @@
 module: a2-03
 level: A2
 sequence: 3
-slug: 03-dative-verbs
+slug: dative-verbs
 version: '2.0'
 title: Dative Verbs
 subtitle: Verbs That Demand the Dative Case
@@ -96,7 +96,7 @@ sources:
   url: https://uk.wiktionary.org/
   type: reference
   notes: Case requirements for common verbs
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.1
 persona:
   voice: Encouraging Cultural Guide

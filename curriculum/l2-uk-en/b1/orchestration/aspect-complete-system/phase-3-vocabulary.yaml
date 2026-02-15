@@ -1,0 +1,118 @@
+- ipa: /dɔ.kɔˈna.nɪj ʋɪd/
+  lemma: доконаний вид
+  notes: Focuses on the result or completion of an action
+  pos: phrase
+  translation: perfective aspect
+- ipa: /ne.dɔ.kɔˈna.nɪj ʋɪd/
+  lemma: недоконаний вид
+  notes: Focuses on the process, duration, or repetition of an action
+  pos: phrase
+  translation: imperfective aspect
+- gender: m
+  ipa: /prɔˈt͡sɛs/
+  lemma: процес
+  pos: noun
+  translation: process
+- gender: m
+  ipa: /re.zulʲˈtat/
+  lemma: результат
+  pos: noun
+  translation: result
+- gender: f
+  ipa: /trɪˈʋa.lʲisʲtʲ/
+  lemma: тривалість
+  pos: noun
+  translation: duration
+- gender: n
+  ipa: /pɔʋˈtɔ.re.nʲːa/
+  lemma: повторення
+  pos: noun
+  translation: repetition
+- gender: m
+  ipa: /kɔnˈtɛkst/
+  lemma: контекст
+  pos: noun
+  translation: context
+- gender: m
+  ipa: /ˈmar.ker/
+  lemma: маркер
+  notes: A word indicating which aspect to use (e.g., often, suddenly)
+  pos: noun
+  translation: marker
+- gender: n
+  ipa: /zaˈʋɛr.ʃe.nʲːa/
+  lemma: завершення
+  pos: noun
+  translation: completion
+- ipa: /ɔd.nɔ.raˈzɔ.ʋa ˈdʲi.ja/
+  lemma: одноразова дія
+  pos: phrase
+  translation: single action
+- gender: m
+  ipa: /ˈfɔ.kus/
+  lemma: фокус
+  pos: noun
+  translation: focus
+- gender: m
+  ipa: /ˈna.mir/
+  lemma: намір
+  pos: noun
+  translation: intention
+- gender: f
+  ipa: /pɔ.sʲlʲiˈdɔʋ.nʲisʲtʲ/
+  lemma: послідовність
+  pos: noun
+  translation: sequence
+- aspect: imperfective
+  ipa: /zdaˈʋa.tɪ/
+  lemma: здавати
+  notes: Process or attempt, result is not guaranteed
+  pos: verb
+  translation: to take (an exam) / to hand over
+- aspect: perfective
+  ipa: /zda.tɪ/
+  lemma: здати
+  notes: Successful completion
+  pos: verb
+  translation: to pass (an exam) / to hand over (successfully)
+- aspect: imperfective
+  ipa: /ˈʋt͡ʃɪ.tɪ/
+  lemma: вчити
+  pos: verb
+  translation: to study / to learn / to teach
+- aspect: perfective
+  ipa: /ˈʋɪʋ.t͡ʃɪ.tɪ/
+  lemma: вивчити
+  pos: verb
+  translation: to learn (completely) / to master
+- aspect: imperfective
+  ipa: /ˈstu.ka.tɪ/
+  lemma: стукати
+  pos: verb
+  translation: to knock (repeatedly)
+- aspect: perfective
+  ipa: /ˈstuk.nu.tɪ/
+  lemma: стукнути
+  pos: verb
+  translation: to knock (once)
+- aspect: imperfective
+  ipa: /krɪˈt͡ʃa.tɪ/
+  lemma: кричати
+  pos: verb
+  translation: to shout / to scream
+- aspect: perfective
+  ipa: /ˈkrɪk.nu.tɪ/
+  lemma: крикнути
+  pos: verb
+  translation: to shout (once) / to cry out
+- aspect: imperfective
+  ipa: /rɔˈbɪ.tɪ/
+  lemma: робити
+  pos: verb
+  translation: to do / to make
+- aspect: perfective
+  ipa: /zrɔˈbɪ.tɪ/
+  lemma: зробити
+  pos: verb
+  translation: to have done / to complete
+

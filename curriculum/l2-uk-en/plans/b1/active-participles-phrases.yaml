@@ -52,7 +52,7 @@ activity_hints:
 - type: quiz
   focus: Identify participle types
   items: 25
-- type: cloze
+- type: fill-in
   focus: Participle to relative clause
   items: 20
 - type: error-correction

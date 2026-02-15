@@ -1,7 +1,7 @@
 module: a2-13
 level: A2
 sequence: 13
-slug: 13-the-completed-past
+slug: the-completed-past
 version: '2.0'
 title: The Completed Past
 subtitle: Using Perfective Aspect
@@ -95,7 +95,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Дієслово
   type: reference
   notes: Past tense formation patterns
-immersion: 40-50% Ukrainian
+immersion: 50-60% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

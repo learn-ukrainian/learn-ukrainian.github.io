@@ -83,6 +83,7 @@ grammar:
 - Check-in phrases (заселення, виселення)
 - Requests and complaints
 register: розмовний
+immersion: 75-90% Ukrainian
 phase: A2.6 [Practical]
 persona:
   voice: Encouraging Cultural Guide

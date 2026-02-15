@@ -1,7 +1,7 @@
 module: a2-39
 level: A2
 sequence: 39
-slug: 39-adjective-suffixes-qualities
+slug: adjective-suffixes-qualities
 version: '2.0'
 title: Adjective Suffixes — Qualities
 subtitle: Making Descriptions Richer
@@ -48,7 +48,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
   type: reference
   notes: Rules for diminutive and intensive adjective suffixes
-immersion: 65-75% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.3
 persona:
   voice: Encouraging Cultural Guide

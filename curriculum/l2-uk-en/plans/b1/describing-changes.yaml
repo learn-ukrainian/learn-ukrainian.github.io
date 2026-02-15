@@ -64,10 +64,10 @@ activity_hints:
 - type: fill-in
   focus: Describe changes in context
   items: 20
-- type: cloze
+- type: fill-in
   focus: Rephrase change descriptions
   items: 15
-- type: cloze
+- type: fill-in
   focus: Narrate trends
   items: 10
 focus: vocabulary

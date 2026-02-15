@@ -1,7 +1,7 @@
 module: b1-12
 level: B1
 sequence: 12
-slug: 12-aspect-pairs-essential-40
+slug: aspect-pairs-essential-40
 version: '2.0'
 title: 'Видові пари: 40 найважливіших'
 subtitle: Essential Aspect Pairs - The 40 most common verb pairs
@@ -53,7 +53,7 @@ activity_hints:
 - type: fill-in
   focus: Choose correct form in context
   items: 20+
-- type: group-sort
+- type: true-false
   focus: By formation type (prefix, suffix, suppletive)
   items: 40+
 - type: quiz

@@ -1,7 +1,7 @@
 module: a2-22
 level: A2
 sequence: 22
-slug: 22-if-i-were
+slug: if-i-were
 version: '2.0'
 title: If I Were
 subtitle: The Conditional Mood
@@ -50,7 +50,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Умовний_спосіб
   type: reference
   notes: Deep dive into hypothetical vs real conditions
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.2
 persona:
   voice: Encouraging Cultural Guide

@@ -1,7 +1,7 @@
 module: a2-38
 level: A2
 sequence: 38
-slug: 38-action-verb-prefixes
+slug: action-verb-prefixes
 version: '2.0'
 title: Action Verb Prefixes
 subtitle: Redoing, Finishing, and Opening
@@ -56,7 +56,7 @@ sources:
   url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
   type: reference
   notes: Functional analysis of Po-, Za-, Vy-, and Pere- in action stems
-immersion: 40-50% Ukrainian
+immersion: 60-75% Ukrainian
 phase: A2.3
 persona:
   voice: Encouraging Cultural Guide

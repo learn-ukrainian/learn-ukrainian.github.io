@@ -63,7 +63,7 @@ vocabulary_hints:
   - предикативний (predicative)
   - основа дієслова (verb stem)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Verb to passive participle
   items: 25
 - type: fill-in

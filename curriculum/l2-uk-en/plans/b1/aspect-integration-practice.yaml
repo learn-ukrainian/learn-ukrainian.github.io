@@ -1,7 +1,7 @@
 module: b1-14
 level: B1
 sequence: 14
-slug: 14-aspect-integration-practice
+slug: aspect-integration-practice
 version: '2.0'
 title: 'Інтеграція виду: практика'
 subtitle: Aspect Integration Practice
@@ -47,7 +47,7 @@ vocabulary_hints:
   - врешті-решт (eventually)
   - зрештою (after all)
 activity_hints:
-- type: cloze
+- type: fill-in
   focus: Extended narrative with aspect choices
   items: 15+
 - type: fill-in

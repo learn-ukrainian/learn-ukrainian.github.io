@@ -1,8 +1,0 @@
----
-module: c1-hist-102
-level: C1-HIST
-slug: syntez-zakhid-2022
-version: '1.0'
-id: c1-hist-102
-build:
-  last_modified: '2026-01-26'

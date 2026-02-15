@@ -49,10 +49,10 @@ activity_hints:
 - type: fill-in
   focus: Complete causal/result sentences
   items: 25
-- type: cloze
+- type: fill-in
   focus: Cause to result conversion
   items: 20
-- type: unjumble
+- type: error-correction
   focus: Link cause and effect
   items: 15
 - type: translate

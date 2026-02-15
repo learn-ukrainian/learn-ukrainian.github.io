@@ -45,7 +45,7 @@ vocabulary_hints:
   - зрозумілість (clarity)
   - стиль (style)
 activity_hints:
-- type: unjumble
+- type: error-correction
   focus: Build multi-clause sentences
   items: 25
 - type: error-correction
@@ -54,7 +54,7 @@ activity_hints:
 - type: fill-in
   focus: Complete integrated sentences
   items: 15
-- type: cloze
+- type: fill-in
   focus: Write complex paragraphs
   items: 10
 focus: grammar

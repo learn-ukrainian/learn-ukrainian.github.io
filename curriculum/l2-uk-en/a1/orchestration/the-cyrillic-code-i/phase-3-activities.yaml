@@ -1,0 +1,215 @@
+- type: group-sort
+  title: 'Сортування літер: Друзі та незнайомці'
+  instruction: 'Розподіліть літери за трьома групами: Справжні друзі (як в англійській), Фальшиві друзі (виглядають знайомо, але звучать інакше) та Нові знайомі (нові форми).'
+  groups:
+    - name: 'Справжні друзі (True Friends)'
+      items: ['А', 'Е', 'І', 'О', 'К', 'М', 'Т']
+    - name: 'Фальшиві друзі (False Friends)'
+      items: ['В', 'Н', 'Р', 'С', 'У', 'Х']
+    - name: 'Нові знайомі (New Shapes)'
+      items: ['Б', 'Д', 'З', 'Л', 'П', 'Ф']
+
+- type: match-up
+  title: 'Знайдіть пару: Велика та мала літери'
+  instruction: 'З’єднайте велику літеру з її малою парою.'
+  pairs:
+    - left: 'Д'
+      right: 'д'
+    - left: 'Б'
+      right: 'б'
+    - left: 'Р'
+      right: 'р'
+    - left: 'Л'
+      right: 'л'
+    - left: 'М'
+      right: 'м'
+    - left: 'Н'
+      right: 'н'
+    - left: 'Ф'
+      right: 'ф'
+    - left: 'Е'
+      right: 'е'
+
+- type: match-up
+  title: 'Українські слова та їх значення'
+  instruction: 'З’єднайте українське слово з його англійським перекладом.'
+  pairs:
+    - left: 'Банк'
+      right: 'Bank'
+    - left: 'Метро'
+      right: 'Metro'
+    - left: 'Кафе'
+      right: 'Cafe'
+    - left: 'Кіт'
+      right: 'Cat'
+    - left: 'Мама'
+      right: 'Mom'
+    - left: 'План'
+      right: 'Plan'
+    - left: 'Факт'
+      right: 'Fact'
+    - left: 'Так'
+      right: 'Yes'
+
+- type: quiz
+  title: 'Перевірка звуків: Фальшиві друзі'
+  instruction: 'Оберіть правильний звук для виділеної літери.'
+  items:
+    - question: 'Який звук позначає літера «Р» у слові «Ресторан»?'
+      explanation: "Літера «Р» в українській мові читається як [r] (р-р-р), а не як [p]."
+      options:
+        - text: '[r] (як у "roar")'
+          correct: true
+        - text: '[p] (як у "park")'
+          correct: false
+        - text: '[b] (як у "book")'
+          correct: false
+        - text: '[n] (як у "no")'
+          correct: false
+    - question: 'Який звук позначає літера «Н» у слові «Ні»?'
+      explanation: "Літера «Н» виглядає як H, але читається як [n]."
+      options:
+        - text: '[n] (як у "no")'
+          correct: true
+        - text: '[h] (як у "hi")'
+          correct: false
+        - text: '[k] (як у "kite")'
+          correct: false
+        - text: '[m] (як у "mom")'
+          correct: false
+    - question: 'Який звук позначає літера «С» у слові «Суп»?'
+      explanation: "Літера «С» завжди читається як [s], ніколи як [k]."
+      options:
+        - text: '[s] (як у "snake")'
+          correct: true
+        - text: '[k] (як у "cat")'
+          correct: false
+        - text: '[c] (як у "center")'
+          correct: false
+        - text: '[z] (як у "zoo")'
+          correct: false
+    - question: 'Який звук позначає літера «В» у слові «Віза»?'
+      explanation: "Літера «В» читається як [v] або [w], але не як [b]."
+      options:
+        - text: '[v] (як у "very")'
+          correct: true
+        - text: '[b] (як у "bee")'
+          correct: false
+        - text: '[f] (як у "face")'
+          correct: false
+        - text: '[w] (як у "we")'
+          correct: false
+    - question: 'Який звук позначає літера «Х» у слові «Хата»?'
+      explanation: "Літера «Х» позначає звук [x], як у шотландському «Loch»."
+      options:
+        - text: '[x] (як у "Loch")'
+          correct: true
+        - text: '[k] (як у "kite")'
+          correct: false
+        - text: '[h] (як у "hi")'
+          correct: false
+        - text: '[ks] (як у "box")'
+          correct: false
+    - question: 'Який звук позначає літера «У» у слові «Урок»?'
+      explanation: "Літера «У» виглядає як Y, але читається як [u]."
+      options:
+        - text: '[u] (як у "moon")'
+          correct: true
+        - text: '[y] (як у "yes")'
+          correct: false
+        - text: '[a] (як у "father")'
+          correct: false
+        - text: '[i] (як у "meet")'
+          correct: false
+
+- type: anagram
+  title: 'Розшифруйте слова'
+  instruction: 'Складіть правильне слово з перемішаних літер. Підказка: це слова з уроку.'
+  items:
+    - scrambled: 'ОМТЕР'
+      answer: 'МЕТРО'
+      hint: 'Підземний транспорт'
+    - scrambled: 'ФАКЕ'
+      answer: 'КАФЕ'
+      hint: 'Місце, де п’ють каву'
+    - scrambled: 'КБАН'
+      answer: 'БАНК'
+      hint: 'Фінансова установа'
+    - scrambled: 'МАМА'
+      answer: 'МАМА'
+      hint: 'Найрідніша людина'
+    - scrambled: 'ЛПАН'
+      answer: 'ПЛАН'
+      hint: 'Стратегія дій'
+    - scrambled: 'ТІК'
+      answer: 'КІТ'
+      hint: 'Пухнастий домашній улюбленець'
+
+- type: true-false
+  title: 'Правда чи міф?'
+  instruction: 'Визначте, чи є твердження правильним згідно з текстом уроку.'
+  items:
+    - statement: 'Українська абетка називається кирилицею.'
+      correct: true
+      explanation: 'Так, це правда. Вона названа на честь святого Кирила.'
+    - statement: 'В українській мові є літера «ё» (йо).'
+      correct: false
+      explanation: 'Ні, в українській мові немає літери «ё». Ми пишемо «йо» або «ьо».'
+    - statement: 'Літера «О» в українській мові завжди читається як [о], ніколи як [а].'
+      correct: true
+      explanation: 'Це золоте правило: «О» завжди чітка і ніколи не перетворюється на «а».'
+    - statement: 'Українська літера «В» читається як англійська «B» (bee).'
+      correct: false
+      explanation: 'Ні, літера «В» читається як [v] або [w]. Звук [b] позначає літера «Б».'
+    - statement: 'Літера «І» (з крапкою) є символом української ідентичності.'
+      correct: true
+      explanation: 'Так, вона відрізняє українську абетку від російської, де такої літери немає.'
+    - statement: 'Літера «С» може читатися як [k].'
+      correct: false
+      explanation: 'Ні, літера «С» завжди читається як [s] (як у слові sun).'
+
+- type: fill-in
+  title: 'Доповніть речення'
+  instruction: 'Оберіть правильне слово, щоб доповнити діалог.'
+  items:
+    - sentence: '— Це метро? — Так, це ________.'
+      answer: 'метро'
+      options: ['метро', 'кафе', 'банк', 'парк']
+      explanation: 'Логічна відповідь на запитання "Це метро?" — "Так, це метро".'
+    - sentence: '— Це суп? — Ні, це ________.'
+      answer: 'салат'
+      options: ['салат', 'метро', 'план', 'акт']
+      explanation: 'У діалозі з уроку: "Це суп? — Ні, це салат".'
+    - sentence: '— А це какао? — Так, ________.'
+      answer: 'какао'
+      options: ['какао', 'суп', 'салат', 'банк']
+      explanation: 'Підтвердження запитання: "Так, какао".'
+    - sentence: 'Мама і ________ у кафе.'
+      answer: 'тато'
+      options: ['тато', 'кіт', 'банк', 'план']
+      explanation: 'Мама і тато — логічна пара людей.'
+    - sentence: 'Це не дім, це ________.'
+      answer: 'банк'
+      options: ['банк', 'кіт', 'так', 'ні']
+      explanation: 'Банк — це будівля, як і дім, тому підходить за контекстом.'
+    - sentence: 'Це ________ міста.'
+      answer: 'план'
+      options: ['план', 'суп', 'кіт', 'рік']
+      explanation: 'План міста — стійке словосполучення.'
+
+- type: unjumble
+  title: 'Складіть речення'
+  instruction: 'Розставте слова у правильному порядку, щоб утворити речення.'
+  items:
+    - words: ['Це', 'метро']
+      answer: 'Це метро'
+    - words: ['Мама', 'і', 'тато']
+      answer: 'Мама і тато'
+    - words: ['Тут', 'кафе']
+      answer: 'Тут кафе'
+    - words: ['Це', 'мій', 'кіт']
+      answer: 'Це мій кіт'
+    - words: ['Так', 'це', 'план']
+      answer: 'Так, це план'
+    - words: ['Це', 'не', 'суп']
+      answer: 'Це не суп'
