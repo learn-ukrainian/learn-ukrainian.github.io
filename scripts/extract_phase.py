@@ -45,6 +45,37 @@ def _strip_code_fences(text: str) -> str:
     return text
 
 
+def _strip_dict_wrapper(text: str, tag: str) -> tuple[str, str | None]:
+    """Auto-strip single-key dict wrapper if YAML tag expects a bare list.
+
+    Gemini frequently wraps vocabulary/activities in a key like:
+        items:
+          - lemma: ...
+    or:
+        activities:
+          - type: quiz
+
+    This function detects and strips the wrapper, returning the bare list YAML.
+
+    Returns:
+        (cleaned_text, wrapper_key_or_None)
+    """
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError:
+        return text, None
+
+    if isinstance(data, dict) and len(data) == 1:
+        key = list(data.keys())[0]
+        value = data[key]
+        if isinstance(value, list):
+            # Re-serialize as bare list
+            cleaned = yaml.dump(value, allow_unicode=True, default_flow_style=False)
+            return cleaned, key
+
+    return text, None
+
+
 def _validate_yaml(text: str, tag: str) -> str | None:
     """Try to parse YAML text, return error string or None if valid."""
     try:
@@ -133,6 +164,10 @@ def main() -> int:
             cleaned = content
             if tag in YAML_TAGS:
                 cleaned = _strip_code_fences(content)
+                # Auto-strip single-key dict wrappers (e.g., `items:`, `activities:`)
+                cleaned, wrapper_key = _strip_dict_wrapper(cleaned, tag)
+                if wrapper_key:
+                    print(f"  🔧 {tag}: Auto-stripped '{wrapper_key}:' wrapper → bare list")
 
             # Determine output filename based on phase
             ext = ".yaml" if tag in YAML_TAGS else ".md"
@@ -154,10 +189,6 @@ def main() -> int:
                     data = yaml.safe_load(cleaned)
                     if isinstance(data, list):
                         print(f"     ✅ Valid YAML: {len(data)} items")
-                    elif isinstance(data, dict) and len(data) == 1:
-                        # Gemini wrapped in a key like `items:` — warn
-                        key = list(data.keys())[0]
-                        print(f"     ⚠️  YAML wrapped in '{key}:' — should be bare list")
                     else:
                         print(f"     ℹ️  YAML type: {type(data).__name__}")
         elif tag in result["truncated"]:

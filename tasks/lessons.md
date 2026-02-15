@@ -480,6 +480,25 @@
 
 ---
 
+## 2026-02-14 - Claude Context Is The Bottleneck
+
+**Mistake**: M04 rebuild consumed massive Claude context on orchestration overhead — manual content merging, multiple audit iterations, fix prompt assembly, stale background task notifications. Claude was acting as bricklayer, not architect.
+
+**Correction**: User said: "i am worried about the claude side... the bottleneck is claude. we should be doing this with gemini-gemini later as adversary teams."
+
+**Rule**:
+- **Claude = architect/dispatcher, NOT hands-on builder.** Minimize Claude's involvement in each module.
+- **Never use background tasks for Gemini calls** — they create stale notifications that flood context
+- **Gemini should self-fix** — send Gemini the audit log and let it fix, don't parse errors and craft fix prompts as Claude
+- **Script the merge** — content merging should be one script call, not manual Edit operations in Claude
+- **Future state: Gemini-Gemini adversary** — Yellow builds, Green reviews, Claude only intervenes on pipeline stalls
+- **Reduce audit iterations** — pre-validate naming/lint before running full audit
+- **Each module should cost Claude ~20 turns max**, not 50+
+
+**Applied**: -
+
+---
+
 ## Template for New Entries
 
 ```markdown

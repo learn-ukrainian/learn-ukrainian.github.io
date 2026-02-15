@@ -31,7 +31,7 @@ GRAMMAR_CONSTRAINTS = {
         'aspect': 'full',
         'participles': True,
         'subordinate_clauses': 'complex',
-        'max_words_per_sentence': 25,
+        'max_words_per_sentence': 30,
         'max_clauses': 4,
     },
     'B2': {
@@ -233,26 +233,26 @@ STAGE_ORDER = {
 ACTIVITY_COMPLEXITY = {
     'quiz': {
         'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 8},
-        'A2': {'min_len': 7, 'max_len': 15, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A1
-        'B1': {'min_len': 9, 'max_len': 20, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
-        'B1-vocab': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
-        'B1-culture': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
+        'A2': {'min_len': 5, 'max_len': 15, 'options': [4], 'min_items': 8},  # Lowered min_len to 5: short quiz prompts are valid
+        'B1': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len from 9→5: short quiz prompts are valid at B1
+        'B1-vocab': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
+        'B1-culture': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 8},  # Relaxed to 5 for factual questions (Issue #441)
-        'B2-history': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard (was 6, better alignment)
-        'B2-biography': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard
+        'B2-history': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
+        'B2-biography': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2-skills': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Skills: allow short factual questions (5+ words)
-        'C1': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 12 to 8
-        'C2': {'min_len': 10, 'max_len': 35, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 14 to 10
+        'C1': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
+        'C2': {'min_len': 5, 'max_len': 35, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
         # Seminar tracks - quiz is supplementary, focus is analytical work
-        'lit': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'b2-hist': {'min_len': 8, 'max_len': 25, 'options': [4], 'min_items': 5},
-        'c1-hist': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'c1-bio': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'lit': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'b2-hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
+        'c1-hist': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'c1-bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
         'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},
         'A2': {'pairs_min': 10, 'pairs_max': 12, 'min_items': 8},
-        'B1': {'pairs_min': 12, 'pairs_max': 14, 'min_items': 8},
+        'B1': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'C1': {'pairs_min': 8, 'pairs_max': 18, 'min_items': 6},
         'C2': {'pairs_min': 10, 'pairs_max': 18, 'min_items': 6},

@@ -23,7 +23,7 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
         "model": "gemini-3-flash-preview",
         "word_floor": 2500,
         "persona": "The Cultural Guide",
-        "immersion_range": [0.35, 0.75],
+        "immersion_range": [0.50, 0.90],
     },
     "b1": {
         "model": "gemini-3-flash-preview",
