@@ -138,24 +138,21 @@ EOF
 
 > **WARNING:** `HARD_MINIMUM_WORD_COUNT` is NOT in the initial placeholders. It is computed PER-SECTION in Step 2d from the meta's section word allocation. Putting the total module target here causes every section to be written at full module length (8x overshoot).
 
-**Activity config** — read from quick-ref and add to placeholders before Phase 3:
-```bash
-# After Phase 2, before Phase 3 dispatch, add activity placeholders:
-# Read these from the quick-ref or hardcode per level:
-# A1: 8 activities, 6-10 range, 12+ items, no cloze
-# A2: 10 activities, 8-12 range, 12+ items
-# B1 bridge: 8 activities, 6-10 range, 10+ items
-# B1 M06+: 10 activities, 8-12 range, 12+ items
-yq -i '.ACTIVITY_COUNT_TARGET = "8"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.ACTIVITY_MIN = "6"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.ACTIVITY_MAX = "10"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.ITEMS_MIN = "12"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.VOCAB_COUNT_TARGET = "20"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.FORBIDDEN_ACTIVITY_TYPES = "cloze"' "${ORCH_DIR}/placeholders.yaml"  # A1 specific
-yq -i '.ALLOWED_ACTIVITY_TYPES = "quiz, fill-in, match-up, anagram, unjumble, mark-the-words, reorder"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.REQUIRED_TYPES = "quiz, fill-in, match-up"' "${ORCH_DIR}/placeholders.yaml"
-yq -i '.PRIORITY_TYPES = "anagram, unjumble"' "${ORCH_DIR}/placeholders.yaml"
-```
+**Activity config** — before Phase 3 dispatch, read `placeholders.yaml` and add these fields (use `read_file` + `write_file`):
+
+| Field | A1 | A2 | B1 bridge (M01-M05) | B1 M06+ / B2+ |
+|-------|----|----|---------------------|---------------|
+| `ACTIVITY_COUNT_TARGET` | 8 | 10 | 8 | 10 |
+| `ACTIVITY_MIN` | 6 | 8 | 6 | 8 |
+| `ACTIVITY_MAX` | 10 | 12 | 10 | 12 |
+| `ITEMS_MIN` | 12 | 12 | 10 | 12 |
+| `VOCAB_COUNT_TARGET` | 20 | 25 | 20 | 30 |
+| `FORBIDDEN_ACTIVITY_TYPES` | cloze | — | — | — |
+| `ALLOWED_ACTIVITY_TYPES` | quiz, fill-in, match-up, anagram, unjumble, mark-the-words, reorder | (same + cloze) | (same + cloze) | (all types) |
+| `REQUIRED_TYPES` | quiz, fill-in, match-up | quiz, fill-in, match-up | quiz, fill-in | quiz, fill-in |
+| `PRIORITY_TYPES` | anagram, unjumble | anagram, unjumble | anagram, cloze | cloze, unjumble |
+
+Pick the column matching the track and module number, then write all fields into `placeholders.yaml`.
 
 ---
 
@@ -292,17 +289,17 @@ EXAMPLE_MIN=$(( $(yq '.example_min // 8' "${META_PATH}") ))
 
 > **CRITICAL: Per-section word target.** Each section gets its OWN `HARD_MINIMUM_WORD_COUNT` computed from the meta's section allocation — NOT the total module target. Passing the total causes catastrophic overshoot (8x).
 
-1. **Compute and write per-section placeholders** (MUST override before each dispatch):
-   ```bash
-   SECTION_ALLOC=$(yq ".content_outline.\"${SECTION_TITLE}\"" "${META_PATH}")
-   SECTION_HARD_MIN=$((SECTION_ALLOC * 3 / 2))  # 1.5x overshoot of THIS section only
-   yq -i ".SECTION_TITLE = \"${SECTION_TITLE}\"" "${ORCH_DIR}/placeholders.yaml"
-   yq -i ".HARD_MINIMUM_WORD_COUNT = \"${SECTION_HARD_MIN}\"" "${ORCH_DIR}/placeholders.yaml"
-   yq -i ".SECTION_ENGAGEMENT_MIN = \"$(( ENGAGEMENT_MIN > NUM_SECTIONS ? ENGAGEMENT_MIN / NUM_SECTIONS : 1 ))\"" "${ORCH_DIR}/placeholders.yaml"
-   yq -i ".SECTION_EXAMPLE_MIN = \"$(( EXAMPLE_MIN > NUM_SECTIONS ? EXAMPLE_MIN / NUM_SECTIONS : 3 ))\"" "${ORCH_DIR}/placeholders.yaml"
-   yq -i ".PREVIOUS_CONTENT_SUMMARY = \"${PREVIOUS_CONTENT_SUMMARY}\"" "${ORCH_DIR}/placeholders.yaml"
-   yq -i ".CALLOUT_TYPES_USED = \"${CALLOUT_TYPES_USED}\"" "${ORCH_DIR}/placeholders.yaml"
-   ```
+1. **Update placeholders.yaml with per-section values** (use `read_file` + `write_file` — no `yq -i`):
+
+   Read `${ORCH_DIR}/placeholders.yaml`, then write it back with these fields updated:
+   - `SECTION_TITLE`: current section name
+   - `HARD_MINIMUM_WORD_COUNT`: section's word allocation from meta × 1.5 (NOT the total module target)
+   - `SECTION_ENGAGEMENT_MIN`: module engagement min ÷ number of sections (at least 1)
+   - `SECTION_EXAMPLE_MIN`: module example min ÷ number of sections (at least 3)
+   - `PREVIOUS_CONTENT_SUMMARY`: H3 headers from all previous sections (for seam prevention)
+   - `CALLOUT_TYPES_USED`: callout types used in previous sections (for variety)
+
+   > **Example:** If meta says section "Це/Ось" has 400 words allocation → `HARD_MINIMUM_WORD_COUNT: "600"` (400 × 1.5).
 
 2. Fill template: `scripts/fill_template.py --template ... --placeholders ... --output ${ORCH_DIR}/phase-2-p2-${INDEX}-prompt.md --no-strict`
 
@@ -325,14 +322,9 @@ EXAMPLE_MIN=$(( $(yq '.example_min // 8' "${META_PATH}") ))
 6. Append: `cat "${ORCH_DIR}/phase-2-p2-${INDEX}-section_content.md" >> "${CONTENT_PATH}"`
 
 7. **Update seam context** (prevents repetition between sections):
-   ```bash
-   # Extract H3 headers from this section for next section's context
-   NEW_H3S=$(grep '^### ' "${ORCH_DIR}/phase-2-p2-${INDEX}-section_content.md" | head -10)
-   PREVIOUS_CONTENT_SUMMARY="${PREVIOUS_CONTENT_SUMMARY}\n${NEW_H3S}"
-   # Track callout types used (prevent duplicate callout types across sections)
-   NEW_CALLOUTS=$(grep -oP '\[![\w-]+\]' "${ORCH_DIR}/phase-2-p2-${INDEX}-section_content.md" | sort -u | tr '\n' ', ')
-   CALLOUT_TYPES_USED="${CALLOUT_TYPES_USED}${NEW_CALLOUTS}"
-   ```
+   - Read the extracted section file. Collect all `### ` headings and any `[!callout-type]` markers.
+   - Append the H3 headings to `PREVIOUS_CONTENT_SUMMARY` and the callout types to `CALLOUT_TYPES_USED`.
+   - These will be written into `placeholders.yaml` before the next section's dispatch (step 1).
 
 **Step 2e: Validate total**
 ```bash
