@@ -1,0 +1,7 @@
+naturalness:
+  status: PASS
+  score: 10
+  review: The content is naturally phrased for a patient tutor persona.
+last_audit:
+  timestamp: 2026-02-15T12:00:00
+  status: PASS

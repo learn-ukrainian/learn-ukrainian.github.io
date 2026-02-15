@@ -3,27 +3,44 @@
 # audit_module.sh - Audit module and save log
 #
 # Usage:
-#   scripts/audit_module.sh curriculum/l2-uk-en/{level}/{num}-{slug}.md
+#   scripts/audit_module.sh curriculum/l2-uk-en/{level}/{num}-{slug}.md [--skip-activities]
 #
 # What it does:
 #   1. Runs audit_module.py on the specified file
 #   2. Saves audit log to curriculum/l2-uk-en/{level}/audit/{slug}-audit.log
 #   3. Returns audit exit code (0 = pass, 1 = fail)
 #
+# Options:
+#   --skip-activities   Content-only audit: defer activity/vocab gates
+#
 # Examples:
 #   scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
 #   scripts/audit_module.sh curriculum/l2-uk-en/b2-hist/15-holodomor-timeline.md
+#   scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/a1/this-is-i-am.md
 
 set -euo pipefail
 
+# Parse arguments
+SKIP_ACTIVITIES=""
+MODULE_PATH=""
+
+for arg in "$@"; do
+    case "$arg" in
+        --skip-activities)
+            SKIP_ACTIVITIES="--skip-activities"
+            ;;
+        *)
+            MODULE_PATH="$arg"
+            ;;
+    esac
+done
+
 # Check arguments
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <module-path>"
+if [ -z "$MODULE_PATH" ]; then
+    echo "Usage: $0 [--skip-activities] <module-path>"
     echo "Example: $0 curriculum/l2-uk-en/b1/09-aspect-future.md"
     exit 1
 fi
-
-MODULE_PATH="$1"
 
 # Validate file exists
 if [ ! -f "$MODULE_PATH" ]; then
@@ -50,13 +67,16 @@ LOG_PATH="$AUDIT_DIR/${SLUG}-audit.log"
 # Run audit and save to log file
 # Use tee to both display and save output
 echo "Auditing: $MODULE_PATH"
+if [ -n "$SKIP_ACTIVITIES" ]; then
+    echo "Mode: content-only (activities deferred)"
+fi
 echo "Saving log to: $LOG_PATH"
 echo ""
 
 # Run audit_module.py with tee to save output
 # Capture exit code separately
 set +e
-.venv/bin/python scripts/audit_module.py "$MODULE_PATH" 2>&1 | tee "$LOG_PATH"
+.venv/bin/python scripts/audit_module.py $SKIP_ACTIVITIES "$MODULE_PATH" 2>&1 | tee "$LOG_PATH"
 AUDIT_EXIT_CODE=${PIPESTATUS[0]}
 set -e
 
@@ -75,5 +95,5 @@ else
     echo "❌ AUDIT FAILED (see $LOG_PATH for details)"
 fi
 
-# Exit with audit exit code
+# Exit with audit exit code (IPA lint is informational, not blocking)
 exit $AUDIT_EXIT_CODE

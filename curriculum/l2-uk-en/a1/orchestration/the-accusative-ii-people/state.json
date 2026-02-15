@@ -1,0 +1,45 @@
+{
+  "slug": "the-accusative-ii-people",
+  "track": "a1",
+  "module_num": 12,
+  "mode": "full",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:04:08Z",
+      "task_id": "yw-the-accusative-ii-people-p0"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:04:45Z",
+      "task_id": "yw-the-accusative-ii-people-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:11:16Z",
+      "sections_done": 4,
+      "sections_total": 4
+    },
+    "4": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:24:06Z",
+      "attempts": 3
+    },
+    "5": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:24:07Z"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:24:44Z",
+      "task_id": "gr-the-accusative-ii-people",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:25:17Z",
+      "task_id": "yw-the-accusative-ii-people-6b"
+    }
+  },
+  "last_updated": "2026-02-15T23:25:17Z"
+}

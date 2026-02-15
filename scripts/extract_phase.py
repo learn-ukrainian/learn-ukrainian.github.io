@@ -199,7 +199,11 @@ def main() -> int:
     # Extract friction report (always attempt, regardless of phase)
     friction = extract_friction(raw_text)
     if friction:
-        friction_file = args.output_dir / f"friction-attempt-{args.attempt}.md"
+        # Include phase in filename to prevent overwriting across phases
+        if args.phase is not None:
+            friction_file = args.output_dir / f"phase-{args.phase}-friction-{args.attempt}.md"
+        else:
+            friction_file = args.output_dir / f"friction-attempt-{args.attempt}.md"
         friction_file.write_text(friction + "\n", encoding="utf-8")
         print(f"  📋 FRICTION: → {friction_file.name}")
 

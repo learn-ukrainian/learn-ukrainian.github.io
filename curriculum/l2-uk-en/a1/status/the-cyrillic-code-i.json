@@ -2,7 +2,7 @@
   "module": "the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T00:40:22.692275Z",
+  "last_audit": "2026-02-15T23:44:41.363451Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-14T23:00:58.476583Z",
@@ -37,6 +37,11 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
     "review": {
       "status": "pass",
       "violations": 0,
@@ -46,7 +51,8 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

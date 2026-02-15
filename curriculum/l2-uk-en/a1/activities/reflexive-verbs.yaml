@@ -1,0 +1,255 @@
+- type: fill-in
+  title: Conjugation Practice
+  instruction: Fill in the correct form of the reflexive verb.
+  items:
+    - sentence: Я ___ зранку. (вмиватися)
+      answer: вмиваюся
+      options: [вмиваюся, вмиваєшся, вмиваємося, вмиваються]
+    - sentence: Ти ___ швидко. (одягатися)
+      answer: одягаєшся
+      options: [одягаюся, одягаєшся, одягається, одягаєтеся]
+    - sentence: Він ___ голосно. (сміятися)
+      answer: сміється
+      options: [сміюся, смієшся, сміється, сміються]
+    - sentence: Ми ___ кожен день. (вчитися)
+      answer: вчимося
+      options: [вчуся, вчимося, вчитеся, вчаться]
+    - sentence: Ви ___ з сусідами. (вітатися)
+      answer: вітаєтеся
+      options: [вітаєшся, вітається, вітаємося, вітаєтеся]
+    - sentence: Вони ___ у парку. (зустрічатися)
+      answer: зустрічаються
+      options: [зустрічаюся, зустрічається, зустрічаємося, зустрічаються]
+    - sentence: Я ___ з новими друзями. (знайомитися)
+      answer: знайомлюся
+      options: [знайомлюся, знайомишся, знайомимося, знайомляться]
+    - sentence: Вона ___ додому. (повертатися)
+      answer: повертається
+      options: [повертаюся, повертаєшся, повертається, повертаються]
+    - sentence: Ти ___ телевізор. (дивитися)
+      answer: дивишся
+      options: [дивлюся, дивишся, дивиться, дивляться]
+    - sentence: Ми ___ тепло. (одягатися)
+      answer: одягаємося
+      options: [одягаюся, одягаємося, одягаєтеся, одягаються]
+    - sentence: Ви ___ разом. (сміятися)
+      answer: смієтеся
+      options: [сміюся, сміємося, смієтеся, сміються]
+    - sentence: Вони ___ холодною водою. (вмиватися)
+      answer: вмиваються
+      options: [вмиваюся, вмиваємося, вмиваєтеся, вмиваються]
+
+- type: fill-in
+  title: Choosing -ся or -сь
+  instruction: Choose the correct suffix based on the ending of the verb.
+  items:
+    - sentence: Я одягаю___
+      answer: сь
+      options: [ся, сь, ться, шся]
+    - sentence: Ти одягаєш___
+      answer: ся
+      options: [ся, сь, ться, шся]
+    - sentence: Ми вчимо___
+      answer: сь
+      options: [ся, сь, ться, шся]
+    - sentence: Ви вмиваєте___
+      answer: сь
+      options: [ся, сь, ться, шся]
+    - sentence: Вони вмивають___
+      answer: ся
+      options: [ся, сь, ться, шся]
+    - sentence: Він називаєть___
+      answer: ся
+      options: [ся, сь, ться, шся]
+    - sentence: Я дивлю___
+      answer: сь
+      options: [ся, сь, ться, шся]
+    - sentence: Ми вітаємо___
+      answer: сь
+      options: [ся, сь, ться, шся]
+    - sentence: Ти знайомиш___
+      answer: ся
+      options: [ся, сь, ться, шся]
+    - sentence: Ви повертаєте___
+      answer: сь
+      options: [ся, сь, ться, шся]
+    - sentence: Вони вчаться
+      answer: ся
+      options: [ся, сь, ться, шся]
+    - sentence: Я знайомлю___
+      answer: сь
+      options: [ся, сь, ться, шся]
+
+- type: match-up
+  title: Transitive ↔ Reflexive
+  instruction: Match the transitive base verb with its reflexive counterpart.
+  pairs:
+    - left: мити
+      right: митися
+    - left: одягати
+      right: одягатися
+    - left: вмивати
+      right: вмиватися
+    - left: вчити
+      right: вчитися
+    - left: називати
+      right: називатися
+    - left: вітати
+      right: вітатися
+    - left: голити
+      right: голитися
+    - left: зупиняти
+      right: зупинятися
+    - left: знайомити
+      right: знайомитися
+    - left: цікавити
+      right: цікавитися
+    - left: повертати
+      right: повертатися
+    - left: дивити
+      right: дивитися
+
+- type: multiple-choice
+  title: Reflexive Meaning
+  instruction: Choose the correct meaning for the sentence.
+  items:
+    - question: Ми вітаємося.
+      answer: We greet each other.
+      options: ["We greet each other.", "I greet you.", "They greet us.", "We are happy."]
+    - question: Вона вмивається.
+      answer: She is washing herself.
+      options: ["She is washing herself.", "She is washing a car.", "He is washing her.", "We are washing."]
+    - question: Я вчуся.
+      answer: I am studying.
+      options: ["I am studying.", "I am teaching.", "You are studying.", "They are learning."]
+    - question: Діти сміються.
+      answer: Children are laughing.
+      options: ["Children are laughing.", "Children are crying.", "Children are playing.", "Children are eating."]
+    - question: Як називається це місто?
+      answer: What is this city called?
+      options: ["What is this city called?", "Where is this city?", "Who lives here?", "How big is this city?"]
+    - question: Він повертається додому.
+      answer: He is returning home.
+      options: ["He is returning home.", "He is leaving home.", "He is at home.", "He is building a home."]
+    - question: Ми знайомимося.
+      answer: We are getting acquainted.
+      options: ["We are getting acquainted.", "We are friends.", "We are talking.", "We are leaving."]
+    - question: Ти дивишся кіно.
+      answer: You are watching a movie.
+      options: ["You are watching a movie.", "You are making a movie.", "You are in a movie.", "You like movies."]
+
+- type: multiple-choice
+  title: Daily Routine
+  instruction: Choose the correct verb for the context.
+  items:
+    - question: Зранку я ___ холодною водою.
+      answer: вмиваюся
+      options: [вмиваюся, називаюся, сміюся, дивлюся]
+    - question: Потім я ___ і йду на роботу.
+      answer: одягаюся
+      options: [одягаюся, вмиваюся, вчуся, вітаюся]
+    - question: В університеті я ___ кожен день.
+      answer: вчуся
+      options: [вчуся, голюся, знайомлюся, називаюся]
+    - question: Ввечері я ___ додому.
+      answer: повертаюся
+      options: [повертаюся, вмиваюся, одягаюся, сміюся]
+    - question: Я ___ телевізор.
+      answer: дивлюся
+      options: [дивлюся, вмиваюся, одягаюся, вчуся]
+    - question: Мені ___ цей фільм.
+      answer: подобається
+      options: [подобається, називається, вчиться, вітається]
+    - question: Я ___ спортом.
+      answer: займаюся
+      options: [займаюся, вмиваюся, сміюся, повертаюся]
+    - question: Я ___ з новими людьми.
+      answer: знайомлюся
+      options: [знайомлюся, вмиваюся, одягаюся, вчуся]
+
+- type: multiple-choice
+  title: Introduction
+  instruction: Choose the correct response in the dialogue.
+  items:
+    - question: — Як ___ це місто? — Це Київ.
+      answer: називається
+      options: [називається, вмивається, вчиться, сміється]
+    - question: — Привіт! Ми ___ . Мене звати Іван.
+      answer: знайомимося
+      options: [знайомимося, вмиваємося, одягаємося, сміємося]
+    - question: — Я ___ у цьому університеті.
+      answer: вчуся
+      options: [вчуся, голюся, вітаюся, повертаюся]
+    - question: — Ви часто ___ у парку? — Так, кожного вечора.
+      answer: зустрічаєтеся
+      options: [зустрічаєтеся, вмиваєтеся, одягаєтеся, смієтеся]
+    - question: — Чому вони ___ ? — Це смішна історія.
+      answer: сміються
+      options: [сміються, вмиваються, одягаються, вчаться]
+    - question: — Ти вже ___ додому? — Так, я в автобусі.
+      answer: повертаєшся
+      options: [повертаєшся, вмиваєшся, одягаєшся, вчишся]
+    - question: — Він ___ з усіма колегами.
+      answer: вітається
+      options: [вітається, вмивається, одягається, сміється]
+    - question: — Я ___ цією книжкою.
+      answer: цікавлюся
+      options: [цікавлюся, вмиваюся, одягаюся, називаюся]
+
+- type: multiple-choice
+  title: Grammar Logic
+  instruction: Choose the correct grammatical explanation.
+  items:
+    - question: Why do we use -сь in 'Я вмиваюся'?
+      answer: Because it follows a vowel.
+      options: ["Because it follows a vowel.", "Because it follows a consonant.", "Because it is I.", "Because it is today."]
+    - question: Why do we use -ся in 'Ти вмиваєшся'?
+      answer: Because it follows a consonant.
+      options: ["Because it follows a consonant.", "Because it follows a vowel.", "Because it is you.", "Because it is morning."]
+    - question: What does the suffix -ся mean?
+      answer: self (себе)
+      options: ["self (себе)", "you", "yesterday", "small"]
+    - question: Pronounce -ться correctly.
+      answer: long soft [ts:a]
+      options: ["long soft [ts:a]", "hard [t]", "soft [s]", "silent"]
+    - question: Pronounce -шся correctly.
+      answer: soft [s:a]
+      options: ["soft [s:a]", "hard [sh]", "soft [sh]", "[ts:a]"]
+    - question: "'Вмивати' vs 'Вмиватися'."
+      answer: Transitive vs Reflexive
+      options: ["Transitive vs Reflexive", "Past vs Present", "Noun vs Verb", "Big vs Small"]
+    - question: "'Сміятися' is..."
+      answer: always reflexive
+      options: ["always reflexive", "sometimes reflexive", "a noun", "an adjective"]
+    - question: "'Вітатися' is..."
+      answer: reciprocal (each other)
+      options: ["reciprocal (each other)", "true reflexive", "lexicalized", "not a verb"]
+
+- type: multiple-choice
+  title: Mix and Match
+  instruction: Choose the correct form for the subject.
+  items:
+    - sentence: Вони ___ (вчитися).
+      answer: вчаться
+      options: [вчаться, вчимося, вчуся, вчиться]
+    - sentence: Ми ___ (одягатися).
+      answer: одягаємося
+      options: [одягаємося, одягаєшся, одягається, одягаюся]
+    - sentence: Ви ___ (сміятися).
+      answer: смієтеся
+      options: [смієтеся, смієшся, сміється, сміються]
+    - sentence: Я ___ (дивитися).
+      answer: дивлюся
+      options: [дивлюся, дивишся, дивиться, дивляться]
+    - sentence: Ти ___ (вітатися).
+      answer: вітаєшся
+      options: [вітаєшся, вітаємося, вітаєтеся, вітаються]
+    - sentence: Він ___ (знайомитися).
+      answer: знайомиться
+      options: [знайомиться, знайомлюся, знайомимося, знайомляться]
+    - sentence: Вона ___ (повертатися).
+      answer: повертається
+      options: [повертається, повертаюся, повертаємося, повертаються]
+    - sentence: Ми ___ (вмиватися).
+      answer: вмиваємося
+      options: [вмиваємося, вмиваєшся, вмивається, вмиваються]

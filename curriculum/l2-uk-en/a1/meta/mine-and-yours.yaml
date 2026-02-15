@@ -1,0 +1,16 @@
+slug: mine-and-yours
+title: "Mine and Yours"
+word_target: 1307
+content_outline:
+- section: "Розминка: Чиє це?"
+  words: 99
+- section: "Теорія: Мій, Твій, Його"
+  words: 643
+- section: "Практика: Наші речі"
+  words: 201
+- section: "Використання: Це твоє?"
+  words: 179
+- section: "Культура: Ти і Ви"
+  words: 185
+engagement_min: 4
+example_min: 8

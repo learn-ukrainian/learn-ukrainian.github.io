@@ -1,0 +1,34 @@
+content_outline:
+  - section: "Вступ: Мистецтво запитань"
+    words: 100
+    points:
+      - "Questions drive conversation: moving beyond simple statements to interaction"
+      - "The 'Good News': Ukrainian questions are structurally simpler than English (no 'do/does' gymnastics)"
+      - "Core tools: The particle 'чи', rising intonation, and the negation particle 'не'"
+  - section: "Теорія: Питання, відповіді та заперечення"
+    words: 717
+    points:
+      - "H3: Yes/No Questions with 'Чи': Structure (Чи + statement?), polite/formal nuance"
+      - "H3: The Casual Alternative: Dropping 'чи' and relying entirely on rising intonation (visualize with ↗ arrows)"
+      - "H3: Answering: 'Так' (Yes) vs. 'Ні' (No); distinguishing 'ні' (no) from 'не' (not)"
+      - "H3: Simple Negation: Placing 'не' strictly before the verb (e.g., 'Я не знаю', not 'Я ні знаю')"
+      - "H3: Question Words (Special Questions): Хто, Що (mentioning 'шо' as common spoken variant), Де, Коли"
+      - "H3: The 'Do' Trap: Explicit warning against translating English auxiliary 'do' (e.g., 'Робиш ти знати?' is wrong)"
+  - section: "Практикум: Інтонація та слова"
+    words: 38
+    points:
+      - "Quick check: Identifying the correct question word for the context"
+      - "Intonation drill: Transforming a statement into a question using pitch only"
+  - section: "У реальному житті: Діалоги"
+    words: 152
+    points:
+      - "Scenario 1: At the Café - ordering using polite questions (with 'чи')"
+      - "Scenario 2: Asking a friend - casual questions (without 'чи', using intonation)"
+      - "Scenario 3: Simple negation - politely refusing or correcting a fact"
+  - section: "Культурний контекст: «Чи» та Альф"
+    words: 124
+    points:
+      - "Register Check: Using 'чи' signals politeness and education; dropping it is for friends"
+      - "Pop Culture Icon: The legendary Ukrainian dub of ALF"
+      - "Quote analysis: 'Ти не любиш котів? Ти просто не вмієш їх готувати!'"
+# Total: 1131 words

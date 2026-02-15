@@ -1,0 +1,64 @@
+module: lit-essay-yakovenko-mirror
+level: LIT.ESSAY
+slug: yakovenko-mirror-of-history
+version: '2.0'
+title: 'Наталя Яковенко: Дзеркала історії'
+subtitle: Методологія як мистецтво
+content_outline:
+- section: Вступ — Історія як текст
+  words: 800
+  points:
+  - Аналіз вступу до "Дзеркал історії"
+  - Концепція "образу іншого"
+  - Як історик конструює минуле
+- section: Шляхта і Козаки — подвійна оптика
+  words: 1200
+  points:
+  - Розбір ключових есеїв про ранньомодерну ідентичність
+  - Проблема "націоналізації" історії 17 століття
+  - Латинська культура України
+- section: Стилістика авторки
+  words: 1000
+  points:
+  - Барокова пишність мови Яковенко
+  - Іронія та наукова точність
+  - Термінологічна вишуканість
+- section: Деколонізація методу
+  words: 800
+  points:
+  - Відмова від радянських та народницьких схем
+  - Повернення України в європейський контекст (Res Publica)
+  - Антропологічний вимір
+- section: Підсумок
+  words: 700
+  points:
+  - Вплив на сучасну гуманітаристику
+  - Чому це треба читати філологам
+word_target: 4500
+vocabulary_hints:
+  required:
+  - наратив
+  - дискурс
+  - ідентичність
+  - топос
+  - шляхта
+  recommended:
+  - палімпсест
+  - деконструкція
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Методологічний розбір
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати методологічні підходи Наталі Яковенко
+- Дослідити мовну стилістику наукового тексту
+persona:
+  voice: Literary Critic
+  role: Methodology Expert

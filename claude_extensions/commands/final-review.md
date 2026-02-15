@@ -1,7 +1,7 @@
-# Final Review: Claude QA Gate for Foreman-Built Modules
+# Final Review: Claude QA Gate for Otaman-Built Modules
 
 > **Claude is the adversarial reviewer. Trust nothing. Verify everything.**
-> The Foreman claims it passed. The audit report on disk is stale. Phase 6b claims fixes were applied. Prove it.
+> The Otaman claims it passed. The audit report on disk is stale. Phase 6b claims fixes were applied. Prove it.
 
 ## Usage
 
@@ -20,9 +20,9 @@
 
 ## What This Does
 
-The Foreman (Gemini) orchestrated the full Phase 0-6b pipeline. Now Claude provides the final quality gate. Your job is to catch what the Foreman missed, what Phase 6b claimed to fix but didn't, and what automated checks can't see.
+The Otaman (content sprint) and Hetman (activity enrichment) have completed the full pipeline. Now Claude provides the final quality gate. Your job is to catch what the pipeline missed, what fixes claimed to be applied but weren't, and what automated checks can't see.
 
-**You are NOT a rubber stamp.** You are the adversary. Assume the Foreman cut corners until proven otherwise.
+**You are NOT a rubber stamp.** You are the adversary. Assume the pipeline cut corners until proven otherwise.
 
 ---
 
@@ -42,7 +42,7 @@ ORCH_DIR="curriculum/l2-uk-en/${TRACK}/orchestration/${SLUG}"
 
 ### 2. Run a FRESH audit (MANDATORY)
 
-**NEVER trust the audit report on disk.** The Foreman may have modified files after the last audit. Always run fresh:
+**NEVER trust the audit report on disk.** The Otaman may have modified files after the last audit. Always run fresh:
 
 ```bash
 scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
@@ -188,4 +188,4 @@ Confirm all gates still pass after your fixes.
 2. **Verify fixes with grep.** Never trust completion claims.
 3. **Check semantic correctness.** Audit checks structure, you check meaning.
 4. **Regenerate MDX.** Every time. No exceptions.
-5. **Be the adversary.** The Foreman's job is to build. Your job is to break.
+5. **Be the adversary.** The Otaman's job is to build. Your job is to break.

@@ -1,0 +1,50 @@
+TRACK: "a2"
+LEVEL: "A2"
+SLUG: "the-dative-i-pronouns"
+TOPIC_TITLE: "The Dative I — Pronouns"
+MODULE_NUM: "1"
+PLAN_PATH: "curriculum/l2-uk-en/plans/a2/the-dative-i-pronouns.yaml"
+META_PATH: "curriculum/l2-uk-en/a2/meta/the-dative-i-pronouns.yaml"
+CONTENT_PATH: "curriculum/l2-uk-en/a2/the-dative-i-pronouns.md"
+ACTIVITIES_PATH: "curriculum/l2-uk-en/a2/activities/the-dative-i-pronouns.yaml"
+VOCAB_PATH: "curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml"
+RESEARCH_PATH: "curriculum/l2-uk-en/a2/research/the-dative-i-pronouns-research.md"
+REVIEW_PATH: "curriculum/l2-uk-en/a2/review/the-dative-i-pronouns-review.md"
+QUICK_REF_PATH: "claude_extensions/quick-ref/A2.md"
+SCHEMA_PATH: "schemas/activities-a2.schema.json"
+WORD_TARGET: "1000"
+SKILL_IDENTITY: "full-rebuild-core-a"
+PERSONA_FLAVOR: "The Helpful Neighbor"
+PERSONA_VOICE: "Encouraging Cultural Guide"
+PERSONA_ROLE: "Empathic Psychologist"
+IMMERSION_RULE: "Content is 50-60% English. Grammar in English, examples in Ukrainian. Sentences max 15 words. All cases allowed. Simple subordinate clauses only."
+LEVEL_CONSTRAINTS: |
+  GRAMMAR RULES:
+  - Max 15 words per Ukrainian sentence
+  - Max 2 clauses per sentence
+  - All cases allowed
+  - Simple subordinate clauses allowed (який/що/коли)
+  - Aspect pairs introduced but not complex
+  - No participles
+ACTIVITY_COUNT_TARGET: "10"
+ACTIVITY_MIN: "8"
+ACTIVITY_MAX: "12"
+ITEMS_MIN: "12"
+VOCAB_COUNT_TARGET: "25"
+FORBIDDEN_ACTIVITY_TYPES: ""
+ALLOWED_ACTIVITY_TYPES: "quiz, fill-in, match-up, anagram, unjumble, mark-the-words, reorder, cloze"
+REQUIRED_TYPES: "quiz, fill-in, match-up"
+PRIORITY_TYPES: "anagram, unjumble"
+SECTION_TITLE: "Practice / Практика"
+HARD_MINIMUM_WORD_COUNT: "225"
+SECTION_ENGAGEMENT_MIN: "1"
+SECTION_EXAMPLE_MIN: "2"
+PREVIOUS_CONTENT_SUMMARY: |
+  - The Seven Magic Keys: Pronoun Forms
+  - The "Like" Revolution: Подобатися
+  - Expressing Necessity: Потрібно and Треба
+  - Emotional and Physical States
+  - Usage Note: Politeness and "You"
+  ---
+  When in doubt, start with **вам**. It is like bringing a small gift when you visit a new neighbor — it shows respect and good manners.
+CALLOUT_TYPES_USED: "['culture', 'tip', 'myth-buster']"

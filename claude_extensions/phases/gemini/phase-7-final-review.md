@@ -9,7 +9,6 @@
 **You MUST use `run_shell_command` (bash) to execute scripts.** You are NOT read-only. You have FULL access to:
 - Run `scripts/audit_module.sh` (mandatory — never simulate)
 - Run `.venv/bin/python scripts/calc_immersion.py` (mandatory)
-- Run `.venv/bin/python scripts/generate_mdx.py` (after fixes)
 - Run `grep` commands to verify fixes
 - Edit files with `write_file` to apply fixes
 
@@ -97,14 +96,33 @@ grep -nP '[ыэёъ]' {CONTENT_PATH}
 grep -nP '[ыэёъ]' {ACTIVITIES_PATH}
 ```
 
-### 3c: IPA errors
+### 3c: IPA errors (AUTOMATED — mandatory)
+
+**Run the IPA linter. Do NOT use manual grep for IPA checks.**
+
 ```bash
-grep -n '/w/' {CONTENT_PATH}
-grep -n '/ʊ/' {CONTENT_PATH}
-grep -n '/w/' {VOCAB_PATH}
-grep -n '/ʊ/' {VOCAB_PATH}
+.venv/bin/python scripts/lint_ipa.py {CONTENT_PATH}
 ```
-Fix: /w/ -> /ʋ/, /ʊ/ -> /u/
+
+If issues found, auto-fix:
+```bash
+.venv/bin/python scripts/lint_ipa.py {CONTENT_PATH} --fix
+```
+
+**What it catches (8 rules):**
+- IPA-001: /ʊ/ → /u/ (Ukrainian has no lax vowel)
+- IPA-002: /ɫ/ → /l/ (no dark L)
+- IPA-003: tʃ → t͡ʃ (ч needs tie-bar)
+- IPA-004: dʒ → d͡ʒ (дж needs tie-bar)
+- IPA-005: /w/ → /ʋ/ (В is labiodental, inside IPA brackets)
+- IPA-006: /v/ → /ʋ/ (same, inside IPA brackets)
+- IPA-007: ts → t͡s (ц needs tie-bar, context-aware)
+- IPA-008: dz → d͡z (дз needs tie-bar, context-aware)
+
+**After fixing, re-lint to confirm clean:**
+```bash
+.venv/bin/python scripts/lint_ipa.py {CONTENT_PATH}
+```
 
 ### 3d: Inline IPA (B1+ only)
 For B1 and above: IPA belongs ONLY in vocabulary YAML, not inline in content.
@@ -201,16 +219,7 @@ For EACH fix:
 
 ---
 
-## Step 7: Regenerate MDX
-
-If you changed ANY file:
-```bash
-.venv/bin/python scripts/generate_mdx.py l2-uk-en {TRACK} {MODULE_NUM}
-```
-
----
-
-## Step 8: Re-Run Audit
+## Step 7: Re-Run Audit
 
 ```bash
 scripts/audit_module.sh {CONTENT_PATH}
@@ -253,8 +262,7 @@ Confirm all gates pass after fixes. Max 2 fix-audit loops.
 |-------|--------|---------|
 | Russianisms | CLEAN/FOUND | {details} |
 | Russian characters | CLEAN/FOUND | {details} |
-| IPA /w/ errors | CLEAN/FOUND | {count fixed} |
-| IPA /ʊ/ errors | CLEAN/FOUND | {count fixed} |
+| IPA lint (8 rules) | CLEAN/FIXED | {lint_ipa.py output: X issues, Y fixed} |
 | Inline IPA (B1+) | CLEAN/FOUND/N/A | {count} |
 | English leakage | CLEAN/FOUND | {details} |
 | LLM artifacts | CLEAN/FOUND | {count, list} |
@@ -311,8 +319,7 @@ After the verdict:
 3. **Finding zero issues is suspicious** -- dig deeper.
 4. **Every finding must cite specific text** with grep evidence.
 5. **Run the audit yourself.** Never trust cached reports.
-6. **Regenerate MDX after fixes.**
-7. **Verify fixes with grep.**
+6. **Verify fixes with grep.**
 8. **Write verdict between delimiters.**
 9. **Do NOT loop.** Max 2 attempts per fix. Max 2 fix-audit cycles. If still failing, emit NEEDS_WORK verdict with issues listed.
 10. **Always finish.** Always emit `===FINAL_REVIEW_END===`, even on errors. Incomplete output wastes the session.

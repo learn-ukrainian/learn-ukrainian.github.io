@@ -34,7 +34,7 @@ Examples:
 
 **Андрій:** Привіт! [prɪ.ˈʋit]
 **Олена:** Привіт, Андрію! Де метро? [prɪ.ˈʋit ɑn.ˈdrʲi.ju dɛ mɛt.ˈrɔ]
-**Андрій:** Метро там, у центрі. [mɛt.ˈrɔ tɑm u ˈtsɛnt.rʲi]
+**Андрій:** Метро там, у центрі. [mɛt.ˈrɔ tɑm u ˈt͡sɛnt.rʲi]
 **Олена:** Дякую! [ˈdʲɑ.ku.ju]
 
 ### Ґ: The Hard G
@@ -43,7 +43,7 @@ The letter **Ґ ґ** [ɡ] represents the hard, explosive sound found in the Engl
 
 Examples:
 *   **ґанок** [ˈɡɑ.nɔk] — porch
-*   **ґудзик** [ˈɡu.dzɪk] — button
+*   **ґудзик** [ˈɡu.d͡zɪk] — button
 *   **ґрунт** [ɡrunt] — soil / ground
 
 > [!history-bite]
@@ -79,12 +79,12 @@ Examples:
 
 ### Ч: The Chair
 
-The letter **Ч ч** [tʃ] looks like an upside-down number 4 or a chair. It represents the sound like «ch» in *chair* or *cheese*. In Ukrainian, **Ч** is always hard and crisp.
+The letter **Ч ч** [t͡ʃ] looks like an upside-down number 4 or a chair. It represents the sound like «ch» in *chair* or *cheese*. In Ukrainian, **Ч** is always hard and crisp.
 
 Examples:
-*   **чай** [tʃɑj] — tea
-*   **час** [tʃɑs] — time
-*   **чоловік** [tʃɔ.lɔ.ˈʋik] — man / husband
+*   **чай** [t͡ʃɑj] — tea
+*   **час** [t͡ʃɑs] — time
+*   **чоловік** [t͡ʃɔ.lɔ.ˈʋik] — man / husband
 
 > [!myth-buster]
 > **Is it "h"?**
@@ -95,20 +95,20 @@ Examples:
 The letter **Ц ц** [ts] makes the sound found at the end of English words like *cats* or *pizza*. In Ukrainian, it often starts words. To pronounce it, say *its* quickly, dropping the *i*.
 
 Examples:
-*   **центр** [tsɛntr] — center
-*   **цукор** [ˈtsu.kɔr] — sugar
-*   **ціна** [tsiˈnɑ] — price
+*   **центр** [t͡sɛntr] — center
+*   **цукор** [ˈt͡su.kɔr] — sugar
+*   **ціна** [t͡siˈnɑ] — price
 
-Try saying: «Це центр» [tsɛ tsɛntr] — This is the center.
+Try saying: «Це центр» [t͡sɛ t͡sɛntr] — This is the center.
 
 ### Щ: Two in One
 
-The letter **Щ щ** [ʃtʃ] combines two sounds: **Ш** [ʃ] + **Ч** [tʃ]. It sounds like the middle of *fre**sh ch**eese*. It gives words weight and volume.
+The letter **Щ щ** [ʃt͡ʃ] combines two sounds: **Ш** [ʃ] + **Ч** [t͡ʃ]. It sounds like the middle of *fre**sh ch**eese*. It gives words weight and volume.
 
 Examples:
-*   **борщ** [bɔrʃtʃ] — borscht
-*   **ще** [ʃtʃɛ] — more / still / yet
-*   **щастя** [ˈʃtʃɑs.tʲɑ] — happiness
+*   **борщ** [bɔrʃt͡ʃ] — borscht
+*   **ще** [ʃt͡ʃɛ] — more / still / yet
+*   **щастя** [ˈʃt͡ʃɑs.tʲɑ] — happiness
 
 ## Частина II: Голосні, м'якість та символ Ї
 
@@ -187,7 +187,7 @@ The letter **Й й** [j] is a semivowel — like the English "y" in *yes* or *bo
 
 Examples:
 *   **край** [krɑj] — edge / land
-*   **чай** [tʃɑj] — tea
+*   **чай** [t͡ʃɑj] — tea
 *   **Київ** [ˈkɪ.jiʋ] — Kyiv
 
 ### Duel of Vowels: Hard И vs Soft І
@@ -198,7 +198,7 @@ Confusing these two changes meanings.
 
 | Letter | IPA | Mouth Position | Example |
 | :--- | :--- | :--- | :--- |
-| **І** | [i] (like *ee* in *meet*) | Wide smile | **ніч** [nʲitʃ] — night |
+| **І** | [i] (like *ee* in *meet*) | Wide smile | **ніч** [nʲit͡ʃ] — night |
 | **И** | [ɪ] (like *i* in *bit*, deeper) | Relaxed, jaw forward | **жити** [ˈʒɪ.tɪ] — to live |
 
 ## Практичний блок: Читання та вимова
@@ -209,7 +209,7 @@ Let's put theory into practice. Focus on your pronunciation muscles. Ukrainian p
 *   **Г** [ɦ] (Soft): Гарний [ˈɦɑr.nɪj] — beautiful.
 *   **Ґ** [ɡ] (Hard): Ґанок [ˈɡɑ.nɔk] — porch.
 *   **Г** [ɦ] (Soft): Голова [ɦɔ.lɔ.ˈʋɑ] — head.
-*   **Ґ** [ɡ] (Hard): Ґудзик [ˈɡu.dzɪk] — button.
+*   **Ґ** [ɡ] (Hard): Ґудзик [ˈɡu.d͡zɪk] — button.
 
 > [!warning]
 > Never pronounce Ukrainian **Г** like a hard English "g". It should flow like "h". If you say "ґарний" with a hard stop, it will sound very strange to a native speaker.
@@ -224,20 +224,20 @@ Let's put theory into practice. Focus on your pronunciation muscles. Ukrainian p
 *   **День** [dɛnʲ] — soft N.
 *   **Батько** [ˈbɑtʲ.kɔ] — soft T.
 *   **Сіль** [sʲilʲ] — salt.
-*   Example sentence: Сьогодні чудовий **день**. [sʲɔ.ˈɦɔd.nʲi tʃu.ˈdɔ.ʋɪj dɛnʲ] (Today is a wonderful day.)
+*   Example sentence: Сьогодні чудовий **день**. [sʲɔ.ˈɦɔd.nʲi t͡ʃu.ˈdɔ.ʋɪj dɛnʲ] (Today is a wonderful day.)
 
 ### Practice with Iotated: Я, Ю, Є, Ї
 *   **Я**: яблуко [ˈjɑb.lu.kɔ] — apple.
 *   **Є**: Європа [jɛʋ.ˈrɔ.pɑ] — Europe.
 *   **Ї**: їжа [ˈji.ʒɑ] — food.
 *   **Ю**: юнак [ju.ˈnɑk] — young man.
-*   Example sentence: Я люблю **чай**. [jɑ lʲu.ˈblʲu tʃɑj] (I like tea.)
+*   Example sentence: Я люблю **чай**. [jɑ lʲu.ˈblʲu t͡ʃɑj] (I like tea.)
 
 ### Complex Words
 *   **Школа** [ˈʃkɔ.lɑ]: Hard [ʃ] + Hard K. Pronounce it as two clear syllables: ʃkɔ-lɑ.
-*   **Центр** [tsɛntr]: Starts with [ts], ends with cluster ntr. Don't add a vowel at the end.
+*   **Центр** [t͡sɛntr]: Starts with [ts], ends with cluster ntr. Don't add a vowel at the end.
 *   **Шоколад** [ʃɔ.kɔ.ˈlɑd]: Uses the [ʃ] sound.
-*   Example sentence: **Школа** у центрі міста. [ˈʃkɔ.lɑ u ˈtsɛnt.rʲi ˈmʲis.tɑ] (The school is in the city center.)
+*   Example sentence: **Школа** у центрі міста. [ˈʃkɔ.lɑ u ˈt͡sɛnt.rʲi ˈmʲis.tɑ] (The school is in the city center.)
 
 ## Культурний контекст: Українська абетка як код
 

@@ -1,0 +1,34 @@
+content_outline:
+  - section: "Розминка: Повернення дії на себе"
+    words: 205
+    points:
+      - "Introduction to the reflexive suffix -ся as an action 'returning' to the subject (mirror concept)"
+      - "Historical explanation of -ся as a short form of the pronoun 'себе' (self), once a separate word"
+      - "English scaffolding: explain the conceptual difference between transitive and reflexive verbs in English prose"
+      - "Visual comparison: мити (washing something) vs митися (washing oneself)"
+      - "Practical context: overview of daily routine and social interaction scenarios where -ся is essential"
+  - section: "Презентація: Правила вживання та відмінювання"
+    words: 220
+    points:
+      - "The -ся/-сь phonetic rule: detailed breakdown of when to use which form (consonant vs vowel) with a clear table"
+      - "Full present tense conjugation table for the verb 'вмиватися' with stressed endings highlighted"
+      - "Each reflexive category (True Reflexive, Reciprocal, Lexicalized) gets its own H3 with definition, 3+ examples, and usage note"
+      - "Focus on high-frequency verbs: одягатися, вітатися, сміятися, дивитися, подобатися"
+      - "Structural rule: the suffix always remains attached to the very end of the conjugated verb form"
+  - section: "Практика: Відмінювання та вправи"
+    words: 205
+    points:
+      - "Conjugation drill: transforming 'я', 'ти', 'він/вона' forms using the correct -ся or -сь suffix"
+      - "Matching exercise: connecting transitive base verbs with their reflexive counterparts to show the change in meaning"
+      - "Suffix selection challenge: identifying the correct form based on the vowel/consonant ending of the verb in various persons"
+      - "Sentence building: using 'називатися' and 'знайомитися' in simple introductory dialogues"
+      - "Feedback loop: highlighting common learner mistakes like dropping the suffix during conjugation or person changes"
+  - section: "Культурний аспект та особливості вимови"
+    words: 200
+    points:
+      - "Phonetic breakdown of the -ться cluster (written as -ться but pronounced as a long soft [ц:а])"
+      - "The -шся sound: explaining the pronunciation as a soft [с:а] for conversational naturalness"
+      - "Mnemonic aid for the phonetic rule: 'Vowel likes -сь, Consonant likes -ся' for quick recall"
+      - "Cultural context: why mastery of reflexive verbs is a significant milestone for A1 students' self-expression"
+      - "Final summary: connecting these verbs to the wider context of the Ukrainian daily routine and etiquette"
+  # Total: 830 words

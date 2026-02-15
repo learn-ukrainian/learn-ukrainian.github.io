@@ -2,13 +2,13 @@
   "module": "the-gender-code",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T00:11:31.493579Z",
+  "last_audit": "2026-02-16T00:26:13.968705Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-15T00:11:03.327235Z",
-    "meta": "2026-02-14T23:45:46.542887Z",
-    "activities": "2026-02-15T00:11:19.026138Z",
-    "vocabulary": "2026-02-15T00:11:10.976798Z",
+    "md": "2026-02-16T00:07:12.568516Z",
+    "meta": "2026-02-15T23:53:36.647848Z",
+    "activities": "2026-02-16T00:09:07.196666Z",
+    "vocabulary": "2026-02-16T00:08:45.158996Z",
     "plan": "2026-02-14T15:15:44.397169Z"
   },
   "gates": {
@@ -20,22 +20,27 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1147/934 (raw: 1289)"
+      "message": "3265/934 (raw: 3449)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/8"
+      "message": "10/8"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "18/1"
+      "message": "25/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
     },
     "review": {
       "status": "pass",
@@ -46,7 +51,8 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

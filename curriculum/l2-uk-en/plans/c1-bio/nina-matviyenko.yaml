@@ -1,0 +1,101 @@
+module: c1-bio-144
+level: C1-BIO
+sequence: 144
+slug: nina-matviyenko
+version: '2.0'
+title: 'Ніна Матвієнко: Голос душі'
+content_outline:
+- section: Вступ — Берегиня пісні
+  words: 400
+  points:
+  - Унікальний тембр, який впізнає кожен українець
+  - Народна артистка, Герой України
+  - Символ автентичної української культури
+- section: Дитинство і становлення
+  words: 600
+  points:
+  - Важке дитинство в інтернаті
+  - Робота на заводі "Хіммаш" і мрія про сцену
+  - Навчання в студії хору імені Верьовки
+- section: Хор імені Верьовки
+  words: 800
+  points:
+  - Солістка головного хору країни (1968-1991)
+  - Репертуар: народні пісні, колискові, веснянки
+  - Гастролі світом і представлення України
+- section: Акторська кар'єра
+  words: 600
+  points:
+  - Роботи в кіно і театрі
+  - Телевистави ("Маруся Чурай", "Катерина Білокур")
+  - Образ української жінки-матері
+- section: Стиль і манера
+  words: 700
+  points:
+  - "Матвієнківський" стиль виконання
+  - Збереження архаїки в сучасному аранжуванні
+  - Співпраця з сучасними музикантами (ТНМК, Monatik)
+- section: Родина і спадщина
+  words: 700
+  points:
+  - Мистецька династія (чоловік Петро Гончар, донька Тоня)
+  - Громадянська позиція і любов до України
+  - Смерть 2023 року: прощання з епохою
+- section: Дискусія — Пісня як код нації
+  words: 200
+  points:
+  - Роль народної пісні в збереженні ідентичності
+  - Чому її голос називають "магічним"
+word_target: 4000
+vocabulary_hints:
+  required:
+  - солістка (soloist)
+  - народна пісня (folk song)
+  - хор (choir)
+  - тембр (timbre)
+  - автентика (authenticity)
+  - спадщина (legacy)
+  - душа (soul)
+  - обряд (ritual)
+  - голос (voice)
+  - репертуар (repertoire)
+  recommended:
+  - а капела (a cappella)
+  - віртуозність (virtuosity)
+  - династія (dynasty)
+  - інтернат (boarding school)
+  - магія (magic)
+activity_hints:
+- type: reading
+  focus: Спогади Ніни Матвієнко
+  source: Книга "Ой, виорю нивку широкую"
+  items: 3 passages
+- type: essay-response
+  focus: Пісня як історична пам'ять
+  word_target: 300
+  output: Есе
+focus: biography
+prerequisites:
+- c1-ritual-songs
+connects_to:
+- c1-bio-62-mykhailo-hrushevskyi
+- c1-bio-135-vasyl-stus
+module_type: biography
+sources:
+- name: Ніна Матвієнко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Матвієнко_Ніна_Митрофанівна
+  type: primary
+  notes: Біографія
+- name: Золота колекція
+  url: https://music.youtube.com/
+  type: reference
+  notes: Аудіозаписи
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Analyze the vocal style of Nina Matviyenko
+- Evaluate the role of folk music in national identity
+- Discuss the preservation of cultural heritage
+persona:
+  voice: Ethnomusicologist
+  role: Cultural Historian

@@ -1,88 +1,124 @@
-items:
-  - lemma: брат
-    ipa: /brɑt/
-    translation: brother
-    pos: noun
-    gender: m
-  - lemma: сестра
-    ipa: /seˈstrɑ/
-    translation: sister
-    pos: noun
-    gender: f
-  - lemma: мама
-    ipa: /ˈmɑmɑ/
-    translation: mother
-    pos: noun
-    gender: f
-  - lemma: тато
-    ipa: /ˈtɑtɔ/
-    translation: father
-    pos: noun
-    gender: m
-  - lemma: дім
-    ipa: /dim/
-    translation: house
-    pos: noun
-    gender: m
-  - lemma: вікно
-    ipa: /ʋikˈnɔ/
-    translation: window
-    pos: noun
-    gender: n
-  - lemma: книга
-    ipa: /ˈknɪɦɑ/
-    translation: book
-    pos: noun
-    gender: f
-  - lemma: місто
-    ipa: /ˈmistɔ/
-    translation: city
-    pos: noun
-    gender: n
-  - lemma: стіл
-    ipa: /stil/
-    translation: table
-    pos: noun
-    gender: m
-  - lemma: море
-    ipa: /ˈmɔre/
-    translation: sea
-    pos: noun
-    gender: n
-  - lemma: ніч
-    ipa: /nʲitʃ/
-    translation: night
-    pos: noun
-    gender: f
-  - lemma: день
-    ipa: /denʲ/
-    translation: day
-    pos: noun
-    gender: m
-  - lemma: земля
-    ipa: /zemˈlʲɑ/
-    translation: earth
-    pos: noun
-    gender: f
-  - lemma: серце
-    ipa: /ˈsɛrtse/
-    translation: heart
-    pos: noun
-    gender: n
-  - lemma: рід
-    ipa: /rid/
-    translation: gender
-    pos: noun
-    gender: m
-  - lemma: чоловічий
-    ipa: /tʃɔlɔˈʋitʃɪi/
-    translation: masculine
-    pos: adj
-  - lemma: жіночий
-    ipa: /ʒiˈnɔtʃɪi/
-    translation: feminine
-    pos: adj
-  - lemma: середній
-    ipa: /seˈrɛdnʲɪi/
-    translation: neuter
-    pos: adj
+- example: Мій брат — студент.
+  gender: m
+  lemma: брат
+  pos: noun
+  translation: brother
+  usage: Family member
+- example: Моя сестра — студентка.
+  gender: f
+  lemma: сестра
+  pos: noun
+  translation: sister
+  usage: Family member
+- example: Це моя мама.
+  gender: f
+  lemma: мама
+  pos: noun
+  translation: mother
+  usage: Family member
+- example: Це мій тато.
+  gender: m
+  lemma: тато
+  notes: Masculine by natural gender despite -o ending
+  pos: noun
+  translation: father
+- example: Це мій дім.
+  gender: m
+  lemma: дім
+  pos: noun
+  translation: house / home
+- example: Моє вікно.
+  gender: n
+  lemma: вікно
+  pos: noun
+  translation: window
+- example: Це моя книга.
+  gender: f
+  lemma: книга
+  pos: noun
+  translation: book
+- example: Київ — це місто.
+  gender: n
+  lemma: місто
+  pos: noun
+  translation: city
+- example: Мій стіл новий.
+  gender: m
+  lemma: стіл
+  pos: noun
+  translation: table
+- example: Тут велике море.
+  gender: n
+  lemma: море
+  pos: noun
+  translation: sea
+- example: Це добра ніч.
+  gender: f
+  lemma: ніч
+  notes: 'Family 3 exception: feminine ending in a consonant'
+  pos: noun
+  translation: night
+- example: Сьогодні гарний день.
+  gender: m
+  lemma: день
+  pos: noun
+  translation: day
+- example: Тут моя земля.
+  gender: f
+  lemma: земля
+  pos: noun
+  translation: earth / land
+- example: Моє серце.
+  gender: n
+  lemma: серце
+  pos: noun
+  translation: heart
+- example: Це мій хліб.
+  gender: m
+  lemma: хліб
+  pos: noun
+  translation: bread
+- example: Це сонце.
+  gender: n
+  lemma: сонце
+  pos: noun
+  translation: sun
+- example: Там зона.
+  gender: f
+  lemma: зона
+  pos: noun
+  translation: zone
+- example: Це моє імʼя.
+  gender: n
+  lemma: імʼя
+  notes: Family 4 neuter noun
+  pos: noun
+  translation: name
+- lemma: мій
+  pos: pronoun
+  translation: my (masculine)
+  usage: Possessive pronoun for masculine nouns
+- lemma: моя
+  pos: pronoun
+  translation: my (feminine)
+  usage: Possessive pronoun for feminine nouns
+- lemma: рід
+  pos: noun
+  translation: gender
+  usage: Grammatical term
+- lemma: чоловічий
+  pos: adjective
+  translation: masculine
+  usage: Grammatical term (Чоловічий рід)
+- lemma: жіночий
+  pos: adjective
+  translation: feminine
+  usage: Grammatical term (Жіночий рід)
+- lemma: середній
+  pos: adjective
+  translation: neuter
+  usage: Grammatical term (Середній рід)
+- lemma: приголосний
+  pos: noun
+  translation: consonant
+  usage: Grammatical term

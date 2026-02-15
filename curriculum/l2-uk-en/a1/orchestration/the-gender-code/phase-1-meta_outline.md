@@ -1,30 +1,36 @@
 content_outline:
-  - section: "Презентація: Код роду"
-    words: 410
+  - section: "Вступ: Родовий код іменників"
+    words: 215
     points:
-      - "Intro: Every Ukrainian noun has a gender (Masculine, Feminine, Neuter) — it's about grammar, not just biology"
-      - "The 'Secret Code': 95% of genders are revealed by the word ending (pattern recognition strategy)"
-      - "Masculine Rule (Чоловічий рід): Ends in a consonant (стіл, хліб, дім, брат)"
-      - "Feminine Rule (Жіночий рід): Ends in -а or -я (книга, кімната, земля, сестра)"
-      - "Neuter Rule (Середній рід): Ends in -о or -е (вікно, місто, море, сонце)"
-      - "The 'Dad' Exception: 'Тато' ends in -a but is Masculine (natural gender overrides grammar for people)"
-      - "Visual Aid Description: Associate genders with colors (Blue=M, Red=F, Yellow=N) for memory retention"
-      - "Mini-dialogue: Contextual usage of 'мій' (M), 'моя' (F), 'моє' (N) to demonstrate agreement basics"
-  - section: "Практика: Чотири відміни"
-    words: 323
+      - "Concept: Every Ukrainian noun has a fixed gender (Masculine, Feminine, or Neuter)."
+      - "English Scaffolding: Explain that gender is grammatical, not always biological (objects like tables are 'he')."
+      - "Pattern Recognition: 95% of genders are predictable by the word's ending; no need for rote memorization."
+      - "Mnemonics: Introduce color-coding (Blue=Masculine, Red/Pink=Feminine, Yellow=Neuter) as visual anchors."
+      - "Interactive Check: Can you guess the gender of 'taxi' or 'pizza' based on their endings?"
+  - section: "Презентація: Основні правила роду"
+    words: 300
     points:
-      - "Concept of 'Families' (Відміни): Nouns belong to 4 declension groups based on how they change"
-      - "Family 1 (The 'A-Team'): Nouns ending in -а/-я. Mostly Feminine (мама, земля), some Masculine (тато)"
-      - "Family 2 (The 'Hard Core'): Masculine consonants (стіл, брат) + Neuter -о/-е (вікно, море)"
-      - "Family 3 (The 'Soft' Exception): Feminine nouns ending in a consonant or soft sign (ніч, любов, тінь)"
-      - "Research Alert: The 'Soft Sign' Ambiguity — Contrast 'день' (M) vs 'ніч' (F)"
-      - "Family 4 (The 'Changelings'): Neuter nouns ending in -а/-я (ім'я, теля) that gain suffixes in cases"
-      - "Research Alert: The 'Name' Trap — 'ім'я' looks Feminine (-я) but is Neuter (Family 4)"
-  - section: "Культурний контекст"
-    words: 201
+      - "Masculine (Чоловічий рід): Ends in a consonant (стіл, хліб, дім) — the 'Hard/Stop' rule."
+      - "Feminine (Жіночий рід): Ends in -а or -я (книга, кімната, земля) — the 'Open/A' rule."
+      - "Neuter (Середній рід): Ends in -о or -е (вікно, місто, море) — the 'Round/Circle' rule."
+      - "Exceptions Checklist: Natural gender overrides endings (тато is Masculine despite -o ending; собака is Masculine despite -a)."
+      - "The Soft Sign Trap: Introduce the 'ь' ambiguity (день-M vs. ніч-F) with research notes on the contrast."
+      - "Mini-dialogue: Using possessive pronouns (мій, моя, моє) to show gender agreement in context."
+  - section: "Класифікація: Чотири родини (відміни)"
+    words: 219
     points:
-      - "Cultural Hook: 'Сонце' (Sun) is Neuter — a gentle, impartial life-giver (unlike M/F in other languages)"
-      - "Common Error: 'Собака' (Dog) is Masculine, despite the -a ending ('Гарний собака')"
-      - "Vocabulary in Context: 'Дім' (M), 'Вікно' (N), 'Кімната' (F) — spotting genders in a house environment"
-      - "Pop Culture Connection: S.T.A.L.K.E.R. vocabulary examples (артефакт - M, зона - F)"
-      - "Production Task Logic: A checklist for determining gender (1. Person? 2. Ending? 3. Soft sign check?)"
+      - "Deep Dive: Introduction to the 4 declension families (відміни) as the engine of Ukrainian grammar."
+      - "Family 1: -а/-я endings (mostly Feminine: мама; some Masculine: тато, Микола)."
+      - "Family 2: Masculine consonant (брат) + Neuter -о/-е (місто)."
+      - "Family 3: Feminine nouns ending in a consonant or soft sign (ніч, любов)."
+      - "Family 4: Neuter nouns in -а/-я with stem changes (The 'Name' Trap: імʼя is Neuter, not Feminine)."
+      - "Synthesis: A table mapping endings to both gender and declension family for quick reference."
+  - section: "Застосування: Культура та практика"
+    words: 200
+    points:
+      - "Cultural Insight: The 'Neuter Sun' (сонце) and its gentle role in Ukrainian folklore vs. other languages."
+      - "Modern Hook: Gaming vocabulary from S.T.A.L.K.E.R. (артефакт - M, зона - F, укриття - N)."
+      - "Production Task: Step-by-step guide to identifying gender (Check person -> Check ending -> Check soft sign)."
+      - "Self-Correction: Identifying the most common learner errors (over-reliance on English 'it')."
+      - "Final Summary: Quick-fire categorization of core vocabulary (дім, вікно, книга, серце)."
+# Total: 934 words

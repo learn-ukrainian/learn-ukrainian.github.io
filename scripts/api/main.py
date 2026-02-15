@@ -31,6 +31,7 @@ from .config import (
 # Team routers
 from .blue_router import router as blue_router
 from .gold_router import router as gold_router
+from .dashboard_router import router as dashboard_router
 
 app = FastAPI(
     title="Playground API",
@@ -48,6 +49,7 @@ app.add_middleware(
 # Mount team routers — each team owns their own file
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(gold_router, prefix="/api/gold")
+app.include_router(dashboard_router, prefix="/api/dashboard")
 
 
 # ==================== SHARED ENDPOINTS ====================
@@ -163,14 +165,6 @@ async def batch_websocket(websocket: WebSocket):
 
 
 # ==================== STATIC FILES (MUST BE LAST) ====================
-
-@app.get("/v2-gold/{path:path}")
-async def serve_v2_gold(path: str):
-    file_path = PLAYGROUNDS_DIR / "v2-gold" / path
-    if file_path.exists():
-        return FileResponse(file_path)
-    raise HTTPException(status_code=404)
-
 
 @app.get("/{path:path}")
 async def serve_static(path: str):

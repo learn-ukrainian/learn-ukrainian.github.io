@@ -1,0 +1,25 @@
+content_outline:
+  - section: "Вступ: Читання кирилиці та рід іменників"
+    words: 285
+    points:
+      - "Supportive introduction from the 'Friendly Hostel Host' persona; provide English scaffolding for the checkpoint objectives and how to use the results."
+      - "Comprehensive review of the 33 letters of the Ukrainian alphabet, focusing on the phonetic distinction between 'и' and 'і' to address common learner errors (§4.1.1)."
+      - "Reading practice for high-frequency vocabulary and proper nouns (Київ, Україна, кава) without any Latin transliteration."
+      - "Noun gender classification rules for masculine, feminine, and neuter based on word endings (§4.2.1.1); include a clear categorization table."
+      - "Explanation of biological gender exceptions such as 'тато' and 'батько', emphasizing their masculine status despite word endings."
+  - section: "Дієвідмінювання дієслів теперішнього часу"
+    words: 210
+    points:
+      - "Consolidation of First (-ати) and Second (-ити/-іти) conjugation patterns in the present tense (§4.2.4.1)."
+      - "Full conjugation paradigms for core A1 verbs: читати, знати, говорити, писати."
+      - "Specific focus on the 3rd person plural endings (-уть/-ють vs -ать/-ять) to prevent group mixing errors identified in research."
+      - "Introduction to basic syntactic roles: define subject (підмет) and predicate (присудок) with 3 sentence examples demonstrating agreement."
+  - section: "Комунікація: Питальні речення та замовлення в кафе"
+    words: 380
+    points:
+      - "Formation of specific questions using 'хто', 'що', 'де', 'коли' (§4.3.1) and intonation patterns for general yes/no questions."
+      - "Proper placement and usage of the negation particle 'не' in simple sentences."
+      - "Thematic vocabulary for the cafe: drinks (кава), dishes (страви), and the bill (рахунок) (§3.9)."
+      - "Cultural anchor: 2-3 paragraphs on the Lviv coffee tradition and the historical impact of Yuriy Kulchytsky on European coffee culture."
+      - "Practical ordering phrases ('Можна мені...?', 'Я хочу...') and polite markers like 'будь ласка', 'дякую', and 'перепрошую'."
+      - "Integration Task: A 6-turn dialogue scenario in a cafe context, concluding with the blessing 'Смачного!' and a self-assessment checklist for A1.1 readiness."

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Dashboard - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .nav a { color: var(--text2); }
+.refresh-indicator { font-size: 11px; color: var(--text3); }
+
+.content { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 1200px) { .content { grid-template-columns: 1fr; } }
+
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.card h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.card h2 .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.card.full-width { grid-column: 1 / -1; }
+
+/* Pipeline diagram */
+.pipeline { display: flex; align-items: center; gap: 0; margin-bottom: 16px; flex-wrap: wrap; }
+.phase-node { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; background: var(--bg3); border: 1px solid var(--border); white-space: nowrap; }
+.phase-arrow { color: var(--text3); font-size: 16px; padding: 0 4px; }
+.phase-node.otaman { border-color: var(--orange); color: var(--orange); }
+.phase-node.hetman { border-color: var(--purple); color: var(--purple); }
+
+/* Active builds */
+.build-list { display: flex; flex-direction: column; gap: 4px; }
+.build-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bg); border-radius: 6px; font-size: 13px; }
+.build-item .dot { width: 8px; height: 8px; border-radius: 50%; animation: pulse 1.5s infinite; }
+.build-item .dot.otaman { background: var(--orange); }
+.build-item .dot.hetman { background: var(--purple); }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.build-item .slug { font-weight: 600; }
+.build-item .track { color: var(--text2); }
+.build-item .age { color: var(--text3); margin-left: auto; font-size: 12px; }
+
+/* Queue */
+.queue-list { max-height: 300px; overflow-y: auto; }
+.queue-item { display: flex; align-items: center; gap: 8px; padding: 4px 8px; font-size: 12px; border-bottom: 1px solid var(--border); }
+.queue-item:last-child { border-bottom: none; }
+.queue-item .num { color: var(--text3); min-width: 24px; }
+.queue-item .track-tag { background: var(--bg3); padding: 1px 6px; border-radius: 3px; font-size: 11px; color: var(--text2); }
+
+/* Messages */
+.msg-list { max-height: 400px; overflow-y: auto; }
+.msg-item { padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.msg-item:last-child { border-bottom: none; }
+.msg-item .msg-header { display: flex; gap: 8px; margin-bottom: 2px; }
+.msg-item .msg-from { font-weight: 600; }
+.msg-item .msg-to { color: var(--text2); }
+.msg-item .msg-time { color: var(--text3); margin-left: auto; }
+.msg-item .msg-content { color: var(--text2); word-break: break-word; }
+.msg-item .msg-task { color: var(--purple); font-size: 11px; }
+
+.empty { color: var(--text3); font-size: 13px; padding: 16px; text-align: center; }
+.loading { text-align: center; padding: 40px; color: var(--text2); }
+.loading .spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Stats row */
+.pipeline-stats { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.pipeline-stat { text-align: center; min-width: 80px; }
+.pipeline-stat .value { font-size: 24px; font-weight: 700; }
+.pipeline-stat .label { font-size: 11px; color: var(--text2); text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Pipeline Dashboard</h1>
+  <span class="refresh-indicator" id="refresh-info"></span>
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/audit-dashboard.html">Audit</a>
+    <a href="/curriculum-dashboard.html">Curriculum</a>
+    <a href="/activity-explorer.html">Activities</a>
+  </div>
+</div>
+
+<div class="pipeline-stats" style="padding:16px 24px;" id="pipeline-stats">
+  <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<div class="content" id="main-content">
+  <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<script>
+const API = '/api/dashboard';
+
+async function fetchPipeline() {
+  const res = await fetch(`${API}/pipeline`);
+  return await res.json();
+}
+
+function formatAge(seconds) {
+  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 3600) return `${Math.floor(seconds/60)}m ago`;
+  return `${Math.floor(seconds/3600)}h ago`;
+}
+
+function render(data) {
+  document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+
+  // Stats
+  const statsEl = document.getElementById('pipeline-stats');
+  statsEl.innerHTML = `
+    <div class="pipeline-stat"><div class="value" style="color:var(--orange)">${data.active_builds.filter(b=>b.stage==='otaman').length}</div><div class="label">Otaman Active</div></div>
+    <div class="pipeline-stat"><div class="value" style="color:var(--purple)">${data.active_builds.filter(b=>b.stage==='hetman').length}</div><div class="label">Hetman Active</div></div>
+    <div class="pipeline-stat"><div class="value" style="color:var(--yellow)">${data.otaman_queue_total}</div><div class="label">Otaman Queue</div></div>
+    <div class="pipeline-stat"><div class="value" style="color:var(--blue)">${data.hetman_queue_total}</div><div class="label">Hetman Queue</div></div>
+  `;
+
+  // Main content
+  const content = document.getElementById('main-content');
+  content.innerHTML = '';
+
+  // Otaman pipeline
+  const otamanCard = makeCard('Otaman Pipeline', 'Content Sprint', 'orange');
+  otamanCard.innerHTML += `
+    <div class="pipeline">
+      ${['P0 Research','P1 Meta','P2 Content','P4 Audit','P6 Review','P6b Fixes'].map(p =>
+        `<span class="phase-node otaman">${p}</span><span class="phase-arrow">&#8594;</span>`
+      ).join('').slice(0,-40)}
+    </div>
+  `;
+  const otamanBuilds = data.active_builds.filter(b => b.stage === 'otaman');
+  if (otamanBuilds.length > 0) {
+    otamanCard.innerHTML += `<div class="build-list">${otamanBuilds.map(b => `
+      <div class="build-item">
+        <div class="dot otaman"></div>
+        <span class="slug">${b.slug}</span>
+        <span class="track">${b.track}</span>
+        <span style="color:var(--text3);font-size:11px">${b.latest_file}</span>
+        <span class="age">${formatAge(b.seconds_ago)}</span>
+      </div>
+    `).join('')}</div>`;
+  } else {
+    otamanCard.innerHTML += '<div class="empty">No active otaman builds</div>';
+  }
+  content.appendChild(otamanCard);
+
+  // Hetman pipeline
+  const hetmanCard = makeCard('Hetman Pipeline', 'Activity Enrichment', 'purple');
+  hetmanCard.innerHTML += `
+    <div class="pipeline">
+      ${['P3 Activities','P4 Full Audit','P7 Final Review'].map(p =>
+        `<span class="phase-node hetman">${p}</span><span class="phase-arrow">&#8594;</span>`
+      ).join('').slice(0,-40)}
+    </div>
+  `;
+  const hetmanBuilds = data.active_builds.filter(b => b.stage === 'hetman');
+  if (hetmanBuilds.length > 0) {
+    hetmanCard.innerHTML += `<div class="build-list">${hetmanBuilds.map(b => `
+      <div class="build-item">
+        <div class="dot hetman"></div>
+        <span class="slug">${b.slug}</span>
+        <span class="track">${b.track}</span>
+        <span style="color:var(--text3);font-size:11px">${b.latest_file}</span>
+        <span class="age">${formatAge(b.seconds_ago)}</span>
+      </div>
+    `).join('')}</div>`;
+  } else {
+    hetmanCard.innerHTML += '<div class="empty">No active hetman builds</div>';
+  }
+  content.appendChild(hetmanCard);
+
+  // Otaman queue
+  const oqCard = makeCard(`Otaman Queue (${data.otaman_queue_total})`, 'Needs Content', 'yellow');
+  if (data.otaman_queue.length > 0) {
+    oqCard.innerHTML += `<div class="queue-list">${data.otaman_queue.map((m,i) => `
+      <div class="queue-item">
+        <span class="num">${i+1}</span>
+        <span class="track-tag">${m.track}</span>
+        <span>${m.slug}</span>
+      </div>
+    `).join('')}</div>`;
+    if (data.otaman_queue_total > 50) {
+      oqCard.innerHTML += `<div class="empty">... and ${data.otaman_queue_total - 50} more</div>`;
+    }
+  } else {
+    oqCard.innerHTML += '<div class="empty">Queue empty</div>';
+  }
+  content.appendChild(oqCard);
+
+  // Hetman queue
+  const hqCard = makeCard(`Hetman Queue (${data.hetman_queue_total})`, 'Needs Activities', 'blue');
+  if (data.hetman_queue.length > 0) {
+    hqCard.innerHTML += `<div class="queue-list">${data.hetman_queue.map((m,i) => `
+      <div class="queue-item">
+        <span class="num">${i+1}</span>
+        <span class="track-tag">${m.track}</span>
+        <span>${m.slug}</span>
+      </div>
+    `).join('')}</div>`;
+    if (data.hetman_queue_total > 50) {
+      hqCard.innerHTML += `<div class="empty">... and ${data.hetman_queue_total - 50} more</div>`;
+    }
+  } else {
+    hqCard.innerHTML += '<div class="empty">Queue empty</div>';
+  }
+  content.appendChild(hqCard);
+
+  // Broker messages
+  const msgCard = makeCard('Broker Messages', 'Last 20', 'text2');
+  msgCard.classList.add('full-width');
+  if (data.broker_messages.length > 0) {
+    msgCard.innerHTML += `<div class="msg-list">${data.broker_messages.map(m => `
+      <div class="msg-item">
+        <div class="msg-header">
+          <span class="msg-from">${m.from_llm || '?'}</span>
+          <span class="msg-to">&#8594; ${m.to_llm || '?'}</span>
+          ${m.task_id ? `<span class="msg-task">${m.task_id}</span>` : ''}
+          <span class="msg-time">${m.timestamp || ''}</span>
+        </div>
+        <div class="msg-content">${escapeHtml((m.content || '').substring(0, 200))}</div>
+      </div>
+    `).join('')}</div>`;
+  } else {
+    msgCard.innerHTML += '<div class="empty">No recent messages</div>';
+  }
+  content.appendChild(msgCard);
+}
+
+function makeCard(title, subtitle, color) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<h2>${title} <span class="badge" style="background:var(--${color});color:var(--bg)">${subtitle}</span></h2>`;
+  return card;
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+async function refresh() {
+  try {
+    const data = await fetchPipeline();
+    render(data);
+  } catch (e) {
+    console.error('Fetch error:', e);
+  }
+}
+
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>

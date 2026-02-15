@@ -1,0 +1,109 @@
+- lemma: цей
+  notes: Use for masculine nouns near you
+  pos: pronoun
+  translation: this (masculine)
+  usage: цей стіл
+- lemma: ця
+  notes: Use for feminine nouns near you
+  pos: pronoun
+  translation: this (feminine)
+  usage: ця книга
+- lemma: це
+  notes: Use for neuter nouns near you, or for "This is..."
+  pos: pronoun
+  translation: this (neuter)
+  usage: це вікно, це мама
+- lemma: ці
+  notes: Use for plural nouns near you
+  pos: pronoun
+  translation: these (plural)
+  usage: ці люди
+- lemma: той
+  notes: Use for masculine nouns far from you
+  pos: pronoun
+  translation: that (masculine)
+  usage: той дім
+- lemma: та
+  notes: Use for feminine nouns far from you
+  pos: pronoun
+  translation: that (feminine)
+  usage: та шафа
+- lemma: те
+  notes: Use for neuter nouns far from you
+  pos: pronoun
+  translation: that (neuter)
+  usage: те море
+- lemma: ті
+  notes: Use for plural nouns far from you
+  pos: pronoun
+  translation: those (plural)
+  usage: ті вікна
+- gender: m
+  lemma: стіл
+  pos: noun
+  translation: table
+- gender: f
+  lemma: книга
+  pos: noun
+  translation: book
+- gender: m
+  lemma: телефон
+  pos: noun
+  translation: phone
+- gender: f
+  lemma: кімната
+  pos: noun
+  translation: room
+- gender: n
+  lemma: вікно
+  pos: noun
+  translation: window
+- gender: m
+  lemma: стілець
+  pos: noun
+  translation: chair
+- gender: n
+  lemma: ліжко
+  pos: noun
+  translation: bed
+- gender: f
+  lemma: шафа
+  pos: noun
+  translation: wardrobe
+- gender: pl
+  lemma: двері
+  pos: noun
+  translation: door
+- gender: f
+  lemma: лампа
+  pos: noun
+  translation: lamp
+- gender: m
+  lemma: ніж
+  pos: noun
+  translation: knife
+- gender: f
+  lemma: ложка
+  pos: noun
+  translation: spoon
+- gender: n
+  lemma: блюдо
+  pos: noun
+  translation: platter
+- gender: f
+  lemma: хата
+  pos: noun
+  translation: traditional house
+- gender: f
+  lemma: квартира
+  pos: noun
+  translation: apartment
+- gender: m
+  lemma: дім
+  pos: noun
+  translation: home / house
+- gender: m
+  lemma: гість
+  pos: noun
+  translation: guest
+

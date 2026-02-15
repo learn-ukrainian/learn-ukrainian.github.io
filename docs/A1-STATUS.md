@@ -1,68 +1,71 @@
 # A1 Module Status
 
-**Generated:** 2026-02-10 16:08:58
+**Generated:** 2026-02-16 00:32:41
 **Total Modules:** 44
-**Status:** 44 passing, 0 failing, 0 stubs, 0 errors
+**Status:** 10 passing, 2 prose-only, 5 failing, 1 stubs, 26 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 44/44 (100%)
-- ❌ **Failing:** 0/44
-- 📝 **Stubs:** 0/44
+- ✅ **Passing:** 10/44 (22%)
+- 🔄 **Prose-Only (awaiting enrichment):** 2/44
+- ❌ **Failing:** 5/44
+- 📝 **Stubs:** 1/44
+- ⚠️ **Errors:** 26/44
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-the-cyrillic-code-i | ✅ PASS | 1135/1019 | - |
-| 002 | 02-the-cyrillic-code-ii | ✅ PASS | 1628/1531 | - |
-| 003 | 03-the-gender-code | ✅ PASS | 1050/934 | - |
-| 004 | 04-this-is-i-am | ✅ PASS | 1467/1448 | - |
-| 005 | 05-my-world-objects | ✅ PASS | 1660/1412 | - |
-| 006 | 06-the-living-verb-i | ✅ PASS | 1469/1210 | - |
-| 007 | 07-questions-and-negation | ✅ PASS | 1163/1131 | - |
-| 008 | 08-the-living-verb-ii | ✅ PASS | 994/972 | - |
-| 009 | 09-reflexive-verbs | ✅ PASS | 1496/750 | - |
-| 010 | 10-checkpoint-first-contact | ✅ PASS | 1276/875 | - |
-| 011 | 11-the-accusative-i-things | ✅ PASS | 1004/855 | - |
-| 012 | 12-the-accusative-ii-people | ✅ PASS | 1479/1374 | - |
-| 013 | 13-the-locative-where-things-are | ✅ PASS | 2071/1331 | - |
-| 014 | 14-mine-and-yours | ✅ PASS | 1758/1307 | - |
-| 015 | 15-around-the-city | ✅ PASS | 1922/1602 | - |
-| 016 | 16-the-genitive-i-absence | ✅ PASS | 1151/1038 | - |
-| 017 | 17-numbers-and-money | ✅ PASS | 1154/1091 | - |
-| 018 | 18-food-and-shopping | ✅ PASS | 810/750 | - |
-| 019 | 19-at-the-cafe | ✅ PASS | 1165/1075 | - |
-| 020 | 20-checkpoint-navigation | ✅ PASS | 1439/1073 | - |
-| 021 | 21-yesterday-past-tense | ✅ PASS | 1134/1092 | - |
-| 022 | 22-tomorrow-future-tense | ✅ PASS | 1280/1082 | - |
-| 023 | 23-what-time-is-it | ✅ PASS | 1073/1064 | - |
-| 024 | 24-can-must-want-modals | ✅ PASS | 1183/1049 | - |
-| 025 | 25-my-daily-routine | ✅ PASS | 1036/750 | - |
-| 026 | 26-describing-things-adjectives | ✅ PASS | 1013/853 | - |
-| 027 | 27-colors-and-clothing | ✅ PASS | 1192/750 | - |
-| 028 | 28-description-adverbs | ✅ PASS | 1053/750 | - |
-| 029 | 29-weather-and-nature | ✅ PASS | 927/869 | - |
-| 030 | 30-prepositions-iii | ✅ PASS | 1154/936 | - |
-| 031 | 31-body-and-health | ✅ PASS | 904/820 | - |
-| 032 | 32-my-family | ✅ PASS | 1069/916 | - |
-| 033 | 33-holidays-and-traditions | ✅ PASS | 892/750 | - |
-| 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/962 | - |
-| 035 | 35-at-the-cafe-practical | ✅ PASS | 908/825 | - |
-| 036 | 36-at-the-restaurant | ✅ PASS | 1117/750 | - |
-| 037 | 37-at-the-market | ✅ PASS | 812/793 | - |
-| 038 | 38-at-the-store | ✅ PASS | 836/750 | - |
-| 039 | 39-buying-tickets | ✅ PASS | 986/750 | - |
-| 040 | 40-taking-transport | ✅ PASS | 827/750 | - |
-| 041 | 41-phone-basics | ✅ PASS | 813/750 | - |
-| 042 | 42-emergencies | ✅ PASS | 798/750 | - |
-| 043 | 43-combined-practice | ✅ PASS | 1101/750 | - |
-| 044 | 44-a1-final-exam | ✅ PASS | 1075/750 | - |
+| 001 | the-cyrillic-code-i | ✅ PASS | 2202/1019 | - |
+| 002 | the-cyrillic-code-ii | ✅ PASS | 1888/1531 | - |
+| 003 | the-gender-code | ✅ PASS | 3265/934 | - |
+| 004 | this-is-i-am | ✅ PASS | 1776/1448 | - |
+| 005 | my-world-objects | ✅ PASS | 3266/1412 | - |
+| 006 | the-living-verb-i | ✅ PASS | 1849/1210 | - |
+| 007 | questions-and-negation | ✅ PASS | 2976/1131 | - |
+| 008 | the-living-verb-ii | 🔄 PROSE | 1661/972 | - |
+| 009 | reflexive-verbs | 🔄 PROSE | 2782/830 | - |
+| 010 | checkpoint-first-contact | ✅ PASS | 1744/875 | - |
+| 011 | the-accusative-i-things | ✅ PASS | 2253/855 | - |
+| 012 | the-accusative-ii-people | ✅ PASS | 3714/1374 | - |
+| 013 | the-locative-where-things-are | ❌ FAIL | 2469/1331 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-locative-where-things-are-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
+| 014 | mine-and-yours | ❌ FAIL | 1751/1307 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/mine-and-yours-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
+| 015 | around-the-city | 📝 STUB | 0/0 | empty |
+| 016 | the-genitive-i-absence | ❌ FAIL | 3093/1038 | Structure: Missing '## Summary' |
+| 017 | numbers-and-money | ❌ FAIL | 2584/1091 | - |
+| 018 | food-and-shopping | ❌ FAIL | 2078/750 | - |
+| 019 | at-the-cafe | ⚠️ MISSING | 0/0 | no_file |
+| 020 | checkpoint-navigation | ⚠️ MISSING | 0/0 | no_file |
+| 021 | yesterday-past-tense | ⚠️ MISSING | 0/0 | no_file |
+| 022 | tomorrow-future-tense | ⚠️ MISSING | 0/0 | no_file |
+| 023 | what-time-is-it | ⚠️ MISSING | 0/0 | no_file |
+| 024 | can-must-want-modals | ⚠️ MISSING | 0/0 | no_file |
+| 025 | my-daily-routine | ⚠️ MISSING | 0/0 | no_file |
+| 026 | describing-things-adjectives | ⚠️ MISSING | 0/0 | no_file |
+| 027 | colors-and-clothing | ⚠️ MISSING | 0/0 | no_file |
+| 028 | description-adverbs | ⚠️ MISSING | 0/0 | no_file |
+| 029 | weather-and-nature | ⚠️ MISSING | 0/0 | no_file |
+| 030 | prepositions-iii | ⚠️ MISSING | 0/0 | no_file |
+| 031 | body-and-health | ⚠️ MISSING | 0/0 | no_file |
+| 032 | my-family | ⚠️ MISSING | 0/0 | no_file |
+| 033 | holidays-and-traditions | ⚠️ MISSING | 0/0 | no_file |
+| 034 | checkpoint-core-grammar | ⚠️ MISSING | 0/0 | no_file |
+| 035 | at-the-cafe-practical | ⚠️ MISSING | 0/0 | no_file |
+| 036 | at-the-restaurant | ⚠️ MISSING | 0/0 | no_file |
+| 037 | at-the-market | ⚠️ MISSING | 0/0 | no_file |
+| 038 | at-the-store | ⚠️ MISSING | 0/0 | no_file |
+| 039 | buying-tickets | ⚠️ MISSING | 0/0 | no_file |
+| 040 | taking-transport | ⚠️ MISSING | 0/0 | no_file |
+| 041 | phone-basics | ⚠️ MISSING | 0/0 | no_file |
+| 042 | emergencies | ⚠️ MISSING | 0/0 | no_file |
+| 043 | combined-practice | ⚠️ MISSING | 0/0 | no_file |
+| 044 | a1-final-exam | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

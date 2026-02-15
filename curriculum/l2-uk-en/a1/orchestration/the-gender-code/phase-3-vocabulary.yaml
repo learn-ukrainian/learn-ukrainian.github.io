@@ -1,70 +1,105 @@
-- word: брат
+- example: Мій брат — студент.
+  gender: m
+  lemma: брат
+  pos: noun
   translation: brother
-  gender: m
-  ipa: "brɑt"
-  definition: "A male sibling."
-- word: сестра
+  usage: Family member
+- example: Моя сестра — студентка.
+  gender: f
+  lemma: сестра
+  pos: noun
   translation: sister
+  usage: Family member
+- example: Це моя мама.
   gender: f
-  ipa: "seˈstrɑ"
-  definition: "A female sibling."
-- word: мама
-  translation: mom / mother
-  gender: f
-  ipa: "ˈmɑmɑ"
-  definition: "A female parent."
-- word: тато
-  translation: dad / father
+  lemma: мама
+  pos: noun
+  translation: mother
+  usage: Family member
+- example: Це мій тато.
   gender: m
-  ipa: "ˈtɑtɔ"
-  definition: "A male parent. Grammatically looks neuter (-o) or feminine-like in plural, but is always masculine."
-- word: дім
-  translation: home / house
+  lemma: тато
+  notes: Masculine by natural gender despite -o ending
+  pos: noun
+  translation: father
+- example: Це мій дім.
   gender: m
-  ipa: "dʲim"
-  definition: "A place where one lives."
-- word: вікно
+  lemma: дім
+  pos: noun
+  translation: house / home
+- example: Моє вікно.
+  gender: n
+  lemma: вікно
+  pos: noun
   translation: window
-  gender: n
-  ipa: "ʋikˈnɔ"
-  definition: "An opening in a wall to let in light and air."
-- word: книга
+- example: Це моя книга.
+  gender: f
+  lemma: книга
+  pos: noun
   translation: book
-  gender: f
-  ipa: "ˈknɪɦɑ"
-  definition: "A written or printed work consisting of pages."
-- word: місто
+- example: Київ — це місто.
+  gender: n
+  lemma: місто
+  pos: noun
   translation: city
-  gender: n
-  ipa: "ˈmistɔ"
-  definition: "A large town."
-- word: стіл
+- example: Мій стіл новий.
+  gender: m
+  lemma: стіл
+  pos: noun
   translation: table
-  gender: m
-  ipa: "sʲtʲil"
-  definition: "A piece of furniture with a flat top."
-- word: море
+- example: Тут велике море.
+  gender: n
+  lemma: море
+  pos: noun
   translation: sea
-  gender: n
-  ipa: "ˈmɔre"
-  definition: "The expanse of salt water that covers most of the earth's surface."
-- word: ніч
+- example: Це добра ніч.
+  gender: f
+  lemma: ніч
+  notes: 'Family 3 exception: feminine ending in a consonant'
+  pos: noun
   translation: night
-  gender: f
-  ipa: "nʲitʃ"
-  definition: "The period of darkness in each twenty-four hours."
-- word: день
-  translation: day
+- example: Сьогодні гарний день.
   gender: m
-  ipa: "denʲ"
-  definition: "The time between sunrise and sunset."
-- word: земля
-  translation: earth / land
+  lemma: день
+  pos: noun
+  translation: day
+- example: Тут моя земля.
   gender: f
-  ipa: "zemˈlʲɑ"
-  definition: "The planet on which we live; the world."
-- word: серце
-  translation: heart
+  lemma: земля
+  pos: noun
+  translation: earth / land
+- example: Моє серце.
   gender: n
-  ipa: "ˈsɛrtse"
-  definition: "The organ that pumps blood; often associated with love/emotion."
+  lemma: серце
+  pos: noun
+  translation: heart
+- example: Це мій хліб.
+  gender: m
+  lemma: хліб
+  pos: noun
+  translation: bread
+- example: Це сонце.
+  gender: n
+  lemma: сонце
+  pos: noun
+  translation: sun
+- example: Там зона.
+  gender: f
+  lemma: зона
+  pos: noun
+  translation: zone
+- example: Це моє імʼя.
+  gender: n
+  lemma: імʼя
+  notes: Family 4 neuter noun
+  pos: noun
+  translation: name
+- lemma: мій
+  pos: pronoun
+  translation: my (masculine)
+  usage: Possessive pronoun for masculine nouns
+- lemma: моя
+  pos: pronoun
+  translation: my (feminine)
+  usage: Possessive pronoun for feminine nouns
+

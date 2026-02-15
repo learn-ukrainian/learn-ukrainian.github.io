@@ -1,0 +1,52 @@
+TRACK: a1
+LEVEL: A1
+SLUG: reflexive-verbs
+TOPIC_TITLE: Reflexive Verbs (-ся)
+MODULE_NUM: '9'
+PLAN_PATH: curriculum/l2-uk-en/plans/a1/reflexive-verbs.yaml
+META_PATH: curriculum/l2-uk-en/a1/meta/reflexive-verbs.yaml
+CONTENT_PATH: curriculum/l2-uk-en/a1/reflexive-verbs.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/a1/activities/reflexive-verbs.yaml
+VOCAB_PATH: curriculum/l2-uk-en/a1/vocabulary/reflexive-verbs.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/a1/research/reflexive-verbs-research.md
+REVIEW_PATH: curriculum/l2-uk-en/a1/review/reflexive-verbs-review.md
+ORCH_DIR: curriculum/l2-uk-en/a1/orchestration/reflexive-verbs
+QUICK_REF_PATH: claude_extensions/quick-ref/A1.md
+SCHEMA_PATH: schemas/activities-a1.schema.json
+WORD_TARGET: '830'
+SKILL_IDENTITY: full-rebuild-core-a
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_VOICE: Patient Supportive Tutor
+PERSONA_ROLE: Yoga Instructor
+IMMERSION_RULE: 'TARGET: 15-35% Ukrainian, 65-85% English. Explanatory prose primarily
+  in English. Grammar concepts explained in English with Ukrainian terminology introduced
+  (bolded, with translation on first use). Examples increasingly in Ukrainian with
+  translations. Callout text in English. Ukrainian sentences max 10 words.'
+LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations): - Max 10 words
+  per Ukrainian sentence (STRICT — count every word) - ONLY 1 clause per sentence
+  (no compound sentences) - Dative case FORBIDDEN (no мені, тобі, йому, їй, нам, вам,
+  їм, -ові/-еві endings) - Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею
+  endings) - NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що,
+  бо, щоб, поки are ALL BANNED - Only imperfective aspect verbs - No participles -
+  Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics), Vocative'
+ACTIVITY_COUNT_TARGET: 10
+ACTIVITY_MIN: 8
+ITEMS_MIN: 12
+VOCAB_COUNT_TARGET: 20
+FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
+  essay-response, critical-analysis, comparative-study, authorial-intent
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, reorder, group-sort
+REQUIRED_TYPES: ''
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+SECTION_TITLE: Культурний аспект та особливості вимови
+HARD_MINIMUM_WORD_COUNT: '300'
+SECTION_ENGAGEMENT_MIN: '1'
+SECTION_EXAMPLE_MIN: '3'
+PREVIOUS_CONTENT_SUMMARY: '### Topics Covered:\n- Drill: Transform the Self\n- Matching:
+  Transitive vs. Reflexive\n- Suffix Challenge: Vowel or Consonant?\n- Dialogue Builder:
+  Meeting New People\n- Common Mistakes: Don''t Drop the Self!\n\n### Last Paragraphs:\nA
+  very common mistake is to forget the **-ся** when changing the person. Remember,
+  the suffix is loyal! It stays with the verb no matter who is doing the action. If
+  you say **я мию** (I wash [something]), people will wait for you to say *what* you
+  are washing. If you mean yourself, you must say **я миюся**.'
+CALLOUT_TYPES_USED: fact, note, tip, warning

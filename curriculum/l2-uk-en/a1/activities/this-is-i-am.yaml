@@ -1,0 +1,357 @@
+- type: quiz
+  title: "Grammar Basics"
+  instruction: "Choose the correct answer to check your understanding."
+  items:
+    - question: "Which verb do we usually skip in Ukrainian present tense sentences?"
+      options:
+        - text: "є (is/are)"
+          correct: true
+        - text: "робити (to do)"
+          correct: false
+        - text: "мати (to have)"
+          correct: false
+        - text: "хотіти (to want)"
+          correct: false
+      explanation: "In Ukrainian, the linking verb «є» is usually omitted."
+    - question: "Which pronoun is used for polite address?"
+      options:
+        - text: "Ви"
+          correct: true
+        - text: "Ти"
+          correct: false
+        - text: "Ми"
+          correct: false
+        - text: "Вони"
+          correct: false
+      explanation: "«Ви» is used for formal communication and addressing elders."
+    - question: "What gender is the word «вікно» (ends in -о)?"
+      options:
+        - text: "Neuter (Воно)"
+          correct: true
+        - text: "Masculine (Він)"
+          correct: false
+        - text: "Feminine (Вона)"
+          correct: false
+        - text: "No gender"
+          correct: false
+      explanation: "Words ending in -о are usually neuter."
+    - question: "How do you say 'This is a passport' in Ukrainian?"
+      options:
+        - text: "Це паспорт."
+          correct: true
+        - text: "Він паспорт."
+          correct: false
+        - text: "Я паспорт."
+          correct: false
+        - text: "Це є паспорт."
+          correct: false
+      explanation: "We use the universal word «Це» and omit the verb."
+    - question: "Where is the particle «не» placed in a negative sentence?"
+      options:
+        - text: "Before the word it negates"
+          correct: true
+        - text: "After the word it negates"
+          correct: false
+        - text: "At the end of the sentence"
+          correct: false
+        - text: "At the beginning of the sentence"
+          correct: false
+      explanation: "The particle «не» always stands before the word it negates."
+    - question: "Which pronoun corresponds to «кава» (ends in -а)?"
+      options:
+        - text: "Вона"
+          correct: true
+        - text: "Він"
+          correct: false
+        - text: "Воно"
+          correct: false
+        - text: "Ми"
+          correct: false
+      explanation: "Words ending in -а are usually feminine, so «Вона»."
+    - question: "What is the translation of 'I am a student'?"
+      options:
+        - text: "Я студент."
+          correct: true
+        - text: "Я є студент."
+          correct: false
+        - text: "Це студент."
+          correct: false
+        - text: "Він студент."
+          correct: false
+      explanation: "We simply say 'Subject + Predicate': Я студент."
+    - question: "Which word is the 'Universal Pointer'?"
+      options:
+        - text: "Це"
+          correct: true
+        - text: "Він"
+          correct: false
+        - text: "Тут"
+          correct: false
+        - text: "Там"
+          correct: false
+      explanation: "«Це» corresponds to 'This is', 'It is', 'These are'."
+
+- type: match-up
+  title: "Match the Pronouns"
+  instruction: "Connect the Ukrainian pronoun with its English translation."
+  pairs:
+    - left: "Я"
+      right: "I"
+    - left: "Ти"
+      right: "You (informal)"
+    - left: "Ми"
+      right: "We"
+    - left: "Ви"
+      right: "You (formal/plural)"
+    - left: "Вони"
+      right: "They"
+    - left: "Він"
+      right: "He"
+    - left: "Вона"
+      right: "She"
+    - left: "Воно"
+      right: "It"
+
+- type: group-sort
+  title: "He, She, or It?"
+  instruction: "Sort the words by gender based on their endings."
+  groups:
+    - name: "Він (Masculine)"
+      items:
+        - "студент"
+        - "паспорт"
+        - "стіл"
+        - "телефон"
+        - "вчитель"
+        - "Іван"
+    - name: "Вона (Feminine)"
+      items:
+        - "кава"
+        - "машина"
+        - "піца"
+        - "вчителька"
+        - "Марія"
+        - "студентка"
+    - name: "Воно (Neuter)"
+      items:
+        - "вікно"
+        - "молоко"
+        - "авто"
+        - "місто"
+
+- type: anagram
+  title: "Vocabulary Check"
+  instruction: "Unscramble the words from the lesson."
+  items:
+    - scrambled: "с т у д е н т"
+      answer: "студент"
+    - scrambled: "п а с п о р т"
+      answer: "паспорт"
+    - scrambled: "в ч и т е л ь"
+      answer: "вчитель"
+    - scrambled: "с т і л"
+      answer: "стіл"
+    - scrambled: "к а в а"
+      answer: "кава"
+    - scrambled: "в і к н о"
+      answer: "вікно"
+    - scrambled: "у к р а ї н е ц ь"
+      answer: "українець"
+    - scrambled: "в ч и т е л ь к а"
+      answer: "вчителька"
+
+- type: quiz
+  title: "Sentence Structure"
+  instruction: "Choose the correct sentence structure."
+  items:
+    - question: "Correct way to say: 'I am a student'"
+      options:
+        - text: "Я студент."
+          correct: true
+        - text: "Я є студент."
+          correct: false
+        - text: "Він студент."
+          correct: false
+        - text: "Студент я."
+          correct: false
+      explanation: "We skip the verb 'to be'."
+    - question: "Correct way to say: 'This is not a table'"
+      options:
+        - text: "Це не стіл."
+          correct: true
+        - text: "Це стіл ні."
+          correct: false
+        - text: "Це немає стіл."
+          correct: false
+        - text: "Стіл це не."
+          correct: false
+      explanation: "The particle 'не' comes before the noun."
+    - question: "Correct way to say: 'He is not a teacher'"
+      options:
+        - text: "Він не вчитель."
+          correct: true
+        - text: "Він ні вчитель."
+          correct: false
+        - text: "Він немає вчитель."
+          correct: false
+        - text: "Він вчитель не."
+          correct: false
+      explanation: "Use 'не' for negation."
+    - question: "Correct way to say: 'We are here'"
+      options:
+        - text: "Ми тут."
+          correct: true
+        - text: "Ми є тут."
+          correct: false
+        - text: "Ми там."
+          correct: false
+        - text: "Я тут."
+          correct: false
+      explanation: "No verb needed."
+    - question: "Correct way to say: 'They are Ukrainians'"
+      options:
+        - text: "Вони українці."
+          correct: true
+        - text: "Вони є українці."
+          correct: false
+        - text: "Вони українець."
+          correct: false
+        - text: "Ми українці."
+          correct: false
+      explanation: "Skip the verb."
+    - question: "Correct way to say: 'She is a student'"
+      options:
+        - text: "Вона студентка."
+          correct: true
+        - text: "Вона студент."
+          correct: false
+        - text: "Він студент."
+          correct: false
+        - text: "Вона є студентка."
+          correct: false
+      explanation: "Match gender: 'студентка' is female."
+    - question: "Correct way to say: 'Who is this?'"
+      options:
+        - text: "Хто це?"
+          correct: true
+        - text: "Що це?"
+          correct: false
+        - text: "Де це?"
+          correct: false
+        - text: "Як це?"
+          correct: false
+      explanation: "Use 'Хто' for people."
+    - question: "Correct way to say: 'What is this?'"
+      options:
+        - text: "Що це?"
+          correct: true
+        - text: "Хто це?"
+          correct: false
+        - text: "Де це?"
+          correct: false
+        - text: "Коли це?"
+          correct: false
+      explanation: "Use 'Що' for objects."
+
+- type: fill-in
+  title: "Choose the Correct Word"
+  instruction: "Complete the sentence with the correct word."
+  items:
+    - sentence: "___ студент. (I am a student)"
+      answer: "Я"
+      options: ["Я", "Ти", "Він", "Вона"]
+      explanation: "«Я» means I."
+    - sentence: "___ тут. (We are here)"
+      answer: "Ми"
+      options: ["Ми", "Ви", "Вони", "Я"]
+      explanation: "«Ми» means We."
+    - sentence: "Це ___ паспорт. (This is not a passport)"
+      answer: "не"
+      options: ["не", "ні", "ніт", "є"]
+      explanation: "Use «не» for negation before a noun."
+    - sentence: "___ українка. (She is Ukrainian)"
+      answer: "Вона"
+      options: ["Вона", "Він", "Воно", "Ми"]
+      explanation: "«Українка» is feminine, so «Вона»."
+    - sentence: "___ вчитель? (Who is a teacher?)"
+      answer: "Хто"
+      options: ["Хто", "Що", "Це", "Де"]
+      explanation: "Use «Хто» for people."
+    - sentence: "___ це? Це стіл. (What is this? This is a table)"
+      answer: "Що"
+      options: ["Що", "Хто", "Як", "Де"]
+      explanation: "Use «Що» for objects."
+    - sentence: "___ це? Це Іван. (Who is this? This is Ivan)"
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Як"]
+      explanation: "Ivan is a person."
+    - sentence: "Це ___. (This is a table - masculine)"
+      answer: "стіл"
+      options: ["стіл", "кава", "вікно", "мама"]
+      explanation: "«Стіл» is masculine."
+
+- type: true-false
+  title: "Cultural Context: Ty vs Vy"
+  instruction: "Decide if the statement about «Ти» and «Ви» is true."
+  items:
+    - statement: "It is better to address a stranger on the street as «Ви»."
+      correct: true
+      explanation: "«Ви» is the safe and polite option for strangers."
+    - statement: "You can immediately say «Ти» to your new boss."
+      correct: false
+      explanation: "Bosses are usually addressed as «Ви» until agreed otherwise."
+    - statement: "«Ви» is used only for plural (groups of people)."
+      correct: false
+      explanation: "«Ви» is also used for a single person as a sign of respect."
+    - statement: "Friends and children are usually addressed as «Ти»."
+      correct: true
+      explanation: "«Ти» is informal for close people."
+    - statement: "If you are in doubt, it is better to say «Ти»."
+      correct: false
+      explanation: "If in doubt, always use «Ви»."
+    - statement: "The switch to «Ти» is often proposed by the older person."
+      correct: true
+      explanation: "Etiquette suggests the older or higher status person initiates it."
+    - statement: "In IT companies, «Ти» is becoming more common."
+      correct: true
+      explanation: "Modern work culture is shifting towards informal «Ти»."
+    - statement: "You should use «Ви» with a police officer."
+      correct: true
+      explanation: "Formal situations require «Ви»."
+
+- type: fill-in
+  title: "Who or What?"
+  instruction: "Choose the correct question word."
+  items:
+    - sentence: "___ це? Це Марія."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Як"]
+      explanation: "Maria is a person."
+    - sentence: "___ це? Це телефон."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Як"]
+      explanation: "Phone is an object."
+    - sentence: "___ це? Це студенти."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Як"]
+      explanation: "Students are people."
+    - sentence: "___ це? Це кава."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Як"]
+      explanation: "Coffee is an object."
+    - sentence: "___ це? Це Іван."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Як"]
+      explanation: "Ivan is a person."
+    - sentence: "___ це? Це паспорт."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Як"]
+      explanation: "Passport is an object."
+    - sentence: "___ це? Це вчитель."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Як"]
+      explanation: "Teacher is a person."
+    - sentence: "___ це? Це вікно."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Як"]
+      explanation: "Window is an object."

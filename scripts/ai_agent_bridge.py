@@ -639,7 +639,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         skip_model_check: If True, ignore cached model unavailability (retry anyway).
         allow_write: If True, grant Gemini full bash + write access (for phases that need
                     to run scripts like audit_module.sh, generate_mdx.py, apply fixes).
-                    Only Foreman should use this flag.
+                    Only Otaman should use this flag.
         delimiters: Comma-separated delimiter names for --allow-write mode.
                    E.g., "FINAL_REVIEW,FRICTION" → ===FINAL_REVIEW_START/END=== + ===FRICTION_START/END===
     """
@@ -824,7 +824,7 @@ def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", 
         output_path: If set, Gemini writes output to this file. Uses -y mode with
             post-validation instead of --approval-mode plan.
         allow_write: If True, use FULL-EXECUTION prompt instead of READ-ONLY.
-            Grants bash + file write access. Used by Foreman for phases that need
+            Grants bash + file write access. Used by Otaman for phases that need
             to run audit scripts, apply fixes, and regenerate MDX.
         delimiters: Comma-separated delimiter names (e.g., "FINAL_REVIEW,FRICTION").
             Injected into system prompt so model knows exact output tags.
@@ -836,7 +836,7 @@ def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", 
     # Prepare prompt for Gemini
     if allow_write:
         # FULL-EXECUTION MODE: Gemini has bash + write access.
-        # Used by Foreman for phases that need to run scripts (audit, MDX generation)
+        # Used by Otaman for phases that need to run scripts (audit, MDX generation)
         # and apply fixes to content/activity/vocabulary files.
         # Build delimiter instruction from --delimiters arg or use generic fallback
         if delimiters:
@@ -1631,7 +1631,7 @@ def main():
     ask_gemini_parser.add_argument("--skip-model-check", dest="skip_model_check", action="store_true",
                                    help="Skip the model availability pre-flight check.")
     ask_gemini_parser.add_argument("--allow-write", dest="allow_write", action="store_true",
-                                   help="Grant Gemini full bash + write access (for phases that run audit, apply fixes, generate MDX). Only Foreman should use this.")
+                                   help="Grant Gemini full bash + write access (for phases that run audit, apply fixes, generate MDX). Only Otaman should use this.")
     ask_gemini_parser.add_argument("--delimiters", dest="delimiters",
                                    help="Comma-separated delimiter names for --allow-write mode. "
                                         "E.g., 'FINAL_REVIEW,FRICTION' → ===FINAL_REVIEW_START/END===. "

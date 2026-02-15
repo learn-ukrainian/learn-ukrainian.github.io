@@ -1,6 +1,6 @@
 ---
 name: final-review
-description: Adversarial final review for foreman-built modules. Runs in a NEW session (separate from builder/reviewer) to maintain independence. Catches what automated audit and Green Team missed.
+description: Adversarial final review for otaman-built modules. Runs in a NEW session (separate from builder/reviewer) to maintain independence. Catches what automated audit and Green Team missed.
 ---
 
 # Final Review: Adversarial QA Gate (Phase 7)

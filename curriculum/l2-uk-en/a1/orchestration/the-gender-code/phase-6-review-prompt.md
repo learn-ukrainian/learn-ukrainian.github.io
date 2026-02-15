@@ -26,11 +26,11 @@ Read ALL of these files from disk before writing anything:
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Persona flavor:   The Helpful Neighbor
 Module persona:   Patient Supportive Tutor, acting as Linguistic Taxonomist
-Word count:       1299 / 934 (139%)
-Activities:       8
-Vocabulary items: 19
-Engagement boxes: 3
-Immersion:        10.9% (target: 10-15)
+Word count:       3442 / 934 (368%)
+Activities:       10
+Vocabulary items: 24
+Engagement boxes: 5
+Immersion:        11% (target: 10-25%)
 Audit status:     PASS
 ```
 

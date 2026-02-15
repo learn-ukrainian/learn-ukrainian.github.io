@@ -1,0 +1,149 @@
+- aspect: imperfective
+  lemma: бачити
+  pos: verb
+  translation: to see
+  usage: Triggers Accusative Case
+- aspect: imperfective
+  lemma: чути
+  pos: verb
+  translation: to hear
+  usage: Triggers Accusative Case
+- aspect: imperfective
+  lemma: мати
+  pos: verb
+  translation: to have
+  usage: Triggers Accusative Case
+- aspect: imperfective
+  lemma: хотіти
+  pos: verb
+  translation: to want
+  usage: Triggers Accusative Case
+- aspect: imperfective
+  lemma: купувати
+  pos: verb
+  translation: to buy
+  usage: Triggers Accusative Case
+- aspect: imperfective
+  lemma: брати
+  pos: verb
+  translation: to take
+- gender: f
+  lemma: книга
+  pos: noun
+  translation: book
+- gender: f
+  lemma: кава
+  pos: noun
+  translation: coffee
+- aspect: imperfective
+  lemma: любити
+  pos: verb
+  translation: to love
+- aspect: imperfective
+  lemma: шукати
+  pos: verb
+  translation: to look for
+- aspect: imperfective
+  lemma: знаходити
+  pos: verb
+  translation: to find
+- aspect: imperfective
+  lemma: відкривати
+  pos: verb
+  translation: to open
+- gender: m
+  lemma: стіл
+  pos: noun
+  translation: table
+- gender: m
+  lemma: телефон
+  pos: noun
+  translation: phone
+- gender: n
+  lemma: вікно
+  pos: noun
+  translation: window
+- gender: f
+  lemma: вода
+  pos: noun
+  translation: water
+- gender: m
+  lemma: паспорт
+  pos: noun
+  translation: passport
+- gender: n
+  lemma: місто
+  pos: noun
+  translation: city
+- gender: m
+  lemma: хліб
+  pos: noun
+  translation: bread
+- gender: f
+  lemma: ціна
+  pos: noun
+  translation: price
+- gender: m
+  lemma: мед
+  pos: noun
+  translation: honey
+- gender: n
+  lemma: м'ясо
+  pos: noun
+  translation: meat
+- gender: m
+  lemma: ринок
+  pos: noun
+  translation: market
+- gender: f
+  lemma: газета
+  pos: noun
+  translation: newspaper
+- gender: f
+  lemma: вишня
+  pos: noun
+  translation: cherry tree
+- gender: f
+  lemma: мелодія
+  pos: noun
+  translation: melody
+- gender: m
+  lemma: чоловічий рід
+  pos: noun
+  translation: masculine gender
+- gender: m
+  lemma: жіночий рід
+  pos: noun
+  translation: feminine gender
+- gender: m
+  lemma: середній рід
+  pos: noun
+  translation: neuter gender
+- gender: m
+  lemma: відмінок
+  pos: noun
+  translation: case
+- gender: m
+  lemma: іменник
+  pos: noun
+  translation: noun
+- gender: m
+  lemma: чоловічий
+  pos: adj
+  translation: masculine
+- gender: m
+  lemma: жіночий
+  pos: adj
+  translation: feminine
+- gender: m
+  lemma: середній
+  pos: adj
+  translation: neuter
+- gender: m
+  lemma: рід
+  pos: noun
+  translation: gender
+- gender: n
+  lemma: дієслово
+  pos: noun
+  translation: verb

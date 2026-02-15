@@ -1,0 +1,126 @@
+- example: Спочатку я подумав, а потім сказав.
+  lemma: спочатку
+  notes: 'Use for sequence: First X, then Y.'
+  pos: adverb
+  translation: at first, initially
+- example: Потім ми пішли в кіно.
+  lemma: потім
+  notes: Connects sequential actions.
+  pos: adverb
+  translation: then, after that
+- example: Нарешті дощ закінчився.
+  lemma: нарешті
+  notes: Signals the end of a sequence or a result.
+  pos: adverb
+  translation: finally, at last
+- example: Раптом задзвонив телефон.
+  lemma: раптом
+  notes: Signals a plot twist or surprise.
+  pos: adverb
+  translation: suddenly
+- example: Гість прийшов несподівано.
+  lemma: несподівано
+  notes: Synonym for раптом, slightly more formal.
+  pos: adverb
+  translation: unexpectedly
+- example: Раніше тут був ліс.
+  lemma: раніше
+  notes: Refers to a past state different from now.
+  pos: adverb
+  translation: earlier, previously, used to
+- example: Ми недавно бачили цей фільм.
+  lemma: недавно
+  notes: Near past.
+  pos: adverb
+  translation: recently, not long ago
+- example: Це було дуже давно.
+  lemma: давно
+  notes: Distant past.
+  pos: adverb
+  translation: long ago
+- example: Тільки-но я зайшов, почався урок.
+  lemma: тільки-но
+  notes: Emphasizes immediacy.
+  pos: conjunction
+  translation: just as, as soon as
+- example: Ми ледве встигли на автобус.
+  lemma: ледве
+  notes: Implies difficulty or "just made it".
+  pos: adverb
+  translation: barely, hardly
+- example: Розкажи мені цікаву історію.
+  gender: f
+  lemma: історія
+  pos: noun
+  translation: story, history
+- example: Його розповідь була довгою.
+  gender: f
+  lemma: розповідь
+  pos: noun
+  translation: narrative, tale
+- example: Діти люблять казки.
+  gender: f
+  lemma: казка
+  pos: noun
+  translation: fairy tale
+- example: Він розповів смішний анекдот.
+  gender: m
+  lemma: анекдот
+  pos: noun
+  translation: joke, anecdote
+- example: Це був тільки початок.
+  gender: m
+  lemma: початок
+  pos: noun
+  translation: beginning, start
+- example: Кінець фільму був сумним.
+  gender: m
+  lemma: кінець
+  pos: noun
+  translation: end
+- example: Це був дивний випадок.
+  gender: m
+  lemma: випадок
+  pos: noun
+  translation: incident, case
+- example: Подорож була справжньою пригодою.
+  gender: f
+  lemma: пригода
+  pos: noun
+  translation: adventure
+- aspect: imperfective
+  example: Він любить розповідати історії.
+  lemma: розповідати
+  pos: verb
+  translation: to tell, to narrate
+- aspect: perfective
+  example: Що сталося?
+  lemma: статися
+  pos: verb
+  translation: to happen
+- aspect: imperfective
+  example: Продовжуйте читати.
+  lemma: продовжувати
+  pos: verb
+  translation: to continue
+- aspect: imperfective
+  example: Ми закінчуємо роботу.
+  lemma: закінчувати
+  pos: verb
+  translation: to finish
+- example: Одного разу ми пішли в ліс.
+  lemma: одного разу
+  notes: Classic story opener.
+  pos: phrase
+  translation: once, one time
+- example: Жили-були дід і баба.
+  lemma: жили-були
+  notes: Literally "lived-were", used for fairy tales.
+  pos: phrase
+  translation: once upon a time
+- example: Він справжня душа компанії.
+  lemma: душа компанії
+  notes: Someone who is entertaining and charismatic.
+  pos: phrase
+  translation: soul of the company
+

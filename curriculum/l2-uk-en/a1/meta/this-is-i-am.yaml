@@ -1,0 +1,56 @@
+id: 4
+slug: 'this-is-i-am'
+title: 'This Is / I Am'
+subtitle: 'Zero Copula and Personal Pronouns'
+version: '2.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
+duration: 45
+transliteration: 'full'
+tags: ['grammar', 'pronouns', 'zero-copula']
+grammar: ['personal-pronouns', 'zero-copula']
+objectives:
+  - 'Learner can use personal pronouns (я, ти, він, вона, etc.)'
+  - 'Learner can form identity statements without "to be" (zero copula)'
+  - 'Learner can use це to point out people and objects'
+  - 'Learner can distinguish masculine/feminine nationality forms'
+content_outline:
+  - section: "Вступ"
+    words: 139
+    points:
+      - "Concept: The 'Phantom Is' — Ukrainian skips 'am/is/are' in the present tense (Zero Copula)"
+      - "Analogy: 'I [___] Student' — visualize the gap where the verb would be"
+      - "Contrast: English requires 'to be', Ukrainian uses the Zero Copula for identity"
+      - "Examples: 'Я студент' (I am a student), 'Це стіл' (This is a table)"
+  - section: "Презентація"
+    words: 864
+    points:
+      - "Personal Pronouns: Define Я, ти, ми, ви, вони (I, you, we, you pl., they)"
+      - "Gendered Pronouns: Він (he), Вона (she), Воно (it) — explicit drill on gender"
+      - "The 'It' Trap: Explain that objects have gender (e.g., a table is 'він', not 'воно')"
+      - "The Pointing Word 'Це': Acts as 'This is', 'It is', 'These are' (invariable)"
+      - "Visualizing 'Це': The 'Finger Pointing' word for identifying people and objects"
+      - "Formal vs. Informal ('Ти' vs 'Ви'): The 'Safety Net' concept — use 'Ви' for strangers/elders"
+      - "Zero Copula Construction: Subject + Predicate (e.g., 'Він українець')"
+      - "Negation basic intro: 'Я не студент' (I am not a student)"
+  - section: "Практика"
+    words: 153
+    points:
+      - "Transformation Drill: 'Ivan is a student' → 'He is a student' (Noun → Pronoun)"
+      - "Gender Match: Identifying objects (Lamp → She/Вона, Phone → He/Він)"
+      - "Register Check: Scenarios for choosing 'Ти' (friend) vs 'Ви' (boss, stranger)"
+  - section: "Продукція"
+    words: 126
+    points:
+      - "Self-Introduction: 'Я [Name]. Я [Role/Nationality].'"
+      - "Environment Description: Pointing to objects using 'Це' + Noun"
+      - "Simple Identity Statements: Combining pronouns with roles (e.g., 'Ми студенти')"
+  - section: "Культурний контекст"
+    words: 166
+    points:
+      - "The 'Vi' Safety Net: Why starting with 'Ви' is crucial for politeness in Ukraine"
+      - "The 'Bruderschaft' Moment: The social ritual of switching from 'Ви' to 'Ти'"
+      - "Modern Usage: How youth/IT culture might use 'Ти' sooner, but 'Ви' remains the safe default"
+naturalness:
+  status: 'PASS'
+  score: 10

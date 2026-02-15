@@ -1,0 +1,351 @@
+- type: fill-in
+  title: "Мій чи Моя? (My or Mine?)"
+  instruction: "Choose the correct form of 'my' based on the gender of the noun."
+  items:
+    - sentence: "Це __ телефон."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Телефон is masculine, so we use мій."
+    - sentence: "Де __ сумка?"
+      answer: "твоя"
+      options: ["твій", "твоя", "твоє", "твої"]
+      explanation: "Сумка is feminine, so we use твоя."
+    - sentence: "Це __ яблуко."
+      answer: "моє"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Яблуко is neuter, so we use моє."
+    - sentence: "Це __ паспорт?"
+      answer: "твій"
+      options: ["твій", "твоя", "твоє", "твої"]
+      explanation: "Паспорт is masculine, so we use твій."
+    - sentence: "Це __ місто."
+      answer: "наше"
+      options: ["наш", "наша", "наше", "наші"]
+      explanation: "Місто is neuter, so we use наше."
+    - sentence: "__ це кава?"
+      answer: "Чия"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Кава is feminine, so we use Чия."
+    - sentence: "Це __ сестра."
+      answer: "моя"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Сестра is feminine, so we use моя."
+    - sentence: "Це __ брат."
+      answer: "мій"
+      options: ["мій", "моя", "моє", "мої"]
+      explanation: "Брат is masculine, so we use мій."
+
+- type: match-up
+  title: "Matching Genders"
+  instruction: "Match the pronoun to the correct noun."
+  pairs:
+    - left: "Мій"
+      right: "брат"
+    - left: "Моя"
+      right: "сестра"
+    - left: "Моє"
+      right: "авто"
+    - left: "Твій"
+      right: "паспорт"
+    - left: "Твоя"
+      right: "кава"
+    - left: "Ваше"
+      right: "місто"
+    - left: "Наш"
+      right: "дім"
+    - left: "Їхній"
+      right: "кіт"
+
+- type: true-false
+  title: "Grammar Rules"
+  instruction: "Read the statement about possessive pronouns and decide if it is True or False."
+  items:
+    - statement: "'Мій' changes its form depending on the gender of the object."
+      correct: true
+      explanation: "Yes, it becomes мій, моя, моє, or мої."
+    - statement: "'Його' (his) changes form like 'мій'."
+      correct: false
+      explanation: "No, 'його' (his) and 'її' (her) are invariable. They never change."
+    - statement: "We use 'Ви' (You formal) when talking to a group of friends."
+      correct: true
+      explanation: "Yes, 'Ви' is always used for plurals, even if they are friends."
+    - statement: "'Чий' is used for feminine nouns."
+      correct: false
+      explanation: "'Чий' is masculine. 'Чия' is feminine."
+    - statement: "'Свій' means 'one's own'."
+      correct: true
+      explanation: "It reflects ownership back to the subject."
+    - statement: "You should always use 'ти' with your boss."
+      correct: false
+      explanation: "No, use 'Ви' with superiors or in formal settings to show respect."
+    - statement: "'Наш' (our) changes based on gender."
+      correct: true
+      explanation: "Yes, it becomes наш, наша, наше, наші."
+    - statement: "'Її' (her) changes to 'Їїя' for feminine nouns."
+      correct: false
+      explanation: "No, 'її' never changes."
+
+- type: quiz
+  title: "Possessive Master"
+  instruction: "Select the correct answer."
+  items:
+    - question: "Which word means 'Whose' for a masculine object?"
+      options:
+        - text: "Чий"
+          correct: true
+        - text: "Чия"
+          correct: false
+        - text: "Чиє"
+          correct: false
+        - text: "Чиї"
+          correct: false
+    - question: "Translate: 'This is her cat.'"
+      options:
+        - text: "Це її кіт."
+          correct: true
+        - text: "Це їїя кіт."
+          correct: false
+        - text: "Це вона кіт."
+          correct: false
+        - text: "Це їй кіт."
+          correct: false
+    - question: "Which pronoun corresponds to 'we'?"
+      options:
+        - text: "Наш"
+          correct: true
+        - text: "Ваш"
+          correct: false
+        - text: "Мій"
+          correct: false
+        - text: "Твій"
+          correct: false
+    - question: "When do we use 'Ваш'?"
+      options:
+        - text: "For formal situations or plural groups."
+          correct: true
+        - text: "Only for family."
+          correct: false
+        - text: "Only for masculine objects."
+          correct: false
+        - text: "Never."
+          correct: false
+    - question: "What is the neuter form of 'your' (informal)?"
+      options:
+        - text: "Твоє"
+          correct: true
+        - text: "Твій"
+          correct: false
+        - text: "Твоя"
+          correct: false
+        - text: "Твої"
+          correct: false
+    - question: "Which word is invariable (never changes)?"
+      options:
+        - text: "Його"
+          correct: true
+        - text: "Мій"
+          correct: false
+        - text: "Ваш"
+          correct: false
+        - text: "Чий"
+          correct: false
+    - question: "Translate: 'Is this your (formal) passport?'"
+      options:
+        - text: "Це ваш паспорт?"
+          correct: true
+        - text: "Це твій паспорт?"
+          correct: false
+        - text: "Це ваша паспорт?"
+          correct: false
+        - text: "Це ваше паспорт?"
+          correct: false
+    - question: "What is the plural of 'мій'?"
+      options:
+        - text: "Мої"
+          correct: true
+        - text: "Мій"
+          correct: false
+        - text: "Моя"
+          correct: false
+        - text: "Моє"
+          correct: false
+
+- type: fill-in
+  title: "Change the Gender"
+  instruction: "The noun changed! Choose the new correct pronoun."
+  items:
+    - sentence: "Мій брат —> __ сестра."
+      answer: "моя"
+      options: ["моя", "мій", "моє", "мої"]
+      explanation: "Сестра is feminine."
+    - sentence: "Твій дім —> __ кімната."
+      answer: "твоя"
+      options: ["твоя", "твій", "твоє", "твої"]
+      explanation: "Кімната is feminine."
+    - sentence: "Наш друг —> __ місто."
+      answer: "наше"
+      options: ["наше", "наш", "наша", "наші"]
+      explanation: "Місто is neuter."
+    - sentence: "Ваш паспорт —> __ сумка."
+      answer: "ваша"
+      options: ["ваша", "ваш", "ваше", "ваші"]
+      explanation: "Сумка is feminine."
+    - sentence: "Його кіт —> __ кішка."
+      answer: "його"
+      options: ["його", "її", "їхня", "своя"]
+      explanation: "Його never changes."
+    - sentence: "Її син —> __ донька."
+      answer: "її"
+      options: ["її", "його", "їхня", "своя"]
+      explanation: "Її never changes."
+    - sentence: "Їхній дім —> __ проблема."
+      answer: "їхня"
+      options: ["їхня", "їхній", "їхнє", "їхні"]
+      explanation: "Проблема is feminine."
+    - sentence: "Мій стіл —> __ вікно."
+      answer: "моє"
+      options: ["моє", "мій", "моя", "мої"]
+      explanation: "Вікно is neuter."
+
+- type: fill-in
+  title: "Question Time: Чий? Чия?"
+  instruction: "Choose the correct question word."
+  items:
+    - sentence: "__ це телефон?"
+      answer: "Чий"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Телефон is masculine."
+    - sentence: "__ це кава?"
+      answer: "Чия"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Кава is feminine."
+    - sentence: "__ це яблуко?"
+      answer: "Чиє"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Яблуко is neuter."
+    - sentence: "__ це окуляри?"
+      answer: "Чиї"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Окуляри is plural."
+    - sentence: "__ це паспорт?"
+      answer: "Чий"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Паспорт is masculine."
+    - sentence: "__ це сумка?"
+      answer: "Чия"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Сумка is feminine."
+    - sentence: "__ це місце?"
+      answer: "Чиє"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Місце is neuter."
+    - sentence: "__ це гроші?"
+      answer: "Чиї"
+      options: ["Чий", "Чия", "Чиє", "Чиї"]
+      explanation: "Гроші is plural."
+
+- type: quiz
+  title: "Culture Check"
+  instruction: "Choose the culturally correct option."
+  items:
+    - question: "Ask your professor: 'Is this your book?'"
+      options:
+        - text: "Це ваша книга?"
+          correct: true
+        - text: "Це твоя книга?"
+          correct: false
+        - text: "Це твоє книга?"
+          correct: false
+        - text: "Це ваш книга?"
+          correct: false
+    - question: "Ask your little sister: 'Where is your toy?'"
+      options:
+        - text: "Де твоя іграшка?"
+          correct: true
+        - text: "Де ваша іграшка?"
+          correct: false
+        - text: "Де твій іграшка?"
+          correct: false
+        - text: "Де ваше іграшка?"
+          correct: false
+    - question: "Address a group of friends:"
+      options:
+        - text: "Ви"
+          correct: true
+        - text: "Ти"
+          correct: false
+        - text: "Ми"
+          correct: false
+        - text: "Вони"
+          correct: false
+    - question: "Ask a stranger about a lost phone:"
+      options:
+        - text: "Вибачте, чий це телефон?"
+          correct: true
+        - text: "Ей, чий телефон?"
+          correct: false
+        - text: "Ти, це твій телефон?"
+          correct: false
+        - text: "Телефон тут!"
+          correct: false
+    - question: "Why use 'Ви' with one person?"
+      options:
+        - text: "To show respect (politeness)."
+          correct: true
+        - text: "Because they are very big."
+          correct: false
+        - text: "Because we don't know their name."
+          correct: false
+        - text: "It is a mistake."
+          correct: false
+    - question: "Can you use 'Ти' with a stranger?"
+      options:
+        - text: "Only if you agreed to switch."
+          correct: true
+        - text: "Yes, always."
+          correct: false
+        - text: "Never."
+          correct: false
+        - text: "Only if they are older."
+          correct: false
+    - question: "You are asking your roommate (friend):"
+      options:
+        - text: "Це твоя футболка?"
+          correct: true
+        - text: "Це ваша футболка?"
+          correct: false
+        - text: "Це твій футболка?"
+          correct: false
+        - text: "Це ваші футболка?"
+          correct: false
+    - question: "What does the word 'свій' mean?"
+      options:
+        - text: "One's own (belongs to subject)."
+          correct: true
+        - text: "It is shorter than 'його'."
+          correct: false
+        - text: "It sounds funny."
+          correct: false
+        - text: "It is only for plural."
+          correct: false
+
+- type: match-up
+  title: "Translation Challenge"
+  instruction: "Match the English phrase to the Ukrainian translation."
+  pairs:
+    - left: "My house"
+      right: "Мій дім"
+    - left: "Your (formal) car"
+      right: "Ваше авто"
+    - left: "Her brother"
+      right: "Її брат"
+    - left: "His sister"
+      right: "Його сестра"
+    - left: "Our city"
+      right: "Наше місто"
+    - left: "Their children"
+      right: "Їхні діти"
+    - left: "Whose phone?"
+      right: "Чий телефон?"
+    - left: "My own ticket"
+      right: "Свій квиток"

@@ -1379,19 +1379,17 @@ def get_a1_immersion_range(module_num: int) -> tuple[int, int]:
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for A2 based on module number.
 
-    Phase-based immersion progression per A2-CURRICULUM-PLAN.md:
-    - A2.1 (01-20): 35-50% (widened from 40-45% to accommodate content variation)
-    - A2.2 (21-40): 40-55% (widened from 45-50%)
-    - A2.3 (41-50): 50%+ (Pre-B1 runway)
+    3-band graduated immersion per #576 final decision:
+    - Band 1 (M01-20): 50-60% — Core grammar, English for theory
+    - Band 2 (M21-50): 60-75% — Applied grammar, English only for abstracts
+    - Band 3 (M51-70): 75-90% — Consolidation, near-full immersion
     """
-    if module_num <= 15:
-        return (40, 50)  # A2.1: Core case endings
-    elif module_num <= 35:
-        return (50, 65)  # A2.2: Aspect/Consolidation
-    elif module_num <= 44:
-        return (65, 75)  # A2.3/4: Advanced integration
+    if module_num <= 20:
+        return (50, 60)   # Band 1: Core grammar
+    elif module_num <= 50:
+        return (60, 75)   # Band 2: Applied grammar
     else:
-        return (75, 85)  # A2.5: Final Pre-B1 Runway
+        return (75, 90)   # Band 3: Consolidation / Pre-B1
 
 
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:

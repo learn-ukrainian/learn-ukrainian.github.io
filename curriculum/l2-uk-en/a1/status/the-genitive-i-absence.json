@@ -1,0 +1,60 @@
+{
+  "module": "the-genitive-i-absence",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T21:44:11.130452Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-15T21:05:23.081430Z",
+    "meta": "2026-02-15T20:07:12.009277Z",
+    "activities": "2026-02-15T20:55:00.608419Z",
+    "vocabulary": null,
+    "plan": "2026-02-12T13:27:12.637975Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 2,
+      "message": "Missing '## Summary' | Lint: 1 Format Errors"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "3093/1038 (raw: 3362) | engagement: 2/3 | pedagogy: 11 violations | immersion: 17.2% LOW (target 25-40% (M16))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 1 (soft target)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Not scored"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "34 IPA issues (run lint_ipa.py --fix)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 1,
+    "fail_count": 3,
+    "deferred_count": 0
+  }
+}

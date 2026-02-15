@@ -1,0 +1,58 @@
+{
+  "module": "reflexive-verbs",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T19:05:20.081552Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-15T18:40:23.411012Z",
+    "meta": "2026-02-15T18:40:04.054528Z",
+    "activities": "2026-02-15T18:42:10.861184Z",
+    "vocabulary": "2026-02-15T18:40:01.064790Z",
+    "plan": "2026-02-12T13:27:12.715725Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2782/830 (raw: 3314)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "12 IPA issues (run lint_ipa.py --fix)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 2
+  }
+}

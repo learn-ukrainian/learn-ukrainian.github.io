@@ -1,0 +1,297 @@
+- type: match-up
+  title: 'Ukrainian People: English Equivalents'
+  instruction: 'Match the Ukrainian people with their English equivalents.'
+  pairs:
+    - left: "мама"
+      right: "mother"
+    - left: "тато"
+      right: "father"
+    - left: "брат"
+      right: "brother"
+    - left: "сестра"
+      right: "sister"
+    - left: "друг"
+      right: "friend (m.)"
+    - left: "подруга"
+      right: "friend (f.)"
+    - left: "лікар"
+      right: "doctor"
+    - left: "вчитель"
+      right: "teacher"
+    - left: "кіт"
+      right: "cat"
+    - left: "пес"
+      right: "dog"
+
+- type: fill-in
+  title: 'Accusative Forms: Animate vs Inanimate'
+  instruction: 'Choose the correct Accusative form for the sentence.'
+  items:
+    - sentence: "Я люблю ___."
+      answer: "маму"
+      options: ["мама", "маму", "мамі", "мамою"]
+    - sentence: "Ми чекаємо ___."
+      answer: "тата"
+      options: ["тато", "тата", "тату", "татові"]
+    - sentence: "Ти знаєш ___?"
+      answer: "брата"
+      options: ["брат", "брата", "брату", "братові"]
+    - sentence: "Вона бачить ___."
+      answer: "сестру"
+      options: ["сестра", "сестру", "сестрою", "сестрі"]
+    - sentence: "Я знаю ___."
+      answer: "друга"
+      options: ["друг", "друга", "другу", "другові"]
+    - sentence: "Він чекає ___."
+      answer: "подругу"
+      options: ["подруга", "подругу", "подругою", "подрузі"]
+    - sentence: "Ми любимо ___."
+      answer: "кота"
+      options: ["кіт", "кота", "коту", "котові"]
+    - sentence: "Ви бачите ___?"
+      answer: "пса"
+      options: ["пес", "пса", "псу", "псові"]
+    - sentence: "Я знаю ___."
+      answer: "лікаря"
+      options: ["лікар", "лікаря", "лікарю", "лікареві"]
+    - sentence: "Вона чекає ___."
+      answer: "вчителя"
+      options: ["вчитель", "вчителя", "вчителю", "вчителеві"]
+    - sentence: "Ми бачимо ___."
+      answer: "Сашка"
+      options: ["Сашко", "Сашка", "Сашку", "Сашкові"]
+    - sentence: "Ти знаєш ___?"
+      answer: "Андрія"
+      options: ["Андрій", "Андрія", "Андрію", "Андрієві"]
+
+- type: quiz
+  title: 'The "Heart Word" Rule'
+  instruction: 'Test your understanding of animate vs inanimate rules.'
+  items:
+    - question: "Which question do we ask for 'Heart Words' (people and animals)?"
+      explanation: "We use 'Хто?' (Who?) for living beings with a heart."
+      options:
+        - text: "Хто?"
+          correct: true
+        - text: "Що?"
+          correct: false
+        - text: "Як?"
+          correct: false
+        - text: "Де?"
+          correct: false
+    - question: "What is the Accusative ending for a masculine animate noun like 'брат'?"
+      explanation: "Masculine 'Heart Words' add -а (or -я if soft)."
+      options:
+        - text: "-а or -я"
+          correct: true
+        - text: "it stays the same"
+          correct: false
+        - text: "-у or -ю"
+          correct: false
+        - text: "-о"
+          correct: false
+    - question: "Does the word 'стіл' (table) change in 'Я бачу стіл'?"
+      explanation: "No, 'Stone Words' (masculine inanimate) do not change."
+      options:
+        - text: "No, it stays the same"
+          correct: true
+        - text: "Yes, it becomes 'стола'"
+          correct: false
+        - text: "Yes, it becomes 'столу'"
+          correct: false
+        - text: "Only if it is a small table"
+          correct: false
+    - question: "Which word is a 'Heart Word' grammatically?"
+      explanation: "A cat (кіт) is a living creature, so it follows animate rules."
+      options:
+        - text: "кіт (cat)"
+          correct: true
+        - text: "дім (house)"
+          correct: false
+        - text: "книга (book)"
+          correct: false
+        - text: "стіл (table)"
+          correct: false
+    - question: "What is the Accusative form of 'мама'?"
+      explanation: "Feminine nouns change -а to -у."
+      options:
+        - text: "маму"
+          correct: true
+        - text: "мама"
+          correct: false
+        - text: "мама"
+          correct: false
+        - text: "мамі"
+          correct: false
+    - question: "How do you say 'I am waiting for Andriy'?"
+      explanation: "We use 'чекаю' + Accusative (Андрія) without 'for'."
+      options:
+        - text: "Я чекаю Андрія."
+          correct: true
+        - text: "Я чекаю для Андрія."
+          correct: false
+        - text: "Я чекаю Андрій."
+          correct: false
+        - text: "Я чекаю до Андрія."
+          correct: false
+    - question: "Why do we call them 'Heart Words' in this lesson?"
+      explanation: "It is a metaphor for living things (animate nouns)."
+      options:
+        - text: "Because they have a heart (are alive)"
+          correct: true
+        - text: "Because we love them"
+          correct: false
+        - text: "Because the rule is hard"
+          correct: false
+        - text: "Because they look like hearts"
+          correct: false
+    - question: "Which role does 'тата' play in 'Я бачу тата'?"
+      explanation: "'Тата' is the object (додаток) of the action."
+      options:
+        - text: "Додаток (Object)"
+          correct: true
+        - text: "Підмет (Subject)"
+          correct: false
+        - text: "Присудок (Predicate)"
+          correct: false
+        - text: "Дієслово (Verb)"
+          correct: false
+
+- type: match-up
+  title: 'Grammar Terms: Anatomy of a Sentence'
+  instruction: 'Match the grammar terms with their English equivalents.'
+  pairs:
+    - left: "істота"
+      right: "animate noun"
+    - left: "неістота"
+      right: "inanimate noun"
+    - left: "дієслово"
+      right: "verb"
+    - left: "підмет"
+      right: "subject"
+    - left: "присудок"
+      right: "predicate"
+    - left: "додаток"
+      right: "object"
+    - left: "хто"
+      right: "who"
+    - left: "кого"
+      right: "whom"
+
+- type: fill-in
+  title: 'Verbs and People: Complete the Sentence'
+  instruction: 'Complete the sentences using the provided verbs.'
+  items:
+    - sentence: "Я ___ брата."
+      answer: "знаю"
+      options: ["знаю", "знає", "знаємо", "знають"]
+    - sentence: "Вона ___ маму."
+      answer: "любить"
+      options: ["любить", "люблю", "любимо", "люблять"]
+    - sentence: "Ми ___ тата."
+      answer: "чекаємо"
+      options: ["чекаємо", "чекаю", "чекає", "чекають"]
+    - sentence: "Ти ___ друга?"
+      answer: "бачиш"
+      options: ["бачиш", "бачу", "бачить", "бачимо"]
+    - sentence: "Вони ___ вчителя."
+      answer: "знають"
+      options: ["знають", "знаю", "знає", "знаємо"]
+    - sentence: "Ви ___ кота?"
+      answer: "любите"
+      options: ["любите", "люблю", "любить", "любимо"]
+    - sentence: "Я ___ подругу."
+      answer: "чекаю"
+      options: ["чекаю", "чекає", "чекаємо", "чекають"]
+    - sentence: "Ми ___ лікаря."
+      answer: "бачимо"
+      options: ["бачимо", "бачу", "бачить", "бачите"]
+    - sentence: "Він ___ сусіда."
+      answer: "знає"
+      options: ["знає", "знаю", "знаємо", "знають"]
+    - sentence: "Вона ___ сестру."
+      answer: "любить"
+      options: ["любить", "люблю", "любимо", "люблять"]
+    - sentence: "Ми ___ вчителя."
+      answer: "чекаємо"
+      options: ["чекаємо", "чекаю", "чекає", "чекаєте"]
+    - sentence: "Я ___ пса."
+      answer: "бачу"
+      options: ["бачу", "бачиш", "бачить", "бачимо"]
+
+- type: match-up
+  title: 'Affectionate Forms: Closer Bonds'
+  instruction: 'Match the affectionate forms with their basic forms.'
+  pairs:
+    - left: "матуся"
+      right: "мама"
+    - left: "татусь"
+      right: "тато"
+    - left: "братик"
+      right: "брат"
+    - left: "сестричка"
+      right: "сестра"
+    - left: "доня"
+      right: "дочка"
+    - left: "синочок"
+      right: "син"
+    - left: "дідусь"
+      right: "дід"
+    - left: "бабуся"
+      right: "баба"
+    - left: "внучок"
+      right: "внук"
+    - left: "котик"
+      right: "кіт"
+
+- type: group-sort
+  title: 'Syntactic Roles identification'
+  instruction: 'Sort the highlighted words into their roles in the sentence.'
+  groups:
+    - name: "Підмет (Subject)"
+      items: ["**Студент** бачить вчителя.", "**Колега** любить кота.", "**Вона** чекає тата.", "**Ми** знаємо Катю."]
+    - name: "Присудок (Predicate)"
+      items: ["Студент **бачить** вчителя.", "Колега **любить** кота.", "Вона **чекає** тата.", "Ми **знаємо** Катю."]
+    - name: "Додаток (Object)"
+      items: ["Студент бачить **вчителя**.", "Колега любить **кота**.", "Вона чекає **тата**.", "Ми знаємо **Катю**."]
+
+- type: fill-in
+  title: 'Accusative Names: Personal Circle'
+  instruction: 'Choose the correct Accusative form of the name.'
+  items:
+    - sentence: "Я знаю ___."
+      answer: "Олександра"
+      options: ["Олександр", "Олександра", "Олександру", "Олександрові"]
+    - sentence: "Ми бачимо ___."
+      answer: "Олену"
+      options: ["Олена", "Олену", "Оленою", "Олені"]
+    - sentence: "Ти чекаєш ___?"
+      answer: "Андрія"
+      options: ["Андрій", "Андрія", "Андрію", "Андрієві"]
+    - sentence: "Вона знає ___."
+      answer: "Катю"
+      options: ["Катя", "Катю", "Катею", "Каті"]
+    - sentence: "Ми любимо ___."
+      answer: "Миколу"
+      options: ["Микола", "Миколу", "Миколою", "Миколі"]
+    - sentence: "Ви бачите ___?"
+      answer: "Івана"
+      options: ["Іван", "Івана", "Івану", "Іванові"]
+    - sentence: "Я чекаю ___."
+      answer: "Марію"
+      options: ["Марія", "Марію", "Марією", "Марії"]
+    - sentence: "Ви бачите ___?"
+      answer: "Петра"
+      options: ["Петро", "Петра", "Петру", "Петрові"]
+    - sentence: "Вона бачить ___."
+      answer: "Наталю"
+      options: ["Наталя", "Наталю", "Наталею", "Наталі"]
+    - sentence: "Ми знаємо ___."
+      answer: "Сергія"
+      options: ["Сергій", "Сергія", "Сергію", "Сергієві"]
+    - sentence: "Ти любиш ___?"
+      answer: "Юлію"
+      options: ["Юлія", "Юлію", "Юлією", "Юлії"]
+    - sentence: "Я чекаю ___."
+      answer: "Дмитра"
+      options: ["Дмитро", "Дмитра", "Дмитру", "Дмитрові"]

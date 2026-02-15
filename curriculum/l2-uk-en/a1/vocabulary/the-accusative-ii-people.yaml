@@ -1,0 +1,181 @@
+items:
+  - lemma: брат
+    ipa: /brɑt/
+    translation: brother
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: сестра
+    ipa: /sɛˈstrɑ/
+    translation: sister
+    pos: noun
+    gender: f
+    note: animate
+  - lemma: друг
+    ipa: /druɦ/
+    translation: friend (male)
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: подруга
+    ipa: /pɔˈdruɦɑ/
+    translation: friend (female)
+    pos: noun
+    gender: f
+    note: animate
+  - lemma: мама
+    ipa: /ˈmɑmɑ/
+    translation: mother
+    pos: noun
+    gender: f
+    note: animate
+  - lemma: тато
+    ipa: /tɑˈtɔ/
+    translation: father
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: лікар
+    ipa: /lʲiˈkɑr/
+    translation: doctor
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: вчитель
+    ipa: /ʋtʃɪˈtɛlʲ/
+    translation: teacher
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: кіт
+    ipa: /kʲit/
+    translation: cat (male)
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: пес
+    ipa: /pɛs/
+    translation: dog
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: син
+    ipa: /sɪn/
+    translation: son
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: Максим
+    ipa: /mɑkˈsɪm/
+    translation: Maksym
+    pos: noun
+    gender: m
+    note: name
+  - lemma: Андрій
+    ipa: /ɑnˈdrij/
+    translation: Andrii
+    pos: noun
+    gender: m
+    note: name
+  - lemma: Микола
+    ipa: /mɪˈkɔlɑ/
+    translation: Mykola
+    pos: noun
+    gender: m
+    note: name
+  - lemma: бачити
+    ipa: /bɑˈtʃɪtɪ/
+    translation: to see
+    pos: verb
+    gender: ~
+    note: + Accusative
+  - lemma: знати
+    ipa: /znɑˈtɪ/
+    translation: to know
+    pos: verb
+    gender: ~
+    note: + Accusative
+  - lemma: любити
+    ipa: /lʲuˈbɪtɪ/
+    translation: to love
+    pos: verb
+    gender: ~
+    note: + Accusative
+  - lemma: чекати
+    ipa: /tʃɛˈkɑtɪ/
+    translation: to wait for
+    pos: verb
+    gender: ~
+    note: + Accusative
+  - lemma: пан
+    ipa: /pɑn/
+    translation: Mr.
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: пані
+    ipa: /pɑˈnʲi/
+    translation: Ms./Mrs.
+    pos: noun
+    gender: f
+    note: indeclinable
+  - lemma: хто
+    ipa: /xtɔ/
+    translation: who
+    pos: pronoun
+    gender: ~
+    note: subject
+  - lemma: кого
+    ipa: /kɔˈhɔ/
+    translation: whom
+    pos: pronoun
+    gender: ~
+    note: object
+  - lemma: знайомий
+    ipa: /znɑˈjɔmɪj/
+    translation: acquaintance (male)
+    pos: noun
+    gender: m
+    note: animate
+  - lemma: знайома
+    ipa: /znɑˈjɔmɑ/
+    translation: acquaintance (female)
+    pos: noun
+    gender: f
+    note: animate
+  - lemma: істота
+    ipa: /isˈtɔtɑ/
+    translation: animate noun
+    pos: noun
+    gender: f
+    note: grammar term
+  - lemma: неістота
+    ipa: /neisˈtɔtɑ/
+    translation: inanimate noun
+    pos: noun
+    gender: f
+    note: grammar term
+  - lemma: дієслово
+    ipa: /dijɛˈslɔʋɔ/
+    translation: verb
+    pos: noun
+    gender: n
+    note: grammar term
+  - lemma: підмет
+    ipa: /ˈpidmɛt/
+    translation: subject
+    pos: noun
+    gender: m
+    note: grammar term
+  - lemma: присудок
+    ipa: /ˈprɪsudɔk/
+    translation: predicate
+    pos: noun
+    gender: m
+    note: grammar term
+  - lemma: додаток
+    ipa: /dɔˈdɑtɔk/
+    translation: object
+    pos: noun
+    gender: m
+    note: grammar term

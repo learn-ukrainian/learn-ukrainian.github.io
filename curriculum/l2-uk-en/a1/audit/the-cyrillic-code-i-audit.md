@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1019
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-15 00:40:22
+**Generated:** 2026-02-15 23:44:41
 
 ## Configuration
 **Type:** A1-grammar
@@ -45,6 +45,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

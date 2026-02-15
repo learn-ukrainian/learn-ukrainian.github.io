@@ -22,8 +22,9 @@ Examples:
     npm run audit -- c1-bio shevchenko,franko   # Audit specific C1-BIO modules
 
 Options:
-    --fix       Automatically fix YAML schema violations
-    --verbose   Show detailed output for each module
+    --fix              Automatically fix YAML schema violations
+    --verbose          Show detailed output for each module
+    --skip-activities  Content-only audit: defer activity/vocab gates (otaman stage 1)
 """
 
 import argparse
@@ -184,7 +185,7 @@ def _extract_slug(file_path: Path) -> str:
     return file_path.stem
 
 
-def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tuple[int, int, list[str], dict[str, str]]:
+def run_audit(files: list[Path], fix: bool = False, verbose: bool = False, skip_activities: bool = False) -> tuple[int, int, list[str], dict[str, str]]:
     """Run audit on the given files. Returns (passed, failed, failed_modules, slug_results)."""
     passed = 0
     failed = 0
@@ -210,6 +211,8 @@ def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tu
         cmd = [".venv/bin/python", "scripts/audit_module.py", str(file_path)]
         if fix:
             cmd.append("--fix")
+        if skip_activities:
+            cmd.append("--skip-activities")
 
         # Run audit
         if verbose:
@@ -311,6 +314,7 @@ def main():
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed output for each module")
     parser.add_argument("--check-missing", action="store_true", help="Report missing content files listed in curriculum.yaml")
     parser.add_argument("--no-sync", action="store_true", help="Don't sync batch state file after audit")
+    parser.add_argument("--skip-activities", action="store_true", help="Content-only audit: defer activity/vocab gates")
 
     args = parser.parse_args()
 
@@ -328,11 +332,12 @@ def main():
 
     # Header
     level_upper = args.level.upper()
+    mode = "Content-Only Audit" if args.skip_activities else "Audit"
     print("═" * 64)
     if args.modules:
-        print(f"  {level_upper} Audit: {len(files)} module(s)")
+        print(f"  {level_upper} {mode}: {len(files)} module(s)")
     else:
-        print(f"  {level_upper} Full Level Audit: {total_planned} modules")
+        print(f"  {level_upper} Full Level {mode}: {total_planned} modules")
 
     if missing and args.check_missing:
         print(f"  (Warning: {len(missing)} modules are missing content files)")
@@ -341,7 +346,7 @@ def main():
     print()
 
     # Run audit
-    passed, failed, failed_modules, slug_results = run_audit(files, fix=args.fix, verbose=args.verbose)
+    passed, failed, failed_modules, slug_results = run_audit(files, fix=args.fix, verbose=args.verbose, skip_activities=args.skip_activities)
 
     # Sync batch state (unless --no-sync or auditing a subset)
     if not args.no_sync and slug_results:

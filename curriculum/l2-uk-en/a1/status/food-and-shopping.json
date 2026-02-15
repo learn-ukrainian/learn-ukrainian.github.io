@@ -1,0 +1,58 @@
+{
+  "module": "food-and-shopping",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T21:41:34.511705Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-15T21:29:51.310710Z",
+    "meta": "2026-02-15T21:25:03.654899Z",
+    "activities": null,
+    "vocabulary": null,
+    "plan": "2026-02-14T15:15:44.353647Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "2078/750 (raw: 2340) | engagement: 1/3 | pedagogy: 1 violations | immersion: 22.8% LOW (target 25-40% (M18))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Not scored"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "37 IPA issues (run lint_ipa.py --fix)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 1,
+    "fail_count": 2,
+    "deferred_count": 2
+  }
+}

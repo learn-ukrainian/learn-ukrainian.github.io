@@ -22,19 +22,32 @@ Read ALL four files before writing anything.
 Write the section prose for **{SECTION_TITLE}** within the module **{TOPIC_TITLE}**.
 
 - **WORD BUDGET**: {HARD_MINIMUM_WORD_COUNT} words minimum, {HARD_MINIMUM_WORD_COUNT} × 2 maximum. Stay in this range.
-- **Immersion**: {IMMERSION_RULE}
 - **Engagement callouts**: Include at least {SECTION_ENGAGEMENT_MIN} callout(s) in this section.
 - **Example sentences**: Include at least {SECTION_EXAMPLE_MIN} example sentences in this section.
 
+## Immersion Level (HARD FAIL if violated — audit measures this)
+
+{IMMERSION_RULE}
+
+> **The audit measures immersion as % of Ukrainian words.** If your content exceeds the target Ukrainian %, the module FAILS and must be rewritten. This is NOT a suggestion — it is enforced automatically. Count your languages before submitting.
+
+## Level Grammar Constraints (HARD FAIL if violated)
+
+{LEVEL_CONSTRAINTS}
+
+> **These constraints are enforced by automated audit.** Every violation = audit failure = rebuild. Follow them exactly.
+
 ## Coherence Context (Previously Written)
 
-To ensure flow and avoid repetition, here is what has been covered in previous sections:
+To ensure flow and avoid repetition, here is what has been covered in previous sections.
+The context below includes **topic headings** (what was covered) and **closing prose** (how the previous section ended — use this to write a seamless bridge):
 
 {PREVIOUS_CONTENT_SUMMARY}
 
 ### Seam Prevention (CRITICAL)
 
 - **Continue the narrative flow seamlessly** from the previous section. The reader has been reading continuously — don't break immersion.
+- **Use the closing prose above** to write your opening bridge sentence. Pick up where the previous section left off — reference its final concept, example, or question naturally.
 - **Do NOT** start with "In this section..." / "У цьому розділі..." / "Тепер розглянемо..." or any meta-commentary about what the section will cover.
 - **Do NOT** re-introduce concepts already covered in previous sections. Refer back to them naturally (e.g., "як ми вже бачили з дієсловами руху..." not "Дієслова руху — це...").
 - **Do NOT** repeat the module title or section title in prose. The H2 heading is enough.

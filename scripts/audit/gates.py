@@ -136,6 +136,13 @@ def evaluate_persona(has_persona: bool, has_voice: bool, has_role: bool) -> Gate
     return GateResult('PASS', '✅', "Persona Defined")
 
 
+def evaluate_ipa(issue_count: int) -> GateResult:
+    """Evaluate IPA transcription quality (auto-fixable, WARN level)."""
+    if issue_count == 0:
+        return GateResult('PASS', '✅', "Clean IPA")
+    return GateResult('WARN', '⚠️', f"{issue_count} IPA issues (run lint_ipa.py --fix)")
+
+
 def evaluate_lint(error_count: int) -> GateResult:
     """Evaluate lint errors gate."""
     if error_count == 0:

@@ -1,0 +1,283 @@
+- type: fill-in
+  title: "Prepositions: В vs На"
+  instruction: "Choose the correct preposition: **в** (in) or **на** (on/at)."
+  items:
+    - sentence: "Я ___ вулиці."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Street is an open space."
+    - sentence: "Ми ___ аптеці."
+      answer: "в"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Pharmacy is a building."
+    - sentence: "Автобус ___ зупинці."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Stop is an open location."
+    - sentence: "Студент ___ площі."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Square is an open space."
+    - sentence: "Вона ___ пошті."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Post office is an exception (function)."
+    - sentence: "Він ___ магазині."
+      answer: "в"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Shop is a building."
+    - sentence: "Ми ___ вокзалі."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Station is an exception (function)."
+    - sentence: "Ти ___ парку."
+      answer: "в"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Park is a contained space (trees around)."
+    - sentence: "Я йду ___ вулицю."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Motion onto the street."
+    - sentence: "Він йде ___ аптеку."
+      answer: "в"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Motion into the building."
+    - sentence: "Ми йдемо ___ площу."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Motion onto the square."
+    - sentence: "Вона йде ___ пошту."
+      answer: "на"
+      options: ["на", "в", "біля", "про"]
+      explanation: "Motion to the post office."
+
+- type: match-up
+  title: "Directions Vocabulary"
+  instruction: "Match the Ukrainian direction with the English translation."
+  pairs:
+    - left: "Прямо"
+      right: "Straight"
+    - left: "Наліво"
+      right: "To the left"
+    - left: "Направо"
+      right: "To the right"
+    - left: "Назад"
+      right: "Back"
+    - left: "Вулиця"
+      right: "Street"
+    - left: "Площа"
+      right: "Square"
+    - left: "Зупинка"
+      right: "Stop"
+    - left: "Аптека"
+      right: "Pharmacy"
+    - left: "Де?"
+      right: "Where?"
+    - left: "Куди?"
+      right: "Where to?"
+
+- type: unjumble
+  title: "Giving Directions"
+  instruction: "Reorder the words to form correct instructions."
+  items:
+    - answer: "Спочатку ідіть прямо."
+      words: ["ідіть", "Спочатку", "прямо."]
+    - answer: "Потім повертайте наліво."
+      words: ["наліво.", "повертайте", "Потім"]
+    - answer: "Де тут аптека?"
+      words: ["тут", "аптека?", "Де"]
+    - answer: "Магазин біля парку."
+      words: ["біля", "Магазин", "парку."]
+    - answer: "Зупинка навпроти пошти."
+      words: ["пошти.", "навпроти", "Зупинка"]
+    - answer: "Я йду в банк."
+      words: ["банк.", "в", "Я", "йду"]
+
+- type: true-false
+  title: "City Knowledge"
+  instruction: "Decide if the statement is True or False based on the module."
+  items:
+    - statement: "Площа — це центр міста."
+      correct: true
+      explanation: "Squares are often central hubs in Ukrainian cities."
+    - statement: "Маршрутка зупиняється автоматично."
+      correct: false
+      explanation: "You must ask the driver to stop."
+    - statement: "Ми використовуємо 'Де?' для руху."
+      correct: false
+      explanation: "'Де?' is for static location. 'Куди?' is for motion."
+    - statement: "Світлофор — це транспорт."
+      correct: false
+      explanation: "Traffic light is infrastructure, not transport."
+    - statement: "Ми кажем 'на вулиці'."
+      correct: true
+      explanation: "Street is an open space, so we use 'на'."
+    - statement: "Аптека — це місце, де ми купуємо ліки."
+      correct: true
+      explanation: "Pharmacy is for medicine."
+    - statement: "В Україні немає площ."
+      correct: false
+      explanation: "Every city has a square."
+    - statement: "Щоб запитати дорогу, скажіть 'Вибачте'."
+      correct: true
+      explanation: "It is polite to start with 'Excuse me'."
+
+- type: fill-in
+  title: "Question Words: Де vs Куди"
+  instruction: "Choose the correct question word: **Де** (Where - location) or **Куди** (Where to - motion)."
+  items:
+    - sentence: "___ ти живеш?"
+      answer: "Де"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Static location (live)."
+    - sentence: "___ ти йдеш?"
+      answer: "Куди"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Motion (go)."
+    - sentence: "___ знаходиться банк?"
+      answer: "Де"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Static location (is located)."
+    - sentence: "___ їде автобус?"
+      answer: "Куди"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Motion (bus goes)."
+    - sentence: "___ ми зараз?"
+      answer: "Де"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Static location (are now)."
+    - sentence: "___ йдуть туристи?"
+      answer: "Куди"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Motion (tourists go)."
+    - sentence: "___ стоїть машина?"
+      answer: "Де"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Static location (car stands)."
+    - sentence: "___ ми повертаємо?"
+      answer: "Куди"
+      options: ["Де", "Куди", "Що", "Хто"]
+      explanation: "Motion (we turn)."
+
+- type: match-up
+  title: "City Places"
+  instruction: "Match the place with its description."
+  pairs:
+    - left: "Аптека"
+      right: "Medicine"
+    - left: "Парк"
+      right: "Trees and walking"
+    - left: "Зупинка"
+      right: "Waiting for transport"
+    - left: "Магазин"
+      right: "Buying food"
+    - left: "Вокзал"
+      right: "Trains"
+    - left: "Пошта"
+      right: "Sending letters"
+    - left: "Вулиця"
+      right: "Cars and people"
+    - left: "Перехрестя"
+      right: "Roads cross here"
+
+- type: group-sort
+  title: "Prepositions: В vs На"
+  instruction: "Sort the places based on whether they use 'В' (in) or 'На' (on/at)."
+  groups:
+    - name: "В (In)"
+      items: ["Парк", "Аптека", "Магазин", "Банк", "Кафе", "Готель"]
+    - name: "На (On)"
+      items: ["Вулиця", "Площа", "Зупинка", "Пошта", "Вокзал", "Ринок"]
+
+- type: quiz
+  title: "Understanding Directions"
+  instruction: "Choose the best answer."
+  items:
+    - question: "You want to go to the pharmacy. What do you ask?"
+      options:
+        - text: "Де тут аптека?"
+          correct: true
+        - text: "Я аптека."
+          correct: false
+        - text: "Де я?"
+          correct: false
+        - text: "Це ліки."
+          correct: false
+      explanation: "'Де тут аптека?' means 'Where is the pharmacy here?'"
+    - question: "A local says 'Ідіть прямо'. What do you do?"
+      options:
+        - text: "Go straight."
+          correct: true
+        - text: "Turn left."
+          correct: false
+        - text: "Turn right."
+          correct: false
+        - text: "Go back."
+          correct: false
+      explanation: "'Прямо' means straight."
+    - question: "You are 'на площі'. Where are you?"
+      options:
+        - text: "In the square."
+          correct: true
+        - text: "In the bank."
+          correct: false
+        - text: "In the shop."
+          correct: false
+        - text: "In the park."
+          correct: false
+      explanation: "'Площа' means square."
+    - question: "Look at the street. What is a 'світлофор'?"
+      options:
+        - text: "Traffic light."
+          correct: true
+        - text: "Street light."
+          correct: false
+        - text: "Car."
+          correct: false
+        - text: "Bus stop."
+          correct: false
+      explanation: "'Світлофор' is a traffic light."
+    - question: "When do we use 'Куди'?"
+      options:
+        - text: "For motion (where to)."
+          correct: true
+        - text: "For static location (where)."
+          correct: false
+        - text: "For time (when)."
+          correct: false
+        - text: "For people (who)."
+          correct: false
+      explanation: "'Куди' implies movement."
+    - question: "The pharmacy is 'біля банку'. Where is it?"
+      options:
+        - text: "Near the bank."
+          correct: true
+        - text: "Opposite the bank."
+          correct: false
+        - text: "In the bank."
+          correct: false
+        - text: "Behind the bank."
+          correct: false
+      explanation: "'Біля' means near."
+    - question: "You are 'на вокзалі'. What are you doing?"
+      options:
+        - text: "Waiting for a train."
+          correct: true
+        - text: "Buying bread."
+          correct: false
+        - text: "Sleeping."
+          correct: false
+        - text: "Swimming."
+          correct: false
+      explanation: "'Вокзал' is a train station."
+    - question: "A friend says 'Це серце міста'. What is it?"
+      options:
+        - text: "The square."
+          correct: true
+        - text: "The pharmacy."
+          correct: false
+        - text: "The supermarket."
+          correct: false
+        - text: "The taxi."
+          correct: false
+      explanation: "The square is often called the heart of the city."

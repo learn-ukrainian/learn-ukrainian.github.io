@@ -83,6 +83,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Auto-check naturalness via Gemini if PENDING"
     )
+    parser.add_argument(
+        "--skip-activities",
+        action="store_true",
+        help="Content-only audit: defer activity/vocab gates (for otaman content sprint)"
+    )
 
     args = parser.parse_args()
 
@@ -110,7 +115,7 @@ if __name__ == "__main__":
                 print(f"\n✅ Applied {num_fixes} fixes. Re-running audit to verify...\n")
 
         # Run standard audit
-        success = audit_module(file_path)
+        success = audit_module(file_path, skip_activities=args.skip_activities)
 
 
         if not success:

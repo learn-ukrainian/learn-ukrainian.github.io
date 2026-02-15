@@ -1,0 +1,291 @@
+- type: fill-in
+  title: Conjugate Second Conjugation verbs
+  instruction: Choose the correct form for the Second Conjugation verb in each sentence.
+  items:
+    - sentence: Я (говорити) повільно.
+      answer: говорю
+      options: ["говорю", "говориш", "говорять", "говоримо"]
+    - sentence: Ти (бачити) парк.
+      answer: бачиш
+      options: ["бачу", "бачиш", "бачить", "бачать"]
+    - sentence: Він (любити) каву.
+      answer: любить
+      options: ["люблю", "любить", "люблять", "любимо"]
+    - sentence: Ми (робити) фото.
+      answer: робимо
+      options: ["роблю", "робимо", "робите", "роблять"]
+    - sentence: Ви (вчити) мову.
+      answer: вчите
+      options: ["вчиш", "вчить", "вчите", "вчать"]
+    - sentence: Вони (сидіти) тут.
+      answer: сидять
+      options: ["сиджу", "сидить", "сидять", "сидимо"]
+    - sentence: Я (робити) помилки.
+      answer: роблю
+      options: ["роблю", "робиш", "робимо", "роблять"]
+    - sentence: Ти (просити) допомогу.
+      answer: просиш
+      options: ["прошу", "просиш", "просить", "просять"]
+    - sentence: Вона (платити) гроші.
+      answer: платить
+      options: ["плачу", "платиш", "платить", "платять"]
+    - sentence: Ми (бачити) море.
+      answer: бачимо
+      options: ["бачу", "бачимо", "бачите", "бачать"]
+    - sentence: Ви (говорити) багато.
+      answer: говорите
+      options: ["говорю", "говориш", "говорите", "говорять"]
+    - sentence: Вони (любити) Україну.
+      answer: люблять
+      options: ["люблю", "любить", "люблять", "любимо"]
+
+- type: match-up
+  title: Sort verbs by conjugation type
+  instruction: Match each verb with its conjugation family.
+  pairs:
+    - left: читати
+      right: 1st
+    - left: говорити
+      right: 2nd
+    - left: робити
+      right: 2nd
+    - left: писати
+      right: 1st
+    - left: бачити
+      right: 2nd
+    - left: знати
+      right: 1st
+    - left: любити
+      right: 2nd
+    - left: мати
+      right: 1st
+    - left: сидіти
+      right: 2nd
+    - left: вчити
+      right: 2nd
+
+- type: fill-in
+  title: Consonant mutations in the Я-form
+  instruction: Choose the correct form for the verb when saying 'I' (Я).
+  items:
+    - sentence: Я (сидіти) на стільці.
+      answer: сиджу
+      options: ["сиджу", "сидиш", "сидить", "сидять"]
+    - sentence: Я (платити) за каву.
+      answer: плачу
+      options: ["плачу", "платиш", "платить", "платять"]
+    - sentence: Я (просити) допомогу.
+      answer: прошу
+      options: ["прошу", "просиш", "просить", "просять"]
+    - sentence: Я (любити) море.
+      answer: люблю
+      options: ["люблю", "любиш", "любить", "люблять"]
+    - sentence: Я (робити) обід.
+      answer: роблю
+      options: ["роблю", "робиш", "робить", "роблять"]
+    - sentence: Я (бачити) ліс.
+      answer: бачу
+      options: ["бачу", "бачиш", "бачить", "бачать"]
+    - sentence: Я (ходити) до школи.
+      answer: ходжу
+      options: ["ходжу", "ходиш", "ходить", "ходять"]
+    - sentence: Я (водити) машину.
+      answer: воджу
+      options: ["воджу", "водиш", "водить", "водять"]
+    - sentence: Я (вчити) урок.
+      answer: вчу
+      options: ["вчу", "вчиш", "вчить", "вчать"]
+    - sentence: Я (пити) воду.
+      answer: п'ю
+      options: ["п'ю", "п'єш", "п'є", "п'ють"]
+    - sentence: Я (казати) привіт.
+      answer: кажу
+      options: ["кажу", "кажеш", "каже", "кажуть"]
+    - sentence: Я (писати) лист.
+      answer: пишу
+      options: ["пишу", "пишеш", "пише", "пишуть"]
+
+- type: true-false
+  title: Conjugation Rules
+  instruction: Identify if the statement about Ukrainian verbs is true or false.
+  items:
+    - statement: Verbs ending in -ити usually belong to the Second Conjugation.
+      correct: true
+    - statement: "In the Second Conjugation, the Ми form ends in -емо."
+      correct: false
+    - statement: Consonant mutations in the Second Conjugation happen for all persons.
+      correct: false
+    - statement: The verb їсти follows the regular Second Conjugation pattern.
+      correct: false
+    - statement: "We add л in the Я form after labial consonants like б and п."
+      correct: true
+    - statement: "Він говорить is a Second Conjugation form."
+      correct: true
+    - statement: "The verb читати belongs to the Second Conjugation."
+      correct: false
+    - statement: "The verb бачити is in the Second Conjugation family."
+      correct: true
+    - statement: "Second Conjugation verbs are also called the и-family."
+      correct: true
+    - statement: "The ending -ять is used for Вони in the Second Conjugation."
+      correct: true
+    - statement: "The ending -еш is used for Ти in the Second Conjugation."
+      correct: false
+    - statement: "The Я form of любити is я любю."
+      correct: false
+
+- type: quiz
+  title: Choose the Correct Ending
+  instruction: Select the correct present tense ending for each subject and verb.
+  items:
+    - question: "Ти (говорити) ..."
+      options:
+        - text: говориш
+          correct: true
+        - text: говорите
+          correct: false
+        - text: говоримо
+          correct: false
+        - text: говорять
+          correct: false
+    - question: "Ми (бачити) ..."
+      options:
+        - text: бачимо
+          correct: true
+        - text: бачите
+          correct: false
+        - text: бачиш
+          correct: false
+        - text: бачу
+          correct: false
+    - question: "Ви (робити) ..."
+      options:
+        - text: робите
+          correct: true
+        - text: робимо
+          correct: false
+        - text: робиш
+          correct: false
+        - text: роблю
+          correct: false
+    - question: "Вони (любити) ..."
+      options:
+        - text: люблять
+          correct: true
+        - text: любить
+          correct: false
+        - text: любимо
+          correct: false
+        - text: любиш
+          correct: false
+    - question: "Я (просити) ..."
+      options:
+        - text: прошу
+          correct: true
+        - text: просиш
+          correct: false
+        - text: просить
+          correct: false
+        - text: просимо
+          correct: false
+    - question: "Він (вчити) ..."
+      options:
+        - text: вчить
+          correct: true
+        - text: вчу
+          correct: false
+        - text: вчиш
+          correct: false
+        - text: вчать
+          correct: false
+
+- type: unjumble
+  title: Build a Sentence
+  instruction: Put the words in the correct order to form a Ukrainian sentence.
+  items:
+    - words: ["Ми", "повільно", "говоримо"]
+      answer: Ми говоримо повільно
+    - words: ["Ти", "парк", "бачиш"]
+      answer: Ти бачиш парк
+    - words: ["Я", "каву", "люблю"]
+      answer: Я люблю каву
+    - words: ["Вони", "фото", "роблять"]
+      answer: Вони роблять фото
+    - words: ["Вона", "тут", "сидить"]
+      answer: Вона сидить тут
+    - words: ["Ми", "мову", "вчимо"]
+      answer: Ми вчимо мову
+
+- type: group-sort
+  title: Sorting Verb Endings
+  instruction: Sort these verb endings into the correct category (1st or 2nd Conjugation).
+  groups:
+    - name: 1st Conjugation
+      items: ["-еш", "-е", "-емо", "-ете", "-уть"]
+    - name: 2nd Conjugation
+      items: ["-иш", "-ить", "-имо", "-ите", "-ять"]
+
+- type: quiz
+  title: Irregular Verbs Review
+  instruction: Answer the questions about the verbs 'їсти' and 'пити'.
+  items:
+    - question: "How do you say 'I eat'?"
+      options:
+        - text: Я їм
+          correct: true
+        - text: Я їсу
+          correct: false
+        - text: Я їдять
+          correct: false
+        - text: Я їмо
+          correct: false
+    - question: "How do you say 'You (singular) drink'?"
+      options:
+        - text: Ти п'єш
+          correct: true
+        - text: Ти п'ю
+          correct: false
+        - text: Ти п'є
+          correct: false
+        - text: Ти п'ють
+          correct: false
+    - question: "How do you say 'They eat'?"
+      options:
+        - text: Вони їдять
+          correct: true
+        - text: Вони їсть
+          correct: false
+        - text: Вони їмо
+          correct: false
+        - text: Вони їси
+          correct: false
+    - question: "How do you say 'We drink'?"
+      options:
+        - text: Ми п'ємо
+          correct: true
+        - text: Ми п'єте
+          correct: false
+        - text: Ми п'ють
+          correct: false
+        - text: Ми п'єш
+          correct: false
+    - question: "What is the infinitive 'to eat'?"
+      options:
+        - text: їсти
+          correct: true
+        - text: пити
+          correct: false
+        - text: бачити
+          correct: false
+        - text: любити
+          correct: false
+    - question: "What is the infinitive 'to drink'?"
+      options:
+        - text: пити
+          correct: true
+        - text: їсти
+          correct: false
+        - text: говорити
+          correct: false
+        - text: робити
+          correct: false

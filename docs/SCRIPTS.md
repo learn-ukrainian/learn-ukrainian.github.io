@@ -1501,28 +1501,54 @@ Full technical documentation: `scripts/scoring/README.md`
 
 ---
 
-## Foreman: Gemini-Orchestrated Rebuilds
+## Two-Stage Pipeline: Otaman + Hetman
 
-**Purpose:** The Foreman is a Gemini interactive-mode skill that autonomously orchestrates the full Phase 0-6b rebuild pipeline for a single module. It dispatches Yellow Gemini (builder) and Green Gemini (reviewer) sub-agents, runs audits, manages fix loops, and persists state for crash recovery. Claude only does a lightweight final review (~5 turns instead of 50+).
+The pipeline is split into two stages for throughput optimization:
 
-**Architecture:**
+- **Otaman** (`/otaman`) — Content sprint: prose only, no activities. ~30-60 min/module.
+- **Hetman** (`/hetman`) — Activity enrichment: adds activities, vocabulary, and final review.
+
+This split allows content generation to sprint ahead while activities (the bottleneck phase) are added later.
+
+### Architecture
+
 ```
-User → /foreman {track} {num}  (Gemini interactive mode)
+User → /otaman {track} {num}  (Gemini interactive mode)
          │
     ┌────▼─────┐
-    │ FOREMAN  │  Orchestrates pipeline, runs audits
+    │ OTAMAN   │  Content sprint (Phases 0-6b, prose only)
     └────┬─────┘
          │ dispatches via ai_agent_bridge.py
     ┌────┼────────────┐
     ▼                 ▼
- YELLOW (yw-)      GREEN (gr-)        FR (fr-)
- Builder           Reviewer           Final Review
- --stdout-only     --stdout-only      --allow-write --delimiters
-    │                 │                   │
-    │    ┌────────────┘                   │
-    ▼    ▼                                ▼
-  Phases 0-3,4-fix               Phase 7 (adversarial)
-  Phase 6b fixes                 3rd session, no memory
+ YELLOW (yw-)      GREEN (gr-)
+ Builder           Reviewer (prose only)
+ --stdout-only     --stdout-only
+    │                 │
+    ▼                 ▼
+  Phases 0-2, 4-fix  Phase 6 (prose review)
+  Phase 6b fixes
+         │
+    ┌────▼─────┐
+    │ content  │  ✅ Content-complete (activities deferred)
+    │ complete │
+    └────┬─────┘
+         │
+User → /hetman {track} {num}  (later, when capacity available)
+         │
+    ┌────▼─────┐
+    │ HETMAN   │  Activity enrichment (Phases 3, 4, 7)
+    └────┬─────┘
+         │
+    ┌────┼────────────┐
+    ▼                 ▼
+ YELLOW (yw-)      FR (fr-)
+ Activities        Final Review
+ --stdout-only     --allow-write --delimiters
+    │                 │
+    ▼                 ▼
+  Phase 3           Phase 7 (adversarial)
+  Phase 4 (full)    3rd session, no memory
          │
     ┌────▼─────┐
     │ CLAUDE   │  Spot-check only (1 in 5 modules)
@@ -1532,39 +1558,109 @@ User → /foreman {track} {num}  (Gemini interactive mode)
 ### Usage
 
 ```bash
-# In Gemini interactive mode:
-/foreman b1 5           # Full rebuild of B1 module 5
-/foreman c1-bio 12      # Full rebuild of C1-BIO module 12
+# Stage 1: Content sprint (GEMINI skills — run in Gemini interactive mode)
+/otaman b1 5           # [Gemini] Prose-only rebuild of B1 module 5
+/otaman c1-bio 12      # [Gemini] Prose-only rebuild of C1-BIO module 12
+/otaman b2-hist        # [Gemini] Batch: all remaining modules in track
 
-# After Foreman completes, in Claude:
-/final-review b1 5      # Claude final QA (~5 turns)
+# Stage 2: Activity enrichment (GEMINI skills)
+/hetman b1 5           # [Gemini] Add activities + final review to B1 module 5
+/hetman c1-bio         # [Gemini] Batch: enrich all content-complete modules
+
+# Full E2E mode (GEMINI skill — content + activities + review, no otaman needed)
+/hetman b1 5 --full    # [Gemini] Full pipeline for a single module
+/hetman c1-bio --full  # [Gemini] Batch: all incomplete modules from scratch
+
+# After Hetman completes (CLAUDE skill):
+/final-review b1 5     # [Claude] Final QA (~5 turns)
+
+# Content-only audit (used by otaman)
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
+
+# Batch verification (run AFTER Gemini finishes to catch lies)
+.venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
+.venv/bin/python scripts/verify_track.py {track} --range 1-5  # Verify modules 1-5 only
+.venv/bin/python scripts/verify_track.py {track} --full       # Require full pass (not just content-complete)
+.venv/bin/python scripts/verify_track.py {track} --quick      # Fast: cached status, skip re-audit
+
+# Per-module verification gates (Gemini MUST run before declaring success)
+.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Content-complete
+.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Fully-complete
 ```
+
+### Deterministic Python Builder (Preferred)
+
+`scripts/build_module.py` replaces LLM orchestration with deterministic Python.
+Gemini only gets called for LLM tasks (research, writing, reviewing). State,
+resume, verification — all in Python.
+
+```bash
+# Full pipeline (resume-aware)
+.venv/bin/python scripts/build_module.py {track} {num}
+
+# Content only (phases 0-6b, no activities)
+.venv/bin/python scripts/build_module.py {track} {num} --content-only
+
+# Enrich only (phases 3+7, requires existing content)
+.venv/bin/python scripts/build_module.py {track} {num} --enrich
+
+# Just verify (run audit, print PASS/FAIL, exit immediately)
+.venv/bin/python scripts/build_module.py {track} {num} --verify
+
+# Rebuild from scratch (nuke state)
+.venv/bin/python scripts/build_module.py {track} {num} --rebuild
+
+# Re-run a specific phase
+.venv/bin/python scripts/build_module.py {track} {num} --force-phase 2
+
+# Dry-run (show plan, no Gemini dispatches)
+.venv/bin/python scripts/build_module.py {track} {num} --dry-run
+```
+
+**Key advantages over LLM orchestration:**
+- Deterministic state tracking in `orchestration/{slug}/state.json`
+- Section-by-section resume (kill mid-Phase 2, re-run → skips done sections)
+- Fail-fast on bloated/thin sections (2x ceiling, 50% floor)
+- Config tables for immersion rules, level constraints, activity configs
+- No broken heredocs, no forgotten conditionals, no rebuilding from scratch
 
 ### Key Components
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| Foreman skill | `.gemini/skills/foreman/SKILL.md` | Full orchestration protocol (Phases 0-7) |
+| **Module builder** | `scripts/build_module.py` | **Deterministic Python orchestrator (preferred)** |
+| Otaman skill | `.gemini/skills/otaman/SKILL.md` | Content sprint orchestration (Phases 0-6b) — legacy |
+| Hetman skill | `.gemini/skills/hetman/SKILL.md` | Activity enrichment (Phases 3, 4, 7) or full E2E (`--full`) — legacy |
 | Final review skill (Gemini) | `.gemini/skills/final-review/SKILL.md` | Adversarial Phase 7 QA (separate session) |
-| Final review skill (Claude) | `claude_extensions/commands/final-review.md` | Claude spot-check QA (fallback) |
-| Phase 7 template | `claude_extensions/phases/gemini/phase-7-final-review.md` | Template filled by foreman for Phase 7 |
+| Final review skill (Claude) | `claude_extensions/commands/final-review.md` | Claude spot-check QA |
+| Otaman verify gate | `scripts/otaman_verify.py` | Hard pass/fail gate for content-complete modules |
+| Hetman verify gate | `scripts/hetman_verify.py` | Hard pass/fail gate for fully-complete modules |
 | Template filler | `scripts/fill_template.py` | Fill phase templates with placeholders |
 | AI agent bridge | `scripts/ai_agent_bridge.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
 | State persistence | `orchestration/{slug}/state.json` | Crash recovery |
+| Batch dispatcher | `scripts/batch_otaman.py` | Autonomous batch scheduling |
 
 ### Pipeline Phases
+
+**Otaman (content sprint):**
 
 | Phase | Action | Agent | Mode |
 |-------|--------|-------|------|
 | 0 | Research | Yellow Gemini | `--stdout-only` |
 | 1 | Meta rebuild | Yellow Gemini | `--stdout-only` |
 | 2 | Content writing (sharded) | Yellow Gemini | `--stdout-only` |
+| 4 | Content-only audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
+| 5 | MDX generation + status | Local | -- |
+| 6 | Prose review | Green Gemini (new session) | `--stdout-only` |
+| 6b | Apply prose fixes + IPA lint | Yellow + local | `--allow-write` |
+
+**Hetman (activity enrichment):**
+
+| Phase | Action | Agent | Mode |
+|-------|--------|-------|------|
 | 3 | Activities + vocabulary | Yellow Gemini | `--stdout-only` |
-| 4 | Audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
-| 5 | MDX generation + status | Local | — |
-| 5b | Archive diff | Local | — |
-| 6 | Independent review | Green Gemini (new session) | `--stdout-only` |
-| 6b | Apply review fixes | Yellow + local | `--allow-write` |
+| 4 | Full audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
+| 5 | MDX regeneration | Local | -- |
 | 7 | **Final review (adversarial)** | **FR Gemini (3rd session)** | `--allow-write --delimiters` |
 
 ### Dispatch Modes
@@ -1583,7 +1679,7 @@ The bridge (`ai_agent_bridge.py`) supports three execution modes:
 
 ### Template Filling
 
-The Foreman uses `scripts/fill_template.py` to fill phase templates with computed placeholders:
+The Otaman/Hetman use `scripts/fill_template.py` to fill phase templates with computed placeholders:
 
 ```bash
 .venv/bin/python scripts/fill_template.py \
@@ -1596,19 +1692,38 @@ Placeholders are computed once during pre-flight and stored in `orchestration/{s
 
 ### Crash Recovery
 
-State is persisted to `orchestration/{slug}/state.json` after every phase transition. On re-invocation, the Foreman reads the state file and resumes from the last incomplete phase.
+State is persisted to `orchestration/{slug}/state.json` after every phase transition. On re-invocation, the orchestrator reads the state file and resumes from the last incomplete phase.
 
-### Comparison with /orchestrate-rebuild
+### Content-Only Audit
 
-| Feature | `/orchestrate-rebuild` | `/foreman` |
-|---------|----------------------|------------|
-| Orchestrator | Claude | Gemini |
-| Phases | 0-6b | 0-7 (includes adversarial final review) |
-| Claude turns per module | ~50 | ~0 (spot-check 1 in 5 only) |
-| Final QA | Claude `/final-review` | Gemini Phase 7 (3rd session, `--allow-write`) |
-| Crash recovery | None | state.json |
-| Template filling | In-memory | `fill_template.py` |
-| State tracking | None | Persistent JSON |
+The `--skip-activities` flag enables content-only audits that defer activity/vocab gates:
+
+```bash
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
+```
+
+Deferred gates serialize as `"status": "deferred"` in the status JSON, enabling:
+- Otaman to pass content-only audits without activities
+- `batch_otaman.py` to distinguish content-complete from fully-passing modules
+- Hetman to find modules that need activity enrichment
+
+### Verification Gates
+
+Hard pass/fail scripts that Gemini MUST run before declaring a module complete. These replace LLM self-assessment with deterministic checks.
+
+**Why these exist:** Gemini sometimes shortcuts conditional bash logic and declares success without running the actual audit. These scripts are the single source of truth — exit 0 = PASS, exit 1 = FAIL.
+
+**`scripts/otaman_verify.py`** — Content-complete gate (used after Otaman):
+```bash
+.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
+```
+Checks: runs audit with `--skip-activities`, reads status JSON (no failing gates), verifies orchestration artifacts (phase-2 sections, placeholders.yaml).
+
+**`scripts/hetman_verify.py`** — Fully-complete gate (used after Hetman):
+```bash
+.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
+```
+Checks: runs FULL audit (no `--skip-activities`), ALL gates must pass (no deferred, no fail), activities YAML and vocabulary YAML must exist.
 
 ---
 
@@ -2056,7 +2171,7 @@ npm run sync:landing:dry      # Preview changes without applying
 # Interactive mode
 .venv/bin/python scripts/ai_agent_bridge.py interactive
 
-# Dispatch with full execution access (Foreman Phase 7)
+# Dispatch with full execution access (Otaman Phase 7)
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Activate skill final-review. ..." \
   --task-id fr-{slug} \

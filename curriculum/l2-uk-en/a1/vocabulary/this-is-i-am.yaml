@@ -1,0 +1,78 @@
+- lemma: це
+  notes: Universal pointer word, invariable
+  pos: pronoun
+  translation: this is / it is
+- lemma: я
+  pos: pronoun
+  translation: I
+- lemma: ти
+  notes: Used with friends, family, children
+  pos: pronoun
+  translation: you (informal)
+- gender: m
+  lemma: він
+  pos: pronoun
+  translation: he
+- gender: f
+  lemma: вона
+  pos: pronoun
+  translation: she
+- lemma: хто
+  notes: Question word for people
+  pos: pronoun
+  translation: who
+- lemma: що
+  notes: Question word for objects
+  pos: pronoun
+  translation: what
+- gender: m
+  lemma: студент
+  pos: noun
+  translation: student (male)
+- gender: m
+  lemma: українець
+  pos: noun
+  translation: Ukrainian (male)
+- gender: f
+  lemma: українка
+  pos: noun
+  translation: Ukrainian (female)
+- gender: m
+  lemma: вчитель
+  pos: noun
+  translation: teacher (male)
+- gender: f
+  lemma: вчителька
+  pos: noun
+  translation: teacher (female)
+- lemma: ми
+  pos: pronoun
+  translation: we
+- lemma: ви
+  notes: Used for strangers, elders, or groups
+  pos: pronoun
+  translation: you (formal/plural)
+- lemma: вони
+  pos: pronoun
+  translation: they
+- gender: n
+  lemma: воно
+  notes: Used for neuter nouns (ending in -o/-e)
+  pos: pronoun
+  translation: it
+- lemma: не
+  notes: Negation particle, placed before the word it negates
+  pos: particle
+  translation: not
+- gender: m
+  lemma: паспорт
+  pos: noun
+  translation: passport
+- gender: m
+  lemma: стіл
+  pos: noun
+  translation: table
+- gender: f
+  lemma: кава
+  pos: noun
+  translation: coffee

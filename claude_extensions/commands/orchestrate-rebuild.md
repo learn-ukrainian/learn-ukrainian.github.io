@@ -3,7 +3,7 @@
 > **Claude orchestrates. Gemini builds. Human resolves failures.**
 > Every module is built fresh from plan + meta. No resume logic. No Claude fallback.
 
-> **Foreman Alternative:** For fully autonomous Gemini-orchestrated rebuilds, use `/foreman {track} {num}` in Gemini interactive mode. The Foreman handles the full Phase 0-7 pipeline autonomously (including Phase 7 adversarial final review in a separate session). Claude spot-checks a random sample only. See `.gemini/skills/foreman/SKILL.md`.
+> **Otaman Alternative:** For fully autonomous Gemini-orchestrated rebuilds, use `/otaman {track} {num}` in Gemini interactive mode. The Otaman handles the full Phase 0-7 pipeline autonomously (including Phase 7 adversarial final review in a separate session). Claude spot-checks a random sample only. See `.gemini/skills/otaman/SKILL.md`.
 
 ## Usage
 
@@ -148,7 +148,7 @@ orchestration/{slug}/
 5. ✅ Phase 6 Green Team review generated (not rubber-stamped)
 6. ✅ Phase 6b review fixes applied (every actionable issue addressed)
 7. ✅ Final audit re-passes after Phase 6b fixes
-8. ✅ Phase 7 final review passes (adversarial QA in separate session) — **Foreman pipeline only**
+8. ✅ Phase 7 final review passes (adversarial QA in separate session) — **Otaman pipeline only**
 
 **Phase 6b is NOT optional. The workflow proceeds automatically from Phase 6 → Phase 6b → Final audit.** Do NOT skip Phase 6/6b. Do NOT report completion after Phase 5. Do NOT stop and wait for human instruction between Phase 6 and Phase 6b. The module is done when the review cycle is complete and the final audit passes.
 
@@ -238,7 +238,7 @@ When monolithic Phase 2 consistently undershoots word targets (common for module
 - **Callout tracking** — `{CALLOUT_TYPES_USED}` prevents type repetition across sections
 - **Seam prevention** — template instructs "continue seamlessly, no re-introductions"
 
-**The Foreman** (`.gemini/skills/foreman/SKILL.md`) implements its own inline assembly for this pattern. This script is for the Claude-orchestrated path only.
+**The Otaman** (`.gemini/skills/otaman/SKILL.md`) implements its own inline assembly for this pattern. This script is for the Claude-orchestrated path only.
 
 ### Phase 3: Activities + Vocabulary
 

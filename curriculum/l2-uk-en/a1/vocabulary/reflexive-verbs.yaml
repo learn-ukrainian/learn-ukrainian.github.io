@@ -1,0 +1,65 @@
+- word: вмиватися
+  ipa: /ʋmɪˈʋatɪsʲa/
+  translation: to wash oneself
+  pos: verb
+  note: reflexive, present tense я вмиваюся, ти вмиваєшся
+- word: одягатися
+  ipa: /odʲaˈɦatɪsʲa/
+  translation: to dress oneself
+  pos: verb
+  note: reflexive, present tense я одягаюся, ти одягаєшся
+- word: дивитися
+  ipa: /dɪˈʋɪtɪsʲa/
+  translation: to watch, to look
+  pos: verb
+  note: reflexive, present tense я дивлюся, ти дивишся
+- word: сміятися
+  ipa: /sʲmʲiˈjatɪsʲa/
+  translation: to laugh
+  pos: verb
+  note: reflexive, present tense я сміюся, ти смієшся
+- word: називатися
+  ipa: /nazɪˈʋatɪsʲa/
+  translation: to be called
+  pos: verb
+  note: reflexive, present tense я називаюся, ти називаєшся
+- word: вчитися
+  ipa: /ˈʋtʃɪtɪsʲa/
+  translation: to study, to learn
+  pos: verb
+  note: reflexive, present tense я вчуся, ти вчишся
+- word: займатися
+  ipa: /zajˈmatɪsʲa/
+  translation: to do, to engage in
+  pos: verb
+  note: reflexive, present tense я займаюся, ти займаєшся (+ Instrumental)
+- word: повертатися
+  ipa: /poʋerˈtatɪsʲa/
+  translation: to return
+  pos: verb
+  note: reflexive, present tense я повертаюся, ти повертаєшся
+- word: знайомитися
+  ipa: /znajˈɔmɪtɪsʲa/
+  translation: to get acquainted
+  pos: verb
+  note: reflexive, present tense я знайомлюся, ти знайомишся
+- word: вітатися
+  ipa: /ʋʲiˈtatɪsʲa/
+  translation: to greet each other
+  pos: verb
+  note: reflexive, present tense я вітаюся, ти вітаєшся
+- word: дієслово
+  ipa: /dʲijeˈsɫɔʋo/
+  translation: verb
+  pos: noun
+  gender: neuter
+- word: суфікс
+  ipa: /ˈsufʲiks/
+  translation: suffix
+  pos: noun
+  gender: masculine
+- word: відмінювання
+  ipa: /ʋʲidˈmʲinʲuʋanʲnʲa/
+  translation: conjugation
+  pos: noun
+  gender: neuter

@@ -1,0 +1,79 @@
+- lemma: чи
+  notes: Used to start a Yes/No question
+  pos: particle
+  translation: whether / question particle
+- lemma: що
+  notes: Used for inanimate objects
+  pos: pronoun
+  translation: what
+- lemma: хто
+  notes: Used for people
+  pos: pronoun
+  translation: who
+- lemma: де
+  notes: Asks about location
+  pos: adverb
+  translation: where
+- lemma: коли
+  notes: Asks about time
+  pos: adverb
+  translation: when
+- lemma: не
+  notes: Negation particle, placed before the verb
+  pos: particle
+  translation: not
+- lemma: так
+  notes: Affirmative answer
+  pos: particle
+  translation: 'yes'
+- lemma: ні
+  notes: Negative answer
+  pos: particle
+  translation: 'no'
+- lemma: куди
+  notes: Asks about direction
+  pos: adverb
+  translation: where to
+- lemma: чому
+  notes: Asks for a reason
+  pos: adverb
+  translation: why
+- lemma: як
+  notes: Asks about manner
+  pos: adverb
+  translation: how
+- lemma: скільки
+  notes: Asks about quantity
+  pos: adverb
+  translation: how much / how many
+- lemma: завжди
+  pos: adverb
+  translation: always
+- lemma: ніколи
+  pos: adverb
+  translation: never
+- gender: f
+  lemma: кава
+  pos: noun
+  translation: coffee
+- gender: m
+  lemma: кіт
+  pos: noun
+  translation: cat
+- gender: m
+  lemma: пес
+  pos: noun
+  translation: dog
+- gender: f
+  lemma: мама
+  pos: noun
+  translation: mom
+- aspect: imp
+  lemma: знати
+  pos: verb
+  translation: to know
+- aspect: imp
+  lemma: читати
+  pos: verb
+  translation: to read
+

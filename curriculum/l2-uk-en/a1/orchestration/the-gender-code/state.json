@@ -1,15 +1,60 @@
 {
+  "slug": "the-gender-code",
   "track": "a1",
   "module_num": 3,
-  "slug": "the-gender-code",
-  "status": "in_progress",
-  "current_phase": "4",
-  "attempt": 1,
-  "history": [
-    {"phase": "0", "status": "complete", "task_id": "yw-the-gender-code-p0", "timestamp": "2026-02-14T21:48:00Z"},
-    {"phase": "1", "status": "complete", "task_id": "yw-the-gender-code-p1", "timestamp": "2026-02-14T21:50:00Z"},
-    {"phase": "2", "status": "complete", "task_id": "yw-the-gender-code-p2", "timestamp": "2026-02-14T22:05:00Z"},
-    {"phase": "3", "status": "complete", "task_id": "yw-the-gender-code-p3-minimal", "timestamp": "2026-02-14T22:15:00Z"}
-  ],
-  "last_updated": "2026-02-14T21:45:00Z"
+  "mode": "full",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-15T22:53:07Z",
+      "task_id": "yw-the-gender-code-p0"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-15T22:53:36Z",
+      "task_id": "yw-the-gender-code-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:01:53Z",
+      "sections_done": 4,
+      "sections_total": 4
+    },
+    "4": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:05:50Z",
+      "attempts": 2
+    },
+    "5": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:05:51Z"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:06:48Z",
+      "task_id": "gr-the-gender-code",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:07:22Z",
+      "task_id": "yw-the-gender-code-6b"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:07:57Z",
+      "task_id": "yw-the-gender-code-p3"
+    },
+    "4-full": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:09:13Z",
+      "attempts": 2
+    },
+    "7": {
+      "status": "complete",
+      "timestamp": "2026-02-15T23:18:52Z",
+      "task_id": "fr-the-gender-code"
+    }
+  },
+  "last_updated": "2026-02-15T23:18:52Z"
 }

@@ -127,6 +127,9 @@ Before generating ANY content for seminar tracks, complete research phase:
 # Audit module (saves log automatically)
 scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md
 
+# Content-only audit (defer activity/vocab gates — for otaman content sprint)
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
+
 # Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
 .venv/bin/python scripts/validate_plan_config.py {level}
 
@@ -147,9 +150,33 @@ npm run metrics:extract {track}  # Extract raw metrics
 # Full rebuild for core tracks (research → build → review → verify)
 /full-rebuild-core {level} {num}   # a1, a2, b1, b2, c1, c2, b2-pro, c1-pro
 
-# Foreman: Gemini-orchestrated full rebuild (saves ~45 Claude turns per module)
-/foreman {track} {num}             # In Gemini interactive mode — autonomous Phase 0-6b
-/final-review {track} {num}        # Claude final QA after Foreman completes (~5 turns)
+# Two-stage pipeline: Otaman (content sprint) → Hetman (activity enrichment)
+# NOTE: /otaman and /hetman are GEMINI skills (run in Gemini interactive mode)
+/otaman {track} {num}             # [Gemini] Stage 1: prose only (Phases 0-6b)
+/hetman {track} {num}             # [Gemini] Stage 2: activities + final review (Phases 3-7)
+/hetman {track} {num} --full      # [Gemini] Full E2E: content + activities + review (no otaman needed)
+/hetman {track}                   # [Gemini] Stage 2 batch: enrich all content-complete modules
+/hetman {track} --full            # [Gemini] Full E2E batch: all incomplete modules from scratch
+/final-review {track} {num}       # [Claude] Final QA after Hetman completes (~5 turns)
+
+# Deterministic Python builder (replaces LLM orchestration — preferred)
+.venv/bin/python scripts/build_module.py {track} {num}                  # Full pipeline (resume-aware)
+.venv/bin/python scripts/build_module.py {track} {num} --content-only   # Prose only (phases 0-6b)
+.venv/bin/python scripts/build_module.py {track} {num} --enrich         # Activities only (phases 3+7)
+.venv/bin/python scripts/build_module.py {track} {num} --verify         # Just run audit, PASS/FAIL
+.venv/bin/python scripts/build_module.py {track} {num} --rebuild        # Nuke state, rebuild from Phase 0
+.venv/bin/python scripts/build_module.py {track} {num} --force-phase 2  # Re-run specific phase
+.venv/bin/python scripts/build_module.py {track} {num} --dry-run        # Show plan, no dispatching
+
+# Pipeline verification (run AFTER Gemini finishes to catch lies)
+.venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
+.venv/bin/python scripts/verify_track.py {track} --range 1-5  # Verify modules 1-5
+.venv/bin/python scripts/verify_track.py {track} --full       # Require full pass (not just content-complete)
+.venv/bin/python scripts/verify_track.py {track} --quick      # Fast: read cached status, skip re-audit
+
+# Per-module verification gates (Gemini MUST run these before declaring success)
+.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Content-complete gate
+.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Fully-complete gate
 
 # Full pipeline (lint → generate → validate)
 npm run pipeline l2-uk-en {level} {module_num}
@@ -160,11 +187,19 @@ npm run claude:deploy
 # Vocabulary rebuild
 npm run vocab:rebuild
 
-# Autonomous batch dispatcher
+# Autonomous batch dispatcher (old pipeline — batch_gemini_runner.py)
 .venv/bin/python scripts/batch_dispatcher.py run          # Continuous — hammer Gemini until done
 .venv/bin/python scripts/batch_dispatcher.py scan         # Show priorities (no dispatch)
 .venv/bin/python scripts/batch_dispatcher.py status       # Show current state
 .venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio  # Force single track
+
+# Batch Otaman dispatcher (new pipeline — Gemini /otaman, fully autonomous)
+.venv/bin/python scripts/batch_otaman.py run             # Continuous — max 2 parallel sessions
+.venv/bin/python scripts/batch_otaman.py run --one-shot  # Single module, then exit
+.venv/bin/python scripts/batch_otaman.py scan            # Show track status + next dispatch
+.venv/bin/python scripts/batch_otaman.py status          # Show dispatch history
+.venv/bin/python scripts/batch_otaman.py dispatch-one --track a1  # Force specific track
+# Filters: --include-tracks a1 b1 | --exclude-tracks c2 | --max-runtime-hours 12
 
 # Broker maintenance
 .venv/bin/python scripts/ai_agent_bridge.py cleanup              # Clean stale PIDs + ancient messages

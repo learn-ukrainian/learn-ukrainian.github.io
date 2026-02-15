@@ -1,0 +1,42 @@
+TRACK: "a2"
+LEVEL: "A2"
+SLUG: "health-body"
+TOPIC_TITLE: "Health and Body"
+MODULE_NUM: "55"
+PLAN_PATH: "curriculum/l2-uk-en/plans/a2/health-body.yaml"
+META_PATH: "curriculum/l2-uk-en/a2/meta/health-body.yaml"
+CONTENT_PATH: "curriculum/l2-uk-en/a2/health-body.md"
+ACTIVITIES_PATH: "curriculum/l2-uk-en/a2/activities/health-body.yaml"
+VOCAB_PATH: "curriculum/l2-uk-en/a2/vocabulary/health-body.yaml"
+RESEARCH_PATH: "curriculum/l2-uk-en/a2/research/health-body-research.md"
+REVIEW_PATH: "curriculum/l2-uk-en/a2/review/health-body-review.md"
+QUICK_REF_PATH: "claude_extensions/quick-ref/A2.md"
+SCHEMA_PATH: "schemas/activities-a2.schema.json"
+WORD_TARGET: "1000"
+SKILL_IDENTITY: "full-rebuild-core-a"
+PERSONA_FLAVOR: "The Helpful Neighbor"
+PERSONA_VOICE: "Encouraging Cultural Guide"
+PERSONA_ROLE: "Yoga Instructor"
+IMMERSION_RULE: "TARGET: 75-90% Ukrainian, 10-25% English. English only in vocabulary tables and brief grammar notes. Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
+LEVEL_CONSTRAINTS: "GRAMMAR RULES:
+- Max 15 words per Ukrainian sentence
+- Max 2 clauses per sentence
+- All cases allowed
+- Simple subordinate clauses allowed (який/що/коли)
+- Aspect pairs introduced but not complex
+- No participles"
+ACTIVITY_COUNT_TARGET: 10
+ACTIVITY_MIN: 8
+ACTIVITY_MAX: 12
+ITEMS_MIN: 12
+VOCAB_COUNT_TARGET: 25
+FORBIDDEN_ACTIVITY_TYPES: ""
+ALLOWED_ACTIVITY_TYPES: "quiz, fill-in, match-up, anagram, unjumble, mark-the-words, reorder, cloze"
+REQUIRED_TYPES: "quiz, fill-in, match-up"
+PRIORITY_TYPES: "anagram, unjumble"
+SECTION_TITLE: "Summary / Підсумок"
+HARD_MINIMUM_WORD_COUNT: 150
+SECTION_ENGAGEMENT_MIN: 1
+SECTION_EXAMPLE_MIN: 2
+PREVIOUS_CONTENT_SUMMARY: "### Нещасний випадок\n### У кабінеті лікаря\n### Бабусині поради\n### Перевірка розуміння\n\n---\n\n> [!culture]\n> **Гірчичники** (Mustard plasters)\n> Це традиційний метод лікування застуди та кашлю в Україні. Це папір із гірчичним порошком. Їх кладуть на спину, щоб «прогріти» тіло. Це пече (it burns), але багато хто вірить, що це допомагає!\n\nПам'ятайте: коли ви хворієте, слухайте лікаря, але не забувайте про чай з малиною. Це смачно і корисно!"
+CALLOUT_TYPES_USED: "[!tip], [!warning], [!culture], [!fact], [!observe]"

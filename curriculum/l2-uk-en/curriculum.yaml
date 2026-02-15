@@ -586,17 +586,17 @@ levels:
     - kostiantyn-vasyl-ostrozky
     - iov-boretskyi
     - severyn-nalyvaiko
-    - petro-sahaidachny
     - meletii-smotrytskyi
-    - sylvestr-kosiv
+    - petro-sahaidachny
     - bohdan-khmelnytskyy
     - petro-mohyla
+    - sylvestr-kosiv
     - ivan-vyhovskyi
     - ivan-sirko
     - yuriy-nemyrych
     - ivan-mazepa
-    - kost-hordiyenko
     - danylo-apostol
+    - kost-hordiyenko
     - pavlo-polubotok
     - pylyp-orlyk
     - petro-kalnyshevskyy
@@ -610,6 +610,7 @@ levels:
     - panteleimon-kulish
     - hanna-barvinok
     - marko-vovchok
+    - oleksander-potebnya
     - ivan-nechuy-levytskyi
     - marko-kropyvnytskyi
     - mykhailo-drahomanov
@@ -621,7 +622,6 @@ levels:
     - nataliya-kobrynska
     - ivan-franko
     - yevhen-chykalenko
-    - oleksander-potebnya
     - borys-hrinchenko
     - olha-kobylianska
     - volodymyr-vernadskyi
@@ -655,7 +655,6 @@ levels:
     - valentyna-radzymovska
     - les-kurbas
     - oleksandr-arkhypenko
-    - klavdiya-latysheva
     - olha-basarab
     - mykola-zerov
     - oleksa-slisarenko
@@ -673,6 +672,7 @@ levels:
     - maik-yohansen
     - vasyl-vyshyvanyi
     - berta-rapoport
+    - klavdiya-latysheva
     - yuriy-kondratiuk
     - dmytro-falkivskyi
     - yevhen-pluzhnyk
@@ -690,7 +690,9 @@ levels:
     - bohdan-ihor-antonych
     - mariia-prymachenko
     - mykhailo-yangel
+    - petro-veskliaov
     - mykola-amosov
+    - vasyl-kuk
     - borys-paton
     - oles-honchar
     - vasyl-sukhomlynskyi
@@ -702,9 +704,14 @@ levels:
     - dmytro-pavlychko
     - lina-kostenko
     - ivan-dziuba
+    - liubomyr-huzar
     - vasyl-symonenko
     - viacheslav-chornovil
     - vasyl-stus
+    - ivan-mykolaichuk
+    - bohdan-stupka
+    - natalia-yakovenko
+    - nina-matviyenko
     - myroslav-marynovych
     - volodymyr-ivasyuk
     - leonid-kadenyuk
@@ -719,23 +726,20 @@ levels:
     - yuri-andrukhovych
     - vitaly-portnikov
     - taras-prokhasko
-    - tamara-horikha-zernya
+    - kuzma-skryabin
     - pavlo-sheremet
     - serhiy-zhadan
+    - volodymyr-vakulenko
     - oleg-sentsov
-    - kateryna-kalytko
-    - sofia-andrukhovych
+    - yuriy-ruf
     - oleksandra-matviichuk
     - kateryna-handziuk
-    - oleksandr-usyk
+    - victoria-amelina
+    - maksym-kryvtsov
+    - illia-chernilevskyi
     - andriy-pilshchykov
     - dmytro-kotsyubailo
     - roman-ratushny
-    - volodymyr-vakulenko
-    - victoria-amelina
-    - maksym-kryvtsov
-    - yuriy-ruf
-    - illia-chernilevskyi
   lit:
     type: track
     modules:
@@ -1533,6 +1537,7 @@ levels:
     - riabchuk-two-ukraines
     - hrytsak-history-ukraine
     - hrytsak-overcoming-past
+    - yakovenko-mirror-of-history
     - prokhasko-fm-halychyna
     - portnikov-bells
     - portnikov-conclusion
@@ -1544,6 +1549,8 @@ levels:
     - chmut-institutions
     - kotsyubailo-legacy
     - kipiani-case-of-stus
+    - kis-survival-as-victory
+    - mokryk-rebellion-against-empire
     - aseyev-isolation-donetsk
     - aseyev-the-torture-camp
     - essay-synthesis-1

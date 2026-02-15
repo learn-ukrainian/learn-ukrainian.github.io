@@ -1,0 +1,15 @@
+{
+  "slug": "my-world-objects",
+  "track": "a1",
+  "module_num": 5,
+  "mode": "full",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-15T22:52:52Z",
+      "sections_done": 5,
+      "sections_total": 5
+    }
+  },
+  "last_updated": "2026-02-15T22:52:52Z"
+}

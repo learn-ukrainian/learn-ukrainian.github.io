@@ -100,23 +100,34 @@ def save_status_cache(
     # Helper to serialize a result
     def serialize_gate(res):
         if not res: return {"status": "skipped", "violations": 0}
-        
+
         status = "pass"
         if hasattr(res, 'status'):
             status = res.status.lower()
         elif isinstance(res, dict):
             status = res.get('status', 'pass').lower()
-            
+
+        # INFO status with "Deferred" in message = content-only audit deferral
+        # Other INFO statuses (e.g., naturalness PENDING) stay as "info"
+        if status == 'info':
+            raw_msg = ""
+            if hasattr(res, 'msg'):
+                raw_msg = res.msg
+            elif isinstance(res, dict):
+                raw_msg = res.get('msg', '')
+            if 'Deferred' in raw_msg or 'content-only' in raw_msg.lower():
+                status = 'deferred'
+
         msg = ""
         if hasattr(res, 'msg'):
             msg = res.msg
         elif isinstance(res, dict):
             msg = res.get('msg', '')
-            
+
         # Parse violations/issues from msg or other fields if available
         # Simple heuristic: if fail, assume 1 violation unless parsed
         violations = 1 if status == 'fail' else 0
-        
+
         return {
             "status": status,
             "violations": violations,
@@ -152,6 +163,8 @@ def save_status_cache(
     
     gates['naturalness'] = serialize_gate(results.get('naturalness'))
 
+    gates['ipa'] = serialize_gate(results.get('ipa'))
+
     # Review gate (final gate — only checked when content gates pass)
     if review_violations is None:
         review_violations = []
@@ -163,16 +176,24 @@ def save_status_cache(
     }
 
     # 3. Overall Status
-    overall = {
-        "status": "fail" if has_critical_failure else "pass",
-        "blocking_issues": critical_failure_reasons
-    }
-    
-    # Counts
     pass_count = sum(1 for g in gates.values() if g['status'] == 'pass')
     fail_count = sum(1 for g in gates.values() if g['status'] == 'fail')
-    overall['pass_count'] = pass_count
-    overall['fail_count'] = fail_count
+    deferred_count = sum(1 for g in gates.values() if g['status'] == 'deferred')
+
+    if has_critical_failure or fail_count > 0:
+        overall_status = "fail"
+    elif deferred_count > 0:
+        overall_status = "content-complete"
+    else:
+        overall_status = "pass"
+
+    overall = {
+        "status": overall_status,
+        "blocking_issues": critical_failure_reasons,
+        "pass_count": pass_count,
+        "fail_count": fail_count,
+        "deferred_count": deferred_count,
+    }
 
     # 4. Construct Cache Object
     cache_data = {
@@ -472,7 +493,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness']
+                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness']
     for k in keys_order:
         r = results.get(k)
         if r:
@@ -724,7 +745,7 @@ def print_gates(results: dict, level_code: str) -> None:
     """Print gate results to console."""
     print(f"\n--- STRICT GATES (Level {level_code}) ---")
     keys_order = ['persona', 'words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality']
+                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality']
     for k in keys_order:
         r = results.get(k)
         if r:

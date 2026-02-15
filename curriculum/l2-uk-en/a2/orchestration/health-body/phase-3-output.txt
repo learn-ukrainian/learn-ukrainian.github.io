@@ -1,0 +1,851 @@
+✅ Message sent to Gemini (ID: 2268)
+✓ Message 2268 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #2268...
+📨 Message #2268
+   From: gemini → To: gemini
+   Type: query
+   Task: yw-health-body-p3
+   Time: 2026-02-15T14:21:10.504636+00:00
+
+============================================================
+
+Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/orchestration/health-body/phase-3-prompt.md
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-pro-preview"}
+
+🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
+I will activate the `full-rebuild-core-a` skill and then read the instructions from the specified prompt file.
+I will read the module content, plan, metadata, activity schema, and reference documentation to generate the required activities and vocabulary.
+===ACTIVITIES_START===
+
+- type: match-up
+  title: 'Частини тіла: Знайдіть пару'
+  instruction: 'З’єднайте українське слово з англійським перекладом.'
+  pairs:
+    - left: 'голова'
+      right: 'head'
+    - left: 'спина'
+      right: 'back'
+    - left: 'рука'
+      right: 'hand/arm'
+    - left: 'нога'
+      right: 'leg'
+    - left: 'живіт'
+      right: 'stomach'
+    - left: 'вухо'
+      right: 'ear'
+    - left: 'горло'
+      right: 'throat'
+    - left: 'серце'
+      right: 'heart'
+    - left: 'ніс'
+      right: 'nose'
+    - left: 'зуб'
+      right: 'tooth'
+    - left: 'палець'
+      right: 'finger'
+    - left: 'тіло'
+      right: 'body'
+    - left: 'шия'
+      right: 'neck'
+    - left: 'око'
+      right: 'eye'
+    - left: 'рот'
+      right: 'mouth'
+    - left: 'волосся'
+      right: 'hair'
+
+- type: mark-the-words
+  title: 'Знайдіть частини тіла'
+  instruction: 'Прочитайте текст і позначте всі слова, що називають частини тіла.'
+  text: 'Це моє тіло. Ось моя голова і моя шия. У мене є сильні руки та швидкі ноги. Моє серце б’ється ритмічно. Мій живіт не болить. Я люблю спорт. Йога корисна для спини. Біг тренує ноги. Коли я думаю, працює голова. Треба берегти очі та вуха.'
+  answers:
+    - 'тіло'
+    - 'голова'
+    - 'шия'
+    - 'руки'
+    - 'ноги'
+    - 'серце'
+    - 'живіт'
+    - 'спини'
+    - 'ноги'
+    - 'голова'
+    - 'очі'
+    - 'вуха'
+
+- type: quiz
+  title: 'Рід іменників: Він, Вона чи Воно?'
+  instruction: 'Визначте рід слова. Пам’ятайте про закінчення.'
+  items:
+    - question: 'Якого роду слово «голова»?'
+      explanation: 'Закінчення -а вказує на жіночий рід (вона).'
+      options:
+        - text: 'жіночий (вона)'
+          correct: true
+        - text: 'чоловічий (він)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «ніс»?'
+      explanation: 'Це слово чоловічого роду (він), закінчується на приголосний.'
+      options:
+        - text: 'чоловічий (він)'
+          correct: true
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «тіло»?'
+      explanation: 'Закінчення -о вказує на середній рід (воно).'
+      options:
+        - text: 'середній (воно)'
+          correct: true
+        - text: 'чоловічий (він)'
+          correct: false
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «рука»?'
+      explanation: 'Це слово жіночого роду (вона).'
+      options:
+        - text: 'жіночий (вона)'
+          correct: true
+        - text: 'чоловічий (він)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «живіт»?'
+      explanation: 'Це слово чоловічого роду (він).'
+      options:
+        - text: 'чоловічий (він)'
+          correct: true
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «серце»?'
+      explanation: 'Закінчення -е вказує на середній рід (воно).'
+      options:
+        - text: 'середній (воно)'
+          correct: true
+        - text: 'чоловічий (він)'
+          correct: false
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «нежить»?'
+      explanation: 'Це слово чоловічого роду (сильний нежить), хоча має м’який знак.'
+      options:
+        - text: 'чоловічий (він)'
+          correct: true
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «спина»?'
+      explanation: 'Це слово жіночого роду (вона).'
+      options:
+        - text: 'жіночий (вона)'
+          correct: true
+        - text: 'чоловічий (він)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «вухо»?'
+      explanation: 'Закінчення -о вказує на середній рід (воно).'
+      options:
+        - text: 'середній (воно)'
+          correct: true
+        - text: 'чоловічий (він)'
+          correct: false
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+    - question: 'Якого роду слово «зуб»?'
+      explanation: 'Це слово чоловічого роду (він).'
+      options:
+        - text: 'чоловічий (він)'
+          correct: true
+        - text: 'жіночий (вона)'
+          correct: false
+        - text: 'середній (воно)'
+          correct: false
+        - text: 'множина (вони)'
+          correct: false
+
+- type: fill-in
+  title: 'Граматика: Болить чи Болять?'
+  instruction: 'Вставте правильну форму дієслова. Пам’ятайте: однина — болить, множина — болять.'
+  items:
+    - sentence: 'У мене _____ голова.'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Голова одна, тому використовуємо однину «болить».'
+    - sentence: 'У мене _____ ноги.'
+      answer: 'болять'
+      options:
+        - 'болять'
+        - 'болить'
+        - 'хворіють'
+        - 'хворіє'
+      explanation: 'Ноги — це множина, тому «болять».'
+    - sentence: 'У тебе _____ зуб?'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Зуб один, тому «болить».'
+    - sentence: 'У бабусі _____ спина.'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Спина одна, тому «болить».'
+    - sentence: 'У спортсмена _____ руки.'
+      answer: 'болять'
+      options:
+        - 'болять'
+        - 'болить'
+        - 'хворіють'
+        - 'хворіє'
+      explanation: 'Руки — це множина.'
+    - sentence: 'У дитини _____ вухо.'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Вухо одне.'
+    - sentence: 'У мене _____ пальці.'
+      answer: 'болять'
+      options:
+        - 'болять'
+        - 'болить'
+        - 'хворіють'
+        - 'хворіє'
+      explanation: 'Пальці — це множина.'
+    - sentence: 'Сьогодні _____ горло.'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Горло одне.'
+    - sentence: 'Чому у вас _____ живіт?'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Живіт один.'
+    - sentence: 'У мене _____ очі.'
+      answer: 'болять'
+      options:
+        - 'болять'
+        - 'болить'
+        - 'хворіють'
+        - 'хворіє'
+      explanation: 'Очі — це множина.'
+    - sentence: 'У дідуся _____ коліна.'
+      answer: 'болять'
+      options:
+        - 'болять'
+        - 'болить'
+        - 'хворіють'
+        - 'хворіє'
+      explanation: 'Коліна — це множина.'
+    - sentence: 'У мене _____ серце.'
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіє'
+        - 'хворіють'
+      explanation: 'Серце одне.'
+
+- type: unjumble
+  title: 'Складіть речення'
+  instruction: 'Розставте слова у правильному порядку.'
+  items:
+    - words:
+        - 'У'
+        - 'мене'
+        - 'болить'
+        - 'голова'
+      answer: 'У мене болить голова'
+    - words:
+        - 'У'
+        - 'тебе'
+        - 'болять'
+        - 'ноги'
+      answer: 'У тебе болять ноги'
+    - words:
+        - 'Сьогодні'
+        - 'у'
+        - 'мене'
+        - 'температура'
+      answer: 'Сьогодні у мене температура'
+    - words:
+        - 'Мій'
+        - 'ніс'
+        - 'червоний'
+      answer: 'Мій ніс червоний'
+    - words:
+        - 'Лікар'
+        - 'працює'
+        - 'в'
+        - 'лікарні'
+      answer: 'Лікар працює в лікарні'
+    - words:
+        - 'Треба'
+        - 'пити'
+        - 'чай'
+        - 'з'
+        - 'малиною'
+      answer: 'Треба пити чай з малиною'
+    - words:
+        - 'У'
+        - 'дитини'
+        - 'сильний'
+        - 'кашель'
+      answer: 'У дитини сильний кашель'
+    - words:
+        - 'Вам'
+        - 'потрібен'
+        - 'спокій'
+        - 'і'
+        - 'ліки'
+      answer: 'Вам потрібен спокій і ліки'
+    - words:
+        - 'У'
+        - 'мене'
+        - 'дуже'
+        - 'болить'
+        - 'спина'
+      answer: 'У мене дуже болить спина'
+    - words:
+        - 'Я'
+        - 'йду'
+        - 'до'
+        - 'лікаря'
+      answer: 'Я йду до лікаря'
+
+- type: match-up
+  title: 'Симптоми та визначення'
+  instruction: 'З’єднайте слово з його значенням або контекстом.'
+  pairs:
+    - left: 'Температура'
+      right: '38.5 градусів'
+    - left: 'Кашель'
+      right: 'Кхе-кхе'
+    - left: 'Нежить'
+      right: 'Ніс не дихає'
+    - left: 'Слабкість'
+      right: 'Немає сили'
+    - left: 'Лікар'
+      right: 'Людина, яка лікує'
+    - left: 'Лікарня'
+      right: 'Місце, де лежать хворі'
+    - left: 'Малина'
+      right: 'Ягода для чаю'
+    - left: 'Гірчичники'
+      right: 'Пече спину'
+    - left: 'Ліки'
+      right: 'Таблетки або сироп'
+    - left: 'Аптека'
+      right: 'Магазин ліків'
+    - left: 'Забій'
+      right: 'Синець після падіння'
+    - left: 'Чай'
+      right: 'Гарячий напій'
+
+- type: fill-in
+  title: 'Лексика в контексті'
+  instruction: 'Вставте пропущене слово, щоб доповнити речення.'
+  items:
+    - sentence: 'Я хворію, тому йду до _____.'
+      answer: 'лікаря'
+      options:
+        - 'лікаря'
+        - 'лікарню'
+        - 'лікар'
+        - 'ліки'
+      explanation: 'Йти до кого? До лікаря (людини).'
+    - sentence: 'Швидка допомога їде в _____.'
+      answer: 'лікарню'
+      options:
+        - 'лікарню'
+        - 'лікаря'
+        - 'лікарня'
+        - 'лікування'
+      explanation: 'Їхати куди? В лікарню (місце).'
+    - sentence: 'У мене висока _____.'
+      answer: 'температура'
+      options:
+        - 'температура'
+        - 'погода'
+        - 'кашель'
+        - 'нежить'
+      explanation: 'Слово "висока" (жіночий рід) підходить до "температура".'
+    - sentence: 'Треба пити гарячий чай з _____.'
+      answer: 'малиною'
+      options:
+        - 'малиною'
+        - 'малина'
+        - 'малини'
+        - 'малині'
+      explanation: 'З чим? З малиною (Орудний відмінок).'
+    - sentence: 'Чай з малиною — це народна _____.'
+      answer: 'медицина'
+      options:
+        - 'медицина'
+        - 'аптека'
+        - 'лікарня'
+        - 'хвороба'
+      explanation: 'Народна медицина (traditional medicine).'
+    - sentence: 'У мене сильний _____.'
+      answer: 'кашель'
+      options:
+        - 'кашель'
+        - 'температура'
+        - 'слабкість'
+        - 'рука'
+      explanation: '"Сильний" — чоловічий рід.'
+    - sentence: 'Вона _____ на грип.'
+      answer: 'захворіла'
+      options:
+        - 'захворіла'
+        - 'захворів'
+        - 'хворіє'
+        - 'болить'
+      explanation: 'Минула дія для жінки: захворіла.'
+    - sentence: 'Здоров’я — це найбільший _____.'
+      answer: 'скарб'
+      options:
+        - 'скарб'
+        - 'лікар'
+        - 'біль'
+        - 'друг'
+      explanation: 'Скарб (treasure).'
+    - sentence: 'У мене _____ ніс.'
+      answer: 'закладений'
+      options:
+        - 'закладений'
+        - 'закладена'
+        - 'закладене'
+        - 'закладені'
+      explanation: 'Ніс — чоловічий рід.'
+    - sentence: 'Мені треба купити _____.'
+      answer: 'ліки'
+      options:
+        - 'ліки'
+        - 'лікар'
+        - 'лікарню'
+        - 'хворобу'
+      explanation: 'Купити що? Ліки.'
+
+- type: cloze
+  title: 'У лікаря'
+  instruction: 'Заповніть пропуски в діалозі.'
+  passage: '— Добрий день, лікарю! — Добрий день. Що у вас {{1}}? — У мене {{2}} голова і {{3}} горло. — А яка у вас {{4}}? — У мене {{5}} температура, 38 градусів. — У вас є {{6}}? — Так, я кашляю вранці. — Вам {{7}} пити багато води. Також {{8}} ліки в аптеці. — Дякую, лікарю. — {{9}}!'
+  blanks:
+    - id: 1
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'хворіє'
+        - 'турбує'
+        - 'робить'
+    - id: 2
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'має'
+        - 'хворіє'
+    - id: 3
+      answer: 'болить'
+      options:
+        - 'болить'
+        - 'болять'
+        - 'хворіють'
+        - 'мають'
+    - id: 4
+      answer: 'температура'
+      options:
+        - 'температура'
+        - 'ситуація'
+        - 'погода'
+        - 'проблема'
+    - id: 5
+      answer: 'висока'
+      options:
+        - 'висока'
+        - 'низька'
+        - 'велика'
+        - 'довга'
+    - id: 6
+      answer: 'кашель'
+      options:
+        - 'кашель'
+        - 'нежить'
+        - 'біль'
+        - 'голос'
+    - id: 7
+      answer: 'треба'
+      options:
+        - 'треба'
+        - 'можна'
+        - 'хочеться'
+        - 'подобається'
+    - id: 8
+      answer: 'купіть'
+      options:
+        - 'купіть'
+        - 'продайте'
+        - 'зробіть'
+        - 'ідіть'
+    - id: 9
+      answer: 'Одужуйте'
+      options:
+        - 'Одужуйте'
+        - 'Вітайте'
+        - 'Прощайте'
+        - 'Спіть'
+    - id: 10
+      answer: 'турбує'
+      options:
+        - 'турбує'
+        - 'цікавить'
+        - 'хвилює'
+        - 'радує'
+
+- type: unjumble
+  title: 'Поради лікаря'
+  instruction: 'Складіть речення з порадами.'
+  items:
+    - words:
+        - 'Вам'
+        - 'не'
+        - 'можна'
+        - 'багато'
+        - 'ходити'
+      answer: 'Вам не можна багато ходити'
+    - words:
+        - 'Пийте'
+        - 'гарячий'
+        - 'чай'
+        - 'з'
+        - 'медом'
+      answer: 'Пийте гарячий чай з медом'
+    - words:
+        - 'Слухайте'
+        - 'свій'
+        - 'організм'
+        - 'і'
+        - 'відпочивайте'
+      answer: 'Слухайте свій організм і відпочивайте'
+    - words:
+        - 'У'
+        - 'здоровому'
+        - 'тілі'
+        - 'здоровий'
+        - 'дух'
+      answer: 'У здоровому тілі здоровий дух'
+    - words:
+        - 'Малина'
+        - 'допомагає'
+        - 'від'
+        - 'високої'
+        - 'температури'
+      answer: 'Малина допомагає від високої температури'
+    - words:
+        - 'Не'
+        - 'бійтеся'
+        - 'йти'
+        - 'до'
+        - 'лікаря'
+      answer: 'Не бійтеся йти до лікаря'
+    - words:
+        - 'Треба'
+        - 'поставити'
+        - 'гірчичники'
+        - 'на'
+        - 'спину'
+      answer: 'Треба поставити гірчичники на спину'
+    - words:
+        - 'Купіть'
+        - 'необхідні'
+        - 'ліки'
+        - 'в'
+        - 'аптеці'
+      answer: 'Купіть необхідні ліки в аптеці'
+
+- type: quiz
+  title: 'Перевірка знань: Здоров’я та Культура'
+  instruction: 'Дайте відповідь на запитання про здоров’я та українські традиції.'
+  items:
+    - question: 'Що означає прислів’я «У здоровому тілі — здоровий дух»?'
+      explanation: 'Це означає зв’язок між фізичним та ментальним здоров’ям.'
+      options:
+        - text: 'Фізичне здоров’я впливає на настрій'
+          correct: true
+        - text: 'Тільки дух важливий'
+          correct: false
+        - text: 'Тіло не важливе'
+          correct: false
+        - text: 'Спорт — це погано'
+          correct: false
+    - question: 'Що таке «гірчичники»?'
+      explanation: 'Це засіб народної медицини для прогрівання.'
+      options:
+        - text: 'Папір з гірчицею для лікування'
+          correct: true
+        - text: 'Смачна їжа з гірчицею'
+          correct: false
+        - text: 'Вид спорту'
+          correct: false
+        - text: 'Назва лікаря'
+          correct: false
+    - question: 'Куди ми йдемо, коли хворіємо?'
+      explanation: 'Ми йдемо до людини (лікаря).'
+      options:
+        - text: 'До лікаря'
+          correct: true
+        - text: 'В лікаря'
+          correct: false
+        - text: 'На лікаря'
+          correct: false
+        - text: 'З лікарем'
+          correct: false
+    - question: 'Куди їде швидка допомога?'
+      explanation: 'Швидка їде в місце (лікарню).'
+      options:
+        - text: 'В лікарню'
+          correct: true
+        - text: 'До лікарні'
+          correct: false
+        - text: 'На лікарню'
+          correct: false
+        - text: 'У лікаря'
+          correct: false
+    - question: 'Яка ягода допомагає від застуди в українській традиції?'
+      explanation: 'Малина — найпопулярніший засіб.'
+      options:
+        - text: 'Малина'
+          correct: true
+        - text: 'Полуниця'
+          correct: false
+        - text: 'Вишня'
+          correct: false
+        - text: 'Кавун'
+          correct: false
+    - question: 'У конструкції «У мене болить голова», хто виконує дію?'
+      explanation: 'Голова є підметом і виконує дію «болить».'
+      options:
+        - text: 'Голова'
+          correct: true
+        - text: 'Я'
+          correct: false
+        - text: 'Лікар'
+          correct: false
+        - text: 'Біль'
+          correct: false
+    - question: 'Як перекласти слово «painkillers»?'
+      explanation: 'Знеболювальне — ліки проти болю.'
+      options:
+        - text: 'Знеболювальне'
+          correct: true
+        - text: 'Вітаміни'
+          correct: false
+        - text: 'Антибіотики'
+          correct: false
+        - text: 'Малина'
+          correct: false
+    - question: 'Що таке «ожеледиця»?'
+      explanation: 'Це коли на дорозі лід.'
+      options:
+        - text: 'Лід на дорозі'
+          correct: true
+        - text: 'Сильний дощ'
+          correct: false
+        - text: 'Спека'
+          correct: false
+        - text: 'Туман'
+          correct: false
+
+===ACTIVITIES_END===
+
+===VOCABULARY_START===
+
+items:
+  - lemma: 'голова'
+    translation: 'head'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'body part that thinks'
+  - lemma: 'шия'
+    translation: 'neck'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'connects head to body'
+  - lemma: 'спина'
+    translation: 'back'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'rear part of the body'
+  - lemma: 'рука'
+    translation: 'arm, hand'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'limb for holding things'
+  - lemma: 'нога'
+    translation: 'leg'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'limb for walking'
+  - lemma: 'живіт'
+    translation: 'stomach, belly'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'front part of the body'
+  - lemma: 'ніс'
+    translation: 'nose'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'part of face for smelling'
+  - lemma: 'зуб'
+    translation: 'tooth'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'hard part in mouth'
+  - lemma: 'палець'
+    translation: 'finger'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'part of hand'
+  - lemma: 'вухо'
+    translation: 'ear'
+    pos: 'noun'
+    gender: 'n'
+    notes: 'organ of hearing'
+  - lemma: 'горло'
+    translation: 'throat'
+    pos: 'noun'
+    gender: 'n'
+    notes: 'internal part of neck'
+  - lemma: 'серце'
+    translation: 'heart'
+    pos: 'noun'
+    gender: 'n'
+    notes: 'organ that pumps blood'
+  - lemma: 'тіло'
+    translation: 'body'
+    pos: 'noun'
+    gender: 'n'
+    notes: 'physical structure of a person'
+  - lemma: 'здоров’я'
+    translation: 'health'
+    pos: 'noun'
+    gender: 'n'
+    notes: 'state of being well'
+  - lemma: 'боліти'
+    translation: 'to hurt'
+    pos: 'verb'
+    aspect: 'imperfective'
+    usage: 'У мене болить [щось]'
+  - lemma: 'температура'
+    translation: 'temperature, fever'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'symptom of illness'
+  - lemma: 'кашель'
+    translation: 'cough'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'expelling air from lungs'
+  - lemma: 'нежить'
+    translation: 'runny nose'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'symptom of cold'
+  - lemma: 'слабкість'
+    translation: 'weakness'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'lack of strength'
+  - lemma: 'лікар'
+    translation: 'doctor'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'person who treats illness'
+  - lemma: 'лікарня'
+    translation: 'hospital'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'place for medical treatment'
+  - lemma: 'ліки'
+    translation: 'medicine'
+    pos: 'noun'
+    notes: 'plural only'
+  - lemma: 'малина'
+    translation: 'raspberry'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'berry used for tea against cold'
+  - lemma: 'захворіти'
+    translation: 'to get sick'
+    pos: 'verb'
+    aspect: 'perfective'
+  - lemma: 'ожеледиця'
+    translation: 'ice on the road'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'dangerous winter condition'
+
+===VOCABULARY_END===
+
+===FRICTION_START===
+**Phase**: Phase 3: Activities + Vocabulary
+**Step**: Full YAML generation
+**Friction Type**: NONE
+**Raw Error**: None
+**Self-Correction**: N/A
+**Proposed Tooling Fix**: N/A
+===FRICTION_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (21223 chars)
+✅ Message sent to Claude (ID: 2271)
+✓ Message 2268 acknowledged

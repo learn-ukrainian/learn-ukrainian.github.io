@@ -1,0 +1,132 @@
+- lemma: пасивний стан
+  notes: граматична категорія, де підмет не є виконавцем дії
+  pos: noun phrase
+  translation: passive voice
+- lemma: активний стан
+  notes: граматична категорія, де підмет є виконавцем дії
+  pos: noun phrase
+  translation: active voice
+- example: написаний, зроблений
+  gender: m
+  lemma: дієприкметник
+  pos: noun
+  translation: participle
+- example: безособове речення
+  lemma: безособовий
+  pos: adjective
+  translation: impersonal
+- example: зворотне дієслово (на -ся)
+  lemma: зворотний
+  pos: adjective
+  translation: reflexive
+- gender: m
+  lemma: агент
+  notes: виконавець дії
+  pos: noun
+  translation: agent
+- gender: m
+  lemma: регістр
+  notes: стиль мовлення (офіційний, розмовний)
+  pos: noun
+  translation: register
+- lemma: офіційно-діловий
+  notes: стиль документів
+  pos: adjective
+  translation: official-business / bureaucratic
+- lemma: науковий
+  pos: adjective
+  translation: scientific
+- lemma: літературний
+  pos: adjective
+  translation: literary
+- lemma: розмовний
+  pos: adjective
+  translation: colloquial / conversational
+- gender: n
+  lemma: узгодження
+  notes: граматичний зв'язок слів (рід, число, відмінок)
+  pos: noun
+  translation: agreement
+- example: пасивна конструкція
+  gender: f
+  lemma: конструкція
+  pos: noun
+  translation: construction
+- gender: f
+  lemma: трансформація
+  pos: noun
+  translation: transformation
+- gender: m
+  lemma: контекст
+  pos: noun
+  translation: context
+- gender: m
+  lemma: стиль
+  pos: noun
+  translation: style
+- gender: m
+  lemma: підмет
+  notes: головний член речення
+  pos: noun
+  translation: subject
+- gender: m
+  lemma: присудок
+  notes: головний член речення, що вказує на дію
+  pos: noun
+  translation: predicate
+- gender: m
+  lemma: додаток
+  notes: другорядний член речення
+  pos: noun
+  translation: object
+- example: знахідний відмінок
+  gender: m
+  lemma: відмінок
+  pos: noun
+  translation: case
+- lemma: доконаний вид
+  notes: завершена дія
+  pos: noun phrase
+  translation: perfective aspect
+- lemma: недоконаний вид
+  notes: незавершена дія, процес
+  pos: noun phrase
+  translation: imperfective aspect
+- gender: m
+  lemma: канцелярит
+  notes: надмірно ускладнена офіційна мова
+  pos: noun
+  translation: bureaucratese
+- aspect: imperfective
+  lemma: ухвалювати
+  pos: verb
+  translation: to adopt / to pass (a law/decision)
+- aspect: perfective
+  lemma: ухвалити
+  pos: verb
+  translation: to adopt / to pass (a law/decision)
+- aspect: imperfective
+  lemma: приймати
+  pos: verb
+  translation: to accept / to take
+- aspect: perfective
+  lemma: прийняти
+  pos: verb
+  translation: to accept / to take
+- aspect: imperfective
+  lemma: забороняти
+  pos: verb
+  translation: to forbid / to ban
+- aspect: perfective
+  lemma: заборонити
+  pos: verb
+  translation: to forbid / to ban
+- aspect: imperfective
+  lemma: виконувати
+  pos: verb
+  translation: to perform / to execute
+- aspect: perfective
+  lemma: виконати
+  pos: verb
+  translation: to perform / to execute
+

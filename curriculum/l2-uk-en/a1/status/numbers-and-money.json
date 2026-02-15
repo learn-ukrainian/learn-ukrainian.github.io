@@ -1,0 +1,58 @@
+{
+  "module": "numbers-and-money",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T21:41:33.690326Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-15T21:16:00.460937Z",
+    "meta": "2026-02-15T21:09:52.245846Z",
+    "activities": null,
+    "vocabulary": null,
+    "plan": "2026-02-12T13:27:12.734862Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Valid Structure | Lint: 1 Format Errors"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2584/1091 (raw: 2921) | pedagogy: 2 violations | immersion: 20.2% LOW (target 25-40% (M17))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Not scored"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "31 IPA issues (run lint_ipa.py --fix)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 0,
+    "fail_count": 3,
+    "deferred_count": 2
+  }
+}

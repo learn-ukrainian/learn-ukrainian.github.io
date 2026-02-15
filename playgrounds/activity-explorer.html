@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Explorer - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .nav a { color: var(--text2); }
+
+/* Level filter */
+.level-filter { display: flex; gap: 4px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.level-btn { padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); transition: all 0.15s; }
+.level-btn:hover { border-color: var(--blue); color: var(--text); }
+.level-btn.active { background: var(--blue); border-color: var(--blue); color: var(--bg); }
+
+.main { display: grid; grid-template-columns: 1fr 420px; height: calc(100vh - 97px); }
+@media (max-width: 1000px) { .main { grid-template-columns: 1fr; } }
+
+.left-panel { overflow-y: auto; padding: 16px 24px; }
+.right-panel { border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; background: var(--bg2); }
+
+/* Type grid */
+.type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.type-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.15s; }
+.type-card:hover { border-color: var(--blue); transform: translateY(-1px); }
+.type-card.selected { border-color: var(--blue); background: rgba(88,166,255,0.08); }
+.type-card.forbidden { opacity: 0.4; border-color: var(--red); }
+.type-card .type-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.type-card .type-levels { font-size: 11px; color: var(--text2); }
+.type-card .type-category { font-size: 10px; color: var(--text3); text-transform: uppercase; margin-bottom: 4px; }
+.type-card .forbidden-badge { display: inline-block; font-size: 10px; background: rgba(248,81,73,0.2); color: var(--red); padding: 1px 6px; border-radius: 4px; margin-top: 4px; }
+
+/* Detail panel */
+.detail-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.detail-card h3 { font-size: 15px; margin-bottom: 8px; }
+.detail-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.detail-row:last-child { border-bottom: none; }
+.detail-row .label { color: var(--text2); }
+.detail-row .value { font-weight: 500; }
+
+.level-tag { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; margin: 1px; }
+.level-tag.allowed { background: rgba(63,185,80,0.15); color: var(--green); }
+.level-tag.forbidden { background: rgba(248,81,73,0.15); color: var(--red); }
+
+.complexity-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.complexity-table th { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--border); color: var(--text2); font-size: 11px; }
+.complexity-table td { padding: 4px 6px; border-bottom: 1px solid var(--border); }
+
+/* YAML preview */
+.yaml-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'SF Mono', Consolas, monospace; font-size: 12px; line-height: 1.5; white-space: pre; overflow-x: auto; color: var(--text2); margin-top: 8px; }
+.yaml-key { color: var(--blue); }
+.yaml-str { color: var(--green); }
+
+.empty { color: var(--text3); font-size: 13px; padding: 24px; text-align: center; }
+.loading { text-align: center; padding: 40px; color: var(--text2); }
+.loading .spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.section-header { font-size: 13px; font-weight: 600; color: var(--text2); margin: 16px 0 8px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Activity Explorer</h1>
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/audit-dashboard.html">Audit</a>
+    <a href="/pipeline-dashboard.html">Pipeline</a>
+    <a href="/curriculum-dashboard.html">Curriculum</a>
+  </div>
+</div>
+
+<div class="level-filter" id="level-filter"></div>
+
+<div class="main">
+  <div class="left-panel" id="left-panel">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+  <div class="right-panel" id="right-panel">
+    <div class="empty">Select an activity type to see details</div>
+  </div>
+</div>
+
+<script>
+const API = '/api/dashboard';
+let configData = null;
+let selectedType = null;
+let selectedLevel = 'ALL';
+
+const CATEGORIES = {
+  traditional: ['match-up','fill-in','quiz','true-false','group-sort','unjumble','error-correction','anagram','select','translate','cloze','mark-the-words'],
+  seminar: ['reading','essay-response','critical-analysis','comparative-study','authorial-intent','creative-writing'],
+  historical: ['etymology-trace','transcription','grammar-identify','paleography-analysis','dialect-comparison','translation-critique','phonology-lab','grammar-lab','parallel-text','historical-writing','register-identify','loanword-trace','comparative-style'],
+};
+
+const LEVEL_ORDER = ['A1','A2','B1','B2','C1','C2'];
+
+const YAML_EXAMPLES = {
+  'quiz': `- type: quiz\n  title: "Vocabulary Check"\n  items:\n    - q: "How do you say 'book'?"\n      options: ["книга","ручка","стіл"]\n      answer: 0`,
+  'match-up': `- type: match-up\n  title: "Match Words"\n  pairs:\n    - l: "книга"\n      r: "book"\n    - l: "стіл"\n      r: "table"`,
+  'fill-in': `- type: fill-in\n  title: "Complete the sentence"\n  items:\n    - text: "Я ___ студент."\n      answer: "є"`,
+  'true-false': `- type: true-false\n  title: "True or False"\n  items:\n    - statement: "Київ — столиця."\n      answer: true`,
+  'group-sort': `- type: group-sort\n  title: "Sort by Gender"\n  groups:\n    - name: "Masculine"\n      items: ["стіл","хліб"]\n    - name: "Feminine"\n      items: ["книга","вода"]`,
+  'mark-the-words': `- type: mark-the-words\n  text: "Гарний день приніс радість."\n  answers:\n    - "день"\n    - "радість"`,
+  'essay-response': `- type: essay-response\n  title: "Reflect on the text"\n  prompt: "Analyze the theme..."\n  min_words: 150`,
+};
+
+async function fetchConfig() {
+  const res = await fetch(`${API}/activity-config`);
+  configData = await res.json();
+  renderLevelFilter();
+  renderTypeGrid();
+}
+
+function renderLevelFilter() {
+  const container = document.getElementById('level-filter');
+  const levels = ['ALL', ...LEVEL_ORDER];
+  container.innerHTML = levels.map(l => `
+    <button class="level-btn ${selectedLevel === l ? 'active' : ''}" onclick="filterLevel('${l}')">${l}</button>
+  `).join('');
+}
+
+function filterLevel(level) {
+  selectedLevel = level;
+  renderLevelFilter();
+  renderTypeGrid();
+  if (selectedType) renderTypeDetail(selectedType);
+}
+
+function getCategory(type) {
+  if (CATEGORIES.traditional.includes(type)) return 'Traditional';
+  if (CATEGORIES.seminar.includes(type)) return 'Seminar';
+  if (CATEGORIES.historical.includes(type)) return 'Historical';
+  return 'Other';
+}
+
+function isForbiddenAtLevel(type, level) {
+  if (level === 'ALL') return false;
+  const restrictions = configData.restrictions || {};
+  const r = restrictions[level];
+  if (r && r.forbidden && r.forbidden.includes(type)) return true;
+
+  // Check level configs for forbidden_types
+  for (const [key, cfg] of Object.entries(configData.levels || {})) {
+    if (key.startsWith(level) && cfg.forbidden_types && cfg.forbidden_types.includes(type)) return true;
+  }
+  return false;
+}
+
+function renderTypeGrid() {
+  const container = document.getElementById('left-panel');
+  const types = configData.types || [];
+
+  const grouped = {};
+  for (const t of types) {
+    const cat = getCategory(t.type);
+    if (!grouped[cat]) grouped[cat] = [];
+    const forbidden = isForbiddenAtLevel(t.type, selectedLevel);
+
+    // Filter: if a level is selected, check if type is available at that level
+    if (selectedLevel !== 'ALL') {
+      const hasLevel = t.available_levels.some(l => l.toUpperCase().startsWith(selectedLevel));
+      if (!hasLevel && !forbidden) return; // skip if not available and not forbidden
+    }
+
+    grouped[cat].push({ ...t, forbidden });
+  }
+
+  let html = '';
+  for (const cat of ['Traditional', 'Seminar', 'Historical', 'Other']) {
+    const items = grouped[cat];
+    if (!items || items.length === 0) continue;
+    html += `<div class="section-header">${cat} (${items.length})</div>`;
+    html += '<div class="type-grid">';
+    html += items.map(t => {
+      const sel = selectedType === t.type ? 'selected' : '';
+      const forb = t.forbidden ? 'forbidden' : '';
+      return `
+        <div class="type-card ${sel} ${forb}" onclick="selectType('${t.type}')">
+          <div class="type-name">${t.type}</div>
+          <div class="type-levels">${t.available_levels.join(', ') || 'N/A'}</div>
+          ${t.forbidden ? '<div class="forbidden-badge">Forbidden at ' + selectedLevel + '</div>' : ''}
+        </div>
+      `;
+    }).join('');
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function selectType(type) {
+  selectedType = type;
+  renderTypeGrid();
+  renderTypeDetail(type);
+}
+
+function renderTypeDetail(type) {
+  const panel = document.getElementById('right-panel');
+  const typeData = configData.types.find(t => t.type === type);
+  if (!typeData) { panel.innerHTML = '<div class="empty">Type not found</div>'; return; }
+
+  // Level availability
+  const levelTags = LEVEL_ORDER.map(l => {
+    const available = typeData.available_levels.some(al => al.toUpperCase().startsWith(l));
+    const forbidden = isForbiddenAtLevel(type, l);
+    if (forbidden) return `<span class="level-tag forbidden">${l} (forbidden)</span>`;
+    if (available) return `<span class="level-tag allowed">${l}</span>`;
+    return `<span class="level-tag" style="color:var(--text3);background:var(--bg3)">${l}</span>`;
+  }).join('');
+
+  // Complexity table
+  const complexity = typeData.complexity || {};
+  const complexKeys = Object.keys(complexity);
+  let complexHtml = '';
+  if (complexKeys.length > 0) {
+    const allFields = new Set();
+    for (const v of Object.values(complexity)) {
+      for (const k of Object.keys(v)) allFields.add(k);
+    }
+    const fields = [...allFields].sort();
+    complexHtml = `
+      <div class="detail-card">
+        <h3>Complexity by Level</h3>
+        <table class="complexity-table">
+          <thead><tr><th>Level</th>${fields.map(f => `<th>${f}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${complexKeys.map(level => `
+              <tr>
+                <td style="font-weight:600">${level}</td>
+                ${fields.map(f => `<td>${formatComplexValue(complexity[level][f])}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  // Level configs that mention this type
+  let levelConfigHtml = '';
+  const relevantConfigs = [];
+  for (const [key, cfg] of Object.entries(configData.levels || {})) {
+    const isPriority = cfg.priority_types && cfg.priority_types.includes(type);
+    const isRequired = cfg.required_types && cfg.required_types.includes(type);
+    const isForbidden = cfg.forbidden_types && cfg.forbidden_types.includes(type);
+    if (isPriority || isRequired || isForbidden) {
+      relevantConfigs.push({ level: key, isPriority, isRequired, isForbidden });
+    }
+  }
+  if (relevantConfigs.length > 0) {
+    levelConfigHtml = `
+      <div class="detail-card">
+        <h3>Level Requirements</h3>
+        ${relevantConfigs.map(c => `
+          <div class="detail-row">
+            <span class="label">${c.level}</span>
+            <span class="value">
+              ${c.isRequired ? '<span style="color:var(--green)">Required</span>' : ''}
+              ${c.isPriority ? '<span style="color:var(--blue)">Priority</span>' : ''}
+              ${c.isForbidden ? '<span style="color:var(--red)">Forbidden</span>' : ''}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  // YAML example
+  const example = YAML_EXAMPLES[type] || `- type: ${type}\n  title: "Example"\n  items:\n    - ...`;
+  const yamlHtml = `
+    <div class="detail-card">
+      <h3>YAML Example</h3>
+      <div class="yaml-preview">${escapeHtml(example)}</div>
+    </div>
+  `;
+
+  panel.innerHTML = `
+    <h2 style="font-size:18px;margin-bottom:4px;">${type}</h2>
+    <div style="color:var(--text2);font-size:12px;margin-bottom:12px;">${getCategory(type)} activity</div>
+    <div class="detail-card">
+      <h3>Level Availability</h3>
+      <div style="margin-top:4px">${levelTags}</div>
+    </div>
+    ${complexHtml}
+    ${levelConfigHtml}
+    ${yamlHtml}
+  `;
+}
+
+function formatComplexValue(val) {
+  if (val === undefined || val === null) return '-';
+  if (Array.isArray(val)) return val.join(', ');
+  if (typeof val === 'object') return JSON.stringify(val);
+  return String(val);
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+fetchConfig();
+</script>
+</body>
+</html>

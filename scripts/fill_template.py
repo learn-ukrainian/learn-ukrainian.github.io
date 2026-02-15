@@ -11,6 +11,12 @@ Usage:
         --placeholders orchestration/{slug}/placeholders.yaml \
         --output orchestration/{slug}/phase-2-prompt.md
 
+    # Override/add per-section values without touching placeholders.yaml:
+    .venv/bin/python scripts/fill_template.py \
+        --template ... --placeholders ... --output ... \
+        --set SECTION_TITLE="Практика: Родина та тварини" \
+        --set HARD_MINIMUM_WORD_COUNT=600
+
 Exit codes:
     0 - Success
     1 - Error (missing file, unresolved placeholders, etc.)
@@ -64,6 +70,10 @@ def main() -> int:
         "--no-strict", action="store_false", dest="strict",
         help="Warn but don't fail on unresolved placeholders"
     )
+    parser.add_argument(
+        "--set", action="append", default=[], metavar="KEY=VALUE",
+        help="Override or add a placeholder (repeatable). Applied AFTER YAML file."
+    )
     args = parser.parse_args()
 
     if not args.template.exists():
@@ -75,6 +85,14 @@ def main() -> int:
 
     template_text = args.template.read_text(encoding="utf-8")
     placeholders = yaml.safe_load(args.placeholders.read_text(encoding="utf-8"))
+
+    # Apply --set overrides on top of YAML placeholders
+    for item in args.set:
+        if "=" not in item:
+            print(f"ERROR: --set requires KEY=VALUE format, got: {item}")
+            return 1
+        key, value = item.split("=", 1)
+        placeholders[key] = value
 
     if not isinstance(placeholders, dict):
         print(f"ERROR: Placeholders file must be a YAML dict, got {type(placeholders).__name__}")

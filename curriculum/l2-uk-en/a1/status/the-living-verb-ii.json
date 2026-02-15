@@ -1,0 +1,58 @@
+{
+  "module": "the-living-verb-ii",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-15T19:05:19.535905Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-15T18:21:59.033426Z",
+    "meta": "2026-02-15T18:10:51.537537Z",
+    "activities": "2026-02-15T18:12:54.502201Z",
+    "vocabulary": "2026-02-15T18:21:53.645881Z",
+    "plan": "2026-02-14T15:15:44.404470Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1661/972 (raw: 2020)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0,
+    "deferred_count": 2
+  }
+}

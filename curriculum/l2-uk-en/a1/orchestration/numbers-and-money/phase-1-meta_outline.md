@@ -1,0 +1,31 @@
+content_outline:
+  - section: "Розминка: Числа в повсякденному житті"
+    words: 220
+    points:
+      - "English scaffolding: Introduction to the vital role of numbers for survival in a new country (shopping, transport, time)"
+      - "Interactive warm-up identifying numbers in daily visuals (prices on a menu, bus numbers, dates)"
+      - "Introduction to basic cardinal numbers 0-10 with mandatory IPA stress (оди́н, чоти́ри, де́в'ять)"
+      - "Supportive note on the gendered nature of 'один/одна' and 'два/дві' for beginner safety"
+  - section: "Презентація: Рахуємо до ста та правила узгодження"
+    words: 450
+    points:
+      - "Formation of numbers 11-19: suffix -надцять and the soft sign rule (only at the end)"
+      - "Formation of tens 20-90 (suffix -дцять, -десят) and compound numbers (e.g., 25, 48)"
+      - "Detailed English explanation of the '1-2-5 Agreement Rule' (The Bazaar Accountant's secret)"
+      - "Grammar table: 1 = Nominative Singular, 2-4 = Nominative Plural, 5+ = Genitive Plural"
+      - "Comparison of soft sign placement: п'ятнадцять (teens) vs п'ятдесят (tens) to avoid common errors"
+      - "Agreement examples specifically with 'гривня' (feminine) vs 'копійка'"
+  - section: "Практика: Покупки та ціни"
+    words: 221
+    points:
+      - "Essential shopping vocabulary: 'коштувати' (to cost), 'ціна' (price), 'дорого' (expensive), 'дешево' (cheap)"
+      - "Interrogative structures: 'Скільки це коштує?' and 'Скільки з мене?' for bazaar transactions"
+      - "Understanding 'решта' and 'здача' (change) with supporting dialogue examples"
+      - "Roleplay: Buying daily essentials (coffee, bread, water) using real 2024 price ranges (35–45 UAH for coffee)"
+  - section: "Культурний огляд: Світ української гривні"
+    words: 200
+    points:
+      - "Historical hook: The origin of 'hryvnia' from Kyivan Rus neck jewelry (torcs)"
+      - "The ₴ symbol: Decoding the design (cursive 'г' and stability lines introduced in 2004)"
+      - "Modern pricing context: Why kopecks are rare in cash but exist in digital totals"
+      - "Cultural anchor: Proverb 'Копійка береже гривню' (A kopeck saves a hryvnia) with explanation"

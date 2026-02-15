@@ -1,0 +1,67 @@
+items:
+  - word: говорити
+    ipa: "[ɦɔwɔˈrɪtɪ]"
+    translation: to speak
+  - word: робити
+    ipa: "[rɔˈbɪtɪ]"
+    translation: to do
+  - word: любити
+    ipa: "[lʲʊˈbɪtɪ]"
+    translation: to love
+  - word: бачити
+    ipa: "[ˈbatʃɪtɪ]"
+    translation: to see
+  - word: їсти
+    ipa: "[ˈjisʲtɪ]"
+    translation: to eat
+  - word: пити
+    ipa: "[ˈpɪtɪ]"
+    translation: to drink
+  - word: ходити
+    ipa: "[ˈxɔdɪtɪ]"
+    translation: to walk
+  - word: просити
+    ipa: "[prɔˈsɪtɪ]"
+    translation: to ask
+  - word: сидіти
+    ipa: "[sɪˈdʲitɪ]"
+    translation: to sit
+  - word: стояти
+    ipa: "[stɔˈjatɪ]"
+    translation: to stand
+  - word: платити
+    ipa: "[plɐˈtɪtɪ]"
+    translation: to pay
+  - word: вчити
+    ipa: "[ˈwtʃɪtɪ]"
+    translation: to teach/learn
+  - word: дієслово
+    ipa: "[dʲijeˈslɔwɔ]"
+    translation: verb
+  - word: життя
+    ipa: "[ʒɪˈtʲːɐ]"
+    translation: life
+  - word: дім
+    ipa: "[dʲim]"
+    translation: home
+  - word: інфінітив
+    ipa: "[infʲiniˈtɪw]"
+    translation: infinitive
+  - word: спілкування
+    ipa: "[spʲilˈkʊwanʲnʲɐ]"
+    translation: communication
+  - word: помилка
+    ipa: "[pɔˈmɪlkɐ]"
+    translation: mistake
+  - word: кава
+    ipa: "[ˈkawɐ]"
+    translation: coffee
+  - word: гроші
+    ipa: "[ˈɦrɔʃi]"
+    translation: money
+  - word: парк
+    ipa: "[park]"
+    translation: park
+  - word: море
+    ipa: "[ˈmɔrɛ]"
+    translation: sea

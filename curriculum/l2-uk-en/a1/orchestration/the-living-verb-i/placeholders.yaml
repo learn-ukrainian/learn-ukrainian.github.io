@@ -1,0 +1,68 @@
+TRACK: "a1"
+LEVEL: "A1"
+SLUG: "the-living-verb-i"
+TOPIC_TITLE: "The Living Verb I"
+MODULE_NUM: "6"
+PLAN_PATH: "curriculum/l2-uk-en/plans/a1/the-living-verb-i.yaml"
+META_PATH: "curriculum/l2-uk-en/a1/meta/the-living-verb-i.yaml"
+CONTENT_PATH: "curriculum/l2-uk-en/a1/the-living-verb-i.md"
+ACTIVITIES_PATH: "curriculum/l2-uk-en/a1/activities/the-living-verb-i.yaml"
+VOCAB_PATH: "curriculum/l2-uk-en/a1/vocabulary/the-living-verb-i.yaml"
+RESEARCH_PATH: "curriculum/l2-uk-en/a1/research/the-living-verb-i-research.md"
+REVIEW_PATH: "curriculum/l2-uk-en/a1/review/the-living-verb-i-review.md"
+QUICK_REF_PATH: "claude_extensions/quick-ref/A1.md"
+SCHEMA_PATH: "schemas/activities-a1.schema.json"
+WORD_TARGET: "1210"
+SKILL_IDENTITY: "full-rebuild-core-a"
+PERSONA_FLAVOR: "The Helpful Neighbor"
+PERSONA_VOICE: "Patient Supportive Tutor"
+PERSONA_ROLE: "Sports Commentator"
+IMMERSION_RULE: "Content is 65-85% English. Growing Ukrainian immersion. Grammar concepts explained in English with Ukrainian terminology introduced. Sentences max 10 words. Dative and Instrumental cases FORBIDDEN. No subordinate clauses."
+LEVEL_CONSTRAINTS: "HARD GRAMMAR RULES (audit will reject violations):\n- Max 10 words per Ukrainian sentence (STRICT — count every word)\n- ONLY 1 clause per sentence (no compound sentences)\n- Dative case FORBIDDEN (no мені, тобі, йому, їй, нам, вам, їм, -ові/-еві endings)\n- Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)\n- NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n- Only imperfective aspect verbs\n- No participles\n- Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics), Vocative"
+ACTIVITY_COUNT_TARGET: 8
+ACTIVITY_MIN: 6
+ACTIVITY_MAX: 10
+ITEMS_MIN: 12
+VOCAB_COUNT_TARGET: 20
+FORBIDDEN_ACTIVITY_TYPES: cloze
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, mark-the-words, reorder
+REQUIRED_TYPES: quiz, fill-in, match-up
+PRIORITY_TYPES: anagram, unjumble
+SECTION_TITLE: "Культурний контекст: Українське слово"
+HARD_MINIMUM_WORD_COUNT: "390"
+SECTION_ENGAGEMENT_MIN: "1"
+SECTION_EXAMPLE_MIN: "2"
+PREVIOUS_CONTENT_SUMMARY: "### Building Your First Sentences\n### The Art of Knowing\n### Asking and Working\n### The Dropped Pronoun\n---\n*   **Він працює тут.** [win prɑˈtsʲujɛ tut] — He works here.\n*   **Ми працюємо вдома.** [mɪ prɑˈtsʲujɛmɔ ˈwdɔmɑ] — We work at home.\n*   **Вони працюють багато.** [wɔˈnɪ prɑˈtsʲujutʲ bɑˈɦɑtɔ] — They work a lot.\n\n### The Dropped Pronoun\n\nYou will often hear Ukrainians speak without the words \"I\", \"you\", or \"we\". This is not lazy. It is efficient. Because the ending of the verb **already tells you** who is doing the action, the pronoun is extra information.\n\nIf I say **«Читаю»**, the ending **-ю** screams \"I am doing it!\". We do not need **Я**.\n\n*   **Знаю це.** [ˈznɑju tsɛ] — (I) know this.\n*   **Слухаємо радіо.** [ˈsluxɑjɛmɔ ˈrɑdʲijo] — (We) listen to the radio.\n*   **Чекаєш маму?** [tʃeˈkɑjɛʃ ˈmɑmu] — (Are you) waiting for mom?\n\nThis sounds very natural. It shows you are comfortable with the language. You are focusing on the *action*, not on yourself."
+CALLOUT_TYPES_USED: "tip,tip,context,observe"
+PLAN_OBJECTIVES: |-
+  Learner can conjugate First Conjugation verbs in present tense
+  - Learner can form basic action statements
+  - Learner can describe daily activities using -ати verbs
+  - Learner understands basic concept of imperfective aspect
+PLAN_PEDAGOGY: PPP
+AUDIT_ERRORS: |-
+  CRITICAL FIXES REQUIRED:
+
+  1. **ACTIVITIES (Highest Priority)**:
+     - **Schema Error**: Activity 'anagram' ("Rozshifruyte diyeslova") items are missing the required `correct` property. Add it.
+     - **Forbidden Type**: Activity 'unjumble' ("Skladnishi rechennya") is BANNED for A1 M06. Replace it with `quiz` or `anagram`.
+     - **Item Counts**: Several activities have only 6 items. Increase ALL activities to at least 8 items (required for A1).
+     - **Hints**: Remove `hint` fields from all items (forbidden).
+
+  2. **CONTENT**:
+     - **Redundancy**: The audit found verbatim repetition of sentences like "Я слухаю радіо", "Ми знаємо місто". Remove redundant paragraphs.
+     - **Immersion**: Current immersion is 11.4% (Target: 15-35%). Convert simple English explanations to Ukrainian. Use more Ukrainian in examples and headers.
+     - **Metalanguage**: Define "дієслово" (verb) in vocabulary or use English equivalent.
+
+  Please modify:
+  - `curriculum/l2-uk-en/a1/activities/the-living-verb-i.yaml` (Fix schema, counts, types)
+  - `curriculum/l2-uk-en/a1/the-living-verb-i.md` (Fix redundancy, boost immersion)
+AUDIT_STATUS: ✅ AUDIT PASSED
+AUDIT_WORD_COUNT: "1786"
+WORD_PERCENT: 147%
+ACTIVITY_COUNT: "8"
+VOCAB_COUNT: "22"
+ENGAGEMENT_COUNT: "4"
+IMMERSION_PERCENT: 15.1%
+IMMERSION_TARGET: 15-35%
+PREV_MODULE: a1-05 (My World - Objects)
