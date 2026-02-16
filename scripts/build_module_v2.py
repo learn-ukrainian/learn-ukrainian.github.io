@@ -28,11 +28,13 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shutil
 import subprocess
 import sys
 import textwrap
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -82,10 +84,17 @@ from batch_gemini_config import (
 # ---------------------------------------------------------------------------
 # Thread-safe state via filelock
 # ---------------------------------------------------------------------------
+_HAS_FILELOCK = False
 try:
     from filelock import FileLock
+    _HAS_FILELOCK = True
 except ImportError:
-    # Fallback: no-op lock (single-threaded is fine for most runs)
+    import warnings
+    warnings.warn(
+        "filelock not installed — parallel 4a+4b will run sequentially. "
+        "Install with: pip install filelock",
+        stacklevel=1,
+    )
     class FileLock:  # type: ignore[no-redef]
         def __init__(self, path: str | Path):
             pass
@@ -95,6 +104,7 @@ except ImportError:
             pass
 
 _state_lock: FileLock | None = None
+_log_lock = threading.Lock()
 
 
 def _init_state_lock(ctx: ModuleContext) -> None:
@@ -115,14 +125,28 @@ def mark_phase_locked(ctx: ModuleContext, phase: str, status: str, **extra: Any)
 _original_mark_phase = v1.mark_phase
 v1.mark_phase = mark_phase_locked  # type: ignore[assignment]
 
+# Monkey-patch v1's log for thread-safe output during parallel 4a+4b
+_original_log = v1.log
+
+
+def _log_threadsafe(msg: str) -> None:
+    with _log_lock:
+        _original_log(msg)
+
+
+v1.log = _log_threadsafe  # type: ignore[assignment]
+log = _log_threadsafe  # Override our own import too
+
 
 # ---------------------------------------------------------------------------
 # Archive Detection + Restoration
 # ---------------------------------------------------------------------------
 ARCHIVE_DIR = PROJECT_ROOT / "_archive"
 ARCHIVE_WORD_THRESHOLD = 2000
-# Git commit before clean-slate rebuild (prose lives in parent)
-ARCHIVE_GIT_REF = "944f3524a^"
+# Git ref for pre-rebuild content. Points to parent of 944f3524a (the clean-slate
+# rebuild commit). This commit is permanent in history — won't be GC'd.
+# Override via ARCHIVE_GIT_REF env var if repo history changes.
+ARCHIVE_GIT_REF = os.environ.get("ARCHIVE_GIT_REF", "944f3524a^")
 
 
 def detect_archived_prose(track: str, slug: str) -> tuple[bool, str, Path | None]:
@@ -458,9 +482,11 @@ def phase_4b_vocabulary(ctx: ModuleContext) -> bool:
 def _run_parallel_4ab(ctx: ModuleContext) -> bool:
     """Run activities + vocabulary generation in parallel via ThreadPoolExecutor.
 
-    Falls back to sequential in dry-run mode.
+    Falls back to sequential in dry-run mode or when filelock is missing.
     """
-    if ctx.dry_run:
+    if ctx.dry_run or not _HAS_FILELOCK:
+        if not _HAS_FILELOCK and not ctx.dry_run:
+            log("  Phase 4a+4b: Running sequentially (filelock not installed)")
         if not phase_4a_activities(ctx):
             return False
         return phase_4b_vocabulary(ctx)
