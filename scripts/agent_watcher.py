@@ -406,6 +406,14 @@ def run_watcher():
                     logger.debug(f"Skipping error message #{msg['id']}")
                     continue
 
+                # Skip pipeline-internal messages (v2 builder uses stdout, broker
+                # gets only a short summary — not for headless dispatch)
+                task = msg.get('task_id') or ''
+                if task.startswith('yw-'):
+                    logger.debug(f"Auto-acking pipeline msg #{msg['id']} (task={task})")
+                    acknowledge_message(msg['id'], status="auto-acked-pipeline")
+                    continue
+
                 # Check if max delivery attempts exceeded
                 attempts = delivery_attempts.get(msg['id'], 0)
                 if attempts >= MAX_DELIVERY_ATTEMPTS:

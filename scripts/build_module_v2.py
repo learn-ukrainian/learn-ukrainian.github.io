@@ -35,6 +35,9 @@ import subprocess
 import sys
 import textwrap
 import threading
+import time
+
+import yaml
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -136,6 +139,76 @@ def _log_threadsafe(msg: str) -> None:
 
 v1.log = _log_threadsafe  # type: ignore[assignment]
 log = _log_threadsafe  # Override our own import too
+
+
+# Monkey-patch dispatch_gemini to always use stdout_only=True in v2 pipeline.
+# The pipeline captures stdout directly — broker responses are redundant and
+# cause spurious watcher notifications.
+_original_dispatch_gemini = v1.dispatch_gemini
+
+
+def _dispatch_gemini_stdout_only(
+    prompt: str, task_id: str, model: str = PRO_MODEL,
+    stdout_only: bool = False, allow_write: bool = False,
+    output_file: Path | None = None, timeout: int = 1800,
+) -> tuple[bool, str]:
+    return _original_dispatch_gemini(
+        prompt, task_id, model=model,
+        stdout_only=True,  # Always stdout-only in v2
+        allow_write=allow_write, output_file=output_file, timeout=timeout,
+    )
+
+
+v1.dispatch_gemini = _dispatch_gemini_stdout_only  # type: ignore[assignment]
+dispatch_gemini = _dispatch_gemini_stdout_only  # Override our own import too
+
+
+# ---------------------------------------------------------------------------
+# Prose-only verification (ignores review + activity gates)
+# ---------------------------------------------------------------------------
+# Gates that are NOT prose-related — skip in Phase 3 prose audit
+_NON_PROSE_GATES = {"review", "activities", "density", "unique_types", "priority",
+                    "engagement", "activity_quality"}
+
+
+def run_verify_prose_only(content_path: Path) -> tuple[bool, str]:
+    """Run audit_module.sh --skip-activities and check only prose-relevant gates.
+
+    Unlike otaman_verify.py which checks review + orchestration artifacts,
+    this only looks at gates that Phase 3 can actually fix: words, structure,
+    ipa, lint, pedagogy, naturalness, immersion, vocab, persona.
+    """
+    import json as _json
+
+    audit_script = str(PROJECT_ROOT / "scripts" / "audit_module.sh")
+    result = run_script(
+        [audit_script, "--skip-activities", str(content_path)],
+        capture=True, timeout=300,
+    )
+    output = (result.stdout or "") + (result.stderr or "")
+
+    # Read the status JSON written by the audit
+    track_dir = content_path.parent
+    slug = content_path.stem
+    bare_slug = slug.split("-", 1)[1] if slug[0].isdigit() and "-" in slug else slug
+    status_file = track_dir / "status" / f"{bare_slug}.json"
+
+    if not status_file.exists():
+        return False, output + "\nNo status JSON produced by audit"
+
+    status = _json.loads(status_file.read_text(encoding="utf-8"))
+    gates = status.get("gates", {})
+
+    failing = []
+    for gate_name, gate_data in gates.items():
+        if gate_name in _NON_PROSE_GATES:
+            continue
+        if gate_data.get("status") == "fail":
+            failing.append(f"{gate_name}: {gate_data.get('message', '?')}")
+
+    if failing:
+        return False, output + "\nProse-relevant failures:\n" + "\n".join(f"  {f}" for f in failing)
+    return True, output
 
 
 # ---------------------------------------------------------------------------
@@ -263,9 +336,9 @@ def restore_from_archive(
 # ---------------------------------------------------------------------------
 # V2 Phase Functions
 # ---------------------------------------------------------------------------
-MAX_PROSE_FIX_ITERS = 3
-MAX_ENRICHMENT_FIX_ITERS = 3
-MAX_FINAL_FIX_ITERS = 2
+MAX_PROSE_FIX_ITERS = 5       # Prose is hardest — more room for convergence
+MAX_ENRICHMENT_FIX_ITERS = 3  # Activities/vocab are more mechanical
+MAX_FINAL_FIX_ITERS = 3       # Final comprehensive — one extra for edge cases
 
 
 def phase_0_v2(ctx: ModuleContext) -> bool:
@@ -342,6 +415,15 @@ def phase_2_v2(ctx: ModuleContext) -> bool:
         log("  Phase 2: SKIP (already complete)")
         return True
 
+    # Adoption check: if file exists and is substantial, skip generation
+    content_path = ctx.paths["md"]
+    if content_path.exists():
+        word_count = len(content_path.read_text(encoding="utf-8").split())
+        if word_count >= ctx.word_target * 0.8:
+            log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+            mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
+            return True
+
     if getattr(ctx, "is_archived", False):
         fits, matched, missing = _check_archive_fits_outline(ctx)
         archive_source = getattr(ctx, "archive_source", "unknown")
@@ -369,6 +451,11 @@ def phase_2_v2(ctx: ModuleContext) -> bool:
             log(f"  Phase 2: Generating fresh prose instead")
             # Fall through to v1 content generation
 
+    # In dry-run, content_outline may not exist yet (Phase 1 creates it)
+    if ctx.dry_run and not ctx.content_outline:
+        log("  Phase 2: DRY-RUN — would generate prose (outline depends on Phase 1)")
+        return True
+
     return phase_2_content(ctx)
 
 
@@ -392,37 +479,45 @@ def phase_3_prose_audit_fix(ctx: ModuleContext) -> bool:
         _run_legacy_cleanse(ctx)
 
     for attempt in range(1, MAX_PROSE_FIX_ITERS + 1):
-        log(f"  Phase 3: Prose audit attempt {attempt}/{MAX_PROSE_FIX_ITERS}...")
-        passed, output = run_verify(ctx.paths["md"], content_only=True)
+        if attempt == 1:
+            log("  Phase 3: Initial prose audit...")
+        else:
+            log(f"  Phase 3: Audit after fix {attempt - 1}/{MAX_PROSE_FIX_ITERS - 1}...")
+        passed, output = run_verify_prose_only(ctx.paths["md"])
 
         log_file = ctx.orch_dir / f"phase3-audit-attempt-{attempt}.log"
         log_file.write_text(output, encoding="utf-8")
 
         if passed:
-            log(f"  Phase 3: PASS (attempt {attempt})")
+            fixes = attempt - 1
+            log(f"  Phase 3: PASS{f' (after {fixes} fix(es))' if fixes else ''}")
             mark_phase_locked(ctx, phase, "complete", attempts=attempt)
             return True
 
-        log(f"  Phase 3: FAIL (attempt {attempt})")
+        if attempt == 1:
+            log("  Phase 3: FAIL — needs fixes")
+        else:
+            log(f"  Phase 3: FAIL (fix {attempt - 1} insufficient)")
         if attempt >= MAX_PROSE_FIX_ITERS:
-            log(f"  Phase 3: EXHAUSTED — {MAX_PROSE_FIX_ITERS} attempts")
+            log(f"  Phase 3: EXHAUSTED — {MAX_PROSE_FIX_ITERS - 1} fix attempts")
             mark_phase_locked(ctx, phase, "failed", attempts=attempt)
             return False
 
         # Dispatch fix to Gemini
+        fix_num = attempt  # fix 1 happens after audit 1 fails
         fix_prompt = _build_fix_prompt(ctx, output, content_only=True)
-        fix_prompt_file = ctx.orch_dir / f"phase3-fix{attempt}-prompt.md"
+        fix_prompt_file = ctx.orch_dir / f"phase3-fix{fix_num}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, encoding="utf-8")
 
-        log(f"  Phase 3: Dispatching prose fix {attempt}...")
-        fix_output = _gemini_output_path(ctx.slug, f"p3-fix{attempt}")
+        log(f"  Phase 3: Dispatching prose fix {fix_num}/{MAX_PROSE_FIX_ITERS - 1}...")
+        fix_output = _gemini_output_path(ctx.slug, f"p3-fix{fix_num}")
         ok, _ = dispatch_gemini(
             _dispatch_prompt(ctx, fix_prompt_file),
-            task_id=f"yw-{ctx.slug}-p3fix{attempt}",
+            task_id=f"yw-{ctx.slug}-p3fix{fix_num}",
             model=ctx.model, allow_write=True, output_file=fix_output,
         )
         if not ok:
-            log(f"  Phase 3: Fix dispatch {attempt} failed")
+            log(f"  Phase 3: Fix dispatch {fix_num} failed")
             continue
 
         # Apply section-level fixes
@@ -496,6 +591,15 @@ def _run_parallel_4ab(ctx: ModuleContext) -> bool:
         log("  Phase 4a+4b: SKIP (both already complete)")
         return True
 
+    # Adoption check: if both files exist and are substantial, skip generation
+    act_path = ctx.paths["activities"]
+    voc_path = ctx.paths["vocabulary"]
+    if act_path.exists() and voc_path.exists():
+        log("  Phase 4a+4b: ADOPT — existing activities/vocab found")
+        mark_phase_locked(ctx, "3a", "complete", note="adopted-existing")
+        mark_phase_locked(ctx, "3b", "complete", note="adopted-existing")
+        return True
+
     results: dict[str, bool] = {}
 
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -542,37 +646,45 @@ def phase_5_enrichment_audit_fix(ctx: ModuleContext) -> bool:
         return True
 
     for attempt in range(1, MAX_ENRICHMENT_FIX_ITERS + 1):
-        log(f"  Phase 5: Enrichment audit attempt {attempt}/{MAX_ENRICHMENT_FIX_ITERS}...")
+        if attempt == 1:
+            log("  Phase 5: Initial enrichment audit...")
+        else:
+            log(f"  Phase 5: Audit after fix {attempt - 1}/{MAX_ENRICHMENT_FIX_ITERS - 1}...")
         passed, output = run_verify(ctx.paths["md"], content_only=False)
 
         log_file = ctx.orch_dir / f"phase5-audit-attempt-{attempt}.log"
         log_file.write_text(output, encoding="utf-8")
 
         if passed:
-            log(f"  Phase 5: PASS (attempt {attempt})")
+            fixes = attempt - 1
+            log(f"  Phase 5: PASS{f' (after {fixes} fix(es))' if fixes else ''}")
             mark_phase_locked(ctx, phase, "complete", attempts=attempt)
             return True
 
-        log(f"  Phase 5: FAIL (attempt {attempt})")
+        if attempt == 1:
+            log("  Phase 5: FAIL — needs fixes")
+        else:
+            log(f"  Phase 5: FAIL (fix {attempt - 1} insufficient)")
         if attempt >= MAX_ENRICHMENT_FIX_ITERS:
-            log(f"  Phase 5: EXHAUSTED — {MAX_ENRICHMENT_FIX_ITERS} attempts")
+            log(f"  Phase 5: EXHAUSTED — {MAX_ENRICHMENT_FIX_ITERS - 1} fix attempts")
             mark_phase_locked(ctx, phase, "failed", attempts=attempt)
             return False
 
         # Dispatch enrichment fix
+        fix_num = attempt
         fix_prompt = _build_fix_prompt(ctx, output, content_only=False)
-        fix_prompt_file = ctx.orch_dir / f"phase5-fix{attempt}-prompt.md"
+        fix_prompt_file = ctx.orch_dir / f"phase5-fix{fix_num}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, encoding="utf-8")
 
-        log(f"  Phase 5: Dispatching enrichment fix {attempt}...")
-        fix_output = _gemini_output_path(ctx.slug, f"p5-fix{attempt}")
+        log(f"  Phase 5: Dispatching enrichment fix {fix_num}/{MAX_ENRICHMENT_FIX_ITERS - 1}...")
+        fix_output = _gemini_output_path(ctx.slug, f"p5-fix{fix_num}")
         ok, _ = dispatch_gemini(
             _dispatch_prompt(ctx, fix_prompt_file),
-            task_id=f"yw-{ctx.slug}-p5fix{attempt}",
+            task_id=f"yw-{ctx.slug}-p5fix{fix_num}",
             model=ctx.model, allow_write=True, output_file=fix_output,
         )
         if not ok:
-            log(f"  Phase 5: Fix dispatch {attempt} failed")
+            log(f"  Phase 5: Fix dispatch {fix_num} failed")
             continue
 
         if fix_output.exists():
@@ -605,37 +717,45 @@ def phase_7_final_audit_fix(ctx: ModuleContext) -> bool:
         return True
 
     for attempt in range(1, MAX_FINAL_FIX_ITERS + 1):
-        log(f"  Phase 7: Final audit attempt {attempt}/{MAX_FINAL_FIX_ITERS}...")
+        if attempt == 1:
+            log("  Phase 7: Initial final audit...")
+        else:
+            log(f"  Phase 7: Audit after fix {attempt - 1}/{MAX_FINAL_FIX_ITERS - 1}...")
         passed, output = run_verify(ctx.paths["md"], content_only=False)
 
         log_file = ctx.orch_dir / f"phase7-audit-attempt-{attempt}.log"
         log_file.write_text(output, encoding="utf-8")
 
         if passed:
-            log(f"  Phase 7: PASS (attempt {attempt})")
+            fixes = attempt - 1
+            log(f"  Phase 7: PASS{f' (after {fixes} fix(es))' if fixes else ''}")
             mark_phase_locked(ctx, phase, "complete", attempts=attempt)
             return True
 
-        log(f"  Phase 7: FAIL (attempt {attempt})")
+        if attempt == 1:
+            log("  Phase 7: FAIL — needs fixes")
+        else:
+            log(f"  Phase 7: FAIL (fix {attempt - 1} insufficient)")
         if attempt >= MAX_FINAL_FIX_ITERS:
-            log(f"  Phase 7: EXHAUSTED — {MAX_FINAL_FIX_ITERS} attempts")
+            log(f"  Phase 7: EXHAUSTED — {MAX_FINAL_FIX_ITERS - 1} fix attempts")
             mark_phase_locked(ctx, phase, "failed", attempts=attempt)
             return False
 
         # Dispatch comprehensive fix
+        fix_num = attempt
         fix_prompt = _build_fix_prompt(ctx, output, content_only=False)
-        fix_prompt_file = ctx.orch_dir / f"phase7-fix{attempt}-prompt.md"
+        fix_prompt_file = ctx.orch_dir / f"phase7-fix{fix_num}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, encoding="utf-8")
 
-        log(f"  Phase 7: Dispatching final fix {attempt}...")
-        fix_output = _gemini_output_path(ctx.slug, f"p7-fix{attempt}")
+        log(f"  Phase 7: Dispatching final fix {fix_num}/{MAX_FINAL_FIX_ITERS - 1}...")
+        fix_output = _gemini_output_path(ctx.slug, f"p7-fix{fix_num}")
         ok, _ = dispatch_gemini(
             _dispatch_prompt(ctx, fix_prompt_file),
-            task_id=f"yw-{ctx.slug}-p7fix{attempt}",
+            task_id=f"yw-{ctx.slug}-p7fix{fix_num}",
             model=ctx.model, allow_write=True, output_file=fix_output,
         )
         if not ok:
-            log(f"  Phase 7: Fix dispatch {attempt} failed")
+            log(f"  Phase 7: Fix dispatch {fix_num} failed")
             continue
 
         if fix_output.exists():
@@ -788,8 +908,38 @@ def _phase_state_ids(phase_id: str) -> list[str]:
 # Preflight + Completion
 # ---------------------------------------------------------------------------
 
+def _bootstrap_meta_from_plan(track: str, slug: str) -> None:
+    """Create a minimal meta file from plan if meta doesn't exist.
+
+    Phase 1 will regenerate a proper meta later. This just gets us past
+    v1's preflight which requires meta to exist.
+    """
+    paths = get_module_paths(track, slug)
+    meta_path = paths["meta"]
+    plan_path = paths["plan"]
+
+    if meta_path.exists():
+        return
+    if not plan_path.exists():
+        return  # No plan = nothing to bootstrap from, will fail later
+
+    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
+    minimal_meta = {
+        "slug": slug,
+        "title": plan.get("title", slug.replace("-", " ").title()),
+        "word_target": plan.get("word_target", 0),
+    }
+    meta_path.parent.mkdir(parents=True, exist_ok=True)
+    meta_path.write_text(yaml.dump(minimal_meta, allow_unicode=True), encoding="utf-8")
+
+
 def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     """Resolve all paths, load plan/meta, detect archive. Returns ModuleContext."""
+    # Bootstrap minimal meta from plan if missing (Phase 1 regenerates it properly)
+    track, num = args.track, args.num
+    slug = slug_for_num(track, num)
+    _bootstrap_meta_from_plan(track, slug)
+
     # Use v1's preflight for base setup (it handles all path/config resolution)
     # Set mode flags so v1 gives us mode="full" as the base
     args.content_only = False
@@ -922,24 +1072,28 @@ def main() -> int:
         _init_log(ctx.slug)
         write_placeholders(ctx)
 
+        t0 = time.time()
         ok = run_pipeline_v2(ctx)
+        elapsed = time.time() - t0
+        elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
+
         write_completion_report_v2(ctx, ok)
 
         if ok:
             if not ctx.dry_run:
                 passed, output = run_verify(ctx.paths["md"], content_only=False)
                 if passed:
-                    log(f"\nVERDICT: PASS — {ctx.slug} fully complete (e2e)")
+                    log(f"\nVERDICT: PASS — {ctx.slug} fully complete (e2e) [{elapsed_str}]")
                 else:
-                    log(f"\nVERDICT: FAIL — final verification failed")
+                    log(f"\nVERDICT: FAIL — final verification failed [{elapsed_str}]")
                     for line in output.strip().split("\n")[-15:]:
                         log(f"  {line}")
                     return 1
             else:
-                log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in e2e mode")
+                log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in e2e mode [{elapsed_str}]")
             return 0
         else:
-            log(f"\nPIPELINE FAILED — check logs in {ctx.orch_dir}")
+            log(f"\nPIPELINE FAILED — check logs in {ctx.orch_dir} [{elapsed_str}]")
             return 1
 
     except FileNotFoundError as e:

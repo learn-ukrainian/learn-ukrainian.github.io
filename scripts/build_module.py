@@ -453,6 +453,8 @@ def is_phase_complete(ctx: ModuleContext, phase: str) -> bool:
 
 def mark_phase(ctx: ModuleContext, phase: str, status: str, **extra: Any) -> None:
     """Update phase status in state and persist."""
+    if ctx.dry_run:
+        return
     if "phases" not in ctx.state:
         ctx.state["phases"] = {}
     entry = {"status": status, "timestamp": _now_iso()}
@@ -1046,6 +1048,7 @@ def phase_3b_vocabulary(ctx: ModuleContext) -> bool:
         str(SCRIPTS_DIR / "extract_phase.py"),
         str(output_file),
         "--tags", "VOCABULARY",
+        "--phase", "3",
         "--output-dir", str(ctx.orch_dir),
     ]
     result = run_script(args, capture=True)

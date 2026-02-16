@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, HTTPException
 
-from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
+from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -456,3 +456,321 @@ async def activity_config():
         "levels": levels,
         "restrictions": restrictions,
     }
+
+
+# ==================== COMMS MONITORING ====================
+
+# Schema column check for backward compat
+_BROKER_COLS: set | None = None
+
+
+def _ensure_broker_cols(conn: sqlite3.Connection) -> set:
+    """Cache the column names of the messages table."""
+    global _BROKER_COLS
+    if _BROKER_COLS is None:
+        cur = conn.cursor()
+        cur.execute("PRAGMA table_info(messages)")
+        _BROKER_COLS = {row[1] for row in cur.fetchall()}
+    return _BROKER_COLS
+
+WATCHER_PID_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.pid"
+WATCHER_LOG_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.log"
+STUCK_DIR = CURRICULUM_ROOT / "stuck"
+
+
+def _get_broker_db():
+    """Get a read-only connection to the broker SQLite database."""
+    if not MESSAGE_DB.exists():
+        return None
+    conn = sqlite3.connect(str(MESSAGE_DB))
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def _is_watcher_running() -> dict:
+    """Check watcher daemon health."""
+    import os
+    pid = None
+    running = False
+    if WATCHER_PID_FILE.exists():
+        try:
+            pid = int(WATCHER_PID_FILE.read_text().strip())
+            os.kill(pid, 0)  # Check if process exists
+            running = True
+        except (ValueError, OSError):
+            pass
+    return {"running": running, "pid": pid}
+
+
+@router.get("/comms")
+async def comms_status():
+    """Communications monitoring: watcher health, message stats, delivery metrics."""
+    result = {
+        "watcher": _is_watcher_running(),
+        "stats": {},
+        "unread": {},
+        "tasks": [],
+        "stuck_tasks": [],
+        "recent_messages": [],
+        "delivery_stats": {},
+        "watcher_log_tail": [],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+    conn = _get_broker_db()
+    if not conn:
+        result["error"] = "Broker database not found"
+        return result
+
+    cur = conn.cursor()
+
+    # Overall message stats
+    cur.execute("SELECT COUNT(*) FROM messages")
+    total = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM messages WHERE acknowledged = 0")
+    unread_total = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM messages WHERE status = 'delivery_failed'")
+    failed_total = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM messages WHERE message_type = 'error'")
+    errors_total = cur.fetchone()[0]
+
+    result["stats"] = {
+        "total_messages": total,
+        "unread": unread_total,
+        "delivery_failed": failed_total,
+        "errors": errors_total,
+    }
+
+    # Unread per agent
+    cur.execute("""
+        SELECT to_llm, COUNT(*) FROM messages
+        WHERE acknowledged = 0
+        GROUP BY to_llm
+    """)
+    result["unread"] = {row[0]: row[1] for row in cur.fetchall()}
+
+    # Active tasks with stats
+    cur.execute("""
+        SELECT
+            task_id,
+            COUNT(*) as msg_count,
+            SUM(CASE WHEN acknowledged = 0 THEN 1 ELSE 0 END) as unread,
+            SUM(CASE WHEN status = 'delivery_failed' THEN 1 ELSE 0 END) as failed,
+            MAX(timestamp) as last_activity,
+            GROUP_CONCAT(DISTINCT from_llm) as participants
+        FROM messages
+        WHERE task_id IS NOT NULL
+        GROUP BY task_id
+        ORDER BY MAX(id) DESC
+        LIMIT 20
+    """)
+    result["tasks"] = [
+        {
+            "task_id": row["task_id"],
+            "message_count": row["msg_count"],
+            "unread": row["unread"],
+            "failed": row["failed"],
+            "last_activity": row["last_activity"],
+            "participants": row["participants"],
+        }
+        for row in cur.fetchall()
+    ]
+
+    # Delivery stats by status
+    cur.execute("""
+        SELECT status, COUNT(*) FROM messages
+        GROUP BY status
+    """)
+    result["delivery_stats"] = {
+        (row[0] or "pending"): row[1] for row in cur.fetchall()
+    }
+
+    # Recent messages (last 50) with full acknowledge/status info
+    cur.execute("""
+        SELECT id, task_id, from_llm, to_llm, message_type,
+               SUBSTR(content, 1, 300) as content_preview,
+               timestamp, acknowledged, status
+        FROM messages
+        ORDER BY id DESC LIMIT 50
+    """)
+    result["recent_messages"] = [
+        {
+            "id": row["id"],
+            "task_id": row["task_id"],
+            "from": row["from_llm"],
+            "to": row["to_llm"],
+            "type": row["message_type"],
+            "content_preview": row["content_preview"],
+            "timestamp": row["timestamp"],
+            "acknowledged": bool(row["acknowledged"]),
+            "status": row["status"] or "pending",
+        }
+        for row in cur.fetchall()
+    ]
+
+    conn.close()
+
+    # Stuck tasks (from filesystem)
+    if STUCK_DIR.exists():
+        for f in sorted(STUCK_DIR.glob("*.md")):
+            try:
+                text = f.read_text()
+                result["stuck_tasks"].append({
+                    "file": f.name,
+                    "task_id": f.stem,
+                    "preview": text[:300],
+                })
+            except Exception:
+                pass
+
+    # Also check track-specific stuck dirs
+    for track_dir in CURRICULUM_ROOT.iterdir():
+        stuck_sub = track_dir / "stuck"
+        if stuck_sub.exists() and stuck_sub.is_dir():
+            for f in sorted(stuck_sub.glob("*.md")):
+                try:
+                    text = f.read_text()
+                    result["stuck_tasks"].append({
+                        "file": f"{track_dir.name}/{f.name}",
+                        "task_id": f.stem,
+                        "preview": text[:300],
+                    })
+                except Exception:
+                    pass
+
+    # Watcher log tail (last 20 lines)
+    if WATCHER_LOG_FILE.exists():
+        try:
+            lines = WATCHER_LOG_FILE.read_text().splitlines()[-20:]
+            result["watcher_log_tail"] = lines
+        except Exception:
+            pass
+
+    return result
+
+
+@router.get("/comms/message/{message_id}")
+async def comms_message_detail(message_id: int):
+    """Full content of a single message."""
+    conn = _get_broker_db()
+    if not conn:
+        raise HTTPException(status_code=503, detail="Broker database not found")
+    cur = conn.cursor()
+    cols = _ensure_broker_cols(conn)
+    select_cols = ["id", "task_id", "from_llm", "to_llm", "message_type", "content", "timestamp", "acknowledged"]
+    if "status" in cols:
+        select_cols.append("status")
+    if "data" in cols:
+        select_cols.append("data")
+    cur.execute(f"SELECT {','.join(select_cols)} FROM messages WHERE id = ?", (message_id,))
+    row = cur.fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail=f"Message {message_id} not found")
+    return {
+        "id": row["id"],
+        "task_id": row["task_id"],
+        "from": row["from_llm"],
+        "to": row["to_llm"],
+        "type": row["message_type"],
+        "content": row["content"],
+        "data": row["data"] if "data" in cols else None,
+        "timestamp": row["timestamp"],
+        "acknowledged": bool(row["acknowledged"]),
+        "status": row["status"] if "status" in cols else "unknown",
+    }
+
+
+@router.get("/comms/conversation/{task_id}")
+async def comms_conversation(task_id: str):
+    """Full conversation thread for a task, chronological order."""
+    conn = _get_broker_db()
+    if not conn:
+        raise HTTPException(status_code=503, detail="Broker database not found")
+    cur = conn.cursor()
+    cols = _ensure_broker_cols(conn)
+    select_cols = ["id", "task_id", "from_llm", "to_llm", "message_type", "content", "timestamp", "acknowledged"]
+    if "status" in cols:
+        select_cols.append("status")
+    cur.execute(
+        f"SELECT {','.join(select_cols)} FROM messages WHERE task_id = ? ORDER BY id ASC",
+        (task_id,),
+    )
+    messages = [
+        {
+            "id": row["id"],
+            "from": row["from_llm"],
+            "to": row["to_llm"],
+            "type": row["message_type"],
+            "content": row["content"],
+            "timestamp": row["timestamp"],
+            "acknowledged": bool(row["acknowledged"]),
+            "status": row["status"] if "status" in cols else "unknown",
+        }
+        for row in cur.fetchall()
+    ]
+    conn.close()
+    return {"task_id": task_id, "messages": messages, "count": len(messages)}
+
+
+@router.get("/comms/messages")
+async def comms_messages(
+    limit: int = 50,
+    offset: int = 0,
+    from_llm: str | None = None,
+    to_llm: str | None = None,
+    task_id: str | None = None,
+    unread_only: bool = False,
+):
+    """Paginated, filterable message list."""
+    conn = _get_broker_db()
+    if not conn:
+        raise HTTPException(status_code=503, detail="Broker database not found")
+    cur = conn.cursor()
+
+    where_parts = []
+    params: list = []
+    if from_llm:
+        where_parts.append("from_llm = ?")
+        params.append(from_llm)
+    if to_llm:
+        where_parts.append("to_llm = ?")
+        params.append(to_llm)
+    if task_id:
+        where_parts.append("task_id = ?")
+        params.append(task_id)
+    if unread_only:
+        where_parts.append("acknowledged = 0")
+
+    where_clause = f"WHERE {' AND '.join(where_parts)}" if where_parts else ""
+
+    cur.execute(f"SELECT COUNT(*) FROM messages {where_clause}", params)
+    total = cur.fetchone()[0]
+
+    cur.execute(
+        f"""SELECT id, task_id, from_llm, to_llm, message_type,
+                   SUBSTR(content, 1, 500) as content_preview,
+                   timestamp, acknowledged, status
+            FROM messages {where_clause}
+            ORDER BY id DESC LIMIT ? OFFSET ?""",
+        params + [limit, offset],
+    )
+    messages = [
+        {
+            "id": row["id"],
+            "task_id": row["task_id"],
+            "from": row["from_llm"],
+            "to": row["to_llm"],
+            "type": row["message_type"],
+            "content_preview": row["content_preview"],
+            "timestamp": row["timestamp"],
+            "acknowledged": bool(row["acknowledged"]),
+            "status": row["status"] or "pending",
+        }
+        for row in cur.fetchall()
+    ]
+    conn.close()
+    return {"messages": messages, "total": total, "limit": limit, "offset": offset}

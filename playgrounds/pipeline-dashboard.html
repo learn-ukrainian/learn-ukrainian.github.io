@@ -10,6 +10,7 @@
   --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
   --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
   --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+  --claude: #58a6ff; --gemini: #d29922;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
@@ -56,15 +57,76 @@ a:hover { text-decoration: underline; }
 .queue-item .track-tag { background: var(--bg3); padding: 1px 6px; border-radius: 3px; font-size: 11px; color: var(--text2); }
 
 /* Messages */
-.msg-list { max-height: 400px; overflow-y: auto; }
-.msg-item { padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.msg-list { max-height: 600px; overflow-y: auto; }
+.msg-item { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 12px; cursor: pointer; transition: background 0.15s; }
 .msg-item:last-child { border-bottom: none; }
-.msg-item .msg-header { display: flex; gap: 8px; margin-bottom: 2px; }
+.msg-item:hover { background: var(--bg3); }
+.msg-item .msg-header { display: flex; gap: 8px; margin-bottom: 3px; align-items: center; flex-wrap: wrap; }
 .msg-item .msg-from { font-weight: 600; }
+.msg-item .msg-from.claude { color: var(--claude); }
+.msg-item .msg-from.gemini { color: var(--gemini); }
 .msg-item .msg-to { color: var(--text2); }
-.msg-item .msg-time { color: var(--text3); margin-left: auto; }
-.msg-item .msg-content { color: var(--text2); word-break: break-word; }
-.msg-item .msg-task { color: var(--purple); font-size: 11px; }
+.msg-item .msg-time { color: var(--text3); margin-left: auto; font-size: 11px; }
+.msg-item .msg-content { color: var(--text2); word-break: break-word; line-height: 1.4; }
+.msg-item .msg-task { color: var(--purple); font-size: 11px; cursor: pointer; text-decoration: underline; }
+.msg-item .msg-task:hover { color: var(--text); }
+.msg-item .msg-status { font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 600; }
+.msg-item .msg-status.delivered { background: var(--green); color: var(--bg); }
+.msg-item .msg-status.pending { background: var(--yellow); color: var(--bg); }
+.msg-item .msg-status.delivery_failed { background: var(--red); color: #fff; }
+.msg-item .msg-status.error { background: var(--red); color: #fff; }
+.msg-item .msg-full { display: none; margin-top: 8px; padding: 8px; background: var(--bg); border-radius: 4px; font-family: 'SF Mono', Monaco, monospace; font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; color: var(--text); max-height: 400px; overflow-y: auto; }
+.msg-item.expanded .msg-full { display: block; }
+.msg-item.expanded .msg-content { display: none; }
+.msg-item .expand-hint { font-size: 10px; color: var(--text3); }
+
+/* Agent avatar */
+.agent-avatar { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.agent-avatar.claude { background: rgba(88,166,255,0.2); color: var(--claude); }
+.agent-avatar.gemini { background: rgba(210,153,34,0.2); color: var(--gemini); }
+
+/* Comms section */
+.comms-header { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.comms-stat { text-align: center; min-width: 70px; }
+.comms-stat .value { font-size: 20px; font-weight: 700; }
+.comms-stat .label { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+.watcher-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+.watcher-badge.running { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid var(--green); }
+.watcher-badge.stopped { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid var(--red); }
+.watcher-badge .indicator { width: 8px; height: 8px; border-radius: 50%; }
+.watcher-badge.running .indicator { background: var(--green); animation: pulse 1.5s infinite; }
+.watcher-badge.stopped .indicator { background: var(--red); }
+
+/* Filter bar */
+.filter-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+.filter-bar label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+.filter-btn { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); cursor: pointer; transition: all 0.15s; }
+.filter-btn:hover { border-color: var(--text2); color: var(--text); }
+.filter-btn.active { background: var(--blue); color: var(--bg); border-color: var(--blue); }
+.filter-btn.active.claude { background: var(--claude); border-color: var(--claude); }
+.filter-btn.active.gemini { background: var(--gemini); border-color: var(--gemini); }
+.filter-btn.active.unread { background: var(--yellow); border-color: var(--yellow); }
+.filter-sep { width: 1px; height: 16px; background: var(--border); }
+
+/* Task list */
+.task-list { display: flex; flex-direction: column; gap: 2px; }
+.task-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; font-size: 12px; background: var(--bg); border-radius: 4px; cursor: pointer; transition: background 0.15s; }
+.task-item:hover { background: var(--bg3); }
+.task-item .task-id { font-weight: 600; color: var(--purple); min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-item .task-msgs { color: var(--text2); }
+.task-item .task-unread { color: var(--yellow); font-weight: 600; }
+.task-item .task-failed { color: var(--red); font-weight: 600; }
+.task-item .task-time { color: var(--text3); margin-left: auto; font-size: 11px; }
+
+/* Stuck tasks */
+.stuck-item { padding: 6px 8px; background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.2); border-radius: 4px; margin-bottom: 4px; font-size: 12px; }
+.stuck-item .stuck-id { font-weight: 600; color: var(--red); }
+
+/* Log viewer */
+.log-viewer { max-height: 200px; overflow-y: auto; background: var(--bg); border-radius: 4px; padding: 8px; font-family: 'SF Mono', Monaco, monospace; font-size: 11px; line-height: 1.5; color: var(--text2); }
+.log-viewer .log-line { white-space: pre-wrap; word-break: break-all; }
+.log-viewer .log-line.error { color: var(--red); }
+.log-viewer .log-line.warning { color: var(--yellow); }
 
 .empty { color: var(--text3); font-size: 13px; padding: 16px; text-align: center; }
 .loading { text-align: center; padding: 40px; color: var(--text2); }
@@ -76,6 +138,29 @@ a:hover { text-decoration: underline; }
 .pipeline-stat { text-align: center; min-width: 80px; }
 .pipeline-stat .value { font-size: 24px; font-weight: 700; }
 .pipeline-stat .label { font-size: 11px; color: var(--text2); text-transform: uppercase; }
+
+/* Section divider */
+.section-title { padding: 8px 24px; font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--bg2); margin-top: 8px; }
+
+/* Conversation modal */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100; backdrop-filter: blur(4px); }
+.modal-overlay.visible { display: flex; align-items: center; justify-content: center; }
+.modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; width: 90%; max-width: 800px; max-height: 85vh; display: flex; flex-direction: column; }
+.modal-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.modal-header h3 { font-size: 15px; font-weight: 600; }
+.modal-header .close-btn { margin-left: auto; width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.modal-header .close-btn:hover { color: var(--text); background: var(--bg); }
+.modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+
+/* Conversation thread */
+.conv-msg { display: flex; gap: 10px; margin-bottom: 12px; }
+.conv-msg .conv-avatar { flex-shrink: 0; }
+.conv-msg .conv-bubble { flex: 1; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+.conv-msg.from-claude .conv-bubble { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); }
+.conv-msg.from-gemini .conv-bubble { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.2); }
+.conv-msg .conv-meta { font-size: 10px; color: var(--text3); margin-bottom: 4px; display: flex; gap: 8px; }
+.conv-msg .conv-text { color: var(--text2); white-space: pre-wrap; word-break: break-word; }
+.conv-msg .conv-text a { color: var(--blue); }
 </style>
 </head>
 <body>
@@ -95,15 +180,41 @@ a:hover { text-decoration: underline; }
   <div class="loading"><div class="spinner"></div></div>
 </div>
 
-<div class="content" id="main-content">
+<div class="content" id="pipeline-content">
   <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<div class="section-title">Agent Communications</div>
+
+<div class="content" id="comms-content">
+  <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<!-- Conversation modal -->
+<div class="modal-overlay" id="conv-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="agent-avatar claude" style="width:24px;height:24px;font-size:11px">C</span>
+      <span style="font-size:14px;color:var(--text3)">&#8596;</span>
+      <span class="agent-avatar gemini" style="width:24px;height:24px;font-size:11px">G</span>
+      <h3 id="conv-title">Conversation</h3>
+      <button class="close-btn" onclick="closeConversation()">&times;</button>
+    </div>
+    <div class="modal-body" id="conv-body">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
 </div>
 
 <script>
 const API = '/api/dashboard';
 
-async function fetchPipeline() {
-  const res = await fetch(`${API}/pipeline`);
+// State
+let commsFilter = { from: null, unread: false };
+let cachedComms = null;
+
+async function fetchJSON(url) {
+  const res = await fetch(url);
   return await res.json();
 }
 
@@ -113,10 +224,54 @@ function formatAge(seconds) {
   return `${Math.floor(seconds/3600)}h ago`;
 }
 
-function render(data) {
-  document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+function formatTime(ts) {
+  if (!ts) return '';
+  try {
+    const d = new Date(ts);
+    return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  } catch { return ts; }
+}
 
-  // Stats
+function formatDateTime(ts) {
+  if (!ts) return '';
+  try {
+    const d = new Date(ts);
+    return d.toLocaleDateString([], {month:'short', day:'numeric'}) + ' ' +
+           d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  } catch { return ts; }
+}
+
+function escapeHtml(text) {
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+function linkify(text) {
+  // Turn #NNN into GitHub issue links and URLs into clickable links
+  let escaped = escapeHtml(text);
+  escaped = escaped.replace(/#(\d{1,5})\b/g, '<a href="https://github.com/issues/$1" target="_blank">#$1</a>');
+  escaped = escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+  return escaped;
+}
+
+function agentAvatar(name) {
+  const n = (name || '?').toLowerCase();
+  if (n === 'claude') return '<span class="agent-avatar claude">C</span>';
+  if (n === 'gemini') return '<span class="agent-avatar gemini">G</span>';
+  return `<span class="agent-avatar" style="background:var(--bg3);color:var(--text3)">${n[0] || '?'}</span>`;
+}
+
+function makeCard(title, subtitle, color) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<h2>${title} <span class="badge" style="background:var(--${color});color:var(--bg)">${subtitle}</span></h2>`;
+  return card;
+}
+
+// ==================== PIPELINE ====================
+
+function renderPipeline(data) {
   const statsEl = document.getElementById('pipeline-stats');
   statsEl.innerHTML = `
     <div class="pipeline-stat"><div class="value" style="color:var(--orange)">${data.active_builds.filter(b=>b.stage==='otaman').length}</div><div class="label">Otaman Active</div></div>
@@ -125,8 +280,7 @@ function render(data) {
     <div class="pipeline-stat"><div class="value" style="color:var(--blue)">${data.hetman_queue_total}</div><div class="label">Hetman Queue</div></div>
   `;
 
-  // Main content
-  const content = document.getElementById('main-content');
+  const content = document.getElementById('pipeline-content');
   content.innerHTML = '';
 
   // Otaman pipeline
@@ -214,52 +368,252 @@ function render(data) {
     hqCard.innerHTML += '<div class="empty">Queue empty</div>';
   }
   content.appendChild(hqCard);
+}
 
-  // Broker messages
-  const msgCard = makeCard('Broker Messages', 'Last 20', 'text2');
-  msgCard.classList.add('full-width');
-  if (data.broker_messages.length > 0) {
-    msgCard.innerHTML += `<div class="msg-list">${data.broker_messages.map(m => `
-      <div class="msg-item">
-        <div class="msg-header">
-          <span class="msg-from">${m.from_llm || '?'}</span>
-          <span class="msg-to">&#8594; ${m.to_llm || '?'}</span>
-          ${m.task_id ? `<span class="msg-task">${m.task_id}</span>` : ''}
-          <span class="msg-time">${m.timestamp || ''}</span>
+// ==================== COMMS ====================
+
+function toggleFilter(type, value) {
+  if (type === 'from') {
+    commsFilter.from = commsFilter.from === value ? null : value;
+  } else if (type === 'unread') {
+    commsFilter.unread = !commsFilter.unread;
+  }
+  if (cachedComms) renderComms(cachedComms);
+}
+
+function filterMessages(messages) {
+  return messages.filter(m => {
+    if (commsFilter.from && m.from !== commsFilter.from) return false;
+    if (commsFilter.unread && m.acknowledged) return false;
+    return true;
+  });
+}
+
+async function expandMessage(msgId, el) {
+  const item = el.closest('.msg-item');
+  if (item.classList.contains('expanded')) {
+    item.classList.remove('expanded');
+    return;
+  }
+  // Collapse any other expanded
+  document.querySelectorAll('.msg-item.expanded').forEach(e => e.classList.remove('expanded'));
+  const fullEl = item.querySelector('.msg-full');
+  fullEl.textContent = 'Loading...';
+  item.classList.add('expanded');
+  try {
+    const data = await fetchJSON(`${API}/comms/message/${msgId}`);
+    fullEl.innerHTML = linkify(data.content || '(empty)');
+    if (data.data) {
+      fullEl.innerHTML += '\n\n<span style="color:var(--text3)">--- data ---</span>\n' + escapeHtml(data.data);
+    }
+  } catch (e) {
+    fullEl.textContent = 'Failed to load message';
+  }
+}
+
+async function openConversation(taskId) {
+  const modal = document.getElementById('conv-modal');
+  const title = document.getElementById('conv-title');
+  const body = document.getElementById('conv-body');
+  title.textContent = taskId;
+  body.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  modal.classList.add('visible');
+
+  try {
+    const data = await fetchJSON(`${API}/comms/conversation/${encodeURIComponent(taskId)}`);
+    if (data.messages.length === 0) {
+      body.innerHTML = '<div class="empty">No messages in this conversation</div>';
+      return;
+    }
+    body.innerHTML = data.messages.map(m => {
+      const agent = (m.from || 'unknown').toLowerCase();
+      return `<div class="conv-msg from-${agent}">
+        <div class="conv-avatar">${agentAvatar(m.from)}</div>
+        <div class="conv-bubble">
+          <div class="conv-meta">
+            <span style="font-weight:600;color:var(--${agent === 'claude' ? 'claude' : agent === 'gemini' ? 'gemini' : 'text2'})">${m.from || '?'}</span>
+            <span>&#8594; ${m.to || '?'}</span>
+            ${m.type && m.type !== 'message' ? `<span>[${m.type}]</span>` : ''}
+            <span>${formatDateTime(m.timestamp)}</span>
+            <span>#${m.id}</span>
+          </div>
+          <div class="conv-text">${linkify(m.content || '')}</div>
         </div>
-        <div class="msg-content">${escapeHtml((m.content || '').substring(0, 200))}</div>
+      </div>`;
+    }).join('');
+    // Scroll to bottom
+    body.scrollTop = body.scrollHeight;
+  } catch (e) {
+    body.innerHTML = '<div class="empty">Failed to load conversation</div>';
+  }
+}
+
+function closeConversation() {
+  document.getElementById('conv-modal').classList.remove('visible');
+}
+
+// Close modal on ESC or overlay click
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConversation(); });
+document.getElementById('conv-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeConversation();
+});
+
+function renderComms(comms) {
+  cachedComms = comms;
+  const content = document.getElementById('comms-content');
+  content.innerHTML = '';
+
+  // Watcher health + stats
+  const healthCard = makeCard('Watcher Daemon', comms.watcher.running ? 'Running' : 'Stopped', comms.watcher.running ? 'green' : 'red');
+  healthCard.innerHTML += `<div class="comms-header">
+    <div class="watcher-badge ${comms.watcher.running ? 'running' : 'stopped'}">
+      <div class="indicator"></div>
+      ${comms.watcher.running ? `PID ${comms.watcher.pid}` : 'Not running'}
+    </div>
+    <div class="comms-stat"><div class="value">${comms.stats.total_messages || 0}</div><div class="label">Total Msgs</div></div>
+    <div class="comms-stat"><div class="value" style="color:var(--yellow)">${comms.stats.unread || 0}</div><div class="label">Unread</div></div>
+    <div class="comms-stat"><div class="value" style="color:var(--red)">${comms.stats.delivery_failed || 0}</div><div class="label">Failed</div></div>
+    <div class="comms-stat"><div class="value" style="color:var(--red)">${comms.stats.errors || 0}</div><div class="label">Errors</div></div>
+  </div>`;
+
+  // Delivery stats
+  if (comms.delivery_stats && Object.keys(comms.delivery_stats).length > 0) {
+    healthCard.innerHTML += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">${
+      Object.entries(comms.delivery_stats).map(([status, count]) => {
+        const colors = {delivered:'green',pending:'yellow',delivery_failed:'red',error:'red'};
+        const c = colors[status] || 'text2';
+        return `<span style="font-size:11px;color:var(--${c})">${status}: ${count}</span>`;
+      }).join('')
+    }</div>`;
+  }
+
+  // Unread per agent
+  if (comms.unread && Object.keys(comms.unread).length > 0) {
+    healthCard.innerHTML += `<div style="font-size:12px;color:var(--text2);margin-bottom:8px">Unread: ${
+      Object.entries(comms.unread).map(([agent, count]) =>
+        `<span style="font-weight:600;color:var(--yellow)">${agent}: ${count}</span>`
+      ).join(' | ')
+    }</div>`;
+  }
+  content.appendChild(healthCard);
+
+  // Active tasks (clickable)
+  const taskCard = makeCard(`Tasks (${comms.tasks.length})`, 'Active', 'purple');
+  if (comms.tasks.length > 0) {
+    taskCard.innerHTML += `<div class="task-list">${comms.tasks.map(t => `
+      <div class="task-item" onclick="openConversation('${escapeHtml(t.task_id)}')">
+        ${agentAvatar(t.participants ? t.participants.split(',')[0] : '?')}
+        <span class="task-id" title="${escapeHtml(t.task_id)}">${escapeHtml(t.task_id)}</span>
+        <span class="task-msgs">${t.message_count} msgs</span>
+        ${t.unread > 0 ? `<span class="task-unread">${t.unread} unread</span>` : ''}
+        ${t.failed > 0 ? `<span class="task-failed">${t.failed} failed</span>` : ''}
+        <span class="task-time">${formatTime(t.last_activity)}</span>
       </div>
     `).join('')}</div>`;
   } else {
-    msgCard.innerHTML += '<div class="empty">No recent messages</div>';
+    taskCard.innerHTML += '<div class="empty">No active tasks</div>';
+  }
+  content.appendChild(taskCard);
+
+  // Message stream with filters
+  const filtered = filterMessages(comms.recent_messages);
+  const msgCard = makeCard('Message Stream', `${filtered.length} of ${comms.recent_messages.length}`, 'blue');
+  msgCard.classList.add('full-width');
+
+  // Filter bar
+  msgCard.innerHTML += `<div class="filter-bar">
+    <label>Filter:</label>
+    <button class="filter-btn claude ${commsFilter.from === 'claude' ? 'active' : ''}" onclick="toggleFilter('from','claude')">
+      ${agentAvatar('claude')} Claude
+    </button>
+    <button class="filter-btn gemini ${commsFilter.from === 'gemini' ? 'active' : ''}" onclick="toggleFilter('from','gemini')">
+      ${agentAvatar('gemini')} Gemini
+    </button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn unread ${commsFilter.unread ? 'active' : ''}" onclick="toggleFilter('unread')">
+      Unread only
+    </button>
+  </div>`;
+
+  if (filtered.length > 0) {
+    msgCard.innerHTML += `<div class="msg-list">${filtered.map(m => {
+      const statusClass = m.status || 'pending';
+      const fromAgent = (m.from || '').toLowerCase();
+      return `<div class="msg-item" onclick="expandMessage(${m.id}, this)">
+        <div class="msg-header">
+          ${agentAvatar(m.from)}
+          <span class="msg-from ${fromAgent}">${m.from || '?'}</span>
+          <span class="msg-to">&#8594; ${m.to || '?'}</span>
+          <span class="msg-status ${statusClass}">${m.status || 'pending'}</span>
+          <span style="font-size:10px;color:var(--text3)">#${m.id}</span>
+          ${m.type && m.type !== 'message' ? `<span style="font-size:10px;color:var(--text3)">[${m.type}]</span>` : ''}
+          ${m.task_id ? `<span class="msg-task" onclick="event.stopPropagation();openConversation('${escapeHtml(m.task_id)}')">${escapeHtml(m.task_id)}</span>` : ''}
+          ${!m.acknowledged ? '<span style="font-size:10px;color:var(--yellow);font-weight:600">UNREAD</span>' : ''}
+          <span class="msg-time">${formatTime(m.timestamp)}</span>
+        </div>
+        <div class="msg-content">${escapeHtml(m.content_preview || '')}</div>
+        <div class="msg-full"></div>
+        <div class="expand-hint">Click to expand full message</div>
+      </div>`;
+    }).join('')}</div>`;
+  } else {
+    msgCard.innerHTML += '<div class="empty">No messages match filter</div>';
   }
   content.appendChild(msgCard);
-}
 
-function makeCard(title, subtitle, color) {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `<h2>${title} <span class="badge" style="background:var(--${color});color:var(--bg)">${subtitle}</span></h2>`;
-  return card;
-}
+  // Stuck tasks
+  if (comms.stuck_tasks && comms.stuck_tasks.length > 0) {
+    const stuckCard = makeCard(`Stuck Tasks (${comms.stuck_tasks.length})`, 'Needs Human', 'red');
+    stuckCard.classList.add('full-width');
+    stuckCard.innerHTML += comms.stuck_tasks.map(s => `
+      <div class="stuck-item">
+        <span class="stuck-id">${escapeHtml(s.file)}</span>
+        ${s.preview ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;max-height:60px;overflow:hidden">${escapeHtml(s.preview)}</div>` : ''}
+      </div>
+    `).join('');
+    content.appendChild(stuckCard);
+  }
 
-function escapeHtml(text) {
-  const d = document.createElement('div');
-  d.textContent = text;
-  return d.innerHTML;
-}
-
-async function refresh() {
-  try {
-    const data = await fetchPipeline();
-    render(data);
-  } catch (e) {
-    console.error('Fetch error:', e);
+  // Watcher log
+  if (comms.watcher_log_tail && comms.watcher_log_tail.length > 0) {
+    const logCard = makeCard('Watcher Log', 'Last 20 lines', 'gray');
+    logCard.classList.add('full-width');
+    logCard.innerHTML += `<div class="log-viewer">${comms.watcher_log_tail.map(line => {
+      let cls = 'log-line';
+      if (/\[ERROR\]/i.test(line)) cls += ' error';
+      else if (/\[WARNING\]/i.test(line)) cls += ' warning';
+      return `<div class="${cls}">${escapeHtml(line)}</div>`;
+    }).join('')}</div>`;
+    content.appendChild(logCard);
   }
 }
 
-refresh();
-setInterval(refresh, 30000);
+// ==================== REFRESH ====================
+
+async function refreshPipeline() {
+  try {
+    const data = await fetchJSON(`${API}/pipeline`);
+    renderPipeline(data);
+  } catch (e) { console.error('Pipeline fetch error:', e); }
+}
+
+async function refreshComms() {
+  try {
+    const data = await fetchJSON(`${API}/comms`);
+    document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+    renderComms(data);
+  } catch (e) { console.error('Comms fetch error:', e); }
+}
+
+async function refreshAll() {
+  await Promise.all([refreshPipeline(), refreshComms()]);
+}
+
+// Initial load
+refreshAll();
+// Pipeline: 30s, Comms: 10s for near real-time monitoring
+setInterval(refreshPipeline, 30000);
+setInterval(refreshComms, 10000);
 </script>
 </body>
 </html>
