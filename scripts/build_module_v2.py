@@ -181,29 +181,15 @@ def restore_from_archive(
     content_path = ctx.paths["md"]
     content_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # Step 1: Restore prose only (NOT meta — Phase 1 already generated fresh meta)
     if archive_dir is not None:
-        # --- Filesystem restore ---
         src_md = archive_dir / f"{slug}.md"
         if not src_md.exists():
             log(f"  Restore: {src_md} not found")
             return False
-
         shutil.copy2(src_md, content_path)
         log(f"  Restore: prose {src_md.name} → {content_path.name}")
-
-        # Also restore supplementary files if available
-        for sub, dest_key in [
-            ("meta", "meta"),
-            ("activities", "activities"),
-            ("vocabulary", "vocabulary"),
-        ]:
-            src = archive_dir / sub / f"{slug}.yaml"
-            if src.exists():
-                ctx.paths[dest_key].parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(src, ctx.paths[dest_key])
-                log(f"  Restore: {sub}/{slug}.yaml → {ctx.paths[dest_key].name}")
     else:
-        # --- Git restore ---
         git_path = f"curriculum/l2-uk-en/{ctx.track}/{slug}.md"
         result = subprocess.run(
             ["git", "show", f"{ARCHIVE_GIT_REF}:{git_path}"],
@@ -216,12 +202,24 @@ def restore_from_archive(
         content_path.write_text(result.stdout, encoding="utf-8")
         log(f"  Restore: git:{ARCHIVE_GIT_REF}:{git_path} → {content_path.name}")
 
-        # Try restoring supplementary files from git too
-        for sub, dest_key in [
-            ("meta", "meta"),
-            ("activities", "activities"),
-            ("vocabulary", "vocabulary"),
-        ]:
+    # Step 2: Verify word count BEFORE restoring supplementary files
+    if not content_path.exists():
+        return False
+    word_count = len(content_path.read_text(encoding="utf-8").split())
+    if word_count < ARCHIVE_WORD_THRESHOLD:
+        log(f"  Restore: REJECTED — only {word_count}w (need {ARCHIVE_WORD_THRESHOLD})")
+        content_path.unlink()  # Clean up — don't leave debris
+        return False
+
+    # Step 3: Restore activities + vocabulary (NOT meta — fresh from Phase 1)
+    for sub, dest_key in [("activities", "activities"), ("vocabulary", "vocabulary")]:
+        if archive_dir is not None:
+            src = archive_dir / sub / f"{slug}.yaml"
+            if src.exists():
+                ctx.paths[dest_key].parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, ctx.paths[dest_key])
+                log(f"  Restore: {sub}/{slug}.yaml")
+        else:
             git_sub = f"curriculum/l2-uk-en/{ctx.track}/{sub}/{slug}.yaml"
             r = subprocess.run(
                 ["git", "show", f"{ARCHIVE_GIT_REF}:{git_sub}"],
@@ -233,13 +231,9 @@ def restore_from_archive(
                 ctx.paths[dest_key].write_text(r.stdout, encoding="utf-8")
                 log(f"  Restore: git {sub}/{slug}.yaml")
 
-    # Verify word count
-    if content_path.exists():
-        word_count = len(content_path.read_text(encoding="utf-8").split())
-        pct = word_count * 100 // max(ctx.word_target, 1)
-        log(f"  Restore: {word_count} words ({pct}% of {ctx.word_target} target)")
-        return word_count >= ARCHIVE_WORD_THRESHOLD
-    return False
+    pct = word_count * 100 // max(ctx.word_target, 1)
+    log(f"  Restore: {word_count} words ({pct}% of {ctx.word_target} target)")
+    return True
 
 
 # ---------------------------------------------------------------------------
