@@ -78,6 +78,23 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 
 **The mission is Ukrainian education - quality and depth matter.**
 
+### 8. GitHub Issues as Persistent Memory
+
+**Every change must be tracked via GitHub issues.**
+
+- **Before starting work**: Find or create a related GH issue
+- **During work**: Comment progress on the issue
+- **After completing**: Update the issue with what was done, close if resolved
+- **Bug fixes**: Create an issue documenting the bug and fix (even retroactively)
+- **Cross-session context**: GH issues are your external memory — read relevant issues at session start
+- **Best practices**:
+  - Use labels (`area:infra`, `area:content`, `priority:high`, `working:claude`)
+  - Reference issues in commits (e.g., "Fixes #582")
+  - Link related issues to each other
+  - Never do substantial work without an issue trail
+
+**This expands your memory across sessions. If it's not in a GH issue, it didn't happen.**
+
 </critical>
 
 ---
@@ -159,14 +176,17 @@ npm run metrics:extract {track}  # Extract raw metrics
 /hetman {track} --full            # [Gemini] Full E2E batch: all incomplete modules from scratch
 /final-review {track} {num}       # [Claude] Final QA after Hetman completes (~5 turns)
 
-# Deterministic Python builder (replaces LLM orchestration — preferred)
+# Deterministic Python builder v2 (single E2E pipeline — preferred)
+.venv/bin/python scripts/build_module_v2.py {track} {num}                  # Full E2E pipeline (resume-aware)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild        # Nuke state, rebuild from Phase 0
+.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3  # Re-run specific phase
+.venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run        # Show plan, no dispatching
+.venv/bin/python scripts/build_module_v2.py {track} {num} --verify         # Just run audit, PASS/FAIL
+
+# Legacy v1 builder (split modes — use v2 instead)
 .venv/bin/python scripts/build_module.py {track} {num}                  # Full pipeline (resume-aware)
 .venv/bin/python scripts/build_module.py {track} {num} --content-only   # Prose only (phases 0-6b)
 .venv/bin/python scripts/build_module.py {track} {num} --enrich         # Activities only (phases 3+7)
-.venv/bin/python scripts/build_module.py {track} {num} --verify         # Just run audit, PASS/FAIL
-.venv/bin/python scripts/build_module.py {track} {num} --rebuild        # Nuke state, rebuild from Phase 0
-.venv/bin/python scripts/build_module.py {track} {num} --force-phase 2  # Re-run specific phase
-.venv/bin/python scripts/build_module.py {track} {num} --dry-run        # Show plan, no dispatching
 
 # Pipeline verification (run AFTER Gemini finishes to catch lies)
 .venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
