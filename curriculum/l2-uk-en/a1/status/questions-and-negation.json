@@ -2,7 +2,7 @@
   "module": "questions-and-negation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T16:56:26.812848Z",
+  "last_audit": "2026-02-16T14:37:25.132909Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-15T16:55:34.269614Z",
@@ -52,6 +52,7 @@
     "status": "pass",
     "blocking_issues": [],
     "pass_count": 6,
-    "fail_count": 0
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

@@ -2,7 +2,7 @@
   "module": "reflexive-verbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T19:05:20.081552Z",
+  "last_audit": "2026-02-16T15:53:43.962611Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-15T18:40:23.411012Z",
@@ -18,19 +18,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2782/830 (raw: 3314)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2782/830 (raw: 3314) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 2,
+      "message": "3/8 | unique_types: 2/4 types"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "13/1"
     },
     "naturalness": {
       "status": "pass",
@@ -43,16 +43,16 @@
       "message": "12 IPA issues (run lint_ipa.py --fix)"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 2
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

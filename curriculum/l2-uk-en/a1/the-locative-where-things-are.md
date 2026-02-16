@@ -8,11 +8,9 @@ Covers: The Locative: Where Things Are
 
 ### Питання «Де?» (The Question "Where?")
 
-Hello, neighbor! We often look for things. Keys, phones, passports — they like to hide. To find them, we use one simple word: **Де?** (Where?).
+Привіт! I am your guide to Kyiv. To navigate any city or home, you need one simple word: **Де?** (Where?).
 
-This word helps us orient ourselves. When you are in Kyiv, you might ask directions. At home, you look for your phone.
-
-We use this word constantly.
+This word helps you orient yourself. Whether you are looking for a famous monument or just your keys, **де** is your starting point.
 
 _Приклади:_
 *   **Де** паспорт? (Where is the passport?)
@@ -23,49 +21,37 @@ _Приклади:_
 
 ### Наш дім (Our Home)
 
-Let's visit my home. For Ukrainians, **дім** [dʲim] (home) is a special place. We rest here.
+Let's start at my home. For Ukrainians, **дім** [dʲim] (home) is a special place. Inside, there is a **кімната** [kʲimˈnɑtɑ] (room), and in the room, there is furniture, like a **стіл** [sʲtʲil] (table).
 
-Inside the home, there is a **кімната** [kʲimˈnɑtɑ] (room). In the room, there is furniture. For example, a **стіл** [sʲtʲil] (table). We eat and work here.
-
-To say where an object is, we need small words. These are **в** / **у** (in) and **на** (on / at).
+To say where an object is, we use small words: **в** / **у** (in) and **на** (on / at).
 
 > [!culture]
 > **Гостинність (Hospitality)**
-> When you enter a Ukrainian home, the host often offers slippers. Guests leave shoes by the door. Cleanliness is important.
+> In a Ukrainian home, cleanliness is key. Guests leave shoes by the door and often wear slippers provided by the host.
 
 _Приклади:_
 *   Кіт **у** кімнаті. (The cat is in the room.)
 *   Книга **на** столі. (The book is on the table.)
-*   Ми **в**дома. (We are at home.)
 *   Мама **на** кухні. (Mom is in the kitchen.)
 *   Тато **на** дивані. (Dad is on the sofa.)
-*   Студент **у** ліжку. (The student is in bed.)
 
 ### Робота та місто (Work and City)
 
-We do not stay at home all day. Life is active in the city!
-
-We go to the **магазин** [mɑhɑˈzɪn] (shop / store). We buy bread there. Children go to a place called **школа** [ˈʃkɔlɑ] (school). Adults have a duty. It is **робота** [rɔˈbɔtɑ] (work).
-
-Each place is different. We speak about them in different ways. Today we will learn how.
+In the city, we visit the **магазин** [mɑhɑˈzɪn] (shop), children go to **школа** [ˈʃkɔlɑ] (school), and adults go to **робота** [rɔˈbɔtɑ] (work).
 
 _Приклади:_
 *   Студент **у** школі. (The student is at school.)
 *   Тато **на** роботі. (Dad is at work.)
-*   Я **в** магазині. (I am in the shop.)
 *   Ми **у** парку. (We are in the park.)
 *   Вона **в** аптеці. (She is at the pharmacy.)
-*   Він **у** банку. (He is at the bank.)
 
 ## Теорія: Місцевий відмінок
 
-So, we know where dad is. Dad is at work. The student is at school. But why do we say «у школ**і**» and not «школа»? Why «в магазин**і**»? This is our new tool: the Locative Case (Місцевий відмінок).
-
-Imagine you are putting things in their places. The book is not just «стіл». It is **на столі** (on the table). The clothes are not just «шафа». They are **у шафі** (in the wardrobe). In Ukrainian, we change the word ending to show location.
+To say where someone or something is, we use the Locative Case (Місцевий відмінок). We change the word ending to show location.
 
 ### Золоте правило: закінчення -і
 
-For most words, this is very simple. You take the word and change the last letter to **-і**. This works for masculine words (he) and feminine words (she). This is the most popular ending.
+For most masculine and feminine words, simply change the last letter to **-і**.
 
 Look at how it works:
 
@@ -83,38 +69,32 @@ Look at how it works:
 
 ### М’який знак і закінчення -ї
 
-Sometimes a word ends with a soft sound or the letter **-я** (like *кухня*). Or **-й** (like *музей*). Then we cannot write **-і**. We need another letter to keep it soft. We use **-ї**.
+When a word ends in **-й** or **-ія**, we use the ending **-ї** to keep the sound soft. However, soft-stem words ending in **-я** or **-ь** usually take the standard **-і**.
 
-This rule applies to words ending in **-я** (soft 'a') or **-й** (jot).
-
-*   **Кухня** (kitchen) $\rightarrow$ **на кухні** (But: **їдальня** $\rightarrow$ **в їдальні**, soft sign becomes **і**)
-    *   *Note:* If the word ends in **-ія**, we write **-ії**.
-*   **Лінія** (line) $\rightarrow$ **на лінії** [na lʲinʲiji] (on the line)
-*   **Музей** (museum) $\rightarrow$ **у музеї** [u muzejі] (in the museum)
-*   **Трамвай** (tram) $\rightarrow$ **у трамваї** [u tramvajі] (in the tram)
-
-Try to remember this pair: "Museum on the line". Both get **-ї**.
+*   **Музей** (museum) $\rightarrow$ **у музеї** [u muˈzɛji]
+*   **Трамвай** (tram) $\rightarrow$ **у трамваї** [u trɑmˈʋɑji]
+*   **Лінія** (line) $\rightarrow$ **на лінії** [na ˈlʲinʲiji]
+*   **Кухня** (kitchen) $\rightarrow$ **на кухні** [na ˈkuxnʲi]
+*   **Їдальня** (dining room) $\rightarrow$ **в їдальні** [ʋ jiˈdɑlʲnʲi]
 
 ### Магічна зміна звуків (К, Г, Х)
 
-Ukrainian language likes flow. Some sounds are hard to say before **-і**. Try to say "rk-i" or "kh-i". It sounds hard. So Ukrainians change these sounds. This is called alternation.
+Some sounds change before the **-і** ending. This is called alternation. We call it the **"Hand-Leg-Ear"** rule because of these three core words:
 
-This happens in the Locative case.
-
-1.  **К $\rightarrow$ Ц**
-2.  **Г $\rightarrow$ З**
-3.  **Х $\rightarrow$ С**
-
-We call this "Hand-Leg-Ear" rule.
+1.  **К $\rightarrow$ Ц** (ruka $\rightarrow$ rutsi)
+2.  **Г $\rightarrow$ З** (noha $\rightarrow$ nozi)
+3.  **Х $\rightarrow$ С** (vukho $\rightarrow$ vusi)
 
 | Word (Nominative) | Locative Case | Change |
 | :--- | :--- | :--- |
-| **Парк** (park) | **У парку** (Exception!) | (No change here) |
-| **Аптека** (pharmacy) | **В аптеці** [ʋ aptet͡sʲi] | **К $\rightarrow$ Ц** |
-| **Книга** (book) | **У книзі** [u knɪzʲi] | **Г $\rightarrow$ З** |
-| **Поверх** (floor) | **На поверсі** [na pɔʋersʲi] | **Х $\rightarrow$ С** |
-| **Дорога** (road) | **На дорозі** [na dɔrɔzʲi] | **Г $\rightarrow$ З** |
-| **Бібліотека** (library) | **У бібліотеці** [u bʲiblʲiɔtɛt͡sʲi] | **К $\rightarrow$ Ц** |
+| **Рука** (hand) | **У руці** [u ruˈt͡sʲi] | **К $\rightarrow$ Ц** |
+| **Нога** (leg) | **На нозі** [na nɔˈzʲi] | **Г $\rightarrow$ З** |
+| **Вухо** (ear) | **У вусі** [u ˈʋusʲi] | **Х $\rightarrow$ С** |
+| **Аптека** (pharmacy) | **В аптеці** [ʋ ɑpˈtɛt͡sʲi] | **К $\rightarrow$ Ц** |
+| **Книга** (book) | **У книзі** [u ˈknɪzʲi] | **Г $\rightarrow$ З** |
+| **Поверх** (floor) | **На поверсі** [na ˈpɔʋɛrsʲi] | **Х $\rightarrow$ С** |
+| **Дорога** (road) | **На дорозі** [na dɔˈrɔzʲi] | **Г $\rightarrow$ З** |
+| **Бібліотека** (library) | **У бібліотеці** [u bʲiblʲiɔˈtɛt͡sʲi] | **К $\rightarrow$ Ц** |
 
 > [!tip]
 > **How to remember?**
@@ -140,53 +120,35 @@ When do we use **В (У)** and when **НА**? In English, this is "in" vs "on".
 *   **На підлозі** (on the floor surface).
 *   **На дивані** (on the sofa surface).
 
-### Секретна категорія: Події та Процеси
+### Події та Процеси (Events and Processes)
 
-We also use **НА** for an **event** or **activity**. This is very important.
+We use **НА** for an **event** or **activity**, while **В (У)** is for buildings or containers.
 
-If you say "I am in the office", you talk about the building. You are physically there.
-If you say "I am **at work**", you talk about the process. You are busy.
-
+*   **В офісі** (In the office — building).
 *   **На роботі** (At work — process).
 *   **На уроці** (At the lesson — event).
 *   **На концерті** (At the concert — event).
 
-Work is not a box. A concert is not a box. It is something that happens. So we are "on" this process.
+### Особливі місця (Special Places)
 
-### Особливі місця: Куди йдемо?
-
-Some words historically always take **НА**. This is tradition.
-
-1.  **На вулиці** (Outside / On the street). The street is an open space.
-2.  **На пошті** (At the post office).
-3.  **На кухні** (In the kitchen). Kitchen is a room, but we say "on the kitchen".
-4.  **На ринку** / **На базарі** (At the market). The market is an open square.
+Some locations always take **НА** by tradition:
+*   **На вулиці** (Outside / On the street).
+*   **На пошті** (At the post office).
+*   **На кухні** (In the kitchen).
+*   **На ринку** (At the market).
 
 > [!myth-buster]
 > **Ukraine: In or On?**
-> In the past, some people said "on Ukraine". This is old. It meant a region without borders.
-> Now Ukraine is an independent state. It has clear borders. So we say **в Україні** (in Ukraine). Just like **у Польщі** (in Poland) or **у США** (in the USA).
-> Correct: **Я живу в Україні.**
+> In the past, some used "on Ukraine" as if it were a region. Today, Ukraine is a sovereign state with borders, so we use **в Україні** (in Ukraine).
+> **Correct:** Я живу в Україні.
 
 ### В чи У? Як обрати?
 
-You saw **В** and **У**. They are the same word. The difference is music. Ukrainian does not like too many consonants together.
+**В** and **У** mean the same thing. We choose based on the surrounding sounds (Euphony).
 
-The Rule (Euphony):
-1.  Between consonants use **У**.
-    *   Він **у** **ш**колі. (He is at school.)
-2.  Between vowels use **В**.
-    *   Вон**а** **в** **а**птеці. (She is at the pharmacy.)
-3.  If a word starts with **В** or **Ф**, use **У**.
-    *   Ми **у** **В**аршаві. (We are in Warsaw.)
-
-Don't worry if you make a mistake. People will understand you. But with time, you will feel the rhythm.
-
-_Practice:_
-*   Книга **на** столі.
-*   Кіт **у** кімнаті.
-*   Ми **в** офісі.
-*   Студент **у** бібліотеці.
+1.  Between consonants use **У**: Він **у** **ш**колі.
+2.  Between vowels use **В**: Вон**а** **в** **а**птеці.
+3.  If a word starts with **В** or **Ф**, use **У**: Ми **у** **В**аршаві.
 
 ## Практика: Вдома та в місті
 
@@ -407,3 +369,42 @@ _Приклади:_
 *   **Вона в аптеці.** (She is at the pharmacy.)
 
 Remember: **вулиця** (street) is always a surface. You are never "in" the street in Ukrainian. Always **на вулиці**.
+
+# Activities
+
+> [!note]
+> Practice makes perfect! Try these exercises to master the Locative case.
+
+# Vocabulary
+
+| Ukrainian | IPA | English |
+| :--- | :--- | :--- |
+| **де** | [de] | where |
+| **в / у** | [ʋ / u] | in |
+| **на** | [na] | on / at |
+| **кімната** | [kʲimˈnɑtɑ] | room |
+| **стіл** | [sʲtʲil] | table |
+| **магазин** | [mɑhɑˈzɪn] | store |
+| **школа** | [ˈʃkɔlɑ] | school |
+| **робота** | [rɔˈbɔtɑ] | work |
+| **банк** | [bɑnk] | bank |
+| **вокзал** | [ʋɔkˈzɑl] | station |
+| **підлога** | [pʲidˈlɔɦɑ] | floor |
+| **стіна** | [sʲtʲiˈnɑ] | wall |
+| **вулиця** | [ˈʋulɪt͡sʲɑ] | street |
+| **парк** | [pɑrk] | park |
+| **паспорт** | [ˈpɑspɔrt] | passport |
+| **телефон** | [te.leˈfɔn] | phone |
+| **рюкзак** | [rʲukˈzɑk] | backpack |
+| **кухня** | [ˈkuxnʲɑ] | kitchen |
+| **крісло** | [ˈkrʲislɔ] | armchair |
+| **диван** | [dɪˈʋɑn] | sofa |
+| **аптека** | [ɑpˈtɛkɑ] | pharmacy |
+| **центр** | [ˈt͡sɛntr] | center |
+| **дім** | [dʲim] | home |
+| **книга** | [ˈknɪɦɑ] | book |
+| **кава** | [ˈkɑʋɑ] | coffee |
+| **чашка** | [ˈt͡ʃɑʃkɑ] | cup |
+| **місто** | [ˈmʲistɔ] | city |
+| **учитель** | [uˈt͡ʃɪtelʲ] | teacher |
+| **студент** | [stuˈdɛnt] | student |

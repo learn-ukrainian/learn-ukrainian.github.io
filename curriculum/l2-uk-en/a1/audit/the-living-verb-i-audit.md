@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1210
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-15 14:00:17
+**Generated:** 2026-02-16 14:37:29
 
 ## Configuration
 **Type:** A1-grammar
@@ -55,6 +55,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -45,3 +45,7 @@ content_outline:
       - "Visual warning: How T, D, and I change shape in italics/handwriting"
       - "Summary: The alphabet as the first step to cultural understanding"
       - "Identity check: How these letters prove Ukrainian is not Russian"
+
+naturalness:
+  status: PASS
+  score: 10

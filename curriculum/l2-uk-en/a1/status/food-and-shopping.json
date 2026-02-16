@@ -2,7 +2,7 @@
   "module": "food-and-shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T21:41:34.511705Z",
+  "last_audit": "2026-02-16T14:37:22.754883Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-15T21:29:51.310710Z",
@@ -13,9 +13,9 @@
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Activities' header OR activities sidecar"
     },
     "lesson": {
       "status": "fail",
@@ -23,14 +23,14 @@
       "message": "2078/750 (raw: 2340) | engagement: 1/3 | pedagogy: 1 violations | immersion: 22.8% LOW (target 25-40% (M18))"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/8 | density: 0 < 12 | unique_types: 0/4 types | priority: No priority types"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "warn",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "0 < 1 (soft target)"
     },
     "naturalness": {
       "status": "fail",
@@ -50,9 +50,12 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 1,
-    "fail_count": 2,
-    "deferred_count": 2
+    "blocking_issues": [
+      "Structure: Missing '## Activities' header OR activities sidecar",
+      "Missing required activity types: fill-in, match-up"
+    ],
+    "pass_count": 0,
+    "fail_count": 4,
+    "deferred_count": 0
   }
 }

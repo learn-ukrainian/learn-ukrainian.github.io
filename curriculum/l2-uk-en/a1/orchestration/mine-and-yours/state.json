@@ -1,0 +1,25 @@
+{
+  "slug": "mine-and-yours",
+  "track": "a1",
+  "module_num": 14,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T14:15:00Z"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-16T14:20:00Z"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-16T14:35:00Z"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-16T14:45:00Z"
+    }
+  },
+  "last_updated": "2026-02-16T14:15:00Z"
+}

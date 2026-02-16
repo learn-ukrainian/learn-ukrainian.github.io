@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
 **Naturalness:** 0/10 (CHECKED)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-15 21:41:34
+**Generated:** 2026-02-16 14:37:22
 
 ## Configuration
 **Type:** A1-vocab
@@ -22,24 +22,28 @@
   - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 50/100)
 
+- Revision recommended (severity 50/100)
 - 1 violations (minor)
+- Structure issue: Missing '## Activities' header OR activities sidecar
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 2078/750 (raw: 2340)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ❌ 0/8
+- **Density:** ❌ 0 < 12
+- **Unique_types:** ❌ 0/4 types
+- **Priority:** ❌ No priority types
 - **Engagement:** ❌ 1/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
-- **Structure:** ✅ Valid Structure
+- **Vocab:** ⚠️ 0 < 1 (soft target)
+- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
 - **Ipa:** ⚠️ 37 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 22.8% LOW (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ❌ Not scored

@@ -1,0 +1,569 @@
+- type: match-up
+  title: "Словник: Місця та речі (Vocabulary: Places and Things)"
+  instruction: "Match the Ukrainian words with their English translations to build your foundation."
+  pairs:
+    - left: "де"
+      right: "where"
+    - left: "кімната"
+      right: "room"
+    - left: "стіл"
+      right: "table"
+    - left: "магазин"
+      right: "store"
+    - left: "школа"
+      right: "school"
+    - left: "робота"
+      right: "work"
+    - left: "банк"
+      right: "bank"
+    - left: "вокзал"
+      right: "station"
+    - left: "підлога"
+      right: "floor"
+    - left: "стіна"
+      right: "wall"
+    - left: "вулиця"
+      right: "street"
+    - left: "парк"
+      right: "park"
+
+- type: fill-in
+  title: "Знайдіть закінчення (Find the Ending)"
+  instruction: "Choose the correct form of the word in the Locative case. Remember the -і ending!"
+  items:
+    - sentence: "Книга лежить на ..."
+      answer: "столі"
+      options: ["столі", "столу", "стіл", "стола"]
+      explanation: "Masculine nouns like 'стіл' usually take the ending -і."
+    - sentence: "Мама зараз у ..."
+      answer: "кімнаті"
+      options: ["кімнаті", "кімнату", "кімната", "кімнати"]
+      explanation: "Feminine nouns ending in -а change to -і."
+    - sentence: "Гроші лежать у ..."
+      answer: "банку"
+      options: ["банку", "банкі", "банк", "банка"]
+      explanation: "'Банк' is an exception and takes the ending -у."
+    - sentence: "Діти зараз у ..."
+      answer: "школі"
+      options: ["школі", "школу", "школа", "школи"]
+      explanation: "The noun 'школа' changes its ending to -і in the Locative case."
+    - sentence: "Я купую хліб у ..."
+      answer: "магазині"
+      options: ["магазині", "магазину", "магазин", "магазина"]
+      explanation: "The word 'магазин' takes the standard -і ending."
+    - sentence: "Телефон лежить у ..."
+      answer: "рюкзаку"
+      options: ["рюкзаку", "рюкзакі", "рюкзак", "рюкзака"]
+      explanation: "'Рюкзак' ends in -к and takes the exception ending -у."
+    - sentence: "Кава налита у ..."
+      answer: "чашці"
+      options: ["чашці", "чашкі", "чашка", "чашки"]
+      explanation: "The sound К changes to Ц before the ending -і."
+    - sentence: "Кіт спить на ..."
+      answer: "дивані"
+      options: ["дивані", "дивану", "диван", "дивана"]
+      explanation: "'Диван' takes the standard -і ending."
+    - sentence: "Ми гуляємо у ..."
+      answer: "центрі"
+      options: ["центрі", "центру", "центр", "центра"]
+      explanation: "The location 'центр' takes the -і ending."
+    - sentence: "Ваша віза у ..."
+      answer: "паспорті"
+      options: ["паспорті", "паспорту", "паспорт", "паспорта"]
+      explanation: "The word 'паспорт' takes the standard -і ending."
+    - sentence: "Ви зараз у ..."
+      answer: "Києві"
+      options: ["Києві", "Київ", "Києва", "Києву"]
+      explanation: "City names like 'Київ' often end in -і."
+    - sentence: "Ваше фото у ..."
+      answer: "телефоні"
+      options: ["телефоні", "телефону", "телефон", "телефона"]
+      explanation: "The word 'телефон' takes the standard -і ending."
+
+- type: fill-in
+  title: "В/У чи НА? (In or On?)"
+  instruction: "Choose the correct preposition based on whether it is a container or a surface/activity."
+  items:
+    - sentence: "Я зараз ... магазині."
+      answer: "в"
+      options: ["в", "на", "у", "із"]
+      explanation: "We use 'в' between vowels for euphony when talking about being inside a building."
+    - sentence: "Ця книга лежить ... столі."
+      answer: "на"
+      options: ["на", "у", "в", "під"]
+      explanation: "Use 'на' for surfaces like a table."
+    - sentence: "Мій тато зараз ... роботі."
+      answer: "на"
+      options: ["на", "в", "у", "до"]
+      explanation: "Activities and processes like 'work' take the preposition 'на'."
+    - sentence: "Ми відпочиваємо ... парку."
+      answer: "у"
+      options: ["у", "на", "із", "до"]
+      explanation: "A park is considered a defined space, so we use 'у'."
+    - sentence: "Всі діти ... школі."
+      answer: "у"
+      options: ["у", "на", "біля", "за"]
+      explanation: "Students are inside the school building, so use 'у'."
+    - sentence: "Собака бігає ... вулиці."
+      answer: "на"
+      options: ["на", "в", "у", "за"]
+      explanation: "The street is an open space, so it always takes 'на'."
+    - sentence: "Твоє фото ... телефоні."
+      answer: "у"
+      options: ["у", "на", "з", "до"]
+      explanation: "Digital content is 'inside' the device."
+    - sentence: "Моя мама ... кухні."
+      answer: "на"
+      options: ["на", "в", "у", "із"]
+      explanation: "By tradition, the kitchen takes the preposition 'на'."
+    - sentence: "Він працює ... офісі."
+      answer: "в"
+      options: ["в", "на", "у", "біля"]
+      explanation: "An office is a room/container, use 'в' for euphony after a vowel."
+    - sentence: "Кіт сидить ... кріслі."
+      answer: "на"
+      options: ["на", "у", "в", "із"]
+      explanation: "Furniture you sit on usually takes 'на'."
+    - sentence: "Студент сидить ... уроці."
+      answer: "на"
+      options: ["на", "в", "у", "із"]
+      explanation: "A lesson is an event or process, so we use 'на'."
+    - sentence: "Ми їдемо ... автобусі."
+      answer: "в"
+      options: ["в", "на", "у", "із"]
+      explanation: "Being inside a vehicle typically uses 'в' or 'у'."
+
+- type: quiz
+  title: "Перевірка теорії (Theory Check)"
+  instruction: "Let's see how well you remember our rules, neighbor!"
+  items:
+    - question: "Яке слово ми використовуємо, щоб запитати про місце?"
+      explanation: "The word 'Де' is the standard way to ask 'Where?' in Ukrainian."
+      options:
+        - text: "Де"
+          correct: true
+        - text: "Хто"
+          correct: false
+        - text: "Що"
+          correct: false
+        - text: "Як"
+          correct: false
+    - question: "Яке закінчення є найпопулярнішим для місцевого відмінка іменників?"
+      explanation: "The ending -і is the most common for both masculine and feminine nouns in this case."
+      options:
+        - text: "-і"
+          correct: true
+        - text: "-а"
+          correct: false
+        - text: "-у"
+          correct: false
+        - text: "-ом"
+          correct: false
+    - question: "Коли ми використовуємо прийменник НА в українській мові?"
+      explanation: "We use 'на' for surfaces, open spaces, and events/activities."
+      options:
+        - text: "Для поверхонь та процесів"
+          correct: true
+        - text: "Тільки для закритих кімнат"
+          correct: false
+        - text: "Тільки для назв міст"
+          correct: false
+        - text: "Для позначення часу"
+          correct: false
+    - question: "Коли ми зазвичай використовуємо прийменник У або В?"
+      explanation: "These prepositions indicate that something is inside boundaries or a container."
+      options:
+        - text: "Для закритих просторів та контейнерів"
+          correct: true
+        - text: "Тільки для відкритих площ"
+          correct: false
+        - text: "Для позначення днів тижня"
+          correct: false
+        - text: "Для опису подій та свят"
+          correct: false
+    - question: "Як змінюється звук К у слові аптека в місцевому відмінку?"
+      explanation: "The consonant К changes to Ц before the ending -і (аптека -> аптеці)."
+      options:
+        - text: "К змінюється на Ц"
+          correct: true
+        - text: "К змінюється на З"
+          correct: false
+        - text: "К змінюється на С"
+          correct: false
+        - text: "Звук не змінюється"
+          correct: false
+    - question: "Як змінюється звук Г у слові книга в місцевому відмінку?"
+      explanation: "The consonant Г changes to З before the ending -і (книга -> книзі)."
+      options:
+        - text: "Г змінюється на З"
+          correct: true
+        - text: "Г змінюється на Ц"
+          correct: false
+        - text: "Г змінюється на С"
+          correct: false
+        - text: "Г змінюється на Ж"
+          correct: false
+    - question: "Який прийменник ми завжди використовуємо зі словом робота?"
+      explanation: "We say 'на роботі' because work is viewed as an activity."
+      options:
+        - text: "на"
+          correct: true
+        - text: "у"
+          correct: false
+        - text: "в"
+          correct: false
+        - text: "біля"
+          correct: false
+    - question: "Який прийменник ми завжди використовуємо зі словом вулиця?"
+      explanation: "The street is an open surface, so we say 'на вулиці'."
+      options:
+        - text: "на"
+          correct: true
+        - text: "у"
+          correct: false
+        - text: "в"
+          correct: false
+        - text: "за"
+          correct: false
+    - question: "Який звук з'являється замість Х у слові поверх?"
+      explanation: "The consonant Х changes to С before the ending -і (поверх -> поверсі)."
+      options:
+        - text: "с"
+          correct: true
+        - text: "ц"
+          correct: false
+        - text: "з"
+          correct: false
+        - text: "ш"
+          correct: false
+    - question: "Який прийменник вказує, що предмет знаходиться всередині контейнера?"
+      explanation: "Prepositions 'у' or 'в' show that something is inside."
+      options:
+        - text: "у або в"
+          correct: true
+        - text: "на"
+          correct: false
+        - text: "біля"
+          correct: false
+        - text: "під"
+          correct: false
+    - question: "Яке закінчення ми зазвичай використовуємо для слів на -ій?"
+      explanation: "Words ending in -ій or -ія use the ending -ї in the Locative case."
+      options:
+        - text: "-ї"
+          correct: true
+        - text: "-і"
+          correct: false
+        - text: "-я"
+          correct: false
+        - text: "-е"
+          correct: false
+    - question: "Де зазвичай знаходяться гості в традиційному українському домі?"
+      explanation: "Cultural note: hospitality is central, and guests are welcomed inside the home."
+      options:
+        - text: "у домі"
+          correct: true
+        - text: "на вулиці"
+          correct: false
+        - text: "у магазині"
+          correct: false
+        - text: "на вокзалі"
+          correct: false
+
+- type: unjumble
+  title: "Де мої речі? (Where are my things?)"
+  instruction: "Rearrange the words to build correct sentences about locations."
+  items:
+    - words: ["де", "мій", "паспорт"]
+      answer: "Де мій паспорт?"
+    - words: ["паспорт", "у", "сумці"]
+      answer: "Паспорт у сумці"
+    - words: ["де", "наш", "кіт"]
+      answer: "Де наш кіт?"
+    - words: ["він", "на", "дивані"]
+      answer: "Він на дивані"
+    - words: ["студент", "зараз", "у", "школі"]
+      answer: "Студент зараз у школі"
+    - words: ["мама", "на", "роботі"]
+      answer: "Мама на роботі"
+    - words: ["книга", "лежить", "на", "столі"]
+      answer: "Книга лежить на столі"
+    - words: ["тато", "працює", "у", "банку"]
+      answer: "Тато працює у банку"
+    - words: ["ми", "гуляємо", "у", "парку"]
+      answer: "Ми гуляємо у парку"
+    - words: ["вони", "зараз", "вдома"]
+      answer: "Вони зараз вдома"
+    - words: ["рюкзак", "лежить", "на", "підлозі"]
+      answer: "Рюкзак лежить на підлозі"
+    - words: ["фото", "є", "у", "телефоні"]
+      answer: "Фото є у телефоні"
+
+- type: group-sort
+  title: "В/У чи НА? (Inside or On?)"
+  instruction: "Sort these locations based on which preposition they usually take."
+  groups:
+    - name: "В / У (Всередині / Inside)"
+      items: ["магазин", "банк", "кімната", "сумка", "рюкзак", "паспорт", "школа", "офіс", "театр"]
+    - name: "НА (Поверхня або Процес / On or Activity)"
+      items: ["стіл", "стіна", "підлога", "вулиця", "робота", "урок", "концерт", "диван", "крісло", "кухня"]
+
+- type: fill-in
+  title: "Магічні зміни звуків (Magic Sound Changes)"
+  instruction: "Remember the rules: K-C, G-Z, H-S. Type the correct form of the word."
+  items:
+    - sentence: "Я купую ліки в ..."
+      answer: "аптеці"
+      options: ["аптеці", "аптекі", "аптека", "аптеку"]
+      explanation: "The sound К changes to Ц in the Locative case."
+    - sentence: "Ця історія є у ..."
+      answer: "книзі"
+      options: ["книзі", "книгі", "книга", "книги"]
+      explanation: "The sound Г changes to З in the Locative case."
+    - sentence: "Ми живемо на першому ..."
+      answer: "поверсі"
+      options: ["поверсі", "поверхі", "поверх", "поверху"]
+      explanation: "The sound Х changes to С in the Locative case."
+    - sentence: "Машина стоїть на ..."
+      answer: "дорозі"
+      options: ["дорозі", "дорогі", "дорога", "дороги"]
+      explanation: "The sound Г changes to З in the word 'дорога'."
+    - sentence: "Студент сидить у ..."
+      answer: "бібліотеці"
+      options: ["бібліотеці", "бібліотекі", "бібліотека", "бібліотеки"]
+      explanation: "The sound К changes to Ц in the word 'бібліотека'."
+    - sentence: "Ручка лежить у ..."
+      answer: "руці"
+      options: ["руці", "рукі", "рука", "руки"]
+      explanation: "The sound К changes to Ц in the word 'рука'."
+    - sentence: "Кіт сидить на ..."
+      answer: "нозі"
+      options: ["нозі", "ногі", "нога", "ноги"]
+      explanation: "The sound Г changes to З in the word 'нога'."
+    - sentence: "Маленька муха на ..."
+      answer: "мусі"
+      options: ["мусі", "мухі", "муха", "мухи"]
+      explanation: "The sound Х changes to С in the word 'муха'."
+    - sentence: "Ключі в маленькій ..."
+      answer: "аптечці"
+      options: ["аптечці", "аптечкі", "аптечка", "аптечки"]
+      explanation: "The sound К changes to Ц even in diminutive forms like 'аптечка'."
+    - sentence: "Мама працює на ..."
+      answer: "фабриці"
+      options: ["фабриці", "фабрикі", "фабрика", "фабрики"]
+      explanation: "The sound К changes to Ц in 'фабрика'."
+    - sentence: "Я чекаю на ..."
+      answer: "пошті"
+      options: ["пошті", "пошту", "пошта", "пошти"]
+      explanation: "Some words like 'пошта' just take the standard ending -і without sound changes."
+    - sentence: "Твоє фото у ..."
+      answer: "подрузі"
+      options: ["подрузі", "подругі", "подруга", "подруги"]
+      explanation: "The sound Г changes to З in the word 'подруга'."
+
+- type: true-false
+  title: "Правда чи неправда? (True or False?)"
+  instruction: "Test your knowledge of Ukrainian grammar and culture."
+  items:
+    - statement: "Слово дім у місцевому відмінку має форму у домі."
+      correct: true
+      explanation: "Yes, 'дім' changes to 'у домі' (or 'вдома' as an adverb)."
+    - statement: "Зараз правильно казати на Україні, а не в Україні."
+      correct: false
+      explanation: "Modern Ukrainian standard is 'в Україні' for an independent state."
+    - statement: "Прийменник НА використовується для опису подій та процесів."
+      correct: true
+      explanation: "We use 'на' for things like work, lessons, or concerts."
+    - statement: "Слово парк у місцевому відмінку має форму у паркі."
+      correct: false
+      explanation: "Exception: 'парк' takes the ending -у, so it is 'у парку'."
+    - statement: "В українських будинках гості часто носять капці."
+      correct: true
+      explanation: "This is a common cultural tradition in Ukraine."
+    - statement: "Між голосними звуками ми зазвичай використовуємо прийменник У."
+      correct: false
+      explanation: "Between vowels, we use 'в' for better flow (euphony)."
+    - statement: "Перед словами, що починаються на В або Ф, ми використовуємо У."
+      correct: true
+      explanation: "This helps avoid clusters of difficult sounds like 'в в'."
+    - statement: "Слово де змінює форму, коли ми ставимо запитання."
+      correct: false
+      explanation: "The word 'Де' remains the same in the question."
+    - statement: "Слово аптека в місцевому відмінку — це в аптеці."
+      correct: true
+      explanation: "Correct, the K changes to C before the ending -і."
+    - statement: "Для слова вулиця ми використовуємо прийменник в."
+      correct: false
+      explanation: "False, we always say 'на вулиці' because it is an open space."
+    - statement: "Слово кухня зазвичай вживається з прийменником на."
+      correct: true
+      explanation: "Yes, by tradition we say 'на кухні'."
+    - statement: "Слово банк у місцевому відмінку — це у банку."
+      correct: true
+      explanation: "Correct, 'банк' is one of the exceptions with the -у ending."
+
+- type: match-up
+  title: "Знайдіть пару: Місцезнаходження (Find the Pair: Location)"
+  instruction: "Match the basic word with its correct Locative form."
+  pairs:
+    - left: "школа"
+      right: "у школі"
+    - left: "робота"
+      right: "на роботі"
+    - left: "аптека"
+      right: "в аптеці"
+    - left: "стіл"
+      right: "на столі"
+    - left: "сумка"
+      right: "у сумці"
+    - left: "банк"
+      right: "у банку"
+    - left: "парк"
+      right: "у парку"
+    - left: "вулиця"
+      right: "на вулиці"
+    - left: "кімната"
+      right: "у кімнаті"
+    - left: "магазин"
+      right: "у магазині"
+    - left: "центр"
+      right: "у центрі"
+    - left: "підлога"
+      right: "на підлозі"
+
+- type: quiz
+  title: "Де вони? (Where are they?)"
+  instruction: "Choose the correct location based on the context of the situation."
+  items:
+    - question: "Де лежить ваша книга, якщо вона знаходиться на поверхні?"
+      explanation: "For surfaces like a table, we use 'на столі'."
+      options:
+        - text: "на столі"
+          correct: true
+        - text: "у столі"
+          correct: false
+        - text: "на стіл"
+          correct: false
+        - text: "у стіл"
+          correct: false
+    - question: "Де зараз знаходиться вчитель, якщо в школі йде урок?"
+      explanation: "Teachers are usually inside the classroom during a lesson."
+      options:
+        - text: "у класі"
+          correct: true
+        - text: "на класі"
+          correct: false
+        - text: "у клас"
+          correct: false
+        - text: "на клас"
+          correct: false
+    - question: "Де ми зазвичай купуємо ліки, коли ми в місті?"
+      explanation: "Medicine is bought in a pharmacy (аптека -> в аптеці)."
+      options:
+        - text: "в аптеці"
+          correct: true
+        - text: "у магазині"
+          correct: false
+        - text: "на вокзалі"
+          correct: false
+        - text: "у банку"
+          correct: false
+    - question: "Де ми зазвичай відпочиваємо вдома на м'яких меблях?"
+      explanation: "We sit or lie on the sofa (диван -> на дивані)."
+      options:
+        - text: "на дивані"
+          correct: true
+        - text: "у дивані"
+          correct: false
+        - text: "на диван"
+          correct: false
+        - text: "у диван"
+          correct: false
+    - question: "Де знаходяться діти, коли вони вчаться з учителем?"
+      explanation: "Students are inside the school building (школа -> у школі)."
+      options:
+        - text: "у школі"
+          correct: true
+        - text: "на школі"
+          correct: false
+        - text: "у школу"
+          correct: false
+        - text: "на школу"
+          correct: false
+    - question: "Де знаходиться ваша віза під час закордонної подорожі?"
+      explanation: "Visas are located inside the passport (паспорт -> у паспорті)."
+      options:
+        - text: "у паспорті"
+          correct: true
+        - text: "на паспорті"
+          correct: false
+        - text: "у паспорт"
+          correct: false
+        - text: "на паспорт"
+          correct: false
+    - question: "Де ми гуляємо, коли погода гарна і навколо багато дерев?"
+      explanation: "We walk in the park (парк -> у парку)."
+      options:
+        - text: "у парку"
+          correct: true
+        - text: "на парку"
+          correct: false
+        - text: "у паркі"
+          correct: false
+        - text: "на паркі"
+          correct: false
+    - question: "Де знаходиться мама, якщо вона готує смачну вечерю?"
+      explanation: "Cooking happens in the kitchen (кухня -> на кухні)."
+      options:
+        - text: "на кухні"
+          correct: true
+        - text: "у кухні"
+          correct: false
+        - text: "на кухню"
+          correct: false
+        - text: "у кухню"
+          correct: false
+    - question: "Де знаходиться тато, якщо він зараз на зміні і працює?"
+      explanation: "Working is an activity, so we use 'на роботі'."
+      options:
+        - text: "на роботі"
+          correct: true
+        - text: "у роботі"
+          correct: false
+        - text: "на роботу"
+          correct: false
+        - text: "у роботу"
+          correct: false
+    - question: "Де знаходиться кіт, якщо він сидить на місці для сидіння?"
+      explanation: "Chairs and armchairs take 'на' (крісло -> на кріслі)."
+      options:
+        - text: "на кріслі"
+          correct: true
+        - text: "у кріслі"
+          correct: false
+        - text: "на крісло"
+          correct: false
+        - text: "у крісло"
+          correct: false
+    - question: "Де знаходиться ваша чашка, якщо ви щойно поставили її?"
+      explanation: "Items are placed on the table surface (стіл -> на столі)."
+      options:
+        - text: "на столі"
+          correct: true
+        - text: "у столі"
+          correct: false
+        - text: "на стіл"
+          correct: false
+        - text: "у стіл"
+          correct: false
+    - question: "Де знаходяться ваші гроші, якщо вони в надійній установі?"
+      explanation: "Money is kept inside a bank (банк -> у банку)."
+      options:
+        - text: "у банку"
+          correct: true
+        - text: "на банку"
+          correct: false
+        - text: "у банкі"
+          correct: false
+        - text: "на банку"
+          correct: false

@@ -1,0 +1,32 @@
+content_outline:
+  - section: "Вступ: Кав'ярня в Україні"
+    words: 215
+    points:
+      - "Welcome students to the cozy world of Ukrainian café culture."
+      - "Explain typical atmosphere and common items found in Ukrainian cafes (A1 scaffolding in English)."
+      - "Introduce the 'Chatty Barista' persona and set the scene for the lesson."
+      - "Briefly mention the transition from simple shopping (M18) to ordering services."
+  - section: "Діалог у кафе: Як зробити замовлення"
+    words: 320
+    points:
+      - "Greeting the waiter/barista using 'Ви' (politeness rule from research)."
+      - "Standard phrases for ordering: 'Мені, будь ласка...' vs. the literal 'Я хочу' (pedagogical tip)."
+      - "Using 'Я візьму...' (future tense preview) for common items like 'кава' and 'чай'."
+      - "Clarifying orders: 'З молоком?', 'Великий чи маленький?' (Size and additions)."
+      - "Include IPA for all new terms (ка́ва, офіція́нт, меню́) and short sentences."
+  - section: "Розрахунок: Рахунок та оплата"
+    words: 240
+    points:
+      - "Asking for the bill: 'Можна рахунок?' and 'Скільки з мене?'."
+      - "Distinguishing between 'рахунок' (bill) and 'чек' (receipt) as per research notes."
+      - "Payment methods: 'Готівкою' vs. 'Карткою'."
+      - "Cultural etiquette regarding 'чайові' (tips) in Ukraine."
+      - "Reinforce Accusative case for things being paid for."
+  - section: "Кавові традиції: Від Львова до Відня"
+    words: 300
+    points:
+      - "Deep dive into Lviv coffee history (Austro-Hungarian influence, Yuriy Kulchytsky)."
+      - "Explain 'Kava na pisku' (coffee on sand) brewing method (cultural hook)."
+      - "Vocabulary for café ambiance and traditional snacks like 'круасан' or 'тістечко'."
+      - "Summary of polite imperatives used by staff ('принесіть', 'візьміть') and how to respond."
+      - "Ensure 1075 words total across all sections."

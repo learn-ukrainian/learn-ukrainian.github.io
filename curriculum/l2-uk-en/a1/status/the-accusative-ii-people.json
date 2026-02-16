@@ -2,10 +2,10 @@
   "module": "the-accusative-ii-people",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-16T00:32:41.780461Z",
+  "last_audit": "2026-02-16T15:53:50.025956Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-16T00:25:02.557093Z",
+    "md": "2026-02-16T15:47:09.740074Z",
     "meta": "2026-02-16T00:04:45.282578Z",
     "activities": "2026-02-16T00:23:48.927093Z",
     "vocabulary": "2026-02-16T00:25:07.260120Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3714/1374 (raw: 4120)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3694/1374 (raw: 4100) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -43,16 +43,16 @@
       "message": "Clean IPA"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

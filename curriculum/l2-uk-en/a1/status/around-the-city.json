@@ -2,11 +2,11 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T21:58:18.656660Z",
+  "last_audit": "2026-02-16T15:55:10.396361Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-15T21:48:56.530744Z",
-    "meta": "2026-02-15T19:36:32.873574Z",
+    "md": "2026-02-16T15:55:05.836091Z",
+    "meta": "2026-02-16T15:53:29.788833Z",
     "activities": "2026-02-15T21:47:33.894257Z",
     "vocabulary": "2026-02-15T21:34:27.923034Z",
     "plan": "2026-02-12T13:27:12.712519Z"
@@ -20,17 +20,17 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "3426/1602 (raw: 3617) | immersion: 24.2% LOW (target 25-40% (M15))"
+      "message": "3510/1602 (raw: 3701) | immersion: 24.9% LOW (target 25-40% (M15))"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "8/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "23/1"
     },
     "naturalness": {
       "status": "info",
@@ -51,8 +51,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 2,
+    "pass_count": 4,
     "fail_count": 1,
-    "deferred_count": 2
+    "deferred_count": 0
   }
 }

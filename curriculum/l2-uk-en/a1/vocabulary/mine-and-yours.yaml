@@ -1,182 +1,115 @@
-- lemma: мій
-  pos: pronoun
-  translation: my (masc.)
-  gender: m
-- lemma: моя
-  pos: pronoun
-  translation: my (fem.)
-  gender: f
-- lemma: моє
-  pos: pronoun
-  translation: my (neut.)
-  gender: n
-- lemma: мої
-  pos: pronoun
-  translation: my (pl.)
-- lemma: твій
-  pos: pronoun
-  translation: your (masc. informal)
-  gender: m
-- lemma: твоя
-  pos: pronoun
-  translation: your (fem. informal)
-  gender: f
-- lemma: твоє
-  pos: pronoun
-  translation: your (neut. informal)
-  gender: n
-- lemma: твої
-  pos: pronoun
-  translation: your (pl. informal)
-- lemma: його
-  pos: pronoun
-  translation: his (invariable)
-- lemma: її
-  pos: pronoun
-  translation: her (invariable)
-- lemma: наш
-  pos: pronoun
-  translation: our (masc.)
-  gender: m
-- lemma: наша
-  pos: pronoun
-  translation: our (fem.)
-  gender: f
-- lemma: наше
-  pos: pronoun
-  translation: our (neut.)
-  gender: n
-- lemma: наші
-  pos: pronoun
-  translation: our (pl.)
-- lemma: ваш
-  pos: pronoun
-  translation: your (masc. formal/plural)
-  gender: m
-- lemma: ваша
-  pos: pronoun
-  translation: your (fem. formal/plural)
-  gender: f
-- lemma: ваше
-  pos: pronoun
-  translation: your (neut. formal/plural)
-  gender: n
-- lemma: ваші
-  pos: pronoun
-  translation: your (pl. formal/plural)
-- lemma: чий
-  pos: pronoun
-  translation: whose (masc.)
-  gender: m
-- lemma: чия
-  pos: pronoun
-  translation: whose (fem.)
-  gender: f
-- lemma: чиє
-  pos: pronoun
-  translation: whose (neut.)
-  gender: n
-- lemma: чиї
-  pos: pronoun
-  translation: whose (pl.)
-- lemma: їхній
-  pos: pronoun
-  translation: their (masc.)
-  gender: m
-- lemma: свій
-  pos: pronoun
-  translation: one's own (masc.)
-  gender: m
-- lemma: річ
-  pos: noun
-  translation: thing
-  gender: f
-- lemma: телефон
-  pos: noun
-  translation: phone
-  gender: m
-- lemma: паспорт
-  pos: noun
-  translation: passport
-  gender: m
-- lemma: кава
-  pos: noun
-  translation: coffee
-  gender: f
-- lemma: сумка
-  pos: noun
-  translation: bag
-  gender: f
-- lemma: яблуко
-  pos: noun
-  translation: apple
-  gender: n
-- lemma: місто
-  pos: noun
-  translation: city
-  gender: n
-- lemma: брат
-  pos: noun
-  translation: brother
-  gender: m
-- lemma: сестра
-  pos: noun
-  translation: sister
-  gender: f
-- lemma: мама
-  pos: noun
-  translation: mom
-  gender: f
-- lemma: тато
-  pos: noun
-  translation: dad
-  gender: m
-- lemma: авто
-  pos: noun
-  translation: car
-  gender: n
-- lemma: гроші
-  pos: noun
-  translation: money
-- lemma: дім
-  pos: noun
-  translation: house
-  gender: m
-- lemma: кіт
-  pos: noun
-  translation: cat
-  gender: m
-- lemma: машина
-  pos: noun
-  translation: car
-  gender: f
-- lemma: робота
-  pos: noun
-  translation: job/work
-  gender: f
-- lemma: місце
-  pos: noun
-  translation: seat/place
-  gender: n
-- lemma: окуляри
-  pos: noun
-  translation: glasses
-- lemma: кімната
-  pos: noun
-  translation: room
-  gender: f
-- lemma: вікно
-  pos: noun
-  translation: window
-  gender: n
-- lemma: діти
-  pos: noun
-  translation: children
-- lemma: квиток
-  pos: noun
-  translation: ticket
-  gender: m
-- lemma: адреса
-  pos: noun
-  translation: address
-  gender: f
+items:
+  - lemma: мій
+    translation: my (masculine)
+    pos: pronoun
+    notes: variable possessive
+  - lemma: моя
+    translation: my (feminine)
+    pos: pronoun
+  - lemma: моє
+    translation: my (neuter)
+    pos: pronoun
+  - lemma: мої
+    translation: my (plural)
+    pos: pronoun
+  - lemma: твій
+    translation: your (informal masculine)
+    pos: pronoun
+  - lemma: твоя
+    translation: your (informal feminine)
+    pos: pronoun
+  - lemma: твоє
+    translation: your (informal neuter)
+    pos: pronoun
+  - lemma: твої
+    translation: your (informal plural)
+    pos: pronoun
+  - lemma: його
+    translation: his / its
+    pos: pronoun
+    notes: invariable possessive
+  - lemma: її
+    translation: her / hers
+    pos: pronoun
+    notes: invariable possessive
+  - lemma: наш
+    translation: our (masculine)
+    pos: pronoun
+  - lemma: наша
+    translation: our (feminine)
+    pos: pronoun
+  - lemma: наше
+    translation: our (neuter)
+    pos: pronoun
+  - lemma: наші
+    translation: our (plural)
+    pos: pronoun
+  - lemma: ваш
+    translation: your (formal/plural masculine)
+    pos: pronoun
+  - lemma: ваша
+    translation: your (formal/plural feminine)
+    pos: pronoun
+  - lemma: ваше
+    translation: your (formal/plural neuter)
+    pos: pronoun
+  - lemma: ваші
+    translation: your (formal/plural plural)
+    pos: pronoun
+  - lemma: їхній
+    translation: their (masculine)
+    pos: pronoun
+  - lemma: їхня
+    translation: their (feminine)
+    pos: pronoun
+  - lemma: їхнє
+    translation: their (neuter)
+    pos: pronoun
+  - lemma: їхні
+    translation: their (plural)
+    pos: pronoun
+  - lemma: свій
+    translation: one's own (masculine)
+    pos: pronoun
+    notes: reflexive possessive
+  - lemma: своя
+    translation: one's own (feminine)
+    pos: pronoun
+  - lemma: своє
+    translation: one's own (neuter)
+    pos: pronoun
+  - lemma: свої
+    translation: one's own (plural)
+    pos: pronoun
+  - lemma: чий
+    translation: whose (masculine)
+    pos: pronoun
+  - lemma: чия
+    translation: whose (feminine)
+    pos: pronoun
+  - lemma: чиє
+    translation: whose (neuter)
+    pos: pronoun
+  - lemma: чиї
+    translation: whose (plural)
+    pos: pronoun
+  - lemma: річ
+    translation: thing
+    pos: noun
+    gender: f
+  - lemma: займенник
+    translation: pronoun
+    pos: noun
+    gender: m
+  - lemma: іменник
+    translation: noun
+    pos: noun
+    gender: m
+  - lemma: прикметник
+    translation: adjective
+    pos: noun
+    gender: m
+  - lemma: множина
+    translation: plural
+    pos: noun
+    gender: f

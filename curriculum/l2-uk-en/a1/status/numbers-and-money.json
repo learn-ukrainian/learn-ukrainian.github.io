@@ -2,7 +2,7 @@
   "module": "numbers-and-money",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T21:41:33.690326Z",
+  "last_audit": "2026-02-16T14:37:24.406305Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-15T21:16:00.460937Z",
@@ -14,8 +14,8 @@
   "gates": {
     "meta": {
       "status": "fail",
-      "violations": 1,
-      "message": "Valid Structure | Lint: 1 Format Errors"
+      "violations": 2,
+      "message": "Missing '## Activities' header OR activities sidecar | Lint: 1 Format Errors"
     },
     "lesson": {
       "status": "fail",
@@ -23,14 +23,14 @@
       "message": "2584/1091 (raw: 2921) | pedagogy: 2 violations | immersion: 20.2% LOW (target 25-40% (M17))"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/8 | density: 0 < 12 | unique_types: 0/4 types | priority: No priority types"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "warn",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "0 < 1 (soft target)"
     },
     "naturalness": {
       "status": "fail",
@@ -50,9 +50,12 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "Structure: Missing '## Activities' header OR activities sidecar",
+      "Missing required activity types: fill-in, quiz"
+    ],
     "pass_count": 0,
-    "fail_count": 3,
-    "deferred_count": 2
+    "fail_count": 4,
+    "deferred_count": 0
   }
 }

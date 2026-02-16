@@ -1,0 +1,101 @@
+- ipa: '[ˈkɑʋɑ]'
+  lemma: кава
+  notes: Feminine noun; a staple of Ukrainian café culture.
+  pos: noun
+  translation: coffee
+- ipa: '[t͡ʃɑj]'
+  lemma: чай
+  notes: Masculine noun.
+  pos: noun
+  translation: tea
+- ipa: '[mɛˈnʲu]'
+  lemma: меню
+  notes: Neuter noun; indeclinable (does not change its ending).
+  pos: noun
+  translation: menu
+- ipa: '[rɐˈxunɔk]'
+  lemma: рахунок
+  notes: Masculine noun; used when asking for the bill at the end of a meal.
+  pos: noun
+  translation: bill / account
+- ipa: '[ofit͡sʲiˈɑnt]'
+  lemma: офіціант
+  notes: Masculine noun; use formal 'Ви' when addressing staff.
+  pos: noun
+  translation: waiter
+- ipa: '[zɐmoˈʋlʲɑtɪ]'
+  lemma: замовляти
+  notes: Imperfective verb; used for the process of ordering.
+  pos: verb
+  translation: to order
+- ipa: '[prɪnɛˈstɪ]'
+  lemma: принести
+  notes: Perfective verb; often used in the polite request form 'принесіть'.
+  pos: verb
+  translation: to bring
+- ipa: '[budʲ ˈlɑskɐ]'
+  lemma: будь ласка
+  notes: Essential polite particle used in almost every request.
+  pos: phrase
+  translation: please / you are welcome
+- ipa: '[kruɐˈsɑn]'
+  lemma: круасан
+  notes: Masculine noun; a common pastry in modern Ukrainian cafes.
+  pos: noun
+  translation: croissant
+- ipa: '[ˈtʲistɛt͡ʃko]'
+  lemma: тістечко
+  notes: Neuter noun; refers to any small sweet treat or dessert.
+  pos: noun
+  translation: pastry / small cake
+- ipa: '[ɛˈsprɛso]'
+  lemma: еспресо
+  notes: Neuter noun; indeclinable.
+  pos: noun
+  translation: espresso
+- ipa: '[kɐpuˈt͡ʃino]'
+  lemma: капучіно
+  notes: Neuter noun; indeclinable.
+  pos: noun
+  translation: cappuccino
+- ipa: '[t͡ʃɐjɔˈʋʲi]'
+  lemma: чайові
+  notes: Plural noun; usually 10% of the total bill.
+  pos: noun
+  translation: tips
+- ipa: '[ˈkɑrtkɐ]'
+  lemma: картка
+  notes: Feminine noun; refers to a bank/credit card for payment.
+  pos: noun
+  translation: card
+- ipa: '[ɦoˈtʲiu̯kɐ]'
+  lemma: готівка
+  notes: Feminine noun; used when paying with paper money.
+  pos: noun
+  translation: cash
+- ipa: '[tɛrmʲiˈnɑl]'
+  lemma: термінал
+  notes: Masculine noun; the device used for card payments.
+  pos: noun
+  translation: terminal
+- ipa: '[smɐt͡ʃˈnɪj]'
+  lemma: смачний
+  notes: Adjective describing food and drinks.
+  pos: adj
+  translation: tasty / delicious
+- ipa: '[ʋɛˈlɪkɪj]'
+  lemma: великий
+  notes: Adjective used for portion sizes.
+  pos: adj
+  translation: large / big
+- ipa: '[mɐˈlɛnʲкɪj]'
+  lemma: маленький
+  notes: Adjective used for portion sizes.
+  pos: adj
+  translation: small
+- ipa: '[ˈzɑtɪʃnɪj]'
+  lemma: затишний
+  notes: Adjective describing the atmosphere of a café.
+  pos: adj
+  translation: cozy
+

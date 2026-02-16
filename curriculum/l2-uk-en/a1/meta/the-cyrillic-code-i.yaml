@@ -38,3 +38,7 @@ content_outline:
       - "Mini-dialogues at a metro station and café using 'так' and basic nouns"
       - "Final production task: Reading mixed words with IPA support"
       - "Summary of the 19 letters learned and readiness for the next batch"
+
+naturalness:
+  status: PASS
+  score: 10

@@ -1,0 +1,270 @@
+- type: fill-in
+  title: "Змініть закінчення (Change the Endings)"
+  instruction: "Fill in the blank with the correct Locative case ending (-і, -у, or -ї)."
+  items:
+    - sentence: "Кіт у кімнат..."
+      answer: "і"
+      options: ["і", "у", "я", "а"]
+    - sentence: "Книга на стол..."
+      answer: "і"
+      options: ["і", "у", "е", "я"]
+    - sentence: "Ми у парк..."
+      answer: "у"
+      options: ["і", "у", "е", "я"]
+    - sentence: "Гроші у банк..."
+      answer: "у"
+      options: ["і", "у", "е", "я"]
+    - sentence: "Мама на кухн..."
+      answer: "і"
+      options: ["і", "у", "я", "е"]
+    - sentence: "Тато на робот..."
+      answer: "і"
+      options: ["і", "у", "е", "а"]
+    - sentence: "Студент у школ..."
+      answer: "і"
+      options: ["і", "у", "е", "я"]
+    - sentence: "Я в аптец..."
+      answer: "і"
+      options: ["і", "у", "е", "а"]
+    - sentence: "Він у музе..."
+      answer: "ї"
+      options: ["і", "ї", "у", "й"]
+    - sentence: "Рюкзак на підлоз..."
+      answer: "і"
+      options: ["і", "у", "е", "а"]
+    - sentence: "Фото у телефон..."
+      answer: "і"
+      options: ["і", "у", "е", "я"]
+    - sentence: "Паспорт у сумц..."
+      answer: "і"
+      options: ["і", "у", "е", "а"]
+
+- type: fill-in
+  title: "У/В чи НА? (In or On?)"
+  instruction: "Choose the correct preposition (у/в or на) based on the context."
+  items:
+    - sentence: "___ кімнаті є диван."
+      answer: "У"
+      options: ["У", "На", "До", "З"]
+    - sentence: "Книга лежить ___ столі."
+      answer: "на"
+      options: ["на", "у", "в", "біля"]
+    - sentence: "Студент зараз ___ уроці."
+      answer: "на"
+      options: ["на", "у", "в", "до"]
+    - sentence: "Ми живемо ___ Києві."
+      answer: "у"
+      options: ["у", "на", "в", "біля"]
+    - sentence: "Мама працює ___ пошті."
+      answer: "на"
+      options: ["на", "у", "в", "до"]
+    - sentence: "Я чекаю ___ вулиці."
+      answer: "на"
+      options: ["на", "у", "в", "до"]
+    - sentence: "Він працює ___ офісі."
+      answer: "в"
+      options: ["в", "на", "до", "за"]
+    - sentence: "Діти грають ___ парку."
+      answer: "у"
+      options: ["у", "на", "в", "до"]
+
+- type: match-up
+  title: "Де це? (Where is it?)"
+  instruction: "Match the Ukrainian location with its English equivalent."
+  pairs:
+    - left: "у школі"
+      right: "at school"
+    - left: "на роботі"
+      right: "at work"
+    - left: "на столі"
+      right: "on the table"
+    - left: "у сумці"
+      right: "in the bag"
+    - left: "на вулиці"
+      right: "on the street"
+    - left: "у банку"
+      right: "in the bank"
+    - left: "на дивані"
+      right: "on the sofa"
+    - left: "у кімнаті"
+      right: "in the room"
+    - left: "на кухні"
+      right: "in the kitchen"
+    - left: "у магазині"
+      right: "in the shop"
+
+- type: true-false
+  title: "Чи це правильно? (Is this correct?)"
+  instruction: "Decide if the location preposition or ending is used correctly."
+  items:
+    - statement: "Я у роботі."
+      correct: false
+      explanation: "We use 'на' for activities like work (на роботі)."
+    - statement: "Книга на столі."
+      correct: true
+    - statement: "Ми в Києві."
+      correct: true
+    - statement: "Студент у школа."
+      correct: false
+      explanation: "The noun must change to the Locative case (у школі)."
+    - statement: "Тато на кухні."
+      correct: true
+    - statement: "Кіт у кріслі."
+      correct: true
+    - statement: "Телефон на кишені."
+      correct: false
+      explanation: "A pocket is a container, so we use 'у' (у кишені)."
+    - statement: "Мама в аптеці."
+      correct: true
+
+- type: fill-in
+  title: "Де знаходяться речі? (Where are the things?)"
+  instruction: "Complete the sentence using the correct Locative case form of the word in parentheses."
+  items:
+    - sentence: "Стіл у (кімната). -> Стіл у ___."
+      answer: "кімнаті"
+      options: ["кімнаті", "кімнату", "кімната", "кімнати"]
+    - sentence: "Книга на (стіл). -> Книга на ___."
+      answer: "столі"
+      options: ["столі", "стола", "стіл", "столу"]
+    - sentence: "Ми у (центр). -> Ми у ___."
+      answer: "центрі"
+      options: ["центрі", "центра", "центр", "центру"]
+    - sentence: "Кава у (чашка). -> Кава у ___."
+      answer: "чашці"
+      options: ["чашці", "чашка", "чашку", "чашки"]
+    - sentence: "Фото у (рюкзак). -> Фото у ___."
+      answer: "рюкзаку"
+      options: ["рюкзаку", "рюкзак", "рюкзака", "рюкзаці"]
+    - sentence: "Одяг у (шафа). -> Одяг у ___."
+      answer: "шафі"
+      options: ["шафі", "шафа", "шафу", "шафи"]
+    - sentence: "Лампа на (стіл). -> Лампа на ___."
+      answer: "столі"
+      options: ["столі", "стола", "стіл", "столу"]
+    - sentence: "Килим на (підлога). -> Килим на ___."
+      answer: "підлозі"
+      options: ["підлозі", "підлога", "підлогу", "підлоги"]
+
+- type: match-up
+  title: "Знайдіть пару: Хто де? (Find the pair: Who is where?)"
+  instruction: "Match the person with their typical location."
+  pairs:
+    - left: "Студент"
+      right: "у школі"
+    - left: "Тато"
+      right: "на роботі"
+    - left: "Мама"
+      right: "на кухні"
+    - left: "Учитель"
+      right: "у класі"
+    - left: "Дитина"
+      right: "у парку"
+    - left: "Кіт"
+      right: "на кріслі"
+    - left: "Книга"
+      right: "на столі"
+    - left: "Ми"
+      right: "вдома"
+
+- type: quiz
+  title: "Перевірка знань (Knowledge Check)"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "Як сказати 'In the room'?"
+      options:
+        - text: "у кімнаті"
+          correct: true
+        - text: "на кімнаті"
+          correct: false
+        - text: "у кімната"
+          correct: false
+        - text: "у кімнати"
+          correct: false
+    - question: "Як сказати 'On the table'?"
+      options:
+        - text: "на столі"
+          correct: true
+        - text: "у столі"
+          correct: false
+        - text: "на стіл"
+          correct: false
+        - text: "на столу"
+          correct: false
+    - question: "Де ви зараз перебуваєте? (At work)"
+      options:
+        - text: "Я на роботі."
+          correct: true
+        - text: "Я у роботі."
+          correct: false
+        - text: "Я на робота."
+          correct: false
+        - text: "Я на роботи."
+          correct: false
+    - question: "Яке закінчення у слові 'парк' у місцевому відмінку?"
+      options:
+        - text: "-у (у парку)"
+          correct: true
+        - text: "-і (у паркі)"
+          correct: false
+        - text: "-а (у парка)"
+          correct: false
+        - text: "-е (у парке)"
+          correct: false
+    - question: "Правильно: 'в аптеці' чи 'у аптеці'?"
+      options:
+        - text: "в аптеці (після голосної)"
+          correct: true
+        - text: "у аптеці"
+          correct: false
+        - text: "на аптеці"
+          correct: false
+        - text: "до аптеці"
+          correct: false
+    - question: "Де саме зараз лежить паспорт?"
+      options:
+        - text: "у сумці"
+          correct: true
+        - text: "на сумці"
+          correct: false
+        - text: "у сумка"
+          correct: false
+        - text: "у сумки"
+          correct: false
+    - question: "Як сказати 'In the city'?"
+      options:
+        - text: "у місті"
+          correct: true
+        - text: "на місті"
+          correct: false
+        - text: "у місто"
+          correct: false
+        - text: "у міста"
+          correct: false
+    - question: "Де знаходяться діти? (At the lesson)"
+      options:
+        - text: "на уроці"
+          correct: true
+        - text: "у уроці"
+          correct: false
+        - text: "на урок"
+          correct: false
+        - text: "на уроку"
+          correct: false
+
+- type: unjumble
+  title: "Складіть речення (Make a Sentence)"
+  instruction: "Put the words in the correct order."
+  items:
+    - words: ["столі", "Книга", "на"]
+      answer: "Книга на столі"
+    - words: ["школі", "у", "Студент"]
+      answer: "Студент у школі"
+    - words: ["роботі", "Тато", "на"]
+      answer: "Тато на роботі"
+    - words: ["кімнаті", "Кіт", "у"]
+      answer: "Кіт у кімнаті"
+    - words: ["в", "Гроші", "банку"]
+      answer: "Гроші в банку"
+    - words: ["на", "Діти", "вулиці"]
+      answer: "Діти на вулиці"

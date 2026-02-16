@@ -2,13 +2,13 @@
   "module": "the-locative-where-things-are",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T21:58:17.551907Z",
+  "last_audit": "2026-02-16T15:52:21.742822Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-15T20:53:39.686961Z",
-    "meta": "2026-02-15T20:04:15.514570Z",
-    "activities": null,
-    "vocabulary": null,
+    "md": "2026-02-16T15:10:23.287286Z",
+    "meta": "2026-02-16T15:06:25.887063Z",
+    "activities": "2026-02-16T15:05:44.590997Z",
+    "vocabulary": "2026-02-16T14:58:16.466638Z",
     "plan": "2026-02-12T13:27:12.634667Z"
   },
   "gates": {
@@ -20,22 +20,22 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2469/1331 (raw: 2718)"
+      "message": "2090/1331 (raw: 2608)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "23/1"
     },
     "naturalness": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "PENDING \u2014 awaiting review"
+      "message": "10/10 (High)"
     },
     "ipa": {
       "status": "pass",
@@ -43,18 +43,16 @@
       "message": "Clean IPA"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-locative-where-things-are-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-locative-where-things-are-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
-    ],
-    "pass_count": 3,
-    "fail_count": 1,
-    "deferred_count": 2
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

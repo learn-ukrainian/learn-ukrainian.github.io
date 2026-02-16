@@ -10,22 +10,22 @@ Covers: Around the City
 
 Hello, neighbor! **Привіт, сусіде!** Imagine our walk. **Уявіть нашу прогулянку.** We are in a city. **Ми у місті.** It is lively here. **Тут цікаво.** To feel comfortable, we need to know what we see around us.
 
-Look to the right. **Подивіться направо.** You see a wide street. **Ви бачите широку вулицю.** Cars drive there. **Там їдуть машини.** Buses drive there too. **Там також їдуть автобуси.** And over there is a square. **Ось площа.** It is big. **Вона велика.** It is beautiful. **Вона гарна.** It is the heart of our city. **Це серце міста.**
+Look to the right. **Подивіться направо.** You see a wide street. **Ви бачите широку вулицю.** Cars drive there. **Там їдуть машини.** Buses drive there too. **Там також їдуть автобуси.** And over there is a square. **А онде площа.** It is big. **Вона велика.** It is beautiful. **Вона гарна.** It is the heart of our city. **Це серце нашого міста.**
 
-Are you tired? **Ви втомилися?** We can find transport. **Ось транспорт.** Here is a stop. **Тут зупинка.** We wait for the bus here. **Тут ми чекаємо на автобус.** Do you need medicine? **Ви шукаєте ліки?** Here is a pharmacy. **Ось аптека.**
+Are you tired? **Ви втомилися?** Don't worry, we can find transport. **Не хвилюйтеся, ми знайдемо транспорт.** Here is a stop. **Тут зупинка.** We wait for the bus here. **Тут ми чекаємо на автобус.** Do you need medicine? **Ви шукаєте ліки?** Here is a pharmacy. **Ось аптека.**
 
 > [!tip]
-> **Cultural Note**: Unlike in some countries, distinct "squares" (**площа**) are central hubs in Ukrainian cities. They are not just open spaces but meeting points. For example, *Площа Ринок* in Lviv is the center of social life.
+> **Cultural Note**: Unlike in some countries, distinct "squares" (**площа**) are central hubs in Ukrainian cities. They are not just open spaces but meeting points. For example, *Площа Ринок* in Lviv is the center of social life. **Це серце Львова.** (This is the heart of Lviv.)
 
 ### Key Question: Where vs. Where to?
 
-To avoid getting lost, you must understand the difference between two questions. In English, we often use "Where" for both situations, but in Ukrainian, these are two different worlds.
+To avoid getting lost, you must understand the difference between two questions. **Це дуже важливо.** (This is very important.) In English, we often use "Where" for both situations, but in Ukrainian, these are two different worlds. **Це два різні світи.**
 
-The first word is **Де** [dɛ] (Where — static location). We use it when we are standing in one place.
+The first word is **Де** [dɛ] (Where — static location). We use it when we are standing in one place. **Це слово для статики.** (This word is for statics.)
 *   **Де я?** — [dɛ ja] — Where am I?
 *   **Я в аптеці.** — [ja ʋ apˈtɛt͡sʲi] — I am in the pharmacy.
 
-The second word is **Куди** [kuˈdɪ] (Where to — direction/motion). We use it when we are walking or driving.
+The second word is **Куди** [kuˈdɪ] (Where to — direction/motion). We use it when we are walking or driving. **Це слово для руху.** (This word is for motion.)
 *   **Куди ви йдете?** — [kuˈdɪ ʋɪ jˈdɛtɛ] — Where are you going?
 *   **Я йду на площу.** — [ja jdu na ˈplɔʃt͡ʃu] — I am going to the square.
 
@@ -33,7 +33,7 @@ Remember this difference. **Пам'ятайте цю різницю.** **Де** 
 
 ### Our Goal Today
 
-Today I will be your guide. **Сьогодні я ваш гід.** We will learn to navigate. **Ми будемо гуляти.** Instead of just being a tourist with a map, you will be able to ask for the way.
+Today I will be your guide. **Сьогодні я ваш гід.** We will learn to navigate. **Ми будемо гуляти.** Instead of just being a tourist with a map, you will be able to ask for the way. **Ви зможете запитати дорогу.**
 
 We are going to learn important words: **прямо** [ˈprʲamɔ] (straight), **наліво** [naˈlʲiʋɔ] (to the left), and **направо** [naˈpraʋɔ] (to the right). You will also discover how to find a **пошта** [ˈpɔʃta] (post office) or a supermarket.
 
@@ -143,10 +143,10 @@ This is logical, right? **Це логічно, так?** If you move — it is *
 We do not always know the exact address. Often we say: "It is near the bank" or "It is opposite the park".
 
 For this, we need two magic words:
-*   **Біля** [ˈbʲilʲɑ] — near / by / at.
-*   **Навпроти** [nɑu̯ˈprɔtɪ] — opposite / across from.
+*   **Біля** [ˈbʲilʲɑ] — near / by / at. **Це тут.** (It is here.)
+*   **Навпроти** [nɑu̯ˈprɔtɪ] — opposite / across from. **Це там.** (It is there.)
 
-Attention! After these words, we use the **Genitive Case**. Don't panic! For now, we learn just one simple rule for singular nouns.
+Attention! After these words, we use the **Genitive Case**. Don't panic! For now, we learn just one simple rule for singular nouns. **Це просте правило.** (This is a simple rule.)
 
 **The Rule:**
 *   Words ending in **-а** change to **-и**.
@@ -237,9 +237,9 @@ The two most useful words for a navigator are **«спочатку»** (at first
 *   **назад** [naˈzad] — back / backwards
 
 **Examples:**
-*   **Спочатку ідіть прямо.** [spoˈt͡ʃatku iˈdʲitʲ ˈprjamɔ] — First, go straight.
-*   **Потім повертайте наліво.** [ˈpɔtʲim poʋerˈtajte naˈlʲiʋo] — Then turn left.
-*   **Аптека там.** [apˈtɛkɐ tam] — The pharmacy is there.
+*   **Спочатку ідіть прямо.** [spoˈt͡ʃatku iˈdʲitʲ ˈprjamɔ] — First, go straight. **Йдіть по цій вулиці.** (Go along this street.)
+*   **Потім повертайте наліво.** [ˈpɔtʲim poʋerˈtajte naˈlʲiʋo] — Then turn left. **Магазин буде там.** (The shop will be there.)
+*   **Аптека там.** [apˈtɛkɐ tam] — The pharmacy is there. **Ви її побачите.** (You will see it.)
 
 ### Landmarks: Traffic Light and Intersection
 
@@ -397,6 +397,6 @@ In this module, you learned how to navigate a Ukrainian city. You are now ready 
 *   **Landmarks**: You can use **біля** (near) and **навпроти** (opposite) to describe location relative to other objects.
 *   **Asking for Help**: You learned the polite formula "Вибачте, підкажіть, будь ласка..." to ask locals for directions.
 *   **Transport Etiquette**: You know how to ask a marshrutka driver to stop ("На зупинці, будь ласка!").
-*   **Cultural Insight**: You understand the importance of the **площа** or **майдан** as the heart of social life.
+*   **Cultural Insight**: You understand the importance of the **площа** or **майдан** as the heart of social life. **Це важливо для українців.** (This is important for Ukrainians.)
 
-Keep practicing these phrases on your virtual map, and soon you will feel confident on the real streets of Kyiv or Lviv!
+Keep practicing these phrases on your virtual map, and soon you will feel confident on the real streets of Kyiv or Lviv! **Успіхів!** (Good luck!)

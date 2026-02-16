@@ -1,16 +1,15 @@
 # A1 Module Status
 
-**Generated:** 2026-02-16 00:32:41
+**Generated:** 2026-02-16 15:52:22
 **Total Modules:** 44
-**Status:** 10 passing, 2 prose-only, 5 failing, 1 stubs, 26 errors
+**Status:** 11 passing, 7 failing, 1 stubs, 25 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 10/44 (22%)
-- 🔄 **Prose-Only (awaiting enrichment):** 2/44
-- ❌ **Failing:** 5/44
+- ✅ **Passing:** 11/44 (25%)
+- ❌ **Failing:** 7/44
 - 📝 **Stubs:** 1/44
-- ⚠️ **Errors:** 26/44
+- ⚠️ **Errors:** 25/44
 
 ## Module Details
 
@@ -23,18 +22,18 @@
 | 005 | my-world-objects | ✅ PASS | 3266/1412 | - |
 | 006 | the-living-verb-i | ✅ PASS | 1849/1210 | - |
 | 007 | questions-and-negation | ✅ PASS | 2976/1131 | - |
-| 008 | the-living-verb-ii | 🔄 PROSE | 1661/972 | - |
-| 009 | reflexive-verbs | 🔄 PROSE | 2782/830 | - |
+| 008 | the-living-verb-ii | ❌ FAIL | 1661/972 | - |
+| 009 | reflexive-verbs | ❌ FAIL | 2782/830 | - |
 | 010 | checkpoint-first-contact | ✅ PASS | 1744/875 | - |
 | 011 | the-accusative-i-things | ✅ PASS | 2253/855 | - |
-| 012 | the-accusative-ii-people | ✅ PASS | 3714/1374 | - |
-| 013 | the-locative-where-things-are | ❌ FAIL | 2469/1331 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/the-locative-where-things-are-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
-| 014 | mine-and-yours | ❌ FAIL | 1751/1307 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/mine-and-yours-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
+| 012 | the-accusative-ii-people | ❌ FAIL | 3694/1374 | structure |
+| 013 | the-locative-where-things-are | ✅ PASS | 2090/1331 | - |
+| 014 | mine-and-yours | ❌ FAIL | 912/1307 | word_count, structure |
 | 015 | around-the-city | 📝 STUB | 0/0 | empty |
 | 016 | the-genitive-i-absence | ❌ FAIL | 3093/1038 | Structure: Missing '## Summary' |
-| 017 | numbers-and-money | ❌ FAIL | 2584/1091 | - |
-| 018 | food-and-shopping | ❌ FAIL | 2078/750 | - |
-| 019 | at-the-cafe | ⚠️ MISSING | 0/0 | no_file |
+| 017 | numbers-and-money | ❌ FAIL | 2584/1091 | Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: fill-in, quiz |
+| 018 | food-and-shopping | ❌ FAIL | 2078/750 | Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: fill-in, match-up |
+| 019 | at-the-cafe | ✅ PASS | 2768/1075 | - |
 | 020 | checkpoint-navigation | ⚠️ MISSING | 0/0 | no_file |
 | 021 | yesterday-past-tense | ⚠️ MISSING | 0/0 | no_file |
 | 022 | tomorrow-future-tense | ⚠️ MISSING | 0/0 | no_file |

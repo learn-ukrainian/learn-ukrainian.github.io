@@ -1,0 +1,19 @@
+{
+  "slug": "around-the-city",
+  "track": "a1",
+  "module_num": 15,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T11:41:56Z",
+      "note": "skipped-archive-has-research"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T11:38:03Z",
+      "note": "no review file"
+    }
+  },
+  "last_updated": "2026-02-16T11:41:56Z"
+}

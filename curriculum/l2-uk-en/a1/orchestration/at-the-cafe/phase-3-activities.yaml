@@ -1,0 +1,643 @@
+- type: fill-in
+  title: "Замовлення напоїв та страв"
+  instruction: "Допоможіть сусідові замовити смачний напій, обравши правильне слово."
+  items:
+    - sentence: "Для ме́не, будь ла́ска, ___."
+      answer: "кава"
+      options: ["кава", "стіл", "меню", "кав'ярня"]
+      explanation: "Ми замовляємо каву, а не меблі чи будівлю."
+    - sentence: "Я ___ чо́рний чай."
+      answer: "візьму́"
+      options: ["візьму́", "сіда́ю", "па́хне", "прино́сить"]
+      explanation: "Я візьму — це ввічливий спосіб зробити замовлення."
+    - sentence: "Мо́жна ___, будь ла́ска?"
+      answer: "меню́"
+      options: ["меню́", "офіція́нт", "за́тишок", "му́зика"]
+      explanation: "Перед замовленням ми просимо меню."
+    - sentence: "Я хо́чу ка́ву з ___."
+      answer: "молоко́м"
+      options: ["молоко́м", "офіція́нтом", "меню́", "піско́м"]
+      explanation: "Багато людей люблять пити каву з молоком."
+    - sentence: "Цей ___ ду́же смачни́й."
+      answer: "круаса́н"
+      options: ["круаса́н", "терміна́л", "раху́нок", "чек"]
+      explanation: "Круасан — це смачна випічка до кави."
+    - sentence: "Тут є соло́дке ___."
+      answer: "ті́стечко"
+      options: ["ті́стечко", "меню́", "мі́сто", "кафе́"]
+      explanation: "Тістечко — це солодкий десерт."
+    - sentence: "Ми вже хо́чемо ___."
+      answer: "замовля́ти"
+      options: ["замовля́ти", "па́хнути", "сіда́ти", "чека́ти"]
+      explanation: "Коли ми готові, ми починаємо замовляти."
+    - sentence: "Я замовля́ю вели́кий ___."
+      answer: "круаса́н"
+      options: ["круаса́н", "офіція́нт", "за́тишок", "час"]
+      explanation: "Круасан може бути великим або маленьким."
+    - sentence: "Офіція́нт прино́сить ___."
+      answer: "замо́влення"
+      options: ["замо́влення", "терміна́л", "чайові́", "леге́нду"]
+      explanation: "Офіціант приносить те, що ви замовили."
+    - sentence: "Тут є міцне́ ___."
+      answer: "еспре́со"
+      options: ["еспре́со", "ті́стечко", "меню́", "мі́сто"]
+      explanation: "Еспресо — це міцний кавовий напій."
+    - sentence: "Ви хо́чете соло́дкий ___?"
+      answer: "круаса́н"
+      options: ["круаса́н", "офіція́нт", "раху́нок", "час"]
+      explanation: "Круасани часто бувають солодкими."
+    - sentence: "Я візьму́ чай з ___."
+      answer: "цу́кром"
+      options: ["цу́кром", "ка́вою", "меню́", "піско́м"]
+      explanation: "Багато людей додають цукор у чай."
+
+- type: quiz
+  title: "Розуміння діалогу в кафе"
+  instruction: "Перевірте, як добре ви розумієте ввічливий діалог у кав'ярні."
+  items:
+    - question: "Як вві́чливо привіта́тися з офіція́нтом?"
+      explanation: "Добрий день — це універсальне ввічливе вітання."
+      options:
+        - text: "Добри́й день!"
+          correct: true
+        - text: "Будь ла́ска"
+          correct: false
+        - text: "Дя́кую"
+          correct: false
+        - text: "Скі́льки?"
+          correct: false
+    - question: "Яку́ фо́рму зверта́ння ми використову́ємо для офіція́нта?"
+      explanation: "Ви — це форма поваги до персоналу."
+      options:
+        - text: "Ви"
+          correct: true
+        - text: "ти"
+          correct: false
+        - text: "мій"
+          correct: false
+        - text: "хто"
+          correct: false
+    - question: "Що прино́сить офіція́нт на по́чатку?"
+      explanation: "Меню потрібно, щоб обрати напої та страви."
+      options:
+        - text: "меню́"
+          correct: true
+        - text: "раху́нок"
+          correct: false
+        - text: "чек"
+          correct: false
+        - text: "цу́кор"
+          correct: false
+    - question: "Яку́ фра́зу кра́ще сказа́ти для замовлення?"
+      explanation: "Для мене... — це дуже ввічлива конструкція."
+      options:
+        - text: "Для ме́не, будь ла́ска..."
+          correct: true
+        - text: "Я хочу негайно..."
+          correct: false
+        - text: "Дайте мені..."
+          correct: false
+        - text: "Де кава?"
+          correct: false
+    - question: "Що зазвичай ка́же офіція́нт, коли підхо́дить?"
+      explanation: "Офіціант питає про ваші побажання."
+      options:
+        - text: "Що бажа́єте?"
+          correct: true
+        - text: "Хто ви?"
+          correct: false
+        - text: "Де меню?"
+          correct: false
+        - text: "Я офіціант."
+          correct: false
+    - question: "Як ви можете попроси́ти раху́нок?"
+      explanation: "Ми використовуємо слово можна для ввічливого прохання."
+      options:
+        - text: "Мо́жна раху́нок?"
+          correct: true
+        - text: "Дайте гроші"
+          correct: false
+        - text: "Де офіціант?"
+          correct: false
+        - text: "Я плачу"
+          correct: false
+    - question: "Що озна́чає фра́за Скі́льки з ме́не?"
+      explanation: "Це питання про загальну суму оплати."
+      options:
+        - text: "How much from me?"
+          correct: true
+        - text: "Who am I?"
+          correct: false
+        - text: "Where is the bill?"
+          correct: false
+        - text: "What is this?"
+          correct: false
+    - question: "Де Украї́нці зазвича́й сидя́ть ду́же до́вго?"
+      explanation: "Кафе в Україні — це місце для відпочинку та спілкування."
+      options:
+        - text: "в кафе́"
+          correct: true
+        - text: "в магазині"
+          correct: false
+        - text: "на ринку"
+          correct: false
+        - text: "в аптеці"
+          correct: false
+    - question: "Як ви мо́жете вві́чливо поклика́ти офіція́нта?"
+      explanation: "В Україні прийнято просто підняти руку."
+      options:
+        - text: "підня́ти ру́ку"
+          correct: true
+        - text: "голосно кричати"
+          correct: false
+        - text: "стукати по столу"
+          correct: false
+        - text: "йти на кухню"
+          correct: false
+    - question: "Яки́й напо́й зазвича́й п'ють з молоко́м?"
+      explanation: "Кава з молоком — це класичний вибір."
+      options:
+        - text: "ка́ва"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "сік"
+          correct: false
+        - text: "горілка"
+          correct: false
+    - question: "Як ми ка́жемо please украї́нською мо́вою?"
+      explanation: "Будь ласка — незамінне слово для ввічливості."
+      options:
+        - text: "будь ла́ска"
+          correct: true
+        - text: "дякую"
+          correct: false
+        - text: "прошу"
+          correct: false
+        - text: "перепрошую"
+          correct: false
+    - question: "Яки́й відмі́нок ми використову́ємо для слова ме́не?"
+      explanation: "Після прийменника з використовується родовий відмінок."
+      options:
+        - text: "родовий"
+          correct: true
+        - text: "називний"
+          correct: false
+        - text: "знахідний"
+          correct: false
+        - text: "місцевий"
+          correct: false
+
+- type: match-up
+  title: "Словничок кав'ярні"
+  instruction: "Поєднайте українські слова з їхніми англійськими значеннями."
+  pairs:
+    - left: "офіція́нт"
+      right: "waiter"
+    - left: "меню́"
+      right: "menu"
+    - left: "раху́нок"
+      right: "bill"
+    - left: "ка́ва"
+      right: "coffee"
+    - left: "чай"
+      right: "tea"
+    - left: "ті́стечко"
+      right: "pastry"
+    - left: "круаса́н"
+      right: "croissant"
+    - left: "будь ла́ска"
+      right: "please"
+    - left: "дя́кую"
+      right: "thank you"
+    - left: "цу́кор"
+      right: "sugar"
+    - left: "ка́ртка"
+      right: "card"
+    - left: "готі́вка"
+      right: "cash"
+
+- type: unjumble
+  title: "Складіть фрази для замовлення"
+  instruction: "Поставте слова у правильному порядку, щоб утворити ввічливе речення."
+  items:
+    - words: ["Для", "ме́не", "будь", "ла́ска", "ка́ва"]
+      answer: "Для ме́не будь ла́ска ка́ва"
+    - words: ["Я", "візьму́", "чо́рний", "чай"]
+      answer: "Я візьму́ чо́рний чай"
+    - words: ["Мо́жна", "раху́нок", "будь", "ла́ска"]
+      answer: "Мо́жна раху́нок будь ла́ска"
+    - words: ["Офіція́нт", "прино́сить", "смачне́", "ті́стечко"]
+      answer: "Офіція́нт прино́сить смачне́ ті́стечко"
+    - words: ["Я", "хо́чу", "ка́ву", "з", "молоко́м"]
+      answer: "Я хо́чу ка́ву з молоко́м"
+    - words: ["Ви", "хо́чете", "вели́кий", "круаса́н"]
+      answer: "Ви хо́чете вели́кий круаса́н"
+    - words: ["Тут", "є", "ду́же", "смачни́й", "чай"]
+      answer: "Тут є ду́же смачни́й чай"
+    - words: ["Ми", "сіда́ємо", "за", "цей", "сто́лик"]
+      answer: "Ми сіда́ємо за цей сто́лик"
+    - words: ["Скі́льки", "з", "ме́не", "за", "замовлення"]
+      answer: "Скі́льки з ме́не за замовлення"
+    - words: ["Я", "пла́чу", "за", "ка́ву", "ка́рткою"]
+      answer: "Я пла́чу за ка́ву ка́рткою"
+    - words: ["Принесі́ть", "будь", "ла́ска", "міцне́", "еспре́со"]
+      answer: "Принесі́ть будь ла́ска міцне́ еспре́со"
+    - words: ["Львів", "це", "відо́ма", "столи́ця", "ка́ви"]
+      answer: "Львів це відо́ма столи́ця ка́ви"
+
+- type: group-sort
+  title: "Категорії в кав'ярні"
+  instruction: "Розподіліть слова за відповідними групами."
+  groups:
+    - name: "Напої"
+      items: ["ка́ва", "чай", "еспре́со", "капучі́но"]
+    - name: "Смако́лики"
+      items: ["ті́стечко", "круаса́н", "яблуко", "полуни́ця"]
+    - name: "Опла́та та се́рвіс"
+      items: ["раху́нок", "офіція́нт", "ка́ртка", "готі́вка"]
+
+- type: fill-in
+  title: "Ввічливість та обслуговування"
+  instruction: "Доповніть речення про оплату та сервіс у кав'ярні."
+  items:
+    - sentence: "Вибачте, ви ма́єте ___?"
+      answer: "терміна́л"
+      options: ["терміна́л", "офіція́нта", "за́тишок", "пісо́к"]
+      explanation: "Термінал потрібен для оплати карткою."
+    - sentence: "Ми залиша́ємо ___ для офіція́нта."
+      answer: "чайові́"
+      options: ["чайові́", "меню́", "ка́ву", "ті́стечко"]
+      explanation: "Чайові — це подяка за гарне обслуговування."
+    - sentence: "Я пла́чу ___."
+      answer: "готі́вкою"
+      options: ["готі́вкою", "меню́", "за́тишком", "ча́сом"]
+      explanation: "Готівка — це паперові гроші."
+    - sentence: "___ — це офіці́йний докуме́нт."
+      answer: "чек"
+      options: ["чек", "меню́", "ка́ва", "за́тишок"]
+      explanation: "Чек підтверджує вашу оплату."
+    - sentence: "Скі́льки з ___?"
+      answer: "ме́не"
+      options: ["ме́не", "офіція́нта", "меню́", "круаса́на"]
+      explanation: "Ми питаємо про суму, яку повинні заплатити."
+    - sentence: "Принесі́ть, будь ла́ска, ___."
+      answer: "раху́нок"
+      options: ["раху́нок", "офиція́нта", "за́тишок", "тради́цію"]
+      explanation: "Ми просимо рахунок, коли хочемо заплатити."
+    - sentence: "Дя́кую за ___!"
+      answer: "се́рвіс"
+      options: ["се́рвіс", "офіція́нта", "меню́", "терміна́л"]
+      explanation: "Ми дякуємо за якісне обслуговування (сервіс)."
+    - sentence: "Я ма́ю ___, мо́жна плати́ти?"
+      answer: "ка́ртку"
+      options: ["ка́ртку", "офіція́нта", "меню́", "пісо́к"]
+      explanation: "Банківська картка — зручний спосіб оплати."
+    - sentence: "Офіція́нт ду́же ___."
+      answer: "вві́чливий"
+      options: ["вві́чливий", "соло́дкий", "вели́кий", "гаря́чий"]
+      explanation: "Ввічливий офіціант завжди приємний клієнтам."
+    - sentence: "Ви хочете́ ___?"
+      answer: "цу́кор"
+      options: ["цу́кор", "меню́", "офіція́нта", "за́тишок"]
+      explanation: "Цукор робить каву або чай солодкими."
+    - sentence: "Я візьму́ ка́ву ___ цу́кру."
+      answer: "без"
+      options: ["без", "з", "для", "на"]
+      explanation: "Без цукру — якщо ви не любите солодке."
+    - sentence: "Це ва́ше ___."
+      answer: "замо́влення"
+      options: ["замо́влення", "офіція́нт", "меню́", "чайові́"]
+      explanation: "Офіціант приносить ваше готове замовлення."
+
+- type: quiz
+  title: "Історія та традиції"
+  instruction: "Як багато ви знаєте про історію львівської кави?"
+  items:
+    - question: "Яке́ мі́сто є столи́цею ка́ви в Україні?"
+      explanation: "Львів славиться своїми кавовими традиціями."
+      options:
+        - text: "Львів"
+          correct: true
+        - text: "Київ"
+          correct: false
+        - text: "Одеса"
+          correct: false
+        - text: "Харків"
+          correct: false
+    - question: "Хто відкри́в пе́ршу кав'ярню у Ві́дні?"
+      explanation: "Юрій Кульчицький — легендарна постать у кавовій історії."
+      options:
+        - text: "Ю́рій Кульчи́цький"
+          correct: true
+        - text: "бариста"
+          correct: false
+        - text: "офіціант"
+          correct: false
+        - text: "король"
+          correct: false
+    - question: "Як готу́ють традиці́йну ка́ву у Льво́ві?"
+      explanation: "Кава на піску — це особливий метод приготування."
+      options:
+        - text: "на піску́"
+          correct: true
+        - text: "на воді"
+          correct: false
+        - text: "на вогні"
+          correct: false
+        - text: "в машині"
+          correct: false
+    - question: "Як назива́ється спеціа́льний по́суд для ка́ви?"
+      explanation: "Джезва — це маленька каструля з довгою ручкою."
+      options:
+        - text: "дже́зва"
+          correct: true
+        - text: "меню"
+          correct: false
+        - text: "термінал"
+          correct: false
+        - text: "круасан"
+          correct: false
+    - question: "Звідки прийшла́ ка́вова культу́ра до Льво́ва?"
+      explanation: "Львів був частиною Австро-Угорщини, що вплинуло на традиції."
+      options:
+        - text: "з Австро-Угорщини"
+          correct: true
+        - text: "з Туреччини"
+          correct: false
+        - text: "з Африки"
+          correct: false
+        - text: "з Англії"
+          correct: false
+    - question: "Яки́й смако́лик є ду́же популя́рним у кафе́?"
+      explanation: "Круасан — класичний додаток до кави."
+      options:
+        - text: "круаса́н"
+          correct: true
+        - text: "борщ"
+          correct: false
+        - text: "хліб"
+          correct: false
+        - text: "молоко"
+          correct: false
+    - question: "Що зазвича́й п'ють украї́нці в кав'я́рні?"
+      explanation: "Кава — головний напій у таких закладах."
+      options:
+        - text: "ка́ву"
+          correct: true
+        - text: "сік"
+          correct: false
+        - text: "колу"
+          correct: false
+        - text: "квас"
+          correct: false
+    - question: "Що таке́ смако́лики украї́нською мо́вою?"
+      explanation: "Смаколики — це загальна назва для десертів та ласощів."
+      options:
+        - text: "tasty treats"
+          correct: true
+        - text: "hot drinks"
+          correct: false
+        - text: "big meals"
+          correct: false
+        - text: "bitter seeds"
+          correct: false
+    - question: "Яки́й геро́й врятува́в мі́сто Ві́день?"
+      explanation: "Кульчицький проявив сміливість під час облоги Відня."
+      options:
+        - text: "Ю́рій Кульчи́цький"
+          correct: true
+        - text: "бариста"
+          correct: false
+        - text: "waiter"
+          correct: false
+        - text: "student"
+          correct: false
+    - question: "Чому́ ка́ва на піску́ така́ особли́ва?"
+      explanation: "Повільне нагрівання створює неповторний смак і піну."
+      options:
+        - text: "вона́ грі́ється пові́льно"
+          correct: true
+        - text: "вона дуже холодна"
+          correct: false
+        - text: "вона дуже швидка"
+          correct: false
+        - text: "вона зелена"
+          correct: false
+    - question: "Що Ю́рій Кульчи́цький додавав до ка́ви?"
+      explanation: "Він навчив європейців пити каву з молоком і цукром."
+      options:
+        - text: "молоко́ і цу́кор"
+          correct: true
+        - text: "сіль і перець"
+          correct: false
+        - text: "воду і лід"
+          correct: false
+        - text: "мед і лимон"
+          correct: false
+    - question: "Де стої́ть па́м'ятник Ю́рію Кульчи́цькому?"
+      explanation: "У Відні шанують героя, який приніс каву в місто."
+      options:
+        - text: "у Ві́дні"
+          correct: true
+        - text: "у Львові"
+          correct: false
+        - text: "у Парижі"
+          correct: false
+        - text: "у Лондоні"
+          correct: false
+
+- type: unjumble
+  title: "Цікаві факти про каву"
+  instruction: "Розставте слова, щоб розповісти про багаті кавові традиції Львова."
+  items:
+    - words: ["Львів", "це", "ка́вова", "столи́ця", "Украї́ни"]
+      answer: "Львів це ка́вова столи́ця Украї́ни"
+    - words: ["Ю́рій", "Кульчи́цький", "це", "відо́ма", "леге́нда"]
+      answer: "Ю́рій Кульчи́цький це відо́ма леге́нда"
+    - words: ["Він", "відкрива́в", "пе́ршу", "кав'я́рню", "у", "Ві́дні"]
+      answer: "Він відкрива́в пе́ршу кав'я́рню у Ві́дні"
+    - words: ["Ми", "готу́ємо", "ка́ву", "на", "гаря́чому", "піску́"]
+      answer: "Ми готу́ємо ка́ву на гаря́чому піску́"
+    - words: ["Дже́зва", "це", "мале́нька", "кастру́ля", "для", "ка́ви"]
+      answer: "Дже́зва це мале́нька кастру́ля для ка́ви"
+    - words: ["Ка́ва", "на", "піску́", "ство́рює", "густу́", "пі́ну"]
+      answer: "Ка́ва на піску́ ство́рює густу́ пі́ну"
+    - words: ["Украї́на", "це", "ду́же", "цифрова́", "сучасна́", "краї́на"]
+      answer: "Україна це дуже цифрова сучасна країна"
+    - words: ["Лю́ди", "залиша́ють", "чайові́", "у", "ко́жному", "кафе́"]
+      answer: "Лю́ди залиша́ють чайові́ у ко́жному кафе́"
+    - words: ["Бари́ста", "ува́жно", "диви́ться", "на", "гаря́чу", "ка́ву"]
+      answer: "Бари́ста ува́жно диви́ться на гаря́чу ка́ву"
+    - words: ["Мі́сто", "Львів", "ма́є", "ду́же", "старі́", "тради́ції"]
+      answer: "Мі́сто Львів ма́є ду́же старі́ тради́ції"
+    - words: ["Ю́рій", "Кульчи́цький", "знав", "важку́", "туре́цьку", "мо́ву"]
+      answer: "Ю́рій Кульчи́цький знав важку́ туре́цьку мо́ву"
+    - words: ["Ми", "лю́бимо", "цю", "смачну́", "льві́вську", "ка́ву"]
+      answer: "Ми лю́бимо цю смачну́ льві́вську ка́ву"
+
+- type: match-up
+  title: "Запитання та прохання"
+  instruction: "Поєднайте запитання з відповідними ситуаціями."
+  pairs:
+    - left: "Мо́жна меню́?"
+      right: "Can I have the menu?"
+    - left: "Що ви бажа́єте?"
+      right: "What do you wish?"
+    - left: "Що ви пора́дите?"
+      right: "What do you recommend?"
+    - left: "Скі́льки з ме́не?"
+      right: "How much from me?"
+    - left: "Мо́жна раху́нок?"
+      right: "Can I have the bill?"
+    - left: "У вас є терміна́л?"
+      right: "Do you have a terminal?"
+    - left: "Ка́ва з молоко́м?"
+      right: "Coffee with milk?"
+    - left: "Вели́кий чи мале́нький?"
+      right: "Large or small?"
+    - left: "Цу́кор чи без цу́кру?"
+      right: "Sugar or without sugar?"
+    - left: "Готі́вкою чи ка́рткою?"
+      right: "Cash or card?"
+    - left: "Для ме́не, будь ла́ска."
+      right: "For me, please."
+    - left: "Я візьму́ чай."
+      right: "I will take tea."
+
+- type: quiz
+  title: "Загальний огляд теми Кафе"
+  instruction: "Давайте повторимо все, що ми вивчили про відвідування кав'ярні."
+  items:
+    - question: "Що таке́ дже́зва в каво́вій тради́ції?"
+      explanation: "Джезва — це традиційний по́суд для приготування кави."
+      options:
+        - text: "по́суд для ка́ви"
+          correct: true
+        - text: "десерт"
+          correct: false
+        - text: "офіціант"
+          correct: false
+        - text: "рахунок"
+          correct: false
+    - question: "Яки́й відмі́нок у слові раху́нок в ре́ченні Я ма́ю раху́нок?"
+      explanation: "Чоловічі іменники в знахідному відмінку часто збігаються з називним."
+      options:
+        - text: "знахідний"
+          correct: true
+        - text: "називний"
+          correct: false
+        - text: "родовий"
+          correct: false
+        - text: "місцевий"
+          correct: false
+    - question: "Що зазвича́й прино́сять у спеціа́льній па́пці?"
+      explanation: "Рахунок приносять наприкінці візиту в папці."
+      options:
+        - text: "раху́нок"
+          correct: true
+        - text: "меню"
+          correct: false
+        - text: "каву"
+          correct: false
+        - text: "круасан"
+          correct: false
+    - question: "Яка́ фра́за є вві́чливим проха́нням украї́нською?"
+      explanation: "Будь ласка — основа ввічливої мови."
+      options:
+        - text: "будь ла́ска"
+          correct: true
+        - text: "де меню"
+          correct: false
+        - text: "я хочу"
+          correct: false
+        - text: "дай мені"
+          correct: false
+    - question: "Хто такий офіція́нт у за́кладі?"
+      explanation: "Офіціант — це працівник закладу, який приймає замовлення."
+      options:
+        - text: "людина, яка обслуговує"
+          correct: true
+        - text: "кухар"
+          correct: false
+        - text: "директор"
+          correct: false
+        - text: "гість"
+          correct: false
+    - question: "Що озна́чає украї́нське сло́во замовля́ти?"
+      explanation: "Замовляти — це просити приготувати страву або напій."
+      options:
+        - text: "to order"
+          correct: true
+        - text: "to pay"
+          correct: false
+        - text: "to wait"
+          correct: false
+        - text: "to sleep"
+          correct: false
+    - question: "Яки́й напо́й зазвича́й бува́є міцни́й?"
+      explanation: "Кава відома своїм міцним смаком."
+      options:
+        - text: "ка́ва"
+          correct: true
+        - text: "молоко"
+          correct: false
+        - text: "вода"
+          correct: false
+        - text: "сік"
+          correct: false
+    - question: "Як ми ка́жемо thank you офіція́нту?"
+      explanation: "Дякую — найкращий спосіб висловити вдячність."
+      options:
+        - text: "дя́кую"
+          correct: true
+        - text: "будь ласка"
+          correct: false
+        - text: "прошу"
+          correct: false
+        - text: "привіт"
+          correct: false
+    - question: "Де мо́жна поба́чити список страв та ці́ни?"
+      explanation: "Меню містить всю необхідну інформацію про асортимент."
+      options:
+        - text: "у меню́"
+          correct: true
+        - text: "у вікні"
+          correct: false
+        - text: "на стіні"
+          correct: false
+        - text: "на вулиці"
+          correct: false
+    - question: "Яки́й напо́й готу́ють з листя?"
+      explanation: "Чай заварюють з чайного листя."
+      options:
+        - text: "чай"
+          correct: true
+        - text: "кава"
+          correct: false
+        - text: "еспресо"
+          correct: false
+        - text: "капучіно"
+          correct: false
+    - question: "Як назива́ється папе́рова опла́та?"
+      explanation: "Готівка — це фізичні гроші, банкноти."
+      options:
+        - text: "готі́вка"
+          correct: true
+        - text: "картка"
+          correct: false
+        - text: "рахунок"
+          correct: false
+        - text: "чек"
+          correct: false
+    - question: "Що таке́ ті́стечко у меню́?"
+      explanation: "Тістечко — це маленький десерт, солодкість."
+      options:
+        - text: "соло́дкий десе́рт"
+          correct: true
+        - text: "м'ясо"
+          correct: false
+        - text: "риба"
+          correct: false
+        - text: "суп"
+          correct: false

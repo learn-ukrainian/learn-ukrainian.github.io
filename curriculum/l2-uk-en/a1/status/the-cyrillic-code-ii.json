@@ -2,11 +2,11 @@
   "module": "the-cyrillic-code-ii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T17:47:20.852053Z",
+  "last_audit": "2026-02-16T15:52:20.645162Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-15T16:48:25.126138Z",
-    "meta": "2026-02-14T22:33:06.461417Z",
+    "meta": "2026-02-16T15:19:15.122535Z",
     "activities": "2026-02-14T23:36:09.493104Z",
     "vocabulary": "2026-02-15T00:38:49.096382Z",
     "plan": "2026-02-14T15:15:44.393224Z"
@@ -33,9 +33,9 @@
       "message": "20/1"
     },
     "naturalness": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "PENDING \u2014 awaiting review"
+      "message": "10/10 (High)"
     },
     "ipa": {
       "status": "pass",
@@ -51,7 +51,8 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

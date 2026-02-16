@@ -1,357 +1,211 @@
+===CONTENT_START===
+
 <!-- SCOPE
-Covers: Mine and Yours
+Covers: Possessive pronouns (мій, твій, його, її, наш, ваш, їхній) and the reflexive possessive (свій).
+Not covered:
+  - Adjectives → describing-things-adjectives
+Related: the-gender-code, the-locative-where-things-are
 -->
 
-# Mine and Yours
-
-## Розминка: Чиє це?
+# Mine and Yours: Possessive Pronouns
 
-### Загадка в кав'ярні (A Café Mystery)
-**Ви у Львові.** (You are in Lviv.) **Ви в кав'ярні.** (You are in a café.)
-Ви сидите. **На столі телефон.** (On the table is a phone.)
-Is it yours? Is it the waiter's? **Чий це телефон?**
+> **Чому це важливо?**
+>
+> Learn to say «my» or «your». This helps you talk about your things. It makes your Ukrainian personal and clear.
 
-We need a question.
+## Warm-up
 
-If the object is He (Він), the question is **Чий**?
+### Whose is this? (Чий це предмет?)
 
-### Asking "Whose?"
-Which word is correct?
+Imagine you see a phone on the table. You want to find the owner. In Ukrainian, we ask: **Чий?** — [tʃɪi̯] (Whose?).
 
-**Чоловічий рід** (Masculine Objects)
-For masculine objects (Він), we use **чий**.
+The question matches the noun.
+- Masculine: **Чий** це телефон? (Whose phone is this?)
+- Feminine: **Чия** це книга? (Whose book is this?)
+- Plural: **Чиї** це ключі? (Whose keys are these?)
 
-_Приклад:_
-**Чий це телефон?** — Whose phone is this?
-**Чий це паспорт?** — Whose passport is this?
+**Приклад:**
+— **Чий** це телефон? (Whose phone is this?)
+— Це **мій** телефон. (This is my phone.)
 
-**Жіночий рід** (Feminine Objects)
-For feminine objects (Вона), we use **чия**.
-
-_Приклад:_
-**Чия це кава?** — Whose coffee is this?
-**Чия це сумка?** — Whose bag is this?
-
-**Середній рід** (Neuter Objects)
-For neuter objects (Воно), we use **чиє**.
+[!note]
+The answer matches the question. Use **мій** for masculine nouns. It is simple and logical.
 
-_Приклад:_
-**Чиє це яблуко?** — Whose apple is this?
-**Чиє це місто?** — Whose city is this?
-
-> [!tip]
-> **Listen to the Rhythm**
-> **Чия** sounds like **вона** (she).
-> **Чиє** sounds like **воно** (it).
-> Слухайте ритм! (Listen to the rhythm!)
-
-### Міні-діалог (Mini-Dialogue)
-Look at the dialogue:
-
-**Олег:** Чий це телефон? (Whose phone is this?)
-**Анна:** Це мій телефон. (This is my phone.)
-**Олег:** А чия це кава? (And whose coffee is this?)
-**Анна:** Це твоя кава. (This is your coffee.)
-
-## Теорія: Мій, Твій, Його
-
-### Мій і Твій: Римуємо далі
-Remember the rule! "Чия? — Вона".
-It is like a tie and a shirt. They have a match.
+### Finding lost things (Пошук речей)
 
-**Мій** (My):
-*   Masculine: **мій брат** (my brother), **мій тато** (my dad)
-*   Feminine: **моя сестра** (my sister), **моя мама** (my mom)
-*   Neuter: **моє яблуко** (my apple), **моє авто** (my car)
-*   Plural: **мої друзі** (my friends), **мої гроші** (my money)
-
-**Твій** (Your — informal):
-*   Masculine: **твій дім** (your house), **твій кіт** (your cat)
-*   Feminine: **твоя машина** (your car), **твоя робота** (your job)
-*   Neuter: **твоє місто** (your city), **твоє місце** (your seat)
-*   Plural: **твої речі** (your things), **твої окуляри** (your glasses)
-
-Imagine you are at home.
-**Це мій дім.** (This is my house.)
-**Там твоя кімната.** (Your room is there.)
-**Це моє вікно.** (This is my window.)
-
-> [!warning]
-> **Common Mistake: The "Boy" Trap**
-> Don't look at yourself.
-> Even if you are a man, you say **моя машина** (my car), because **машина** is feminine.
-> Even if you are a woman, you say **мій паспорт** (my passport), because **паспорт** is masculine.
-> The object is the boss!
+You find keys in the park. You ask people around you. This is a common daily situation. You need possessive pronouns. They connect objects to owners. We will learn these forms today. We will learn to be polite.
 
-### Наш і Ваш: Група і Повага
-Imagine we are neighbors.
-This is **наш** (our) garden.
+[!context]
+English «my» does not change. Ukrainian pronouns change. They match the noun gender.
 
-These words change.
+## Presentation
 
-**Наш** (Our):
-*   Masculine: **наш дім** (our house)
-*   Feminine: **наша мама** (our mom)
-*   Neuter: **наше місто** (our city)
-*   Plural: **наші діти** (our children)
+### My and Your: Мій та Твій
 
-**Ваш** (Your — formal or plural):
-*   Masculine: **ваш паспорт** (your passport)
-*   Feminine: **ваша кава** (your coffee)
-*   Neuter: **ваше місце** (your seat)
-*   Plural: **ваші гроші** (your money)
+The words **мій** (my) and **твій** (your) are common. Use **твій** with friends. These pronouns change for the noun.
 
-You are in a cafe. The waiter is here.
-**Це наша піца.** (This is our pizza.)
-**Це ваш чай?** (Is this your tea?)
-
-The word "Ваш" has two meanings:
-1.  Plural: **Діти, де ваша мама?** (Children, where is your mom?)
-2.  Respect: **Пане Іване, це ваше авто?** (Mr. Ivan, is this your car?)
-
-This is important.
+Look at these forms:
+- Masculine: **мій** стіл (my table), **твій** рюкзак (your backpack).
+- Feminine: **моя** книга (my book), **твоя** сумка (your bag).
+- Neuter: **моє** вікно (my window), **твоє** хобі (your hobby).
+- Plural: **мої** речі (my things), **твої** ключі (your keys).
 
-### Його і Її: Найлегші слова
-Good news! The words **його** (his) and **її** (her) are simple.
-They do not change.
+| Gender | Question | My | Your (informal) |
+| :--- | :--- | :--- | :--- |
+| **Masculine** | Чий? [tʃɪi̯] | мій [mʲii̯] | твій [tʋʲii̯] |
+| **Feminine** | Чия? [tʃɪˈjɑ] | моя [mɔˈjɑ] | твоя [tʋɔˈjɑ] |
+| **Neuter** | Чиє? [tʃɪˈjɛ] | моє [mɔˈjɛ] | твоє [tʋɔˈjɛ] |
+| **Plural** | Чиї? [tʃɪˈji] | мої [mɔˈji] | твої [tʋɔˈji] |
 
-It is a universal key.
-
-**Його** (His):
-*   **Це його брат.** (This is his brother.)
-*   **Це його сестра.** (This is his sister.)
-*   **Це його пальто.** (This is his coat.)
-*   **Це його гроші.** (This is his money.)
+**Приклади:**
+1. Це **мій** телефон. (This is my phone.)
+2. Оберіть **твою** книгу. (Choose your book.)
+3. Це **моє** місто. (This is my city.)
 
-**Її** (Her):
-*   **Це її син.** (This is her son.)
-*   **Це її донька.** (This is her daughter.)
-*   **Це її фото.** (This is her photo.)
-*   **Це її речі.** (This is her things.)
+### His and Her: Його та Її
 
-Do you see?
-But listen to the pronunciation.
-**Його** — [ɦ].
-**Її** — [jiˈji].
-
-> [!myth-buster]
-> **No "Yoha" or "Yiyiia"**
-> Students often make mistakes. They say "їїя мама".
-> **Stop!** The words do not change.
-> It is a sticker.
-
-### Їхній: Окремий випадок
-We know "його" and "її". But how do we say "their"?
-The word **їхній** (their) changes.
-
-Why? It is an adjective.
-
-*   Masculine: **їхній дім** (their house)
-*   Feminine: **їхня проблема** (their problem)
-*   Neuter: **їхнє вікно** (their window)
-*   Plural: **їхні діти** (their children)
-
-Compare:
-**Це його кіт.** (This is his cat. - Unchanged)
-**Це їхній кіт.** (This is their cat. - Masculine)
-**Це їхня кішка.** (This is their female cat. - Feminine)
-
-Use the word **їхній**.
-
-### Свій: Мій власний
-One more word: **свій**.
-This word means "one's own".
-
-The forms are the same:
-*   **Свій** (masculine)
-*   **Своя** (feminine)
-*   **Своє** (neuter)
-*   **Свої** (plural)
-
-_Приклад:_
-**Я маю свій квиток.** (I have my [own] ticket.)
-**Він бере свій телефон.** (He takes his [own] phone.)
-
-The word **свій** is precision.
+These pronouns are easy. They do not change. They match any noun.
+- **Його** — [jɔˈɦɔ] (his / its).
+- **Її** — [jiˈji] (her / hers).
 
-## Практика: Наші речі
-
-We need practice. Imagine we are neighbors. The room is messy. Whose things are these?
-
-### Look at the Object First
-Which word is correct?
-Look at the object (**річ**). The object decides.
-
-For He (Він):
-**Цей стіл — мій стіл.** (This table is my table.)
-**Цей телефон — твій телефон.** (This phone is your phone.)
+**Приклади:**
+1. Це **його** паспорт. (This is his passport.)
+2. Це **його** школа. (This is his school.)
+3. Це **її** телефон. (This is her phone.)
+4. Це **її** речі. (These are her things.)
 
-For She (Вона):
-**Ця лампа — моя лампа.** (This lamp is my lamp.)
-**Ця сумка — твоя сумка.** (This bag is your bag.)
+[!warning]
+Pronounce **її** as [ji-ji]. It has two identical sounds. It sounds very melodic.
 
-> [!tip]
-> **Match the Thing, Not the Person**
-> Even if you are a man, you say **моя машина** (my car), because **машина** is feminine.
-> Even if you are a woman, you say **мій дім** (my house), because **дім** is masculine.
-> The object is the boss!
+### Our and Your: Наш та Ваш
 
-### Прості слова: Його і Її
-Grammar is a gift. He or She?
-**Його** and **її** do not change.
+Use **наш** (our) and **ваш** (your). Use **ваш** for formal situations. These pronouns change for the noun.
 
-Look:
-1.  **Наш брат — Його брат.** (Our brother — His brother.)
-2.  **Наша сестра — Його сестра.** (Our sister — His sister.)
-3.  **Наше місто — Його місто.** (Our city — His city.)
+- Masculine: **наш** дім, **ваш** рюкзак.
+- Feminine: **наша** мама, **ваша** аптека.
+- Neuter: **наше** вікно, **ваше** ім'я.
+- Plural: **наші** друзі, **ваші** ключі.
 
-**Її** also does not change:
-**Це її син.** (This is her son.)
-**Це її донька.** (This is her daughter.)
+**Приклади:**
+1. **Наш** магазин тут. (Our store is here.)
+2. Де **ваша** аптека? (Where is your pharmacy?)
+3. Це **наші** речі. (These are our things.)
 
-### Гра "Питання" (The Question Game)
-We found an object.
-The question "Whose" also changes.
+### Their: Їхній
 
-For He (Він):
-— **Чий це паспорт?** (Whose passport is this?)
-— **Це мій паспорт.** (This is my passport).
+The word for «their» is **їхній** [ˈjixnʲii̯]. It changes like a soft adjective.
+- Masculine: **їхній** стіл.
+- Feminine: **їхня** школа.
+- Neuter: **їхнє** вікно.
+- Plural: **їхні** ключі.
 
-For She (Вона):
-— **Чия це кава?** (Whose coffee is this?)
-— **Це ваша кава.** (This is your coffee).
+**Приклади:**
+1. Це **їхній** рюкзак. (This is their backpack.)
+2. **Їхня** дитина тут. (Their child is here.)
 
-For It (Воно):
-— **Чиє це яблуко?** (Whose apple is this?)
-— **Це моє яблуко.** (This is my apple).
+[!tip]
+The form **їхній** is standard. It sounds pure and authentic.
 
-### Діалог 2: У кав'ярні
-Here is your friend.
+### Reflexive Possessive: Свій
 
-**Олег:** Привіт, Анно! Це твоя кава? (Hi Anna! Is this your coffee?)
-**Анна:** Привіт, Олегу. Так, це моя кава. А це твій чай? (Hi Oleh. Yes, this is my coffee. And is this your tea?)
-**Олег:** Ні, це не мій чай. Це її чай. (No, this is not my tea. This is her tea.)
-**Анна:** А де твій чай? (And where is your tea?)
-**Олег:** Він там, на столі. (He is there, on the table.)
-**Анна:** Добре. А чий це телефон? (Good. And whose phone is this?)
-**Олег:** Це наш телефон. Це телефон офісу. (This is our phone. This is the office phone.)
+Ukrainian has a special word **свій** [sʋʲii̯]. It means «one's own». Use it when the owner is the subject.
 
-### Діалог: На вокзалі (At the Station)
-Look at the dialogue. Read the dialogue aloud.
+**Приклади:**
+- Я маю **свій** телефон. (I have my [own] phone.)
+- Ти маєш **свою** книгу. (You have your [own] book.)
 
-**Пасажир:** Вибачте, чий це квиток? (Excuse me, whose ticket is this?)
-**Охоронець:** Це ваш квиток? (Is this your ticket?)
-**Пасажир:** Ні, це не мій квиток. Мій квиток тут. (No, this is not my ticket. My ticket is here.)
-**Охоронець:** Можливо, це їхній квиток? (Maybe this is their ticket?)
-**Пасажир:** Так, це їхній квиток! (Yes, this is their ticket!)
+In the third person, it is important.
+- Він має **свою** сумку. (He has his own bag.)
+- Він має **його** сумку. (He has his [another man's] bag.)
 
-**Key Phrases:**
-*   **Вибачте** (Excuse me)
-*   **Мій квиток тут** (My ticket is here)
-*   **Можливо** (Maybe)
+**Forms of свій:**
+- **свій** (masc.), **своя** (fem.), **своє** (neut.), **свої** (pl.).
 
-### Читання: Моя Родина
-Read the story.
+[!myth-buster]
+You can use **свій** for any person. It sounds very natural.
 
-**Це мій дім. Тут живе моя родина.** (This is my house. My family lives here.)
-**Це мій тато. Його звати Іван. Це його авто.** (This is my dad. His name is Ivan. This is his car.)
-**Це моя мама. Її звати Олена. Це її квіти.** (This is my mom. Her name is Olena. These are her flowers.)
-**А це мій брат і моя сестра. Це їхня кімната.** (And this is my brother and my sister. This is their room.)
-**Ми дуже любимо наш дім!** (We really love our house!)
-
-## Використання: Це твоє?
-
-### Питання і Відповіді
-Now we know the question.
-
-The question "Is this yours?":
-
-*   **Це твій телефон?** (Is this your phone?) — Masculine
-*   **Це твоя кава?** (Is this your coffee?) — Feminine
-*   **Це твоє місце?** (Is this your seat?) — Neuter
-
-The answer is simple: **Так, мій** (Yes, mine) or **Ні, не мій** (No, not mine).
-
-> [!context]
-> **Cultural Note**
-> Speak politely to strangers.
-> Switch **твій** (your) to **ваш** (your formal).
-> **Це ваш телефон?**
-> It is respect.
-
-### The Word "Свій"
-Here is a secret: **свій**.
-It is a mirror.
-
-It means "my own," "your own," or "his/her own."
-
-**Я маю свій квиток.** (I have my [own] ticket.)
-**Ти знаєш свою адресу?** (Do you know your [own] address?)
-
-Why? Look at the difference:
-1.  **Він знає свого брата.** (He knows his [own] brother.)
-2.  **Він знає його брата.** (He knows his [someone else's] brother.)
-
-**Свій** is the subject's own object.
-
-### Де "Воно"? (Gender Consistency)
-Don't say "it".
-
-If the object is He (Він):
-**Де твій паспорт? — Він тут.** (Literally: "He is here.")
-
-If the object is She (Вона):
-**Де твоя сумка? — Вона там.** (Literally: "She is there.")
-
-Only for "Воно":
-Use **Воно** (It) only for neuter nouns like **місто** (city) or **море** (sea).
-
-> [!warning]
-> **Don't mix them up!**
-> **Стіл** is masculine, so **Він тут** (He is here).
-
-## Культура: Ти і Ви
-
-We choose words.
-
-### Основи ввічливості
-In Ukrainian, we have **ти** and **ви**.
-
-**Ти** is for friends and family.
-**Ви** is for respect.
-
-> [!tip]
-> **The Safe Choice**
-> Always say **ви**.
-> It is polite and safe.
-
-_Examples:_
-*   **Мамо, ти вдома?** (Mom, are you home?)
-*   **Пане, ви тут працюєте?** (Sir, do you work here?)
-*   **Олено, це твоя кава?** (Olena, is this your coffee?)
-*   **Пані Олено, це ваша кава?** (Ms. Olena, is this your coffee?)
-
-### Група людей
-**Ви** is for a group.
-
-*   **Діти, ви тут?** (Children, are you here?)
-*   **Друзі, це ваш дім.** (Friends, this is your house.)
-*   **Андрію і Іване, ви тут?** (Andriy and Ivan, are you here?)
-
-# Summary
-
-*   **Question Words**: The word for "whose" changes by gender.
-    *   **Чий** (Masculine)
-    *   **Чия** (Feminine)
-    *   **Чиє** (Neuter)
-*   **Possessive Pronouns**: Must agree with the **object**, not the owner.
-    *   **Мій / Твій / Свій** (My / Your / Own)
-    *   **Наш / Ваш** (Our / Your)
-    *   **Їхній** (Their) - literary form, acts like an adjective.
-*   **Unchanging Forms**: Some pronouns never change.
-    *   **Його** (His)
-    *   **Її** (Her)
-*   **Politeness**:
-    *   **Ти** (You - informal/singular) for friends and family.
-    *   **Ви** (You - formal/plural) for strangers, respect, or groups.
-*   **Object Gender**: When referring to "it", use **Він** (he) for masculine objects and **Вона** (she) for feminine objects. Use **Воно** (it) only for neuter objects.
+## Practice
+
+### Matching Owners (Узгодження)
+
+Match the pronoun to the noun.
+- **Мій** + телефон (masc.)
+- **Моя** + книга (fem.)
+- **Моє** + місто (neut.)
+- **Мої** + речі (pl.)
+
+[!observe]
+The endings change fast. It is like a dance. Masculine has no ending. Feminine has ending -а or -я.
+
+### Short Dialogues (Діалоги)
+
+**Сусід:** Чий це рюкзак? (Whose backpack is this?)
+**Ви:** Це **мій** рюкзак. (It's my backpack.)
+**Сусід:** А чия це сумка? (And whose bag is this?)
+**Ви:** Це **твоя** сумка. (It's your bag.)
+
+### Our School (Наша школа)
+
+Let's use **наш** (our).
+1. **Школа** (fem.) -> **наша** школа.
+2. **Дім** (masc.) -> **наш** дім.
+3. **Місто** (neut.) -> **наше** місто.
+4. **Друзі** (pl.) -> **наші** друзі.
+
+## Production
+
+### My Room (Моя кімната)
+
+Look around you. Name five objects. Use **мій**, **моя**, **моє**, or **мої**.
+
+**Try these:**
+- Це **мій** стіл. (This is my table.)
+- Це **моя** книга. (This is my book.)
+- Це **моє** вікно. (This is my window.)
+- Це **мої** ключі. (These are my keys.)
+
+Now talk about family.
+- Це **мій** тато. (This is my dad.)
+- Це **моя** мама. (This is my mom.)
+- Це **наші** діти. (These are our children.)
+
+[!fact]
+We often skip «is» in Ukrainian. We say: «Це — мій телефон.» It is short and clear.
+
+### Helping Neighbors (Допомога)
+
+Ask these questions in your street:
+- **Чия** це дитина? (Whose child is this?)
+- **Чий** це пес? (Whose dog is this?)
+- **Чиї** це речі? (Whose things are these?)
+
+## Cultural Insight
+
+### Polite Forms (Ввічливість)
+
+Respect is very important in Ukraine. Use **ваш** for formal talk. Use it with teachers or strangers. On paper, capitalize the first letter: **Ваш**. This shows great respect.
+
+[!culture]
+Using **твій** with strangers is rude. Always choose **ваш** first. Your neighbors will appreciate this!
+
+### One's Own Shirt (Своя сорочка)
+
+There is a famous saying. **«Своя сорочка ближче до тіла»**. It means we care for our own things. The word **свій** is part of the soul. Use it to sound natural.
+
+---
+
+# Підсумок
+
+Today we learned possessive pronouns. You know **мій**, **твій**, **наш**, **ваш**, and **їхній**. You know invariable **його** and **її**. You know reflexive **свій**. These words help you talk about ownership.
+
+**Перевірте себе:**
+1. How do you say «my table»?
+2. Which pronouns are invariable?
+3. When do you use **ваш**?
+4. What does **свій** mean?
+5. Ask «Whose is this book?».
+6. Is **їхній** a variable pronoun?
+
+---
+
+===CONTENT_END===

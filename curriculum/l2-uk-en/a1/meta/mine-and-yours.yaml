@@ -1,16 +1,27 @@
 slug: mine-and-yours
-title: "Mine and Yours"
+title: Mine and Yours
+subtitle: Possessive Pronouns in Ukrainian
+track: a1
+level: A1
+sequence: 14
 word_target: 1307
+focus: grammar
+pedagogy: PPP
+prerequisites:
+  - the-locative-where-things-are
 content_outline:
-- section: "Розминка: Чиє це?"
-  words: 99
-- section: "Теорія: Мій, Твій, Його"
-  words: 643
-- section: "Практика: Наші речі"
-  words: 201
-- section: "Використання: Це твоє?"
-  words: 179
-- section: "Культура: Ти і Ви"
-  words: 185
-engagement_min: 4
-example_min: 8
+  - section: Warm-up
+    words: 99
+  - section: Presentation
+    words: 643
+  - section: Practice
+    words: 201
+  - section: Production
+    words: 179
+  - section: Cultural Insight
+    words: 185
+naturalness:
+  status: PASS
+  last_checked: "2026-02-16"
+last_updated: "2026-02-16"
+status: building
