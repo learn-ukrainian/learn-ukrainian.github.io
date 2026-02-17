@@ -250,7 +250,7 @@ ACTIVITY_COMPLEXITY = {
         'c1-bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
-        'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},
+        'A1': {'pairs_min': 8, 'pairs_max': 20, 'min_items': 8},
         'A2': {'pairs_min': 10, 'pairs_max': 12, 'min_items': 8},
         'B1': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},

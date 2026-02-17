@@ -324,8 +324,6 @@ def main():
         if not path.exists():
             print(f"  SKIP {path}: not found", file=sys.stderr)
             continue
-        if not path.suffix == '.md':
-            continue
 
         total_files += 1
         result = lint_file(path, fix=args.fix)

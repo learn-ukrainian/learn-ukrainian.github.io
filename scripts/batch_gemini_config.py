@@ -226,10 +226,10 @@ TRACK_CONFIGS = {
         "quick_ref": QUICK_REF_DIR / "RUTH.md",
         "validation_phases": [2, 3],
     },
-    # --- Core tracks (A1-B2: Flash, C1-C2: Pro) ---
+    # --- Core tracks (all Pro — flash too weak for quality content) ---
     "a1": {
         "type": "core",
-        "model": FLASH_MODEL,
+        "model": PRO_MODEL,
         "phases": [1, 2, 3, 5],
         "templates": {
             1: PHASES_DIR / "phase-1-research-core.md",
@@ -245,7 +245,7 @@ TRACK_CONFIGS = {
     },
     "a2": {
         "type": "core",
-        "model": FLASH_MODEL,
+        "model": PRO_MODEL,
         "phases": [1, 2, 3, 5],
         "templates": {
             1: PHASES_DIR / "phase-1-research-core.md",
@@ -261,7 +261,7 @@ TRACK_CONFIGS = {
     },
     "b1": {
         "type": "core",
-        "model": FLASH_MODEL,
+        "model": PRO_MODEL,
         "phases": [1, 2, 3, 5],
         "templates": {
             1: PHASES_DIR / "phase-1-research-core.md",
@@ -277,7 +277,7 @@ TRACK_CONFIGS = {
     },
     "b2": {
         "type": "core",
-        "model": FLASH_MODEL,
+        "model": PRO_MODEL,
         "phases": [1, 2, 3, 5],
         "templates": {
             1: PHASES_DIR / "phase-1-research-core.md",

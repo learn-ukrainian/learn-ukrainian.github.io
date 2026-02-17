@@ -772,14 +772,17 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     prev_summary = ""
     callout_types_used = ""
+    statistics_cited = ""
+    openers_used = ""
+    bio_facts_used = ""
 
     # Rebuild seam context from already-done sections
     for i in range(sections_done):
         section_file = ctx.orch_dir / f"phase-2-p2-{i + 1}-section_content.md"
         if section_file.exists():
-            prev_summary, callout_types_used = _build_seam_context(
+            prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used = _build_seam_context(
                 section_file.read_text(encoding="utf-8"),
-                prev_summary, callout_types_used,
+                prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used,
             )
 
     for idx in range(sections_done, num_sections):
@@ -806,6 +809,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             "SECTION_EXAMPLE_MIN": str(sect_ex),
             "PREVIOUS_CONTENT_SUMMARY": prev_summary or "None (first section)",
             "CALLOUT_TYPES_USED": callout_types_used or "None yet",
+            "STATISTICS_CITED": statistics_cited or "None yet",
+            "OPENERS_USED": openers_used or "None yet",
+            "BIO_FACTS_USED": bio_facts_used or "None yet",
         }
 
         prompt_file = ctx.orch_dir / f"phase-2-p2-{section_num}-prompt.md"
@@ -874,8 +880,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         log(f"    Section {section_num}: {section_word_count} words appended")
 
         # Update seam context
-        prev_summary, callout_types_used = _build_seam_context(
-            section_text, prev_summary, callout_types_used,
+        prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used = _build_seam_context(
+            section_text, prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used,
         )
 
         # Update state
@@ -902,14 +908,39 @@ def _parse_section(section: Any) -> tuple[str, int]:
 
 def _build_seam_context(
     section_text: str, prev_summary: str, callout_types_used: str,
-) -> tuple[str, str]:
+    statistics_cited: str = "", openers_used: str = "", bio_facts_used: str = "",
+) -> tuple[str, str, str, str, str]:
     """Build seam context from a section's text.
 
-    Returns updated (prev_summary, callout_types_used).
+    Returns updated (prev_summary, callout_types_used, statistics_cited,
+    openers_used, bio_facts_used).
+    Each H3 includes its lead sentence so subsequent sections know
+    what claims/facts were already made (not just the topic name).
     """
-    # Extract H3 headers
-    h3s = re.findall(r"^### (.+)$", section_text, re.MULTILINE)
-    h3_list = "\n".join(f"- ### {h}" for h in h3s) if h3s else ""
+    # Extract H3 headers with their lead sentences
+    h3_blocks = re.split(r"^### ", section_text, flags=re.MULTILINE)
+    h3_entries = []
+    for block in h3_blocks[1:]:  # skip text before first H3
+        lines = block.strip().split("\n")
+        title = lines[0].strip()
+        # Find first real prose line (skip blank, callouts, examples)
+        lead = ""
+        for line in lines[1:]:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if stripped.startswith(("> ", "* ", "- ", "_Приклади", "| ", "```")):
+                continue
+            # Take first ~120 chars of the lead sentence
+            lead = stripped[:120].rstrip()
+            if len(stripped) > 120:
+                lead += "..."
+            break
+        if lead:
+            h3_entries.append(f"- ### {title}\n  → {lead}")
+        else:
+            h3_entries.append(f"- ### {title}")
+    h3_list = "\n".join(h3_entries) if h3_entries else ""
 
     # Extract last 2-3 paragraphs (non-empty lines at end)
     paragraphs = [p.strip() for p in section_text.split("\n\n") if p.strip()]
@@ -930,7 +961,113 @@ def _build_seam_context(
         existing.discard("")
         callout_types_used = ", ".join(sorted(existing))
 
-    return new_summary, callout_types_used
+    # --- NEW: Extract statistics cited (numbers with units) ---
+    stat_set = set(statistics_cited.split(" | ")) if statistics_cited else set()
+    # Match patterns like "450 гектарів", "15 тисяч", "1893 року", "5500 до н. е."
+    stat_patterns = re.findall(
+        r"(\d[\d\s]*(?:гектар\w*|га|тисяч\w*|осіб|рок\w*|до н\.\s*е\.|столі\w*|градус\w*|кв\.\s*м|кілометр\w*|метр\w*))",
+        section_text,
+    )
+    for s in stat_patterns:
+        normalized = " ".join(s.split())  # collapse whitespace
+        stat_set.add(normalized)
+    stat_set.discard("")
+    statistics_cited = " | ".join(sorted(stat_set)) if stat_set else ""
+
+    # --- NEW: Extract rhetorical openers (first 3 words of each prose paragraph) ---
+    opener_set = set(openers_used.split(" | ")) if openers_used else set()
+    for para in section_text.split("\n\n"):
+        para = para.strip()
+        if not para:
+            continue
+        # Skip non-prose: headings, callouts, lists, tables, code blocks, examples
+        if para.startswith(("#", ">", "* ", "- ", "| ", "```", "_Приклад")):
+            continue
+        # Skip short lines (likely formatting artifacts)
+        words = para.split()
+        if len(words) < 4:
+            continue
+        # Take first 3 words as the opener fingerprint
+        opener = " ".join(words[:3])
+        opener_set.add(opener)
+    opener_set.discard("")
+    openers_used = " | ".join(sorted(opener_set)) if opener_set else ""
+
+    # --- NEW: Extract biographical facts from callouts ---
+    bio_set = set(bio_facts_used.split(" | ")) if bio_facts_used else set()
+    # Find [!biography] callout blocks and extract key claims
+    bio_blocks = re.findall(
+        r"\[!biography\].*?\n((?:>.*\n)*)", section_text, re.MULTILINE,
+    )
+    for block in bio_blocks:
+        # Extract the first ~80 chars of the bio content as a fingerprint
+        clean = re.sub(r"^>\s*", "", block, flags=re.MULTILINE).strip()
+        lines = [l.strip() for l in clean.split("\n") if l.strip() and not l.strip().startswith("**")]
+        if lines:
+            bio_set.add(lines[0][:80].rstrip())
+    bio_set.discard("")
+    bio_facts_used = " | ".join(sorted(bio_set)) if bio_set else ""
+
+    return new_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used
+
+
+def _sanitize_activities(path: Path) -> None:
+    """Post-process generated activities YAML to fix common Gemini issues.
+
+    - Remove 'hint'/'clue' fields from items (audit rejects them)
+    - Convert hyphenated anagram scrambled to space-separated
+    - Fix anagram letter mismatches (re-scramble from answer)
+    - Cap match-up pairs at 10
+    """
+    import random
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if not isinstance(data, list):
+            return
+        changed = False
+        for activity in data:
+            if not isinstance(activity, dict):
+                continue
+            atype = activity.get("type", "")
+
+            # Cap match-up pairs at 10
+            if atype == "match-up" and "pairs" in activity:
+                if len(activity["pairs"]) > 10:
+                    activity["pairs"] = activity["pairs"][:10]
+                    changed = True
+
+            for item in activity.get("items", []):
+                if not isinstance(item, dict):
+                    continue
+                # Remove hint/clue fields
+                for key in ("hint", "clue"):
+                    if key in item:
+                        del item[key]
+                        changed = True
+                # Fix anagram issues
+                if atype == "anagram" and "scrambled" in item and "answer" in item:
+                    s = item["scrambled"]
+                    answer = item["answer"]
+                    # Fix hyphenated: "а-б-в" → "а б в"
+                    if "-" in s and " " not in s:
+                        s = s.replace("-", " ")
+                    # Verify letters match answer — if not, re-scramble
+                    s_letters = sorted(s.replace(" ", "").lower())
+                    a_letters = sorted(answer.lower())
+                    if s_letters != a_letters:
+                        letters = list(answer)
+                        random.shuffle(letters)
+                        # Avoid producing the answer itself
+                        if "".join(letters) == answer and len(letters) > 1:
+                            letters[0], letters[-1] = letters[-1], letters[0]
+                        s = " ".join(letters)
+                        changed = True
+                    item["scrambled"] = s
+        if changed:
+            path.write_text(yaml.dump(data, allow_unicode=True, default_flow_style=False),
+                            encoding="utf-8")
+    except Exception:
+        pass  # Best-effort — audit will catch anything we miss
 
 
 def phase_3a_activities(ctx: ModuleContext) -> bool:
@@ -974,6 +1111,7 @@ def phase_3a_activities(ctx: ModuleContext) -> bool:
     if activities_extracted.exists():
         ctx.paths["activities"].parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(activities_extracted, ctx.paths["activities"])
+        _sanitize_activities(ctx.paths["activities"])
         log(f"  Phase 3a: Activities saved → {ctx.paths['activities'].name}")
     else:
         log("  Phase 3a: FAILED — no activities extracted")
