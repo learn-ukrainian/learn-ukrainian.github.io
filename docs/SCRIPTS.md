@@ -565,6 +565,7 @@ This command:
 | `validate_meta_yaml.py`   | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
+| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process` |
 
 ### Slug & Path Utilities (Python)
 
@@ -1923,6 +1924,48 @@ npm run status:all             # Generate all levels
 - Updates totals based on combined data
 
 **Output:** `docs/{LEVEL}-STATUS.md`
+
+---
+
+## Research Quality Assessment
+
+### assess_research.py
+
+**Purpose:** Assess research quality across tracks, identify gaps, and auto-upgrade weak research.
+
+**Usage:**
+
+```bash
+# Quality table (tracks with a rubric)
+.venv/bin/python scripts/assess_research.py b2-hist
+.venv/bin/python scripts/assess_research.py a1
+
+# Single module detail
+.venv/bin/python scripts/assess_research.py b2-hist 5
+
+# Only modules with gaps
+.venv/bin/python scripts/assess_research.py b2-hist --gaps
+
+# Coverage only (tracks without a rubric)
+.venv/bin/python scripts/assess_research.py b1
+
+# All tracks overview
+.venv/bin/python scripts/assess_research.py --all
+
+# JSON output
+.venv/bin/python scripts/assess_research.py b2-hist --json
+
+# Refresh queue (research upgraded, content stale)
+.venv/bin/python scripts/assess_research.py a1 --refresh-queue
+.venv/bin/python scripts/assess_research.py a1 --process           # rebuild stale modules
+
+# Upgrade queue (research below score threshold)
+.venv/bin/python scripts/assess_research.py b2-hist --upgrade                  # list modules below 9/10
+.venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8    # custom threshold
+.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process          # regenerate weak research
+```
+
+**Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). If the regenerated research still scores below the threshold, it regenerates again. Hard failures (build error, timeout, missing file) stop retries for that module immediately. Ctrl+C exits cleanly with a progress summary.
 
 ---
 
