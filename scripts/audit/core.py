@@ -118,6 +118,7 @@ from .gates import (
     evaluate_content_heavy,
     evaluate_naturalness,
     evaluate_persona,
+    evaluate_research_alignment,
     compute_recommendation,
 )
 from .checks.content_recall_detection import (
@@ -1547,6 +1548,19 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
     # Check for research file (seminar tracks only)
     research_violations = check_research_file(file_path)
     meta_violations.extend(research_violations)
+
+    # Research alignment gate — checks if content reflects current research
+    try:
+        from research_quality import assess_research_compat, find_research_path
+        _md_path = Path(file_path)
+        _bare_slug = to_bare_slug(_md_path.stem)
+        _research_path = find_research_path(_md_path.parent, _bare_slug)
+        _research_info = None
+        if _research_path:
+            _research_info = assess_research_compat(_research_path, track_code.lower(), _md_path)
+        results['research'] = evaluate_research_alignment(_research_info, _md_path.exists())
+    except ImportError:
+        results['research'] = GateResult('INFO', 'ℹ️', "N/A (research_quality not available)")
 
     # Run activity type validation for ALL modules with meta.yaml
     activity_type_violations = check_activity_hints_valid(meta_data)

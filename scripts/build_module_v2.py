@@ -507,7 +507,14 @@ def phase_2_v2(ctx: ModuleContext) -> bool:
     Plan + research remain the source of truth.
     """
     phase = "2"
-    if is_phase_complete(ctx, phase):
+    # --refresh resets phase 2 so it doesn't get skipped
+    if getattr(ctx, "refresh", False) and is_phase_complete(ctx, phase):
+        state_phases = ctx.state.get("phases", {})
+        if "2" in state_phases:
+            del state_phases["2"]
+            save_state(ctx)
+        log("  Phase 2: RESET (--refresh flag)")
+    elif is_phase_complete(ctx, phase):
         log("  Phase 2: SKIP (already complete)")
         return True
 
@@ -516,9 +523,42 @@ def phase_2_v2(ctx: ModuleContext) -> bool:
     if content_path.exists():
         word_count = len(content_path.read_text(encoding="utf-8").split())
         if word_count >= ctx.word_target * 0.8:
-            log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
-            mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
-            return True
+            # Check if research was upgraded after content was written
+            research_path = ctx.paths.get("research")
+            if research_path and research_path.exists():
+                if research_path.stat().st_mtime > content_path.stat().st_mtime:
+                    try:
+                        from research_quality import assess_research_compat
+                        info = assess_research_compat(research_path, ctx.track, content_path)
+                        if info and info.get("content_alignment", {}).get("refresh_recommended"):
+                            reasons = info["content_alignment"].get("reasons", [])
+                            log(f"  Phase 2: Research upgraded since content was written")
+                            for r in reasons:
+                                log(f"    - {r}")
+                            if getattr(ctx, "refresh", False):
+                                log(f"  Phase 2: --refresh flag set — regenerating prose")
+                                # Fall through to generation instead of adopting
+                                pass  # skip adoption below
+                            else:
+                                log(f"  Phase 2: ADOPT (use --refresh to regenerate from updated research)")
+                                mark_phase_locked(ctx, phase, "complete", note="adopted-stale-prose", words=word_count)
+                                return True
+                        else:
+                            log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                            mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
+                            return True
+                    except ImportError:
+                        log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                        mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
+                        return True
+                else:
+                    log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                    mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
+                    return True
+            else:
+                log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
+                return True
 
     if getattr(ctx, "is_archived", False):
         fits, matched, missing = _check_archive_fits_outline(ctx)
@@ -1080,6 +1120,7 @@ def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     ctx.archive_source = archive_source  # type: ignore[attr-defined]
     ctx.archive_dir = archive_dir  # type: ignore[attr-defined]
     ctx.force_research = getattr(args, "force_research", False)  # type: ignore[attr-defined]
+    ctx.refresh = getattr(args, "refresh", False)  # type: ignore[attr-defined]
 
     if is_archived:
         log(f"Archive: DETECTED — {archive_source}")
@@ -1150,6 +1191,8 @@ def main() -> int:
                         help="Force fresh Phase 0 research even if research file exists")
     parser.add_argument("--dry-run", action="store_true",
                         help="Show plan without dispatching to Gemini")
+    parser.add_argument("--refresh", action="store_true",
+                        help="Regenerate prose from updated research (instead of adopting stale content)")
     parser.add_argument("--verify", action="store_true",
                         help="Just run audit, print PASS/FAIL, exit")
 

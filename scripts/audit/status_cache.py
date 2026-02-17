@@ -94,6 +94,7 @@ def get_source_paths(track_dir: Path, slug: str) -> dict[str, Optional[Path]]:
         "activities": track_dir / "activities" / f"{slug}.yaml",
         "vocabulary": track_dir / "vocabulary" / f"{slug}.yaml",
         "plan": plans_dir / f"{slug}.yaml",
+        "research": track_dir / "research" / f"{slug}-research.md",
     }
 
 

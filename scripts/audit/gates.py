@@ -345,6 +345,33 @@ def evaluate_content_heavy(
     return GateResult('PASS', '✅', f"Content-heavy OK ({activity_count} activities)")
 
 
+def evaluate_research_alignment(
+    research_info: Optional[dict],
+    content_exists: bool,
+) -> GateResult:
+    """Evaluate whether content reflects the current research quality.
+
+    WARN-level gate — flags stale content but doesn't block audits.
+    Uses content_alignment data from research_quality.assess_research().
+    """
+    if research_info is None:
+        return GateResult('INFO', 'ℹ️', "N/A (no research file)")
+
+    if not content_exists:
+        return GateResult('INFO', 'ℹ️', "Content not yet written")
+
+    alignment = research_info.get("content_alignment")
+    if alignment is None:
+        return GateResult('INFO', 'ℹ️', "N/A (no alignment data)")
+
+    if alignment.get("refresh_recommended"):
+        reasons = alignment.get("reasons", [])
+        reason_str = reasons[0] if reasons else "research upgraded"
+        return GateResult('WARN', '⚠️', f"Refresh recommended: {reason_str}")
+
+    return GateResult('PASS', '✅', "Content aligned with research")
+
+
 def compute_recommendation(
     pedagogical_violations: list,
     lint_errors: list,

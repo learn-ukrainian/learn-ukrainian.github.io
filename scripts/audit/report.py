@@ -80,6 +80,9 @@ def save_status_cache(
     source_mtimes['vocabulary'] = get_mtime(vocab_path)
     source_mtimes['plan'] = get_mtime(plan_path)
 
+    research_path = base_path / 'research' / f"{module_slug}-research.md"
+    source_mtimes['research'] = get_mtime(research_path)
+
     # 2. Serialize Gates
     gates = {}
     
@@ -164,6 +167,8 @@ def save_status_cache(
     gates['naturalness'] = serialize_gate(results.get('naturalness'))
 
     gates['ipa'] = serialize_gate(results.get('ipa'))
+
+    gates['research'] = serialize_gate(results.get('research'))
 
     # Review gate (final gate — only checked when content gates pass)
     if review_violations is None:
@@ -493,7 +498,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness']
+                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness', 'research']
     for k in keys_order:
         r = results.get(k)
         if r:
@@ -745,7 +750,7 @@ def print_gates(results: dict, level_code: str) -> None:
     """Print gate results to console."""
     print(f"\n--- STRICT GATES (Level {level_code}) ---")
     keys_order = ['persona', 'words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality']
+                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality', 'research']
     for k in keys_order:
         r = results.get(k)
         if r:
