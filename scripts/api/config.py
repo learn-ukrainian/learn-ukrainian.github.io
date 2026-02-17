@@ -35,6 +35,9 @@ LEVELS = [
     {"id": "ruth", "name": "RUTH - Ruthenian", "path": "ruth"},
 ]
 
+# Seminar tracks (require Phase 0 research)
+SEMINAR_TRACK_IDS = {"b2-hist", "c1-hist", "c1-bio", "lit", "oes", "ruth"}
+
 # Batch state directory
 BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
 

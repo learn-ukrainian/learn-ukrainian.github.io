@@ -1,0 +1,14 @@
+{
+  "slug": "register-formal-informal",
+  "track": "b2",
+  "module_num": 16,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T11:30:19Z",
+      "task_id": "yw-register-formal-informal-p0"
+    }
+  },
+  "last_updated": "2026-02-17T11:30:19Z"
+}

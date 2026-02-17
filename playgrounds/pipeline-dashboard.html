@@ -142,6 +142,7 @@ a:hover { text-decoration: underline; }
 /* Section divider */
 .section-title { padding: 8px 24px; font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--bg2); margin-top: 8px; }
 
+
 /* Conversation modal */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100; backdrop-filter: blur(4px); }
 .modal-overlay.visible { display: flex; align-items: center; justify-content: center; }
@@ -596,6 +597,7 @@ async function refreshPipeline() {
     renderPipeline(data);
   } catch (e) { console.error('Pipeline fetch error:', e); }
 }
+
 
 async function refreshComms() {
   try {

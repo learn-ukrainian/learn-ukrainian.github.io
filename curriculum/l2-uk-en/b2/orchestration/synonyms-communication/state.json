@@ -1,0 +1,14 @@
+{
+  "slug": "synonyms-communication",
+  "track": "b2",
+  "module_num": 59,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:03:03Z",
+      "task_id": "yw-synonyms-communication-p0"
+    }
+  },
+  "last_updated": "2026-02-17T13:03:03Z"
+}

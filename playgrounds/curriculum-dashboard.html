@@ -49,6 +49,25 @@ a:hover { text-decoration: underline; }
 .module-table .status-dot.unaudited { background: var(--yellow); }
 .module-table .status-dot.missing { background: var(--gray); }
 .module-table .word-mini { display: inline-block; height: 4px; border-radius: 2px; background: var(--green); min-width: 2px; }
+.module-table .rq-score { font-size: 11px; font-weight: 600; }
+.module-table .rq-score.exemplary { color: var(--green); }
+.module-table .rq-score.solid { color: var(--blue); }
+.module-table .rq-score.adequate { color: var(--yellow); }
+.module-table .rq-score.thin { color: #f0883e; }
+.module-table .rq-score.stub { color: var(--red); }
+.module-table .rq-coverage { color: var(--text3); font-size: 11px; }
+
+/* Dimension bar */
+.dim-bar { display: flex; gap: 2px; align-items: center; margin: 2px 0; }
+.dim-bar .dim-label { font-size: 11px; color: var(--text2); width: 28px; text-align: right; }
+.dim-bar .dim-fill { height: 6px; border-radius: 3px; }
+.dim-bar .dim-fill.filled { background: var(--green); }
+.dim-bar .dim-fill.empty { background: var(--bg3); }
+.dim-bar .dim-val { font-size: 10px; color: var(--text3); margin-left: 4px; }
+.refresh-banner { background: rgba(210,153,34,0.15); border: 1px solid var(--yellow); border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--yellow); }
+.gap-list { list-style: none; padding: 0; margin-top: 4px; }
+.gap-list li { font-size: 11px; color: var(--text2); padding: 1px 0; }
+.gap-list li::before { content: '\2022'; color: var(--red); margin-right: 6px; }
 
 /* Detail panel */
 .detail-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
@@ -162,6 +181,21 @@ async function loadTrackDetail(trackId) {
   const t = overviewData.tracks.find(t => t.id === trackId);
   const s = t.stats;
 
+  const rs = s.research || {};
+  const hasRubric = !!rs.profile;
+
+  // Research stats line
+  let researchStat = '';
+  if (hasRubric) {
+    const parts = [];
+    for (const label of ['exemplary','solid','adequate','thin','stub']) {
+      if (rs[label] > 0) parts.push(`${rs[label]} ${label}`);
+    }
+    researchStat = `<span style="color:var(--purple)">${parts.join(', ')} | ${rs.total}/${data.module_count}</span>`;
+  } else {
+    researchStat = `<span style="color:var(--text3)">${rs.total || 0}/${data.module_count} researched</span>`;
+  }
+
   container.innerHTML = `
     <div class="track-title">${t.name}</div>
     <div class="track-stats">
@@ -170,19 +204,30 @@ async function loadTrackDetail(trackId) {
       <span style="color:var(--red)">${s.fail} fail</span>
       <span style="color:var(--yellow)">${s.unaudited} unaudited</span>
       <span style="color:var(--gray)">${s.missing} missing</span>
+      ${researchStat}
     </div>
     <table class="module-table">
-      <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Words</th><th>Plan</th></tr></thead>
+      <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Words</th><th>Research</th><th>Plan</th></tr></thead>
       <tbody>
         ${data.modules.map(m => {
           const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
           const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
+          const r = m.research || {};
+          let rCol;
+          if (r.exists && r.score != null) {
+            rCol = `<td><span class="rq-score ${r.quality}">${r.score}/10</span></td>`;
+          } else if (r.exists) {
+            rCol = `<td><span class="rq-coverage">${r.words}w</span></td>`;
+          } else {
+            rCol = `<td style="color:var(--text3)">-</td>`;
+          }
           return `
             <tr onclick="loadModuleDetail('${trackId}','${m.slug}')">
               <td>${m.num}</td>
               <td>${m.slug}</td>
               <td><span class="status-dot ${cls}"></span> ${m.status}</td>
               <td>${m.word_count.toLocaleString()}/${m.word_target.toLocaleString()} <span class="word-mini" style="width:${wordPct}%"></span></td>
+              ${rCol}
               <td>${m.files.plan ? 'Y' : '-'}</td>
             </tr>
           `;
@@ -264,9 +309,62 @@ async function loadModuleDetail(trackId, slug) {
     `;
   }
 
+  let researchHtml = '';
+  if (m.research) {
+    const r = m.research;
+    const qColors = {exemplary:'var(--green)',solid:'var(--blue)',adequate:'var(--yellow)',thin:'#f0883e',stub:'var(--red)'};
+
+    if (r.exists && r.score != null) {
+      // Rubric-scored research
+      let dimsHtml = '';
+      if (r.dimensions) {
+        dimsHtml = Object.entries(r.dimensions).map(([name, d]) => {
+          const filled = '<span class="dim-fill filled" style="width:' + (d.score * 14) + 'px"></span>';
+          const empty = '<span class="dim-fill empty" style="width:' + ((d.max - d.score) * 14) + 'px"></span>';
+          return `<div class="dim-bar"><span class="dim-label">${name.split('_').map(w=>w[0].toUpperCase()).join('')}</span>${filled}${empty}<span class="dim-val">${d.score}/${d.max}</span></div>`;
+        }).join('');
+      }
+      let gapsHtml = '';
+      if (r.gaps && r.gaps.length > 0) {
+        gapsHtml = `<ul class="gap-list">${r.gaps.map(g => `<li>${g}</li>`).join('')}</ul>`;
+      }
+      let alignHtml = '';
+      const ca = r.content_alignment;
+      if (ca && ca.refresh_recommended) {
+        alignHtml = `<div class="refresh-banner">Research upgraded \u2014 content may benefit from refresh<ul class="gap-list">${ca.reasons.map(r => `<li>${r}</li>`).join('')}</ul></div>`;
+      }
+      researchHtml = `
+        <div class="detail-card">
+          <h3>Research <span style="font-size:11px;color:var(--text3)">(${r.profile} rubric)</span></h3>
+          <div class="meta-row"><span class="label">Score</span><span style="color:${qColors[r.quality]||'var(--text2)'};font-weight:600">${r.score}/10 ${r.quality.toUpperCase()}</span></div>
+          <div class="meta-row"><span class="label">Words</span><span>${r.words}</span></div>
+          ${dimsHtml ? `<div style="margin-top:8px">${dimsHtml}</div>` : ''}
+          ${gapsHtml ? `<div style="margin-top:8px"><span style="font-size:11px;color:var(--text2)">Gaps:</span>${gapsHtml}</div>` : ''}
+          ${alignHtml}
+        </div>
+      `;
+    } else if (r.exists) {
+      // No rubric — coverage only
+      researchHtml = `
+        <div class="detail-card">
+          <h3>Research</h3>
+          <div class="meta-row"><span class="label">Status</span><span>${r.words} words | no rubric defined</span></div>
+        </div>
+      `;
+    } else {
+      researchHtml = `
+        <div class="detail-card">
+          <h3>Research</h3>
+          <div style="color:var(--red);font-size:12px;">No research file found.</div>
+        </div>
+      `;
+    }
+  }
+
   panel.innerHTML = `
     <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
     <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId}</div>
+    ${researchHtml}
     ${planHtml}
     ${metaHtml}
     ${lessonHtml}

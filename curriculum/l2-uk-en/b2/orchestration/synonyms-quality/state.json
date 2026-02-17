@@ -1,0 +1,14 @@
+{
+  "slug": "synonyms-quality",
+  "track": "b2",
+  "module_num": 58,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:01:05Z",
+      "task_id": "yw-synonyms-quality-p0"
+    }
+  },
+  "last_updated": "2026-02-17T13:01:05Z"
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "kinets-halytsko-volyni",
+  "track": "b2-hist",
+  "module_num": 26,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:28:59Z",
+      "task_id": "yw-kinets-halytsko-volyni-p0"
+    }
+  },
+  "last_updated": "2026-02-17T13:28:59Z"
+}

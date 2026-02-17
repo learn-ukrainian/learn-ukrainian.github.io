@@ -1,0 +1,14 @@
+{
+  "slug": "synonyms-abstract",
+  "track": "b2",
+  "module_num": 66,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:17:12Z",
+      "task_id": "yw-synonyms-abstract-p0"
+    }
+  },
+  "last_updated": "2026-02-17T13:17:12Z"
+}

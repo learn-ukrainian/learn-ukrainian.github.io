@@ -1,0 +1,14 @@
+{
+  "slug": "regions-west",
+  "track": "b1",
+  "module_num": 72,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:07:05Z",
+      "task_id": "yw-regions-west-p0"
+    }
+  },
+  "last_updated": "2026-02-17T13:07:05Z"
+}

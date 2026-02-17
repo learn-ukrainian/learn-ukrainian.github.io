@@ -1,0 +1,14 @@
+{
+  "slug": "register-technical-scientific",
+  "track": "b2",
+  "module_num": 21,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T11:41:21Z",
+      "task_id": "yw-register-technical-scientific-p0"
+    }
+  },
+  "last_updated": "2026-02-17T11:41:21Z"
+}

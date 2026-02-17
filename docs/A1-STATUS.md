@@ -1,15 +1,15 @@
 # A1 Module Status
 
-**Generated:** 2026-02-17 01:14:00
+**Generated:** 2026-02-17 11:44:04
 **Total Modules:** 44
-**Status:** 31 passing, 1 failing, 0 stubs, 12 errors
+**Status:** 38 passing, 1 failing, 0 stubs, 5 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 31/44 (70%)
+- ✅ **Passing:** 38/44 (86%)
 - ❌ **Failing:** 1/44
 - 📝 **Stubs:** 0/44
-- ⚠️ **Errors:** 12/44
+- ⚠️ **Errors:** 5/44
 
 ## Module Details
 
@@ -23,12 +23,12 @@
 | 006 | the-living-verb-i | ✅ PASS | 1849/1210 | - |
 | 007 | questions-and-negation | ✅ PASS | 2976/1131 | - |
 | 008 | the-living-verb-ii | ✅ PASS | 1661/972 | - |
-| 009 | reflexive-verbs | ✅ PASS | 2782/830 | - |
+| 009 | reflexive-verbs | ✅ PASS | 1723/830 | - |
 | 010 | checkpoint-first-contact | ✅ PASS | 1744/875 | - |
 | 011 | the-accusative-i-things | ✅ PASS | 2253/855 | - |
 | 012 | the-accusative-ii-people | ✅ PASS | 3691/1374 | - |
 | 013 | the-locative-where-things-are | ✅ PASS | 2090/1331 | - |
-| 014 | mine-and-yours | ✅ PASS | 1710/1307 | - |
+| 014 | mine-and-yours | ✅ PASS | 2468/1307 | - |
 | 015 | around-the-city | ✅ PASS | 3528/1602 | - |
 | 016 | the-genitive-i-absence | ✅ PASS | 3127/1038 | - |
 | 017 | numbers-and-money | ✅ PASS | 3194/1091 | - |
@@ -46,14 +46,14 @@
 | 029 | weather-and-nature | ✅ PASS | 1929/869 | - |
 | 030 | prepositions-iii | ✅ PASS | 3237/936 | - |
 | 031 | body-and-health | ✅ PASS | 2175/820 | - |
-| 032 | my-family | ❌ FAIL | 1369/916 | Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: fill-in, match-up |
-| 033 | holidays-and-traditions | ⚠️ MISSING | 0/0 | no_file |
-| 034 | checkpoint-core-grammar | ⚠️ MISSING | 0/0 | no_file |
-| 035 | at-the-cafe-practical | ⚠️ MISSING | 0/0 | no_file |
-| 036 | at-the-restaurant | ⚠️ MISSING | 0/0 | no_file |
-| 037 | at-the-market | ⚠️ MISSING | 0/0 | no_file |
-| 038 | at-the-store | ⚠️ MISSING | 0/0 | no_file |
-| 039 | buying-tickets | ⚠️ MISSING | 0/0 | no_file |
+| 032 | my-family | ✅ PASS | 1166/916 | - |
+| 033 | holidays-and-traditions | ✅ PASS | 1498/750 | - |
+| 034 | checkpoint-core-grammar | ✅ PASS | 1435/962 | - |
+| 035 | at-the-cafe-practical | ✅ PASS | 2110/825 | - |
+| 036 | at-the-restaurant | ✅ PASS | 1459/750 | - |
+| 037 | at-the-market | ✅ PASS | 1993/793 | - |
+| 038 | at-the-store | ✅ PASS | 1821/750 | - |
+| 039 | buying-tickets | ❌ FAIL | 1375/750 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/buying-tickets-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
 | 040 | taking-transport | ⚠️ MISSING | 0/0 | no_file |
 | 041 | phone-basics | ⚠️ MISSING | 0/0 | no_file |
 | 042 | emergencies | ⚠️ MISSING | 0/0 | no_file |

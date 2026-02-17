@@ -4,11 +4,6 @@
   "module_num": 1,
   "mode": "e2e",
   "phases": {
-    "0": {
-      "status": "complete",
-      "timestamp": "2026-02-16T22:18:33Z",
-      "note": "adopted-existing-research"
-    },
     "1": {
       "status": "complete",
       "timestamp": "2026-02-16T22:19:24Z",
@@ -59,7 +54,12 @@
     "8": {
       "status": "complete",
       "timestamp": "2026-02-16T23:04:44Z"
+    },
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:07:02Z",
+      "task_id": "yw-trypillian-civilization-p0"
     }
   },
-  "last_updated": "2026-02-16T23:04:44Z"
+  "last_updated": "2026-02-17T13:07:02Z"
 }

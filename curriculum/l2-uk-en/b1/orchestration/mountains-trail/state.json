@@ -1,0 +1,14 @@
+{
+  "slug": "mountains-trail",
+  "track": "b1",
+  "module_num": 82,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-17T13:24:08Z",
+      "task_id": "yw-mountains-trail-p0"
+    }
+  },
+  "last_updated": "2026-02-17T13:24:08Z"
+}

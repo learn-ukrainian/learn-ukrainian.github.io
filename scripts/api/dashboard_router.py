@@ -6,6 +6,7 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 """
 
 import json
+import re
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,11 +14,12 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, HTTPException
 
-from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT
+from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT, SEMINAR_TRACK_IDS
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from audit.status_cache import read_status, get_source_paths
+from research_quality import assess_research_compat, find_research_path, get_rubric
 
 router = APIRouter(tags=["dashboard"])
 
@@ -56,6 +58,18 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
         has_vocab = sp.get("vocabulary") and sp["vocabulary"].exists() if sp else False
         plan_file = plans_dir / f"{slug}.yaml"
         has_plan = plan_file.exists()
+
+        # Research file detection (all tracks)
+        content_path = sp.get("md") if sp else None
+        rp = find_research_path(track_dir, slug)
+        research_info = assess_research_compat(rp, track_id, content_path) if rp else None
+        if research_info is None:
+            research_info = {
+                "exists": False, "words": 0, "quality": None,
+                "score": None, "markers": None,
+                "profile": get_rubric(track_id),
+                "dimensions": None, "gaps": None,
+            }
 
         # Status
         status_file = status_dir / f"{slug}.json"
@@ -101,7 +115,7 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             except Exception:
                 pass
 
-        modules.append({
+        mod = {
             "slug": slug,
             "num": num,
             "status": overall_status,
@@ -118,9 +132,12 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             },
             "last_audit": last_audit,
             "is_fresh": result.is_fresh if result else False,
-        })
+        }
+        mod["research"] = research_info
+        modules.append(mod)
 
     # Aggregate stats
+    is_seminar = track_id in SEMINAR_TRACK_IDS
     stats = {
         "pass": sum(1 for m in modules if m["status"] == "pass"),
         "content_complete": sum(1 for m in modules if m["status"] == "content-complete"),
@@ -129,10 +146,25 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
         "missing": sum(1 for m in modules if m["status"] == "missing"),
     }
 
+    # Research stats (all tracks)
+    rubric_name = get_rubric(track_id)
+    research_total = sum(1 for m in modules if m.get("research", {}).get("exists"))
+    research_stats = {
+        "total": research_total,
+        "profile": rubric_name,
+    }
+    if rubric_name:
+        for label in ["exemplary", "solid", "adequate", "thin", "stub"]:
+            research_stats[label] = sum(
+                1 for m in modules if m.get("research", {}).get("quality") == label
+            )
+    stats["research"] = research_stats
+
     return {
         "track_id": track_id,
         "track_path": track_path,
         "module_count": len(modules),
+        "is_seminar": is_seminar,
         "stats": stats,
         "modules": modules,
     }
@@ -160,13 +192,16 @@ async def overview():
         s = track_data["stats"]
         pct = round(s["pass"] / track_data["module_count"] * 100) if track_data["module_count"] > 0 else 0
 
-        tracks.append({
+        track_entry = {
             "id": track_id,
             "name": level_cfg["name"],
             "module_count": track_data["module_count"],
             "stats": s,
             "pct_complete": pct,
-        })
+        }
+        if track_data.get("is_seminar"):
+            track_entry["is_seminar"] = True
+        tracks.append(track_entry)
 
         for key in totals:
             if key == "total":
@@ -177,6 +212,55 @@ async def overview():
     return {
         "tracks": tracks,
         "totals": totals,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@router.get("/research")
+async def research_overview():
+    """Research coverage across all tracks with rubric-based quality scoring."""
+    manifest = _load_manifest()
+    levels = manifest.get("levels", {})
+
+    tracks = []
+    for level_cfg in LEVELS:
+        track_id = level_cfg["id"]
+        track_modules = levels.get(track_id, {}).get("modules", [])
+        if not track_modules:
+            continue
+
+        track_data = _scan_track(track_id, level_cfg["path"], track_modules)
+        rs = track_data["stats"].get("research", {})
+
+        mod_research = []
+        for m in track_data["modules"]:
+            r = m.get("research", {})
+            entry = {
+                "num": m["num"],
+                "slug": m["slug"],
+                "exists": r.get("exists", False),
+                "words": r.get("words", 0),
+                "quality": r.get("quality"),
+                "score": r.get("score"),
+                "profile": r.get("profile"),
+                "dimensions": r.get("dimensions"),
+                "gaps": r.get("gaps"),
+                "has_content": m["files"].get("lesson", False),
+            }
+            if "content_alignment" in r:
+                entry["content_alignment"] = r["content_alignment"]
+            mod_research.append(entry)
+
+        tracks.append({
+            "id": track_id,
+            "name": level_cfg["name"],
+            "module_count": track_data["module_count"],
+            "research_stats": rs,
+            "modules": mod_research,
+        })
+
+    return {
+        "tracks": tracks,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -271,6 +355,17 @@ async def module_detail(track_id: str, slug: str):
             result["activities"] = None
     else:
         result["activities"] = None
+
+    # Research (all tracks)
+    content_path = sp.get("md")
+    rp = find_research_path(track_dir, slug)
+    research_info = assess_research_compat(rp, track_id, content_path) if rp else None
+    result["research"] = research_info or {
+        "exists": False, "words": 0, "quality": None,
+        "score": None, "markers": None,
+        "profile": get_rubric(track_id),
+        "dimensions": None, "gaps": None,
+    }
 
     # Orchestration phases
     orch_dir = track_dir / "orchestration" / slug

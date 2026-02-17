@@ -97,6 +97,46 @@ a:hover { text-decoration: underline; }
 
 .meta-info { margin-top: 16px; font-size: 12px; color: var(--text3); }
 
+/* Research coverage */
+.research-section { padding: 0 24px 16px; }
+.research-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.research-card h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.research-card h2 .badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.research-stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.research-stat { text-align: center; min-width: 80px; }
+.research-stat .value { font-size: 20px; font-weight: 700; }
+.research-stat .label { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+.research-legend { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.research-legend .leg { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); }
+.research-legend .dot { width: 8px; height: 8px; border-radius: 2px; }
+.research-track { margin-bottom: 12px; }
+.research-track-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; cursor: pointer; }
+.research-track-header:hover { opacity: 0.8; }
+.research-track-name { font-weight: 600; font-size: 13px; min-width: 200px; }
+.research-bar { flex: 1; height: 14px; background: var(--bg); border-radius: 4px; overflow: hidden; display: flex; }
+.research-bar .seg { height: 100%; transition: width 0.3s; }
+.research-bar .seg.strong { background: var(--green); }  /* exemplary */
+.research-bar .seg.good { background: var(--blue); }    /* solid / no-rubric coverage */
+.research-bar .seg.thin { background: var(--yellow); }  /* adequate */
+.research-bar .seg.stub { background: #f0883e; }        /* thin */
+.research-bar .seg.missing { background: var(--bg3); }
+.research-pct { font-size: 12px; color: var(--text2); min-width: 90px; text-align: right; }
+.research-modules { display: none; margin-top: 4px; margin-bottom: 8px; }
+.research-modules.open { display: block; }
+.research-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 3px; }
+.research-mod { display: flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 4px; font-size: 11px; background: var(--bg); }
+.research-mod .rq { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.research-mod .rq.exemplary { background: var(--green); }
+.research-mod .rq.solid { background: var(--blue); }
+.research-mod .rq.adequate { background: var(--yellow); }
+.research-mod .rq.thin { background: #f0883e; }
+.research-mod .rq.stub { background: var(--red); }
+.research-mod .rq.missing { background: var(--gray); }
+.research-mod .rq.no-rubric { background: var(--text3); }
+.research-mod .slug { color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.research-mod .words { color: var(--text3); margin-left: auto; font-size: 10px; }
+.research-mod.needs-research { border: 1px solid rgba(248,81,73,0.3); }
+
 /* Legend */
 .legend { display: flex; gap: 16px; padding: 12px 24px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); flex-wrap: wrap; }
 .legend-item { display: flex; align-items: center; gap: 4px; }
@@ -138,6 +178,12 @@ a:hover { text-decoration: underline; }
 
 <div class="tracks" id="tracks">
   <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<div class="research-section" id="research-section" style="display:none;">
+  <div class="research-card" id="research-card">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
 </div>
 
 <div class="legend">
@@ -385,13 +431,120 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closePanel();
 });
 
+// ==================== RESEARCH ====================
+
+async function fetchResearch() {
+  try {
+    const res = await fetch(`${API}/research`);
+    const data = await res.json();
+    renderResearch(data);
+  } catch (e) { console.error('Research fetch error:', e); }
+}
+
+function renderResearch(data) {
+  const section = document.getElementById('research-section');
+  const card = document.getElementById('research-card');
+
+  if (!data.tracks || data.tracks.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = '';
+
+  // Aggregate across all tracks
+  let totalMods = 0, totalResearched = 0;
+  let totalExemplary = 0, totalSolid = 0, totalAdequate = 0, totalThin = 0, totalStub = 0;
+  data.tracks.forEach(t => {
+    const rs = t.research_stats;
+    totalMods += t.module_count;
+    totalResearched += rs.total || 0;
+    if (rs.profile) {
+      totalExemplary += rs.exemplary || 0;
+      totalSolid += rs.solid || 0;
+      totalAdequate += rs.adequate || 0;
+      totalThin += rs.thin || 0;
+      totalStub += rs.stub || 0;
+    }
+  });
+  const pct = totalMods > 0 ? Math.round(totalResearched / totalMods * 100) : 0;
+  const badgeColor = pct > 50 ? 'var(--green)' : pct > 20 ? 'var(--yellow)' : 'var(--red)';
+
+  let html = `
+    <h2>Research Coverage <span class="badge" style="background:${badgeColor};color:var(--bg)">${pct}% researched (${totalResearched}/${totalMods})</span></h2>
+    <div class="research-stats-row">
+      <div class="research-stat"><div class="value" style="color:var(--green)">${totalExemplary}</div><div class="label">Exemplary (8-10)</div></div>
+      <div class="research-stat"><div class="value" style="color:var(--blue)">${totalSolid}</div><div class="label">Solid (6-7)</div></div>
+      <div class="research-stat"><div class="value" style="color:var(--yellow)">${totalAdequate}</div><div class="label">Adequate (4-5)</div></div>
+      <div class="research-stat"><div class="value" style="color:#f0883e">${totalThin}</div><div class="label">Thin (2-3)</div></div>
+      <div class="research-stat"><div class="value" style="color:var(--red)">${totalStub}</div><div class="label">Stub (0-1)</div></div>
+    </div>
+    <div class="research-legend">
+      <div class="leg"><div class="dot" style="background:var(--green)"></div>Exemplary (8-10/10)</div>
+      <div class="leg"><div class="dot" style="background:var(--blue)"></div>Solid (6-7/10)</div>
+      <div class="leg"><div class="dot" style="background:var(--yellow)"></div>Adequate (4-5/10)</div>
+      <div class="leg"><div class="dot" style="background:#f0883e"></div>Thin (2-3/10)</div>
+      <div class="leg"><div class="dot" style="background:var(--bg3)"></div>No rubric / missing</div>
+    </div>
+  `;
+
+  data.tracks.forEach(track => {
+    const rs = track.research_stats;
+    const total = track.module_count;
+    const researched = rs.total || 0;
+    const hasRubric = !!rs.profile;
+    const trackPct = total > 0 ? Math.round(researched / total * 100) : 0;
+    const segPct = q => total > 0 ? ((rs[q] || 0) / total * 100).toFixed(1) : 0;
+    const trackId = track.id.replace(/[^a-z0-9-]/g, '');
+    const rubricLabel = hasRubric ? ` (${rs.profile})` : '';
+    const missingCount = total - researched;
+
+    html += `
+      <div class="research-track">
+        <div class="research-track-header" onclick="document.getElementById('rmods-${trackId}').classList.toggle('open')">
+          <span class="research-track-name">${track.name}${rubricLabel}</span>
+          <div class="research-bar">
+            ${hasRubric ? `
+              <div class="seg strong" style="width:${segPct('exemplary')}%"></div>
+              <div class="seg good" style="width:${segPct('solid')}%"></div>
+              <div class="seg thin" style="width:${segPct('adequate')}%"></div>
+              <div class="seg stub" style="width:${segPct('thin')}%"></div>
+            ` : `
+              <div class="seg good" style="width:${total > 0 ? (researched / total * 100).toFixed(1) : 0}%"></div>
+            `}
+            <div class="seg missing" style="width:${total > 0 ? (missingCount / total * 100).toFixed(1) : 0}%"></div>
+          </div>
+          <span class="research-pct">${trackPct}% (${researched}/${total})</span>
+        </div>
+        <div class="research-modules" id="rmods-${trackId}">
+          <div class="research-grid">
+            ${track.modules.map(m => {
+              const q = m.quality || (m.exists ? 'no-rubric' : 'missing');
+              const needsResearch = !m.exists && !m.has_content;
+              const scoreLabel = m.score != null ? `${m.score}/10` : (m.exists ? `${m.words}w` : '');
+              return `<div class="research-mod${needsResearch ? ' needs-research' : ''}">
+                <div class="rq ${q}"></div>
+                <span class="slug" title="${m.slug}">${m.num.toString().padStart(3,'0')} ${m.slug}</span>
+                <span class="words">${scoreLabel}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  card.innerHTML = html;
+}
+
 // ==================== INIT ====================
 
 fetchOverview();
+fetchResearch();
 setInterval(() => {
   trackCache = {};
   fetchOverview();
 }, 30000);
+setInterval(fetchResearch, 60000);
 </script>
 </body>
 </html>
