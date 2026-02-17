@@ -3,12 +3,6 @@
   "track": "a1",
   "module_num": 30,
   "mode": "e2e",
-  "phases": {
-    "0.5": {
-      "status": "complete",
-      "timestamp": "2026-02-17T15:19:22Z",
-      "task_id": "yw-prepositions-iii-p0.5"
-    }
-  },
-  "last_updated": "2026-02-17T15:19:22Z"
+  "phases": {},
+  "last_updated": "2026-02-17T00:00:00Z"
 }
