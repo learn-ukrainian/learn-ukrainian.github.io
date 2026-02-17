@@ -37,6 +37,6 @@ Alignment: The module reinforces the conjugation of base motion verbs when teach
 - Prepares for: `advanced-motion-prefixes` (B1 - passing through, going around), `transport-hub` (A2.4 vocabulary)
 
 ## Notes for Content Writing
-- **Persona**: As a Taxi Driver, the "Helpful Neighbor" persona fits well. Use examples of driving passengers: "We are entering the city center," "We are exiting the highway."
+- **Persona**: As a Taxi Driver, the "Ukrainian Teacher" persona fits well. Use examples of driving passengers: "We are entering the city center," "We are exiting the highway."
 - **Visuals**: Use the "Box Analogy" clearly. В- is an arrow INTO the box; Ви- is an arrow OUT OF the box.
 - **Euphony**: Explicitly teach *увійти* vs *ввійти* vs *увіходити* rules briefly, as these verbs trigger euphony rules constantly.
