@@ -253,7 +253,7 @@ curriculum/l2-uk-en/
 
 **Bare slug** = filename stem with numeric prefix removed (via `scripts/slug_utils.py`)
 
-**Module counts**: A1 (44), A2 (70), B1 (92), B2 (94), C1 (106), C2 (100)
+**Module counts**: A1 (44), A2 (71), B1 (94), B2 (95), C1 (108), C2 (101)
 **Track counts**: B2-HIST (140), C1-BIO (128), LIT (30)
 
 ---
