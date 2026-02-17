@@ -507,13 +507,15 @@ def phase_2_v2(ctx: ModuleContext) -> bool:
     Plan + research remain the source of truth.
     """
     phase = "2"
-    # --refresh resets phase 2 so it doesn't get skipped
+    # --refresh resets phase 2+ so downstream phases re-run with new prose
     if getattr(ctx, "refresh", False) and is_phase_complete(ctx, phase):
         state_phases = ctx.state.get("phases", {})
-        if "2" in state_phases:
-            del state_phases["2"]
-            save_state(ctx)
-        log("  Phase 2: RESET (--refresh flag)")
+        # Clear phase 2 and all downstream phases (3, 4a, 4b, 5, 6, 6b, 7, 8)
+        downstream = [k for k in state_phases if k >= "2"]
+        for k in downstream:
+            del state_phases[k]
+        save_state(ctx)
+        log(f"  Phase 2: RESET (--refresh flag, cleared {len(downstream)} phases)")
     elif is_phase_complete(ctx, phase):
         log("  Phase 2: SKIP (already complete)")
         return True
@@ -523,38 +525,29 @@ def phase_2_v2(ctx: ModuleContext) -> bool:
     if content_path.exists():
         word_count = len(content_path.read_text(encoding="utf-8").split())
         if word_count >= ctx.word_target * 0.8:
-            # Check if research was upgraded after content was written
+            # Check research-content alignment (mtime-independent)
+            refresh_needed = False
             research_path = ctx.paths.get("research")
             if research_path and research_path.exists():
-                if research_path.stat().st_mtime > content_path.stat().st_mtime:
-                    try:
-                        from research_quality import assess_research_compat
-                        info = assess_research_compat(research_path, ctx.track, content_path)
-                        if info and info.get("content_alignment", {}).get("refresh_recommended"):
-                            reasons = info["content_alignment"].get("reasons", [])
-                            log(f"  Phase 2: Research upgraded since content was written")
-                            for r in reasons:
-                                log(f"    - {r}")
-                            if getattr(ctx, "refresh", False):
-                                log(f"  Phase 2: --refresh flag set — regenerating prose")
-                                # Fall through to generation instead of adopting
-                                pass  # skip adoption below
-                            else:
-                                log(f"  Phase 2: ADOPT (use --refresh to regenerate from updated research)")
-                                mark_phase_locked(ctx, phase, "complete", note="adopted-stale-prose", words=word_count)
-                                return True
-                        else:
-                            log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
-                            mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
-                            return True
-                    except ImportError:
-                        log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
-                        mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
-                        return True
-                else:
-                    log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
-                    mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
-                    return True
+                try:
+                    from research_quality import assess_research_compat
+                    info = assess_research_compat(research_path, ctx.track, content_path)
+                    if info and info.get("content_alignment", {}).get("refresh_recommended"):
+                        refresh_needed = True
+                        reasons = info["content_alignment"].get("reasons", [])
+                        log(f"  Phase 2: Research-content misalignment detected")
+                        for r in reasons:
+                            log(f"    - {r}")
+                except ImportError:
+                    pass
+
+            if refresh_needed and getattr(ctx, "refresh", False):
+                log(f"  Phase 2: --refresh flag set — regenerating prose from research")
+                # Fall through to generation
+            elif refresh_needed:
+                log(f"  Phase 2: ADOPT (use --refresh to regenerate from updated research)")
+                mark_phase_locked(ctx, phase, "complete", note="adopted-stale-prose", words=word_count)
+                return True
             else:
                 log(f"  Phase 2: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
                 mark_phase_locked(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
