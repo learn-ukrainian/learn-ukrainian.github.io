@@ -349,7 +349,7 @@ def _check_content_alignment_core(dims: dict, content_text: str) -> dict:
     hooks_dim = dims.get("cultural_hooks", {})
     if hooks_dim.get("score", 0) >= 2:
         has_cultural = bool(re.search(
-            r"(?i)(##.*cultur|##.*\u043a\u0443\u043b\u044c\u0442\u0443\u0440)", content_text
+            r"(?i)(##.*cultur|##.*\u043a\u0443\u043b\u044c\u0442\u0443\u0440|\[!culture\]|\[!context\])", content_text
         ))
         if not has_cultural:
             reasons.append("Research has 2+ cultural hooks but content has no cultural section")
@@ -357,7 +357,7 @@ def _check_content_alignment_core(dims: dict, content_text: str) -> dict:
     errors_dim = dims.get("learner_errors", {})
     if errors_dim.get("score", 0) >= 2:
         has_errors = bool(re.search(
-            r"(?i)(common\s+mistake|\u043f\u043e\u043c\u0438\u043b\u043a|\u0442\u0438\u043f\u043e\u0432|\u043f\u043e\u0448\u0438\u0440\u0435\u043d)",
+            r"(?i)(common\s+mistake|\u043f\u043e\u043c\u0438\u043b\u043a|\u0442\u0438\u043f\u043e\u0432|\u043f\u043e\u0448\u0438\u0440\u0435\u043d|\[!warning\]|\[!caution\]|\[!tip\].*(?:\u043d\u0435\s|\u043d\u0435\u043f\u0440\u0430\u0432|wrong|avoid|careful))",
             content_text,
         ))
         if not has_errors:
