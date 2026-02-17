@@ -1850,7 +1850,14 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     activity_config = get_activity_config(track, num)
     track_config = get_track_config(track)
 
+    # Word target: plan overrides config, config is fallback
     word_target = plan.get("word_target", 0)
+    if not word_target:
+        try:
+            from audit.config import get_word_target as _get_wt
+            word_target = _get_wt(track.upper().split("-")[0], num)
+        except Exception:
+            word_target = 0  # Audit will use its own config fallback
     topic_title = plan.get("title", slug.replace("-", " ").title())
     content_outline = meta.get("content_outline", [])
 

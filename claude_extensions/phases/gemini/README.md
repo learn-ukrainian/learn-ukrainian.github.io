@@ -25,7 +25,7 @@ Templates use `{PLACEHOLDER}` syntax. Claude replaces these before writing the p
 | `{VOCAB_PATH}` | `curriculum/l2-uk-en/{track}/vocabulary/{slug}.yaml` |
 | `{QUICK_REF_PATH}` | `claude_extensions/quick-ref/{LEVEL}.md` |
 | `{SCHEMA_PATH}` | `schemas/activities-{track}.schema.json` |
-| `{WORD_TARGET}` | From plan/meta YAML |
+| `{WORD_TARGET}` | From level config (`scripts/audit/config.py`) |
 | `{SLUG}` | Module slug |
 | `{TRACK}` | Track identifier |
 

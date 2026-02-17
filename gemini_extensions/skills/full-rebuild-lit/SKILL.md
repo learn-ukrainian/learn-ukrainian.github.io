@@ -29,7 +29,7 @@ You are a **Professor of Ukrainian Arts**, specializing in literature and litera
 |-------|-------------------|--------------|
 | LIT (all genres) | 4500–6000 | 6000–9000 |
 
-**Always check the plan's `word_target` — it is the authoritative minimum. Overshoot to 2.0x.**
+**Word targets come from level config (not plans). Write rich content — quality over word count.**
 
 ### Immersion
 

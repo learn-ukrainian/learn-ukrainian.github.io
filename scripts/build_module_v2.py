@@ -1072,10 +1072,18 @@ def _bootstrap_meta_from_plan(track: str, slug: str) -> None:
         return  # No plan = nothing to bootstrap from, will fail later
 
     plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
+    # Word target: plan overrides config, config is fallback
+    wt = plan.get("word_target", 0)
+    if not wt:
+        try:
+            from audit.config import get_word_target as _get_wt
+            wt = _get_wt(track.upper().split("-")[0], int(slug.split("-")[-1]) if slug[0].isdigit() else 1)
+        except Exception:
+            wt = 0
     minimal_meta = {
         "slug": slug,
         "title": plan.get("title", slug.replace("-", " ").title()),
-        "word_target": plan.get("word_target", 0),
+        "word_target": wt,
     }
     meta_path.parent.mkdir(parents=True, exist_ok=True)
     meta_path.write_text(yaml.dump(minimal_meta, allow_unicode=True), encoding="utf-8")

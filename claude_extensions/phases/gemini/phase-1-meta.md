@@ -13,7 +13,7 @@ Read the research notes from Phase 0:
 {RESEARCH_PATH}
 ```
 
-Read the **plan file** (SOURCE OF TRUTH for structure, word_target, objectives, vocabulary):
+Read the **plan file** (SOURCE OF TRUTH for structure, objectives, vocabulary):
 
 ```
 {PLAN_PATH}
@@ -30,16 +30,15 @@ Read the **old meta file** (for reference only — you are REPLACING the content
 **Rebuild** the `content_outline` in the meta file from scratch, using the plan's section structure as the skeleton and the research notes to inform depth and word allocation.
 
 1. Every section has a `words` allocation
-2. Word allocations sum to **exactly {WORD_TARGET}** (the plan's word_target)
+2. Word allocations sum to approximately **{WORD_TARGET}** (the level's word target, provided by the build system)
 3. Sections are informed by research notes (sections with richer research get more words)
 4. Section names are natural Ukrainian H2 headings
 5. Each section's `points` list is specific and actionable — not vague ("cover grammar" → bad; "Each POS gets its own H3 with definition, question, 2+ examples, usage note" → good)
 
 ### Rules
 
-- **Do NOT change `word_target`** — it comes from the plan and is immutable
 - **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
-- Allocations must sum to `word_target` (not more, not less)
+- Allocations should sum to approximately {WORD_TARGET} words (±10% is acceptable)
 - Minimum section allocation: 200 words (smaller sections should be merged)
 - Each section must have `section`, `words`, and `points` fields
 - Section names must be Ukrainian (this is the lesson content heading)
@@ -99,6 +98,5 @@ After your meta outline output, include:
 ## Boundaries
 
 - Do NOT write lesson content
-- Do NOT change word_target
 - Do NOT add fields not listed above (no `id`, `type`, etc.)
 - Do NOT request skills or delegate to Claude

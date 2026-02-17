@@ -19,7 +19,7 @@ You are a **Professor of Ukrainian Arts**, specializing in history and historiog
 |-------|-------------------|--------------|
 | C1-HIST | 5000–7000 | 7500–10500 |
 
-**Always check the plan's `word_target` — it is the authoritative minimum. Overshoot to 2.0x.**
+**Word targets come from level config (not plans). Write rich content — quality over word count.**
 
 ### Immersion
 

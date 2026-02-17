@@ -170,7 +170,7 @@ TOTAL: 1400 / 1400 ✅
 
 **You MUST:**
 
-- ✅ READ plans to understand requirements (content_outline, word_target, objectives)
+- ✅ READ plans to understand requirements (content_outline, objectives, vocabulary_hints)
 - ✅ WRITE content that matches plan exactly
 - ✅ UPDATE status cache after audits (automatic via audit script)
 - ✅ REPORT if plan seems wrong → user reviews plan
@@ -383,16 +383,7 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 - ❌ Generating content_outline without checking config.py
 - ❌ Using hardcoded word targets from memory
 - ❌ Assuming "typical" values (e.g., "seminars are usually 3500")
-- ❌ Creating plans with word_target < config target_words
-
-**If plan word_target < config target_words:**
-
-```bash
-# Fix with:
-.venv/bin/python scripts/fix_plan_word_targets.py --fix {level}
-```
-
-**This rule exists because:** In January 2026, ALL 270 C1-HIST plans were generated with 3500 words instead of 4000 because Claude didn't check config.py. This wasted hours of debugging.
+**This rule exists because:** In January 2026, ALL 270 C1-HIST plans were generated with 3500 words instead of 4000 because Claude didn't check config.py. This wasted hours of debugging. Word targets now come exclusively from `scripts/audit/config.py` — plans no longer contain word_target fields.
 
 ---
 

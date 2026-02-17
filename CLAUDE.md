@@ -150,9 +150,6 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 # Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
 .venv/bin/python scripts/validate_plan_config.py {level}
 
-# Fix plan word_targets if mismatched
-.venv/bin/python scripts/fix_plan_word_targets.py --fix {level}
-
 # Generate status report (from per-module JSON cache)
 npm run status:{level}  # or: .venv/bin/python scripts/generate_level_status.py {level}
 

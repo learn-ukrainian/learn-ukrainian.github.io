@@ -569,7 +569,7 @@ After each module:
 | `{TRACK}` | Track identifier |
 | `{LEVEL}` | Uppercase level for quick-ref |
 | `{SLUG}` | Module slug |
-| `{WORD_TARGET}` | From plan `word_target` |
+| `{WORD_TARGET}` | From level config (`scripts/audit/config.py`) |
 | `{OVERSHOOT_TARGET}` | `word_target * 1.5` (monolithic) or `section_allocation * 1.2` (section dispatch) |
 | `{ENGAGEMENT_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
 | `{EXAMPLE_MIN}` | From MODULE-RICHNESS-GUIDELINES-v2.md |
