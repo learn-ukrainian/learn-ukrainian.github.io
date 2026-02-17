@@ -12,6 +12,12 @@ Usage:
   .venv/bin/python scripts/assess_research.py b2-hist --json         # JSON output
   .venv/bin/python scripts/assess_research.py a1 --refresh-queue     # modules needing content refresh
   .venv/bin/python scripts/assess_research.py a1 --process          # rebuild all stale modules
+  .venv/bin/python scripts/assess_research.py b2-hist --upgrade     # research below 9/10
+  .venv/bin/python scripts/assess_research.py b2-hist --upgrade-process  # regenerate weak research (retries up to 3x)
+  .venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8  # custom threshold
+
+--upgrade-process retries each module up to MAX_RESEARCH_UPGRADE_RETRIES (3) times.
+Hard failures (build error, timeout, missing file) stop retries for that module immediately.
 """
 
 import argparse
@@ -377,6 +383,146 @@ def _process_refresh_queue(track_id: str, results: list[dict]):
     print()
 
 
+MAX_RESEARCH_UPGRADE_RETRIES = 3  # Total attempts per module
+
+
+def _build_upgrade_queue(results: list[dict], min_score: int = 9) -> list[dict]:
+    """Extract modules with research below min_score."""
+    queue = []
+    for r in results:
+        info = r["info"]
+        if info is None:
+            # No research file — needs generation
+            queue.append(r)
+            continue
+        score = info.get("score")
+        if score is not None and score < min_score:
+            queue.append(r)
+    # Sort by score ascending (weakest first = most improvement needed)
+    queue.sort(key=lambda r: (r["info"] or {}).get("score", -1))
+    return queue
+
+
+def _render_upgrade_queue(track_id: str, results: list[dict], min_score: int = 9):
+    """Render modules with research below min_score threshold."""
+    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    queue = _build_upgrade_queue(results, min_score)
+
+    print(f"\n{BOLD}{track_name} Upgrade Queue (research below {min_score}/10){RESET}")
+    print("\u2550" * 70)
+    print(f"{'#':>3}  {'Module':<35} {'Score':>6}  Gaps")
+    print("\u2500" * 70)
+
+    for r in queue:
+        info = r["info"]
+        if info is None:
+            print(f"{r['num']:>3}  {r['slug']:<35} {DIM}{'---':>6}  missing{RESET}")
+            continue
+        score = info.get("score", 0)
+        quality = info.get("quality", "")
+        gaps = info.get("gaps") or []
+        gap_str = ", ".join(g.split(":")[0] for g in gaps[:4])
+        if len(gaps) > 4:
+            gap_str += f" +{len(gaps) - 4}"
+        print(
+            f"{r['num']:>3}  {r['slug']:<35} "
+            f"{_colored(f'{score:>2}/10', quality)}  "
+            f"{gap_str}"
+        )
+
+    print("\u2550" * 70)
+    if queue:
+        print(f"{len(queue)} module(s) need research upgrade to {min_score}/10+")
+    else:
+        print(f"All modules at {min_score}/10+. Nothing to upgrade.")
+    print()
+
+
+def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 9):
+    """Process the upgrade queue — regenerate research with retries until threshold met."""
+    import subprocess
+
+    queue = _build_upgrade_queue(results, min_score)
+    if not queue:
+        print(f"All modules at {min_score}/10+. Nothing to upgrade.")
+        return
+
+    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    total = len(queue)
+    max_attempts = MAX_RESEARCH_UPGRADE_RETRIES
+    print(f"\n{BOLD}{track_name}: Upgrading research for {total} module(s) (max {max_attempts} attempts each){RESET}")
+    print("\u2550" * 70)
+
+    passed = 0
+    failed = 0
+    attempt_log = []  # (slug, attempts_used, final_score)
+    for i, r in enumerate(queue, 1):
+        num = r["num"]
+        slug = r["slug"]
+        old_score = (r["info"] or {}).get("score", "?")
+        print(f"\n[{i}/{total}] M{num:02d} {slug} (current: {old_score}/10)")
+        print("\u2500" * 50)
+
+        module_passed = False
+        last_score = old_score
+        attempts_used = 0
+
+        for attempt in range(1, max_attempts + 1):
+            attempts_used = attempt
+            cmd = [
+                str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
+                str(SCRIPTS_DIR / "build_module_v2.py"),
+                track_id, str(num), "--force-phase", "0", "--force-research",
+            ]
+            try:
+                result = subprocess.run(cmd, timeout=300)
+                if result.returncode == 0:
+                    # Re-assess to check new score
+                    track_dir = CURRICULUM_ROOT / track_id
+                    rp = find_research_path(track_dir, slug)
+                    if rp:
+                        new_info = assess_research_compat(rp, track_id)
+                        new_score = (new_info or {}).get("score", "?")
+                        print(f"  Attempt {attempt}: {last_score}/10 \u2192 {new_score}/10", end="")
+                        if isinstance(new_score, int) and new_score >= min_score:
+                            print(f" {BOLD}\033[32m\u2713{RESET}")
+                            module_passed = True
+                            last_score = new_score
+                            break
+                        elif attempt < max_attempts:
+                            print(f" (below {min_score}, retrying...)")
+                            last_score = new_score
+                        else:
+                            print(f" {BOLD}\033[33mstill below {min_score} after {max_attempts} attempts{RESET}")
+                            last_score = new_score
+                    else:
+                        print(f"  Attempt {attempt}: {BOLD}\033[31mno research file after build{RESET}")
+                        break
+                else:
+                    print(f"  Attempt {attempt}: {BOLD}\033[31mFAIL (exit {result.returncode}){RESET}")
+                    break
+            except subprocess.TimeoutExpired:
+                print(f"  Attempt {attempt}: {BOLD}\033[31mTIMEOUT (5min){RESET}")
+                break
+            except KeyboardInterrupt:
+                print(f"\n\nInterrupted at M{num:02d} attempt {attempt}/{max_attempts}")
+                print(f"Progress: {passed} passed, {failed} failed out of {i}/{total} modules")
+                return
+
+        attempt_log.append((slug, attempts_used, last_score))
+        if module_passed:
+            passed += 1
+        else:
+            failed += 1
+
+    print(f"\n{'═' * 70}")
+    print(f"Done: {passed} upgraded to {min_score}+, {failed} still below")
+    multi = [(s, a) for s, a, _ in attempt_log if a > 1]
+    if multi:
+        print(f"Multi-attempt: {', '.join(f'{s}({a}x)' for s, a in multi)}")
+    print()
+
+
 def _render_all_overview(manifest: dict):
     """Render overview of all tracks."""
     print(f"\n{BOLD}Research Overview{RESET}")
@@ -428,6 +574,9 @@ def main():
     parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
     parser.add_argument("--refresh-queue", action="store_true", help="List modules where content refresh is recommended")
     parser.add_argument("--process", action="store_true", help="Process the refresh queue (run build_module_v2.py --refresh for each)")
+    parser.add_argument("--upgrade", action="store_true", help="List modules with research below --min-score")
+    parser.add_argument("--upgrade-process", action="store_true", help="Regenerate research for modules below --min-score")
+    parser.add_argument("--min-score", type=int, default=9, help="Minimum research score target (default: 9)")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--all", action="store_true", help="Overview of all tracks")
     args = parser.parse_args()
@@ -468,6 +617,17 @@ def main():
         sys.exit(1)
 
     results = _scan_track(track_id, manifest)
+
+    if getattr(args, "upgrade_process", False):
+        min_score = getattr(args, "min_score", 9)
+        _render_upgrade_queue(track_id, results, min_score)
+        _process_upgrade_queue(track_id, results, min_score)
+        return
+
+    if getattr(args, "upgrade", False):
+        min_score = getattr(args, "min_score", 9)
+        _render_upgrade_queue(track_id, results, min_score)
+        return
 
     if getattr(args, "process", False):
         _render_refresh_queue(track_id, results)
