@@ -2164,7 +2164,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/16-1/
       relevance: high
       source: University of Kansas
-  a2-40-adj-suffixes:
+  a2-40-adjective-suffixes-types:
     websites:
     - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
       url: https://opentext.ku.edu/dobraforma/chapter/16-1/

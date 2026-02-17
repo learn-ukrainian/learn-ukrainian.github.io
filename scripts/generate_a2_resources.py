@@ -56,7 +56,7 @@ A2_DOBRA_FORMA_MAPPING = {
     'a2-37-advanced-motion-prefixes': ['28-3'],  # More motion prefixes
     'a2-38-action-verb-prefixes': ['27-1'],  # Perfective prefixes
     'a2-39-adjective-suffixes-qualities': ['16-1'],  # Adjectives
-    'a2-40-adj-suffixes': ['16-1', '16-2'],  # More adjectives
+    'a2-40-adjective-suffixes-types': ['16-1', '16-2'],  # More adjectives
     'a2-41-root-families-i': [],  # Word formation (advanced)
     'a2-42-root-families-ii': [],  # Word formation
     'a2-43-wf-mastery': [],  # Word formation mastery

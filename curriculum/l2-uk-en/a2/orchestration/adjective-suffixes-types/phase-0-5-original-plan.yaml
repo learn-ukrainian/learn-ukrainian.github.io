@@ -1,0 +1,75 @@
+module: a2-40
+level: A2
+sequence: 40
+slug: adj-suffixes
+version: '2.0'
+title: Adjective Suffixes — Types
+subtitle: Materials and Origins
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'From Nouns to Identity: The magic of the material bridge — introduce core suffixes
+    -ськ- and -н- aligned with State Standard §4.2.1.2'
+  - Why 'wooden' is more than a word in Ukrainian — use high-frequency example «дерев'яний»
+    to illustrate the concept
+- section: Presentation / Презентація
+  points:
+  - '''The Materialist Logic: -Ов- (Standard) vs -Ян- (Natural/Traditional)'' — explicit
+    heuristic: -ян- for natural/traditional materials (вовняний, дерев''яний) vs -ов-
+    for standard/processed (металевий, пластиковий); learner error: stress-dependent
+    confusion between -ов- and -ев- (дубовий vs польовий)'
+  - '''The Geography of Suffixes: -Ськ- and its many faces'' — key geographic adjectives:
+    київський, львівський, український'
+  - '''Consonant Mutations: Crossing the bridge from Prague to Odesa'' — focus on
+    the ''Big Three'' mutations (к/ч/ц -> цьк, г/ж/з -> зьк, х/ш/с -> ськ); mnemonic
+    anchor: Прага -> Празький; learner error: mutation failure (e.g., *Прагський*)'
+  - '''Abstract Logic: -Ічн- vs -Н-'' — highlight «домашній» (very high frequency)
+    as prime example for -н-'
+  - '''Prefix-Suffix Combinations (Intro): Настільний, Підземний'' — brief introduction
+    to simultaneous derivation'
+- section: Practice / Практика
+  points:
+  - 'Material conversion drills — focus on converting nouns to adjectives: скло ->
+    скляний, залізо -> залізний'
+  - City-to-Adjective mutation challenge — targeted drills on the k->ts, h->z, kh->s
+    patterns
+- section: Dialogues / Діалоги
+  points:
+  - 'At the handicraft fair: Discussing wooden toys and woolen shawls — cultural hook:
+    context of «яворівська забавка» (wooden toy) and «гуцульський ліжник» (woolen
+    blanket)'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can describe what things are made of
+- Learner can describe origin and nationality
+- Learner can form abstract adjectives
+- Learner can classify adjectives by meaning
+- Learner can handle consonant mutations in origin suffixes
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Adjective Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for material and origin adjective suffixes at A2
+- name: Ukrainian Word Formation - Consonant Changes
+  url: https://uk.wikipedia.org/wiki/Чергування_приголосних_при_творенні_прикметників
+  type: reference
+  notes: Rules for mutations like k->ts, h->z when adding -sk-
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Art Gallery Curator
+vocabulary_hints:
+  required:
+  - дерев'яний (wooden) — дерев'яний стіл, дерев'яний будинок
+  - скляний (glass adj.) — скляна пляшка, скляний посуд
+  - залізний (iron adj.) — залізні двері, залізний характер (idiom)
+  - київський (Kyiv adj.) — київський торт, Київська Русь
+  - львівський (Lviv adj.) — львівська кава, львівський сирник
+  - домашній (home/domestic) — домашнє завдання, домашня тварина
+  - вовняний (woolen) — вовняний светр, вовняна ковдра
+  recommended:
+  - осика (aspen) — traditional wood for Yavoriv toys
+  - ліжник (lizhnyk) — Hutsul woven blanket
