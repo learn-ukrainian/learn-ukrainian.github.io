@@ -1,34 +1,45 @@
 # Дослідження: Telling Stories
 
 ## State Standard Reference
-§4.4.2: "Складне речення: ... складнопідрядні речення із часовою підрядною частиною (сполучне слово коли): вираження значення одночасності... вираження значення різночасовості... складносурядні речення зі сполучниками і (й), та... складносурядні речення з протиставними відношеннями (але)"
-Alignment: This module directly teaches the sequencing connectors (спочатку, потім = time/sequence) and adversative connectors (але = contrast/drama) required for A2 narrative competence.
+§1.4.1.1.1: "Особа вміє: створювати розповідь як просту послідовність подій;"
+Alignment: This module focuses on the transition from listing events ("Robot Style") to creating a cohesive narrative using sequencing connectors (спочатку, потім, нарешті) and drama markers (раптом, несподівано).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Спочатку** | High / Core Adverb | Спочатку... а потім... (structure); спочатку думав (thought at first) |
-| **Потім** | Very High / Core | А потім (and then); що було потім? (what happened next?) |
-| **Нарешті** | High / Modal | Нарешті вдома (finally at home); ну, нарешті! (well, finally!) |
-| **Раптом** | High / Narrative | І раптом (and suddenly); як раптом (when suddenly) |
-| **Несподівано** | Medium / Descriptive | Цілком несподівано (quite unexpectedly); несподівано для всіх |
+| спочатку | High / General | спочатку я..., спочатку було... |
+| потім | High / General | а потім, потім ми... |
+| нарешті | High / General | нарешті прийшов, нарешті сталося |
+| раптом | Medium / Narrative | і раптом побачив, раптом почався |
+| одного разу | Medium / Narrative | одного разу влітку, одного разу я... |
+| несподівано | Medium / Narrative | несподівано з'явився, несподівано для всіх |
+| казка | High / Cultural | читати казку, народна казка |
+| анекдот | High / Cultural | розповідати анекдот, смішний анекдот |
 
 ## Cultural Hooks
-1. **Kazky (Fairy Tales)**: Ukrainian folktales (*казки*) follow a strict linear sequence often initiated by a lack or misfortune, using ritualized opening/closing formulas ("Жили-були...", "От і казочці кінець...").
-2. **The "Anekdot" Tradition**: Ukrainian jokes (*анекдоти*) are a primary form of social bonding. They rely heavily on timing and the "rule of three" sequence, often ending with a witty punchline. Mastering the *anekdot* structure is a high-value social skill.
+1. **The Village Storyteller (Казкар)**: In Ukrainian village tradition, storytelling was a specialized communal art. Storytellers were highly respected for their ability to maintain oral traditions (fairytales, legends, anecdotes) that acted as moral and cultural anchors.
+2. **Ukrainian Laughter (Сміхова культура)**: The "Anekdot" is a vital part of Ukrainian social bonding. It’s not just a joke; it’s a performance. The timing of connectors like "потім" and "раптом" is crucial for the punchline to land.
 
 ## Common Learner Errors
-1. **Спочатку vs. З початку**: Learners confuse the adverb *спочатку* (at first/initially, written together) with the prepositional phrase *з початку* (from the beginning of [something], written separately).
-   - *Error:* "Я читав це з початку." (I read this from the beginning [of the book]) vs *Intended:* "Спочатку я читав..." (At first I read...).
-2. **Word Order in Narrative**: Placing the time marker at the end of the sentence instead of the beginning (English influence).
-   - *Error:* "Я пішов додому потім." → *Correct:* "Потім я пішов додому." (Ukrainian prefers time markers in the theme/start position).
-3. **Overuse of "І" (And)**: Beginners string sentences with "і... і... і..." instead of using variety (*спочатку, потім, тоді, після цього*).
+1. **спочатку vs. з початку**: 
+   - Error: *З початку я поснідав.* (Using the prepositional phrase "from the start of" instead of the adverb "at first").
+   - Correct: **Спочатку** я поснідав. 
+   - Why: Learners confuse the adverb (written as one word) with the preposition + noun phrase (written as two words).
+2. **Word Order Inversion**:
+   - Error: *Я пішов в магазин потім.* (Placing the time marker at the end like English "afterwards").
+   - Correct: **Потім** я пішов в магазин.
+   - Why: In Ukrainian, time connectors typically serve as the "Theme" and are placed at the start of the sentence for logical flow.
+3. **Overuse of "І" (And)**:
+   - Error: *Я прокинувся і я поїв і я пішов...*
+   - Correct: **Спочатку** я прокинувся, **потім** поснідав...
+   - Why: Beginners rely on "and" because they lack sequencing vocabulary.
 
 ## Cross-References
-- **Builds on**: `a1-10` (Basic Verbs), `a2-08` (Past Tense)
-- **Prepares for**: `b1-narrative-tenses` (Aspect in narrative), `b1-biography` (Life stories)
+- Builds on: `daily-routine` (M10), `past-tense` (M18-19)
+- Prepares for: `biography-intro` (M50+), `complex-sentences-temporal` (B1)
 
 ## Notes for Content Writing
-- **Persona**: The "Village Storyteller" fits perfectly with teaching *kazka* formulas ("Жили-були") and *anekdot* structure.
-- **Visuals**: Use a "Timeline Road" visual metaphor for *Спочатку → Потім → Нарешті*.
-- **Immersion**: Use clear Ukrainian markers for the "Road signs of time" section.
+- **Visual Metaphor**: Use a "Timeline Road" or "Train" metaphor to show how "спочатку", "потім", and "нарешті" connect different "cars" of the story.
+- **Drama Markers**: Emphasize that "раптом" is like a "Plot Twist" button.
+- **Narrative Tenses**: Keep it simple (Past Tense) but mention that "однією мовою" or "казка" style uses specific opening formulas like "Жили-були..." (Once upon a time/There lived...).
+- **Persona Alignment**: The "Village Storyteller" persona should be warm, using simple but evocative examples.

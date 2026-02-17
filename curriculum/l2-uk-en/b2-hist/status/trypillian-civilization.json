@@ -1,0 +1,58 @@
+{
+  "module": "trypillian-civilization",
+  "level": "B2",
+  "plan_version": "2",
+  "last_audit": "2026-02-17T00:29:34.704615Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-17T00:24:33.022334Z",
+    "meta": "2026-02-17T00:24:40.398128Z",
+    "activities": "2026-02-17T00:23:25.213391Z",
+    "vocabulary": "2026-02-16T23:40:23.634768Z",
+    "plan": "2026-02-12T13:21:42.064693Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7925/6133 (raw: 8248)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "28/20"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

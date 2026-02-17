@@ -40,7 +40,7 @@ Write the section prose for **{SECTION_TITLE}** within the module **{TOPIC_TITLE
 ## Coherence Context (Previously Written)
 
 To ensure flow and avoid repetition, here is what has been covered in previous sections.
-The context below includes **topic headings** (what was covered) and **closing prose** (how the previous section ended — use this to write a seamless bridge):
+The context below includes **topic headings with lead sentences** (what was covered and what was claimed) and **closing prose** (how the previous section ended — use this to write a seamless bridge):
 
 {PREVIOUS_CONTENT_SUMMARY}
 
@@ -49,6 +49,7 @@ The context below includes **topic headings** (what was covered) and **closing p
 - **Continue the narrative flow seamlessly** from the previous section. The reader has been reading continuously — don't break immersion.
 - **Use the closing prose above** to write your opening bridge sentence. Pick up where the previous section left off — reference its final concept, example, or question naturally.
 - **Do NOT** start with "In this section..." / "У цьому розділі..." / "Тепер розглянемо..." or any meta-commentary about what the section will cover.
+- **Read the `→` lines carefully.** They show what was ALREADY WRITTEN. Do NOT repeat these facts, claims, comparisons, or arguments. If a previous section already compared Trypillia to Egypt, do NOT make the same comparison — use a different angle or reference it briefly ("як ми вже бачили...").
 - **Do NOT** re-introduce concepts already covered in previous sections. Refer back to them naturally (e.g., "як ми вже бачили з дієсловами руху..." not "Дієслова руху — це...").
 - **Do NOT** repeat the module title or section title in prose. The H2 heading is enough.
 - **Transition naturally**: use a bridge sentence connecting the previous section's last concept to this section's first concept. Think of it as one continuous chapter, not separate articles.
@@ -66,6 +67,34 @@ Previously used callout types in this module: {CALLOUT_TYPES_USED}
 - `[!culture]` or `[!history-bite]` — cultural hook
 - `[!fact]` — interesting linguistic/cultural fact
 - `[!decolonization]` — decolonial perspective on language
+
+### Statistics Already Cited (DO NOT REPEAT)
+
+These numbers/measurements have already appeared in previous sections: {STATISTICS_CITED}
+
+**Do NOT restate these exact statistics.** If you must reference the same concept, either:
+- Refer back briefly: «як ми вже зазначили, Тальянки мали площу 450 га»
+- Use a DIFFERENT statistic or angle on the same topic
+- Summarize without restating the number: «найбільше протомісто» instead of repeating «450 гектарів»
+
+### Paragraph Openers Already Used (DO NOT REPEAT)
+
+These are the first 3 words of paragraphs from previous sections: {OPENERS_USED}
+
+**Do NOT start any paragraph with the same 3-word opening as a previous section.** Scan the list above before writing each paragraph. Vary your rhetorical toolkit:
+- Mix: questions, comparisons, direct statements, historical anecdotes, temporal markers, cause-effect
+- If you've already used «Уявіть собі...» in a previous section, try «Порівняйте це з...» or a direct fact
+- If you've already used «Це не просто...», try «X виконує функцію Y» or just state the claim directly
+- Each section should have distinct paragraph openings — no two sections should feel copy-pasted
+
+### Biographical Facts Already Stated (DO NOT REPEAT)
+
+These biographical details have appeared in previous `[!biography]` callouts or prose: {BIO_FACTS_USED}
+
+**Do NOT repeat the same biographical claims.** If the same person was introduced before:
+- Reference them by name without re-introducing: «Хвойка, якого ми вже згадували,...»
+- Add NEW biographical details not covered before
+- Do NOT create a second `[!biography]` callout for the same person
 
 ---
 

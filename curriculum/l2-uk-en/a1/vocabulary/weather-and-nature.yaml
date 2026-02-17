@@ -1,0 +1,81 @@
+- ipa: '[pɔˈɦɔdɑ]'
+  lemma: погода
+  pos: noun
+  translation: weather
+- ipa: '[ˈsɔnt͡sɛ]'
+  lemma: сонце
+  pos: noun
+  translation: sun
+- ipa: '[dɔʃt͡ʃ]'
+  lemma: дощ
+  pos: noun
+  translation: rain
+- ipa: '[sʲnʲiɦ]'
+  lemma: сніг
+  pos: noun
+  translation: snow
+- ipa: '[ˈʋʲitɛr]'
+  lemma: вітер
+  pos: noun
+  translation: wind
+- ipa: '[zɪˈmɑ]'
+  lemma: зима
+  pos: noun
+  translation: winter
+- ipa: '[ʋɛsˈnɑ]'
+  lemma: весна
+  pos: noun
+  translation: spring
+- ipa: '[ˈlʲitɔ]'
+  lemma: літо
+  pos: noun
+  translation: summer
+- ipa: '[ˈɔsʲinʲ]'
+  lemma: осінь
+  pos: noun
+  translation: autumn
+- ipa: '[ˈxɔlɔdnɔ]'
+  lemma: холодно
+  pos: adverb
+  translation: cold / it is cold
+- ipa: '[ˈtɛplɔ]'
+  lemma: тепло
+  pos: adverb
+  translation: warm / it is warm
+- ipa: '[spɛˈkɔtnɔ]'
+  lemma: спекотно
+  pos: adverb
+  translation: hot / it is hot
+- ipa: '[prɔˈxɔlɔdnɔ]'
+  lemma: прохолодно
+  pos: adverb
+  translation: cool / it is cool
+- ipa: '[ˈxmɑrnɔ]'
+  lemma: хмарно
+  pos: adverb
+  translation: cloudy / it is cloudy
+- ipa: '[ˈsɔnʲɑt͡ʃnɔ]'
+  lemma: сонячно
+  pos: adverb
+  translation: sunny / it is sunny
+- ipa: '[sʲɔˈɦɔdʲnʲi]'
+  lemma: сьогодні
+  pos: adverb
+  translation: today
+- ipa: '[ˈzɑu̯trɑ]'
+  lemma: завтра
+  pos: adverb
+  translation: tomorrow
+- ipa: '[tɛmpɛrɑˈturɑ]'
+  lemma: температура
+  pos: noun
+  translation: temperature
+- ipa: '[jˈtɪ]'
+  lemma: йти
+  pos: verb
+  translation: to go (rain/snow)
+- ipa: '[sʲʋʲiˈtɪtɪ]'
+  lemma: світити
+  pos: verb
+  translation: to shine
+

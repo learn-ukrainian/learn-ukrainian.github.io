@@ -39,11 +39,11 @@ _Приклад:_
 
 ### The Animate Trap: Warning against applying the Nominative = Accusative rule to people
 
-Багато студентів потрапляють у пастку. They remember that **стіл** (table) stays **стіл** in a sentence like «Я бачу стіл». They think people work the same way. Така помилка часто трапляється, але пам'ятайте: якщо ви скажете **«Я бачу брат»**, українець вас не зрозуміє. It sounds like your brother is a piece of furniture! 
+Багато студентів потрапляють у пастку. They remember that **стіл** (table) stays **стіл** in a sentence like «Я бачу стіл». They think people work the same way. Така помилка часто трапляється. Пам'ятайте: **«Я бачу брат»** — це неправильно. Українець не зрозуміє. It sounds like your brother is a piece of furniture! 
 
 **Важливо розуміти:** люди — не речі. Вживання закінчення **-а** або **-я** свідчить про повагу до їхнього «серця». It makes your Ukrainian sound natural and correct. Об'єкт — це людина? Використовуйте закінчення.
 
-Ми завжди показуємо, що це жива істота. Такі зміни допоможуть вам говорити правильно. Розуміння цього правила дуже важливе для спілкування.
+Ми завжди показуємо, що це жива істота. Ці зміни допоможуть говорити правильно. Розуміння цього правила дуже важливе для спілкування.
 
 _Приклади (Examples):_
 - **Я бачу лікаря.** — [jɑ ˈbɑt͡ʃu ˈlikɑrʲɑ] (I see the doctor.)

@@ -1,8 +1,8 @@
 # Audit Report: M14 — mine-and-yours.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1307
-**Naturalness:** 0/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-16 15:53:50
+**Naturalness:** 9/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-17 00:47:17
 
 ## Configuration
 **Type:** A1-grammar
@@ -21,7 +21,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | fill-in | Оберіть правильний займенник | 25 | 8 | ✅ |
-| 2 | match-up | Узгодження за родом | 10 | 8 | ✅ |
+| 2 | match-up | Узгодження за родом | 20 | 8 | ✅ |
 | 3 | fill-in | Змініть рід займенника | 15 | 8 | ✅ |
 | 4 | fill-in | Чия це річ? | 8 | 8 | ✅ |
 | 5 | quiz | Свій чи Його/Її? | 8 | 8 | ✅ |
@@ -36,41 +36,32 @@
 - Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'you know...'.
-  - FIX: Vary sentence structure.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 912/1307 (raw: 1100)
+- **Words:** ✅ 1710/1307 (raw: 1934)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/3
+- **Engagement:** ✅ 12/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 5 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.3% (target 25-40% (M14))
+- **Immersion:** 🇺🇦 31.4% (target 25-40% (M14))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ Not scored
+- **Naturalness:** ✅ 9/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 1 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Mine and Yours: Possessive Pronouns** | ✅ | 26 | Included in Core |
-| **Warm-up** | ✅ | 139 | Included in Core |
-| **Presentation** | ✅ | 375 | Included in Core |
-| **Practice** | ✅ | 106 | Included in Core |
-| **Production** | ➖ | 122 | Excluded Type |
-| **Cultural Insight** | ✅ | 75 | Included in Core |
-| **Підсумок** | ✅ | 68 | Included in Core |
+| **Warm-up (Розминка)** | ✅ | 251 | Included in Core |
+| **Presentation** | ✅ | 709 | Included in Core |
+| **Practice** | ✅ | 219 | Included in Core |
+| **Production** | ➖ | 186 | Excluded Type |
+| **Cultural Insight** | ✅ | 213 | Included in Core |
+| **Підсумок** | ✅ | 106 | Included in Core |

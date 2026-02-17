@@ -1,0 +1,97 @@
+- ipa: '[ˈdɔ.bre]'
+  lemma: добре
+  notes: Irregular form of 'добрий'; also used for agreement ('OK')
+  pos: adv
+  translation: well / good / OK
+- ipa: '[po.ˈɦɑ.no]'
+  lemma: погано
+  pos: adv
+  translation: badly
+- ipa: '[ˈʃʋɪd.ko]'
+  lemma: швидко
+  pos: adv
+  translation: quickly / fast
+- ipa: '[po.ˈʋilʲ.no]'
+  lemma: повільно
+  pos: adv
+  translation: slowly
+- ipa: '[ˈɦɔ.los.no]'
+  lemma: голосно
+  pos: adv
+  translation: loudly
+- ipa: '[ˈtɪ.xo]'
+  lemma: тихо
+  pos: adv
+  translation: quietly
+- ipa: '[ˈlɛx.ko]'
+  lemma: легко
+  notes: Pronounced with [x] sound due to assimilation
+  pos: adv
+  translation: easily
+- ipa: '[ˈʋɑʒ.ko]'
+  lemma: важко
+  pos: adv
+  translation: hard / with difficulty
+- ipa: '[ˈsmɑtʃ.no]'
+  lemma: смачно
+  pos: adv
+  translation: tastily / delicious
+- ipa: '[ˈɦɑr.no]'
+  lemma: гарно
+  pos: adv
+  translation: nicely / well / beautifully
+- ipa: '[u.ˈʋɑʒ.no]'
+  lemma: уважно
+  pos: adv
+  translation: attentively / carefully
+- ipa: '[zɐu̯.ˈʒdɪ]'
+  lemma: завжди
+  pos: adv
+  translation: always
+- ipa: '[zɐ.zʋɪ.ˈtʃɑj]'
+  lemma: зазвичай
+  pos: adv
+  translation: usually
+- ipa: '[ˈtʃɑs.to]'
+  lemma: часто
+  pos: adv
+  translation: often
+- ipa: '[ˈi.no.dʲi]'
+  lemma: іноді
+  pos: adv
+  translation: sometimes
+- ipa: '[ˈrʲid.ko]'
+  lemma: рідко
+  pos: adv
+  translation: rarely
+- ipa: '[nʲi.ˈkɔ.lɪ]'
+  lemma: ніколи
+  notes: Always requires 'не' before the verb (double negation)
+  pos: adv
+  translation: never
+- ipa: '[ˈdu.ʒe]'
+  lemma: дуже
+  notes: Intensifier placed before adjectives or adverbs
+  pos: adv
+  translation: very
+- ipa: '[ˈtrɔ.xɪ]'
+  lemma: трохи
+  pos: adv
+  translation: a little / slightly
+- ipa: '[ˈnɑd.to]'
+  lemma: надто
+  pos: adv
+  translation: too / overly
+- ipa: '[iˈmɛnːɪk]'
+  lemma: іменник
+  pos: noun
+  translation: noun
+- ipa: '[prɪˈkmɛtnɪk]'
+  lemma: прикметник
+  pos: noun
+  translation: adjective
+- ipa: '[dʲiˈjesɫoʋo]'
+  lemma: дієслово
+  pos: noun
+  translation: verb
+

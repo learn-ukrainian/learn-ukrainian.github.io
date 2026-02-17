@@ -1,0 +1,14 @@
+{
+  "slug": "pivden-novorosiia",
+  "track": "b2-hist",
+  "module_num": 77,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:33:57Z",
+      "task_id": "yw-pivden-novorosiia-p0"
+    }
+  },
+  "last_updated": "2026-02-16T22:33:57Z"
+}

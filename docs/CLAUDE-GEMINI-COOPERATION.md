@@ -33,11 +33,11 @@
 
 ## Communication Protocol v2 (GitHub-First)
 
-> **Effective: 2026-02-12. Supersedes all previous broker-heavy patterns.**
+> **Effective: 2026-02-12. Updated 2026-02-17: watcher disabled, direct bridge calls replace broker notifications.**
 
 ### Core Principle
 
-**GitHub issues and comments are the primary communication channel.** The message broker is a notification layer ONLY (< 200 chars, references to GH only).
+**GitHub issues and comments are the primary communication channel.** Inter-agent calls use `ai_agent_bridge.py ask-gemini` / `ask-claude` for direct dispatch, or `send` / MCP `send_message` for passive inbox drops. The agent watcher (`agent_watcher.py`) is disabled — agents check their own inbox at session start.
 
 ### Teams (Adversarial by Design)
 

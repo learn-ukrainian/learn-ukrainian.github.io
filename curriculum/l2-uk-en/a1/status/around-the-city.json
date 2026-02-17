@@ -2,10 +2,10 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-16T15:55:10.396361Z",
+  "last_audit": "2026-02-17T00:47:18.265191Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-16T15:55:05.836091Z",
+    "md": "2026-02-16T15:55:15.118955Z",
     "meta": "2026-02-16T15:53:29.788833Z",
     "activities": "2026-02-15T21:47:33.894257Z",
     "vocabulary": "2026-02-15T21:34:27.923034Z",
@@ -18,9 +18,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3510/1602 (raw: 3701) | immersion: 24.9% LOW (target 25-40% (M15))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3528/1602 (raw: 3719)"
     },
     "activities": {
       "status": "pass",
@@ -43,16 +43,16 @@
       "message": "Clean IPA"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

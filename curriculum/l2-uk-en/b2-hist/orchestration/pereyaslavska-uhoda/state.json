@@ -1,0 +1,14 @@
+{
+  "slug": "pereyaslavska-uhoda",
+  "track": "b2-hist",
+  "module_num": 56,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:03:36Z",
+      "task_id": "yw-pereyaslavska-uhoda-p0"
+    }
+  },
+  "last_updated": "2026-02-16T22:03:36Z"
+}

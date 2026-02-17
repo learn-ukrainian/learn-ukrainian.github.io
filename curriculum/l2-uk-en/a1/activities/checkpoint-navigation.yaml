@@ -1,0 +1,481 @@
+- type: quiz
+  title: 'Accusative Case: Direct Objects'
+  items:
+    - question: 'How do you say "I see a bus"?'
+      options:
+        - text: 'Я бачу автобус'
+          correct: true
+        - text: 'Я бачу автобуса'
+          correct: false
+        - text: 'Я бачу автобусу'
+          correct: false
+        - text: 'Я бачу автобусі'
+          correct: false
+      explanation: 'For non-living masculine nouns, the Accusative case is the same as the Nominative.'
+    - question: 'What is the correct ending for a feminine noun in the Accusative? (Я бачу карт...)'
+      options:
+        - text: '-у'
+          correct: true
+        - text: '-а'
+          correct: false
+        - text: '-і'
+          correct: false
+        - text: '-о'
+          correct: false
+      explanation: 'Feminine nouns ending in -а change to -у in the Accusative case.'
+    - question: 'How do you say "He sees the metro"?'
+      options:
+        - text: 'Він бачить метро'
+          correct: true
+        - text: 'Він бачить метра'
+          correct: false
+        - text: 'Він бачить метрі'
+          correct: false
+        - text: 'Він бачить метру'
+          correct: false
+    - question: 'Convert "друг" (living) to Accusative: Я бачу...'
+      options:
+        - text: 'друга'
+          correct: true
+        - text: 'друг'
+          correct: false
+        - text: 'друзі'
+          correct: false
+        - text: 'другу'
+          correct: false
+    - question: 'Where is the direct object in: "Ми бачимо парк"?'
+      options:
+        - text: 'парк'
+          correct: true
+        - text: 'Ми'
+          correct: false
+        - text: 'бачимо'
+          correct: false
+        - text: 'None'
+          correct: false
+    - question: 'Choose the correct form: Я йду на...'
+      options:
+        - text: 'роботу'
+          correct: true
+        - text: 'робота'
+          correct: false
+        - text: 'роботі'
+          correct: false
+        - text: 'роботи'
+          correct: false
+    - question: 'Translate: "They see the city."'
+      options:
+        - text: 'Вони бачать місто'
+          correct: true
+        - text: 'Вони бачать міста'
+          correct: false
+        - text: 'Вони бачать місті'
+          correct: false
+        - text: 'Вони бачать місту'
+          correct: false
+    - question: 'Convert "сестра" (sister) to Accusative: Він знає...'
+      options:
+        - text: 'сестру'
+          correct: true
+        - text: 'сестра'
+          correct: false
+        - text: 'сестри'
+          correct: false
+        - text: 'сестрі'
+          correct: false
+
+- type: quiz
+  title: 'Locative Case: Locations'
+  items:
+    - question: 'What question does the Locative case answer?'
+      options:
+        - text: 'Де?'
+          correct: true
+        - text: 'Куди?'
+          correct: false
+        - text: 'Хто?'
+          correct: false
+        - text: 'Що?'
+          correct: false
+    - question: 'How do you say "in the store"?'
+      options:
+        - text: 'у магазині'
+          correct: true
+        - text: 'у магазин'
+          correct: false
+        - text: 'на магазин'
+          correct: false
+        - text: 'у магазину'
+          correct: false
+    - question: 'What is the Locative form of "аптека"?'
+      options:
+        - text: 'в аптеці'
+          correct: true
+        - text: 'в аптеку'
+          correct: false
+        - text: 'в аптеки'
+          correct: false
+        - text: 'в аптеке'
+          correct: false
+      explanation: 'Consonant shift: к changes to ц before -і.'
+    - question: 'How do you say "on the table"?'
+      options:
+        - text: 'на столі'
+          correct: true
+        - text: 'у столі'
+          correct: false
+        - text: 'на стіл'
+          correct: false
+        - text: 'на столу'
+          correct: false
+    - question: 'What happens to "г" in the Locative case before -і?'
+      options:
+        - text: 'It changes to з'
+          correct: true
+        - text: 'It changes to ц'
+          correct: false
+        - text: 'It changes to с'
+          correct: false
+        - text: 'It remains г'
+          correct: false
+    - question: 'Complete the sentence: Я зараз на...'
+      options:
+        - text: 'станції'
+          correct: true
+        - text: 'станція'
+          correct: false
+        - text: 'станцію'
+          correct: false
+        - text: 'станціях'
+          correct: false
+    - question: 'How do you say "in the city" (місто)?'
+      options:
+        - text: 'у місті'
+          correct: true
+        - text: 'у місто'
+          correct: false
+        - text: 'на місті'
+          correct: false
+        - text: 'у місту'
+          correct: false
+    - question: 'Translate: "The coffee is in the cafe."'
+      options:
+        - text: 'Кава у кафе'
+          correct: true
+        - text: 'Кава на кафе'
+          correct: false
+        - text: 'Кава у кафу'
+          correct: false
+        - text: 'Кава у кафі'
+          correct: false
+      explanation: 'Foreign words like кафе are often indeclinable (no change).'
+
+- type: quiz
+  title: 'Genitive Case: Absence and Counting'
+  items:
+    - question: 'Which word always triggers the Genitive case for absence?'
+      options:
+        - text: 'немає'
+          correct: true
+        - text: 'є'
+          correct: false
+        - text: 'де'
+          correct: false
+        - text: 'це'
+          correct: false
+    - question: 'How do you say "I don''t have a ticket"?'
+      options:
+        - text: 'У мене немає квитка'
+          correct: true
+        - text: 'У мене немає квиток'
+          correct: false
+        - text: 'У мене немає квитку'
+          correct: false
+        - text: 'Я немає квитка'
+          correct: false
+    - question: 'How do you say "from Ukraine"?'
+      options:
+        - text: 'з України'
+          correct: true
+        - text: 'з Україна'
+          correct: false
+        - text: 'з Україну'
+          correct: false
+        - text: 'з Україною'
+          correct: false
+    - question: 'What case is used after the number 3 (три)?'
+      options:
+        - text: 'Genitive Singular'
+          correct: true
+        - text: 'Nominative'
+          correct: false
+        - text: 'Accusative'
+          correct: false
+        - text: 'Locative'
+          correct: false
+    - question: 'Correct translation of "two hryvnias":'
+      options:
+        - text: 'дві гривні'
+          correct: true
+        - text: 'дві гривня'
+          correct: false
+        - text: 'дві гривню'
+          correct: false
+        - text: 'два гривні'
+          correct: false
+    - question: 'Choose the correct form: Тут немає...'
+      options:
+        - text: 'зупинки'
+          correct: true
+        - text: 'зупинка'
+          correct: false
+        - text: 'зупинку'
+          correct: false
+        - text: 'зупинці'
+          correct: false
+    - question: 'Translate: "I am from Lviv (Львів)."'
+      options:
+        - text: 'Я зі Львова'
+          correct: true
+        - text: 'Я з Львів'
+          correct: false
+        - text: 'Я з Львова'
+          correct: false
+        - text: 'Я у Львові'
+          correct: false
+    - question: 'How do you say "There is no tea (чай)"?'
+      options:
+        - text: 'Немає чаю'
+          correct: true
+        - text: 'Немає чай'
+          correct: false
+        - text: 'Немає чаєм'
+          correct: false
+        - text: 'Немає чая'
+          correct: false
+
+- type: quiz
+  title: 'Possessive Pronouns'
+  items:
+    - question: 'Which pronoun means "my" for a feminine noun?'
+      options:
+        - text: 'моя'
+          correct: true
+        - text: 'мій'
+          correct: false
+        - text: 'моє'
+          correct: false
+        - text: 'мої'
+          correct: false
+    - question: 'How do you say "your coffee" (feminine)?'
+      options:
+        - text: 'твоя кава'
+          correct: true
+        - text: 'твій кава'
+          correct: false
+        - text: 'твоє кава'
+          correct: false
+        - text: 'твою кава'
+          correct: false
+    - question: 'Does "його" change its form based on the noun gender?'
+      options:
+        - text: 'No'
+          correct: true
+        - text: 'Yes'
+          correct: false
+        - text: 'Only for feminine'
+          correct: false
+        - text: 'Only for plural'
+          correct: false
+    - question: 'What is "their stop" in Ukrainian?'
+      options:
+        - text: 'їхня зупинка'
+          correct: true
+        - text: 'їхній зупинка'
+          correct: false
+        - text: 'її зупинка'
+          correct: false
+        - text: 'їхні зупинка'
+          correct: false
+    - question: 'Translate: "I see my map (карта)"'
+      options:
+        - text: 'Я бачу мою карту'
+          correct: true
+        - text: 'Я бачу моя карта'
+          correct: false
+        - text: 'Я бачу мій карту'
+          correct: false
+        - text: 'Я бачу мою карта'
+          correct: false
+    - question: 'Correct form: "We are in my store" (Locative)'
+      options:
+        - text: 'Ми у моєму магазині'
+          correct: true
+        - text: 'Ми у мій магазин'
+          correct: false
+        - text: 'Ми у мою магазині'
+          correct: false
+        - text: 'Ми у моєму магазин'
+          correct: false
+    - question: 'How do you say "his ticket" in Ukrainian?'
+      options:
+        - text: 'його квиток'
+          correct: true
+        - text: 'мій квиток'
+          correct: false
+        - text: 'її квиток'
+          correct: false
+        - text: 'твій квиток'
+          correct: false
+    - question: 'How do you say "Our city" (місто - neuter)?'
+      options:
+        - text: 'наше місто'
+          correct: true
+        - text: 'наш місто'
+          correct: false
+        - text: 'наша місто'
+          correct: false
+        - text: 'наші місто'
+          correct: false
+
+- type: quiz
+  title: 'Orientation and Directions'
+  items:
+    - question: 'How do you ask "Where is the metro?"'
+      options:
+        - text: 'Де знаходиться метро?'
+          correct: true
+        - text: 'Куди знаходиться метро?'
+          correct: false
+        - text: 'Скільки знаходиться метро?'
+          correct: false
+        - text: 'Де є метро?'
+          correct: false
+    - question: 'How do you ask for the price?'
+      options:
+        - text: 'Скільки коштує?'
+          correct: true
+        - text: 'Де коштує?'
+          correct: false
+        - text: 'Який коштує?'
+          correct: false
+        - text: 'Як коштує?'
+          correct: false
+    - question: 'What does "наліво" mean in English?'
+      options:
+        - text: 'to the left'
+          correct: true
+        - text: 'to the right'
+          correct: false
+        - text: 'straight'
+          correct: false
+        - text: 'back'
+          correct: false
+    - question: 'What is "straight" in the Ukrainian language?'
+      options:
+        - text: 'прямо'
+          correct: true
+        - text: 'направо'
+          correct: false
+        - text: 'наліво'
+          correct: false
+        - text: 'сюди'
+          correct: false
+    - question: 'Translate the following phrase: "Turn right"'
+      options:
+        - text: 'Повертайте направо'
+          correct: true
+        - text: 'Йдіть прямо'
+          correct: false
+        - text: 'Повертайте наліво'
+          correct: false
+        - text: 'Стійте тут'
+          correct: false
+    - question: 'Complete the sentence: "Магазин ... (is on the left)"'
+      options:
+        - text: 'наліво'
+          correct: true
+        - text: 'направо'
+          correct: false
+        - text: 'прямо'
+          correct: false
+        - text: 'там'
+          correct: false
+    - question: 'How do you say "Go straight"?'
+      options:
+        - text: 'Ідіть прямо'
+          correct: true
+        - text: 'Повертайте прямо'
+          correct: false
+        - text: 'Йду прямо'
+          correct: false
+        - text: 'Ми прямо'
+          correct: false
+    - question: 'Where do you find the cashier?'
+      options:
+        - text: 'Де знаходиться каса?'
+          correct: true
+        - text: 'Де каса знаходиться?'
+          correct: false
+        - text: 'Куди каса?'
+          correct: false
+        - text: 'Скільки каса?'
+          correct: false
+
+- type: match-up
+  title: 'Navigation Vocabulary'
+  pairs:
+    - left: 'Де?'
+      right: 'Where?'
+    - left: 'Куди?'
+      right: 'Where to?'
+    - left: 'Скільки?'
+      right: 'How much?'
+    - left: 'Квиток'
+      right: 'Ticket'
+    - left: 'Зупинка'
+      right: 'Stop'
+    - left: 'Гроші'
+      right: 'Money'
+    - left: 'Прямо'
+      right: 'Straight'
+    - left: 'Наліво'
+      right: 'Left'
+
+- type: fill-in
+  title: 'Case Endings Practice'
+  items:
+    - sentence: 'Я йду в [blank] (бібліотека)...'
+      answer: 'бібліотеку'
+      options: ['бібліотеку', 'бібліотеці', 'бібліотека', 'бібліотеки']
+    - sentence: 'Він живе у [blank] (Київ)...'
+      answer: 'Києві'
+      options: ['Києві', 'Київ', 'Києва', 'Києву']
+    - sentence: 'У мене немає [blank] (карта)...'
+      answer: 'карти'
+      options: ['карти', 'карту', 'карта', 'карті']
+    - sentence: 'Тут є три [blank] (зупинка)...'
+      answer: 'зупинки'
+      options: ['зупинки', 'зупинку', 'зупинка', 'зупинок']
+    - sentence: 'Я бачу твій [blank] (квиток)...'
+      answer: 'квиток'
+      options: ['квиток', 'квитка', 'квитку', 'квитку']
+    - sentence: 'Ми на [blank] (станція)...'
+      answer: 'станції'
+      options: ['станції', 'станція', 'станцію', 'станціях']
+    - sentence: 'Він йде до [blank] (центр)...'
+      answer: 'центру'
+      options: ['центру', 'центр', 'центрі', 'центром']
+    - sentence: 'Вона зараз в [blank] (аптека)...'
+      answer: 'аптеці'
+      options: ['аптеці', 'аптека', 'аптеку', 'аптеки']
+
+- type: group-sort
+  title: 'Gender Classification'
+  groups:
+    - name: Masculine
+      items: ['магазин', 'автобус', 'квиток', 'центр', 'трамвай']
+    - name: Feminine
+      items: ['кава', 'зупинка', 'карта', 'аптека', 'бібліотека']
+    - name: Neuter
+      items: ['метро', 'місто', 'вікно', 'молоко', 'фото']

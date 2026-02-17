@@ -1,0 +1,58 @@
+{
+  "module": "checkpoint-navigation",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-17T00:47:21.246589Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-16T20:51:57.660470Z",
+    "meta": "2026-02-16T19:39:05.655107Z",
+    "activities": "2026-02-16T20:52:32.966740Z",
+    "vocabulary": "2026-02-16T20:51:18.828217Z",
+    "plan": "2026-02-12T13:27:12.729047Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3187/1073 (raw: 3542)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "22/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "47 IPA issues (run lint_ipa.py --fix)"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

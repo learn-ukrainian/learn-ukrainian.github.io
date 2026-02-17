@@ -1,0 +1,14 @@
+{
+  "slug": "slobozhanshchyna",
+  "track": "b2-hist",
+  "module_num": 38,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:43:35Z",
+      "task_id": "yw-slobozhanshchyna-p0"
+    }
+  },
+  "last_updated": "2026-02-16T21:43:35Z"
+}

@@ -1,0 +1,396 @@
+- instruction: Match the Ukrainian weather description to the English translation.
+  pairs:
+  - left: Холодно
+    right: Cold
+  - left: Тепло
+    right: Warm
+  - left: Спекотно
+    right: Hot
+  - left: Прохолодно
+    right: Cool
+  - left: Хмарно
+    right: Cloudy
+  - left: Сонячно
+    right: Sunny
+  - left: Вітряно
+    right: Windy
+  - left: Температура
+    right: Temperature
+  title: 'Знайдіть пару: Погода'
+  type: match-up
+- instruction: Match the season or time expression to its meaning.
+  pairs:
+  - left: Зима
+    right: Winter
+  - left: Весна
+    right: Spring
+  - left: Літо
+    right: Summer
+  - left: Осінь
+    right: Autumn
+  - left: Взимку
+    right: In winter
+  - left: Влітку
+    right: In summer
+  - left: Навесні
+    right: In spring
+  - left: Восени
+    right: In autumn
+  title: 'Знайдіть пару: Пори року'
+  type: match-up
+- groups:
+  - items:
+    - сніг
+    - холодно
+    - -20°C
+    - біло
+    - зима
+    - температура -10°C
+    name: Зима (Winter)
+  - items:
+    - спекотно
+    - сонце
+    - +30°C
+    - зелено
+    - літо
+    - температура +25°C
+    name: Літо (Summer)
+  instruction: 'Drag the words to the correct season: Winter (Зима) or Summer (Літо).'
+  title: Розподіліть слова за сезонами
+  type: group-sort
+- instruction: Choose the correct word to complete the sentence.
+  items:
+  - answer: тепло
+    options:
+    - тепло
+    - холодно
+    - зима
+    - дощ
+    sentence: Сьогодні ____.
+  - answer: хмарно
+    options:
+    - хмарно
+    - сніг
+    - сонце
+    - температура
+    sentence: У Києві зараз ____.
+  - answer: холодно
+    options:
+    - холодно
+    - спекотно
+    - літо
+    - вітер
+    sentence: На вулиці дуже ____.
+  - answer: спекотно
+    options:
+    - спекотно
+    - прохолодно
+    - зима
+    - сніг
+    sentence: Влітку вдень ____.
+  - answer: погода
+    options:
+    - погода
+    - температура
+    - сонце
+    - хмара
+    sentence: Сьогодні гарна ____.
+  - answer: вітряно
+    options:
+    - вітряно
+    - дощ
+    - сніг
+    - сонце
+    sentence: Завтра буде ____.
+  - answer: сніг
+    options:
+    - сніг
+    - дощ
+    - сонце
+    - вітер
+    sentence: Взимку часто йде ____.
+  - answer: дощ
+    options:
+    - дощ
+    - сніг
+    - мороз
+    - тепло
+    sentence: Восени часто йде ____.
+  title: Опишіть погоду
+  type: fill-in
+- instruction: Arrange the words to form a correct Ukrainian sentence.
+  items:
+  - answer: Сьогодні дуже тепло
+    words:
+    - Сьогодні
+    - дуже
+    - тепло
+  - answer: Яка сьогодні погода
+    words:
+    - Яка
+    - сьогодні
+    - погода
+  - answer: Завтра буде дощ
+    words:
+    - Завтра
+    - буде
+    - дощ
+  - answer: Взимку часто йде сніг
+    words:
+    - Взимку
+    - часто
+    - йде
+    - сніг
+  - answer: Я люблю літо
+    words:
+    - Я
+    - люблю
+    - літо
+  - answer: На вулиці зараз вітряно
+    words:
+    - На
+    - вулиці
+    - зараз
+    - вітряно
+  title: Складіть речення
+  type: unjumble
+- instruction: Read the statement. Is it logically True or False?
+  items:
+  - correct: false
+    explanation: Взимку холодно, а спекотно влітку.
+    statement: Взимку дуже спекотно.
+  - correct: false
+    explanation: Сніг йде взимку.
+    statement: Влітку часто йде сніг.
+  - correct: true
+    explanation: Весна — це теплий сезон.
+    statement: Навесні світить сонце і тепло.
+  - correct: true
+    explanation: Це типова ознака осені.
+    statement: Восени листя жовте.
+  - correct: false
+    explanation: Коли йде дощ, на вулиці мокро.
+    statement: Коли йде дощ, на вулиці сухо (dry).
+  - correct: true
+    explanation: Зима, весна, літо, осінь.
+    statement: Україна має чотири пори року.
+  - correct: false
+    explanation: Сніг холодний.
+    statement: Коли йде сніг, на вулиці тепло.
+  - correct: true
+    explanation: Літо — це спекотна пора року.
+    statement: Влітку температура висока.
+  title: Логіка погоди
+  type: true-false
+- instruction: Choose the correct answer based on the lesson.
+  items:
+  - explanation: Зима — це найхолодніша пора року.
+    options:
+    - correct: true
+      text: Взимку
+    - correct: false
+      text: Влітку
+    - correct: false
+      text: Навесні
+    - correct: false
+      text: Восени
+    question: Яка пора року зазвичай найхолодніша?
+  - explanation: Ми кажемо "йде дощ" або "йде сніг".
+    options:
+    - correct: true
+      text: Дощ
+    - correct: false
+      text: Сонце
+    - correct: false
+      text: Вітер
+    - correct: false
+      text: Хмара
+    question: Що ми кажемо, коли вода падає з неба?
+  - explanation: Спекотно — це дуже висока температура.
+    options:
+    - correct: true
+      text: Спекотно
+    - correct: false
+      text: Тепло
+    - correct: false
+      text: Прохолодно
+    - correct: false
+      text: Хмарно
+    question: Яке слово означає "It is hot"?
+  - explanation: Це стандартне питання про погоду.
+    options:
+    - correct: true
+      text: Яка сьогодні погода?
+    - correct: false
+      text: Де сьогодні погода?
+    - correct: false
+      text: Хто сьогодні погода?
+    - correct: false
+      text: Чому сьогодні погода?
+    question: Як запитати "What is the weather?"
+  - explanation: Це теплий період восени.
+    options:
+    - correct: true
+      text: Восени
+    - correct: false
+      text: Взимку
+    - correct: false
+      text: Навесні
+    - correct: false
+      text: Влітку
+    question: В яку пору року ми чекаємо на "бабине літо"?
+  - explanation: Це означає "Cool", не дуже холодно, але не тепло.
+    options:
+    - correct: true
+      text: Cool
+    - correct: false
+      text: Hot
+    - correct: false
+      text: Warm
+    - correct: false
+      text: Freezing
+    question: Що саме означає українське слово "прохолодно" англійською?
+  - explanation: Мороз буває при низькій температурі.
+    options:
+    - correct: true
+      text: -10°C
+    - correct: false
+      text: +20°C
+    - correct: false
+      text: +5°C
+    - correct: false
+      text: +30°C
+    question: Яка температура, коли на вулиці мороз?
+  - explanation: Сонце світить вдень.
+    options:
+    - correct: true
+      text: Сонце
+    - correct: false
+      text: Дощ
+    - correct: false
+      text: Сніг
+    - correct: false
+      text: Вітер
+    question: Що світить у небі вдень?
+  title: Перевірте свої знання
+  type: quiz
+- instruction: Select the correct verb for each weather phenomenon.
+  items:
+  - answer: світить
+    options:
+    - світить
+    - йде
+    - робить
+    - стоїть
+    sentence: Сьогодні ____ сонце.
+  - answer: йде
+    options:
+    - йде
+    - світить
+    - біжить
+    - сидить
+    sentence: На вулиці ____ дощ.
+  - answer: буде
+    options:
+    - буде
+    - є
+    - має
+    - робить
+    sentence: Завтра ____ холодно.
+  - answer: йде
+    options:
+    - йде
+    - світить
+    - лежить
+    - спить
+    sentence: У горах часто ____ сніг.
+  - answer: зараз
+    options:
+    - зараз
+    - буде
+    - вчора
+    - завтра
+    sentence: ____ (Now) вітряно.
+  - answer: буде
+    options:
+    - буде
+    - йде
+    - світить
+    - є
+    sentence: Чи ____ завтра тепло?
+  - answer: йде
+    options:
+    - йде
+    - світить
+    - лежить
+    - стоїть
+    sentence: Восени часто ____ дощ.
+  - answer: світить
+    options:
+    - світить
+    - йде
+    - падає
+    - дме
+    sentence: Влітку яскраво ____ сонце.
+  title: Що робить природа?
+  type: fill-in
+- instruction: Complete the dialogue between two neighbors.
+  items:
+  - answer: погода
+    options:
+    - погода
+    - справа
+    - робота
+    - машина
+    sentence: — Привіт! Яка сьогодні ____?
+  - answer: тепло
+    options:
+    - тепло
+    - дощ
+    - вітер
+    - зима
+    sentence: — Привіт! Сьогодні дуже ____.
+  - answer: йде
+    options:
+    - йде
+    - світить
+    - буде
+    - є
+    sentence: — А чи ____ дощ?
+  - answer: світить
+    options:
+    - світить
+    - йде
+    - падає
+    - гріє
+    sentence: — Ні, зараз ____ сонце.
+  - answer: сонце
+    options:
+    - сонце
+    - дощ
+    - сніг
+    - вітер
+    sentence: — Це добре. Я люблю ____.
+  - answer: дня
+    options:
+    - дня
+    - ранку
+    - вечора
+    - року
+    sentence: — Я теж. Гарного ____!
+  - answer: тепло
+    options:
+    - тепло
+    - холодно
+    - дощ
+    - сніг
+    sentence: — Дякую! Завтра буде ____.
+  - answer: завтра
+    options:
+    - завтра
+    - сьогодні
+    - вчора
+    - зараз
+    sentence: — Так. До ____!
+  title: 'Діалог: Сусіди говорять'
+  type: fill-in

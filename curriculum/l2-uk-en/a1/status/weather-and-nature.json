@@ -1,0 +1,58 @@
+{
+  "module": "weather-and-nature",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-17T00:47:26.254599Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-16T23:55:19.915436Z",
+    "meta": "2026-02-16T23:38:44.988129Z",
+    "activities": "2026-02-16T23:58:54.626505Z",
+    "vocabulary": "2026-02-16T23:48:34.419747Z",
+    "plan": "2026-02-12T13:27:12.679617Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1929/869 (raw: 2093)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

@@ -1,8 +1,8 @@
 # Audit Report: M17 — numbers-and-money.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1091
-**Naturalness:** 0/10 (CHECKED)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-16 14:37:24
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-17 00:47:19
 
 ## Configuration
 **Type:** A1-grammar
@@ -17,49 +17,51 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## LINT ERRORS
-- ❌ Line 61: AI Contamination detected ('\bIn the previous\b'). Remove thinking/self-correction artifacts.
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Числа та ціни | 12 | 8 | ✅ |
+| 2 | fill-in | Гроші та узгодження | 12 | 8 | ✅ |
+| 3 | match-up | Числа та їх назви | 12 | 8 | ✅ |
+| 4 | true-false | Правила та лексика | 12 | 8 | ✅ |
+| 5 | group-sort | Класифікація чисел та грошей | 14 | 12 | ✅ |
+| 6 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 7 | unjumble | Слова-конструктор | 8 | 6 | ✅ |
+| 8 | match-up | Ціни та їх написання | 8 | 8 | ✅ |
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Dative case used at A1: 'нам'
-  - FIX: Dative case not allowed until A2 (M31+). Restructure sentence.
-- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
-
-## Recommendation
-**📝 UPDATE** (severity 52/100)
-
-- Revision recommended (severity 52/100)
-- 2 violations (minor)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2584/1091 (raw: 2921)
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Words:** ✅ 3194/1091 (raw: 3596)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 1 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ⚠️ 31 IPA issues (run lint_ipa.py --fix)
-- **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 2 violations
+- **Vocab:** ✅ 31/1
+- **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 20.2% LOW (target 25-40% (M17))
+- **Immersion:** 🇺🇦 25.7% (target 25-40% (M17))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ Not scored
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Numbers & Money** | ✅ | 0 | Included in Core |
-| **Розминка: Числа в повсякденному житті** | ✅ | 454 | Included in Core |
-| **Презентація: Рахуємо до ста та правила узгодження** | ✅ | 633 | Included in Core |
-| **Практика: Покупки та ціни** | ✅ | 670 | Included in Core |
-| **Культурний огляд: Світ української гривні** | ✅ | 748 | Included in Core |
+| **Розминка: Числа в повсякденному житті (Warm-up: Numbers in Daily Life)** | ✅ | 619 | Included in Core |
+| **Презентація: Рахуємо до ста та правила узгодження (Counting to 100 and Agreement Rules)** | ✅ | 755 | Included in Core |
+| **Практика: Покупки та ціни (Practice: Shopping and Prices)** | ✅ | 899 | Included in Core |
+| **Культурний огляд: Світ української гривні (Cultural Overview: The World of Ukrainian Hryvnia)** | ✅ | 842 | Included in Core |
 | **Summary** | ✅ | 79 | Included in Core |
+| **Activities** | ➖ | 4 | Excluded Type |

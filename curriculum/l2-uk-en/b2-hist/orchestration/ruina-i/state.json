@@ -1,0 +1,14 @@
+{
+  "slug": "ruina-i",
+  "track": "b2-hist",
+  "module_num": 58,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:13:51Z",
+      "task_id": "yw-ruina-i-p0"
+    }
+  },
+  "last_updated": "2026-02-16T22:13:51Z"
+}

@@ -102,6 +102,26 @@
       right: "рюкзак"
     - left: "ваша"
       right: "сумка"
+    - left: "ваше"
+      right: "ім'я"
+    - left: "ваші"
+      right: "ключі"
+    - left: "твій"
+      right: "паспорт"
+    - left: "твоя"
+      right: "аптека"
+    - left: "твоє"
+      right: "хобі"
+    - left: "твої"
+      right: "олівці"
+    - left: "їхній"
+      right: "стіл"
+    - left: "їхня"
+      right: "кімната"
+    - left: "їхнє"
+      right: "фото"
+    - left: "їхні"
+      right: "речі"
 
 - type: fill-in
   title: "Змініть рід займенника"
@@ -184,65 +204,65 @@
 
 - type: quiz
   title: "Свій чи Його/Її?"
-  instruction: "Choose the correct pronoun to show possession by the subject of the sentence."
+  instruction: "Choose the correct pronoun. Remember: 'свій' means the owner IS the subject."
   items:
-    - question: "Я люблю ___ країну. (I love my country)"
-      explanation: "Use 'свою' because the owner is the subject 'Я'."
-      options:
-        - text: "свою"
-          correct: true
-        - text: "мою"
-          correct: false
-        - text: "твою"
-          correct: false
-        - text: "його"
-          correct: false
-    - question: "Він читає ___ книгу. (He reads his own book)"
-      explanation: "Use 'свою' to show it's his own book, not someone else's."
-      options:
-        - text: "свою"
-          correct: true
-        - text: "його"
-          correct: false
-        - text: "її"
-          correct: false
-        - text: "твою"
-          correct: false
-    - question: "Ми знаємо ___ роботу. (We know our work)"
-      explanation: "Use 'свою' as it refers back to the subject 'Ми'."
-      options:
-        - text: "свою"
-          correct: true
-        - text: "нашу"
-          correct: false
-        - text: "вашу"
-          correct: false
-        - text: "їхню"
-          correct: false
-    - question: "Ти бачиш ___ дім. (You see your house)"
-      explanation: "Use 'свій' because it refers back to 'Ти'."
+    - question: "Я маю ___ телефон. (I have my own phone)"
+      explanation: "Use 'свій' because the owner is the subject 'Я'."
       options:
         - text: "свій"
           correct: true
+        - text: "мій"
+          correct: false
+        - text: "його"
+          correct: false
         - text: "твій"
+          correct: false
+    - question: "Він має ___ рюкзак. (He has his own backpack)"
+      explanation: "Use 'свій' because the backpack belongs to the subject 'Він'."
+      options:
+        - text: "свій"
+          correct: true
+        - text: "його"
           correct: false
         - text: "мій"
           correct: false
         - text: "наш"
           correct: false
-    - question: "Вона взяла ___ сумку. (She took her own bag)"
-      explanation: "Use 'свою' to clarify it belongs to the subject 'Вона'."
+    - question: "Це ___ стіл. Він тут працює. (This is his table. He works here.)"
+      explanation: "Use 'його' because the owner is NOT the subject of 'Це ... стіл'."
       options:
-        - text: "свою"
-          correct: true
-        - text: "її"
-          correct: false
-        - text: "мою"
-          correct: false
         - text: "його"
+          correct: true
+        - text: "свій"
           correct: false
-    - question: "Вони люблять ___ місто. (They love their city)"
-      explanation: "Use 'своє' because the owners are the subject 'Вони'."
+        - text: "мій"
+          correct: false
+        - text: "наш"
+          correct: false
+    - question: "Ми маємо ___ дім. (We have our own house)"
+      explanation: "Use 'свій' because it refers back to the subject 'Ми'."
+      options:
+        - text: "свій"
+          correct: true
+        - text: "наш"
+          correct: false
+        - text: "ваш"
+          correct: false
+        - text: "їхній"
+          correct: false
+    - question: "Це ___ книга. Вона тут читає. (This is her book. She reads here.)"
+      explanation: "Use 'її' because the owner is NOT the subject of 'Це ... книга'."
+      options:
+        - text: "її"
+          correct: true
+        - text: "своя"
+          correct: false
+        - text: "моя"
+          correct: false
+        - text: "твоя"
+          correct: false
+    - question: "Вони мають ___ місто. (They have their own city)"
+      explanation: "Use 'своє' because it refers back to the subject 'Вони'."
       options:
         - text: "своє"
           correct: true
@@ -252,27 +272,27 @@
           correct: false
         - text: "ваше"
           correct: false
-    - question: "Він бачить ___ друга. (He sees his own friend)"
-      explanation: "Use 'свого' because the friend belongs to the subject 'Він'."
+    - question: "Ти маєш ___ ключі. (You have your own keys)"
+      explanation: "Use 'свої' because it refers back to 'Ти'."
       options:
-        - text: "свого"
+        - text: "свої"
           correct: true
-        - text: "його"
+        - text: "твої"
           correct: false
-        - text: "мій"
+        - text: "мої"
           correct: false
-        - text: "твій"
+        - text: "наші"
           correct: false
-    - question: "Я маю ___ рюкзак. (I have my own backpack)"
-      explanation: "Use 'свій' as it refers back to 'Я'."
+    - question: "Вона має ___ вікно. (She has her own window)"
+      explanation: "Use 'своє' because it refers back to the subject 'Вона'."
       options:
-        - text: "свій"
+        - text: "своє"
           correct: true
-        - text: "мій"
+        - text: "її"
           correct: false
-        - text: "наш"
+        - text: "моє"
           correct: false
-        - text: "ваш"
+        - text: "наше"
           correct: false
 
 - type: true-false
@@ -285,9 +305,9 @@
     - statement: "Займенник 'свій' можна використовувати тільки для третьої особи."
       correct: false
       explanation: "'Свій' works for all persons: first, second, and third."
-    - statement: "У реченні 'Він взяв його сумку' сумка належить підмету."
+    - statement: "У реченні 'Він має його рюкзак' рюкзак належить йому."
       correct: false
-      explanation: "If it belonged to the subject, we would use 'свою'."
+      explanation: "If it belonged to the subject, we would use 'свій'."
     - statement: "Займенник 'свій' змінюється за родами та числами."
       correct: true
       explanation: "Yes, it matches the noun's gender and number (свій, своя, своє, свої)."
@@ -311,27 +331,27 @@
     - sentence: "Я маю ___ стіл. (masc.)"
       answer: "свій"
       options: ["свій", "своя", "своє", "свої"]
-    - sentence: "Ти маєш ___ кімнату. (fem.)"
-      answer: "свою"
-      options: ["свій", "свою", "своє", "свої"]
-    - sentence: "Він має ___ вікно. (neut.)"
+    - sentence: "Він має ___ телефон. (masc.)"
+      answer: "свій"
+      options: ["свій", "своя", "своє", "свої"]
+    - sentence: "Вона має ___ вікно. (neut.)"
       answer: "своє"
       options: ["свій", "своя", "своє", "свої"]
     - sentence: "Ми маємо ___ речі. (pl.)"
       answer: "свої"
       options: ["свій", "своя", "своє", "свої"]
-    - sentence: "Вона бачить ___ маму. (fem.)"
-      answer: "свою"
-      options: ["свій", "свою", "своє", "свої"]
-    - sentence: "Вони знають ___ місто. (neut.)"
+    - sentence: "Ти маєш ___ рюкзак. (masc.)"
+      answer: "свій"
+      options: ["свій", "своя", "своє", "свої"]
+    - sentence: "Вони мають ___ дім. (masc.)"
+      answer: "свій"
+      options: ["свій", "своя", "своє", "свої"]
+    - sentence: "Він має ___ хобі. (neut.)"
       answer: "своє"
       options: ["свій", "своя", "своє", "свої"]
-    - sentence: "Він читає ___ книгу. (fem.)"
-      answer: "свою"
-      options: ["свій", "свою", "своє", "свої"]
-    - sentence: "Я бачу ___ тата. (masc.)"
-      answer: "свого"
-      options: ["свій", "свого", "своє", "свої"]
+    - sentence: "Я маю ___ ключі. (pl.)"
+      answer: "свої"
+      options: ["свій", "своя", "своє", "свої"]
 
 - type: group-sort
   title: "Змінні та незмінні займенники"

@@ -1,0 +1,14 @@
+{
+  "slug": "reflexive-verbs",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-17T00:47:14.211770Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-17T00:47:14.211753Z",
+  "result": "success"
+}

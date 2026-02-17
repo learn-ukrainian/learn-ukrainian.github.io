@@ -1,0 +1,81 @@
+- ipa: '[prokɪˈdatɪsʲa]'
+  lemma: прокидатися
+  pos: verb
+  translation: to wake up
+- ipa: '[vmɪˈvatɪsʲa]'
+  lemma: вмиватися
+  pos: verb
+  translation: to wash one's face
+- ipa: '[odʲaˈɦatɪsʲa]'
+  lemma: одягатися
+  pos: verb
+  translation: to get dressed
+- ipa: '[ˈsɲidatɪ]'
+  lemma: снідати
+  pos: verb
+  translation: to have breakfast
+- ipa: '[pratsʲuˈvatɪ]'
+  lemma: працювати
+  pos: verb
+  translation: to work
+- ipa: '[oˈbidatɪ]'
+  lemma: обідати
+  pos: verb
+  translation: to have lunch
+- ipa: '[vidpotʃɪˈvatɪ]'
+  lemma: відпочивати
+  pos: verb
+  translation: to rest
+- ipa: '[veˈtʃɛrʲatɪ]'
+  lemma: вечеряти
+  pos: verb
+  translation: to have dinner
+- ipa: '[dɪˈvɪtɪsʲa]'
+  lemma: дивитися
+  pos: verb
+  translation: to watch
+- ipa: '[lʲaˈhatɪ]'
+  lemma: лягати
+  pos: verb
+  translation: to lie down
+- ipa: '[ˈspatɪ]'
+  lemma: спати
+  pos: verb
+  translation: to sleep
+- ipa: '[spoˈtʃatku]'
+  lemma: спочатку
+  pos: adv
+  translation: first / at first
+- ipa: '[ˈpotim]'
+  lemma: потім
+  pos: adv
+  translation: then / after that
+- ipa: '[ˈpislʲa ˈtsʲoɦo]'
+  lemma: після цього
+  pos: phrase
+  translation: after this
+- ipa: '[naˈrɛʃtʲi]'
+  lemma: нарешті
+  pos: adv
+  translation: finally
+- ipa: '[zau̯ˈʒdɪ]'
+  lemma: завжди
+  pos: adv
+  translation: always
+- ipa: '[zazvɪˈtʃai̯]'
+  lemma: зазвичай
+  pos: adv
+  translation: usually
+- ipa: '[ˈinodʲi]'
+  lemma: іноді
+  pos: adv
+  translation: sometimes
+- ipa: '[ˈridko]'
+  lemma: рідко
+  pos: adv
+  translation: rarely
+- ipa: '[ɲiˈkɔlɪ]'
+  lemma: ніколи
+  pos: adv
+  translation: never
+

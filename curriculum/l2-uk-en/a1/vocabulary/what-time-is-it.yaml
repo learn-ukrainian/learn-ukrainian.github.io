@@ -1,0 +1,81 @@
+- ipa: '[tʃas]'
+  lemma: час
+  pos: noun
+  translation: time
+- ipa: '[ɦɔˈdɪna]'
+  lemma: година
+  pos: noun
+  translation: hour
+- ipa: '[xvɪˈlɪna]'
+  lemma: хвилина
+  pos: noun
+  translation: minute
+- ipa: '[dɛnʲ]'
+  lemma: день
+  pos: noun
+  translation: day
+- ipa: '[ˈtɪʒdɛnʲ]'
+  lemma: тиждень
+  pos: noun
+  translation: week
+- ipa: '[ˈmʲisʲat͡sʲ]'
+  lemma: місяць
+  pos: noun
+  translation: month
+- ipa: '[rʲik]'
+  lemma: рік
+  pos: noun
+  translation: year
+- ipa: '[ˈranɔk]'
+  lemma: ранок
+  pos: noun
+  translation: morning
+- ipa: '[ˈvɛtʃʲir]'
+  lemma: вечір
+  pos: noun
+  translation: evening
+- ipa: '[nʲitʃ]'
+  lemma: ніч
+  pos: noun
+  translation: night
+- ipa: '[ˈzaras]'
+  lemma: зараз
+  pos: adverb
+  translation: now
+- ipa: '[ˈrɔsklad]'
+  lemma: розклад
+  pos: noun
+  translation: schedule
+- ipa: '[ˈpɔtʲaɦ]'
+  lemma: потяг
+  pos: noun
+  translation: train
+- ipa: '[vɔkˈzal]'
+  lemma: вокзал
+  pos: noun
+  translation: station (train)
+- ipa: '[ˈvʲilʲnɪj]'
+  lemma: вільний
+  pos: adj
+  translation: free
+- ipa: '[ˈzajnʲatɪj]'
+  lemma: зайнятий
+  pos: adj
+  translation: busy
+- ipa: '[sʲɔˈɦɔdnʲi]'
+  lemma: сьогодні
+  pos: adverb
+  translation: today
+- ipa: '[ˈzavtra]'
+  lemma: завтра
+  pos: adverb
+  translation: tomorrow
+- ipa: '[pɔnɛˈdʲilɔk]'
+  lemma: понеділок
+  pos: noun
+  translation: Monday
+- ipa: '[ˈsʲitʃɛnʲ]'
+  lemma: січень
+  pos: noun
+  translation: January
+

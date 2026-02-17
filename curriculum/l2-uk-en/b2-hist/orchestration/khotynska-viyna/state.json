@@ -1,0 +1,14 @@
+{
+  "slug": "khotynska-viyna",
+  "track": "b2-hist",
+  "module_num": 46,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:53:16Z",
+      "task_id": "yw-khotynska-viyna-p0"
+    }
+  },
+  "last_updated": "2026-02-16T21:53:16Z"
+}

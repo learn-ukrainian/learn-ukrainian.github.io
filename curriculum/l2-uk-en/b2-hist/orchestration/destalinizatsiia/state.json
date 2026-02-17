@@ -1,0 +1,14 @@
+{
+  "slug": "destalinizatsiia",
+  "track": "b2-hist",
+  "module_num": 113,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:17:06Z",
+      "task_id": "yw-destalinizatsiia-p0"
+    }
+  },
+  "last_updated": "2026-02-16T23:17:06Z"
+}

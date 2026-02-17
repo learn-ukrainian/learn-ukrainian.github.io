@@ -1,0 +1,65 @@
+{
+  "slug": "body-and-health",
+  "track": "a1",
+  "module_num": 31,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T17:13:21Z",
+      "task_id": "yw-body-and-health-p0"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:22:51Z",
+      "task_id": "yw-body-and-health-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:25:27Z",
+      "sections_done": 3,
+      "sections_total": 3
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:35:25Z",
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:35:25Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:35:25Z",
+      "note": "adopted-existing"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:46:48Z",
+      "attempts": 2
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:48:00Z",
+      "task_id": "gr-body-and-health",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:49:26Z",
+      "task_id": "yw-body-and-health-6b"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:51:38Z",
+      "attempts": 2
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:51:39Z"
+    }
+  },
+  "last_updated": "2026-02-16T23:51:39Z"
+}

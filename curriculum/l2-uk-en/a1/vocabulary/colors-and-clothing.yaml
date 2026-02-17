@@ -1,0 +1,124 @@
+items:
+  - lemma: білий
+    ipa: "/ˈb⁽ʲ⁾ilɪj/"
+    translation: "white"
+    pos: "adj"
+    gender: "m"
+  - lemma: чорний
+    ipa: "/ˈtʃɔrnɪj/"
+    translation: "black"
+    pos: "adj"
+    gender: "m"
+  - lemma: червоний
+    ipa: "/tʃerˈwɔnɪj/"
+    translation: "red"
+    pos: "adj"
+    gender: "m"
+  - lemma: синій
+    ipa: "/ˈsɪnʲij/"
+    translation: "dark blue"
+    pos: "adj"
+    gender: "m"
+  - lemma: зелений
+    ipa: "/zeˈlɛnɪj/"
+    translation: "green"
+    pos: "adj"
+    gender: "m"
+  - lemma: жовтий
+    ipa: "/ˈʒɔwtɪj/"
+    translation: "yellow"
+    pos: "adj"
+    gender: "m"
+  - lemma: колір
+    ipa: "/ˈkɔlʲir/"
+    translation: "color"
+    pos: "noun"
+    gender: "m"
+  - lemma: сорочка
+    ipa: "/sɔˈrɔtʃkɑ/"
+    translation: "shirt"
+    pos: "noun"
+    gender: "f"
+  - lemma: сукня
+    ipa: "/ˈsuknʲɑ/"
+    translation: "dress"
+    pos: "noun"
+    gender: "f"
+  - lemma: светр
+    ipa: "/swɛtr/"
+    translation: "sweater"
+    pos: "noun"
+    gender: "m"
+  - lemma: куртка
+    ipa: "/ˈkurtkɑ/"
+    translation: "jacket"
+    pos: "noun"
+    gender: "f"
+  - lemma: штани
+    ipa: "/ʃtɑˈnɪ/"
+    translation: "pants / trousers"
+    pos: "noun"
+    gender: "pl"
+  - lemma: джинси
+    ipa: "/ˈdʒɪnsɪ/"
+    translation: "jeans"
+    pos: "noun"
+    gender: "pl"
+  - lemma: окуляри
+    ipa: "/ɔkuˈlʲɑrɪ/"
+    translation: "glasses"
+    pos: "noun"
+    gender: "pl"
+  - lemma: вишиванка
+    ipa: "/ʋɪʃɪˈʋɑnkɑ/"
+    translation: "embroidered shirt"
+    pos: "noun"
+    gender: "f"
+  - lemma: носити
+    ipa: "/nɔˈsɪtɪ/"
+    translation: "to wear"
+    pos: "verb"
+  - lemma: розмір
+    ipa: "/ˈrɔzmir/"
+    translation: "size"
+    pos: "noun"
+    gender: "m"
+  - lemma: ціна
+    ipa: "/tʲiˈnɑ/"
+    translation: "price"
+    pos: "noun"
+    gender: "f"
+  - lemma: одяг
+    ipa: "/ˈɔdʲɑɦ/"
+    translation: "clothes"
+    pos: "noun"
+    gender: "m"
+  - lemma: магазин
+    ipa: "/mɑɦɑˈzɪn/"
+    translation: "shop / store"
+    pos: "noun"
+    gender: "m"
+  - lemma: коштувати
+    ipa: "/ˈkɔʃtʊʋɑtɪ/"
+    translation: "to cost"
+    pos: "verb"
+  - lemma: гривня
+    ipa: "/ˈɦrɪʋnʲɑ/"
+    translation: "hryvnia (currency)"
+    pos: "noun"
+    gender: "f"
+  - lemma: гарний
+    ipa: "/ˈɦɑrnɪj/"
+    translation: "beautiful / nice"
+    pos: "adj"
+    gender: "m"
+  - lemma: новий
+    ipa: "/nɔˈʋɪj/"
+    translation: "new"
+    pos: "adj"
+    gender: "m"
+  - lemma: теплий
+    ipa: "/ˈtɛplɪj/"
+    translation: "warm"
+    pos: "adj"
+    gender: "m"

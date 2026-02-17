@@ -1,0 +1,145 @@
+items:
+  - lemma: голова
+    ipa: /ɦɔlɔˈʋa/
+    translation: head
+    pos: noun
+    gender: f
+  - lemma: рука
+    ipa: /ruˈka/
+    translation: hand / arm
+    pos: noun
+    gender: f
+  - lemma: нога
+    ipa: /nɔˈɦa/
+    translation: leg / foot
+    pos: noun
+    gender: f
+  - lemma: живіт
+    ipa: /ʒeˈʋit/
+    translation: stomach
+    pos: noun
+    gender: m
+  - lemma: горло
+    ipa: /ˈɦɔrlɔ/
+    translation: throat
+    pos: noun
+    gender: n
+  - lemma: око
+    ipa: /ˈɔkɔ/
+    translation: eye
+    pos: noun
+    gender: n
+  - lemma: вухо
+    ipa: /ˈʋuxɔ/
+    translation: ear
+    pos: noun
+    gender: n
+  - lemma: спина
+    ipa: /spɪˈna/
+    translation: back
+    pos: noun
+    gender: f
+  - lemma: температура
+    ipa: /tɛmpɛraˈtura/
+    translation: fever / temperature
+    pos: noun
+    gender: f
+  - lemma: кашель
+    ipa: /ˈkaʃɛlʲ/
+    translation: cough
+    pos: noun
+    gender: m
+  - lemma: нежить
+    ipa: /ˈnɛʒetʲ/
+    translation: runny nose
+    pos: noun
+    gender: m
+  - lemma: аптека
+    ipa: /apˈtɛka/
+    translation: pharmacy
+    pos: noun
+    gender: f
+  - lemma: ліки
+    ipa: /ˈlʲikɪ/
+    translation: medicine
+    pos: noun
+    gender: pl
+  - lemma: таблетка
+    ipa: /tabˈlɛtka/
+    translation: pill / tablet
+    pos: noun
+    gender: f
+  - lemma: сироп
+    ipa: /sɪˈrɔp/
+    translation: syrup
+    pos: noun
+    gender: m
+  - lemma: вітамін
+    ipa: /ʋitaˈmin/
+    translation: vitamin
+    pos: noun
+    gender: m
+  - lemma: боліти
+    ipa: /bɔˈlʲitɪ/
+    translation: to hurt
+    pos: verb
+  - lemma: шукати
+    ipa: /ʃuˈkatɪ/
+    translation: to look for
+    pos: verb
+  - lemma: купувати
+    ipa: /kupuˈʋatɪ/
+    translation: to buy
+    pos: verb
+  - lemma: пити
+    ipa: /ˈpɪtɪ/
+    translation: to drink
+    pos: verb
+  - lemma: відпочивати
+    ipa: /ʋidpɔtʃɪˈʋatɪ/
+    translation: to rest
+    pos: verb
+  - lemma: фармацевт
+    ipa: /farmɐˈtsɛu̯t/
+    translation: pharmacist
+    pos: noun
+    gender: m
+  - lemma: зелений
+    ipa: /zɛˈlɛnɪj/
+    translation: green
+    pos: adj
+  - lemma: хрест
+    ipa: /xrɛst/
+    translation: cross
+    pos: noun
+    gender: m
+  - lemma: малина
+    ipa: /maˈlɪna/
+    translation: raspberry
+    pos: noun
+    gender: f
+  - lemma: дієслово
+    ipa: /dʲijɛˈslɔʋɔ/
+    translation: verb
+    pos: noun
+    gender: n
+  - lemma: займенник
+    ipa: /zajˈmɛnːɪk/
+    translation: pronoun
+    pos: noun
+    gender: m
+  - lemma: однина
+    ipa: /ɔdnɪˈna/
+    translation: singular
+    pos: noun
+    gender: f
+  - lemma: множина
+    ipa: /mnɔʒɪˈna/
+    translation: plural
+    pos: noun
+    gender: f
+  - lemma: відмінок
+    ipa: /ʋidˈminɔk/
+    translation: case
+    pos: noun
+    gender: m

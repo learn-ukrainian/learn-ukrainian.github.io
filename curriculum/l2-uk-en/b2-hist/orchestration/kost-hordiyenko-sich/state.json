@@ -1,0 +1,14 @@
+{
+  "slug": "kost-hordiyenko-sich",
+  "track": "b2-hist",
+  "module_num": 65,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:18:18Z",
+      "task_id": "yw-kost-hordiyenko-sich-p0"
+    }
+  },
+  "last_updated": "2026-02-16T22:18:18Z"
+}

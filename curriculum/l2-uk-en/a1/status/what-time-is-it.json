@@ -1,0 +1,58 @@
+{
+  "module": "what-time-is-it",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-17T00:47:22.928984Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-16T21:55:43.588642Z",
+    "meta": "2026-02-16T21:27:28.857057Z",
+    "activities": "2026-02-16T21:51:41.600817Z",
+    "vocabulary": "2026-02-16T21:46:31.089310Z",
+    "plan": "2026-02-14T15:15:44.417436Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2287/1064 (raw: 2448)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

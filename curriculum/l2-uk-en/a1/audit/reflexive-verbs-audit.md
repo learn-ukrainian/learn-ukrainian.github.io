@@ -1,8 +1,8 @@
 # Audit Report: M09 — reflexive-verbs.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 830
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-16 15:53:43
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-17 00:47:14
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,44 +20,35 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in | Conjugation Practice | 12 | 8 | ✅ |
-| 2 | fill-in | Choosing -ся or -сь | 12 | 8 | ✅ |
-| 3 | match-up | Transitive ↔ Reflexive | 12 | 8 | ✅ |
+| 1 | quiz | Вибір суфікса: -ся чи -сь? | 12 | 8 | ✅ |
+| 2 | match-up | Дія на себе чи на іншого? | 10 | 8 | ✅ |
+| 3 | fill-in | Знайдіть свій ритм: -ся чи -сь | 12 | 8 | ✅ |
+| 4 | group-sort | Класифікація дієслів | 12 | 12 | ✅ |
+| 5 | quiz | Мистецтво вимови: -ться та -шся | 12 | 8 | ✅ |
+| 6 | fill-in | Практика відмінювання: Дієслово «вчитися» | 12 | 8 | ✅ |
+| 7 | anagram | Розшифруйте зворотні дієслова | 12 | 8 | ✅ |
+| 8 | fill-in | Ранкова історія: Все про -ся | 12 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 3 (target: 8-12) ❌
-- Unique types: 2 (minimum: 4) ❌
-- Priority types used: 2/5 (fill-in, match-up) ✅
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** match-up 'Transitive ↔ Reflexive' has 12 pairs (target: 8-10)
-  - FIX: Adjust number of pairs to 8-10.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in reflexive-verbs.yaml: Schema validation error at key '0': 'вчаться' is not of type 'object'
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 20/100)
-
-- 3 violations (minor)
-- Activity count below minimum
-
 ## Gates
 - **Words:** ✅ 2782/830 (raw: 3314)
-- **Activities:** ❌ 3/8
+- **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ❌ 2/4 types
+- **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/1
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ⚠️ 12 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 15.3% (target 15-35% (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

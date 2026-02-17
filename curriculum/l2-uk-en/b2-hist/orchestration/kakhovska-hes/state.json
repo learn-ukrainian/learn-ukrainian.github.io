@@ -1,0 +1,14 @@
+{
+  "slug": "kakhovska-hes",
+  "track": "b2-hist",
+  "module_num": 135,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:50:03Z",
+      "task_id": "yw-kakhovska-hes-p0"
+    }
+  },
+  "last_updated": "2026-02-16T23:50:03Z"
+}

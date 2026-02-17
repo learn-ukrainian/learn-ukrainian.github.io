@@ -1,0 +1,14 @@
+{
+  "slug": "petro-kalnyshevskyi",
+  "track": "b2-hist",
+  "module_num": 73,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:29:46Z",
+      "task_id": "yw-petro-kalnyshevskyi-p0"
+    }
+  },
+  "last_updated": "2026-02-16T22:29:46Z"
+}

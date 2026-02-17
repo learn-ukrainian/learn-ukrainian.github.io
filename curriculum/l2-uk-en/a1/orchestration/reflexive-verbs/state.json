@@ -1,0 +1,19 @@
+{
+  "slug": "reflexive-verbs",
+  "track": "a1",
+  "module_num": 9,
+  "mode": "e2e",
+  "phases": {
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T15:10:44Z",
+      "task_id": "yw-reflexive-verbs-p3b"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-16T15:11:11Z",
+      "task_id": "yw-reflexive-verbs-p3a"
+    }
+  },
+  "last_updated": "2026-02-16T15:11:11Z"
+}

@@ -406,13 +406,18 @@ def run_watcher():
                     logger.debug(f"Skipping error message #{msg['id']}")
                     continue
 
-                # Skip pipeline-internal messages (v2 builder uses stdout, broker
-                # gets only a short summary — not for headless dispatch)
-                task = msg.get('task_id') or ''
-                if task.startswith('yw-'):
-                    logger.debug(f"Auto-acking pipeline msg #{msg['id']} (task={task})")
-                    acknowledge_message(msg['id'], status="auto-acked-pipeline")
+                # Leave gemini→claude messages unread so Claude can read them
+                # via check_inbox / receive_messages. Auto-ack everything else.
+                if msg['to'] == 'claude':
+                    logger.debug(f"Leaving msg #{msg['id']} for Claude to read ({msg['from']}→claude)")
                     continue
+
+                # Auto-ack all other messages (gemini→gemini self-dispatches,
+                # claude→gemini pipeline messages, etc). The build_module
+                # pipeline calls Gemini directly — watcher never dispatches.
+                logger.debug(f"Auto-acking msg #{msg['id']} ({msg['from']}→{msg['to']} task={msg.get('task_id', 'N/A')})")
+                acknowledge_message(msg['id'], status="auto-acked-monitor-only")
+                continue
 
                 # Check if max delivery attempts exceeded
                 attempts = delivery_attempts.get(msg['id'], 0)

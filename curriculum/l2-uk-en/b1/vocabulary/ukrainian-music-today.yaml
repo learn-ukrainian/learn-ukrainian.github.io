@@ -1,0 +1,210 @@
+---
+module: 76-ukrainian-music-today
+level: B1
+version: '2.0'
+items:
+- lemma: альбом
+  ipa: /alʲbˈɔm/
+  translation: album
+  pos: noun
+  gender: m
+- lemma: артист
+  ipa: /artˈɪst/
+  translation: artist, performer
+  pos: noun
+- lemma: бандура
+  ipa: /bandˈura/
+  translation: bandura (instrument)
+  pos: noun
+  gender: f
+- lemma: виконавиця
+  ipa: /ʋɪkɔnˈaʋɪt͡sja/
+  translation: performer (female)
+  pos: noun
+  gender: f
+- lemma: витвір
+  ipa: /ʋˈɪtʋir/
+  translation: creation, work of art
+  pos: noun
+- lemma: вопл
+  ipa: /ʋɔpl/
+  translation: wail
+  pos: noun
+  gender: f
+- lemma: відоплясов
+  ipa: /ʋidɔpljasɔʋ/
+  translation: Vidoplyasov
+  pos: noun
+  gender: m
+- lemma: десятиліття
+  ipa: /dɛsjatɪlˈittja/
+  translation: decade
+  pos: noun
+  gender: n
+- lemma: джаз
+  ipa: /dʒaz/
+  translation: jazz
+  pos: noun
+  gender: m
+- lemma: джазовий
+  ipa: /dʒˈazɔʋɪj/
+  translation: jazz (adj)
+  pos: adj
+- lemma: джамала
+  ipa: /dʒamala/
+  translation: Jamala (singer)
+  pos: noun
+  gender: f
+- lemma: електро-фолк
+  ipa: /ɛlɛktrɔ-fɔlk/
+  translation: electro-folk
+  pos: noun
+  gender: m
+- lemma: електроніка
+  ipa: /ɛlɛktrˈɔnika/
+  translation: electronics
+  pos: noun
+  gender: f
+- lemma: етно-хаос
+  ipa: /ˈɛtnɔ-xaɔs/
+  translation: ethno-chaos
+  pos: noun
+  gender: m
+- lemma: жанр
+  ipa: /ʒanr/
+  translation: genre
+  pos: noun
+- lemma: запорожець
+  ipa: /zapɔrˈɔʒɛt͡sʲ/
+  translation: Zaporozhets
+  pos: noun
+  gender: m
+- lemma: каное
+  ipa: /kanˈɔɛ/
+  translation: canoe
+  pos: noun
+  gender: n
+- lemma: клубний
+  ipa: /klˈubnɪj/
+  translation: club (adj)
+  pos: adj
+- lemma: кліп
+  ipa: /klip/
+  translation: clip, music video
+  pos: noun
+- lemma: мелодія
+  ipa: /mɛlˈɔdija/
+  translation: melody
+  pos: noun
+  gender: f
+- lemma: мехенді
+  ipa: /mɛxɛndi/
+  translation: mehndi
+  pos: noun
+  gender: n
+- lemma: нажива
+  ipa: /naʒˈɪʋa/
+  translation: gain, profit
+  pos: noun
+  gender: f
+- lemma: неофолк
+  ipa: /nɛɔfɔlk/
+  translation: neofolk
+  pos: noun
+  gender: m
+- lemma: неофіційний
+  ipa: /nɛɔfit͡sˈijnɪj/
+  translation: unofficial
+  pos: adj
+- lemma: плейлист
+  ipa: /plɛjlɪst/
+  translation: playlist
+  pos: noun
+  gender: m
+- lemma: потужно
+  ipa: /pɔtˈuʒnɔ/
+  translation: powerfully
+  pos: adv
+- lemma: присвячений
+  ipa: /prɪsʋˈjat͡ʃɛnɪj/
+  translation: dedicated
+  pos: adj
+- lemma: продюсер
+  ipa: /prɔdˈjusɛr/
+  translation: producer
+  pos: noun
+- lemma: ренесанс
+  ipa: /rɛnɛsˈans/
+  translation: Renaissance
+  pos: noun
+  gender: m
+- lemma: реп
+  ipa: /rɛp/
+  translation: rap (music)
+  pos: noun
+  gender: m
+- lemma: реп-музика
+  ipa: /rɛp-mˈuzɪka/
+  translation: rap music
+  pos: noun
+  gender: m
+- lemma: реп-сцена
+  ipa: /rɛp-st͡sˈɛna/
+  translation: rap scene
+  pos: noun
+  gender: f
+- lemma: реперка
+  ipa: /rɛpɛrka/
+  translation: rapper (female)
+  pos: noun
+- lemma: рок-музика
+  ipa: /rɔk-mˈuzɪka/
+  translation: rock music
+  pos: noun
+  gender: f
+- lemma: руслан
+  ipa: /ruslˈan/
+  translation: Ruslan (name)
+  pos: noun
+  gender: m
+- lemma: саундтрек
+  ipa: /saundtrˈɛk/
+  translation: soundtrack
+  pos: noun
+- lemma: скрябін
+  ipa: /skrjabin/
+  translation: Skryabin (name)
+  pos: noun
+  gender: m
+- lemma: співак
+  ipa: /spiʋˈak/
+  translation: singer
+  pos: noun
+  gender: f
+- lemma: створюючи
+  ipa: /stʋˈɔrjujut͡ʃɪ/
+  translation: creating
+  pos: verb
+- lemma: стійкість
+  ipa: /stˈijkistʲ/
+  translation: stability, resilience
+  pos: noun
+  gender: f
+- lemma: торкнутися
+  ipa: /tɔrknˈutɪsja/
+  translation: to touch (perfective)
+  pos: verb
+- lemma: хіп-хоп
+  ipa: /xip-xɔp/
+  translation: hip hop
+  pos: noun
+  gender: m
+- lemma: ширший
+  ipa: /ʃˈɪrʃɪj/
+  translation: wider (adj)
+  pos: adj
+- lemma: шоу
+  ipa: /ʃˈɔu/
+  translation: show
+  pos: noun
+  gender: m

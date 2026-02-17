@@ -1,7 +1,7 @@
 # Audit Report: M07 — questions-and-negation.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1131
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-16 14:37:25
+**Generated:** 2026-02-17 00:47:13
 
 ## Configuration
 **Type:** A1-grammar

@@ -1,0 +1,65 @@
+{
+  "slug": "my-daily-routine",
+  "track": "a1",
+  "module_num": 25,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T16:59:53Z",
+      "task_id": "yw-my-daily-routine-p0"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:21:01Z",
+      "task_id": "yw-my-daily-routine-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:22:43Z",
+      "sections_done": 2,
+      "sections_total": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:36:26Z",
+      "attempts": 2
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:37:05Z",
+      "task_id": "yw-my-daily-routine-p3b"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:37:36Z",
+      "task_id": "yw-my-daily-routine-p3a"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:39:51Z",
+      "attempts": 2
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:41:37Z",
+      "task_id": "gr-my-daily-routine",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:42:59Z",
+      "task_id": "yw-my-daily-routine-6b"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:42:59Z",
+      "attempts": 1
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:43:00Z"
+    }
+  },
+  "last_updated": "2026-02-16T21:43:00Z"
+}

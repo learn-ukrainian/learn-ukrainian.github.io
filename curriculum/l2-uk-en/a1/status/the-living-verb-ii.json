@@ -2,12 +2,12 @@
   "module": "the-living-verb-ii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-16T15:53:39.237453Z",
+  "last_audit": "2026-02-17T00:47:14.186343Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-15T18:21:59.033426Z",
+    "md": "2026-02-16T15:57:34.756527Z",
     "meta": "2026-02-15T18:10:51.537537Z",
-    "activities": "2026-02-15T18:12:54.502201Z",
+    "activities": "2026-02-16T16:02:10.909265Z",
     "vocabulary": "2026-02-15T18:21:53.645881Z",
     "plan": "2026-02-14T15:15:44.404470Z"
   },
@@ -18,14 +18,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1661/972 (raw: 2020) | pedagogy: 9 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "1661/972 (raw: 2276)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "8/8 | density: 3 < 12"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -38,21 +38,21 @@
       "message": "10/10 (High)"
     },
     "ipa": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Clean IPA"
+      "message": "8 IPA issues (run lint_ipa.py --fix)"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 2,
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M15 — around-the-city.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1602
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-16 15:55:10
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-17 00:47:18
 
 ## Configuration
 **Type:** A1
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3510/1602 (raw: 3701)
+- **Words:** ✅ 3528/1602 (raw: 3719)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 24.9% LOW (target 25-40% (M15))
+- **Immersion:** 🇺🇦 25.0% (target 25-40% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 
@@ -59,7 +59,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Around the City** | ✅ | 0 | Included in Core |
 | **Вступ: Місто навколо нас** | ✅ | 460 | Included in Core |
-| **Теорія: Напрямки та інфраструктура** | ✅ | 1121 | Included in Core |
+| **Теорія: Напрямки та інфраструктура** | ✅ | 1139 | Included in Core |
 | **Практика: Мапа міста** | ✅ | 779 | Included in Core |
 | **Ваш вихід: Як пройти...?** | ✅ | 482 | Included in Core |
 | **Культурний контекст: Навігація по-українськи** | ✅ | 510 | Included in Core |

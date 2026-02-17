@@ -1,255 +1,658 @@
-- type: fill-in
-  title: Conjugation Practice
-  instruction: Fill in the correct form of the reflexive verb.
+- instruction: 'Choose the correct reflexive suffix based on the sound that comes
+    before it. Remember: Vowels like -сь, Consonants like -ся.'
   items:
-    - sentence: Я ___ зранку. (вмиватися)
-      answer: вмиваюся
-      options: [вмиваюся, вмиваєшся, вмиваємося, вмиваються]
-    - sentence: Ти ___ швидко. (одягатися)
-      answer: одягаєшся
-      options: [одягаюся, одягаєшся, одягається, одягаєтеся]
-    - sentence: Він ___ голосно. (сміятися)
-      answer: сміється
-      options: [сміюся, смієшся, сміється, сміються]
-    - sentence: Ми ___ кожен день. (вчитися)
-      answer: вчимося
-      options: [вчуся, вчимося, вчитеся, вчаться]
-    - sentence: Ви ___ з сусідами. (вітатися)
-      answer: вітаєтеся
-      options: [вітаєшся, вітається, вітаємося, вітаєтеся]
-    - sentence: Вони ___ у парку. (зустрічатися)
-      answer: зустрічаються
-      options: [зустрічаюся, зустрічається, зустрічаємося, зустрічаються]
-    - sentence: Я ___ з новими друзями. (знайомитися)
-      answer: знайомлюся
-      options: [знайомлюся, знайомишся, знайомимося, знайомляться]
-    - sentence: Вона ___ додому. (повертатися)
-      answer: повертається
-      options: [повертаюся, повертаєшся, повертається, повертаються]
-    - sentence: Ти ___ телевізор. (дивитися)
-      answer: дивишся
-      options: [дивлюся, дивишся, дивиться, дивляться]
-    - sentence: Ми ___ тепло. (одягатися)
-      answer: одягаємося
-      options: [одягаюся, одягаємося, одягаєтеся, одягаються]
-    - sentence: Ви ___ разом. (сміятися)
-      answer: смієтеся
-      options: [сміюся, сміємося, смієтеся, сміються]
-    - sentence: Вони ___ холодною водою. (вмиватися)
-      answer: вмиваються
-      options: [вмиваюся, вмиваємося, вмиваєтеся, вмиваються]
-
-- type: fill-in
-  title: Choosing -ся or -сь
-  instruction: Choose the correct suffix based on the ending of the verb.
-  items:
-    - sentence: Я одягаю___
-      answer: сь
-      options: [ся, сь, ться, шся]
-    - sentence: Ти одягаєш___
-      answer: ся
-      options: [ся, сь, ться, шся]
-    - sentence: Ми вчимо___
-      answer: сь
-      options: [ся, сь, ться, шся]
-    - sentence: Ви вмиваєте___
-      answer: сь
-      options: [ся, сь, ться, шся]
-    - sentence: Вони вмивають___
-      answer: ся
-      options: [ся, сь, ться, шся]
-    - sentence: Він називаєть___
-      answer: ся
-      options: [ся, сь, ться, шся]
-    - sentence: Я дивлю___
-      answer: сь
-      options: [ся, сь, ться, шся]
-    - sentence: Ми вітаємо___
-      answer: сь
-      options: [ся, сь, ться, шся]
-    - sentence: Ти знайомиш___
-      answer: ся
-      options: [ся, сь, ться, шся]
-    - sentence: Ви повертаєте___
-      answer: сь
-      options: [ся, сь, ться, шся]
-    - sentence: Вони вчаться
-      answer: ся
-      options: [ся, сь, ться, шся]
-    - sentence: Я знайомлю___
-      answer: сь
-      options: [ся, сь, ться, шся]
-
-- type: match-up
-  title: Transitive ↔ Reflexive
-  instruction: Match the transitive base verb with its reflexive counterpart.
+  - explanation: Після голосного звука 'ю' ми використовуємо короткий суфікс -сь.
+    options:
+    - correct: true
+      text: -сь
+    - correct: false
+      text: -ся
+    - correct: false
+      text: -ть
+    - correct: false
+      text: -ш
+    question: Яке закінчення ви додасте до слова «вмиваю...»?
+  - explanation: Після приголосного звука 'ш' ми завжди використовуємо суфікс -ся.
+    options:
+    - correct: true
+      text: -ся
+    - correct: false
+      text: -сь
+    - correct: false
+      text: -ть
+    - correct: false
+      text: -мо
+    question: Як правильно написати слово «ти вмиваєш...»?
+  - explanation: Закінчення 'мо' має голосний звук, тому ми додаємо -сь.
+    options:
+    - correct: true
+      text: -сь
+    - correct: false
+      text: -ся
+    - correct: false
+      text: -ти
+    - correct: false
+      text: -те
+    question: Оберіть правильну форму для слова «ми вчимо...».
+  - explanation: Буква 'я' у суфіксі -ся використовується після приголосного звука
+      'ть'.
+    options:
+    - correct: true
+      text: -ся
+    - correct: false
+      text: -сь
+    - correct: false
+      text: -ю
+    - correct: false
+      text: -є
+    question: Який суфікс потрібен у слові «вони вчаться»?
+  - explanation: Після голосного 'е' у закінченні 'те' ми використовуємо -сь.
+    options:
+    - correct: true
+      text: -сь
+    - correct: false
+      text: -ся
+    - correct: false
+      text: -ть
+    - correct: false
+      text: -мо
+    question: Яку форму має дієслово «ви одягаєте...»?
+  - explanation: Форма 'ється' закінчується на приголосний, тому ми використовуємо
+      -ся.
+    options:
+    - correct: true
+      text: одягається
+    - correct: false
+      text: одягаєсь
+    - correct: false
+      text: одягає
+    - correct: false
+      text: одягають
+    question: Як ви скажете «він одягається» українською мовою?
+  - explanation: Після голосного 'ю' у першій особі ми додаємо -сь.
+    options:
+    - correct: true
+      text: -сь
+    - correct: false
+      text: -ся
+    - correct: false
+      text: -ть
+    - correct: false
+      text: -ш
+    question: Яке закінчення має форма «я смію...»?
+  - explanation: Після шиплячого приголосного 'ш' ми додаємо повний суфікс -ся.
+    options:
+    - correct: true
+      text: -ся
+    - correct: false
+      text: -сь
+    - correct: false
+      text: -ть
+    - correct: false
+      text: -мо
+    question: Як звучить правильна форма «ти смієш...»?
+  - explanation: Голосний звук наприкінці вимагає використання короткого суфікса -сь.
+    options:
+    - correct: true
+      text: повертаємось
+    - correct: false
+      text: повертаємося
+    - correct: false
+      text: повертаєм
+    - correct: false
+      text: повертають
+    question: 'Оберіть правильний варіант: «Ми повертаємо...».'
+  - explanation: Після приголосного 'ть' ми завжди використовуємо суфікс -ся.
+    options:
+    - correct: true
+      text: -ся
+    - correct: false
+      text: -сь
+    - correct: false
+      text: -ть
+    - correct: false
+      text: -мо
+    question: Який суфікс ми додаємо до слова «вони дивлять...»?
+  - explanation: Після голосного звука ми обираємо короткий варіант суфікса -сь.
+    options:
+    - correct: true
+      text: називаюсь
+    - correct: false
+      text: називаюся
+    - correct: false
+      text: називають
+    - correct: false
+      text: називаєте
+    question: Як ви напишете фразу «я називаю...»?
+  - explanation: Приголосний звук 'ш' вимагає приєднання повного суфікса -ся.
+    options:
+    - correct: true
+      text: вчишся
+    - correct: false
+      text: вчишсь
+    - correct: false
+      text: вчимо
+    - correct: false
+      text: вчите
+    question: Яка форма правильна для слова «ти вчиш...»?
+  title: 'Вибір суфікса: -ся чи -сь?'
+  type: quiz
+- instruction: Match the base verb (action on something else) with its reflexive counterpart
+    (action on oneself).
   pairs:
-    - left: мити
-      right: митися
-    - left: одягати
-      right: одягатися
-    - left: вмивати
-      right: вмиватися
-    - left: вчити
-      right: вчитися
-    - left: називати
-      right: називатися
-    - left: вітати
-      right: вітатися
-    - left: голити
-      right: голитися
-    - left: зупиняти
-      right: зупинятися
-    - left: знайомити
-      right: знайомитися
-    - left: цікавити
-      right: цікавитися
-    - left: повертати
-      right: повертатися
-    - left: дивити
-      right: дивитися
-
-- type: multiple-choice
-  title: Reflexive Meaning
-  instruction: Choose the correct meaning for the sentence.
+  - left: мити (wash)
+    right: митися (wash oneself)
+  - left: одягати (dress)
+    right: одягатися (dress oneself)
+  - left: вчити (teach)
+    right: вчитися (learn/study)
+  - left: називати (name/call)
+    right: називатися (be called)
+  - left: знайомити (introduce)
+    right: знайомитися (get acquainted)
+  - left: вітати (congratulate)
+    right: вітатися (greet each other)
+  - left: голити (shave someone)
+    right: голитися (shave oneself)
+  - left: зупиняти (stop something)
+    right: зупинятися (stop oneself)
+  - left: повертати (turn something)
+    right: повертатися (return/come back)
+  - left: чесати (comb/scratch)
+    right: чесатися (comb oneself)
+  title: Дія на себе чи на іншого?
+  type: match-up
+- instruction: Complete the sentences by adding the correct reflexive suffix (-ся
+    or -сь). Pay attention to the last letter of the verb form.
   items:
-    - question: Ми вітаємося.
-      answer: We greet each other.
-      options: ["We greet each other.", "I greet you.", "They greet us.", "We are happy."]
-    - question: Вона вмивається.
-      answer: She is washing herself.
-      options: ["She is washing herself.", "She is washing a car.", "He is washing her.", "We are washing."]
-    - question: Я вчуся.
-      answer: I am studying.
-      options: ["I am studying.", "I am teaching.", "You are studying.", "They are learning."]
-    - question: Діти сміються.
-      answer: Children are laughing.
-      options: ["Children are laughing.", "Children are crying.", "Children are playing.", "Children are eating."]
-    - question: Як називається це місто?
-      answer: What is this city called?
-      options: ["What is this city called?", "Where is this city?", "Who lives here?", "How big is this city?"]
-    - question: Він повертається додому.
-      answer: He is returning home.
-      options: ["He is returning home.", "He is leaving home.", "He is at home.", "He is building a home."]
-    - question: Ми знайомимося.
-      answer: We are getting acquainted.
-      options: ["We are getting acquainted.", "We are friends.", "We are talking.", "We are leaving."]
-    - question: Ти дивишся кіно.
-      answer: You are watching a movie.
-      options: ["You are watching a movie.", "You are making a movie.", "You are in a movie.", "You like movies."]
-
-- type: multiple-choice
-  title: Daily Routine
-  instruction: Choose the correct verb for the context.
+  - answer: сь
+    explanation: Вмиваю ends in a vowel, so we add -сь.
+    options:
+    - сь
+    - ся
+    - ть
+    - ш
+    sentence: Я вмиваю____ холодною водою зранку.
+  - answer: ся
+    explanation: Одягаєш ends in a consonant, so we add -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Ти одягаєш____ дуже повільно сьогодні.
+  - answer: ться
+    explanation: 'Note: The full form is сміється (ends in -ться).'
+    options:
+    - ться
+    - ться
+    - сь
+    - мо
+    sentence: Він завжди сміє____ над жартами.
+  - answer: сь
+    explanation: Вчимо ends in a vowel, so we add -сь.
+    options:
+    - сь
+    - ся
+    - ть
+    - ш
+    sentence: Ми вчимо____ розмовляти українською мовою.
+  - answer: ся
+    explanation: Знайомлять ends in a consonant, so we add -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Вони знайомлять____ у новому класі.
+  - answer: сь
+    explanation: Повертаєте ends in a vowel, so we add -сь.
+    options:
+    - сь
+    - ся
+    - ть
+    - ш
+    sentence: Ви повертаєте____ додому пізно ввечері.
+  - answer: сь
+    explanation: Дивлю ends in a vowel, so we add -сь.
+    options:
+    - сь
+    - ся
+    - ть
+    - ш
+    sentence: Я часто дивлю____ цікаві фільми.
+  - answer: ться
+    explanation: Називається is the correct 3rd person singular form.
+    options:
+    - ться
+    - ться
+    - сь
+    - мо
+    sentence: Як називає____ це маленьке місто?
+  - answer: ся
+    explanation: Вітаєш ends in a consonant, so we add -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Ти часто вітаєш____ з сусідами.
+  - answer: сь
+    explanation: Зупиняємо ends in a vowel, so we add -сь.
+    options:
+    - сь
+    - ся
+    - ть
+    - ш
+    sentence: Ми зупиняємо____ біля старого парку.
+  - answer: ся
+    explanation: Бавлять ends in a consonant, so we add -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Діти бавлять____ на спортивному майданчику.
+  - answer: сь
+    explanation: Голю ends in a vowel, so we add -сь.
+    options:
+    - сь
+    - ся
+    - ть
+    - ш
+    sentence: Я голю____ кожний ранок перед роботою.
+  title: 'Знайдіть свій ритм: -ся чи -сь'
+  type: fill-in
+- groups:
+  - items:
+    - вмиватися
+    - одягатися
+    - голитися
+    - взуватися
+    name: Дія на себе (True Reflexive)
+  - items:
+    - вітатися
+    - знайомитися
+    - цілуватися
+    - зустрічатися
+    name: Дія один на одного (Reciprocal)
+  - items:
+    - сміятися
+    - дивитися
+    - сподіватися
+    - намагатися
+    name: Завжди зворотні (Lexicalized)
+  instruction: 'Group the reflexive verbs based on their meaning: action on oneself,
+    action on each other, or always reflexive (lexicalized).'
+  title: Класифікація дієслів
+  type: group-sort
+- instruction: Test your knowledge of Ukrainian pronunciation for reflexive endings.
+    Remember the 'long buzz' rules!
   items:
-    - question: Зранку я ___ холодною водою.
-      answer: вмиваюся
-      options: [вмиваюся, називаюся, сміюся, дивлюся]
-    - question: Потім я ___ і йду на роботу.
-      answer: одягаюся
-      options: [одягаюся, вмиваюся, вчуся, вітаюся]
-    - question: В університеті я ___ кожен день.
-      answer: вчуся
-      options: [вчуся, голюся, знайомлюся, називаюся]
-    - question: Ввечері я ___ додому.
-      answer: повертаюся
-      options: [повертаюся, вмиваюся, одягаюся, сміюся]
-    - question: Я ___ телевізор.
-      answer: дивлюся
-      options: [дивлюся, вмиваюся, одягаюся, вчуся]
-    - question: Мені ___ цей фільм.
-      answer: подобається
-      options: [подобається, називається, вчиться, вітається]
-    - question: Я ___ спортом.
-      answer: займаюся
-      options: [займаюся, вмиваюся, сміюся, повертаюся]
-    - question: Я ___ з новими людьми.
-      answer: знайомлюся
-      options: [знайомлюся, вмиваюся, одягаюся, вчуся]
-
-- type: multiple-choice
-  title: Introduction
-  instruction: Choose the correct response in the dialogue.
+  - explanation: Букви -ться вимовляються як один довгий м'який звук [ц:а].
+    options:
+    - correct: true
+      text: як довгий м'який [ц:а]
+    - correct: false
+      text: як окремі букви т і с
+    - correct: false
+      text: як твердий звук т
+    - correct: false
+      text: як англійський звук th
+    question: Як правильно вимовляється закінчення у слові «вмивається»?
+  - explanation: У розмовній мові закінчення -шся вимовляється як довгий м'який звук
+      [с:а].
+    options:
+    - correct: true
+      text: як довгий м'який [с:а]
+    - correct: false
+      text: як окремі букви ш і с
+    - correct: false
+      text: як твердий звук ш
+    - correct: false
+      text: як англійський звук sh
+    question: Який звук ми чуємо в кінці слова «вчишся»?
+  - explanation: У транскрипції -ться передається як [ц'ːа].
+    options:
+    - correct: true
+      text: '[сʲмʲiˈjɛtsʲ:a]'
+    - correct: false
+      text: '[сʲмʲiˈjɛt-sʲa]'
+    - correct: false
+      text: '[сʲмʲiˈjɛtʲsʲa]'
+    - correct: false
+      text: '[сʲмʲiˈjɛtsa]'
+    question: Оберіть правильну транскрипцію для слова «сміється».
+  - explanation: Закінчення -шся перетворюється на довгий м'який звук [с:а].
+    options:
+    - correct: true
+      text: '[odʲaˈɦajɛsʲ:a]'
+    - correct: false
+      text: '[odʲaˈɦajɛʃsʲa]'
+    - correct: false
+      text: '[odʲaˈɦajɛsʲa]'
+    - correct: false
+      text: '[odʲaˈɦajɛt͡sʲa]'
+    question: Як звучить дієслово «одягаєшся» в швидкій мові?
+  - explanation: Закінчення -ться характерне для 3-ї особи (він, вона, воно, вони).
+    options:
+    - correct: true
+      text: у третій особі
+    - correct: false
+      text: у першій особі
+    - correct: false
+      text: у другій особі
+    - correct: false
+      text: тільки у множині
+    question: У якій особі ми зустрічаємо закінчення -ться?
+  - explanation: Закінчення -шся належить до 2-ї особи однини (ти).
+    options:
+    - correct: true
+      text: у другій особі однини
+    - correct: false
+      text: у третій особі множини
+    - correct: false
+      text: у першій особі однини
+    - correct: false
+      text: тільки у ввічливій формі
+    question: У якій особі ми вимовляємо звук [с:а] для -шся?
+  - explanation: Ці зміни роблять мову більш співучою та легкою для вимови.
+    options:
+    - correct: true
+      text: зробити мову співучою
+    - correct: false
+      text: зробити мову складнішою
+    - correct: false
+      text: заплутати іноземців
+    - correct: false
+      text: змінити значення слова
+    question: Яка головна мета цих фонетичних змін у мові?
+  - explanation: Ні, звук Т повністю зливається з С у довгий м'який звук [ц:].
+    options:
+    - correct: true
+      text: ні, вони зливаються
+    - correct: false
+      text: так, дуже чітко
+    - correct: false
+      text: тільки в офіційній мові
+    - correct: false
+      text: тільки перед голосним
+    question: Чи вимовляємо ми окремо букву Т у -ться?
+  - explanation: Це 3-тя особа множини, тому вимовляється довгий м'який [ц:а].
+    options:
+    - correct: true
+      text: '[ʋoˈnɪ ˈʋtʃatsʲ:a]'
+    - correct: false
+      text: '[ʋoˈnɪ ˈʋtʃatʲsʲa]'
+    - correct: false
+      text: '[ʋoˈnɪ ˈʋtʃat-sʲa]'
+    - correct: false
+      text: '[ʋoˈnɪ ˈʋtʃat͡sa]'
+    question: Як звучить кінець слова «вони вчаться»?
+  - explanation: Друга особа однини має закінчення -шся, що вимовляється як [с:а].
+    options:
+    - correct: true
+      text: '[tɪ sʲmʲiˈjɛsʲ:a]'
+    - correct: false
+      text: '[tɪ sʲmʲiˈjɛʃsʲa]'
+    - correct: false
+      text: '[tɪ sʲmʲiˈjɛsʲa]'
+    - correct: false
+      text: '[tɪ sʲmʲiˈjɛt͡sʲ:a]'
+    question: Як звучить дієслово «ти смієшся» у діалозі?
+  - explanation: Двокрапка позначає довгий звук (подовження приголосного).
+    options:
+    - correct: true
+      text: довгий звук
+    - correct: false
+      text: короткий звук
+    - correct: false
+      text: м'який звук
+    - correct: false
+      text: наголошений звук
+    question: Що означає символ двокрапки у транскрипції [ц'ː]?
+  - explanation: Так, письмове -ться завжди вимовляється як довгий м'який звук [ц:а].
+    options:
+    - correct: true
+      text: так, завжди змінюється
+    - correct: false
+      text: ні, ніколи не змінюється
+    - correct: false
+      text: тільки в деяких словах
+    - correct: false
+      text: тільки в піснях
+    question: Чи змінюється вимова, якщо ми пишемо -ться?
+  title: 'Мистецтво вимови: -ться та -шся'
+  type: quiz
+- instruction: Complete the forms of the verb 'вчитися' (to study/learn) for different
+    people. Watch the suffix choice!
   items:
-    - question: — Як ___ це місто? — Це Київ.
-      answer: називається
-      options: [називається, вмивається, вчиться, сміється]
-    - question: — Привіт! Ми ___ . Мене звати Іван.
-      answer: знайомимося
-      options: [знайомимося, вмиваємося, одягаємося, сміємося]
-    - question: — Я ___ у цьому університеті.
-      answer: вчуся
-      options: [вчуся, голюся, вітаюся, повертаюся]
-    - question: — Ви часто ___ у парку? — Так, кожного вечора.
-      answer: зустрічаєтеся
-      options: [зустрічаєтеся, вмиваєтеся, одягаєтеся, смієтеся]
-    - question: — Чому вони ___ ? — Це смішна історія.
-      answer: сміються
-      options: [сміються, вмиваються, одягаються, вчаться]
-    - question: — Ти вже ___ додому? — Так, я в автобусі.
-      answer: повертаєшся
-      options: [повертаєшся, вмиваєшся, одягаєшся, вчишся]
-    - question: — Він ___ з усіма колегами.
-      answer: вітається
-      options: [вітається, вмивається, одягається, сміється]
-    - question: — Я ___ цією книжкою.
-      answer: цікавлюся
-      options: [цікавлюся, вмиваюся, одягаюся, називаюся]
-
-- type: multiple-choice
-  title: Grammar Logic
-  instruction: Choose the correct grammatical explanation.
+  - answer: сь
+    explanation: Vowel ending -ю requires -сь.
+    options:
+    - сь
+    - ся
+    - мо
+    - те
+    sentence: Я вчу____ в університеті.
+  - answer: ся
+    explanation: Consonant ending -ш requires -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Ти вчиш____ кожний вечір.
+  - answer: ся
+    explanation: Consonant ending -ть requires -ся (writes -ться).
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Він вчить____ грати на гітарі.
+  - answer: сь
+    explanation: Vowel ending -о requires -сь.
+    options:
+    - сь
+    - ся
+    - мо
+    - те
+    sentence: Ми вчимо____ розмовляти вільно.
+  - answer: сь
+    explanation: Vowel ending -е requires -сь.
+    options:
+    - сь
+    - ся
+    - мо
+    - те
+    sentence: Ви вчите____ писати гарно.
+  - answer: ся
+    explanation: Consonant ending -ть requires -ся (writes -ться).
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Вони вчать____ нові слова.
+  - answer: ся
+    explanation: Singular 3rd person requires -ся (writes -ться).
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Дівчина вчить____ у коледжі.
+  - answer: ся
+    explanation: Plural 3rd person requires -ся (writes -ться).
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Студенти вчать____ дуже старанно.
+  - answer: сь
+    explanation: First person ends in -ю, so use -сь.
+    options:
+    - сь
+    - ся
+    - мо
+    - те
+    sentence: Я вчу____ грати у футбол.
+  - answer: ся
+    explanation: Second person ends in -ш, so use -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Ти вчиш____ готувати борщ.
+  - answer: сь
+    explanation: First person plural ends in -о, so use -сь.
+    options:
+    - сь
+    - ся
+    - мо
+    - те
+    sentence: Ми вчимо____ танцювати гопак.
+  - answer: ся
+    explanation: Third person plural ends in -ть, so use -ся.
+    options:
+    - ся
+    - сь
+    - мо
+    - те
+    sentence: Вони вчать____ малювати портрети.
+  title: 'Практика відмінювання: Дієслово «вчитися»'
+  type: fill-in
+- instruction: Rearrange the letters to form common reflexive verbs used in daily
+    life. All verbs end in the suffix -ся or -сь.
   items:
-    - question: Why do we use -сь in 'Я вмиваюся'?
-      answer: Because it follows a vowel.
-      options: ["Because it follows a vowel.", "Because it follows a consonant.", "Because it is I.", "Because it is today."]
-    - question: Why do we use -ся in 'Ти вмиваєшся'?
-      answer: Because it follows a consonant.
-      options: ["Because it follows a consonant.", "Because it follows a vowel.", "Because it is you.", "Because it is morning."]
-    - question: What does the suffix -ся mean?
-      answer: self (себе)
-      options: ["self (себе)", "you", "yesterday", "small"]
-    - question: Pronounce -ться correctly.
-      answer: long soft [ts:a]
-      options: ["long soft [ts:a]", "hard [t]", "soft [s]", "silent"]
-    - question: Pronounce -шся correctly.
-      answer: soft [s:a]
-      options: ["soft [s:a]", "hard [sh]", "soft [sh]", "[ts:a]"]
-    - question: "'Вмивати' vs 'Вмиватися'."
-      answer: Transitive vs Reflexive
-      options: ["Transitive vs Reflexive", "Past vs Present", "Noun vs Verb", "Big vs Small"]
-    - question: "'Сміятися' is..."
-      answer: always reflexive
-      options: ["always reflexive", "sometimes reflexive", "a noun", "an adjective"]
-    - question: "'Вітатися' is..."
-      answer: reciprocal (each other)
-      options: ["reciprocal (each other)", "true reflexive", "lexicalized", "not a verb"]
-
-- type: multiple-choice
-  title: Mix and Match
-  instruction: Choose the correct form for the subject.
+  - answer: митися
+    scrambled: и м т и я с
+  - answer: сміятися
+    scrambled: я я и м т с с і
+  - answer: вчитися
+    scrambled: с я и т и ч в
+  - answer: одягатися
+    scrambled: я и г о а д я т с
+  - answer: дивитися
+    scrambled: и я с т и в д и
+  - answer: називатися
+    scrambled: в з а н я и т с и а
+  - answer: займатися
+    scrambled: а з с и т а я й м
+  - answer: повертатися
+    scrambled: п а с и т о р е т в я
+  - answer: голитися
+    scrambled: л я с т о и г и
+  - answer: знайомитися
+    scrambled: я с и т и м й о н з а
+  - answer: вітатися
+    scrambled: і а т т я в с и
+  - answer: зупинятися
+    scrambled: п н я у и т з с и я
+  title: Розшифруйте зворотні дієслова
+  type: anagram
+- instruction: Complete the short story about a morning routine by choosing the correct
+    reflexive verbs in their proper forms.
   items:
-    - sentence: Вони ___ (вчитися).
-      answer: вчаться
-      options: [вчаться, вчимося, вчуся, вчиться]
-    - sentence: Ми ___ (одягатися).
-      answer: одягаємося
-      options: [одягаємося, одягаєшся, одягається, одягаюся]
-    - sentence: Ви ___ (сміятися).
-      answer: смієтеся
-      options: [смієтеся, смієшся, сміється, сміються]
-    - sentence: Я ___ (дивитися).
-      answer: дивлюся
-      options: [дивлюся, дивишся, дивиться, дивляться]
-    - sentence: Ти ___ (вітатися).
-      answer: вітаєшся
-      options: [вітаєшся, вітаємося, вітаєтеся, вітаються]
-    - sentence: Він ___ (знайомитися).
-      answer: знайомиться
-      options: [знайомиться, знайомлюся, знайомимося, знайомляться]
-    - sentence: Вона ___ (повертатися).
-      answer: повертається
-      options: [повертається, повертаюся, повертаємося, повертаються]
-    - sentence: Ми ___ (вмиватися).
-      answer: вмиваємося
-      options: [вмиваємося, вмиваєшся, вмивається, вмиваються]
+  - answer: вмиваюся
+    explanation: First person singular 'я' requires 'вмиваюся'.
+    options:
+    - вмиваюся
+    - вмиваєшся
+    - вмиваємося
+    - вмиваються
+    sentence: Кожного ранку я прокидаюся і ____ холодною водою.
+  - answer: одягаюся
+    explanation: First person singular 'я' requires 'одягаюся'.
+    options:
+    - одягаюся
+    - одягаєшся
+    - одягається
+    - одягаються
+    sentence: Потім я швидко ____ і йду на кухню.
+  - answer: вмивається
+    explanation: Third person singular 'брат' requires 'вмивається'.
+    options:
+    - вмивається
+    - вмиваюся
+    - вмиваємося
+    - вмиваються
+    sentence: Мій брат ще ____ у своїй кімнаті.
+  - answer: збираємося
+    explanation: First person plural 'ми' requires 'збираємося'.
+    options:
+    - збираємося
+    - збираюся
+    - збираєшся
+    - збираються
+    sentence: Ми разом ____ снідати о восьмій годині.
+  - answer: голиться
+    explanation: Third person singular 'тато' requires 'голиться'.
+    options:
+    - голиться
+    - голюся
+    - голишся
+    - голяться
+    sentence: Мій тато ____ перед роботою.
+  - answer: повертаюся
+    explanation: 'Note: In this context, it could mean ''return'' or ''prepare/set
+      off''. Based on lesson, ''збираюся'' or ''повертаюся''.'
+    options:
+    - повертаюся
+    - збираюся
+    - вчуся
+    - сміюся
+    sentence: Після сніданку я ____ до університету.
+  - answer: вчаться
+    explanation: Third person plural 'діти' requires 'вчаться'.
+    options:
+    - вчаться
+    - вчуся
+    - вчишся
+    - вчимося
+    sentence: У школі діти ____ читати та писати.
+  - answer: дивимося
+    explanation: First person plural 'ми' requires 'дивимося'.
+    options:
+    - дивимося
+    - дивлюся
+    - дивишся
+    - дивляться
+    sentence: Увечері ми ____ цікаві передачі по ТБ.
+  - answer: сміємося
+    explanation: First person plural 'ми' requires 'сміємося'.
+    options:
+    - сміємося
+    - сміюся
+    - смієшся
+    - сміються
+    sentence: Ми часто ____ над веселими жартами.
+  - answer: вмиваюся
+    explanation: First person singular 'я' requires 'вмиваюся'.
+    options:
+    - вмиваюся
+    - вмиваємося
+    - вмиваєшся
+    - вмиваються
+    sentence: Перед сном я знову ____ у ванній.
+  - answer: дивиться
+    explanation: Third person singular 'сестра' requires 'дивиться'.
+    options:
+    - дивиться
+    - дивлюся
+    - дивишся
+    - дивляться
+    sentence: Моя сестра ____ у дзеркало і посміхається.
+  - answer: повертаємося
+    explanation: First person plural 'ми' requires 'повертаємося'.
+    options:
+    - повертаємося
+    - повертаюся
+    - повертаєшся
+    - повертаються
+    sentence: Ми ____ додому завжди вчасно.
+  title: 'Ранкова історія: Все про -ся'
+  type: fill-in

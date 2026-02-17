@@ -1,0 +1,65 @@
+{
+  "slug": "describing-things-adjectives",
+  "track": "a1",
+  "module_num": 26,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T17:02:17Z",
+      "task_id": "yw-describing-things-adjectives-p0"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:44:00Z",
+      "task_id": "yw-describing-things-adjectives-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:46:21Z",
+      "sections_done": 3,
+      "sections_total": 3
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:51:44Z",
+      "attempts": 2
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:52:26Z",
+      "task_id": "yw-describing-things-adjectives-p3b"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:53:50Z",
+      "task_id": "yw-describing-things-adjectives-p3a"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:57:38Z",
+      "attempts": 2
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:58:42Z",
+      "task_id": "gr-describing-things-adjectives",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:00:44Z",
+      "task_id": "yw-describing-things-adjectives-6b"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:00:45Z",
+      "attempts": 1
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:00:45Z"
+    }
+  },
+  "last_updated": "2026-02-16T22:00:45Z"
+}

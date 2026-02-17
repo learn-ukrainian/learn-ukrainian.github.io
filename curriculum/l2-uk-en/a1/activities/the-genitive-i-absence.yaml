@@ -1,407 +1,295 @@
-- type: quiz
-  title: "Перевірка розуміння: «немає» та «без»"
-  instruction: "Оберіть правильну форму слова."
+- type: fill-in
+  title: Трансформація в родовий відмінок
+  instruction: 'Змініть іменник у дужках на форму родового відмінка (відсутність).'
   items:
-    - question: "Як правильно сказати «I don't have milk»?"
-      options:
-        - text: "У мене немає молоко"
-          correct: false
-        - text: "У мене немає молока"
-          correct: true
-        - text: "У мене немає молокам"
-          correct: false
-        - text: "У мене немає молоку"
-          correct: false
-    - question: "Яке закінчення має слово «хліб» після «немає»?"
-      options:
-        - text: "-у"
-          correct: false
-        - text: "-а"
-          correct: true
-        - text: "-и"
-          correct: false
-        - text: "-о"
-          correct: false
-    - question: "Як правильно сказати «without sugar»?"
-      options:
-        - text: "без цукру"
-          correct: true
-        - text: "без цукора"
-          correct: false
-        - text: "без цукри"
-          correct: false
-        - text: "без цукор"
-          correct: false
-    - question: "Яке закінчення має жіночий рід (наприклад, «вода») у родовому відмінку?"
-      options:
-        - text: "-а"
-          correct: false
-        - text: "-и"
-          correct: true
-        - text: "-і"
-          correct: false
-        - text: "-у"
-          correct: false
-    - question: "Як ви зазвичай кажете слово «unfortunately»?"
-      options:
-        - text: "будь ласка"
-          correct: false
-        - text: "на жаль"
-          correct: true
-        - text: "вибачте"
-          correct: false
-        - text: "добрий день"
-          correct: false
-    - question: "Яка форма слова «гроші» після «немає»?"
-      options:
-        - text: "гроші"
-          correct: false
-        - text: "грошей"
-          correct: true
-        - text: "гроша"
-          correct: false
-        - text: "грошу"
-          correct: false
-    - question: "Яке закінчення має слово «кава» після «без»?"
-      options:
-        - text: "-и"
-          correct: true
-        - text: "-а"
-          correct: false
-        - text: "-е"
-          correct: false
-        - text: "-у"
-          correct: false
-    - question: "Яке закінчення має слово «час» у запереченні?"
-      options:
-        - text: "-а"
-          correct: false
-        - text: "-у"
-          correct: true
-        - text: "-и"
-          correct: false
-        - text: "-е"
-          correct: false
-    - question: "Як правильно і ввічливо сказати «without water»?"
-      options:
-        - text: "без води"
-          correct: true
-        - text: "без вода"
-          correct: false
-        - text: "без воду"
-          correct: false
-        - text: "без водою"
-          correct: false
-    - question: "Що саме означає українське слово «немає»?"
-      options:
-        - text: "I have"
-          correct: false
-        - text: "there is no"
-          correct: true
-        - text: "I want"
-          correct: false
-        - text: "please"
-          correct: false
-    - question: "Яке закінчення має слово «машина» після «немає»?"
-      options:
-        - text: "-и"
-          correct: true
-        - text: "-а"
-          correct: false
-        - text: "-у"
-          correct: false
-        - text: "-о"
-          correct: false
-    - question: "Яке закінчення має слово «цукор» після «без»?"
-      options:
-        - text: "-у"
-          correct: true
-        - text: "-а"
-          correct: false
-        - text: "-и"
-          correct: false
-        - text: "-ом"
-          correct: false
-
-- type: match-up
-  title: "Ствердження та заперечення"
-  instruction: "Знайдіть пару: що є і чого немає."
-  pairs:
-    - left: "Є телефон."
-      right: "Немає телефона."
-    - left: "Є вода."
-      right: "Немає води."
-    - left: "Є час."
-      right: "Немає часу."
-    - left: "Є квиток."
-      right: "Немає квитка."
-    - left: "Є кава."
-      right: "Немає кави."
-    - left: "Є цукор."
-      right: "Немає цукру."
-    - left: "Є ключ."
-      right: "Немає ключа."
-    - left: "Є гроші."
-      right: "Немає грошей."
-    - left: "Є машина."
-      right: "Немає машини."
-    - left: "Є молоко."
-      right: "Немає молока."
+  - sentence: У мене немає (телефон) ____.
+    answer: телефона
+    options: [телефона, телефону, телефоном, телефоні]
+  - sentence: У нього немає (ключ) ____.
+    answer: ключа
+    options: [ключа, ключу, ключем, ключі]
+  - sentence: У неї немає (вода) ____.
+    answer: води
+    options: [води, воду, воді, водою]
+  - sentence: У нас немає (час) ____.
+    answer: часу
+    options: [часу, часа, часом, часі]
+  - sentence: У вас немає (квиток) ____.
+    answer: квитка
+    options: [квитка, квитку, квитком, квитку]
+  - sentence: У них немає (гроші) ____.
+    answer: грошей
+    options: [грошей, гроші, грошам, грошима]
+  - sentence: Тут немає (хліб) ____.
+    answer: хліба
+    options: [хліба, хлібу, хлібом, хлібі]
+  - sentence: Там немає (цукор) ____.
+    answer: цукру
+    options: [цукру, цукра, цукром, цукрі]
 
 - type: fill-in
-  title: "Заповніть пропуски"
-  instruction: "Оберіть правильне закінчення для слова."
+  title: Речення з «немає»
+  instruction: 'Доповніть речення, використовуючи правильну форму слова.'
   items:
-    - sentence: "У мене немає ключ... ."
-      answer: "ключа"
-      options: ["ключа", "ключу", "ключи", "ключ"]
-    - sentence: "Тут немає вод... ."
-      answer: "води"
-      options: ["води", "вода", "воду", "воде"]
-    - sentence: "Я хочу каву без цукр... ."
-      answer: "цукру"
-      options: ["цукру", "цукра", "цукри", "цукром"]
-    - sentence: "Сьогодні немає час... ."
-      answer: "часу"
-      options: ["часу", "часа", "часи", "часом"]
-    - sentence: "У нас немає грош... ."
-      answer: "грошей"
-      options: ["грошей", "гроші", "гроша", "грошу"]
-    - sentence: "Він п'є чай без молок... ."
-      answer: "молока"
-      options: ["молока", "молоко", "молоку", "молоки"]
-    - sentence: "Де мій квиток? Тут немає квитк... ."
-      answer: "квитка"
-      options: ["квитка", "квитку", "квитки", "квитком"]
-    - sentence: "У мене немає телефон... ."
-      answer: "телефона"
-      options: ["телефона", "телефону", "телефони", "телефон"]
-    - sentence: "Тут немає кав... ."
-      answer: "кави"
-      options: ["кави", "кава", "каву", "каве"]
-    - sentence: "Будь ласка, вода без газ... ."
-      answer: "газу"
-      options: ["газу", "газа", "газом", "гази"]
-    - sentence: "Я п'ю чай без цукр... ."
-      answer: "цукру"
-      options: ["цукру", "цукра", "цукром", "цукри"]
-    - sentence: "У нас немає проблем... ."
-      answer: "проблеми"
-      options: ["проблеми", "проблема", "проблему", "проблеме"]
-
-- type: true-false
-  title: "Правда чи неправда?"
-  instruction: "Визначте, чи правильне речення."
-  items:
-    - statement: "Після слова «немає» ми використовуємо Родовий відмінок."
-      correct: true
-    - statement: "Слово «гроші» після «немає» стає «гроша»."
-      correct: false
-    - statement: "Прийменник «без» вимагає Родового відмінка."
-      correct: true
-    - statement: "Мас-іменники (цукор, час) часто мають закінчення -у."
-      correct: true
-    - statement: "«На жаль» означає «You are welcome»."
-      correct: false
-    - statement: "Слово «квиток» у родовому відмінку — «квитка»."
-      correct: true
-    - statement: "Слово «вода» у родовому відмінку має закінчення -и."
-      correct: true
-    - statement: "Слово «хліб» після «немає» має закінчення -у."
-      correct: false
-    - statement: "Слово «немає» означає відсутність чогось."
-      correct: true
-    - statement: "Ми кажемо «кава без молоко»."
-      correct: false
-    - statement: "У запереченні чоловічий рід (конкретні назви) має закінчення -а."
-      correct: true
-    - statement: "Слово «час» має закінчення -у після «немає»."
-      correct: true
-
-- type: unjumble
-  title: "Складіть речення"
-  instruction: "Розставте слова в правильному порядку."
-  items:
-    - words: ["немає", "У", "мене", "ключа"]
-      answer: "У мене немає ключа"
-    - words: ["води", "немає", "Тут"]
-      answer: "Тут немає води"
-    - words: ["без", "каву", "Я", "цукру", "хочу"]
-      answer: "Я хочу каву без цукру"
-    - words: ["немає", "часу", "жаль", "На"]
-      answer: "На жаль немає часу"
-    - words: ["молока", "без", "Чай", "ласка", "будь"]
-      answer: "Чай без молока будь ласка"
-    - words: ["телефона", "У", "немає", "нього"]
-      answer: "У нього немає телефона"
-    - words: ["грошей", "немає", "Сьогодні"]
-      answer: "Сьогодні немає грошей"
-    - words: ["квитка", "немає", "Вас", "у"]
-      answer: "У вас немає квитка"
-    - words: ["без", "Вода", "газу"]
-      answer: "Вода без газу"
-    - words: ["хліба", "Тут", "немає"]
-      answer: "Тут немає хліба"
-    - words: ["проблеми", "немає", "Це"]
-      answer: "Це немає проблеми"
-    - words: ["без", "їм", "хліб", "Я", "води"]
-      answer: "Я їм хліб без води"
+  - sentence: 'Я шукаю ключ. Тут немає ____.'
+    answer: ключа
+    options: [ключа, ключ, ключу, ключем]
+  - sentence: 'Я хочу пити. У мене немає ____.'
+    answer: води
+    options: [води, воду, вода, воді]
+  - sentence: 'Я поспішаю. У мене немає ____.'
+    answer: часу
+    options: [часу, часа, час, часі]
+  - sentence: 'Де мій телефон? Тут немає ____.'
+    answer: телефона
+    options: [телефона, телефон, телефону, телефоном]
+  - sentence: 'Я хочу каву. У мене немає ____.'
+    answer: молока
+    options: [молока, молоко, молоку, молоком]
+  - sentence: 'Де квиток? У сумці немає ____.'
+    answer: квитка
+    options: [квитка, квитку, квиток, квитком]
+  - sentence: 'У ресторані сьогодні немає ____.'
+    answer: хліба
+    options: [хліба, хлібу, хліб, хлібом]
+  - sentence: 'На жаль, у мене немає ____.'
+    answer: квитка
+    options: [квитка, квиток, квитку, квитком]
 
 - type: quiz
-  title: "Виберіть правильну форму (Родовий відмінок)"
-  instruction: "Яке слово підходить?"
+  title: Вибір правильної форми
+  instruction: Оберіть правильну форму іменника для вираження відсутності.
   items:
-    - question: "Тут зараз зовсім немає ... ."
-      options:
-        - text: "хліба"
-          correct: true
-        - text: "хліб"
-          correct: false
-        - text: "хлібом"
-          correct: false
-        - text: "хлібові"
-          correct: false
-    - question: "Я дуже хочу чай без ... ."
-      options:
-        - text: "цукор"
-          correct: false
-        - text: "цукру"
-          correct: true
-        - text: "цукром"
-          correct: false
-        - text: "цукрі"
-          correct: false
-    - question: "У мене сьогодні немає ... ."
-      options:
-        - text: "вода"
-          correct: false
-        - text: "води"
-          correct: true
-        - text: "воду"
-          correct: false
-        - text: "водою"
-          correct: false
-    - question: "Сьогодні зовсім немає ... ."
-      options:
-        - text: "часа"
-          correct: false
-        - text: "часу"
-          correct: true
-        - text: "час"
-          correct: false
-        - text: "часи"
-          correct: false
-    - question: "На жаль, немає ... ."
-      options:
-        - text: "гроші"
-          correct: false
-        - text: "грошей"
-          correct: true
-        - text: "гроша"
-          correct: false
-        - text: "грошем"
-          correct: false
-    - question: "Ви хочете пити каву без ... ?"
-      options:
-        - text: "молока"
-          correct: true
-        - text: "молоко"
-          correct: false
-        - text: "молоку"
-          correct: false
-        - text: "молоком"
-          correct: false
-    - question: "Там сьогодні немає ... ."
-      options:
-        - text: "квиток"
-          correct: false
-        - text: "квитка"
-          correct: true
-        - text: "квитку"
-          correct: false
-        - text: "квитки"
-          correct: false
-    - question: "У вас немає ... ?"
-      options:
-        - text: "ключ"
-          correct: false
-        - text: "ключа"
-          correct: true
-        - text: "ключу"
-          correct: false
-        - text: "ключем"
-          correct: false
-    - question: "Тут зовсім немає ... ."
-      options:
-        - text: "телефона"
-          correct: true
-        - text: "телефон"
-          correct: false
-        - text: "телефону"
-          correct: false
-        - text: "телефони"
-          correct: false
-    - question: "Я п'ю воду без ... ."
-      options:
-        - text: "газ"
-          correct: false
-        - text: "газу"
-          correct: true
-        - text: "газа"
-          correct: false
-        - text: "газом"
-          correct: false
-    - question: "У неї сьогодні немає ... ."
-      options:
-        - text: "машина"
-          correct: false
-        - text: "машини"
-          correct: true
-        - text: "машину"
-          correct: false
-        - text: "машиною"
-          correct: false
-    - question: "Там зовсім немає ... ."
-      options:
-        - text: "проблема"
-          correct: false
-        - text: "проблеми"
-          correct: true
-        - text: "проблему"
-          correct: false
-        - text: "проблемою"
-          correct: false
+  - question: 'Скажіть, будь ласка, у вас немає ____?'
+    options:
+    - text: квитка
+      correct: true
+    - text: квиток
+      correct: false
+    - text: квитки
+      correct: false
+    - text: квитком
+      correct: false
+  - question: 'Я дуже поспішаю, у мене немає ____.'
+    options:
+    - text: часу
+      correct: true
+    - text: час
+      correct: false
+    - text: часом
+      correct: false
+    - text: часі
+      correct: false
+  - question: 'Тут дуже жарко, але немає ____.'
+    options:
+    - text: води
+      correct: true
+    - text: вода
+      correct: false
+    - text: воду
+      correct: false
+    - text: воді
+      correct: false
+  - question: 'Вибачте, але у мене немає ____.'
+    options:
+    - text: грошей
+      correct: true
+    - text: гроші
+      correct: false
+    - text: грошам
+      correct: false
+    - text: грошима
+      correct: false
+  - question: 'Я п''ю цей смачний чай без ____.'
+    options:
+    - text: молока
+      correct: true
+    - text: молоко
+      correct: false
+    - text: молоку
+      correct: false
+    - text: молоком
+      correct: false
+  - question: 'Ця кава дуже добра навіть без ____.'
+    options:
+    - text: цукру
+      correct: true
+    - text: цукор
+      correct: false
+    - text: цукром
+      correct: false
+    - text: цукра
+      correct: false
+  - question: 'У мене в сумці немає ____.'
+    options:
+    - text: ключа
+      correct: true
+    - text: ключ
+      correct: false
+    - text: ключі
+      correct: false
+    - text: ключем
+      correct: false
+  - question: 'Тут на столі немає вашого ____.'
+    options:
+    - text: телефона
+      correct: true
+    - text: телефон
+      correct: false
+    - text: телефону
+      correct: false
+    - text: телефоні
+      correct: false
 
 - type: match-up
-  title: "Закінчення Родового відмінка"
-  instruction: "З'єднайте слово та його закінчення після «немає»."
+  title: Знайдіть пару
+  instruction: Знайдіть відповідну форму родового відмінка для кожного слова.
   pairs:
-    - left: "телефон"
-      right: "-а (телефона)"
-    - left: "хліб"
-      right: "-а (хліба)"
-    - left: "ключ"
-      right: "-а (ключа)"
-    - left: "квиток"
-      right: "-а (квитка)"
-    - left: "вода"
-      right: "-и (води)"
-    - left: "кава"
-      right: "-и (кави)"
-    - left: "машина"
-      right: "-и (машини)"
-    - left: "проблема"
-      right: "-и (проблеми)"
-    - left: "час"
-      right: "-у (часу)"
-    - left: "цукор"
-      right: "-у (цукру)"
+  - left: телефон (phone)
+    right: телефона
+  - left: ключ (key)
+    right: ключа
+  - left: вода (water)
+    right: води
+  - left: час (time)
+    right: часу
+  - left: квиток (ticket)
+    right: квитка
+  - left: гроші (money)
+    right: грошей
+  - left: цукор (sugar)
+    right: цукру
+  - left: хліб (bread)
+    right: хліба
+
+- type: true-false
+  title: Правила відсутності
+  instruction: Визначте, чи правильне твердження щодо вживання родового відмінка.
+  items:
+  - statement: Після слова «немає» завжди використовується називний відмінок.
+    correct: false
+  - statement: Прийменник «без» вимагає родового відмінка.
+    correct: true
+  - statement: Слово «хліб» у родовому відмінку має закінчення -а (хліба).
+    correct: true
+  - statement: Слово «вода» у родовому відмінку має закінчення -и (води).
+    correct: true
+  - statement: Слово «час» у родовому відмінку має закінчення -а (часа).
+    correct: false
+  - statement: Слово «гроші» у родовому відмінку має форму «грошей».
+    correct: true
+  - statement: Конкретні іменники чоловічого роду зазвичай мають закінчення -а.
+    correct: true
+  - statement: Абстрактні іменники чоловічого роду зазвичай мають закінчення -у.
+    correct: true
+
+- type: unjumble
+  title: Складіть речення
+  instruction: Перетягніть слова у правильному порядку, щоб утворити заперечне речення.
+  items:
+  - words: [У, мене, немає, телефона]
+    answer: У мене немає телефона.
+  - words: [Тут, немає, води]
+    answer: Тут немає води.
+  - words: [У, нього, немає, квитка]
+    answer: У нього немає квитка.
+  - words: [На, жаль, немає, часу]
+    answer: На жаль немає часу.
+  - words: [Він, п''є, чай, без, цукру]
+    answer: Він п''є чай без цукру.
+  - words: [Я, хочу, каву, без, молока]
+    answer: Я хочу каву без молока.
 
 - type: group-sort
-  title: "Закінчення іменників (-а чи -у?)"
-  instruction: "Розподіліть слова за закінченнями в родовому відмінку."
+  title: Категорії закінчень
+  instruction: Розподіліть слова за їхнім закінченням у родовому відмінку (відсутність).
   groups:
-    - name: "Закінчення -а (Конкретні)"
-      items: ["хліб", "телефон", "ключ", "квиток", "молоко", "ніж"]
-    - name: "Закінчення -у (Абстрактні/Маса)"
-      items: ["час", "цукор", "газ", "чай", "сік", "робота"]
+  - name: Закінчення -а/-я (Конкретні речі)
+    items: [телефона, ключа, квитка, хліба, паспорта, олівця]
+  - name: Закінчення -у/-ю (Абстрактні/маси)
+    items: [часу, цукру, газу, чаю, снігу, вітру]
+
+- type: quiz
+  title: Практика з «немає»
+  instruction: Оберіть правильну відповідь для завершення діалогу.
+  items:
+  - question: '— У тебе є ключ? — Ні, ...'
+    options:
+    - text: немає ключа
+      correct: true
+    - text: немає ключ
+      correct: false
+    - text: немає ключу
+      correct: false
+    - text: є ключ
+      correct: false
+  - question: '— Ви хочете цукор? — Ні, я п''ю чай ...'
+    options:
+    - text: без цукру
+      correct: true
+    - text: без цукор
+      correct: false
+    - text: немає цукру
+      correct: false
+    - text: без цукром
+      correct: false
+  - question: '— Де твій паспорт? — На жаль, у мене ...'
+    options:
+    - text: немає паспорта
+      correct: true
+    - text: немає паспорт
+      correct: false
+    - text: немає паспорту
+      correct: false
+    - text: є паспорт
+      correct: false
+  - question: '— У вас є гроші? — Ні, у нас ...'
+    options:
+    - text: немає грошей
+      correct: true
+    - text: немає гроші
+      correct: false
+    - text: немає грошам
+      correct: false
+    - text: немає грошима
+      correct: false
+  - question: '— Ви хочете каву з молоком? — Ні, я хочу каву ...'
+    options:
+    - text: без молока
+      correct: true
+    - text: без молоко
+      correct: false
+    - text: немає молока
+      correct: false
+    - text: без молоком
+      correct: false
+  - question: '— Тут є вода? — Ні, тут ...'
+    options:
+    - text: немає води
+      correct: true
+    - text: немає вода
+      correct: false
+    - text: немає воду
+      correct: false
+    - text: немає воді
+      correct: false
+  - question: '— Ви поспішаєте? — Так, у мене ...'
+    options:
+    - text: немає часу
+      correct: true
+    - text: немає час
+      correct: false
+    - text: немає часа
+      correct: false
+    - text: є час
+      correct: false
+  - question: '— У вас є хліб? — Вибачте, у магазині ...'
+    options:
+    - text: немає хліба
+      correct: true
+    - text: немає хліб
+      correct: false
+    - text: немає хлібу
+      correct: false
+    - text: є хліб
+      correct: false

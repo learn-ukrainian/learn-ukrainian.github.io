@@ -2,13 +2,13 @@
   "module": "the-dative-i-pronouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-15T13:44:23.190758Z",
+  "last_audit": "2026-02-16T19:49:25.392823Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-15T13:44:15.543965Z",
+    "md": "2026-02-15T16:48:25.138872Z",
     "meta": "2026-02-15T13:29:25.804132Z",
     "activities": "2026-02-15T13:42:07.675900Z",
-    "vocabulary": "2026-02-15T13:30:20.008112Z",
+    "vocabulary": "2026-02-15T13:44:38.414495Z",
     "plan": "2026-02-14T20:37:54.887103Z"
   },
   "gates": {
@@ -30,12 +30,17 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "26/1"
+      "message": "29/1"
     },
     "naturalness": {
       "status": "fail",
       "violations": 1,
       "message": "10/10 (CHECKED - Requires rewrite)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
     },
     "review": {
       "status": "skipped",
@@ -46,7 +51,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 2
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

@@ -1,0 +1,14 @@
+{
+  "slug": "home-and-furniture",
+  "track": "a2",
+  "module_num": 46,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T20:02:14Z",
+      "task_id": "yw-home-and-furniture-p0"
+    }
+  },
+  "last_updated": "2026-02-16T20:02:14Z"
+}

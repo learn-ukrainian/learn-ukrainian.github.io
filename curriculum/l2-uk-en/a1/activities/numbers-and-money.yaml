@@ -1,0 +1,306 @@
+- type: "quiz"
+  title: "Числа та ціни"
+  items:
+    - question: "Яке це число в українській мові? [nulʲ]"
+      options:
+        - text: "нуль"
+          correct: true
+        - text: "один"
+          correct: false
+        - text: "п'ять"
+          correct: false
+        - text: "десять"
+          correct: false
+    - question: "Яке це число в українській мові? [odɪˈnadtsʲatʲ]"
+      options:
+        - text: "одинадцять"
+          correct: true
+        - text: "дванадцять"
+          correct: false
+        - text: "тринадцять"
+          correct: false
+        - text: "десять"
+          correct: false
+    - question: "Як правильно сказати число \"15\" українською мовою?"
+      options:
+        - text: "п'ятнадцять"
+          correct: true
+        - text: "одинадцять"
+          correct: false
+        - text: "дев'ятнадцять"
+          correct: false
+        - text: "п'ять"
+          correct: false
+    - question: "Як правильно сказати число \"40\" українською мовою?"
+      options:
+        - text: "сорок"
+          correct: true
+        - text: "сорокнадцять"
+          correct: false
+        - text: "чотиридесят"
+          correct: false
+        - text: "сто"
+          correct: false
+    - question: "Як правильно запитати ціну предмета в магазині?"
+      options:
+        - text: "Скільки це коштує?"
+          correct: true
+        - text: "Хто це такий?"
+          correct: false
+        - text: "Де це знаходиться?"
+          correct: false
+        - text: "Як це називається?"
+          correct: false
+    - question: "Що означає українське слово \"здача\" в магазині?"
+      options:
+        - text: "money back / change"
+          correct: true
+        - text: "the total price"
+          correct: false
+        - text: "the list of items"
+          correct: false
+        - text: "hot fresh water"
+          correct: false
+    - question: "Яке це число в українській мові? [ˈdwadtsʲatʲ]"
+      options:
+        - text: "двадцять"
+          correct: true
+        - text: "дванадцять"
+          correct: false
+        - text: "тридцять"
+          correct: false
+        - text: "десять"
+          correct: false
+    - question: "Що означає українське слово \"дорого\" для покупця?"
+      options:
+        - text: "it is expensive"
+          correct: true
+        - text: "it is very cheap"
+          correct: false
+        - text: "it is the price"
+          correct: false
+        - text: "it is free water"
+          correct: false
+    - question: "Яке це число в українській мові? [stɔ]"
+      options:
+        - text: "сто"
+          correct: true
+        - text: "сорок"
+          correct: false
+        - text: "сім"
+          correct: false
+        - text: "сіль"
+          correct: false
+    - question: "Яке це число в українській мові? [sim]"
+      options:
+        - text: "сім"
+          correct: true
+        - text: "сімдесят"
+          correct: false
+        - text: "шість"
+          correct: false
+        - text: "вісім"
+          correct: false
+    - question: "Яке це число в українській мові? [pjatdeˈsʲat]"
+      options:
+        - text: "п'ятдесят"
+          correct: true
+        - text: "п'ятнадцять"
+          correct: false
+        - text: "п'ятдесятнадцять"
+          correct: false
+        - text: "п'ятсот"
+          correct: false
+    - question: "Яке це число в українській мові? [tʃoˈtɪrɪ]"
+      options:
+        - text: "чотири"
+          correct: true
+        - text: "чотирнадцять"
+          correct: false
+        - text: "чотиридесят"
+          correct: false
+        - text: "черешня"
+          correct: false
+
+- type: "fill-in"
+  title: "Гроші та узгодження"
+  items:
+    - sentence: "Цей свіжий хліб коштує одна ___."
+      answer: "гривня"
+      options: ["гривня", "гривні", "гривень", "гроші"]
+    - sentence: "Мала пляшка води коштує три ___."
+      answer: "гривні"
+      options: ["гривні", "гривня", "гривень", "гроші"]
+    - sentence: "Смачна гаряча кава коштує п'ятнадцять ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гроші"]
+    - sentence: "Ця газета коштує двадцять одна ___."
+      answer: "гривня"
+      options: ["гривня", "гривні", "гривень", "гроші"]
+    - sentence: "Один квиток коштує дві ___."
+      answer: "гривні"
+      options: ["гривні", "гривня", "гривень", "гроші"]
+    - sentence: "У моєму гаманці є сто ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гроші"]
+    - sentence: "Ця сода коштує чотири ___."
+      answer: "гривні"
+      options: ["гривні", "гривня", "гривень", "гроші"]
+    - sentence: "Це яблуко коштує шість ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гроші"]
+    - sentence: "Одне велике яблуко коштує вісім ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гроші"]
+    - sentence: "Ці два квитки коштують сорок дві ___."
+      answer: "гривні"
+      options: ["гривні", "гривня", "гривень", "гроші"]
+    - sentence: "Ваша кава коштує тридцять одна ___."
+      answer: "гривня"
+      options: ["гривня", "гривні", "гривень", "гроші"]
+    - sentence: "Це морозиво коштує дев'ять ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гроші"]
+
+- type: "match-up"
+  title: "Числа та їх назви"
+  pairs:
+    - left: "0"
+      right: "нуль"
+    - left: "5"
+      right: "п'ять"
+    - left: "11"
+      right: "одинадцять"
+    - left: "14"
+      right: "чотирнадцять"
+    - left: "20"
+      right: "двадцять"
+    - left: "40"
+      right: "сорок"
+    - left: "50"
+      right: "п'ятдесят"
+    - left: "90"
+      right: "дев'яносто"
+    - left: "100"
+      right: "сто"
+    - left: "15"
+      right: "п'ятнадцять"
+    - left: "1"
+      right: "один"
+    - left: "10"
+      right: "десять"
+
+- type: "true-false"
+  title: "Правила та лексика"
+  items:
+    - statement: "Слово \"гривня\" має таку саму форму після чисел 1 та 5."
+      correct: false
+      explanation: "Після 1 — гривня, після 5 — гривень."
+    - statement: "Число 40 в українській мові — це \"сорок\"."
+      correct: true
+    - statement: "Після чисел 2, 3, 4 ми використовуємо форму \"гривні\"."
+      correct: true
+    - statement: "Слово \"здача\" означає ціну предмета."
+      correct: false
+      explanation: "Здача — це гроші, які продавець повертає покупцеві."
+    - statement: "Число 100 в українській мові — це \"сто\"."
+      correct: true
+    - statement: "Фраза \"Скільки це коштує?\" використовується для запитання про ціну."
+      correct: true
+    - statement: "В українській мові ціни часто використовують кому для десяткових знаків."
+      correct: true
+    - statement: "Число 11 (одинадцять) вимагає форми \"гривні\"."
+      correct: false
+      explanation: "11 вимагає форми \"гривень\" (виняток 11-14)."
+    - statement: "Слово \"дешево\" означає високу ціну."
+      correct: false
+      explanation: "Дешево означає низьку ціну."
+    - statement: "Слово \"один\" змінює форму за родами (один, одна, одне)."
+      correct: true
+    - statement: "Слово \"решта\" — це синонім до слова \"здача\"."
+      correct: true
+    - statement: "Число 90 в українській мові — це \"дев'ятьдесят\"."
+      correct: false
+      explanation: "Правильна форма — дев'яносто."
+
+- type: "group-sort"
+  title: "Класифікація чисел та грошей"
+  instruction: "Розподіліть слова за категоріями: Числа або Гроші/Ціни."
+  groups:
+    - name: "Числа (Numbers)"
+      items:
+        - "нуль"
+        - "десять"
+        - "двадцять"
+        - "сорок"
+        - "п'ятдесят"
+        - "дев'яносто"
+        - "сто"
+    - name: "Гроші та Ціни (Money & Prices)"
+      items:
+        - "гривня"
+        - "копійка"
+        - "здача"
+        - "решта"
+        - "ціна"
+        - "дорого"
+        - "дешево"
+
+- type: "unjumble"
+  title: "Складіть речення"
+  instruction: "Розставте слова в правильному порядку, щоб утворити запитання або твердження."
+  items:
+    - words: ["Скільки", "коштує?", "це"]
+      answer: "Скільки це коштує?"
+    - words: ["коштує", "Кава", "гривень.", "десять"]
+      answer: "Кава коштує десять гривень."
+    - words: ["коштує", "тридцять", "Хліб", "гривень."]
+      answer: "Хліб коштує тридцять гривень."
+    - words: ["гривень.", "Це", "сорок"]
+      answer: "Це сорок гривень."
+    - words: ["Ваша", "п'ять", "здача —", "гривень."]
+      answer: "Ваша здача — п'ять гривень."
+    - words: ["одна", "Вода", "гривня.", "коштує"]
+      answer: "Вода коштує одна гривня."
+
+- type: "unjumble"
+  title: "Слова-конструктор"
+  instruction: "Складіть слова з літер, пов'язаних з числами та грошима."
+  items:
+    - words: ["н", "у", "л", "ь"]
+      answer: "нуль"
+    - words: ["с", "т", "о"]
+      answer: "сто"
+    - words: ["с", "і", "м", "д", "е", "с", "я", "т"]
+      answer: "сімдесят"
+    - words: ["г", "р", "и", "в", "н", "я"]
+      answer: "гривня"
+    - words: ["г", "р", "о", "ш", "і"]
+      answer: "гроші"
+    - words: ["ц", "і", "н", "а"]
+      answer: "ціна"
+    - words: ["с", "о", "р", "о", "к"]
+      answer: "сорок"
+    - words: ["п", "я", "т", "ь"]
+      answer: "п'ять"
+
+- type: "match-up"
+  title: "Ціни та їх написання"
+  instruction: "Поєднайте цифрове позначення ціни з її правильним словесним описом."
+  pairs:
+    - left: "1 ₴"
+      right: "одна гривня"
+    - left: "3 ₴"
+      right: "три гривні"
+    - left: "5 ₴"
+      right: "п'ять гривень"
+    - left: "21 ₴"
+      right: "двадцять одна гривня"
+    - left: "44 ₴"
+      right: "сорок чотири гривні"
+    - left: "100 ₴"
+      right: "сто гривень"
+    - left: "11 ₴"
+      right: "одинадцять гривень"
+    - left: "2 ₴"
+      right: "дві гривні"

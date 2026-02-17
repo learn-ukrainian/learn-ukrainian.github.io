@@ -1,0 +1,14 @@
+{
+  "slug": "bohdan-khmelnytskyi",
+  "track": "b2-hist",
+  "module_num": 52,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:59:32Z",
+      "task_id": "yw-bohdan-khmelnytskyi-p0"
+    }
+  },
+  "last_updated": "2026-02-16T21:59:32Z"
+}

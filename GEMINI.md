@@ -140,9 +140,10 @@ yq '.levels.b2-hist.modules[4]' curriculum/l2-uk-en/curriculum.yaml
 # List all modules in order for C1
 yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
 
-# Broker maintenance (fix stuck messages)
-.venv/bin/python scripts/ai_agent_bridge.py cleanup              # Clean stale PIDs + ancient messages
-.venv/bin/python scripts/ai_agent_bridge.py cleanup --dry-run    # Preview what would be cleaned
+# Inter-agent communication
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude "message"  # Direct call to Claude (immediate)
+.venv/bin/python scripts/ai_agent_bridge.py send "message"        # Drop in Claude's inbox (passive)
+.venv/bin/python scripts/ai_agent_bridge.py inbox                 # Check your inbox
 ```
 
 ## Critical Workflow Rules (Gemini)
@@ -168,7 +169,7 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
 4. **Vital Status (Biographies)**: **CRITICAL**: Check if the subject is ALIVE.
    - **Living**: Do NOT use "Legacy" or "Last Years". Use "Modern Period" or "Impact".
    - **Deceased**: Standard biography headers apply.
-5. **Communication with Claude**: Use `scripts/ai_agent_bridge.py` (See "Inter-Agent Communication" section).
+5. **Communication with Claude**: Use `scripts/ai_agent_bridge.py ask-claude` for direct calls, or `send` for passive inbox drops (See "Inter-Agent Communication" section).
 6. **Batch Operations**: For large refactors, prefer creating disposable `fix_batch_*.py` scripts over manual editing.
 7. **Strict Header Hierarchy**: `# Summary`, `# Activities` (H1), `##` (H2).
 8. **Regenerate HTML**: Always regenerate HTML output immediately after fixing module markdown.
@@ -402,37 +403,43 @@ run_shell_command("rg 'somepattern' .")
 
 **GitHub issues and comments are the primary communication channel.** All substantive discussion — reviews, proposals, implementation plans, architectural feedback, disagreements — happens on GitHub where it's persistent, searchable, and visible to the human.
 
-**The message broker is a NOTIFICATION layer ONLY.** Broker messages must be SHORT (< 200 chars) and only reference a GitHub issue/comment. Never put substantive content in broker messages.
+### How to Communicate with Claude
 
-**The pattern:**
+There are two methods — use the right one for the situation:
 
-1. **Post your work/review/proposal as a GitHub issue comment**
-2. **Send a SHORT broker ping to Claude** pointing to it
-3. **Claude reads the GitHub comment and responds there**
-
+**1. Direct call (`ask-claude`)** — for requests that need Claude's attention NOW:
 ```bash
-# Step 1: Post your work on GitHub
-gh issue comment 559 --body "## 💛 Жовта — Implementation complete ..."
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude \
+  "Review posted on #559. Please read and respond."
+```
+This launches a Claude Code session that processes your message immediately.
 
-# Step 2: Ping Claude via broker (NOTIFICATION ONLY — < 200 chars)
+**2. Mailbox drop (`send`)** — for passive notifications Claude will see next session:
+```bash
 .venv/bin/python scripts/ai_agent_bridge.py send \
-  "Implementation posted on #559. Please review." \
+  "FYI: c1-bio modules 1-5 complete. See #559." \
   --type feedback --task-id issue-559
 ```
+This drops a message in Claude's inbox. Claude checks it at session start.
+
+**When to use which:**
+
+| Method | When | Example |
+|--------|------|---------|
+| `ask-claude` | Need response now, review request, blocking question | "Review #559", "Is this approach OK?" |
+| `send` | FYI, progress update, non-blocking notification | "Modules 1-5 done", "Research complete" |
 
 **What goes WHERE:**
 
-| Channel | Use For | Max Length |
-|---------|---------|------------|
-| **GitHub issues** | Task specs, proposals, architecture plans | Unlimited |
-| **GitHub comments** | Reviews, feedback, progress updates, disagreements | Unlimited |
-| **Broker messages** | Notifications only: "read #559", "work posted on #558" | < 200 chars |
+| Channel | Use For |
+|---------|---------|
+| **GitHub issues/comments** | All substantive content: reviews, proposals, code, feedback |
+| **Bridge calls** | Short references to GitHub issues (< 200 chars) |
 
-**What NEVER goes in broker messages:**
-- Full reviews or feedback
+**What NEVER goes in bridge messages:**
+- Full reviews or feedback (put on GitHub)
 - Code snippets or file contents
 - Implementation proposals
-- Architectural discussion
 
 ### Cross-Review Protocol
 
@@ -442,43 +449,24 @@ When Claude posts a review of your work:
 - Read the GitHub comment carefully
 - If you disagree, respond ON GITHUB with a counter-argument
 - If you agree, fix the issues and post an update ON GITHUB
-- Then ping Claude via broker: "Fixes posted on #559, please re-review"
+- Then notify Claude: `ask-claude "Fixes posted on #559, please re-review"`
 
 When you finish work that needs Claude's review:
 - Post a summary ON GITHUB with what you did and what to review
-- Ping Claude via broker: "Work complete on #558, please review"
+- Then notify Claude: `ask-claude "Work complete on #558, please review"`
 
 ### Session Start Protocol
 
 ```bash
-# 1. Check broker for notifications from Claude
+# 1. Check inbox for messages from Claude
 .venv/bin/python scripts/ai_agent_bridge.py inbox
 
 # 2. For each notification, read the referenced GitHub issue
 gh issue view <N>
 
-# 3. Respond ON GITHUB, then ping back via broker
+# 3. Respond ON GITHUB, then notify Claude if needed
+.venv/bin/python scripts/ai_agent_bridge.py ask-claude "Response posted on #N"
 ```
-
-### Legacy: Direct Broker Commands
-
-For quick operational pings (not substantive discussion):
-
-```bash
-# Send notification to Claude
-.venv/bin/python scripts/ai_agent_bridge.py send "Quick note" --type feedback --task-id task-id
-
-# Check inbox
-.venv/bin/python scripts/ai_agent_bridge.py inbox
-
-# Acknowledge messages
-.venv/bin/python scripts/ai_agent_bridge.py ack <message_id>
-
-# Acknowledge ALL unread
-.venv/bin/python scripts/ai_agent_bridge.py ack-all gemini
-```
-
-**Do NOT use broker for:** reviews, proposals, implementation details, or anything that benefits from persistence and searchability. Use GitHub for those.
 
 ## Gemini Self-Review Protocol (MANDATORY)
 
@@ -566,19 +554,18 @@ gh issue view 506
 ### Your Handoff Response Flow
 
 1. **Check inbox**: `.venv/bin/python scripts/ai_agent_bridge.py inbox`
-2. **Read SHORT message** (issue reference only): `.venv/bin/python scripts/ai_agent_bridge.py read <id>`
-3. **Read the ISSUE for full details**: `gh issue view <issue_number>`
-4. **Check configs yourself** (don't trust message for numbers):
+2. **Read the ISSUE for full details**: `gh issue view <issue_number>`
+3. **Check configs yourself** (don't trust message for numbers):
    ```bash
    grep -A10 "c1-bio" scripts/audit/config.py | grep target
    ```
-5. **Choose work mode**:
+4. **Choose work mode**:
    - **Autonomous**: Start working, update issue with progress as you go
    - **Collaborative**: Reply "Request UI trigger for collaborative session"
-6. **Update issue with progress**: `gh issue comment <N> --body "✅ module-1 complete"`
-7. **When done**, send response to Claude:
+5. **Update issue with progress**: `gh issue comment <N> --body "✅ module-1 complete"`
+6. **When done**, notify Claude:
    ```bash
-   .venv/bin/python scripts/ai_agent_bridge.py send "Work complete. See issue #N for details." --type response --task-id gh-N
+   .venv/bin/python scripts/ai_agent_bridge.py ask-claude "Work complete on #N. Please review."
    ```
 
 ### Progress Update Format

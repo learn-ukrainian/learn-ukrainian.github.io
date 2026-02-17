@@ -1,0 +1,690 @@
+- groups:
+  - items:
+    - гарний
+    - швидкий
+    - добрий
+    - тихий
+    - голосний
+    - повільний
+    - смачна
+    - цікава
+    name: Прикметник (Adjective)
+  - items:
+    - гарно
+    - швидко
+    - добре
+    - тихо
+    - голосно
+    - повільно
+    - смачно
+    - цікаво
+    name: Прислівник (Adverb)
+  instruction: 'Sort the words into two groups: Adjectives (answer ''Який?'') and
+    Adverbs (answer ''Як?'').'
+  title: Прикметник чи Прислівник?
+  type: group-sort
+- instruction: Match the adjective with its corresponding adverb form.
+  pairs:
+  - left: швидкий
+    right: швидко
+  - left: повільний
+    right: повільно
+  - left: добрий
+    right: добре
+  - left: поганий
+    right: погано
+  - left: тихий
+    right: тихо
+  - left: голосний
+    right: голосно
+  - left: смачний
+    right: смачно
+  - left: цікавий
+    right: цікаво
+  - left: легкий
+    right: легко
+  - left: важкий
+    right: важко
+  title: 'Знайдіть пару: Прикметник → Прислівник'
+  type: match-up
+- instruction: Choose the correct answer about Ukrainian adverbs.
+  items:
+  - explanation: Adverbs of manner answer the question 'Як?' (How?).
+    options:
+    - correct: true
+      text: Як?
+    - correct: false
+      text: Який?
+    - correct: false
+      text: Хто?
+    - correct: false
+      text: Що?
+    question: На яке питання відповідає прислівник способу дії?
+  - explanation: Most adverbs derived from adjectives end in -о (швидкий → швидко).
+    options:
+    - correct: true
+      text: -о
+    - correct: false
+      text: -ий
+    - correct: false
+      text: -а
+    - correct: false
+      text: -е
+    question: Яке закінчення зазвичай мають прислівники, утворені від прикметників?
+  - explanation: 'This is an exception: добрий → добре.'
+    options:
+    - correct: true
+      text: добре
+    - correct: false
+      text: добро
+    - correct: false
+      text: добрий
+    - correct: false
+      text: добр
+    question: Як утворити прислівник від слова «добрий»?
+  - explanation: Adverbs of manner usually stand after the verb.
+    options:
+    - correct: true
+      text: Після дієслова
+    - correct: false
+      text: Перед дієсловом
+    - correct: false
+      text: На початку речення
+    - correct: false
+      text: В кінці речення
+    question: Де зазвичай стоїть прислівник способу дії (наприклад, «швидко»)?
+  - explanation: Adverbs of frequency usually stand before the verb.
+    options:
+    - correct: true
+      text: Перед дієсловом
+    - correct: false
+      text: Після дієслова
+    - correct: false
+      text: Після іменника
+    - correct: false
+      text: Завжди в кінці
+    question: Де зазвичай стоїть прислівник часу (наприклад, «часто»)?
+  - explanation: 'Ukrainian requires double negation: ніколи не.'
+    options:
+    - correct: true
+      text: Я ніколи не сплю
+    - correct: false
+      text: Я ніколи сплю
+    - correct: false
+      text: Я не сплю ніколи
+    - correct: false
+      text: Я сплю ніколи
+    question: Як перекласти «I never sleep» українською?
+  - explanation: Дуже means very.
+    options:
+    - correct: true
+      text: дуже
+    - correct: false
+      text: трохи
+    - correct: false
+      text: надто
+    - correct: false
+      text: завжди
+    question: Як перекласти слово «very» українською мовою?
+  - explanation: Добре is often used to mean 'OK' or 'Fine'.
+    options:
+    - correct: true
+      text: OK / Згода
+    - correct: false
+      text: Погано
+    - correct: false
+      text: Швидко
+    - correct: false
+      text: Ні
+    question: Що означає слово «добре» у діалозі?
+  - explanation: Тихо (quietly) is the opposite of голосно (loudly).
+    options:
+    - correct: true
+      text: тихо
+    - correct: false
+      text: швидко
+    - correct: false
+      text: добре
+    - correct: false
+      text: гарно
+    question: Який прислівник є антонімом до слова «голосно»?
+  - explanation: Повільно (slowly) is the opposite of швидко (quickly).
+    options:
+    - correct: true
+      text: повільно
+    - correct: false
+      text: тихо
+    - correct: false
+      text: добре
+    - correct: false
+      text: легко
+    question: Який прислівник є антонімом до слова «швидко»?
+  - explanation: Трохи means a little.
+    options:
+    - correct: true
+      text: трохи
+    - correct: false
+      text: дуже
+    - correct: false
+      text: надто
+    - correct: false
+      text: завжди
+    question: Як перекласти вираз «a little» українською мовою?
+  - explanation: Завжди means always.
+    options:
+    - correct: true
+      text: always
+    - correct: false
+      text: never
+    - correct: false
+      text: often
+    - correct: false
+      text: sometimes
+    question: Що означає українське слово «завжди» англійською?
+  title: Перевірка правил
+  type: quiz
+- instruction: Complete the sentence by changing the adjective in brackets into an
+    adverb.
+  items:
+  - answer: швидко
+    explanation: Adjective швидкий + -о = швидко.
+    options:
+    - швидко
+    - швидкий
+    - швидка
+    - швидке
+    sentence: Він бігає (швидкий) _______.
+  - answer: тихо
+    explanation: Adjective тихий + -о = тихо.
+    options:
+    - тихо
+    - тихий
+    - тиха
+    - тихе
+    sentence: Вона говорить (тихий) _______.
+  - answer: добре
+    explanation: 'Exception: добрий → добре.'
+    options:
+    - добре
+    - добрий
+    - добро
+    - добра
+    sentence: Ми живемо (добрий) _______.
+  - answer: гарно
+    explanation: Adjective гарний + -о = гарно.
+    options:
+    - гарно
+    - гарний
+    - гарна
+    - гарне
+    sentence: Студент відповідає (гарний) _______.
+  - answer: голосно
+    explanation: Adjective голосний + -о = голосно.
+    options:
+    - голосно
+    - голосний
+    - голосна
+    - голосне
+    sentence: Музика грає (голосний) _______.
+  - answer: повільно
+    explanation: Adjective повільний + -о = повільно.
+    options:
+    - повільно
+    - повільний
+    - повільна
+    - повільне
+    sentence: Черепаха повзе (повільний) _______.
+  - answer: смачно
+    explanation: Adjective смачний + -о = смачно.
+    options:
+    - смачно
+    - смачний
+    - смачна
+    - смачне
+    sentence: Піца пахне (смачний) _______.
+  - answer: легко
+    explanation: Adjective легкий + -о = легко.
+    options:
+    - легко
+    - легкий
+    - легка
+    - легке
+    sentence: Я роблю це (легкий) _______.
+  - answer: цікаво
+    explanation: 'Used as a predicate: Це цікаво (It is interesting).'
+    options:
+    - цікаво
+    - цікавий
+    - цікава
+    - цікаве
+    sentence: Це завдання (цікавий) _______.
+  - answer: погано
+    explanation: Adjective поганий + -о = погано.
+    options:
+    - погано
+    - поганий
+    - погана
+    - погане
+    sentence: Він співає (поганий) _______.
+  - answer: уважно
+    explanation: Adjective уважний + -о = уважно.
+    options:
+    - уважно
+    - уважний
+    - уважна
+    - уважне
+    sentence: Ми слухаємо (уважний) _______.
+  - answer: важко
+    explanation: Adjective важкий + -о = важко.
+    options:
+    - важко
+    - важкий
+    - важка
+    - важке
+    sentence: Вона працює (важкий) _______.
+  title: Утворіть прислівник
+  type: fill-in
+- instruction: 'Arrange the words to form a correct sentence. Remember: manner adverbs
+    usually go after the verb.'
+  items:
+  - answer: Він читає швидко
+    words:
+    - Він
+    - читає
+    - швидко
+  - answer: Вона співає гарно
+    words:
+    - Вона
+    - співає
+    - гарно
+  - answer: Ми працюємо добре
+    words:
+    - Ми
+    - працюємо
+    - добре
+  - answer: Музика грає голосно
+    words:
+    - Музика
+    - грає
+    - голосно
+  - answer: Вони говорять тихо
+    words:
+    - Вони
+    - говорять
+    - тихо
+  - answer: Кухар готує смачно
+    words:
+    - Кухар
+    - готує
+    - смачно
+  - answer: Автобус їде повільно
+    words:
+    - Автобус
+    - їде
+    - повільно
+  - answer: Я роблю це легко
+    words:
+    - Я
+    - роблю
+    - це
+    - легко
+  - answer: Студент слухає уважно
+    words:
+    - Студент
+    - слухає
+    - уважно
+  - answer: Він живе погано
+    words:
+    - Він
+    - живе
+    - погано
+  - answer: Марина танцює цікаво
+    words:
+    - Марина
+    - танцює
+    - цікаво
+  - answer: Ми сидимо тихо
+    words:
+    - Ми
+    - сидимо
+    - тихо
+  title: Складіть речення (Порядок слів)
+  type: unjumble
+- instruction: 'Arrange the words. Remember: frequency adverbs usually go BEFORE the
+    verb, and ''ніколи'' needs ''не''.'
+  items:
+  - answer: Я часто читаю
+    words:
+    - Я
+    - часто
+    - читаю
+  - answer: Ми завжди снідаємо
+    words:
+    - Ми
+    - завжди
+    - снідаємо
+  - answer: Він ніколи не спить
+    words:
+    - Він
+    - ніколи
+    - не
+    - спить
+  - answer: Вона рідко гуляє
+    words:
+    - Вона
+    - рідко
+    - гуляє
+  - answer: Ти іноді пишеш
+    words:
+    - Ти
+    - іноді
+    - пишеш
+  - answer: Я зазвичай працюю вдома
+    words:
+    - Я
+    - зазвичай
+    - працюю
+    - вдома
+  - answer: Ми ніколи не сваримося
+    words:
+    - Ми
+    - ніколи
+    - не
+    - сваримося
+  - answer: Він часто п'є каву
+    words:
+    - Він
+    - часто
+    - п'є
+    - каву
+  - answer: Вона завжди говорить правду
+    words:
+    - Вона
+    - завжди
+    - говорить
+    - правду
+  - answer: Вони рідко ходять у кіно
+    words:
+    - Вони
+    - рідко
+    - ходять
+    - у
+    - кіно
+  - answer: Я іноді слухаю джаз
+    words:
+    - Я
+    - іноді
+    - слухаю
+    - джаз
+  - answer: Він ніколи не запізнюється
+    words:
+    - Він
+    - ніколи
+    - не
+    - запізнюється
+  title: Складіть речення (Час і частота)
+  type: unjumble
+- instruction: Choose the correct frequency adverb based on the English translation.
+  items:
+  - answer: часто
+    explanation: Often = часто.
+    options:
+    - часто
+    - завжди
+    - рідко
+    - ніколи
+    sentence: Я _______ ходжу в парк.
+  - answer: завжди
+    explanation: Always = завжди.
+    options:
+    - завжди
+    - іноді
+    - рідко
+    - часто
+    sentence: Ми _______ п'ємо каву вранці.
+  - answer: ніколи
+    explanation: Never = ніколи.
+    options:
+    - ніколи
+    - завжди
+    - часто
+    - зазвичай
+    sentence: Він _______ не їсть м'ясо.
+  - answer: рідко
+    explanation: Rarely = рідко.
+    options:
+    - рідко
+    - часто
+    - завжди
+    - іноді
+    sentence: Вона _______ дивиться телевізор.
+  - answer: іноді
+    explanation: Sometimes = іноді.
+    options:
+    - іноді
+    - ніколи
+    - завжди
+    - рідко
+    sentence: Ти _______ співаєш?
+  - answer: зазвичай
+    explanation: Usually = зазвичай.
+    options:
+    - зазвичай
+    - ніколи
+    - рідко
+    - трохи
+    sentence: Я _______ працюю тихо.
+  - answer: часто
+    explanation: Often = часто.
+    options:
+    - часто
+    - рідко
+    - ніколи
+    - трохи
+    sentence: Ми _______ готуємо вдома.
+  - answer: завжди
+    explanation: Always = завжди.
+    options:
+    - завжди
+    - рідко
+    - іноді
+    - ніколи
+    sentence: Він _______ слухає музику.
+  - answer: ніколи
+    explanation: Never = ніколи.
+    options:
+    - ніколи
+    - часто
+    - завжди
+    - іноді
+    sentence: Вона _______ не спізнюється.
+  - answer: рідко
+    explanation: Rarely = рідко.
+    options:
+    - рідко
+    - завжди
+    - часто
+    - дуже
+    sentence: Я _______ їм піцу.
+  - answer: іноді
+    explanation: Sometimes = іноді.
+    options:
+    - іноді
+    - ніколи
+    - завжди
+    - дуже
+    sentence: Ти _______ читаєш книги?
+  - answer: завжди
+    explanation: Always = завжди.
+    options:
+    - завжди
+    - ніколи
+    - рідко
+    - трохи
+    sentence: Ми _______ раді вас бачити.
+  title: Оберіть правильне слово
+  type: fill-in
+- instruction: Read the statement and decide if it is grammatically correct or true.
+  items:
+  - correct: false
+    explanation: Ні, «швидко» відповідає на питання «Як?» (How?).
+    statement: Слово «швидко» відповідає на питання «Який?».
+  - correct: true
+    explanation: 'Так, це виняток: добрий → добре.'
+    statement: Слово «добрий» змінюється на «добре».
+  - correct: false
+    explanation: 'Помилка! Потрібне подвійне заперечення: «Я ніколи НЕ сплю».'
+    statement: У реченні «Я ніколи сплю» немає помилки.
+  - correct: true
+    explanation: Так, це прислівник (loudly).
+    statement: Слово «голосно» — це прислівник.
+  - correct: false
+    explanation: Ні, «часто» зазвичай стоїть ПЕРЕД дієсловом.
+    statement: Прислівник часу «часто» зазвичай стоїть після дієслова.
+  - correct: true
+    explanation: Так, «гарний» (beautiful/good) — це прикметник.
+    statement: Слово «гарний» — це прикметник.
+  - correct: false
+    explanation: 'Ні, правильно: «Він бігає швидко».'
+    statement: «Він бігає швидкий» — це правильне речення.
+  - correct: true
+    explanation: Так, дуже = very.
+    statement: Слово «дуже» означає «very».
+  - correct: false
+    explanation: Ні, «завжди» = always. «Ніколи» = never.
+    statement: Слово «завжди» означає «never».
+  - correct: true
+    explanation: Так, це стандартна позиція (Він читає швидко).
+    statement: Прислівник способу дії зазвичай стоїть після дієслова.
+  - correct: false
+    explanation: Ні, «трохи» = a little. «Надто» = too.
+    statement: «Трохи» означає «too».
+  - correct: true
+    explanation: Так, смачний + -о = смачно.
+    statement: Слово «смачно» утворене від слова «смачний».
+  title: Правда чи Неправда?
+  type: true-false
+- instruction: Fill in the blank with the correct adverb of intensity.
+  items:
+  - answer: дуже
+    explanation: Very = дуже.
+    options:
+    - дуже
+    - трохи
+    - завжди
+    - часто
+    sentence: Цей фільм _______ цікавий.
+  - answer: трохи
+    explanation: A little = трохи.
+    options:
+    - трохи
+    - дуже
+    - надто
+    - завжди
+    sentence: Я _______ втомився.
+  - answer: надто
+    explanation: Too/Overly = надто.
+    options:
+    - надто
+    - трохи
+    - рідко
+    - добре
+    sentence: Музика грає _______ голосно.
+  - answer: дуже
+    explanation: Very = дуже.
+    options:
+    - дуже
+    - трохи
+    - іноді
+    - рідко
+    sentence: Вона _______ гарно співає.
+  - answer: надто
+    explanation: Too = надто.
+    options:
+    - надто
+    - трохи
+    - завжди
+    - часто
+    sentence: Суп _______ гарячий.
+  - answer: трохи
+    explanation: A little = трохи.
+    options:
+    - трохи
+    - дуже
+    - надто
+    - завжди
+    sentence: Він говорить _______ тихо.
+  - answer: дуже
+    explanation: Very = дуже.
+    options:
+    - дуже
+    - трохи
+    - рідко
+    - ніколи
+    sentence: Це _______ важливо.
+  - answer: трохи
+    explanation: A little = трохи.
+    options:
+    - трохи
+    - дуже
+    - надто
+    - завжди
+    sentence: Я _______ знаю українську.
+  - answer: дуже
+    explanation: Very = дуже.
+    options:
+    - дуже
+    - трохи
+    - рідко
+    - іноді
+    sentence: Піца _______ смачна.
+  - answer: надто
+    explanation: Too = надто.
+    options:
+    - надто
+    - трохи
+    - добре
+    - гарно
+    sentence: Це завдання _______ важке.
+  - answer: дуже
+    explanation: Very = дуже.
+    options:
+    - дуже
+    - трохи
+    - надто
+    - рідко
+    sentence: Ми _______ раді.
+  - answer: трохи
+    explanation: A little = трохи.
+    options:
+    - трохи
+    - дуже
+    - надто
+    - завжди
+    sentence: Він _______ зайнятий.
+  title: Наскільки? (Інтенсивність)
+  type: fill-in
+- instruction: Match the Ukrainian word with its English translation.
+  pairs:
+  - left: завжди
+    right: always
+  - left: ніколи
+    right: never
+  - left: часто
+    right: often
+  - left: рідко
+    right: rarely
+  - left: іноді
+    right: sometimes
+  - left: зазвичай
+    right: usually
+  - left: дуже
+    right: very
+  - left: трохи
+    right: a little
+  - left: надто
+    right: too
+  - left: швидко
+    right: quickly
+  title: Знайдіть переклад
+  type: match-up

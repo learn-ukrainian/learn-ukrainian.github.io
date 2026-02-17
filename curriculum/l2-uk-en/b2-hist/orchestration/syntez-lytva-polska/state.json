@@ -1,0 +1,14 @@
+{
+  "slug": "syntez-lytva-polska",
+  "track": "b2-hist",
+  "module_num": 40,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:45:20Z",
+      "task_id": "yw-syntez-lytva-polska-p0"
+    }
+  },
+  "last_updated": "2026-02-16T21:45:20Z"
+}

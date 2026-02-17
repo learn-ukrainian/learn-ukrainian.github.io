@@ -1,0 +1,511 @@
+- groups:
+  - items:
+    - новий
+    - старий
+    - гарний
+    - синій
+    name: Він (Masculine)
+  - items:
+    - нова
+    - стара
+    - гарна
+    - синя
+    name: Вона (Feminine)
+  - items:
+    - нове
+    - старе
+    - гарне
+    - синє
+    name: Воно (Neuter)
+  - items:
+    - нові
+    - старі
+    - гарні
+    - сині
+    name: Вони (Plural)
+  instruction: Розподіліть прикметники за родом (Look at the endings!).
+  title: Сортування за родом
+  type: group-sort
+- instruction: Match the word with its opposite.
+  pairs:
+  - left: великий
+    right: малий
+  - left: новий
+    right: старий
+  - left: добрий
+    right: поганий
+  - left: дорогий
+    right: дешевий
+  - left: гарний
+    right: негарний
+  - left: цікавий
+    right: нудний
+  - left: молодий
+    right: старий
+  - left: білий
+    right: чорний
+  title: Знайдіть пару (Антоніми)
+  type: match-up
+- instruction: Оберіть правильну відповідь.
+  items:
+  - explanation: Чоловічий рід твердої групи має закінчення -ий.
+    options:
+    - correct: true
+      text: -ий
+    - correct: false
+      text: -а
+    - correct: false
+      text: -е
+    - correct: false
+      text: -і
+    question: Яке закінчення має слово «новий» (Masculine)?
+  - explanation: Синій має закінчення -ій, тому це м'яка група.
+    options:
+    - correct: true
+      text: синій
+    - correct: false
+      text: новий
+    - correct: false
+      text: гарний
+    - correct: false
+      text: старий
+    question: Яке слово належить до «м'якої групи»?
+  - explanation: Книга — жіночий рід, тому питання «Яка?».
+    options:
+    - correct: true
+      text: Яка?
+    - correct: false
+      text: Який?
+    - correct: false
+      text: Яке?
+    - correct: false
+      text: Які?
+    question: Яке питання ми ставимо до слова «книга» (вона)?
+  - explanation: Вікно — середній рід (воно), тому «нове».
+    options:
+    - correct: true
+      text: нове вікно
+    - correct: false
+      text: новий вікно
+    - correct: false
+      text: нова вікно
+    - correct: false
+      text: нові вікно
+    question: Як правильно сказати «new window»?
+  - explanation: Дім — чоловічий рід, тому питання «Який?».
+    options:
+    - correct: true
+      text: Який?
+    - correct: false
+      text: Яка?
+    - correct: false
+      text: Яке?
+    - correct: false
+      text: Які?
+    question: Яке питання ми ставимо до слова «дім» (він)?
+  - explanation: Зазвичай прикметник стоїть перед іменником (новий дім).
+    options:
+    - correct: true
+      text: перед іменником
+    - correct: false
+      text: після іменника
+    - correct: false
+      text: в кінці речення
+    - correct: false
+      text: після дієслова
+    question: Де зазвичай стоїть прикметник в українській мові?
+  - explanation: Синя — жіночий рід м'якої групи, закінчення -я.
+    options:
+    - correct: true
+      text: -я
+    - correct: false
+      text: -а
+    - correct: false
+      text: -е
+    - correct: false
+      text: -і
+    question: Яке закінчення має слово «синя»?
+  - explanation: Дорогий means expensive.
+    options:
+    - correct: true
+      text: дорогий
+    - correct: false
+      text: дешевий
+    - correct: false
+      text: добрий
+    - correct: false
+      text: старий
+    question: Яке українське слово означає «expensive»?
+  title: Граматична перевірка
+  type: quiz
+- instruction: Оберіть правильну форму прикметника.
+  items:
+  - answer: нова
+    explanation: Школа (вона) -> нова.
+    options:
+    - нова
+    - новий
+    - нове
+    - нові
+    sentence: Це ____ школа.
+  - answer: старе
+    explanation: Вікно (воно) -> старе.
+    options:
+    - старе
+    - старий
+    - стара
+    - старі
+    sentence: Це ____ вікно.
+  - answer: добрий
+    explanation: Студент (він) -> добрий.
+    options:
+    - добрий
+    - добра
+    - добре
+    - добрі
+    sentence: Цей студент ____.
+  - answer: гарна
+    explanation: Дівчина (вона) -> гарна.
+    options:
+    - гарна
+    - гарний
+    - гарне
+    - гарні
+    sentence: Ця дівчина ____.
+  - answer: велике
+    explanation: Місто (воно) -> велике.
+    options:
+    - велике
+    - великий
+    - велика
+    - великі
+    sentence: Це ____ місто.
+  - answer: синя
+    explanation: Ручка (вона) -> синя.
+    options:
+    - синя
+    - синій
+    - синє
+    - сині
+    sentence: Це ____ ручка.
+  - answer: цікава
+    explanation: Книга (вона) -> цікава.
+    options:
+    - цікава
+    - цікавий
+    - цікаве
+    - цікаві
+    sentence: Це ____ книга.
+  - answer: дорогий
+    explanation: Телефон (він) -> дорогий.
+    options:
+    - дорогий
+    - дорога
+    - дороге
+    - дорогі
+    sentence: Це ____ телефон.
+  title: Узгодження прикметників
+  type: fill-in
+- instruction: Put the words in the correct order.
+  items:
+  - answer: Це новий дім
+    words:
+    - новий
+    - Це
+    - дім
+  - answer: Це стара книга
+    words:
+    - книга
+    - стара
+    - Це
+  - answer: Тут велике вікно
+    words:
+    - вікно
+    - велике
+    - Тут
+  - answer: Він добрий студент
+    words:
+    - студент
+    - добрий
+    - Він
+  - answer: Цей телефон дорогий
+    words:
+    - Цей
+    - дорогий
+    - телефон
+  - answer: Ця квартира мала
+    words:
+    - мала
+    - квартира
+    - Ця
+  title: Складіть речення
+  type: unjumble
+- instruction: Match the noun with a logical adjective (watch the gender!).
+  pairs:
+  - left: квартира (вона)
+    right: нова
+  - left: дім (він)
+    right: старий
+  - left: вікно (воно)
+    right: велике
+  - left: зошит (він)
+    right: синій
+  - left: кімната (вона)
+    right: гарна
+  - left: студент (він)
+    right: добрий
+  - left: книга (вона)
+    right: цікава
+  - left: квиток (він)
+    right: дешевий
+  title: Підберіть пару
+  type: match-up
+- instruction: Оберіть слово, яке найкраще пасує за змістом.
+  items:
+  - answer: дорогий
+    explanation: 1000 доларів — це багато, тому дорогий.
+    options:
+    - дорогий
+    - дешевий
+    - старий
+    - малий
+    sentence: Цей телефон коштує 1000 доларів. Він ____.
+  - answer: дешева
+    explanation: 1 гривня — це мало, тому дешева.
+    options:
+    - дешева
+    - дорога
+    - велика
+    - синя
+    sentence: Ця ручка коштує 1 гривню. Вона ____.
+  - answer: молодий
+    explanation: Антонім до слова «старий» для людей — «молодий».
+    options:
+    - молодий
+    - старий
+    - поганий
+    - новий
+    sentence: Мій друг — студент. Він не старий, він ____.
+  - answer: цікавий
+    explanation: Антонім до слова «нудний» — «цікавий».
+    options:
+    - цікавий
+    - поганий
+    - дешевий
+    - малий
+    sentence: Цей фільм не нудний, він дуже ____.
+  - answer: гарний
+    explanation: Антонім до слова «поганий» — «гарний».
+    options:
+    - гарний
+    - поганий
+    - старий
+    - синій
+    sentence: Це не поганий день, це ____ день.
+  - answer: великий
+    explanation: Антонім до слова «малий» — «великий».
+    options:
+    - великий
+    - малий
+    - новий
+    - дешевий
+    sentence: Слон ____, а миша мала.
+  - answer: нова
+    explanation: Тільки з магазину означає «нова».
+    options:
+    - нова
+    - стара
+    - погана
+    - дешева
+    sentence: Ця машина тільки з магазину, вона ____.
+  - answer: синє
+    explanation: Колір неба — синій (середній рід — синє).
+    options:
+    - синє
+    - зелене
+    - червоне
+    - жовте
+    sentence: Небо має колір моря. Воно ____.
+  title: Опишіть ситуацію
+  type: fill-in
+- instruction: Put the words in the correct order to make a sentence.
+  items:
+  - answer: Це новий і гарний дім
+    words:
+    - дім
+    - Це
+    - гарний
+    - і
+    - новий
+  - answer: Це дуже цікава стара книга
+    words:
+    - книга
+    - цікава
+    - стара
+    - дуже
+    - Це
+  - answer: Це нове і велике вікно
+    words:
+    - вікно
+    - велике
+    - Це
+    - і
+    - нове
+  - answer: Це мій новий синій стіл
+    words:
+    - стіл
+    - синій
+    - мій
+    - Це
+    - новий
+  - answer: Це дуже велика і гарна кімната
+    words:
+    - кімната
+    - гарна
+    - велика
+    - дуже
+    - і
+    - Це
+  - answer: Він добрий і цікавий студент
+    words:
+    - студент
+    - цікавий
+    - добрий
+    - і
+    - Він
+  - answer: Це мій новий дорогий телефон
+    words:
+    - телефон
+    - дорогий
+    - мій
+    - Це
+    - новий
+  - answer: Тут стоїть старий малий стіл
+    words:
+    - стіл
+    - малий
+    - старий
+    - стоїть
+    - Тут
+  title: Складіть словосполучення
+  type: unjumble
+- instruction: Визначте, чи твердження правильне.
+  items:
+  - correct: true
+    explanation: Так, це протилежні за значенням слова.
+    statement: Слово «великий» — це антонім до слова «малий».
+  - correct: false
+    explanation: Ні, книга — це «вона» (feminine), бо закінчується на -а.
+    statement: Слово «книга» має рід «він» (masculine).
+  - correct: false
+    explanation: Ні, вікно — це «воно», тому «нове вікно».
+    statement: Ми кажемо «новий вікно».
+  - correct: true
+    explanation: Так, воно має м'яке закінчення -ій.
+    statement: Слово «синій» належить до м'якої групи.
+  - correct: false
+    explanation: Ні, це антоніми.
+    statement: «Старий» — це синонім до слова «новий».
+  - correct: true
+    explanation: Так, це якісна характеристика.
+    statement: Слово «гарний» описує якість (quality).
+  - correct: false
+    explanation: Ні, «дорогий» означає «expensive».
+    statement: Слово «дорогий» означає «cheap».
+  - correct: false
+    explanation: Ні, дім — це чоловічий рід, тому «Який?».
+    statement: Питання для слова «дім» — «Яка?».
+  title: Правильно чи ні?
+  type: true-false
+- instruction: Що ви скажете в цій ситуації?
+  items:
+  - explanation: Клієнт просив велику.
+    options:
+    - correct: true
+      text: велику квартиру
+    - correct: false
+      text: малу квартиру
+    - correct: false
+      text: стару квартиру
+    - correct: false
+      text: погану квартиру
+    question: Клієнт хоче велику квартиру. Що ви показуєте?
+  - explanation: 100 років — це багато, тому старий.
+    options:
+    - correct: true
+      text: Це старий дім.
+    - correct: false
+      text: Це новий дім.
+    - correct: false
+      text: Це молодий дім.
+    - correct: false
+      text: Це малий дім.
+    question: Ви бачите дім, якому 100 років. Як ви його опишете?
+  - explanation: Це позитивна характеристика.
+    options:
+    - correct: true
+      text: Він добрий студент.
+    - correct: false
+      text: Він поганий студент.
+    - correct: false
+      text: Він старий студент.
+    - correct: false
+      text: Він дешевий студент.
+    question: Студент завжди вчить уроки. Який він?
+  - explanation: Мало грошей -> дешевий.
+    options:
+    - correct: true
+      text: дешевий
+    - correct: false
+      text: дорогий
+    - correct: false
+      text: великий
+    - correct: false
+      text: цікавий
+    question: Ви хочете купити хліб, але у вас мало грошей. Який хліб ви шукаєте?
+  - explanation: Сонце і тепло — це гарна погода.
+    options:
+    - correct: true
+      text: гарна
+    - correct: false
+      text: погана
+    - correct: false
+      text: стара
+    - correct: false
+      text: дешева
+    question: На вулиці сонце і тепло. Яка погода?
+  - explanation: Остання модель -> новий.
+    options:
+    - correct: true
+      text: новий
+    - correct: false
+      text: старий
+    - correct: false
+      text: дешевий
+    - correct: false
+      text: поганий
+    question: Цей телефон — остання модель цього року. Він...
+  - explanation: Ви хочете заміну на краще (новий).
+    options:
+    - correct: true
+      text: новий стіл
+    - correct: false
+      text: старий стіл
+    - correct: false
+      text: поганий стіл
+    - correct: false
+      text: малий стіл
+    question: Стіл зламаний і брудний. Ви не хочете цей стіл. Ви хочете...
+  - explanation: Колір неба — синій.
+    options:
+    - correct: true
+      text: синє
+    - correct: false
+      text: зелене
+    - correct: false
+      text: червоне
+    - correct: false
+      text: жовте
+    question: Небо кольору моря. Яке воно?
+  title: Ситуації (Real Estate)
+  type: quiz

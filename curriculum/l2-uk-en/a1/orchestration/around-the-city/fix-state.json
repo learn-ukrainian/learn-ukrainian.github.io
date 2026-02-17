@@ -1,0 +1,14 @@
+{
+  "slug": "around-the-city",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-17T00:47:17.725449Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-17T00:47:17.725434Z",
+  "result": "success"
+}

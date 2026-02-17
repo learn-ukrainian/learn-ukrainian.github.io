@@ -1,0 +1,531 @@
+- type: quiz
+  title: "Color Identification"
+  instruction: "Choose the correct color translation."
+  items:
+    - question: "How do you say 'red' in Ukrainian?"
+      options:
+        - text: "червоний"
+          correct: true
+        - text: "чорний"
+          correct: false
+        - text: "білий"
+          correct: false
+        - text: "синій"
+          correct: false
+      explanation: "Червоний is red."
+    - question: "How do you say 'white' in Ukrainian?"
+      options:
+        - text: "білий"
+          correct: true
+        - text: "жовтий"
+          correct: false
+        - text: "зелений"
+          correct: false
+        - text: "чорний"
+          correct: false
+      explanation: "Білий is white."
+    - question: "How do you say 'black' in Ukrainian?"
+      options:
+        - text: "чорний"
+          correct: true
+        - text: "червоний"
+          correct: false
+        - text: "білий"
+          correct: false
+        - text: "синій"
+          correct: false
+      explanation: "Чорний is black."
+    - question: "How do you say 'green' in Ukrainian?"
+      options:
+        - text: "зелений"
+          correct: true
+        - text: "жовтий"
+          correct: false
+        - text: "синій"
+          correct: false
+        - text: "білий"
+          correct: false
+      explanation: "Зелений is green."
+    - question: "How do you say 'dark blue' in Ukrainian?"
+      options:
+        - text: "синій"
+          correct: true
+        - text: "зелений"
+          correct: false
+        - text: "червоний"
+          correct: false
+        - text: "жовтий"
+          correct: false
+      explanation: "Синій is dark blue."
+    - question: "How do you say 'yellow' in Ukrainian?"
+      options:
+        - text: "жовтий"
+          correct: true
+        - text: "білий"
+          correct: false
+        - text: "чорний"
+          correct: false
+        - text: "червоний"
+          correct: false
+      explanation: "Жовтий is yellow."
+    - question: "What is the gender of the word 'білий'?"
+      options:
+        - text: "Masculine"
+          correct: true
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: "Ends in -ий."
+    - question: "What is the gender of the word 'біла'?"
+      options:
+        - text: "Feminine"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: "Ends in -а."
+    - question: "What is the gender of the word 'біле'?"
+      options:
+        - text: "Neuter"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Plural"
+          correct: false
+      explanation: "Ends in -е."
+    - question: "What is the number form of 'білі'?"
+      options:
+        - text: "Plural"
+          correct: true
+        - text: "Masculine"
+          correct: false
+        - text: "Feminine"
+          correct: false
+        - text: "Neuter"
+          correct: false
+      explanation: "Ends in -і."
+    - question: "Translate the phrase 'This is a red shirt'."
+      options:
+        - text: "Це червона сорочка."
+          correct: true
+        - text: "Це червоний сорочка."
+          correct: false
+        - text: "Це червоне сорочка."
+          correct: false
+        - text: "Це червону сорочку."
+          correct: false
+      explanation: "Сорочка is feminine, so червона."
+    - question: "Translate the phrase 'I wear a red shirt'."
+      options:
+        - text: "Я ношу червону сорочку."
+          correct: true
+        - text: "Я ношу червона сорочка."
+          correct: false
+        - text: "Я ношу червоний сорочка."
+          correct: false
+        - text: "Я ношу червоне сорочка."
+          correct: false
+      explanation: "Accusative case: -а changes to -у."
+
+- type: match-up
+  title: "Vocabulary Matching"
+  instruction: "Match the word to its meaning."
+  pairs:
+    - left: "сорочка"
+      right: "shirt"
+    - left: "сукня"
+      right: "dress"
+    - left: "штани"
+      right: "pants"
+    - left: "светр"
+      right: "sweater"
+    - left: "куртка"
+      right: "jacket"
+    - left: "джинси"
+      right: "jeans"
+    - left: "окуляри"
+      right: "glasses"
+    - left: "вишиванка"
+      right: "embroidered shirt"
+    - left: "колір"
+      right: "color"
+    - left: "розмір"
+      right: "size"
+    - left: "ціна"
+      right: "price"
+    - left: "одяг"
+      right: "clothes"
+
+- type: fill-in
+  title: "Gender Agreement"
+  instruction: "Choose the correct ending."
+  items:
+    - sentence: "Це біл__ сорочка."
+      answer: "біла"
+      options: ["біла", "білий", "біле", "білі"]
+      explanation: "Feminine."
+    - sentence: "Це чорн__ светр."
+      answer: "чорний"
+      options: ["чорний", "чорна", "чорне", "чорні"]
+      explanation: "Masculine."
+    - sentence: "Це червон__ яблуко."
+      answer: "червоне"
+      options: ["червоне", "червона", "червоний", "червоні"]
+      explanation: "Neuter."
+    - sentence: "Це син__ джинси."
+      answer: "сині"
+      options: ["сині", "синій", "синя", "синє"]
+      explanation: "Plural."
+    - sentence: "Це зелен__ куртка."
+      answer: "зелена"
+      options: ["зелена", "зелений", "зелене", "зелені"]
+      explanation: "Feminine."
+    - sentence: "Це жовт__ сонце."
+      answer: "жовте"
+      options: ["жовте", "жовтий", "жовта", "жовті"]
+      explanation: "Neuter."
+    - sentence: "Це нов__ штани."
+      answer: "нові"
+      options: ["нові", "новий", "нова", "нове"]
+      explanation: "Plural."
+    - sentence: "Це гарн__ сукня."
+      answer: "гарна"
+      options: ["гарна", "гарний", "гарне", "гарні"]
+      explanation: "Feminine."
+    - sentence: "Це велик__ розмір."
+      answer: "великий"
+      options: ["великий", "велика", "велике", "великі"]
+      explanation: "Masculine."
+    - sentence: "Це мал__ вікно."
+      answer: "мале"
+      options: ["мале", "малий", "мала", "малі"]
+      explanation: "Neuter."
+    - sentence: "Це тепл__ светр."
+      answer: "теплий"
+      options: ["теплий", "тепла", "тепле", "теплі"]
+      explanation: "Masculine."
+    - sentence: "Це добр__ людина."
+      answer: "добра"
+      options: ["добра", "добрий", "добре", "добрі"]
+      explanation: "Feminine."
+
+- type: match-up
+  title: "Phrase Building"
+  instruction: "Match the phrase parts."
+  pairs:
+    - left: "Я ношу"
+      right: "I wear"
+    - left: "Ти носиш"
+      right: "You wear"
+    - left: "Він носить"
+      right: "He wears"
+    - left: "Вона носить"
+      right: "She wears"
+    - left: "Ми носимо"
+      right: "We wear"
+    - left: "Ви носите"
+      right: "You (pl) wear"
+    - left: "Вони носять"
+      right: "They wear"
+    - left: "Скільки коштує?"
+      right: "How much does it cost?"
+    - left: "Який це розмір?"
+      right: "What size is this?"
+    - left: "Чи є у вас...?"
+      right: "Do you have...?"
+    - left: "Ось ця сорочка."
+      right: "Here is this shirt."
+    - left: "Ось ці джинси."
+      right: "Here are these jeans."
+
+- type: fill-in
+  title: "Accusative Case"
+  instruction: "Choose the correct form."
+  items:
+    - sentence: "Я ношу ___ (сорочка)."
+      answer: "сорочку"
+      options: ["сорочку", "сорочка", "сорочки", "сорочці"]
+      explanation: "Accusative feminine."
+    - sentence: "Я ношу ___ (светр)."
+      answer: "светр"
+      options: ["светр", "светра", "светру", "светри"]
+      explanation: "Accusative masculine inanimate (no change)."
+    - sentence: "Я ношу ___ (сукня)."
+      answer: "сукню"
+      options: ["сукню", "сукня", "сукні", "сукнею"]
+      explanation: "Accusative feminine (-я -> -ю)."
+    - sentence: "Я ношу ___ (куртка)."
+      answer: "куртку"
+      options: ["куртку", "куртка", "куртки", "куртці"]
+      explanation: "Accusative feminine."
+    - sentence: "Він носить ___ (окуляри)."
+      answer: "окуляри"
+      options: ["окуляри", "окулярів", "окулярами", "окулярах"]
+      explanation: "Plural inanimate (no change)."
+    - sentence: "Вона носить ___ (джинси)."
+      answer: "джинси"
+      options: ["джинси", "джинсів", "джинсами", "джинсах"]
+      explanation: "Plural inanimate (no change)."
+    - sentence: "Ми носимо ___ (одяг)."
+      answer: "одяг"
+      options: ["одяг", "одягу", "одягом", "одязі"]
+      explanation: "Masculine inanimate (no change)."
+    - sentence: "Я купую ___ (вишиванка)."
+      answer: "вишиванку"
+      options: ["вишиванку", "вишиванка", "вишиванки", "вишиванці"]
+      explanation: "Accusative feminine."
+    - sentence: "Я бачу ___ (магазин)."
+      answer: "магазин"
+      options: ["магазин", "магазина", "магазину", "магазини"]
+      explanation: "Masculine inanimate."
+    - sentence: "Я бачу ___ (дівчина)."
+      answer: "дівчину"
+      options: ["дівчину", "дівчина", "дівчини", "дівчині"]
+      explanation: "Feminine animate (-а -> -у)."
+    - sentence: "Він має ___ (машина)."
+      answer: "машину"
+      options: ["машину", "машина", "машини", "машині"]
+      explanation: "Accusative feminine."
+    - sentence: "Вона має ___ (телефон)."
+      answer: "телефон"
+      options: ["телефон", "телефона", "телефону", "телефони"]
+      explanation: "Masculine inanimate."
+
+- type: true-false
+  title: "Shopping Etiquette"
+  instruction: "True or False?"
+  items:
+    - statement: "You can ask 'Скільки коштує?' for price."
+      correct: true
+      explanation: "Correct phrase."
+    - statement: "You say 'Скільки коштують' for plural items like jeans."
+      correct: true
+      explanation: "Plural verb for plural noun."
+    - statement: "To ask for size, say 'Який це колір?'"
+      correct: false
+      explanation: "That means 'What color is this?'."
+    - statement: "'Чи є у вас...?' implies 'Do you have...?'"
+      correct: true
+      explanation: "Standard polite question."
+    - statement: "You use 'Це' for plural items like pants."
+      correct: false
+      explanation: "Use 'Ці' for plural items."
+    - statement: "Masculine adjectives end in -ий."
+      correct: true
+      explanation: "Standard masculine ending."
+    - statement: "Feminine adjectives end in -е."
+      correct: false
+      explanation: "Feminine ends in -а."
+    - statement: "Neuter adjectives end in -е."
+      correct: true
+      explanation: "Standard neuter ending."
+    - statement: "Soft masculine adjectives end in -ій (like синій)."
+      correct: true
+      explanation: "Soft stem rule."
+    - statement: "Soft feminine adjectives end in -я (like синя)."
+      correct: true
+      explanation: "Soft stem rule."
+    - statement: "The verb 'носити' means 'to buy'."
+      correct: false
+      explanation: "It means 'to wear'."
+    - statement: "Vyshyvanka is a traditional shirt."
+      correct: true
+      explanation: "Cultural fact."
+
+- type: quiz
+  title: "What is it?"
+  instruction: "Identify the object description."
+  items:
+    - question: "It is green. It is on the ground."
+      options:
+        - text: "Трава (Grass)"
+          correct: true
+        - text: "Сніг (Snow)"
+          correct: false
+        - text: "Сонце (Sun)"
+          correct: false
+        - text: "Небо (Sky)"
+          correct: false
+      explanation: "Green grass."
+    - question: "It is white. It is cold."
+      options:
+        - text: "Сніг (Snow)"
+          correct: true
+        - text: "Трава (Grass)"
+          correct: false
+        - text: "Сонце (Sun)"
+          correct: false
+        - text: "Небо (Sky)"
+          correct: false
+      explanation: "White snow."
+    - question: "It is yellow. It is hot."
+      options:
+        - text: "Сонце (Sun)"
+          correct: true
+        - text: "Сніг (Snow)"
+          correct: false
+        - text: "Трава (Grass)"
+          correct: false
+        - text: "Небо (Sky)"
+          correct: false
+      explanation: "Yellow sun."
+    - question: "It is blue. It is above us."
+      options:
+        - text: "Небо (Sky)"
+          correct: true
+        - text: "Сонце (Sun)"
+          correct: false
+        - text: "Сніг (Snow)"
+          correct: false
+        - text: "Трава (Grass)"
+          correct: false
+      explanation: "Blue sky."
+    - question: "It is red. You wear it."
+      options:
+        - text: "Червона сорочка"
+          correct: true
+        - text: "Червоне яблуко"
+          correct: false
+        - text: "Червоний автобус"
+          correct: false
+        - text: "Червоний стілець"
+          correct: false
+      explanation: "Red shirt."
+    - question: "It is black. You wear them on legs."
+      options:
+        - text: "Чорні штани"
+          correct: true
+        - text: "Чорна куртка"
+          correct: false
+        - text: "Чорний светр"
+          correct: false
+        - text: "Чорні окуляри"
+          correct: false
+      explanation: "Black pants."
+    - question: "It is warm. You wear it in winter."
+      options:
+        - text: "Светр"
+          correct: true
+        - text: "Сорочка"
+          correct: false
+        - text: "Сукня"
+          correct: false
+        - text: "Футболка"
+          correct: false
+      explanation: "Sweater."
+    - question: "It is elegant. Women wear it."
+      options:
+        - text: "Сукня"
+          correct: true
+        - text: "Штани"
+          correct: false
+        - text: "Светр"
+          correct: false
+        - text: "Куртка"
+          correct: false
+      explanation: "Dress."
+    - question: "You wear them on your eyes."
+      options:
+        - text: "Окуляри"
+          correct: true
+        - text: "Джинси"
+          correct: false
+        - text: "Штани"
+          correct: false
+        - text: "Куртка"
+          correct: false
+      explanation: "Glasses."
+    - question: "This is a shop where you buy clothes."
+      options:
+        - text: "Магазин одягу"
+          correct: true
+        - text: "Магазин продуктів"
+          correct: false
+        - text: "Аптека"
+          correct: false
+        - text: "Банк"
+          correct: false
+      explanation: "Clothing store."
+    - question: "You use this to pay."
+      options:
+        - text: "Гроші (Money)"
+          correct: true
+        - text: "Слово"
+          correct: false
+        - text: "Колір"
+          correct: false
+        - text: "Розмір"
+          correct: false
+      explanation: "Money."
+    - question: "This implies small or large."
+      options:
+        - text: "Розмір"
+          correct: true
+        - text: "Колір"
+          correct: false
+        - text: "Ціна"
+          correct: false
+        - text: "Стиль"
+          correct: false
+      explanation: "Size."
+
+- type: fill-in
+  title: "Complete the Dialogue"
+  instruction: "Fill in the missing words."
+  items:
+    - sentence: "- Добрий день! - ___ день!"
+      answer: "Добрий"
+      options: ["Добрий", "Поганий", "Гарний", "Привіт"]
+      explanation: "Standard greeting."
+    - sentence: "- Чи є у вас ___ сорочка?"
+      answer: "червона"
+      options: ["червона", "червоний", "червоне", "червоні"]
+      explanation: "Feminine."
+    - sentence: "- Так, ___ ця сорочка."
+      answer: "ось"
+      options: ["ось", "тут", "там", "це"]
+      explanation: "Here is."
+    - sentence: "- Який це ___?"
+      answer: "розмір"
+      options: ["розмір", "колір", "ціна", "стиль"]
+      explanation: "Asking for size."
+    - sentence: "- Це розмір ___."
+      answer: "М"
+      options: ["М", "Так", "Ні", "Є"]
+      explanation: "Size M."
+    - sentence: "- Скільки ___?"
+      answer: "коштує"
+      options: ["коштує", "коштують", "ціна", "гроші"]
+      explanation: "Singular verb."
+    - sentence: "- Вона коштує 500 ___."
+      answer: "гривень"
+      options: ["гривень", "доларів", "євро", "фунтів"]
+      explanation: "Ukrainian currency."
+    - sentence: "- Дякую! - ___ ласка!"
+      answer: "Будь"
+      options: ["Будь", "Прошу", "Вибачте", "Так"]
+      explanation: "You are welcome."
+    - sentence: "- Чи є у вас сині ___?"
+      answer: "джинси"
+      options: ["джинси", "штани", "окуляри", "шорти"]
+      explanation: "Jeans."
+    - sentence: "- Скільки ___ ці джинси?"
+      answer: "коштують"
+      options: ["коштують", "коштує", "ціна", "гроші"]
+      explanation: "Plural verb."
+    - sentence: "- Вони ___ 1000 гривень."
+      answer: "коштують"
+      options: ["коштують", "коштує", "мають", "є"]
+      explanation: "They cost."
+    - sentence: "- Я ___ їх."
+      answer: "купую"
+      options: ["купую", "беру", "хочу", "маю"]
+      explanation: "I buy."

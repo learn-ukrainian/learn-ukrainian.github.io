@@ -221,10 +221,10 @@ npm run vocab:rebuild
 .venv/bin/python scripts/batch_otaman.py dispatch-one --track a1  # Force specific track
 # Filters: --include-tracks a1 b1 | --exclude-tracks c2 | --max-runtime-hours 12
 
-# Broker maintenance
-.venv/bin/python scripts/ai_agent_bridge.py cleanup              # Clean stale PIDs + ancient messages
-.venv/bin/python scripts/ai_agent_bridge.py cleanup --dry-run    # Preview what would be cleaned
-.venv/bin/python scripts/ai_agent_bridge.py cleanup --max-age 6  # Force-ack messages older than 6h
+# Inter-agent communication
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "message" --task-id id  # Direct call to Gemini (immediate)
+# For passive notifications, use MCP send_message tool (drops in Gemini's inbox)
+.venv/bin/python scripts/ai_agent_bridge.py inbox                              # Check your inbox
 ```
 
 See `docs/SCRIPTS.md` for complete reference.
@@ -399,49 +399,61 @@ Use `/interview` for complex features, unclear requirements, or broad requests. 
 
 **GitHub issues and comments are the primary communication channel.** All substantive discussion — reviews, proposals, implementation plans, architectural feedback, disagreements — happens on GitHub where it's persistent, searchable, and visible to the human.
 
-**The message broker is a notification layer ONLY.** Broker messages must be SHORT (< 200 chars) and only reference a GitHub issue/comment. Never put substantive content in broker messages.
+### How to Communicate with Gemini
 
-**The pattern:**
+There are two methods — use the right one for the situation:
 
-1. **Post your work/review/proposal as a GitHub issue comment**
-2. **Send a SHORT broker ping to the other agent** pointing them to it
-3. **The other agent reads the GitHub comment** and responds there
-
+**1. Direct call (`ask-gemini`)** — for requests that need Gemini's attention NOW:
 ```bash
-# Step 1: Post review on GitHub
-gh issue comment 559 --body "## 💙 Синя — Review ..."
-
-# Step 2: Ping Gemini via broker (NOTIFICATION ONLY)
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
   "Review posted on #559. Please read and respond." \
   --task-id issue-559
 ```
+This launches a Gemini session that processes your message immediately.
+
+**2. Mailbox drop (MCP `send_message`)** — for passive notifications Gemini will see next session:
+```python
+mcp__message-broker__send_message(
+    to="gemini", content="FYI: c1-bio research complete. See #559.",
+    from_llm="claude", message_type="context"
+)
+```
+This drops a message in Gemini's inbox. Gemini checks it at session start.
+
+**When to use which:**
+
+| Method | When | Example |
+|--------|------|---------|
+| `ask-gemini` | Need response now, dispatch work, blocking question | "Build module #5", "Review #559" |
+| `send_message` | FYI, progress update, non-blocking notification | "Research done", "Audit results posted" |
 
 **What goes WHERE:**
 
-| Channel | Use For | Max Length |
-|---------|---------|------------|
-| **GitHub issues** | Task specs, proposals, architecture plans | Unlimited |
-| **GitHub comments** | Reviews, feedback, progress updates, disagreements | Unlimited |
-| **Broker messages** | Notifications only: "read #559", "review posted on #558" | < 200 chars |
+| Channel | Use For |
+|---------|---------|
+| **GitHub issues/comments** | All substantive content: reviews, proposals, code, feedback |
+| **Bridge calls** | Short references to GitHub issues (< 200 chars) |
 
-**What NEVER goes in broker messages:**
-- Full reviews or feedback
+**What NEVER goes in bridge messages:**
+- Full reviews or feedback (put on GitHub)
 - Code snippets or file contents
 - Implementation proposals
-- Architectural discussion
 
 </critical>
 
 ### Session Start Checklist
 
 > **AT SESSION START:**
-> 1. Check broker inbox for notifications:
+> 1. Check inbox for notifications from Gemini:
 >    ```python
 >    mcp__message-broker__check_inbox(for_llm="claude")
 >    ```
-> 2. For each notification, read the referenced GitHub issue/comment
-> 3. Respond ON GITHUB, then ping back via broker
+> 2. If unread messages, read them:
+>    ```python
+>    mcp__message-broker__receive_messages(for_llm="claude")
+>    ```
+> 3. For each notification, read the referenced GitHub issue/comment
+> 4. Respond ON GITHUB, then notify Gemini if needed via `ask-gemini`
 
 ### Cross-Review Protocol
 
@@ -494,7 +506,7 @@ Gemini outputs verbose thinking tokens (10-100K chars). All structured output us
 
 ## Orchestrated Rebuild (Claude → Gemini)
 
-**`/orchestrate-rebuild {track} {num}`** — Claude orchestrates phase-by-phase, Gemini executes. Claude validates between phases and writes all files. Shared filesystem is data transport; broker carries only short signals. Full details: `claude_extensions/commands/orchestrate-rebuild.md`
+**`/orchestrate-rebuild {track} {num}`** — Claude orchestrates phase-by-phase, Gemini executes. Claude validates between phases and writes all files. Shared filesystem is data transport; `ask-gemini` dispatches each phase. Full details: `claude_extensions/commands/orchestrate-rebuild.md`
 
 ---
 

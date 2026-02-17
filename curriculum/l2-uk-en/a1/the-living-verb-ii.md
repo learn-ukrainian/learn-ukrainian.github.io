@@ -192,4 +192,24 @@ These **-ити** verbs are a bridge to other Slavic languages. If you travel to
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| дієслово | /dʲijeˈslɔwɔ/ | verb | noun | n | grammar term |
+| дієслово | [dʲijeˈslɔwɔ] | verb | noun | n | grammar term |
+| дієвідміна | [dʲijeˈʋidmʲinɐ] | conjugation | noun | f | grammar term |
+| закінчення | [zɐˈkʲintʃenʲnʲɐ] | ending | noun | n | grammar term |
+| говорити | [ɦɔwɔˈrɪtɪ] | to speak | verb | - | |
+| робити | [rɔˈbɪtɪ] | to do | verb | - | |
+| любити | [lʲʊˈbɪtɪ] | to love | verb | - | |
+| бачити | [ˈbatʃɪtɪ] | to see | verb | - | |
+| їсти | [ˈjisʲtɪ] | to eat | verb | - | |
+| пити | [ˈpɪtɪ] | to drink | verb | - | |
+| ходити | [ˈxɔdɪtɪ] | to walk | verb | - | |
+| просити | [prɔˈsɪtɪ] | to ask | verb | - | |
+| сидіти | [sɪˈdʲitɪ] | to sit | verb | - | |
+| стояти | [stɔˈjatɪ] | to stand | verb | - | |
+| платити | [plɐˈtɪtɪ] | to pay | verb | - | |
+| вчити | [ˈwtʃɪtɪ] | to teach/learn | verb | - | |
+| життя | [ʒɪˈtʲːɐ] | life | noun | n | |
+| дім | [dʲim] | home | noun | m | |
+| кава | [ˈkawɐ] | coffee | noun | f | |
+| гроші | [ˈɦrɔʃi] | money | noun | pl | |
+| парк | [park] | park | noun | m | |
+| море | [ˈmɔrɛ] | sea | noun | n | |

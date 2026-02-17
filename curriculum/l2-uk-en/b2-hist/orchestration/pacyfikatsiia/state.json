@@ -1,0 +1,14 @@
+{
+  "slug": "pacyfikatsiia",
+  "track": "b2-hist",
+  "module_num": 99,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:01:03Z",
+      "task_id": "yw-pacyfikatsiia-p0"
+    }
+  },
+  "last_updated": "2026-02-16T23:01:03Z"
+}

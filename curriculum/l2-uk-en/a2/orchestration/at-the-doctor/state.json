@@ -1,0 +1,14 @@
+{
+  "slug": "at-the-doctor",
+  "track": "a2",
+  "module_num": 34,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T19:39:50Z",
+      "task_id": "yw-at-the-doctor-p0"
+    }
+  },
+  "last_updated": "2026-02-16T19:39:50Z"
+}

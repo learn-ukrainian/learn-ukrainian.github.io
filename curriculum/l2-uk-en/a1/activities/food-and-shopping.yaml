@@ -1,0 +1,462 @@
+- type: match-up
+  title: "Food and Drinks"
+  instruction: "Match the Ukrainian word with its English translation."
+  pairs:
+    - left: "хліб"
+      right: "bread"
+    - left: "молоко"
+      right: "milk"
+    - left: "вода"
+      right: "water"
+    - left: "кава"
+      right: "coffee"
+    - left: "сік"
+      right: "juice"
+    - left: "чай"
+      right: "tea"
+    - left: "цукор"
+      right: "sugar"
+    - left: "масло"
+      right: "butter"
+    - left: "яйце"
+      right: "egg"
+    - left: "сир"
+      right: "cheese"
+    - left: "м'ясо"
+      right: "meat"
+    - left: "риба"
+      right: "fish"
+
+- type: group-sort
+  title: "Vegetable or Fruit?"
+  instruction: "Sort the items into the correct categories: Vegetables (овочі) or Fruits (фрукти)."
+  groups:
+    - name: "Овочі"
+      items:
+        - "картопля"
+        - "помідор"
+        - "морква"
+        - "огірок"
+        - "капуста"
+        - "буряк"
+    - name: "Фрукти"
+      items:
+        - "яблуко"
+        - "банан"
+        - "груша"
+        - "слива"
+        - "ананас"
+        - "лимон"
+
+- type: fill-in
+  title: "Verb Conjugation: To Love"
+  instruction: "Fill in the correct form of the verb любити (to love)."
+  items:
+    - sentence: "Я ______ каву."
+      answer: "люблю"
+      options: ["люблю", "любиш", "любить", "любимо"]
+    - sentence: "Ти ______ чай."
+      answer: "любиш"
+      options: ["люблю", "любиш", "любить", "любите"]
+    - sentence: "Він ______ молоко."
+      answer: "любить"
+      options: ["любиш", "любить", "любимо", "люблять"]
+    - sentence: "Ми ______ сік."
+      answer: "любимо"
+      options: ["любить", "любимо", "любите", "люблять"]
+    - sentence: "Ви ______ воду."
+      answer: "любите"
+      options: ["любимо", "любите", "люблять", "любиш"]
+    - sentence: "Вони ______ фрукти."
+      answer: "люблять"
+      options: ["любить", "любите", "люблять", "любимо"]
+    - sentence: "Я ______ сир."
+      answer: "люблю"
+      options: ["люблю", "любиш", "любить", "любимо"]
+    - sentence: "Вона ______ м'ясо."
+      answer: "любить"
+      options: ["любиш", "любить", "любимо", "люблять"]
+    - sentence: "Ти ______ овочі."
+      answer: "любиш"
+      options: ["люблю", "любиш", "любить", "любите"]
+    - sentence: "Ми ______ батони."
+      answer: "любимо"
+      options: ["любить", "любимо", "любите", "люблять"]
+    - sentence: "Ви ______ рибу."
+      answer: "любите"
+      options: ["любимо", "любите", "люблять", "любиш"]
+    - sentence: "Вони ______ яйця."
+      answer: "люблять"
+      options: ["любить", "любите", "люблять", "люблю"]
+
+- type: fill-in
+  title: "Buying Items"
+  instruction: "Complete the sentences with the correct word for the object in the Accusative case."
+  items:
+    - sentence: "Я купую ______."
+      answer: "хліб"
+      options: ["хліб", "хліба", "хлібом", "хлібу"]
+    - sentence: "Ти купуєш ______."
+      answer: "воду"
+      options: ["вода", "води", "воду", "водою"]
+    - sentence: "Ми купуємо ______."
+      answer: "каву"
+      options: ["кава", "кави", "каву", "кавою"]
+    - sentence: "Він купує ______."
+      answer: "сік"
+      options: ["сік", "соку", "соком", "соку"]
+    - sentence: "Вона купує ______."
+      answer: "молоко"
+      options: ["молоко", "молока", "молоку", "молоком"]
+    - sentence: "Вони купують ______."
+      answer: "сир"
+      options: ["сир", "сиру", "сиром", "сири"]
+    - sentence: "Я купую ______."
+      answer: "м'ясо"
+      options: ["м'ясо", "м'яса", "м'ясом", "м'ясу"]
+    - sentence: "Ти купуєш ______."
+      answer: "банан"
+      options: ["банан", "банана", "банану", "бананом"]
+    - sentence: "Ми купуємо ______."
+      answer: "картоплю"
+      options: ["картопля", "картоплі", "картоплю", "картоплею"]
+    - sentence: "Ви купуєте ______."
+      answer: "рибу"
+      options: ["риба", "риби", "рибу", "рибою"]
+    - sentence: "Він купує ______."
+      answer: "чай"
+      options: ["чай", "чаю", "чаєм", "чаю"]
+    - sentence: "Вони купують ______."
+      answer: "цукор"
+      options: ["цукор", "цукру", "цукром", "цукру"]
+
+- type: quiz
+  title: "How much?"
+  instruction: "Translate the phrase or choose the correct price answer."
+  items:
+    - question: "How do you ask 'How much does it cost?'"
+      options:
+        - text: "Скільки коштує?"
+          correct: true
+        - text: "Хто це?"
+          correct: false
+        - text: "Де це?"
+          correct: false
+        - text: "Як справи?"
+          correct: false
+    - question: "How do you say 'Ten hryvnias'?"
+      options:
+        - text: "Десять гривень"
+          correct: true
+        - text: "Десять ціна"
+          correct: false
+        - text: "Десять літрів"
+          correct: false
+        - text: "Десять копійок"
+          correct: false
+    - question: "How do you say 'One hryvnia'?"
+      options:
+        - text: "Одна гривня"
+          correct: true
+        - text: "Одна ціна"
+          correct: false
+        - text: "Один гривня"
+          correct: false
+        - text: "Одне гривня"
+          correct: false
+    - question: "How do you say 'Twenty hryvnias'?"
+      options:
+        - text: "Двадцять гривень"
+          correct: true
+        - text: "Двадцять ціна"
+          correct: false
+        - text: "Двадцять літрів"
+          correct: false
+        - text: "Двадцять батон"
+          correct: false
+    - question: "How do you say 'Five hryvnias'?"
+      options:
+        - text: "П'ять гривень"
+          correct: true
+        - text: "П'ять ціна"
+          correct: false
+        - text: "П'ять гривня"
+          correct: false
+        - text: "П'ята гривня"
+          correct: false
+    - question: "How do you say 'Two hryvnias'?"
+      options:
+        - text: "Дві гривні"
+          correct: true
+        - text: "Дві ціна"
+          correct: false
+        - text: "Два гривні"
+          correct: false
+        - text: "Дві гривень"
+          correct: false
+    - question: "How do you say 'Seven hryvnias'?"
+      options:
+        - text: "Сім гривень"
+          correct: true
+        - text: "Сім ціна"
+          correct: false
+        - text: "Сім гривня"
+          correct: false
+        - text: "Сім гривню"
+          correct: false
+    - question: "How do you say 'Six hryvnias'?"
+      options:
+        - text: "Шість гривень"
+          correct: true
+        - text: "Шість ціна"
+          correct: false
+        - text: "Шість гривні"
+          correct: false
+        - text: "Шість пляшок"
+          correct: false
+    - question: "How do you say 'Three hryvnias'?"
+      options:
+        - text: "Три гривні"
+          correct: true
+        - text: "Три ціна"
+          correct: false
+        - text: "Три гривень"
+          correct: false
+        - text: "Три літри"
+          correct: false
+    - question: "Translate into English: 'Чотири гривні, будь ласка'"
+      options:
+        - text: "Four hryvnias, please"
+          correct: true
+        - text: "Four prices, please"
+          correct: false
+        - text: "Four bottles, please"
+          correct: false
+        - text: "Four apples, please"
+          correct: false
+    - question: "Translate into English: 'Вісім гривень за кілограм'"
+      options:
+        - text: "Eight hryvnias per kilogram"
+          correct: true
+        - text: "Eight prices per kilogram"
+          correct: false
+        - text: "Eight kilograms per liter"
+          correct: false
+        - text: "Eight grams per pack"
+          correct: false
+    - question: "Translate into English: 'Дев'ять гривень за пляшку'"
+      options:
+        - text: "Nine hryvnias per bottle"
+          correct: true
+        - text: "Nine prices per bottle"
+          correct: false
+        - text: "Nine liters per bottle"
+          correct: false
+        - text: "Nine packs per bottle"
+          correct: false
+
+- type: fill-in
+  title: "Quantities and Packaging"
+  instruction: "Fill in the correct quantity or packaging word (літр, пляшка, кілограм, пачка)."
+  items:
+    - sentence: "Одна ______ води."
+      answer: "пляшка"
+      options: ["пляшка", "літр", "кілограм", "пачка"]
+    - sentence: "Один ______ молока."
+      answer: "літр"
+      options: ["літр", "пляшка", "кілограм", "пачка"]
+    - sentence: "Один ______ цукру."
+      answer: "кілограм"
+      options: ["кілограм", "літр", "пляшка", "пачка"]
+    - sentence: "Одна ______ масла."
+      answer: "пачка"
+      options: ["пачка", "літр", "пляшка", "кілограм"]
+    - sentence: "Перший ______ картоплі."
+      answer: "кілограм"
+      options: ["кілограм", "літр", "пляшка", "пачка"]
+    - sentence: "Ця ______ соку."
+      answer: "пляшка"
+      options: ["пляшка", "літр", "кілограм", "пачка"]
+    - sentence: "Один ______ кефіру."
+      answer: "літр"
+      options: ["літр", "пляшка", "кілограм", "пачка"]
+    - sentence: "Така ______ солі."
+      answer: "пачка"
+      options: ["пачка", "літр", "пляшка", "кілограм"]
+    - sentence: "Скляна ______ молока."
+      answer: "пляшка"
+      options: ["пляшка", "літр", "кілограм", "пачка"]
+    - sentence: "Повний ______ соку."
+      answer: "літр"
+      options: ["літр", "пляшка", "кілограм", "пачка"]
+    - sentence: "Один ______ борошна."
+      answer: "кілограм"
+      options: ["кілограм", "літр", "пляшка", "пачка"]
+    - sentence: "Мала ______ чаю."
+      answer: "пачка"
+      options: ["пачка", "літр", "пляшка", "кілограм"]
+
+- type: match-up
+  title: "Ukrainian Food Traditions"
+  instruction: "Match the traditional item or term with its description."
+  pairs:
+    - left: "паляниця"
+      right: "traditional round bread"
+    - left: "батон"
+      right: "white long bread"
+    - left: "пампушки"
+      right: "small buns"
+    - left: "борщ"
+      right: "traditional red soup"
+    - left: "сало"
+      right: "pork fat"
+    - left: "рушник"
+      right: "embroidered towel"
+    - left: "сіль"
+      right: "salt"
+    - left: "вечеря"
+      right: "dinner"
+    - left: "сніданок"
+      right: "breakfast"
+    - left: "обід"
+      right: "lunch"
+    - left: "ніж"
+      right: "knife"
+    - left: "ложка"
+      right: "spoon"
+
+- type: quiz
+  title: "Cooking and Preferences"
+  instruction: "Choose the correct word to complete the sentence."
+  items:
+    - question: "Мама готує на вечерю смачне ______."
+      options:
+        - text: "м'ясо"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "літр"
+          correct: false
+        - text: "ціна"
+          correct: false
+    - question: "Я дуже люблю свіжі ______."
+      options:
+        - text: "яйця"
+          correct: true
+        - text: "пляшка"
+          correct: false
+        - text: "кілограм"
+          correct: false
+        - text: "пачка"
+          correct: false
+    - question: "Тато щоранку купує свіжий ______."
+      options:
+        - text: "сир"
+          correct: true
+        - text: "пляшка"
+          correct: false
+        - text: "метр"
+          correct: false
+        - text: "літр"
+          correct: false
+    - question: "Ми щодня їмо свіжий ______."
+      options:
+        - text: "хліб"
+          correct: true
+        - text: "літр"
+          correct: false
+        - text: "пачка"
+          correct: false
+        - text: "вода"
+          correct: false
+    - question: "Ви завжди п'єте гарячий ______."
+      options:
+        - text: "чай"
+          correct: true
+        - text: "пачка"
+          correct: false
+        - text: "кілограм"
+          correct: false
+        - text: "батон"
+          correct: false
+    - question: "Вони дуже люблять солодкі ______."
+      options:
+        - text: "яблука"
+          correct: true
+        - text: "кілограм"
+          correct: false
+        - text: "літр"
+          correct: false
+        - text: "ціна"
+          correct: false
+    - question: "Він зараз їсть жовтий ______."
+      options:
+        - text: "банан"
+          correct: true
+        - text: "літр"
+          correct: false
+        - text: "пляшка"
+          correct: false
+        - text: "вода"
+          correct: false
+    - question: "Вона щоранку п'є холодне ______."
+      options:
+        - text: "молоко"
+          correct: true
+        - text: "пачка"
+          correct: false
+        - text: "кілограм"
+          correct: false
+        - text: "батон"
+          correct: false
+    - question: "Ви на обід їсте свіжу ______."
+      options:
+        - text: "рибу"
+          correct: true
+        - text: "кілограм"
+          correct: false
+        - text: "літр"
+          correct: false
+        - text: "пляшку"
+          correct: false
+    - question: "Вони на ринку купують ______."
+      options:
+        - text: "картоплю"
+          correct: true
+        - text: "пачку"
+          correct: false
+        - text: "літр"
+          correct: false
+        - text: "метр"
+          correct: false
+    - question: "Я завжди п'ю чисту ______."
+      options:
+        - text: "воду"
+          correct: true
+        - text: "метр"
+          correct: false
+        - text: "кілограм"
+          correct: false
+        - text: "батон"
+          correct: false
+    - question: "Ми в магазині купуємо ______."
+      options:
+        - text: "батон"
+          correct: true
+        - text: "метр"
+          correct: false
+        - text: "літр"
+          correct: false
+        - text: "вода"
+          correct: false
+
+- type: group-sort
+  title: "Food Categories Deep Dive"
+  instruction: "Sort the items into the correct categories."
+  groups:
+    - name: "Напої (Drinks)"
+      items: ["вода", "сік", "чай", "кава", "кефір", "молоко"]
+    - name: "Овочі та фрукти (Vegetables & Fruits)"
+      items: ["картопля", "помідор", "морква", "яблуко", "банан", "груша"]
+    - name: "Інші продукти (Other Foods)"
+      items: ["хліб", "сир", "м'ясо", "риба", "цукор", "масло"]

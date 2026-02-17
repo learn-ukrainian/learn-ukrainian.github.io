@@ -2,7 +2,7 @@
 **Level:** A2 | **Module:** M01 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
 **Naturalness:** 10/10 (CHECKED)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-15 13:44:23
+**Generated:** 2026-02-16 19:49:25
 
 ## Configuration
 **Type:** A2-grammar
@@ -47,13 +47,11 @@
   - FIX: Break into shorter sentences. First 5 words: 'Коли ви запитуєте про чийсь...'
 - **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Зверніть увагу як часто українці...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, займенник
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 35/100)
 
-- 5 violations (moderate)
+- 4 violations (moderate)
 - Immersion 15% off target
 
 ## Gates
@@ -64,8 +62,9 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 29/1
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 4 violations
 - **Content_heavy:** ℹ️ N/A (standard module)

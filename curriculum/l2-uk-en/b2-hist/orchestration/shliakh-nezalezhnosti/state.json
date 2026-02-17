@@ -1,0 +1,14 @@
+{
+  "slug": "shliakh-nezalezhnosti",
+  "track": "b2-hist",
+  "module_num": 119,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T23:21:14Z",
+      "task_id": "yw-shliakh-nezalezhnosti-p0"
+    }
+  },
+  "last_updated": "2026-02-16T23:21:14Z"
+}

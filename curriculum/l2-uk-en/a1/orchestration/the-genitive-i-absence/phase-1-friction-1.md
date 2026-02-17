@@ -2,5 +2,5 @@
 **Step**: Full outline
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Initial plan sections were below the 200-word minimum floor (Warm-up: 114, Practice: 174). I redistributed the word count from the 1038 total to ensure all sections meet the 200-word requirement while maintaining the plan's logical structure and naming.
+**Self-Correction**: Adjusted word allocations from the plan to ensure all sections meet the 200-word minimum requirement while strictly maintaining the plan's 4-section structure and total word target of 1038.
 **Proposed Tooling Fix**: N/A

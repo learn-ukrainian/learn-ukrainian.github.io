@@ -1,0 +1,14 @@
+{
+  "slug": "at-the-pharmacy",
+  "track": "a2",
+  "module_num": 60,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T20:34:52Z",
+      "task_id": "yw-at-the-pharmacy-p0"
+    }
+  },
+  "last_updated": "2026-02-16T20:34:52Z"
+}

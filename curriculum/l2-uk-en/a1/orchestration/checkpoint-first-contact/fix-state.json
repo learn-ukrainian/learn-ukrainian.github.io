@@ -1,0 +1,14 @@
+{
+  "slug": "checkpoint-first-contact",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-17T00:47:14.827077Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-17T00:47:14.827062Z",
+  "result": "success"
+}

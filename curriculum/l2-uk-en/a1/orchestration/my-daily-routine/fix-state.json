@@ -1,0 +1,14 @@
+{
+  "slug": "my-daily-routine",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-17T00:47:23.508720Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-17T00:47:23.508705Z",
+  "result": "success"
+}

@@ -1,0 +1,65 @@
+{
+  "slug": "can-must-want-modals",
+  "track": "a1",
+  "module_num": 24,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T16:51:54Z",
+      "task_id": "yw-can-must-want-modals-p0"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-16T20:57:44Z",
+      "task_id": "yw-can-must-want-modals-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:01:19Z",
+      "sections_done": 4,
+      "sections_total": 4
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:08:37Z",
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:08:38Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:08:38Z",
+      "note": "adopted-existing"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:08:38Z",
+      "attempts": 1
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:09:40Z",
+      "task_id": "gr-can-must-want-modals",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:11:05Z",
+      "task_id": "yw-can-must-want-modals-6b"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:19:56Z",
+      "attempts": 2
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-16T21:19:56Z"
+    }
+  },
+  "last_updated": "2026-02-16T21:19:56Z"
+}

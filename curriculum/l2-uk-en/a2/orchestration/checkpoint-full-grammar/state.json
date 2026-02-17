@@ -1,0 +1,14 @@
+{
+  "slug": "checkpoint-full-grammar",
+  "track": "a2",
+  "module_num": 56,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T20:28:48Z",
+      "task_id": "yw-checkpoint-full-grammar-p0"
+    }
+  },
+  "last_updated": "2026-02-16T20:28:48Z"
+}

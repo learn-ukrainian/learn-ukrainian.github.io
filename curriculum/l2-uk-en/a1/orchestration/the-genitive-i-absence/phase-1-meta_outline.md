@@ -1,34 +1,30 @@
 content_outline:
-  - section: "Розминка"
+  - section: "Розминка: ситуація відсутності"
     words: 200
     points:
-      - "Вступ до концепції відсутності: перехід від конструкції «У мене є» (A1.04) до «У мене немає»."
-      - "Стратегія «U-Turn»: швидкий контраст на прикладах повсякденних речей (ключі, телефон, паспорт)."
-      - "Англійське пояснення (English Scaffolding) для закладення логіки заперечення, необхідне для рівня A1."
-      - "Демонстрація того, як відсутність предмета змінює його форму (перше знайомство зі зміною відмінка)."
-  - section: "Презентація"
-    words: 338
+      - "English-led introduction to the concept of negation, contrasting «є» (existence) and «немає» (absence)."
+      - "Interactive scenario: identifying objects you have versus things that are missing in your immediate environment."
+      - "Introduction to the «У мене немає...» frame as a fundamental tool for basic survival communication."
+  - section: "Презентація: конструкція «немає» та закінчення"
+    words: 350
     points:
-      - "Конструкція «немає + Родовий відмінок»: пояснення граматичної ролі об'єкта при запереченні."
-      - "Чоловічий рід: правило закінчень «-а/-я» для конкретних назв (хліб, квиток) та «-у/-ю» для масових/абстрактних назв (час, цукор)."
-      - "Жіночий рід: правила закінчень «-и/-і» (вода, машина, кава) з акцентом на вимові."
-      - "Множина: особливий фокус на важливому слові «гроші» (немає грошей) та запобігання помилці «немає гроші»."
-      - "Вживання прийменника «без» (кава без молока, без цукру) як способу вираження відсутності інгредієнта."
-      - "Кожна підтема (ЧР, ЖР, множина, прийменник) має власний H3: визначення, IPA-транскрипція, 2+ приклади з перекладом."
-  - section: "Практика"
-    words: 250
+      - "Explaining the «немає + Родовий відмінок» pattern as a fixed communicative model for A1 learners."
+      - "Presentation of singular Genitive endings: -а/-я (masculine) and -и/-і (feminine) using transformation tables."
+      - "Addressing masculine noun ending choices: -а for concrete objects (хліб) vs -у for abstract concepts (час, цукор)."
+      - "Linguistic safety: distinguishing between the particle «не» (not) and the word «немає» (there is no) to prevent syntax errors."
+      - "Introduction to the preposition «без» (without) with practical beverage and food examples (кава без молока)."
+  - section: "Практика: тренування та вправи"
+    words: 200
     points:
-      - "Вправа на трансформацію: зміна речень з стверджувальних на заперечні (є квиток → немає квитка)."
-      - "Діалоги-розпитування: «У тебе є...? — Ні, немає», що інтегрують назви гаджетів та особистих речей."
-      - "Ситуативна практика: замовлення напоїв у кав’ярні з використанням «без» (кава без цукру, вода без газу)."
-      - "Мнемонічні поради для розрізнення чоловічих закінчень «-а» та «-у» на основі дослідження."
-      - "Аналіз типових помилок: чому не можна використовувати називний відмінок після «немає»."
-  - section: "Культурний контекст"
-    words: 250
+      - "Step-by-step drilling of noun transformations from Nominative to Genitive focusing on core A1 vocabulary."
+      - "Guided sentence construction for shopping and city navigation situations (keys, tickets, phones)."
+      - "Short communicative dialogues: checking availability of items using «У вас є...? — Ні, немає...»."
+      - "Specific focus on the high-frequency fixed plural phrase «немає грошей» as a survival expression."
+  - section: "Культурна довідка: ввічливі вирази та приказки"
+    words: 288
     points:
-      - "Мовний етикет: ввічлива відмова за допомогою конструкції «На жаль, немає...» (Unfortunately, there isn't...)."
-      - "Деколонізаційний аспект: перевага автентичного «Без проблем» над калькованим «Немає проблем»."
-      - "Символізм хліба: чому фраза «Немає хліба» має особливу вагу в українській традиції (хліб та сіль)."
-      - "Культура обслуговування: як правильно і ввічливо просити про відсутність інгредієнтів у ресторані чи вдома."
-      - "Висновок про важливість володіння запереченням для успішної навігації в українському середовищі."
-# Total: 1038 words
+      - "Analysis of the ubiquitous phrase «Немає проблем!» as a reflection of modern Ukrainian hospitality and flexibility."
+      - "Social nuance: using «немає» as a factual statement to soften refusals in shops and social interactions."
+      - "Cultural anchor: introducing the proverb «Немає диму без вогню» (No smoke without fire) to illustrate grammar in folk wisdom."
+      - "Contextual application: talking about what a city lacks (reference to a1-15 vocabulary) to describe travel experiences."
+      - "Final summary of absence-related idiomatic expressions and mnemonic tips for mastering Genitive endings."

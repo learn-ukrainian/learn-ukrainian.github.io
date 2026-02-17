@@ -1,0 +1,94 @@
+- ipa: '[dɛ]'
+  lemma: де
+  notes: Asks about location (static)
+  pos: adv
+  translation: where
+- ipa: '[kuˈdɪ]'
+  lemma: куди
+  notes: Asks about direction (dynamic)
+  pos: adv
+  translation: where to
+- ipa: '[ˈzvidkɪ]'
+  lemma: звідки
+  notes: Asks about origin
+  pos: adv
+  translation: where from
+- ipa: '[v]'
+  lemma: в
+  notes: 'Variant: у. Used with Locative (location) or Accusative (direction)'
+  pos: prep
+  translation: in, into
+- ipa: '[na]'
+  lemma: на
+  notes: Used for surfaces or events/activities
+  pos: prep
+  translation: on, at, to
+- ipa: '[dɔ]'
+  lemma: до
+  notes: Always takes Genitive case; implies reaching a person or place
+  pos: prep
+  translation: to, towards
+- ipa: '[z]'
+  lemma: з
+  notes: 'Variant: із, зі. Opposite of ''в'' and ''на'''
+  pos: prep
+  translation: from, out of
+- ipa: '[vid]'
+  lemma: від
+  notes: Used with Genitive; often implies distance or source
+  pos: prep
+  translation: from (away from)
+- ipa: '[jtɪ]'
+  lemma: йти
+  notes: Unidirectional motion
+  pos: verb
+  translation: to go (on foot), to walk
+- ipa: '[ˈjixatɪ]'
+  lemma: їхати
+  notes: Unidirectional motion
+  pos: verb
+  translation: to go (by transport), to ride
+- ipa: '[pɔvɛrˈtatɪsʲa]'
+  lemma: повертатися
+  pos: verb
+  translation: to return, to come back
+- ipa: '[ˈvdɔma]'
+  lemma: вдома
+  notes: Static location answer to 'Де?'
+  pos: adv
+  translation: at home
+- ipa: '[dɔˈdɔmu]'
+  lemma: додому
+  notes: Directional answer to 'Куди?'
+  pos: adv
+  translation: home, homewards
+- ipa: '[ˈmisʲt͡sɛ]'
+  lemma: місце
+  pos: noun
+  translation: place, location, seat
+- ipa: '[marʃˈrut]'
+  lemma: маршрут
+  pos: noun
+  translation: route
+- ipa: '[ˈmisʲtɔ]'
+  lemma: місто
+  pos: noun
+  translation: city
+- ipa: '[ˈvulɪt͡sʲa]'
+  lemma: вулиця
+  pos: noun
+  translation: street
+- ipa: '[ˈpɔtʲaɦ]'
+  lemma: потяг
+  pos: noun
+  translation: train
+- ipa: '[ˈkapt͡sʲi]'
+  lemma: капці
+  notes: Plural only
+  pos: noun
+  translation: slippers
+- ipa: '[prɔvidˈnɪk]'
+  lemma: провідник
+  pos: noun
+  translation: conductor (train)
+

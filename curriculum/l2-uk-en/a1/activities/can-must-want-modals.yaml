@@ -1,0 +1,579 @@
+- type: match-up
+  title: Modal Meanings
+  pairs:
+  - left: могти
+    right: can, be able (physical)
+  - left: вміти
+    right: know how to (skill)
+  - left: хотіти
+    right: to want
+  - left: мусити
+    right: must (personal)
+  - left: треба
+    right: need to (impersonal)
+  - left: потрібно
+    right: necessary
+  - left: можна
+    right: allowed, may
+  - left: не можна
+    right: not allowed, forbidden
+  - left: варто
+    right: worth, advisable
+  - left: я можу
+    right: I can
+  instruction: Match the corresponding elements.
+- type: group-sort
+  title: Modal Categories
+  groups:
+  - name: Ability (Здатність)
+    items:
+    - могти
+    - вміти
+    - я можу
+    - ти вмієш
+  - name: Obligation (Обов'язок)
+    items:
+    - мусити
+    - треба
+    - потрібно
+    - я мушу
+  - name: Permission & Desire (Дозвіл та Бажання)
+    items:
+    - можна
+    - не можна
+    - хотіти
+    - варто
+  instruction: Distribute the elements into groups.
+- type: fill-in
+  title: могти Conjugation
+  items:
+  - sentence: Я ___ говорити українською.
+    answer: можу
+    options:
+    - можу
+    - можеш
+    - може
+    - можуть
+  - sentence: Ти ___ допомогти?
+    answer: можеш
+    options:
+    - можу
+    - можеш
+    - може
+    - можете
+  - sentence: Вона ___ прийти завтра.
+    answer: може
+    options:
+    - можу
+    - можеш
+    - може
+    - можуть
+  - sentence: Ми ___ зробити це разом.
+    answer: можемо
+    options:
+    - можемо
+    - можете
+    - можуть
+    - можу
+  - sentence: Ви ___ почекати трохи?
+    answer: можете
+    options:
+    - можете
+    - можемо
+    - можуть
+    - можеш
+  - sentence: Вони ___ грати на гітарі.
+    answer: можуть
+    options:
+    - можуть
+    - можемо
+    - можете
+    - може
+  - sentence: Він ___ плавати дуже швидко.
+    answer: може
+    options:
+    - може
+    - можу
+    - можеш
+    - можуть
+  - sentence: Я не ___ прийти сьогодні.
+    answer: можу
+    options:
+    - можу
+    - можеш
+    - може
+    - можемо
+  - sentence: Діти ___ гуляти тут.
+    answer: можуть
+    options:
+    - можуть
+    - може
+    - можемо
+    - можеш
+  - sentence: Ви ___ відкрити двері?
+    answer: можете
+    options:
+    - можете
+    - можемо
+    - можеш
+    - можуть
+  - sentence: Хто ___ сказати правильну відповідь?
+    answer: може
+    options:
+    - може
+    - можуть
+    - можу
+    - можемо
+  - sentence: Ми не ___ запізнюватися.
+    answer: можемо
+    options:
+    - можемо
+    - можете
+    - можеш
+    - може
+  instruction: Choose the correct word to fill in the blank.
+- type: fill-in
+  title: Obligation Words
+  items:
+  - sentence: Я ___ працювати завтра.
+    answer: мушу
+    options:
+    - мушу
+    - можу
+    - вмію
+    - хочу
+  - sentence: ___ вчитися кожен день.
+    answer: Треба
+    options:
+    - Треба
+    - Можна
+    - Вмію
+    - Хочу
+  - sentence: Вона ___ закінчити проект.
+    answer: мусить
+    options:
+    - мусить
+    - вміє
+    - може
+    - хоче
+  - sentence: ___ відповісти на лист.
+    answer: Потрібно
+    options:
+    - Потрібно
+    - Можна
+    - Не можна
+    - Хочу
+  - sentence: Він ___ прийти вчасно.
+    answer: мусить
+    options:
+    - мусить
+    - вміє
+    - може
+    - хоче
+  - sentence: Тут ___ палити.
+    answer: не можна
+    options:
+    - не можна
+    - дозволено
+    - можна
+    - треба
+  - sentence: ___ подивитися цей фільм.
+    answer: Варто
+    options:
+    - Варто
+    - Треба
+    - Не можна
+    - Заборонено
+  - sentence: Тобі ___ відпочити після роботи.
+    answer: варто
+    options:
+    - варто
+    - можна
+    - не можна
+    - вмієш
+  - sentence: Студенти ___ знати правила.
+    answer: мусять
+    options:
+    - мусять
+    - мусить
+    - мусиш
+    - мушу
+  - sentence: Я ___ йти додому вже зараз.
+    answer: мушу
+    options:
+    - мушу
+    - мусиш
+    - мусить
+    - мусимо
+  - sentence: Вам ___ бути тут о дев'ятій.
+    answer: потрібно
+    options:
+    - потрібно
+    - вчасно
+    - можна
+    - варто
+  - sentence: Нам ___ працювати більше.
+    answer: треба
+    options:
+    - треба
+    - можна
+    - дозволено
+    - заборонено
+  instruction: Choose the correct word to fill in the blank.
+- type: quiz
+  title: Ability or Skill?
+  items:
+  - question: Does the sentence «Я вмію плавати» express ability or skill?
+    options:
+    - text: Skill (learned knowledge)
+      correct: true
+    - text: Physical ability
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: How do you categorize the sentence «Я не можу прийти сьогодні»?
+    options:
+    - text: Physical/Circumstantial ability
+      correct: true
+    - text: Skill
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: What category does «Вона вміє готувати українські страви» specifically
+      belong to?
+    options:
+    - text: Skill
+      correct: true
+    - text: Physical ability
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: Which category matches the question «Ти можеш відкрити ці двері?» accurately?
+    options:
+    - text: Physical ability (request)
+      correct: true
+    - text: Skill
+      correct: false
+    - text: Obligation
+      correct: false
+    - text: Prohibition
+      correct: false
+  - question: Does the sentence «Він вміє грати на гітарі» mean skill or ability?
+    options:
+    - text: Skill
+      correct: true
+    - text: Physical ability
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: How is the sentence «Ми можемо почати зараз» correctly categorized here?
+    options:
+    - text: Physical ability
+      correct: true
+    - text: Skill
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: What does the sentence «Вони вміють танцювати сальсу» actually express?
+    options:
+    - text: Skill
+      correct: true
+    - text: Physical ability
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: Which category fits «Я не можу знайти свої ключі» accurately?
+    options:
+    - text: Physical ability
+      correct: true
+    - text: Skill
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: Choose the category for "Can you help me with this?"
+    options:
+    - text: Physical ability (request)
+      correct: true
+    - text: Skill
+      correct: false
+    - text: Permission
+      correct: false
+    - text: Obligation
+      correct: false
+  - question: Does "She can speak four languages" express a learned skill?
+    options:
+    - text: Yes, it is a skill (вміти)
+      correct: true
+    - text: No, it is physical ability
+      correct: false
+    - text: It is a permission
+      correct: false
+    - text: It is an obligation
+      correct: false
+  - question: Is "I can't swim today because the water is cold" a skill issue?
+    options:
+    - text: No, it is a circumstantial ability (могти)
+      correct: true
+    - text: Yes, it is a skill issue
+      correct: false
+    - text: It is a permission issue
+      correct: false
+    - text: It is an obligation issue
+      correct: false
+  - question: Choose the correct category for "We can't go there now."
+    options:
+    - text: Physical/circumstantial ability
+      correct: true
+    - text: Learned skill
+      correct: false
+    - text: Absolute obligation
+      correct: false
+    - text: Constant permission
+      correct: false
+  instruction: Choose the correct answer.
+- type: quiz
+  title: Modal Meanings
+  items:
+  - question: Which English phrase represents «Можна увійти?» accurately today?
+    options:
+    - text: May I enter?
+      correct: true
+    - text: Must I enter?
+      correct: false
+    - text: Can I swim?
+      correct: false
+    - text: Should I leave?
+      correct: false
+  - question: What is the English meaning of «Тут не можна палити»?
+    options:
+    - text: Smoking is forbidden here.
+      correct: true
+    - text: Smoking is allowed here.
+      correct: false
+    - text: You must smoke here.
+      correct: false
+    - text: You should smoke here.
+      correct: false
+  - question: How do you accurately say «Я мушу працювати» in English?
+    options:
+    - text: I must work.
+      correct: true
+    - text: I can work.
+      correct: false
+    - text: I want to work.
+      correct: false
+    - text: I know how to work.
+      correct: false
+  - question: What does the phrase «Варто подивитися цей фільм» mean?
+    options:
+    - text: This movie is worth watching.
+      correct: true
+    - text: You must watch this movie.
+      correct: false
+    - text: You can't watch this movie.
+      correct: false
+    - text: This movie is forbidden.
+      correct: false
+  - question: How do you accurately translate «Треба вчитися кожен день»?
+    options:
+    - text: One must/needs to study every day.
+      correct: true
+    - text: One can study every day.
+      correct: false
+    - text: One wants to study every day.
+      correct: false
+    - text: One is allowed to study every day.
+      correct: false
+  - question: What does precisely the sentence «Вона хоче почати» mean?
+    options:
+    - text: She wants to start.
+      correct: true
+    - text: She must start.
+      correct: false
+    - text: She can start.
+      correct: false
+    - text: She knows how to start.
+      correct: false
+  - question: Which English translation is correct for «Тут можна фотографувати»?
+    options:
+    - text: Photography is allowed here.
+      correct: true
+    - text: Photography is forbidden here.
+      correct: false
+    - text: You must take photos here.
+      correct: false
+    - text: You should take photos here.
+      correct: false
+  - question: Which phrase accurately translates «Варто відпочити» into English?
+    options:
+    - text: One should rest (it is worth resting).
+      correct: true
+    - text: One must rest.
+      correct: false
+    - text: One can rest.
+      correct: false
+    - text: One is forbidden to rest.
+      correct: false
+  - question: What is accurately the meaning of «Не можна»?
+    options:
+    - text: Not allowed / Forbidden
+      correct: true
+    - text: Possible
+      correct: false
+    - text: Necessary
+      correct: false
+    - text: Easy
+      correct: false
+  - question: How do you say accurately "I can help" in Ukrainian?
+    options:
+    - text: Я можу допомогти
+      correct: true
+    - text: Я мушу допомогти
+      correct: false
+    - text: Я хочу допомогти
+      correct: false
+    - text: Я вмію допомогти
+      correct: false
+  - question: What does precisely the word «Треба» imply?
+    options:
+    - text: Necessity (impersonal)
+      correct: true
+    - text: Physical ability
+      correct: false
+    - text: Learned skill
+      correct: false
+    - text: Forbidden action
+      correct: false
+  - question: Which phrase accurately means "I have to go" in Ukrainian (strong obligation)?
+    options:
+    - text: Я мушу йти
+      correct: true
+    - text: Я можу йти
+      correct: false
+    - text: Я хочу йти
+      correct: false
+    - text: Я вмію йти
+      correct: false
+  instruction: Choose the correct answer.
+- type: unjumble
+  title: Modal Sentences
+  items:
+  - words:
+    - можу
+    - я
+    - українською
+    - говорити
+    answer: Я можу говорити українською
+  - words:
+    - вмієш
+    - ти
+    - плавати
+    - '?'
+    answer: Ти вмієш плавати
+  - words:
+    - мусить
+    - він
+    - працювати
+    - завтра
+    answer: Він мусить працювати завтра
+  - words:
+    - можна
+    - тут
+    - сісти
+    - '?'
+    answer: Можна тут сісти
+  - words:
+    - не можна
+    - палити
+    - тут
+    answer: Тут не можна палити
+  - words:
+    - хоче
+    - вона
+    - почати
+    answer: Вона хоче почати
+  - words:
+    - мусимо
+    - ми
+    - чекати
+    - тут
+    answer: Ми мусимо чекати тут
+  - words:
+    - треба
+    - вчитися
+    - кожен
+    - день
+    answer: Треба вчитися кожен день
+  - words:
+    - можу
+    - я
+    - прийти
+    - не
+    - сьогодні
+    answer: Я не можу прийти сьогодні
+  - words:
+    - вміють
+    - вони
+    - малювати
+    - добре
+    answer: Вони вміють малювати добре
+  - words:
+    - хочу
+    - я
+    - допомогти
+    - тобі
+    answer: Я хочу допомогти тобі
+  - words:
+    - хоче
+    - він
+    - прийти
+    - вчасно
+    answer: Він хоче прийти вчасно
+  instruction: Arrange the words in the correct order.
+- type: true-false
+  title: Modal Understanding
+  items:
+  - statement: «Вміти» means "to know how to".
+    correct: true
+  - statement: «Могти» means "must".
+    correct: false
+    explanation: Incorrect! it means "can"
+  - statement: «Можна» is used to ask permission.
+    correct: true
+  - statement: «Не можна» means "allowed".
+    correct: false
+    explanation: Incorrect! it means "forbidden/not allowed"
+  - statement: «Треба» is an impersonal word for necessity.
+    correct: true
+  - statement: «Мусити» changes form for each person (I, you, he...).
+    correct: true
+  - statement: «Варто» means "worth" or "advisable".
+    correct: true
+  - statement: «Мусити» means "to want".
+    correct: false
+    explanation: Incorrect! it means "must"
+  - statement: «Хотіти» means "to want".
+    correct: true
+  - statement: «Варто» means "forbidden".
+    correct: false
+    explanation: Incorrect! it means "worth/should"
+  - statement: «Треба» never changes form.
+    correct: true
+  - statement: «Не можна» means "you can".
+    correct: false
+    explanation: Incorrect! it means "not allowed"
+  instruction: Determine if the statement is true.

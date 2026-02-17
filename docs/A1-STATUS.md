@@ -1,15 +1,15 @@
 # A1 Module Status
 
-**Generated:** 2026-02-16 15:52:22
+**Generated:** 2026-02-17 01:14:00
 **Total Modules:** 44
-**Status:** 11 passing, 7 failing, 1 stubs, 25 errors
+**Status:** 31 passing, 1 failing, 0 stubs, 12 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 11/44 (25%)
-- ❌ **Failing:** 7/44
-- 📝 **Stubs:** 1/44
-- ⚠️ **Errors:** 25/44
+- ✅ **Passing:** 31/44 (70%)
+- ❌ **Failing:** 1/44
+- 📝 **Stubs:** 0/44
+- ⚠️ **Errors:** 12/44
 
 ## Module Details
 
@@ -22,31 +22,31 @@
 | 005 | my-world-objects | ✅ PASS | 3266/1412 | - |
 | 006 | the-living-verb-i | ✅ PASS | 1849/1210 | - |
 | 007 | questions-and-negation | ✅ PASS | 2976/1131 | - |
-| 008 | the-living-verb-ii | ❌ FAIL | 1661/972 | - |
-| 009 | reflexive-verbs | ❌ FAIL | 2782/830 | - |
+| 008 | the-living-verb-ii | ✅ PASS | 1661/972 | - |
+| 009 | reflexive-verbs | ✅ PASS | 2782/830 | - |
 | 010 | checkpoint-first-contact | ✅ PASS | 1744/875 | - |
 | 011 | the-accusative-i-things | ✅ PASS | 2253/855 | - |
-| 012 | the-accusative-ii-people | ❌ FAIL | 3694/1374 | structure |
+| 012 | the-accusative-ii-people | ✅ PASS | 3691/1374 | - |
 | 013 | the-locative-where-things-are | ✅ PASS | 2090/1331 | - |
-| 014 | mine-and-yours | ❌ FAIL | 912/1307 | word_count, structure |
-| 015 | around-the-city | 📝 STUB | 0/0 | empty |
-| 016 | the-genitive-i-absence | ❌ FAIL | 3093/1038 | Structure: Missing '## Summary' |
-| 017 | numbers-and-money | ❌ FAIL | 2584/1091 | Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: fill-in, quiz |
-| 018 | food-and-shopping | ❌ FAIL | 2078/750 | Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: fill-in, match-up |
+| 014 | mine-and-yours | ✅ PASS | 1710/1307 | - |
+| 015 | around-the-city | ✅ PASS | 3528/1602 | - |
+| 016 | the-genitive-i-absence | ✅ PASS | 3127/1038 | - |
+| 017 | numbers-and-money | ✅ PASS | 3194/1091 | - |
+| 018 | food-and-shopping | ✅ PASS | 2860/750 | - |
 | 019 | at-the-cafe | ✅ PASS | 2768/1075 | - |
-| 020 | checkpoint-navigation | ⚠️ MISSING | 0/0 | no_file |
-| 021 | yesterday-past-tense | ⚠️ MISSING | 0/0 | no_file |
-| 022 | tomorrow-future-tense | ⚠️ MISSING | 0/0 | no_file |
-| 023 | what-time-is-it | ⚠️ MISSING | 0/0 | no_file |
-| 024 | can-must-want-modals | ⚠️ MISSING | 0/0 | no_file |
-| 025 | my-daily-routine | ⚠️ MISSING | 0/0 | no_file |
-| 026 | describing-things-adjectives | ⚠️ MISSING | 0/0 | no_file |
-| 027 | colors-and-clothing | ⚠️ MISSING | 0/0 | no_file |
-| 028 | description-adverbs | ⚠️ MISSING | 0/0 | no_file |
-| 029 | weather-and-nature | ⚠️ MISSING | 0/0 | no_file |
-| 030 | prepositions-iii | ⚠️ MISSING | 0/0 | no_file |
-| 031 | body-and-health | ⚠️ MISSING | 0/0 | no_file |
-| 032 | my-family | ⚠️ MISSING | 0/0 | no_file |
+| 020 | checkpoint-navigation | ✅ PASS | 3187/1073 | - |
+| 021 | yesterday-past-tense | ✅ PASS | 1889/1092 | - |
+| 022 | tomorrow-future-tense | ✅ PASS | 1624/1082 | - |
+| 023 | what-time-is-it | ✅ PASS | 2287/1064 | - |
+| 024 | can-must-want-modals | ✅ PASS | 1296/1049 | - |
+| 025 | my-daily-routine | ✅ PASS | 1189/750 | - |
+| 026 | describing-things-adjectives | ✅ PASS | 1141/853 | - |
+| 027 | colors-and-clothing | ✅ PASS | 1950/750 | - |
+| 028 | description-adverbs | ✅ PASS | 1112/750 | - |
+| 029 | weather-and-nature | ✅ PASS | 1929/869 | - |
+| 030 | prepositions-iii | ✅ PASS | 3237/936 | - |
+| 031 | body-and-health | ✅ PASS | 2175/820 | - |
+| 032 | my-family | ❌ FAIL | 1369/916 | Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: fill-in, match-up |
 | 033 | holidays-and-traditions | ⚠️ MISSING | 0/0 | no_file |
 | 034 | checkpoint-core-grammar | ⚠️ MISSING | 0/0 | no_file |
 | 035 | at-the-cafe-practical | ⚠️ MISSING | 0/0 | no_file |

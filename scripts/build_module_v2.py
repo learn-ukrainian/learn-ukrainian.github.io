@@ -80,8 +80,8 @@ from build_module import (
     ModuleContext,
 )
 from batch_gemini_config import (
-    CURRICULUM_DIR, PHASES_DIR, PRO_MODEL, PROJECT_ROOT, SEMINAR_TRACKS,
-    get_module_paths, get_track_config, slug_for_num,
+    CURRICULUM_DIR, FLASH_MODEL, PHASES_DIR, PRO_MODEL, PROJECT_ROOT,
+    SEMINAR_TRACKS, get_module_paths, get_track_config, slug_for_num,
 )
 
 # ---------------------------------------------------------------------------
@@ -133,6 +133,8 @@ _original_log = v1.log
 
 
 def _log_threadsafe(msg: str) -> None:
+    # Remap v1 phase names to v2 display names
+    msg = msg.replace("Phase 3a:", "Phase 4a:").replace("Phase 3b:", "Phase 4b:")
     with _log_lock:
         _original_log(msg)
 
@@ -141,10 +143,25 @@ v1.log = _log_threadsafe  # type: ignore[assignment]
 log = _log_threadsafe  # Override our own import too
 
 
-# Monkey-patch dispatch_gemini to always use stdout_only=True in v2 pipeline.
-# The pipeline captures stdout directly — broker responses are redundant and
-# cause spurious watcher notifications.
+# Monkey-patch dispatch_gemini to always use stdout_only=True in v2 pipeline,
+# with automatic flash→pro fallback when flash is rate-limited.
 _original_dispatch_gemini = v1.dispatch_gemini
+
+# Rate limit / auth failure signatures in Gemini CLI output
+_RATE_LIMIT_PATTERNS = [
+    "Error authenticating",
+    "FatalAuthenti",
+    "RESOURCE_EXHAUSTED",
+    "rate limit",
+    "quota exceeded",
+    "429",
+]
+
+
+def _is_rate_limited(output: str) -> bool:
+    """Check if dispatch failed due to rate limiting or auth exhaustion."""
+    lower = output.lower()
+    return any(p.lower() in lower for p in _RATE_LIMIT_PATTERNS)
 
 
 def _dispatch_gemini_stdout_only(
@@ -152,11 +169,22 @@ def _dispatch_gemini_stdout_only(
     stdout_only: bool = False, allow_write: bool = False,
     output_file: Path | None = None, timeout: int = 1800,
 ) -> tuple[bool, str]:
-    return _original_dispatch_gemini(
+    ok, output = _original_dispatch_gemini(
         prompt, task_id, model=model,
         stdout_only=True,  # Always stdout-only in v2
         allow_write=allow_write, output_file=output_file, timeout=timeout,
     )
+    # Fallback: if flash failed due to rate limit, retry with pro
+    if not ok and model == FLASH_MODEL and _is_rate_limited(output):
+        log(f"  [fallback] Flash rate-limited, retrying with pro model...")
+        ok, output = _original_dispatch_gemini(
+            prompt, task_id, model=PRO_MODEL,
+            stdout_only=True, allow_write=allow_write,
+            output_file=output_file, timeout=timeout,
+        )
+        if ok:
+            log(f"  [fallback] Pro model succeeded")
+    return ok, output
 
 
 v1.dispatch_gemini = _dispatch_gemini_stdout_only  # type: ignore[assignment]
@@ -170,6 +198,14 @@ dispatch_gemini = _dispatch_gemini_stdout_only  # Override our own import too
 _NON_PROSE_GATES = {"review", "activities", "density", "unique_types", "priority",
                     "engagement", "activity_quality"}
 
+# Pedagogy violation codes that are about activities, not prose.
+# These leak through --skip-activities into the lesson gate as "pedagogy: N violations".
+_ACTIVITY_PEDAGOGY_CODES = {
+    "MISSING_ADVANCED_ACTIVITY",
+    "MISSING_REQUIRED_ACTIVITY",
+    "ACTIVITY_TYPE_MISMATCH",
+}
+
 
 def run_verify_prose_only(content_path: Path) -> tuple[bool, str]:
     """Run audit_module.sh --skip-activities and check only prose-relevant gates.
@@ -177,13 +213,16 @@ def run_verify_prose_only(content_path: Path) -> tuple[bool, str]:
     Unlike otaman_verify.py which checks review + orchestration artifacts,
     this only looks at gates that Phase 3 can actually fix: words, structure,
     ipa, lint, pedagogy, naturalness, immersion, vocab, persona.
+
+    Activity-related pedagogy violations (MISSING_ADVANCED_ACTIVITY etc.) are
+    filtered out because Phase 3 cannot add activities — that's Phase 4's job.
     """
     import json as _json
 
     audit_script = str(PROJECT_ROOT / "scripts" / "audit_module.sh")
-    result = run_script(
+    result = subprocess.run(
         [audit_script, "--skip-activities", str(content_path)],
-        capture=True, timeout=300,
+        cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=300,
     )
     output = (result.stdout or "") + (result.stderr or "")
 
@@ -199,12 +238,33 @@ def run_verify_prose_only(content_path: Path) -> tuple[bool, str]:
     status = _json.loads(status_file.read_text(encoding="utf-8"))
     gates = status.get("gates", {})
 
+    # Count how many pedagogy violations are actually about activities (not prose)
+    activity_ped_count = 0
+    for code in _ACTIVITY_PEDAGOGY_CODES:
+        activity_ped_count += output.count(f"[{code}]")
+
     failing = []
     for gate_name, gate_data in gates.items():
         if gate_name in _NON_PROSE_GATES:
             continue
         if gate_data.get("status") == "fail":
-            failing.append(f"{gate_name}: {gate_data.get('message', '?')}")
+            msg = gate_data.get("message", "")
+            # If the lesson gate fails ONLY because of activity-related pedagogy
+            # violations, skip it — Phase 3 cannot fix missing activities.
+            if gate_name == "lesson" and "pedagogy" in msg:
+                # Extract total pedagogy violation count from message
+                # Format: "7927/6133 (raw: 8250) | pedagogy: 2 violations"
+                ped_match = re.search(r"pedagogy:\s*(\d+)\s*violation", msg)
+                if ped_match:
+                    total_ped = int(ped_match.group(1))
+                    if activity_ped_count >= total_ped:
+                        # ALL pedagogy violations are activity-related — skip
+                        continue
+                    # Some are real prose issues — adjust the message
+                    real_ped = total_ped - activity_ped_count
+                    msg = re.sub(r"pedagogy:\s*\d+\s*violations?",
+                                 f"pedagogy: {real_ped} violations", msg)
+            failing.append(f"{gate_name}: {msg}")
 
     if failing:
         return False, output + "\nProse-relevant failures:\n" + "\n".join(f"  {f}" for f in failing)
@@ -221,6 +281,11 @@ ARCHIVE_WORD_THRESHOLD = 2000
 # Override via ARCHIVE_GIT_REF env var if repo history changes.
 ARCHIVE_GIT_REF = os.environ.get("ARCHIVE_GIT_REF", "944f3524a^")
 
+# Tracks whose archived content is known to be low-quality and should NOT be
+# restored. Research will be regenerated from scratch via Phase 0 instead.
+# Add/remove tracks here as quality improves.
+ARCHIVE_SKIP_TRACKS: set[str] = {"c1-bio", "c1-hist", "lit"}
+
 
 def detect_archived_prose(track: str, slug: str) -> tuple[bool, str, Path | None]:
     """Check for restorable archived prose.
@@ -232,6 +297,9 @@ def detect_archived_prose(track: str, slug: str) -> tuple[bool, str, Path | None
     Returns (is_archived, source_description, archive_dir_or_None).
     For git-based archives, archive_dir is None (content extracted on demand).
     """
+    if track in ARCHIVE_SKIP_TRACKS:
+        return False, "", None
+
     # --- Filesystem archive ---
     track_archive = ARCHIVE_DIR / track
     if track_archive.is_dir():
@@ -249,19 +317,23 @@ def detect_archived_prose(track: str, slug: str) -> tuple[bool, str, Path | None
                 log(f"  Archive: found {md_path.name} but only {word_count}w (need {ARCHIVE_WORD_THRESHOLD})")
 
     # --- Git history archive ---
-    try:
-        git_path = f"curriculum/l2-uk-en/{track}/{slug}.md"
-        result = subprocess.run(
-            ["git", "show", f"{ARCHIVE_GIT_REF}:{git_path}"],
-            capture_output=True, text=True, timeout=10,
-            cwd=str(PROJECT_ROOT),
-        )
-        if result.returncode == 0 and result.stdout:
-            word_count = len(result.stdout.split())
-            if word_count >= ARCHIVE_WORD_THRESHOLD:
-                return True, f"git:{ARCHIVE_GIT_REF} ({word_count}w)", None
-    except (subprocess.TimeoutExpired, OSError):
-        pass
+    # Only use git fallback if no filesystem archive dir exists for this track.
+    # If the dir exists but the file is missing, that means it was intentionally
+    # deleted (e.g. for redo) — don't resurrect from git.
+    if not track_archive.is_dir():
+        try:
+            git_path = f"curriculum/l2-uk-en/{track}/{slug}.md"
+            result = subprocess.run(
+                ["git", "show", f"{ARCHIVE_GIT_REF}:{git_path}"],
+                capture_output=True, text=True, timeout=10,
+                cwd=str(PROJECT_ROOT),
+            )
+            if result.returncode == 0 and result.stdout:
+                word_count = len(result.stdout.split())
+                if word_count >= ARCHIVE_WORD_THRESHOLD:
+                    return True, f"git:{ARCHIVE_GIT_REF} ({word_count}w)", None
+        except (subprocess.TimeoutExpired, OSError):
+            pass
 
     return False, "", None
 
@@ -341,14 +413,38 @@ MAX_ENRICHMENT_FIX_ITERS = 3  # Activities/vocab are more mechanical
 MAX_FINAL_FIX_ITERS = 3       # Final comprehensive — one extra for edge cases
 
 
+def _with_flash(ctx: ModuleContext, fn):
+    """Run a phase function with flash model, restoring original model after."""
+    original = ctx.track_config.get("model", PRO_MODEL)
+    ctx.track_config["model"] = FLASH_MODEL
+    try:
+        return fn(ctx)
+    finally:
+        ctx.track_config["model"] = original
+
+
 def phase_0_v2(ctx: ModuleContext) -> bool:
-    """Phase 0: Research. Always runs — plan + research = source of truth."""
-    return phase_0_research(ctx)
+    """Phase 0: Research. Skips if research file already exists, else uses flash."""
+    force = getattr(ctx, "force_research", False)
+    research_path = ctx.paths.get("research")
+    if not force and research_path and research_path.exists() and research_path.stat().st_size > 200:
+        if not is_phase_complete(ctx, "0"):
+            mark_phase_locked(ctx, "0", "complete", note="adopted-existing-research")
+        log(f"  Phase 0: ADOPT — existing research ({research_path.stat().st_size:,} bytes)")
+        return True
+    if force:
+        log("  Phase 0: --force-research — regenerating research")
+        # Clear state so v1's phase_0_research doesn't skip
+        state = ctx.state.get("phases", {})
+        if "0" in state:
+            del state["0"]
+            save_state(ctx)
+    return _with_flash(ctx, phase_0_research)
 
 
 def phase_1_v2(ctx: ModuleContext) -> bool:
-    """Phase 1: Meta/Outline. Always runs."""
-    return phase_1_meta(ctx)
+    """Phase 1: Meta/Outline. Uses flash (structured YAML template)."""
+    return _with_flash(ctx, phase_1_meta)
 
 
 def _check_archive_fits_outline(ctx: ModuleContext) -> tuple[bool, list[str], list[str]]:
@@ -561,6 +657,20 @@ def _run_legacy_cleanse(ctx: ModuleContext) -> None:
         # These will be caught by the audit loop in Phase 3
 
 
+def _validate_activities_yaml(path: Path) -> bool:
+    """Check if an activities YAML file passes schema validation."""
+    try:
+        from audit.checks.yaml_schema_validation import validate_activity_yaml_file
+        valid, errors = validate_activity_yaml_file(path)
+        if not valid:
+            for e in errors[:3]:
+                log(f"    Schema error: {e[:120]}")
+        return valid
+    except Exception as e:
+        log(f"    Schema validation error: {e}")
+        return False  # If we can't validate, don't adopt
+
+
 # Phase 4a/4b use v1 functions directly. The phase IDs in state.json use
 # v1's "3a"/"3b" names for backward compatibility with existing state files.
 
@@ -591,14 +701,19 @@ def _run_parallel_4ab(ctx: ModuleContext) -> bool:
         log("  Phase 4a+4b: SKIP (both already complete)")
         return True
 
-    # Adoption check: if both files exist and are substantial, skip generation
+    # Adoption check: if both files exist AND are valid, skip generation
     act_path = ctx.paths["activities"]
     voc_path = ctx.paths["vocabulary"]
     if act_path.exists() and voc_path.exists():
-        log("  Phase 4a+4b: ADOPT — existing activities/vocab found")
-        mark_phase_locked(ctx, "3a", "complete", note="adopted-existing")
-        mark_phase_locked(ctx, "3b", "complete", note="adopted-existing")
-        return True
+        act_valid = _validate_activities_yaml(act_path)
+        if act_valid:
+            log("  Phase 4a+4b: ADOPT — existing activities/vocab found and valid")
+            mark_phase_locked(ctx, "3a", "complete", note="adopted-existing")
+            mark_phase_locked(ctx, "3b", "complete", note="adopted-existing")
+            return True
+        else:
+            log("  Phase 4a+4b: Existing activities invalid — deleting and regenerating")
+            act_path.unlink(missing_ok=True)
 
     results: dict[str, bool] = {}
 
@@ -964,6 +1079,7 @@ def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     ctx.is_archived = is_archived  # type: ignore[attr-defined]
     ctx.archive_source = archive_source  # type: ignore[attr-defined]
     ctx.archive_dir = archive_dir  # type: ignore[attr-defined]
+    ctx.force_research = getattr(args, "force_research", False)  # type: ignore[attr-defined]
 
     if is_archived:
         log(f"Archive: DETECTED — {archive_source}")
@@ -1030,6 +1146,8 @@ def main() -> int:
                         help="Nuke state and rebuild from Phase 0")
     parser.add_argument("--force-phase", type=str, default=None,
                         help="Re-run a specific phase even if state says complete")
+    parser.add_argument("--force-research", action="store_true",
+                        help="Force fresh Phase 0 research even if research file exists")
     parser.add_argument("--dry-run", action="store_true",
                         help="Show plan without dispatching to Gemini")
     parser.add_argument("--verify", action="store_true",
@@ -1080,7 +1198,11 @@ def main() -> int:
         write_completion_report_v2(ctx, ok)
 
         if ok:
-            if not ctx.dry_run:
+            if ctx.dry_run:
+                log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in e2e mode [{elapsed_str}]")
+            elif ctx.force_phase:
+                log(f"\nVERDICT: PASS — phase {ctx.force_phase} complete [{elapsed_str}]")
+            else:
                 passed, output = run_verify(ctx.paths["md"], content_only=False)
                 if passed:
                     log(f"\nVERDICT: PASS — {ctx.slug} fully complete (e2e) [{elapsed_str}]")
@@ -1089,8 +1211,6 @@ def main() -> int:
                     for line in output.strip().split("\n")[-15:]:
                         log(f"  {line}")
                     return 1
-            else:
-                log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in e2e mode [{elapsed_str}]")
             return 0
         else:
             log(f"\nPIPELINE FAILED — check logs in {ctx.orch_dir} [{elapsed_str}]")

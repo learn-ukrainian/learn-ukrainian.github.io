@@ -1,8 +1,8 @@
 # Audit Report: M18 — food-and-shopping.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 750
-**Naturalness:** 0/10 (CHECKED)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-16 14:37:22
+**Naturalness:** 10/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-17 00:47:19
 
 ## Configuration
 **Type:** A1-vocab
@@ -17,43 +17,60 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Food and Drinks | 12 | 8 | ✅ |
+| 2 | group-sort | Vegetable or Fruit? | 12 | 12 | ✅ |
+| 3 | fill-in | Verb Conjugation: To Love | 12 | 8 | ✅ |
+| 4 | fill-in | Buying Items | 12 | 8 | ✅ |
+| 5 | quiz | How much? | 12 | 8 | ✅ |
+| 6 | fill-in | Quantities and Packaging | 12 | 8 | ✅ |
+| 7 | match-up | Ukrainian Food Traditions | 12 | 8 | ✅ |
+| 8 | quiz | Cooking and Preferences | 12 | 8 | ✅ |
+| 9 | group-sort | Food Categories Deep Dive | 18 | 12 | ✅ |
 
-## Recommendation
-**📝 UPDATE** (severity 50/100)
-
-- Revision recommended (severity 50/100)
-- 1 violations (minor)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
+**Summary:**
+- Total activities: 9 (target: 8-12) ✅
+- Unique types: 4 (minimum: 4) ✅
+- Priority types used: 3/5 (fill-in, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2078/750 (raw: 2340)
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ❌ 1/3
+- **Words:** ✅ 2860/750 (raw: 4157)
+- **Activities:** ✅ 9/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 4/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 11/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 1 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ⚠️ 37 IPA issues (run lint_ipa.py --fix)
+- **Vocab:** ✅ 26/1
+- **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 22.8% LOW (target 25-40% (M18))
+- **Immersion:** 🇺🇦 38.8% (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ❌ Not scored
+- **Naturalness:** ✅ 10/10 (High)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Food, Drinks & Shopping** | ✅ | 0 | Included in Core |
-| **Розминка: Що ми їмо та п'ємо?** | ✅ | 550 | Included in Core |
-| **Презентація: Продукти та покупки** | ✅ | 813 | Included in Core |
-| **Практика: У магазині та культурні традиції** | ✅ | 659 | Included in Core |
-| **Summary** | ✅ | 56 | Included in Core |
+| **Розминка: Що ми їмо та п'ємо?** | ✅ | 719 | Included in Core |
+| **Презентація: Назви продуктів та граматичні конструкції** | ✅ | 1415 | Included in Core |
+| **Практика та культура: Покупки та традиції** | ✅ | 601 | Included in Core |
+| **Summary** | ✅ | 125 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
+| **match-up: Food and Drinks** | ⚪️ | 0 | Skipped (using YAML) |
+| **quiz: Vegetable or Fruit?** | ⚪️ | 0 | Skipped (using YAML) |
+| **fill-in: Verb Conjugation** | ⚪️ | 0 | Skipped (using YAML) |
+| **fill-in: Buying Items** | ⚪️ | 0 | Skipped (using YAML) |
+| **quiz: How much?** | ⚪️ | 0 | Skipped (using YAML) |
+| **fill-in: Quantities** | ⚪️ | 0 | Skipped (using YAML) |
+| **match-up: Traditional Items** | ⚪️ | 0 | Skipped (using YAML) |
+| **quiz: Cooking** | ⚪️ | 0 | Skipped (using YAML) |
+| **group-sort: Food Categories** | ⚪️ | 0 | Skipped (using YAML) |

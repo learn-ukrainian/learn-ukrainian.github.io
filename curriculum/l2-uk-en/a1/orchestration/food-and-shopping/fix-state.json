@@ -1,0 +1,14 @@
+{
+  "slug": "food-and-shopping",
+  "iterations": [
+    {
+      "iteration": 1,
+      "started": "2026-02-17T00:47:19.417687Z",
+      "audit_passed": true,
+      "action": "done",
+      "result": "success"
+    }
+  ],
+  "started": "2026-02-17T00:47:19.417671Z",
+  "result": "success"
+}

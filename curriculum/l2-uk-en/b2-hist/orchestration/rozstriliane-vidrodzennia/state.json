@@ -1,0 +1,14 @@
+{
+  "slug": "rozstriliane-vidrodzennia",
+  "track": "b2-hist",
+  "module_num": 98,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-16T22:59:38Z",
+      "task_id": "yw-rozstriliane-vidrodzennia-p0"
+    }
+  },
+  "last_updated": "2026-02-16T22:59:38Z"
+}
