@@ -53,6 +53,7 @@ from .checks import (
     check_activity_header_format,
 )
 from .checks.content_purity import check_content_purity
+from .checks.prose_quality import check_prose_quality
 from .checks.content_quality import (
     ACADEMIC_LATIN_ALLOWLIST,
     HISTORICAL_TRACKS,
@@ -1695,11 +1696,19 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
         print(f"  ✨ Purity violations found: {len(purity_violations)}")
         for v in purity_violations:
             print(f"     ❌ [{v['type']}] {v['issue']}")
-            
+
         content_quality_violations.extend(purity_violations)
-            
-    
-            
+
+    # Run prose quality checks (Drill blocks, Glossary lists, LLM fingerprints, Inline English)
+    prose_violations = check_prose_quality(content)
+
+    if prose_violations:
+        print(f"  ✨ Prose quality violations found: {len(prose_violations)}")
+        for v in prose_violations:
+            print(f"     ❌ [{v['type']}] {v['issue']}")
+
+        content_quality_violations.extend(prose_violations)
+
     # Convert purity violations to standard pedagogical violations for reporting
     for v in content_quality_violations:
         pedagogical_violations.append({

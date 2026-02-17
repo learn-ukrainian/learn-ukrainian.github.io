@@ -866,8 +866,20 @@ def _apply_meta_outline(meta_path: Path, outline_text: str) -> bool:
         return False
 
 
+def _build_section_budget_table(sections: list, word_target: int) -> str:
+    """Build a markdown table of section word budgets for the whole-module template."""
+    rows = ["| Section | Target | Write Minimum (1.5x) |", "|---------|--------|---------------------|"]
+    for section in sections:
+        title, words = _parse_section(section)
+        if words <= 0:
+            words = word_target // max(len(sections), 1)
+        rows.append(f"| {title} | {words} | {int(words * 1.5)} |")
+    rows.append(f"| **Total** | **{word_target}** | **{int(word_target * 1.5)}** |")
+    return "\n".join(rows)
+
+
 def phase_2_content(ctx: ModuleContext) -> bool:
-    """Phase 2: Content (sharded, section-by-section)."""
+    """Phase 2: Content (whole-module, single Gemini call)."""
     phase = "2"
     if is_phase_complete(ctx, phase):
         log("  Phase 2: SKIP (already complete)")
@@ -879,154 +891,66 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         return False
 
     num_sections = len(sections)
-    log(f"  Phase 2: {num_sections} sections to generate")
-
-    # Check how many sections are already done (for resume)
-    sections_done = ctx.state.get("phases", {}).get(phase, {}).get("sections_done", 0)
-    if ctx.force_phase == phase:
-        sections_done = 0
-
-    template = PHASES_DIR / "phase-2-content-section.md"
-    placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
-
-    # Compute richness values from meta
     engagement_min = ctx.meta.get("engagement_min", 4)
     example_min = ctx.meta.get("example_min", 8)
+    overshoot = int(ctx.word_target * 1.5)
 
-    # Initialize content file if starting fresh (never in dry-run mode)
+    log(f"  Phase 2: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
+
+    template = PHASES_DIR / "phase-2-content.md"
+    placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
+    prompt_file = ctx.orch_dir / "phase-2-prompt.md"
+
+    overrides = {
+        "OVERSHOOT_TARGET": str(overshoot),
+        "ENGAGEMENT_MIN": str(engagement_min),
+        "EXAMPLE_MIN": str(example_min),
+        "SECTION_BUDGET_TABLE": _build_section_budget_table(sections, ctx.word_target),
+    }
+
+    if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
+        return False
+
+    if ctx.dry_run:
+        log("  Phase 2: DRY-RUN — would dispatch whole-module content generation")
+        return True
+
+    # Dispatch
+    output_file = _gemini_output_path(ctx.slug, "2")
+    ok, _ = dispatch_gemini(
+        _dispatch_prompt(ctx, prompt_file),
+        task_id=f"yw-{ctx.slug}-p2",
+        model=ctx.model, stdout_only=True, output_file=output_file,
+    )
+    if not ok:
+        log("  Phase 2: FAILED — dispatch error")
+        return False
+
+    # Extract content from delimited output
+    content_text = None
+    if output_file.exists():
+        raw = output_file.read_text(encoding="utf-8")
+        content_text = _extract_delimited_content(raw, "===CONTENT_START===", "===CONTENT_END===")
+
+    if not content_text:
+        log("  Phase 2: FAILED — no delimited content extracted")
+        return False
+
+    # Write content file
     content_path = ctx.paths["md"]
-    if sections_done == 0 and not ctx.dry_run:
-        content_path.parent.mkdir(parents=True, exist_ok=True)
-        header = (
-            f"<!-- SCOPE\nCovers: {ctx.topic_title}\n-->\n\n"
-            f"# {ctx.topic_title}\n\n"
-        )
-        content_path.write_text(header, encoding="utf-8")
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(content_text, encoding="utf-8")
 
-    prev_summary = ""
-    callout_types_used = ""
-    statistics_cited = ""
-    openers_used = ""
-    bio_facts_used = ""
+    total_words = len(content_text.split())
+    pct = total_words * 100 // max(ctx.word_target, 1)
+    log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
 
-    # Rebuild seam context from already-done sections
-    for i in range(sections_done):
-        section_file = ctx.orch_dir / f"phase-2-p2-{i + 1}-section_content.md"
-        if section_file.exists():
-            prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used = _build_seam_context(
-                section_file.read_text(encoding="utf-8"),
-                prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used,
-            )
+    # Fail-fast: too thin
+    if total_words < ctx.word_target * 0.5:
+        log(f"  Phase 2: FAIL-FAST — only {total_words}w vs {ctx.word_target}w target")
+        return False
 
-    for idx in range(sections_done, num_sections):
-        section = sections[idx]
-        section_num = idx + 1
-
-        # Parse section info (handles both dict-with-keys and simple formats)
-        section_title, section_words = _parse_section(section)
-
-        if section_words <= 0:
-            log(f"    Section {section_num}: WARNING — 0 word allocation, defaulting to {ctx.word_target // num_sections}")
-            section_words = ctx.word_target // num_sections
-
-        hard_min = int(section_words * 1.5)
-        sect_eng = max(1, engagement_min // num_sections)
-        sect_ex = max(3, example_min // num_sections)
-
-        log(f"    Section {section_num}/{num_sections}: {section_title} (target: {section_words}w, hard_min: {hard_min}w)")
-
-        overrides = {
-            "SECTION_TITLE": section_title,
-            "HARD_MINIMUM_WORD_COUNT": str(hard_min),
-            "SECTION_ENGAGEMENT_MIN": str(sect_eng),
-            "SECTION_EXAMPLE_MIN": str(sect_ex),
-            "PREVIOUS_CONTENT_SUMMARY": prev_summary or "None (first section)",
-            "CALLOUT_TYPES_USED": callout_types_used or "None yet",
-            "STATISTICS_CITED": statistics_cited or "None yet",
-            "OPENERS_USED": openers_used or "None yet",
-            "BIO_FACTS_USED": bio_facts_used or "None yet",
-        }
-
-        prompt_file = ctx.orch_dir / f"phase-2-p2-{section_num}-prompt.md"
-        if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
-            return False
-
-        if ctx.dry_run:
-            log(f"    Section {section_num}: DRY-RUN — would dispatch")
-            # Update state for dry-run tracking
-            mark_phase(ctx, phase, "in_progress", sections_done=section_num, sections_total=num_sections)
-            continue
-
-        # Dispatch
-        output_file = _gemini_output_path(ctx.slug, f"2-{section_num}")
-        ok, _ = dispatch_gemini(
-            _dispatch_prompt(ctx, prompt_file),
-            task_id=f"yw-{ctx.slug}-p2-{section_num}",
-            model=ctx.model, stdout_only=True, output_file=output_file,
-        )
-        if not ok:
-            log(f"    Section {section_num}: FAILED — dispatch error")
-            mark_phase(ctx, phase, "in_progress", sections_done=idx, sections_total=num_sections)
-            return False
-
-        # Extract
-        if not extract_phase_output(output_file, "2-section", ctx.orch_dir):
-            log(f"    Section {section_num}: FAILED — extraction error")
-            mark_phase(ctx, phase, "in_progress", sections_done=idx, sections_total=num_sections)
-            return False
-
-        # The extracted file
-        extracted = ctx.orch_dir / "phase-2-section-section_content.md"
-        section_file = ctx.orch_dir / f"phase-2-p2-{section_num}-section_content.md"
-
-        if extracted.exists():
-            shutil.move(str(extracted), str(section_file))
-        elif section_file.exists():
-            pass  # Already in the right place
-        else:
-            log(f"    Section {section_num}: FAILED — no extracted content")
-            mark_phase(ctx, phase, "in_progress", sections_done=idx, sections_total=num_sections)
-            return False
-
-        section_text = section_file.read_text(encoding="utf-8")
-        section_word_count = len(section_text.split())
-
-        # Fail-fast after section 1: only check floor (too thin = bad prompt)
-        if section_num == 1:
-            floor = int(section_words * 0.5)
-            if section_word_count < floor:
-                log(f"    FAIL-FAST: Section 1 thin: {section_word_count} words vs {section_words} target (floor: {floor})")
-                return False
-
-        # Density check
-        threshold = int(section_words * 0.8)
-        if section_word_count < threshold:
-            log(f"    THIN: {section_title} = {section_word_count}w (target: {section_words}, min: {threshold})")
-            # TODO: dispatch density fix (max 1 retry per section)
-
-        # Append to content file
-        with open(content_path, "a", encoding="utf-8") as f:
-            f.write(section_text)
-            if not section_text.endswith("\n"):
-                f.write("\n")
-
-        log(f"    Section {section_num}: {section_word_count} words appended")
-
-        # Update seam context
-        prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used = _build_seam_context(
-            section_text, prev_summary, callout_types_used, statistics_cited, openers_used, bio_facts_used,
-        )
-
-        # Update state
-        mark_phase(ctx, phase, "in_progress", sections_done=section_num, sections_total=num_sections)
-
-    # Validate total
-    if not ctx.dry_run and content_path.exists():
-        total_words = len(content_path.read_text(encoding="utf-8").split())
-        pct = total_words * 100 // max(ctx.word_target, 1)
-        log(f"  Phase 2: Total {total_words} words ({pct}% of {ctx.word_target} target)")
-
-    mark_phase(ctx, phase, "complete", sections_done=num_sections, sections_total=num_sections)
+    mark_phase(ctx, phase, "complete")
     return True
 
 
@@ -1756,8 +1680,29 @@ def _is_rubber_stamp(review_text: str) -> bool:
     return False
 
 
+def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str | None:
+    """Extract content between delimiter tags, handling code block wrapping."""
+    # Strip code block markers Gemini sometimes wraps around delimiters
+    cleaned = re.sub(r'```\w*\n', '', text)
+    cleaned = re.sub(r'\n```', '', cleaned)
+    pattern = re.compile(
+        rf'{re.escape(start_tag)}\s*\n(.*?)\n\s*{re.escape(end_tag)}',
+        re.DOTALL,
+    )
+    m = pattern.search(cleaned)
+    return m.group(1).strip() if m else None
+
+
+MAX_6B_ATTEMPTS = 3
+
+
 def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
-    """Phase 6b: Apply prose fixes from review."""
+    """Phase 6b: Apply prose fixes from review using phase-fix-content.md template.
+
+    Uses the structured template (not ad-hoc prompt), passes full review
+    (no truncation), and runs a verify loop (max 3 attempts) to ensure
+    prose quality gate passes before marking complete.
+    """
     phase = "6b"
     if is_phase_complete(ctx, phase):
         log("  Phase 6b: SKIP (already complete)")
@@ -1770,48 +1715,113 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
         return True
 
     if ctx.dry_run:
-        log("  Phase 6b: DRY-RUN — would apply prose fixes")
+        log("  Phase 6b: DRY-RUN — would apply prose fixes via template")
         return True
 
-    # Build 6b prompt
-    review_text = review_path.read_text(encoding="utf-8")
+    template = PHASES_DIR / "phase-fix-content.md"
     prompt_file = ctx.orch_dir / "phase-6b-prompt.md"
-    prompt = textwrap.dedent(f"""\
-        # Phase 6b: Apply Prose Fixes
 
-        Read the review below and fix the issues in the content file.
+    # Build overrides for template placeholders
+    overrides = {
+        "REVIEW_PATH": str(ctx.paths["review"]),
+        "CONTENT_PATH": str(ctx.paths["md"]),
+        "PLAN_PATH": str(ctx.paths.get("plan", "")),
+        "RESEARCH_PATH": str(ctx.paths.get("research", "")),
+    }
 
-        ## Review
+    for attempt in range(1, MAX_6B_ATTEMPTS + 1):
+        # On retry, append specific violation details to help Gemini focus
+        extra_overrides = dict(overrides)
+        if attempt > 1:
+            # Re-fill template with violation context appended
+            violation_context = ctx.orch_dir / f"phase-6b-violations-{attempt}.md"
+            if violation_context.exists():
+                extra_section = violation_context.read_text(encoding="utf-8")
+                # Write an augmented prompt with violation details
+                if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=extra_overrides):
+                    log(f"  Phase 6b: Template fill failed (attempt {attempt})")
+                    continue
+                # Append violation details to the filled prompt
+                current = prompt_file.read_text(encoding="utf-8")
+                prompt_file.write_text(
+                    current + "\n\n" + extra_section,
+                    encoding="utf-8",
+                )
+            else:
+                if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=extra_overrides):
+                    log(f"  Phase 6b: Template fill failed (attempt {attempt})")
+                    continue
+        else:
+            if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file, overrides=extra_overrides):
+                log("  Phase 6b: Template fill failed")
+                return False
 
-        {review_text[:3000]}
+        task_id = f"yw-{ctx.slug}-6b" if attempt == 1 else f"yw-{ctx.slug}-6b-r{attempt}"
+        log(f"  Phase 6b: Dispatching prose fixes (attempt {attempt}/{MAX_6B_ATTEMPTS})...")
+        output_file = _gemini_output_path(ctx.slug, f"6b-a{attempt}")
+        ok, raw_output = dispatch_gemini(
+            _dispatch_prompt(ctx, prompt_file),
+            task_id=task_id,
+            model=ctx.model, allow_write=True, output_file=output_file,
+        )
 
-        ## Files
+        if not ok:
+            log(f"  Phase 6b: Dispatch failed (attempt {attempt})")
+            continue
 
-        - Content: `{ctx.paths['md']}`
+        # Extract fixed content from delimited output
+        if output_file.exists():
+            output_text = output_file.read_text(encoding="utf-8")
+            fixed_content = _extract_delimited_content(
+                output_text, "===CONTENT_START===", "===CONTENT_END===",
+            )
+            if fixed_content:
+                ctx.paths["md"].write_text(fixed_content, encoding="utf-8")
+                log(f"  Phase 6b: Fixed content written ({len(fixed_content)} chars)")
+            else:
+                log(f"  Phase 6b: No delimited content found — Gemini may have written directly")
 
-        ## Instructions
+        # Run IPA lint as safety net
+        run_script([str(SCRIPTS_DIR / "lint_ipa.py"), str(ctx.paths["md"]), "--fix"], capture=True)
 
-        1. Fix issues from the review — word/sentence changes, grammar, clarity
-        2. Skip major structural rewrites
-        3. After fixing, run IPA lint: `.venv/bin/python scripts/lint_ipa.py {ctx.paths['md']} --fix`
-    """)
-    prompt_file.write_text(prompt, encoding="utf-8")
+        # Verify: re-run audit to check if prose quality gate passes
+        passed, verify_output = run_verify(ctx.paths["md"], content_only=True)
+        verify_log = ctx.orch_dir / f"phase-6b-verify-{attempt}.log"
+        verify_log.write_text(verify_output, encoding="utf-8")
 
-    log("  Phase 6b: Dispatching prose fix application...")
-    output_file = _gemini_output_path(ctx.slug, "6b")
-    ok, _ = dispatch_gemini(
-        _dispatch_prompt(ctx, prompt_file),
-        task_id=f"yw-{ctx.slug}-6b",
-        model=ctx.model, allow_write=True, output_file=output_file,
-    )
+        if passed:
+            fixes = attempt - 1
+            log(f"  Phase 6b: PASS{f' (after {fixes} retry/ies)' if fixes else ''}")
+            mark_phase(ctx, phase, "complete", task_id=task_id, attempts=attempt)
+            return True
 
-    if not ok:
-        log("  Phase 6b: WARNING — dispatch failed, continuing anyway")
+        log(f"  Phase 6b: Verify FAILED (attempt {attempt})")
 
-    # Run IPA lint as safety net
-    run_script([str(SCRIPTS_DIR / "lint_ipa.py"), str(ctx.paths["md"]), "--fix"], capture=True)
+        if attempt < MAX_6B_ATTEMPTS:
+            # Write violation details for next attempt
+            violation_file = ctx.orch_dir / f"phase-6b-violations-{attempt + 1}.md"
+            violation_file.write_text(textwrap.dedent(f"""\
 
-    mark_phase(ctx, phase, "complete", task_id=f"yw-{ctx.slug}-6b")
+                ## ADDITIONAL: Audit Violations Still Present (attempt {attempt} failed)
+
+                The previous fix attempt did NOT resolve these audit violations.
+                You MUST fix them this time. Focus specifically on these errors:
+
+                ```
+                {verify_output[-2000:]}
+                ```
+
+                **Priority fixes:**
+                - Remove ALL `_Приклад(и):_` drill blocks from narrative prose — rewrite as flowing paragraphs
+                - Remove ALL glossary-style `**word** —` definition lists from narrative — move to vocabulary YAML
+                - Vary repetitive rhetorical patterns (не просто X, а Y)
+                - Remove inline English translations from B1+ content
+            """), encoding="utf-8")
+
+    # Exhausted attempts — mark with note
+    log(f"  Phase 6b: EXHAUSTED — {MAX_6B_ATTEMPTS} attempts, prose violations remaining")
+    mark_phase(ctx, phase, "complete", task_id=f"yw-{ctx.slug}-6b",
+               note="prose-violations-remaining", attempts=MAX_6B_ATTEMPTS)
     return True
 
 
