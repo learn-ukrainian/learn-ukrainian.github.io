@@ -11,6 +11,7 @@ Usage:
   .venv/bin/python scripts/assess_research.py --all                  # all tracks overview
   .venv/bin/python scripts/assess_research.py b2-hist --json         # JSON output
   .venv/bin/python scripts/assess_research.py a1 --refresh-queue     # modules needing content refresh
+  .venv/bin/python scripts/assess_research.py a1 --process          # rebuild all stale modules
 """
 
 import argparse
@@ -283,10 +284,8 @@ def _render_single_module(track_id: str, result: dict):
     print()
 
 
-def _render_refresh_queue(track_id: str, results: list[dict]):
-    """Render modules where content refresh is recommended (research upgraded, content stale)."""
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
-
+def _build_refresh_queue(results: list[dict]) -> list[dict]:
+    """Extract and sort modules where content refresh is recommended."""
     queue = []
     for r in results:
         info = r["info"]
@@ -296,9 +295,14 @@ def _render_refresh_queue(track_id: str, results: list[dict]):
         if not alignment.get("refresh_recommended"):
             continue
         queue.append(r)
-
-    # Sort by research score descending (highest score = most value in refreshing)
     queue.sort(key=lambda r: r["info"].get("score", 0), reverse=True)
+    return queue
+
+
+def _render_refresh_queue(track_id: str, results: list[dict]):
+    """Render modules where content refresh is recommended (research upgraded, content stale)."""
+    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    queue = _build_refresh_queue(results)
 
     print(f"\n{BOLD}{track_name} Refresh Queue (research upgraded, content stale){RESET}")
     print("\u2550" * 70)
@@ -323,6 +327,53 @@ def _render_refresh_queue(track_id: str, results: list[dict]):
         print(f"Run: .venv/bin/python scripts/build_module_v2.py {track_id} {{num}} --refresh")
     else:
         print("No modules need content refresh.")
+    print()
+
+
+def _process_refresh_queue(track_id: str, results: list[dict]):
+    """Process the refresh queue — run build_module_v2.py --refresh for each module."""
+    import subprocess
+
+    queue = _build_refresh_queue(results)
+    if not queue:
+        print("No modules need content refresh.")
+        return
+
+    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    total = len(queue)
+    print(f"\n{BOLD}{track_name}: Processing {total} module(s){RESET}")
+    print("\u2550" * 70)
+
+    passed = 0
+    failed = 0
+    for i, r in enumerate(queue, 1):
+        num = r["num"]
+        slug = r["slug"]
+        print(f"\n[{i}/{total}] M{num:02d} {slug}")
+        print("\u2500" * 50)
+
+        cmd = [
+            str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
+            str(SCRIPTS_DIR / "build_module_v2.py"),
+            track_id, str(num), "--refresh",
+        ]
+        try:
+            result = subprocess.run(cmd, timeout=600)
+            if result.returncode == 0:
+                passed += 1
+                print(f"  {BOLD}\033[32mPASS{RESET}")
+            else:
+                failed += 1
+                print(f"  {BOLD}\033[31mFAIL (exit {result.returncode}){RESET}")
+        except subprocess.TimeoutExpired:
+            failed += 1
+            print(f"  {BOLD}\033[31mTIMEOUT (10min){RESET}")
+        except KeyboardInterrupt:
+            print(f"\n\nInterrupted after {i-1}/{total} modules ({passed} passed, {failed} failed)")
+            return
+
+    print(f"\n{'═' * 70}")
+    print(f"Done: {passed} passed, {failed} failed out of {total}")
     print()
 
 
@@ -376,6 +427,7 @@ def main():
     parser.add_argument("num", nargs="?", type=int, help="Module number")
     parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
     parser.add_argument("--refresh-queue", action="store_true", help="List modules where content refresh is recommended")
+    parser.add_argument("--process", action="store_true", help="Process the refresh queue (run build_module_v2.py --refresh for each)")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--all", action="store_true", help="Overview of all tracks")
     args = parser.parse_args()
@@ -416,6 +468,11 @@ def main():
         sys.exit(1)
 
     results = _scan_track(track_id, manifest)
+
+    if getattr(args, "process", False):
+        _render_refresh_queue(track_id, results)
+        _process_refresh_queue(track_id, results)
+        return
 
     if getattr(args, "refresh_queue", False):
         _render_refresh_queue(track_id, results)
