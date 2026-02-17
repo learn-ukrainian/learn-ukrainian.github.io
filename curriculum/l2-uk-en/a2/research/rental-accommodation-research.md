@@ -35,6 +35,5 @@ Alignment: This module directly addresses the "винаймання кварти
 - **Prepares for**: `a2-63` (Scheduling Appointments - arranging viewings), `a2-contracts` (future legal/business modules).
 
 ## Notes for Content Writing
-- **Tone**: Use the "Ukrainian Teacher" persona to explain the unwritten rules (like paying cash or checking utility meters).
 - **Realism**: Include the question "А комунальні?" in the dialogue practice — it's the #1 question prospective tenants ask.
 - **Distinction**: Clearly distinguish between `кімната` (room in a shared flat) and `однокімнатна квартира` (1-room apartment/studio), as this confuses English speakers.

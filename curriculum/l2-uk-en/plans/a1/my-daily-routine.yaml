@@ -7,12 +7,10 @@ title: My Daily Routine
 subtitle: Reflexive Verbs and Daily Activities
 content_outline:
 - section: Warm-up
-  words: 100
   points:
   - Як розповісти про свій день
   - Послідовність дій
 - section: Presentation
-  words: 220
   points:
   - Ранкові дії (прокидатися, вмиватися, снідати, одягатися)
   - Денні дії (працювати, обідати, відпочивати)
@@ -20,16 +18,13 @@ content_outline:
   - Прислівники послідовності (спочатку, потім, після цього, нарешті)
   - Прислівники частоти (завжди, зазвичай, іноді, рідко, ніколи)
 - section: Practice
-  words: 414
   points:
   - Діалог про типовий день (О котрій ти встаєш?)
   - Діалог про вихідні (Що ти робиш у суботу?)
   - Порівняння робочого дня та вихідного
 - section: Practice 2
-  words: 16
   points:
   - Опис свого типового дня
-word_target: 750
 vocabulary_hints:
   required:
   - прокидатися (to wake up)

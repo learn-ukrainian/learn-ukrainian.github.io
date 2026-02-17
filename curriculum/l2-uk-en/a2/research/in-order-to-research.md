@@ -28,4 +28,3 @@ Alignment: This module directly addresses the requirement to form complex senten
 ## Notes for Content Writing
 - **Visual Logic**: Use a clear flowchart or decision tree: "Is the doer the same?" → YES (Infinitive) / NO (Past Tense).
 - **Register Check**: Keep *аби* informal/spoken and *для того, щоб* emphatic/formal. Focus 80% of practice on standard *щоб*.
-- **Immersion**: Use the "Cultural Guide" persona to introduce the "Щоб" toasts in the Dialogue section. It's a high-value conversational skill.

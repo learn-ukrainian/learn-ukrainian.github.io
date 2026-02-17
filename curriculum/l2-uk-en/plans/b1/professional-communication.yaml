@@ -7,34 +7,28 @@ title: Професійна комунікація
 subtitle: Professional & Educational Communication
 content_outline:
 - section: Вступ
-  words: 444
   points:
   - Workplace and education communication needs
   - Formal vs informal register
   - Professional and academic context
 - section: На роботі — Робоча комунікація
-  words: 1067
   points:
   - Workplace vocabulary (колега, керівник, нарада, звіт)
   - Professional dialogues and scenarios
   - Formal correspondence
 - section: В університеті — Освітня комунікація
-  words: 889
   points:
   - Education vocabulary (студент, викладач, лекція, семінар)
   - Academic communication (іспит, залік, курсова робота)
   - University life (гуртожиток, бібліотека, деканат)
 - section: Діалоги — Робота та навчання
-  words: 889
   points:
   - Professional dialogues (at work scenarios)
   - Academic dialogues (with professor, classmates)
 - section: Практика
-  words: 711
   points:
   - Role-play work and education scenarios
   - Written communication practice
-word_target: 4000
 vocabulary_hints:
   required:
   - колега (colleague)

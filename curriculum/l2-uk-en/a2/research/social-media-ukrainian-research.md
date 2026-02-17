@@ -28,6 +28,5 @@ Alignment: This module directly addresses the "social networks" (соціаль�
 - Prepares for: a2-68 (Texting and Messaging)
 
 ## Notes for Content Writing
-- **Tone**: The "Community Manager" persona should use current slang but acknowledge standard terms.
 - **Platform Specifics**: Focus examples on Instagram (visuals/lifestyle) and Telegram (news/channels) as they dominate the Ukrainian landscape.
 - **Visuals**: Describe UI elements clearly (e.g., "кнопка 'Стежити'", "іконка серця").

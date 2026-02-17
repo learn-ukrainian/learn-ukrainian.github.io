@@ -38,4 +38,3 @@ Alignment: Covers the communicative function of expressing stance, certainty, an
 ## Notes for Content Writing
 - **Pedagogy**: Explicitly teach the "Comma Rule" — it's a hard rule in Ukrainian syntax unlike the optional "that" in English.
 - **Distinction**: Create a clear contrast table for *Думати* (Process: "What are you thinking about?") vs *Вважати* (Opinion: "What is your opinion?").
-- **Persona**: As the "Cultural Guide", frame the ability to express an opinion as a key part of Ukrainian "democratic" and "discursive" culture (Ukrainians love to debate!).

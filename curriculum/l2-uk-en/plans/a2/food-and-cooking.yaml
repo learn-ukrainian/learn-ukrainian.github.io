@@ -7,30 +7,25 @@ title: Food and Cooking
 subtitle: In the Kitchen
 content_outline:
 - section: Вступ
-  words: 150
   points:
   - Cooking culture in Ukraine
   - Traditional dishes
   - Kitchen vocabulary
 - section: Граматика
-  words: 650
   points:
   - Kitchen equipment (каструля, сковорода, духовка)
   - Cooking methods (варити, смажити, пекти)
   - Meals of the day (сніданок, обід, вечеря)
   - Tastes (солодкий, солоний, кислий)
 - section: Практика
-  words: 500
   points:
   - Dialogues: cooking with grandmother
   - Recipe practice
   - Table phrases
 - section: Підсумок
-  words: 100
   points:
   - Summary of learned vocabulary
   - Cultural insights
-word_target: 1400
 vocabulary_hints:
   required:
   - варити (to boil/cook)

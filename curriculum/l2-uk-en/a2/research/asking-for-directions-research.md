@@ -29,6 +29,5 @@ Alignment: This module directly addresses the required competence in expressing 
 - Prepares for: a2-67 (Social Media Ukrainian)
 
 ## Notes for Content Writing
-- The persona is "Lost Tourist in Odesa" interacting with a "Cultural Guide" local. Lean heavily into the Odesa humor hook: the local should be helpful but chatty, perhaps asking "Where are you from?" before giving the direction.
 - Ensure the distinction between *йти* and *їхати* is crystal clear, as this is a primary A2 stumbling block.
 - Use the Odesa setting to introduce specific transport vocabulary naturally (tram, marshrutka).

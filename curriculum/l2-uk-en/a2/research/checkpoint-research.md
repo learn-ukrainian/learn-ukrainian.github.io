@@ -32,6 +32,5 @@ Alignment: This module directly addresses the A2 requirement for health vocabula
 - Prepares for: B1 Health modules (more specific diseases), B1 complex syntax (conditional *якби*).
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the "Cultural Guide" persona to frame the health advice not just as medical instructions but as "what grandmothers advise" (folk remedies) alongside modern doctor visits.
 - **Grammar Scaffolding**: Ensure distinct sections for *Cause* (тому що), *Purpose* (щоб), and *Relative* (який) before mixing them.
 - **Immersion**: Use Ukrainian for the dialogue and practical advice; keep grammar explanations for syntax in English/mixed as per A2 Band 2.

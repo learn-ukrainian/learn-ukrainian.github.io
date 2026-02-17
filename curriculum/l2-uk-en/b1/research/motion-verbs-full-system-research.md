@@ -33,6 +33,5 @@ Alignment: This module systematizes the core 14 motion verb pairs (unidirectiona
 - **Prepares for:** B1-17 (Prefixed Motion Verbs), B1-25 (Motion Checkpoint), B1-35 (Complex Sentences with "where to").
 
 ## Notes for Content Writing
-- **Persona Integration:** The "Logistics Director" persona is perfect here. Frame the "unidirectional" verbs as "express delivery" (Point A to Point B, specific goal) and "multidirectional" verbs as "regular supply routes" or "patrolling".
 - **Visuals:** Use the "Vector vs. Circle" analogy. Unidirectional = Arrow (→). Multidirectional = Circle/Chaos (↺ or 〰️).
 - **Immersion:** Ensure all explanations of the "physics" of motion are in clear, simple Ukrainian.

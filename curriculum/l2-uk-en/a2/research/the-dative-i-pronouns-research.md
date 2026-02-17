@@ -35,4 +35,3 @@ Alignment: This module introduces the Dative case for pronouns (recipient) and a
 ## Notes for Content Writing
 - **Pedagogy Alert**: The Standard puts "I like" (Nom) and "I feel cold" (Impersonal/B1) in different buckets. For A2 learners, group them by the *Pronoun Form* (Мені...), not the syntactic structure.
 - **Scaffolding**: Visual aid for "Subject -> Dative" transformation is critical for *подобатися*.
-- **Persona**: Use the "Cultural Guide" persona to explain the "threshold" superstition when teaching "give to..." examples.

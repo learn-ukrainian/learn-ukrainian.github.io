@@ -27,7 +27,6 @@ Alignment: This module covers the full range of imperative forms (1st, 2nd, and 
 - Prepares for: `b1-conditional-mood` (Hypothetical wishes and "if" clauses)
 
 ## Notes for Content Writing
-- **Persona**: As the "Cultural Guide," frame the imperative not as a list of "orders" but as a toolkit for hospitality, toasting, and wishing well.
 - **Scaffolding**: Since this is A2, use English to explain the "Let's" vs "Let them" distinction before diving into the Ukrainian paradigms.
 - **Recipe Focus**: Use the Borscht instructions to contrast the 2nd person (*додайте*) with collective suggestions (*додаймо*).
 - **IPA**: Ensure stress marks for all verbs: *неха́й*, *бу́дьмо*, *бажа́ю*, *ході́мо*.

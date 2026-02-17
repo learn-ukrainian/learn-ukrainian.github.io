@@ -6,30 +6,23 @@ version: '2.0'
 title: 'Микола Зеров: <!-- Title -->'
 content_outline:
 - section: Вступ — Poet, translator, Neoclassicist leader
-  words: 400
   points:
   - <!-- point -->
 - section: Ранні роки та становлення
-  words: 600
   points:
   - <!-- point -->
 - section: Творчий шлях та основні здобутки
-  words: 800
   points:
   - <!-- point -->
 - section: Роль у Розстріляному відродженні
-  words: 800
   points:
   - <!-- point -->
 - section: Переслідування та трагічна доля
-  words: 700
   points:
   - <!-- point -->
 - section: Спадщина та значення
-  words: 700
   points:
   - <!-- point -->
-word_target: 4000
 vocabulary_hints:
   required:
   - Розстріляне відродження

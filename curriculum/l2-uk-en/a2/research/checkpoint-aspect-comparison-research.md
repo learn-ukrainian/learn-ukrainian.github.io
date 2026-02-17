@@ -31,6 +31,5 @@ Alignment: This module consolidates the core A2 grammatical pillars: aspect pair
 - Prepares for: `a2-26` (Higher A2 narratives and complex syntactic integration).
 
 ## Notes for Content Writing
-- **The "Safe Harbor" Persona**: As an Encouraging Cultural Guide, frame the checkpoint as a "celebration of skills" rather than a test. Use the "Hospitality" hook to make aspect choices feel intuitive.
 - **Visuals**: Use a comparison table for irregular adjectives (великий, малий, добрий, поганий).
 - **TTT Pedagogy**: Start with a "Synthesis Dialogue" that uses all four skills, then "teach" by unpacking the choices made in the dialogue.

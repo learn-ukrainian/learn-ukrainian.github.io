@@ -29,6 +29,5 @@ Alignment: This module serves as the summative assessment for the entire A2 morp
 - **Prepares for**: A2-57 (Practical Intro to B1) and the B1 Bridge (Metalanguage).
 
 ## Notes for Content Writing
-- **Tone**: This is a "Celebration of Knowledge," not just a test. Use the "Literary Editor" persona to frame corrections as "polishing" the language.
 - **Euphony as Logic**: Explain that some "irregularities" are actually just the language trying to sound better (Euphony), which helps learners accept the rules more easily.
 - **Meta-language**: Since this connects to B1, start introducing simple Ukrainian grammar terms (іменник, дієслово) in the explanations/feedback, as per the "B1 Bridge" preparation strategy.

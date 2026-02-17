@@ -30,6 +30,5 @@ Alignment: This module serves as the capstone assessment ("Final Exam") for the 
 - Prepares for: `b1-01` (How to Talk About Grammar) - providing the vocabulary foundation (noun, verb, case names) needed for B1's metalanguage approach.
 
 ## Notes for Content Writing
-- **Tone**: The "University Dean" persona should be authoritative but encouraging, treating the user as a serious student ready for the "next level" (B1).
 - **Format**: Use the "Exam" theme to frame the exercises. "Task 1", "Task 2" instead of just "Exercise".
 - **Integration**: The "Navigation in the city" skill (Section 3) can be framed as "Finding your way to the exam center" to integrate it naturally with the exam theme.

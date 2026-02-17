@@ -35,4 +35,3 @@ Alignment: This module directly addresses the "ways of spending free time" and "
 ## Notes for Content Writing
 - **Grammar Focus**: Strictly enforce the distinction: *грати у + Acc* (games), *грати на + Loc* (music), *займатися + Instr* (activities).
 - **Immersion**: This is A2.5 (High Immersion). Use Ukrainian for all examples and dialogues. English is allowed only for the specific grammar explanation of the *грати/займатися* distinction to ensure clarity.
-- **Persona**: As "The Cultural Guide" (suggested by the content), frame hobbies not just as "fun" but as ways to connect with friends and nature (social aspect is huge in Ukraine).

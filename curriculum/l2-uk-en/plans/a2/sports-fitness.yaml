@@ -7,27 +7,22 @@ title: Sports and Fitness
 subtitle: Active Lifestyle
 content_outline:
 - section: Вступ
-  words: 140
   points:
   - Popular sports in Ukraine
   - Ukrainian athletes
 - section: Граматика
-  words: 550
   points:
   - Team sports (футбол, баскетбол, волейбол)
   - Individual sports (плавання, біг, теніс)
   - Fitness vocabulary (спортзал, тренування)
   - Sports events (матч, змагання, чемпіонат)
 - section: Практика
-  words: 615
   points:
   - Dialogues about sports
   - Describe fitness routines
 - section: Підсумок
-  words: 100
   points:
   - Summary of vocabulary
-word_target: 1405
 vocabulary_hints:
   required:
   - спорт (sport)

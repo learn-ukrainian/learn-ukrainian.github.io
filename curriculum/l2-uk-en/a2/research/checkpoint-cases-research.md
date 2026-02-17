@@ -37,6 +37,5 @@ Alignment: This module provides a comprehensive review (Checkpoint) of all seven
 
 ## Notes for Content Writing
 - Focus on the **Service Interaction** dialogues (Post & Bank) to provide a practical "Mixed Case" environment.
-- Use the **Cultural Guide** persona to explain the "Stamps as Money" fact as a transition between post and money/banking topics.
 - Emphasize the **Dative case** for age and expressions of feeling (мені холодно/цікаво) as these are high-frequency A2 functions.
 - Ensure the **Self-assessment checklist** includes a "Preposition + Case" matching section, as this is a major friction point identified in research.

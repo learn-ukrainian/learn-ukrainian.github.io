@@ -29,7 +29,6 @@ Alignment: This module covers the essential A1 modal verb of ability (могти
 - Prepares for: a1-25 (My Daily Routine) - provides the grammatical tools to describe what one "must" or "wants" to do daily.
 
 ## Notes for Content Writing
-- Use the **Career Counselor** persona to ground modals in practical advice: "You must learn...", "You can work...".
 - Keep sentences short (max 8-10 words) as per A1 pedagogical guidelines.
 - Ensure IPA stress marks for every occurrence of `могти` (мо́жу, мо́жеш) and `хотіти` (хо́чу, хо́чеш), as stress shifts are tricky here.
 - Explicitly explain that `треба`, `можна`, and `потрібно` are impersonal and don't change regardless of who "needs" or "can".

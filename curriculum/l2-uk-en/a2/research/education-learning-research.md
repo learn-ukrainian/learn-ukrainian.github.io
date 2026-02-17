@@ -35,4 +35,3 @@ Alignment: Module directly addresses the required actions for acquiring knowledg
 ## Notes for Content Writing
 - **Distinguish Verbs**: dedicate a specific clear section (table/comparison) to `вчитися` (process/location) vs `вивчати` (specific subject). This is the highest value grammar point here.
 - **Grades**: Use the 12-point scale in examples/dialogues to reinforce cultural realism (e.g., "Wow, you got a 11 in Math!").
-- **Persona Flavor**: As the "School Principal" (Encouraging Cultural Guide), frame the strictness of exams/grades with warmth and encouragement. Use phrases like "Education is light" (Навчання — світло).

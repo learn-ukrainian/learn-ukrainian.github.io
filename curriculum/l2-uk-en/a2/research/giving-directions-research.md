@@ -35,4 +35,3 @@ Additional Grammar Support:
 ## Notes for Content Writing
 - **Perspective**: Focus on *giving* directions (imperatives: "ідіть", "поверніть") but include the *question* forms ("як пройти?") as triggers.
 - **Prepositions**: Clearly distinguish static location ("біля", "навпроти" + Genitive) from motion ("в/на" + Accusative, "до" + Genitive).
-- **Immersion**: Use the "Kyiv Metro Navigator" persona. Use real station names (Khreshchatyk, Zoloti Vorota) to ground the dialogue.

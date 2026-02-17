@@ -27,7 +27,6 @@ Alignment: This module focuses on the primary usage of the Instrumental case for
 - Prepares for: a2-05 (Instrumental II - Means & Tools), a2-06 (Being and Becoming), a2-07 (Spatial Prepositions).
 
 ## Notes for Content Writing
-- Focus on the **Wedding Starosta** persona (as per plan) to emphasize social bonds and "pairing up" (groom with bride, guests with each other).
 - Use clear tables to show masculine, feminine, and neuter endings for the Instrumental case.
 - Explicitly explain the **з / із / зі** euphony rules as they are a common point of confusion.
 - Reinforce the difference between **друг** and **приятель** in the examples to add cultural depth.

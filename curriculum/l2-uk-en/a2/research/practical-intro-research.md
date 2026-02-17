@@ -30,6 +30,5 @@ Alignment: This module directly addresses the A2 requirement to master the usage
 - Prepares for: a2-58 (Practical Warm-up), B1.1 (Metalanguage transition)
 
 ## Notes for Content Writing
-- Focus on the "Safe Harbor" persona: Mistakes are natural.
 - Use the "Surzhyk" concept gently – as a sign of trying, but point towards the standard form.
 - The "Integration Task" should be a real-world scenario (e.g., writing a message to a friend or boss) that naturally forces the use of cases and aspect.

@@ -32,4 +32,3 @@ Alignment: This module introduces adjective comparisons (cheap/cheaper/cheapest)
 - Focus on the practical distinction between "магазин" (standard fixed prices) and "ринок" (dynamic negotiation).
 - Introduce Digital Shopping terms (кошик, оформити, доставка) as they are high-frequency in modern Ukraine.
 - Use comparative forms primarily for price and quality—the most common contexts for A2 learners.
-- Ensure the persona (Cultural Guide) emphasizes politeness in negotiation (e.g., using "будь ласка" and "дякую" even when walking away).

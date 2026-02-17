@@ -7,35 +7,28 @@ title: 'Числівники: збірні та дроби'
 subtitle: Numerals - Collectives and Fractions
 content_outline:
 - section: Тест
-  words: 495
   points:
   - Collective vs cardinal numerals
   - Fractional expressions
 - section: Пояснення
-  words: 1029
   points:
   - Collective numerals
   - When to use collectives
 - section: Дроби та відсотки
-  words: 761
   points:
   - Fractions
   - Percentages and decimals
 - section: Практика
-  words: 384
   points:
   - Choose cardinal vs collective
   - Express fractions
 - section: Діалоги
-  words: 1105
   points:
   - Real-world numeral usage
   - Mathematical contexts
 - section: Потрібно більше практики?
-  words: 226
   points:
   - Additional exercises
-word_target: 4000
 vocabulary_hints:
   required:
   - збірний числівник (collective numeral)

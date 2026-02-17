@@ -31,6 +31,5 @@ Alignment: This module bridges the A2 introduction of forms with B1/B2 pragmatic
 - Prepares for: **B1-49** (Numerals - collective forms often trigger diminutives: *двоє діток*), **B2** (Stylistics & Irony)
 
 ## Notes for Content Writing
-- **Persona Flavor**: As a "Kindergarten Teacher" (from meta), the narrator can naturally use diminutives but MUST explicitly contrast this "teacher voice" with "adult/professional voice" to teach register.
 - **Focus Shift**: Move beyond simple Noun suffixes. Dedicate significant space to **Pragmatics** (when *not* to use them).
 - **Unique Feature**: Must teach *Adjective* (-еньк-) and *Adverb* (-енько) forms as they are highly productive in B1 speech.

@@ -32,7 +32,6 @@ Alignment: The Standard explicitly lists adjectives with suffixes `-ськ-` (у
 - Prepares for: `word-formation-b1` (systematic suffix rules), `geography-ukraine` (place adjectives)
 
 ## Notes for Content Writing
-- **Persona:** Use the "Art Gallery Curator" persona to discuss the "materiality" of the toys and blankets.
 - **Pedagogy:** A2 learners don't need the full table of all mutations. Focus on the big three: `к/ч/ц` -> `цьк`, `г/ж/з` -> `зьк`, `х/ш/с` -> `ськ`.
 - **Mnemonic:** Use "Prague -> Prazkyi" as the anchor for the `г -> з` mutation, as it's a common travel destination.
 - **Material Bridge:** Explicitly contrast "Natural/Traditional" (-ян-, e.g., wooden, clay) vs "Standard" (-ов-, e.g., metal, plastic) as a heuristic, even if not 100% linguistically rigorous, it helps learners guess.

@@ -8,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Detailed breakdown of the Govinova letter
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Lab: Zvenyhorod Letter #1'

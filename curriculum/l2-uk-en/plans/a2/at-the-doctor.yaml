@@ -7,12 +7,10 @@ title: At the Doctor
 subtitle: Health and Medical Vocabulary
 content_outline:
 - section: Introduction / Вступ
-  words: 200
   points:
   - Health as wealth: Social etiquette of symptoms
   - Navigating the Ukrainian 'Poliklinika'
 - section: Presentation / Презентація
-  words: 600
   points:
   - 'The Complaint: У мене болить (Singular) vs Болять (Plural)'
   - 'Symptoms & Conditions: Температура, Кашель, Нежить'
@@ -21,15 +19,12 @@ content_outline:
   - 'Medical Imperatives: Дихайте, Відкрийте рот'
   - 'Traditional Remedies: Malyna, Garlic, and Mustard Plasters'
 - section: Practice / Практика
-  words: 150
   points:
   - Role-playing a doctor's visit
   - Pharmacy shopping list drills
 - section: Dialogues / Діалоги
-  words: 50
   points:
   - Calling an ambulance or explaining a flu to a family doctor
-word_target: 1000
 focus: vocabulary
 pedagogy: PPP
 objectives:

@@ -16,7 +16,6 @@ Alignment: This module directly addresses the formation of the conditional mood 
 
 ## Cultural Hooks
 1. **Taras Shevchenko Quote**: "Якби ви вчились так, як треба, / То й мудрість би була своя." (If you learned as you ought to, / Then wisdom would be your own.) — *Epistle to my countrymen* (І мертвим, і живим...). This is a universally known quote in Ukraine, perfect for illustrating the `якби` + past tense structure.
-2. **Alternative History Genre**: Ukrainian literature has a strong tradition of "what if" scenarios (e.g., V. Kozhelyanko's "Defilada"), reflecting on the nation's turbulent history. This aligns with the "Alternative History Author" persona for this module.
 
 ## Common Learner Errors
 1. **Real vs. Unreal Confusion**: Using `якщо` (if [real]) instead of `якби` (if [unreal]).
@@ -34,6 +33,5 @@ Alignment: This module directly addresses the formation of the conditional mood 
 - Prepares for: `b1-33` (Conditionals Mixed Complex) — lays the foundation for mixing tenses.
 
 ## Notes for Content Writing
-- **Persona Alignment**: The "Alternative History Author" persona is excellent here. Use examples that rewrite history slightly or imagine different outcomes for famous events (lightly, not controversially) or personal life choices.
 - **Pedagogy**: Explicitly contrast `якщо` + Present/Future vs `якби` + Past. This is the single biggest hurdle. Use a "Reality Check" table.
 - **Immersion**: Ensure explanations of the difference are 100% in Ukrainian. Use clear signaling words: "Реальність" vs "Фантазія/Мрія".

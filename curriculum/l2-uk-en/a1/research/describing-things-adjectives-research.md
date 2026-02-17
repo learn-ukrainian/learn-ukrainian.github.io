@@ -30,5 +30,4 @@ Alignment: This module focuses on the Nominative case forms for adjectives in al
 
 ## Notes for Content Writing
 - Focus on the distinction between the "Hard group" (-ий) and "Soft group" (-ій). Only introduce one major soft-stem adjective (`синій` or `домашній`) to keep it manageable at A1.
-- Use the "Real Estate Agent" persona to create natural scenarios for describing houses, rooms, and furniture (великий, новий, гарний).
 - Ensure IPA is present for all new vocabulary, specifically focusing on the shift in endings.

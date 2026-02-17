@@ -38,4 +38,3 @@ Alignment: This module explicitly targets the B1 requirement for complex sentenc
 - **The Agreement Algorithm**: Explicitly teach the 2-step decision process: 1) Look BACK for Gender/Number (Antecedent), 2) Look FORWARD for Case (Function in sub-clause). Use a visual or step-by-step text guide for this.
 - **Immersion**: Explain "Antecedent" simply in Ukrainian (слово, яке ми описуємо).
 - **Register**: Keep examples natural. Use *який* for descriptive richness.
-- **Persona**: The "Portrait Photographer" persona from the plan is perfect for *describing* people and things using *який* ("This is the lens *which* captures light best"; "The model *who* arrived late...").

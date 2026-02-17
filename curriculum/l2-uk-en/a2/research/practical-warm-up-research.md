@@ -37,5 +37,4 @@ Alignment: This module explicitly targets the "strategies" mentioned in §1.2.1.
 - **Prepares for**: A2-59 (Doctor Visit) - applies listening/speaking skills in a high-stakes scenario.
 
 ## Notes for Content Writing
-- The module must be very "meta" about learning strategies but keep the language simple (A2 level). Use the "Morning Show Host" persona to make these dry skills feel like "life hacks" for living in Ukraine.
 - Use the **Radio Dictation** as the "Integration Task" context (simulated mini-version).

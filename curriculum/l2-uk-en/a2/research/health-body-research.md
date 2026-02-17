@@ -34,5 +34,4 @@ Alignment: Supports the grammar of "medical advice" and "symptoms" (often expres
 
 ## Notes for Content Writing
 - Focus heavily on the **"У мене болить [X]"** construction as it is the core grammatical hurdle.
-- Use the **"Yoga Instructor"** persona to frame body parts in a positive, active context (stretching, movement) before moving to "symptoms" (what stops you from moving).
 - Keep medical advice simple: "Треба пити чай", "Не можна ходити на роботу".

@@ -31,5 +31,4 @@ Alignment: This module directly teaches the three mandatory forms of the future 
 
 ## Notes for Content Writing
 - **Stylistic Balance**: Ensure the **synthetic form** (-тиму) is presented as a fully equal alternative to the compound form, not just a "literary" variant. It is standard in modern Ukrainian.
-- **Tone**: Use the "Strategic Planner" persona to make the grammar practical — planning a trip, a career, or a project.
 - **Immersion**: Explain the logic of "Perfective Future = Simple Future" carefully in Ukrainian. It's a concept shift for English speakers (Future is form, Aspect is meaning).

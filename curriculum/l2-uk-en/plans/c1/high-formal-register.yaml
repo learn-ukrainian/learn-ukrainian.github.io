@@ -13,10 +13,8 @@ objectives:
 - Learner can transform neutral text into official-business style
 content_outline:
 - section: Introduction
-  words: 4000
   subsections:
   - TBD
-word_target: 4000
 vocabulary:
   required: '[]'
   recommended: '[]'

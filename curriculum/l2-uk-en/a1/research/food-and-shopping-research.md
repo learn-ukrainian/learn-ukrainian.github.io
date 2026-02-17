@@ -30,5 +30,4 @@ Alignment: This module focuses on the Accusative case for purchasing food (direc
 
 ## Notes for Content Writing
 - **Scaffolding**: Provide clear tables for Accusative (feminine focus) and Genitive (quantity focus).
-- **Immersion**: Use the "Personal Chef" persona to suggest ingredients for a simple Ukrainian dish (like *борщ*) to hit the word target while staying thematic.
 - **Visuals**: Use shopping lists and price tags to make the practice section feel authentic.

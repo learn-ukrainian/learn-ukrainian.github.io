@@ -27,6 +27,5 @@ Alignment: This module provides the essential *metalanguage* (терміноло
 - Prepares for: `b1-02` (Verb terminology), `b1-03` (Reading rules), `b1-05` (Metalanguage Checkpoint).
 
 ## Notes for Content Writing
-- **Persona**: Adopt the "Senior Language & Culture Specialist" voice. The tone should be empowering — "Knowing these words gives you the power to ask questions and understand answers."
 - **Visuals**: The module needs strong visual structural breakdowns (diagrams of sentences) described in text for the "Syntax" section.
 - **Immersion**: This is a bridge module (B1.0). Use the "English Scaffolding" paragraph effectively in the intro, but switch to Ukrainian definitions for the terms themselves immediately.

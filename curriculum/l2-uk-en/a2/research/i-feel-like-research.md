@@ -31,6 +31,5 @@ Alignment: This module directly addresses the A2 requirement for expressing subj
 - **Prepares for**: B1 Health & Medicine modules (describing symptoms); B1/B2 expressing complex emotional states and opinions.
 
 ## Notes for Content Writing
-- **Persona**: The "Encouraging Cultural Guide" should use the "meteo-sensitivity" angle to make the grammar feel like insider cultural knowledge ("You aren't just saying you are cold; you are tuning into the world like a Ukrainian!").
 - **Scaffolding**: Explicitly contrast "Я" (Identity) vs "Мені" (State/Feeling) tables to fix the "Я холодний" error early.
 - **Distinction**: Clearly distinguish "радий" (Short adjective, agrees with gender: я радий/рада) vs "щасливий" (Long adjective) vs "мені весело" (Adverbial state).

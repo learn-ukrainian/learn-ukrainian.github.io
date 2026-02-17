@@ -32,7 +32,6 @@
 - Prepares for: `a1-32-my-family` (Describing relatives' health), `a1-42-emergencies` (Calling for help/ambulance).
 
 ## Notes for Content Writing
-- **The Polyclinic Nurse Persona**: Use the "Nurse" voice to be practical and efficient but caring. Use "Відкрийте рот" (Open your mouth) or "Покажіть горло" (Show your throat).
 - **Immersion level**: Keep explanations of the "У мене болить" construction in English to ensure clarity, as case usage (Nominative for the subject of pain) can be counter-intuitive for English speakers.
 - **Visuals**: A table comparing "болить" (singular parts) and "болять" (plural parts like eyes/очі, ears/вуха, hands/руки) is highly recommended.
 - **Causal links**: Integrate "бо" and "тому що" in the practice dialogues (e.g., "Я не прийшов, бо я хворий").

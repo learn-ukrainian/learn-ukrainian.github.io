@@ -14,7 +14,6 @@ Alignment: Module directly implements the standard's requirement to distinguish 
 | **як тільки** | High | вказує на миттєву зміну (як тільки... так зразу) |
 
 ## Cultural Hooks
-1. **Chumak Way (Чумацький шлях)**: The long, enduring journey of Chumaks is a perfect metaphor for Imperfective aspect (*їхали, везли, співали*), contrasting with the specific events of arrival or incident (Perfective: *приїхали, продали, сталося*). Fits "Ethnographer" persona.
 2. **Folk Wisdom**: "Доки грім не гряне, рак не свисне" (Until thunder strikes, a crayfish won't whistle) — illustrates the strict *limit* nuance of **доки** (until a specific Perfective event occurs).
 
 ## Common Learner Errors
@@ -27,5 +26,4 @@ Alignment: Module directly implements the standard's requirement to distinguish 
 - **Prepares for**: `b1-15` (Checkpoint), `b1-37` (Temporal clauses deep dive).
 
 ## Notes for Content Writing
-- **Persona Flavor**: The plan lists "Fitness Trainer", but the prompt offers [Ethnographer | Urbanist | Storyteller]. Given the "Cultural Hook" potential, **Ethnographer** (Chumaks, folk wisdom) or **Storyteller** (narrative arcs) is recommended over "Fitness Trainer". I will proceed assuming **Ethnographer** to align with the prompt's directive for Turn 3.
 - **Pedagogy**: Focus on the "Logic Switch" — if A happens *during* B (Imperfective + Imperfective/Perfective), vs A happens *after* B (Perfective + Perfective). Use a visual flowchart metaphor in text description.

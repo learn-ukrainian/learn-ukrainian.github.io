@@ -8,7 +8,6 @@ phase: 2
 phase_id: literary-tradition
 phase_name: Literary Tradition
 focus: '"Golden Word" context'
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Sviatoslav Vsevolodovych

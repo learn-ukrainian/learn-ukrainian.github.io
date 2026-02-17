@@ -38,7 +38,6 @@ Alignment: This module provides the essential communicative foundation for numer
 - Prepares for: a1-23 (What Time Is It) — uses numbers 0-60 for time.
 
 ## Notes for Content Writing
-- **The Bazaar Accountant Persona**: Use a "Bazaar Accountant" voice to explain the "1-2-5 Rule" as a secret for not getting overcharged.
 - **Visual Agreement Tables**: Crucial for A1. Show clearly: 1 (Nom.Sg) | 2, 3, 4 (Nom.Pl) | 5-20, 0 (Gen.Pl).
 - **Phonetics**: Focus on the pronunciation of 'п'ять' [pjat'] and the shifting stress in 'одина́дцять' vs 'двадця́ть'.
 - **Modern Pricing**: Use realistic 2024 prices (e.g., Coffee ~ 40-60 UAH) to keep the lesson practical for travelers.

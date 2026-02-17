@@ -36,7 +36,6 @@ Alignment: This module directly addresses the A2 requirement for expanded spatia
 - Prepares for: a2-08 (Logical Prepositions), a2-09 (All Cases Practice), a2-65 (Giving Directions).
 
 ## Notes for Content Writing
-- Use the **Interior Designer** persona to describe a modern room vs. a traditional *khata* to illustrate prepositions.
 - Emphasize the "куди?" vs. "де?" distinction using a decision table or flowchart.
 - Ensure IPA is provided for all new vocabulary, especially for stressed vowels in prepositions like *напроти* [наˈпрɔти] and *навколо* [наˈўкɔлɔ].
 - Include a "History Bite" about the *pich* to anchor the prepositions *на*, *під*, *за*.

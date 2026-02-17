@@ -7,31 +7,25 @@ title: Nature and Weather
 subtitle: The World Around Us
 content_outline:
 - section: Вступ
-  words: 150
   points:
   - Ukraine's diverse landscapes
   - Nature vocabulary introduction
 - section: Граматика
-  words: 800
   points:
   - Weather conditions (погода, дощ, сніг)
   - Landscapes (гора, річка, ліс)
   - Flora and fauna (дерева, тварини)
   - Environment vocabulary
 - section: Практика
-  words: 500
   points:
   - Dialogues about weather
   - Nature descriptions
 - section: Корисні вирази
-  words: 150
   points:
   - Useful weather phrases
 - section: Підсумок
-  words: 100
   points:
   - Summary of vocabulary
-word_target: 1700
 vocabulary_hints:
   required:
   - погода (weather)

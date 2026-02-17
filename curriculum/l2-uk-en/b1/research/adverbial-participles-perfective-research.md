@@ -31,5 +31,4 @@ Alignment: This module directly addresses the requirement for "Simple complicate
 
 ## Notes for Content Writing
 - **Visuals**: Use a clear timeline visual to distinguish `читаючи` (simultaneous line) vs `прочитавши` (completed dot before main action).
-- **Narrative**: The "Film Director" persona is perfect for this grammar. Use stage directions as examples: "Having entered the room, the hero stops." (Зайшовши в кімнату, герой зупиняється).
 - **Emphasis**: Stress that `-вши` is for vowel stems (прочита-вши) and `-ши` for consonant stems (приніс-ши), but note that `-вши` is overwhelmingly more common in high-frequency verbs.

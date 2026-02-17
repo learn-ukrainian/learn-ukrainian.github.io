@@ -32,7 +32,6 @@ Alignment: This module addresses the A2 requirement for forming and using simple
 - Prepares for: a2-19 (The Best, The Worst), a2-20 (Preferences and Choices), a2-24 (Smart Shopping)
 
 ## Notes for Content Writing
-- **Persona Implementation**: Use the "Sports Commentator" persona to compare athletes' heights, speeds, and scores to keep the tone energetic.
 - **Pedagogical Scaffolding**: Use clear tables to separate regular *-іший* forms from *-ший* forms that trigger consonant shifts. 
 - **Comparison Logic**: Explicitly contrast the `ніж + Nominative` vs `за + Accusative` structures, as this is a frequent source of A2 errors.
 - **Immersion**: Maintain 50-60% immersion. Ensure all grammar terms (вищий ступінь, прикметник) are introduced and reinforced.

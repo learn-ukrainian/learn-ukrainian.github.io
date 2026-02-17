@@ -30,6 +30,5 @@ Alignment: This module focuses on "Combined Practice" by integrating multiple sp
 - Prepares for: a1-44 (A1 Final Exam)
 
 ## Notes for Content Writing
-- Adopting the **"Personal Trainer"** persona: Be encouraging as the learner navigates the "obstacle course" of combining tasks.
 - Use **Sequence Markers** (H3 level) to guide the learner through the scenarios: Step 1 (Planning), Step 2 (Execution), Step 3 (Problem Solving).
 - Focus on the **Practical Transition**: Moving from single-sentence answers to "narrative arcs" (e.g., "First I go here, then I buy this, because I need...").

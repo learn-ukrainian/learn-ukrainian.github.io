@@ -39,4 +39,3 @@ Alignment: This module directly enables the A2 requirement to narrate events in 
 ## Notes for Content Writing
 - **Visuals**: Use a timeline visualization for *Before/After* logic.
 - **Pedagogy**: Explicitly contrast `перед` + Noun vs `перед тим як` + Verb. This is a high-friction point for English speakers.
-- **Persona**: Use the "Ukrainian Teacher" voice to tell a story about a busy day or a trip, using these linkers to make the narrative flow.

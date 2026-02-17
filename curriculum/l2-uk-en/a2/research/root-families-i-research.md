@@ -31,5 +31,5 @@ Alignment: This module directly addresses the A2 requirement for mastering aspec
 
 ## Notes for Content Writing
 - **Visual Analogy**: Use the "Lego" metaphor strongly. The root is the "block," the prefix is the "connector."
-- **Tone**: Keep it "Encouraging Cultural Guide." Use the etymology of *писанка* to make the *пис-* root feel magical rather than mechanical.
+- **Tone**: Use the etymology of *писанка* to make the *пис-* root feel magical rather than mechanical.
 - **Simplification**: Do NOT introduce all prefixes. Stick to the "Big 4" for A2: *в-, ви-, при-, під-*.

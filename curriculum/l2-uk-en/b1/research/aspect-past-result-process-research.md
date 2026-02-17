@@ -35,7 +35,6 @@ Alignment: This module explicitly targets the distinction between imperfective (
 - **Prepares for**: `b1-09` (Aspect in future), `b1-14` (Aspect integration practice), `b1-26+` (Complex sentences with temporal clauses like "коли я робив...").
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the **Crime Scene Investigator** persona as hinted in the plan ("Detective" logic). Analyze "evidence" of completed actions (perfective) vs "traces" of ongoing actions (imperfective).
 - **Visuals**: Use a timeline metaphor. Process = a wavy line with no end point visible. Result = a point or a checkmark on the timeline.
 - **Context**: In the "Work Report" dialogue, emphasize that bosses usually ask for Perfective (What did you *accomplish*?), while friends might ask for Imperfective (What were you *doing* all day?).
 - **Immersion**: Ensure all grammar explanations are 100% Ukrainian. Use clear, simple terms like «дія завершена» vs «дія тривала».

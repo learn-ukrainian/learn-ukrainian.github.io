@@ -15,7 +15,6 @@ Alignment: Module directly targets the B1 requirement for complex sentences with
 
 ## Cultural Hooks
 1. **The "Symphonic" Syntax**: Ukrainian literary tradition (e.g., Gogol, Lesya Ukrainka) values complex sentences as a way to create a "panoramic" view of reality, weaving multiple thoughts into a single "symphony," contrasting with the often shorter, punchier sentences of modern digital communication.
-2. **Contemporary Complexity**: Modern authors like Serhiy Zhadan use long, multi-clause sentences to reflect the chaos and interconnectedness of modern life, creating a "web of thought" that mirrors the complexity of the urban experience (the "Urbanist" persona angle).
 
 ## Common Learner Errors
 1. **Relative Pronoun Agreement**: *Дівчина, який я бачив* → *Дівчина, **яку** я бачив*. (Failure to agree `який` in gender/number/case with the antecedent).
@@ -27,5 +26,4 @@ Alignment: Module directly targets the B1 requirement for complex sentences with
 - Prepares for: b1-35 (Concessive Clauses), b1-41 (Checkpoint 2)
 
 ## Notes for Content Writing
-- **Persona Integration**: Since this is a Checkpoint, the "Senior Language Specialist" voice should dominate, but the "Cultural Hooks" can be woven into the "Integration Challenge" or reading passages as examples of *why* we learn complex syntax (to express complex thoughts like Zhadan or Ukrainka).
 - **Meta-Cognition**: Emphasize *self-assessment* terms (оцінювання, результат) as this is a checkpoint. The goal is learner autonomy.

@@ -32,7 +32,6 @@ Alignment: This module focuses on the "Weather" (погода) and "Seasons" (п
 - Prepares for: a1-30 (Prepositions III) — will expand on location and time; a1-33 (Holidays and Traditions) — connects seasons to cultural celebrations.
 
 ## Notes for Content Writing
-- **Persona Integration**: As a "Carpathian Ranger," focus on the dramatic changes in mountain weather and the beauty of the seasons in the woods.
 - **Impersonal focus**: Emphasize that "It" is not translated in "It is warm" (**Тепло**).
 - **Phonetic focus**: Ensure IPA stress for **восени** (vóseny) and **навесні** (navesní) as these are often tricky for beginners.
 - **Visuals**: Use a table to group weather adverbs by temperature (Спекотно > Тепло > Прохолодно > Холодно).

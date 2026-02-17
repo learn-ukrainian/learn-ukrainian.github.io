@@ -35,5 +35,4 @@ Alignment: This module directly addresses the requirement to describe character 
 
 ## Notes for Content Writing
 - **Dative Logic**: Explicitly contrast *Він веселий* (He is a cheerful person usually) vs. *Йому весело* (He is having fun right now).
-- **Persona Flavor**: Use the **Encouraging Cultural Guide** voice to frame emotions not just as biological states, but as connecting with others (e.g., "shared joy is double joy").
 - **Visuals**: Use emoji or simple icons to map *радість, сум, злість* to their adjectives and dative constructions to reinforce the link.

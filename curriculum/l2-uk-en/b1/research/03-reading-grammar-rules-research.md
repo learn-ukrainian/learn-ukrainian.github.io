@@ -33,6 +33,5 @@
 - **Prepares for**: `b1-04` (Sentence structure terms), `b1-05` (Metalanguage Checkpoint)
 
 ## Notes for Content Writing
-- **Tone**: The persona is a "Law Student" / "Senior Specialist" - the tone should be structured, logical, and slightly analytical, treating grammar like a system of laws/rules.
 - **Visuals**: Use "textbook excerpts" as visual aids — simulate a page from a Ukrainian grammar book and have the user "decode" it.
 - **Key Distinction**: Ensure clear differentiation between "розмовна мова" (colloquial) and "літературна мова" (standard/literary), as this is a key B1 stylistic competence.

@@ -33,5 +33,4 @@ Alignment: This module addresses the A1 requirement for describing daily routine
 
 ## Notes for Content Writing
 - Ensure reflexive verbs are highlighted in the "Morning Activities" section as they are most common there (прокидатися, вмиватися, одягатися).
-- Use the "Ukrainian Teacher" persona to make the routine descriptions feel warm and practical, perhaps by discussing a morning cup of coffee or a typical greeting.
 - Maintain the 10-40% immersion target; use English to explain the -ся/-сь suffix logic before showing the routine examples.

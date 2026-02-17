@@ -6,13 +6,11 @@ version: '2.0'
 title: Стилістичні сполучники
 content_outline:
 - section: Вступ — Сполучники як засіб зв'язку
-  words: 421
   points:
   - Роль сполучників у побудові тексту
   - Різниця між простими та стилістичними сполучниками
   - Регістр і вибір сполучників
 - section: Сполучники протиставлення
-  words: 737
   points:
   - Проте, втім (however)
   - Зате (but on the other hand)
@@ -20,7 +18,6 @@ content_outline:
   - Навпаки (on the contrary)
   - Стилістичні відтінки кожного
 - section: Сполучники приєднання
-  words: 632
   points:
   - Причому (moreover/and)
   - До того ж (besides)
@@ -28,7 +25,6 @@ content_outline:
   - Тим більше (especially/all the more)
   - Контексти вживання
 - section: Сполучники наслідку
-  words: 632
   points:
   - Тому (therefore)
   - Отже (thus/so)
@@ -36,7 +32,6 @@ content_outline:
   - Внаслідок чого (as a result of which)
   - Формальність кожного варіанту
 - section: Допустові сполучники
-  words: 737
   points:
   - Хоча (although)
   - Незважаючи на те що (despite the fact that)
@@ -44,19 +39,16 @@ content_outline:
   - Дарма що (even though - colloquial)
   - Регістрові відмінності
 - section: Вибір за регістром
-  words: 526
   points:
   - Формальні варіанти (офіційний стиль)
   - Нейтральні варіанти (загальне вживання)
   - Неформальні варіанти (розмовний стиль)
   - Типові помилки змішування регістрів
 - section: Практика і підсумок
-  words: 315
   points:
   - Інтеграція у власне мовлення
   - Елегантність вираження думок
   - Підготовка до модуля 15
-word_target: 4000
 vocabulary_hints:
   required:
   - сполучник (connector/conjunction)

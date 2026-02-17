@@ -31,7 +31,6 @@ Alignment: This module covers the core A2 requirements for expressing purpose (`
 - Prepares for: **a2-09** (All Cases Practice - integrating these into complex syntax), **a2-10** (Post Office & Bank - practical application of logical relationships).
 
 ## Notes for Content Writing
-- **Persona Integration**: Use the **Chess Grandmaster** persona to frame logical prepositions as "strategic connections". Choosing the right preposition is like making the right move to connect pieces (ideas).
 - **Immersion Goal**: Aim for **50-60% Ukrainian**. Keep grammar explanations in English (Band 1 rules) but use Ukrainian for the "Story of the Letter" and Pharmacy dialogues.
 - **IPA Focus**: Ensure stress marks for all prepositions, especially `після` [ˈpʲisʲlʲa] and `завдяки` [zawˈdakɪ].
 - **Visuals**: A table comparing `через` (cause) vs `для` (purpose) vs `про` (topic) is essential for this level.

@@ -27,6 +27,5 @@ Alignment: This module directly addresses the B1 requirement for mastering aspec
 - Prepares for: **b1-14** (Aspect integration), **b1-61** (Professional communication), **b2-pro** track (Business Ukrainian)
 
 ## Notes for Content Writing
-- **Tone**: Professional yet accessible. Use the "Productivity Coach" persona to frame grammar as a tool for efficiency (e.g., "Use Perfective to show results to your boss").
 - **Immersion**: 100% Ukrainian. Explain *deadline* vs *rechenets* entirely in Ukrainian (e.g., "Слово 'дедлайн' популярне, але в офіційних документах краще писати 'кінцевий термін'").
 - **Visuals**: Use a timeline metaphor: Imperfective = wavy line (process), Perfective = X mark (result/point).

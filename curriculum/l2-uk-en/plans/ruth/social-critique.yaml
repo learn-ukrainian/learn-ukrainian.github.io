@@ -8,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Defense of the poor vs rich prelates
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Social Critique

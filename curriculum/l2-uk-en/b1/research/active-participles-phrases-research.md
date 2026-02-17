@@ -30,4 +30,3 @@ Alignment: This module directly addresses the morphology of participles and thei
 ## Notes for Content Writing
 - **Stylistic Hard Line**: Be very strict about *active present participles*. Teach them primarily as forms to *recognize and avoid*, replacing them with "той, хто..." clauses or specific adjectives.
 - **Exceptions List**: Clearly list the "adjectivized" exceptions (співучий, квітучий, родючий) that are safe to use.
-- **Narrative Angle**: The "Poet" persona can lament the "dead language" of bureaucrats (cancelyarit) vs. the "living language" of folk songs (using correct lexicalized forms like *співучий*).

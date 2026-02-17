@@ -42,4 +42,3 @@ Alignment: This module focuses on the transition from listing events ("Robot Sty
 - **Visual Metaphor**: Use a "Timeline Road" or "Train" metaphor to show how "спочатку", "потім", and "нарешті" connect different "cars" of the story.
 - **Drama Markers**: Emphasize that "раптом" is like a "Plot Twist" button.
 - **Narrative Tenses**: Keep it simple (Past Tense) but mention that "однією мовою" or "казка" style uses specific opening formulas like "Жили-були..." (Once upon a time/There lived...).
-- **Persona Alignment**: The "Village Storyteller" persona should be warm, using simple but evocative examples.

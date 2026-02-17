@@ -7,13 +7,11 @@ title: 'Складні Сполучники I: Причина та Допуск'
 subtitle: Advanced Conjunctions I - Causal and Concessive
 content_outline:
 - section: Розминка — Чому і незважаючи на
-  words: 727
   points:
   - Причинові сполучники — бо (розм.) vs тому що (нейтр.) vs оскільки (офіц.)
   - Допустові сполучники — хоча vs незважаючи на те що vs попри те що
   - Регістрові відмінності та пунктуація
 - section: Causal Conjunctions
-  words: 1221
   points:
   - тому що (because - neutral)
   - оскільки (since - formal)
@@ -21,7 +19,6 @@ content_outline:
   - через те що (due to the fact that)
   - у зв'язку з тим що (in connection with)
 - section: Concessive Conjunctions
-  words: 1221
   points:
   - хоча (although - neutral)
   - незважаючи на те що (despite the fact that)
@@ -29,13 +26,11 @@ content_outline:
   - дарма що (even though)
   - хай (let/even if)
 - section: Практика — складні речення
-  words: 831
   points:
   - Об'єднати прості речення складним причиновим сполучником
   - Переписати текст, змінивши сполучники на офіційніші/розмовніші
   - Написати аргументативний параграф з причиновими та допустовими зв'язками
   - Виправити помилки в пунктуації складних речень
-word_target: 4000
 focus: grammar
 pedagogy: Grammar
 objectives:

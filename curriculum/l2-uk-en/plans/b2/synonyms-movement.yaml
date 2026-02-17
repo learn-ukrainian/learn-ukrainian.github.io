@@ -7,13 +7,11 @@ title: 'Синоніми: Рух і Пересування'
 subtitle: Synonyms - Movement
 content_outline:
 - section: Розминка — Як ходити і бігати
-  words: 727
   points:
   - Однонаправлений vs різнонаправлений рух (йти vs ходити)
   - Манера руху (крокувати, брести, тупати)
   - Швидкість і контроль (мчати vs нестися)
 - section: Walk
-  words: 1221
   points:
   - йти (go - general, one direction)
   - ходити (walk - repeated, habitual)
@@ -21,7 +19,6 @@ content_outline:
   - брести (trudge - tired walking)
   - тупати (stomp - heavy steps)
 - section: Run
-  words: 1221
   points:
   - бігти (run - one direction)
   - бігати (run - repeated)
@@ -29,13 +26,11 @@ content_outline:
   - нестися (dash - uncontrolled)
   - чимчикувати (scurry - quick small steps)
 - section: Практика — динамічний опис
-  words: 831
   points:
   - Обрати дієслово руху відповідно до контексту (втома, поспіх, урочистість)
   - Описати сцену з різними видами руху персонажів
   - Порівняти український і англійський вибір дієслів руху
   - Написати динамічну сцену з 5+ різними дієсловами
-word_target: 4000
 focus: phraseology
 pedagogy: CBI
 objectives:

@@ -28,6 +28,5 @@ Alignment: This module directly addresses the A2 requirement to discuss "leisure
 - **Prepares for**: `a2-56` (Checkpoint), and B1 modules where 'Instrumental of profession/interest' becomes critical.
 
 ## Notes for Content Writing
-- **Persona**: Use "The Cultural Guide" flavor implicitly (or "Olympic Trainer" as per plan). Frame "займатися спортом" not just as a hobby, but as a disciplined lifestyle (very Ukrainian value).
 - **Grammar Focus**: Strictly enforce the binary: Team Sports = *грати в* + Accusative; Individual/Fitness = *займатися* + Instrumental. Use a visual table for this.
 - **Immersion**: Use famous Ukrainian athletes (Usyk, Shevchenko) in examples to make sentences memorable.

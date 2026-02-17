@@ -31,6 +31,5 @@ Alignment: This module explicitly teaches the formation and usage of `за-`, `�
 - **Prepares for**: `b1-20` (Motion - approaching & departing), `b1-22` (Motion full prefix integration)
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the "Commuter" persona to explain the `заходити/виходити` distinction through the lens of public transport stories.
 - **TTT Approach**: Use a diagnostic dialogue about a chaotic morning commute (trying to enter a full bus, stopping by a kiosk).
 - **Nuance**: Explicitly teach `зайти за кимось` (to pick someone up on foot) vs `заїхати за кимось` (to pick someone up by car) — very practical for social plans.

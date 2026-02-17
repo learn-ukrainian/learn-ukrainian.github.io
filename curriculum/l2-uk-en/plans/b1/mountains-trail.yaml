@@ -7,16 +7,13 @@ title: Гори та трейлраннінг
 subtitle: Hiking and Trail Running in the Carpathians
 content_outline:
 - section: Огляд
-  words: 133
   points:
   - Цілі модуля
 - section: Вступ
-  words: 495
   points:
   - Українські гори як місце відпочинку
   - Від туристів до трейлраннерів
 - section: Інтеграція
-  words: 1877
   points:
   - Говерла та інші вершини
   - Найвища точка України (2061 м)
@@ -29,20 +26,15 @@ content_outline:
   - Де зупинитися в горах
   - Спорядження і безпека
 - section: Практика
-  words: 168
   points:
   - Ключові концепції
 - section: Продукція
-  words: 887
   points:
   - Діалоги про гори та трейлраннінг
 - section: Підсумок — Побачимось на вершині!
-  words: 291
   points:
   - Гори як терапія і натхнення
 - section: Потрібно більше практики?
-  words: 149
-word_target: 4000
 vocabulary_hints:
   required:
   - гора (mountain)

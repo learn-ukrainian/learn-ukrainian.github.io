@@ -8,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Praising patrons (Mazepa, Mohyla)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Panegyric Style

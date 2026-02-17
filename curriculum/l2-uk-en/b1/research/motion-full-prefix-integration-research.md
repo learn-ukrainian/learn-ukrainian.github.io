@@ -31,6 +31,5 @@ Alignment: This module explicitly covers the formation and usage of these prefix
 - **Prepares for**: b1-23 (Motion patterns in other verbs), b1-25 (Checkpoint).
 
 ## Notes for Content Writing
-- **Persona (Urban Explorer)**: Use the Kyiv Metro descent/transfer as a recurring motif for the physical prefixes.
 - **Narrative**: The "Castle Excursion" dialogue is an excellent opportunity to introduce figurative meanings (legends, history "passing", armies "retreating").
 - **Pedagogy**: Explicitly contrast *при-* and *до-* in the analysis section, as this is a high-friction point for English speakers. Use the TTT approach: let them try to choose the prefix in the diagnostic before explaining the strict logic.

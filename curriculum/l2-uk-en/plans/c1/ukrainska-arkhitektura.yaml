@@ -7,13 +7,11 @@ title: Українська архітектура
 subtitle: Ukrainian Architecture — Stone Chronicles
 content_outline:
 - section: Розминка — Камʼяні хроніки
-  words: 933
   points:
   - Софія Київська — візантійська спадщина
   - Козацьке бароко — унікальний національний стиль
   - Дерев'яні церкви Карпат — світова спадщина UNESCO
 - section: Content Areas
-  words: 1667
   points:
   - 'Kyivan Rus'': Софія Київська, Печерська лавра — Byzantine heritage'
   - 'Ukrainian Baroque: Козацьке бароко, Мазепинський стиль — unique national style'
@@ -21,13 +19,11 @@ content_outline:
   - 'Modernism: Конструктивізм Харкова, Держпром — Soviet avant-garde'
   - 'Contemporary: Сучасна архітектура, відбудова — post-war rebuilding'
 - section: Практика — архітектурний аналіз
-  words: 1400
   points:
   - Описати Софію Київську — візантійська архітектура, мозаїки, фрески
   - Порівняти козацьке бароко та європейський стиль — Мазепинська доба
   - Написати есе про карпатські дерев'яні церкви як світову спадщину
   - Проаналізувати Держпром як приклад конструктивізму
-word_target: 4000
 focus: fine-arts
 pedagogy: CBI
 objectives:

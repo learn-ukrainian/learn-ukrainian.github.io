@@ -17,7 +17,6 @@ Alignment: This module introduces the structural formation of the conditional mo
 
 ## Cultural Hooks
 1. **The "Hrybi" Proverb**: "Якби та аби, та виросли в роті гриби" (If and maybe, then mushrooms would grow in the mouth). A classic Ukrainian idiom used to gently mock someone who indulges in too many "what ifs" or empty dreams without action.
-2. **The "Coffeehouse Philosopher" Persona**: Connects to the Lviv coffee culture (Львівські кав'ярні) where people often sit for hours discussing hypothetical ideas, dreams, and politics. This anchors the "If I were..." concept in a specific Ukrainian urban setting.
 
 ## Common Learner Errors
 1. **Particle choice (б vs би)**: Learners often use "би" everywhere. 
@@ -34,7 +33,6 @@ Alignment: This module introduces the structural formation of the conditional mo
 - Prepares for: `complex-sentences` (B1), `future-plans` (A2.3).
 
 ## Notes for Content Writing
-- **Persona Implementation**: Use the "Lviv Philosopher" to introduce scenarios like "Якби я мав власну кав'ярню..." (If I had my own coffeehouse...).
 - **Grammar Visuals**: A simple table comparing **якщо** + present/future (Real) vs **якби** + past (Unreal) is essential.
 - **Politeness**: Emphasize "Я б хотів..." as a softer, more polite alternative to "Я хочу" in service settings.
 - **Word Target Strategy**: To reach the 1000-word target while maintaining A2 simplicity, expand on the "Dreams and Wishes" section with varied examples (travel, profession, social change) and use the "Proverbial usage" section to explain the cultural context of the "Mushrooms" proverb.

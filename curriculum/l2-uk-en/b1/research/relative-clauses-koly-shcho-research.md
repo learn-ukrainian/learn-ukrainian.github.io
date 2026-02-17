@@ -38,6 +38,5 @@ Alignment: This module directly addresses the B1 requirement for complex sentenc
 - **Prepares for**: `b1-29` (Purpose Clauses *щоб* + infinitive), `b1-30` (Causal Clauses *тому що*).
 
 ## Notes for Content Writing
-- **Persona (Storyteller)**: Frame the grammar through the lens of *memory* and *storytelling*. "When we remember, we travel in time."
 - **Focus**: Clearly distinguish `що` (conjunction: "I know *that*...") from `що` (relative pronoun: "The book *that*..."). This is a key B1 threshold concept.
 - **Euphony**: Mention that `що` is often preferred after vowel-ending words or to avoid "k-heavy" sentences (unpleasant sound repetition), whereas `який` is better for strict gender specification.

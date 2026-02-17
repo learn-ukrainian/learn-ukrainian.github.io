@@ -7,45 +7,29 @@ title: 'Ділова пошта: Поглиблено'
 subtitle: Complex correspondence and email threads
 content_outline:
 - section: Вступ
-  words: 489
   points:
   - 'Контекст професійної кореспонденції вищого рівня: координація проєктів, багатостороннє
     листування'
   - Виклики складного ділового спілкування електронною поштою в українських компаніях
   - Перехід від базових навичок (М85) до майстерності управління складними ситуаціями
 - section: Імерсивна розповідь
-  words: 1877
   subsections:
   - name: Управління ланцюжками листування
-    words: 250
   - name: Копія, прихована копія та етикет багатосторонньої кореспонденції
-    words: 250
   - name: Ескалація та чутливі питання
-    words: 250
   - name: Нагадування та подальші дії
-    words: 200
   - name: Делегування завдань електронною поштою
-    words: 200
 - section: Аналіз
-  words: 981
   subsections:
   - name: Стратегії управління складною кореспонденцією
-    words: 200
   - name: Лексика та фразеологія для координації
-    words: 150
   - name: Контекст та цитування в ланцюжках
-    words: 150
   - name: Культурні особливості української професійної комунікації
-    words: 100
 - section: Граматика в контексті
-  words: 489
   subsections:
   - name: Дієприкметники для професійної мови
-    words: 150
   - name: Складнопідрядні речення в діловому стилі
-    words: 150
 - section: Підсумок
-  words: 164
   points:
   - 'Синтез навичок: від структури простого листа (М85) до оркестрації складної кореспонденції'
   - 'Ключові принципи: ясність, професіоналізм, культурна обізнаність'
@@ -59,7 +43,6 @@ objectives:
 - Learner can write follow-up messages and acknowledgments appropriately
 - Learner can delegate tasks and coordinate complex projects via email
 phase: B2.4 Communication Skills
-word_target: 4000
 vocabulary_hints:
   required:
   - термін (term)

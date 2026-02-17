@@ -29,4 +29,3 @@ Alignment: Although formal morphological listing in §4.2.1.4 (A2) focusing on b
 - **The "Subject=Possessor" Rule**: This is the heart of the module. Use a decision-tree approach (Mermaid flowchart) to show when *свій* is needed.
 - **Ambiguity Focus**: Use the "Petro and Ivan" example to show how *його* vs *свою* changes the entire meaning of a sentence.
 - **Declension Table**: Since *свій* declines like *мій*, reuse the pattern to build confidence.
-- **Tone**: As a "Real Estate Agent" (persona), use examples related to owning/sharing property, "my own house," "personal space," etc.

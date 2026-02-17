@@ -7,12 +7,10 @@ title: Numerals and Nouns
 subtitle: Counting Things Correctly
 content_outline:
 - section: Introduction / Вступ
-  words: 200
   points:
   - The concept of 'Zones' in Ukrainian counting
   - Why English logic fails here
 - section: Presentation / Презентація
-  words: 600
   points:
   - Zone 1: One (Agreement in gender)
   - Zone 2: Two, Three, Four (The dual trace - Genitive Singular)
@@ -20,15 +18,12 @@ content_outline:
   - Compound Numbers: The 'Last Digit' Rule
   - Exceptions: 11-14
 - section: Practice / Практика
-  words: 150
   points:
   - Market counting drills
   - Currency agreement (Gryvnia/Dollar)
 - section: Dialogues / Діалоги
-  words: 50
   points:
   - Buying products in specific quantities at a market
-word_target: 1000
 activity_hints:
 - type: quiz
   focus: Accusative with numerals (animate vs inanimate)

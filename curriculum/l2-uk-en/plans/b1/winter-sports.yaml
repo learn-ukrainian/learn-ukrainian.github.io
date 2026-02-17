@@ -7,16 +7,13 @@ title: Зимові види спорту
 subtitle: Skiing and Snowboarding in Ukraine
 content_outline:
 - section: Огляд
-  words: 133
   points:
   - Цілі модуля
 - section: Вступ
-  words: 535
   points:
   - Зимовий туризм в Україні
   - Від санчат до сноуборду
 - section: Інтеграція
-  words: 1783
   points:
   - Буковель — Головний курорт
   - Найбільший гірськолижний курорт України
@@ -29,20 +26,15 @@ content_outline:
   - Правила поведінки на трасі
   - Лавинна безпека
 - section: Практика
-  words: 317
   points:
   - Ключові концепції
 - section: Продукція
-  words: 751
   points:
   - Діалоги про зимові види спорту
 - section: Підсумок — Побачимось на схилі!
-  words: 309
   points:
   - Планування зимової відпустки
 - section: Потрібно більше практики?
-  words: 172
-word_target: 4000
 vocabulary_hints:
   required:
   - лижі (skis)

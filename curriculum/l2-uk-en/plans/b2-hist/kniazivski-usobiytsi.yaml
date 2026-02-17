@@ -6,56 +6,46 @@ version: '2.0'
 title: Княжі усобиці та роздроблення
 content_outline:
 - section: Розминка
-  words: 205
   points:
   - Defining sovereignty vs suzerainty
   - The map of 1054 vs 1132
 - section: 'Читання: Тріумвірат Ярославичів'
-  words: 718
   points:
   - The will of Yaroslav the Wise
   - Battle of Alta (1068)
   - Kyiv Uprising
 - section: Любецький з'їзд (1097)
-  words: 462
   points:
   - Every man holds his own fatherland
   - The blinding of Vasylko
   - Consequences of the Congress
 - section: Володимир Мономах
-  words: 718
   points:
   - Crusades against Polovtsians
   - Monomakh's Reforms (Statute)
   - Instruction (Povchannia)
 - section: Соціальна структура та Економіка
-  words: 718
   points:
   - Economic causes of fragmentation
   - Boyars, Druzhina, Smerds
   - Urban growth
 - section: Культура та Церква
-  words: 256
   points:
   - Architecture (St. Michael's)
   - Chronicle writing (Nestor)
   - Church as unifying force
 - section: Первинні джерела
-  words: 410
   points:
   - Extract from the Primary Chronicle on Liubech
   - Extract from Monomakh's Instruction
 - section: Деколонізаційний погляд
-  words: 359
   points:
   - Reframing Fragmentation as Decentralization
   - European parallels
   - Myth of 'Feudal Disunity'
 - section: Підсумок
-  words: 154
   points:
   - Legacy of the era
-word_target: 4000
 vocabulary_hints:
   required:
   - усобиця (internecine war)

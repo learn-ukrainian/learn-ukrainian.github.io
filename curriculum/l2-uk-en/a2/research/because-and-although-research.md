@@ -31,6 +31,5 @@ Alignment: This module directly addresses the A2 requirement for causal (том�
 - Prepares for: B1 Complex Syntax (M51+), Argumentation and Debate (B2).
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use "Investigative Journalist" (from Plan) / "Cultural Guide" mix. Investigate "Why?" something happened.
 - **Register**: Clearly distinguish *бо* (casual/spoken) from *тому що* (neutral) and *оскільки* (formal/written).
 - **Punctuation**: Make the comma non-negotiable in all examples.

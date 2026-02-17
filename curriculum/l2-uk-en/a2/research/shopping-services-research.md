@@ -32,6 +32,5 @@ Alignment: This module directly addresses the "Shopping" and "Services" thematic
 - Prepares for: a2-54 (Sports and Fitness) - instrumental case usage; a2-63 (At the Bank) - financial vocabulary.
 
 ## Notes for Content Writing
-- **Persona Usage**: As the "Bessarabka Market Vendor", use the "Ukrainian Teacher" voice but with a market twist. Invite the learner to taste goods ("Спробуйте!"), discuss freshness, and warn them about high prices elsewhere.
 - **Grammar Focus**: Ensure clear distinction between Accusative (buying *what*: хліб, молоко) and Instrumental (paying *how*: карткою, готівкою).
 - **Service Vocabulary**: Briefly introduce 'ремонт', 'перукарня', 'хімчистка' as planned, but keep the main focus on the shopping transaction flow (Store -> Selection -> Price -> Payment).

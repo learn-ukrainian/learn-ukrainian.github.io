@@ -31,4 +31,3 @@ Alignment: This module addresses the standard's requirement for expressing desti
 - Focus on the polite request format: "Мені, будь ласка, один квиток до..."
 - Teach the fixed phrases "В один бік" (One way) and "Туди й назад" (Round trip) as vocabulary chunks.
 - Use `о котрій?` for schedule questions, as it aligns with A1 time expression requirements.
-- Ensure the "Theater Box Office Manager" persona is helpful but efficient, reflecting the reality of busy Ukrainian stations.

@@ -7,13 +7,11 @@ title: Театральне мистецтво I
 subtitle: Theater Arts I — From Origins to Kurbas
 content_outline:
 - section: Розминка — Витоки українського театру
-  words: 933
   points:
   - Від вертепу до професійної сцени
   - Театр корифеїв — Заньковецька, Кропивницький
   - Лесь Курбас — геній світового рівня
 - section: Content Areas
-  words: 1667
   points:
   - 'Origins: Вертеп, шкільна драма — folk and religious roots'
   - '19th century: Котляревський, Кропивницький, **Марія Заньковецька** — national
@@ -21,13 +19,11 @@ content_outline:
   - 'Revolutionary: **Лесь Курбас**, Театр "Березіль" — world-class experimental theater,
     Executed Renaissance martyr'
 - section: Практика — історія театру
-  words: 1400
   points:
   - Описати структуру вертепу — персонажі, сюжет
   - Проаналізувати внесок Марії Заньковецької
   - Написати есе про революційний театр Курбаса
   - Обговорити розстріл Курбаса та знищення "Березолю"
-word_target: 4000
 focus: fine-arts
 pedagogy: CBI
 objectives:

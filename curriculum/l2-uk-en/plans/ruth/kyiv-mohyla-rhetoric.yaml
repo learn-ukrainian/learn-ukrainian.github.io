@@ -8,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Loci Communes — The 5 Canons
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Kyiv-Mohyla Rhetoric

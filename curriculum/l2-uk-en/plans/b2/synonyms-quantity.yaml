@@ -7,13 +7,11 @@ title: 'Синоніми: Кількість та Міра'
 subtitle: Synonyms - Quantity and Measure
 content_outline:
 - section: Розминка — Багато чи мало?
-  words: 727
   points:
   - Багато vs чимало vs безліч — ступені інтенсивності
   - Розмовні слова (купа, маса) vs нейтральні (багато)
   - Мало vs трохи — негативна vs позитивна конотація
 - section: Much/Many
-  words: 1221
   points:
   - багато (much/many - neutral)
   - чимало (quite a lot - moderate)
@@ -21,7 +19,6 @@ content_outline:
   - купа (pile - colloquial)
   - маса (mass - colloquial)
 - section: Few/Little
-  words: 1221
   points:
   - мало (few/little - neutral)
   - небагато (not much)
@@ -29,13 +26,11 @@ content_outline:
   - кілька (several - countable)
   - декілька (a few - formal)
 - section: Практика — опис кількості
-  words: 831
   points:
   - Обрати слово кількості відповідно до регістру (звіт vs лист другу)
   - Переписати текст, змінивши сприйняття кількості (перебільшення vs применшення)
   - Написати статистичний огляд з різними кількісними словами
   - Зв'язок з M32 (числівники) — комплексне вираження кількості
-word_target: 4000
 focus: phraseology
 pedagogy: CBI
 objectives:

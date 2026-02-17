@@ -30,6 +30,5 @@ Alignment: This module explicitly teaches the semantic distinction between these
 - **Prepares for**: `b1-14` (Aspect integration practice) — feeds into the broader narrative skills.
 
 ## Notes for Content Writing
-- **Persona**: The "Memoirist" persona is perfect here. Use a nostalgic tone for "repeated" actions (childhood habits) vs a dramatic tone for "single events" (turning points).
 - **Visuals**: A timeline visualization is crucial. "Dots on a line" (repeated) vs "One big X" (single event).
 - **Immersion**: Ensure no English "used to" explanations in the main text. Show, don't tell, via the timeline and context.

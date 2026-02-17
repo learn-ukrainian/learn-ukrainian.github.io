@@ -31,7 +31,6 @@ Alignment: This module introduces both the synthetic (най-) and analytic (н�
 - Prepares for: `b1-06` (Advanced Adjective Usage and Stylistics)
 
 ## Notes for Content Writing
-- **Persona Integration**: As a "Restaurant Critic," use the superlative to rate dishes ("найсмачніша піца"), service ("найкращий сервіс"), and atmosphere ("найзатишніше місце").
 - **Grammar Scaffolding**: Clearly explain that `най-` is simply added to the comparative form. If they know the comparative, they know the superlative.
 - **Emphatic Forms**: Briefly introduce `якнай-` and `щонай-` (e.g., *якнайшвидше*) as ways to say "as ... as possible," per the module plan.
 - **Focus on Irregulars**: Spend extra time on *великий/малий* and *добрий/поганий* as these are the most common in daily speech.

@@ -8,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: How grammar was taught in brotherhood schools
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Pedagogy

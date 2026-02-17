@@ -41,4 +41,3 @@ Alignment: This module directly targets the B1 requirement to master a wide rang
 - **TTT Approach**: Start with a diagnostic that traps students into using simple sentences where a complex one is better/needed.
 - **Focus on punctuation**: The comma rule is a "hard" rule in Ukrainian (structural), unlike the "breath" rule in English. Make this a key teaching point.
 - **Register**: Distinguish between *бо* (casual) and *тому що* (neutral/formal).
-- **Style**: Use the "Novel Editor" persona to frame complex sentences as a tool for better storytelling, not just grammar rules. "Don't write choppy sentences; flow like a river."

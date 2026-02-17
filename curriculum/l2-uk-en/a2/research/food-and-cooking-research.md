@@ -39,6 +39,5 @@ Alignment: The module directly addresses §3.10 by teaching cooking methods (*с
 - **Prepares for**: `a2-46` (Home and Furniture - expanding on household items), B1 modules on recipes and traditions.
 
 ## Notes for Content Writing
-- **Persona**: The "Hospitable Host" should frame the imperative not as harsh commands, but as sharing a beloved family recipe ("Take this, cut that...").
 - **Grammar Scaffolding**: Ensure the distinction between "Instrumental for tools" (NO preposition) and "Instrumental for ingredients" (WITH preposition *з*) is explicitly taught to prevent the common error.
 - **Visuals**: Use a clear table comparing `називний` vs `орудний` for the 3 genders (ніж -> ножем, ложка -> ложкою, масло -> маслом).

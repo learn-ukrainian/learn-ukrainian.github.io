@@ -33,6 +33,5 @@ Alignment: This module directly targets the formation and usage of prefixed moti
 - **Prepares for**: B1.26 (Relative clauses - describing *where* someone went), B2 Narrative modules (travel stories).
 
 ## Notes for Content Writing
-- **Persona**: Adopt the "Logistics Manager" persona to make the "Checkpoint" feel like a route planning session or a transport analysis.
 - **Context**: Use the Kyiv Metro map or a train schedule as a recurring visual/contextual theme for the exercises.
 - **Visuals**: Emphasize the spatial logic of prefixes (diagrams of *в-* vs *ви-*, *під-* vs *від-*).

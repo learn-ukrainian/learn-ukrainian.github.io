@@ -6,13 +6,11 @@ version: '2.0'
 title: 'Синоніми: Емоції та почуття'
 content_outline:
 - section: Розминка — Нюанси емоційної лексики
-  words: 727
   points:
   - Чому "сум" і "журба" — не одне й те саме
   - Інтенсивність, регістр, стилістичне забарвлення
   - Зв'язок з фразеологією M47-54 (емоції в ідіомах)
 - section: Joy
-  words: 1221
   points:
   - радість (joy - general)
   - щастя (happiness - deeper)
@@ -20,7 +18,6 @@ content_outline:
   - втіха (delight - often from children)
   - насолода (pleasure - sensory)
 - section: Sadness
-  words: 1221
   points:
   - сум (sadness - general)
   - журба (melancholy - poetic)
@@ -28,13 +25,11 @@ content_outline:
   - горе (grief - intense)
   - туга (longing - nostalgic)
 - section: Практика — вибір точного слова
-  words: 831
   points:
   - Обрати синонім відповідно до контексту (офіційний лист vs художній текст)
   - Градуювати синоніми за інтенсивністю (сум → журба → горе)
   - Переписати текст, замінивши нейтральні слова на експресивні
   - Написати психологічний портрет з багатою емоційною лексикою
-word_target: 4000
 focus: phraseology
 pedagogy: CBI
 objectives:

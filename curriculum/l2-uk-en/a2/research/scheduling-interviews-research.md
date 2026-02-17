@@ -27,6 +27,5 @@ Alignment: This module directly addresses the "Work" theme by covering job searc
 - Prepares for: `a2-65` (Giving Directions) - office location context.
 
 ## Notes for Content Writing
-- **Persona**: The "HR Recruiter" persona allows for a natural Q&A format. Use this to model both sides of the conversation (Interviewer questions vs. Candidate answers).
 - **Practical Focus**: The dialogue should include the exact phrases for "When can you start?" (`Коли ви можете почати?`) and "What are your salary expectations?" (`Яка бажана зарплата?`).
 - **Scaffolding**: Ensure the Instrumental case for professions (`працювати + Instr`) is reinforced, as it's a persistent trouble spot.

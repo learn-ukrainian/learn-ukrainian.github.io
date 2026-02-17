@@ -16,7 +16,6 @@ Alignment: This module covers the core "Nature" theme (§3.13) and expands the D
 | річка | Med-High | швидка річка, на березі річки, купатися в річці |
 
 ## Cultural Hooks
-1. **Chuhaister (Чугайстер)**: A mythical Carpathian forest spirit (the "Woodman") who is friendly to humans, loves to dance, and protects woodcutters. Fits the "Carpathian Forester" persona perfectly.
 2. **Lake Nesamovyte (Озеро Несамовите)**: A legendary lake in the Chornohora ridge. Legend says if you throw a stone into it, you will summon a terrible storm (thunder/hail). Good for "stormy weather" vocabulary context.
 3. **Idiom**: "Сім погод надворі" (Seven weathers outside) – used to describe changeable, unpredictable weather, typical of the mountains.
 
@@ -30,6 +29,5 @@ Alignment: This module covers the core "Nature" theme (§3.13) and expands the D
 - **Prepares for**: A2-48 (Emotions - "Мені сумно/весело" uses the exact same Dative structure as "Мені холодно").
 
 ## Notes for Content Writing
-- **Persona**: The "Carpathian Forester" role allows natural integration of specific nature terms (stezha, polonyna) as "passive/flavor" vocabulary without overwhelming the learner.
 - **Grammar Scaffolding**: Explicitly contrast *Який день?* (Холодний) vs *Як надворі?* (Холодно) to address the #1 error.
 - **Visuals**: Use a table for "Impersonal Constructions" (Subject in English -> Dative in Ukrainian).

@@ -8,7 +8,6 @@ phase: 1
 phase_id: chancery-legal
 phase_name: Chancery & Legal
 focus: Суд, Судія — Basic procedure
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Courts

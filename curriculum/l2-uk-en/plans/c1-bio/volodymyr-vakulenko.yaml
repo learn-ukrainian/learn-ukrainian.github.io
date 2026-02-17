@@ -7,23 +7,17 @@ title: Володимир Вакуленко
 subtitle: Володимир Вакуленко
 content_outline:
 - section: Вступ та контекст
-  words: 800
   points: []
 - section: Життя та мучеництво в Ізюмі
-  words: 1200
   points: []
 - section: 'Щоденник окупації: Голос з-під землі'
-  words: 1000
   points: []
 - section: Деколонізаційна перспектива
-  words: 800
   points:
   - Зв'язок з Розстріляним Відродженням 1930-х
   - Українська суб'єктність та опір
 - section: Підсумок та спадщина
-  words: 700
   points: []
-word_target: 4500
 vocabulary_hints:
   required:
   - суб'єктність

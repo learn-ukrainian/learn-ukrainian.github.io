@@ -7,44 +7,35 @@ title: 'Хмельниччина: Козацька держава'
 subtitle: 'The Cossack State: Structure and Administration of the Hetmanate'
 content_outline:
 - section: 'Вступ: Народилася Гетьманщина'
-  words: 432
   points:
   - The challenge of state-building after victories
   - Cossack democracy vs. European legal standards
 - section: 'Структура влади: Гетьман та Генеральна старшина'
-  words: 757
   points:
   - The role of the Hetman as head of state
   - Functions of the General Staff (Scribe, Quartermaster, Judge, Treasurer)
 - section: 'Адміністративний устрій: Полково-сотенна система'
-  words: 757
   points:
   - Merging military and territorial structures
   - Role of colonels and centurions in local governance
 - section: 'Чигирин: Серце козацької держави'
-  words: 486
   points:
   - Chyhyryn as a European capital
   - Diplomatic etiquette and foreign embassies
 - section: 'Економіка та право: Скарбниця та суди'
-  words: 541
   points:
   - Creation of a national financial system
   - Cossack justice and the Lithuanian Statute
 - section: Читання
-  words: 378
   points:
   - Analysis of state documents
 - section: Первинні джерела
-  words: 324
   points:
   - Alberto Vimina's notes on Chyhyryn
 - section: 'Деколонізаційний погляд: Державність проти анархії'
-  words: 325
   points:
   - Debunking imperial myths of 'Cossack chaos'
   - The Hetmanate as a mature political project
-word_target: 4000
 vocabulary_hints:
   required:
   - гетьманат

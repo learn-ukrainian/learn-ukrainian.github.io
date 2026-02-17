@@ -27,6 +27,5 @@ Alignment: This module directly addresses the A2 requirement to master both the 
 - Prepares for: a2-15 (Aspect Morphology), a2-16 (Aspect Mastery Pairs), a2-22 (If I Were).
 
 ## Notes for Content Writing
-- Use the "Ambitious Startup Founder" persona to frame plans as "strategic goals" (imperfective/process) and promises as "deliverables" (perfective/result).
 - Emphasize that in Ukrainian, "I will do" (result) is a single word (*зроблю*), while "I will be doing" (process) requires two (*буду робити*).
 - Integrate the proverb "Обіцянка — цяцянка" to add cultural depth to the "Promises" section.

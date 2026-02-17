@@ -6,13 +6,11 @@ version: '2.0'
 title: 'Люди Русі: Суспільство та побут'
 content_outline:
 - section: Розминка
-  words: 160
   points:
   - Demographics of Kyiv vs London
   - The concept of Estate (Stan)
   - 'Vocabulary: Vira, Izgoy, Votchyna'
 - section: 'Читання: Суспільство та повсякдення Київської Русі'
-  words: 3200
   points:
   - 'The Prince and Druzhina: The top of the pyramid'
   - Boyars as landed aristocracy (Votchyna system)
@@ -26,13 +24,11 @@ content_outline:
   - 'Entertainment: Skomorokhy, Chess, and Festivals'
   - 'Literacy and Education: Birch Bark Letters and Graffiti'
 - section: 'Первинні джерела: Голоси епохи'
-  words: 400
   points:
   - 'Ruska Pravda: The price of life and honor'
   - Collective responsibility (Verv)
   - 'Birch Bark Letters: Ordinary voices'
 - section: 'Деколонізаційний погляд: Руйнування імперських міфів'
-  words: 240
   points:
   - Regional differences in housing (Mazanka vs Izba)
   - Differences in clothing and traditions
@@ -84,7 +80,6 @@ sources:
   notes: Legal text on social classes
 immersion: 100% Ukrainian
 phase: B2-HIST.1 [Kyivan Rus]
-word_target: 4000
 activity_hints:
 - type: reading
   focus: Первинні джерела

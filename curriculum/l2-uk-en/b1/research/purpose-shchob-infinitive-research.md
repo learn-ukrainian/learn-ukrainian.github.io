@@ -31,6 +31,5 @@ Alignment: This module directly teaches the B1 requirement for purpose clauses w
 - Connects to: `b1-16` (Motion verbs - often used with purpose: "Я йду в магазин, щоб купити хліб").
 
 ## Notes for Content Writing
-- **Tone**: The "Lesya Ukrainka" hook provides a slightly serious, poetic undertone suitable for the "Senior Language Specialist" persona.
 - **Pedagogy**: Explicitly contrast "same subject" (this module) with "different subject" (next module) to prevent fossilized errors, but focus practice ONLY on the infinitive form here.
 - **Style**: Use `аби` in literary examples to show richness, but focus on `щоб` for active production.

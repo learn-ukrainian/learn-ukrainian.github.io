@@ -7,58 +7,47 @@ title: 'Юрій Немирич: Гадяцька угода'
 subtitle: 'Yurii Nemyrych: The Treaty of Hadiach'
 content_outline:
 - section: Вступ
-  words: 364
   points:
   - 'Nemyrych as a unique figure: intellectual and politician'
   - The crisis after Khmelnytsky's death
 - section: 'Юрій Немирич: Портрет інтелектуала'
-  words: 545
   points:
   - Education in Europe (Leiden, Oxford, Paris)
   - Protestant faith (Arianism) and tolerance
   - Political career in the Commonwealth
 - section: 'Гадяцька угода 1658: Проект трьох народів'
-  words: 727
   points:
   - The concept of the Grand Duchy of Rus'
   - 'Equality of rights: religion, language, administration'
   - The vision of a federal state
 - section: Освіта і культура в проекті Немирича
-  words: 455
   points:
   - Plans for two academies (universities)
   - Freedom of the press and schools
   - Intellectual foundation for the state
 - section: 'Конотопська битва: Тріумф зброї'
-  words: 545
   points:
   - The war with Muscovy (1658-1659)
   - Victory at Konotop as a defense of the Treaty
   - Vyhovsky's military leadership
 - section: 'Крах великої ідеї: Чому не вийшло?'
-  words: 455
   points:
   - Internal opposition (Pushkar, Barabash)
   - Muscovite propaganda and incitement of the masses
   - The tragic death of Nemyrych
 - section: Читання
-  words: 227
   points:
   - Analysis of the Hadiach Treaty text
 - section: Первинні джерела
-  words: 273
   points:
   - Analysis of Nemyrych's speech to the Sejm
 - section: Деколонізаційний погляд
-  words: 273
   points:
   - Hadiach as an alternative to Pereiaslav
   - The myth of 'inevitable unity' with Russia
 - section: Підсумок
-  words: 136
   points:
   - Final evaluation of the project
-word_target: 4000
 vocabulary_hints:
   required:
   - федерація

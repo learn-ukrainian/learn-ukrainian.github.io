@@ -7,41 +7,34 @@ title: Hotel Accommodation
 subtitle: Checking In and Out
 content_outline:
 - section: 'Introduction: Hotels in Ukraine'
-  words: 100
   points:
   - Types of accommodation
   - Booking options
   - Hotel vocabulary overview
 - section: Making a Reservation
-  words: 200
   points:
   - забронювати номер
   - Room types (одномісний, двомісний)
   - Dates and duration
 - section: Checking In
-  words: 200
   points:
   - реєстрація, паспорт
   - заселення, ключ
   - Room information
 - section: Hotel Amenities
-  words: 200
   points:
   - сніданок, Wi-Fi, парковка
   - рушник, мило, шампунь
   - Requesting items
 - section: Problems and Solutions
-  words: 150
   points:
   - Common complaints
   - Asking for help
   - Resolving issues
 - section: 'Practice: Hotel Stay'
-  words: 150
   points:
   - Check in dialogue
   - Request amenities
-word_target: 1000
 vocabulary_hints:
   required:
   - готель (hotel)

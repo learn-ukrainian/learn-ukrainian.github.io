@@ -19,7 +19,6 @@ Alignment: This module focuses on the formation and usage of the past tense of p
 | **знайшов** | High | знайшов рішення, знайшов вихід, знайшов час |
 
 ## Cultural Hooks
-1. **The Archivist's Duty (SUCHO Initiative)**: In 2022, thousands of volunteers (the SUCHO initiative) worked to digitize and save Ukrainian cultural heritage websites before they were lost to the war. They *preserved* (зберегли) over 10 terabytes of data. This "result-focused" action is a modern anchor for the "Museum Archivist" persona.
 2. **Proverbial Wisdom**: "Діло майстра величає" (The deed glorifies the master). Ukrainian culture places high value on the *completion* of work and the tangible result left behind. Another fitting proverb: "Кінець — справі вінець" (The end is the crown of the work).
 
 ## Common Learner Errors
@@ -32,7 +31,6 @@ Alignment: This module focuses on the formation and usage of the past tense of p
 - Prepares for: **a2-14** (Future Plans - perfective future), **a2-15** (Aspect Morphology - deepening the "how"), **a2-26** (Telling Stories - narrative sequencing).
 
 ## Notes for Content Writing
-- **Persona Alignment**: The "Museum Archivist" should talk about finding lost documents, finishing a catalog, or saving a collection. Use "архів", "документ", "колекція" in examples.
 - **Narrative Sequencing**: Emphasize the "Chain of Events" pattern (first I did A, then I did B). Use markers like «спочатку», «потім», «нарешті».
 - **Immersion**: Since this is A2 Band 1 (M13), keep grammar theory in English but use Ukrainian for all archival examples and the "Yesterday in the Museum" dialogue.
 - **Visual Aid**: A decision tree for "Did I finish it?" vs "Was I doing it?" would be highly effective for this group.

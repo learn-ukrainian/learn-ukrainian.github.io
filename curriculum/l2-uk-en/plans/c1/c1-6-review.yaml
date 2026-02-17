@@ -7,13 +7,11 @@ title: 'C1.6 Література: Огляд та рефлексія'
 subtitle: 'C1.6 Literature: Review and Reflection'
 content_outline:
 - section: Розминка — Український літературний канон
-  words: 933
   points:
   - Від Котляревського до Коцюбинського — еволюція
   - Романтизм, реалізм, імпресіонізм — напрямки
   - Шевченко, Франко, Леся — три стовпи
 - section: Review Areas
-  words: 1667
   points:
   - 'Major authors: Kotlyarevsky, Shevchenko, Franko, Lesya Ukrainka'
   - 'Literary movements: Romanticism, Realism'
@@ -21,13 +19,11 @@ content_outline:
   - Literary analysis skills application
   - Cross-author comparisons
 - section: Практика — інтеграційний аналіз
-  words: 1400
   points:
   - Порівняти Шевченка та Франка — поетика та ідеологія
   - Написати есе про еволюцію жіночих образів у літературі
   - Проаналізувати вплив історичного контексту на творчість
   - Обговорити актуальність класики у сучасній Україні
-word_target: 4000
 focus: review
 pedagogy: Integration
 objectives:

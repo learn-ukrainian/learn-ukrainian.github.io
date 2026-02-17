@@ -33,6 +33,5 @@ Alignment: This module directly addresses the §3.12 thematic requirement by cov
 - Prepares for: **b1-health** (advanced diseases, internal organs, navigating the healthcare bureaucracy).
 
 ## Notes for Content Writing
-- **Persona Strategy**: As the "Encouraging Cultural Guide", frame the "poliklinika" not as a scary bureaucracy but as a place of care. Use the "raspberry tea" tip as a warm "grandmotherly" piece of advice.
 - **Grammar Focus**: Be very careful with "У мене болить". Ensure the distinction between Singular (болить голова) and Plural (болять очі) is the primary drill.
 - **Terminology**: Use "сімейний лікар" (family doctor) to reflect the modern medical reform in Ukraine, rather than just "терапевт".

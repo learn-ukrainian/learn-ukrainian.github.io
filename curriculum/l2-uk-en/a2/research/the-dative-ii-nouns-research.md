@@ -38,4 +38,3 @@ Alignment: This module directly addresses the core function of the Dative case a
 ## Notes for Content Writing
 - **The "Recipient" Metaphor**: Frame the Dative case clearly as the "To/For" case. If you can put "to" or "for" before the noun in English, it's likely Dative in Ukrainian (gave [to] mom, sent [to] dad).
 - **Consonant Shifts**: Pay special attention to the feminine shifts in Dative (г-з, к-ц, х-с) like *нога -> нозі*, *рука -> руці*. These are phonetically tricky but essential for euphony.
-- **Persona Usage**: As the "Encouraging Cultural Guide", use the flower/gift traditions heavily in examples. "Don't just learn the grammar, learn how not to offend your host!"

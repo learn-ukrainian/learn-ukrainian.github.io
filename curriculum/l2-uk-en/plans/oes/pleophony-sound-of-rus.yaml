@@ -8,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: ToroT/TereT vs TraT/TreT patterns
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Pleophony: The Sound of Rus'''

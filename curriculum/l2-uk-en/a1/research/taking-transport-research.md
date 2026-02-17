@@ -31,5 +31,4 @@ Alignment: This module addresses the A1 requirement for expressing location usin
 ## Notes for Content Writing
 - Focus on the distinction between **зупинка** (bus/tram stop) and **станція** (metro station).
 - Include the essential phrase **"Ви виходите?"** (Are you getting off?) as it's the most common phrase used to move through a crowd in Ukrainian transport.
-- Use "The Ukrainian Teacher" persona to explain the etiquette of "marshrutka" payment (passing money through other passengers).
 - Ensure IPA is provided for all new terms, especially multi-syllable ones like "прокомпостувати" or "тролейбус".

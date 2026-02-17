@@ -7,57 +7,46 @@ title: Структура речення
 subtitle: Sentence analysis terminology
 content_outline:
 - section: Introduction - Understanding Sentence Structure
-  words: 403
   points:
   - Why sentence analysis terminology matters
   - How native speakers learn syntax
   - Connection to complex sentences in B1.3
 - section: Sentence Parts (Члени речення)
-  words: 1107
   points:
   - підмет (subject), присудок (predicate)
   - додаток (object), означення (attribute)
   - обставина (adverbial)
   - Identifying parts in example sentences
 - section: Sentence Types
-  words: 201
   points:
   - просте речення (simple sentence)
   - складне речення (complex sentence)
 - section: Clause Types
-  words: 227
   points:
   - головне речення (main clause)
   - підрядне речення (subordinate clause)
 - section: Conjunctions
-  words: 151
   points:
   - connecting parts together
   - і, а, але, що, бо
 - section: Punctuation Terms
-  words: 252
   points:
   - кома, крапка, знак питання
   - двокрапка, крапка з комою
 - section: Additional Syntax Terms
-  words: 151
   points:
   - синтаксис, пунктуація, інверсія
 - section: Practice Analyzing Sentences
-  words: 503
   points:
   - Breaking down real Ukrainian sentences
   - Identifying all components
 - section: Dialogues
-  words: 629
   points:
   - 6 mini-dialogues illustrating concepts
 - section: Summary
-  words: 376
   points:
   - Key terms review
   - Self-assessment checklist
-word_target: 4000
 vocabulary_hints:
   required:
   - підмет (subject)

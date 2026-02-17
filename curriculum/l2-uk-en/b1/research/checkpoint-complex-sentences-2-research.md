@@ -34,6 +34,5 @@ Alignment: This module directly addresses the B1 requirements for complex senten
 - **Prepares for**: B1.4 (Advanced Grammar), B1.5 (Vocabulary Expansion - deeper texts)
 
 ## Notes for Content Writing
-- **Tone**: As a checkpoint, the tone should be encouraging but rigorous. Use the "Senior Editor" persona to frame the "integration" of skills as a professional milestone.
 - **Pedagogy**: Focus on *nuance* in causal connectors (бо vs. тому що vs. через те що) — "через те що" is more formal/official.
 - **Immersion**: Ensure all metalanguage instructions (e.g., "Change to indirect speech") are 100% in Ukrainian («Перетворіть на непряму мову»).

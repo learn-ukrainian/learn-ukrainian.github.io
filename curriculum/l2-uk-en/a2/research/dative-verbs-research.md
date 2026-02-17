@@ -29,6 +29,5 @@ Alignment: This module directly addresses the core function of the Dative case a
 - Prepares for: a2-04 (Instrumental I - often used with help "допомагати з..."), a2-09 (All Cases Practice), a2-11 (Checkpoint)
 
 ## Notes for Content Writing
-- **Persona Alignment**: The "Volunteer Coordinator" persona is perfect for `допомагати`, `довіряти`, `дякувати`. Use scenarios of organizing a community event or charity drive.
 - **Scaffolding**: Explicitly contrast English "I thank YOU" (Direct Object) with Ukrainian "I give thanks TO YOU" (Indirect Object) to fix the case error before it happens.
 - **Impersonal Verbs**: `Подобатися` needs a dedicated spotlight because the subject/object roles flip compared to English.

@@ -7,50 +7,41 @@ title: What Time Is It?
 subtitle: Telling Time, Days, and Months
 content_outline:
 - section: Warm-up
-  words: 32
   points:
   - Чому важливо знати час
   - Як українці питають про час
 - section: Presentation
-  words: 251
   points:
   - Питання про час (Котра година? / О котрій?)
   - Повні години (Перша година, друга година...)
   - Половина та чверть (Пів на другу, чверть на третю)
   - Хвилини (Десять хвилин на третю / Без десяти третя)
 - section: Days of the Week
-  words: 77
   points:
   - понеділок, вівторок, середа
   - четвер, п'ятниця, субота, неділя
   - У понеділок (On Monday)
 - section: Months of the Year
-  words: 123
   points:
   - січень - грудень (January - December)
   - У січні (In January)
   - Seasons connection
 - section: Time Prepositions
-  words: 92
   points:
   - о + locative (at a time)
   - до + genitive (until)
   - після + genitive (after)
 - section: Presentation 2
-  words: 260
   points:
   - Розклад дня (О восьмій ранку я прокидаюся)
   - Призначення зустрічей (Зустрінемося о п'ятій)
 - section: Practice
-  words: 210
   points:
   - Діалог про час (Котра година? — П'ята година)
   - Діалог про плани на тиждень
 - section: Practice 2
-  words: 19
   points:
   - Складання розкладу українською
-word_target: 1064
 vocabulary_hints:
   required:
   - година (hour)

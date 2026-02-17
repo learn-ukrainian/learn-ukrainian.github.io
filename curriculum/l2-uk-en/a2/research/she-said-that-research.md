@@ -36,6 +36,5 @@ Alignment: Module teaches the core mechanisms (conjunctions *що*, *щоб*, *�
 - Prepares for: `b1-reported-speech-advanced` (Nuanced reporting verbs), `b2-direct-indirect-speech` (Stylistic transformation)
 
 ## Notes for Content Writing
-- **Persona**: Use the "Gossip Columnist" / "Ukrainian Teacher" persona to make the *repetition* of "He said/She said" natural and amusing rather than dry.
 - **Tense Logic**: Explicitly frame the Ukrainian system as "Fair" or "Honest" — we report exactly what we heard, without changing the time.
 - **Differentiation**: Clearly distinguish *казати* (message content, introduces *що*) vs *говорити* (act of speaking).

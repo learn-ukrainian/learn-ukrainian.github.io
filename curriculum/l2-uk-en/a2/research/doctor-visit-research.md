@@ -34,6 +34,5 @@ Alignment: This module directly addresses the "візит до лікаря" (vi
 - **Prepares for**: `a2-60` (At the Pharmacy) - `ліки` and `рецепт` flow directly into buying meds.
 
 ## Notes for Content Writing
-- **Persona Usage**: As "The Cultural Guide" (Turn 3), mention the tea/raspberry tradition when the doctor gives advice (e.g., "Drink plenty of tea with raspberry").
 - **Grammar Focus**: Prioritize the `У мене болить [Nominative]` construction as the primary A2 pattern. Mention `Мені погано` (Dative) for general states.
 - **Formal Address**: Doctor-patient interactions are strictly formal (`Ви`).

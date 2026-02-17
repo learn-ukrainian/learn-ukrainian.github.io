@@ -7,40 +7,34 @@ title: 'Словотворення: назви місць та об''єктів'
 subtitle: 'Word Formation: Place and Object Names'
 content_outline:
 - section: Розминка — Як утворюються назви місць
-  words: 600
   points:
   - Чому місце дії має спеціальну назву (їсти → їдальня)
   - Три основні суфікси для місць (-ня, -ище, -арня)
   - Зв'язок із назвами осіб (лікар → лікарня)
 - section: Suffix -ня (place of activity)
-  words: 800
   points:
   - читати → читальня (reading room)
   - спати → спальня (bedroom)
   - їсти → їдальня (canteen)
   - варити → варильня (brewery)
 - section: Suffix -ище (place/area)
-  words: 800
   points:
   - клад → кладовище (cemetery)
   - ховати → сховище (storage)
   - пасти → пасовище (pasture)
   - жити → житло + -ище → жи́тлище (dwelling)
 - section: Suffix -арня (workshop/establishment)
-  words: 800
   points:
   - лікар → лікарня (hospital)
   - друкар → друкарня (printing house)
   - пекар → пекарня (bakery)
   - перукар → перукарня (hair salon)
 - section: Практика — утворення назв місць
-  words: 1000
   points:
   - Утворити назви місць від заданих дієслів (зберігати → ?)
   - Визначити суфікс і твірне слово (кав'ярня ← кава)
   - Аналіз тексту — знайти всі назви місць та їхнє походження
   - Описати свій район, використовуючи назви закладів
-word_target: 4000
 focus: grammar
 pedagogy: TTT
 objectives:

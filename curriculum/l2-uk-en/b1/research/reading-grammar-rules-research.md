@@ -31,6 +31,5 @@
 - **Prepares for**: B1-04 (Sentence Structure), B1-05 (Metalanguage Checkpoint), and all future B1 grammar modules (which use these instructions).
 
 ## Notes for Content Writing
-- **Tone**: The "Ukrainian Teacher" persona should treat grammar rules like "recipes" — instructions to be followed for a good result.
 - **Visuals**: Use "textbook snippets" as visual examples. Show a "screenshot" of a rule, then decode it.
 - **Emphasis**: Highlight that identifying the "instruction verb" (виберіть, вставте, з'єднайте) is 80% of understanding the task.

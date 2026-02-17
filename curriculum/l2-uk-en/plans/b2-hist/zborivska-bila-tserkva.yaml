@@ -7,50 +7,40 @@ title: Зборівська та Білоцерківська угоди
 subtitle: The Treaties of Zboriv and Bila Tserkva
 content_outline:
 - section: 'Вступ: Між перемогами та миром'
-  words: 450
   points:
   - Diplomatic situation after Zboriv (1649)
   - The goals of the Hetmanate vs. the Crown
 - section: 'Зборівський договір (1649): Перше визнання'
-  words: 600
   points:
   - 'Key conditions: 40,000 register, three voivodeships'
   - Legal status of the Hetmanate
   - The role of the Orthodox Church
 - section: Берестечко та поворот подій
-  words: 450
   points:
   - The impact of the 1651 defeat
   - Shift in the balance of power
 - section: 'Білоцерківський договір (1651): Гіркий компроміс'
-  words: 500
   points:
   - Reduction of the register (20,000)
   - Territorial losses (only Kyiv voivodeship)
   - Social tension and dissatisfaction among Cossacks
 - section: 'Читання: Тексти угод'
-  words: 400
   points:
   - Analysis of the Zboriv articles
 - section: Первинні джерела
-  words: 400
   points:
   - Ossonlinski and Khmelnytsky quotes
 - section: 'Аналіз: Дипломатія як мистецтво можливого'
-  words: 400
   points:
   - Khmelnytsky's tactical retreat
   - Preserving the core of the state
 - section: 'Деколонізаційний погляд: Вихід з-під польського права'
-  words: 350
   points:
   - Treaties as steps towards total sovereignty
   - Debunking the 'betrayal' narrative
 - section: Спадщина угод та історична пам'ять
-  words: 250
   points:
   - Impact on future legal acts
-word_target: 4000
 vocabulary_hints:
   required:
   - угода

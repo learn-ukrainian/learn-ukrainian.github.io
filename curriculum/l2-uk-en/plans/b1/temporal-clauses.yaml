@@ -7,28 +7,23 @@ title: Часові підрядні речення
 subtitle: Temporal Clauses Deep Dive
 content_outline:
 - section: Тест
-  words: 411
   points:
   - Diagnostic quiz on temporal clauses
   - Self-assessment questions
 - section: Пояснення
-  words: 2391
   points:
   - коли - Basic Time Clause
   - Sequence Connectors (перш ніж, після того як, як тільки)
   - Duration Connectors (поки, доки, під час того як)
   - Simultaneous Actions
 - section: Практика
-  words: 532
   points:
   - Sequence events
   - Build temporal stories
 - section: Діалоги
-  words: 666
   points:
   - Temporal clauses in conversation
   - Narrative scenarios
-word_target: 4000
 vocabulary_hints:
   required:
   - коли (when)

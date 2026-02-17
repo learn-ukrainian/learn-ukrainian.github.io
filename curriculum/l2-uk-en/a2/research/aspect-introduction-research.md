@@ -27,6 +27,5 @@ Alignment: This module introduces the fundamental concept of aspectual pairs (im
 - Prepares for: a2-13 (The Completed Past), a2-14 (Future Plans and Promises), a2-15 (Aspect Morphology).
 
 ## Notes for Content Writing
-- Use the **Borsch Master Chef** persona to explain the difference between the *process* of chopping beets and the *result* of a finished pot of borsch.
 - Emphasize that perfective verbs DO NOT have a present tense form.
 - Clearly categorize pairs by formation: prefixation (*писати/написати*), suffix/stem change (*купувати/купити*), and suppletion (*говорити/сказати*, *брати/взяти*).

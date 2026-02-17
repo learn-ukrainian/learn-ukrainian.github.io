@@ -35,6 +35,5 @@ Alignment: This module directly addresses the A2 requirement for communicative c
 - Prepares for: a2-70 (A2 Final Exam)
 
 ## Notes for Content Writing
-- **Persona Flavor (Turn 3)**: Use "The Encouraging Cultural Guide" to explain how easy and advanced Ukrainian digital services are compared to many other countries.
 - **Visuals**: Describe UI elements clearly (buttons like "Оплатити", icons for "Кошик").
 - **Grammar Focus**: Pay attention to the Imperative mood for app commands (Натисніть, Оберіть) and Genitive case for quantities/transactions.

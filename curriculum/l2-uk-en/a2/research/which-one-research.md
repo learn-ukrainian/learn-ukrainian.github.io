@@ -39,4 +39,3 @@
 ## Notes for Content Writing
 - **Scaffolding Strategy**: Start with Nominative `який` (Subject of the clause) as it matches the form learners know. Introduce Accusative `якого/яку` only in the second half.
 - **Visual Aid**: Use a "Mirror" analogy. `Який` reflects the noun it follows (Gender/Number) but dresses for the job it does inside the new sentence (Case).
-- **Persona**: The "Competition Judge" persona fits well — describing *exactly* which contestant/item is the winner ("The one who is fast...", "The cake which is sweet...").

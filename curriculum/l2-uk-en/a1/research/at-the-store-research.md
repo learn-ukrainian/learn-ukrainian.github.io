@@ -29,7 +29,6 @@ Alignment: This module focuses on the Accusative case for direct objects (buying
 - Prepares for: a1-39 (Buying Tickets) — expands Accusative usage to travel/services.
 
 ## Notes for Content Writing
-- **Persona Alignment**: As a "Supermarket Manager", I should guide the student through the departments (відділи), explaining not just words but the "flow" of a Ukrainian supermarket.
 - **Accusative Focus**: Use high-frequency feminine nouns (кава, вода, ковбаса) to reinforce the -у/-ю ending.
 - **Immersion Control**: Maintain heavy English scaffolding (60-70% English for grammar) as this is A1, but keep dialogues and vocabulary 100% Ukrainian with IPA.
 - **The "Bag" Ritual**: Emphasize the question «Пакет потрібен?» as it's the most common phrase at a Ukrainian checkout.

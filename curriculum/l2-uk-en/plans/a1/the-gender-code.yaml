@@ -7,13 +7,11 @@ title: The Gender Code
 subtitle: Unlocking Ukrainian Gender Patterns
 content_outline:
 - section: Warm-up
-  words: 97
   points:
   - Every Ukrainian noun has a gender — masculine, feminine, or neuter
   - The ending reveals the gender (pattern recognition, not memorization)
   - 95% predictable from the word ending
 - section: Presentation
-  words: 313
   points:
   - 'Masculine: consonant ending (стіл, хліб, дім)'
   - 'Feminine: -а or -я ending (книга, кімната, земля)'
@@ -21,7 +19,6 @@ content_outline:
   - Gender affects adjectives, pronouns, and case endings
   - Mini-dialogue demonstrating all three genders
 - section: Practice
-  words: 323
   points:
   - 4 declension families overview (відміни)
   - 'Family 1: -а/-я (mostly feminine) — мама, земля'
@@ -29,16 +26,13 @@ content_outline:
   - 'Family 3: feminine consonant (rare) — ніч, любов'
   - 'Family 4: neuter -а/-я with stem changes — імʼя, теля'
 - section: Production
-  words: 71
   points:
   - Categorize nouns by gender from endings
   - Identify declension family for common words
 - section: Cultural Insight
-  words: 130
   points:
   - S.T.A.L.K.E.R. Ukrainian game vocabulary example
   - Home vocabulary across all three genders
-word_target: 934
 vocabulary_hints:
   required:
   - брат (brother)

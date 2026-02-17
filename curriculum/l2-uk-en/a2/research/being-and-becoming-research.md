@@ -34,6 +34,5 @@ Alignment: This module directly addresses the requirement for A2 learners to use
 
 ## Notes for Content Writing
 - Focus on the distinction: **Present Tense Identity** (Nom. - *Я лікар*) vs. **Role/Function/Process** (Instr. - *Я працюю лікарем*, *Я буду лікарем*).
-- Integrate the "Life Coach" persona by asking learners what they *dream* of becoming (*Ким ви мрієте стати?*).
 - Ensure consistent use of both masculine and feminine forms for all profession examples to model modern Ukrainian usage.
 - Use the "Cultural Insight" box to explain the 2020 linguistic reform regarding femininitives.

@@ -30,4 +30,3 @@ Alignment: This module explicitly teaches the correlation between negation, impe
 ## Notes for Content Writing
 - **Genitive Trigger**: Emphasize that *negation* often triggers the *Genitive case* for the object (не читав *книги*, not *книгу*). This is a crucial A2/B1 bridge skill.
 - **"Ще не" Exception**: Highlight that "ще не" (not yet) is the major exception that *allows* Perfective aspect (Я ще не прочитав = I haven't finished reading yet), contrasting with general "не" + Imperfective.
-- **Tone**: Use the "Defense Lawyer" persona to explain the "laws" of negation—imperfective is the default "defense" against accusation (I wasn't doing it!), while perfective admits the action but denies the result.

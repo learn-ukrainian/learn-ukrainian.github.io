@@ -28,6 +28,5 @@ Alignment: This module explicitly teaches the semantic logic of prefixes (`пе�
 - Prepares for: B1 Motion Verbs (where prefixes `по-`, `при-`, `за-` indicate direction), B1 Advanced Aspect.
 
 ## Notes for Content Writing
-- **Persona Alert**: Use the "Film Director" persona to explain prefixes as "scene directions" (e.g., "Cut! Do it again!" = `пере-`).
 - **Visuals**: Use a clear "Hinge vs. Abstract" comparison table for Open/Close verbs.
 - **Scaffolding**: Carefully distinguish `по-` as "a little bit" (delimitative) vs `по-` as perfective marker. Focus on "doing something for a while" (`почитати`) vs "starting" (`піти`).

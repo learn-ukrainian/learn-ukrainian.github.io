@@ -7,13 +7,11 @@ title: Історія української літератури
 subtitle: History of Ukrainian Literature
 content_outline:
 - section: Розминка — Від літопису до роману
-  words: 933
   points:
   - Київська Русь — літописи, житія, повісті
   - Бароко — Сковорода як філософ-поет
   - Романтизм та національне пробудження
 - section: Content Areas
-  words: 1667
   points:
   - 'Давня література: chronicles, religious texts, polemics'
   - 'Бароко: Сковорода, Кониський'
@@ -21,13 +19,11 @@ content_outline:
   - 'Реалізм: social consciousness'
   - 'Модернізм: early 20th century experimentation'
 - section: Практика — літературна історія
-  words: 1400
   points:
   - Проаналізувати фрагмент Повісті минулих літ
   - Порівняти барокову та романтичну поезію
   - Написати есе про вплив соціального контексту на літературу
   - Обговорити зв'язок між модернізмом та національним відродженням
-word_target: 4000
 focus: literature
 pedagogy: Immersion & Analysis
 objectives:

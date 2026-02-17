@@ -34,6 +34,5 @@ Alignment: This module explicitly targets the formation and usage of `від-`, 
 - **Prepares for**: b1-21 (Motion - figurative uses), b1-22 (Motion full prefix integration)
 
 ## Notes for Content Writing
-- **Station Master Persona**: The "Station Master" persona fits perfectly with `відходити` (trains departing) and `підходити` (trains approaching the platform). Use railway announcements as examples.
 - **Prepositions**: Ensure strict enforcement of preposition usage: `підійти ДО` (genitive), `відійти ВІД` (genitive). This is a critical grammatical anchor.
 - **Nuance**: Highlight that `підійти` implies getting *close* to something (proximity), whereas `дійти` implies reaching the *end* of a path (destination).

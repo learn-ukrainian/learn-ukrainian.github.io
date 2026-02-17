@@ -37,4 +37,3 @@ Alignment: This module directly addresses the B1 requirement for complex sentenc
 ## Notes for Content Writing
 - **Contrastive Grammar**: Explicitly distinguish "хоча" (conjunction + clause) from "незважаючи на" (preposition + noun).
 - **Style Tip**: Introduce "попри" as a stylish, slightly more formal alternative to "незважаючи на" often used in media.
-- **Tone**: The "Debate Champion" persona implies a focus on argumentation — use examples related to winning arguments, conceding minor points to win major ones ("Хоча ваш аргумент сильний, факти свідчать про інше").

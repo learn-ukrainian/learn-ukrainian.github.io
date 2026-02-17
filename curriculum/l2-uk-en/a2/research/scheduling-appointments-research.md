@@ -30,6 +30,5 @@ Alignment: This module directly addresses the A2 requirement for understanding a
 - Prepares for: `a2-59-doctor-visit` (specific medical booking), `a2-64-scheduling-interviews` (formal scheduling)
 
 ## Notes for Content Writing
-- **Persona**: As "Cultural Guide", frame the lesson around the "Art of Planning" in Ukraine—how to be polite but persistent.
 - **Pedagogy**: Explicitly distinguish between "booking an appointment" (*записатися*) vs "arranging a hangout" (*домовитися про зустріч*).
 - **Immersion**: Use Ukrainian interface terms (calendars, booking apps) in examples to boost realism.
