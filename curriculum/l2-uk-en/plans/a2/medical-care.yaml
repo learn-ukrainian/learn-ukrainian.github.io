@@ -6,73 +6,44 @@ version: '2.0'
 title: Medical Care
 subtitle: Doctor Consultations, Diagnosis & Prescriptions
 content_outline:
-- section: Вступ
+- section: Introduction / Вступ
   points:
-  - Healthcare system basics — role of 'сімейний лікар' (family doctor) and 'поліклініка'
-    (clinic)
-  - 'Medical vocabulary overview — cultural hook: mandatory use of ''бахіли'' (shoe
-    covers) in clinics; State Standard §3.12 alignment'
-- section: Презентація
+  - 'From symptoms to consultation — builds on a2-34 (body parts, боліти) and a2-55
+    (wellness, healthcare system); now: full doctor visit from start to finish'
+  - 'Cultural hook: mandatory use of «бахіли» (shoe covers) in clinics; the
+    «декларація з лікарем» system'
+- section: Запис до лікаря
   points:
-  - Making appointments — usage of 'записатися до лікаря' (make an appointment) and
-    'викликати лікаря' (call a doctor)
-  - 'Describing symptoms — focus on ''У мене болить [Nominative]'' construction; learner
-    error: ''Я болю голову'' (incorrect) vs ''У мене болить голова'' (correct); learner
-    error: ''ангіна'' = tonsillitis/strep throat (not heart attack)'
-  - 'Doctor''s questions — formal address (''Ви'') is strictly required; common question:
-    ''Що у вас болить?'''
+  - 'Making appointments — записатися до лікаря (online/phone), вибрати час прийому;
+    cultural note: Helsi.me as the main appointment platform'
+  - 'Calling a doctor home — викликати лікаря додому; when to call швидку допомогу;
+    learner error: «ангіна» = tonsillitis (not heart attack!)'
+- section: На прийомі у лікаря
+  points:
+  - 'Doctor''s questions — formal «Ви» strictly required; «Що вас турбує?», «Де
+    болить?», «Як давно?»; learner error: using «ти» with a doctor'
+  - 'Patient''s answers — describing medical history: «У мене алергія на...»,
+    «Я приймаю ліки від...», «Це почалося вчора»'
+  - 'Physical examination — дихайте/не дихайте, відкрийте рот, покажіть язик;
+    standard ref: §4.2.3.2 imperative forms'
+  - 'Measurement vocabulary — міряти температуру, вимірювати тиск, зважитися;
+    collocations: нормальний тиск, підвищена температура'
+- section: Діагноз і лікування
+  points:
+  - 'Understanding the diagnosis — діагноз, застуда, грип, ангіна, отруєння;
+    collocations: поставити діагноз, підтвердити діагноз'
+  - 'Prescriptions — виписати рецепт, приймати ліки; learner error: рецепт
+    (prescription) ≠ чек (receipt); dosage: двічі/тричі на день, до/після їжі'
+  - 'Sick leave — лікарняний (sick leave certificate), взяти лікарняний;
+    cultural note: the bureaucratic process of getting лікарняний'
 - section: Practice / Практика
   points:
-  - Medical dialogue exercises — practice expressing physical states with Dative ('Мені
-    погано') and Nominative for pain subjects ('Голова болить')
-  - Complete consultation practice — include 'огляд пацієнта' (patient exam) and 'міряти
-    температуру' (taking temperature)
+  - Full consultation role-play — from greeting to diagnosis to prescription
+  - 'Calling to make an appointment — phone dialogue with receptionist'
 - section: Narrative / Розповідь
   points:
-  - Story about doctor visit — narrative centering on a visit to a 'сімейний лікар'
-  - 'Diagnosis and treatment — use ''виписати ліки'' and ''рецепт''; learner error:
-    confusion between ''рецепт'' (prescription) and ''чек'' (receipt); cultural hook:
-    mention ''narodna medytsyna'' (tea with raspberry/viburnum) as a first step before
-    meds'
-- section: Need More Practice?
-  points:
-  - Summary and key phrases — recap key collocations like 'У мене температура', 'приймати
-    ліки'
-vocabulary_hints:
-  required:
-  - лікар (doctor) — сімейний лікар (family doctor), записатися до лікаря (make an
-    appointment), викликати лікаря (call a doctor)
-  - пацієнт (patient) — огляд пацієнта (patient exam), скарги пацієнта (patient complaints)
-  - болить (hurts) — Що у вас болить? (What hurts?), У мене болить голова (My head
-    hurts)
-  - симптом (symptom)
-  - 'рецепт (prescription) — рецепт на ліки (prescription for meds), отримати рецепт
-    (get a prescription); learner error: not a payment receipt (чек)'
-  - ліки (medicine) — приймати ліки (take meds), виписати ліки (prescribe meds), ліки
-    від грипу (flu meds)
-  - лікарня (hospital)
-  - поліклініка (clinic) — outpatient facility where family doctors work
-  recommended:
-  - діагноз (diagnosis)
-  - лікування (treatment)
-  - лікарняний (sick leave)
-  - алергія (allergy)
-  - температура (temperature) — міряти температуру (to take temp), висока температура
-    (high fever), у мене температура (I have a fever)
-  - тиск (blood pressure)
-activity_hints:
-- type: match-up
-  focus: Medical vocabulary
-  items: 25
-- type: cloze
-  focus: Doctor-patient conversation
-  items: 12
-- type: fill-in
-  focus: Complete medical sentences
-  items: 15
-- type: cloze
-  focus: Medical consultation
-  items: 8
+  - 'Story of a doctor visit — complete narrative from feeling sick to recovery;
+    integrates all vocabulary from the module'
 focus: practical
 pedagogy: PPP
 prerequisites:
@@ -80,17 +51,54 @@ prerequisites:
 connects_to:
 - a2-60 (At the Pharmacy)
 objectives:
-- Learner can describe medical history
-- Learner can answer doctor's questions
-- Learner can understand diagnosis and advice
-- Learner can ask for sick leave
+- Learner can make a doctor's appointment
+- Learner can describe symptoms to a doctor using formal register
+- Learner can understand diagnosis and medical advice
+- Learner can handle prescriptions and sick leave
 grammar:
-- Medical history questions and answers
-- Describing pain (intensity, location)
-- Understanding medical advice
+- formal medical register (Ви-form throughout)
+- medical imperatives (дихайте, відкрийте)
+- describing medical history (past tense + temporal markers)
+- prescription language (приймати + frequency)
+module_type: practical
+sources:
+- name: Ukrainian State Standard 2024 - Health Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for medical consultation and formal health communication at A2
 register: розмовний
 immersion: 75-90% Ukrainian
 phase: A2.6 [Practical]
 persona:
   voice: Encouraging Cultural Guide
   role: Emergency Dispatcher
+vocabulary_hints:
+  required:
+  - лікар (doctor) — сімейний лікар, записатися до лікаря, викликати лікаря
+  - пацієнт (patient) — огляд пацієнта, скарги пацієнта, картка пацієнта
+  - 'рецепт (prescription) — виписати рецепт, рецепт на ліки; learner error: ≠ чек
+    (receipt)'
+  - діагноз (diagnosis) — поставити діагноз, підтвердити діагноз
+  - лікарняний (sick leave) — взяти лікарняний, бути на лікарняному
+  - приймати (to take [medicine]) — приймати ліки двічі на день, до/після їжі
+  - прийом (appointment/consultation) — час прийому, на прийомі у лікаря
+  recommended:
+  - алергія (allergy) — алергія на пилок, алергічна реакція
+  - тиск (blood pressure) — вимірювати тиск, підвищений тиск
+  - аналіз (test/analysis) — здати аналізи, аналіз крові
+  - направлення (referral) — направлення до спеціаліста
+  - застуда (cold) — застудитися, лікувати застуду
+  - отруєння (poisoning) — харчове отруєння
+activity_hints:
+- type: match-up
+  focus: Medical consultation vocabulary
+  items: 25
+- type: fill-in
+  focus: Doctor-patient dialogue completion
+  items: 15
+- type: fill-in
+  focus: Making appointments (phone/online)
+  items: 12
+- type: fill-in
+  focus: Understanding prescriptions
+  items: 8

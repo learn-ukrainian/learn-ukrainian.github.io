@@ -8,54 +8,92 @@ subtitle: Wellness, Traditional Medicine & Healthy Lifestyle
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Essential health vocabulary — focus on basics like голова, рука, нога, температура
-  - 'Grammar of ''болить'' — learner error: ''Я болить...'' vs correct ''У мене болить...'';
-    focus on impersonal construction'
-- section: Presentation / Презентація
+  - 'From illness to wellness — transition from a2-34 (body/symptoms) to broader
+    health concepts; cultural hook: «Здоров''я — найбільше багатство»'
+  - 'Ukrainian wellness culture — holistic approach: physical, mental, spiritual
+    health as interconnected; contrast with Western "gym culture"'
+- section: Здоровий спосіб життя
   points:
-  - 'Body parts (gender and agreement) — focus on plural agreement (learner error:
-    ''У мене болить ноги'' vs ''болять''); usage of possessives'
-  - Symptoms and illnesses — collocations like 'висока температура', 'червоне горло',
-    'крутиться голова'
-  - 'Medical locations and treatments — cultural hook: ''чай з малиною'' as first
-    remedy; learner error: confusing ''лікар'' (person) vs ''лікарня'' (place)'
+  - 'Daily wellness vocabulary — правильне харчування, фізичні вправи, здоровий сон;
+    collocations: вести здоровий спосіб життя, дотримуватися режиму'
+  - 'Mental health basics — стрес, відпочинок, настрій; cultural note: growing
+    awareness of mental health in Ukraine, especially post-2022'
+  - 'Fitness and exercise — зарядка, пробіжка, йога; cultural hook: outdoor fitness
+    equipment in Ukrainian parks (вуличні тренажери)'
+- section: Народна медицина
+  points:
+  - 'Herbal remedies — чай з малиною (raspberry tea for colds), калина (viburnum),
+    липа (linden); cultural hook: every Ukrainian grandmother''s pharmacy'
+  - 'Traditional practices — гірчичники (mustard plasters), банки (cupping), мед з
+    молоком; learner error: these are actual current practices, not just folklore'
+  - 'Баня/сауна culture — cultural hook: steam baths as wellness tradition;
+    collocations: паритися в бані, березовий віник'
+- section: Система охорони здоров''я
+  points:
+  - 'Healthcare system overview — поліклініка vs лікарня; cultural hook: medical
+    reform and декларація з сімейним лікарем'
+  - 'Types of medical facilities — аптека, стоматологія, приватна клініка;
+    collocations: цілодобова аптека, чергова аптека'
+  - 'Health insurance and costs — медичне страхування, безкоштовна медицина;
+    cultural note: evolution of Ukrainian healthcare from Soviet free model'
 - section: Practice / Практика
   points:
-  - 'Dialogue at the doctor — scenario: simple check-up involving ''дихайте/не дихайте''
-    and describing symptoms'
+  - 'Wellness advice dialogues — giving health tips using треба/варто + infinitive'
+  - 'Comparing wellness practices — traditional vs modern approaches'
 - section: Dialogues / Діалоги
   points:
-  - Story about an accident — narrative context using 'зламати ногу/руку'; expressing
-    pain and recovery
-- section: Summary / Підсумок
-  points:
-  - 'Recap of body parts and symptoms — include proverb: ''Здоров''я — найбільше багатство'''
+  - 'At the wellness center — discussion about healthy lifestyle choices'
+  - 'Grandma''s remedies vs modern medicine — generational dialogue about health
+    practices'
 focus: vocabulary
 pedagogy: PPP
 objectives:
-- Learner can name body parts
-- Learner can describe symptoms and illness
-- Learner can understand medical instructions
-- Learner can give simple health advice
+- Learner can discuss healthy lifestyle in Ukrainian
+- Learner can describe traditional Ukrainian remedies
+- Learner can navigate the healthcare system vocabulary
+- Learner can give and understand wellness advice
 grammar:
-- describing symptoms (болить, температура)
-- medical advice (треба, можна)
-- body parts vocabulary
-- doctor's appointment
+- wellness vocabulary and collocations
+- advice structures (треба, варто, потрібно + infinitive)
+- comparison of practices (більш/менш корисний)
+- healthcare system terminology
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Health and Hygiene
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for health vocabulary and wellness at A2
 immersion: 75-90% Ukrainian
-phase: A2.3
+phase: A2.5
 persona:
   voice: Encouraging Cultural Guide
   role: Yoga Instructor
 vocabulary_hints:
   required:
-  - 'голова (head) — collocations: болить голова, крутиться голова'
-  - 'боліти (to hurt) — impersonal construction focus: у мене болить X (singular)
-    vs болять Y (plural)'
-  - 'температура (fever/temperature) — collocation: висока температура, міряти температуру'
-  - 'лікар (doctor) — distinction: йти до лікаря (person) vs у лікарню (place)'
+  - 'здоров''я (health) — collocations: міцне здоров''я, піклуватися про здоров''я'
+  - 'здоровий (healthy) — здоровий спосіб життя, здорове харчування'
+  - 'ліки (medicine) — пити ліки, ліки від грипу, народні ліки'
+  - 'малина (raspberry) — чай з малиною (universal cold remedy)'
+  - 'аптека (pharmacy) — цілодобова аптека, чергова аптека'
+  - 'харчування (nutrition) — правильне харчування, здорове харчування'
+  - 'відпочинок (rest/relaxation) — активний відпочинок, повноцінний відпочинок'
   recommended:
-  - 'ліки (medicine) — context: пити ліки, ліки від грипу'
-  - 'горло (throat) — context: червоне горло, болить горло'
-  - 'калина (viburnum) — cultural context: traditional remedy tea'
-  - 'малина (raspberry) — cultural context: tea with raspberry jam for colds'
+  - 'калина (viburnum) — traditional remedy, cultural symbol'
+  - 'гірчичники (mustard plasters) — traditional remedy still in use'
+  - 'зарядка (morning exercises) — робити зарядку'
+  - 'стрес (stress) — знімати стрес, боротися зі стресом'
+  - 'страхування (insurance) — медичне страхування'
+  - 'поліклініка (outpatient clinic) — районна поліклініка'
+activity_hints:
+- type: match-up
+  focus: Wellness vocabulary
+  items: 25
+- type: fill-in
+  focus: Health advice with треба/варто
+  items: 15
+- type: quiz
+  focus: Traditional vs modern remedies
+  items: 15
+- type: fill-in
+  focus: Healthcare system navigation
+  items: 10
