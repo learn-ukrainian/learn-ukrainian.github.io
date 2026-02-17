@@ -19,7 +19,7 @@ from pathlib import Path
 
 RUBRIC_REGISTRY = {
     "core": {
-        "tracks": {"a1", "a2"},
+        "tracks": {"a1", "a2", "b1", "b2", "c1", "c2"},
         "max_score": 10,
         "dimensions": ["state_standard", "vocabulary", "cultural_hooks",
                         "learner_errors", "cross_references", "pedagogy_notes"],
