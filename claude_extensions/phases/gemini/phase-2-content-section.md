@@ -182,19 +182,23 @@ Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear
 
 ### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
 
+**Level-gated IPA rules:**
+- **A1–A2**: IPA allowed ONLY on the **first occurrence** of each new vocabulary word when it is introduced. NEVER transcribe full sentences, example phrases, or words the student has already seen in earlier modules. The goal is a pronunciation hint on unfamiliar words, not a phonetics textbook.
+- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file.
+
 **ALL pronunciation guides MUST use IPA symbols.** Latin transliterations are BANNED.
+Maximum ~15-25 IPA annotations per module (one per new word). If you have more, you are over-annotating.
 
 ```markdown
+❌ WRONG (full sentence IPA):
+"**Котра година?** [kɔˈtra ɦɔˈdɪna] (What time is it?)"
+"**Ви на вокзалі.** [ʋɪ na ʋɔkˈzalʲi] (You are at the station.)"
+
 ❌ WRONG (Latin transliteration):
-"Х sounds like 'kh' in Scottish 'loch'"
-"Ш = 'sh', Ч = 'ch', Ж = 'zh'"
 "хліб (khlib)"
 
-✅ RIGHT (IPA with English approximation):
-"**Х** — [x], like the «ch» in Scottish «loch»"
-"**Ш** — [ʃ], like «sh» in «shoe»"
-"**Ч** — [tʃ], like «ch» in «church»"
-"**Ж** — [ʒ], like «s» in «measure»"
+✅ RIGHT (IPA on new vocabulary only):
+"The key phrase is **котра** [kɔˈtra] (which). Use it to ask about time."
 "**хліб** — [xlʲib]"
 ```
 
