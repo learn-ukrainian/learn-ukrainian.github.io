@@ -938,12 +938,183 @@ def phase_8_mdx(ctx: ModuleContext) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Phase 0.5: Plan Enrichment from Research
+# ---------------------------------------------------------------------------
+
+def _merge_enrichment_into_plan(plan: dict, enrichment: dict) -> dict:
+    """Deterministic merge: replace section points + extend vocabulary_hints.
+
+    Only touches content_outline.points and vocabulary_hints — all other
+    plan fields are preserved untouched.
+    """
+    # Build lookup: section name -> enriched points
+    enriched_sections = {}
+    for section in enrichment.get("content_outline", []):
+        name = section.get("section", "")
+        if name:
+            enriched_sections[name] = section.get("points", [])
+
+    # Replace points in matching sections
+    for section in plan.get("content_outline", []):
+        name = section.get("section", "")
+        if name in enriched_sections:
+            section["points"] = enriched_sections[name]
+
+    # Merge vocabulary_hints (add collocations, don't remove words)
+    enriched_vocab = enrichment.get("vocabulary_hints")
+    if enriched_vocab and isinstance(enriched_vocab, dict):
+        plan_vocab = plan.setdefault("vocabulary_hints", {})
+        for category in ("required", "recommended"):
+            if category in enriched_vocab and enriched_vocab[category]:
+                plan_vocab[category] = enriched_vocab[category]
+
+    return plan
+
+
+def phase_0_5_enrich_plan(ctx: ModuleContext) -> bool:
+    """Phase 0.5: Enrich plan with research findings.
+
+    Reads research + plan, dispatches to Gemini, merges enriched
+    content_outline and vocabulary_hints back into the plan file.
+    """
+    phase = "0.5"
+    if is_phase_complete(ctx, phase):
+        log("  Phase 0.5: SKIP (already complete)")
+        return True
+
+    # Skip if research doesn't exist (Phase 0 must complete first)
+    research_path = ctx.paths.get("research")
+    if not research_path or not research_path.exists():
+        log("  Phase 0.5: SKIP — no research file (Phase 0 must run first)")
+        return True
+
+    # Quality gate: research must score 9+/10 to avoid enriching from thin research
+    MIN_RESEARCH_SCORE = 9
+    try:
+        from research_quality import assess_research_compat
+        info = assess_research_compat(research_path, ctx.track)
+        if info and info.get("score") is not None:
+            score = info["score"]
+            if score < MIN_RESEARCH_SCORE:
+                log(f"  Phase 0.5: SKIP — research quality {score}/10 < {MIN_RESEARCH_SCORE} threshold")
+                return True
+            log(f"  Phase 0.5: Research quality {score}/10 — proceeding")
+    except ImportError:
+        log("  Phase 0.5: WARNING — research_quality not available, skipping quality gate")
+
+    plan_path = ctx.paths.get("plan")
+    if not plan_path or not plan_path.exists():
+        log("  Phase 0.5: SKIP — no plan file")
+        return True
+
+    # Check if plan already has enrichment markers (idempotency)
+    plan_text = plan_path.read_text(encoding="utf-8")
+    plan = yaml.safe_load(plan_text) or {}
+    has_enrichment = any(
+        "—" in str(p) or "learner error:" in str(p) or "cultural hook:" in str(p)
+        for section in plan.get("content_outline", [])
+        for p in section.get("points", [])
+    )
+    if has_enrichment and not ctx.force_phase:
+        log("  Phase 0.5: SKIP — plan already appears enriched")
+        mark_phase_locked(ctx, phase, "complete", note="already-enriched")
+        return True
+
+    # Fill template
+    template = PHASES_DIR / "phase-0-5-enrich-plan.md"
+    if not template.exists():
+        log(f"  Phase 0.5: SKIP — template not found: {template}")
+        return True
+
+    prompt_file = ctx.orch_dir / "phase-0-5-prompt.md"
+    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+        return False
+
+    if ctx.dry_run:
+        log("  Phase 0.5: DRY-RUN — would dispatch plan enrichment")
+        return True
+
+    # Dispatch to Gemini
+    log("  Phase 0.5: Dispatching plan enrichment...")
+    output_file = _gemini_output_path(ctx.slug, "0.5")
+    ok, raw_output = dispatch_gemini(
+        _dispatch_prompt(ctx, prompt_file),
+        task_id=f"yw-{ctx.slug}-p0.5",
+        model=FLASH_MODEL,  # Lightweight task — flash is sufficient
+        stdout_only=True, output_file=output_file,
+    )
+    if not ok:
+        log("  Phase 0.5: FAILED — Gemini dispatch error")
+        return False
+
+    # Extract enrichment from delimiters
+    enrichment_text = ""
+    if "===ENRICHMENT_START===" in raw_output and "===ENRICHMENT_END===" in raw_output:
+        start = raw_output.index("===ENRICHMENT_START===") + len("===ENRICHMENT_START===")
+        end = raw_output.index("===ENRICHMENT_END===")
+        enrichment_text = raw_output[start:end].strip()
+    else:
+        log("  Phase 0.5: FAILED — no ENRICHMENT delimiters in output")
+        return False
+
+    # Parse enrichment YAML
+    try:
+        enrichment = yaml.safe_load(enrichment_text) or {}
+    except yaml.YAMLError as e:
+        log(f"  Phase 0.5: FAILED — YAML parse error: {e}")
+        # Save raw output for debugging
+        (ctx.orch_dir / "phase-0-5-enrichment-raw.md").write_text(
+            enrichment_text, encoding="utf-8"
+        )
+        return False
+
+    if not enrichment.get("content_outline"):
+        log("  Phase 0.5: FAILED — no content_outline in enrichment")
+        return False
+
+    # Backup original plan
+    backup_path = ctx.orch_dir / "phase-0-5-original-plan.yaml"
+    backup_path.write_text(plan_text, encoding="utf-8")
+
+    # Save enrichment artifact
+    enrichment_artifact = ctx.orch_dir / "phase-0-5-enrichment.yaml"
+    enrichment_artifact.write_text(
+        yaml.dump(enrichment, allow_unicode=True, default_flow_style=False),
+        encoding="utf-8",
+    )
+
+    # Merge enrichment into plan
+    enriched_plan = _merge_enrichment_into_plan(plan, enrichment)
+
+    # Validate: no word_target or words fields added
+    for forbidden_key in ("words", "word_target", "word_count"):
+        enriched_plan.pop(forbidden_key, None)
+
+    # Write enriched plan back
+    plan_path.write_text(
+        yaml.dump(enriched_plan, allow_unicode=True, default_flow_style=False, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    # Count enriched points
+    total_points = sum(
+        len(s.get("points", []))
+        for s in enriched_plan.get("content_outline", [])
+    )
+    log(f"  Phase 0.5: Plan enriched ({total_points} points across {len(enriched_plan.get('content_outline', []))} sections)")
+
+    mark_phase_locked(ctx, phase, "complete", task_id=f"yw-{ctx.slug}-p0.5")
+    return True
+
+
+# ---------------------------------------------------------------------------
 # Pipeline Runner
 # ---------------------------------------------------------------------------
 
 # Unified phase sequence — no mode branching
 PHASE_SEQUENCE = [
     "0",    # Research
+    "0.5",  # Plan Enrichment
     "1",    # Meta/Outline
     "2",    # Write Prose
     "3",    # Prose Audit+Fix
@@ -957,6 +1128,7 @@ PHASE_SEQUENCE = [
 
 PHASE_FUNCTIONS_V2: dict[str, Any] = {
     "0":    phase_0_v2,
+    "0.5":  phase_0_5_enrich_plan,
     "1":    phase_1_v2,
     "2":    phase_2_v2,
     "3":    phase_3_prose_audit_fix,
@@ -970,6 +1142,7 @@ PHASE_FUNCTIONS_V2: dict[str, Any] = {
 
 PHASE_LABELS: dict[str, str] = {
     "0":    "Research",
+    "0.5":  "Plan Enrichment",
     "1":    "Meta/Outline",
     "2":    "Write Prose",
     "3":    "Prose Audit+Fix",

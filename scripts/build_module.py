@@ -653,6 +653,140 @@ def phase_0_research(ctx: ModuleContext) -> bool:
     return True
 
 
+def phase_0_5_enrich_plan(ctx: ModuleContext) -> bool:
+    """Phase 0.5: Enrich plan with research findings.
+
+    Reads research + plan, dispatches to Gemini, merges enriched
+    content_outline and vocabulary_hints back into the plan file.
+    Delegates to v2's implementation if available, otherwise runs inline.
+    """
+    phase = "0.5"
+    if is_phase_complete(ctx, phase):
+        log("  Phase 0.5: SKIP (already complete)")
+        return True
+
+    # Skip if research doesn't exist
+    research_path = ctx.paths.get("research")
+    if not research_path or not research_path.exists():
+        log("  Phase 0.5: SKIP — no research file (Phase 0 must run first)")
+        return True
+
+    # Quality gate: research must score 9+/10 to avoid enriching from thin research
+    MIN_RESEARCH_SCORE = 9
+    try:
+        from research_quality import assess_research_compat
+        info = assess_research_compat(research_path, ctx.track)
+        if info and info.get("score") is not None:
+            score = info["score"]
+            if score < MIN_RESEARCH_SCORE:
+                log(f"  Phase 0.5: SKIP — research quality {score}/10 < {MIN_RESEARCH_SCORE} threshold")
+                return True
+            log(f"  Phase 0.5: Research quality {score}/10 — proceeding")
+    except ImportError:
+        log("  Phase 0.5: WARNING — research_quality not available, skipping quality gate")
+
+    plan_path = ctx.paths.get("plan")
+    if not plan_path or not plan_path.exists():
+        log("  Phase 0.5: SKIP — no plan file")
+        return True
+
+    # Check if plan already has enrichment markers
+    plan_text = plan_path.read_text(encoding="utf-8")
+    plan = yaml.safe_load(plan_text) or {}
+    has_enrichment = any(
+        "\u2014" in str(p) or "learner error:" in str(p) or "cultural hook:" in str(p)
+        for section in plan.get("content_outline", [])
+        for p in section.get("points", [])
+    )
+    if has_enrichment and not ctx.force_phase:
+        log("  Phase 0.5: SKIP — plan already appears enriched")
+        mark_phase(ctx, phase, "complete", note="already-enriched")
+        return True
+
+    template = PHASES_DIR / "phase-0-5-enrich-plan.md"
+    if not template.exists():
+        log(f"  Phase 0.5: SKIP — template not found: {template}")
+        return True
+
+    prompt_file = ctx.orch_dir / "phase-0-5-prompt.md"
+    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+        return False
+
+    if ctx.dry_run:
+        log("  Phase 0.5: DRY-RUN — would dispatch plan enrichment")
+        return True
+
+    log("  Phase 0.5: Dispatching plan enrichment...")
+    from batch_gemini_config import FLASH_MODEL as _FLASH
+    output_file = _gemini_output_path(ctx.slug, "0.5")
+    ok, raw_output = dispatch_gemini(
+        _dispatch_prompt(ctx, prompt_file),
+        task_id=f"yw-{ctx.slug}-p0.5",
+        model=_FLASH, stdout_only=True, output_file=output_file,
+    )
+    if not ok:
+        log("  Phase 0.5: FAILED — Gemini dispatch error")
+        return False
+
+    # Extract enrichment from delimiters
+    if "===ENRICHMENT_START===" in raw_output and "===ENRICHMENT_END===" in raw_output:
+        start = raw_output.index("===ENRICHMENT_START===") + len("===ENRICHMENT_START===")
+        end = raw_output.index("===ENRICHMENT_END===")
+        enrichment_text = raw_output[start:end].strip()
+    else:
+        log("  Phase 0.5: FAILED — no ENRICHMENT delimiters in output")
+        return False
+
+    try:
+        enrichment = yaml.safe_load(enrichment_text) or {}
+    except yaml.YAMLError as e:
+        log(f"  Phase 0.5: FAILED — YAML parse error: {e}")
+        (ctx.orch_dir / "phase-0-5-enrichment-raw.md").write_text(enrichment_text, encoding="utf-8")
+        return False
+
+    if not enrichment.get("content_outline"):
+        log("  Phase 0.5: FAILED — no content_outline in enrichment")
+        return False
+
+    # Backup original plan
+    (ctx.orch_dir / "phase-0-5-original-plan.yaml").write_text(plan_text, encoding="utf-8")
+    # Save enrichment artifact
+    (ctx.orch_dir / "phase-0-5-enrichment.yaml").write_text(
+        yaml.dump(enrichment, allow_unicode=True, default_flow_style=False), encoding="utf-8",
+    )
+
+    # Merge: replace section points, extend vocabulary_hints
+    enriched_sections = {}
+    for section in enrichment.get("content_outline", []):
+        name = section.get("section", "")
+        if name:
+            enriched_sections[name] = section.get("points", [])
+    for section in plan.get("content_outline", []):
+        name = section.get("section", "")
+        if name in enriched_sections:
+            section["points"] = enriched_sections[name]
+    enriched_vocab = enrichment.get("vocabulary_hints")
+    if enriched_vocab and isinstance(enriched_vocab, dict):
+        plan_vocab = plan.setdefault("vocabulary_hints", {})
+        for cat in ("required", "recommended"):
+            if cat in enriched_vocab and enriched_vocab[cat]:
+                plan_vocab[cat] = enriched_vocab[cat]
+
+    # Strip forbidden keys
+    for key in ("words", "word_target", "word_count"):
+        plan.pop(key, None)
+
+    plan_path.write_text(
+        yaml.dump(plan, allow_unicode=True, default_flow_style=False, sort_keys=False),
+        encoding="utf-8",
+    )
+    total_points = sum(len(s.get("points", [])) for s in plan.get("content_outline", []))
+    log(f"  Phase 0.5: Plan enriched ({total_points} points)")
+
+    mark_phase(ctx, phase, "complete", task_id=f"yw-{ctx.slug}-p0.5")
+    return True
+
+
 def phase_1_meta(ctx: ModuleContext) -> bool:
     """Phase 1: Meta rebuild (content_outline generation)."""
     phase = "1"
@@ -1722,14 +1856,15 @@ def phase_7_final_review(ctx: ModuleContext) -> bool:
 
 # Phase sequences by mode
 PHASE_SEQUENCES = {
-    "content-only": ["0", "1", "2", "4", "6", "6b", "5"],
+    "content-only": ["0", "0.5", "1", "2", "4", "6", "6b", "5"],
     "enrich":       ["3a", "3b", "4-full", "7", "5"],
-    "full":         ["0", "1", "2", "3a", "3b", "4-full", "6", "6b", "7", "5"],
+    "full":         ["0", "0.5", "1", "2", "3a", "3b", "4-full", "6", "6b", "7", "5"],
 }
 
 # Map phase IDs to functions
 PHASE_FUNCTIONS: dict[str, Any] = {
     "0":      lambda ctx: phase_0_research(ctx),
+    "0.5":    lambda ctx: phase_0_5_enrich_plan(ctx),
     "1":      lambda ctx: phase_1_meta(ctx),
     "2":      lambda ctx: phase_2_content(ctx),
     "3a":     lambda ctx: phase_3a_activities(ctx),

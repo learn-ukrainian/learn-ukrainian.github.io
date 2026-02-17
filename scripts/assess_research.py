@@ -15,6 +15,7 @@ Usage:
   .venv/bin/python scripts/assess_research.py b2-hist --upgrade     # research below 9/10
   .venv/bin/python scripts/assess_research.py b2-hist --upgrade-process  # regenerate weak research (retries up to 3x)
   .venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8  # custom threshold
+  .venv/bin/python scripts/assess_research.py a1 --enrich-plans    # enrich plans from 9+ research
 
 --upgrade-process retries each module up to MAX_RESEARCH_UPGRADE_RETRIES (3) times.
 Hard failures (build error, timeout, missing file) stop retries for that module immediately.
@@ -564,6 +565,63 @@ def _render_all_overview(manifest: dict):
     print()
 
 
+def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9):
+    """Enrich plans for modules with research at or above min_score."""
+    import subprocess
+
+    # Filter: modules with research score >= min_score
+    queue = []
+    for r in results:
+        info = r["info"]
+        if info is None:
+            continue
+        score = info.get("score")
+        if score is not None and score >= min_score:
+            queue.append(r)
+
+    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    if not queue:
+        print(f"No {track_name} modules with research at {min_score}+/10.")
+        return
+
+    total = len(queue)
+    print(f"\n{BOLD}{track_name}: Enriching plans for {total} module(s) (research {min_score}+/10){RESET}")
+    print("\u2550" * 70)
+
+    passed = 0
+    failed = 0
+    for i, r in enumerate(queue, 1):
+        num = r["num"]
+        slug = r["slug"]
+        score = (r["info"] or {}).get("score", "?")
+        print(f"\n[{i}/{total}] M{num:02d} {slug} (research: {score}/10)")
+        print("\u2500" * 50)
+
+        cmd = [
+            str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
+            str(SCRIPTS_DIR / "build_module_v2.py"),
+            track_id, str(num), "--force-phase", "0.5",
+        ]
+        try:
+            result = subprocess.run(cmd, timeout=300)
+            if result.returncode == 0:
+                passed += 1
+                print(f"  {BOLD}\033[32mENRICHED{RESET}")
+            else:
+                failed += 1
+                print(f"  {BOLD}\033[31mFAIL (exit {result.returncode}){RESET}")
+        except subprocess.TimeoutExpired:
+            failed += 1
+            print(f"  {BOLD}\033[31mTIMEOUT (5min){RESET}")
+        except KeyboardInterrupt:
+            print(f"\n\nInterrupted after {i-1}/{total} modules ({passed} enriched, {failed} failed)")
+            return
+
+    print(f"\n{'=' * 70}")
+    print(f"Done: {passed} enriched, {failed} failed out of {total}")
+    print()
+
+
 # ==================== MAIN ====================
 
 
@@ -577,6 +635,7 @@ def main():
     parser.add_argument("--upgrade", action="store_true", help="List modules with research below --min-score")
     parser.add_argument("--upgrade-process", action="store_true", help="Regenerate research for modules below --min-score")
     parser.add_argument("--min-score", type=int, default=9, help="Minimum research score target (default: 9)")
+    parser.add_argument("--enrich-plans", action="store_true", help="Enrich plans for modules with research at --min-score or above")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--all", action="store_true", help="Overview of all tracks")
     args = parser.parse_args()
@@ -617,6 +676,11 @@ def main():
         sys.exit(1)
 
     results = _scan_track(track_id, manifest)
+
+    if getattr(args, "enrich_plans", False):
+        min_score = getattr(args, "min_score", 9)
+        _process_enrich_plans(track_id, results, min_score)
+        return
 
     if getattr(args, "upgrade_process", False):
         min_score = getattr(args, "min_score", 9)
