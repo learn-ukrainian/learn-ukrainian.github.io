@@ -8,42 +8,51 @@ subtitle: Making and Changing Plans
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Appointment culture
-  - Phone vs online booking
+  - 'Appointment culture — cultural hook: The ''Academic Quarter'' (social lateness
+    OK) vs Strict Business Punctuality; use of 24-hour clock in official schedules;
+    aligned with State Standard §1.1.2.1.1'
+  - 'Phone vs online booking — cultural hook: The Messenger Revolution (Viber/Telegram
+    dominance over voice calls)'
 - section: Presentation / Презентація
   points:
-  - Я хочу записатися на...
-  - Choosing date and time
-  - Phone etiquette
+  - 'Я хочу записатися на... — distinguish ''записатися'' (service appointment) vs
+    ''домовитися про зустріч'' (hangout); collocations: записатися на прийом/стрижку'
+  - 'Choosing date and time — learner error: confusing ''о котрій?'' (at what time?
+    - Locative) with ''на котру?'' (for what time? - Accusative); warning on ''half
+    past'' logic (3:30 is ''half on fourth'')'
+  - Phone etiquette — polite phrases for scheduling and checking availability
 - section: Practice / Практика
   points:
-  - Make appointment calls
-  - Reschedule meetings
+  - 'Make appointment calls — immersion note: use Ukrainian interface terms (calendars,
+    booking apps) for realism'
+  - 'Reschedule meetings — collocations: перенести на завтра, перенести на іншу годину'
 - section: Dialogues (Діалоги)
   points:
-  - Scheduling dialogues
-  - Confirming details
+  - Scheduling dialogues — mix of formal (doctor/business) and informal scenarios
+  - 'Confirming details — cultural hook: ''Check your Viber'' for confirmation details'
 - section: Narrative (Розповідь)
   points:
-  - Scheduling story
+  - Scheduling story — realistic scenario involving booking via app or messenger
 - section: Need More Practice?
   points:
   - Summary and links
 vocabulary_hints:
   required:
-  - записатися (to make an appointment)
-  - зустріч (meeting)
-  - час (time)
+  - записатися (to make an appointment) — записатися на прийом (book appointment),
+    записатися до лікаря
+  - 'зустріч (meeting) — призначити зустріч (schedule), перенести (reschedule), скасувати
+    (cancel); learner error: зустріти vs зустрітися з'
+  - час (time) — вільний час (free time)
   - дата (date)
-  - перенести (to reschedule)
-  - скасувати (to cancel)
+  - перенести (to reschedule) — перенести на завтра, перенести на іншу годину
+  - скасувати (to cancel) — скасувати зустріч
   - підтвердити (to confirm)
-  - вільний (available)
+  - вільний (available) — ви вільні? (are you free?), вільне місце (free spot)
   recommended:
   - нагадування (reminder)
   - прийом (appointment)
   - секретар (secretary)
-  - зайнятий (busy)
+  - зайнятий (busy) — я зайнятий, лінія зайнята
   - раніше (earlier)
   - пізніше (later)
 activity_hints:
@@ -59,7 +68,7 @@ prerequisites:
 - a2-62 (Rental Accommodation)
 connects_to:
 - a2-64 (Scheduling Interviews)
-- a2-59 (Doctor Visit)
+- a2-59 (Medical Care)
 objectives:
 - Learner can make an appointment by phone
 - Learner can reschedule or cancel a meeting

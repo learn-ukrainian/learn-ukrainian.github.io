@@ -8,23 +8,34 @@ subtitle: Buying Medicine
 content_outline:
 - section: 'Introduction: Ukrainian Pharmacies'
   points:
-  - Pharmacy types (аптека)
-  - Over-the-counter vs prescription
-  - Pharmacy vocabulary overview
+  - 'Pharmacy types (аптека) — cultural hook: «Чергова аптека» (duty pharmacy) open
+    24/7 with green cross'
+  - 'Over-the-counter vs prescription — cultural hook: antibiotics require «е-рецепт»
+    (electronic prescription via SMS) since 2022; term: «безрецептурні ліки» (OTC
+    drugs)'
+  - 'Pharmacy vocabulary overview — learner error: «ліки» is always plural (pluralia
+    tantum); avoid Russianism «лікарство»; alignment: State Standard §3.12 «Здоров’я
+    й особиста гігієна»'
 - section: Asking for Medicine
   points:
-  - Мені потрібно щось від...
-  - Describing symptoms
-  - Common ailments
+  - 'Мені потрібно щось від... — grammar drill: «ліки від» + Genitive (not «для»);
+    e.g., «від голови», «від кашлю»; alignment: State Standard §4.2.2.2 (Genitive
+    for ''від'')'
+  - 'Describing symptoms — cultural hook: preference for herbal remedies (фітотерапія)
+    like tea with viburnum before synthetic drugs'
+  - 'Common ailments — collocations: «ліки від застуди» (cold), «від кашлю» (cough),
+    «від голови» (headache)'
 - section: Understanding Labels
   points:
-  - дозування, застосування
+  - 'дозування, застосування — usage note: standard «приймати ліки» vs colloquial
+    «пити таблетки»; alignment: State Standard §4.2.3.2 (Imperative for instructions)'
   - протипоказання
   - Reading instructions
 - section: Dosage Instructions
   points:
-  - таблетка, капсула, сироп
-  - раз на день, двічі на день
+  - 'таблетка, капсула, сироп — collocations: «таблетки для розсмоктування» (lozenges)'
+  - 'раз на день, двічі на день — phrase: «приймати по одній таблетці» (take one pill
+    at a time)'
   - Before/after meals
 - section: Side Effects and Warnings
   points:
@@ -33,18 +44,22 @@ content_outline:
   - When to see a doctor
 - section: 'Practice: Pharmacy Dialogue'
   points:
-  - Buy medicine for common ailments
+  - Buy medicine for common ailments — incorporate distinction between OTC painkillers
+    and prescription antibiotics
   - Ask about dosage
 vocabulary_hints:
   required:
-  - аптека (pharmacy)
-  - ліки (medicine)
-  - таблетка (pill)
-  - рецепт (prescription)
+  - 'аптека (pharmacy) — collocations: чергова аптека (24/7), купити в аптеці'
+  - 'ліки (medicine) — always plural! collocations: ліки від застуди, приймати ліки,
+    безрецептурні ліки'
+  - 'таблетка (pill) — collocations: таблетка від голови, приймати по одній таблетці,
+    таблетки для розсмоктування'
+  - 'рецепт (prescription) — collocations: електронний рецепт (е-рецепт), ліки за
+    рецептом, виписати рецепт'
   - дозування (dosage)
-  - біль (pain)
-  - кашель (cough)
-  - температура (fever)
+  - 'біль (pain) — use with «від»: таблетки від болю'
+  - 'кашель (cough) — collocations: сироп від кашлю, ліки від кашлю'
+  - 'температура (fever) — collocations: жарознижувальні (antipyretics)'
   recommended:
   - сироп (syrup)
   - мазь (ointment)
@@ -62,7 +77,7 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- a2-59 (Doctor Visit)
+- a2-59 (Medical Care)
 connects_to:
 - a2-61 (Hotel Accommodation)
 objectives:

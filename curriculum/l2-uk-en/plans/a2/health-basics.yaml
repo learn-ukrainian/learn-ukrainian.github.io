@@ -1,0 +1,80 @@
+module: a2-34
+level: A2
+sequence: 34
+slug: health-basics
+version: '2.0'
+title: Health Basics
+subtitle: Body Parts, Symptoms & Pain Expressions
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Health as wealth: Social etiquette of symptoms — cultural hook: calling a doctor
+    to home remains deeply rooted, especially for children'
+  - 'Navigating the Ukrainian ''Poliklinika'' — cultural hook: distinction between
+    Poliklinika (outpatient checkups) and Likarnia (inpatient/surgery)'
+- section: Presentation / Презентація
+  points:
+  - 'The Complaint: У мене болить (Singular) vs Болять (Plural) — learner error: confusing
+    ''боліти'' (to hurt) and ''хворіти'' (to be sick); learner error: subject-verb
+    agreement (У мене болить ноги vs болять ноги)'
+  - 'Symptoms & Conditions: Температура, Кашель, Нежить — collocations: висока температура,
+    сильний кашель, засоби від нежитю'
+  - 'The Body Parts: A map of human anatomy — builds on A1-body-parts basics'
+  - 'At the Pharmacy (Аптека): Asking for help — collocations: цілодобова аптека,
+    купити в аптеці'
+  - 'Medical Imperatives: Дихайте, Відкрийте рот — standard alignment: §4.2.3.2 Forms
+    of 2nd/3rd person imperative'
+  - 'Traditional Remedies: Malyna, Garlic, and Mustard Plasters — cultural hook: raspberry
+    tea (чай з малиною) is the universal first-line defense; mustard plasters (гірчичники)
+    are still used'
+- section: Practice / Практика
+  points:
+  - 'Role-playing a doctor''s visit — terminology note: use ''сімейний лікар'' to
+    reflect modern medical reform'
+  - Pharmacy shopping list drills
+- section: Dialogues / Діалоги
+  points:
+  - 'Calling an ambulance or explaining a flu to a family doctor — collocations: викликати
+    швидку, підписати декларацію з лікарем'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe symptoms and pain
+- Learner can make a doctor's appointment
+- Learner can understand medical advice and prescriptions
+- Learner can buy medicine at a pharmacy
+grammar:
+- describing pain (у мене болить...)
+- giving advice (вам треба...)
+- medical terminology
+- polite requests to doctors
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Health and Hygiene
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for medical consultation and describing physical conditions at
+    A2
+- name: Medical Ukrainian for Foreigners
+  url: https://uk.wikipedia.org/wiki/Охорона_здоров'я_в_Україні
+  type: reference
+  notes: Common terminology and social norms in Ukrainian medical system
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Family Doctor
+vocabulary_hints:
+  required:
+  - поліклініка (outpatient clinic) — районна поліклініка, йти в поліклініку
+  - аптека (pharmacy) — цілодобова аптека, купити в аптеці
+  - температура (temperature/fever) — висока температура, міряти температуру
+  - кашель (cough) — сильний кашель, сухий кашель
+  - нежить (runny nose) — мати нежить, засоби від нежитю
+  - швидка допомога (ambulance) — викликати швидку, приїхала швидка
+  - сімейний лікар (family doctor) — підписати декларацію з лікарем
+  recommended:
+  - хворіти (to be sick) — я хворію на грип (vs боліти)
+  - боліти (to hurt/ache) — у мене болить голова
+  - гірчичники (mustard plasters) — traditional remedy
+  - малина (raspberry) — чай з малиною

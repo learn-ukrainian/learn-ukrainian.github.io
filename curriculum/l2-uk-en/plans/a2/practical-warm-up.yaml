@@ -8,43 +8,58 @@ subtitle: Getting Ready for Action
 content_outline:
 - section: Огляд
   points:
-  - Preparing for practical scenarios
-  - Warm-up strategies
+  - Preparing for practical scenarios — focus on strategies for understanding short
+    texts (§1.2.1.4)
+  - Warm-up strategies — explicit alignment with State Standard §1.1.1.2 (understanding
+    30-50 word monologues, separate phrases, and short dialogue replies)
 - section: 'Skill 1: Reading Comprehension (Розуміння прочитаного)'
   points:
-  - Skimming for main ideas
-  - Scanning for details
-  - Understanding context clues
+  - 'Skimming for main ideas — cultural hook: browsing book blurbs at Lviv Book Forum
+    (major cultural event)'
+  - Scanning for details — identifying specific information like dates and names in
+    posters or announcements
+  - Understanding context clues — extracting meaning from keywords (ключові слова)
+    without knowing every word; identifying the 'головна ідея'
 - section: 'Skill 2: Listening & Speaking (Слухання та Говоріння)'
   points:
-  - Listening for gist
-  - Identifying key information
+  - 'Listening for gist — learner error: distinguishing *чути* (passive physical hearing)
+    vs. *слухати* (active listening)'
+  - Identifying key information — extracting simple facts from clear speech (§1.1.1.2)
+    with clear structure
 - section: 'Skill 3: Writing Skills (Навички Письма)'
   points:
-  - Writing practice
-  - Vocabulary in context
+  - 'Writing practice — cultural hook: introduction to the Radio Dictation of National
+    Unity tradition held on Ukrainian Language Day'
+  - 'Vocabulary in context — learner error: using *питання* (issue/topic) instead
+    of *запитання* (specific inquiry)'
 - section: Інтеграційне завдання
   points:
-  - Read, listen, respond
-  - Apply all A2 skills
+  - Read, listen, respond — simulated mini-dictation task based on National Unity
+    Day concept
+  - Apply all A2 skills — synthesis of reading strategies and listening comprehension;
+    transferring info (§1.3.1.1)
 - section: Підсумок
   points:
-  - Summary and next steps
+  - Summary and next steps — reinforcing confidence for high-stakes scenarios like
+    doctor visits (Module A2-59)
 vocabulary_hints:
   required:
-  - текст (text)
-  - питання (question)
-  - відповідь (answer)
-  - розуміти (to understand)
-  - читати (to read)
-  - слухати (to listen)
-  - головний (main)
-  - деталь (detail)
+  - текст (text) — читати текст, розуміти текст, писати текст
+  - питання (issue/question) — важливе питання, вирішити питання; distinct from *запитання*
+  - 'запитання (question to ask) — ставити запитання, відповідати на запитання; learner
+    error: confusing with *питання*'
+  - відповідь (answer) — правильна відповідь, дати відповідь
+  - 'розуміти (to understand) — core verb: я розумію, ти розумієш?'
+  - 'читати (to read) — context: reading culture in Ukraine (book forums)'
+  - 'слухати (to listen) — слухати уважно, слухати музику; learner error: confusing
+    with *чути*'
+  - головний (main) — головна ідея, головний герой
+  - деталь (detail) — scanning for details
   recommended:
-  - ідея (idea)
-  - інформація (information)
-  - ключовий (key)
-  - стратегія (strategy)
+  - ідея (idea) — головна ідея
+  - інформація (information) — шукати інформацію
+  - ключовий (key) — ключове слово (keyword)
+  - стратегія (strategy) — стратегія читання
 activity_hints:
 - type: reading
   focus: Understand main ideas
@@ -63,7 +78,7 @@ pedagogy: PPP
 prerequisites:
 - a2-57 (Practical Intro)
 connects_to:
-- a2-59 (Doctor Visit)
+- a2-59 (Medical Care)
 objectives:
 - Learner can understand main ideas in text
 - Learner can answer questions about a text

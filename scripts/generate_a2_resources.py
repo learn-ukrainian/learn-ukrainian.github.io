@@ -50,7 +50,7 @@ A2_DOBRA_FORMA_MAPPING = {
     'a2-31-in-order-to': [],  # Purpose clauses
     'a2-32-which-one': [],  # Relative clauses
     'a2-33-time-clauses': [],  # Temporal clauses
-    'a2-34-at-the-doctor': [],  # Vocabulary
+    'a2-34-health-basics': [],  # Vocabulary
     'a2-35-checkpoint': [],  # Review
     'a2-36-basic-motion-prefixes': ['28-3'],  # Motion verbs with prefixes
     'a2-37-advanced-motion-prefixes': ['28-3'],  # More motion prefixes
@@ -71,7 +71,7 @@ A2_DOBRA_FORMA_MAPPING = {
     'a2-52-education-learning': [],  # Vocabulary
     'a2-53-shopping-services': [],  # Vocabulary
     'a2-54-sports-fitness': [],  # Vocabulary
-    'a2-55-health-body': [],  # Vocabulary
+    'a2-55-health-wellness': [],  # Vocabulary
     'a2-56-checkpoint-vocabulary': [],  # Review
     'a2-57-grammar-review': [],  # Review
     'a2-58-final-review': [],  # Review

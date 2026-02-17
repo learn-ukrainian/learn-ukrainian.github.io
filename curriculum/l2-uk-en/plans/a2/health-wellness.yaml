@@ -1,0 +1,61 @@
+module: a2-55
+level: A2
+sequence: 55
+slug: health-wellness
+version: '2.0'
+title: Health & Wellness
+subtitle: Wellness, Traditional Medicine & Healthy Lifestyle
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Essential health vocabulary — focus on basics like голова, рука, нога, температура
+  - 'Grammar of ''болить'' — learner error: ''Я болить...'' vs correct ''У мене болить...'';
+    focus on impersonal construction'
+- section: Presentation / Презентація
+  points:
+  - 'Body parts (gender and agreement) — focus on plural agreement (learner error:
+    ''У мене болить ноги'' vs ''болять''); usage of possessives'
+  - Symptoms and illnesses — collocations like 'висока температура', 'червоне горло',
+    'крутиться голова'
+  - 'Medical locations and treatments — cultural hook: ''чай з малиною'' as first
+    remedy; learner error: confusing ''лікар'' (person) vs ''лікарня'' (place)'
+- section: Practice / Практика
+  points:
+  - 'Dialogue at the doctor — scenario: simple check-up involving ''дихайте/не дихайте''
+    and describing symptoms'
+- section: Dialogues / Діалоги
+  points:
+  - Story about an accident — narrative context using 'зламати ногу/руку'; expressing
+    pain and recovery
+- section: Summary / Підсумок
+  points:
+  - 'Recap of body parts and symptoms — include proverb: ''Здоров''я — найбільше багатство'''
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can name body parts
+- Learner can describe symptoms and illness
+- Learner can understand medical instructions
+- Learner can give simple health advice
+grammar:
+- describing symptoms (болить, температура)
+- medical advice (треба, можна)
+- body parts vocabulary
+- doctor's appointment
+immersion: 75-90% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Yoga Instructor
+vocabulary_hints:
+  required:
+  - 'голова (head) — collocations: болить голова, крутиться голова'
+  - 'боліти (to hurt) — impersonal construction focus: у мене болить X (singular)
+    vs болять Y (plural)'
+  - 'температура (fever/temperature) — collocation: висока температура, міряти температуру'
+  - 'лікар (doctor) — distinction: йти до лікаря (person) vs у лікарню (place)'
+  recommended:
+  - 'ліки (medicine) — context: пити ліки, ліки від грипу'
+  - 'горло (throat) — context: червоне горло, болить горло'
+  - 'калина (viburnum) — cultural context: traditional remedy tea'
+  - 'малина (raspberry) — cultural context: tea with raspberry jam for colds'

@@ -1,0 +1,14 @@
+{
+  "slug": "health-basics",
+  "track": "a2",
+  "module_num": 34,
+  "mode": "e2e",
+  "phases": {
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-17T14:36:18Z",
+      "task_id": "yw-at-the-doctor-p0.5"
+    }
+  },
+  "last_updated": "2026-02-17T14:36:18Z"
+}
