@@ -69,9 +69,9 @@ phases:
 
   - id: B1.9
     name: "Communication Skills"
-    modules: "[89, 92]"
-    focus: "Communication channels, presentations, feedback/negotiation"
-    checkpoint: 92  # B1 Final Exam
+    modules: "[89, 95]"
+    focus: "Communication channels, presentations, feedback/negotiation, pronouns, phonetics"
+    checkpoint: 95  # B1 Final Exam
 
 grammar_scope:
   - Verbal aspect (full mastery)
@@ -87,7 +87,9 @@ notes: |
   metalanguage bridge at start.
 
   Grammar checkpoints at M15, M25, M34, M41, M51.
-  Final assessment at M92 (B1 Final Exam).
+  Final assessment at M95 (B1 Final Exam).
   Phases B1.5-B1.9 focus on vocabulary, culture, and practical skills.
+  M93-94 added in 2026-02 gap analysis: indefinite/negative pronouns (§4.2.1.4),
+  phonetics & assimilation (§4.1.1).
 
-  92 modules total (reduced from 99 in 2026-01 restructuring).
+  95 modules total (92 from 2026-01 restructuring + 3 gap analysis additions).

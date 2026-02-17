@@ -216,6 +216,8 @@ levels:
     - communication-channels
     - presentations-visuals
     - feedback-negotiation-complaints
+    - indefinite-negative-pronouns
+    - phonetics-assimilation
     - b1-final-exam
   b2:
     type: core
@@ -313,6 +315,7 @@ levels:
     - presentation-skills-basics
     - presentation-skills-advanced
     - discussion-debate
+    - pluperfect-tense
     - b2-final-exam
   c1:
     type: core
