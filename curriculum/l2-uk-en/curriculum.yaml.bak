@@ -33,7 +33,7 @@ levels:
       - 27-colors-and-clothing
       - 28-description-adverbs
       - 29-weather-and-nature
-      - 30-prepositions-iii
+      - 30-prepositions-direction-origin
       - 31-body-and-health
       - 32-my-family
       - 33-holidays-and-traditions
@@ -84,13 +84,13 @@ levels:
       - 31-in-order-to
       - 32-which-one
       - 33-time-clauses
-      - 34-at-the-doctor
+      - 34-health-basics
       - 35-checkpoint
       - 36-basic-motion-prefixes
       - 37-advanced-motion-prefixes
       - 38-action-verb-prefixes
       - 39-adjective-suffixes-qualities
-      - 40-adj-suffixes
+      - 40-adjective-suffixes-types
       - 41-root-families-i
       - 42-root-families-ii
       - 43-wf-mastery
@@ -105,11 +105,11 @@ levels:
       - 52-education-learning
       - 53-shopping-services
       - 54-sports-fitness
-      - 55-health-body
+      - 55-health-wellness
       - 56-checkpoint-full-grammar
       - 57-practical-intro
       - 58-practical-warm-up
-      - 59-doctor-visit
+      - 59-medical-care
       - 60-at-the-pharmacy
       - 61-hotel-accommodation
       - 62-rental-accommodation

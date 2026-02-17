@@ -28,7 +28,7 @@
 3. **Dative Confusion** → *Я погано* (Wrong) vs. *Мені погано* (Correct). English speakers often try to use "I am bad" literally instead of the impersonal dative construction.
 
 ## Cross-References
-- Builds on: `a1-30-prepositions-iii` (Locative case for "в аптеці", "на спині").
+- Builds on: `a1-30-prepositions-direction-origin` (Locative case for "в аптеці", "на спині").
 - Prepares for: `a1-32-my-family` (Describing relatives' health), `a1-42-emergencies` (Calling for help/ambulance).
 
 ## Notes for Content Writing

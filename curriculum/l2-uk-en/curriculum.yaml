@@ -33,7 +33,7 @@ levels:
     - colors-and-clothing
     - description-adverbs
     - weather-and-nature
-    - prepositions-iii
+    - prepositions-direction-origin
     - body-and-health
     - my-family
     - holidays-and-traditions
@@ -84,13 +84,13 @@ levels:
     - in-order-to
     - which-one
     - time-clauses
-    - at-the-doctor
+    - health-basics
     - checkpoint
     - basic-motion-prefixes
     - advanced-motion-prefixes
     - action-verb-prefixes
     - adjective-suffixes-qualities
-    - adj-suffixes
+    - adjective-suffixes-types
     - root-families-i
     - root-families-ii
     - wf-mastery
@@ -105,11 +105,11 @@ levels:
     - education-learning
     - shopping-services
     - sports-fitness
-    - health-body
+    - health-wellness
     - checkpoint-full-grammar
     - practical-intro
     - practical-warm-up
-    - doctor-visit
+    - medical-care
     - at-the-pharmacy
     - hotel-accommodation
     - rental-accommodation
@@ -120,6 +120,7 @@ levels:
     - social-media-ukrainian
     - texting-messaging
     - online-services
+    - participles-intro
     - a2-final-exam
   b1:
     type: core

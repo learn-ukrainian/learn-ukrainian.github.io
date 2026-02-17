@@ -27,7 +27,7 @@ Alignment: This module directly addresses the A2 requirement for understanding a
 
 ## Cross-References
 - Builds on: `a2-14-ordinal-numerals` (dates), `a2-25-time-expressions` (telling time basics)
-- Prepares for: `a2-59-doctor-visit` (specific medical booking), `a2-64-scheduling-interviews` (formal scheduling)
+- Prepares for: `a2-59-medical-care` (specific medical booking), `a2-64-scheduling-interviews` (formal scheduling)
 
 ## Notes for Content Writing
 - **Pedagogy**: Explicitly distinguish between "booking an appointment" (*записатися*) vs "arranging a hangout" (*домовитися про зустріч*).
