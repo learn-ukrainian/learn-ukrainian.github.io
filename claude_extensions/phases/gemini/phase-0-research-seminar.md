@@ -117,4 +117,5 @@ After your research output, include:
 - Do NOT skip any section from the content_outline
 - Do NOT use Russian-language sources
 - Do NOT fabricate quotes or dates — if unsure, mark as "[needs verification]"
+- Do NOT reference persona names or voice instructions — persona is assigned at content generation time by the skill, not by research
 - Do NOT request skills, delegate to Claude, or skip this phase

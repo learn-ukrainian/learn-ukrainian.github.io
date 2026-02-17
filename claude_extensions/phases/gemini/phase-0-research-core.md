@@ -113,4 +113,5 @@ After your research output, include:
 - Do NOT write lesson content — only research notes
 - Do NOT generate activities or vocabulary
 - Do NOT fabricate State Standard references — if you can't find the exact §, say so
+- Do NOT reference persona names or voice instructions (e.g., "Ukrainian Teacher", "Cultural Guide") — persona is assigned at content generation time by the skill, not by research
 - Do NOT request skills, delegate to Claude, or skip this phase
