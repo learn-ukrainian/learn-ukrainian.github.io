@@ -1,33 +1,39 @@
 module: a1-30
 level: A1
 sequence: 30
-slug: prepositions-iii
+slug: prepositions-direction-origin
 version: '2.0'
-title: Prepositions III
+title: 'Prepositions: Direction & Origin'
 subtitle: Direction, Location & Origin
 content_outline:
 - section: Warm-up
   points:
   - Де ти живеш? (місце)
   - Куди ти йдеш? (напрямок)
-  - Звідки ти? (походження)
+  - 'Звідки ти? (походження) — cultural hook: Ukrzaliznytsia icebreaker ''Звідки ти
+    приїхав?'''
 - section: Presentation
   points:
-  - Три типи запитань про місце
-  - Прийменники для кожного типу
+  - 'Три типи запитань про місце — visual aid: Decision Table for Question/Case/Preposition'
+  - 'Прийменники для кожного типу — learner error: Static vs. Dynamic confusion (Де
+    vs Куди); writing note: frame case change as a ''signpost'''
 - section: 'Місце: Де?'
   points:
-  - Прийменники у/в + місцевий відмінок
-  - Прийменник на + місцевий відмінок
+  - 'Прийменники у/в + місцевий відмінок — euphony rule: reinforce у/в usage; cultural
+    hook: ''Slipper Culture'' and static location (вдома)'
+  - 'Прийменник на + місцевий відмінок — learner error: в vs на for functional places
+    (на роботі)'
   - Коли в, коли на (у школі vs на роботі)
 - section: 'Напрямок: Куди?'
   points:
   - Прийменники у/в + знахідний відмінок
-  - Прийменник на + знахідний відмінок
-  - Прийменник до + родовий відмінок
+  - 'Прийменник на + знахідний відмінок — standard ref: §4.2.3.2.2 distinguishing
+    location/direction'
+  - 'Прийменник до + родовий відмінок — learner error: Case Mismatch after ''до''
+    (requires Genitive)'
 - section: 'Походження: Звідки?'
   points:
-  - Прийменник з + родовий відмінок
+  - 'Прийменник з + родовий відмінок — standard ref: §4.1.7 usage of з/із/зі'
   - Прийменник від + родовий відмінок
   - Різниця між з та від
 - section: Presentation 2
@@ -48,17 +54,17 @@ content_outline:
   - Інтеграційні вправи
 vocabulary_hints:
   required:
-  - де (where)
-  - куди (where to)
-  - звідки (where from)
-  - в/у (in, into)
-  - на (on, onto)
-  - до (to, toward)
-  - з (from)
+  - де (where) — Де ти? Де це?
+  - куди (where to) — Куди ти йдеш?
+  - звідки (where from) — Звідки ти?
+  - в/у (in, into) — вдома, у школі, в центр
+  - на (on, onto) — на роботі, на стіл
+  - до (to, toward) — додому, до школи, до Києва
+  - з (from) — з України, зі школи
   - від (from)
   recommended:
-  - йти (to go)
-  - їхати (to go by transport)
+  - йти (to go) — йти пішки, йти додому
+  - їхати (to go by transport) — їхати на метро, їхати в центр
   - приходити (to arrive)
   - повертатися (to return)
 activity_hints:

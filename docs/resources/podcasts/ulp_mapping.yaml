@@ -443,8 +443,8 @@ mappings:
     url: https://www.ukrainianlessons.com/fmu28/
     match_reason: 'Level-aligned topic match: weather'
     relevance: high
-- module_id: a1-30-prepositions-iii
-  module_title: 30 Prepositions Iii
+- module_id: a1-30-prepositions-direction-origin
+  module_title: 30 Prepositions Direction Origin
   level: A1
   recommended_episodes:
   - episode_id: ULP-057

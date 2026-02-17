@@ -8,26 +8,33 @@ subtitle: Seasons, Weather & The Natural World
 content_outline:
 - section: Warm-up
   points:
-  - Погода як щоденна тема розмови
-  - Типова погода в Україні
+  - Погода як щоденна тема розмови — foundation for small talk due to distinct 4 seasons
+    in Ukraine
+  - 'Типова погода в Україні — cultural hook: «Бабине літо» (Indian summer) in late
+    Sept/early Oct'
 - section: Presentation
   points:
-  - Тепло, холодно, спекотно, прохолодно (прислівники)
-  - Йде дощ, йде сніг, світить сонце
-  - Сьогодні... / Вчора було... / Завтра буде...
+  - 'Тепло, холодно, спекотно, прохолодно (прислівники) — use visual scale (Спекотно
+    > Тепло > Прохолодно > Холодно); learner error: literal translation of ''It is''
+    (e.g., *Це холодно* instead of just **Холодно**)'
+  - 'Йде дощ, йде сніг, світить сонце — learner error: incorrect verb for rain/snow
+    (*Дощ робить* instead of idiomatic **Йде дощ**)'
+  - 'Сьогодні... / Вчора було... / Завтра буде... — emphasize impersonal usage (Standard
+    §4.3.2 example: «Ми не гуляємо, бо холодно»)'
 - section: Presentation 2
   points:
-  - Яка сьогодні погода?
-  - Чи буде дощ?
-  - Яка температура?
+  - 'Яка сьогодні погода? — collocations: гарна погода, погана погода'
+  - Чи буде дощ? — include 'хмарно' (cloudy) as a common condition
+  - Яка температура? — basic inquiry structures
 - section: Presentation 3
   points:
-  - Весна, літо, осінь, зима
-  - Прийменник у/взимку (Взимку холодно)
+  - Весна, літо, осінь, зима — distinct seasons context
+  - 'Прийменник у/взимку (Взимку холодно) — phonetic focus: ensure IPA stress for
+    **восени** (vóseny) and **навесні** (navesní)'
 - section: Presentation 4
   points:
-  - Опис погоди в різні пори року
-  - Прогноз погоди
+  - 'Опис погоди в різні пори року — collocation: влітку спекотно'
+  - Прогноз погоди — understanding basic forecast terms
 - section: Practice
   points:
   - Діалог про погоду сьогодні
@@ -38,21 +45,21 @@ content_outline:
   - Опис погоди у вашому місті сьогодні
 vocabulary_hints:
   required:
-  - погода (weather)
-  - дощ (rain)
-  - сніг (snow)
-  - сонце (sun)
-  - тепло (warm)
-  - холодно (cold)
-  - весна (spring)
-  - зима (winter)
+  - погода (weather) — яка сьогодні погода?, гарна/погана погода
+  - 'дощ (rain) — йде дощ (it rains), після дощу; learner error: *дощ робить*'
+  - сніг (snow) — йде сніг (it snows), перший сніг
+  - сонце (sun) — світить сонце, яскраве сонце
+  - тепло (warm) — на вулиці тепло, мені тепло; adverbial use (no 'it is')
+  - холодно (cold) — дуже холодно, мені холодно; adverbial use
+  - весна (spring) — навесні (in spring) - watch stress
+  - зима (winter) — взимку (in winter)
   recommended:
-  - літо (summer)
-  - осінь (autumn)
-  - хмара (cloud)
-  - вітер (wind)
-  - спекотно (hot)
-  - прохолодно (cool)
+  - літо (summer) — влітку (in summer)
+  - осінь (autumn) — восени (in autumn) - watch stress
+  - хмара (cloud) — хмарно (cloudy), сьогодні хмарно
+  - вітер (wind) — сильний вітер
+  - спекотно (hot) — дуже спекотно, влітку спекотно
+  - 'прохолодно (cool) — visual scale: between warm and cold'
 activity_hints:
 - type: match-up
   focus: Weather and nature words
@@ -71,7 +78,7 @@ pedagogy: PPP
 prerequisites:
 - a1-28 (Description - Adverbs)
 connects_to:
-- a1-30 (Prepositions III)
+- a1-30 (Prepositions: Direction & Origin)
 - a1-33 (Holidays and Traditions)
 objectives:
 - Learner can describe the weather

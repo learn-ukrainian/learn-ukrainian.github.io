@@ -927,7 +927,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu28/
       relevance: high
       match_reason: 'Level-aligned topic match: weather'
-  a1-30-prepositions-iii:
+  a1-30-prepositions-direction-origin:
     articles:
     - title: Location vs Destination
       url: https://www.ukrainianlessons.com/location-destination-prepositions/
