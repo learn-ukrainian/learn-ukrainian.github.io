@@ -1040,7 +1040,7 @@ def phase_0_5_enrich_plan(ctx: ModuleContext) -> bool:
     ok, raw_output = dispatch_gemini(
         _dispatch_prompt(ctx, prompt_file),
         task_id=f"yw-{ctx.slug}-p0.5",
-        model=FLASH_MODEL,  # Lightweight task — flash is sufficient
+        model=ctx.model,
         stdout_only=True, output_file=output_file,
     )
     if not ok:
