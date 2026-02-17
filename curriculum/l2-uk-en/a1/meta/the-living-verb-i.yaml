@@ -1,43 +1,46 @@
 slug: the-living-verb-i
 title: The Living Verb I
-word_target: 1210
+word_target: 1900
 content_outline:
-  - section: "Розминка: Від слів до дій"
-    words: 200
-    points:
-      - "Welcome back! Transition from naming objects (Modules 1-5) to using them."
-      - "Introduce the concept of the 'Verb' as the engine of the sentence."
-      - "Preview the goal: Moving from 'Book' (noun) to 'I read' (action)."
-      - "Reassurance: The 'Master Key' metaphor — learning one pattern unlocks hundreds of verbs."
-      - "Connection to daily life: Reading, writing, working, listening."
-  - section: "Презентація: Перша дієвідміна"
-    words: 500
-    points:
-      - "The -ати Pattern: Introduction to the First Conjugation."
-      - "Visual Table: Stem (чит-) + Endings (-аю, -аєш, -ає, -аємо, -аєте, -ають)."
-      - "Model Verb Walkthrough: Conjugating 'читати' (to read) step-by-step."
-      - "Expansion Verbs: 'слухати', 'знати', 'питати', 'грати' follow this exact pattern."
-      - "Concept: Pro-drop. Explaining why 'Читаю' is as correct and natural as 'Я читаю'."
-      - "Common Error Alert: 'Infinitive Abuse' — never say 'Я читати'."
-      - "Brief mention of 'працювати' (to work) as a high-frequency verb with similar endings."
-  - section: "Практика: Життя в русі"
-    words: 250
-    points:
-      - "Drill: Conjugating 'слухати' and 'знати' in context."
-      - "Sentence Building: Subject + Verb + Object (SVO) structure."
-      - "Usage examples with known objects: 'Я читаю журнал', 'Ми слухаємо радіо'."
-      - "Interactive Check: What are you doing right now?"
-      - "Spot the Error: Correcting sentences like 'Він знати' to 'Він знає'."
-  - section: "Культурний контекст: Українське слово"
-    words: 260
-    points:
-      - "The Pro-Drop Culture: Focusing on the action rather than the ego."
-      - "Historical Note: The 'Apostol' (1574) and the deep-rooted tradition of literacy in Ukraine."
-      - "Proverb Analysis: 'Птицю пізнати по пір'ю, а людину по мові' (Language defines you)."
-      - "Motivation: You have now unlocked the ability to describe your world in motion."
-      - "Preview: Next steps — asking questions and negation."
-# Total: 1210 words
-
+- section: 'Розминка: Від слів до дій'
+  words: 200
+  points:
+  - Welcome back! Transition from naming objects (Modules 1-5) to using them.
+  - Introduce the concept of the 'Verb' as the engine of the sentence.
+  - 'Preview the goal: Moving from ''Book'' (noun) to ''I read'' (action).'
+  - 'Reassurance: The ''Master Key'' metaphor — learning one pattern unlocks hundreds
+    of verbs.'
+  - 'Connection to daily life: Reading, writing, working, listening.'
+- section: 'Презентація: Перша дієвідміна'
+  words: 500
+  points:
+  - 'The -ати Pattern: Introduction to the First Conjugation.'
+  - 'Visual Table: Stem (чит-) + Endings (-аю, -аєш, -ає, -аємо, -аєте, -ають).'
+  - 'Model Verb Walkthrough: Conjugating ''читати'' (to read) step-by-step.'
+  - 'Expansion Verbs: ''слухати'', ''знати'', ''питати'', ''грати'' follow this exact
+    pattern.'
+  - 'Concept: Pro-drop. Explaining why ''Читаю'' is as correct and natural as ''Я
+    читаю''.'
+  - 'Common Error Alert: ''Infinitive Abuse'' — never say ''Я читати''.'
+  - Brief mention of 'працювати' (to work) as a high-frequency verb with similar endings.
+- section: 'Практика: Життя в русі'
+  words: 250
+  points:
+  - 'Drill: Conjugating ''слухати'' and ''знати'' in context.'
+  - 'Sentence Building: Subject + Verb + Object (SVO) structure.'
+  - 'Usage examples with known objects: ''Я читаю журнал'', ''Ми слухаємо радіо''.'
+  - 'Interactive Check: What are you doing right now?'
+  - 'Spot the Error: Correcting sentences like ''Він знати'' to ''Він знає''.'
+- section: 'Культурний контекст: Українське слово'
+  words: 260
+  points:
+  - 'The Pro-Drop Culture: Focusing on the action rather than the ego.'
+  - 'Historical Note: The ''Apostol'' (1574) and the deep-rooted tradition of literacy
+    in Ukraine.'
+  - 'Proverb Analysis: ''Птицю пізнати по пір''ю, а людину по мові'' (Language defines
+    you).'
+  - 'Motivation: You have now unlocked the ability to describe your world in motion.'
+  - 'Preview: Next steps — asking questions and negation.'
 naturalness:
   status: PASS
   score: 10

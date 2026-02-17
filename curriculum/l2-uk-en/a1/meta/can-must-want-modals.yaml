@@ -1,4 +1,3 @@
----
 module: a1-24
 level: A1
 slug: can-must-want-modals
@@ -10,17 +9,17 @@ naturalness:
   justification: Essential modal expressions
 duration: 60
 transliteration: none
-word_target: 1049
+word_target: 1600
 build:
   last_modified: '2026-02-16'
 title: Can, Must, Want - Modals
 subtitle: Expressing Ability, Obligation, and Desire
 content_outline:
-- section: "Могти та Вміти: Ваші перші кроки"
+- section: 'Могти та Вміти: Ваші перші кроки'
   words: 260
-- section: "Обов'язок, Дозвіл та Порада"
+- section: Обов'язок, Дозвіл та Порада
   words: 260
-- section: "Світ правил та зусиль"
+- section: Світ правил та зусиль
   words: 260
-- section: "Практичне застосування: Діалоги та Ситуації"
+- section: 'Практичне застосування: Діалоги та Ситуації'
   words: 269

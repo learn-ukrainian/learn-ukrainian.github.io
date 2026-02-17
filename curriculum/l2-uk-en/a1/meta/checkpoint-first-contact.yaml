@@ -1,7 +1,7 @@
 slug: checkpoint-first-contact
 title: 'Checkpoint: First Contact'
 focus: checkpoint
-word_target: 875
+word_target: 2150
 content_outline:
 - section: 'Skill 1: Вступ: Читання кирилиці та рід іменників'
   words: 285
@@ -47,4 +47,5 @@ naturalness:
 activity_count: 1
 activity_density: 12
 unique_activity_types: 1
-priority_activity_types: ['quiz']
+priority_activity_types:
+- quiz

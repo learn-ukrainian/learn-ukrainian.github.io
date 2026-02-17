@@ -1,44 +1,54 @@
 id: 1
 slug: the-cyrillic-code-i
-title: "The Cyrillic Code I"
-subtitle: "Cracking the Ukrainian Alphabet"
+title: The Cyrillic Code I
+subtitle: Cracking the Ukrainian Alphabet
 version: '2.0'
-phase: "A1.1"
-pedagogy: "PPP"
+phase: A1.1
+pedagogy: PPP
 duration: 45
-transliteration: "full"
-tags: ["alphabet", "phonetics", "basics"]
-grammar: ["Letter recognition", "Sound-letter correspondence"]
+transliteration: full
+tags:
+- alphabet
+- phonetics
+- basics
+grammar:
+- Letter recognition
+- Sound-letter correspondence
 objectives:
-  - "Learner can recognize True Friends (letters that look AND sound like English)"
-  - "Learner can decode False Friends (letters that look familiar but sound different)"
-  - "Learner can read 19 Cyrillic letters"
-  - "Learner can pronounce basic international words in Ukrainian"
+- Learner can recognize True Friends (letters that look AND sound like English)
+- Learner can decode False Friends (letters that look familiar but sound different)
+- Learner can read 19 Cyrillic letters
+- Learner can pronounce basic international words in Ukrainian
 content_outline:
-  - section: "Теорія: Cracking the Cyrillic Code"
-    words: 606
-    points:
-      - "Introduction to Cyrillic: Why it is easier than it looks (using 'True Friends')"
-      - "Strategy: Distinguishing 'True Friends' (А, Е, І, О, К, М, Т) from 'False Friends'"
-      - "Detailed breakdown of 'False Friends': В (Vehicle), Н (Hen), Р (Purring/Roaring), С (Snake/Sound), У (Look vs Sound), Х (Kh)"
-      - "Introduction of unique Cyrillic shapes: Б, Д, З, Л, П, Ф with visual hooks (e.g., Д as a house)"
-      - "Using cognates (таксі, піца) to build immediate reading confidence"
-  - section: "Cultural Context: Чому українська абетка особлива"
-    words: 200
-    points:
-      - "The 'Cyrillic' misnomer: St. Cyril and the Glagolitic script origins"
-      - "The 'I' Identity: How retaining 'І' and 'Ї' distinguishes Ukrainian from Russian"
-      - "Avoiding Surzhyk: Explicitly clarifying that 'ё', 'ы', 'э' do not exist in Ukrainian"
-      - "The visual distinctiveness of Ukrainian text as a bridge to European identity"
-  - section: "Практика та Підсумок: First Steps in Reading"
-    words: 213
-    points:
-      - "Reading practice with 'True Friends' vocabulary: мама, кіт, факт, тато"
-      - "Decoding internationalisms involving 'False Friends': банк, метро, кафе, план"
-      - "Mini-dialogues at a metro station and café using 'так' and basic nouns"
-      - "Final production task: Reading mixed words with IPA support"
-      - "Summary of the 19 letters learned and readiness for the next batch"
-
+- section: 'Теорія: Cracking the Cyrillic Code'
+  words: 606
+  points:
+  - 'Introduction to Cyrillic: Why it is easier than it looks (using ''True Friends'')'
+  - 'Strategy: Distinguishing ''True Friends'' (А, Е, І, О, К, М, Т) from ''False
+    Friends'''
+  - 'Detailed breakdown of ''False Friends'': В (Vehicle), Н (Hen), Р (Purring/Roaring),
+    С (Snake/Sound), У (Look vs Sound), Х (Kh)'
+  - 'Introduction of unique Cyrillic shapes: Б, Д, З, Л, П, Ф with visual hooks (e.g.,
+    Д as a house)'
+  - Using cognates (таксі, піца) to build immediate reading confidence
+- section: 'Cultural Context: Чому українська абетка особлива'
+  words: 200
+  points:
+  - 'The ''Cyrillic'' misnomer: St. Cyril and the Glagolitic script origins'
+  - 'The ''I'' Identity: How retaining ''І'' and ''Ї'' distinguishes Ukrainian from
+    Russian'
+  - 'Avoiding Surzhyk: Explicitly clarifying that ''ё'', ''ы'', ''э'' do not exist
+    in Ukrainian'
+  - The visual distinctiveness of Ukrainian text as a bridge to European identity
+- section: 'Практика та Підсумок: First Steps in Reading'
+  words: 213
+  points:
+  - 'Reading practice with ''True Friends'' vocabulary: мама, кіт, факт, тато'
+  - 'Decoding internationalisms involving ''False Friends'': банк, метро, кафе, план'
+  - Mini-dialogues at a metro station and café using 'так' and basic nouns
+  - 'Final production task: Reading mixed words with IPA support'
+  - Summary of the 19 letters learned and readiness for the next batch
 naturalness:
   status: PASS
   score: 10
+word_target: 2200
