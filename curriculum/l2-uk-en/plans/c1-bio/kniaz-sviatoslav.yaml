@@ -81,7 +81,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Evaluate Sviatoslav's legacy - conqueror or destroyer?
-  word_target: 250
   output: Balanced argument with evidence
 focus: biography
 pedagogy: CBI

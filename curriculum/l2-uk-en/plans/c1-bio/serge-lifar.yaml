@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи виправдовує геніальність суперечливі рішення?
-  word_target: 300
   output: Етичне есе
 focus: biography
 prerequisites:

@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи етично вигадувати історію?
-  word_target: 300
   output: Критичний есей
 focus: biography
 prerequisites:

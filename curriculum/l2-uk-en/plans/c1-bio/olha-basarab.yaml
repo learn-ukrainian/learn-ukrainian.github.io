@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому Басараб стала символом?
-  word_target: 300
   output: Історичне есе
 focus: biography
 prerequisites:

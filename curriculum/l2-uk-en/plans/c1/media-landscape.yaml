@@ -78,7 +78,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Analyze news article for bias
-  word_target: 200
 focus: domain
 prerequisites:
 - c1-25 (Political System)

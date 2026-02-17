@@ -64,7 +64,6 @@ vocabulary_hints:
 activity_hints:
 - type: essay-response
   focus: Write formal email on given topic
-  word_target: 150
 - type: quiz
   focus: Digital communication etiquette
   items: 15+

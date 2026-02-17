@@ -70,7 +70,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Was Roksolana a victim or a manipulator?
-  word_target: 300
   output: Balanced analysis with evidence
 - type: critical-analysis
   focus: Evaluate different interpretations of Roksolana

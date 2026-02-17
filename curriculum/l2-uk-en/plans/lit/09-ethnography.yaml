@@ -63,7 +63,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Роль обряду в українській ідентичності
-  word_target: 300
   output: Культурологічне есе
 focus: culture
 pedagogy: literature

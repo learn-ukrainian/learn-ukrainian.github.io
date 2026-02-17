@@ -71,7 +71,6 @@ activity_hints:
   items: 4 passages
 - type: essay-response
   focus: Why is Kvitka called "Father of Ukrainian Prose"?
-  word_target: 300
   output: Literary analysis with examples
 - type: critical-analysis
   focus: Compare Kvitka's sentimentalism with European models

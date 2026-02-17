@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How does Plokhy challenge traditional narratives?
-  word_target: 300
   output: Historiographical analysis
 focus: biography
 prerequisites:

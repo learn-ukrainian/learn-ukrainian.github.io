@@ -63,7 +63,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому Українська революція 1917-1921 зазнала поразки?
-  word_target: 300
 focus: history
 pedagogy: CBI
 prerequisites:

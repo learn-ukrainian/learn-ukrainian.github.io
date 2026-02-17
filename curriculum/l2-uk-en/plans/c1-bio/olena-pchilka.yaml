@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Яку роль відіграла Олена Пчілка у вихованні Лесі Українки?
-  word_target: 300
   output: Біографічне есе
 focus: biography
 prerequisites:

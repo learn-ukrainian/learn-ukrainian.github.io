@@ -62,7 +62,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Шрам vs Череваний — два погляди на Україну
-  word_target: 300
   output: Компаративне есе
 focus: literature
 pedagogy: Analysis

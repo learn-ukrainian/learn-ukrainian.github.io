@@ -61,7 +61,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Мова як засіб характеризації
-  word_target: 300
   output: Лінгвостилістичне есе
 focus: literature
 pedagogy: Seminar

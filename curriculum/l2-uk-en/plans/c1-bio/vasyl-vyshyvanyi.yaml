@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи можна обрати національну ідентичність?
-  word_target: 300
   output: Філософський есей
 focus: biography
 prerequisites:

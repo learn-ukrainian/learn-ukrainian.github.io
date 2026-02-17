@@ -82,7 +82,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Rewrite narrative using participles
-  word_target: 150
   output: Model answer provided
 focus: grammar
 prerequisites:

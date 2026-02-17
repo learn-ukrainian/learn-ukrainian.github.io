@@ -66,7 +66,6 @@ activity_hints:
   items: 40+
 - type: essay-response
   focus: Write professional document
-  word_target: 400
 - type: match-up
   focus: Review all key concepts M21-M34
   items: 20+

@@ -88,8 +88,6 @@ phases:
       - "Підсумковий модуль: Війна як літературний рух"
 
 constraints:
-  min_word_target: 4000
-  max_word_target: 5500
   min_engagement_boxes: 3
   min_primary_sources: 3
   immersion_target: 0.95

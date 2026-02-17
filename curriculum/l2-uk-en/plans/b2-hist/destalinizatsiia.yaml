@@ -66,7 +66,6 @@ activity_hints:
   items: 5
 - type: essay-response
   focus: Чому десталінізація не призвела до деколонізації?
-  word_target: 250
 focus: history
 pedagogy: CBI
 prerequisites:

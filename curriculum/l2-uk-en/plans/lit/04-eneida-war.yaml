@@ -61,7 +61,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Естетика смішної смерті — етика чи мистецтво?
-  word_target: 300
   output: Критичне есе
 focus: literature
 pedagogy: literature

@@ -108,7 +108,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Практичне застосування
-  word_target: 200
 - type: true-false
   focus: Перевірка розуміння
   items: 8

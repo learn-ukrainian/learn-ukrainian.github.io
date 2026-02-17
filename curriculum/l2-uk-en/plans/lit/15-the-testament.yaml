@@ -61,7 +61,6 @@ activity_hints:
   items: '1'
 - type: essay-response
   focus: Чи закликає Шевченко до насильства?
-  word_target: 300
   output: Інтерпретаційне есе
 focus: literature
 pedagogy: Analysis

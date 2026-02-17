@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому Кропивницького називають батьком українського театру?
-  word_target: 300
   output: Historical analysis
 focus: biography
 prerequisites:

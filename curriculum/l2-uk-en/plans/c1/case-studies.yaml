@@ -62,7 +62,6 @@ vocabulary_hints:
 activity_hints:
 - type: essay-response
   focus: Case study analysis report
-  word_target: 400
 - type: quiz
   focus: Case analysis methodology
   items: 15+

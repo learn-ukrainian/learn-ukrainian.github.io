@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому жіночий рух важливий для національного пробудження?
-  word_target: 300
   output: Аргументативне есе
 focus: biography
 prerequisites:

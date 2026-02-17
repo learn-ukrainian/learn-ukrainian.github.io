@@ -68,7 +68,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Україна у творчості Довженка
-  word_target: 300
   output: Аргументований есей
 - type: critical-analysis
   focus: Порівняння долі Довженка та інших митців Розстріляного відродження

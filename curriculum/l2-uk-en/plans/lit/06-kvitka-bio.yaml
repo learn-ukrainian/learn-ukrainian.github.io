@@ -62,7 +62,6 @@ activity_hints:
   items: 3+
 - type: essay-response
   focus: Чому дворянин став "голосом народу"?
-  word_target: 300
   output: Біографічне есе
 focus: biography
 pedagogy: literature

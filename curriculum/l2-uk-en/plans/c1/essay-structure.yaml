@@ -74,10 +74,8 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write introduction with thesis
-  word_target: 200
 - type: essay-response
   focus: Write body paragraph using TEEL
-  word_target: 200
 focus: grammar
 prerequisites:
 - c1-01 to c1-07 (Academic Foundation)

@@ -71,7 +71,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why was a Ukrainian opera significant in 1863?
-  word_target: 250
   output: Analysis of cultural-political context
 - type: critical-analysis
   focus: How does "Zaporozhets" represent Ukrainian identity?

@@ -84,7 +84,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why did Volodymyr choose Byzantine Christianity?
-  word_target: 300
   output: Analysis with historical and pragmatic factors
 - type: critical-analysis
   focus: Evaluate the methods of Christianization

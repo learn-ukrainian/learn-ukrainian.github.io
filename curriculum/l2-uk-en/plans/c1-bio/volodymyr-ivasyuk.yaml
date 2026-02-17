@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому Червона рута стала символом?
-  word_target: 300
   output: Культурологічний есей
 focus: biography
 prerequisites:

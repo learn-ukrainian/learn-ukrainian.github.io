@@ -73,7 +73,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Rewrite text using different connectors
-  word_target: 200
 - type: error-correction
   focus: Fix inappropriate connector usage
   items: 10+

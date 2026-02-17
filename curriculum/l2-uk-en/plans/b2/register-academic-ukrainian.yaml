@@ -84,7 +84,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write academic paragraph with proper hedging
-  word_target: 150
   output: Model answer with style analysis
 focus: style
 prerequisites:

@@ -61,7 +61,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Природа українського гумору як захисного механізму
-  word_target: 300
   output: Аналітичне есе
 focus: literature
 pedagogy: literature

@@ -79,7 +79,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Write cover letter
-  word_target: 200
 focus: style
 prerequisites:
 - c1-01 to c1-20 (Complete C1.1)

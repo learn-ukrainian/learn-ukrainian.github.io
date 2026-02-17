@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Пісня як історична пам'ять
-  word_target: 300
   output: Есе
 focus: biography
 prerequisites:

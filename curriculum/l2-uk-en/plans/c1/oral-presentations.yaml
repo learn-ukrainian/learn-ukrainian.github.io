@@ -73,7 +73,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Write presentation introduction
-  word_target: 150
 focus: grammar
 prerequisites:
 - c1-01 to c1-12 (Academic Foundation)

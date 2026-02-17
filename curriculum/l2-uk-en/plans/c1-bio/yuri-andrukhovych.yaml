@@ -67,7 +67,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи може карнавал бути формою спротиву імперії?
-  word_target: 300
   output: Analytical essay
 focus: biography
 prerequisites:

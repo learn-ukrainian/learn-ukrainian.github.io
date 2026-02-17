@@ -61,7 +61,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Еволюція українського героя (курсовий підсумок)
-  word_target: 400
   output: Підсумкове есе
 focus: literature
 pedagogy: Seminar

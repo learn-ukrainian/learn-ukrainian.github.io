@@ -53,7 +53,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Філософський або літературознавчий аспект твору
-  word_target: 400
   output: Аналітичне есе
 focus: literature
 pedagogy: Seminar

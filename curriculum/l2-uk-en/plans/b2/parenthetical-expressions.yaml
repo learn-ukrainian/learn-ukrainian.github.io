@@ -81,7 +81,6 @@ activity_hints:
   items: 16+
 - type: essay-response
   focus: Write opinion text using varied parenthetical expressions
-  word_target: 150
   output: Model answer provided
 focus: grammar
 prerequisites:

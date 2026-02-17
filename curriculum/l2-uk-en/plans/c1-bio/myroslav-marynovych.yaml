@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому моральний авторитет важливий у часи кризи?
-  word_target: 300
   output: Аргументативне есе
 focus: biography
 prerequisites:

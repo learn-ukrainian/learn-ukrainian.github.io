@@ -61,7 +61,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Контраст між "Кобзарем" і "Журналом"
-  word_target: 300
   output: Компаративне есе
 focus: literature
 pedagogy: Seminar

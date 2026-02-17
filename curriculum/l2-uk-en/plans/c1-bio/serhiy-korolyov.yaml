@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why is Korolyov considered Ukrainian heritage?
-  word_target: 300
   output: Analysis of reclaimed identity
 focus: biography
 prerequisites:

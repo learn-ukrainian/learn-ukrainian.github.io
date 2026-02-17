@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Феномен Діда Панаса в радянській Україні
-  word_target: 300
   output: Есе-аналіз
 focus: biography
 prerequisites:

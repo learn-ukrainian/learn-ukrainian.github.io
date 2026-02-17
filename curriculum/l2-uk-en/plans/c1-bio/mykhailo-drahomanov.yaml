@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи актуальні ідеї Драгоманова сьогодні?
-  word_target: 300
   output: Political analysis
 focus: biography
 prerequisites:

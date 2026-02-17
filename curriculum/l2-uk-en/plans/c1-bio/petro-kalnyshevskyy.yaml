@@ -71,7 +71,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why did the Empire destroy the Sich?
-  word_target: 250
   output: Analysis of imperial motivations
 - type: critical-analysis
   focus: Evaluate the claim that he lived to 112

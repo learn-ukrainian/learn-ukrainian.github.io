@@ -61,7 +61,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Чому імперія боялася українського правопису?
-  word_target: 300
   output: Політико-лінгвістичне есе
 focus: linguistics
 pedagogy: Analysis

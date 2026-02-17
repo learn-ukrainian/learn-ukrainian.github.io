@@ -70,7 +70,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
-  word_target: 250
   output: Analytical argument with evidence
 - type: critical-analysis
   focus: Why did Roman succeed where others failed?

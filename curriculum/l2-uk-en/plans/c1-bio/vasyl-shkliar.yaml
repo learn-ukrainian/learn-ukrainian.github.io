@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Як художня література формує історичну памятка?
-  word_target: 300
   output: Аналітичний есей
 focus: biography
 prerequisites:

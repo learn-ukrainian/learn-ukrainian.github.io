@@ -76,7 +76,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Summarize article in 100 words
-  word_target: 100
 focus: grammar
 prerequisites:
 - c1-07 (Citation & Reference)

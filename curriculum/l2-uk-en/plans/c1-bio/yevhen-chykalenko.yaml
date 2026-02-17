@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Яка роль грошей у національному русі?
-  word_target: 300
   output: Аналітичний есей
 focus: biography
 prerequisites:

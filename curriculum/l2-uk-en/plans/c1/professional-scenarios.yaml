@@ -61,10 +61,8 @@ vocabulary_hints:
 activity_hints:
 - type: essay-response
   focus: Write CV and cover letter
-  word_target: 300
 - type: essay-response
   focus: Business email chain
-  word_target: 200
 - type: quiz
   focus: Professional scenario decisions
   items: 15+

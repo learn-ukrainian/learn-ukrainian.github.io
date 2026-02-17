@@ -73,7 +73,6 @@ activity_hints:
   items: 4 passages
 - type: essay-response
   focus: Why is "Кайдашева сім'я" still relevant today?
-  word_target: 300
   output: Social analysis with modern parallels
 - type: critical-analysis
   focus: Compare Nechuy-Levytsky with European realists (Zola, Dickens)

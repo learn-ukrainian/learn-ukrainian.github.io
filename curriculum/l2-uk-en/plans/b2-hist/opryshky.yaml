@@ -105,7 +105,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Порівняння Довбуша з Робін Гудом
-  word_target: 300
 - type: map-study
   focus: Територія діяльності опришків
 - type: critical-analysis

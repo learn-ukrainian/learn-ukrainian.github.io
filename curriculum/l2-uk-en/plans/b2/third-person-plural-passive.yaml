@@ -79,7 +79,6 @@ activity_hints:
   items: 8+
 - type: essay-response
   focus: Write informal story using 3rd pl passive
-  word_target: 150
   output: Model answer provided
 focus: grammar
 prerequisites:

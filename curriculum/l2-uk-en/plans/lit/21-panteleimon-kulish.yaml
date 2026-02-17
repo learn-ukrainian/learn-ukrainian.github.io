@@ -60,7 +60,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Дуалізм Куліша (європеїзм vs хуторянство)
-  word_target: 300
   output: Біографічне есе
 focus: biography
 pedagogy: Seminar

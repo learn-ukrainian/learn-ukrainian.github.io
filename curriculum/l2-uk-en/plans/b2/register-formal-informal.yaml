@@ -80,7 +80,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write same request formally and informally
-  word_target: 150
   output: Model answers for both registers
 focus: style
 prerequisites:

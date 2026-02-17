@@ -63,7 +63,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому Україна чинить спротив російській агресії?
-  word_target: 300
 focus: history
 pedagogy: CBI
 prerequisites:

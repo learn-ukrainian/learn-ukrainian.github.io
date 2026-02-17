@@ -118,7 +118,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Етична оцінка насильства у визвольній боротьбі
-  word_target: 300
 - type: comparative-study
   focus: Польська vs українська інтерпретація подій
 - type: critical-analysis

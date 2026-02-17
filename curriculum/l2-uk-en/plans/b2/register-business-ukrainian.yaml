@@ -84,7 +84,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Draft business proposal letter
-  word_target: 200
   output: Model answer with annotations
 focus: style
 prerequisites:

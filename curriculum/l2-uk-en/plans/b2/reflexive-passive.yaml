@@ -80,7 +80,6 @@ activity_hints:
   items: 8+
 - type: essay-response
   focus: Write scientific process description
-  word_target: 150
   output: Model answer provided
 focus: grammar
 prerequisites:

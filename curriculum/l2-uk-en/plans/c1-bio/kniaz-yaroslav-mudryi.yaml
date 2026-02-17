@@ -57,7 +57,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Compare Yaroslav's lawgiving with Justinian or Charlemagne
-  word_target: 300
   output: Comparative analysis
 - type: critical-analysis
   focus: Evaluate the title "Mudryi" (The Wise)

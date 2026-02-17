@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did Rudnytska combine feminism with national liberation?
-  word_target: 300
   output: Analysis of intersectional activism
 focus: biography
 prerequisites:

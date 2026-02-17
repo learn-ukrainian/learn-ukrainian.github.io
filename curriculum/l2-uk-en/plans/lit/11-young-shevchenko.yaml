@@ -61,7 +61,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Роль випадку в долі генія
-  word_target: 300
   output: Біографічне есе
 focus: biography
 pedagogy: literature

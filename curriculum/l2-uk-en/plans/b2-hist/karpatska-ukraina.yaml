@@ -63,7 +63,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому Карпатська Україна важлива для української ідентичності?
-  word_target: 250
 focus: history
 pedagogy: CBI
 prerequisites:

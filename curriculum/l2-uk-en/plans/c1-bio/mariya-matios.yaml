@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Як регіональна ідентичність впливає на літературу?
-  word_target: 300
   output: Literary analysis
 focus: biography
 prerequisites:

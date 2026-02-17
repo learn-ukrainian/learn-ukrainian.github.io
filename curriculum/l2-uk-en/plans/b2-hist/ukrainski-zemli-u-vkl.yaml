@@ -67,7 +67,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: critical-analysis
   focus: Аналіз причинно-наслідкових зв'язків між подіями
   items: 3

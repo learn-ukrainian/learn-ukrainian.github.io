@@ -73,7 +73,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write paragraph acknowledging and refuting opposing view
-  word_target: 200
 - type: group-sort
   focus: Classify refutation types
   items: 12+

@@ -62,7 +62,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому документування злочинів важливе для майбутнього правосуддя?
-  word_target: 250
 focus: history
 pedagogy: CBI
 prerequisites:

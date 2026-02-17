@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чим український авангард відрізнявся від західного?
-  word_target: 300
   output: Порівняльне есе
 focus: biography
 prerequisites:

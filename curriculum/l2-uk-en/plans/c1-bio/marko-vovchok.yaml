@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи можна вважати Марко Вовчок українською письменницею?
-  word_target: 300
   output: Critical analysis
 focus: biography
 prerequisites:

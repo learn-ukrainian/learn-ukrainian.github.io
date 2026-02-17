@@ -78,7 +78,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Self-presentation paragraph
-  word_target: 150
 focus: communication
 prerequisites:
 - c1-21 (CV & Resume Writing)

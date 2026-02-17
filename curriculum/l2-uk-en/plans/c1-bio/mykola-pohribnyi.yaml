@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Яка роль радіо у збереженні мови?
-  word_target: 300
   output: Media analysis
 focus: biography
 prerequisites:

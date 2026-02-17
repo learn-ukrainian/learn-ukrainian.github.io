@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Що означає бути вільним?
-  word_target: 300
   output: Есе-роздум
 focus: biography
 prerequisites:

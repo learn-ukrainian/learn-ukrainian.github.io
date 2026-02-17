@@ -71,7 +71,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Was Mazepa a traitor or a patriot?
-  word_target: 300
   output: Analysis of competing narratives
 - type: critical-analysis
   focus: Analyze Mazepa in Ukrainian vs. Russian historiography

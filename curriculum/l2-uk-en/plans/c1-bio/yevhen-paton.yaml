@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did Paton's welding technology change industry?
-  word_target: 300
   output: Technical impact analysis
 focus: biography
 prerequisites:

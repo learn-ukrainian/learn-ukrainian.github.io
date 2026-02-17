@@ -88,7 +88,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Write argumentative paragraph using varied connectors
-  word_target: 150
   output: Model answer provided
 focus: grammar
 prerequisites:

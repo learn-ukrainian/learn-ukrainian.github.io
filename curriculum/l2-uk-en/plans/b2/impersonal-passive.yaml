@@ -83,7 +83,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Write official announcement using -но/-то
-  word_target: 120
   output: Model answer provided
 focus: grammar
 prerequisites:

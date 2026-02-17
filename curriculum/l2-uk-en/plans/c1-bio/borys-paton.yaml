@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did Borys Paton preserve Ukrainian science through political changes?
-  word_target: 300
   output: Science and politics analysis
 focus: biography
 prerequisites:

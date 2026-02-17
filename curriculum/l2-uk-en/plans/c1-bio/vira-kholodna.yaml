@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому німе кіно створювало такі сильні емоції?
-  word_target: 300
   output: Культурологічний есей
 focus: biography
 prerequisites:

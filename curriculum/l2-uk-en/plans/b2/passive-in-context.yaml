@@ -81,7 +81,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Write same news in 3 different registers
-  word_target: 200
   output: Model answers for each register
 focus: grammar
 prerequisites:

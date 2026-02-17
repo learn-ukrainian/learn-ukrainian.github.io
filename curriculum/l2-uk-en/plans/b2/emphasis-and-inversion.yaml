@@ -83,7 +83,6 @@ activity_hints:
   items: 3 texts
 - type: essay-response
   focus: Rewrite paragraph with emphatic structures
-  word_target: 150
   output: Model answer with analysis
 focus: grammar
 prerequisites:

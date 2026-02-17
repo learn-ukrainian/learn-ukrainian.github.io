@@ -79,7 +79,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write paragraph using all sentence types
-  word_target: 150
   output: Model answer with structure analysis
 focus: grammar
 prerequisites:

@@ -62,7 +62,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому Україна пережила дві революції за 10 років?
-  word_target: 300
 focus: history
 pedagogy: CBI
 prerequisites:

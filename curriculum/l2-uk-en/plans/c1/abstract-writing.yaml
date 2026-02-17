@@ -75,7 +75,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Write abstract for given research
-  word_target: 200
 - type: error-correction
   focus: Fix abstract style issues
   items: 10+

@@ -74,7 +74,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Rewrite confident claims with appropriate hedging
-  word_target: 200
 - type: group-sort
   focus: Hedging expressions by strength
   items: 15+

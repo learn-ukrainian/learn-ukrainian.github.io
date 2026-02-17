@@ -61,7 +61,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Етика бунту — чи виправдовує мета засоби?
-  word_target: 300
   output: Філософське есе
 focus: literature
 pedagogy: literature

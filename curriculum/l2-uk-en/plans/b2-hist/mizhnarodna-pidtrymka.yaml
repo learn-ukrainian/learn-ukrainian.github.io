@@ -63,7 +63,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому підтримка України — це захист демократії у світі?
-  word_target: 250
 focus: history
 pedagogy: CBI
 prerequisites:

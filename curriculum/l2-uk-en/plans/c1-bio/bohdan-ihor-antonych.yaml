@@ -66,7 +66,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: У чому унікальність поетичного світу Антонича?
-  word_target: 300
   output: Analytical essay
 focus: biography
 prerequisites:

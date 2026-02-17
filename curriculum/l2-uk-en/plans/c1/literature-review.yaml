@@ -73,7 +73,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write mini-review synthesizing 3 sources
-  word_target: 300
 - type: group-sort
   focus: Classify sources by quality/relevance
   items: 12+

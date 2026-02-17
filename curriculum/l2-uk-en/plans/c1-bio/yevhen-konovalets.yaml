@@ -65,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did Konovalets transform military defeat into political movement?
-  word_target: 300
   output: Strategic analysis
 focus: biography
 prerequisites:

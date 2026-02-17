@@ -84,7 +84,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write formal application (заява)
-  word_target: 150
   output: Model answer with annotations
 focus: style
 prerequisites:

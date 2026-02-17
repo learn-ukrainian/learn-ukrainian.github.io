@@ -84,7 +84,6 @@ activity_hints:
   items: 5 texts (one per style)
 - type: essay-response
   focus: Write same news in two different styles
-  word_target: 200
   output: Model answers for comparison
 focus: style
 prerequisites:

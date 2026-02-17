@@ -61,7 +61,6 @@ activity_hints:
   items: 3+
 - type: essay-response
   focus: Роль особистості в історії культури
-  word_target: 300
   output: Аргументативне есе
 focus: literature
 pedagogy: literature

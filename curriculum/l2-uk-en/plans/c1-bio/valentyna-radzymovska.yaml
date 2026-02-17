@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Як зберігати памятка про жертв?
-  word_target: 300
   output: Рефлексивний есей
 focus: biography
 prerequisites:

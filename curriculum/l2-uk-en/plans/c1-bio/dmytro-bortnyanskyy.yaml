@@ -71,7 +71,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Is Bortnyanskyy Ukrainian or Russian?
-  word_target: 300
   output: Analysis of cultural identity debates
 - type: critical-analysis
   focus: How did empire appropriate Ukrainian talent?

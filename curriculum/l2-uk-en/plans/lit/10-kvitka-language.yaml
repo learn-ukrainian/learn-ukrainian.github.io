@@ -61,7 +61,6 @@ activity_hints:
   items: 6+
 - type: essay-response
   focus: Як слово стає зброєю в боротьбі за гідність нації?
-  word_target: 300
   output: Мовознавче есе
 focus: style
 pedagogy: literature

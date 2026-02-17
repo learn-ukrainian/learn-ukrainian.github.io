@@ -64,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Образ гетьмана в виконанні Ступки
-  word_target: 300
   output: Есе-рецензія
 focus: biography
 prerequisites:

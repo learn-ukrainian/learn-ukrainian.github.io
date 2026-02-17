@@ -61,7 +61,6 @@ vocabulary_hints:
 activity_hints:
 - type: essay-response
   focus: Write article review
-  word_target: 400
 - type: quiz
   focus: Identify strengths/weaknesses in research
   items: 15+

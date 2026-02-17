@@ -73,7 +73,6 @@ activity_hints:
   items: 10+
 - type: essay-response
   focus: Formulate thesis on given topic
-  word_target: 100
 - type: group-sort
   focus: Strong vs weak theses
   items: 15+

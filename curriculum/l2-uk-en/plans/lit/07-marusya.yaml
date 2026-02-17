@@ -62,7 +62,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Чому Квітка вбив своїх героїв?
-  word_target: 300
   output: Аналітичне есе
 focus: literature
 pedagogy: literature

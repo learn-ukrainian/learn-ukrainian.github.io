@@ -61,7 +61,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Концепція \"Національного Батька\" — ризики і переваги
-  word_target: 300
   output: Критичне есе
 focus: culture
 pedagogy: Seminar

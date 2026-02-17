@@ -76,7 +76,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write paragraph using 5+ research verbs
-  word_target: 150
 focus: vocabulary
 prerequisites:
 - c1-02 (Academic Style Markers)

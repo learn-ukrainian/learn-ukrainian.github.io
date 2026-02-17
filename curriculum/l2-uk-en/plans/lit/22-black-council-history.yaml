@@ -61,7 +61,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Чи була Чорна рада "демократією" чи "охлократією"?
-  word_target: 300
   output: Історичне есе
 focus: history
 pedagogy: Immersion

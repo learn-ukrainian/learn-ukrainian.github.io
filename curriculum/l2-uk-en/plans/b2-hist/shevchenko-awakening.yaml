@@ -65,7 +65,6 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Чому Шевченка називають творцем української нації?
-  word_target: 250
 focus: history
 pedagogy: CBI
 prerequisites:

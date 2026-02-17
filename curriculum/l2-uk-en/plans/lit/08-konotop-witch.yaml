@@ -61,7 +61,6 @@ activity_hints:
   items: 5+
 - type: essay-response
   focus: Чому Квітка використовує гумор для критики влади?
-  word_target: 300
   output: Критичне есе
 focus: literature
 pedagogy: literature

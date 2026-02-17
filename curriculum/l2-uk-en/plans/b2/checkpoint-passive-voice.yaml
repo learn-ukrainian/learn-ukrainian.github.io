@@ -86,7 +86,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Diagnostic writing — use all 4 passive forms
-  word_target: 200
   output: Self-evaluate against rubric
 focus: checkpoint
 prerequisites:

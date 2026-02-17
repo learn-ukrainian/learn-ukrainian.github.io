@@ -81,7 +81,6 @@ activity_hints:
   items: 12+
 - type: essay-response
   focus: Write description of symptoms for doctor visit
-  word_target: 150
   output: Model answer provided
 focus: style
 prerequisites:

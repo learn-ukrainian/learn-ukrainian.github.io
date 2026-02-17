@@ -61,7 +61,6 @@ activity_hints:
   items: 4+
 - type: essay-response
   focus: Актуальність для сучасної родини
-  word_target: 300
   output: Аналітичне есе
 focus: literature
 pedagogy: Seminar
