@@ -565,27 +565,47 @@ def _render_all_overview(manifest: dict):
     print()
 
 
+def _is_plan_already_enriched(track_id: str, slug: str) -> bool:
+    """Check if a plan already has enrichment markers (em-dash annotations)."""
+    plan_path = CURRICULUM_ROOT / "plans" / track_id / f"{slug}.yaml"
+    if not plan_path.exists():
+        return False
+    try:
+        plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
+        return any(
+            "\u2014" in str(p) or "learner error:" in str(p) or "cultural hook:" in str(p)
+            for section in plan.get("content_outline", [])
+            for p in section.get("points", [])
+        )
+    except Exception:
+        return False
+
+
 def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9):
     """Enrich plans for modules with research at or above min_score."""
     import subprocess
 
-    # Filter: modules with research score >= min_score
+    # Filter: modules with research score >= min_score AND not already enriched
     queue = []
+    skipped = 0
     for r in results:
         info = r["info"]
         if info is None:
             continue
         score = info.get("score")
         if score is not None and score >= min_score:
+            if _is_plan_already_enriched(track_id, r["slug"]):
+                skipped += 1
+                continue
             queue.append(r)
 
     track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
     if not queue:
-        print(f"No {track_name} modules with research at {min_score}+/10.")
+        print(f"No {track_name} modules need enrichment ({skipped} already enriched).")
         return
 
     total = len(queue)
-    print(f"\n{BOLD}{track_name}: Enriching plans for {total} module(s) (research {min_score}+/10){RESET}")
+    print(f"\n{BOLD}{track_name}: Enriching plans for {total} module(s) (research {min_score}+/10, {skipped} already done){RESET}")
     print("\u2550" * 70)
 
     passed = 0
@@ -618,7 +638,7 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
             return
 
     print(f"\n{'=' * 70}")
-    print(f"Done: {passed} enriched, {failed} failed out of {total}")
+    print(f"Done: {passed} enriched, {failed} failed out of {total} ({skipped} previously enriched)")
     print()
 
 
