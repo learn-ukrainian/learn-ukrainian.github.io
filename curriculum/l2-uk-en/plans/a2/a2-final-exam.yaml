@@ -1,6 +1,6 @@
-module: a2-70
+module: a2-71
 level: A2
-sequence: 70
+sequence: 71
 slug: a2-final-exam
 version: '2.0'
 title: A2 Final Exam
@@ -8,39 +8,52 @@ subtitle: Level Completion
 content_outline:
 - section: Overview / Огляд
   points:
-  - Exam format overview
-  - Skills to demonstrate
+  - 'Exam format overview — cultural hook: The 12-point grading system vs 5-point
+    Soviet scale; universities often use 100-point ECTS scale'
+  - 'Skills to demonstrate — alignment with State Standard §3.7: communicative competence
+    in learning domain (actions related to gaining knowledge)'
 - section: 'Навичка 1: Майстерність відмінків'
   points:
-  - Case system mastery
-  - Practice exercises
+  - 'Case system mastery — learner error: confusion with ''відповідь на питання''
+    (Acc) vs ''відповідати студенту'' (Dat)'
+  - Practice exercises — focus on correct case government in exam-related contexts
 - section: 'Навичка 2: Вид дієслова'
   points:
-  - Verb aspect usage
-  - Process vs result
+  - 'Verb aspect usage — learner error: Aspect Confusion (imperfective for completed
+    results, e.g. ''Я складав'' instead of ''Я склав'')'
+  - 'Process vs result — explicit contrast: ''я складав'' (process) vs ''я склав''
+    (result)'
 - section: 'Навичка 3: Навігація в місті'
   points:
-  - Navigation vocabulary
-  - Giving directions
+  - Navigation vocabulary — framed as 'Finding your way to the exam center' to integrate
+    with theme
+  - Giving directions — practical application for arriving at the ZNO/NMT testing
+    site
 - section: 'Навичка 4: Словотвір'
   points:
   - Word formation
   - Roots and prefixes
 - section: Integration Challenge / Інтеграційне завдання
   points:
-  - Combined skills dialogue
-  - Cultural moments
+  - Combined skills dialogue — enforcing 'скласти іспит' (compose) instead of Russism
+    'здати' (hand over) which is a badge of educated speech
+  - Cultural moments — context of ZNO/NMT (External Independent Evaluation) as the
+    modern standard fighting corruption
 - section: Need More Practice?
   points:
-  - Transition to B1
+  - Transition to B1 — prep for B1-01 metalanguage (noun, verb, case names) providing
+    the vocabulary foundation
 vocabulary_hints:
   required:
-  - іспит (exam)
+  - 'іспит (exam) — collocations: скласти іспит (pass), провалити іспит (fail), готуватися
+    до іспиту'
   - завдання (task)
-  - відповідь (answer)
-  - результат (result)
-  - рівень (level)
-  - оцінка (grade)
+  - 'відповідь (answer) — collocations: правильна відповідь, дати відповідь, шукати
+    відповідь'
+  - 'результат (result) — collocations: гарний результат, отримати результат, чекати
+    на результат'
+  - 'рівень (level) — collocations: рівень знань, підвищити рівень, досягти рівня'
+  - 'оцінка (grade) — collocations: висока оцінка, отримати оцінку, система оцінювання'
   - готовий (ready)
   - успішно (successfully)
   recommended:
@@ -61,6 +74,7 @@ activity_hints:
 focus: checkpoint
 pedagogy: TTT
 prerequisites:
+- a2-70 (Introduction to Participles)
 - a2-69 (Online Services)
 - a2-56 (Checkpoint Full Grammar)
 connects_to:

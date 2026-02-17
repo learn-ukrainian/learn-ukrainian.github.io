@@ -40,9 +40,9 @@ phases:
 
   - id: A2.6
     name: "Practical Scenarios"
-    modules: "[57, 70]"
+    modules: "[57, 71]"
     focus: "Real-world communication, consolidation"
-    final_exam: 70
+    final_exam: 71
 
 grammar_scope:
   - All 7 cases (full paradigms)
@@ -57,4 +57,5 @@ notes: |
   A2 completes the case system and introduces verbal aspect.
   Module 11 is a checkpoint between phases.
   Module 56 is a grammar checkpoint.
-  Module 70 is the A2 Final Exam.
+  Module 70 is Introduction to Participles (State Standard §4.2.3.1).
+  Module 71 is the A2 Final Exam.
