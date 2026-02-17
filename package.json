@@ -30,7 +30,7 @@
     "seo:generate": "python3 scripts/generate_seo.py",
     "sync:landing": ".venv/bin/python scripts/sync_landing_pages.py",
     "sync:landing:dry": ".venv/bin/python scripts/sync_landing_pages.py --dry-run",
-    "claude:deploy": "rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/ && rsync -av claude_extensions/commands/ .agent/workflows/ && rsync -av gemini_extensions/ .gemini/",
+    "claude:deploy": ".venv/bin/python scripts/lint_prompts.py && rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/ && rsync -av claude_extensions/commands/ .agent/workflows/ && rsync -av gemini_extensions/ .gemini/",
     "lint:md": "markdownlint-cli2 \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
     "lint:md:fix": "markdownlint-cli2 --fix \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
     "lint:mdx": "markdownlint-cli2 \"docusaurus/docs/**/*.mdx\"",

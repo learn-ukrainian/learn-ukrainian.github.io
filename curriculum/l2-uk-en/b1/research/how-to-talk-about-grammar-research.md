@@ -1,33 +1,32 @@
 # Дослідження: Як говорити про граматику
 
 ## State Standard Reference
-§4: «Особа вміє розпізнавати та використовувати граматично правильні мовні форми для вираження власних намірів у межах комунікативних потреб... Обсяг граматичних умінь рівня В1 охоплює всі аспекти, що визначені для рівнів А1, А2, але з розширенням лексичного матеріалу...» (UKRAINIAN-STATE-STANDARD-2024.txt, лінії 1981-1988).
-Alignment: This module provides the metalanguage necessary for students to understand and follow grammatical explanations entirely in Ukrainian, facilitating the transition to full immersion.
+§4.2.1.1: "Іменник: іменники чоловічого роду з основою на твердий приголосний... іменники жіночого роду... іменники середнього роду..."
+Alignment: This module provides the essential *metalanguage* (термінологію) required to navigate the linguistic competence sections (§4.2 Morphology, §4.4 Syntax) of the B1 standard. Without knowing terms like "іменник" (noun) or "рід" (gender), a learner cannot access the grammar explanations defined in the standard.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| граматика | High / Academic | вправи з граматики, вивчати граматику |
-| правило | High / General | граматичне правило, за правилом, виняток із правила |
-| приклад | Very High / General | наводити приклад, наприклад, за прикладом |
-| відмінок | Medium / Linguistic | відмінювання за відмінками, сім відмінків |
-| частина мови | Medium / Linguistic | самостійні частини мови, службові слова |
+| іменник (noun) | High (Pedagogical corpus) | рід іменника, відміна іменника, закінчення іменника |
+| дієслово (verb) | High (Pedagogical corpus) | час дієслова, вид дієслова, дієвідмінювання |
+| відмінок (case) | High (Pedagogical corpus) | називний відмінок, родовий відмінок, відмінювання |
+| правило (rule) | Very High (General) | граматичне правило, запам'ятати правило, за правилом |
+| приклад (example) | Very High (General) | наприклад, навести приклад, яскравий приклад |
 
 ## Cultural Hooks
-1. **Мелетій Смотрицький**: Автор «Граматики слов’янської» (1619), яка на два століття стала головним підручником граматики для східних слов’ян. Саме Смотрицький вперше ввів у вжиток літеру «ґ» та систематизував відмінки (джерело: litopys.org.ua).
-2. **Мнемоніка відмінків**: Українські школярі часто використовують вірші-підказки для запам'ятовування послідовності семи відмінків. Найпопулярніший: «**Н**ародив **Р**оман **Д**итину, **З**рубав **О**черетину, **М**’ячик **К**инув» (Н-Р-Д-З-О-М-К) (джерело: naurok.ua).
+1. **Meletiy Smotrytsky's "Grammatika" (1619)**: This seminal work codified Church Slavonic and significantly influenced Ukrainian philology. Crucially for this module, Smotrytsky introduced the letter **«ґ»** (g) to the alphabet to distinguish the plosive sound from the fricative «г» (h). This is a perfect historical anchor for discussing the "rules" of the language.
+2. **Case Mnemonic**: "На Різдво Дід Загубив Горішки Між Ковбасками" (Na Rizdvo Did Zahubyv Horishky Mizh Kovbaskamy) — a classic school mnemonic for the 7 cases: Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий, Кличний.
 
 ## Common Learner Errors
-1. **Змішування назв відмінків** → Learner calls Accusative "об'єктний" (by analogy with English) instead of **знахідний**. — Cause: Interference from English grammatical concepts.
-2. **Пропуск кличного відмінка** → «Привіт, Олена» замість «**Привіт, Олено!**» — Cause: Influence of languages that lost the vocative or use nominative for address.
-3. **Плутанина в родах іменників на -ь** → «Мій біль» (correct) vs «Моя біль» (common error). — Cause: Difficulty in determining gender for words ending in a soft sign.
+1. **"Object Case" vs. "Accusative"**: English speakers often try to map "Direct Object" to a single case concept, failing to distinguish between Accusative (direct target) and Dative (recipient) or Instrumental (tool). *Correction*: Use strict Ukrainian terminology (Знахідний) to break the mental link to English syntax.
+2. **Gender of Inanimates**: Learners struggle with the concept that "стіл" (table) has a gender (masculine) just like a person. They often try to use a neutral "it". *Correction*: Emphasize "Рід" as an inherent property of the *word*, not the object.
+3. **Perfective/Imperfective Confusion**: The concept of "Aspect" (Вид) is alien. Learners often ignore it or map it to Tense. *Correction*: Introduce "Вид" early as a core category of the verb (дієслово), distinct from "Час" (Tense).
 
 ## Cross-References
-- Builds on: A2 Level Completion (all basic case concepts).
-- Prepares for: b1-02 (Verb-specific terminology), b1-03 (Reading grammar rules), b1-06 (Full Immersion Phase).
+- Builds on: A2 grammar competence (conceptual understanding of cases and genders).
+- Prepares for: `b1-02` (Verb terminology), `b1-03` (Reading rules), `b1-05` (Metalanguage Checkpoint).
 
 ## Notes for Content Writing
-- Focus on the **structural logic**: show how Ukrainian terms are often descriptive (e.g., *іменник* from *ім'я*, *прикметник* from *прикмета*).
-- Use the **70% immersion target** to provide English definitions for terms like "participle" or "gerund" which are complex even for native speakers.
-- Ensure the **mnemonic for cases** is prominently featured as a "History Bite" or "Learning Tip".
-- Incorporate the **Smotrytsky fact** to show the deep history of Ukrainian linguistic scholarship.
+- **Persona**: Adopt the "Senior Language & Culture Specialist" voice. The tone should be empowering — "Knowing these words gives you the power to ask questions and understand answers."
+- **Visuals**: The module needs strong visual structural breakdowns (diagrams of sentences) described in text for the "Syntax" section.
+- **Immersion**: This is a bridge module (B1.0). Use the "English Scaffolding" paragraph effectively in the intro, but switch to Ukrainian definitions for the terms themselves immediately.

@@ -1,37 +1,35 @@
 # Дослідження: Вид у минулому: одного разу vs щодня
 
 ## State Standard Reference
-§4.2.3.1: "Дійсний спосіб... утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили"
-Alignment: This module explicitly teaches the distinction between imperfective (habitual/repeated - "хотів") and perfective (single completed - "побачив") aspects in the past tense, which is a core morphological requirement for B1.
+§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили"
+Alignment: This module explicitly teaches the semantic distinction between these forms (imperfective vs perfective) in past tense contexts, ensuring learners can correctly form and select them based on time markers as required by the standard.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| одного разу | High (Narrative) | одного разу влітку, одного разу ми вирішили |
-| щодня | High (Adverb) | щодня ходив, щодня бачив, майже щодня |
+| одного разу | High (Narrative) | одного разу вранці/вночі, одного разу він вирішив, як одного разу |
+| щодня | High (General) | робити щодня, щодня бачити, майже щодня, кожного дня (synonym) |
 | часто | Very High | дуже часто, досить часто, як часто |
-| іноді | High | час від часу, лише іноді |
-| зазвичай | High | як зазвичай, зазвичай ми робили |
+| іноді | High | тільки іноді, іноді навіть, іноді буває |
+| зазвичай | High | як зазвичай, зазвичай ми, він зазвичай |
 | того разу | Medium (Specific) | саме того разу, пам'ятаю того разу |
-| того дня | High (Narrative) | саме того дня, пізніше того дня |
-| завжди | Very High | завжди любив, завжди хотів |
-| ніколи | Very High | ніколи не був, ніколи не бачив |
-| рідко | High | дуже рідко, вкрай рідко |
+| завжди | Very High | назавжди (forever), завжди був, завжди казав |
 
 ## Cultural Hooks
-1. **Storytelling Tradition**: The phrase «Одного разу...» (One day/Once upon a time) is the canonical opener for Ukrainian folk tales and personal anecdotes, signaling a shift from general description to a specific event.
-2. **Hospitality Rituals**: Contrast between daily routine (щодня пив каву сам) and special hospitality events (одного разу прийшли гості, і ми влаштували застілля). This reflects the deep cultural value of guest reception in Ukraine.
+1. **"Одного разу..." (Once upon a time)**: This is the canonical opening for Ukrainian folk tales (казки), immediately signaling a shift from reality to narrative space. It carries a specific "storytelling mode" weight in the culture, distinct from casual conversation.
+2. **Habitual Hospitality**: The concept of "щонеділі" (every Sunday) or "на свята" (on holidays) often triggers specific imperfective verb associations in Ukrainian culture: gathering families, visiting grandparents, making varenyky. This contrasts with the specific "event" of a guest arriving unexpectedly ("одного разу прийшов гість").
 
 ## Common Learner Errors
-1. **Completion vs. Process**: "Я читав цю книгу вчора" (I was reading) vs "Я прочитав цю книгу вчора" (I read/finished). *Cause: English "read" looks the same for both, leading to aspect confusion.*
-2. **"Used to" Confusion**: Using perfective for habitual actions. *Error: "Я пішов до школи щодня" (Wrong) → "Я ходив до школи щодня" (Correct).*
-3. **Gender Agreement**: Mismatching gender in past tense, especially for "одного разу" narratives where the subject might be distant. *Error: "Одного разу я пішов" (said by female) → "Одного разу я пішла".*
+1. **Perfective for Habitual Actions**: *Він прочитав книгу щодня.* → *Він читав книгу щодня.* — Learners mistake the "completeness" of reading a book for the perfective aspect, ignoring the repetition marker "щодня".
+2. **Imperfective for Single Achievements**: *Я складав іспит вчора.* (meaning "I passed") → *Я склав іспит вчора.* — Learners use the process verb (took the exam) when they mean the result (passed the exam).
+3. **"Used to" Confusion**: English speakers try to translate "used to" literally. In Ukrainian, this is simply the **past imperfective** (*Він курив* = He used to smoke / He smoked). Learners often look for a separate "used to" structure that doesn't exist.
 
 ## Cross-References
-- Builds on: b1-06 (Aspect complete system)
-- Prepares for: b1-08 (Aspect in past - result vs process), b1-14 (Aspect integration practice)
+- **Builds on**: `b1-06` (Aspect complete system) — relies on the basic concept of Imp/Perf pairs.
+- **Prepares for**: `b1-08` (Aspect in past - result vs process) — sets the stage for more nuanced distinctions beyond simple frequency.
+- **Prepares for**: `b1-14` (Aspect integration practice) — feeds into the broader narrative skills.
 
 ## Notes for Content Writing
-- Focus on the "Zoom In" effect: Narratives often start with wide-angle habitual descriptions (imperfective/щодня) and then zoom in on a specific disruption or event (perfective/одного разу).
-- Use the "Memoirist" persona effectively: The narrator should sound like they are recounting a fond memory, not just listing facts.
-- Ensure clear distinction between "time markers" that trigger imperfective (завжди, часто) vs perfective (раптом, одного разу).
+- **Persona**: The "Memoirist" persona is perfect here. Use a nostalgic tone for "repeated" actions (childhood habits) vs a dramatic tone for "single events" (turning points).
+- **Visuals**: A timeline visualization is crucial. "Dots on a line" (repeated) vs "One big X" (single event).
+- **Immersion**: Ensure no English "used to" explanations in the main text. Show, don't tell, via the timeline and context.
