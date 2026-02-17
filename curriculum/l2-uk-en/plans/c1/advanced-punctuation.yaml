@@ -19,7 +19,8 @@ content_outline:
   points:
   - Тире між підметом і присудком
   - Тире для підкреслення
-  - Тире у безсполучникових реченнях
+  - 'Тире у безсполучникових реченнях (semantic depth covered in c1-107 Asyndetic
+    Semantics)'
 - section: Двокрапка і крапка з комою
   points:
   - Двокрапка перед переліком
@@ -85,6 +86,7 @@ connects_to:
 - c1-17 (Irregular Verbs Complete)
 - c1-18 (Essay Writing Practice)
 - c1-48 (Literary Syntax)
+- c1-107 (Asyndetic Semantics — semantic logic of dash/colon/comma)
 module_type: grammar
 sources:
 - name: Український правопис 2019

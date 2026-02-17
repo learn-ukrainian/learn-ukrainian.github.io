@@ -1,0 +1,93 @@
+module: c1-108
+level: C1
+sequence: 108
+slug: persuasive-speech
+version: '2.0'
+title: 'Переконлива промова'
+subtitle: 'Persuasive Speech: Argumentation & Rhetoric'
+content_outline:
+- section: Вступ — Мистецтво переконання
+  points:
+  - 'State Standard §4.3.5 alignment — rhetoric, argumentation, persuasion'
+  - 'Ukrainian rhetorical tradition: from Cossack rada speeches to Maidan addresses'
+  - 'Three pillars of persuasion: логос (logic), пафос (emotion), етос (credibility)'
+- section: 'Структура аргументації (Argumentation Structure)'
+  points:
+  - 'Thesis → Antithesis → Synthesis model'
+  - 'Деductive vs inductive reasoning in Ukrainian academic tradition'
+  - 'Concession + rebuttal: Хоча... проте... (Although... however...)'
+  - 'Building a chain of evidence: по-перше... по-друге... нарешті...'
+- section: 'Фігури мовлення (Figures of Speech)'
+  points:
+  - 'Анафора (anaphora): repetition at start — Ми хочемо миру. Ми хочемо правди.
+    Ми хочемо свободи.'
+  - 'Епіфора (epiphora): repetition at end — Це наша земля. Це наша воля. Це наша
+    доля.'
+  - 'Градація (gradation/climax): ascending intensity — Він говорив, кричав, благав.'
+  - 'Антитеза (antithesis): contrast — Одні будують, інші руйнують.'
+  - 'Риторичне запитання: Хіба ми не заслуговуємо на краще?'
+- section: 'Ритм і паузи (Rhythm & Pauses)'
+  points:
+  - 'Tricolon (rule of three): three parallel elements for impact'
+  - 'Short sentences for emphasis after long ones'
+  - 'Парцеляція (parcellation): breaking for dramatic effect — Ми переможемо. Обов''язково.
+    Разом.'
+- section: 'Практика — Написати і виголосити промову'
+  points:
+  - 'Analyze a famous Ukrainian speech (Zelenskyy UN address or historical example)'
+  - 'Write a 3-minute persuasive speech on a given topic'
+  - 'Peer review for rhetorical effectiveness'
+  - 'Identify figures of speech in political and cultural texts'
+- section: Підсумок
+  points:
+  - Checklist of rhetorical devices
+  - When to use which figure of speech
+vocabulary_hints:
+  required:
+  - промова (speech) — виголосити промову, переконлива промова
+  - аргумент (argument) — наводити аргументи, вагомий аргумент
+  - переконання (persuasion/conviction) — мистецтво переконання
+  - теза (thesis) — висунути тезу, захищати тезу
+  - антитеза (antithesis) — теза і антитеза
+  - анафора (anaphora) — стилістичний прийом
+  - градація (gradation) — висхідна градація
+  recommended:
+  - епіфора (epiphora)
+  - парцеляція (parcellation)
+  - риторика (rhetoric) — мистецтво риторики
+  - пафос (pathos) — зайвий пафос
+  - етос (ethos) — авторитет мовця
+activity_hints:
+- type: quiz
+  focus: Identify rhetorical figures in text excerpts
+  items: 15
+- type: fill-in
+  focus: Complete persuasive sentences with rhetorical devices
+  items: 12
+- type: essay-response
+  focus: Write a persuasive speech outline
+- type: match-up
+  focus: Match rhetorical device to example
+  items: 15
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- c1-107 (Asyndetic Semantics)
+connects_to:
+- c1-109 (C1 Final Checkpoint)
+objectives:
+- Learner can structure a persuasive argument using thesis-antithesis-synthesis
+- Learner can use anaphora, epiphora, gradation, and antithesis effectively
+- Learner can analyze rhetorical devices in authentic Ukrainian speeches
+- Learner can write and deliver a short persuasive speech
+grammar:
+- Argumentation structures (thesis, antithesis, synthesis)
+- Rhetorical figures (anaphora, epiphora, gradation, antithesis)
+- Parcellation and tricolon
+- Register-appropriate persuasion strategies
+register: літературний
+immersion: 100% Ukrainian
+phase: C1.5 [Literature]
+persona:
+  voice: Senior Specialist
+  role: Political Speechwriter
