@@ -547,10 +547,15 @@ def _external_artifacts_for_phase(ctx: "ModuleContext", phase_id: str) -> list[P
             result.append(review_f)
 
     if phase_id == "8":
-        # MDX phase — completion.md
+        # MDX phase — completion.md + docusaurus MDX file
         completion = ctx.orch_dir / "completion.md"
         if completion.exists():
             result.append(completion)
+        # Docusaurus MDX output
+        mdx_dir = PROJECT_ROOT / "docusaurus" / "docs" / ctx.track
+        mdx_file = mdx_dir / f"{ctx.slug}.mdx"
+        if mdx_file.exists():
+            result.append(mdx_file)
 
     return result
 
