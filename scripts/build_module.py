@@ -1786,10 +1786,17 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
         # Run IPA lint as safety net
         run_script([str(SCRIPTS_DIR / "lint_ipa.py"), str(ctx.paths["md"]), "--fix"], capture=True)
 
-        # Verify: re-run audit to check if prose quality gate passes
-        passed, verify_output = run_verify(ctx.paths["md"], content_only=True)
+        # Verify: run prose quality check directly (not full audit — that checks activities too)
+        from audit.checks.prose_quality import check_prose_quality
+        prose_content = ctx.paths["md"].read_text(encoding="utf-8")
+        prose_violations = check_prose_quality(prose_content)
+        critical_violations = [v for v in prose_violations if v["severity"] == "critical"]
+        verify_output = "\n".join(
+            f"[{v['severity']}] {v['type']}: {v['issue']}" for v in prose_violations
+        ) or "No prose quality violations"
         verify_log = ctx.orch_dir / f"phase-6b-verify-{attempt}.log"
         verify_log.write_text(verify_output, encoding="utf-8")
+        passed = len(critical_violations) == 0
 
         if passed:
             fixes = attempt - 1
