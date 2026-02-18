@@ -1721,6 +1721,12 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
     template = PHASES_DIR / "phase-fix-content.md"
     prompt_file = ctx.orch_dir / "phase-6b-prompt.md"
 
+    # Clean stale artifacts from previous runs
+    for stale in ctx.orch_dir.glob("phase-6b-violations-*.md"):
+        stale.unlink()
+    for stale in ctx.orch_dir.glob("phase-6b-verify-*.log"):
+        stale.unlink()
+
     # Build overrides for template placeholders
     overrides = {
         "REVIEW_PATH": str(ctx.paths["review"]),
