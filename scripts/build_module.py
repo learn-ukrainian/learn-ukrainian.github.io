@@ -1721,9 +1721,6 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
     template = PHASES_DIR / "phase-fix-content.md"
     prompt_file = ctx.orch_dir / "phase-6b-prompt.md"
 
-    # Save original content — restore on each retry so Gemini always works from clean state
-    original_content = ctx.paths["md"].read_text(encoding="utf-8")
-
     # Build overrides for template placeholders
     overrides = {
         "REVIEW_PATH": str(ctx.paths["review"]),
@@ -1733,10 +1730,7 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
     }
 
     for attempt in range(1, MAX_6B_ATTEMPTS + 1):
-        # Restore original content so each attempt starts fresh
-        ctx.paths["md"].write_text(original_content, encoding="utf-8")
-
-        # On retry, append specific violation details to help Gemini focus
+        # Attempt 1: fix from review. Attempts 2+: keep previous fixes, target remaining violations.
         extra_overrides = dict(overrides)
         if attempt > 1:
             # Re-fill template with violation context appended
