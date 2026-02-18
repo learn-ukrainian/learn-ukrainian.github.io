@@ -101,13 +101,18 @@ class TestExtractDelimited:
         text = "===META_OUTLINE_START===\ndata\n===META_OUTLINE_END==="
         assert extract_delimited(text, "META_OUTLINE") == "data"
 
-    def test_first_match_wins(self):
-        """If same tag appears twice, first complete pair wins (non-greedy)."""
+    def test_last_match_wins(self):
+        """If same tag appears twice, last complete pair wins.
+
+        Gemini often echoes the template delimiters before writing its actual
+        output, so the first match is typically the template echo and the last
+        match is the real content.
+        """
         text = (
-            "===CONTENT_START===\nfirst\n===CONTENT_END===\n"
-            "===CONTENT_START===\nsecond\n===CONTENT_END==="
+            "===CONTENT_START===\ntemplate echo\n===CONTENT_END===\n"
+            "===CONTENT_START===\nreal content\n===CONTENT_END==="
         )
-        assert extract_delimited(text, "CONTENT") == "first"
+        assert extract_delimited(text, "CONTENT") == "real content"
 
 
 # =============================================================================
