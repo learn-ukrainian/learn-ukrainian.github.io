@@ -1,0 +1,115 @@
+- ipa: '[rʲid]'
+  lemma: рід
+  notes: Grammatical gender (masculine, feminine, neuter)
+  pos: noun
+  translation: gender; kind; lineage
+- ipa: '[ˈsɔn.t͡se]'
+  lemma: сонце
+  notes: Neuter gender (ends in -e)
+  pos: noun
+  translation: sun
+- ipa: '[sʲtʲil]'
+  lemma: стіл
+  notes: Masculine gender (consonant ending)
+  pos: noun
+  translation: table
+- ipa: '[ˈknɪ.ɦɑ]'
+  lemma: книга
+  notes: Feminine gender (ends in -a)
+  pos: noun
+  translation: book
+- ipa: '[vʲikˈnɔ]'
+  lemma: вікно
+  notes: Neuter gender (ends in -o)
+  pos: noun
+  translation: window
+- ipa: '[dʲim]'
+  lemma: дім
+  notes: Masculine gender
+  pos: noun
+  translation: house; home
+- ipa: '[ˈmɑ.mɑ]'
+  lemma: мама
+  notes: Feminine gender
+  pos: noun
+  translation: mom
+- ipa: '[ˈtɑ.tɔ]'
+  lemma: тато
+  notes: Masculine gender despite -o ending (biological gender rules)
+  pos: noun
+  translation: dad
+- ipa: '[brɑt]'
+  lemma: брат
+  notes: Masculine gender
+  pos: noun
+  translation: brother
+- ipa: '[seˈstrɑ]'
+  lemma: сестра
+  notes: Feminine gender
+  pos: noun
+  translation: sister
+- ipa: '[ˈmʲis.tɔ]'
+  lemma: місто
+  notes: Neuter gender
+  pos: noun
+  translation: city
+- ipa: '[ˈmɔ.re]'
+  lemma: море
+  notes: Neuter gender
+  pos: noun
+  translation: sea
+- ipa: '[ˈsɛr.t͡se]'
+  lemma: серце
+  notes: Neuter gender
+  pos: noun
+  translation: heart
+- ipa: '[zemˈlʲɑ]'
+  lemma: земля
+  notes: Feminine gender
+  pos: noun
+  translation: earth; land; ground
+- ipa: '[dɛnʲ]'
+  lemma: день
+  notes: Masculine gender (soft sign exception)
+  pos: noun
+  translation: day
+- ipa: '[nʲitʃ]'
+  lemma: ніч
+  notes: Feminine gender (soft sign exception)
+  pos: noun
+  translation: night
+- ipa: '[imˈjɑ]'
+  lemma: ім'я
+  notes: Neuter gender (ends in -я but is neuter)
+  pos: noun
+  translation: name
+- ipa: '[soˈbɑ.kɑ]'
+  lemma: собака
+  notes: Masculine gender despite -a ending
+  pos: noun
+  translation: dog
+- ipa: '[t͡ʃo.loˈvʲik]'
+  lemma: чоловік
+  notes: Masculine gender
+  pos: noun
+  translation: man; husband; masculine (gender)
+- ipa: '[ˈʒin.kɑ]'
+  lemma: жінка
+  notes: Feminine gender
+  pos: noun
+  translation: woman; wife; feminine (gender)
+- ipa: '[t͡ʃo.loˈvʲi.t͡ʃɪj]'
+  lemma: чоловічий
+  notes: Adjective used for grammatical gender
+  pos: adj
+  translation: masculine
+- ipa: '[ʒiˈnɔ.t͡ʃɪj]'
+  lemma: жіночий
+  notes: Adjective used for grammatical gender
+  pos: adj
+  translation: feminine
+- ipa: '[seˈrɛd.nʲij]'
+  lemma: середній
+  notes: Adjective used for grammatical gender
+  pos: adj
+  translation: neuter; middle; average

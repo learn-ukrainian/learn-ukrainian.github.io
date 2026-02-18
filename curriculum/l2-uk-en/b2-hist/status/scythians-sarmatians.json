@@ -1,0 +1,64 @@
+{
+  "module": "scythians-sarmatians",
+  "level": "B2",
+  "plan_version": "1.0.0",
+  "last_audit": "2026-02-18T13:27:02.937782Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-18T13:21:16.108024Z",
+    "meta": "2026-02-18T13:07:51.802084Z",
+    "activities": "2026-02-18T12:07:49.661600Z",
+    "vocabulary": "2026-02-18T12:05:20.447043Z",
+    "plan": "2026-02-17T18:01:43.744386Z",
+    "research": "2026-02-18T00:18:37.000879Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5046/5000 (raw: 5269)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "10 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

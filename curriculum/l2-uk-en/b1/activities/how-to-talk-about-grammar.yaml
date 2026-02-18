@@ -1,0 +1,199 @@
+- type: match-up
+  title: Знайдіть пару (Частини мови)
+  instruction: З'єднайте український термін з його англійським відповідником або поясненням.
+  pairs:
+    - left: Іменник
+      right: Noun (хто? що?)
+    - left: Дієслово
+      right: Verb (що робити?)
+    - left: Прикметник
+      right: Adjective (який?)
+    - left: Прислівник
+      right: Adverb (як? де? коли?)
+    - left: Займенник
+      right: Pronoun (я, ти, він...)
+    - left: Числівник
+      right: Numeral (один, перший...)
+    - left: Сполучник
+      right: Conjunction (і, але, що...)
+    - left: Прийменник
+      right: Preposition (на, у, з...)
+    - left: Корінь
+      right: Root (основа слова)
+    - left: Закінчення
+      right: Ending (змінна частина)
+    - left: Рід
+      right: Gender (чоловічий, жіночий...)
+    - left: Число
+      right: Number (однина, множина)
+
+- type: fill-in
+  title: Граматичний детектив
+  instruction: Вставте пропущений граматичний термін у речення.
+  items:
+    - sentence: "Слово 'стіл' відповідає на питання 'що?', отже це ..."
+      answer: іменник
+      options: ["іменник", "дієслово", "прикметник", "прислівник"]
+      explanation: "Іменник називає предмети і відповідає на питання хто? або що?."
+    - sentence: "У реченні 'Я читаю книгу', слово 'читаю' — це ..."
+      answer: дієслово
+      options: ["іменник", "дієслово", "прикметник", "займенник"]
+      explanation: "Дієслово означає дію."
+    - sentence: "Слово 'гарний' узгоджується з іменником, отже це ..."
+      answer: прикметник
+      options: ["прислівник", "прикметник", "дієслово", "сполучник"]
+      explanation: "Прикметник описує ознаку предмета."
+    - sentence: "Слово 'швидко' не змінюється, це ..."
+      answer: прислівник
+      options: ["прикметник", "прислівник", "іменник", "дієслово"]
+      explanation: "Прислівник — незмінна частина мови."
+    - sentence: "Слова 'я', 'ти', 'ми' — це ..."
+      answer: займенники
+      options: ["займенники", "іменники", "сполучники", "частки"]
+      explanation: "Займенники вказують на особу."
+    - sentence: "Слово 'на' (на столі) — це ..."
+      answer: прийменник
+      options: ["прийменник", "сполучник", "частка", "вигук"]
+      explanation: "Прийменник вказує на місце або час і стоїть перед іменником."
+    - sentence: "Слово 'але' з'єднує дві частини речення, це ..."
+      answer: сполучник
+      options: ["сполучник", "прийменник", "частка", "вигук"]
+      explanation: "Сполучник з'єднує слова або речення."
+    - sentence: "Частка 'не' виражає ..."
+      answer: заперечення
+      options: ["заперечення", "ствердження", "сумнів", "радість"]
+      explanation: "Частка 'не' заперечує дію або ознаку."
+
+- type: quiz
+  title: Знавці відмінків
+  instruction: Виберіть правильну відповідь про українські відмінки.
+  items:
+    - question: "Скільки відмінків в українській мові?"
+      options:
+        - text: "7"
+          correct: true
+        - text: "6"
+          correct: false
+        - text: "5"
+          correct: false
+        - text: "8"
+          correct: false
+      explanation: "В українській мові 7 відмінків (включно з Кличним)."
+    - question: "Який відмінок відповідає на питання 'Кого? Чого?'"
+      options:
+        - text: "Родовий"
+          correct: true
+        - text: "Називний"
+          correct: false
+        - text: "Давальний"
+          correct: false
+        - text: "Орудний"
+          correct: false
+      explanation: "Родовий відмінок (Genitive) — кого? чого?"
+    - question: "Який відмінок ми використовуємо для адресата (кому? чому?)?"
+      options:
+        - text: "Давальний"
+          correct: true
+        - text: "Знахідний"
+          correct: false
+        - text: "Місцевий"
+          correct: false
+        - text: "Кличний"
+          correct: false
+      explanation: "Давальний відмінок (Dative) вказує, кому адресована дія."
+    - question: "Який відмінок завжди вживається з прийменником?"
+      options:
+        - text: "Місцевий"
+          correct: true
+        - text: "Орудний"
+          correct: false
+        - text: "Родовий"
+          correct: false
+        - text: "Знахідний"
+          correct: false
+      explanation: "Місцевий відмінок (Locative) завжди потребує прийменника (на, у, в...)."
+    - question: "Який відмінок використовується для звертання?"
+      options:
+        - text: "Кличний"
+          correct: true
+        - text: "Називний"
+          correct: false
+        - text: "Знахідний"
+          correct: false
+        - text: "Родовий"
+          correct: false
+      explanation: "Кличний відмінок (Vocative) — це форма звертання."
+    - question: "Питання 'Ким? Чим?' належить до..."
+      options:
+        - text: "Орудного відмінка"
+          correct: true
+        - text: "Давального відмінка"
+          correct: false
+        - text: "Місцевого відмінка"
+          correct: false
+        - text: "Родового відмінка"
+          correct: false
+      explanation: "Орудний (Instrumental) — ким? чим?"
+    - question: "Який відмінок є базовою формою слова у словнику?"
+      options:
+        - text: "Називний"
+          correct: true
+        - text: "Знахідний"
+          correct: false
+        - text: "Родовий"
+          correct: false
+        - text: "Кличний"
+          correct: false
+      explanation: "Слова у словнику стоять у Називному відмінку (хто? що?)."
+    - question: "У реченні 'Я бачу маму', слово 'маму' стоїть у..."
+      options:
+        - text: "Знахідному відмінку"
+          correct: true
+        - text: "Родовому відмінку"
+          correct: false
+        - text: "Давальному відмінку"
+          correct: false
+        - text: "Орудному відмінку"
+          correct: false
+      explanation: "Бачу (кого? що?) — це об'єкт дії, Знахідний відмінок."
+
+- type: error-correction
+  title: Редактор-початківець
+  instruction: Знайдіть помилку в узгодженні або термінології та виправте її.
+  items:
+    - sentence: "Це цікавий книга."
+      error: цікавий
+      answer: цікава
+      error_type: word
+      options: ["цікавий", "цікаве", "цікаві", "цікава"]
+      explanation: "Книга — це вона (жіночий рід), тому прикметник має бути 'цікава'."
+    - sentence: "Я бачу гарний дівчина."
+      error: гарний
+      answer: гарну
+      error_type: word
+      options: ["гарна", "гарну", "гарним", "гарний"]
+      explanation: "Дівчина (ж.р., знахідний відмінок) вимагає 'гарну'."
+    - sentence: "Він пише ручка."
+      error: ручка
+      answer: ручкою
+      error_type: word
+      options: ["ручку", "ручкою", "ручці", "ручка"]
+      explanation: "Пише (чим?) — орудний відмінок: ручкою."
+    - sentence: "Ми живемо на Києві."
+      error: на
+      answer: в
+      error_type: word
+      options: ["на", "в", "біля", "про"]
+      explanation: "З містами ми вживаємо прийменник 'в' (in), а не 'на' (on)."
+    - sentence: "Я даю подарунок сестра."
+      error: сестра
+      answer: сестрі
+      error_type: word
+      options: ["сестру", "сестри", "сестрі", "сестрою"]
+      explanation: "Даю (кому?) — давальний відмінок: сестрі."
+    - sentence: "Привіт, Іван!"
+      error: Іван
+      answer: Іване
+      error_type: word
+      options: ["Івана", "Івану", "Іване", "Іваном"]
+      explanation: "При звертанні використовуємо кличний відмінок: Іване."

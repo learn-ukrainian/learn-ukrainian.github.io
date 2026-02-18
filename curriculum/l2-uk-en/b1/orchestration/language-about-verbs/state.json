@@ -1,0 +1,30 @@
+{
+  "slug": "language-about-verbs",
+  "track": "b1",
+  "module_num": 2,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:13:41Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:13:41Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:14:29Z",
+      "task_id": "yw-language-about-verbs-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:17:57Z",
+      "words": 4474,
+      "attempts": 2
+    }
+  },
+  "last_updated": "2026-02-18T12:17:57Z"
+}

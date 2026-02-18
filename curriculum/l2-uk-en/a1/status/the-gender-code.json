@@ -1,0 +1,64 @@
+{
+  "module": "the-gender-code",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-18T13:27:53.666830Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-18T13:24:42.325037Z",
+    "meta": "2026-02-18T13:14:38.454235Z",
+    "activities": "2026-02-18T13:27:20.660620Z",
+    "vocabulary": "2026-02-18T13:25:23.796435Z",
+    "plan": "2026-02-17T15:27:28.209405Z",
+    "research": "2026-02-15T23:53:07.990320Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2190/2000 (raw: 2444)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "23/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}
