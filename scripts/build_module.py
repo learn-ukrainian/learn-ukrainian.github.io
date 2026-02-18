@@ -512,12 +512,12 @@ PHASE_ARTIFACT_PATTERNS: dict[str, list[str]] = {
     "0.5":  ["phase-0-5-*"],
     "1":    ["phase-1-*"],
     "2":    ["phase-2-*"],
-    "3":    ["phase3-*"],
-    "4ab":  ["phase-4a-*", "phase-4b-*", "phase4a-*", "phase4b-*"],
+    "3":    ["phase3-*", "phase-3-*", "phase-3a-*", "phase-3b-*"],
+    "4ab":  ["phase-4a-*", "phase-4b-*", "phase4a-*", "phase4b-*", "phase-4-*"],
     "6":    ["phase-6-*"],
     "6b":   ["phase-6b-*"],
     "5":    ["phase5-*", "phase-5-*"],
-    "7":    ["phase7-*"],
+    "7":    ["phase7-*", "phase-7-*"],
     "8":    ["phase-8-*", "phase8-*"],
 }
 
