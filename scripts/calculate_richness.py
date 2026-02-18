@@ -645,11 +645,17 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
 
 def get_prose_content(content: str) -> str:
     """Extract prose content (excluding activities and vocab)."""
-    # Remove frontmatter
+    # Remove frontmatter (--- delimited)
     if content.startswith('---'):
         parts = content.split('---', 2)
         if len(parts) >= 3:
             content = parts[2]
+    # Remove bare YAML frontmatter (no --- delimiters, starts with YAML key)
+    elif re.match(r'^[a-z_]+:', content):
+        # Find where markdown prose starts (first heading)
+        heading_match = re.search(r'^#\s', content, re.MULTILINE)
+        if heading_match:
+            content = content[heading_match.start():]
 
     # Remove activities section
     for section in ['Activities', 'Вправи']:
@@ -1269,10 +1275,12 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
     if count_engagement_boxes(prose) < 2:
         flags.append('NO_ENGAGEMENT')
 
-    # WALL_OF_TEXT: Paragraph > 500 words without break
+    # WALL_OF_TEXT: Paragraph exceeding threshold without break
+    # Narrative module types (history, biography, literature) have longer natural paragraphs
+    wall_threshold = 800 if module_type in ('history', 'biography', 'literature') else 500
     paragraphs = re.split(r'\n\s*\n', prose)
     for p in paragraphs:
-        if len(p.split()) > 500:
+        if len(p.split()) > wall_threshold:
             flags.append('WALL_OF_TEXT')
             break
 

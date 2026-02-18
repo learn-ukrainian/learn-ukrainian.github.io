@@ -9,6 +9,7 @@ Status indicators:
   📋 Planned - No files yet (up to planned count)
 """
 
+import json
 import os
 import sys
 import yaml
@@ -26,7 +27,7 @@ LEVEL_STATUS_FILE = PROJECT_ROOT / "docs" / "l2-uk-en" / "level-status.yaml"
 
 # Core levels and specialized tracks
 CORE_LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]
-SPECIALIZED_TRACKS = ["b2-hist", "c1-bio", "c1-hist", "b2-pro", "c1-pro", "lit"]
+SPECIALIZED_TRACKS = ["b2-hist", "c1-bio", "c1-hist", "b2-pro", "c1-pro", "lit", "oes", "ruth"]
 
 # Ukrainian level names
 LEVEL_NAMES_UK = {
@@ -42,6 +43,8 @@ LEVEL_NAMES_UK = {
     "b2-pro": "B2-PRO - Професійна українська",
     "c1-pro": "C1-PRO - Фахова українська",
     "lit": "LIT - Українська література",
+    "oes": "OES - Давньоруська мова",
+    "ruth": "RUTH - Руська мова XIV-XVIII",
 }
 
 # English level names for intro
@@ -58,6 +61,8 @@ LEVEL_NAMES_EN = {
     "b2-pro": "Professional Track",
     "c1-pro": "Professional Mastery",
     "lit": "Literature Track",
+    "oes": "Old East Slavic Track",
+    "ruth": "Ruthenian Track",
 }
 
 
@@ -359,6 +364,90 @@ We encourage all learners to support these creators and the broader community of
     return content
 
 
+# Sidebar positions for _category.json
+LEVEL_POSITIONS = {
+    "a1": 2, "a2": 3, "b1": 4, "b2": 5, "c1": 6, "c2": 7,
+    "b2-hist": 8, "c1-bio": 9, "c1-hist": 10,
+    "b2-pro": 11, "c1-pro": 12,
+    "lit": 13, "oes": 14, "ruth": 15,
+}
+
+# Descriptions for _category.json (with module count placeholder {n})
+CATEGORY_DESCRIPTIONS = {
+    "a1": "Learn the Cyrillic alphabet, basic grammar, and everyday vocabulary. {n} modules from first letters to first conversations.",
+    "a2": "All 7 cases, verbal aspect, and practical scenarios. {n} modules for elementary proficiency.",
+    "b1": "Achieve aspect mastery, learn motion verbs, and develop complex sentence fluency. {n} modules for independent users.",
+    "b2": "Master passive voice, participles, and stylistic variation. {n} modules for advanced communication.",
+    "c1": "Stylistics, folk culture, literature, and advanced language. {n} modules for proficient users.",
+    "c2": "Stylistic perfection and professional specialization. {n} modules for complete mastery.",
+    "b2-hist": "Ukrainian history from Trypillia to modern independence. {n} modules at B2 level.",
+    "c1-bio": "Notable Ukrainians through history — poets, scientists, warriors, artists. {n} biographical modules.",
+    "c1-hist": "Primary sources, historiography, and analytical history. {n} modules at academic level.",
+    "b2-pro": "Business communication and professional domains. {n} modules for the workplace.",
+    "c1-pro": "Executive, academic, and specialized professional Ukrainian. {n} modules.",
+    "lit": "Ukrainian literature from Kotliarevsky to contemporary authors. {n} modules.",
+    "oes": "Old East Slavic historical linguistics and primary sources X-XIII century. {n} modules.",
+    "ruth": "Ruthenian / Middle Ukrainian language and documents XIV-XVIII century. {n} modules.",
+}
+
+# _category.json labels
+CATEGORY_LABELS = {
+    "a1": "A1 - Beginner", "a2": "A2 - Elementary",
+    "b1": "B1 - Intermediate", "b2": "B2 - Upper-Intermediate",
+    "c1": "C1 - Advanced", "c2": "C2 - Mastery",
+    "b2-hist": "B2-HIST - Історія України",
+    "c1-bio": "C1-BIO - Біографії українців",
+    "c1-hist": "C1-HIST - Історіографія",
+    "b2-pro": "B2-PRO - Професійна українська",
+    "c1-pro": "C1-PRO - Фахова українська",
+    "lit": "LIT - Literature",
+    "oes": "OES - Old East Slavic",
+    "ruth": "RUTH - Ruthenian",
+}
+
+
+def update_category_json(level, planned):
+    """Update or create _category.json for a level with correct module count."""
+    cat_path = DOCS_DIR / level / "_category.json"
+    cat_path.parent.mkdir(parents=True, exist_ok=True)
+
+    position = LEVEL_POSITIONS.get(level, 99)
+    label = CATEGORY_LABELS.get(level, level.upper())
+    desc_template = CATEGORY_DESCRIPTIONS.get(level, f"{level.upper()} track. {{n}} modules.")
+    description = desc_template.format(n=planned)
+
+    # Use generated-index for core levels, doc link for specialized tracks without index
+    if level in CORE_LEVELS:
+        link_type = "generated-index"
+        title = f"{label} Modules"
+        data = {
+            "label": label,
+            "position": position,
+            "link": {
+                "type": link_type,
+                "title": title,
+                "description": description,
+                "slug": f"/{level}",
+            }
+        }
+    else:
+        # Specialized tracks use doc link to their index.mdx
+        data = {
+            "label": label,
+            "position": position,
+            "link": {
+                "type": "doc",
+                "id": f"{level}/index",
+            }
+        }
+
+    with open(cat_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+        f.write('\n')
+
+    return cat_path
+
+
 def main():
     print("Building landing pages...")
 
@@ -378,6 +467,7 @@ def main():
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
 
+        cat_path = update_category_json(level, planned)
         print(f"  {level.upper()}: {ready}/{planned} modules ({output_path})")
 
     # Build specialized track landing pages
@@ -394,6 +484,7 @@ def main():
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
 
+        cat_path = update_category_json(level, planned)
         print(f"  {level.upper()}: {ready}/{planned} modules ({output_path})")
 
     # Build intro page

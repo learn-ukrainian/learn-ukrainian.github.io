@@ -87,7 +87,7 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
             # Start new section
             current_section = header_match.group(1).strip()
             # Remove markdown formatting and emojis
-            current_section = re.sub(r"\s*[—–:-]\s*.*$", "", current_section)  # Remove "— Subtitle" or ": Subtitle"
+            current_section = re.sub(r"\s*[—–-]\s*.*$", "", current_section)  # Remove "— Subtitle" (keep colons for distinct sections)
             current_section = re.sub(r"[📚🎯💡🔍]", "", current_section).strip()
             current_words = 0
             current_line = idx + 1
@@ -203,8 +203,8 @@ def normalize_section_name(name: str) -> str:
     """
     name = name.lower().strip()
 
-    # Remove em-dash or colon subtitles
-    name = re.sub(r"\s*[—–:\-\/]\s*.*$", "", name)
+    # Remove em-dash subtitles (keep colons for distinct sections)
+    name = re.sub(r"\s*[—–\-\/]\s*.*$", "", name)
 
     # Remove punctuation
     name = re.sub(r"[^\wа-яіїєґ\s]", " ", name)

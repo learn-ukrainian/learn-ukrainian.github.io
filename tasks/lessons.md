@@ -499,6 +499,26 @@
 
 ---
 
+## 2026-02-17 - CRITICAL: Never Create Feature Branches (Shared Workspace)
+
+**Mistake**: Created `fix/a1-a2-gap-analysis` feature branch in a shared working directory where multiple agents (Claude, Gemini) work simultaneously on `main`. This switched the branch for ALL agents. Also committed ~8 plan files that contained other agents' Phase 0.5 enrichment changes mixed with my one-line cross-ref fixes. I wrote the plan that said to create the branch, then executed it without questioning it.
+
+**Correction**: "THERE ARE SEVERAL AGENTS WORKING IN THIS DIR AND YOU CHANGE THE BRANCH" / "why did you create a feature branch?" / "its strictly told to not work in feature branches" / "even you told me to work in the main branch"
+
+**Rule**:
+- **NEVER create feature branches** — all work happens on `main`
+- **Multiple agents share this working directory** — branch changes affect everyone
+- **Before ANY git operation**: check for unstaged changes from other agents
+- **When `git status` shows hundreds of ` M` files**: those belong to other agents — DO NOT stage or commit them
+- **Use `git add` only on files YOU created or modified** — never `git add` directories wholesale
+- **If a plan says "create a branch"**: override it — the plan is wrong, main-only is the rule
+- **When committing cross-ref fixes**: use `git add -p` to stage only your specific line changes, not the entire file
+- **Self-check before git operations**: "Will this affect other agents' work?"
+
+**Applied**: 2026-02-17 (merged back to main, deleted branch)
+
+---
+
 ## Template for New Entries
 
 ```markdown

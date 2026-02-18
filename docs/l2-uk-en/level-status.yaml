@@ -29,7 +29,7 @@ a1:
 
     **Learning Philosophy:** We believe in understanding patterns, not just memorizing phrases. Every grammar concept is explained with clear rules and many examples before you practice.
 a2:
-  planned: 70
+  planned: 71
   status: auto
   description: "Elementary — All 7 cases, aspect intro, practical scenarios"
   introduction: |
@@ -45,7 +45,7 @@ a2:
 
     **Learning Philosophy:** Ukrainian cases aren't random — they follow logical patterns. We teach you to recognize and apply these patterns, making what seems complex surprisingly systematic.
 b1:
-  planned: 92
+  planned: 94
   status: auto
   description: "Intermediate — Aspect mastery, motion verbs, communication skills"
   introduction: |
@@ -61,7 +61,7 @@ b1:
 
     **Занурення:** 75-90% українською — ви вже готові!
 b2:
-  planned: 94
+  planned: 95
   status: auto
   description: "Upper-Intermediate — Passive voice, registers, professional basics"
   introduction: |
@@ -77,7 +77,7 @@ b2:
 
     **Занурення:** 100% українською — англійська більше не потрібна!
 c1:
-  planned: 106
+  planned: 109
   status: auto
   description: "Advanced — Stylistics, literature, complex grammar"
   introduction: |
@@ -93,7 +93,7 @@ c1:
 
     **Занурення:** 100% українською без будь-яких пояснень англійською
 c2:
-  planned: 100
+  planned: 101
   status: auto
   description: "Mastery — Native-level proficiency"
   introduction: |
@@ -131,7 +131,7 @@ b2-hist:
     **Підхід:** Деколонізована перспектива з опорою на українські джерела
 # Advanced History Track (new - analytical/academic level)
 c1-hist:
-  planned: 135
+  planned: 136
   status: auto
   description: "Advanced History — Primary sources, imperial mechanisms, interethnic relations"
   introduction: |
@@ -149,7 +149,7 @@ c1-hist:
     **Підхід:** Академічний аналіз з критичним мисленням
 # Biography Track (relocated from C1 M36-131)
 c1-bio:
-  planned: 100
+  planned: 172
   status: auto
   description: "Biographies — Notable Ukrainians through history"
   introduction: |
@@ -200,7 +200,7 @@ c1-pro:
     **Підхід:** ESP + CLIL — мова через професійні завдання
 # Literature Track (post-C1)
 lit:
-  planned: 30
+  planned: 218
   status: auto
   description: "Literature — Ukrainian classics and literary analysis"
   introduction: |
@@ -215,3 +215,37 @@ lit:
     - Реалізм — Нечуй-Левицький, Панас Мирний
 
     **Підхід:** Прямий контакт з повними текстами через UkrLib
+# Old East Slavic Track (historical linguistics)
+oes:
+  planned: 100
+  status: auto
+  description: "Old East Slavic — Historical linguistics, primary sources X-XIII century"
+  introduction: |
+    ## Давньоруська мова — від літописів до грамот!
+
+    Цей трек — для тих, хто хоче читати першоджерела давньоруської доби в оригіналі. Від «Повісті врем'яних літ» до берестяних грамот — ви опануєте мову Київської Русі.
+
+    **Чого ви навчитеся:**
+    - Давньоруська фонетика та морфологія
+    - Читання літописів та юридичних текстів
+    - Палеографія — давньоруське письмо
+    - Історична лінгвістика — від давньоруської до сучасної української
+
+    **Підхід:** Робота з автентичними текстами X-XIII століття
+# Ruthenian Track (Middle Ukrainian XIV-XVIII)
+ruth:
+  planned: 100
+  status: auto
+  description: "Ruthenian — Middle Ukrainian language XIV-XVIII century"
+  introduction: |
+    ## Руська мова — від Литовського статуту до козацьких літописів!
+
+    Цей трек охоплює мову українських земель XIV-XVIII століть. Від канцелярської мови Великого князівства Литовського до козацьких хронік — ви читатимете тексти епохи в оригіналі.
+
+    **Чого ви навчитеся:**
+    - Канцелярська мова — Литовський статут, привілеї, грамоти
+    - Полемічна література — Вишенський, Смотрицький
+    - Козацькі літописи — Самовидець, Граб'янка, Величко
+    - Історична граматика — від руської до староукраїнської
+
+    **Підхід:** Документна грамотність через автентичні тексти

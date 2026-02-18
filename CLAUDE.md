@@ -175,9 +175,12 @@ npm run metrics:extract {track}  # Extract raw metrics
 
 # Deterministic Python builder v2 (single E2E pipeline — preferred)
 .venv/bin/python scripts/build_module_v2.py {track} {num}                  # Full E2E pipeline (resume-aware)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild        # Nuke state, rebuild from Phase 0
-.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3  # Re-run specific phase
-.venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run        # Show plan, no dispatching
+.venv/bin/python scripts/build_module_v2.py {track} --all                  # Build entire track (skips passing)
+.venv/bin/python scripts/build_module_v2.py {track} --range 4-44           # Build range of modules
+.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild        # Nuke ALL state + artifacts, rebuild from Phase 0
+.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3  # Re-run single phase (cleans that phase's artifacts)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --restart-from 6 # Restart from phase (cleans forward, runs pipeline)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run        # Show plan, no dispatching, no cleanup
 .venv/bin/python scripts/build_module_v2.py {track} {num} --verify         # Just run audit, PASS/FAIL
 
 # Legacy v1 builder (split modes — use v2 instead)
@@ -253,8 +256,8 @@ curriculum/l2-uk-en/
 
 **Bare slug** = filename stem with numeric prefix removed (via `scripts/slug_utils.py`)
 
-**Module counts**: A1 (44), A2 (71), B1 (94), B2 (95), C1 (108), C2 (101)
-**Track counts**: B2-HIST (140), C1-BIO (128), LIT (30)
+**Module counts**: A1 (44), A2 (71), B1 (94), B2 (95), C1 (109), C2 (101)
+**Track counts**: B2-HIST (140), C1-BIO (172), C1-HIST (136), B2-PRO (40), C1-PRO (50), LIT (218), OES (100), RUTH (100)
 
 ---
 
