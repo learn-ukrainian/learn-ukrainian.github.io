@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-cyrillic-code-ii.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 20:22:46
+**Generated:** 2026-02-18 21:14:40
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2539/2000 (raw: 2784)
+- **Words:** ✅ 2545/2000 (raw: 2790)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -62,6 +62,6 @@
 | **Розминка: Повернення до Абетки** | ✅ | 231 | Included in Core |
 | **Презентація: Унікальні літери та звуки** | ✅ | 963 | Included in Core |
 | **Практика: Читаємо та розрізняємо** | ✅ | 480 | Included in Core |
-| **Продукція: Активне читання** | ✅ | 286 | Included in Core |
-| **Культурний контекст: Українська ідентичність** | ✅ | 302 | Included in Core |
+| **Продукція: Активне читання** | ✅ | 297 | Included in Core |
+| **Культурний контекст: Українська ідентичність** | ✅ | 297 | Included in Core |
 | **Підсумок** | ✅ | 209 | Included in Core |

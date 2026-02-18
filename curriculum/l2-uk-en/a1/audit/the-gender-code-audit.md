@@ -1,7 +1,7 @@
 # Audit Report: M03 — the-gender-code.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 20:26:43
+**Generated:** 2026-02-18 21:14:30
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2186/2000 (raw: 2440)
+- **Words:** ✅ 2270/2000 (raw: 2524)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 11.1% (target 10-25% (M03))
+- **Immersion:** 🇺🇦 11.0% (target 10-25% (M03))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,9 +60,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Гендерний Код (The Gender Code)** | ✅ | 70 | Included in Core |
-| **Вступ: Таємний код української мови** | ✅ | 391 | Included in Core |
+| **Вступ: Таємний код української мови** | ✅ | 370 | Included in Core |
 | **Теорія: Основи визначення роду** | ✅ | 504 | Included in Core |
-| **Систематизація: Чотири граматичні сім'ї** | ✅ | 562 | Included in Core |
-| **Практикум: Тренування розпізнавання** | ✅ | 241 | Included in Core |
-| **Культурний контекст: Жива мова** | ✅ | 226 | Included in Core |
+| **Систематизація: Чотири граматичні сім'ї** | ✅ | 527 | Included in Core |
+| **Практикум: Тренування розпізнавання** | ✅ | 337 | Included in Core |
+| **Культурний контекст: Жива мова** | ✅ | 270 | Included in Core |
 | **Підсумок** | ✅ | 192 | Included in Core |

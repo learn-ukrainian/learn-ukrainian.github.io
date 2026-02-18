@@ -14,7 +14,7 @@ Related: a1-02 (Cyrillic), a1-04 (This Is)
 
 ## Вступ: Таємний код української мови
 
-Welcome to one of the most fascinating aspects of your new language. You might have heard that Slavic languages are difficult because of "gender." I want you to reframe that thought right now. Gender is not a hurdle; it is a **code**. And the best part? It is a code that is 95% visible just by looking at the last letter of a word.
+Welcome to one of the most fascinating aspects of your new language. You might have heard that Slavic languages are difficult because of "gender." I want you to reframe that thought right now. Gender is not a hurdle; it is a **code**. And the best part? It is a code that is visible simply by looking at the last letter of a word.
 
 > [!note]
 > **Граматичні терміни (Grammar Terms)**
@@ -26,11 +26,11 @@ Welcome to one of the most fascinating aspects of your new language. You might h
 In Ukrainian, every noun — whether it is a person, a place, or an inanimate object — belongs to one of three teams: **Masculine** (Чоловічий рід), **Feminine** (Жіночий рід), or **Neuter** (Середній рід).
 
 ### Культурний Контекст: Сонце (The Sun)
-In many Romance languages (like French or Spanish), the sun is masculine ("le soleil," "el sol"). It is seen as a strong, active force. In German, it is feminine ("die Sonne"). But in Ukrainian, the sun is **Воно** (It) — Neuter.
+In many Romance languages (like French or Spanish), the sun is masculine ("le soleil," "el sol"). In German, it is feminine ("die Sonne"). But in Ukrainian, the sun is **Воно** (It) — Neuter.
 
 **сонце** [ˈsɔn.t͡se] — sun (Neuter)
 
-Why? In the Ukrainian worldview, the sun is a gentle, impartial life-giver. It shines on everyone equally. It is a fundamental force of nature that transcends the binary of "he" or "she." This gives us our first clue about the Neuter gender: it often includes fundamental, elemental, or abstract concepts.
+Why? Because it ends in **-е** — the Neuter ending. That's the rule in action: the ending determines the gender. This word is a perfect example to remember: the code is in the spelling, not in the meaning.
 
 ### Мнемонічна Система (The System)
 How do you know which team a word belongs to? You don't need to guess. You just need to look at the **ending**. Think of it as a shape or a feeling.
@@ -149,11 +149,11 @@ However, grammatically, they behave like Family 1. They dress like women (wear t
 
 **The "Dog" Distinction:**
 Consider the word **собака** [soˈba.ka] (dog).
-In Russian, this word is feminine. In Ukrainian, **собака** is historically **Masculine**.
-*   **мій собака** (my dog) — Correct (Standard Literary).
-*   *моя собака* — Colloquial/Common error, but stick to Masculine for pure Ukrainian.
+In Russian, this word is feminine. In Ukrainian, **собака** is **Masculine** by default — the standard literary form.
+*   **мій собака** (my dog) — Standard form.
+*   **моя собака** — Also acceptable when specifically referring to a female dog.
 
-Wait, doesn't it end in **-а**? Yes! So actually, **собака** belongs to Family 1 grammatically (like **тато**), but it is Masculine in gender. This is a classic "exception" that learners often stumble on.
+Wait, doesn't it end in **-а**? Yes! So actually, **собака** belongs to Family 1 grammatically (like **тато**), but it is Masculine by default. This is a classic "exception" that learners often stumble on.
 
 > [!warning]
 > **The "Dad" Trap**
@@ -165,18 +165,13 @@ This is a huge family that includes most **Masculine** words (ending in consonan
 It serves as the main home for standard words like **дім** (house), **стіл** (table), **вікно** (window), and **місто** (city).
 
 ### Сім'я 3: Жіночий на приголосний (Feminine Consonant)
-This is the "Night" family. It consists of **Feminine** nouns that end in a consonant (usually singular, abstract concepts).
-
-How do you tell the difference between a Masculine soft sign (like **день**) and a Feminine soft sign (like **ніч**)?
-Honestly? You mostly have to memorize them. But here is a hint: Abstract feelings ending in a sibilant or distinct consonant cluster are often feminine.
+This is the "Night" family. It consists of **Feminine** nouns that end in a consonant.
 
 *   **ніч** (night) — Feminine → **моя ніч**
 *   **любов** [lʲuˈbɔu̯] (love) — Feminine → **моя любов**
 *   **радість** [ˈra.dʲisʲtʲ] (joy) — Feminine → **моя радість**
 
-Compare this to:
-*   **день** (day) — Masculine → **мій день**
-*   **біль** [bʲilʲ] (pain) — Masculine → **мій біль**
+These words must be memorized individually — you can't reliably tell them from consonant-ending Masculine words by ending alone. For now, just recognise the pattern when you see it.
 
 ### Сім'я 4: Дитячий середній (Baby Neuter)
 This is a tiny but essential family of **Neuter** nouns that end in **-а** or **-я**.
@@ -231,6 +226,20 @@ Let's practice with words you will use every day.
 *   Gender: **Feminine**
 *   Phrase: **рідна земля** (native land) / **моя земля** (my land)
 
+**4. Брат (Brother)**
+*   Ending: **-т** (consonant)
+*   Category: Hard Stop
+*   Gender: **Masculine**
+*   Phrase: **рідний брат** (blood brother) / **мій брат** (my brother)
+*   Note: Also confirmed by biological gender — no conflict here.
+
+**5. Ніч (Night)**
+*   Ending: **-ч** (consonant)
+*   Category: Hard Stop — but this is a Family 3 word!
+*   Gender: **Feminine** ← must memorize
+*   Phrase: **тиха ніч** (quiet night) / **моя ніч** (my night)
+*   This is the one case where ending alone is not enough. You will build up your list of Family 3 words over time.
+
 ### Міні-діалог: Сім'я (The Family)
 Let's see gender agreement in action. Notice how **мій** and **моя** change depending on who we are talking about.
 
@@ -254,7 +263,7 @@ If you have ever played the Ukrainian game *S.T.A.L.K.E.R.*, you already know so
 
 *   **Артефакт** [ar.teˈfɑkt] (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
 *   **Зона** [ˈzɔ.nɑ] (The Zone) — Ends in 'a'. It's **Feminine**. The Zone is a *she*. She is dangerous and beautiful.
-*   **Укриття** [u.krɪtˈtʲa] (Shelter) — Ends in 'я' (Double consonant + ya). This is the **Soft Neuter** group (Family 2), distinct from the "Baby Neuter" group (Family 4). It is a place, a state.
+*   **Укриття** [u.krɪtˈtʲa] (Shelter) — Ends in '-я' after a double consonant. It is **Neuter** — a place, a state of safety.
 
 ### Дім та ідентичність (Home and Identity)
 The words for the most important people in your life are gendered, but so are the spaces you inhabit.
@@ -264,7 +273,9 @@ The words for the most important people in your life are gendered, but so are th
 *   **Дім** (Home/House) — Masculine. A house feels solid, built.
 *   **Квартира** [kʋarˈtɪ.ra] (Apartment) — Feminine.
 
-When you speak Ukrainian, you are constantly acknowledging the "soul" or "category" of the things around you. You are not just pointing at objects; you are classifying the world.
+When you speak Ukrainian, you are constantly acknowledging the category of the things around you. You are not just pointing at objects; you are classifying the world.
+
+This is not a burden — it becomes automatic. Native speakers do not stop to think about gender when they say **мій дім** or **моя квартира**. After enough exposure, neither will you. The goal at this stage is not perfection but pattern recognition: train your eye to land on the last letter of every new noun you encounter.
 
 > [!culture]
 > **Приємно познайомитись! (Nice to Meet You!)**

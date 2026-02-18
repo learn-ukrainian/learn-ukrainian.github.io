@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 20:23:51
+**Generated:** 2026-02-18 21:14:44
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2489/2000 (raw: 2862)
+- **Words:** ✅ 2492/2000 (raw: 2865)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -62,7 +62,7 @@
 | **The Cyrillic Code I** | ✅ | 53 | Included in Core |
 | **Розминка: Чому кирилиця?** | ✅ | 476 | Included in Core |
 | **Презентація: Літери-друзі та літери-пастки** | ✅ | 853 | Included in Core |
-| **Практика: Читаємо міжнародні слова** | ✅ | 315 | Included in Core |
+| **Практика: Читаємо міжнародні слова** | ✅ | 318 | Included in Core |
 | **Культурний контекст: Українська ідентичність літери «І»** | ✅ | 298 | Included in Core |
 | **Продукція: Ваші перші слова** | ✅ | 317 | Included in Core |
 | **Summary** | ✅ | 177 | Included in Core |

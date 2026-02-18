@@ -52,7 +52,7 @@ These letters are your "Safe Harbor." They look exactly like their Latin counter
 -   **А а** — [ɑ]. Like the "a" in "f**a**ther." It is open and relaxed.
 -   **Е е** — [ɛ]. Sounds like the "e" in "p**e**t" or "m**e**t." It is short and clear.
 -   **І і** — [i]. Matches the "ee" in "s**ee**" or "m**ee**t." It is sharp and smiling.
--   **О о** — [ɔ]. Similar to the "o" in "m**o**re" or "f**o**r." It is rounded, never a diphthong like "go."
+-   **О о** — [ɔ]. Similar to the "o" in "d**o**g" or "**o**ff." It is rounded, never a diphthong like "go."
 
 > [!culture]
 > **The Ukrainian "O"**
@@ -197,13 +197,13 @@ In Ukrainian, we rarely speak in isolated words. We speak in chunks (**фраз�
 3.  **Мій кіт** [mʲij kʲit] — My cat.
     *   *Usage*: Introducing your pet. "**Це мій кіт** Мурчик."
 4.  **Моя мама** [mɔˈjɑ ˈmɑmɑ] — My mom.
-    *   *Usage*: The most important person to talk about! "**Моя мама** супер."
+    *   *Usage*: The most important person to talk about! "**Моя мама найкраща.**" (My mom is the best.)
 
 ### Visualizing the Scene
 Imagine you have just arrived in **Київ** (Kyiv). You are at the **метро**. You need to buy a token. You look for the sign that says **КАСА** (Kasa - Cashier).
 
 You see a friend (**друг**). They ask: "**Кафе**?" (Café?)
-You answer: "**Так**, **план** супер." (Yes, the plan is super.)
+You answer: "**Так**, чудовий план." (Yes, great plan.)
 
 This might seem simple, but you are speaking Ukrainian! You are using the nominative case (naming things) and basic sentence structures without even realizing it. The grammar will come later; for now, focus on the joy of understanding.
 
@@ -219,7 +219,7 @@ A small but important distinction:
 -   **Кафе** [kɑˈfɛ] = The place (Café).
 -   **Кава** [ˈkɑʋɑ] = The drink (Coffee).
 
-Don't order "кафе" at a "кава"! (Don't order a café at a coffee!). Memorize the difference: **Кафе** is where you sit; **кава** is what you sip.
+**Кафе** is where you sit; **кава** is what you sip. You go to a **кафе** to drink **каву** (coffee). Two different words — two different things.
 
 ---
 

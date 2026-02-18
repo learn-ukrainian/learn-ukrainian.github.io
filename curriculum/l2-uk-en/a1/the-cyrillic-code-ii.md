@@ -238,8 +238,9 @@ Can you read the capital of Ukraine correctly?
 ### Позиція має значення
 Look at the letter **Я** in these two words:
 1.  **Яблуко** (Apple) — Starts the word. Pronounced fully as [jɑ].
-2.  **Тягар** (Burden) — Follows a consonant. It softens the **Т** to [tʲ] and sounds more like [ɑ].
-    *   *Concept*: Iotated vowels lose their "Y" sound when they follow a consonant, transferring that energy into softening the consonant instead.
+2.  **Моя** (my/mine) — Follows a vowel. Also pronounced [jɑ], just as in a word-initial position.
+
+The short rule: after a vowel or at the start of a word, **Я** sounds like "ya". After a consonant, the "y" merges into the consonant — you'll study that pattern in detail later.
 
 ---
 
@@ -253,7 +254,7 @@ You will often see the debate about "Kyiv" vs. "Kiev." This is not just spelling
 Using the spelling **Kyiv** respects the Ukrainian pronunciation and the state language. The same logic applies to names: **Олена** (Olena) instead of Elena, and everyday objects like **олівець** (pencil).
 
 ### Репресована літера Ґ
-We mentioned that **Ґ** is rare. There is a tragic historical reason for this. In 1933, during the Soviet era, the letter **Ґ** was officially banned from the Ukrainian alphabet to make the language more similar to Russian (which does not distinguish between the two G sounds). It was only reinstated in 1990, shortly before Ukraine regained independence.
+We mentioned that **Ґ** is rare. There is a tragic historical reason for this. In 1933, during the Soviet era, the letter **Ґ** was removed from the official Ukrainian orthography — part of a broader Russification of Ukrainian spelling under Soviet pressure. It was only reinstated in 1990, shortly before Ukraine regained independence.
 Using the letter **Ґ** in words like **ґанок** (porch), **ґудзик** (button), or **дзиґа** (top) is an act of reclaiming historical truth.
 
 > [!myth-buster]
