@@ -8,34 +8,45 @@ subtitle: What We Do for Fun
 content_outline:
 - section: Вступ
   points:
-  - How Ukrainians spend free time
-  - Hobbies vocabulary overview
+  - 'How Ukrainians spend free time — cultural hook: Mushroom Picking («Тихе полювання»,
+    often in forests) and Embroidery (Вишивання, creating *vyshyvanka* or *rushnyky*);
+    aligned with State Standard §3.4'
+  - 'Hobbies vocabulary overview — collocations: «моє хобі», «цікаве хобі», «вільний
+    час», «мати вільний час»'
 - section: Граматика
   points:
-  - Indoor hobbies (читати, малювати, грати на гітарі)
-  - Outdoor activities (грати у футбол, займатися спортом)
-  - Social activities (зустрічатися з друзями)
+  - 'Indoor hobbies (читати, малювати, грати на гітарі) — learner error: confusion
+    of cases with «грати»; correct: «грати на гітарі» (Locative for instruments)'
+  - 'Outdoor activities (грати у футбол, займатися спортом) — learner error: «Я граю
+    спорт» (calque); correct: «займатися спортом» (Instrumental); distinguish: «грати
+    у футбол» (Accusative for games)'
+  - 'Social activities (зустрічатися з друзями) — collocations: «проводити дозвілля»,
+    «культурне дозвілля»'
   - Frequency expressions (часто, рідко, іноді)
 - section: Практика
   points:
-  - Dialogues about weekend plans
-  - Describe hobbies and interests
+  - Dialogues about weekend plans — use phrase «у вільний час»
+  - Describe hobbies and interests — focus on correct case usage (Instrumental for
+    activities, Locative for instruments)
 - section: Підсумок
   points:
   - Summary of vocabulary
 vocabulary_hints:
   required:
-  - хобі (hobby)
-  - вільний час (free time)
-  - грати (to play)
-  - займатися (to do/practice)
+  - 'хобі (hobby) — collocations: «моє хобі», «цікаве хобі»'
+  - 'вільний час (free time) — phrase: «у вільний час», «мати вільний час»'
+  - 'дозвілля (leisure) — collocations: «проводити дозвілля», «культурне дозвілля»'
+  - 'грати (to play) — collocations: «грати у футбол» (games), «грати на гітарі» (instruments),
+    «грати в шахи»'
+  - 'займатися (to do/practice) — collocations: «займатися спортом», «займатися йогою»,
+    «займатися танцями»; requires Instrumental case'
   - музика (music)
-  - спорт (sport)
+  - 'спорт (sport) — usage: «займатися спортом» (not «грати спорт»)'
   - читати (to read)
   - малювати (to draw)
   recommended:
-  - гітара (guitar)
-  - шахи (chess)
+  - 'гітара (guitar) — usage: «грати на гітарі»'
+  - 'шахи (chess) — usage: «грати в шахи»'
   - фотографія (photography)
   - подорож (travel)
   - концерт (concert)

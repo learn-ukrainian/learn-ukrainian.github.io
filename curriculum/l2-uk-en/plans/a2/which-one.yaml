@@ -8,23 +8,38 @@ subtitle: Relative Clauses with Який
 content_outline:
 - section: Introduction / Вступ
   points:
-  - The power of description beyond adjectives
-  - 'The Chameleon: Why ''Який'' is the ultimate linker'
+  - 'The power of description beyond adjectives — describing people and things with
+    full sentences; cultural hook: ''Який пан, такий жупан'' (Like master, like coat)
+    — illustrates how ''який'' matches the noun it describes'
+  - '''The Chameleon: Why ''''Який'''' is the ultimate linker'' — visual aid: ''Mirror''
+    analogy (reflects noun gender/number)'
 - section: Presentation / Презентація
   points:
-  - 'Basic Agreement: Який, Яка, Яке, Які'
-  - 'The Case Detective: Why ''Який'' changes inside the clause'
-  - 'Who vs. Which: The universal nature of ''Який'''
-  - 'Abstract Links: Те, що...'
-  - 'Precision: Defining your subject with relative clauses'
-  - The Mandatory Comma
+  - '''Basic Agreement: Який, Яка, Яке, Які'' — starting with Nominative case; learner
+    error: case agreement failures (mismatching gender/number with antecedent)'
+  - '''The Case Detective: Why ''''Який'''' changes inside the clause'' — introducing
+    Accusative forms; rule: case determined by clause verb (знаю кого? -> якого),
+    not the antecedent; visual aid: ''dresses for the job inside the new sentence'''
+  - '''Who vs. Which: The universal nature of ''''Який'''''' — learner error: using
+    ''хто'' instead of ''який'' for people; differentiation: ''хто'' is for ''He who...''
+    (Той, хто...), ''який'' modifies specific nouns'
+  - '''Abstract Links: Те, що...'' — standard reference: §4.4.2 (complex sentences
+    with ''що'', ''тому що'', ''щоб'')'
+  - '''Precision: Defining your subject with relative clauses'' — market culture:
+    ''Який вам зважити?'' (Which one do you want?), ''Які помідори найсолодші?'''
+  - 'The Mandatory Comma — learner error: omitting comma before ''який'' (unlike English
+    restrictive clauses)'
 - section: Practice / Практика
   points:
-  - Sentence merging drills
-  - '''Wanted'' poster description exercises'
+  - Sentence merging drills — combining simple sentences into complex ones; focus
+    on gender/number agreement
+  - '''Wanted'' poster description exercises — describing suspects or lost items using
+    ''який''; learner error: failing to decline ''який'' in Accusative (Я бачу чоловіка,
+    якого...)'
 - section: Dialogues / Діалоги
   points:
-  - Police witness interview or searching for a specific item in a shop
+  - 'Police witness interview or searching for a specific item in a shop — using ''який/яка/яке''
+    to specify details; context: selecting items at a market (''Selection'' culture)'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -52,3 +67,13 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Competition Judge
+vocabulary_hints:
+  required:
+  - який (which/that/who - masc) — який це?, той, який... (the one who/which)
+  - яка (which/that/who - fem) — яка різниця? (what's the difference?), дівчина, яка...
+  - яке (which/that/who - neut) — яке сьогодні число? (what is the date today?)
+  - які (which/that/who - pl) — люди, які... (people who...), які плани?
+  - той (that one) — той, хто... (he who...), той самий (the same one)
+  recommended:
+  - 'чоловік (man/husband) — learner error: чоловік = man AND husband'
+  - 'жінка (woman/wife) — learner error: жінка = woman AND wife'

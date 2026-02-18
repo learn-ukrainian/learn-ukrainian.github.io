@@ -8,41 +8,52 @@ subtitle: Motion - Passing & Crossing
 content_outline:
 - section: Тест
   points:
-  - Prefix diagnostic
-  - Intuition check
+  - Prefix diagnostic — focus on distinguishing direct crossing vs. avoiding (confusing
+    про- and об-)
+  - Intuition check — use visual scenarios (bridge, obstacle)
 - section: Пояснення
   points:
-  - пере-, про-, об- prefixes
-  - Crossing, passing, going around
+  - пере-, про-, об- prefixes — use Mermaid diagrams to distinguish trajectory (A
+    → B across vs. through vs. around)
+  - Crossing, passing, going around — emphasize that обійти implies a longer path
+    or avoiding something unpleasant
 - section: Поглиблення
   points:
-  - Extended patterns
-  - Nuanced usage
+  - 'Extended patterns — cover usage with ''через'' vs. direct Accusative (learner
+    error: ''перейти через вулицю'' is redundant)'
+  - Nuanced usage — distinguish physical motion vs. figurative meanings (перейти межу,
+    обійти увагою)
 - section: Практика
   points:
-  - Prefix selection exercises
+  - 'Prefix selection exercises — context: crossing bridges (cultural hook: Інгульський
+    міст, міст Патона)'
 - section: Діалоги
   points:
-  - Route description dialogues
-  - Natural usage
+  - 'Route description dialogues — context: GPS navigation style or asking directions
+    in a city'
+  - 'Natural usage — correct ''pass a test'' error (learner error: скласти іспит ≠
+    пройти)'
 vocabulary_hints:
   required:
-  - перейти/переходити (to cross on foot)
-  - переїхати/переїжджати (to cross by vehicle)
-  - пройти/проходити (to pass on foot)
-  - проїхати/проїжджати (to pass by vehicle)
-  - обійти/обходити (to go around on foot)
-  - об'їхати/об'їжджати (to drive around)
-  - перехід (crossing)
-  - маршрут (route)
-  - вулиця (street)
-  - міст (bridge)
+  - перейти/переходити (to cross on foot) — перейти вулицю, перейти міст, перейти
+    на інший бік
+  - 'переїхати/переїжджати (to cross by vehicle) — переїжджати міст (cultural hook:
+    Інгульський міст)'
+  - пройти/проходити (to pass on foot) — пройти повз будинок, пройти крізь натовп
+  - 'проїхати/проїжджати (to pass by vehicle) — проїхати по мосту (cultural hook:
+    Віадук у Плебанівці)'
+  - обійти/обходити (to go around on foot) — обійти перешкоду, обійти стороною
+  - об'їхати/об'їжджати (to drive around) — об'їхати яму, об'їхати затор
+  - перехід (crossing) — підземний перехід, пішохідний перехід
+  - маршрут (route) — планувати маршрут, змінити маршрут
+  - вулиця (street) — перейти вулицю (direct Accusative)
+  - міст (bridge) — міст Патона, Інгульський міст
   recommended:
-  - перебігти/перебігати (to run across)
-  - пробігти/пробігати (to run past)
-  - оббігти/оббігати (to run around)
-  - яма (hole/pit)
-  - перешкода (obstacle)
+  - перебігти/перебігати (to run across) — перебігти дорогу
+  - пробігти/пробігати (to run past) — пробігти повз
+  - оббігти/оббігати (to run around) — оббігти навколо
+  - яма (hole/pit) — обійти яму
+  - перешкода (obstacle) — долати перешкоду, обійти перешкоду
 activity_hints:
 - type: quiz
   focus: пере- vs про- vs об- selection

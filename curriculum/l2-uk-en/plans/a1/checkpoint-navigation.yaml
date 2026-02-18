@@ -8,24 +8,30 @@ subtitle: Can You Do the A1.2 Skills?
 content_outline:
 - section: Overview
   points:
-  - Мета контрольної точки — перевірити відмінки
+  - 'Мета контрольної точки — перевірити відмінки — State Standard §4.2.3: Checkpoint
+    for A1.2 block covering Accusative, Locative, and Genitive'
   - Самооцінка перед A1.3
-  - Стратегії для слабких місць
+  - 'Стратегії для слабких місць — Content note: Concise explanations, focus on ''Skill
+    Check'' and self-assessment'
 - section: 'Skill 1: Знахідний відмінок'
   points:
   - Прямий додаток (Я бачу книгу)
   - Неістоти без змін (Я читаю журнал)
   - Істоти зі зміною (Я знаю Марію)
-  - Напрямок руху (Іду в магазин)
+  - 'Напрямок руху (Іду в магазин) — learner error: confusing destination (Acc.) with
+    location (Loc.) like ''Я йду в парку'''
 - section: 'Skill 2: Місцевий відмінок'
   points:
-  - Місце з прийменниками у/в, на
-  - Закінчення -і/-ї (у школі, на роботі)
+  - 'Місце з прийменниками у/в, на — learner error: omitting prepositions (e.g., ''Я
+    школі'')'
+  - 'Закінчення -і/-ї (у школі, на роботі) — cultural hook: Арсенальна (Arsenalna)
+    — deepest metro station (105.5m), perfect for ''на станції'''
   - Чергування приголосних (книга → у книзі)
   - Питання Де?
 - section: 'Skill 3: Родовий відмінок'
   points:
-  - Відсутність з немає (Немає часу)
+  - 'Відсутність з немає (Немає часу) — learner error: using Nominative instead of
+    Genitive (e.g., ''Немає час'')'
   - Кількість з числівниками (два студенти)
   - Походження з прийменником з (Я з України)
 - section: 'Skill 4: Присвійні займенники'
@@ -35,21 +41,23 @@ content_outline:
   - Його/її/їхній без змін
 - section: 'Skill 5: Орієнтування в місті'
   points:
-  - Питання про напрямок (Де знаходиться...?)
+  - 'Питання про напрямок (Де знаходиться...?) — cultural hook: Золоті Ворота (Zoloti
+    Vorota) — ''underground palace'' with mosaics'
   - Вказівки (наліво, направо, прямо)
   - Покупки (Скільки коштує?)
 - section: Integration Task
   points:
-  - Діалог у магазині — застосування відмінків
+  - 'Діалог у магазині — застосування відмінків — Content note: Simulate tourist looking
+    for a café near Zoloti Vorota using all three cases'
   - Оцінка готовності до минулого часу
 vocabulary_hints:
   required:
-  - де (where)
-  - скільки (how much)
-  - немає (there is no)
+  - де (where) — Де знаходиться? Де зупинка?
+  - скільки (how much) — Скільки коштує? Скільки хвилин?
+  - немає (there is no) — Немає часу, немає квитка, тут немає...
   - мій (my)
-  - наліво (left)
-  - направо (right)
+  - наліво (left) — Поверніть наліво, перший поворот наліво
+  - направо (right) — Поверніть направо, направо від парку
   - кава (coffee)
   - гривня (hryvnia)
   recommended:
@@ -57,6 +65,7 @@ vocabulary_hints:
   - зупинка (stop)
   - магазин (store)
   - кілограм (kilogram)
+  - прямо (straight) — Ідіть прямо, завжди прямо
 activity_hints:
 - type: quiz
   focus: A1.2 grammar and vocabulary

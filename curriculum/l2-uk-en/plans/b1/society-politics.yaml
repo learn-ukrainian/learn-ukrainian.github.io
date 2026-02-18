@@ -8,48 +8,57 @@ subtitle: Society & Politics
 content_outline:
 - section: Вступ
   points:
-  - Why political vocabulary matters
-  - Ukrainian democratic context
+  - Why political vocabulary matters — aligned with State Standard §3.6 (Social Relations
+    & State Structure)
+  - 'Ukrainian democratic context — cultural hook: Конституція Пилипа Орлика (1710)
+    as evidence of early democratic traditions'
   - Key concepts overview
 - section: Вживання
   points:
-  - Collocations patterns
-  - Register considerations
-  - Application domains
+  - 'Collocations patterns — focus on high-frequency pairs: ухвалити закон, прийти
+    до влади, брати участь у виборах'
+  - Register considerations — distinguish between official news language (passive
+    constructions) and kitchen table discussion
+  - 'Application domains — learner error: Громадський (public transport) vs Громадянський
+    (civil society)'
 - section: Читання
   points:
   - News article
-  - Historical perspective
+  - 'Historical perspective — engagement: The Human Chain (1990) illustrating civic
+    unity and ''соборність'''
   - Blog commentary
 - section: Діалоги
   points:
   - News discussion (formal)
   - Pre-election debate (informal)
-  - Activism conversation, political analysis
+  - 'Activism conversation, political analysis — syntactic focus: complex causal sentences
+    (тому що, через те що)'
 - section: Лексика
   points:
   - Six vocabulary groups
-  - State/society, power/institutions
-  - Law, democratic process, reforms, concepts
+  - 'State/society, power/institutions — learner error: Політика (sphere/policy) vs
+    Політик (person)'
+  - 'Law, democratic process, reforms, concepts — learner error: Цивільний (civil
+    marriage/law) vs Громадянський (civic rights)'
 - section: Підсумок
   points:
   - Key vocabulary recap
   - Practice recommendations
 vocabulary_hints:
   required:
-  - уряд (government)
-  - держава (state)
-  - влада (power/authority)
-  - вибори (elections)
-  - голосування (voting)
-  - закон (law)
-  - громадянин (citizen)
-  - права (rights)
+  - уряд (government) — формування уряду, відставка уряду, голова уряду
+  - держава (state) — державна влада, органи державної влади
+  - влада (power/authority) — виконавча влада, прийти до влади, поділ влади
+  - вибори (elections) — брати участь у виборах, йти на вибори, виборча дільниця
+  - голосування (voting) — право голосу, день голосування
+  - закон (law) — ухвалити закон, порушувати закон, згідно із законом
+  - громадянин (citizen) — права громадянина, обов'язок громадянина
+  - права (rights) — захищати права, порушення прав
   recommended:
-  - парламент (parliament)
-  - конституція (constitution)
-  - демократія (democracy)
-  - свобода (freedom)
+  - парламент (parliament) — розпуск парламенту, сесія парламенту
+  - конституція (constitution) — згідно з конституцією, гарант конституції
+  - демократія (democracy) — розвиток демократії, принципи демократії
+  - свобода (freedom) — свобода слова, боротьба за свободу
 activity_hints:
 - type: match-up
   focus: Political noun phrases

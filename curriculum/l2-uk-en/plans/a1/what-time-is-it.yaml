@@ -8,53 +8,65 @@ subtitle: Telling Time, Days, and Months
 content_outline:
 - section: Warm-up
   points:
-  - Чому важливо знати час
-  - Як українці питають про час
+  - 'Чому важливо знати час — cultural hook: Укрзалізниця як символ стійкості та пунктуальності
+    (90%+ вчасно)'
+  - 'Як українці питають про час — Standard §4.2.3.4: «Пане, скажіть, будь ласка,
+    котра година?»'
 - section: Presentation
   points:
-  - Питання про час (Котра година? / О котрій?)
-  - Повні години (Перша година, друга година...)
-  - Половина та чверть (Пів на другу, чверть на третю)
-  - Хвилини (Десять хвилин на третю / Без десяти третя)
+  - 'Питання про час (Котра година? / О котрій?) — distinction: «Котра година?» (current
+    time) vs «О котрій?» (event time)'
+  - 'Повні години (Перша година, друга година...) — learner error: using cardinal
+    numbers (один) instead of ordinal (перша)'
+  - 'Половина та чверть (Пів на другу, чверть на третю) — learner error: confusing
+    ''пів на'' (half TO the next hour)'
+  - 'Хвилини (Десять хвилин на третю / Без десяти третя) — Standard §3.4 advice: prioritize
+    ''telegraphic style'' (вісім тридцять) for A1 simplicity'
 - section: Days of the Week
   points:
-  - понеділок, вівторок, середа
+  - 'понеділок, вівторок, середа — learner error: days are capitalized in English
+    but lowercase in Ukrainian'
   - четвер, п'ятниця, субота, неділя
-  - У понеділок (On Monday)
+  - 'У понеділок (On Monday) — Standard §4.2.3.2: `у/в` + Accusative case for days;
+    learner error: using Locative (*у понеділку)'
 - section: Months of the Year
   points:
-  - січень - грудень (January - December)
-  - У січні (In January)
-  - Seasons connection
+  - 'січень - грудень (January - December) — learner error: months are capitalized
+    in English but lowercase in Ukrainian'
+  - 'У січні (In January) — Standard §4.2.3.3: `у/в` + Locative case (ending -і) for
+    months'
+  - 'Seasons connection — context: associating months with seasonal weather in Ukraine'
 - section: Time Prepositions
   points:
-  - о + locative (at a time)
-  - до + genitive (until)
+  - 'о + locative (at a time) — usage: «о котрій?» (at what time?)'
+  - 'до + genitive (until) — usage: deadlines and durations'
   - після + genitive (after)
 - section: Presentation 2
   points:
-  - Розклад дня (О восьмій ранку я прокидаюся)
-  - Призначення зустрічей (Зустрінемося о п'ятій)
+  - 'Розклад дня (О восьмій ранку я прокидаюся) — context: Ukrzaliznytsia conductor''s
+    shift'
+  - 'Призначення зустрічей (Зустрінемося о п''ятій) — cultural note: 24h format official
+    (17:00), 12h colloquial (п''ята вечора)'
 - section: Practice
   points:
   - Діалог про час (Котра година? — П'ята година)
-  - Діалог про плани на тиждень
+  - 'Діалог про плани на тиждень — usage: «на цьому тижні», «наступного тижня»'
 - section: Practice 2
   points:
-  - Складання розкладу українською
+  - 'Складання розкладу українською — context: creating a train schedule'
 vocabulary_hints:
   required:
-  - година (hour)
-  - хвилина (minute)
-  - день (day)
-  - тиждень (week)
-  - місяць (month)
-  - рік (year)
-  - ранок (morning)
-  - вечір (evening)
+  - година (hour) — котра година?, о восьмій годині, ціла година
+  - хвилина (minute) — за п'ять хвилин, через хвилину, зачекайте хвилину
+  - день (day) — добрий день, робочий день, вихідний день
+  - тиждень (week) — на цьому тижні, кінець тижня, наступного тижня
+  - місяць (month) — цього місяця, минулого місяця, три місяці
+  - рік (year) — новий рік, цього року, минулого року
+  - ранок (morning) — доброго ранку, о восьмій ранку, завтра вранці
+  - вечір (evening) — добрий вечір, сьогодні ввечері, о сьомій вечора
   recommended:
-  - понеділок (Monday)
-  - січень (January)
+  - понеділок (Monday) — у понеділок, важкий понеділок
+  - січень (January) — у січні, перше січня
   - зараз (now)
   - пізно (late)
   - рано (early)

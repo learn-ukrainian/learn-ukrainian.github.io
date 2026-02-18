@@ -8,43 +8,62 @@ subtitle: Verbs That Demand the Dative Case
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Concept of verb government (керування)
-  - Comparison with English prepositions
+  - Concept of verb government (керування) — understanding verbs as case-drivers;
+    concept of recipient/beneficiary (State Standard §4.2.2.3) — use example «Подарувати
+    книжку студентові» from standard
+  - 'Comparison with English prepositions — English direct object ''thank YOU'' vs
+    Ukrainian indirect ''give thanks TO YOU''; mapping the invisible ''to'' — learner
+    error: avoiding direct translation like «Дякую тебе» (Acc)'
 - section: Presentation / Презентація
   points:
-  - Dative-only verbs (допомагати, дякувати, вірити)
-  - Dative + Accusative verbs (давати, показувати)
-  - Impersonal usage (здається)
+  - 'Dative-only verbs (допомагати, дякувати, вірити) — cultural hook: volunteering
+    (волонтерство) as a modern staple for ''допомагати'' (especially aiding army/displaced
+    persons); collocations: «щиро/красно дякувати», «наперед дякую»'
+  - 'Dative + Accusative verbs (давати, показувати) — double-object constructions:
+    «давати (комусь) (щось)»; adding ''повідомляти'' for official contexts — example:
+    «Повідомити групі про зміни в розкладі»'
+  - 'Impersonal usage (здається) — spotlight on ''подобатися'' (to please); learner
+    error: subject/object flip mismatch with English ''I like it'' — explicitly correct
+    «Я подобаю це» to «Мені подобається це»'
 - section: Practice / Практика
   points:
-  - Sentence formation with recipients
-  - Error correction: dative vs accusative
+  - 'Sentence formation with recipients — using high-frequency collocations: «допомагати
+    по господарству», «щиро дякувати», «сліпо довіряти», «допоможіть!» (SOS)'
+  - 'Error correction: dative vs accusative — focus on fixing ''Дякую тебе'' (Acc)
+    to ''Дякую тобі'' (Dat); ensuring correct masculine endings -ові/-еві — learner
+    error: correcting «Допомагаю брат» to «Допомагаю братові»'
 - section: Dialogues / Діалоги
   points:
-  - Contextual use of dative-hungry verbs
+  - 'Contextual use of dative-hungry verbs — scenario: mutual aid (concept of to-loka)
+    and volunteering for displaced persons; levels of gratitude: ''Дякую'' vs ''Красно
+    дякую'' — mention ''hand on heart'' gesture and debt of gratitude («Ти допоміг
+    мені? Я допоможу тобі»)'
 vocabulary_hints:
   required:
-  - допомагати (to help)
-  - заважати (to bother)
-  - подобатися (to please/like)
-  - вірити (to believe)
-  - довіряти (to trust)
-  - дякувати (to thank)
-  - вибачати (to forgive)
-  - пробачати (to excuse)
-  - заздрити (to envy)
-  - симпатизувати (to sympathize)
-  - співчувати (to empathize)
-  - личити (to suit)
-  - підходити (to suit/fit)
-  - вистачати (to be enough)
-  - бракувати (to lack)
+  - допомагати (to help) — допомагати (комусь) з (чимось); допомагати по господарству;
+    допоможіть! (SOS)
+  - заважати (to bother) — вибачте, що заважаю; не заважай мені!; нікому не заважати
+  - 'подобатися (to please/like) — мені подобається це; learner error: avoid «я подобаю
+    це»'
+  - вірити (to believe) — вірити на слово; вірити в Бога (Acc) vs вірити людині (Dat)
+  - довіряти (to trust) — довіряти людям; сліпо довіряти; довіряти собі
+  - дякувати (to thank) — дякувати (комусь) за (щось); щиро/красно дякувати; наперед
+    дякую
+  - вибачати (to forgive) — вибачати (комусь) (щось); вибачте мені; вибачте (мені)
+  - пробачати (to excuse) — пробачте за запізнення
+  - заздрити (to envy) — заздрити успіху; біла заздрість (clean envy)
+  - симпатизувати (to sympathize) — симпатизувати колезі
+  - співчувати (to empathize) — щиро співчувати горю
+  - личити (to suit) — тобі личить ця сукня
+  - підходити (to suit/fit) — цей час мені підходить
+  - вистачати (to be enough) — мені вистачає грошей
+  - бракувати (to lack) — мені бракує терпіння
   recommended:
-  - шкодити (to harm)
-  - служити (to serve)
-  - належати (to belong)
-  - сподобатися (to come to like - pf)
-  - захотітися (to feel like - pf)
+  - шкодити (to harm) — це шкодить здоров'ю
+  - служити (to serve) — служити народу
+  - належати (to belong) — це належить мені
+  - сподобатися (to come to like - pf) — мені сподобався фільм
+  - захотітися (to feel like - pf) — мені захотілося кави
 activity_hints:
 - type: fill-in
   focus: Complete sentences with dative verbs

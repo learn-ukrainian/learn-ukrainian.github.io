@@ -8,23 +8,36 @@ subtitle: Expressing Purpose with Щоб
 content_outline:
 - section: Introduction / Вступ
   points:
-  - The logic of intentionality
-  - Why 'Purpose' requires a specific grammar bridge
+  - 'The logic of intentionality — State Standard §4.4.2: expressing purpose with
+    «щоб»; example: «Ми вчимо українську мову, щоб розмовляти з друзями»'
+  - 'Why ''Purpose'' requires a specific grammar bridge — Common Learner Error: Omitting
+    the comma before «щоб» in purpose clauses'
 - section: Presentation / Презентація
   points:
-  - 'Same Subject Logic: Щоб + Infinitive'
-  - 'Different Subject Logic: Щоб + Past Tense (The Subjunctive twist)'
-  - 'Formal Emphasis: Для того щоб'
-  - 'Gentle Purpose: Аби'
-  - 'Purpose with Nouns: Для + Genitive'
-  - 'Wishes as Commands: Щоб ти був здоровий!'
+  - 'Same Subject Logic: Щоб + Infinitive — Common Learner Error: The «For To» Calque
+    (using «для» + infinitive instead of «щоб», e.g., «Я йду для купити» vs «Я йду,
+    щоб купити»)'
+  - 'Different Subject Logic: Щоб + Past Tense (The Subjunctive twist) — Common Learner
+    Error: Subject Mismatch (using infinitive when subject changes, e.g., «Я хочу
+    тебе читати» vs «Я хочу, щоб ти читав»); Visual Logic: «Is the doer the same?»
+    → NO (Past Tense)'
+  - 'Formal Emphasis: Для того щоб — Register Check: Emphatic/Formal usage, builds
+    to C1 Stylistics'
+  - 'Gentle Purpose: Аби — Register Check: Informal/Spoken, implies «just so that»
+    or «if only» (e.g., «аби не спізнитися»)'
+  - 'Purpose with Nouns: Для + Genitive — Reinforces Genitive case usage (§4.2.2.2.2);
+    distinction from «щоб» clauses'
+  - 'Wishes as Commands: Щоб ти був здоровий! — Cultural Hook: The «Щоб» Toast Culture
+    (e.g., «Щоб їлося і пилося, щоб хотілося і моглося!»)'
 - section: Practice / Практика
   points:
-  - Subject-shifting drills
-  - Planning an event with diverse goals
+  - Subject-shifting drills — Use a clear flowchart/decision tree logic
+  - 'Planning an event with diverse goals — Cultural Hook: Proverb «На те коня кують,
+    щоб не спотикався.» (illustrates planning)'
 - section: Dialogues / Діалоги
   points:
-  - Discussing career goals, travel plans, or helping a colleague
+  - 'Discussing career goals, travel plans, or helping a colleague — integrate high-frequency
+    collocations: «Я хочу, щоб...», «Для того, щоб...»'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -53,3 +66,13 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Project Strategist
+vocabulary_hints:
+  required:
+  - 'щоб (in order to) — High frequency; collocations: «Я хочу, щоб...», «Він пішов,
+    щоб...»'
+  - 'для (for) — High frequency; usage with nouns only; collocations: «для тебе»,
+    «для роботи», «для здоров''я»'
+  - 'аби (so that / if only) — Medium frequency; informal; collocations: «аби тільки»,
+    «аби не спізнитися»'
+  - 'мета (goal / purpose) — Medium frequency; collocations: «моя мета», «з метою»
+    (formal)'

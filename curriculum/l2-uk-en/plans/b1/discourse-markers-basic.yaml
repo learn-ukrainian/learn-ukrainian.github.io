@@ -8,53 +8,66 @@ subtitle: 'Discourse Markers: Basic Connectors'
 content_outline:
 - section: Вступ
   points:
-  - What discourse markers do
-  - Categories of connectors
-  - Written vs spoken markers
+  - 'What discourse markers do — cultural hook: ''The Living Word'' concept (Skvoroda),
+    connectors make speech human/polite not just informational'
+  - Categories of connectors — State Standard §4.4.2 (introductory words like 'мабуть')
+    vs §4.4.3 (conjunctions like 'тому що')
+  - Written vs spoken markers — distinguish 'ну/коротше' (spoken) from 'отже/наприклад'
+    (logical/written)
 - section: Вивчення слів
   points:
-  - Five vocabulary groups
-  - Addition, contrast, cause/result
-  - Clarification, generalization
+  - Five vocabulary groups — addition, contrast, cause/effect, clarification, sequence
+  - 'Addition, contrast, cause/result — learner error: confusing ''і'' (and) vs ''а''
+    (contrastive but) vs ''але'' (strong however)'
+  - Clarification, generalization — usage of 'наприклад' and 'отже'
 - section: Вживання
   points:
-  - Position in sentence
-  - Punctuation rules
-  - Formal vs informal register
+  - Position in sentence — 'однак' starts clauses, enclitic 'ж' comes second; intonation
+    pauses for introductory words
+  - 'Punctuation rules — learner error: punctuation blindness (must use commas before
+    ''але'', ''що'', ''бо'')'
+  - 'Formal vs informal register — cultural hook: Kyiv-Mohyla Rhetoric (clarity and
+    structure as intellectual discipline)'
 - section: Читання
   points:
-  - News article
-  - Academic text
-  - Blog (informal)
+  - News article — use of formal contrast markers like 'однак' and 'проте'
+  - 'Academic text — use of structured markers: ''по-перше'', ''по-друге'', ''отже'''
+  - Blog (informal) — use of 'до речі' and emotional softeners
 - section: Діалоги
   points:
-  - Work meeting (formal)
-  - Friends discussing plans (informal)
-  - Student discussion, advice
+  - Work meeting (formal) — use of 'власне кажучи' for correction and 'безумовно'
+    for agreement
+  - Friends discussing plans (informal) — casual use of 'до речі' and 'ну'
+  - Student discussion, advice — use of 'наприклад' and 'мені здається'
 - section: Додаткові маркери
   points:
-  - Replacement and alternatives
-  - Clarification and examples
-  - Emphasis and affirmation
+  - Replacement and alternatives — 'тобто', 'іншими словами'
+  - Clarification and examples — 'зокрема' (in particular)
+  - Emphasis and affirmation — 'безумовно' (certainly)
 - section: Підсумок
   points:
-  - Key markers recap
-  - Practice recommendations
+  - 'Key markers recap — learner error: ''So'' overload (distinguish ''отже'' vs ''тому''
+    vs ''ну'')'
+  - Practice recommendations — focus on intonation and comma placement
 vocabulary_hints:
   required:
-  - також (also)
-  - крім того (besides)
-  - але (but)
-  - однак (however)
-  - тому що (because)
-  - отже (therefore)
-  - наприклад (for example)
-  - тобто (that is)
+  - також (also) — standard addition
+  - крім того (besides) — adds a new argument
+  - 'але (but) — collocations: ''але ж'', ''але все ж таки''; common error vs ''а'''
+  - 'однак (however) — formal contrast; collocations: ''однак варто зазначити'''
+  - 'тому що (because) — causal; collocations: ''саме тому що'''
+  - 'отже (therefore) — logical conclusion; collocations: ''отже ми можемо'''
+  - 'наприклад (for example) — collocations: ''як наприклад'', ''наприклад у випадку'''
+  - тобто (that is) — clarification marker
   recommended:
-  - проте (nevertheless)
-  - внаслідок (as a result)
-  - зокрема (in particular)
-  - іншими словами (in other words)
+  - проте (nevertheless) — formal contrast synonym for 'однак'
+  - внаслідок (as a result) — formal consequence
+  - зокрема (in particular) — specific example
+  - іншими словами (in other words) — rephrasing
+  - до речі (by the way) — high frequency spoken; 'до речі кажучи'
+  - власне (actually/strictly) — correction/precision; 'власне кажучи'
+  - безумовно (certainly) — emphatic agreement; 'безумовно це так'
+  - по-перше / по-друге (firstly/secondly) — structuring arguments
 activity_hints:
 - type: fill-in
   focus: Insert appropriate markers

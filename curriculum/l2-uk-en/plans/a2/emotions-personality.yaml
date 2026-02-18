@@ -8,31 +8,42 @@ subtitle: Describing People
 content_outline:
 - section: Вступ
   points:
-  - Personality vocabulary introduction
-  - Emotional expressions
+  - Personality vocabulary introduction — introduce concept of 'heart-centered' philosophy
+    (Cordocentrism) and feeling emotions 'на душі'
+  - Emotional expressions — use visual aids/emojis to map basic emotions (joy, sadness,
+    anger) to words (радість, сум, злість)
 - section: Граматика
   points:
-  - Personality traits (добрий, злий, щедрий)
-  - Emotional states (радість, сум, злість)
-  - Dative for feelings (мені сумно)
-  - Character descriptions
+  - 'Personality traits (добрий, злий, щедрий) — learner error: gender agreement (вона
+    добра, not добрий); false friend: ''симпатичний'' is nice/good-looking, not sympathetic'
+  - Emotional states (радість, сум, злість) — aligns with State Standard §3.1 regarding
+    character traits
+  - 'Dative for feelings (мені сумно) — learner error: confusing State vs. Quality
+    (Я нудний vs Мені нудно); basis in State Standard §4.2.2.3'
+  - 'Character descriptions — cultural hook: emphasize ''щирість'' (sincerity) and
+    ''гостинність'' (hospitality) as key positive traits; proverb: ''Не по одежині
+    судять, а по розуму'''
 - section: Практика
   points:
-  - Dialogues about people
-  - Character descriptions
+  - Dialogues about people — include asking 'Що у тебе на душі?' (What is on your
+    soul?)
+  - Character descriptions — focus on traits useful for professional contexts (preparing
+    for A2-49)
 - section: Підсумок
   points:
-  - Summary of vocabulary
+  - Summary of vocabulary — reinforce distinction between being (adjective) and feeling
+    (adverb+dative)
 vocabulary_hints:
   required:
-  - добрий (kind)
-  - злий (angry/evil)
-  - щасливий (happy)
-  - сумний (sad)
-  - розумний (smart)
-  - веселий (cheerful)
-  - спокійний (calm)
-  - нервовий (nervous)
+  - добрий (kind) — добра людина, добре серце, добрий день, добра воля
+  - злий (angry/evil) — злий собака, злий жарт, злі язики (gossips), на зло (out of
+    spite)
+  - щасливий (happy) — щаслива дорога, щасливий випадок, щасливе дитинство
+  - сумний (sad) — сумна пісня, сумний погляд, сумна звістка
+  - розумний (smart) — розумна голова, розумна дитина, розумний вибір
+  - веселий (cheerful) — веселі свята, весела вдадача, весела компанія
+  - спокійний (calm) — спокійне життя, спокійний голос, спокійної ночі
+  - нервовий (nervous) — нервова система, нервовий тік, нервова робота
   recommended:
   - щедрий (generous)
   - скупий (stingy)

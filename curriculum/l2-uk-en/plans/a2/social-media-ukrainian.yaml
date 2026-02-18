@@ -8,35 +8,45 @@ subtitle: Digital Life
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Popular platforms
-  - Digital culture
+  - Popular platforms — Telegram as primary news/comms source (75% for news, 90% daily
+    usage, official updates), Instagram for business (often replacing websites)
+  - 'Digital culture — State Standard §3.4 alignment; cultural hook: ''Пишіть у дірект''
+    (Write to DM) as standard business phrase'
 - section: Presentation / Презентація
   points:
-  - Social media vocabulary
-  - Posts, likes, comments
+  - 'Social media vocabulary — ''сторінка'' vs ''сайт'' (false friend); UI terms:
+    кнопка ''Стежити'', іконка серця'
+  - 'Posts, likes, comments — ''лайк'' vs ''вподобайка'' (purist alternative), ''світлина''
+    (photo); learner error: confusing case for ''підписатися на...'' (Accusative:
+    на канал, на сторінку)'
 - section: Practice / Практика
   points:
-  - Write posts and comments
+  - Write posts and comments — 'поширити допис' (share post), 'знімати сторіз' (film
+    stories), 'кидати в сторіз' (post to stories)
 - section: Dialogues / Діалоги
   points:
-  - Online conversations
-  - Commenting exchanges
+  - Online conversations — casual register, focus on Telegram (news/messaging) and
+    Instagram (visuals) context
+  - 'Commenting exchanges — interacting with ''підписники'' (followers); collocation:
+    ''кількість підписників'', ''мої підписники'''
 - section: Narrative / Розповідь
   points:
-  - Social media story
+  - Social media story — focus on navigating UI ('кнопка', 'іконка') and digital interactions
+    ('поширити', 'лайкнути')
 - section: Need More Practice?
   points:
   - Summary and links
 vocabulary_hints:
   required:
-  - профіль (profile)
-  - пост (post)
-  - лайк (like)
-  - коментар (comment)
-  - підписник (follower)
-  - підписатися (to subscribe)
-  - поділитися (to share)
-  - сторіз (stories)
+  - 'профіль (profile) — learner error: confuse with ''сторінка'' (page)'
+  - пост (post) — писати пост, опублікувати пост, новий пост
+  - 'лайк (like) — ставити лайк, збирати лайки; alt: вподобайка (purist)'
+  - коментар (comment) — common UI term
+  - підписник (follower) — мої підписники, кількість підписників, накрутка підписників
+  - підписатися (to subscribe) — підписатися на канал (Accusative case warning), підписатися
+    на сторінку
+  - 'поділитися (to share) — поділитися з друзями; synonym: поширити допис'
+  - сторіз (stories) — знімати сторіз, кидати в сторіз, дивитися сторіз
   recommended:
   - стрічка (feed)
   - хештег (hashtag)
@@ -44,6 +54,7 @@ vocabulary_hints:
   - приватність (privacy)
   - блокувати (to block)
   - сповіщення (notification)
+  - світлина (photo)
 activity_hints:
 - type: match-up
   focus: Social media vocabulary

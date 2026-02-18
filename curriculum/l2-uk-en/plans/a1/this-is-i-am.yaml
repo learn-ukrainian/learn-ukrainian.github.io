@@ -8,20 +8,28 @@ subtitle: Zero Copula and Personal Pronouns
 content_outline:
 - section: Warm-up
   points:
-  - Ukrainian skips "am/is/are" in present tense (zero copula)
-  - 'Pattern: Я студент (I student = I am a student)'
+  - 'Ukrainian skips "am/is/are" in present tense (zero copula) — learner error: The
+    Phantom "Is" (using "є" unnecessarily)'
+  - 'Pattern: Я студент (I student = I am a student) — contrast English "to be" with
+    Ukrainian Zero Copula using visual gaps'
   - Pro-drop language family inheritance from Proto-Slavic
 - section: Presentation
   points:
-  - Personal pronouns (я, ти, він, вона, воно, ми, ви, вони)
-  - 'Formal vs informal: Ви vs ти — when to use each'
-  - 'Zero copula pattern: Subject + Predicate (no verb)'
-  - 'Examples: Я студент, Він українець, Це книга'
+  - Personal pronouns (я, ти, він, вона, воно, ми, ви, вони) — aligns with State Standard
+    §4.2.1.4 (nominative case usage)
+  - 'Formal vs informal: Ви vs ти — when to use each — cultural hook: The "Vi" Safety
+    Net (addressing strangers)'
+  - 'Zero copula pattern: Subject + Predicate (no verb) — aligns with State Standard
+    §4.2.3.1 (simple identification sentences)'
+  - 'Examples: Я студент, Він українець, Це книга — learner error: The "It" Trap (referring
+    to all objects as "воно" instead of gendered pronouns)'
   - Linking verb є exists but rarely used in speech
 - section: Practice
   points:
-  - Transformation exercises with personal pronouns
-  - Формальність — choosing Ви vs ти in scenarios
+  - 'Transformation exercises with personal pronouns — drill focus: "Ivan is a student
+    -> He is a student" transformation pattern'
+  - 'Формальність — choosing Ви vs ти in scenarios — learner error: Register Mix-up
+    (using "ти" with elders/strangers)'
 - section: Production
   points:
   - Self-introduction without "to be" verb
@@ -29,14 +37,15 @@ content_outline:
 - section: Cultural Insight
   points:
   - Modern Ukraine — young people often use ти immediately
-  - When in doubt, start with Ви — always safer
+  - 'When in doubt, start with Ви — always safer — cultural hook: The "Bruderschaft"
+    Moment (social transition from Ви to ти)'
 vocabulary_hints:
   required:
-  - це (this is)
-  - я (I)
-  - ти (you)
-  - він (he)
-  - вона (she)
+  - 'це (this is) — collocations: це (noun), хто це?, що це?'
+  - 'я (I) — collocations: я студент, я тут, я (name)'
+  - 'ти (you) — collocations: ти хто?, ти де?, ти студент?'
+  - 'він (he) — collocations: він там, він українець'
+  - 'вона (she) — collocations: вона тут, вона вчителька'
   - хто (who)
   - що (what)
   - студент (student)

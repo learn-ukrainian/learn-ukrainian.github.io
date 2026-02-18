@@ -7,25 +7,29 @@ title: Пасив у контексті — вибір за регістром
 content_outline:
 - section: Вступ — Регістр і пасив
   points:
-  - Що таке регістр
-  - Чому вибір пасиву залежить від контексту
-  - Підсумок чотирьох форм пасиву
+  - Що таке регістр — alignment with CEFR B2 Sociolinguistic Competence
+  - 'Чому вибір пасиву залежить від контексту — cultural hook: The ''Kantseliaryt''
+    Trap (bureaucratese vs Agency Pass)'
+  - Підсумок чотирьох форм пасиву — preference for Active Voice ('Ми вирішили' > 'Було
+    вирішено') where possible
 - section: Таблиця регістрів і форм пасиву
   points:
-  - Юридичний документ → -но/-то
+  - 'Юридичний документ → -но/-то — cultural hook: Unique Ukrainian form with strict
+    Action Focus (no agent)'
   - Наукова стаття → -ся
   - Літературний текст → -ний/-тий
   - Розмовна оповідь → 3-я особа множини
 - section: Практичні сценарії — Юридичний контекст
   points:
-  - Оголошення, накази, постанови
-  - Чому -но/-то є обов'язковим
-  - Зразки документів
+  - 'Оголошення, накази, постанови — vocab: офіційний документ, офіційна заява'
+  - 'Чому -но/-то є обов''язковим — learner error: The ''By-Agent'' mistake (e.g.,
+    ''Закон прийнято *парламентом*'')'
+  - Зразки документів — State Standard §4.3.3.1 (one-member sentences)
 - section: Практичні сценарії — Науковий контекст
   points:
   - Опис експерименту, методології
   - Чому -ся підходить найкраще
-  - Зразки наукових текстів
+  - Зразки наукових текстів — State Standard §4.3.2 (participial phrases)
 - section: Практичні сценарії — Літературний та журналістичний контекст
   points:
   - Художній опис, новини
@@ -34,25 +38,29 @@ content_outline:
 - section: Практичні сценарії — Розмовний контекст
   points:
   - Побутові оповіді, чутки
-  - Чому 3-я особа множини є природною
-  - Уникання формальності
+  - 'Чому 3-я особа множини є природною — learner error: Overuse of ''Buty'' + Participle
+    (calque of ''was written'')'
+  - 'Уникання формальності — vocab: доречний/недоречний жарт'
 - section: Інтегрована практика
   points:
   - Один зміст у чотирьох формах
-  - Критерії вибору
-  - Типові помилки
+  - 'Критерії вибору — content writing note: Include decision tree flowchart (Agent
+    known? -> Important? -> Active Voice)'
+  - 'Типові помилки — learner error: Register mismatch with reflexive verbs (e.g.,
+    ''я вибачаюся'' vs ''вибачте'')'
 vocabulary_hints:
   required:
-  - регістр (register)
-  - контекст (context)
+  - регістр (register) — офіційний/неофіційний регістр, високий регістр, зміна регістру
+  - контекст (context) — у цьому контексті, широкий контекст, вирвати з контексту
   - вибір (choice/selection)
-  - юридичний (legal)
+  - юридичний (legal) — юридична особа, юридичний термін, юридична сила
   - науковий (scientific)
   - літературний (literary)
   - журналістичний (journalistic)
   - розмовний (colloquial)
-  - доречний (appropriate)
+  - доречний (appropriate) — доречне зауваження, цілком доречно, недоречний жарт
   - недоречний (inappropriate)
+  - офіційний (official) — офіційний документ, офіційна заява, офіційний стиль
   recommended:
   - стилістика (stylistics)
   - комунікативна ситуація (communicative situation)

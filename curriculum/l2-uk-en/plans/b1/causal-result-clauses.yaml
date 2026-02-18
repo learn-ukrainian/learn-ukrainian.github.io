@@ -8,38 +8,51 @@ subtitle: Causal and Result Clauses
 content_outline:
 - section: Тест
   points:
-  - Diagnostic quiz on causal/result clauses
-  - Self-assessment questions
+  - Diagnostic quiz on causal/result clauses — focus on distinguishing 'бо' (casual)
+    vs 'оскільки' (formal)
+  - 'Self-assessment questions — check for common errors: punctuation before ''тому
+    що'', spelling ''тому що'' as two words'
 - section: Пояснення
   points:
-  - Expressing reasons
-  - Causal Connectors (тому що, бо, через те що)
-  - Result Connectors (тому, отже, внаслідок)
-  - Cause → Result Transformation
-  - Advanced Patterns (завдяки тому що, оскільки)
+  - 'Expressing reasons — emphasize agency: ''We rebuilt it because we needed it''
+    vs passive forms'
+  - 'Causal Connectors (тому що, бо, через те що) — learner error: using ''тому як''
+    (Russism); distinguish registers: ''бо'' (spoken, end of sentence) vs ''тому що''
+    (neutral)'
+  - 'Result Connectors (тому, отже, внаслідок) — collocations: ''Внаслідок аварії...'',
+    ''Внаслідок того, що...'''
+  - Cause → Result Transformation — use Mermaid diagrams to show reversible logic
+    (A implies B, therefore B is because of A)
+  - 'Advanced Patterns (завдяки тому що, оскільки) — ''Оскільки'' for formal sentence
+    starts; cultural hook: ''Хто полю годить, тому жито родить'' (agrarian ethos)'
 - section: Практика
   points:
-  - Express cause and effect
-  - Transform statements
+  - 'Express cause and effect — cultural hook: ''Диму без вогню не буває'' (causality
+    belief)'
+  - Transform statements — focus on shifting focus from Fate ('Доля') to personal
+    agency (Franko's 'Lupayte syu skalu')
 - section: Діалоги
   points:
-  - Causal/result clauses in conversation
-  - Everyday reasoning scenarios
+  - Causal/result clauses in conversation — differentiate 'бо' (casual reply) from
+    full sentence explanations
+  - Everyday reasoning scenarios — use real-world contexts illustrating personal responsibility
+    and action
 vocabulary_hints:
   required:
-  - причина (cause/reason)
-  - наслідок (consequence)
-  - тому що (because)
-  - бо (because)
-  - тому (therefore)
-  - отже (thus)
-  - через те що (due to)
-  - внаслідок (as a result)
+  - причина (cause/reason) — fundamental concept
+  - наслідок (consequence) — logical pair to 'причина'
+  - тому що (because) — 'Це сталося тому, що...'; 'Я запізнився, тому що...' (Neutral)
+  - бо (because) — 'Не прийду, бо зайнятий'; 'Люблю, бо гарна' (Spoken)
+  - тому (therefore) — 'Був дощ, тому ми не пішли' (Connector)
+  - отже (thus) — 'Ти тут, отже ми можемо починати' (Logical)
+  - через те що (due to) — 'Через те що йшов дощ...'; 'Захворів через те, що...' (Neutral)
+  - внаслідок (as a result) — 'Внаслідок аварії...'; 'Внаслідок того, що...' (Formal)
   recommended:
-  - оскільки (since)
-  - завдяки (thanks to)
-  - у зв'язку з (in connection with)
-  - відтак (hence)
+  - оскільки (since) — 'Оскільки ви не відповіли...'; 'Оскільки закон вимагає...'
+    (Formal, often starts sentence)
+  - завдяки (thanks to) — positive cause
+  - у зв'язку з (in connection with) — formal/official
+  - відтак (hence) — logical consequence
 activity_hints:
 - type: fill-in
   focus: Complete causal/result sentences

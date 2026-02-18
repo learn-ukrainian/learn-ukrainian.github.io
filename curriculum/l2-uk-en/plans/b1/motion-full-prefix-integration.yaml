@@ -10,18 +10,26 @@ content_outline:
   points: '[]'
 - section: Пояснення
   points:
-  - 1. Система просторових префіксів
-  - '2. Аспект: Як префікси змінюють вид'
-  - 3. Переносні (фігуральні) значення
-  - Реальні приклади використання
+  - '1. Система просторових префіксів — cultural hook: Kyiv Metro (Arsenalna) navigation
+    (сходити, виходити, переходити)'
+  - '2. Аспект: Як префікси змінюють вид — learner error: по- (multidirectional base
+    = walk a bit) vs. пі- (unidirectional base = set off)'
+  - '3. Переносні (фігуральні) значення — collocations: перейти межу, руки не доходять,
+    вийти сухим із води'
+  - 'Реальні приклади використання — collocations: вийти заміж, прийти до висновку,
+    дійти згоди'
 - section: Практика
   points:
-  - Як обрати правильне слово? Алгоритм.
-  - Типові помилки студентів
+  - 'Як обрати правильне слово? Алгоритм. — learner error: при- (arrival/presence)
+    vs. до- (reaching a limit/edge)'
+  - 'Типові помилки студентів — learner error: в- (neutral entry) vs. за- (short visit/drop
+    by)'
 - section: Діалоги
   points:
-  - 'Діалог 1: Зустріч біля метро'
-  - 'Діалог 2: Екскурсія замком'
+  - 'Діалог 1: Зустріч біля метро — context: Arsenalna station (deepest in world,
+    5 min descent)'
+  - 'Діалог 2: Екскурсія замком — cultural hook: Kamianets-Podilskyi, Legend of Sultan
+    Osman II (відійти - retreat)'
   - 'Діалог 3: Загублений гаманець'
 - section: Підсумок
   points: '[]'
@@ -32,22 +40,27 @@ content_outline:
   - Онлайн-ресурси
 vocabulary_hints:
   required:
-  - при- (arrival)
-  - ви- (exit)
-  - в-/у- (entry)
-  - пере- (across)
-  - про- (through/past)
-  - об- (around)
-  - по- (start)
-  - за- (drop by)
-  - від- (away from)
-  - до- (reaching)
+  - при- (arrival) — прийти вчасно (arrive on time), прийти до тями (regain consciousness)
+  - ви- (exit) — вийти з дому (leave home), вийти заміж (marry), нічого не вийшло
+    (nothing worked out)
+  - в-/у- (entry) — ввійшов у кімнату (entered neutral)
+  - пере- (across) — перейти вулицю (cross street), перейти на українську (switch
+    language), перейти межу (cross the line)
+  - про- (through/past) — пройти повз (walk past), біль пройшов (pain passed), пройти
+    курс (complete a course)
+  - об- (around) — об'їхати (drive around/bypass)
+  - по- (start) — піти (set off), походити (walk a bit)
+  - за- (drop by) — зайти в магазин (enter shop), зайти в гості (drop by), сонце зайшло
+    (sun set)
+  - від- (away from) — відійти (move away/retreat)
+  - до- (reaching) — дійти до центру (reach center), дійти згоди (reach agreement),
+    руки не доходять (never get around to it)
   recommended:
-  - під- (approach)
-  - роз- (disperse)
-  - з-/с- (down/together)
-  - над- (over - rare)
-  - комбінація (combination)
+  - під- (approach) — підійти до (approach someone)
+  - роз- (disperse) — розійтися (disperse)
+  - з-/с- (down/together) — сходити вниз (go down)
+  - над- (over - rare) — надійти (arrive - letters/news)
+  - комбінація (combination) — повідходити (move away - plural)
 activity_hints:
 - type: quiz
   focus: Prefix meaning identification

@@ -9,24 +9,32 @@ content_outline:
 - section: Warm-up
   points:
   - Питання Як? (добре, швидко, тихо)
-  - Різниця між прикметником і прислівником
+  - 'Різниця між прикметником і прислівником — learner error: confusion due to English
+    forms like ''fast/hard'' being same for adj/adv; visual aid: table comparing Який?
+    vs Як?'
 - section: Presentation
   points:
   - Від прикметників на -ий → -о (швидкий → швидко)
-  - Неправильні прислівники (добрий → добре)
-  - Позиція в реченні (після дієслова)
+  - 'Неправильні прислівники (добрий → добре) — cultural hook: ''Добре'' as universal
+    agreement/confirmation (like ''Okay'')'
+  - 'Позиція в реченні (після дієслова) — state standard: elementary description of
+    actions (line 374, 436)'
 - section: Presentation 2
   points:
-  - Шкала частоти (завжди → зазвичай → часто → іноді → рідко → ніколи)
-  - Позиція перед дієсловом
+  - 'Шкала частоти (завжди → зазвичай → часто → іноді → рідко → ніколи) — state standard:
+    expressing time concepts (line 477)'
+  - 'Позиція перед дієсловом — learner error: missing double negation with ''ніколи''
+    (MUST use ''ніколи не...'')'
 - section: Presentation 3
   points:
-  - Дуже, трохи, зовсім, майже
+  - 'Дуже, трохи, зовсім, майже — learner error: wrong placement of ''дуже'' (e.g.
+    ''працює добре дуже'')'
   - Сполучення з прикметниками та дієсловами
 - section: Presentation 4
   points:
   - Опис своїх звичок (Я зазвичай снідаю швидко)
-  - Опис того, як людина щось робить
+  - 'Опис того, як людина щось робить — cultural hook: proverb ''Повільно їдеш — далі
+    будеш'' (Haste makes waste)'
 - section: Practice
   points:
   - Діалог про спосіб життя
@@ -36,14 +44,15 @@ content_outline:
   - Опис своїх звичок та того, як ви робите речі
 vocabulary_hints:
   required:
-  - добре (well)
-  - погано (badly)
-  - швидко (quickly)
-  - повільно (slowly)
-  - завжди (always)
-  - часто (often)
-  - іноді (sometimes)
-  - ніколи (never)
+  - 'добре (well) — collocations: добре працювати, добре знати, дуже добре'
+  - 'погано (badly) — collocations: погано почуватися, погано розуміти'
+  - 'швидко (quickly) — collocations: швидко їсти, швидко бігати, швидко говорити'
+  - 'повільно (slowly) — collocations: повільно йти, повільно читати'
+  - 'завжди (always) — collocations: завжди разом, завжди готовий, завжди вранці'
+  - 'часто (often) — collocations: часто бувати, часто бачити, часто гуляти'
+  - 'іноді (sometimes) — collocations: іноді буває, іноді ми ходимо'
+  - 'ніколи (never) — usage note: REQUIRES ''не'' (ніколи не...); collocations: ніколи
+    не бачив'
   recommended:
   - голосно (loudly)
   - тихо (quietly)
@@ -51,6 +60,7 @@ vocabulary_hints:
   - зазвичай (usually)
   - легко (easily)
   - важко (with difficulty)
+  - 'дуже (very) — collocations: дуже цікаво, дуже гарно, дуже швидко'
 activity_hints:
 - type: fill-in
   focus: Form adverbs from adjectives

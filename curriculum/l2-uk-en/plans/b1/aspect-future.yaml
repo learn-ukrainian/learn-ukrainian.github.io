@@ -8,45 +8,55 @@ subtitle: 'Aspect in Future: Three Ways to Express Future Actions'
 content_outline:
 - section: Тест
   points:
-  - Three ways to express future
-  - Intuition check
+  - Three ways to express future — діагностика розуміння різниці між доконаним і недоконаним
+    видом
+  - 'Intuition check — common learner error: confusing ''буду'' + perfective infinitive
+    (e.g., ''я буду прочитати'')'
 - section: Пояснення
   points:
-  - Compound future (will be doing)
-  - Synthetic future (-tymu)
-  - Perfective future (simple)
+  - 'Compound future (will be doing) — ''буду'' + інфінітив недоконаного виду; learner
+    error warning: avoid mixing aspects'
+  - Synthetic future (-tymu) — стилістично рівноправна форма, стандартна для сучасної
+    мови, а не лише літературна
+  - 'Perfective future (simple) — зміна концепції для англомовних: ''Perfective Future
+    = Simple Future'' (форма теперішнього часу має значення майбутнього)'
 - section: Практика
   points:
-  - Selection rules
-  - Common mistakes
-  - Scenarios (plans, formal, academic)
+  - 'Selection rules — State Standard alignment: розрізнення складеної, синтетичної
+    та простої форм (§4.2.3.1)'
+  - Common mistakes — overuse of analytic 'буду робити' vs synthetic 'робитиму'; using
+    perfective present for future
+  - 'Scenarios (plans, formal, academic) — cultural hook: ''Не кажи гоп, поки не перескочиш''
+    (superstition about announcing plans)'
 - section: Діалоги
   points:
-  - Plans (conversational)
-  - Formal discussion
-  - Resolutions
+  - 'Plans (conversational) — use high-frequency verbs: ''збиратися'', ''сподіватися'';
+    cultural hook: ''Сплюнь і постучи по дереву'' to avoid jinxing'
+  - Formal discussion — use 'мати намір', 'планувати' (medium/formal register)
+  - Resolutions — use 'обіцяти' with perfective future (committing to a result)
 - section: Підсумок
   points:
-  - Comparison table
-  - Self-check
+  - Comparison table — чітке протиставлення трьох форм (compound vs synthetic vs perfective)
+  - Self-check — verify understanding of aspectual nuance in future context
 vocabulary_hints:
   required:
-  - майбутній час (future tense)
-  - складна форма (compound form)
-  - синтетична форма (synthetic form)
-  - простий майбутній (simple future)
-  - буду (I will - auxiliary)
-  - завтра (tomorrow)
-  - через тиждень (in a week)
-  - потім (then/later)
-  - скоро (soon)
-  - планувати (to plan)
+  - майбутній час (future tense) — у майбутньому, світле майбутнє
+  - складна форма (compound form) — буду писати
+  - синтетична форма (synthetic form) — писатиму
+  - простий майбутній (simple future) — напишу
+  - буду (I will - auxiliary) — буду робити (imperfective only)
+  - завтра (tomorrow) — завтра вранці
+  - через тиждень (in a week) — через рік/місяць
+  - потім (then/later) — а потім...
+  - скоро (soon) — зовсім скоро
+  - планувати (to plan) — планувати відпустку, планувати зустріч
   recommended:
-  - обіцяти (to promise)
-  - мати намір (to intend)
-  - збиратися (to be going to)
-  - сподіватися (to hope)
-  - гадати (to think/suppose)
+  - обіцяти (to promise) — обіцяти виконати, обіцяти підтримку
+  - мати намір (to intend) — мати серйозний намір, мати намір вступити (formal)
+  - збиратися (to be going to) — збиратися зробити, збиратися в дорогу (high freq
+    spoken)
+  - сподіватися (to hope) — сподіватися на краще, сподіватися, що...
+  - гадати (to think/suppose) — гадати, що... (spoken context)
 activity_hints:
 - type: fill-in
   focus: Compound → synthetic future

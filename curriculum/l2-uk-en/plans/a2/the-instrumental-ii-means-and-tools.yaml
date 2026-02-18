@@ -8,43 +8,54 @@ subtitle: How? By What Means?
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Contrast with з + instrumental (accompaniment)
-  - Direct instrumental for means/manner
+  - 'Contrast with з + instrumental (accompaniment) — learner error: literally translating
+    ''with a pen'' as ''з ручкою'' instead of just ''ручкою'' (Research Error #1:
+    Я пишу з ручкою vs Я пишу ручкою); emphasize the ''No З for Tools'' rule early'
+  - 'Direct instrumental for means/manner — State Standard §4.2.2.5.1: ''Без прийменника:
+    знаряддя і засіб дії: Студент пише новою ручкою''; example: «Діти люблять малювати
+    олівцями»'
 - section: Presentation / Презентація
   points:
-  - Transport by Instrumental (їхати автобусом)
-  - Tools and Instruments (писати ручкою)
+  - 'Transport by Instrumental (їхати автобусом) — learner error: attempting to decline
+    ''метро'' or ''таксі'' (Error #3: *метром* instead of *метро* -> correct: «Я їду
+    метро»); cultural hook: the ''night train'' (нічний поїзд) travel culture'
+  - 'Tools and Instruments (писати ручкою) — learner error: confusion between -ом
+    (hard) and -ем (soft/mixed) endings (Error #2: *олівецом* instead of *олівцем*);
+    examples: ножем, виделкою (Kitchen context)'
   - Body Parts as Instruments
 - section: Practice / Практика
   points:
-  - '"How do you...?" question patterns'
-  - Common expressions review
+  - '''How do you...?'' question patterns — focus on questions ''Як?'' (How?) and
+    ''Чим?'' (With what?) — Note: ''Чим'' specifically asks for the instrument/tool'
+  - 'Common expressions review — collocations: дістатися автобусом, їхати власною
+    машиною'
 - section: Dialogues / Діалоги
   points:
-  - Commute and tool usage scenarios
+  - 'Commute and tool usage scenarios — context: using tools (knife/fork) while sharing
+    food during long train journeys (Cultural Hook #2: Залізниця)'
 vocabulary_hints:
   required:
-  - автобус
-  - трамвай
-  - тролейбус
-  - метро
-  - машина
-  - таксі
-  - поїзд
-  - літак
-  - ручка
-  - олівець
-  - ніж
-  - виделка
-  - ложка
-  - комп'ютер
-  - телефон
+  - автобус (bus) — їхати автобусом, дістатися автобусом
+  - трамвай (tram)
+  - тролейбус (trolleybus)
+  - метро (metro) — їхати метро, дістатися метро (indeclinable)
+  - машина (car) — їхати власною машиною, подорожувати машиною
+  - таксі (taxi) — їхати таксі (indeclinable)
+  - поїзд (train) — їхати нічним поїздом, подорожувати поїздом
+  - літак (plane)
+  - ручка (pen) — писати синьою ручкою, підписати ручкою
+  - олівець (pencil) — малювати олівцем, креслити олівцем
+  - ніж (knife) — різати ножем, чистити ножем
+  - виделка (fork) — їсти виделкою, тримати виделкою
+  - ложка (spoon)
+  - комп'ютер (computer)
+  - телефон (phone)
   recommended:
-  - ножиці
-  - голка
-  - молоток
-  - пензель
-  - очі
+  - ножиці (scissors)
+  - голка (needle)
+  - молоток (hammer)
+  - пензель (brush/paintbrush)
+  - очі (eyes)
 activity_hints:
 - type: fill-in
   focus: Choose correct transport instrumental

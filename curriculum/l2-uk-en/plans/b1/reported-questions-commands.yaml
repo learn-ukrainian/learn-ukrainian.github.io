@@ -8,37 +8,47 @@ subtitle: Reported Questions & Commands
 content_outline:
 - section: Тест
   points:
-  - Diagnostic quiz on indirect questions/commands
+  - Diagnostic quiz on indirect questions/commands — check for common 'що' vs 'чи'
+    confusion and 'ask to do' mistranslations
   - Self-assessment questions
 - section: Пояснення
   points:
-  - Yes/No Questions (Він запитав, чи...)
-  - Wh-Questions (Вона запитала, що/де/коли...)
-  - Reported Commands (Він сказав, щоб я...)
-  - Reported Requests (просити, щоб)
+  - 'Yes/No Questions (Він запитав, чи...) — learner error: using ''що'' instead of
+    ''чи'' for indirect yes/no questions'
+  - 'Wh-Questions (Вона запитала, що/де/коли...) — emphasize falling narrative intonation
+    and removal of question mark; learner error: forgetting pronoun shifts (I -> he/she)'
+  - Reported Commands (Він сказав, щоб я...) — highlight 'щоб' + past tense structure
+    despite present/future meaning; contrast register of 'наказати' (strong/military)
+    vs 'просити' (polite) vs 'вимагати' (demanding)
+  - 'Reported Requests (просити, щоб) — learner error: translating ''ask to action''
+    as ''питати'' instead of ''просити''; cultural hook: preference for indirect politeness
+    (''Чи не могли б ви...?'')'
 - section: Практика
   points:
-  - Report questions and commands
+  - Report questions and commands — practice transforming direct imperatives into
+    polite indirect requests
   - Mixed transformation
 - section: Діалоги
   points:
-  - Indirect questions/commands in conversation
+  - Indirect questions/commands in conversation — highlight 'Ty' vs 'Vy' dynamics
+    in reporting requests (friend vs formal)
   - Everyday scenarios
 vocabulary_hints:
   required:
-  - питання (question)
-  - наказ (command)
-  - прохання (request)
-  - чи (whether)
-  - запитати (to ask)
-  - наказати (to order)
-  - просити (to request)
-  - щоб (that - subjunctive)
+  - питання (question) — поставити питання, вирішити питання, спірне питання
+  - наказ (command) — віддати наказ, виконати наказ, видати наказ
+  - прохання (request) — звернутися з проханням, ввічливе прохання, настійливе прохання
+  - чи (whether) — mandatory for Yes/No indirect questions (avoiding 'що')
+  - запитати (to ask) — запитати дозволу, запитати дорогу, запитати пораду
+  - наказати (to order) — наказати зробити, суворо наказати
+  - просити (to request) — просити допомоги, просити пробачення, просити слова
+  - щоб (that - subjunctive) — used in reported commands/requests with past tense
+    verb (сказав, щоб я зробив)
   recommended:
-  - поцікавитися (to wonder)
-  - вимагати (to demand)
-  - умовляти (to persuade)
-  - заборонити (to forbid)
+  - поцікавитися (to wonder) — polite alternative to 'запитати' in indirect speech
+  - вимагати (to demand) — stronger than 'просити', often implies authority or urgency
+  - умовляти (to persuade) — trying to convince someone to act
+  - заборонити (to forbid) — often used in negative reported commands
 activity_hints:
 - type: fill-in
   focus: Questions and commands to indirect

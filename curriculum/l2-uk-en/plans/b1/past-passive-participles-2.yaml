@@ -8,22 +8,29 @@ subtitle: Past Passive Participles II - Short Forms (-но/-то)
 content_outline:
 - section: Тест
   points:
-  - What are short forms
-  - Impersonal passive meaning
+  - What are short forms — start with realistic signs like «Вхід заборонено» or «Зачинено»
+    as engagement hook
+  - Impersonal passive meaning — emphasis on the fact of action, not the doer (bureaucratic
+    objectivity)
 - section: Пояснення
   points:
-  - Formation -но/-то suffixes
-  - Impersonal passive constructions
-  - Full vs short form
+  - 'Formation -но/-то suffixes — mostly from perfective verbs to show result; learner
+    error: using imperfective stems like «писано» instead of «написано»'
+  - 'Impersonal passive constructions — SYNTAX SHIFT: requires Accusative object («Книгу
+    написано»), not Nominative; cultural hook: official style «Рішення прийнято»'
+  - 'Full vs short form — visual comparison table (Nom vs Acc); learner error: syntactic
+    mismatch «Книга написано» (incorrect) vs «Книгу написано» (correct)'
 - section: Практика
   points:
-  - Transform full to short
-  - Create impersonal sentences
+  - Transform full to short — focus on changing Nominative subject to Accusative object
+  - Create impersonal sentences — use high-frequency result verbs like «зроблено»,
+    «написано»
 - section: Діалоги
   points:
-  - Common short form expressions
-  - Signs and announcements
-  - Real-world usage
+  - Common short form expressions — «Вхід заборонено», «Перерву закінчено»
+  - 'Signs and announcements — «Обережно, пофарбовано!»; historical resonance: «Акт
+    проголошено», «Універсал підписано»'
+  - Real-world usage — store hours «магазин відчинено/зачинено»
 - section: Потрібно більше практики?
   points:
   - Additional exercises
@@ -31,17 +38,20 @@ vocabulary_hints:
   required:
   - коротка форма (short form)
   - безособовий (impersonal)
-  - написано (written - impersonal)
-  - зроблено (done - impersonal)
-  - заборонено (forbidden)
-  - дозволено (permitted)
+  - написано (written - impersonal) — як тут написано, чорним по білому написано
+  - зроблено (done - impersonal) — роботу зроблено, це було зроблено вчасно
+  - заборонено (forbidden) — вхід заборонено, суворо заборонено
+  - дозволено (permitted) — тут дозволено паркуватися
   - відкрито (opened - impersonal)
-  - завершено (completed)
+  - завершено (completed) — перерву завершено
   recommended:
   - наголос (emphasis)
   - орудний відмінок (instrumental case)
   - агент (agent)
   - оголошення (announcement)
+  - зачинено (closed) — магазин зачинено, двері зачинено
+  - пофарбовано (painted) — обережно, пофарбовано!
+  - проголошено (proclaimed) — акт проголошено (historical context)
 activity_hints:
 - type: fill-in
   focus: Full to short form

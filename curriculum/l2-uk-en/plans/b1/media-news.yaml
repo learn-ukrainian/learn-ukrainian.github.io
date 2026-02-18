@@ -8,24 +8,31 @@ subtitle: Media and News
 content_outline:
 - section: Вступ
   points:
-  - Ukrainian media overview
-  - Types of media
+  - 'Ukrainian media overview — cultural hook: Suspilne (2017) as independent public
+    broadcaster'
+  - 'Types of media — standard alignment: §3.4 covers press, radio, TV, internet'
   - News vocabulary basics
 - section: Вживання
   points:
-  - Collocations patterns
-  - Register considerations
-  - Application domains, key expressions
+  - 'Collocations patterns — learner error: confusion between «транслювати» (broadcast)
+    and «перекладати» (translate)'
+  - Register considerations — distinct formal reporting lexis vs. informal discussion
+  - 'Application domains, key expressions — avoid Russianisms: «брати участь» not
+    «приймати участь», «порушувати питання» not «піднімати питання»'
 - section: Читання
   points:
   - News article
-  - Ukrainian media overview
-  - Blog (informal)
+  - 'Ukrainian media overview — cultural hook: «Алло, алло, алло! Говорить Харків!»
+    (1924) as start of broadcasting history'
+  - 'Blog (informal) — modernity note: include Telegram channels and podcasts as key
+    modern sources'
 - section: Діалоги
   points:
-  - News discussion (informal)
-  - In the editorial office (formal)
-  - Fact-checking, media expert interview
+  - News discussion (informal) — focus on discussing content as leisure/rest activity
+  - 'In the editorial office (formal) — case usage note: «повідомляти» + Accusative
+    (fact) vs. Dative (person)'
+  - Fact-checking, media expert interview — introduce concept of «медіаграмотність»
+    (media literacy)
 - section: Лексика
   points:
   - Seven vocabulary groups
@@ -37,18 +44,20 @@ content_outline:
   - Practice recommendations
 vocabulary_hints:
   required:
-  - новини (news)
-  - стаття (article)
-  - журналіст (journalist)
+  - новини (news) — свіжі/останні/термінові новини, дивитися/читати новини, стрічка
+    новин
+  - стаття (article) — писати/публікувати статтю, аналітична/наукова стаття
+  - журналіст (journalist) — військовий/спортивний журналіст, журналістське розслідування
   - телебачення (television)
   - газета (newspaper)
   - репортаж (report)
-  - повідомляти (to report)
+  - 'повідомляти (to report) — grammar: + Accusative (news/fact), + Dative (person)'
   - висвітлювати (to cover/highlight)
   recommended:
-  - редакція (editorial office)
-  - трансляція (broadcast)
-  - подкаст (podcast)
+  - редакція (editorial office) — працювати в редакції, редакційна політика
+  - трансляція (broadcast) — пряма трансляція, вести трансляцію
+  - ЗМІ (media) — засоби масової інформації, роль ЗМІ, сучасні ЗМІ
+  - 'подкаст (podcast) — modernity: digital news source'
   - оприлюднювати (to publish/release)
 activity_hints:
 - type: match-up

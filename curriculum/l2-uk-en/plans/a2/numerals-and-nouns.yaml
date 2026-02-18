@@ -8,22 +8,40 @@ subtitle: Counting Things Correctly
 content_outline:
 - section: Introduction / Вступ
   points:
-  - The concept of 'Zones' in Ukrainian counting
-  - Why English logic fails here
+  - 'The concept of ''Zones'' in Ukrainian counting — use the mental model of Zone
+    1 (1), Zone 2 (2-4), Zone 3 (5-20) to simplify logic — Zone 1: ''1'' (Gender agreement);
+    Zone 2: ''2-4'' (Nominative Plural); Zone 3: ''5-20'' (Genitive Plural)'
+  - 'Why English logic fails here — mention State Standard §4.2.1.3 regarding quantitative
+    designation — learner error: assuming plural ''s'' works for all numbers > 1'
 - section: Presentation / Презентація
   points:
-  - Zone 1: One (Agreement in gender)
-  - Zone 2: Two, Three, Four (The dual trace - Genitive Singular)
-  - Zone 3: Five to Twenty (The Genitive Plural zone)
-  - Compound Numbers: The 'Last Digit' Rule
-  - Exceptions: 11-14
+  - 'Zone 1: One (Agreement in gender) — learner error: forgetting gender agreement
+    for ''один''/''одна''/''одне'' (e.g., ''два пляшки'' instead of ''дві пляшки'');
+    collocations: один долар, одна година, одне вікно'
+  - 'Zone 2: Two, Three, Four (The dual trace - Genitive Singular) — cultural hook:
+    The Dual Legacy (Двоїна) explains the specific stress patterns that echo the old
+    dual number; learner error: L1 Interference (Russian) often leads to using Genitive
+    Singular (два стола) instead of Ukrainian Nominative Plural (два столи)'
+  - 'Zone 3: Five to Twenty (The Genitive Plural zone) — learner error: The ''11-14''
+    Trap — learners often apply the ''Last Digit Rule'' (1-4) to teens, forgetting
+    they belong entirely to Zone 3; collocations: п''ять гривень, десять євро, двадцять
+    хвилин'
+  - 'Compound Numbers: The ''Last Digit'' Rule — emphasize that only the *last word*
+    determines the agreement zone (e.g., 21 -> Zone 1, 22 -> Zone 2)'
+  - 'Exceptions: 11-14 — reinforce that 11-14 belong strictly to Zone 3 (Genitive
+    Plural) despite ending in 1-4'
 - section: Practice / Практика
   points:
-  - Market counting drills
-  - Currency agreement (Gryvnia/Dollar)
+  - Market counting drills — use market context (ринок) for natural repetition of
+    counting currency (гривні) and products (яблука, пляшки)
+  - 'Currency agreement (Gryvnia/Dollar) — cultural hook: Kyivan Rus Currency — ''Gryvnia''
+    was a unit of weight in IX-XIII centuries; collocations: дві гривні vs п''ять
+    гривень, один долар vs три долари'
 - section: Dialogues / Діалоги
   points:
-  - Buying products in specific quantities at a market
+  - 'Buying products in specific quantities at a market — include Animacy distinction
+    (Accusative case): ''Бачу два столи'' (inanimate = Nom) vs ''Бачу двох друзів''
+    (animate = Gen-like form)'
 activity_hints:
 - type: quiz
   focus: Accusative with numerals (animate vs inanimate)
@@ -58,3 +76,17 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Inventory Manager
+vocabulary_hints:
+  required:
+  - один / одна / одне (one) — один долар, одна година, одне вікно
+  - 'два / дві (two) — два квитки, дві гривні, дві пляшки — learner error: gender
+    agreement'
+  - три (three) — три дні, три гривні — Zone 2 agreement
+  - чотири (four) — чотири роки — Zone 2 agreement
+  - п'ять (five) — п'ять гривень, п'ять доларів — Zone 3 agreement
+  - десять (ten) — десять євро, десять хвилин — Zone 3 agreement
+  - двадцять (twenty) — двадцять хвилин — Zone 3 agreement
+  - 'гривня (hryvnia) — три гривні, п''ять гривень, десять гривень — Cultural note:
+    Kyivan Rus currency'
+  - долар (dollar) — один долар, три долари, п'ять доларів
+  - євро (euro) — десять євро — Indeclinable noun

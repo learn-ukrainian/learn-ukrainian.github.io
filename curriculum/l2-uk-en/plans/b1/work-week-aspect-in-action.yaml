@@ -8,41 +8,53 @@ subtitle: Work Week - Aspect in Real-Life Context
 content_outline:
 - section: Тест
   points:
-  - Diagnostic contrast for workplace aspect usage
-  - Intuition check
+  - Diagnostic contrast for workplace aspect usage — focus on Process vs. Result confusion
+    (робив vs зробив)
+  - Intuition check — check gender agreement with 'дедлайн' (masculine)
 - section: Пояснення
   points:
-  - Aspect in workplace context
-  - Plans and tasks (ДВ)
-  - Progress reports (НДВ)
-  - Weekly communication patterns
+  - Aspect in workplace context — aligned with State Standard §4.2.3.1 (Aspect in
+    all tenses, work theme)
+  - 'Plans and tasks (ДВ) — collocations: ставити завдання, термінове завдання'
+  - 'Progress reports (НДВ) — collocations: складати звіт, подавати звіт'
+  - 'Weekly communication patterns — cultural hook: Standard 40h week vs. Flexible
+    IT schedules (гнучкий графік)'
 - section: Практика
   points:
-  - Decision-making framework
-  - Common mistakes section
+  - 'Decision-making framework — visual metaphor: Wavy line (process/imperfective)
+    vs. X mark (result/perfective)'
+  - 'Common mistakes section — learner error: Using Perfective in Present (e.g., *Я
+    напишу зараз* instead of *Я пишу зараз*)'
 - section: Діалоги
   points:
-  - 5-6 authentic dialogues
-  - Grammar in natural context
-  - Various situations
+  - '5-6 authentic dialogues — scenario: The ''Deadline'' vs ''Реченець'' debate (purist
+    vs. modern usage)'
+  - 'Grammar in natural context — collocations: призначити/скасувати/перенести зустріч'
+  - 'Various situations — scenario: Missing a deadline (пропустити дедлайн/кінцевий
+    термін)'
 vocabulary_hints:
   required:
-  - завдання (task)
-  - звіт (report)
-  - зустріч (meeting)
-  - дедлайн (deadline)
-  - проект (project)
-  - колега (colleague)
-  - начальник (boss)
-  - офіс (office)
-  - робочий день (workday)
-  - робочий тиждень (work week)
+  - 'завдання (task) — collocations: виконувати завдання, ставити завдання, термінове
+    завдання'
+  - 'звіт (report) — collocations: складати звіт, подавати звіт, річний звіт'
+  - 'зустріч (meeting) — collocations: призначити зустріч, скасувати зустріч, перенести
+    зустріч'
+  - 'дедлайн (deadline) — collocations: жорсткий дедлайн, пропустити дедлайн, вкластися
+    в дедлайн; synonyms: кінцевий термін, реченець'
+  - 'проект (project) — context: working on a project (працювати над проектом - НДВ)
+    vs finished a project (закінчити проект - ДВ)'
+  - 'колега (colleague) — context: discussing tasks with colleagues'
+  - 'начальник (boss) — context: reporting to the boss (звітувати перед начальником)'
+  - 'офіс (office) — context: working in the office vs remote work (віддалена робота)'
+  - робочий день (workday) — standard vs flexible hours
+  - робочий тиждень (work week) — 40-hour standard
   recommended:
-  - презентація (presentation)
-  - нарада (meeting/conference)
-  - план (plan)
-  - графік (schedule)
-  - відпустка (vacation/leave)
+  - 'презентація (presentation) — collocations: готувати презентацію (process), підготувати
+    презентацію (result)'
+  - 'нарада (meeting/conference) — collocations: проводити нараду, бути на нараді'
+  - 'план (plan) — context: making plans vs realizing plans'
+  - 'графік (schedule) — collocations: гнучкий графік (flexible schedule)'
+  - 'відпустка (vacation/leave) — context: going on leave (йти у відпустку)'
 activity_hints:
 - type: fill-in
   focus: Work reports with correct aspect

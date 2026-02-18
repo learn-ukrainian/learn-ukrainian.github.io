@@ -8,51 +8,81 @@ subtitle: The Treaties of Zboriv and Bila Tserkva
 content_outline:
 - section: 'Вступ: Між перемогами та миром'
   points:
-  - Diplomatic situation after Zboriv (1649)
-  - The goals of the Hetmanate vs. the Crown
+  - 'Diplomatic situation after Zboriv (1649) — context of the English Revolution
+    (execution of Charles I) and the Fronde in France: a world in turmoil; cultural
+    hook: [!context]'
+  - The goals of the Hetmanate vs. the Crown — shift from seeking 'pardon' to the
+    goal of 'liberating the Rus' people from Polish bondage'
 - section: 'Зборівський договір (1649): Перше визнання'
   points:
-  - 'Key conditions: 40,000 register, three voivodeships'
-  - Legal status of the Hetmanate
-  - The role of the Orthodox Church
+  - 'Key conditions: 40,000 register, three voivodeships — signed August 18, 1649;
+    exclusion of Crown army from Kyiv, Bratslav, and Chernihiv voivodeships'
+  - 'Legal status of the Hetmanate — factual recognition of a separate territory and
+    administration (Orthodox nobility only); engagement hook: [!history-bite] regarding
+    the ban on Jesuit colleges'
+  - The role of the Orthodox Church — the Metropolitan of Kyiv granted a seat in the
+    Senate (though opposed by Catholic bishops)
 - section: Берестечко та поворот подій
   points:
-  - The impact of the 1651 defeat
-  - Shift in the balance of power
+  - The impact of the 1651 defeat — the scale of the battle (largest in 17th-century
+    Europe); the tactical masterpiece of Bohun's retreat
+  - 'Shift in the balance of power — the retreat of Islam-Girey and Khmelnytsky''s
+    captivity; engagement hook: [!myth-buster] on the ''Tatar betrayal'' vs. geopolitical
+    pragmatism'
 - section: 'Білоцерківський договір (1651): Гіркий компроміс'
   points:
-  - Reduction of the register (20,000)
-  - Territorial losses (only Kyiv voivodeship)
-  - Social tension and dissatisfaction among Cossacks
+  - Reduction of the register (20,000) — signed September 28, 1651; drastic cut from
+    the previous 40k
+  - Territorial losses (only Kyiv voivodeship) — Bratslav and Chernihiv voivodeships
+    return to Polish administration
+  - 'Social tension and dissatisfaction among Cossacks — the prohibition of foreign
+    relations (especially with Crimea); engagement hook: [!decolonization] ''Not a
+    defeat, but a pause'''
 - section: 'Читання: Тексти угод'
   points:
-  - Analysis of the Zboriv articles
+  - 'Analysis of the Zboriv articles — comparison of preambles: ''Declaration of Grace''
+    (Zboriv) vs. ''Humble Subjecthood'' (Bila Tserkva)'
 - section: Первинні джерела
   points:
-  - Ossonlinski and Khmelnytsky quotes
+  - 'Ossonlinski and Khmelnytsky quotes — Jerzy Ossoliński: ''The only means of salvation
+    is to separate the Tatars from the Cossacks''; Khmelnytsky on divine providence
+    and victory'
 - section: 'Аналіз: Дипломатія як мистецтво можливого'
   points:
-  - Khmelnytsky's tactical retreat
-  - Preserving the core of the state
+  - Khmelnytsky's tactical retreat — Zboriv provided legitimacy, Bila Tserkva provided
+    time
+  - Preserving the core of the state — treaties as acts of state-building, not just
+    truce in a rebellion
 - section: 'Деколонізаційний погляд: Вихід з-під польського права'
   points:
-  - Treaties as steps towards total sovereignty
-  - Debunking the 'betrayal' narrative
+  - 'Treaties as steps towards total sovereignty — engagement hook: [!analysis] on
+    ''Subjecthood'' (international recognition); debunking the Soviet myth of ''class
+    struggle'''
+  - 'Debunking the ''betrayal'' narrative — contested terms: ''Treason'' vs. ''Pragmatic
+    Politics'' regarding the Crimean Khanate'
 - section: Спадщина угод та історична пам'ять
   points:
-  - Impact on future legal acts
+  - Impact on future legal acts — Zboriv as the prototype for the Union of Hadiach
+    (1658); the lesson that diplomacy requires a strong army (Berestechko -> Bila
+    Tserkva)
 vocabulary_hints:
   required:
-  - угода
-  - компроміс
-  - автономія
-  - ратифікація
-  - воєводство
-  - амністія
-  - шляхта
-  - реєстр
-  - легітимність
-  - поступка
+  - угода (agreement/treaty) — Зборівська угода, підписати угоду
+  - компроміс (compromise) — піти на компроміс, вимушений компроміс
+  - автономія (autonomy) — широка автономія, урізана автономія
+  - ратифікація (ratification) — ратифікація сеймом, чекати ратифікації
+  - воєводство (voivodeship) — Київське воєводство, три воєводства
+  - амністія (amnesty) — повна амністія, оголосити амністію
+  - шляхта (nobility) — православна шляхта, права шляхти
+  - реєстр (register) — козацький реєстр, скорочення реєстру
+  - легітимність (legitimacy) — державна легітимність, визнання легітимності
+  - поступка (concession) — територіальні поступки, дипломатичні поступки
+  recommended:
+  - сейм (Sejm/Parliament) — рішення сейму
+  - митрополит (Metropolitan) — Київський митрополит
+  - універсал (Universal/Manifesto) — гетьманський універсал
+  - суверенітет (sovereignty) — кроки до суверенітету
+  - геополітика (geopolitics) — складна геополітика
 activity_hints:
 - type: reading
   focus: Analysis of diplomatic documents

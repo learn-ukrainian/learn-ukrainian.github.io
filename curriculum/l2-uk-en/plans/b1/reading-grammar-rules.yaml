@@ -8,43 +8,53 @@ subtitle: Understanding grammar explanations in Ukrainian
 content_outline:
 - section: Introduction - Reading Grammar in Ukrainian
   points:
-  - Why understanding instruction patterns matters
-  - Common grammar textbook structure
+  - 'Why understanding instruction patterns matters — aligns with State Standard §3.8:
+    Organization of educational process (understanding lectures, exams)'
+  - 'Common grammar textbook structure — visual focus: use textbook snippets/screenshots
+    and decode them'
   - Preparation for full immersion
 - section: Grammar Explanation Patterns
   points:
-  - '"X використовується, коли..." (X is used when...)'
+  - '"X використовується, коли..." (X is used when...) — collocations: часто використовується,
+    як правило використовується'
   - '"X показує..." (X shows...)'
-  - '"X означає..." (X means...)'
+  - '"X означає..." (X means...) — collocations: що це означає, слово означає, це
+    не означає'
 - section: Instruction Words
   points:
-  - порівняйте, зверніть увагу
+  - 'порівняйте, зверніть увагу — collocations: порівняйте речення, порівняйте з'
   - наприклад, тобто, отже
 - section: Comparison Patterns
   points:
-  - на відміну від
+  - 'на відміну від — collocation: суттєва відмінність (essential difference)'
   - подібно до
 - section: Activity Instruction Verbs
   points:
   - виберіть, знайдіть, з'єднайте
   - розташуйте, доповніть, натисніть
   - перекладіть, складіть
-  - Understanding what activities ask you to do
+  - 'Understanding what activities ask you to do — key insight: identifying the verb
+    is 80% of understanding the task'
 - section: Analytical Terms
   points:
   - контекст, маркер, частота
   - аспектуальна пара
-  - Using these terms in grammar discussion
+  - 'Using these terms in grammar discussion — learner error warning: use «брати участь»
+    not «приймати участь» (calque)'
 - section: Style and Register Terminology
   points:
-  - стиль, регістр
+  - стиль, регістр — aligns with State Standard §4.5.1 Stylistics (distinguishing
+    formal vs informal)
   - розмовна мова, літературна мова, формальна мова
-  - Recognizing style markers in texts
+  - 'Recognizing style markers in texts — cultural hook: Іван Огієнко (Metropolitan
+    Ilarion) and his «12 Language Commandments» on standard language'
 - section: Word Formation Terms
   points:
-  - корінь, префікс, суфікс
+  - 'корінь, префікс, суфікс — cultural hook: Мелетій Смотрицький (1619), author of
+    first grammar, established the system of declensions'
   - основа, закінчення
-  - Analyzing word structure
+  - 'Analyzing word structure — learner error: confusion of «утворіть» (morphological
+    form) vs «зробіть» (general task); case error: «навчання чогось» (Genitive)'
 - section: Practice
   points:
   - Reading authentic grammar explanations
@@ -57,10 +67,11 @@ content_outline:
   - Readiness check for M04
 vocabulary_hints:
   required:
-  - використовується (is used)
+  - використовується (is used) — часто використовується, використовується для, як
+    правило використовується
   - показує (shows)
-  - означає (means)
-  - порівняйте (compare)
+  - означає (means) — що це означає, слово означає, це не означає
+  - порівняйте (compare) — порівняйте речення, порівняйте з, порівняйте таблиці
   - зверніть увагу (note, pay attention)
   - виберіть (choose)
   - знайдіть (find)
@@ -71,7 +82,7 @@ vocabulary_hints:
   - частота (frequency)
   - аспектуальна пара (aspectual pair)
   - розмовна мова (colloquial language)
-  - літературна мова (literary language)
+  - 'літературна мова (literary language) — context: Ohiienko''s standardization'
   - формальна мова (formal language)
 activity_hints:
 - type: mark-the-words

@@ -8,32 +8,39 @@ subtitle: 'Emotions: Deep Dive'
 content_outline:
 - section: Вступ
   points:
-  - Beyond basic emotions
-  - Nuance and intensity
-  - Cultural expression
+  - 'Beyond basic emotions — grammar focus: Dative Experiencer (Мені сумно) vs Nominative
+    Agent (Я сумую)'
+  - Nuance and intensity — distinguish *сум* (sadness), *туга* (yearning), and *розпач*
+    (despair)
+  - 'Cultural expression — cultural hook: Cordocentrism (heart-centered worldview)
+    and *Зажура* (poetic sadness)'
 - section: Читання
   points:
-  - Emotional texts
-  - Describing feelings
+  - 'Emotional texts — focus on high-frequency states: *радість*, *тривога*, *захоплення*'
+  - 'Describing feelings — learner error: "Я відчуваю себе добре" (calque) → use "Я
+    почуваюся добре"'
 - section: Діалоги
   points:
-  - Describe feelings precisely
-  - Express emotional nuance
+  - 'Describe feelings precisely — use collocations: *щира радість*, *глибокий смуток*,
+    *бити на сполох*'
+  - 'Express emotional nuance — learner error: *переживати* (survive/suffer) vs *хвилюватися*
+    (worry/anxious)'
 vocabulary_hints:
   required:
-  - радість (joy)
-  - смуток (sadness)
-  - тривога (anxiety)
-  - захоплення (admiration/excitement)
-  - розчарування (disappointment)
-  - гнів (anger)
-  - страх (fear)
-  - відчувати (to feel)
+  - радість (joy) — щира/непідробна радість, стрибати з радості, сльози радості
+  - смуток (sadness) — глибокий смуток, смуток охопив, розвіяти смуток
+  - тривога (anxiety) — відчувати тривогу, бити на сполох, повітряна тривога
+  - захоплення (admiration/excitement) — викликати захоплення, дивитися із захопленням,
+    щире захоплення
+  - розчарування (disappointment) — гірке розчарування, спіткало розчарування
+  - гнів (anger) — праведний гнів, приборкати гнів, спалах гніву
+  - страх (fear) — відчувати страх
+  - відчувати (to feel) — відчувати підтримку, відчувати страх, відчувати натхнення
   recommended:
-  - ностальгія (nostalgia)
-  - натхнення (inspiration)
-  - відчай (despair)
-  - заздрість (envy)
+  - ностальгія (nostalgia) — світлий смуток (related concept)
+  - натхнення (inspiration) — відчувати натхнення
+  - відчай (despair) — синонім до розпач
+  - заздрість (envy) — чорна/біла заздрість (idiomatic)
 activity_hints:
 - type: match-up
   focus: Match emotions to descriptions

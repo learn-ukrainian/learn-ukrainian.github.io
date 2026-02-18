@@ -8,41 +8,52 @@ subtitle: Motion - Starting & Returning
 content_outline:
 - section: Діагностика
   points:
-  - Prefix diagnostic
-  - Intuition check
+  - 'Prefix diagnostic — діалог про хаотичний ранок: спроба зайти в переповнену маршрутку,
+    забігти в кіоск'
+  - Intuition check — перевірка розуміння різниці між «йти» та «піти», «їхати» та
+    «поїхати»
 - section: Пояснення
   points:
-  - по-, за-, роз- prefixes
-  - Starting, stopping by, dispersing
+  - по-, за-, роз- prefixes — семантика початку (по-), відвідування/входу (за-) та
+    розходження (роз-); State Standard §4.3.8
+  - 'Starting, stopping by, dispersing — «поїхати» (start trip), «зайти» (visit/enter),
+    «розійтися» (disperse); learner error: плутанина префіксів руху з іншими значеннями'
 - section: Поглиблення
   points:
-  - Extended patterns
-  - Nuanced usage
+  - 'Extended patterns — розрізнення «зайти за кимось» (пішки) та «заїхати за кимось»
+    (транспортом); preposition confusion: «зайти в» vs «зайти за»'
+  - 'Nuanced usage — «зайти» (casual) vs «увійти» (formal); cultural hook: традиція
+    «На коня» перед тим, як гості розійдуться'
 - section: Практика
   points:
-  - Prefix selection exercises
+  - 'Prefix selection exercises — фокус на виборі між транспортом (їхати) та ходою
+    (йти); learner error: «піти до Львова» замість «поїхати»'
 - section: Діалоги
   points:
-  - Movement dialogues
-  - Natural usage
+  - 'Movement dialogues — сценарій від''їзду; cultural hook: звичай «Присісти на дорогу»
+    перед виходом з дому'
+  - 'Natural usage — етикет транспорту: «Спочатку виходять, потім заходять»; colloquial
+    usage: «заскочити» (pop in)'
 vocabulary_hints:
   required:
-  - піти/виходити (to leave on foot)
-  - поїхати/виїжджати (to leave by vehicle)
-  - зайти/заходити (to stop by on foot)
-  - заїхати/заїжджати (to stop by in vehicle)
-  - розійтися/розходитися (to disperse on foot)
-  - роз'їхатися/роз'їжджатися (to disperse by vehicle)
-  - початок (beginning)
-  - зупинка (stop)
-  - розходження (dispersal)
-  - напрямок (direction)
+  - піти/виходити (to leave on foot/exit) — вийти з дому, вийти на зупинці
+  - поїхати/виїжджати (to leave by vehicle/exit) — поїхати у відпустку, виїхати з
+    міста
+  - зайти/заходити (to stop by on foot) — зайти в гості, зайти в магазин, зайти по
+    дорозі
+  - заїхати/заїжджати (to stop by in vehicle) — заїхати за кимось, заїхати на заправку
+  - розійтися/розходитися (to disperse on foot) — розійтися по домівках, думки розійшлися
+  - роз'їхатися/роз'їжджатися (to disperse by vehicle) — гості роз'їхалися
+  - 'початок (beginning) — context: початок руху'
+  - зупинка (stop) — вийти на зупинці
+  - 'розходження (dispersal) — context: шляхи розійшлися'
+  - 'напрямок (direction) — context: змінити напрямок руху'
   recommended:
-  - побігти (to start running)
-  - забігти (to run in briefly)
-  - розбігтися (to scatter running)
-  - заскочити (to pop in quickly)
-  - затриматися (to linger)
+  - побігти (to start running) — побігти на автобус
+  - забігти (to run in briefly) — забігти в аптеку
+  - розбігтися (to scatter running) — діти розбіглися
+  - 'заскочити (to pop in quickly) — colloquial: заскочити на каву'
+  - затриматися (to linger) — затриматися на роботі
 activity_hints:
 - type: quiz
   focus: по- vs за- vs роз- selection

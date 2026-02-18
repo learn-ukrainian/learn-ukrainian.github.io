@@ -9,37 +9,44 @@ content_outline:
 - section: Тест
   points:
   - Compare two narratives
-  - Deduce rule (One vs Many)
+  - Deduce rule (One vs Many) — use visual timeline (Dots on a line vs One big X)
+    per research
 - section: Пояснення
   points:
-  - Single events (markers: once, that time)
-  - Repeated actions (markers: always, often)
-  - Contrast table
-  - Special cases (once, long ago)
+  - 'Single events (markers: once, that time) — cultural hook: «Одного разу...» as
+    canonical folk tale opener'
+  - 'Repeated actions (markers: always, often) — cultural hook: «щонеділі» associations
+    with family rituals'
+  - 'Contrast table — explicit contrast: «читав» (process/habit) vs «прочитав» (result)'
+  - 'Special cases (once, long ago) — learner error: confusion with English «used
+    to» (just past imperfective)'
 - section: Практика
   points:
   - Selection algorithm
-  - Common mistakes
+  - 'Common mistakes — learner error: Perfective for Habitual Actions (Він прочитав
+    книгу щодня)'
   - Aspect in daily life
 - section: Діалоги
   points:
-  - School memories
+  - 'School memories — context: habits (used to) vs specific events'
   - Summer stories
   - Work experience
 - section: Підсумок
   points:
-  - Summary of markers
+  - Summary of markers — review frequency adverbs
   - Self-check
 vocabulary_hints:
   required:
-  - одного разу (once)
-  - щодня (every day)
-  - часто (often)
-  - іноді (sometimes)
-  - зазвичай (usually)
-  - того разу (that time)
+  - 'одного разу (once) — collocations: одного разу вранці/вночі, одного разу він
+    вирішив'
+  - 'щодня (every day) — collocations: робити щодня, щодня бачити; synonym: кожного
+    дня'
+  - 'часто (often) — collocations: дуже часто, досить часто'
+  - 'іноді (sometimes) — collocations: тільки іноді, іноді навіть, іноді буває'
+  - 'зазвичай (usually) — collocations: як зазвичай, він зазвичай'
+  - 'того разу (that time) — collocations: саме того разу, пам''ятаю того разу'
   - того дня (that day)
-  - завжди (always)
+  - 'завжди (always) — collocations: назавжди (forever), завжди був, завжди казав'
   - ніколи (never)
   - рідко (rarely)
   recommended:

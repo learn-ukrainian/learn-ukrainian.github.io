@@ -8,41 +8,54 @@ subtitle: Travel Arrangements
 content_outline:
 - section: Warm-up
   points:
-  - Види транспорту між містами (поїзд, автобус, маршрутка)
-  - Залізничні вокзали України
+  - Види транспорту між містами (поїзд, автобус, маршрутка) — distinction between
+    `вокзал` (major hub) and `станція/зупинка` (local stop)
+  - Залізничні вокзали України — focus on `вокзал` context; use collocations 'центральний
+    вокзал', 'залізничний вокзал'
 - section: Presentation
   points:
-  - Запит квитка (Один квиток до..., будь ласка)
-  - Уточнення (Туди й назад / В один бік)
-  - Клас та місце (Купе / Плацкарт / Сидячий)
-  - Розклад (О котрій відправлення? / Коли прибуття?)
-  - Платформа (На якій платформі? / В якому вагоні?)
+  - 'Запит квитка (Один квиток до..., будь ласка) — learner error: using `в` instead
+    of `до` + Genitive for cities; learner error: gender agreement `одна квиток` instead
+    of `один квиток` (masculine); State Standard: introduces high-frequency `до` +
+    Genitive structure'
+  - Уточнення (Туди й назад / В один бік) — teach as fixed vocabulary chunks
+  - 'Клас та місце (Купе / Плацкарт / Сидячий) — cultural hook: Platzkart culture
+    (sharing food like roast chicken/eggs, social space)'
+  - Розклад (О котрій відправлення? / Коли прибуття?) — use `о котрій?` for schedule
+    questions as per A1 standard
+  - 'Платформа (На якій платформі? / В якому вагоні?) — cultural hook: tea served
+    by conductors (`провідники`) in traditional silver-colored glass holders (`підстаканники`)'
 - section: Practice
   points:
-  - Діалог 1: Купівля квитка на поїзд до Львова
-  - Діалог 2: Запитання про розклад автобусів
-  - Діалог 3: Зміна квитка
+  - 'Діалог 1: Купівля квитка на поїзд до Львова — focus on polite request format
+    `Мені, будь ласка...`; use correct `до Львова` (Genitive)'
+  - 'Діалог 2: Запитання про розклад автобусів — reinforce usage of `автовокзал` vs
+    `автостанція`'
+  - 'Діалог 3: Зміна квитка'
 - section: Warm-up 2
   points:
-  - Наратив про подорож у Карпати
+  - Наратив про подорож у Карпати — integrate mention of tea in glass holders and
+    conductor interaction
   - Практична лексика в контексті
 vocabulary_hints:
   required:
-  - квиток (ticket)
-  - поїзд (train)
-  - автобус (bus)
-  - вокзал (station)
-  - платформа (platform)
-  - місце (seat)
-  - відправлення (departure)
-  - прибуття (arrival)
+  - 'квиток (ticket) — collocations: купити квиток, один квиток (masculine agreement),
+    електронний квиток'
+  - 'поїзд (train) — collocations: сісти на поїзд, швидкий поїзд, поїзд №...'
+  - автобус (bus) — contrast with `маршрутка` (minibus)
+  - 'вокзал (station) — collocations: центральний вокзал, залізничний вокзал; distinct
+    from `зупинка`'
+  - 'платформа (platform) — usage: на першій платформі, яка платформа?'
+  - 'місце (seat) — context: нижнє/верхнє місце (lower/upper berth)'
+  - 'відправлення (departure) — usage: о котрій відправлення?'
+  - 'прибуття (arrival) — usage: коли прибуття?'
   recommended:
-  - каса (ticket office)
-  - розклад (schedule)
-  - вагон (carriage)
-  - пересадка (transfer)
-  - туди й назад (round trip)
-  - купе (compartment)
+  - 'каса (ticket office) — collocations: квиткова каса, де каса?'
+  - 'розклад (schedule) — collocations: розклад поїздів, за розкладом'
+  - 'вагон (carriage) — usage: в якому вагоні?'
+  - 'пересадка (transfer) — context: з пересадкою / без пересадки'
+  - туди й назад (round trip) — fixed phrase chunk
+  - 'купе (compartment) — cultural context: sleeping car types'
 activity_hints:
 - type: fill-in
   focus: Ticket purchase conversation

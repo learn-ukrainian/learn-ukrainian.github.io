@@ -8,38 +8,47 @@ subtitle: Talking About What You Don't Have
 content_outline:
 - section: Warm-up
   points:
-  - Ситуація відсутності (У мене немає...)
-  - Контраст є vs немає
+  - 'Ситуація відсутності (У мене немає...) — learner error: using Nominative after
+    немає (e.g., *У мене немає квиток*)'
+  - Контраст є vs немає — focus on ready-made communicative models per State Standard
+    §4.0
 - section: Presentation
   points:
-  - Конструкція немає + родовий (Немає часу)
-  - 'Закінчення: -а/-я для чоловічого, -и/-і для жіночого'
-  - Прийменник без + родовий (кава без цукру)
-  - 'Заперечення: не маю + родовий'
+  - Конструкція немає + родовий (Немає часу) — include fixed formulaic phrases 'немає
+    часу', 'немає грошей' (plural exception)
+  - 'Закінчення: -а/-я для чоловічого, -и/-і для жіночого — learner error: confusing
+    masculine endings -а (concrete) vs -у (abstract like ''часу'')'
+  - 'Прийменник без + родовий (кава без цукру) — key collocations: без цукру, без
+    молока, без квитка'
+  - 'Заперечення: не маю + родовий — learner error: confusing ''немає'' (absence)
+    with particle ''не'' (negation)'
 - section: Practice
   points:
-  - Трансформація називний → родовий
-  - Речення з немає та без
-  - Діалоги "У тебе є...? — Ні, немає"
+  - Трансформація називний → родовий — use a simple Visual Mapping table (Nom → Gen)
+    like хліб → хліба, вода → води
+  - Речення з немає та без — focus on high frequency items (цукор, квиток, час)
+  - Діалоги "У тебе є...? — Ні, немає" — use softened refusals context
 - section: Cultural Insight
   points:
-  - Типові вирази з немає (Немає проблем!)
-  - Ввічливі відмови в українській культурі
+  - Типові вирази з немає (Немає проблем!) — ubiquitous phrase reflecting helpful/flexible
+    attitude; include proverb 'Немає диму без вогню'
+  - Ввічливі відмови в українській культурі — using factual 'немає' to soften a direct
+    refusal (e.g., 'Вибачте, хліба немає')
 vocabulary_hints:
   required:
-  - немає (there is no)
-  - без (without)
-  - час (time)
-  - гроші (money)
-  - молоко (milk)
-  - цукор (sugar)
-  - вода (water)
-  - хліб (bread)
+  - немає (there is no) — немає часу, немає проблем, немає грошей
+  - без (without) — без цукру, без молока, без квитка
+  - 'час (time) — немає часу (Gen: часу)'
+  - 'гроші (money) — немає грошей (Gen: грошей)'
+  - молоко (milk) — без молока
+  - 'цукор (sugar) — без цукру, немає цукру (Gen: цукру)'
+  - вода (water) — води немає
+  - хліб (bread) — хліба немає
   recommended:
-  - проблема (problem)
-  - квиток (ticket)
-  - ключ (key)
-  - телефон (phone)
+  - проблема (problem) — немає проблем (Gen pl.)
+  - 'квиток (ticket) — немає квитка, без квитка (Gen: квитка)'
+  - ключ (key) — немає ключа
+  - телефон (phone) — немає телефону
 activity_hints:
 - type: fill-in
   focus: Change nouns to genitive

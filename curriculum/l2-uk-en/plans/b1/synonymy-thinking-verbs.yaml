@@ -8,32 +8,45 @@ subtitle: 'Synonymy I: Thinking Verbs'
 content_outline:
 - section: Вступ
   points:
-  - Why verb precision matters
-  - Thinking verb categories
-  - Synonymy overview
+  - 'Why verb precision matters — cultural hook: René Descartes «Я мислю, отже я існую»
+    (Cognito, ergo sum)'
+  - Thinking verb categories — distinguish process (міркувати), opinion (вважати),
+    and state (розуміти)
+  - 'Synonymy overview — stylistic differentiation: neutral «я думаю» vs formal «я
+    вважаю»'
 - section: Читання
   points:
-  - Thinking verb texts
-  - Semantic differences
+  - 'Thinking verb texts — cultural hook: Taras Shevchenko «Думи мої, думи мої...»
+    (sorrowful reflection)'
+  - 'Semantic differences — learner error: «рахувати» (to count) vs «вважати» (to
+    opine); learner error: «гадати» (to suppose) vs «ворожити» (to fortune-tell);
+    nuance: «думати про» (general) vs «думати над» (problem solving)'
 - section: Діалоги
   points:
-  - Choose appropriate verbs
-  - Express thoughts precisely
+  - Choose appropriate verbs — focus on collocations like «вважати за потрібне», «розуміти
+    з півслова»
+  - 'Express thoughts precisely — cultural hook: Folk wisdom «На те й голова, щоб
+    у ній розум був»'
 vocabulary_hints:
   required:
-  - думати (to think)
-  - гадати (to suppose)
-  - вважати (to consider)
-  - міркувати (to ponder)
-  - розуміти (to understand)
-  - пам'ятати (to remember)
-  - згадувати (to recall)
-  - усвідомлювати (to realize)
+  - 'думати (to think) — high freq; collocations: думати про (кого/що), думати над
+    (задачею), довго думати'
+  - 'гадати (to suppose) — medium freq; context: я гадаю (I suppose/guess), не довго
+    думаючи й гадаючи'
+  - 'вважати (to consider) — high freq; context: я вважаю, що...; вважати за потрібне;
+    вважати когось другом'
+  - 'міркувати (to ponder) — medium freq; collocations: міркувати логічно, міркувати
+    вголос, міркувати над проблемою'
+  - 'розуміти (to understand) — high freq; collocations: чудово розуміти, розуміти
+    з півслова, дати зрозуміти'
+  - пам'ятати (to remember) — cognitive state
+  - згадувати (to recall) — active process
+  - усвідомлювати (to realize) — deep cognition
   recommended:
-  - роздумувати (to reflect)
-  - обмірковувати (to deliberate)
-  - осягати (to grasp)
-  - впізнавати (to recognize)
+  - роздумувати (to reflect) — profound thought process
+  - обмірковувати (to deliberate) — weighing options
+  - осягати (to grasp) — full comprehension
+  - впізнавати (to recognize) — cognitive identification
 activity_hints:
 - type: match-up
   focus: Match verbs to meanings

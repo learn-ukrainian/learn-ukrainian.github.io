@@ -8,48 +8,54 @@ subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
 content_outline:
 - section: Тест
   points:
-  - Three types of negation
-  - Intuition check
+  - Three types of negation — general denial, specific refusal, prohibition
+  - Intuition check — diagnostic questions on aspect choice in negative contexts
 - section: Пояснення
   points:
-  - General negation (imperfective)
-  - '''Not yet'' exception (perfective)'
-  - '''Don''''t do it'' warnings (perfective)'
-  - Negative imperatives
+  - 'General negation (imperfective) — default preference for Imperfective aspect;
+    state standard: Genitive case for direct object (не читав книги)'
+  - '''Not yet'' exception (perfective) — ''ще не'' triggers Perfective (expectation
+    of result)'
+  - '''Don''t do it'' warnings (perfective) — distinction between warning (Perfective)
+    and prohibition (Imperfective)'
+  - 'Negative imperatives — learner error: using Perfective for general prohibitions
+    (Не роби цього!)'
 - section: Практика
   points:
-  - Decision algorithm
-  - Common mistakes
-  - Scenarios
+  - 'Decision algorithm — flowchart: Is it a general fact? Is it ''not yet''? Is it
+    a warning?'
+  - 'Common mistakes — learner error: Missing Double Negation (Я не бачив нікого)'
+  - 'Scenarios — cultural hook: The ''Polite Refusal'' ritual (repeating ''ні'' with
+    gratitude)'
 - section: Діалоги
   points:
-  - Bookstore
-  - Movie discussion
-  - Academic work
+  - Bookstore — focus on Genitive case in negation (немає книги, не бачив словника)
+  - Movie discussion — using 'взагалі не' (not at all) and 'ніколи' (never)
+  - Academic work — excuses using 'ще не' (I haven't finished the paper yet)
 - section: Підсумок
   points:
-  - Summary table
-  - Self-check
+  - Summary table — aspect usage matrix for negation types
+  - Self-check — verify understanding of Genitive trigger and 'ще не' exception
 vocabulary_hints:
   required:
-  - заперечення
-  - не
-  - Я не читав цієї книги
-  - Він не дзвонив
-  - ще не
-  - ніколи
-  - взагалі
-  - заборона
-  - попередження
-  - очікувана дія
-  - загальне заперечення
-  - відмова
+  - заперечення (negation) — граматична категорія
+  - не (not) — не знаю, не можу, не треба
+  - Я не читав цієї книги (I didn't read this book) — Genitive trigger example
+  - Він не дзвонив (He didn't call) — general factual negation
+  - ще не (not yet) — ще не готовий, ще не час, ще не зробив
+  - ніколи (never) — ніколи не бачив, ніколи не пізно
+  - взагалі (in general / at all) — взагалі не, взагалі-то
+  - заборона (prohibition) — сувора заборона, заборона в'їзду
+  - попередження (warning) — останнє попередження, штормове попередження
+  - очікувана дія (expected action) — context for 'ще не'
+  - загальне заперечення (general negation) — imperfective aspect trigger
+  - 'відмова (refusal) — cultural hook: polite refusal requires repetition'
   recommended:
-  - нікуди
-  - ніяк
-  - ніщо
-  - випадково
-  - навмисне
+  - нікуди (nowhere) — double negation required
+  - ніяк (in no way) — double negation required
+  - ніщо (nothing) — double negation required
+  - випадково (accidentally) — contrast with intentional action
+  - навмисне (on purpose) — contrast with accidental action
 activity_hints:
 - type: quiz
   focus: Which aspect in negation?

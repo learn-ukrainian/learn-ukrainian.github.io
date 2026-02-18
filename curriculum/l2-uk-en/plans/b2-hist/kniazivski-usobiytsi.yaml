@@ -7,64 +7,86 @@ title: Княжі усобиці та роздроблення
 content_outline:
 - section: Розминка
   points:
-  - Defining sovereignty vs suzerainty
-  - The map of 1054 vs 1132
+  - Defining sovereignty vs suzerainty — Київський князь як сюзерен (перший серед
+    рівних), а не абсолютний монарх
+  - The map of 1054 vs 1132 — [!context] comparison of 'monolithic' 1054 map vs 'patchwork
+    puzzle' of 1132
 - section: 'Читання: Тріумвірат Ярославичів'
   points:
-  - The will of Yaroslav the Wise
-  - Battle of Alta (1068)
-  - Kyiv Uprising
+  - The will of Yaroslav the Wise — attempt to create a system of checks and balances;
+    rota system breakdown
+  - Battle of Alta (1068) — [!history-bite] citizens expelled Izyaslav not for tyranny
+    but for failure to protect; first major defeat by Polovtsians
+  - Kyiv Uprising — Vseslav Polotsky released from prison ('поруба') and elected by
+    community; precedent of 'viche' power
 - section: Любецький з'їзд (1097)
   points:
-  - Every man holds his own fatherland
-  - The blinding of Vasylko
-  - Consequences of the Congress
+  - Every man holds his own fatherland — «Кожен хай держить отчину свою»; shift from
+    rota system to hereditary patrimony
+  - The blinding of Vasylko — [!myth-buster] 'Unity' oath immediately followed by
+    brutal realpolitik violation; shock to society
+  - Consequences of the Congress — legalization of political fragmentation (federalization)
 - section: Володимир Мономах
   points:
-  - Crusades against Polovtsians
-  - Monomakh's Reforms (Statute)
-  - Instruction (Povchannia)
+  - Crusades against Polovtsians — successful campaigns of 1103 and 1111; securing
+    the borders
+  - Monomakh's Reforms (Statute) — social compromise after 1113 uprising; limiting
+    interest rates ('різи') and protecting debtors ('закупи')
+  - Instruction (Povchannia) — [!quote] «Не проминіть ніколи людину, не привітавши
+    її...»; image of ideal Christian ruler-humanist
 - section: Соціальна структура та Економіка
   points:
-  - Economic causes of fragmentation
-  - Boyars, Druzhina, Smerds
-  - Urban growth
+  - Economic causes of fragmentation — [!decolonization] growth of regional capitals
+    (Chernihiv, Halych) made them independent of Kyiv
+  - Boyars, Druzhina, Smerds — distinction between free peasants (smerds) and debt-dependent
+    (zakupy)
+  - Urban growth — Kyiv remains largest (50k pop), but regional centers rise; craft
+    and trade expansion
 - section: Культура та Церква
   points:
-  - Architecture (St. Michael's)
-  - Chronicle writing (Nestor)
-  - Church as unifying force
+  - Architecture (St. Michael's) — built by Sviatopolk II (1108-1113); 'shimmering
+    painting' mosaics
+  - Chronicle writing (Nestor) — Nestor the Chronicler as ideologue of Rus unity (PVL
+    1113)
+  - Church as unifying force — Kyiv Metropoly remained the only structure uniting
+    all lands
 - section: Первинні джерела
   points:
-  - Extract from the Primary Chronicle on Liubech
-  - Extract from Monomakh's Instruction
+  - 'Extract from the Primary Chronicle on Liubech — include quote: «Пощо ми губимо
+    Руськую землю, самі проти себе зваду маючи?»'
+  - 'Extract from Monomakh''s Instruction — focus on moral guidelines: do not kill,
+    honor guests, do not be lazy'
 - section: Деколонізаційний погляд
   points:
-  - Reframing Fragmentation as Decentralization
-  - European parallels
-  - Myth of 'Feudal Disunity'
+  - Reframing Fragmentation as Decentralization — [!perspective] not 'collapse' but
+    evolution into confederation
+  - European parallels — comparison with Holy Roman Empire or France; standard feudal
+    stage
+  - Myth of 'Feudal Disunity' — debunking Soviet/Imperial myth of 'disaster' leading
+    to Moscow's rise; debunking 'Joint Cradle' myth
 - section: Підсумок
   points:
-  - Legacy of the era
+  - Legacy of the era — unity requires high political culture; internal contradictions
+    laid groundwork for vulnerability to Mongols
 vocabulary_hints:
   required:
-  - усобиця (internecine war)
-  - роздроблення (fragmentation)
-  - лествичне право (rota system)
-  - престолонаслідування (succession)
-  - отчина (patrimony)
-  - з'їзд (congress)
-  - боярин (boyar)
-  - князівство (principality)
-  - половці (Polovtsians)
-  - єдність (unity)
-  - центральна влада (central authority)
-  - місцева еліта (local elite)
+  - усобиця (internecine war) — князівські усобиці, припинити усобиці
+  - роздроблення (fragmentation) — феодальне роздроблення, політична децентралізація
+  - лествичне право (rota system) — принцип сеньйорату, спадкування за старшинством
+  - престолонаслідування (succession) — порядок престолонаслідування, криза престолонаслідування
+  - отчина (patrimony) — володіти отчиною, батьківська спадщина
+  - з'їзд (congress) — князівський з'їзд, Любецький з'їзд
+  - боярин (boyar) — впливові бояри, боярська рада
+  - князівство (principality) — удільне князівство, Київське князівство
+  - половці (Polovtsians) — половецька загроза, походи на половців
+  - єдність (unity) — збереження єдності, ідея єдності Русі
+  - центральна влада (central authority) — послаблення центральної влади
+  - місцева еліта (local elite) — зростання впливу місцевої еліти
   recommended:
-  - засліплення (blinding)
-  - номінальний (nominal)
-  - союз (alliance)
-  - культурний розквіт (cultural flourishing)
+  - засліплення (blinding) — політичне засліплення, жорстока розправа
+  - номінальний (nominal) — номінальний правитель, номінальна влада
+  - союз (alliance) — укласти союз, військовий союз
+  - культурний розквіт (cultural flourishing) — епоха культурного розквіту регіонів
 activity_hints:
 - type: reading
   focus: Chronicle account of Liubech Congress

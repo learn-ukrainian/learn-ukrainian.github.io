@@ -8,43 +8,58 @@ subtitle: Getting Around Town
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Getting around cities
-  - Motion verbs review
+  - 'Getting around cities — §3.5: Середовище перебування (місто чи село) AND §3.6:
+    Подорожі (основні дії на позначення руху); focus on essential direction adverbs:
+    прямо, ліворуч, праворуч'
+  - 'Motion verbs review — learner error: confusing unidirectional vs habitual forms
+    (йти vs ходити); emphasize context-dependent usage'
 - section: Presentation / Презентація
   points:
-  - йти vs їхати
-  - Transport vocabulary
-  - Direction phrases
+  - 'йти vs їхати — §4.2.3.1: дієвідмінювання дієслів руху; focus on foot vs vehicle
+    distinction; learner error: «Я йду в Київ» (I''m walking to Kyiv) vs «Я їду в
+    Київ» (I''m going by vehicle); learner error: prefix confusion *по-* (start) vs
+    *при-* (arrival) e.g. *поїхав* vs *приїхав*'
+  - 'Transport vocabulary — cultural hook: introduce specific transport (tram, marshrutka)
+    in Odesa context; use «їхати автобусом», «їхати на роботу»'
+  - 'Direction phrases — cultural hook: relative directions (landmarks like «біля
+    аптеки», «перед пам''ятником») vs strict distances; introduce «повертати за ріг»
+    (turn around the corner)'
 - section: Practice / Практика
   points:
-  - Plan a route
+  - Plan a route — using specific landmarks («біля аптеки», «перед пам'ятником») instead
+    of strict distances
 - section: Dialogues / Діалоги
   points:
-  - Direction conversations
-  - Multi-step directions
+  - 'Direction conversations — cultural hook: Odesa style — answering a question with
+    a question («А вам це точно треба?») or long winding stories'
+  - Multi-step directions — ensure correct use of «повертати», «іти», «їхати» in sequence
 - section: Narrative / Розповідь
   points:
-  - Navigation story
+  - Navigation story — humorous Odesa narrative (e.g., the Deribasivska 'buy a goose'
+    joke or similar trope about relative directions)
 - section: Need More Practice?
   points:
-  - Summary and links
+  - Summary and links — reinforce distinction between foot/vehicle movement
 vocabulary_hints:
   required:
-  - йти (to go on foot)
-  - їхати (to go by transport)
-  - метро (metro)
-  - автобус (bus)
-  - трамвай (tram)
-  - зупинка (stop)
-  - станція (station)
-  - маршрут (route)
+  - 'йти (to go on foot) — High Freq; collocations: йти пішки, йти прямо, йти до...'
+  - 'їхати (to go by transport) — Very High Freq; collocations: їхати автобусом, їхати
+    на роботу, їхати в центр'
+  - 'повертати (to turn) — Medium-High Freq; collocations: повертати праворуч/ліворуч,
+    повертати за ріг'
+  - метро (metro) — use with їхати (їхати на метро)
+  - автобус (bus) — use with їхати (їхати автобусом)
+  - трамвай (tram) — popular in Odesa context
+  - 'зупинка (stop) — collocations: автобусна зупинка, кінцева зупинка'
+  - станція (station) — refer to metro or train stations
+  - маршрут (route) — context of planning a trip
   recommended:
-  - пересадка (transfer)
-  - вихід (exit)
-  - платформа (platform)
-  - квиток (ticket)
-  - проїзд (fare)
-  - розклад (schedule)
+  - пересадка (transfer) — useful for public transport directions
+  - вихід (exit) — essential for metro navigation
+  - платформа (platform) — train/metro context
+  - квиток (ticket) — buying tickets for transport
+  - проїзд (fare) — paying for the trip
+  - розклад (schedule) — checking transport times
 activity_hints:
 - type: match-up
   focus: Transport vocabulary

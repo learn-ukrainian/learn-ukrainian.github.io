@@ -8,39 +8,52 @@ subtitle: Navigating the City
 content_outline:
 - section: Warm-up
   points:
-  - Види транспорту в українських містах
-  - Як ви їздите на роботу/навчання?
+  - 'Види транспорту в українських містах — State Standard: focus on ''місто'' (city)
+    and ''подорожі'' (travel)'
+  - 'Як ви їздите на роботу/навчання? — learner error: forgetting Instrumental case
+    or ''на'' + Locative (e.g., ''їду автобус'' instead of ''автобусом'')'
 - section: Presentation
   points:
-  - Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка)
-  - Ключові фрази (Наступна зупинка..., Обережно, двері зачиняються)
-  - Оплата проїзду (квиток, проїзний, валідатор)
-  - Пересадка (Де можна пересісти на...?)
+  - 'Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка) — distinguish
+    ''зупинка'' (bus/tram) vs ''станція'' (metro); cultural hook: Arsenalna is the
+    deepest metro station in the world'
+  - 'Ключові фрази (Наступна зупинка..., Обережно, двері зачиняються) — must include
+    ''Ви виходите?'' (Are you getting off?) for moving through crowds; cultural hook:
+    Mykola Petrenko as the iconic ''Voice of the Metro'''
+  - 'Оплата проїзду (квиток, проїзний, валідатор) — note: ensure IPA for multi-syllable
+    terms like ''прокомпостувати'''
+  - 'Пересадка (Де можна пересісти на...?) — collocations: ''робити пересадку'', ''станція
+    з пересадкою'''
 - section: Practice
   points:
-  - Запитати дорогу (Як доїхати до...?)
+  - 'Запитати дорогу (Як доїхати до...?) — learner error: confusing Direction (Accusative)
+    vs. Location (Locative), e.g., ''Де ти йдеш?'' vs ''Куди ти йдеш?'''
   - Купити квиток (Один квиток, будь ласка)
-  - На зупинці (Цей автобус їде до...?)
+  - 'На зупинці (Цей автобус їде до...?) — collocations: ''вийти на зупинці'', ''наступна
+    зупинка'''
 - section: Warm-up 2
   points:
-  - Наратив про подорож метром
+  - 'Наратив про подорож метром — context: deep stations, long escalators (Kyiv Metro
+    style)'
   - Ключова лексика в контексті
   - Оголошення в метро
 vocabulary_hints:
   required:
-  - зупинка (stop)
-  - метро (metro)
+  - зупинка (stop) — наступна зупинка, автобусна зупинка, вийти на зупинці
+  - метро (metro) — їхати на метро, станція метро, вхід у метро
   - трамвай (tram)
-  - тролейбус (trolleybus)
+  - 'тролейбус (trolleybus) — note: provide careful IPA'
   - маршрут (route)
-  - станція (station)
-  - пересадка (transfer)
-  - виходити (to exit)
+  - станція (station) — кінцева станція, станція пересадки
+  - пересадка (transfer) — робити пересадку, станція з пересадкою
+  - 'виходити (to exit) — phrase: Ви виходите? (Are you getting off?)'
   recommended:
-  - прокомпостувати (to validate)
-  - проїзний (transit pass)
+  - прокомпостувати (to validate) — IPA required; challenging pronunciation
+  - проїзний (transit pass) — проїзний квиток
   - кондуктор (conductor)
-  - водій (driver)
+  - водій (driver) — водій маршрутки
+  - квиток (ticket) — купити квиток, один квиток
+  - маршрутка (marshrutka) — сісти в маршрутку, номер маршрутки
 activity_hints:
 - type: fill-in
   focus: Asking for transport help

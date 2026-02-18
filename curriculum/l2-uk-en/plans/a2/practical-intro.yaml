@@ -8,46 +8,58 @@ subtitle: Real World Ukrainian
 content_outline:
 - section: Огляд
   points:
-  - From theory to practice
-  - Real-world communication
+  - From theory to practice — State Standard §4.2.2 alignment (applying grammatical
+    norms in speech)
+  - 'Real-world communication — cultural hook: Surzhyk as a transitional stage, ''mistakes''
+    as stepping stones to standard Ukrainian'
 - section: 'Skill 1: The 7 Cases (Сім відмінків)'
   points:
-  - All cases overview
-  - When to use each case
+  - All cases overview — focus on functional usage over rote memorization (State Standard
+    §4.2.2)
+  - 'When to use each case — cultural hook: The Vocative case (Кличний) as a critical
+    marker of respect (Пане Юрію vs. Юра)'
 - section: 'Skill 2: Verb Aspect (Вид дієслова)'
   points:
-  - Perfective vs imperfective
-  - Aspect in context
+  - Perfective vs imperfective — State Standard §4.2.3.1 (differentiation of aspect
+    pairs)
+  - 'Aspect in context — learner error: using Perfective for Present tense (я напишу
+    = future, not present)'
 - section: 'Skill 3: Complex Sentences (Складні речення)'
   points:
-  - Conjunctions and connectors
-  - Building complex sentences
+  - Conjunctions and connectors — State Standard §4.4.2 (complex sentences with тому
+    що, бо, щоб, якщо)
+  - Building complex sentences — moving beyond simple subject-verb-object structures
 - section: 'Skill 4: Common Mistakes (Типові помилки)'
   points:
-  - Case confusion
-  - Aspect errors
+  - 'Case confusion — learner error: Accusative instead of Genitive for negation (я
+    не бачу книгу vs. книги)'
+  - 'Aspect errors — learner error: Motion verb confusion (йти vs. їхати)'
 - section: Інтеграційне завдання
   points:
-  - Integration challenge
-  - Apply all skills
+  - 'Integration challenge — scenario: writing a message to a friend or boss (requires
+    cases + aspect)'
+  - Apply all skills — synthesizing grammar rules into coherent communication
 - section: Підсумок
   points:
-  - Summary and next steps
+  - Summary and next steps — preparing for B1.1 metalanguage transition
 vocabulary_hints:
   required:
-  - речення (sentence)
-  - слово (word)
-  - граматика (grammar)
-  - правило (rule)
-  - помилка (mistake)
-  - правильно (correctly)
-  - неправильно (incorrectly)
-  - контекст (context)
+  - 'речення (sentence) — collocations: скласти речення, просте/складне речення, член
+    речення'
+  - 'слово (word) — collocations: нове слово, значення слова, іншомовне слово, чесне
+    слово'
+  - 'граматика (grammar) — collocations: вивчати граматику, правила граматики'
+  - 'правило (rule) — collocations: запам''ятати правило, за правилом, виняток з правила'
+  - 'помилка (mistake) — collocations: зробити помилку, виправити помилку, груба/типова
+    помилка'
+  - 'правильно (correctly) — usage: як правильно сказати?'
+  - 'неправильно (incorrectly) — context: це граматично неправильно'
+  - 'контекст (context) — collocations: у контексті, зрозуміти з контексту'
   recommended:
-  - відмінок (case)
-  - вид (aspect)
-  - сполучник (conjunction)
-  - порядок (order)
+  - 'відмінок (case) — context: визначити відмінок'
+  - 'вид (aspect) — context: доконаний/недоконаний вид'
+  - 'сполучник (conjunction) — context: поєднати частини речення'
+  - 'порядок (order) — collocations: порядок слів'
 activity_hints:
 - type: fill-in
   focus: Case selection in context

@@ -8,45 +8,55 @@ subtitle: Pointing to Things with Demonstratives
 content_outline:
 - section: Warm-up
   points:
-  - Demonstratives point to things — "this one" or "that one"
-  - In Ukrainian, demonstratives change by gender (m/f/n/pl)
-  - Using gender knowledge from Module 03
+  - Demonstratives point to things — "this one" or "that one" — visual scaffolding
+    essential (finger touching vs pointing)
+  - In Ukrainian, demonstratives change by gender (m/f/n/pl) — aligns with State Standard
+    §4.2.2 (demonstrative pronouns)
+  - Using gender knowledge from Module 03 — reinforcing endings without explicit reteaching
 - section: Presentation
   points:
   - 'Near demonstratives: цей (m), ця (f), це (n), ці (pl)'
-  - 'Far demonstratives: той (m), та (f), те (n), ті (pl)'
-  - Match demonstrative to noun gender
-  - 'Dual meaning of це: neuter "this" AND general "this is"'
+  - 'Far demonstratives: той (m), та (f), те (n), ті (pl) — proximity confusion is
+    a common learner error'
+  - 'Match demonstrative to noun gender — learner error: mismatching gender (e.g.,
+    Цей книга)'
+  - 'Dual meaning of це: neuter "this" AND general "this is" — critical distinction:
+    Це + Noun (Identification) vs Цей + Noun (Specification)'
 - section: Practice
   points:
   - 'Kitchen objects: ніж (m), ложка (f), блюдо (n)'
   - 'Furniture: диван (m), шафа (f), крісло (n)'
-  - Room vocabulary with gender agreement
+  - 'Room vocabulary with gender agreement — cultural hook: "В гостях добре, а вдома
+    краще" (East or West, home is best)'
 - section: Cultural Insight
   points:
   - Why телефон is masculine but лампа is feminine
-  - Ukrainian home vocabulary across all three genders
+  - Ukrainian home vocabulary across all three genders — distinction between traditional
+    хата (rural house) and modern квартира (apartment)
+  - The "Pokuttia" (Red Corner) concept — traditional special place for icons/rushnyky,
+    relevant even in modern layouts
 - section: Production
   points:
-  - Navigate a living space naming objects
+  - Navigate a living space naming objects — differentiate between objects near (цей)
+    and far (той)
   - Point and identify using correct demonstratives
 vocabulary_hints:
   required:
-  - цей (this m.)
-  - ця (this f.)
-  - той (that m.)
-  - та (that f.)
-  - стіл (table)
-  - книга (book)
-  - телефон (phone)
-  - кімната (room)
+  - цей (this m.) — цей стіл, цей будинок
+  - ця (this f.) — ця книга, ця кімната
+  - той (that m.) — той чоловік, той парк
+  - та (that f.) — та жінка
+  - стіл (table) — на столі, письмовий стіл
+  - книга (book) — цікава книга, читати книгу
+  - телефон (phone) — мобільний телефон, мій телефон
+  - кімната (room) — моя кімната, велика кімната
   recommended:
-  - стілець (chair)
-  - ліжко (bed)
-  - лампа (lamp)
-  - вікно (window)
-  - шафа (wardrobe)
-  - двері (door)
+  - стілець (chair) — зручний стілець
+  - ліжко (bed) — велике ліжко
+  - лампа (lamp) — настільна лампа
+  - вікно (window) — біля вікна, це вікно
+  - шафа (wardrobe) — у шафі
+  - двері (door) — вхідні двері (plural only in Ukr)
 activity_hints:
 - type: match-up
   focus: Label room objects

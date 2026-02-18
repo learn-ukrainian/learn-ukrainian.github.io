@@ -8,36 +8,50 @@ subtitle: Making Direct Objects Work
 content_outline:
 - section: Warm-up
   points:
-  - Що я бачу в кімнаті? (називний)
-  - Перехід до знахідного відмінка
+  - Що я бачу в кімнаті? (називний) — start with concrete, visible objects to anchor
+    the concept before introducing case change; use 'бачити' + object to prime the
+    structure
+  - 'Перехід до знахідного відмінка — introduce the concept of ''Direct Object'' (object
+    of action) vs Subject; learner error: misunderstanding grammatical role (Conceptual
+    Nominative)'
 - section: Presentation
   points:
-  - Коли вживається знахідний (прямий додаток)
-  - 'Жіночий рід: -а → -у, -я → -ю (книга → книгу)'
-  - 'Чоловічий рід неістот: без змін (стіл → стіл)'
-  - 'Середній рід: без змін (вікно → вікно)'
-  - Дієслова зі знахідним (бачити, чути, брати, мати, хотіти, купувати)
+  - 'Коли вживається знахідний (прямий додаток) — align with State Standard §4.2.3.2.1;
+    focus strictly on inanimate objects; context: shopping (''Я купую...'')'
+  - '''Жіночий рід: -а → -у, -я → -ю (книга → книгу)'' — learner error: leaving feminine
+    nouns in Nominative (-a); emphasize change is mandatory for Feminine Singular'
+  - '''Чоловічий рід неістот: без змін (стіл → стіл)'' — emphasize ''Safe Harbor''
+    concept; learner error: adding -a ending (Masculine Inanimate Confusion)'
+  - '''Середній рід: без змін (вікно → вікно)'' — reinforce that only Feminine singular
+    hard/soft usually changes here; contrast with Feminine to highlight the pattern'
+  - 'Дієслова зі знахідним (бачити, чути, брати, мати, хотіти, купувати) — use high-freq
+    collocations: мати рацію, брати участь, хотіти їсти; emphasize these verbs as
+    triggers'
 - section: Practice
   points:
-  - Трансформація називного → знахідний
-  - Заповнення речень правильною формою
+  - Трансформація називного → знахідний — focus on distinguishing when change happens
+    (Fem) vs when it doesn't (Masc/Neut); ensure mix of inanimate nouns only
+  - 'Заповнення речень правильною формою — prioritize high-frequency verbs: бачити,
+    чути, брати, мати'
 - section: Production
   points:
-  - Описати, що є в магазині (Я бачу...)
-  - Список покупок (Я хочу купити...)
+  - Описати, що є в магазині (Я бачу...) — use 'бачити' + variety of inanimate objects
+  - 'Список покупок (Я хочу купити...) — cultural hook: include staples like ''хліб'',
+    ''гречка'' (buckwheat), daily rituals'
 - section: Cultural Insight
   points:
-  - Типові покупки в українському магазині
+  - 'Типові покупки в українському магазині — mention ''базар'' (market) vs supermarket;
+    cultural hook: the ubiquitous ''Пакет потрібен?'' question at checkouts'
 vocabulary_hints:
   required:
-  - бачити (to see)
-  - чути (to hear)
-  - брати (to take)
-  - мати (to have)
-  - хотіти (to want)
-  - купувати (to buy)
-  - книга (book)
-  - каву (coffee acc.)
+  - бачити (to see) — бачити проблему, я бачу...
+  - чути (to hear) — чути музику, чути голос
+  - брати (to take) — брати участь, брати трубку, брати каву
+  - мати (to have) — мати рацію, мати час, мати можливість
+  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...
+  - купувати (to buy) — купувати продукти, купувати одяг
+  - книга (book) — читати книгу, цікава книга
+  - каву (coffee acc.) — пити каву, замовляти каву
   recommended:
   - любити (to love)
   - шукати (to look for)

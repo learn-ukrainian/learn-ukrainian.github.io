@@ -8,39 +8,49 @@ subtitle: Родина
 content_outline:
 - section: Warm-up
   points:
-  - Члени сім'ї (мама, тато, брат, сестра)
-  - Питання про сім'ю
+  - 'Члени сім''ї (мама, тато, брат, сестра) — core vocabulary introduction (State
+    Standard §3.1); State Standard §4.2.1.1 examples: мама (маму, на мамі), тато (тата,
+    на татові)'
+  - Питання про сім'ю — e.g., «Хто це?»
 - section: Presentation
   points:
-  - Близька родина (батьки, діти, брати, сестри)
-  - Розширена родина (дідусь, бабуся, дядько, тітка)
-  - Родинні стосунки (чоловік, дружина, онук, онука)
+  - 'Близька родина (батьки, діти, брати, сестри) — use «У мене є...» construction
+    as primary way to talk about family count; learner error: avoid «Я маю...» which
+    is less natural for A1'
+  - 'Розширена родина (дідусь, бабуся, дядько, тітка) — cultural hook: multi-generational
+    households are common in Ukraine, grandparents often help raise children'
+  - 'Родинні стосунки (чоловік, дружина, онук, онука) — learner error: чоловік = man
+    AND husband (avoid «жінка» for wife)'
 - section: Presentation 2
   points:
   - Вік (Моєму братові 25 років)
-  - Професія (Мій тато — лікар)
-  - Характер (Моя сестра дуже добра)
-  - Зовнішність (Моя мама має темне волосся)
+  - 'Професія (Мій тато — лікар) — State Standard §3.1: status of others (colleague,
+    neighbor)'
+  - Характер (Моя сестра дуже добра) — reuse adjectives from A1-31 (kind, happy)
+  - Зовнішність (Моя мама має темне волосся) — reuse vocabulary from A1-31 (dark hair,
+    kind eyes)
 - section: Practice
   points:
-  - Представлення своєї сім'ї
-  - Розповідь про родину
+  - 'Представлення своєї сім''ї — cultural hook: nuance between «сім''я» (unit) and
+    «родина» (lineage/ancestry)'
+  - 'Розповідь про родину — learner error: possessive agreement (Мій мама -> Моя мама)'
 - section: Practice 2
   points:
   - Діалог про сім'ю друга
-  - Діалог про родинне свято
-  - Показ сімейних фото
+  - Діалог про родинне свято — prepares for module A1-33 (Holidays)
+  - Показ сімейних фото — highlight Vocative forms (Мамо, Тату) per content notes;
+    often skipped by beginners but essential for daily address
 - section: Practice 3
   points:
   - Опис своєї сім'ї
 vocabulary_hints:
   required:
-  - мама (mom)
-  - тато (dad)
-  - брат (brother)
-  - сестра (sister)
-  - дідусь (grandfather)
-  - бабуся (grandmother)
+  - мама (mom) — рідна мама, молода мама
+  - тато (dad) — рідний тато, мій тато
+  - брат (brother) — старший брат, молодший брат, рідний брат
+  - сестра (sister) — старша сестра, молодша сестра, рідна сестра
+  - дідусь (grandfather) — мудрий дідусь, мій дідусь
+  - бабуся (grandmother) — добра бабуся
   - син (son)
   - донька (daughter)
   recommended:
@@ -49,7 +59,7 @@ vocabulary_hints:
   - онук (grandson)
   - дружина (wife)
   - чоловік (husband)
-  - родина (family)
+  - родина (family) — велика родина, українська родина
 activity_hints:
 - type: match-up
   focus: Family member names

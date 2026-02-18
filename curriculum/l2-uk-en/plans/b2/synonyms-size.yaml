@@ -8,29 +8,46 @@ subtitle: Synonyms - Size and Scale
 content_outline:
 - section: Розминка — Від малого до величезного
   points:
-  - Нейтральні слова vs експресивні (малий vs крихітний)
-  - Розмовні vs книжні (здоровенний vs велетенський)
-  - Коли вживати підсилювачі (дуже, надзвичайно, неймовірно)
+  - Нейтральні слова vs експресивні (малий vs крихітний) — Focus on gradation (scale)
+    from neutral to absolute (big -> huge -> gigantic)
+  - 'Розмовні vs книжні (здоровенний vs велетенський) — learner error: using colloquial
+    ''здоровенний'' in formal writing (e.g., ''здоровенний прибуток'' instead of ''значний'')'
+  - 'Коли вживати підсилювачі (дуже, надзвичайно, неймовірно) — learner error: double
+    comparatives with absolute synonyms (e.g., ''більш величезний'' is incorrect)'
 - section: Big
   points:
-  - великий (big - neutral)
-  - здоровенний (huge - colloquial)
-  - велетенський (gigantic - from "giant")
-  - величезний (enormous - emphatic)
-  - грандіозний (grand - impressive)
+  - 'великий (big - neutral) — collocations: великий успіх, велика помилка, велика
+    родина; distinguish physical size vs abstract magnitude'
+  - 'здоровенний (huge - colloquial) — cultural hook: Батьківщина-Мати (102m) as context
+    for ''здоровенний'' in colloquial speech; implies clunky or awkwardly big'
+  - 'велетенський (gigantic - from "giant") — cultural hook: Ан-225 «Мрія» (world''s
+    largest plane) symbol of engineering scale; collocations: велетенські кроки, велетенська
+    сила'
+  - 'величезний (enormous - emphatic) — collocations: величезний вплив, величезне
+    значення; learner error: ''великий авторитет'' -> better ''величезний'' or ''значний'''
+  - 'грандіозний (grand - impressive) — collocations: грандіозний план, грандіозний
+    скандал; often positive but can be ironic'
 - section: Small
   points:
-  - малий (small - neutral)
-  - маленький (little - diminutive)
-  - крихітний (tiny - very small)
-  - мізерний (minuscule - negligible)
-  - мініатюрний (miniature - cute small)
+  - 'малий (small - neutral) — collocations: малий бізнес, малий внесок'
+  - маленький (little - diminutive) — often implies affection or cuteness
+  - 'крихітний (tiny - very small) — collocations: крихітна деталь, крихітна зарплата
+    (ironic)'
+  - 'мізерний (minuscule - negligible) — collocations: мізерний шанс, мізерні кошти;
+    negative connotation'
+  - мініатюрний (miniature - cute small) — implies precise, small-scale version of
+    something larger
 - section: Практика — опис масштабу
   points:
-  - Обрати прикметник відповідно до регістру (новина vs казка)
-  - Градуювати синоніми за інтенсивністю
-  - Описати подію, використовуючи різні синоніми розміру
-  - Переписати текст, змінивши масштаб опису (перебільшення vs применшення)
+  - 'Обрати прикметник відповідно до регістру (новина vs казка) — cultural hook: use
+    ''Mriya'' story for reading text to naturally introduce ''giant'', ''colossal'',
+    ''wingspan'''
+  - Градуювати синоніми за інтенсивністю — practice ordering from 'малий' to 'мізерний'
+    and 'великий' to 'грандіозний'
+  - Описати подію, використовуючи різні синоніми розміру — differentiate physical
+    size vs abstract magnitude (e.g. salary vs building)
+  - 'Переписати текст, змінивши масштаб опису (перебільшення vs применшення) — cross-reference:
+    prepares for C1 Stylistics (hyperbole)'
 focus: phraseology
 pedagogy: CBI
 objectives:
@@ -44,13 +61,19 @@ register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
-  - синонім (synonym)
-  - вираз (expression)
-  - значення (meaning)
-  - контекст (context)
+  - великий (big) — великий успіх, велика помилка, велика родина
+  - величезний (enormous) — величезний вплив, величезне значення, величезна сума
+  - велетенський (gigantic) — велетенські кроки, велетенська сила, велетенський розмір
+  - грандіозний (grand) — грандіозний план, грандіозний скандал, грандіозна подія
+  - малий (small) — малий бізнес, малий внесок
+  - крихітний (tiny) — крихітна деталь, крихітна зарплата (іронічно)
+  - мізерний (minuscule/negligible) — мізерний шанс, мізерні кошти, мізерний результат
+  - здоровенний (huge/hulking) — здоровенний хлопець, здоровенна гора (colloquial)
   recommended:
-  - переносне значення (figurative meaning)
-  - стилістичне забарвлення (stylistic coloring)
+  - мініатюрний (miniature) — мініатюрна копія, мініатюрна жінка
+  - масштаб (scale) — масштаб проблеми, у промислових масштабах
+  - габарити (dimensions) — габарити вантажу, великогабаритний
+  - розмах (wingspan/scope) — розмах крил (Мрія), розмах діяльності
 activity_hints:
 - type: reading
   focus: Контекстне використання

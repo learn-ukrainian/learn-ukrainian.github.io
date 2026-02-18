@@ -8,35 +8,54 @@ subtitle: The First Great Clashes for Rights and Freedoms
 content_outline:
 - section: Вступ
   points:
-  - The accumulation of social tension in the late 16th century
-  - The conflict between 'registrove' and 'neregistrove' cossackdom
+  - 'The accumulation of social tension in the late 16th century — context of the
+    ''Great Border'' (Великий Кордон) where cossacks were the only defense against
+    Tatars; cultural hook: [!context]'
+  - The conflict between 'registrove' and 'neregistrove' cossackdom — impact of the
+    1590 Seim Constitution 'Order regarding Nizovtsi' (Порядок щодо низовців)
 - section: Повстання Криштофа Косинського (1591–1593)
   points:
-  - 'Causes: Private conflict vs. social grievance'
-  - 'Course of events: Battle of Piatka'
-  - Consequences and the role of the Ostrozkyi princes
+  - 'Causes: Private conflict vs. social grievance — dispute over Rokytne estate with
+    Janusz Ostrozkyi escalating into social explosion; engagement hook: [!history-bite]'
+  - 'Course of events: Battle of Piatka — decisive role of Ostrozkyi''s artillery
+    and the capture of Bila Tserkva (symbolic destruction of debt documents)'
+  - Consequences and the role of the Ostrozkyi princes — suppression of the first
+    attempt at independent political force; Kosynskyi's death in Cherkasy
 - section: Повстання Северина Наливайка (1594–1596)
   points:
-  - 'Scale and geography: From Podillia to Belarus'
-  - The union of registered and non-registered cossacks
-  - The tragic finale at Solonytsia
-  - Political program of Nalyvaiko
+  - 'Scale and geography: From Podillia to Belarus — capture of Bratslav and proclamation
+    of a ''free cossack city'''
+  - The union of registered and non-registered cossacks — alliance with Hryhorii Loboda
+    (registered) and Matvii Shaula (Zaporozhians)
+  - The tragic finale at Solonytsia — the betrayal by registered cossacks and Zholkevskyi's
+    broken promise of amnesty
+  - 'Political program of Nalyvaiko — the idea of a separate ''Appanage Principality''
+    (Удільне князівство) between Dnister and Dnipro; engagement hook: [!myth-buster]'
 - section: Читання
   points:
-  - Analysis of the 'Seim Constitutions' regarding cossacks
-  - Accounts of Stanislav Zholkevskyi
+  - Analysis of the 'Seim Constitutions' regarding cossacks — 1593 'punishment without
+    trial' and 1596 declaration of cossacks as 'hostes patriae' (enemies of the fatherland)
+  - Accounts of Stanislav Zholkevskyi — justification of cruelty as 'state necessity'
+    against 'swawolnicy' (unruly ones)
 - section: Соціальний та Релігійний Вимір боротьби
   points:
-  - The struggle for rights and 'volnosti'
-  - 'The religious factor: Defense of Orthodoxy'
+  - 'The struggle for rights and ''volnosti'' — demand for noble status (shliakhta
+    rights: court, land ownership, tax exemption)'
+  - 'The religious factor: Defense of Orthodoxy — context of the Union of Brest (1596)
+    turning cossacks into the ''Sword of Orthodoxy''; engagement hook: [!culture]'
 - section: Первинні джерела та свідчення очевидців
   points:
-  - Excerpts from the accounts of contemporaries (Bielski, Heidenstein)
-  - Letter of Nalyvaiko to the King
+  - Excerpts from the accounts of contemporaries (Bielski, Heidenstein) — Bielski's
+    description of the Battle of Piatka; mention of Erich Lassota's visit
+  - 'Letter of Nalyvaiko to the King — diplomatic rhetoric offering service in exchange
+    for autonomy; engagement hook: [!quote]'
 - section: Деколонізаційний погляд на історію повстань
   points:
-  - Reconceptualizing 'rebellion' as 'liberation war'
-  - The myth of 'peasant riots' vs. professional military struggle
+  - 'Reconceptualizing ''rebellion'' as ''liberation war'' — reframing ''bunt chłopstwa''
+    (peasant riot) as a state-building effort by a new political elite; engagement
+    hook: [!decolonization]'
+  - The myth of 'peasant riots' vs. professional military struggle — evidence of organized
+    artillery, intelligence, and diplomacy
 activity_hints:
 - type: reading
   focus: Contemporary accounts of the Solonytsia massacre
@@ -62,19 +81,19 @@ register: публіцистичний
 phase: HIST.5 [Rise of Cossacks]
 vocabulary_hints:
   required:
-  - історія (history)
-  - держава (state)
-  - народ (people)
-  - влада (power)
-  - період (period)
-  - подія (event)
-  - джерело (source)
-  - спадщина (heritage)
+  - повстання (uprising) — козацьке повстання, придушення повстання
+  - реєстр (registry) — реєстрове козацтво, викреслити з реєстру
+  - шляхта (nobility) — права шляхти, конфлікт зі шляхтою
+  - унія (union) — Берестейська унія, релігійна унія
+  - свавілля (arbitrariness/unruliness) — польський термін 'swawola', козацьке свавілля
+  - облога (siege) — облога табору, тривала облога
+  - зрада (betrayal/treason) — зрада старшини, звинувачення у зраді
+  - угода (agreement) — порушення угоди, підписання угоди
   recommended:
-  - аналіз (analysis)
-  - контекст (context)
-  - вплив (influence)
-  - наслідки (consequences)
+  - артилерія (artillery) — використання артилерії
+  - автономія (autonomy) — вимога автономії
+  - амністія (amnesty) — обіцянка амністії
+  - вимоги (demands) — політичні вимоги
 persona:
   voice: Senior Professor of History
   role: Kyiv-Mohyla Academy Historian

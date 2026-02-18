@@ -8,23 +8,36 @@ subtitle: Making Descriptions Richer
 content_outline:
 - section: Introduction / Вступ
   points:
-  - The power of the suffix: descriptiveness without 'very'
-  - Why Ukrainian adjectives are emotionally charged
+  - 'The power of the suffix: descriptiveness without ''very'' — introduce the ''Temperature
+    Scale'' concept: Neutral (малий) → Warm (маленький) → Intense (малесенький)'
+  - Why Ukrainian adjectives are emotionally charged — explain that diminutives often
+    signal respect and intimacy (e.g., рідненька), not just physical smallness — reference
+    State Standard §4.5.1 on 'emotional-expressive lexis'
 - section: Presentation / Презентація
   points:
-  - 'Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision)'
-  - 'The Scale of Giants: -Енн- and -Езн- (Enormous and Intense)'
-  - 'The Material Link: -Ян- and -Ов- (What it is made of)'
-  - 'Professional Identity: -Ськ- (Places and Groups)'
-  - 'General Relationships: The universal -Н- suffix'
-  - 'Suffix Grammar: Does a suffix affect the case ending?'
+  - '''Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision)'' — use examples
+    like «гарненька дівчина», «тепленьке молоко»; learner error: register mismatch
+    (using diminutives in formal contexts, e.g. asking a boss for a ''підписочок'')'
+  - '''The Scale of Giants: -Енн- and -Езн- (Enormous and Intense)'' — cultural hook:
+    use «страшенний» (terrible/huge) to explain Ukrainian hyperbole in storytelling;
+    learner error: stress shift confusion with passive participles (нездійсне́нний
+    vs незді́йснений)'
+  - '''The Material Link: -Ян- and -Ов- (What it is made of)'' — reference State Standard
+    §4.3.6 on noun-to-adjective derivation (осінь – осінній)'
+  - '''Professional Identity: -Ськ- (Places and Groups)'' — content writing note:
+    focus heavily on the K/Ch/Ts -> TsK mutation rule (e.g., Прага -> празький); learner
+    error: writing «пражський» or «козакський» instead of «козацький»'
+  - '''General Relationships: The universal -Н- suffix'''
+  - '''Suffix Grammar: Does a suffix affect the case ending?'''
 - section: Practice / Практика
   points:
-  - Suffix transformation drills
-  - Emotional re-writing: Neutral to Diminutive to Intensive
+  - Suffix transformation drills — include specific drills for the K/Ch/Ts -> TsK
+    mutation rule
+  - 'Emotional re-writing: Neutral to Diminutive to Intensive'
 - section: Dialogues / Діалоги
   points:
-  - On the market: Choosing between 'big' and 'gigantic' watermelons
+  - 'On the market: Choosing between ''big'' and ''gigantic'' watermelons — use collocations
+    like «здоровенний кавун» vs «гарненький кавунчик»'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -48,3 +61,27 @@ phase: A2.3
 persona:
   voice: Encouraging Cultural Guide
   role: Character Witness
+vocabulary_hints:
+  required:
+  - 'маленький (small/little) — collocations: маленька дитина, маленьке село'
+  - 'гарненький (pretty/nice - diminutive) — collocations: гарненька дівчина, гарненький
+    будиночок'
+  - 'тепленький (warm - diminutive) — collocations: тепленьке молоко, тепленька вода'
+  - 'рідненький (dear/kindred - diminutive) — cultural hook: рідненька матуся (deep
+    affection)'
+  - 'тихенький (quiet - diminutive) — collocations: тихенький голос'
+  - 'малесенький (tiny - emphatic) — collocations: малесенький котик'
+  - 'чистесенький (pure/clean - emphatic) — collocations: чистесенька вода'
+  - 'страшенний (terrible/huge - expressive) — cultural hook: страшенний вітер, страшенний
+    змій'
+  - 'здоровенний (huge/enormous - expressive) — collocations: здоровенний чоловік,
+    здоровенний собака'
+  - 'величезний (huge/gigantic) — collocations: величезний будинок'
+  - 'київський (Kyiv adjective) — collocations: київський торт'
+  - 'львівський (Lviv adjective) — collocations: львівська кава'
+  - 'український (Ukrainian) — collocations: українська мова'
+  - 'студентський (student adjective) — collocations: студентський квиток'
+  recommended:
+  - 'білесенький (white - emphatic) — collocations: білесенький сніг'
+  - 'тонесенький (thin - emphatic) — collocations: тонесенька нитка'
+  - 'довжелезний (long - emphatic) — collocations: довжелезний шлях'

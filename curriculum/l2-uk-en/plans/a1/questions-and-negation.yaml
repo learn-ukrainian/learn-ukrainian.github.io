@@ -9,18 +9,24 @@ content_outline:
 - section: Warm-up
   points:
   - Conversations need questions and answers, not just statements
-  - Ukrainian is simpler — just add чи or use rising intonation
-  - Negation — just put не before the verb
+  - 'Ukrainian is simpler — just add чи or use rising intonation — content note: use
+    arrows (↗) to visualize intonation'
+  - 'Negation — just put не before the verb — learner error: confusion between ні
+    (no) and не (not)'
 - section: Presentation
   points:
   - 'Yes/No questions with чи: Чи ти читаєш? (Do you read?)'
-  - Casual alternative — rising intonation without чи
+  - 'Casual alternative — rising intonation without чи — cultural hook: ''Чи'' is
+    standard/polite; dropping it is conversational/casual'
   - 'Answers: Так (yes), Ні (no)'
-  - 'Question words: що, хто, де, куди, звідки, коли, чому, як, скільки'
-  - No "do/does" needed — question word signals the question
+  - 'Question words: що, хто, де, куди, звідки, коли, чому, як, скільки — content
+    note: teach ''що'' but mention common spoken variant ''шо'''
+  - 'No "do/does" needed — question word signals the question — learner error: The
+    ''Do'' Trap (translating auxiliary ''do'')'
 - section: Practice
   points:
-  - Forming questions from statements
+  - Forming questions from statements — focus on rising intonation (↗) for yes/no
+    questions without чи
   - Choosing correct question word for context
 - section: Production
   points:
@@ -29,17 +35,18 @@ content_outline:
 - section: Cultural Insight
   points:
   - Register difference — formal uses чи, casual uses intonation
-  - Pop culture examples from Ukrainian dubbing
+  - 'Pop culture examples from Ukrainian dubbing — include iconic ALF quote: "Ти не
+    любиш котів? Ти просто не вмієш їх готувати!"'
 vocabulary_hints:
   required:
-  - чи (question particle)
-  - що (what)
-  - хто (who)
-  - де (where)
-  - коли (when)
-  - не (not)
-  - так (yes)
-  - ні (no)
+  - чи (question particle) — Чи ти...? Чи це...? (High frequency)
+  - що (what) — Що це? Що ти робиш? (Top 50 word)
+  - хто (who) — Хто це? Хто там?
+  - де (where) — Де ти? Де це?
+  - коли (when) — Коли сніданок? Коли ти вдома?
+  - не (not) — не знаю, не розумію, не хочу (Very high frequency)
+  - так (yes) — так, звичайно; так, будь ласка
+  - ні (no) — ні, дякую; ні, не...
   recommended:
   - куди (where to)
   - чому (why)

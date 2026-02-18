@@ -8,29 +8,39 @@ subtitle: Passive Constructions - Complete System
 content_outline:
 - section: Тест
   points:
-  - Three passive types overview
-  - Active vs passive voice
+  - Three passive types overview — Adjectival (state/feature), Impersonal (fact/result),
+    Reflexive (process/regular action)
+  - 'Active vs passive voice — state standard §4.4.2 alignment: simple sentence with
+    participle clause vs active construction'
 - section: Пояснення
   points:
-  - Participle passive
-  - Short form passive
-  - Reflexive passive (-ся)
-  - Choosing the right passive
+  - 'Participle passive — Adjectival function (state/feature: зачинений магазин)'
+  - 'Short form passive — Impersonal forms on -но/-то (зроблено, прожито); unique
+    Ukrainian feature emphasizing result/fatality; learner error: adding agent in
+    instrumental case (Мною було зроблено -> WRONG)'
+  - 'Reflexive passive (-ся) — Process or regular action (магазин зачиняється); learner
+    error: confusing process with result'
+  - 'Choosing the right passive — cultural hook: avoiding ''Kanceliaryt'' (bureaucratese)
+    and Russian-style passive overuse; preference for active voice in natural Ukrainian'
 - section: Практика
   points:
-  - Transform with all three types
-  - Compare meanings
+  - Transform with all three types — fix English calques like 'It was decided by him'
+    -> 'Він вирішив'
+  - Compare meanings — distinguish between process (будується) and result (збудовано/збудований)
 - section: Діалоги
   points:
-  - Real-world passive usage
-  - Context and style
+  - Real-world passive usage — official announcements (Вхід заборонено) vs news reports
+  - Context and style — contrasting official register (passive) with conversational
+    style (active)
 - section: Потрібно більше практики?
   points:
-  - Additional exercises
+  - Additional exercises — focus on correcting 'passive heavy' sentences to natural
+    active ones
 vocabulary_hints:
   required:
-  - пасивний стан (passive voice)
-  - активний стан (active voice)
+  - пасивний стан (passive voice) — вживати пасивний стан, речення в пасивному стані
+  - активний стан (active voice) — перетворити на активний стан, перевага активного
+    стану
   - зворотний (reflexive)
   - трансформація (transformation)
   - конструкція (construction)
@@ -42,6 +52,9 @@ vocabulary_hints:
   - агент дії (agent of action)
   - регістр (register)
   - уникати (to avoid)
+  - дієприкметник (participle) — пасивний дієприкметник, дієприкметниковий зворот
+  - -но/-то (impersonal ending) — зроблено, написано, відкрито, заборонено
+  - будуватися (to be built) — будинок будується, плани будуються
 activity_hints:
 - type: fill-in
   focus: Active to three passive types

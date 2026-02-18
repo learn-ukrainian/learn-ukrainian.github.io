@@ -8,34 +8,46 @@ subtitle: Complex Sentences & Health
 content_outline:
 - section: Overview / Огляд
   points:
-  - Transitioning from simple reports to complex ideas
+  - Transitioning from simple reports to complex ideas — aligned with State Standard
+    §4.4.2 for complex sentence structure and §3.12 for health vocabulary
   - The map of Level A2.2 proficiency
 - section: Skill 1
   points:
-  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через)'
+  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через) — learner error:
+    overusing formal ''тому що'' in casual speech where ''бо'' is more natural'
   - Model, Practice, and Self-Check structure
 - section: Skill 2
   points:
-  - 'Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past)'
+  - 'Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past) — learner error:
+    confusing conjunction ''щоб'' (in order to) with ''що б'' (what would)'
   - Model, Practice, and Self-Check structure
 - section: Skill 3
   points:
-  - 'Relative Chameleon: Який in all cases'
+  - 'Relative Chameleon: Який in all cases — learner error: failing to decline ''який''
+    to match the gender/case of the noun it replaces (e.g. using ''який'' for feminine
+    noun)'
   - Model, Practice, and Self-Check structure
 - section: Skill 4
   points:
-  - 'Time Coordination: Коли, поки, після того як'
+  - 'Time Coordination: Коли, поки, після того як — prepares for B1 complex syntax
+    (conditional ''якби'')'
   - Model, Practice, and Self-Check structure
 - section: Skill 5
   points:
-  - 'Health and Body: Integrating body parts and symptoms'
-  - Model, Practice, and Self-Check structure
+  - 'Health and Body: Integrating body parts and symptoms — vocab focus: голова, живіт,
+    горло, рука/нога; learner error: using literal translation for ''take medicine''
+    instead of ''приймати ліки'' (though ''пити'' is colloquial)'
+  - 'Model, Practice, and Self-Check structure — cultural hook: treating colds with
+    raspberry (малина), viburnum (калина) tea, or honey (мед) for their natural antipyretic
+    properties'
 - section: Integration Challenge / Інтеграційне завдання
   points:
-  - Combined task using all skills
+  - 'Combined task using all skills — context: explaining symptoms (cause) and desired
+    outcome (purpose) to a doctor'
 - section: Dialogues / Діалоги
   points:
-  - A summary dialogue combining review items
+  - 'A summary dialogue combining review items — cultural hook: usage of ''Будьмо!''
+    (Let us be!) as a toast to health, implying ''let us be alive/healthy'''
 focus: checkpoint
 pedagogy: TTT
 objectives:
@@ -64,3 +76,18 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Border Control Officer
+vocabulary_hints:
+  required:
+  - голова (head) — болить голова (headache), мити голову (wash hair)
+  - горло (throat) — червоне горло (red/sore throat), болить горло (sore throat)
+  - температура (temperature/fever) — висока температура (high fever), міряти температуру
+    (take temperature)
+  - ліки (medicine) — приймати ліки (take medicine - formal/correct), купити ліки
+    (buy medicine)
+  - лікар (doctor) — йти до лікаря (go to the doctor), записатися до лікаря (make
+    an appointment)
+  recommended:
+  - живіт (stomach/belly) — болить живіт (stomach ache)
+  - рука/нога (arm/hand / leg/foot) — зламати руку (break an arm), права нога (right
+    leg)
+  - застуда (cold) — мати застуду (have a cold), лікувати застуду (treat a cold)

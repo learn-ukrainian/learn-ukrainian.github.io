@@ -8,43 +8,61 @@ subtitle: Automating Perfective and Imperfective
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Theoretical review vs Practical drilling
-  - Decision tree for aspect choice
+  - 'Theoretical review vs Practical drilling — address the Process/Result Confusion
+    (e.g., ''Я мию'' vs ''Я помив'') — learner error: confusing process (duration)
+    with result, e.g., ''Я купив молоко дві години'' instead of ''Я купував...'''
+  - Decision tree for aspect choice — visualize the choice between process/habit (imperfective)
+    and result/sequence (perfective) using a Mermaid diagram
 - section: Presentation / Презентація
   points:
-  - The Core 30 Pairs (Tiers 1, 2, 3)
-  - Drill patterns (Past/Future context)
-  - Common pitfalls and how to avoid them
+  - 'The Core 30 Pairs (Tiers 1, 2, 3) — group by formation method: Prefixation (мити-помити),
+    Suffixation (розповідати-розповісти), Suppletive (брати-взяти) — learner error:
+    Prefix Overgeneralization (using ''з-'' for everything instead of specific prefixes
+    like ''по-'' or ''на-'')'
+  - Drill patterns (Past/Future context) — focus on the rhythm of the pairs for automation
+  - Common pitfalls and how to avoid them — specifically the Present-Perfective Trap
+    ('Я напишу зараз' instead of 'Я пишу') and Prefix Overgeneralization
 - section: Practice / Практика
   points:
-  - Rapid fire drills
-  - Narrative sequencing practice
+  - Rapid fire drills — prompt immediate aspect choice based on keywords (зараз, вчора,
+    завтра)
+  - 'Narrative sequencing practice — use sequential actions (First I did X, then Y)
+    to practice perfective strings — cultural hook: use ''cooking borscht'' sequence
+    (UNESCO intangible heritage)'
 - section: Dialogues / Діалоги
   points:
-  - Peer review dialogue on aspect choices
+  - 'Peer review dialogue on aspect choices — scenario options: planning a ''toloka''
+    (building a house) or cooking borscht (process vs. result) — cultural hook: ''toloka''
+    rituals like leaving grain overnight to check for ''clean'' energy'
 vocabulary_hints:
   required:
-  - готувати/приготувати (to cook)
-  - мити/помити (to wash)
-  - прибирати/прибрати (to clean up)
-  - дзвонити/подзвонити (to call)
-  - питати/запитати (to ask)
-  - відповідати/відповісти (to answer)
-  - платити/заплатити (to pay)
-  - купувати/купити (to buy)
-  - продавати/продати (to sell)
-  - знаходити/знайти (to find)
-  - губити/загубити (to lose)
-  - пам'ятати/запам'ятати (to remember)
-  - забувати/забути (to forget)
-  - малювати/намалювати (to draw)
-  - будувати/побудувати (to build)
+  - 'готувати/приготувати (to cook) — ~ вечерю, ~ страву, ~ уроки (prepare lessons);
+    cultural hook: cooking Borscht as intangible heritage (UNESCO)'
+  - 'мити/помити (to wash) — ~ посуд, ~ руки, ~ підлогу, ~ вікна; learner error: confusing
+    process ''I am washing'' with result ''I washed'''
+  - прибирати/прибрати (to clean up) — ~ кімнату, ~ зі столу
+  - дзвонити/подзвонити (to call) — ~ мамі, ~ другові, ~ у двері, ~ за номером
+  - питати/запитати (to ask) — ~ дорогу, ~ ціну, ~ про здоров'я
+  - відповідати/відповісти (to answer) — ~ на питання, ~ на лист, ~ за вчинки (be
+    responsible)
+  - платити/заплатити (to pay) — ~ карткою, ~ готівкою, ~ за каву, ~ рахунок
+  - 'купувати/купити (to buy) — ~ продукти, ~ квиток, ~ подарунок, ~ квартиру; learner
+    error: using imperfective for a completed purchase result'
+  - продавати/продати (to sell) — ~ квартиру, ~ машину
+  - знаходити/знайти (to find) — ~ ключі, ~ рішення, ~ роботу, ~ спільну мову
+  - губити/загубити (to lose) — ~ гаманець, ~ надію
+  - пам'ятати/запам'ятати (to remember) — ~ адресу, ~ правило
+  - 'забувати/забути (to forget) — ~ ім''я, ~ пароль, ~ номер телефону, ~ вдома; learner
+    error: mixing up with ''to leave behind'' (залишати)'
+  - малювати/намалювати (to draw) — ~ картину, ~ портрет
+  - 'будувати/побудувати (to build) — ~ дім, ~ плани, ~ стосунки (build relationships);
+    cultural hook: ''toloka'' tradition for communal house building'
   recommended:
-  - ремонтувати/відремонтувати (to repair)
-  - чекати/зачекати (to wait)
-  - пробувати/спробувати (to try)
-  - показувати/показати (to show)
-  - допомагати/допомогти (to help)
+  - ремонтувати/відремонтувати (to repair) — ~ машину, ~ телефон
+  - чекати/зачекати (to wait) — ~ хвилину, ~ на автобус
+  - пробувати/спробувати (to try) — ~ страву, ~ зробити це
+  - показувати/показати (to show) — ~ фото, ~ дорогу
+  - допомагати/допомогти (to help) — ~ батькам, ~ з перекладом
 activity_hints:
 - type: match-up
   focus: Speed match - rapid pair matching

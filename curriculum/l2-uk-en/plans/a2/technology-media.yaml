@@ -8,20 +8,27 @@ subtitle: Digital World
 content_outline:
 - section: Вступ
   points:
-  - Technology in daily life
-  - Digital vocabulary
-  - Internet culture
+  - 'Technology in daily life — IT Nation context: Ukraine as a major IT hub'
+  - Digital vocabulary — distinction between smartphone (смартфон) and feature phone
+    (телефон)
+  - 'Internet culture — State Standard alignment: usage of internet and social media
+    in daily life'
 - section: Граматика
   points:
   - Devices (комп'ютер, ноутбук, планшет, смартфон)
-  - Internet vocabulary (вебсайт, посилання, пароль)
-  - Media and content (новини, стаття, блог, подкаст)
-  - Digital verbs (шукати, завантажувати, публікувати)
+  - 'Internet vocabulary (вебсайт, посилання, пароль) — learner error: «на інтернеті»
+    (calque) → correct: «в інтернеті» (Locative)'
+  - 'Media and content (новини, стаття, блог, подкаст) — cultural hook: Diia (Дія)
+    app as «State in a smartphone» example for «додаток»'
+  - 'Digital verbs (шукати, завантажувати, публікувати) — distinction: завантажити
+    (download) vs. викласти (upload); learner error: avoid colloquial «скачати»'
 - section: Практика
   points:
-  - Dialogues about remote work
-  - Story about becoming a blogger
-  - Story about grandma learning tech
+  - 'Dialogues about remote work — usage of collocations: «надіслати посилання», «ввести
+    пароль», «у мережі»'
+  - 'Story about becoming a blogger — usage: «публікувати», «соціальна мережа»'
+  - Story about grandma learning tech — using the Diia app for state services (cultural
+    context)
 - section: Підсумок
   points:
   - Summary of vocabulary
@@ -29,20 +36,25 @@ content_outline:
 vocabulary_hints:
   required:
   - комп'ютер (computer)
-  - телефон (phone)
-  - інтернет (internet)
-  - сайт (website)
+  - телефон (phone) — often used interchangeably with смартфон
+  - 'інтернет (internet) — collocations: в інтернеті (Locative), доступ до інтернету,
+    безлімітний інтернет'
+  - 'сайт (website) — collocations: офіційний сайт, зайти на сайт'
   - пошта (email)
-  - завантажити (to download)
+  - 'завантажити (to download) — collocations: завантажувати файл/додаток; note: prefer
+    over colloquial скачати'
   - відправити (to send)
-  - шукати (to search)
+  - 'шукати (to search) — note: шукати в ґуґлі (declined) or шукати в Google'
   recommended:
-  - додаток (app)
-  - пароль (password)
+  - 'додаток (app) — collocations: мобільний додаток, встановити додаток; cultural
+    example: Дія'
+  - 'пароль (password) — collocations: ввести пароль, забути пароль, надійний пароль'
   - акаунт (account)
   - оновлення (update)
   - підписка (subscription)
-  - мережа (network)
+  - 'мережа (network) — collocations: соціальна мережа, у мережі (online), немає мережі'
+  - 'посилання (link) — collocations: активне посилання, надіслати посилання, перейти
+    за посиланням'
 activity_hints:
 - type: match-up
   focus: Technology terms

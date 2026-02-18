@@ -8,51 +8,65 @@ subtitle: Finding an Apartment
 content_outline:
 - section: Introduction
   points:
-  - Rental market overview
-  - Finding apartments
+  - 'Rental market overview — cultural hook: «Без посередників» (No middlemen) is
+    a common phrase to avoid fees'
+  - 'Finding apartments — distinction between «від власника» (from owner) and «через
+    рієлтора» (via agent); collocations: комісія рієлтора, послуги рієлтора'
 - section: Presentation
   points:
-  - Rental vocabulary intro
+  - 'Rental vocabulary intro — learner error: confusing «здавати» (to rent out/give)
+    with «знімати» (to rent/take)'
 - section: Reading Context
   points:
-  - здається, оренда, депозит
-  - Room descriptions
+  - 'здається, оренда, депозит — cultural hook: «Перший і останній місяць» (paying
+    first and last month upfront) is standard practice; collocations: довгострокова
+    оренда, страховий депозит'
+  - 'Room descriptions — writing note: clearly distinguish «кімната» (room in shared
+    flat) from «однокімнатна квартира» (studio/1-bed); cultural hook: «євроремонт»
+    vs «радянський стан»'
 - section: Viewing Dialogue
   points:
-  - Asking about features
-  - меблі, ремонт, техніка
+  - Asking about features — use collocations like «квартира з євроремонтом»
+  - 'меблі, ремонт, техніка — state standard alignment: cover specific furniture vocabulary;
+    collocations: квартира з меблями, без меблів, нові меблі'
 - section: Utilities Review
   points:
-  - комунальні послуги
+  - 'комунальні послуги — learner error: assuming utilities are included; essential
+    question «А комунальні включені?»; collocation: плюс комунальні'
   - газ, вода, електрика
 - section: Agreement Insight
   points:
-  - договір оренди
-  - Terms and conditions
+  - 'договір оренди — collocation: «підписати договір оренди»'
+  - 'Terms and conditions — cultural hook: cash is often preferred for deposits; terms:
+    застава (security deposit)'
 - section: Practice
   points:
-  - Inquire about apartment
+  - 'Inquire about apartment — learner error: using Locative instead of Accusative
+    for moving («в нову квартиру», not «в новій квартирі»)'
   - Discuss terms
 - section: Narrative
   points:
-  - Rental story
+  - Rental story — reinforce Accusative case for destination of moving
 vocabulary_hints:
   required:
-  - оренда (rent)
-  - квартира (apartment)
-  - власник (owner)
+  - оренда (rent) — довгострокова ~, подобова ~, вартість ~и, здати в ~у
+  - квартира (apartment) — однокімнатна ~, з євроремонтом, огляд ~и
+  - власник (owner) — від ~а, дзвонити ~у, я ~
   - орендар (tenant)
-  - депозит (deposit)
-  - комунальні (utilities)
-  - договір (contract)
-  - меблі (furniture)
+  - депозит (deposit) — страховий ~, повернути ~
+  - комунальні (utilities) — платити за ~, ~ включені, плюс ~
+  - договір (contract) — ~ оренди, підписати ~
+  - меблі (furniture) — квартира з ~ями, без ~ів, нові ~
   recommended:
   - здається (for rent)
-  - кімната (room)
-  - ремонт (renovation)
+  - кімната (room) — зняти ~у (vs квартира)
+  - ремонт (renovation) — євроремонт, радянський стан
   - гарантія (guarantee)
-  - завдаток (advance payment)
+  - застава (security deposit) — synonym for депозит
   - умови (conditions)
+  - 'зняти (to rent/take) — ~ квартиру, ~ житло, ~ кімнату, ~ без посередників (learner
+    error: not здати)'
+  - рієлтор (realtor) — комісія ~а, без ~а, послуги ~а
 activity_hints:
 - type: match-up
   focus: Rental vocabulary

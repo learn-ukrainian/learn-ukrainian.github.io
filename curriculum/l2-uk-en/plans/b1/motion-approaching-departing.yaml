@@ -8,33 +8,41 @@ subtitle: Motion - Approaching & Departing
 content_outline:
 - section: Тест
   points:
-  - Prefix diagnostic
+  - 'Prefix diagnostic — learner error focus: confusing під- (approach) vs при- (arrive)'
   - Intuition check
 - section: Пояснення
   points:
-  - під-, від-, до- prefixes
-  - Approaching, departing, reaching
+  - 'під-, від-, до- prefixes — strict preposition enforcement: підійти ДО (genitive),
+    відійти ВІД (genitive)'
+  - 'Approaching, departing, reaching — nuance: підійти implies proximity/closeness,
+    дійти implies reaching the end/limit'
 - section: Поглиблення
   points:
-  - Extended patterns
-  - Nuanced usage
+  - 'Extended patterns — cultural hook: «Проводи» and train station vocabulary (поїзд
+    відходить о...)'
+  - 'Nuanced usage — figurative meanings: дійти згоди (agree), відійти в минуле (become
+    history)'
 - section: Практика
   points:
-  - Prefix selection exercises
+  - 'Prefix selection exercises — learner error focus: distinguishing від- (away from)
+    vs ви- (out of)'
 - section: Діалоги
   points:
-  - Journey dialogues
-  - Natural usage
+  - 'Journey dialogues — cultural hook: «Присісти на дорогу» tradition before departure'
+  - 'Natural usage — common collocations: час підійти, поїзд відійшов'
 vocabulary_hints:
   required:
-  - підійти/підходити (to approach on foot)
+  - підійти/підходити (to approach on foot) — підійти до вікна, підійти ближче, час
+    підійти
   - під'їхати/під'їжджати (to approach by vehicle)
-  - відійти/відходити (to move away on foot)
+  - відійти/відходити (to move away on foot) — відійти від краю, поїзд відійшов (departed),
+    відійти в минуле
   - від'їхати/від'їжджати (to drive away)
-  - дійти/доходити (to reach on foot)
+  - дійти/доходити (to reach on foot) — дійти додому, дійти згоди (figurative), дійшли
+    чутки
   - доїхати/доїжджати (to reach by vehicle)
-  - наближення (approach)
-  - віддалення (moving away)
+  - наближення (approach) — наближення свята, міра наближення
+  - віддалення (moving away) — ефект віддалення, поступове віддалення
   - досягнення (reaching)
   - відстань (distance)
   recommended:

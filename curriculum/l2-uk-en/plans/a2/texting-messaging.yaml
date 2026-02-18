@@ -8,42 +8,55 @@ subtitle: Chatting with Friends
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Messaging culture
-  - Popular apps
+  - 'Messaging culture — ''Don''t Call'' etiquette (''Краще напиши''); cultural hook:
+    avoiding intrusive calls — phenomenon of ''telefonophobia'', preference for text
+    over voice — State Standard §3.4 alignment (Internet & Social Networks)'
+  - 'Popular apps — Telegram supremacy (81% usage); cultural hook: news consumption
+    via Telegram channels — de facto standard for work and personal life'
 - section: Presentation / Презентація
   points:
-  - Texting vocabulary
-  - Common abbreviations
+  - 'Texting vocabulary — focus on ''написати'' (text me) vs ''дзвонити''; learner
+    error: confusing digital verbs — standard phrase ''Напиши мені'''
+  - 'Common abbreviations — ''прив'', ''дяк'' (vs ''спс''), ''бдлск''; learner error:
+    Russianisms in slang — emphasize ''прив/дяк'' are for close friends only — include
+    ''норм'' as high-frequency reply'
 - section: Practice / Практика
   points:
-  - Chat with friends
+  - 'Chat with friends — emphasize Vocative case (''Привіт, Андрію''); learner error:
+    omitting vocative in chats — reinforce that vocative is for all names, not just
+    formal address'
 - section: Dialogues / Діалоги
   points:
-  - Text conversations
-  - Making plans
+  - 'Text conversations — usage of stickers (Patron, memes) and ''голосове'' messages;
+    cultural hook: polarizing nature of voice messages — sticker culture: Shevchenko,
+    Patron the Dog — collocation: ''кинути стікер'''
+  - 'Making plans — organizing a meeting via text — use ''груповий чат'' context —
+    collocation: ''створити чат'''
 - section: Narrative / Розповідь
   points:
-  - Messaging story
+  - 'Messaging story — typical Telegram interactions — includes ''голосове повідомлення''
+    element — context: sharing photos/files (''надіслати фото'')'
 - section: Need More Practice?
   points:
   - Summary and links
 vocabulary_hints:
   required:
-  - повідомлення (message)
-  - надіслати (to send)
-  - отримати (to receive)
-  - прив (hi - abbreviated)
-  - дяк (thanks - abbreviated)
-  - чат (chat)
-  - смайлик (emoji)
-  - голосове (voice message)
+  - повідомлення (message) — надіслати ~, отримати ~, голосове ~
+  - надіслати (to send) — ~ фото, ~ файл, ~ смайлик
+  - отримати (to receive) — standard pair with надіслати
+  - прив (hi - abbreviated) — standalone greeting; close friends only
+  - дяк (thanks - abbreviated) — standalone thanks; avoid Russian 'спс'
+  - чат (chat) — груповий ~, створити ~
+  - смайлик (emoji) — надіслати ~
+  - голосове (voice message) — often polarizing (love/hate); huge part of culture
   recommended:
-  - норм (normal/fine)
-  - прикольно (cool)
-  - круто (awesome)
-  - стікер (sticker)
-  - пересилати (to forward)
-  - видалити (to delete)
+  - норм (normal/fine) — Як ти? - Норм.
+  - прикольно (cool) — common reaction
+  - круто (awesome) — common reaction
+  - 'стікер (sticker) — набір стікерів, кинути ~; cultural hook: sticker packs (Patron,
+    Shevchenko)'
+  - пересилати (to forward) — forward messages in Telegram
+  - видалити (to delete) — delete for everyone vs just me
 activity_hints:
 - type: match-up
   focus: Texting vocabulary

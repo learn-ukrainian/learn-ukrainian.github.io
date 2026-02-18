@@ -8,39 +8,49 @@ subtitle: Consolidating the Case System
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Importance of the 7-case system
-  - Quick reference table
+  - 'Importance of the 7-case system — cultural hook: Ukrainian has 7 cases (unlike
+    English''s few) which creates its famous melody and emotional nuance (Vocative);
+    often ranked 2nd most melodic language after Italian'
+  - Quick reference table — establish 'Court Translator' persona for precision in
+    endings, encouraging 'legal' accuracy
 - section: Presentation / Презентація
   points:
-  - Case-by-case review (Nom to Voc)
-  - Gender forms summary
-  - Strategic question-based approach
+  - Case-by-case review (Nom to Voc) — aligns with State Standard §4.2.2 (all 7 cases,
+    singular/plural)
+  - 'Gender forms summary — learner error: confusing Genitive and Accusative for animate
+    masculine nouns (''Я бачу друга'', not ''Я бачу друг'')'
+  - 'Strategic question-based approach — focus on question words as triggers: хто/що,
+    кого/чого, кому/чому, ким/чим, на кому/на чому'
 - section: Practice / Практика
   points:
-  - Mixed case identification
-  - Paradigms for key nouns (друг, книга)
+  - 'Mixed case identification — learner error: using Locative without a preposition
+    (''Я працюю в лікарні'', not ''Я працюю лікарні'')'
+  - 'Paradigms for key nouns (друг, книга) — learner error: using Nominative for age
+    instead of Dative (''Мені 20 років'', not ''Я 20 років'')'
 - section: Dialogues / Діалоги
   points:
-  - Real-world application of mixed cases
+  - 'Real-world application of mixed cases — focus on precision and correctness in
+    everyday scenarios; context: legal/official scenarios to fit Court Translator
+    persona'
 vocabulary_hints:
   required:
-  - хто (who)
-  - що (what)
-  - кого (whom - acc/gen)
-  - чого (of what)
-  - кому (to whom)
-  - чому (to what / why)
-  - ким (by whom)
-  - чим (by what)
-  - відмінок (case)
-  - називний (nominative)
-  - родовий (genitive)
-  - давальний (dative)
-  - знахідний (accusative)
-  - орудний (instrumental)
-  - місцевий (locative)
+  - хто (who) — хто це? (High freq)
+  - що (what) — що це? (High freq)
+  - кого (whom - acc/gen) — нема кого (High freq)
+  - чого (of what) — нема чого (High freq)
+  - кому (to whom) — дати комусь (High freq)
+  - чому (to what / why) — чому ти тут? (High freq)
+  - ким (by whom) — бути кимсь (High freq)
+  - чим (by what) — задоволений чимсь (High freq)
+  - відмінок (case) — відмінювати за відмінками (Academic)
+  - називний (nominative) — суб'єкт (State Standard)
+  - родовий (genitive) — заперечення, кількість (State Standard)
+  - давальний (dative) — адресат (State Standard)
+  - знахідний (accusative) — прямий об'єкт (State Standard)
+  - орудний (instrumental) — знаряддя, супровід (State Standard)
+  - місцевий (locative) — місце, на кому / на чому (State Standard)
   recommended:
-  - кличний (vocative)
+  - кличний (vocative) — звертання (State Standard)
   - однина (singular)
   - множина (plural)
   - закінчення (ending)

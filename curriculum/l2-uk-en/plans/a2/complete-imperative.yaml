@@ -9,21 +9,36 @@ content_outline:
 - section: Introduction / Вступ
   points:
   - Concept of willpower in language
-  - Why imperative is not always 'impolite'
+  - 'Why imperative is not always ''impolite'' — contrast with English ''Please''
+    dependency; cultural note: wishes like «Нехай щастить!» function as social glue
+    rather than commands — cultural hook: emphasizes shared hopes for success'
 - section: Presentation / Презентація
   points:
-  - Review of 2nd person (ти/ви)
-  - The 'Let's' form (-мо suffix)
-  - 3rd Person: хай / нехай (The indirect wish)
-  - Formation nuances (soft vs hard stems)
-  - Negative Imperatives (не)
+  - 'Review of 2nd person (ти/ви) — content note: Scaffolding required, use English
+    to explain the concept first'
+  - 'The ''Let''s'' form (-мо suffix) — learner error: English speakers often try
+    ''let''s + infinitive'' instead of the dedicated -мо/-імо suffix (e.g., *ходімо*
+    not *давай ходити*)'
+  - '3rd Person: хай / нехай (The indirect wish) — learner error: *нехай* is NOT the
+    negative of *хай*, they are interchangeable particles for 3rd person; verb remains
+    in present/future form (e.g., *хай він читає*)'
+  - 'Formation nuances (soft vs hard stems) — include State Standard examples: *мріяти
+    (мрій), казати (кажи), пити (пий)* — content note: ensure IPA stress marks for
+    all verbs (мрі́й, кажи́, пий)'
+  - 'Negative Imperatives (не) — content note: clarify position of *не* (e.g., *хай
+    не читає*)'
 - section: Practice / Практика
   points:
-  - Instructions for a recipe (Борщ)
-  - Toast making ceremony
+  - Instructions for a recipe (Борщ) — contrast 2nd person commands (*додайте*) with
+    collective suggestions (*додаймо*)
+  - 'Toast making ceremony — cultural hook: The ritual of «Будьмо!» as a call to collective
+    presence; mention the 3rd toast tradition «за кохання/жінок» — cultural note:
+    men traditionally stand for this toast'
 - section: Dialogues / Діалоги
   points:
-  - Kitchen dialogue or team coordination
+  - 'Kitchen dialogue or team coordination — use context to practice mixing ''Do this''
+    (2nd person) with ''Let him do that'' (3rd person) and ''Let''s do this'' (1st
+    person plural) — vocabulary hook: include *ходімо в гості* or *ходімо разом*'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -46,3 +61,19 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Carpathian Rescue Lead
+vocabulary_hints:
+  required:
+  - 'хай (let) — particle for 3rd person imperative; collocations: хай живе (long
+    live), хай щастить (good luck)'
+  - 'нехай (let) — particle for 3rd person imperative; interchangeable with хай; collocation:
+    нехай буде (let it be)'
+  - 'будьмо (cheers/let us be) — standard drinking toast; strict cultural usage; cultural
+    hook: collective presence'
+  - 'бажати (to wish) — takes Genitive case; collocations: бажаю щастя (I wish happiness),
+    бажаю успіхів (I wish success)'
+  - 'ходімо (let''s go) — 1st person plural imperative of йти/ходити; collocation:
+    ходімо разом (let''s go together), ходімо в гості'
+  recommended:
+  - 'мріяти (to dream) — imperative: мрій/мрійте/нехай мріє; State Standard example'
+  - 'казати (to say) — imperative: кажи/кажіть/нехай каже; State Standard example'
+  - 'пити (to drink) — imperative: пий/пийте/нехай п''є; State Standard example'

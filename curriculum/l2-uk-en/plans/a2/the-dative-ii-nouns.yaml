@@ -8,44 +8,67 @@ subtitle: Giving, Sending, and Showing
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Building on dative pronouns from M01
-  - Indirect object concept (recipient of action)
-  - Ukrainian overview of recipients
+  - Building on dative pronouns from M01 — recall «мені/тобі» as foundational examples;
+    builds on A1-09 (Nominative Plural) for Dative Plural base
+  - Indirect object concept (recipient of action) — frame as the "To/For" case for
+    easier English-to-Ukrainian mapping (gave [to] mom, sent [to] dad)
+  - Ukrainian overview of recipients — include typical contexts like «Дідусеві вісімдесят
+    років» to introduce age expression (Standard §4.2.2.3)
 - section: Presentation
   points:
-  - Masculine endings (-ові/-у)
-  - Feminine endings (-і) with consonant changes
-  - Neuter and Plural endings
-  - Dative-hungry verbs
+  - 'Masculine endings (-ові/-у) — contrast «студентові» and «студенту»; learner error:
+    avoid confusion with Accusative/Genitive; learner error: mixing gender endings
+    (e.g. giving Masc -у to Fem nouns)'
+  - 'Feminine endings (-і) with consonant changes — focus on shifts: г-з (нога-нозі),
+    к-ц (рука-руці), х-с (муха-мусі) for phonetic euphony'
+  - Neuter and Plural endings — emphasize -ам for plurals, building on A1 Nominative
+    Plural knowledge
+  - 'Dative-hungry verbs — focus on high-frequency social verbs like «телефонувати»
+    (call mom/doctor), «допомагати» (help parents/friend), «дарувати» (give flowers/joy);
+    learner error: using Accusative for help/call (e.g. «допомагати маму» instead
+    of «мамі»)'
 - section: Practice
   points:
-  - Reading and sentence transformation
+  - Reading and sentence transformation — use "Gift Etiquette" context (odd number
+    of flowers for living, avoid yellow for romance) to practice «дарувати квіти мамі»
 - section: Dialogues
   points:
-  - Mini-dialogues in context
+  - Mini-dialogues in context — include "Angel Day" (Name Day) greetings «Вітаю з
+    Днем ангела!» and gift-giving scenarios for the «іменинник»
+  - Cultural note context — discuss taboo gifts (sharp objects, watches) in a dialogue
+    where characters 'buy' the gift for a coin to avoid bad luck
 vocabulary_hints:
   required:
-  - давати (to give)
-  - дарувати (to gift)
-  - посилати (to send)
-  - надсилати (to send)
-  - показувати (to show)
-  - пояснювати (to explain)
-  - розповідати (to tell)
-  - допомагати (to help)
-  - заважати (to bother)
-  - личити (to suit)
-  - підходити (to suit)
-  - вистачати (to be enough)
-  - бракувати (to lack)
-  - відповідати (to answer)
-  - телефонувати (to call)
+  - 'давати (to give) — collocations: «давати пораду» (give advice), «давати відповідь»
+    (give answer), «давати слово» (give word/promise)'
+  - 'дарувати (to gift) — collocations: «дарувати квіти» (give flowers), «дарувати
+    радість» (bring joy), «дарувати подарунок» (give a gift); cultural hook: odd number
+    for the living!'
+  - посилати (to send) — generic "to send" (e.g., a courier)
+  - 'надсилати (to send) — digital/post: «надсилати листа» (send a letter), «надсилати
+    повідомлення» (send a message)'
+  - показувати (to show) — showing the way or a gift to a recipient
+  - пояснювати (to explain) — «пояснювати правила» (explain rules), «пояснювати дорогу»
+    (explain the way), «пояснювати причину» (explain reason)
+  - розповідати (to tell) — telling a story or news to someone
+  - 'допомагати (to help) — collocations: «допомагати батькам» (help parents), «допомагати
+    у навчанні» (help with studies); learner error: use Dative («допомагати мамі»),
+    NOT Accusative («маму»)'
+  - заважати (to bother) — bothering or hindering someone
+  - личити (to suit) — clothing/style suiting someone
+  - підходити (to suit) — something being suitable for someone
+  - вистачати (to be enough) — being sufficient for someone
+  - бракувати (to lack) — something missing/lacking for someone
+  - відповідати (to answer) — answering to a person or group
+  - 'телефонувати (to call) — collocations: «телефонувати мамі» (call mom), «телефонувати
+    лікарю» (call doctor); learner error: use Dative («телефонувати директору»), NOT
+    Accusative; distinct from «кликати»'
   recommended:
-  - шкодити (to harm)
-  - вірити (to believe)
-  - довіряти (to trust)
-  - радити (to advise)
-  - дозволяти (to allow)
+  - шкодити (to harm) — causing harm to someone/something
+  - вірити (to believe) — believing someone
+  - довіряти (to trust) — trusting someone
+  - радити (to advise) — giving advice to someone
+  - дозволяти (to allow) — allowing/permitting someone
 activity_hints:
 - type: fill-in
   focus: Add dative endings to nouns

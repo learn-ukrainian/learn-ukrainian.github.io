@@ -8,48 +8,58 @@ subtitle: Comprehensive Assessment
 content_outline:
 - section: Warm-up
   points:
-  - Структура фінального тесту
+  - Структура фінального тесту — supportive tone to reduce stress, emphasis on celebration
+    of progress
   - Як оцінюється кожна частина
-  - Поради для успішного складання
+  - Поради для успішного складання — focus on calm confidence («Ви готові!»)
 - section: Presentation
   points:
-  - Іменники та рід
-  - Дієслова (теперішній, минулий, майбутній час)
-  - Відмінки (називний, знахідний, родовий, місцевий)
-  - Узгодження прикметників та займенників
+  - 'Іменники та рід — learner error: mismatching adjectives/pronouns (e.g., *Мій
+    велика машина*)'
+  - 'Дієслова (теперішній, минулий, майбутній час) — learner error: mixing conjugation
+    classes (Class I -ати vs Class II -ити)'
+  - 'Відмінки (називний, знахідний, родовий, місцевий) — learner error: confusion
+    between motion (Acc) and location (Loc) with *в/на*'
+  - Узгодження прикметників та займенників — verification of morphological competence
+    per State Standard §4.2
 - section: Presentation 2
   points:
-  - Тематичні групи (їжа, транспорт, покупки)
+  - Тематичні групи (їжа, транспорт, покупки) — integrated into «Trip around Ukraine»
+    narrative
   - Базові фрази для спілкування
   - Числа та час
 - section: Presentation 3
   points:
-  - Аудіювання (розуміння простих діалогів)
-  - Читання (розуміння коротких текстів)
-  - Говоріння (рольові ситуації)
+  - Аудіювання (розуміння простих діалогів) — focus on verbs *слухати* and *розуміти*
+  - Читання (розуміння коротких текстів) — alignment with State Standard §4.3.1 simple
+    sentences
+  - Говоріння (рольові ситуації) — practical scenarios aligned with A1 communicative
+    goals
 - section: Comprehensive Test
   points:
-  - Інтеграційні завдання
+  - 'Інтеграційні завдання — cultural hook: context of visiting Kyiv (Dnipro, chestnuts)
+    and Lviv (coffee, books)'
   - Практичні сценарії
 - section: Warm-up 2
   points:
-  - Фінальний наратив про подорож Україною
+  - Фінальний наратив про подорож Україною — naturally revisiting themes like Transport,
+    Food, and Home
   - Застосування всіх навичок A1
-  - Готовність до рівня A2
+  - Готовність до рівня A2 — preparing for Genitive/Dative cases in next level
 vocabulary_hints:
   required:
-  - говорити (to speak)
+  - говорити (to speak) — говорити українською, говорити правду
   - читати (to read)
   - писати (to write)
-  - слухати (to listen)
-  - розуміти (to understand)
+  - слухати (to listen) — слухати музику, слухати вчителя
+  - розуміти (to understand) — добре розуміти, розуміти текст
   - відповідати (to answer)
   - питати (to ask)
-  - знати (to know)
+  - знати (to know) — знати мову, знати відповідь, я знаю
   recommended:
   - правильно (correctly)
   - помилка (mistake)
-  - завдання (task)
+  - завдання (task) — домашнє завдання, цікаве завдання
   - оцінка (grade)
 activity_hints:
 - type: quiz

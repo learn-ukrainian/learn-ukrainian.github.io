@@ -8,33 +8,55 @@ subtitle: The Legendary Founder of the First Sich
 content_outline:
 - section: Вступ
   points:
-  - The transition from princes to cossack leaders
-  - Dmytro Vyshnevetskyi as a figure of the frontier
+  - 'The transition from princes to cossack leaders — Vyshnevetskyi as the ''last
+    knight'' of the princely era and ''first knight'' of the Cossack era; cultural
+    hook: the synthesis of old aristocracy and new steppe tactics'
+  - Dmytro Vyshnevetskyi as a figure of the frontier — living on the border of settled
+    Rzeczpospolita and nomadic Wild Fields; [!history-bite] he was an elite magnate,
+    debunking the myth that all Cossacks were runaway serfs
 - section: 'Шлях князя: Від Волині до Степу'
   points:
-  - Origins and noble status
-  - Early military experience
-  - Diplomatic maneuvers
+  - Origins and noble status — born ~1517 in Vyshnivets, Volhynia, of the Gedyminovych
+    lineage
+  - Early military experience — Starosta of Kaniv and Cherkasy (1550-1553), the frontline
+    defense against Tatar raids
+  - Diplomatic maneuvers — realizing passive castle defense was insufficient, shifting
+    to active steppe tactics to intercept raiders
 - section: Заснування Малої Хортиці
   points:
-  - Strategic necessity of the 1550s
-  - Life in the first fortress
-  - Historical legacy
+  - Strategic necessity of the 1550s — establishing a base in 1556 on Mala Khortytsia
+    island to control river crossings; [!context] why Khortytsia was the ideal 'Dnipro
+    castle'
+  - Life in the first fortress — not just a camp, but a fortress with earthworks and
+    wooden log structures
+  - Historical legacy — the first precedent of a permanent Cossack garrison beyond
+    the rapids
 - section: Читання
   points:
-  - Analysis of folk ballads and primary accounts
+  - Analysis of folk ballads and primary accounts — specifically 'Song of Baida' and
+    Marcin Bielski's chronicle; [!culture] connecting Baida's image to the 'kharakternyk'
+    archetype
 - section: Геополітика і Дипломатія
   points:
-  - Relations with Poland, Lithuania, and Moscow
-  - The anti-Tatar coalition strategy
+  - Relations with Poland, Lithuania, and Moscow — the 'Moscow episode' (1558-1561)
+    as a pragmatic resource grab for the anti-Crimean war; [!myth-buster] Vyshnevetskyi
+    was an ally, not a servant, and left when priorities shifted
+  - The anti-Tatar coalition strategy — attempts to unite Poland, Lithuania, Moscow,
+    and potentially Moldova against the Ottoman threat
 - section: Первинні джерела
   points:
-  - Chronicle accounts of Vyshnevetskyi's death
-  - Ballad of Baida
+  - Chronicle accounts of Vyshnevetskyi's death — Marcin Bielski's detailed description
+    of his execution in Istanbul (1563) by hanging from a rib; [!quote] French ambassador's
+    account confirming the legend
+  - Ballad of Baida — symbolism of refusing the Sultan's daughter/faith as an affirmation
+    of Christian knightly honor
 - section: Деколонізаційний погляд
   points:
-  - Vyshnevetskyi as an independent actor
-  - The myth of Moscow's protectorate
+  - Vyshnevetskyi as an independent actor — acting as a sovereign who sent ambassadors
+    and built fortresses; [!decolonization] treating him as a geopolitical player,
+    not a vassal
+  - The myth of Moscow's protectorate — refuting the Soviet narrative of 'eternal
+    attraction' to Russia; it was a situational alliance broken by Vyshnevetskyi
 activity_hints:
 - type: reading
   focus: 'Ballad of Baida: Analysis of folk imagery'
@@ -58,19 +80,20 @@ register: публіцистичний
 phase: HIST.5 [Rise of Cossacks]
 vocabulary_hints:
   required:
-  - історія (history)
-  - держава (state)
-  - народ (people)
-  - влада (power)
-  - період (period)
-  - подія (event)
-  - джерело (source)
-  - спадщина (heritage)
+  - історія (history) — козацька історія, історія України, сторінки історії
+  - держава (state) — будувати державу, інтереси держави, захист держави
+  - народ (people) — український народ, пам'ять народу, воля народу
+  - влада (power) — князівська влада, військова влада, боротьба за владу
+  - період (period) — період Руїни, княжий період, історичний період
+  - подія (event) — історична подія, трагічна подія, важлива подія
+  - джерело (source) — першоджерело, історичне джерело, надійне джерело
+  - спадщина (heritage) — культурна спадщина, козацька спадщина, історична спадщина
   recommended:
-  - аналіз (analysis)
-  - контекст (context)
-  - вплив (influence)
-  - наслідки (consequences)
+  - аналіз (analysis) — критичний аналіз, аналіз джерел, глибокий аналіз
+  - контекст (context) — історичний контекст, політичний контекст, культурний контекст
+  - вплив (influence) — політичний вплив, культурний вплив, вплив на події
+  - наслідки (consequences) — політичні наслідки, історичні наслідки, непередбачувані
+    наслідки
 persona:
   voice: Senior Professor of History
   role: Fortress Builder

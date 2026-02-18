@@ -8,41 +8,48 @@ subtitle: Finding Your Way Around Ukrainian Spaces
 content_outline:
 - section: Warm-up
   points:
-  - Питання Де? в повсякденному житті
-  - Основні місця (дім, робота, школа)
+  - 'Питання Де? в повсякденному житті — frequent collocations: «Де ти?», «Де ви?»,
+    «Де це?»'
+  - Основні місця (дім, робота, школа) — introduce basic locatives (вдома, на роботі,
+    у школі) before grammar rules
 - section: Presentation
   points:
-  - 'Закінчення: -і/-ї для більшості іменників'
-  - Чергування приголосних (к→ц, г→з, х→с)
-  - Прийменник у/в (у школі, в офісі)
-  - Прийменник на (на роботі, на вулиці)
-  - Коли в, коли на (основні правила)
+  - 'Закінчення: -і/-ї для більшості іменників — aligns with State Standard §4.2.3.3'
+  - 'Чергування приголосних (к→ц, г→з, х→с) — learner error: missing mutations (e.g.,
+    «в рукі» instead of «у руці», «на нозі»)'
+  - 'Прийменник у/в (у школі, в офісі) — learner error: violation of euphony (e.g.,
+    «В Львові» should be «У Львові»)'
+  - 'Прийменник на (на роботі, на вулиці) — learner error: calque «in work» -> «у
+    роботі» instead of «на роботі»'
+  - 'Коли в, коли на (основні правила) — contrast pairs: «у банку» vs «на пошті»,
+    «в Україні» vs «на вулиці»'
 - section: Practice
   points:
-  - Трансформація називний → місцевий
-  - Вибір у/в чи на
-  - Діалоги "Де знаходиться...?"
+  - Трансформація називний → місцевий — focus on consonant mutations (к→ц, г→з, х→с)
+  - Вибір у/в чи на — visualize container (в) vs surface/event (на)
+  - Діалоги "Де знаходиться...?" — use question "Де це?" and common locatives
 - section: Production
   points:
-  - Опис своєї кімнати (Книга на столі)
-  - Опис розташування в місті
+  - 'Опис своєї кімнати (Книга на столі) — cultural hook: shoes off in hallway (slippers)'
+  - 'Опис розташування в місті — cultural hook: contrast Stalinkas vs Khrushchevkas
+    architecture'
 vocabulary_hints:
   required:
-  - де (where)
-  - в/у (in)
-  - на (on/at)
-  - кімната (room)
-  - стіл (table)
-  - магазин (store)
-  - школа (school)
-  - робота (work)
+  - 'де (where) — collocations: Де ти? Де ви? Де це?'
+  - в/у (in) — euphony rules are critical (В Львові vs У Львові)
+  - 'на (on/at) — specific usage: на роботі, на столі, на вулиці'
+  - 'кімната (room) — usage: в кімнаті'
+  - 'стіл (table) — usage: на столі'
+  - 'магазин (store) — usage: в магазині'
+  - 'школа (school) — usage: у школі'
+  - 'робота (work) — usage: на роботі (not у!)'
   recommended:
-  - банк (bank)
-  - вокзал (station)
-  - підлога (floor)
-  - стіна (wall)
-  - вулиця (street)
-  - парк (park)
+  - 'банк (bank) — usage: у банку'
+  - 'вокзал (station) — usage: на вокзалі'
+  - 'підлога (floor) — usage: на підлозі (mutation г→з)'
+  - 'стіна (wall) — usage: на стіні'
+  - 'вулиця (street) — usage: на вулиці'
+  - 'парк (park) — usage: у парку'
 activity_hints:
 - type: fill-in
   focus: Change nouns to locative

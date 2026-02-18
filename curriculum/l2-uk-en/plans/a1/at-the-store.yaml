@@ -8,34 +8,41 @@ subtitle: Supermarket Shopping
 content_outline:
 - section: Warm-up
   points:
-  - Структура українського супермаркету
-  - Відділи (молочний, м'ясний, кондитерський)
+  - 'Структура українського супермаркету — cultural hook: ''Silpo'' themed supermarkets
+    offer immersive cultural experiences (e.g., GTA, Steampunk themes)'
+  - 'Відділи (молочний, м''ясний, кондитерський) — collocation: у якому відділі?'
 - section: Presentation
   points:
-  - Питання про місцезнаходження (Де знаходиться...? / В якому відділі...?)
+  - 'Питання про місцезнаходження (Де знаходиться...? / В якому відділі...?) — learner
+    error: Inanimate Masculine Over-correction (e.g., ''я купую магазин'', not ''магазина'')'
   - Прохання допомогти (Вибачте, де тут...?)
-  - На касі (Пакет потрібен? / Готівкою чи карткою?)
-  - Акції та знижки (Це в акції? / Скільки відсотків знижка?)
-  - Проблеми (Ця ціна неправильна / Чек, будь ласка)
+  - 'На касі (Пакет потрібен? / Готівкою чи карткою?) — emphasizing the ''Bag Ritual''
+    (''Пакет потрібен?''); learner error: avoid Russian calque ''покупка'', use ''купівля''
+    or ''закупи'''
+  - 'Акції та знижки (Це в акції? / Скільки відсотків знижка?) — collocation: акційна
+    знижка'
+  - 'Проблеми (Ця ціна неправильна / Чек, будь ласка) — cultural hook: tradition of
+    printing predictions/quotes on receipts (''чек'')'
 - section: Practice
   points:
-  - Діалог 1: Пошук товару в магазині
-  - Діалог 2: Оплата на касі
-  - Діалог 3: Повернення товару
+  - 'Діалог 1: Пошук товару в магазині — writing note: use high-frequency feminine
+    nouns (кава, вода) to reinforce Accusative -у/-ю ending'
+  - 'Діалог 2: Оплата на касі — collocation: розрахуватися на касі'
+  - 'Діалог 3: Повернення товару'
 - section: Warm-up 2
   points:
-  - Наратив про похід у супермаркет
+  - 'Наратив про похід у супермаркет — collocation: іти в магазин (movement context)'
   - Типові ситуації та фрази
 vocabulary_hints:
   required:
-  - магазин (store)
-  - супермаркет (supermarket)
-  - каса (checkout)
-  - відділ (section/department)
-  - пакет (bag)
-  - знижка (discount)
-  - ціна (price)
-  - чек (receipt)
+  - магазин (store) — продуктовий магазин, іти в магазин
+  - супермаркет (supermarket) — Silpo themed stores
+  - каса (checkout) — на касі, черга до каси
+  - відділ (section/department) — у якому відділі?, молочний/м'ясний відділ
+  - пакет (bag) — пакет потрібен?, покласти в пакет
+  - знижка (discount) — велика знижка, акційна знижка
+  - ціна (price) — ціна за кілограм, низька ціна
+  - чек (receipt) — чек, будь ласка; predictions on receipts
   recommended:
   - кошик (basket)
   - візок (cart)

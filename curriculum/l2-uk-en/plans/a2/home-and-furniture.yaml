@@ -8,41 +8,52 @@ subtitle: Where I Live
 content_outline:
 - section: Вступ
   points:
-  - Types of housing
-  - Home vocabulary introduction
+  - Types of housing — aligns with State Standard §3.2 (квартира, приватний будинок)
+  - Home vocabulary introduction — use a 'Room Map' concept to group items logically
 - section: Граматика
   points:
-  - Rooms (кухня, вітальня, спальня)
-  - Furniture (стіл, стілець, диван, ліжко)
-  - Appliances (холодильник, пральна машина)
-  - Locative case for location
+  - 'Rooms (кухня, вітальня, спальня) — note ''на кухні'' exception (English ''in'',
+    Ukrainian ''on''); learner error: confusing prepositions'
+  - 'Furniture (стіл, стілець, диван, ліжко) — cultural hook: superstition about sitting
+    at the corner of a table (unmarried); learner error: ''у столі'' (inside) vs ''на
+    столі'' (on)'
+  - Appliances (холодильник, пральна машина) — builds on a2-45 (Food/Cooking)
+  - 'Locative case for location — explicitly highlight consonant mutations [г]→[з],
+    [к]→[ц], [х]→[с] (e.g., підлога -> на підлозі); learner error: forgetting mutations'
 - section: Практика
   points:
-  - Dialogues about homes
-  - Room descriptions
+  - 'Dialogues about homes — cultural hook: The Threshold (Поріг) taboo (shaking hands
+    across it)'
+  - 'Room descriptions — learner error: confusing Location (Locative) vs Direction
+    (Accusative)'
 - section: Корисні вирази
   points:
-  - Useful home phrases
+  - Useful home phrases — include invitation etiquette (crossing threshold)
 - section: Підсумок
   points:
   - Summary of vocabulary
 vocabulary_hints:
   required:
-  - кімната (room)
-  - кухня (kitchen)
-  - спальня (bedroom)
-  - вітальня (living room)
-  - ванна (bathroom)
-  - меблі (furniture)
-  - стіл (table)
-  - ліжко (bed)
+  - 'кімната (room) — learner error: confusion with ''місце'' (place); location vs
+    direction'
+  - кухня (kitchen) — на кухні (in the kitchen) [exception]
+  - спальня (bedroom) — у спальні (in the bedroom)
+  - вітальня (living room) — у вітальні (in the living room)
+  - ванна (bathroom) — у ванній (in the bathroom)
+  - меблі (furniture) — collective noun (singular); меблі для дому
+  - стіл (table) — на столі (on the table), ставити стіл (to set the table), письмовий
+    стіл (desk)
+  - ліжко (bed) — у ліжку (in bed), двоспальне ліжко (double bed), стелити ліжко (to
+    make the bed)
   recommended:
-  - шафа (wardrobe)
-  - диван (sofa)
-  - холодильник (refrigerator)
-  - пральна машина (washing machine)
-  - квартира (apartment)
-  - будинок (house)
+  - шафа (wardrobe) — у шафі (in the wardrobe/closet), книжкова шафа (bookcase), шафа-купе
+    (sliding wardrobe)
+  - диван (sofa) — на дивані (on the sofa), лежати на дивані (to lie on the sofa)
+  - холодильник (refrigerator) — common appliance
+  - пральна машина (washing machine) — essential appliance
+  - квартира (apartment) — у квартирі (in the apartment)
+  - 'будинок (house) — у будинку (in the house); cultural hook: Domovyk (spirit protecting
+    the home)'
 activity_hints:
 - type: match-up
   focus: Rooms and furniture

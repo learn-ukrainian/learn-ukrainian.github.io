@@ -8,31 +8,37 @@ subtitle: Essential Aspect Pairs - The 40 most common verb pairs
 content_outline:
 - section: Тест
   points:
-  - Diagnostic aspect pair recognition
+  - Diagnostic aspect pair recognition — target 'Perfective Present' error trap (e.g.
+    'Я зроблю це зараз')
   - Intuition check
 - section: Пояснення
   points:
-  - 40 essential aspect pairs
+  - '40 essential aspect pairs — alignment: State Standard §4.2.3.1 (B1); prioritize
+    Top 10/20 verbs like робити/зробити, говорити/сказати'
   - Formation patterns (prefix, suffix, suppletive)
-  - Usage in context
+  - 'Usage in context — visual aid: Process vs Result timeline; cultural hook: «Вода
+    камінь точить» (Imperfective focus); use icons 🔄/✅'
 - section: Практика
   points:
   - Pair matching exercises
-  - Context selection
+  - 'Context selection — learner error: mixing ''буду'' + perfective infinitive (''Я
+    буду прочитати'')'
 - section: Діалоги
   points:
-  - Aspect pairs in conversation
-  - Natural usage
+  - 'Aspect pairs in conversation — learner error: using perfective for present tense
+    meaning; usage: «Вчора я читав» (process) vs «Вчора я прочитав» (result)'
+  - 'Natural usage — cultural hook: «Зробив діло – гуляй сміло» (Result focus)'
 vocabulary_hints:
   required:
-  - робити/зробити (to do/make)
-  - писати/написати (to write)
-  - читати/прочитати (to read)
-  - говорити/сказати (to speak/say)
-  - брати/взяти (to take)
-  - давати/дати (to give)
-  - їсти/з'їсти (to eat)
-  - пити/випити (to drink)
+  - робити/зробити (to do/make) — робити домашнє завдання, зробити помилку (Top 10
+    verbs)
+  - писати/написати (to write) — писати листа, написати книгу
+  - читати/прочитати (to read) — читати новини, прочитати до кінця
+  - говорити/сказати (to speak/say) — говорити правду, сказати «ні» (Top 20 verbs)
+  - брати/взяти (to take) — брати участь, взяти до уваги (Top 50 verbs)
+  - давати/дати (to give) — давати слово, дати пораду (Top 50 verbs)
+  - їсти/з'їсти (to eat) — їсти сніданок, з'їсти все
+  - пити/випити (to drink) — пити каву, випити ліки
   - класти/покласти (to put)
   - ставити/поставити (to put standing)
   recommended:
@@ -40,7 +46,7 @@ vocabulary_hints:
   - закривати/закрити (to close)
   - починати/почати (to begin)
   - закінчувати/закінчити (to finish)
-  - вчити/вивчити (to study/learn)
+  - вчити/вивчити (to study/learn) — вчити мову, вивчити вірш
 activity_hints:
 - type: match-up
   focus: Imperfective → Perfective pairs

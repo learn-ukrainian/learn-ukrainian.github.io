@@ -8,39 +8,50 @@ subtitle: Word Formation Mastery
 content_outline:
 - section: Introduction / Вступ
   points:
-  - From analysis to synthesis
-  - Creating new words
-  - Pattern recognition
+  - 'From analysis to synthesis — cultural hook: Ukrainian as a ''LEGO'' language
+    (synthetic vs analytic); avoid ''phrasal verb'' thinking (e.g., get up vs встати)'
+  - Creating new words — introduction to high-yield 'blocks' (prefixes по-, з-, ви-,
+    пере-, за-)
+  - 'Pattern recognition — transition from memorizing words to building them (State
+    Standard §4.3.1-2: Aspectual Pairs & Comparisons)'
 - section: Presentation / Презентація
   points:
-  - The Word Architect and Derivative Chain
-  - The 8 Super-Roots Review
-  - The Mastery Matrix
-  - Anatomy of a Complex Word
+  - The Word Architect and Derivative Chain — use 'Word Math' equations (e.g., за
+    + пис + ати = записати)
+  - The 8 Super-Roots Review — focus on high-frequency roots like -ход- (motion),
+    -пис- (write), -роб- (work)
+  - The Mastery Matrix — covering Aspectual Pairs (prefixation) and Comparisons (suffixation)
+    per State Standard §4.3.1-2
+  - 'Anatomy of a Complex Word — examples like ''гідроелектростанція'' to show synthesis
+    logic; learner error: Root Rigidity (failing to see root when vowels change, e.g.,
+    кінець/кінця)'
 - section: Practice / Практика
   points:
-  - Reverse Engineering
-  - Word Architect Challenge
-  - Logic Synthesis
+  - Reverse Engineering — identifying roots in complex words to guess meaning
+  - 'Word Architect Challenge — applying the Euphony Rule (Cafe ''Ptakh'': с- before
+    к, п, т, ф, х); learner error: writing ''зфотографувати'' instead of ''сфотографувати'''
+  - 'Logic Synthesis — distinguishing prefixes; learner error: using ''ре-'' instead
+    of ''пере-'' for repetition (e.g., переписати)'
 - section: Dialogues / Діалоги
   points:
-  - At the Linguistic Club conversation
-  - Confidence through Logic reflection
+  - At the Linguistic Club conversation — discussing 'Emotional Engineering' (diminutives
+    like мама -> матуся)
+  - Confidence through Logic reflection — summarizing the 'Mastery Matrix' approach
 vocabulary_hints:
   required:
-  - корінь (root)
-  - префікс (prefix)
-  - суфікс (suffix)
-  - творити (to create)
-  - будувати (to build)
-  - аналізувати (to analyze)
-  - синтезувати (to synthesize)
-  - значення (meaning)
+  - корінь (root) — e.g., -ход- (motion), -пис- (write), -роб- (work)
+  - префікс (prefix) — e.g., по- (start/limit), пере- (re-/cross), з-/с- (together)
+  - суфікс (suffix) — e.g., -ник (agent/person), -ння (process)
+  - творити (to create) — context of word formation (творення слів)
+  - будувати (to build) — metaphor of 'Word Architect'
+  - аналізувати (to analyze) — breaking down words into parts
+  - синтезувати (to synthesize) — combining parts into new words
+  - значення (meaning) — how prefixes change meaning
   recommended:
-  - похідний (derivative)
-  - первісний (original)
-  - продуктивний (productive)
-  - закінчення (ending)
+  - похідний (derivative) — words derived from roots
+  - первісний (original) — original form
+  - продуктивний (productive) — patterns that work often (high-yield)
+  - закінчення (ending) — grammatical changes
 activity_hints:
 - type: fill-in
   focus: Create words from parts

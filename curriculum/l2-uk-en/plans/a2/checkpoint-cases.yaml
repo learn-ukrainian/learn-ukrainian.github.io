@@ -8,41 +8,53 @@ subtitle: Review and Mastery
 content_outline:
 - section: Overview
   points:
-  - Checkpoint overview and goals
-  - Self-assessment checklist
+  - 'Checkpoint overview and goals — Alignment with State Standard §4.2.2 (Linguistic
+    competence: morphology, Catalogue C)'
+  - Self-assessment checklist — Ensure inclusion of a 'Preposition + Case' matching
+    section (research friction point)
 - section: Skills Review / Повторення навичок
   points:
-  - Dative (Skill 1) - Recipients & Experiencers
-  - Instrumental (Skill 2) - Tools & Companions
-  - Prepositions (Skill 3) - Motion vs Location
-  - Services (Skill 4) - Post & Bank integration
+  - Dative (Skill 1) - Recipients & Experiencers — Emphasize age and expressions of
+    feeling (мені холодно/цікаво) and recipients (Подарувати книжку студентові); Standard
+    §4.2.2.3
+  - 'Instrumental (Skill 2) - Tools & Companions — learner error: Nom. for Instruments
+    (omitting ending) and Profession/status (бути програмувальником); Standard §4.2.2.5'
+  - 'Prepositions (Skill 3) - Motion vs Location — learner error: Nom. after Negation/Prepositions;
+    Standard §4.2.2.2/§4.2.2.6; include Locative (в/у, на) and Path (по)'
+  - 'Services (Skill 4) - Post & Bank integration — focus on practical ''Mixed Case''
+    dialogues; cultural hook: Digital Banking Leadership (Monobank/Diia)'
 - section: Integration Challenge
   points:
-  - Mixed case narrative analysis
-  - Final summary and next steps
+  - 'Mixed case narrative analysis — cultural hook: Stamps as Currency (1918) historical
+    note; UNR stamps circulated as coins'
+  - Final summary and next steps — Prepares for a2-12 (Aspect Introduction) where
+    case usage remains constant
 vocabulary_hints:
   required:
-  - відмінок (case)
-  - давальний (dative)
-  - орудний (instrumental)
-  - прийменник (preposition)
-  - допомагати (to help)
-  - подобатися (to like)
-  - з (with)
-  - для (for)
-  - без (without)
-  - через (because of)
-  - після (after)
-  - пошта (post office)
-  - банк (bank)
-  - відправляти (to send)
-  - обмінювати (to exchange)
+  - відмінок (case) — Nominative to Vocative (7 cases)
+  - давальний (dative) — Recipients & Experiencers
+  - орудний (instrumental) — Tools & Companions
+  - прийменник (preposition) — Critical for case governance
+  - допомагати (to help) — High (Dative); допомагати мамі/другові, допомагати з роботою
+  - подобатися (to like) — High (Dative); мені подобається це місто, подобатися вчителю
+  - з (with) — Very High (Inst/Gen); кава з молоком, розмовляти з другом, приїхати
+    з Києва
+  - для (for) — Genitive preposition
+  - без (without) — Genitive preposition
+  - через (because of) — High (Acc); через дорогу, через дощ (because of), через тиждень
+  - після (after) — Genitive preposition
+  - пошта (post office) — Medium (Services); на пошті, відправити поштою, відділення
+    пошти
+  - рахунок (account) — Medium (Bank); відкрити рахунок, гроші на рахунку, номер рахунку;
+    Digital Banking Leadership context
+  - відправляти (to send) — Post context
+  - обмінювати (to exchange) — Bank context
   recommended:
-  - правильно (correctly)
-  - помилка (mistake)
-  - виправити (to correct)
-  - перевірити (to check)
-  - оцінка (assessment)
+  - правильно (correctly) — Self-correction context
+  - помилка (mistake) — learner error identification
+  - виправити (to correct) — Error correction tasks
+  - перевірити (to check) — Self-assessment context
+  - оцінка (assessment) — Progress check
 activity_hints:
 - type: quiz
   focus: Comprehensive case quiz - all 7 cases

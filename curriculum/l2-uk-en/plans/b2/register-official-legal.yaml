@@ -7,39 +7,49 @@ title: 'Офіційно-діловий стиль: документи, зако
 content_outline:
 - section: Вступ — Офіційно-діловий стиль
   points:
-  - Визначення та сфера застосування
+  - 'Визначення та сфера застосування — focus on functional domain of official documentation;
+    tone: strict neutrality, no emotions'
   - Підстилі (законодавчий, адміністративний, дипломатичний)
-  - Основні ознаки
+  - Основні ознаки — alignment with State Standard §4.4.1.1 (functional styles)
 - section: Мовні засоби офіційного стилю
   points:
-  - Безособові конструкції -но/-то
-  - Стандартизовані звороти
-  - Канцеляризми та кліше
-  - Складні номінальні групи
+  - Безособові конструкції -но/-то — State Standard §4.3.3.1 (One-Member Sentences);
+    foundation for impersonal style ('Там усе правильно записано')
+  - Стандартизовані звороти — drill 'Instrumental vs Genitive' distinction (згідно
+    з vs відповідно до)
+  - Канцеляризми та кліше — use 'Bad vs Good' comparison tables
+  - 'Складні номінальні групи — State Standard §4.2.6 (Verbal Nouns: читання, навантаження,
+    додаток)'
 - section: Типи документів
   points:
-  - Заява
-  - Наказ
-  - Протокол
+  - 'Заява — collocations: написати/подати заяву, про звільнення; learner error: ''від''
+    in header (Заява від Петренка -> Заява Петренка)'
+  - 'Наказ — collocations: видати наказ, наказ набирає чинності, скасувати наказ'
+  - 'Протокол — collocations: вести протокол, порядок денний, слухали/виступили/ухвалили'
   - Акт
 - section: Структура офіційних документів
   points:
-  - Реквізити документа
-  - Адресат та адресант
+  - 'Реквізити документа — visual layout emphasis: Header right-aligned, Title centered'
+  - Адресат та адресант — Genitive usage for sender (no preposition 'від')
   - Основна частина
   - Підпис та дата
 - section: Законодавчі тексти
   points:
-  - Мова законів
-  - Типові конструкції
+  - 'Мова законів — cultural hook: Cossack Bureaucracy and ''Universals'' (Універсали)
+    of the General Military Chancellery'
+  - 'Типові конструкції — historical context: Ruthenian as legal language in 16th-17th
+    c. courts (Volyn, Kyiv)'
   - Посилання на статті
   - Читання та розуміння законів
 - section: Типові помилки
   points:
   - Надмірна канцелярщина
-  - Русизми в офіційних документах
-  - Неправильне вживання кліше
-  - Сучасні норми
+  - 'Русизми в офіційних документах — learner error: ''згідно наказу'' (Dative) ->
+    ''згідно з наказом'' (Instrumental)'
+  - 'Неправильне вживання кліше — learner error: ''приймати міри/участь'' -> ''вживати
+    заходів / брати участь'''
+  - 'Сучасні норми — learner error: ''на протязі'' (draft) -> ''протягом/упродовж''
+    (duration)'
 - section: Практика і підсумок
   points:
   - Написання заяв
@@ -48,13 +58,15 @@ content_outline:
 vocabulary_hints:
   required:
   - офіційно-діловий стиль (official-business style)
-  - заява (application/statement)
-  - наказ (order/decree)
-  - протокол (minutes/protocol)
+  - заява (application/statement) — написати/подати заяву, заява про звільнення, додаток
+    до заяви
+  - наказ (order/decree) — видати наказ, наказ набирає чинності, згідно з наказом
+  - протокол (minutes/protocol) — вести протокол, порядок денний, витяг з протоколу
   - акт (act/document)
   - реквізит (requisite/detail)
   - канцеляризм (bureaucratese)
-  - кліше (cliché/set phrase)
+  - кліше (cliché/set phrase) — брати участь (NOT приймати), відповідно до (+Gen),
+    протягом
   - постанова (resolution)
   - розпорядження (directive)
   recommended:
@@ -63,6 +75,7 @@ vocabulary_hints:
   - законодавство (legislation)
   - нормативний акт (normative act)
   - стаття (article - of law)
+  - чинний (valid/effective) — чинне законодавство, набрати чинності
 activity_hints:
 - type: quiz
   focus: Identify official style features in documents

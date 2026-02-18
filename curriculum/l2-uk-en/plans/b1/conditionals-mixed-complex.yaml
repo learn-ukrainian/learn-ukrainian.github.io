@@ -8,38 +8,48 @@ subtitle: Mixed and Complex Conditionals
 content_outline:
 - section: 'Тест: Перевірте себе'
   points:
-  - Diagnostic quiz on mixed conditionals
-  - Self-assessment questions
+  - Diagnostic quiz on mixed conditionals — focus on distinguishing real vs. unreal
+    contexts
+  - Self-assessment questions — check if student confuses 'якщо' (real) and 'якби'
+    (unreal)
 - section: Пояснення
   points:
-  - Beyond simple conditionals
-  - Past Condition, Present Result
-  - Present Condition, Past Result
-  - Chained Conditionals
-  - Complex Condition Patterns (якщо не, навіть якщо/якби)
+  - Beyond simple conditionals — introduce mixed types where time frames differ in
+    condition and result
+  - 'Past Condition, Present Result — cultural hook: proverb «Якби знав, де впадеш,
+    соломки підстелив би»'
+  - 'Present Condition, Past Result — example: «Якби я був розумнішим (generally),
+    я б не зробив цього (then)»'
+  - 'Chained Conditionals — logic chains: If A happens -> B happens -> If B happens
+    -> C happens'
+  - 'Complex Condition Patterns (якщо не, навіть якщо/якби) — include ''за умови''
+    for formal agreements; learner error: omitting comma before ''якщо'''
 - section: Практика
   points:
-  - Form mixed conditionals
-  - Create conditional chains
+  - 'Form mixed conditionals — learner error: using ''якщо'' for unreal conditions
+    (Russian interference ''єслі'' -> ''якщо'')'
+  - Create conditional chains — practice linking cause and effect across multiple
+    steps
 - section: Діалоги
   points:
-  - Mixed conditionals in conversation
-  - Complex scenarios
+  - Mixed conditionals in conversation — use 'Якби не + Noun' pattern (e.g., historical
+    irony «Якби не макогін і качалка...»)
+  - Complex scenarios — use 'за умови' in formal/semi-formal contexts (rules, agreements)
 vocabulary_hints:
   required:
-  - змішаний (mixed)
-  - складний (complex)
-  - ланцюговий (chained)
-  - якщо не (unless)
-  - навіть якщо (even if)
-  - навіть якби (even if - unreal)
-  - доки (as long as)
-  - за умови (provided that)
+  - змішаний (mixed) — змішаний тип умовних речень
+  - складний (complex) — складне речення, складні умови
+  - ланцюговий (chained) — ланцюгова реакція
+  - якщо не (unless) — якщо не помиляюся, якщо не секрет
+  - навіть якщо (even if) — навіть якщо це..., навіть якщо ми...
+  - навіть якби (even if - unreal) — навіть якби я хотів...
+  - доки (as long as) — доки не...
+  - за умови (provided that) — за умови, що... (formal), за умови згоди
   recommended:
-  - в іншому випадку (otherwise)
-  - крім того (besides)
-  - тим часом (meanwhile)
-  - проте (however)
+  - в іншому випадку (otherwise) — інакше
+  - крім того (besides) — до того ж
+  - тим часом (meanwhile) — у той час
+  - проте (however) — однак
 activity_hints:
 - type: fill-in
   focus: Complete mixed conditionals

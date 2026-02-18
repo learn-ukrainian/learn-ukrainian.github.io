@@ -11,44 +11,51 @@ content_outline:
   - Цілі модуля
 - section: Вступ
   points:
-  - Велосипед як транспорт і хобі
-  - Водні види спорту в Україні
+  - Велосипед як транспорт і хобі — growing cycling community in Kyiv (Veloden)
+  - Водні види спорту в Україні — popular adrenaline activities and leisure
 - section: Інтеграція
   points:
-  - Велодоріжки у великих містах
-  - Прокат велосипедів (Nextbike та інші)
+  - 'Велодоріжки у великих містах — Kyiv context: Velotrek, Trukhaniv Island'
+  - Прокат велосипедів (Nextbike та інші) — Bikenow, app-based rentals common in cities
   - Велотуризм українськими маршрутами
-  - Сплави річками (Дністер, Південний Буг)
-  - Каякінг і SUP-серфінг
-  - Пляжі Одеси та Азовського моря
+  - Сплави річками (Дністер, Південний Буг) — include Carpathian rafting on Cheremosh
+    or Black Tysa
+  - Каякінг і SUP-серфінг — Dnipro kayaking (Hydropark, Obolon), viewing Motherland
+    Monument from water
+  - 'Пляжі Одеси та Азовського моря — learner error: їдемо «на море» (destination)
+    vs купаємося «в морі» (location)'
   - Триатлон як комплексний вид спорту
-  - Українські змагання
-  - Правила безпеки на воді і дорозі
+  - Українські змагання — «Veloden» (All-Ukrainian Cycling Day)
+  - Правила безпеки на воді і дорозі — use Dnipro Kayak Guide persona for safety tips
+    (e.g., life jackets)
 - section: Практика
   points:
-  - Ключові концепції
+  - 'Ключові концепції — learner error: confusion between «плавати» (habitual/ability)
+    vs «плисти» (unidirectional)'
 - section: Продукція
   points:
-  - Діалоги про велосипед та водні види спорту
+  - 'Діалоги про велосипед та водні види спорту — focus on correct case usage: їхати
+    «на велосипеді» (not «велосипедом»)'
 - section: Підсумок — Активне літо
   points:
   - Як спланувати активний відпочинок
 - section: Потрібно більше практики?
+  points: []
 vocabulary_hints:
   required:
-  - велосипед (bicycle)
-  - плавання (swimming)
-  - каяк (kayak)
-  - річка (river)
-  - пляж (beach)
-  - оренда (rental)
-  - шлем (helmet)
-  - рятівний жилет (life jacket)
+  - велосипед (bicycle) — їхати на велосипеді, кататися на велосипеді, гірський велосипед
+  - плавання (swimming) — займатися плаванням, уроки плавання
+  - каяк (kayak) — орендувати каяк, сплав на каяках
+  - річка (river) — сплав річкою
+  - пляж (beach) — піщаний пляж, міський пляж, засмагати на пляжі
+  - оренда (rental) — пункт оренди, взяти в оренду, погодинна оренда
+  - шлем (helmet) — одягати шлем (safety)
+  - рятівний жилет (life jacket) — обов'язковий на воді
   recommended:
   - триатлон (triathlon)
-  - велодоріжка (bike path)
-  - SUP (stand-up paddleboard)
-  - басейн (pool)
+  - велодоріжка (bike path) — інфраструктура міст
+  - SUP (stand-up paddleboard) — популярний вид відпочинку
+  - басейн (pool) — плавати в басейні
 activity_hints:
 - type: reading
   focus: Rental information and safety guides

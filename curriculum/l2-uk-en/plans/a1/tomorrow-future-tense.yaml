@@ -8,26 +8,33 @@ subtitle: Talking About What Will Happen
 content_outline:
 - section: Warm-up
   points:
-  - Контраст теперішнього, минулого та майбутнього часу
+  - Контраст теперішнього, минулого та майбутнього часу — cross-ref to A1-21 (Yesterday)
 - section: Presentation
   points:
-  - Складений майбутній (буду + інфінітив)
-  - Дієвідміна буду (буду, будеш, буде, будемо, будете, будуть)
-  - Синтетичний майбутній (-му, -меш, -ме) — згадка
+  - 'Складений майбутній (буду + інфінітив) — focus heavily on this structure (State
+    Standard §4.2.4.1); learner error: aspect clash (e.g., *буду прочитати instead
+    of буду читати)'
+  - 'Дієвідміна буду (буду, будеш, буде, будемо, будете, будуть) — learner error:
+    conjugation drift (mixing 1st/2nd pl endings)'
+  - Синтетичний майбутній (-му, -меш, -ме) — згадка — limit to brief 'FYI' to avoid
+    overwhelming learner
 - section: Presentation 2
   points:
-  - Вираження планів (Я буду працювати)
-  - Вираження намірів (Я хочу..., Я збираюся...)
+  - 'Вираження планів (Я буду працювати) — cultural hook: «Не кажи ''гоп'', поки не
+    перескочиш» (caution with plans)'
+  - 'Вираження намірів (Я хочу..., Я збираюся...) — collocations: хочу знати, збиратися
+    додому'
 - section: Presentation 3
   points:
-  - Завтра, післязавтра, наступного тижня
-  - У понеділок, у січні, наступного року
+  - 'Завтра, післязавтра, наступного тижня — collocations: завтра вранці, завтра ввечері;
+    grammar note: practice genitive endings for ''наступного'''
+  - 'У понеділок, у січні, наступного року — collocations: наступного року'
 - section: Presentation 4
   points:
-  - Скоро, незабаром, потім, пізніше
+  - 'Скоро, незабаром, потім, пізніше — cultural hook: «Завтра буде новий день» (optimism/resilience)'
 - section: Presentation 5
   points:
-  - Плани на вихідні
+  - 'Плани на вихідні — collocations: мати плани, складати план'
   - Плани на відпустку
 - section: Practice
   points:
@@ -38,14 +45,15 @@ content_outline:
   - Розповідь про свої плани на завтра
 vocabulary_hints:
   required:
-  - завтра (tomorrow)
-  - буду (I will)
-  - наступний (next)
-  - план (plan)
-  - хотіти (to want)
-  - збиратися (to be going to)
-  - незабаром (soon)
-  - потім (then, later)
+  - завтра (tomorrow) — завтра вранці, завтра ввечері
+  - 'буду (I will) — я буду там, будемо працювати; learner error: do not use for perfective
+    verbs'
+  - наступний (next) — наступного тижня, наступного року
+  - план (plan) — мати плани, складати план
+  - хотіти (to want) — хочу знати, дуже хочемо
+  - збиратися (to be going to) — збиратися додому, збиратися в дорогу
+  - незабаром (soon) — незабаром весна, незабаром побачимося
+  - потім (then, later) — а потім, потім скажу
   recommended:
   - тиждень (week)
   - рік (year)

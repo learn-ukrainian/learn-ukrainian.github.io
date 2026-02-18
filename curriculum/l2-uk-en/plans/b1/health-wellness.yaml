@@ -8,32 +8,41 @@ subtitle: Health and Wellness
 content_outline:
 - section: Вступ
   points:
-  - Beyond basic illness words
-  - Wellness concept
-  - Ukrainian health context
+  - Beyond basic illness words — focus on 'хворіти на...' (Prep/Acc) vs Russism 'хворіти грипом' (Instr); learner error: confusing
+      'почуватися' (state) vs 'відчувати' (sense)
+  - Wellness concept — introduction of 'самопочуття' (well-being) vs 'стан здоров'я'
+    (health condition)
+  - Ukrainian health context — cultural hook: fear of 'протяг' (drafts) as a cause
+      of illness; herbal wisdom (kalyna, romashka) and the ubiquity of pharmacies
 - section: Читання
   points:
-  - Health texts
-  - Wellness advice
+  - Health texts — identifying symptoms using 'У мене болить [part]' vs 'Я хворий
+    на [disease]'
+  - Wellness advice — focus on 'профілактика' (prevention) and 'зміцнення імунітету'
+    (strengthening immunity)
 - section: Діалоги
   points:
-  - Discuss wellness topics
-  - Give health advice
+  - Discuss wellness topics — register differentiation: formal (doctor interaction)
+      vs informal (friends describing symptoms)
+  - Give health advice — active patient role; asking 'Як ваше самопочуття?' and responding
+    with 'одужувати' context
 vocabulary_hints:
   required:
-  - здоров'я (health)
-  - самопочуття (well-being)
-  - симптом (symptom)
-  - лікування (treatment)
-  - харчування (nutrition)
-  - стрес (stress)
-  - фітнес (fitness)
-  - одужувати (to recover)
+  - здоров'я (health) — міцне здоров'я, берегти здоров'я, на здоров'я (toast)
+  - самопочуття (well-being) — як ваше самопочуття?, скаржитися на самопочуття (common
+    phrase)
+  - симптом (symptom) — описувати симптоми, явні симптоми
+  - лікування (treatment) — проходити курс лікування, ефективне лікування, лікуватися
+    вдома
+  - харчування (nutrition) — здорове харчування, режим харчування
+  - стрес (stress) — боротися зі стресом, вплив стресу на здоров'я
+  - фітнес (fitness) — займатися фітнесом, підтримувати форму
+  - одужувати (to recover) — швидко одужувати, бажаю одужання (common wish)
   recommended:
-  - діагноз (diagnosis)
-  - профілактика (prevention)
-  - імунітет (immunity)
-  - релаксація (relaxation)
+  - діагноз (diagnosis) — поставити діагноз, попередній діагноз
+  - профілактика (prevention) — профілактика захворювань, краще ніж лікування
+  - імунітет (immunity) — зміцнювати імунітет, слабкий імунітет
+  - релаксація (relaxation) — методи релаксації, для покращення самопочуття
 activity_hints:
 - type: match-up
   focus: Health noun phrases

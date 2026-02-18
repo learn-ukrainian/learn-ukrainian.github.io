@@ -8,48 +8,62 @@ subtitle: Describing Changes
 content_outline:
 - section: Вступ
   points:
-  - Why change vocabulary matters
-  - Dynamic vs static descriptions
-  - Temporal perspective
+  - 'Why change vocabulary matters — tone set by ''Climate Scientist'' persona: describing
+    environment and society'
+  - Dynamic vs static descriptions — distinguish process (*процес*) from result (*результат*)
+  - Temporal perspective — gradual (*поступово*) vs sudden (*різко*) change
 - section: Вживання
   points:
-  - Collocations with adverbs
-  - Typical constructions
-  - Application domains
+  - Collocations with adverbs — *стрімко зростати*, *поступово змінюватися*, *різко
+    падати*
+  - Typical constructions — *перетворюватися на...* (transform into), *змінюватися
+    на краще* (change for better)
+  - Application domains — Climate (*потепління*), Economy (*ціни*), Society (*звичаї*)
 - section: Читання
   points:
-  - Economic review
-  - Weather forecast
-  - Social changes blog
+  - Economic review — use of *зростати* (abstract) vs *рости* (physical); learner
+    error warning included
+  - 'Weather forecast — Climate Scientist focus: *температура підвищується/знижується*,
+    *погода змінюється*'
+  - 'Social changes blog — cultural hook: Kyiv transformation (UNESCO status, de-russification)
+    and street renaming as *зміна*'
 - section: Діалоги
   points:
-  - Work meeting (formal)
-  - Weather discussion (informal)
-  - Economic discussion, doctor visit
+  - 'Work meeting (formal) — Discussing project changes; learner error: *змінювати
+    план* (Accusative) NOT *змінювати до плану*'
+  - Weather discussion (informal) — *Погода змінюється* (intransitive) vs *Вітер змінює
+    напрямок* (transitive)
+  - Economic discussion, doctor visit — *Ціни зростають* (prices rise) and *Зір погіршується*
+    (eyesight worsens)
 - section: Лексика
   points:
-  - Six vocabulary groups
-  - General change verbs, improvement/decline
-  - Growth/decrease, expansion, speed adverbs
+  - Six vocabulary groups — Motion, State, Quantity, Quality, Time, Abstract
+  - General change verbs, improvement/decline — *змінювати/ся*, *покращувати/ся*,
+    *погіршувати/ся*
+  - 'Growth/decrease, expansion, speed adverbs — cultural hook: *Дія* creates *стрімкий
+    розвиток* (rapid development)'
 - section: Підсумок
   points:
-  - Key vocabulary recap
-  - Practice recommendations
+  - Key vocabulary recap — *зростати* vs *рости*, *змінювати* vs *змінюватися*
+  - Practice recommendations — Describe local weather or city changes using new adverbs
 vocabulary_hints:
   required:
-  - зростати (to grow/increase)
-  - зменшуватися (to decrease)
-  - змінюватися (to change)
-  - перетворюватися (to transform)
-  - підвищуватися (to rise)
-  - знижуватися (to lower/decline)
-  - поступово (gradually)
-  - різко (sharply)
+  - 'зростати (to grow/increase) — *попит/економіка/ціни/напруга зростають*; learner
+    error: use *рости* only for physical growth (kids, plants)'
+  - зменшуватися (to decrease) — *кількість/відстань/ризик зменшується*
+  - 'змінюватися (to change) — *погода/ситуація/часи/світ змінюється*; learner error:
+    confused with transitive *змінювати* (change something)'
+  - 'перетворюватися (to transform) — *перетворюватися на (щось)*; context: cities
+    transforming'
+  - підвищуватися (to rise) — *температура/рівень/тиск підвищується*
+  - знижуватися (to lower/decline) — *температура/ціни/рівень знижується*
+  - поступово (gradually) — *поступово змінюватися/звикати/відновлюватися*
+  - різко (sharply) — *різко змінитися/впасти/піднятися*
   recommended:
-  - стрімко (rapidly)
-  - значно (significantly)
-  - падати (to fall)
-  - ставати (to become)
+  - 'стрімко (rapidly) — *стрімко розвиватися/зростати/падати*; context: digital state/Diia'
+  - значно (significantly) — *значно впливати/змінити/покращити*
+  - падати (to fall) — *курс валют/ціни/температура падає*
+  - ставати (to become) — *ставати кращим/гіршим/більш доступним*
 activity_hints:
 - type: match-up
   focus: Verb + adverb combinations

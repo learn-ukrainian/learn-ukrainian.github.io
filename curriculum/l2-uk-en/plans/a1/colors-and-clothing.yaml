@@ -8,26 +8,33 @@ subtitle: Describing What You Wear
 content_outline:
 - section: Warm-up
   points:
-  - Кольори навколо нас
+  - 'Кольори навколо нас — cultural context: color symbolism (red=life/energy, black=soil/wisdom,
+    white=purity/divinity)'
   - Улюблені кольори
 - section: Presentation
   points:
   - Основні кольори (білий, чорний, червоний, синій, зелений, жовтий)
-  - Узгодження з родом (червоний светр, червона сукня)
+  - 'Узгодження з родом (червоний светр, червона сукня) — learner error: using masculine
+    form for all nouns (e.g., червоний сорочка)'
   - Незмінювані кольори (бордо, беж, хакі)
 - section: Presentation 2
   points:
-  - Одяг (сорочка, штани, плаття, куртка, светр)
-  - Дієслово носити + знахідний (Я ношу джинси)
+  - 'Одяг (сорочка, штани, плаття, куртка, светр) — collocations: біла сорочка, червона
+    сукня'
+  - 'Дієслово носити + знахідний (Я ношу джинси) — learner error: failing to change
+    feminine endings in Accusative (e.g., ''Я ношу червона сукня''); note: inanimate
+    masculine matches nominative (Я ношу светр)'
   - Дієслово одягати/одягатися
 - section: Presentation 3
   points:
-  - Штани, джинси, окуляри (тільки множина!)
+  - 'Штани, джинси, окуляри (тільки множина!) — learner error: using singular adjectives
+    (e.g., синій штани)'
   - Ці штани (не ця штана)
 - section: Presentation 4
   points:
-  - Опис того, що хтось носить
-  - Покупка одягу в магазині
+  - 'Опис того, що хтось носить — cultural hook: Vyshyvanka as a talisman (оберіг)
+    protecting the wearer; patterns on collar/cuffs ''seal'' energy'
+  - Покупка одягу в магазині — include price and size inquiries to link back to numbers
 - section: Practice
   points:
   - Діалог у магазині одягу
@@ -37,21 +44,23 @@ content_outline:
   - Опис свого улюбленого вбрання
 vocabulary_hints:
   required:
-  - білий (white)
-  - чорний (black)
-  - червоний (red)
-  - синій (blue)
-  - зелений (green)
-  - сорочка (shirt)
-  - штани (pants)
-  - плаття (dress)
+  - 'білий (white) — біла сорочка, білий сніг; cultural: symbol of purity/divinity'
+  - 'чорний (black) — чорні штани, чорна кава; cultural: symbol of fertile soil/wisdom'
+  - 'червоний (red) — червона сукня, червона ручка; cultural: symbol of energy/life/protection'
+  - синій (blue) — сині джинси, синій светр
+  - зелений (green) — зелена трава, зелений колір
+  - сорочка (shirt) — біла сорочка, носити сорочку
+  - штани (pants) — plural-only (pluralia tantum); нові штани, сині штани
+  - 'плаття (dress) — synonym: сукня; літнє плаття; червона сукня'
+  - сукня (dress) — high frequency synonym for плаття; червона сукня, літня сукня
   recommended:
   - жовтий (yellow)
   - коричневий (brown)
   - куртка (jacket)
-  - светр (sweater)
+  - светр (sweater) — синій светр
   - взуття (footwear)
-  - носити (to wear)
+  - носити (to wear) — носити одяг, носити окуляри; requires Accusative case (Я ношу...)
+  - окуляри (glasses) — plural-only; носити окуляри
 activity_hints:
 - type: match-up
   focus: Color and clothing names

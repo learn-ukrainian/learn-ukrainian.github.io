@@ -9,20 +9,31 @@ content_outline:
 - section: Introduction / Вступ
   points:
   - Concept of superlative as the extreme
-  - Simplicity of Ukrainian 'най-' rule
+  - 'Simplicity of Ukrainian ''най-'' rule — grammar scaffolding: simply add ''най-''
+    to the comparative form'
 - section: Presentation / Презентація
   points:
-  - Regular formation (най- + comparative)
-  - Irregular superlatives (Top 10)
-  - Emphatic prefixes (якнай-, щонай-)
+  - 'Regular formation (най- + comparative) — learner error: Double Superlatives (e.g.,
+    ''найбільш цікавіший'' instead of ''найбільш цікавий'' or ''найцікавіший''); align
+    with State Standard §4.3.1 (synthetic form)'
+  - Analytic superlative formation (найбільш/найменш + adjective) — align with State
+    Standard §4.3.1 (analytic form)
+  - 'Irregular superlatives (Top 10) — focus on high-frequency pairs: великий/найбільший,
+    малий/найменший, добрий/найкращий; learner error: Russian influence ''самий''
+    (e.g., ''самий гарний'' instead of ''найгарніший'')'
+  - Emphatic prefixes (якнай-, щонай-) — introduce as ways to express 'as ... as possible'
+    (e.g., якнайшвидше)
   - Intensifiers vs Superlatives (дуже vs найкращий)
 - section: Practice / Практика
   points:
-  - World records quiz
-  - Sentence transformation drills
+  - 'World records quiz — cultural hooks: Станція «Арсенальна» (найглибша), Говерла
+    (найвища гора), печера «Оптимістична» (найдовша), АН-225 «Мрія» (найбільший літак)'
+  - 'Sentence transformation drills — learner error: ensure adjective agreement in
+    gender, number, and case (e.g., найкраща ідея vs найкращий план)'
 - section: Dialogues / Діалоги
   points:
-  - Award ceremony dialogue using superlatives
+  - Award ceremony dialogue using superlatives — use collocations like 'найважливіший
+    крок' and 'найвищий рівень'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -50,3 +61,18 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Restaurant Critic
+vocabulary_hints:
+  required:
+  - найкращий (the best) — найкращий друг, найкращий час, найкраща ідея
+  - найгірший (the worst) — найгірший сценарій, найгірша погода, найгірший день
+  - найбільший (the biggest/largest) — найбільша країна, найбільша помилка, найбільше
+    місто
+  - найменший (the smallest) — найменша дитина, найменша деталя, найменша ціна
+  - найважливіший (the most important) — найважливіше питання, найважливіший крок
+  recommended:
+  - найвищий (the highest) — найвища гора, найвищий бал, найвищий рівень
+  - найбільш (the most... [analytic]) — найбільш популярний, найбільш відомий, найбільш
+    цікавий
+  - якнайшвидше (as fast as possible) — emphatic prefix usage
+  - станція (station) — context for 'найглибша станція метро' (Арсенальна)
+  - гора (mountain) — context for 'найвища гора' (Говерла)

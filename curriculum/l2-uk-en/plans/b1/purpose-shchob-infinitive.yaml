@@ -7,24 +7,33 @@ title: 'Підрядні речення мети: щоб + інфінітив'
 subtitle: Purpose Clauses - Same Subject
 content_outline:
 - section: Тест
-  points: '[]'
+  points:
+  - '[]'
 - section: Граматика
   points:
-  - Правило однакового підмета
-  - Альтернативні вирази мети
+  - 'Правило однакового підмета — State Standard §4.4.3 alignment: focus on same-subject
+    construction (e.g., «Ми ходимо в музеї, щоб знати...»)'
+  - Альтернативні вирази мети — usage of «для того, щоб» (formal/written) vs «аби»
+    (literary/spoken)
 - section: Поглиблення
   points:
-  - Типові дієслова з щоб + інфінітив
+  - 'Типові дієслова з щоб + інфінітив — connection with motion verbs (b1-16): «Я
+    йду, щоб купити...»'
   - Інфінітив доконаного і недоконаного виду
   - Позиція щоб-речення
-  - Типові помилки та як їх уникнути
-  - Заперечні конструкції
+  - 'Типові помилки та як їх уникнути — learner error: conjugated verb instead of
+    infinitive («щоб я допоміг» vs «щоб допомогти»); subject mismatch checks; confusing
+    «щоб» vs «що»'
+  - 'Заперечні конструкції — cultural hook: Lesya Ukrainka''s «Щоб не плакать, я сміялась»
+    (resilience)'
 - section: Практика
   points:
-  - 'Діалог 1: На роботі'
-  - 'Діалог 2: Про навчання'
-  - 'Діалог 3: Про спорт'
-  - 'Діалог 4: Про подорож'
+  - 'Діалог 1: На роботі — cultural hook: proverb «Щоб рибу їсти, треба у воду лізти»
+    (work ethic)'
+  - 'Діалог 2: Про навчання — focus on «аби» in literary context'
+  - 'Діалог 3: Про спорт — focus on «поставити ціль / досягти мети»'
+  - 'Діалог 4: Про подорож — context: Lviv Museums (National Museum, Arsenal) per
+    State Standard example'
   - 'Діалог 5: Про покупки'
 - section: Потрібно більше практики?
   points:
@@ -33,13 +42,13 @@ content_outline:
   - Онлайн-ресурси
 vocabulary_hints:
   required:
-  - щоб (in order to)
-  - мета (purpose/goal)
+  - щоб (in order to) — зробити все, щоб...; для того, щоб...
+  - мета (purpose/goal) — головна мета; досягти мети; з метою
   - інфінітив (infinitive)
-  - для того щоб (in order to)
-  - аби (in order to - literary)
-  - ціль (aim)
-  - намір (intention)
+  - для того щоб (in order to) — ...для того, щоб забезпечити... (Formal/Written)
+  - аби (in order to - literary) — аби знати; аби вижити; роблю це, аби... (Literary/Spoken)
+  - ціль (aim) — поставити ціль; йти до цілі
+  - намір (intention) — мати намір; серйозні наміри
   - причина (reason)
   recommended:
   - задля (for the sake of)

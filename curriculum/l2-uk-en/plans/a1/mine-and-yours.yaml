@@ -8,42 +8,53 @@ subtitle: Possessive Pronouns in Ukrainian
 content_outline:
 - section: Warm-up
   points:
-  - Ситуація з загубленими речами
-  - Питання "Чий? Чия? Чиє?"
+  - Ситуація з загубленими речами — use a 'lost and found' scenario to naturally generate
+    ownership exchanges
+  - Питання "Чий? Чия? Чиє?" — lead with this question framework as a mental anchor
+    before paradigm tables
 - section: Presentation
   points:
-  - Змінювані форми (мій/моя/моє/мої, твій/твоя/твоє/твої)
-  - Узгодження з родом іменника
-  - Незмінювані форми (його, її, їхній)
-  - Формальне ваш/ваша/ваше
+  - 'Змінювані форми (мій/моя/моє/мої, твій/твоя/твоє/твої) — learner error: gender
+    mismatch (e.g., *мій книга* instead of *моя книга*)'
+  - 'Узгодження з родом іменника — State Standard §4.1.2: possessives must agree with
+    noun gender (masculine, feminine, neuter)'
+  - 'Незмінювані форми (його, її, їхній) — cultural hook: usage of *їхній* (declinable)
+    vs *їх* (Russianism) as a decolonization marker'
+  - 'Формальне ваш/ваша/ваше — cultural hook: distinction extends to possessives (*твій*
+    vs *Ваш*); switching marks a relationship milestone'
   - Наш/наша/наше для групи
 - section: Practice
   points:
-  - Вибір правильної форми займенника
+  - 'Вибір правильної форми займенника — learner error: nominative-only usage (freezing
+    when case changes are needed)'
   - Заміна іменника на займенник
 - section: Production
   points:
-  - Опис своїх речей (Це мій телефон)
+  - 'Опис своїх речей (Це мій телефон) — State Standard §3.1: ownership context for
+    ''personal belongings, everyday items'''
   - Діалог про власність (Чия це сумка?)
 - section: Cultural Insight
   points:
-  - Ввічливість та займенники (ваш vs твій)
+  - Ввічливість та займенники (ваш vs твій) — emphasize that using *Ваш* with elders/strangers
+    is mandatory etiquette, not optional
   - Коли вживати формальні форми
 vocabulary_hints:
   required:
-  - мій (my m.)
-  - моя (my f.)
-  - твій (your m.)
-  - його (his)
-  - її (her)
-  - наш (our)
-  - чий (whose m.)
-  - чия (whose f.)
+  - мій (my m.) — мій друг, мій телефон, мій дім
+  - моя (my f.) — gender agreement with feminine nouns
+  - твій (your m.) — твій рюкзак, твоя книга, твоє ім'я
+  - його (his) — його машина, його батько, його робота; invariable form
+  - її (her) — її сумка, її мама, її кімната; invariable form
+  - наш (our) — наш клас, наша школа, наше місто
+  - чий (whose m.) — чий це? чия сумка? чиє взуття?
+  - чия (whose f.) — question word for feminine nouns
   recommended:
-  - ваш (your formal)
-  - їхній (their)
-  - свій (one's own)
-  - річ (thing)
+  - ваш (your formal) — ваша адреса, ваш паспорт, ваше прізвище
+  - їхній (their) — їхній будинок, їхня сім'я, їхнє рішення; literary standard (avoid
+    *їх*)
+  - свій (one's own) — свій час, своя справа, своє місце; untranslatable reflexive
+    possessive
+  - річ (thing) — context word for lost and found scenarios
 activity_hints:
 - type: fill-in
   focus: Complete with correct possessive

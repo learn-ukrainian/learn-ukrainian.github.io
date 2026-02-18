@@ -8,27 +8,43 @@ subtitle: Synonyms - Movement
 content_outline:
 - section: Розминка — Як ходити і бігати
   points:
-  - Однонаправлений vs різнонаправлений рух (йти vs ходити)
-  - Манера руху (крокувати, брести, тупати)
-  - Швидкість і контроль (мчати vs нестися)
+  - 'Однонаправлений vs різнонаправлений рух (йти vs ходити) — learner error: confusion
+    between actual (linear) and habitual (multi-directional) motion (e.g., ''Я щодня
+    йду'' instead of ''Я щодня ходжу'')'
+  - 'Манера руху (крокувати, брести, тупати) — context: ''тупати'' is often auditory
+    (noise), ''брести'' is physical state (tiredness/resistance)'
+  - 'Швидкість і контроль (мчати vs нестися) — stylistic focus: imply high intensity
+    and lack of control, whereas ''бігти'' is neutral'
 - section: Walk
   points:
-  - йти (go - general, one direction)
-  - ходити (walk - repeated, habitual)
-  - крокувати (stride - deliberate steps)
-  - брести (trudge - tired walking)
-  - тупати (stomp - heavy steps)
+  - 'йти (go - general, one direction) — collocations: йти додому, йти на роботу,
+    йти пішки, дощ іде'
+  - 'ходити (walk - repeated, habitual) — collocations: ходити в гості, ходити до
+    школи, ходити навшпиньки'
+  - 'крокувати (stride - deliberate steps) — collocations: крокувати вулицею, бадьоро
+    крокувати, крокувати в ногу'
+  - 'брести (trudge - tired walking) — literary image: associated with Shevchenko
+    (''блукав я, брів...''); collocations: брести по снігу, брести навмання, ледве
+    брести'
+  - 'тупати (stomp - heavy steps) — collocations: тупати ногами, гучно тупати, тупати
+    на місці'
 - section: Run
   points:
-  - бігти (run - one direction)
-  - бігати (run - repeated)
-  - мчати (race - very fast)
-  - нестися (dash - uncontrolled)
-  - чимчикувати (scurry - quick small steps)
+  - бігти (run - one direction) — neutral verb for movement
+  - бігати (run - repeated) — habitual or multi-directional movement
+  - 'мчати (race - very fast) — collocations: мчати на повній швидкості, мчати стрімголов,
+    час мчить'
+  - 'нестися (dash - uncontrolled) — collocations: нестися як вітер, нестися назустріч;
+    phraseology: «На ходу підметки рве» (proverb)'
+  - 'чимчикувати (scurry - quick small steps) — correction: research suggests it is
+    often ''to trudge, to walk slowly/rhythmically'' or ironic (''shuffle along'');
+    collocations: чимчикувати додому, повільно чимчикувати'
 - section: Практика — динамічний опис
   points:
-  - Обрати дієслово руху відповідно до контексту (втома, поспіх, урочистість)
-  - Описати сцену з різними видами руху персонажів
+  - 'Обрати дієслово руху відповідно до контексту (втома, поспіх, урочистість) — alignment:
+    State Standard §4.4.1.2 (Stylistic competence)'
+  - 'Описати сцену з різними видами руху персонажів — cultural hook: proverb «Багато
+    ходити – довго жити»'
   - Порівняти український і англійський вибір дієслів руху
   - Написати динамічну сцену з 5+ різними дієсловами
 focus: phraseology
@@ -45,13 +61,13 @@ register: художній
 phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
-  - синонім (synonym)
-  - вираз (expression)
-  - значення (meaning)
-  - контекст (context)
+  - синонім (synonym) — говорити, розмовляти, спілкуватися
+  - вираз (expression) — сталий вираз
+  - значення (meaning) — пряме значення, переносне значення
+  - контекст (context) — у цьому контексті
   recommended:
-  - переносне значення (figurative meaning)
-  - стилістичне забарвлення (stylistic coloring)
+  - переносне значення (figurative meaning) — метафоричне вживання
+  - стилістичне забарвлення (stylistic coloring) — емоційне забарвлення
 activity_hints:
 - type: reading
   focus: Контекстне використання

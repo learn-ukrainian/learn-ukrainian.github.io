@@ -8,33 +8,44 @@ subtitle: Buying and Paying
 content_outline:
 - section: Вступ
   points:
-  - Types of stores
-  - Shopping culture
+  - Types of stores — distinguish between магазин (shop), супермаркет (supermarket),
+    and ринок (market) — State Standard §3.9
+  - 'Shopping culture — introduce Bessarabka Market as a cultural landmark (built
+    1912 by Lazar Brodsky, Art Nouveau); mention the idiom ''Expensive as in Bessarabka'';
+    note market etiquette: ''Чи є у вас свіже...?'' instead of ''Ти маєш...?'''
 - section: Граматика
   points:
-  - Store vocabulary (магазин, супермаркет, ринок)
-  - Prices and paying (Скільки коштує?, платити)
-  - Checkout vocabulary (каса, чек, здача)
-  - Services (хімчистка, перукарня, ремонт)
+  - 'Store vocabulary (магазин, супермаркет, ринок) — collocations: йти в магазин
+    (Accusative for motion); learner error: using Locative (в магазині) for direction'
+  - 'Prices and paying (Скільки коштує?, платити) — distinguish Accusative for ''what''
+    (купувати хліб) vs Instrumental for ''how'' (платити карткою/готівкою); learner
+    error: платити картою -> платити карткою (Instrumental)'
+  - 'Checkout vocabulary (каса, чек, здача) — collocations: потрібен чек, фіскальний
+    чек'
+  - Services (хімчистка, перукарня, ремонт) — introduce basic service vocabulary per
+    State Standard §3.11; keep focus on shopping transaction flow
 - section: Практика
   points:
-  - Shopping dialogues
-  - Service requests
+  - 'Shopping dialogues — focus on natural queries: ''Чи є у вас...?'' instead of
+    ''Ти маєш...?'' (learner error: direct translation); flow: Store -> Selection
+    -> Price -> Payment'
+  - Service requests — use basic service vocabulary
 - section: Підсумок
   points:
   - Summary of vocabulary
 vocabulary_hints:
   required:
-  - магазин (store)
-  - ціна (price)
-  - купувати (to buy)
-  - платити (to pay)
-  - гроші (money)
-  - картка (card)
-  - готівка (cash)
-  - чек (receipt)
+  - 'магазин (store) — collocations: йти в магазин, продуктовий магазин (High Frequency)'
+  - 'ціна (price) — collocations: висока ціна, яка ціна? (High Frequency)'
+  - 'купувати (to buy) — collocations: купувати продукти, купувати одяг (High Frequency)'
+  - 'платити (to pay) — collocations: платити карткою, платити готівкою; note: Instrumental
+    case (High Frequency)'
+  - гроші (money) — State Standard §3.9
+  - 'картка (card) — collocations: банківська картка, платити карткою (High Frequency)'
+  - 'готівка (cash) — collocations: платити готівкою, мати готівку (Medium Frequency)'
+  - 'чек (receipt) — collocations: потрібен чек, фіскальний чек (Medium Frequency)'
   recommended:
-  - знижка (discount)
+  - 'знижка (discount) — collocations: знижка 50%, сезонні знижки (Medium Frequency)'
   - каса (checkout)
   - здача (change)
   - пакет (bag)

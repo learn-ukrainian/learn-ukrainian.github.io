@@ -8,42 +8,52 @@ subtitle: Numerals - Collectives and Fractions
 content_outline:
 - section: Тест
   points:
-  - Collective vs cardinal numerals
-  - Fractional expressions
+  - Collective vs cardinal numerals — diagnostic of 'нас двоє' vs 'два студенти'
+  - Fractional expressions — basic recognition of 'пів', 'третина'
 - section: Пояснення
   points:
-  - Collective numerals
-  - When to use collectives
+  - Collective numerals — definition and forms (двоє, троє, четверо); focus on masculine
+    living beings and pluralia tantum
+  - 'When to use collectives — Rule: living males, young animals, objects like ''ножиці'';
+    Learner Error: ''троє бабусь'' (Grandmother Trap) or ''двоє телефонів'' (Phone
+    Trap); case rule: requires Genitive Plural'
 - section: Дроби та відсотки
   points:
-  - Fractions
-  - Percentages and decimals
+  - 'Fractions — common forms: половина, третина, чверть, півтора (+ Gen. Sg.); usage
+    in time-telling'
+  - Percentages and decimals — basic formation and agreement
 - section: Практика
   points:
-  - Choose cardinal vs collective
-  - Express fractions
+  - Choose cardinal vs collective — exercises focusing on distinguishing 'три брати'
+    vs 'троє братів' (style) and mandatory collectives ('двоє дверей')
+  - Express fractions — matching fractions to text, time expressions
 - section: Діалоги
   points:
-  - Real-world numeral usage
-  - Mathematical contexts
+  - 'Real-world numeral usage — counting people at a table (''нас п''ятеро''), ordering
+    food (portions); Cultural hook: ''God loves the trinity'' (Бог трійцю любить)'
+  - 'Mathematical contexts — simple arithmetic or recipes; Cultural hook: ''12 dishes''
+    (12 страв) for Christmas'
 - section: Потрібно більше практики?
   points:
-  - Additional exercises
+  - Additional exercises — reinforcement of Genitive Plural case with collectives
 vocabulary_hints:
   required:
-  - збірний числівник (collective numeral)
-  - дробовий числівник (fractional numeral)
-  - двоє (two - collective)
-  - троє (three - collective)
-  - половина (half)
-  - третина (third)
-  - чверть (quarter)
-  - відсоток (percent)
+  - збірний числівник (collective numeral) — used for groups of people or pluralia
+    tantum objects
+  - дробовий числівник (fractional numeral) — e.g., одна друга, півтора
+  - 'двоє (two - collective) — двоє дітей, двоє друзів, нас двоє; learner error: do
+    not use with feminine nouns'
+  - 'троє (three - collective) — троє синів, троє дверей; cultural hook: Бог трійцю
+    любить'
+  - половина (half) — половина часу, о пів на другу
+  - третина (third) — третина населення
+  - чверть (quarter) — чверть на третю, чверть століття
+  - відсоток (percent) — use with Genitive case
   recommended:
-  - кількісний (cardinal)
-  - десятковий (decimal)
-  - множина (plural)
-  - ножиці (scissors)
+  - кількісний (cardinal) — один, два, три
+  - десятковий (decimal) — нуль цілих п'ять десятих
+  - множина (plural) — required for collective numerals (Genitive Plural)
+  - 'ножиці (scissors) — plurale tantum noun requiring collective numeral: двоє ножиць'
 activity_hints:
 - type: fill-in
   focus: Choose cardinal or collective

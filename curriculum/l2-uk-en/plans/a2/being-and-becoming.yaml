@@ -8,36 +8,49 @@ subtitle: Professions and Instrumental Case
 content_outline:
 - section: Introduction / Вступ
   points:
-  - Concept of role vs identity
-  - Present tense (Nom) vs Past/Future (Instr)
+  - 'Concept of role vs identity — distinguish Present Tense Identity (Nom. - *Я лікар*)
+    vs. Role/Function/Process (Instr. - *Я буду лікарем*) — focus: State Standard
+    §4.2.2.5.1: ''Без прийменника: характеристика особи за професією чи статусом'''
+  - 'Present tense (Nom) vs Past/Future (Instr) — learner error: Nominative trap after
+    *бути*/*стати* (e.g., *хоче стати лікар* instead of *лікарем*)'
 - section: Presentation / Презентація
   points:
-  - '"бути" + instrumental (Past/Future)'
-  - '"стати/ставати" + instrumental (Change)'
-  - '"працювати" + instrumental (Current)'
-  - Gender forms of professions
+  - '"бути" + instrumental (Past/Future) — key collocation: *буде лікарем*, *був вчителем*
+    (Very High frequency)'
+  - '"стати/ставати" + instrumental (Change) — cultural hook: IT Hub Prestige (*програміст*,
+    *айтішник*, *тестувальник*)'
+  - '"працювати" + instrumental (Current) — learner error: "Work as" calque (*працюю
+    як менеджер* instead of *працюю менеджером*); interference from English "work
+    as" or German "arbeiten als"'
+  - 'Gender forms of professions — cultural hook: 2020 reform on femininitives (*директорка*,
+    *інженерка*, *президентка*) reflecting societal shift — content writing note:
+    Ensure consistent use of both masculine and feminine forms for all profession
+    examples'
 - section: Practice / Практика
   points:
-  - Transformation drills (Present to Past)
-  - Career aspiration exercises
+  - 'Transformation drills (Present to Past) — focus: Present (Nom) to Past/Future
+    (Instr)'
+  - 'Career aspiration exercises — learner error: Gender mismatch (*хороший лікарка*
+    instead of *хороша лікарка*)'
 - section: Dialogues / Діалоги
   points:
-  - '"What do you do?" conversations'
-  - Career history scenarios
+  - '"What do you do?" conversations — focus: Modern IT context (*айтішник*, *тестувальник*)'
+  - Career history scenarios — model modern Ukrainian usage with IT professions
 vocabulary_hints:
   required:
-  - бути (to be)
-  - стати (to become)
-  - ставати (to be becoming)
-  - працювати (to work)
-  - служити (to serve)
-  - залишатися (to remain)
-  - виявитися (to turn out)
-  - здаватися (to seem)
-  - лікар (doctor)
-  - вчитель (teacher)
-  - інженер (engineer)
-  - програміст (programmer)
+  - бути (to be) — буде лікарем, був вчителем (Very High frequency)
+  - стати (to become) — стати спеціалістом, стати успішним (High Frequency)
+  - ставати (to be becoming) — process of change
+  - 'працювати (to work) — працювати інженером, працювати в офісі (High Frequency);
+    learner error: do not use *як*'
+  - служити (to serve) — instrumental usage
+  - залишатися (to remain) + instr.
+  - виявитися (to turn out) + instr.
+  - здаватися (to seem) + instr.
+  - лікар (doctor) — працювати лікарем, викликати лікаря (High Frequency)
+  - вчитель (teacher) — перша вчителька, працювати вчителем (High Frequency)
+  - інженер (engineer) — головний інженер, стати інженером (Medium-High Frequency)
+  - програміст (programmer) — high prestige profession in Ukraine; colloquial *айтішник*
   - журналіст (journalist)
   - юрист (lawyer)
   - економіст (economist)

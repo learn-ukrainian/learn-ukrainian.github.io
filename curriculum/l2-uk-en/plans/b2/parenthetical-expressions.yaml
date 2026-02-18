@@ -7,36 +7,45 @@ title: Вставні слова та вирази
 content_outline:
 - section: Вступ — Вставні слова та вирази
   points:
-  - Що таке вставні конструкції
+  - 'Що таке вставні конструкції — State Standard §4.3.2: «просте речення зі вставними
+    словами»'
   - Їх роль у побудові тексту
-  - Відмінність від членів речення
+  - 'Відмінність від членів речення — learner error: homonymy (e.g., «Він може це
+    зробити» vs «Він, може, прийде»); use decision tree visual'
 - section: Вставні слова для вираження впевненості та невпевненості
   points:
-  - Впевненість (безумовно, безперечно, звісно, напевно)
-  - Невпевненість (можливо, мабуть, здається, очевидно)
+  - 'Впевненість (безумовно, безперечно, звісно, напевно) — звісно/звичайно: high
+    frequency agreement markers'
+  - 'Невпевненість (можливо, мабуть, здається, очевидно) — cultural hook: «Polite
+    Uncertainty» (Ukrainians use «мабуть» to soften statements and avoid aggression)'
   - Градація ступеня впевненості
 - section: Вставні слова для вираження ставлення
   points:
-  - Позитивна оцінка (на щастя, на радість)
-  - Негативна оцінка (на жаль, на біду)
+  - Позитивна оцінка (на щастя, на радість) — «на щастя» expresses relief/positive
+    evaluation
+  - 'Негативна оцінка (на жаль, на біду) — learner error: «на жаль» is always written
+    separately (not «нажаль»)'
   - Нейтральне ставлення
 - section: Вставні слова для позначення джерела інформації
   points:
   - За словами... (according to...)
   - На думку... (in the opinion of...)
   - Як відомо... (as is known...)
-  - Кажуть... (they say...)
+  - 'Кажуть... (they say...) — cultural hook: «Collective Wisdom» (implies shared
+    knowledge/rumor, appealing to community authority)'
 - section: Вставні слова для організації висловлювання
   points:
-  - Послідовність (по-перше, по-друге, нарешті)
+  - 'Послідовність (по-перше, по-друге, нарешті) — learner error: always hyphenated
+    (not «по перше»)'
   - Узагальнення (загалом, взагалі, отже)
-  - Уточнення (зокрема, наприклад, а саме)
+  - Уточнення (зокрема, наприклад, а саме) — «до речі» used for topic switching
   - Протиставлення (навпаки, з іншого боку)
 - section: Пунктуація при вставних словах
   points:
   - Виділення комами
   - Позиція у реченні
-  - Типові помилки
+  - 'Типові помилки — warning: «False Parentheticals» (навіть, майже, адже, принаймні)
+    are NEVER separated by commas'
 - section: Практика і підсумок
   points:
   - Інтеграція в мовлення
@@ -51,15 +60,19 @@ vocabulary_hints:
   - джерело інформації (source of information)
   - безумовно (undoubtedly)
   - можливо (possibly)
-  - на жаль (unfortunately)
-  - на щастя (fortunately)
-  - по-перше (firstly)
+  - на жаль (unfortunately) — always written separately; emotional evaluation
+  - на щастя (fortunately) — relief/positive evaluation
+  - по-перше (firstly) — always hyphenated; formal/structured speech
   recommended:
   - градація (gradation)
   - оцінка (evaluation)
   - висловлювання (utterance)
   - уточнення (specification)
   - узагальнення (generalization)
+  - мабуть (probably) — marks uncertainty/politeness; standard spelling with «т»
+  - кажуть (they say) — colloquial source of info; implies collective wisdom
+  - до речі (by the way) — topic switching; high frequency
+  - звісно (of course) — agreement/certainty
 activity_hints:
 - type: quiz
   focus: Identify function of parenthetical expression

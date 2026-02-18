@@ -8,15 +8,21 @@ subtitle: Sentence analysis terminology
 content_outline:
 - section: Introduction - Understanding Sentence Structure
   points:
-  - Why sentence analysis terminology matters
-  - How native speakers learn syntax
-  - Connection to complex sentences in B1.3
+  - 'Why sentence analysis terminology matters — cultural hook: ''Anatomy of Language''
+    concept in Ukrainian education'
+  - 'How native speakers learn syntax — content writing note: Metalanguage Bridge
+    B1.0, allow English scaffolding here only'
+  - 'Connection to complex sentences in B1.3 — State Standard Reference §4.4: terminology
+    prepares for lines 2380-2431'
 - section: Sentence Parts (Члени речення)
   points:
-  - підмет (subject), присудок (predicate)
-  - додаток (object), означення (attribute)
-  - обставина (adverbial)
-  - Identifying parts in example sentences
+  - 'підмет (subject), присудок (predicate) — cultural hook: underlining ritual (one
+    line/two lines); learner error: Pro-Drop ''Missing Subject'' panic'
+  - 'додаток (object), означення (attribute) — cultural hook: underlining (dotted/wavy);
+    learner error: confusing Object vs. Adverbial cases'
+  - 'обставина (adverbial) — cultural hook: underlining (dot-dash)'
+  - 'Identifying parts in example sentences — content writing note: visual underlining
+    is key for authentic teaching'
 - section: Sentence Types
   points:
   - просте речення (simple sentence)
@@ -35,36 +41,43 @@ content_outline:
   - двокрапка, крапка з комою
 - section: Additional Syntax Terms
   points:
-  - синтаксис, пунктуація, інверсія
+  - 'синтаксис, пунктуація, інверсія — learner error: Rigid SVO order vs. OVS for
+    emphasis'
 - section: Practice Analyzing Sentences
   points:
-  - Breaking down real Ukrainian sentences
-  - Identifying all components
+  - 'Breaking down real Ukrainian sentences — collocations: зробити розбір, повний
+    синтаксичний аналіз'
+  - 'Identifying all components — cultural hook: syntactic analysis as a logic exercise'
 - section: Dialogues
   points:
-  - 6 mini-dialogues illustrating concepts
+  - '6 mini-dialogues illustrating concepts — content writing note: scenario where
+    a friend helps fix a text using these terms'
 - section: Summary
   points:
   - Key terms review
   - Self-assessment checklist
 vocabulary_hints:
   required:
-  - підмет (subject)
-  - присудок (predicate)
-  - додаток (object)
-  - означення (attribute)
-  - обставина (adverbial)
-  - головне речення (main clause)
-  - підрядне речення (subordinate clause)
-  - просте речення (simple sentence)
-  - складне речення (complex sentence)
-  - складносурядне речення (compound sentence)
+  - підмет (subject) — головний член речення, підкреслюємо однією рискою
+  - присудок (predicate) — дієслівний присудок, узгоджується з підметом (підкреслюємо
+    двома рисками)
+  - додаток (object) — прямий додаток, непрямий додаток (підкреслюємо пунктиром)
+  - означення (attribute) — узгоджене означення, відповідає на питання 'який?' (підкреслюємо
+    хвилястою лінією)
+  - обставина (adverbial) — обставина часу, обставина місця, обставина способу дії
+    (підкреслюємо штрих-пунктиром)
+  - головне речення (main clause) — незалежна частина складного речення
+  - підрядне речення (subordinate clause) — залежна частина, починається зі сполучника
+  - просте речення (simple sentence) — має одну граматичну основу
+  - складне речення (complex sentence) — має дві або більше граматичних основ
+  - складносурядне речення (compound sentence) — частини рівноправні
   recommended:
-  - складнопідрядне речення (complex sentence with subordination)
-  - кома (comma)
-  - крапка (period)
-  - сполучник (conjunction)
-  - інтонація (intonation)
+  - складнопідрядне речення (complex sentence with subordination) — частини нерівноправні
+  - кома (comma) — ставимо кому перед 'а', 'але', 'що'
+  - крапка (period) — ставимо в кінці розповідного речення
+  - сполучник (conjunction) — з'єднує частини речення
+  - інтонація (intonation) — розповідна, питальна, оклична
+  - синтаксичний розбір (syntactic analysis) — зробити розбір речення
 activity_hints:
 - type: mark-the-words
   focus: Identify sentence parts in Ukrainian sentences

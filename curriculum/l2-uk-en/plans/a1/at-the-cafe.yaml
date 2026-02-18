@@ -8,18 +8,24 @@ subtitle: Ordering Food and Drinks in Ukrainian
 content_outline:
 - section: Warm-up
   points:
-  - Типова кав'ярня в Україні
-  - Що зазвичай замовляють
+  - 'Типова кав''ярня в Україні — cultural hook: Lviv coffee tradition and ''kava
+    na pisku'''
+  - Що зазвичай замовляють — focus on high-frequency items (кава, чай, тістечко)
 - section: Presentation
   points:
-  - Привітання офіціанта (Добрий день! Що бажаєте?)
-  - Замовлення (Мені, будь ласка... / Я візьму...)
-  - Уточнення (З молоком? / Великий чи маленький?)
-  - Рахунок (Можна рахунок? / Скільки з мене?)
-  - Оплата (Готівкою / Карткою)
+  - 'Привітання офіціанта (Добрий день! Що бажаєте?) — learner error: using informal
+    ''ти'' instead of respectful ''Ви'''
+  - 'Замовлення (Мені, будь ласка... / Я візьму...) — learner error: ''Я хочу'' implies
+    demand, use polite ''Мені, будь ласка''; grammar focus: Accusative case for objects
+    (каву, воду)'
+  - Уточнення (З молоком? / Великий чи маленький?) — focus on adjectives agreement
+  - 'Рахунок (Можна рахунок? / Скільки з мене?) — learner error: confusing ''рахунок''
+    (bill) with ''чек'' (receipt)'
+  - 'Оплата (Готівкою / Карткою) — communicative intention: purchasing/services (State
+    Standard §4.3.2)'
 - section: Practice
   points:
-  - Діалоги офіціант-клієнт
+  - Діалоги офіціант-клієнт — integrate simple compound sentences with 'і', 'але'
   - Читання меню
   - Рольова гра замовлення
 - section: Production
@@ -27,24 +33,24 @@ content_outline:
   - Створення власного діалогу в кафе
 - section: Cultural Insight
   points:
-  - Кавова культура в Україні (особливо Львів)
+  - Кавова культура в Україні (особливо Львів) — mention Yuriy Kulchytsky legend
   - Етикет у кафе та чайові
 vocabulary_hints:
   required:
-  - кава (coffee)
-  - чай (tea)
-  - меню (menu)
-  - рахунок (bill)
-  - офіціант (waiter)
-  - замовляти (to order)
+  - кава (coffee) — міцна кава, філіжанка кави, кава з молоком
+  - чай (tea) — чорний чай, зелений чай, чай з лимоном
+  - меню (menu) — принести меню, подивитися меню
+  - рахунок (bill) — просити рахунок, оплатити рахунок
+  - офіціант (waiter) — покликати офіціанта, ввічливий офіціант
+  - замовляти (to order) — замовляти каву, я замовлю
   - принести (to bring)
-  - будь ласка (please)
+  - будь ласка (please) — Мені, будь ласка..., скажіть, будь ласка
   recommended:
   - круасан (croissant)
   - тістечко (pastry)
   - еспресо (espresso)
   - капучіно (cappuccino)
-  - чайові (tip)
+  - чайові (tip) — залишати чайові, добрі чайові
   - картка (card)
 activity_hints:
 - type: fill-in

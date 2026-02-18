@@ -8,19 +8,26 @@ subtitle: Sequencing Events in Narrative
 content_outline:
 - section: Introduction / Вступ
   points:
-  - The power of sequence in daily life
-  - Why 'Robot Style' fails in social situations
+  - 'The power of sequence in daily life — §1.4.1.1.1: transition from listing events
+    to cohesive narrative'
+  - 'Why ''Robot Style'' fails in social situations — learner error: overuse of «і»
+    (and) instead of sequencing words'
 - section: Presentation / Презентація
   points:
-  - 'Road signs of time: Спочатку, Потім, Нарешті'
-  - 'Drama and Twists: Раптом, Несподівано'
-  - 'Relative Time: Раніше, Недавно, Давно'
-  - 'Advanced Connectors: Тільки-но, Ледве'
-  - 'Registers: Fairytale vs Report vs Anecdote'
+  - '''Road signs of time: Спочатку, Потім, Нарешті'' — visual metaphor: «Timeline
+    Road» or «Train» cars; learner error: «спочатку» (adverb) vs «з початку» (prep);
+    word order note: time markers start the sentence'
+  - '''Drama and Twists: Раптом, Несподівано'' — metaphor: «Plot Twist» button; collocation:
+    «і раптом побачив...»'
+  - '''Relative Time: Раніше, Недавно, Давно'''
+  - '''Advanced Connectors: Тільки-но, Ледве'''
+  - '''Registers: Fairytale vs Report vs Anecdote'' — cultural hook: The Village Storyteller
+    (Казкар); opening formula: «Жили-були...»'
 - section: Practice / Практика
   points:
   - Sequencing a chaotic morning
-  - Anekdot completion drills
+  - 'Anekdot completion drills — cultural hook: Ukrainian Laughter (Сміхова культура);
+    timing of connectors is crucial for punchlines'
 - section: Dialogues / Діалоги
   points:
   - Telling a fishing story or travel adventure
@@ -51,3 +58,13 @@ phase: A2.2
 persona:
   voice: Encouraging Cultural Guide
   role: Village Storyteller
+vocabulary_hints:
+  required:
+  - спочатку (at first) — спочатку я..., спочатку було...
+  - потім (then/afterwards) — а потім, потім ми...
+  - нарешті (finally) — нарешті прийшов, нарешті сталося
+  - раптом (suddenly) — і раптом побачив, раптом почався
+  - одного разу (once/one day) — одного разу влітку, одного разу я...
+  - несподівано (unexpectedly) — несподівано з'явився, несподівано для всіх
+  - казка (fairytale) — читати казку, народна казка
+  - анекдот (joke/anecdote) — розповідати анекдот, смішний анекдот
