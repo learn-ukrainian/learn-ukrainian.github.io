@@ -1593,11 +1593,65 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 .venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist # Scan specific tracks
 ```
 
-### Deterministic Python Builder v2 (Preferred)
+### Deterministic Python Builder v3 (Preferred — 4-call optimised)
 
-`scripts/build_module_v2.py` is the single E2E pipeline for building modules.
-Gemini only gets called for LLM tasks (research, writing, reviewing). State,
-resume, verification — all in Python.
+`scripts/build_module_v3.py` reduces round-trips vs v2 by collapsing phases into single calls.
+Baseline: 4 Gemini calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+.
+
+```bash
+# Single module — full E2E (4 Gemini calls baseline)
+.venv/bin/python scripts/build_module_v3.py {track} {num}
+
+# Build entire track (skips already-passing modules)
+.venv/bin/python scripts/build_module_v3.py {track} --all
+
+# Build a range of modules
+.venv/bin/python scripts/build_module_v3.py {track} --range 1-20
+
+# Pre-seed research for all modules (Phase A only — fast batch)
+.venv/bin/python scripts/build_module_v3.py {track} --all --research-only
+
+# Nuke v3 state and restart from Phase A
+.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild
+
+# Re-run a single phase (A/B/C/audit/D/E/F)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase D
+
+# Skip track context injection in Phases B and C
+.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context
+
+# Dry-run (show plan, no Gemini dispatches)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --dry-run
+
+# Just verify (run audit, print PASS/FAIL, exit)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --verify
+
+# + Phase F: Claude final QA gate after Phase D
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review
+```
+
+**Pipeline phases:**
+```
+Phase A (research+meta) → B (content+track-ctx) → C (activities+vocab+track-ctx)
+→ audit (prose+enrichment loop, max 3 fixes)
+→ D (review+fix loop, max 2 iters)
+→ [F: Claude QA, optional]
+→ E (MDX, always last)
+```
+
+**v3 vs v2:**
+- Phase A = v2's phases 0 + 0.5 + 1 (1 call instead of 3)
+- Phase D = v2's phases 6 + 6b + 7 (1-2 calls instead of 3+)
+- Track context injected into Phases B + C for cross-module consistency
+- State: `state-v3.json` (no conflict with v2's `state.json`)
+- Templates: `phase-A-seminar.md`, `phase-A-core.md`, `phase-D-review-fix.md`
+- v2 remains available as fallback
+
+### Deterministic Python Builder v2 (Fallback — archive support)
+
+`scripts/build_module_v2.py` — use for modules with archived prose (1.4M word
+archive detection + restore). Also the utility library imported by v3.
+Gemini only gets called for LLM tasks (research, writing, reviewing).
 
 ```bash
 # Single module (resume-aware)
@@ -1680,8 +1734,9 @@ No stale files from previous runs.
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| **Module builder v2** | `scripts/build_module_v2.py` | **E2E pipeline with batch mode (preferred)** |
-| Module builder v1 | `scripts/build_module.py` | Legacy split-mode builder (utility library for v2) |
+| **Module builder v3** | `scripts/build_module_v3.py` | **4-call optimised pipeline (preferred)** |
+| Module builder v2 | `scripts/build_module_v2.py` | E2E pipeline — fallback, archive support |
+| Module builder v1 | `scripts/build_module.py` | Legacy split-mode builder (utility library for v2/v3) |
 | Final review (Claude) | `claude_extensions/commands/final-review.md` | Claude cross-agent QA |
 | Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
 | Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
@@ -2030,9 +2085,33 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/assess_research.py b2-hist --upgrade                  # list modules below 9/10
 .venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8    # custom threshold
 .venv/bin/python scripts/assess_research.py b2-hist --upgrade-process          # regenerate weak research
+
+# Enrich plans from 9+ research
+.venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
 ```
 
-**Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). If the regenerated research still scores below the threshold, it regenerates again. Hard failures (build error, timeout, missing file) stop retries for that module immediately. Ctrl+C exits cleanly with a progress summary.
+**Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
+
+**v3 integration:** after a successful upgrade, `--upgrade-process` automatically clears Phase A from `state-v3.json` for that module. This forces `build_module_v3.py` to regenerate the meta outline from the improved research on the next run. Modules whose research wasn't upgraded keep their Phase A cached.
+
+### Full Research → Build Workflow (v3)
+
+```bash
+# 1. Pre-seed research for all modules
+.venv/bin/python scripts/build_module_v3.py c1-bio --all --research-only
+
+# 2. Assess — see what's below 9/10
+.venv/bin/python scripts/assess_research.py c1-bio --gaps
+
+# 3. Upgrade weak research (auto-resets v3 Phase A for upgraded modules)
+.venv/bin/python scripts/assess_research.py c1-bio --upgrade-process
+
+# 4. Enrich plans from 9+ research
+.venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
+
+# 5. Full build — Phase A cached for passing modules, re-runs for upgraded ones
+.venv/bin/python scripts/build_module_v3.py c1-bio --all
+```
 
 ---
 

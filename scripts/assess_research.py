@@ -29,6 +29,30 @@ from pathlib import Path
 # Add scripts/ to path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+
+def _clear_v3_phase_a(track_id: str, slug: str) -> bool:
+    """Clear Phase A from state-v3.json so build_module_v3 re-runs it with improved research.
+
+    Called after --upgrade-process successfully upgrades a module's research to 9+.
+    Without this, v3 would skip Phase A (still marked complete) and use a stale
+    meta outline generated from the old weak research.
+    """
+    _curriculum_root = Path(__file__).resolve().parent.parent / "curriculum" / "l2-uk-en"
+    orch_dir = _curriculum_root / track_id / "orchestration" / slug
+    state_file = orch_dir / "state-v3.json"
+    if not state_file.exists():
+        return False  # No v3 state — nothing to clear
+    try:
+        state = json.loads(state_file.read_text("utf-8"))
+        phases = state.get("phases", {})
+        cleared = phases.pop("v3-A", None)
+        if cleared is not None:
+            state_file.write_text(json.dumps(state, indent=2, ensure_ascii=False), "utf-8")
+            return True
+    except Exception:
+        pass
+    return False
+
 import yaml
 from research_quality import (
     DIMENSION_SHORT_LABELS,
@@ -489,6 +513,9 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
                             print(f" {BOLD}\033[32m\u2713{RESET}")
                             module_passed = True
                             last_score = new_score
+                            # Clear v3 Phase A so meta outline is regenerated from improved research
+                            if _clear_v3_phase_a(track_id, slug):
+                                print(f"  v3 Phase A reset → meta outline will regenerate on next v3 run")
                             break
                         elif attempt < max_attempts:
                             print(f" (below {min_score}, retrying...)")

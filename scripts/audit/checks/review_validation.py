@@ -412,10 +412,15 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                     )
                 })
             elif total_cit >= 3 and (verified / total_cit) < 0.5:
-                # Less than half match — suspicious
+                # Less than half match — suspicious.
+                # When the sample is large (≥5 citations) and verification rate is low (<50%),
+                # this is conclusive evidence of fabrication, not just paraphrasing.
+                # Escalate to critical so the pipeline blocks — no prompt compliance needed.
+                is_conclusive = total_cit >= 5 and unverified >= 5
+                severity = 'critical' if is_conclusive else 'warning'
                 violations.append({
                     'type': 'UNVERIFIED_CITATIONS',
-                    'severity': 'warning',
+                    'severity': severity,
                     'message': (
                         f"Only {verified}/{total_cit} Ukrainian citations in the review "
                         f"were found in the source module. The reviewer may be quoting "

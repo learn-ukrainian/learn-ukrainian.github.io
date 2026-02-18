@@ -1396,18 +1396,21 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for B1 based on module number.
 
     B1 Immersion Philosophy:
-    - M01-05 (B1.0 Bridge): NO immersion limit — teach grammar terminology in English/Ukrainian
-    - M06-85 (B1.1+): 90-95% Ukrainian — grammar explained IN Ukrainian using metalanguage
+    - M01-05 (B1.0 Bridge): 60-85% — metalanguage bridge; max 2 paragraphs of English intro,
+      rest in Ukrainian. Floor ensures continuity from A2 Band 3 (75-90%).
+    - M06-85 (B1.1+): 85-100% Ukrainian — grammar explained IN Ukrainian using metalanguage
 
     The bridge modules (M01-05) prepare students to understand grammar explanations
     in Ukrainian by teaching them the necessary metalanguage vocabulary first.
+    These modules should NOT drop below A2 Band 3 levels (75-90%).
     """
     if module_num <= 5:
-        # Bridge modules: no immersion gate
-        # These modules teach grammar terminology and can use as much English as needed
-        return (0, 100)
+        # Bridge modules: English allowed for max 2 intro paragraphs, then Ukrainian
+        # Floor of 60% maintains continuity from A2 Band 3 (75-90% late A2)
+        # No ceiling: being MORE Ukrainian than required is always acceptable
+        return (60, 100)
 
-    # All other B1 modules target 90-95% Ukrainian immersion
+    # All other B1 modules target 85-100% Ukrainian immersion
     return (85, 100)  # B1 is fully immersed - no upper limit
 
 

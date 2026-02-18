@@ -197,7 +197,18 @@ npm run metrics:extract {track}  # Extract raw metrics
 /hetman {track} --full            # [Gemini] Full E2E batch: all incomplete modules from scratch
 /final-review {track} {num}       # [Claude] Final QA after Hetman completes (~5 turns)
 
-# Deterministic Python builder v2 (single E2E pipeline — preferred)
+# Deterministic Python builder v3 (4-call optimised — preferred for new builds)
+.venv/bin/python scripts/build_module_v3.py {track} {num}                  # Full E2E (4 Gemini calls baseline)
+.venv/bin/python scripts/build_module_v3.py {track} --all                  # Build entire track (skips passing)
+.venv/bin/python scripts/build_module_v3.py {track} --range 1-20           # Build range
+.venv/bin/python scripts/build_module_v3.py {track} --all --research-only  # Pre-seed all research (Phase A only)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild        # Nuke v3 state, restart from Phase A
+.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase B  # Re-run single phase (A/B/C/audit/D/E/F)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context  # Skip track context injection
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review   # + Phase F: Claude QA gate
+# v3 state: state-v3.json (separate from v2's state.json — no conflict)
+
+# Deterministic Python builder v2 (single E2E pipeline — fallback)
 .venv/bin/python scripts/build_module_v2.py {track} {num}                  # Full E2E pipeline (resume-aware)
 .venv/bin/python scripts/build_module_v2.py {track} --all                  # Build entire track (skips passing)
 .venv/bin/python scripts/build_module_v2.py {track} --range 4-44           # Build range of modules

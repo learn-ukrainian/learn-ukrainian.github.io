@@ -1392,7 +1392,11 @@ def _bootstrap_meta_from_plan(track: str, slug: str) -> None:
     if not plan_path.exists():
         return  # No plan = nothing to bootstrap from, will fail later
 
-    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
+    try:
+        plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError as e:
+        log(f"  bootstrap: WARNING — plan YAML parse error for {slug}, skipping bootstrap: {e}")
+        return
     # Word target: plan overrides config, config is fallback
     wt = plan.get("word_target", 0)
     if not wt:
