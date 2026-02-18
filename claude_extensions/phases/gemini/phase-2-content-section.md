@@ -1,6 +1,6 @@
 # Phase 2: Write Section Content
 
-> **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_FLAVOR}: {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
+> **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
 
 > **Your #1 job: Write {HARD_MINIMUM_WORD_COUNT} words for the section "{SECTION_TITLE}".**
 > This is ONE section of a larger module — stay within your word budget.

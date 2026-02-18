@@ -1,6 +1,6 @@
 # Phase 2: Write Module Summary
 
-> **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_FLAVOR}: {PERSONA_VOICE}.
+> **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}.
 
 ## Files to Read
 

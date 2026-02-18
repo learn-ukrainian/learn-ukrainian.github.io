@@ -504,7 +504,7 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 # Level-specific configuration
 LEVEL_CONFIG = {
     'A1': {
-        'target_words': 750,
+        'target_words': 2000,  # Feb 2026: raised from 750 — word targets are MINIMUMS
         'min_activities': 8,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -515,7 +515,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz'}
     },
     'A2': {
-        'target_words': 1000,
+        'target_words': 3000,  # Feb 2026: raised from 1000 — word targets are MINIMUMS
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -526,7 +526,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'unjumble', 'fill-in'}
     },
     'A1-checkpoint': {
-        'target_words': 500,  # Checkpoints can be shorter
+        'target_words': 1500,  # Checkpoints: proportional to A1 base (2000)
         'min_activities': 8,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
@@ -537,7 +537,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'match-up'}
     },
     'A2-checkpoint': {
-        'target_words': 800,  # Checkpoints can be shorter
+        'target_words': 2500,  # Checkpoints: proportional to A2 base (3000)
         'min_activities': 10,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
@@ -680,7 +680,7 @@ LEVEL_CONFIG = {
     },
     'B2-history': {
         # B2-HIST Track: History seminar style
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -846,7 +846,7 @@ LEVEL_CONFIG = {
         # C1-BIO Track: Biography seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: biographical analysis, legacy evaluation, era context
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -866,7 +866,7 @@ LEVEL_CONFIG = {
         # C1-HIST Track: History seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: historical analysis, source criticism, historiographical debate
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -920,7 +920,7 @@ LEVEL_CONFIG = {
     },
     'C2': {
         # C2 Track: Seminar style - production-focused
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -936,7 +936,7 @@ LEVEL_CONFIG = {
     },
     'C2-stylistic': {
         # C2 Stylistic Track: Seminar style - style mastery
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -952,7 +952,7 @@ LEVEL_CONFIG = {
     },
     'C2-literary': {
         # C2 Literary Track: Seminar style - literary production
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -968,7 +968,7 @@ LEVEL_CONFIG = {
     },
     'C2-professional': {
         # C2 Professional Track: Seminar style - professional mastery
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1009,7 +1009,7 @@ LEVEL_CONFIG = {
         # LIT Track: Pure seminar style (post-C1)
         # Activities: reading + essay-response + critical-analysis + comparative-study
         # NO traditional activities (quiz, match-up, fill-in)
-        'target_words': 4500,  # LIT is longer (literary analysis)
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
@@ -1026,7 +1026,7 @@ LEVEL_CONFIG = {
     # --- Literature variant tracks (inherit LIT config with minor adjustments) ---
     'LIT-ESSAY': {
         # Essay/non-fiction track: longer analytical pieces
-        'target_words': 4500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1042,7 +1042,7 @@ LEVEL_CONFIG = {
     },
     'LIT-HIST-FIC': {
         # Historical fiction: narrative analysis focus
-        'target_words': 4500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1058,7 +1058,7 @@ LEVEL_CONFIG = {
     },
     'LIT-FANTASTIKA': {
         # Sci-fi/fantasy: genre analysis
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1074,7 +1074,7 @@ LEVEL_CONFIG = {
     },
     'LIT-WAR': {
         # War literature: urgent, contemporary focus
-        'target_words': 4500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1090,7 +1090,7 @@ LEVEL_CONFIG = {
     },
     'LIT-HUMOR': {
         # Humor/satire
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1106,7 +1106,7 @@ LEVEL_CONFIG = {
     },
     'LIT-JUVENILE': {
         # Children's/YA lit
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1123,7 +1123,7 @@ LEVEL_CONFIG = {
     'OES': {
         # OES Track: Historical Linguistics (post-B2)
         # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 6,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1147,7 +1147,7 @@ LEVEL_CONFIG = {
     'RUTH': {
         # RUTH Track: Ruthenian/Middle Ukrainian (post-B2)
         # Source: Gemini Research ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 6,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1175,7 +1175,7 @@ LEVEL_CONFIG = {
         # B2-HIST Track: Transitional seminar style (B2 level)
         # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
         # Easier than LIT: shorter essays, some factual checks allowed
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1195,7 +1195,7 @@ LEVEL_CONFIG = {
         # C1-HIST Track: Academic seminar style (C1 level)
         # Activities: reading + essay-response (full) + critical-analysis + comparative-study
         # Academic rigor: longer essays, source criticism, historiographical analysis
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1422,13 +1422,6 @@ def get_level_config(level_code: str, module_focus: str = None) -> dict:
 
 
 def get_word_target(level_code: str, module_num: int, module_focus: str = None) -> int:
-    """Get word target for a level, with A1 graduation."""
+    """Get word target for a level. Word targets are MINIMUMS."""
     config = get_level_config(level_code, module_focus)
-    if level_code == 'A1':
-        if module_num <= 5:
-            return 300
-        elif module_num <= 10:
-            return 500
-        else:
-            return 750
     return config['target_words']

@@ -1,6 +1,6 @@
 # Phase 2: Write the Lesson Content
 
-> **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_FLAVOR}: {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
+> **Persona reminder:** You are {SKILL_IDENTITY}. Write in the voice of {PERSONA_VOICE}. Maintain this persona throughout — do not drift into generic AI tone.
 
 > **Your #1 job: Write {OVERSHOOT_TARGET} words of rich, structured Ukrainian content.**
 > Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.

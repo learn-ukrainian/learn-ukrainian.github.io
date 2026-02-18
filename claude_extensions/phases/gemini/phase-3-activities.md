@@ -10,7 +10,6 @@ Before writing ANY YAML, confirm these targets:
 | Target | Value |
 |--------|-------|
 | Skill identity | {SKILL_IDENTITY} |
-| Persona flavor | {PERSONA_FLAVOR} |
 | Module persona | {PERSONA_VOICE}, acting as {PERSONA_ROLE} |
 | Activities required | {ACTIVITY_MIN}–{ACTIVITY_MAX} |
 | Items per activity | ≥{ITEMS_MIN} |

@@ -127,9 +127,13 @@ def mark_phase_locked(ctx: ModuleContext, phase: str, status: str, **extra: Any)
         _original_mark_phase(ctx, phase, status, **extra)
 
 
-# Monkey-patch v1's mark_phase so all delegated phase functions use locking
+# Monkey-patch v1's mark_phase so all delegated phase functions use locking.
+# Guard: only patch if not already wrapped (prevents double-patch if this module
+# is loaded twice — once as __main__ and once via deferred import).
 _original_mark_phase = v1.mark_phase
-v1.mark_phase = mark_phase_locked  # type: ignore[assignment]
+if not getattr(v1.mark_phase, "_is_locked_wrapper", False):
+    mark_phase_locked._is_locked_wrapper = True  # type: ignore[attr-defined]
+    v1.mark_phase = mark_phase_locked  # type: ignore[assignment]
 
 # Monkey-patch v1's log for thread-safe output during parallel 4a+4b
 _original_log = v1.log
@@ -1114,20 +1118,12 @@ def phase_0_5_enrich_plan(ctx: ModuleContext) -> bool:
 # Pipeline Runner
 # ---------------------------------------------------------------------------
 
-# Unified phase sequence — no mode branching
-PHASE_SEQUENCE = [
-    "0",    # Research
-    "0.5",  # Plan Enrichment
-    "1",    # Meta/Outline
-    "2",    # Write Prose
-    "3",    # Prose Audit+Fix
-    "4ab",  # Activities + Vocabulary (parallel)
-    "6",    # Adversarial Review (before enrichment audit — review file required by hetman_verify)
-    "6b",   # Apply Review Fixes
-    "5",    # Enrichment Audit+Fix (runs hetman_verify which needs review file)
-    "7",    # Final Audit+Fix
-    "8",    # MDX Generation
-]
+# PHASE_SEQUENCE is defined in v1 (build_module.py) to avoid double-import deadlock.
+# When build_module_v2.py runs as __main__ and v1's clean_phase_artifacts imports from
+# it, Python loads a second module copy that re-executes monkey-patching, creating a
+# mark_phase_locked₂ → mark_phase_locked₁ chain = two FileLock objects on the same
+# file = flock deadlock on macOS. Keeping the list in v1 eliminates the import.
+PHASE_SEQUENCE = v1.PHASE_SEQUENCE
 
 PHASE_FUNCTIONS_V2: dict[str, Any] = {
     "0":    phase_0_v2,
@@ -1188,7 +1184,7 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
 
     log("")
 
-    # Handle --force-phase
+    # Handle --force-phase (single phase only)
     force_phase = ctx.force_phase
     if force_phase:
         if force_phase not in PHASE_FUNCTIONS_V2:
@@ -1198,7 +1194,30 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
         func = PHASE_FUNCTIONS_V2[force_phase]
         return func(ctx)
 
-    # Execute phases sequentially
+    # Handle --restart-from (run from that phase through the end)
+    restart_from = getattr(ctx, "restart_from", None)
+    if restart_from:
+        if restart_from not in PHASE_FUNCTIONS_V2:
+            log(f"  ERROR: Unknown phase '{restart_from}'. Valid: {', '.join(PHASE_SEQUENCE)}")
+            return False
+        try:
+            start_idx = PHASE_SEQUENCE.index(restart_from)
+        except ValueError:
+            log(f"  ERROR: Phase '{restart_from}' not in sequence")
+            return False
+        remaining = PHASE_SEQUENCE[start_idx:]
+        log(f"  --restart-from {restart_from}: running phases {', '.join(remaining)}")
+        for phase_id in remaining:
+            func = PHASE_FUNCTIONS_V2.get(phase_id)
+            if not func:
+                log(f"  Unknown phase: {phase_id}")
+                continue
+            if not func(ctx):
+                log(f"\n  PIPELINE STOPPED at phase {phase_id}")
+                return False
+        return True
+
+    # Execute phases sequentially (full pipeline)
     for phase_id in PHASE_SEQUENCE:
         func = PHASE_FUNCTIONS_V2.get(phase_id)
         if not func:
@@ -1212,20 +1231,8 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
     return True
 
 
-def _phase_state_ids(phase_id: str) -> list[str]:
-    """Map v2 phase IDs to state.json phase IDs (returns list for uniformity).
-
-    v2 phase "4ab" maps to v1's "3a" + "3b" for backward compat.
-    v2 phase "5" uses "5-enrich", "7" uses "7-final", "8" uses "8".
-    All others match their v2 IDs.
-    """
-    if phase_id == "4ab":
-        return ["3a", "3b"]
-    if phase_id == "5":
-        return ["5-enrich"]
-    if phase_id == "7":
-        return ["7-final"]
-    return [phase_id]
+# _phase_state_ids is defined in v1 (build_module.py) — same double-import reason.
+_phase_state_ids = v1._phase_state_ids
 
 
 # ---------------------------------------------------------------------------
@@ -1298,6 +1305,7 @@ def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     ctx.archive_dir = archive_dir  # type: ignore[attr-defined]
     ctx.force_research = getattr(args, "force_research", False)  # type: ignore[attr-defined]
     ctx.refresh = getattr(args, "refresh", False)  # type: ignore[attr-defined]
+    ctx.restart_from = getattr(args, "restart_from", None)  # type: ignore[attr-defined]
 
     if is_archived:
         log(f"Archive: DETECTED — {archive_source}")
@@ -1370,7 +1378,9 @@ def main() -> int:
     parser.add_argument("--rebuild", action="store_true",
                         help="Nuke state and rebuild from Phase 0")
     parser.add_argument("--force-phase", type=str, default=None,
-                        help="Re-run a specific phase even if state says complete")
+                        help="Re-run a single phase (cleans that phase's artifacts only)")
+    parser.add_argument("--restart-from", type=str, default=None,
+                        help="Restart from a phase: cleans that phase + all subsequent, then runs pipeline from there")
     parser.add_argument("--force-research", action="store_true",
                         help="Force fresh Phase 0 research even if research file exists")
     parser.add_argument("--dry-run", action="store_true",
@@ -1432,6 +1442,7 @@ def main() -> int:
                 track=args.track, num=n,
                 build_all=False, build_range=None,
                 rebuild=args.rebuild, force_phase=args.force_phase,
+                restart_from=args.restart_from,
                 force_research=args.force_research, dry_run=args.dry_run,
                 refresh=args.refresh, verify=False,
             )

@@ -468,6 +468,140 @@ def _now_iso() -> str:
 
 
 # ---------------------------------------------------------------------------
+# Orchestration artifact cleanup
+# ---------------------------------------------------------------------------
+
+# Unified phase sequence — shared between v1 and v2.
+# Defined HERE (in v1) to avoid double-import when build_module_v2.py is __main__
+# and clean_phase_artifacts tries to import from it (causes monkey-patch deadlock).
+PHASE_SEQUENCE = [
+    "0",    # Research
+    "0.5",  # Plan Enrichment
+    "1",    # Meta/Outline
+    "2",    # Write Prose
+    "3",    # Prose Audit+Fix
+    "4ab",  # Activities + Vocabulary (parallel)
+    "6",    # Adversarial Review (before enrichment audit)
+    "6b",   # Apply Review Fixes
+    "5",    # Enrichment Audit+Fix
+    "7",    # Final Audit+Fix
+    "8",    # MDX Generation
+]
+
+
+def _phase_state_ids(phase_id: str) -> list[str]:
+    """Map v2 phase IDs to state.json phase IDs.
+
+    v2 phase "4ab" maps to v1's "3a" + "3b" for backward compat.
+    v2 phase "5" uses "5-enrich", "7" uses "7-final", "8" uses "8".
+    All others match their v2 IDs.
+    """
+    if phase_id == "4ab":
+        return ["3a", "3b"]
+    if phase_id == "5":
+        return ["5-enrich"]
+    if phase_id == "7":
+        return ["7-final"]
+    return [phase_id]
+
+
+# Map each v2 phase ID to glob patterns for its orchestration artifacts.
+# "phase-{N}-*" for phases that use hyphens, "phase{N}-*" for those without.
+PHASE_ARTIFACT_PATTERNS: dict[str, list[str]] = {
+    "0":    ["phase-0-*"],
+    "0.5":  ["phase-0-5-*"],
+    "1":    ["phase-1-*"],
+    "2":    ["phase-2-*"],
+    "3":    ["phase3-*"],
+    "4ab":  ["phase-4a-*", "phase-4b-*", "phase4a-*", "phase4b-*"],
+    "6":    ["phase-6-*"],
+    "6b":   ["phase-6b-*"],
+    "5":    ["phase5-*", "phase-5-*"],
+    "7":    ["phase7-*"],
+    "8":    ["phase-8-*", "phase8-*"],
+}
+
+# Phases that produce artifacts outside the orchestration dir.
+# Maps phase ID to a callable(ctx) -> list[Path] of files to delete.
+def _external_artifacts_for_phase(ctx: "ModuleContext", phase_id: str) -> list[Path]:
+    """Return paths to audit/review/status files produced by a phase."""
+    slug = ctx.slug
+    paths = ctx.paths
+    result: list[Path] = []
+
+    if phase_id in ("3", "5", "7"):
+        # Audit phases write audit report + log + status JSON
+        audit_dir = paths["md"].parent / "audit"
+        for ext in ["-audit.md", "-audit.log", "-grammar.yaml", "-quality.md"]:
+            f = audit_dir / f"{slug}{ext}"
+            if f.exists():
+                result.append(f)
+        status_f = paths["status"]
+        if status_f.exists():
+            result.append(status_f)
+
+    if phase_id == "6":
+        # Review phase writes review file
+        review_f = paths["review"]
+        if review_f.exists():
+            result.append(review_f)
+
+    if phase_id == "8":
+        # MDX phase — completion.md
+        completion = ctx.orch_dir / "completion.md"
+        if completion.exists():
+            result.append(completion)
+
+    return result
+
+
+def clean_phase_artifacts(ctx: "ModuleContext", phase_id: str, forward: bool = False) -> int:
+    """Delete orchestration artifacts for a phase (and all subsequent phases if forward=True).
+
+    Also cleans external artifacts (audit, review, status) for affected phases.
+    Returns the number of files deleted.
+    """
+    if forward:
+        # Find phase_id in sequence and delete everything from there onward
+        try:
+            idx = PHASE_SEQUENCE.index(phase_id)
+        except ValueError:
+            idx = 0
+        phases_to_clean = PHASE_SEQUENCE[idx:]
+    else:
+        phases_to_clean = [phase_id]
+
+    deleted = 0
+    orch_dir = ctx.orch_dir
+
+    for pid in phases_to_clean:
+        # Clean orchestration artifacts
+        patterns = PHASE_ARTIFACT_PATTERNS.get(pid, [])
+        for pattern in patterns:
+            for f in orch_dir.glob(pattern):
+                f.unlink()
+                deleted += 1
+
+        # Clean external artifacts (audit, review, status)
+        for f in _external_artifacts_for_phase(ctx, pid):
+            f.unlink()
+            deleted += 1
+
+        # Clear phase state
+        if "phases" in ctx.state and pid in ctx.state["phases"]:
+            del ctx.state["phases"][pid]
+        # Also clear mapped state IDs (e.g., "4ab" maps to "3a"+"3b")
+        for state_id in _phase_state_ids(pid):
+            if "phases" in ctx.state and state_id in ctx.state["phases"]:
+                del ctx.state["phases"][state_id]
+
+    if deleted > 0:
+        save_state(ctx)
+
+    return deleted
+
+
+# ---------------------------------------------------------------------------
 # 4. Gemini Dispatch Helpers
 # ---------------------------------------------------------------------------
 
@@ -915,43 +1049,139 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         log("  Phase 2: DRY-RUN — would dispatch whole-module content generation")
         return True
 
-    # Dispatch
-    output_file = _gemini_output_path(ctx.slug, "2")
-    ok, _ = dispatch_gemini(
-        _dispatch_prompt(ctx, prompt_file),
-        task_id=f"yw-{ctx.slug}-p2",
-        model=ctx.model, stdout_only=True, output_file=output_file,
-    )
-    if not ok:
-        log("  Phase 2: FAILED — dispatch error")
-        return False
-
-    # Extract content from delimited output
-    content_text = None
-    if output_file.exists():
-        raw = output_file.read_text(encoding="utf-8")
-        content_text = _extract_delimited_content(raw, "===CONTENT_START===", "===CONTENT_END===")
-
-    if not content_text:
-        log("  Phase 2: FAILED — no delimited content extracted")
-        return False
-
-    # Write content file
+    MAX_P2_ATTEMPTS = 3
     content_path = ctx.paths["md"]
     content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text(content_text, encoding="utf-8")
 
-    total_words = len(content_text.split())
-    pct = total_words * 100 // max(ctx.word_target, 1)
-    log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
+    for attempt in range(1, MAX_P2_ATTEMPTS + 1):
+        attempt_suffix = "" if attempt == 1 else f"-r{attempt}"
+        task_suffix = "" if attempt == 1 else f"-r{attempt}"
 
-    # Fail-fast: too thin
-    if total_words < ctx.word_target * 0.5:
-        log(f"  Phase 2: FAIL-FAST — only {total_words}w vs {ctx.word_target}w target")
-        return False
+        # On retry, build an expansion prompt from the thin content
+        if attempt > 1 and content_path.exists():
+            current_text = content_path.read_text(encoding="utf-8")
+            current_words = len(current_text.split())
+            deficit = ctx.word_target - current_words
+            expand_prompt = _build_phase2_expansion_prompt(
+                ctx, current_text, current_words, deficit
+            )
+            expand_prompt_file = ctx.orch_dir / f"phase-2-expand-{attempt}.md"
+            expand_prompt_file.write_text(expand_prompt, encoding="utf-8")
+            dispatch_file = expand_prompt_file
+            log(f"  Phase 2: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
+        else:
+            dispatch_file = prompt_file
 
-    mark_phase(ctx, phase, "complete")
-    return True
+        output_file = _gemini_output_path(ctx.slug, f"2{attempt_suffix}")
+        ok, _ = dispatch_gemini(
+            _dispatch_prompt(ctx, dispatch_file),
+            task_id=f"yw-{ctx.slug}-p2{task_suffix}",
+            model=ctx.model, stdout_only=True, output_file=output_file,
+        )
+        if not ok:
+            log(f"  Phase 2: Dispatch failed (attempt {attempt})")
+            continue
+
+        # Extract content from delimited output
+        content_text = None
+        if output_file.exists():
+            raw = output_file.read_text(encoding="utf-8")
+            content_text = _extract_delimited_content(raw, "===CONTENT_START===", "===CONTENT_END===")
+
+        if not content_text:
+            log(f"  Phase 2: No delimited content extracted (attempt {attempt})")
+            continue
+
+        # Write content file
+        content_path.write_text(content_text, encoding="utf-8")
+
+        total_words = len(content_text.split())
+        pct = total_words * 100 // max(ctx.word_target, 1)
+        log(f"  Phase 2: {total_words} words written ({pct}% of {ctx.word_target} target)")
+
+        if total_words >= ctx.word_target * 0.75:
+            mark_phase(ctx, phase, "complete", words=total_words, attempts=attempt)
+            return True
+
+        log(f"  Phase 2: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
+
+    log(f"  Phase 2: FAIL — exhausted {MAX_P2_ATTEMPTS} attempts, content still under 50% of target")
+    return False
+
+
+def _build_phase2_expansion_prompt(ctx: "ModuleContext", current_text: str, current_words: int, deficit: int) -> str:
+    """Build a prompt telling Gemini to expand thin content to meet word target."""
+    # Analyze which sections are thin
+    import re
+    sections: list[tuple[str, int]] = []
+    current_section = ""
+    section_text: list[str] = []
+
+    for line in current_text.split("\n"):
+        h2_match = re.match(r'^##\s+(.+)', line)
+        if h2_match:
+            if current_section and section_text:
+                wc = len(" ".join(section_text).split())
+                sections.append((current_section, wc))
+            current_section = h2_match.group(1)
+            section_text = []
+        else:
+            section_text.append(line)
+    if current_section and section_text:
+        wc = len(" ".join(section_text).split())
+        sections.append((current_section, wc))
+
+    section_report = "\n".join(f"- **{name}**: {wc} words" for name, wc in sections)
+
+    research_path = ctx.paths.get("research", "")
+    overshoot = int(ctx.word_target * 1.5)
+
+    return f"""# Phase 2: EXPAND — Content is {current_words} words, need {ctx.word_target}+
+
+> **Persona reminder:** You are {ctx.skill_identity}. Write in the voice of {ctx.persona_flavor}. Maintain your voice throughout.
+
+## Problem
+
+Your previous output was **{current_words} words** — far below the **{ctx.word_target} word minimum**.
+You need to add approximately **{deficit} more words** of substantive content.
+
+### Current section word counts:
+{section_report}
+
+## Your Task
+
+Read the current content file at `{ctx.paths["md"]}` and the original prompt at `{ctx.orch_dir / "phase-2-prompt.md"}`.
+
+**Rewrite the ENTIRE module** with dramatically expanded content. Every H3 subsection needs:
+- 80-100+ words minimum (many of yours currently have 20-40)
+- 2+ full example sentences in context
+- Explanatory prose, not just headings and bullet points
+- Callout boxes, comparison tables, cultural connections
+
+**DO NOT just add filler.** Each section needs real depth:
+- Historical examples with dates and specifics
+- Primary source quotes (from research file)
+- Detailed explanations of concepts
+- Cultural context and connections
+
+## Critical Rules
+- Write at least **{overshoot} words** (1.5x target)
+- Use research file: `{research_path}`
+- Immersion: {ctx.immersion_rule}
+- Output between `===CONTENT_START===` and `===CONTENT_END===` delimiters
+
+## Output Format
+
+===CONTENT_START===
+{{entire rewritten module with dramatically expanded content}}
+===CONTENT_END===
+
+===WORD_COUNTS===
+Section "{{name}}": {{count}} words
+...
+Total: {{total}} words
+===WORD_COUNTS===
+"""
 
 
 def _parse_section(section: Any) -> tuple[str, int]:
@@ -2043,15 +2273,41 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     )
 
     # Load or init state
+    is_dry = getattr(args, "dry_run", False)
+
     if args.rebuild:
-        # Nuke state
-        state_file = _state_file(ctx)
-        if state_file.exists():
-            state_file.unlink()
-        ctx.state = load_state(ctx)
-        log("State: RESET (--rebuild)")
+        if is_dry:
+            ctx.state = load_state(ctx)
+            log("State: RESET (--rebuild) — DRY-RUN, no artifacts deleted")
+        else:
+            # Nuke state + all orchestration/external artifacts
+            ctx.state = load_state(ctx)  # load first so clean_phase_artifacts can read orch_dir
+            deleted = clean_phase_artifacts(ctx, PHASE_SEQUENCE[0], forward=True)
+            # Also nuke state.json itself and lock
+            state_file = _state_file(ctx)
+            lock_file = state_file.with_suffix(".json.lock")
+            for f in [state_file, lock_file]:
+                if f.exists():
+                    f.unlink()
+            ctx.state = load_state(ctx)
+            log(f"State: RESET (--rebuild) — deleted {deleted} artifacts")
     else:
         ctx.state = load_state(ctx)
+
+        if not is_dry:
+            # --force-phase: clean artifacts for that single phase
+            if args.force_phase:
+                deleted = clean_phase_artifacts(ctx, args.force_phase, forward=False)
+                if deleted:
+                    log(f"Cleaned {deleted} artifacts for phase {args.force_phase}")
+
+            # --restart-from: clean artifacts from that phase forward
+            restart_from = getattr(args, "restart_from", None)
+            if restart_from:
+                deleted = clean_phase_artifacts(ctx, restart_from, forward=True)
+                if deleted:
+                    log(f"Cleaned {deleted} artifacts from phase {restart_from} onward")
+
         if ctx.state.get("phases"):
             completed = [p for p, v in ctx.state["phases"].items() if v.get("status") == "complete"]
             log(f"State: Loaded — phases complete: {', '.join(completed) or 'none'}")
