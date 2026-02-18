@@ -1940,22 +1940,49 @@ def _is_rubber_stamp(review_text: str) -> bool:
     return False
 
 
-def dispatch_claude_review(ctx: ModuleContext) -> tuple[bool, str]:
-    """Dispatch Phase 6 review to Claude API instead of Gemini.
+def _claude_cli() -> str:
+    """Return path to the claude CLI executable."""
+    import shutil as _shutil
+    return _shutil.which("claude") or "claude"
 
-    Reads all module files inline and calls the Claude API with the adversarial
+
+def _run_claude_headless(prompt: str, timeout: int = 300) -> tuple[bool, str]:
+    """Call `claude -p <prompt>` headlessly and return (success, output).
+
+    Uses subprocess so no API key or anthropic package is required.
+    Unsets CLAUDECODE to allow calls from within a Claude Code session.
+    """
+    import subprocess as _sp
+    env = os.environ.copy()
+    env.pop("CLAUDECODE", None)  # Prevent "nested session" error
+    try:
+        result = _sp.run(
+            [_claude_cli(), "-p", prompt, "--output-format", "text"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+        )
+        if result.returncode != 0:
+            err = (result.stderr or "").strip()
+            log(f"  Claude CLI error (rc={result.returncode}): {err[:200]}")
+            return False, ""
+        return True, result.stdout.strip()
+    except FileNotFoundError:
+        log("  Claude CLI not found — install claude and ensure it is on PATH")
+        return False, ""
+    except Exception as e:
+        log(f"  Claude CLI exception: {e}")
+        return False, ""
+
+
+def dispatch_claude_review(ctx: ModuleContext) -> tuple[bool, str]:
+    """Dispatch Phase 6 review to headless Claude CLI instead of Gemini.
+
+    Reads all module files inline and calls `claude -p` with the adversarial
     review prompt. Returns (success, review_text).
     """
-    try:
-        import anthropic  # type: ignore[import]
-    except ImportError:
-        log("  Phase 6 (Claude): anthropic package not installed — pip install anthropic")
-        return False, ""
-
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        log("  Phase 6 (Claude): ANTHROPIC_API_KEY not set")
-        return False, ""
 
     # Load all relevant files
     def _read(path: Path) -> str:
@@ -2074,21 +2101,13 @@ Produce a review in this EXACT format:
 Be specific. Quote actual text. If you find no issues, that means you didn't look hard enough.
 """
 
-    log("  Phase 6 (Claude): Calling Claude API for adversarial review...")
-    try:
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model="claude-opus-4-6",
-            max_tokens=4096,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_prompt}],
-        )
-        review_text = response.content[0].text.strip()
-        log(f"  Phase 6 (Claude): Review complete ({len(review_text)} chars)")
-        return True, review_text
-    except Exception as e:
-        log(f"  Phase 6 (Claude): API error — {e}")
+    full_prompt = f"{system_prompt}\n\n{user_prompt}"
+    log("  Phase 6 (Claude): Calling headless claude for adversarial review...")
+    ok, review_text = _run_claude_headless(full_prompt, timeout=300)
+    if not ok:
         return False, ""
+    log(f"  Phase 6 (Claude): Review complete ({len(review_text)} chars)")
+    return True, review_text
 
 
 def _apply_file_fixes(fix_response: str, ctx: "ModuleContext") -> int:
@@ -2144,24 +2163,14 @@ def _apply_file_fixes(fix_response: str, ctx: "ModuleContext") -> int:
 
 
 def dispatch_claude_final_review(ctx: "ModuleContext") -> tuple[bool, str, str]:
-    """Phase 9: Full final QA gate via Claude API.
+    """Phase 9: Full final QA gate via headless Claude CLI.
 
-    Reads all module files inline, runs a fresh audit, calls claude-opus-4-6
+    Reads all module files inline, runs a fresh audit, calls `claude -p`
     for deep semantic review, applies structured file fixes, and returns a verdict.
 
     Returns (success, verdict, report_text).
     verdict: "APPROVE" | "NEEDS_WORK" | "REJECT"
     """
-    try:
-        import anthropic  # type: ignore[import]
-    except ImportError:
-        log("  Phase 9 (Claude): anthropic package not installed — pip install anthropic")
-        return False, "", ""
-
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        log("  Phase 9 (Claude): ANTHROPIC_API_KEY not set")
-        return False, "", ""
 
     def _read(path: Path | None) -> str:
         if path and path.exists():
@@ -2304,20 +2313,12 @@ Verdict guide:
 Do not rubber-stamp. A verdict of APPROVE on a module with real unfixed issues is a failure.
 """
 
-    log("  Phase 9 (Claude): Calling Claude Opus for final QA review...")
-    try:
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model="claude-opus-4-6",
-            max_tokens=8096,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_prompt}],
-        )
-        report = response.content[0].text.strip()
-        log(f"  Phase 9 (Claude): Review complete ({len(report)} chars)")
-    except Exception as e:
-        log(f"  Phase 9 (Claude): API error — {e}")
+    full_prompt = f"{system_prompt}\n\n{user_prompt}"
+    log("  Phase 9 (Claude): Calling headless claude for final QA review...")
+    ok, report = _run_claude_headless(full_prompt, timeout=600)
+    if not ok:
         return False, "", ""
+    log(f"  Phase 9 (Claude): Review complete ({len(report)} chars)")
 
     # Apply fixes from response
     fixes_applied = _apply_file_fixes(report, ctx)
