@@ -2,21 +2,21 @@
   "module": "language-about-verbs",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-18T13:29:42.286829Z",
+  "last_audit": "2026-02-18T13:31:12.193274Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-18T13:29:30.158270Z",
     "meta": "2026-02-18T13:14:29.357463Z",
-    "activities": null,
-    "vocabulary": null,
+    "activities": "2026-02-18T13:31:11.326810Z",
+    "vocabulary": "2026-02-18T13:30:48.739963Z",
     "plan": "2026-02-17T20:22:59.859047Z",
     "research": "2026-02-17T11:34:50.185833Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Activities' header OR activities sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "pass",
@@ -24,14 +24,14 @@
       "message": "4633/4000 (raw: 5027)"
     },
     "activities": {
-      "status": "fail",
-      "violations": 4,
-      "message": "0/4 | density: 0 < 6 | unique_types: 0/3 types | priority: No priority types"
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "0 < 20 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -49,19 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "No Tier 2 (Core) review file at l2-uk-en/b1/review/language-about-verbs-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Structure: Missing '## Activities' header OR activities sidecar",
-      "Missing required activity types: error-correction, fill-in, match-up, quiz"
+      "No Tier 2 (Core) review file at l2-uk-en/b1/review/language-about-verbs-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
     ],
-    "pass_count": 3,
-    "fail_count": 2,
-    "deferred_count": 0
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 2
   }
 }

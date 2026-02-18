@@ -24,7 +24,22 @@
       "timestamp": "2026-02-18T12:17:57Z",
       "words": 4474,
       "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:29:53Z",
+      "attempts": 3
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:30:48Z",
+      "task_id": "yw-language-about-verbs-p3b"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:31:11Z",
+      "task_id": "yw-language-about-verbs-p3a"
     }
   },
-  "last_updated": "2026-02-18T12:17:57Z"
+  "last_updated": "2026-02-18T12:31:11Z"
 }
