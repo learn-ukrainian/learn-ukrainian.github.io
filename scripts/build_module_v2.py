@@ -1020,7 +1020,7 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
 
     ok, verdict, report = v1.dispatch_claude_final_review(ctx)
     if not ok:
-        log("  Phase 9: FAILED — Claude API unavailable")
+        log("  Phase 9: FAILED — Claude CLI unavailable")
         return False  # Hard fail: can't review without Claude
 
     # Save final review report
@@ -1033,14 +1033,9 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
     orch_report = ctx.orch_dir / "phase-9-final-review.md"
     orch_report.write_text(report, encoding="utf-8")
 
-    # If fixes were applied, regenerate MDX
+    # If fixes were applied, re-audit now so verdict reflects fixed state.
+    # MDX is NOT regenerated here — Phase 8 always runs after Phase 9 (see run_pipeline_v2).
     if "===FIX_START===" in report:
-        log("  Phase 9: Regenerating MDX after fixes...")
-        run_script([
-            str(SCRIPTS_DIR / "generate_mdx.py"), "l2-uk-en", ctx.track, str(ctx.module_num),
-        ], capture=True)
-
-        # Re-audit after fixes
         passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
         audit_log = ctx.orch_dir / "phase9-post-fix-audit.log"
         audit_log.write_text(audit_out, encoding="utf-8")
@@ -1048,6 +1043,7 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
         if not passed:
             log(f"  Phase 9: Post-fix audit FAILED (verdict: {verdict})")
             if verdict == "REJECT":
+                mark_phase_locked(ctx, phase, "failed", verdict=verdict)
                 return False
             log("  Phase 9: Audit failed but verdict is not REJECT — marking NEEDS_WORK")
         else:
@@ -1337,8 +1333,15 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
                 return False
         return True
 
-    # Execute phases sequentially (full pipeline)
+    # Execute phases sequentially (full pipeline).
+    # When --final-review is set, Phase 8 (MDX) is deferred to after Phase 9
+    # so MDX is always generated from the final fixed content.
+    defer_mdx = getattr(ctx, "final_review", False)
+
     for phase_id in PHASE_SEQUENCE:
+        if phase_id == "8" and defer_mdx:
+            continue  # MDX deferred — will run after Phase 9
+
         func = PHASE_FUNCTIONS_V2.get(phase_id)
         if not func:
             log(f"  Unknown phase: {phase_id}")
@@ -1349,11 +1352,18 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
             return False
 
     # Phase 9: Claude Final Review (optional — runs when --final-review is set)
-    if getattr(ctx, "final_review", False):
+    if defer_mdx:
         log(f"\n  Phase 9: {PHASE_LABELS['9']}")
         if not phase_9_final_review(ctx):
             log("\n  PIPELINE STOPPED at phase 9 (REJECT verdict)")
             return False
+
+        # Phase 8: MDX — always runs last so it reflects any Phase 9 fixes.
+        # Reset state so it regenerates even when resuming a previously-complete build.
+        log(f"\n  Phase 8: {PHASE_LABELS['8']} (post-review)")
+        ctx.state.pop("8", None)
+        if not phase_8_mdx(ctx):
+            log("\n  WARNING: MDX generation failed after Phase 9")
 
     return True
 
