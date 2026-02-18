@@ -93,9 +93,10 @@ def main():
     if not orch_dir.exists():
         missing_artifacts.append("orchestration directory missing")
     else:
-        phase2_files = list(orch_dir.glob("phase-2-p2-*-section_content.md"))
-        if not phase2_files:
-            missing_artifacts.append("no Phase 2 section content files")
+        phase2_sections = list(orch_dir.glob("phase-2-p2-*-section_content.md"))
+        phase2_prompt = (orch_dir / "phase-2-prompt.md").exists()
+        if not phase2_sections and not phase2_prompt:
+            missing_artifacts.append("no Phase 2 artifacts (section files or prompt)")
         if not (orch_dir / "placeholders.yaml").exists():
             missing_artifacts.append("placeholders.yaml missing")
 
