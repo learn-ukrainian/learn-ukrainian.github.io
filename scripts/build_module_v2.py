@@ -1260,7 +1260,10 @@ def _bootstrap_meta_from_plan(track: str, slug: str) -> None:
     if not wt:
         try:
             from audit.config import get_word_target as _get_wt
-            wt = _get_wt(track.upper().split("-")[0], int(slug.split("-")[-1]) if slug[0].isdigit() else 1)
+            from build_module import track_to_level_focus
+            level_code, module_focus = track_to_level_focus(track)
+            mod_num = int(slug.split("-")[-1]) if slug[0].isdigit() else 1
+            wt = _get_wt(level_code, mod_num, module_focus)
         except Exception:
             wt = 0
     minimal_meta = {

@@ -838,10 +838,8 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
 
     print(f"\n📋 Auditing: {display_level} M{module_num:02d} — {module_title}")
     
-    # Check word target
+    # Check word target — config is source of truth (meta may have stale values)
     target = get_word_target(level_code, module_num, module_focus)
-    if meta_data and meta_data.get('word_target'):
-        target = meta_data['word_target']
     print(f"   File: {file_path} | Target: {target} words")
 
     # Required Metadata Check

@@ -369,6 +369,30 @@ def get_level_label(track: str) -> str:
     return track.upper().replace("-", "_").rstrip("_")
 
 
+# Track → (level_code, module_focus) for LEVEL_CONFIG resolution
+_TRACK_FOCUS_MAP: dict[str, tuple[str, str | None]] = {
+    "b2-hist": ("B2", "history"),
+    "c1-bio": ("C1", "biography"),
+    "c1-hist": ("C1", "history"),
+    "b2-pro": ("B2", "professional"),
+    "c1-pro": ("C1", "professional"),
+    "lit": ("C1", "literature"),
+    "oes": ("C2", "seminar"),
+    "ruth": ("C2", "seminar"),
+}
+
+
+def track_to_level_focus(track: str) -> tuple[str, str | None]:
+    """Map track name to (level_code, module_focus) for config resolution."""
+    # Lit sub-genres (lit-poetry, lit-drama, etc.) → same as lit
+    if track.startswith("lit-"):
+        return ("C1", "literature")
+    if track in _TRACK_FOCUS_MAP:
+        return _TRACK_FOCUS_MAP[track]
+    # Core tracks: a1, a2, b1, b2, c1, c2
+    return (track.upper().split("-")[0], None)
+
+
 # ---------------------------------------------------------------------------
 # 3. ModuleContext Dataclass + State Helpers
 # ---------------------------------------------------------------------------
@@ -2254,7 +2278,8 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     if not word_target:
         try:
             from audit.config import get_word_target as _get_wt
-            word_target = _get_wt(track.upper().split("-")[0], num)
+            level_code, module_focus = track_to_level_focus(track)
+            word_target = _get_wt(level_code, num, module_focus)
         except Exception:
             word_target = 0  # Audit will use its own config fallback
     topic_title = plan.get("title", slug.replace("-", " ").title())
