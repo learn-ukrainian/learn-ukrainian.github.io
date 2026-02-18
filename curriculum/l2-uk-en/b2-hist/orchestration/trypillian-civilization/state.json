@@ -39,7 +39,13 @@
       "status": "complete",
       "timestamp": "2026-02-18T12:28:55Z",
       "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:30:23Z",
+      "task_id": "gr-trypillian-civilization",
+      "attempts": 1
     }
   },
-  "last_updated": "2026-02-18T12:28:55Z"
+  "last_updated": "2026-02-18T12:30:23Z"
 }
