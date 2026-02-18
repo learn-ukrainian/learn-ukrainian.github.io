@@ -19,6 +19,8 @@ Pipeline:
 
 Usage:
     .venv/bin/python scripts/build_module_v2.py {track} {num}               # Full E2E
+    .venv/bin/python scripts/build_module_v2.py {track} --all               # Build entire track
+    .venv/bin/python scripts/build_module_v2.py {track} --range 4-44        # Build range
     .venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild     # Nuke state, restart
     .venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3  # Re-run phase
     .venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run     # Show plan
@@ -81,7 +83,8 @@ from build_module import (
 )
 from batch_gemini_config import (
     CURRICULUM_DIR, FLASH_MODEL, PHASES_DIR, PRO_MODEL, PROJECT_ROOT,
-    SEMINAR_TRACKS, get_module_paths, get_track_config, slug_for_num,
+    SEMINAR_TRACKS, get_module_index, get_module_paths, get_track_config,
+    slug_for_num,
 )
 
 # ---------------------------------------------------------------------------
@@ -1119,9 +1122,9 @@ PHASE_SEQUENCE = [
     "2",    # Write Prose
     "3",    # Prose Audit+Fix
     "4ab",  # Activities + Vocabulary (parallel)
-    "5",    # Enrichment Audit+Fix
-    "6",    # Adversarial Review
+    "6",    # Adversarial Review (before enrichment audit — review file required by hetman_verify)
     "6b",   # Apply Review Fixes
+    "5",    # Enrichment Audit+Fix (runs hetman_verify which needs review file)
     "7",    # Final Audit+Fix
     "8",    # MDX Generation
 ]
@@ -1347,6 +1350,8 @@ def main() -> int:
         epilog=textwrap.dedent("""\
             Examples:
               %(prog)s a1 12                    # Full E2E pipeline (resume-aware)
+              %(prog)s a1 --all                 # Build entire track sequentially
+              %(prog)s a1 --range 4-44          # Build modules 4 through 44
               %(prog)s b2-hist 1                # E2E with archive restore
               %(prog)s a1 12 --rebuild          # Nuke state, rebuild from Phase 0
               %(prog)s a1 12 --force-phase 3    # Re-run specific phase only
@@ -1355,8 +1360,13 @@ def main() -> int:
         """),
     )
     parser.add_argument("track", help="Track identifier (a1, a2, b1, ..., c1-bio, b2-hist, lit, ...)")
-    parser.add_argument("num", type=int, help="1-indexed module number within the track")
+    parser.add_argument("num", type=int, nargs="?", default=None,
+                        help="1-indexed module number (optional with --all or --range)")
 
+    parser.add_argument("--all", action="store_true", dest="build_all",
+                        help="Build all modules in the track sequentially")
+    parser.add_argument("--range", type=str, default=None, dest="build_range",
+                        help="Build a range of modules (e.g. 4-44, 1-10)")
     parser.add_argument("--rebuild", action="store_true",
                         help="Nuke state and rebuild from Phase 0")
     parser.add_argument("--force-phase", type=str, default=None,
@@ -1371,6 +1381,81 @@ def main() -> int:
                         help="Just run audit, print PASS/FAIL, exit")
 
     args = parser.parse_args()
+
+    # Validate: need num, --all, or --range
+    if args.num is None and not args.build_all and not args.build_range:
+        parser.error("Either provide a module number, --all, or --range")
+
+    # --all / --range: resolve module numbers and run sequentially
+    if args.build_all or args.build_range:
+        idx = get_module_index(args.track)
+        total = idx["total"]
+
+        if args.build_all:
+            nums = list(range(1, total + 1))
+            print(f"Building ALL {total} modules in {args.track}", flush=True)
+        else:
+            # Parse range like "4-44"
+            match = re.match(r"^(\d+)-(\d+)$", args.build_range)
+            if not match:
+                parser.error(f"Invalid range format: {args.build_range!r} (expected N-M, e.g. 4-44)")
+            start, end = int(match.group(1)), int(match.group(2))
+            if start < 1 or end > total or start > end:
+                parser.error(f"Range {start}-{end} out of bounds (track has {total} modules)")
+            nums = list(range(start, end + 1))
+            print(f"Building {args.track} modules {start}-{end} ({len(nums)} modules)", flush=True)
+
+        passed_list, failed_list, skipped_list = [], [], []
+        t0_batch = time.time()
+
+        for i, n in enumerate(nums, 1):
+            slug = slug_for_num(args.track, n)
+            print(f"\n{'='*70}", flush=True)
+            print(f"[{i}/{len(nums)}] {args.track} #{n} — {slug}", flush=True)
+            print(f"{'='*70}", flush=True)
+
+            # Skip already-complete modules (unless --rebuild)
+            if not args.rebuild and not args.force_phase:
+                try:
+                    paths = get_module_paths(args.track, slug)
+                    if paths["md"].exists():
+                        check_passed, _ = run_verify(paths["md"], content_only=False)
+                        if check_passed:
+                            print(f"  SKIP: already passing audit", flush=True)
+                            skipped_list.append((n, slug))
+                            continue
+                except Exception:
+                    pass  # proceed with build
+
+            # Build single module by re-invoking main logic
+            single_args = argparse.Namespace(
+                track=args.track, num=n,
+                build_all=False, build_range=None,
+                rebuild=args.rebuild, force_phase=args.force_phase,
+                force_research=args.force_research, dry_run=args.dry_run,
+                refresh=args.refresh, verify=False,
+            )
+            rc = _run_single_module(single_args)
+            if rc == 0:
+                passed_list.append((n, slug))
+            else:
+                failed_list.append((n, slug))
+                print(f"  FAILED — continuing to next module", flush=True)
+
+        # Summary
+        elapsed_batch = time.time() - t0_batch
+        elapsed_str = f"{int(elapsed_batch // 60)}m {int(elapsed_batch % 60)}s"
+        print(f"\n{'='*70}", flush=True)
+        print(f"BATCH COMPLETE — {args.track} [{elapsed_str}]", flush=True)
+        print(f"  Passed:  {len(passed_list)}", flush=True)
+        print(f"  Failed:  {len(failed_list)}", flush=True)
+        print(f"  Skipped: {len(skipped_list)} (already passing)", flush=True)
+        if failed_list:
+            print(f"  Failed modules:", flush=True)
+            for n, slug in failed_list:
+                print(f"    #{n} {slug}", flush=True)
+        print(f"{'='*70}", flush=True)
+        return 1 if failed_list else 0
 
     # --verify mode: just run audit and exit
     if args.verify:
@@ -1401,7 +1486,12 @@ def main() -> int:
             print(f"ERROR: {e}", flush=True)
             return 1
 
-    # Main pipeline
+    # Main pipeline (single module)
+    return _run_single_module(args)
+
+
+def _run_single_module(args: argparse.Namespace) -> int:
+    """Run the E2E pipeline for a single module. Returns 0 on success, 1 on failure."""
     try:
         ctx = preflight_v2(args)
         _init_log(ctx.slug)
