@@ -1,0 +1,71 @@
+{
+  "slug": "greeks-crimea-olbia",
+  "track": "b2-hist",
+  "module_num": 3,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:12:45Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:12:45Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:17:39Z",
+      "task_id": "yw-greeks-crimea-olbia-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:30:26Z",
+      "words": 4357,
+      "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:47:09Z",
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:47:10Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:47:10Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:50:25Z",
+      "task_id": "gr-greeks-crimea-olbia",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:56:18Z",
+      "task_id": "yw-greeks-crimea-olbia-6b",
+      "attempts": 1
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:56:29Z",
+      "attempts": 1
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:56:36Z",
+      "attempts": 1
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:56:50Z"
+    }
+  },
+  "last_updated": "2026-02-18T15:56:50Z"
+}

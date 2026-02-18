@@ -1,0 +1,31 @@
+items:
+  - lemma: рід
+    ipa: '[rid]'
+    translation: gender
+    pos: noun
+    gender: m
+    note: —
+  - lemma: дієслово
+    ipa: '[dʲijɛˈslɔʋɔ]'
+    translation: verb
+    pos: noun
+    gender: n
+    note: —
+  - lemma: чоловічий
+    ipa: '[t͡ʃɔlɔˈʋit͡ʃɪj]'
+    translation: masculine
+    pos: adj
+    gender: m
+    note: —
+  - lemma: жіночий
+    ipa: '[ʒiˈnɔt͡ʃɪj]'
+    translation: feminine
+    pos: adj
+    gender: m
+    note: —
+  - lemma: середній
+    ipa: '[sɛˈrɛdɲɪj]'
+    translation: middle / neuter
+    pos: adj
+    gender: m
+    note: —

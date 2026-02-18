@@ -3,37 +3,37 @@ level: B1
 sequence: 93
 slug: indefinite-negative-pronouns
 version: '2.0'
-title: 'Невизначені та заперечні займенники'
-subtitle: 'Indefinite & Negative Pronouns'
+title: Невизначені та заперечні займенники
+subtitle: Indefinite & Negative Pronouns
 content_outline:
 - section: Вступ — Світ невизначеності
   points:
-  - 'Why Ukrainian has three "someone" words — хтось, хто-небудь, дехто each express
-    a different shade of indefiniteness'
-  - 'State Standard §4.2.1.4 alignment — expanded pronoun system at B1'
+  - Why Ukrainian has three "someone" words — хтось, хто-небудь, дехто each express
+    a different shade of indefiniteness
+  - State Standard §4.2.1.4 alignment — expanded pronoun system at B1
   - 'Cultural hook: the Ukrainian love of precision — unlike English "someone", Ukrainian
     distinguishes known-but-unspecified (хтось) from truly random (хто-небудь)'
-- section: 'Невизначені займенники з -сь (Known but unspecified)'
+- section: Невизначені займенники з -сь (Known but unspecified)
   points:
-  - 'хтось, щось, якийсь, чийсь, десь, колись, кудись — the speaker knows or assumes
-    existence'
+  - хтось, щось, якийсь, чийсь, десь, колись, кудись — the speaker knows or assumes
+    existence
   - 'Formation: pronoun + -сь (invariable particle)'
   - 'Usage: Хтось подзвонив. (Someone called — I heard the phone.)'
   - 'Declension: хтось declines like хто (когось, комусь, кимось)'
-- section: 'Невизначені займенники з -небудь (Truly indefinite)'
+- section: Невизначені займенники з -небудь (Truly indefinite)
   points:
-  - 'хто-небудь, що-небудь, який-небудь, де-небудь, коли-небудь'
+  - хто-небудь, що-небудь, який-небудь, де-небудь, коли-небудь
   - 'Usage: questions, future, hypothetical — Чи хто-небудь бачив мої ключі?'
   - 'Learner error: using -небудь for past events (wrong — use -сь for known existence)'
-  - 'Hyphen spelling rule — always hyphenated'
-- section: 'Невизначені займенники з де- (Some, a few)'
+  - Hyphen spelling rule — always hyphenated
+- section: Невизначені займенники з де- (Some, a few)
   points:
-  - 'дехто, дещо, деякий, десь, деколи — partial quantity, "some of many"'
+  - дехто, дещо, деякий, десь, деколи — partial quantity, "some of many"
   - 'Usage: Дехто вважає, що... (Some people think that...)'
   - 'Contrast: дехто (some people) vs хтось (someone specific but unnamed)'
-- section: 'Заперечні займенники з ні- (Negative pronouns)'
+- section: Заперечні займенники з ні- (Negative pronouns)
   points:
-  - 'ніхто, ніщо, ніякий, нічий, ніде, ніколи, нікуди, ніскільки'
+  - ніхто, ніщо, ніякий, нічий, ніде, ніколи, нікуди, ніскільки
   - 'Double negation rule — MANDATORY in Ukrainian: Ніхто не прийшов (Nobody came)'
   - 'Learner error: omitting не with ні- pronouns (English transfer — *Ніхто прийшов)'
   - 'Preposition splits: ні з ким, ні до кого, ні про що — preposition goes between
@@ -99,3 +99,4 @@ phase: B1.9 [Communication Skills]
 persona:
   voice: Senior Language & Culture Specialist
   role: Logic Puzzle Host
+word_target: 4000

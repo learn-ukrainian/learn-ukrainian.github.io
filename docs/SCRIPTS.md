@@ -1587,6 +1587,10 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 # Per-module verification gates (Gemini MUST run before declaring success)
 .venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Content-complete
 .venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Fully-complete
+
+# Batch scan for structural activity errors (run after large Gemini batches)
+.venv/bin/python scripts/scan_activity_errors.py                    # Scan all tracks
+.venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist # Scan specific tracks
 ```
 
 ### Deterministic Python Builder v2 (Preferred)
@@ -1770,6 +1774,24 @@ Checks: runs audit with `--skip-activities`, reads status JSON (no failing gates
 .venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
 ```
 Checks: runs FULL audit (no `--skip-activities`), ALL gates must pass (no deferred, no fail), activities YAML and vocabulary YAML must exist.
+
+**`scripts/scan_activity_errors.py`** — Batch structural correctness scanner:
+```bash
+.venv/bin/python scripts/scan_activity_errors.py                     # All tracks
+.venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist  # Selected tracks
+```
+Scans every `activities/*.yaml` file for 5 structural errors that the YAML schema cannot catch. Exit 0 = clean, exit 1 = critical errors found.
+
+Detects:
+| Error type | What it catches |
+|---|---|
+| `SELECT_MIN_CORRECT_MISMATCH` | `min_correct` ≠ actual count of `correct: true` options per question |
+| `QUIZ_CORRECT_COUNT` | Quiz items with 0 or 2+ correct answers (must be exactly 1) |
+| `FILL_IN_ANSWER_NOT_IN_OPTIONS` | `answer` not present in the `options` list — student can never select correct answer |
+| `TRANSLATE_CORRECT_COUNT` | Translate items with 0 or 2+ correct options (must be exactly 1) |
+| `MARK_THE_WORDS_ANSWER_NOT_IN_TEXT` | Answer word absent from the activity `text` — student cannot mark it |
+
+These same checks run automatically inside `audit_module.sh` (hooked into `audit/core.py`). The batch scanner is for spotting errors across many modules at once after a Gemini build batch.
 
 ---
 

@@ -1,0 +1,19 @@
+{
+  "slug": "the-locative-where-things-are",
+  "track": "a1",
+  "module_num": 13,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T19:55:39Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T19:55:39Z",
+      "note": "already-enriched"
+    }
+  },
+  "last_updated": "2026-02-18T19:55:39Z"
+}

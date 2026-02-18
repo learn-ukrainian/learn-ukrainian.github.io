@@ -8,31 +8,31 @@ subtitle: 'High Formal Register: Language of Documents'
 content_outline:
 - section: Вступ — Світ офіційних документів
   points:
-  - 'State Standard §4.4.1.1 alignment — official style and its substyles'
+  - State Standard §4.4.1.1 alignment — official style and its substyles
   - 'Why officialese exists: precision, unambiguity, legal force'
-  - 'Cultural hook: Ukrainian bureaucratic tradition — from Cossack universals
-    to modern legislation'
-- section: 'Підстилі офіційно-ділового стилю (Substyles)'
+  - 'Cultural hook: Ukrainian bureaucratic tradition — from Cossack universals to
+    modern legislation'
+- section: Підстилі офіційно-ділового стилю (Substyles)
   points:
   - 'Законодавчий (legislative): закони, постанови, укази'
   - 'Дипломатичний (diplomatic): ноти, меморандуми, конвенції'
   - 'Адміністративно-канцелярський (administrative): накази, інструкції, протоколи'
   - 'Діловий (business): договори, акти, довідки, заяви'
-- section: 'Синтаксис канцеляриту (Bureaucratic Syntax)'
+- section: Синтаксис канцеляриту (Bureaucratic Syntax)
   points:
   - 'Passive chains: було прийнято рішення, має бути забезпечено'
   - 'Nominalization: з метою покращення, у зв''язку з необхідністю'
   - 'Impersonal constructions: слід зазначити, необхідно підкреслити'
   - 'Standardized word order: subject → predicate → object with minimal inversion'
   - 'Learner error: mixing officialese with conversational style in formal documents'
-- section: 'Кліше та стандартні формули (Clichés & Standard Formulas)'
+- section: Кліше та стандартні формули (Clichés & Standard Formulas)
   points:
   - 'Opening formulas: Відповідно до..., На підставі..., Згідно з..., З огляду на...'
-  - 'Body formulas: Вважати за доцільне..., Покласти відповідальність на...,
-    Довести до відома...'
+  - 'Body formulas: Вважати за доцільне..., Покласти відповідальність на..., Довести
+    до відома...'
   - 'Closing formulas: У разі невиконання..., Контроль покласти на...'
   - 'Learner error: confusing згідно з (+ Instrumental) vs відповідно до (+ Genitive)'
-- section: 'Типи документів (Document Types)'
+- section: Типи документів (Document Types)
   points:
   - 'Закон (Law): структура — преамбула, статті, пункти, прикінцеві положення'
   - 'Постанова (Decree/Resolution): рішення колегіального органу'
@@ -40,12 +40,12 @@ content_outline:
   - 'Наказ (Order): розпорядчий документ керівника'
   - 'Заява (Application): особисте звернення — structure and register'
   - 'Довідка (Certificate): інформаційний документ'
-- section: 'Практика — Від канцеляриту до людської мови'
+- section: Практика — Від канцеляриту до людської мови
   points:
-  - 'Read and analyze authentic Ukrainian legislative text'
-  - 'Write a formal заява (application) following standard template'
-  - 'Transform bureaucratic text into neutral style (deoffficialize)'
-  - 'Transform neutral text into official style (officialize)'
+  - Read and analyze authentic Ukrainian legislative text
+  - Write a formal заява (application) following standard template
+  - Transform bureaucratic text into neutral style (deoffficialize)
+  - Transform neutral text into official style (officialize)
 - section: Підсумок
   points:
   - Summary of key formulas by document type
@@ -96,3 +96,4 @@ phase: C1.3 [Advanced Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Державний службовець
+word_target: 4000

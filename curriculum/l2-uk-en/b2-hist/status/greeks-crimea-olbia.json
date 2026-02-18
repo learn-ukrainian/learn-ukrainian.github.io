@@ -1,0 +1,64 @@
+{
+  "module": "greeks-crimea-olbia",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-18T18:35:38.814675Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-18T16:56:18.448915Z",
+    "meta": "2026-02-18T16:40:41.117444Z",
+    "activities": "2026-02-18T16:40:41.135265Z",
+    "vocabulary": "2026-02-18T16:38:10.944302Z",
+    "plan": "2026-02-17T14:35:52.888978Z",
+    "research": "2026-02-18T00:18:36.990745Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5184/5000 (raw: 5426)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "14 < 20 (soft target)"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

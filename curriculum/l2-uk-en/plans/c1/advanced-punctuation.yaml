@@ -19,8 +19,7 @@ content_outline:
   points:
   - Тире між підметом і присудком
   - Тире для підкреслення
-  - 'Тире у безсполучникових реченнях (semantic depth covered in c1-107 Asyndetic
-    Semantics)'
+  - Тире у безсполучникових реченнях (semantic depth covered in c1-107 Asyndetic Semantics)
 - section: Двокрапка і крапка з комою
   points:
   - Двокрапка перед переліком
@@ -106,3 +105,4 @@ objectives:
 persona:
   voice: Senior Specialist
   role: Коректор
+word_target: 4000

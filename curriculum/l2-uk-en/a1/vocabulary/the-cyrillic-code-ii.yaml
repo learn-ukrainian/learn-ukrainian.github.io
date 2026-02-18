@@ -1,8 +1,8 @@
-- ipa: '[tsɛntr]'
+- ipa: '[t͡sɛntr]'
   lemma: центр
   pos: noun
   translation: center
-- ipa: '[tʃɑi̯]'
+- ipa: '[t͡ʃɑi̯]'
   lemma: чай
   pos: noun
   translation: tea
@@ -26,11 +26,11 @@
   lemma: Європа
   pos: noun
   translation: Europe
-- ipa: '[ˈjɑblʊkɔ]'
+- ipa: '[ˈjɑblukɔ]'
   lemma: яблуко
   pos: noun
   translation: apple
-- ipa: '[ʃtʃɛ]'
+- ipa: '[ʃt͡ʃɛ]'
   lemma: ще
   pos: adv
   translation: still, more
@@ -46,7 +46,7 @@
   lemma: юнак
   pos: noun
   translation: young man
-- ipa: '[sʲiˈmjɑ]'
+- ipa: '[sʲimˈjɑ]'
   lemma: сім'я
   pos: noun
   translation: family

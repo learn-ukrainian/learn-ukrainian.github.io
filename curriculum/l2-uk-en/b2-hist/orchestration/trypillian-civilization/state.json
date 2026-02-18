@@ -45,7 +45,27 @@
       "timestamp": "2026-02-18T12:30:23Z",
       "task_id": "gr-trypillian-civilization",
       "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:32:36Z",
+      "task_id": "yw-trypillian-civilization-6b",
+      "attempts": 1
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:38:15Z",
+      "attempts": 2
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:38:16Z",
+      "attempts": 1
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:38:17Z"
     }
   },
-  "last_updated": "2026-02-18T12:30:23Z"
+  "last_updated": "2026-02-18T12:38:17Z"
 }

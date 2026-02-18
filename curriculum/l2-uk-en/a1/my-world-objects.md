@@ -1,0 +1,333 @@
+<!-- SCOPE
+Covers: Demonstrative pronouns (this/that), gender agreement, household vocabulary, identifying vs describing objects.
+Not covered:
+  - Adjective declension (full tables) → a1-07
+  - Locative case (location) → a1-10
+Related: a1-04 (Gender), a1-06 (Verbs), a1-15 (City)
+-->
+
+# My World: Objects
+
+> **Чому це важливо?**
+>
+> Imagine walking into a room. You don't just see "stuff"—you see *this* table, *that* window, *this* book. To connect with your environment, you need to be able to point at things and name them. This lesson gives you the "laser pointer" of language: the ability to single out specific objects in your world, whether they are right in front of you or across the room.
+
+## Вступ: Вказуємо на світ
+
+Welcome back! In our last lesson, we discovered that every Ukrainian noun has a gender—it is a **Він** (he), **Вона** (she), or **Воно** (it). Today, we are going to put that knowledge to work. We are going to start pointing at things.
+
+Imagine you are standing in the middle of a room. Some things are close enough to touch—you can rest your hand on a chair or pick up a book. Other things are further away—a window on the other side of the room, or a lamp in the corner.
+
+In English, we have a simple system for this:
+*   **This** (near me)
+*   **That** (far from me)
+
+Ukrainian has the exact same system! We distinguish between objects that are "here" (near) and objects that are "there" (far). But because Ukrainian nouns have gender, our words for "this" and "that" must change to match the object we are pointing at.
+
+### The Concept of Proximity (Концепція близькості)
+
+When we say "this," we imply closeness. It is often something you can physically touch or is within your personal space.
+*   **Close (Near):** I am holding a pen. -> *This* pen.
+*   **Far (Distant):** I am pointing at a building across the street. -> *That* building.
+
+In Ukrainian, this distinction is very sharp. You cannot use the "near" word for something across the room.
+
+> [!context]
+> **Візуалізація**
+> *   **Цей (This):** Imagine your finger is **touching** the object. You are right there.
+> *   **Той (That):** Imagine your arm is **extended**, pointing away from you. There is distance between you and the object.
+
+### Recalling Gender (Основи)
+
+Before we learn the new words, let's quickly remember *why* we need them. Remember the endings from the last lesson?
+
+1.  **Masculine (Він):** Usually ends in a consonant (like **стіл** [sʲtʲil] — table).
+2.  **Feminine (Вона):** Usually ends in **-а** or **-я** (like **книга** [ˈknɪɦɐ] — book).
+3.  **Neuter (Воно):** Usually ends in **-о** or **-е** (like **вікно** [ʋʲikˈnɔ] — window).
+
+If you try to use a masculine "this" with a feminine "book," it sounds as wrong to a Ukrainian ear as saying "This is a handsome woman" might sound in English—grammatically understandable, but strange!
+
+Let's explore how to point correctly.
+
+## Теорія: Вказівні займенники (Цей і Той)
+
+This is the core of our lesson. We have two families of words: the **Ц-family** (This) and the **Т-family** (That). Notice the first letter—it helps you remember the distance.
+
+### The "Near" Demonstratives (Цей)
+
+The "Near" words start with the letter **Ц** [ts]. Think of the "ts" sound in "cats." It’s a sharp, close sound. These words mean "This" (singular) or "These" (plural).
+
+| Gender | Ukrainian | IPA | English | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| **Masculine** | **цей** | [t͡sei̯] | This | **цей стіл** (this table) |
+| **Feminine** | **ця** | [t͡sʲɑ] | This | **ця лампа** (this lamp) |
+| **Neuter** | **це** | [tse] | This | **це вікно** (this window) |
+| **Plural** | **ці** | [t͡sʲi] | These | **ці двері** (these doors) |
+
+**Usage Note:**
+Use these forms when the object is within your reach.
+*   **Цей телефон** [t͡sei̯ te̞le̞ˈfɔn] (this phone) — sticking to your hand.
+*   **Ця книга** [t͡sʲɑ ˈknɪɦɐ] (this book) — right in front of you.
+
+### The "Far" Demonstratives (Той)
+
+For distant objects, we rely on the **Т** [t] family. This sound corresponds directly to the English "There" or "That." The hard consonant acts as a pointer, pushing the item away from you.
+
+| Gender | Ukrainian | IPA | English | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| **Masculine** | **той** | [tɔi̯] | That | **той стіл** (that table) |
+| **Feminine** | **та** | [tɑ] | That | **та лампа** (that lamp) |
+| **Neuter** | **те** | [te̞] | That | **те вікно** (that window) |
+| **Plural** | **ті** | [tʲi] | Those | **ті двері** (those doors) |
+
+**Usage Note:**
+Use these forms when you need to point.
+*   **Той телефон** (that phone) — on the other side of the room.
+*   **Та книга** (that book) — on the shelf over there.
+
+> [!tip]
+> **Звукова асоціація**
+> *   **Ц** is for **C**lose (Center).
+> *   **Т** is for **T**here (Target).
+
+### CRITICAL: "Це" vs "Цей" (The Identification Trap)
+
+This is the most common mistake for beginners. In English, "This" does double duty.
+1.  "**This is** a book."
+2.  "**This** book is new."
+
+In Ukrainian, these are **different grammatical structures**.
+
+#### 1. Identification (Що це?)
+When you simply want to say "This is X," you ALWAYS use the neutral word **Це** [tse], regardless of the gender of the object. **Це** here acts like the subject "It/This".
+
+*   **Що це?** (What is this?)
+*   **Це стіл.** (This is a table.) — Even though *стіл* is masculine!
+*   **Це книга.** (This is a book.) — Even though *книга* is feminine!
+*   **Це вікно.** (This is a window.)
+
+Here, **Це** means "This situation/object/phenomenon." It does not agree with the noun.
+
+#### 2. Specification (Який саме?)
+When you want to say "This specific object (not that one)," you MUST use the agreed gender form (**цей, ця, це, ці**).
+
+*   **Цей стіл.** (This table [specifically].)
+*   **Ця книга.** (This book [specifically].)
+*   **Це вікно.** (This window [specifically].)
+
+**Comparison Table:**
+
+| Context | English | Ukrainian | Why? |
+| :--- | :--- | :--- | :--- |
+| **Identification** | This is a book. | **Це** книга. | We are just naming it. "Це" is invariant. |
+| **Specification** | This book (is good). | **Ця** книга... | We are pointing to a specific feminine object. |
+
+> [!warning]
+> **Don't Mix Them Up!**
+> *   WRONG: **Цей** книга. (Masculine "this" with feminine "book" — Gender Mismatch).
+> *   WRONG: **Ця** є книга. (English structure translated word-for-word).
+> *   CORRECT: **Це** книга. (This is a book).
+> *   CORRECT: **Ця** книга... (This book...).
+
+## Практика: Побут і речі
+
+Now that we have the grammar, let's fill our room with objects. We will learn common items you find in a Ukrainian home, from the living room to the kitchen.
+
+### Меблі (Furniture)
+
+Let's learn these words by their gender so we know which "pointer" to use.
+
+#### Masculine
+These words end in a consonant.
+
+1.  **стіл** [sʲtʲil] — table
+2.  **стілець** [sʲtʲiˈlɛtʲsʲ] — chair
+3.  **диван** [dɪˈʋɑn] — sofa/couch
+4.  **телефон** [te̞le̞ˈfɔn] — telephone/phone
+
+*Example Usage:*
+*   **Цей стілець.** (This chair — I am sitting on it.)
+*   **Той диван.** (That sofa — across the room.)
+
+#### Feminine
+These words end in **-а**.
+
+1.  **шафа** [ˈʃɑfɑ] — wardrobe/cupboard
+2.  **книга** [ˈknɪɦɐ] — book
+3.  **кімната** [kimˈnɑtɑ] — room
+4.  **лампа** [ˈlɑmpɑ] — lamp
+
+*Example Usage:*
+*   **Ця шафа.** (This wardrobe — right here.)
+*   **Та кімната.** (That room — down the hall.)
+
+#### Neuter
+These words end in **-о**.
+
+1.  **вікно** [ʋʲikˈnɔ] — window
+2.  **ліжко** [ˈlʲiʒkɔ] — bed
+3.  **крісло** [ˈkrʲislɔ] — armchair (distinct from simple chair)
+
+*Example Usage:*
+*   **Це ліжко.** (This bed.)
+*   **Те крісло.** (That armchair.)
+
+### На кухні (In the Kitchen)
+
+The kitchen is the heart of the home. Here are some essential items. Pay attention to the endings!
+
+1.  **ніж** [nʲiʒ] — knife (Masculine)
+2.  **ложка** [ˈlɔʒkɑ] — spoon (Feminine)
+3.  **чашка** [ˈt͡ʃɑʃkɑ] — cup (Feminine)
+4.  **тарілка** [tɑˈrʲilkɑ] — plate (Feminine)
+5.  **блюдо** [ˈblʲudɔ] — platter/dish (Neuter)
+
+*Example Usage:*
+*   **Цей ніж гострий.** (This knife is sharp.)
+*   **Та ложка нова.** (That spoon is new.)
+*   **Це блюдо гаряче.** (This platter is hot.)
+
+### Особисті речі (Personal Items)
+
+These are things you often carry with you or use every day.
+
+1.  **комп'ютер** [kɔmˈpjute̞r] — computer (Masculine)
+2.  **сумка** [ˈsumkɑ] — bag (Feminine)
+3.  **ключі** [klʲuˈt͡ʃi] — keys (Plural)
+4.  **окуляри** [ɔkuˈlʲɑrɪ] — glasses (Plural)
+
+*Example Usage:*
+*   **Це мій комп'ютер.** (This is my computer.)
+*   **Де твоя сумка?** (Where is your bag?)
+*   **Ці окуляри нові.** (These glasses are new.)
+
+### Mini-Dialogue: Identification vs Specification
+
+Let's see how a conversation works when we combine these concepts. Imagine you are asking about things in a furniture store.
+
+**A:** **Що це?** (What is this?)
+**B:** **Це стіл.** (This is a table.)
+**A:** **А той стіл?** (And that table [over there]?)
+**B:** **Той стіл — старий.** (That table is old.)
+**A:** **Добре. А що це?** (OK. And what is this?)
+**B:** **Це шафа.** (This is a wardrobe.)
+**A:** **Ця шафа?** (This wardrobe [specifically]?)
+**B:** **Так, ця шафа.** (Yes, this wardrobe.)
+
+Notice how speaker B switches from **Це** (naming the object) to **Той/Ця** (talking about that specific object).
+
+### Drill: Find a Pair (Знайди пару)
+
+Давайте потренуємося з'єднувати об'єкт із вказівним займенником.
+
+*   **Ліжко** (bed) ends in **-о**, marking it as Neuter. Therefore, the correct form is **Це ліжко** or **Те ліжко**.
+*   **Телефон** (phone) ends in a consonant (Masculine). This requires **Цей телефон** or **Той телефон**.
+*   **Лампа** (lamp) ends in **-а**, which is Feminine. We must use **Ця лампа** or **Та лампа**.
+*   **Ключі** (keys) implies multiple items (Plural). We use **Ці ключі** or **Ті ключі**.
+
+> [!myth-buster]
+> **Чи телефон — чоловік?**
+> Students often ask: "Why is a phone masculine? It's an object!"
+> Remember, grammatical gender is about the **word**, not the object. The word **телефон** ends in a consonant, so it follows the masculine pattern. If we called it by a different name, like "трубка" (handset), it would be feminine because it ends in **-а**. Don't look for biology in grammar—look at the ending of the word!
+
+## Культурний контекст: Український дім
+
+Language reflects how people live. Let's look at the Ukrainian concept of "home."
+
+### House vs. Apartment
+
+In English, we often use "house" and "home" almost interchangeably. In Ukrainian, we distinguish the physical structure clearly.
+
+*   **Хата** [ˈxɑtɑ] — This is the traditional rural house. Historically, it refers to the white-washed clay cottage with a thatched roof, but today it implies a detached house in a village or a traditional dwelling. It carries a warm, cozy, historical feeling.
+*   **Квартира** [kʋɑrˈtɪrɑ] — This is an apartment or flat. Most urban Ukrainians live in a **квартира**.
+*   **Дім** [dʲim] — This is the general word for "home" or "house" (the building). It represents the concept of home as a sanctuary.
+
+There is a famous proverb: **«В гостях добре, а вдома краще»** [u ˈɦɔsʲtʲɑx ˈdɔbre̞ ɑ ˈʋdɔmɑ ˈkrɑʃt͡ʃe̞]. It translates literally as "It is good as a guest, but better at home." It is the Ukrainian equivalent of "East or West, home is best."
+
+### Покуття: The Honored Corner
+
+If you enter a traditional Ukrainian home (and even many modern ones), you might notice a special arrangement in the corner diagonally opposite the door. This is called the **Покуття** [pɔˈkutʲːɑ].
+
+Historically, this was the spiritual center of the house. It was decorated with **рушники** [ruʃnɪˈkɪ] (embroidered towels) and icons. It was where the family table stood, and where honored guests were seated.
+
+In a modern **квартира**, you might not see icons, but the instinct to create a "focal point" in the room remains—perhaps now occupied by a TV or a display of family photos. But the linguistic habit of orienting oneself in a room relative to the "main" corner is deep-seated.
+
+### A Note on "Doors"
+
+There is one tricky word in our vocabulary list: **двері** [ˈdʋɛrʲi] (door/doors).
+In Ukrainian, this word is **always plural**. Just like "scissors" or "pants" in English. You never say "a door" in the singular.
+
+*   **Це двері.** (This is a door.) — We use the invariant **Це** to identify the object.
+*   **Ці двері.** (These doors.) — We use plural **Ці** to point to this specific door/doors.
+*   **Ті двері.** (Those doors.) — We use plural **Ті** to point to that specific door/doors far away.
+
+Because it is plural, we use **ці** (these) and **ті** (those), even if we are looking at just one entrance.
+
+> [!culture]
+> **Гостинність**
+> Ukrainians are incredibly hospitable. When you cross the **поріг** (threshold) of a Ukrainian home, you are often expected to take off your shoes immediately. You might be offered **тапці** (slippers). Walking into a room with outdoor shoes is considered very rude and unclean!
+
+## Використання: Описуємо кімнату
+
+Let's bring everything together. We are going to describe a room using our new tools: Identification (**Це**) and Specification (**Цей/Ця/Те**).
+
+### Сценарій: Екскурсія кімнатою
+
+Imagine you are showing your room to a friend via video call.
+
+**Крок 1: Ідентифікація (Identify).**
+*   **Що це?** (What is this?)
+*   **Це кімната.** (This is a room.)
+
+**Крок 2: Близькі предмети (Near).**
+*   **Цей стіл.** (This table [here].)
+*   **Ця лампа.** (This lamp [here].)
+
+**Крок 3: Далекі предмети (Far).**
+*   **Той диван.** (That sofa [there].)
+*   **Те вікно.** (That window [there].)
+
+**Крок 4: Опис (Describe).**
+*   **Цей стіл — мій.** (This table is mine.)
+*   **Та шафа — стара.** (That wardrobe is old.)
+
+### Production Task (Практичне завдання)
+
+Подивіться навколо себе. Знайдіть три предмети.
+
+1.  First, locate a **Masculine** object (ends in consonant). Point to it.
+    *   If it is close, say: **Цей...**
+    *   If it is far, say: **Той...**
+2.  Next, identify a **Feminine** item (ends in -a). Point to it.
+    *   If it is close, say: **Ця...**
+    *   If it is far, say: **Та...**
+3.  Finally, choose a **Neuter** example (ends in -o). Point to it.
+    *   If it is close, say: **Це...**
+    *   If it is far, say: **Те...**
+
+Ця фізична дія — вказувати і говорити — допомагає поєднати граматику з реальністю.
+
+---
+
+# Підсумок
+
+Congratulations! You have just gained control over your environment in Ukrainian. You are no longer just an observer; you can identify, select, and point out specific objects in your world.
+
+We learned:
+1.  **Це** (This is) describes the situation or identifies an object: **Це стіл.**
+2.  **Цей/Ця/Це/Ці** (This) points to specific things nearby: **Цей стіл.**
+3.  **Той/Та/Те/Ті** (That) points to specific things far away: **Той стіл.**
+4.  We must always match the gender of the pointer to the gender of the noun.
+
+**Перевірте себе:**
+
+1.  How do you say "This is a book"? (Hint: Are you identifying it or specifying it?)
+2.  How do you say "That book"? (Hint: Is it far or near? What gender is 'book'?)
+3.  Which word is for "That" (masculine): **Цей** or **Той**?
+4.  Why is **телефон** masculine, but **лампа** feminine?
+5.  If you want to point to a window across the room, which phrase do you use: **Це вікно** or **Те вікно**?
+6.  True or False: The word **двері** (door) is always singular.
+
+In the next lesson, we will breathe life into these objects by learning how to describe what they *do* and who *we* are. Get ready for your first verbs!
+
+---

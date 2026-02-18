@@ -9,8 +9,8 @@ content_outline:
 - section: Розминка — Речення без підмета
   points:
   - Чому деякі речення не мають підмета
-  - 'Чотири типи односкладних речень — full typology per State Standard §4.3.3:
-    означено-особові, неозначено-особові, безособові, номінативні'
+  - 'Чотири типи односкладних речень — full typology per State Standard §4.3.3: означено-особові,
+    неозначено-особові, безособові, номінативні'
   - Стилістичний ефект — емоційність, лаконічність
 - section: Означено-особові (Definite-personal)
   points:
@@ -73,3 +73,4 @@ activity_hints:
 persona:
   voice: Professional Language Coach
   role: Copywriter (Копірайтер)
+word_target: 4000

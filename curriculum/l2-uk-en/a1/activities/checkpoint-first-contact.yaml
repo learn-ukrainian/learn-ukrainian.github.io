@@ -1,0 +1,419 @@
+- type: quiz
+  title: Alphabet Check
+  items:
+    - question: Please identify the letter that sounds like [r] in "rabbit"?
+      options:
+        - text: 'Р'
+          correct: true
+        - text: 'П'
+          correct: false
+        - text: 'Н'
+          correct: false
+        - text: 'В'
+          correct: false
+    - question: Please identify the letter that sounds like [n] in "new"?
+      options:
+        - text: 'Н'
+          correct: true
+        - text: 'H'
+          correct: false
+        - text: 'П'
+          correct: false
+        - text: 'М'
+          correct: false
+    - question: Please identify the letter that sounds like [s] in "soup"?
+      options:
+        - text: 'С'
+          correct: true
+        - text: 'К'
+          correct: false
+        - text: 'Р'
+          correct: false
+        - text: 'Т'
+          correct: false
+    - question: Can you identify the correct sound for the letter 'Г'?
+      options:
+        - text: '[ɦ] (soft)'
+          correct: true
+        - text: '[g] (hard)'
+          correct: false
+        - text: '[r]'
+          correct: false
+        - text: '[h]'
+          correct: false
+    - question: Can you identify the correct sound for the letter 'Ґ'?
+      options:
+        - text: '[g] (hard)'
+          correct: true
+        - text: '[ɦ] (soft)'
+          correct: false
+        - text: '[k]'
+          correct: false
+        - text: '[d]'
+          correct: false
+    - question: Can you identify the correct sound for the letter 'Е'?
+      options:
+        - text: '[ɛ]'
+          correct: true
+        - text: '[jɛ]'
+          correct: false
+        - text: '[i]'
+          correct: false
+        - text: '[a]'
+          correct: false
+    - question: Can you identify the correct sound for the letter 'Є'?
+      options:
+        - text: '[jɛ]'
+          correct: true
+        - text: '[ɛ]'
+          correct: false
+        - text: '[e]'
+          correct: false
+        - text: '[ji]'
+          correct: false
+    - question: Which of these Ukrainian words starts with the sound [p]?
+      options:
+        - text: 'Парк'
+          correct: true
+        - text: 'Рік'
+          correct: false
+        - text: 'Ні'
+          correct: false
+        - text: 'Ви'
+          correct: false
+    - question: Which of these Ukrainian words starts with the sound [r]?
+      options:
+        - text: 'Ресторан'
+          correct: true
+        - text: 'Парк'
+          correct: false
+        - text: 'Папа'
+          correct: false
+        - text: 'Мама'
+          correct: false
+    - question: Which of these Ukrainian words starts with the sound [n]?
+      options:
+        - text: 'Новий'
+          correct: true
+        - text: 'Парк'
+          correct: false
+        - text: 'Де'
+          correct: false
+        - text: 'Так'
+          correct: false
+    - question: Which of these Ukrainian words starts with the sound [s]?
+      options:
+        - text: 'Суп'
+          correct: true
+        - text: 'Борщ'
+          correct: false
+        - text: 'Ніч'
+          correct: false
+        - text: 'Молоко'
+          correct: false
+    - question: Which of these Ukrainian vowels is considered a "hard" vowel?
+      options:
+        - text: 'И'
+          correct: true
+        - text: 'І'
+          correct: false
+        - text: 'Я'
+          correct: false
+        - text: 'Ю'
+          correct: false
+
+- type: match-up
+  title: Gender Sort
+  pairs:
+    - left: кава
+      right: Feminine (вона)
+    - left: віза
+      right: Feminine (вона)
+    - left: сім'я
+      right: Feminine (вона)
+    - left: ресторан
+      right: Masculine (він)
+    - left: телефон
+      right: Masculine (він)
+    - left: паспорт
+      right: Masculine (він)
+    - left: місто
+      right: Neuter (воно)
+    - left: море
+      right: Neuter (воно)
+    - left: вікно
+      right: Neuter (воно)
+    - left: тато
+      right: Masculine (Exception)
+    - left: дядько
+      right: Masculine (Exception)
+    - left: Микола
+      right: Masculine (Exception)
+
+- type: fill-in
+  title: First Conjugation (-ати)
+  items:
+    - sentence: 'Я ____ (читати).'
+      answer: 'читаю'
+      options: ['читаю', 'читаєш', 'читає', 'читають']
+    - sentence: 'Ти ____ (знати).'
+      answer: 'знаєш'
+      options: ['знаєш', 'знає', 'знають', 'знаю']
+    - sentence: 'Він ____ (мати).'
+      answer: 'має'
+      options: ['має', 'маємо', 'мають', 'маю']
+    - sentence: 'Ми ____ (читати).'
+      answer: 'читаємо'
+      options: ['читаємо', 'читаєте', 'читають', 'читаю']
+    - sentence: 'Ви ____ (знати).'
+      answer: 'знаєте'
+      options: ['знаєте', 'знаєш', 'знають', 'знаємо']
+    - sentence: 'Вони ____ (мати).'
+      answer: 'мають'
+      options: ['мають', 'має', 'маємо', 'маю']
+    - sentence: 'Я ____ (знати).'
+      answer: 'знаю'
+      options: ['знаю', 'знаєш', 'знає', 'знаємо']
+    - sentence: 'Ти ____ (читати).'
+      answer: 'читаєш'
+      options: ['читаєш', 'читаю', 'читає', 'читаємо']
+    - sentence: 'Вона ____ (мати).'
+      answer: 'має'
+      options: ['має', 'мають', 'маємо', 'маю']
+    - sentence: 'Ми ____ (знати).'
+      answer: 'знаємо'
+      options: ['знаємо', 'знаєте', 'знають', 'знаю']
+    - sentence: 'Ви ____ (читати).'
+      answer: 'читаєте'
+      options: ['читаєте', 'читаєш', 'читають', 'читаємо']
+    - sentence: 'Вони ____ (читати).'
+      answer: 'читають'
+      options: ['читають', 'читає', 'читаємо', 'читаю']
+
+- type: fill-in
+  title: Second Conjugation (-ити)
+  items:
+    - sentence: 'Я ____ (говорити).'
+      answer: 'говорю'
+      options: ['говорю', 'говориш', 'говорить', 'говорять']
+    - sentence: 'Ти ____ (робити).'
+      answer: 'робиш'
+      options: ['робиш', 'робить', 'роблять', 'роблю']
+    - sentence: 'Він ____ (бачити).'
+      answer: 'бачить'
+      options: ['бачить', 'бачимо', 'бачать', 'бачу']
+    - sentence: 'Ми ____ (говорити).'
+      answer: 'говоримо'
+      options: ['говоримо', 'говорите', 'говорять', 'говорю']
+    - sentence: 'Ви ____ (робити).'
+      answer: 'робите'
+      options: ['робите', 'робиш', 'роблять', 'робимо']
+    - sentence: 'Вони ____ (говорити).'
+      answer: 'говорять'
+      options: ['говорять', 'говорить', 'говоримо', 'говорю']
+    - sentence: 'Я ____ (робити).'
+      answer: 'роблю'
+      options: ['роблю', 'робиш', 'роббить', 'робимо']
+    - sentence: 'Ти ____ (говорити).'
+      answer: 'говориш'
+      options: ['говориш', 'говорю', 'говорить', 'говоримо']
+    - sentence: 'Вона ____ (бачити).'
+      answer: 'бачить'
+      options: ['бачить', 'бачать', 'бачимо', 'бачу']
+    - sentence: 'Ми ____ (робити).'
+      answer: 'робимо'
+      options: ['робимо', 'робите', 'роблять', 'роблю']
+    - sentence: 'Ви ____ (говорити).'
+      answer: 'говорите'
+      options: ['говорите', 'говориш', 'говорять', 'говоримо']
+    - sentence: 'Вони ____ (робити).'
+      answer: 'роблять'
+      options: ['роблять', 'робить', 'робимо', 'роблю']
+
+- type: group-sort
+  title: Which Conjugation Group?
+  groups:
+    - name: Group 1 (-ати)
+      items: ['читати', 'знати', 'мати', 'снідати', 'питати', 'думати']
+    - name: Group 2 (-ити)
+      items: ['говорити', 'робити', 'бачити', 'любити', 'ходити', 'вчити']
+
+- type: anagram
+  title: Word Scramble
+  items:
+    - scrambled: 'а в а к'
+      answer: 'кава'
+    - scrambled: 'ю н е м'
+      answer: 'меню'
+    - scrambled: 'п у с'
+      answer: 'суп'
+    - scrambled: 'к і с'
+      answer: 'сік'
+    - scrambled: 'а д о в'
+      answer: 'вода'
+    - scrambled: 'й а ч'
+      answer: 'чай'
+    - scrambled: 'е ф а к'
+      answer: 'кафе'
+    - scrambled: 'а ц і п'
+      answer: 'піца'
+    - scrambled: 'а з і в'
+      answer: 'віза'
+    - scrambled: 'е р о м'
+      answer: 'море'
+    - scrambled: 'о т с і м'
+      answer: 'місто'
+    - scrambled: 'к р а п'
+      answer: 'парк'
+
+- type: match-up
+  title: Question Words
+  pairs:
+    - left: Хто?
+      right: Who?
+    - left: Що?
+      right: What?
+    - left: Де?
+      right: Where? (Place)
+    - left: Куди?
+      right: Where to? (Direction)
+    - left: Коли?
+      right: When?
+    - left: Який?
+      right: Which?
+    - left: Чому?
+      right: Why?
+    - left: Як?
+      right: How?
+    - left: Скільки?
+      right: How much?
+    - left: Чи?
+      right: (Question particle)
+    - left: Звідки?
+      right: Where from?
+    - left: Чий?
+      right: Whose?
+
+- type: quiz
+  title: Cafe Survival
+  items:
+    - question: How would you ask "Can I have...?" in a cafe?
+      options:
+        - text: 'Можна...?'
+          correct: true
+        - text: 'Я маю...?'
+          correct: false
+        - text: 'Хто це...?'
+          correct: false
+        - text: 'Де це...?'
+          correct: false
+    - question: How would you say "I will have..." when ordering?
+      options:
+        - text: 'Я буду...'
+          correct: true
+        - text: 'Я роблю...'
+          correct: false
+        - text: 'Я знаю...'
+          correct: false
+        - text: 'Я йду...'
+          correct: false
+    - question: What does the phrase "Смачного" mean?
+      options:
+        - text: 'Bon appétit'
+          correct: true
+        - text: 'Thank you'
+          correct: false
+        - text: 'Hello'
+          correct: false
+        - text: 'Goodbye'
+          correct: false
+    - question: How would you say "Thank you" in Ukrainian?
+      options:
+        - text: 'Дякую'
+          correct: true
+        - text: 'Будь ласка'
+          correct: false
+        - text: 'Привіт'
+          correct: false
+        - text: 'Так'
+          correct: false
+    - question: How would you ask for the bill at the end?
+      options:
+        - text: 'Можна рахунок?'
+          correct: true
+        - text: 'Можна меню?'
+          correct: false
+        - text: 'Де туалет?'
+          correct: false
+        - text: 'Що це?'
+          correct: false
+    - question: Is the word "кава" masculine, feminine, or neuter?
+      options:
+        - text: 'Feminine (вона)'
+          correct: true
+        - text: 'Masculine (він)'
+          correct: false
+        - text: 'Neuter (воно)'
+          correct: false
+        - text: 'Plural'
+          correct: false
+    - question: Is the word "кафе" masculine, feminine, or neuter?
+      options:
+        - text: 'Neuter (воно)'
+          correct: true
+        - text: 'Feminine (вона)'
+          correct: false
+        - text: 'Masculine (він)'
+          correct: false
+        - text: 'Plural'
+          correct: false
+    - question: How would you say "Please" or "You are welcome"?
+      options:
+        - text: 'Будь ласка'
+          correct: true
+        - text: 'Дякую'
+          correct: false
+        - text: 'Вибачте'
+          correct: false
+        - text: 'Ні'
+          correct: false
+    - question: What is the English translation for "меню"?
+      options:
+        - text: 'Menu'
+          correct: true
+        - text: 'Me'
+          correct: false
+        - text: 'Money'
+          correct: false
+        - text: 'Man'
+          correct: false
+    - question: What is the English translation for "салат"?
+      options:
+        - text: 'Salad'
+          correct: true
+        - text: 'Salt'
+          correct: false
+        - text: 'Soup'
+          correct: false
+        - text: 'Sun'
+          correct: false
+    - question: What is the English translation for "суп"?
+      options:
+        - text: 'Soup'
+          correct: true
+        - text: 'Soap'
+          correct: false
+        - text: 'Super'
+          correct: false
+        - text: 'Sun'
+          correct: false
+    - question: What is the English translation for "сік"?
+      options:
+        - text: 'Juice'
+          correct: true
+        - text: 'Sick'
+          correct: false
+        - text: 'Sock'
+          correct: false
+        - text: 'Sack'
+          correct: false

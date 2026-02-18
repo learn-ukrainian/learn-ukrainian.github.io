@@ -10,8 +10,8 @@ content_outline:
   points:
   - 'From symptoms to consultation — builds on a2-34 (body parts, боліти) and a2-55
     (wellness, healthcare system); now: full doctor visit from start to finish'
-  - 'Cultural hook: mandatory use of «бахіли» (shoe covers) in clinics; the
-    «декларація з лікарем» system'
+  - 'Cultural hook: mandatory use of «бахіли» (shoe covers) in clinics; the «декларація
+    з лікарем» system'
 - section: Запис до лікаря
   points:
   - 'Making appointments — записатися до лікаря (online/phone), вибрати час прийому;
@@ -20,30 +20,30 @@ content_outline:
     learner error: «ангіна» = tonsillitis (not heart attack!)'
 - section: На прийомі у лікаря
   points:
-  - 'Doctor''s questions — formal «Ви» strictly required; «Що вас турбує?», «Де
-    болить?», «Як давно?»; learner error: using «ти» with a doctor'
-  - 'Patient''s answers — describing medical history: «У мене алергія на...»,
-    «Я приймаю ліки від...», «Це почалося вчора»'
-  - 'Physical examination — дихайте/не дихайте, відкрийте рот, покажіть язик;
-    standard ref: §4.2.3.2 imperative forms'
-  - 'Measurement vocabulary — міряти температуру, вимірювати тиск, зважитися;
-    collocations: нормальний тиск, підвищена температура'
+  - 'Doctor''s questions — formal «Ви» strictly required; «Що вас турбує?», «Де болить?»,
+    «Як давно?»; learner error: using «ти» with a doctor'
+  - 'Patient''s answers — describing medical history: «У мене алергія на...», «Я приймаю
+    ліки від...», «Це почалося вчора»'
+  - 'Physical examination — дихайте/не дихайте, відкрийте рот, покажіть язик; standard
+    ref: §4.2.3.2 imperative forms'
+  - 'Measurement vocabulary — міряти температуру, вимірювати тиск, зважитися; collocations:
+    нормальний тиск, підвищена температура'
 - section: Діагноз і лікування
   points:
-  - 'Understanding the diagnosis — діагноз, застуда, грип, ангіна, отруєння;
-    collocations: поставити діагноз, підтвердити діагноз'
-  - 'Prescriptions — виписати рецепт, приймати ліки; learner error: рецепт
-    (prescription) ≠ чек (receipt); dosage: двічі/тричі на день, до/після їжі'
-  - 'Sick leave — лікарняний (sick leave certificate), взяти лікарняний;
-    cultural note: the bureaucratic process of getting лікарняний'
+  - 'Understanding the diagnosis — діагноз, застуда, грип, ангіна, отруєння; collocations:
+    поставити діагноз, підтвердити діагноз'
+  - 'Prescriptions — виписати рецепт, приймати ліки; learner error: рецепт (prescription)
+    ≠ чек (receipt); dosage: двічі/тричі на день, до/після їжі'
+  - 'Sick leave — лікарняний (sick leave certificate), взяти лікарняний; cultural
+    note: the bureaucratic process of getting лікарняний'
 - section: Practice / Практика
   points:
   - Full consultation role-play — from greeting to diagnosis to prescription
-  - 'Calling to make an appointment — phone dialogue with receptionist'
+  - Calling to make an appointment — phone dialogue with receptionist
 - section: Narrative / Розповідь
   points:
-  - 'Story of a doctor visit — complete narrative from feeling sick to recovery;
-    integrates all vocabulary from the module'
+  - Story of a doctor visit — complete narrative from feeling sick to recovery; integrates
+    all vocabulary from the module
 focus: practical
 pedagogy: PPP
 prerequisites:
@@ -102,3 +102,4 @@ activity_hints:
 - type: fill-in
   focus: Understanding prescriptions
   items: 8
+word_target: 3000

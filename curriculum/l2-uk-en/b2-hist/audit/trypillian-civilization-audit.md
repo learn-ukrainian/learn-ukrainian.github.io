@@ -1,7 +1,7 @@
 # Audit Report: M01 — trypillian-civilization.md
 **Level:** B2-HIST | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-18 13:28:56
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-18 13:44:17
 
 ## Configuration
 **Type:** B2-history
@@ -16,32 +16,37 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Звіт Вікентія Хвойки | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз тексту Хвойки | 1 | 1 | ✅ |
+| 3 | comparative-study | Протоміста проти міст Шумеру | 1 | 1 | ✅ |
+| 4 | essay-response | Загадка спалених хат | 1 | 1 | ✅ |
+| 5 | true-false | Перевірка знань | 10 | 8 | ✅ |
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ❌ 4259/5000 (raw: 4495)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 5159/5000 (raw: 5398)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 10 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Immersion:** 🇺🇦 99.8% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -56,28 +61,28 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 4 | 3 | 100% | 24% | 23.8% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 11 | 2 | 100% | 14% | 14.3% |
 | cultural | 5 | 4 | 100% | 10% | 9.5% |
 | visual | 8 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 18 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 20 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Трипільська цивілізація** | ✅ | 65 | Included in Core |
-| **Вступ** | ✅ | 526 | Included in Core |
-| **Читання** | ✅ | 417 | Included in Core |
-| **Історія відкриття** | ✅ | 490 | Included in Core |
-| **Первинні джерела** | ✅ | 295 | Included in Core |
-| **Протоміста** | ✅ | 533 | Included in Core |
-| **Господарство та економіка** | ✅ | 402 | Included in Core |
-| **Ремесла та технології** | ✅ | 474 | Included in Core |
-| **Духовний світ та суспільний устрій** | ✅ | 444 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 345 | Included in Core |
+| **Вступ** | ✅ | 625 | Included in Core |
+| **Читання** | ✅ | 418 | Included in Core |
+| **Історія відкриття** | ✅ | 493 | Included in Core |
+| **Первинні джерела** | ✅ | 363 | Included in Core |
+| **Протоміста** | ✅ | 700 | Included in Core |
+| **Господарство та економіка** | ✅ | 425 | Included in Core |
+| **Ремесла та технології** | ✅ | 638 | Included in Core |
+| **Духовний світ та суспільний устрій** | ✅ | 639 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 525 | Included in Core |
 | **Потрібно більше практики?** | ✅ | 106 | Included in Core |
 | **Підсумок** | ✅ | 162 | Included in Core |

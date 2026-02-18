@@ -1,0 +1,787 @@
+- groups:
+  - items:
+    - брат
+    - лікар
+    - кіт
+    - пес
+    - студент
+    - вчитель
+    - Андрій
+    - сусід
+    - дідусь
+    - сестра
+    - мама
+    - друг
+    name: Істоти (Хто?)
+  - items:
+    - стіл
+    - парк
+    - телефон
+    - автобус
+    - паспорт
+    - квиток
+    - комп'ютер
+    - олівець
+    - зошит
+    - рюкзак
+    - чай
+    - місто
+    name: Неістоти (Що?)
+  instruction: 'Розподіліть слова на дві групи: Істоти (Хто?) та Неістоти (Що?).'
+  title: Живе чи неживе?
+  type: group-sort
+- instruction: З’єднайте слово у називному відмінку з його формою у знахідному відмінку.
+  pairs:
+  - left: брат
+    right: брата
+  - left: син
+    right: сина
+  - left: тато
+    right: тата
+  - left: друг
+    right: друга
+  - left: студент
+    right: студента
+  - left: лікар
+    right: лікаря
+  - left: вчитель
+    right: вчителя
+  - left: дідусь
+    right: дідуся
+  - left: Андрій
+    right: Андрія
+  - left: Сергій
+    right: Сергія
+  title: 'Чоловічий рід: Знайдіть пару'
+  type: match-up
+- instruction: Оберіть правильну відповідь на питання про граматику.
+  items:
+  - explanation: Іменники-істоти чоловічого роду твердої групи отримують закінчення
+      -а (брат -> брата).
+    options:
+    - correct: true
+      text: -а
+    - correct: false
+      text: -у
+    - correct: false
+      text: -ом
+    - correct: false
+      text: -і
+    question: Яке закінчення мають іменники-істоти чоловічого роду (тверда група)
+      у знахідному відмінку?
+  - explanation: Іменники-істоти чоловічого роду м'якої групи отримують закінчення
+      -я (вчитель -> вчителя).
+    options:
+    - correct: true
+      text: -я
+    - correct: false
+      text: -ю
+    - correct: false
+      text: -ем
+    - correct: false
+      text: -ї
+    question: Яке закінчення мають іменники-істоти чоловічого роду (м'яка група) у
+      знахідному відмінку?
+  - explanation: Іменники жіночого роду на -а змінюють закінчення на -у (сестра ->
+      сестру).
+    options:
+    - correct: true
+      text: -а змінюється на -у
+    - correct: false
+      text: -а змінюється на -о
+    - correct: false
+      text: -а змінюється на -и
+    - correct: false
+      text: не змінюються
+    question: Як змінюються іменники жіночого роду на -а у знахідному відмінку?
+  - explanation: Іменники жіночого роду на -я змінюють закінчення на -ю (Марія ->
+      Марію).
+    options:
+    - correct: true
+      text: -я змінюється на -ю
+    - correct: false
+      text: -я змінюється на -у
+    - correct: false
+      text: -я змінюється на -і
+    - correct: false
+      text: не змінюються
+    question: Як змінюються іменники жіночого роду на -я у знахідному відмінку?
+  - explanation: Іменники-неістоти чоловічого роду не змінюються (Я бачу стіл).
+    options:
+    - correct: true
+      text: Ні, не змінюються
+    - correct: false
+      text: Так, додають -а
+    - correct: false
+      text: Так, додають -у
+    - correct: false
+      text: Так, додають -и
+    question: Чи змінюються іменники-неістоти чоловічого роду у знахідному відмінку?
+  - explanation: До істот ми ставимо питання Кого? (Whom?).
+    options:
+    - correct: true
+      text: Кого?
+    - correct: false
+      text: Що?
+    - correct: false
+      text: Де?
+    - correct: false
+      text: Коли?
+    question: Яке питання ми ставимо до іменників-істот у знахідному відмінку?
+  - explanation: У слові кіт відбувається чергування і -> о (кота).
+    options:
+    - correct: true
+      text: кота
+    - correct: false
+      text: кіта
+    - correct: false
+      text: коту
+    - correct: false
+      text: кітом
+    question: Як змінюється слово 'кіт' у знахідному відмінку?
+  - explanation: У слові пес випадає літера е (пса).
+    options:
+    - correct: true
+      text: пса
+    - correct: false
+      text: песа
+    - correct: false
+      text: песу
+    - correct: false
+      text: псом
+    question: Як змінюється слово 'пес' у знахідному відмінку?
+  - explanation: М'який знак змінюється на -я (вчителя).
+    options:
+    - correct: true
+      text: вчителя
+    - correct: false
+      text: вчитела
+    - correct: false
+      text: вчителю
+    - correct: false
+      text: вчителем
+    question: Як змінюється слово 'вчитель' у знахідному відмінку?
+  - explanation: Лікар додає закінчення -я (лікаря).
+    options:
+    - correct: true
+      text: лікаря
+    - correct: false
+      text: лікара
+    - correct: false
+      text: лікару
+    - correct: false
+      text: лікарем
+    question: Як змінюється слово 'лікар' у знахідному відмінку?
+  - explanation: Стіл - це неістота (неживий предмет).
+    options:
+    - correct: true
+      text: Ні
+    - correct: false
+      text: Так
+    - correct: false
+      text: Тільки в казках
+    - correct: false
+      text: Залежить від контексту
+    question: Чи є слово 'стіл' істотою граматично?
+  - explanation: Так, тварини в українській мові є істотами.
+    options:
+    - correct: true
+      text: Так
+    - correct: false
+      text: Ні
+    - correct: false
+      text: Тільки дикі коти
+    - correct: false
+      text: Тільки домашні коти
+    question: Чи є слово 'кіт' істотою граматично?
+  title: Перевірка правил
+  type: quiz
+- instruction: Оберіть правильну форму слова, щоб доповнити речення.
+  items:
+  - answer: брата
+    explanation: Брат - істота, тому додаємо -а.
+    options:
+    - брата
+    - брат
+    - брату
+    - братом
+    sentence: Я бачу {{answer}}.
+  - answer: лікаря
+    explanation: Лікар - істота, додаємо -я (м'яка група).
+    options:
+    - лікаря
+    - лікар
+    - лікару
+    - лікарем
+    sentence: Я знаю {{answer}}.
+  - answer: сина
+    explanation: Син - істота, додаємо -а.
+    options:
+    - сина
+    - син
+    - сину
+    - сином
+    sentence: Вона любить {{answer}}.
+  - answer: студента
+    explanation: Студент - істота, додаємо -а.
+    options:
+    - студента
+    - студент
+    - студенту
+    - студентом
+    sentence: Ми чекаємо {{answer}}.
+  - answer: Андрія
+    explanation: Андрій - ім'я на -й, змінюється на -я.
+    options:
+    - Андрія
+    - Андрій
+    - Андрію
+    - Андрієм
+    sentence: Ти знаєш {{answer}}?
+  - answer: пса
+    explanation: Пес - істота, випадає е, додаємо -а.
+    options:
+    - пса
+    - пес
+    - псу
+    - псом
+    sentence: Він має {{answer}}.
+  - answer: друга
+    explanation: Друг - істота, додаємо -а.
+    options:
+    - друга
+    - друг
+    - другу
+    - другом
+    sentence: Я бачу {{answer}}.
+  - answer: вчителя
+    explanation: Вчитель - істота, ь змінюється на -я.
+    options:
+    - вчителя
+    - вчитель
+    - вчителю
+    - вчителем
+    sentence: Я знаю {{answer}}.
+  - answer: тата
+    explanation: Тато - чоловічий рід, істота, закінчення -о змінюється на -а.
+    options:
+    - тата
+    - тато
+    - тату
+    - татом
+    sentence: Вона любить {{answer}}.
+  - answer: директора
+    explanation: Директор - істота, додаємо -а.
+    options:
+    - директора
+    - директор
+    - директору
+    - директором
+    sentence: Ми чекаємо {{answer}}.
+  - answer: сусіда
+    explanation: Сусід - істота, додаємо -а.
+    options:
+    - сусіда
+    - сусід
+    - сусіду
+    - сусідом
+    sentence: Ти бачиш {{answer}}?
+  - answer: кота
+    explanation: Кіт - істота, і змінюється на о, додаємо -а.
+    options:
+    - кота
+    - кіт
+    - коту
+    - котом
+    sentence: Він має {{answer}}.
+  title: Кого я бачу? (Чоловічий рід)
+  type: fill-in
+- instruction: Оберіть правильну форму слова жіночого роду.
+  items:
+  - answer: маму
+    explanation: Мама - жіночий рід, -а змінюється на -у.
+    options:
+    - маму
+    - мама
+    - мами
+    - мамі
+    sentence: Я люблю {{answer}}.
+  - answer: сестру
+    explanation: Сестра - жіночий рід, -а змінюється на -у.
+    options:
+    - сестру
+    - сестра
+    - сестри
+    - сестрі
+    sentence: Я чекаю {{answer}}.
+  - answer: Олену
+    explanation: Олена - жіночий рід, -а змінюється на -у.
+    options:
+    - Олену
+    - Олена
+    - Олени
+    - Олені
+    sentence: Він знає {{answer}}.
+  - answer: подругу
+    explanation: Подруга - жіночий рід, -а змінюється на -у.
+    options:
+    - подругу
+    - подруга
+    - подруги
+    - подрузі
+    sentence: Ми бачимо {{answer}}.
+  - answer: дочку
+    explanation: Дочка - жіночий рід, -а змінюється на -у.
+    options:
+    - дочку
+    - дочка
+    - дочки
+    - дочці
+    sentence: Я маю {{answer}}.
+  - answer: Марію
+    explanation: Марія - жіночий рід на -я, змінюється на -ю.
+    options:
+    - Марію
+    - Марія
+    - Марії
+    - Марією
+    sentence: Ти знаєш {{answer}}?
+  - answer: сусідку
+    explanation: Сусідка - жіночий рід, -а змінюється на -у.
+    options:
+    - сусідку
+    - сусідка
+    - сусідки
+    - сусідці
+    sentence: Я бачу {{answer}}.
+  - answer: колегу
+    explanation: Колега закінчується на -а і приймає -у в знахідному відмінку, незалежно від статі людини.
+    options:
+    - колегу
+    - колега
+    - колеги
+    - колезі
+    sentence: Я знаю {{answer}}.
+  - answer: бабусю
+    explanation: Бабуся - жіночий рід на -я, змінюється на -ю.
+    options:
+    - бабусю
+    - бабуся
+    - бабусі
+    - бабусею
+    sentence: Вона любить {{answer}}.
+  - answer: Вікторію
+    explanation: Вікторія - жіночий рід на -я, змінюється на -ю.
+    options:
+    - Вікторію
+    - Вікторія
+    - Вікторії
+    - Вікторією
+    sentence: Ми чекаємо {{answer}}.
+  - answer: дівчину
+    explanation: Дівчина - жіночий рід, -а змінюється на -у.
+    options:
+    - дівчину
+    - дівчина
+    - дівчини
+    - дівчині
+    sentence: Ти бачиш {{answer}}?
+  - answer: собаку
+    explanation: Собака - жіночий рід, -а змінюється на -у.
+    options:
+    - собаку
+    - собака
+    - собаки
+    - собаці
+    sentence: Він має {{answer}}.
+  title: Кого я люблю? (Жіночий рід)
+  type: fill-in
+- instruction: Розставте слова у правильному порядку, щоб утворити речення.
+  items:
+  - answer: Я бачу брата
+    words:
+    - Я
+    - бачу
+    - брата
+  - answer: Ми знаємо лікаря
+    words:
+    - Ми
+    - знаємо
+    - лікаря
+  - answer: Він бачить студента
+    words:
+    - Він
+    - бачить
+    - студента
+  - answer: Ти чекаєш вчителя
+    words:
+    - Ти
+    - чекаєш
+    - вчителя
+  - answer: Вона знає сусіда
+    words:
+    - Вона
+    - знає
+    - сусіда
+  - answer: Я бачу кота
+    words:
+    - Я
+    - бачу
+    - кота
+  - answer: Ми любимо маму
+    words:
+    - Ми
+    - любимо
+    - маму
+  - answer: Він чекає друга
+    words:
+    - Він
+    - чекає
+    - друга
+  - answer: Ти бачиш пса
+    words:
+    - Ти
+    - бачиш
+    - пса
+  - answer: Вона знає подругу
+    words:
+    - Вона
+    - знає
+    - подругу
+  - answer: Я люблю тата
+    words:
+    - Я
+    - люблю
+    - тата
+  - answer: Вони знають сина
+    words:
+    - Вони
+    - знають
+    - сина
+  title: Складіть речення
+  type: unjumble
+- instruction: З’єднайте початкову форму слова з формою знахідного відмінка.
+  pairs:
+  - left: кіт
+    right: кота
+  - left: пес
+    right: пса
+  - left: вчитель
+    right: вчителя
+  - left: водій
+    right: водія
+  - left: Андрій
+    right: Андрія
+  - left: Сергій
+    right: Сергія
+  - left: Юрій
+    right: Юрія
+  - left: дідусь
+    right: дідуся
+  - left: батько
+    right: батька
+  - left: Ігор
+    right: Ігоря
+  title: 'Складні форми: Знайдіть пару'
+  type: match-up
+- instruction: Оберіть правильну форму питання або відповіді для ситуації.
+  items:
+  - explanation: 'Друг - істота, знахідний відмінок: друга.'
+    options:
+    - correct: true
+      text: Я чекаю друга.
+    - correct: false
+      text: Я чекаю друг.
+    - correct: false
+      text: Я чекаю друзі.
+    - correct: false
+      text: Я чекаю другом.
+    question: Ви чекаєте друга. Як це сказати?
+  - explanation: 'Лікар - істота, знахідний відмінок: лікаря.'
+    options:
+    - correct: true
+      text: Я бачу лікаря.
+    - correct: false
+      text: Я бачу лікар.
+    - correct: false
+      text: Я бачу лікарі.
+    - correct: false
+      text: Я бачу лікарем.
+    question: Ви бачите лікаря. Як це сказати?
+  - explanation: 'Андрій - ім''я (істота), знахідний відмінок: Андрія.'
+    options:
+    - correct: true
+      text: Я знаю Андрія.
+    - correct: false
+      text: Я знаю Андрій.
+    - correct: false
+      text: Я знаю Андрію.
+    - correct: false
+      text: Я знаю Андрієм.
+    question: Ви знаєте Андрія. Як це сказати?
+  - explanation: 'Мама - жіночий рід, знахідний відмінок: маму.'
+    options:
+    - correct: true
+      text: Я люблю маму.
+    - correct: false
+      text: Я люблю мама.
+    - correct: false
+      text: Я люблю мами.
+    - correct: false
+      text: Я люблю мамі.
+    question: Ви любите маму. Як це сказати?
+  - explanation: Я маю кого? Пса.
+    options:
+    - correct: true
+      text: Я маю пса.
+    - correct: false
+      text: Я маю пес.
+    - correct: false
+      text: Я маю псу.
+    - correct: false
+      text: Я маю псом.
+    question: У вас є пес. Як це сказати?
+  - explanation: 'Студент - істота, знахідний відмінок: студента.'
+    options:
+    - correct: true
+      text: Я бачу студента.
+    - correct: false
+      text: Я бачу студент.
+    - correct: false
+      text: Я бачу студенти.
+    - correct: false
+      text: Я бачу студентом.
+    question: Ви бачите студента. Як це сказати?
+  - explanation: 'Тато - чоловічий рід, істота, знахідний відмінок: тата.'
+    options:
+    - correct: true
+      text: Я чекаю тата.
+    - correct: false
+      text: Я чекаю тато.
+    - correct: false
+      text: Я чекаю тату.
+    - correct: false
+      text: Я чекаю татом.
+    question: Ви чекаєте тата. Як це сказати?
+  - explanation: 'Сусід - істота, знахідний відмінок: сусіда.'
+    options:
+    - correct: true
+      text: Я знаю сусіда.
+    - correct: false
+      text: Я знаю сусід.
+    - correct: false
+      text: Я знаю сусіду.
+    - correct: false
+      text: Я знаю сусідом.
+    question: Ви знаєте сусіда. Як це сказати?
+  - explanation: 'Кіт - істота, знахідний відмінок: кота.'
+    options:
+    - correct: true
+      text: Я бачу кота.
+    - correct: false
+      text: Я бачу кіт.
+    - correct: false
+      text: Я бачу коту.
+    - correct: false
+      text: Я бачу котом.
+    question: Ви бачите кота. Як це сказати?
+  - explanation: 'Брат - істота, знахідний відмінок: брата.'
+    options:
+    - correct: true
+      text: Я люблю брата.
+    - correct: false
+      text: Я люблю брат.
+    - correct: false
+      text: Я люблю брату.
+    - correct: false
+      text: Я люблю братом.
+    question: Ви любите брата. Як це сказати?
+  - explanation: 'Марія - жіночий рід, знахідний відмінок: Марію.'
+    options:
+    - correct: true
+      text: Я знаю Марію.
+    - correct: false
+      text: Я знаю Марія.
+    - correct: false
+      text: Я знаю Марії.
+    - correct: false
+      text: Я знаю Марією.
+    question: Ви знаєте Марію. Як це сказати?
+  - explanation: 'Сестра - жіночий рід, знахідний відмінок: сестру.'
+    options:
+    - correct: true
+      text: Я бачу сестру.
+    - correct: false
+      text: Я бачу сестра.
+    - correct: false
+      text: Я бачу сестри.
+    - correct: false
+      text: Я бачу сестрі.
+    question: Ви бачите сестру. Як це сказати?
+  title: 'Ситуації: Кого чи Що?'
+  type: quiz
+- instruction: Розставте слова у правильному порядку, щоб утворити питання.
+  items:
+  - answer: Ти знаєш лікаря
+    words:
+    - Ти
+    - знаєш
+    - лікаря
+  - answer: Ви бачите вчителя
+    words:
+    - Ви
+    - бачите
+    - вчителя
+  - answer: Де ти бачиш студента
+    words:
+    - Де
+    - ти
+    - бачиш
+    - студента
+  - answer: Ти знаєш сусіда
+    words:
+    - Ти
+    - знаєш
+    - сусіда
+  - answer: Ви чекаєте колегу
+    words:
+    - Ви
+    - чекаєте
+    - колегу
+  - answer: Ти знаєш друга
+    words:
+    - Ти
+    - знаєш
+    - друга
+  - answer: Ти маєш подругу
+    words:
+    - Ти
+    - маєш
+    - подругу
+  - answer: Ви знаєте сестру
+    words:
+    - Ви
+    - знаєте
+    - сестру
+  - answer: Ти любиш тата
+    words:
+    - Ти
+    - любиш
+    - тата
+  - answer: Ви любите студента
+    words:
+    - Ви
+    - любите
+    - студента
+  - answer: Ти любиш кота
+    words:
+    - Ти
+    - любиш
+    - кота
+  - answer: Ви знаєте колегу
+    words:
+    - Ви
+    - знаєте
+    - колегу
+  title: Запитайте про людей
+  type: unjumble
+- instruction: Впишіть правильну форму імені у знахідному відмінку.
+  items:
+  - answer: Івана
+    explanation: Іван -> Івана.
+    options:
+    - Івана
+    - Іван
+    - Івану
+    - Іваном
+    sentence: Я знаю {{answer}}.
+  - answer: Олену
+    explanation: Олена -> Олену.
+    options:
+    - Олену
+    - Олена
+    - Олени
+    - Олені
+    sentence: Я знаю {{answer}}.
+  - answer: Петра
+    explanation: Петро -> Петра.
+    options:
+    - Петра
+    - Петро
+    - Петру
+    - Петром
+    sentence: Я бачу {{answer}}.
+  - answer: Оксану
+    explanation: Оксана -> Оксану.
+    options:
+    - Оксану
+    - Оксана
+    - Оксани
+    - Оксані
+    sentence: Я бачу {{answer}}.
+  - answer: Максима
+    explanation: Максим -> Максима.
+    options:
+    - Максима
+    - Максим
+    - Максиму
+    - Максимом
+    sentence: Я люблю {{answer}}.
+  - answer: Юлію
+    explanation: Юлія -> Юлію.
+    options:
+    - Юлію
+    - Юлія
+    - Юлії
+    - Юлією
+    sentence: Я люблю {{answer}}.
+  - answer: Антона
+    explanation: Антон -> Антона.
+    options:
+    - Антона
+    - Антон
+    - Антону
+    - Антоном
+    sentence: Я чекаю {{answer}}.
+  - answer: Вікторію
+    explanation: Вікторія -> Вікторію.
+    options:
+    - Вікторію
+    - Вікторія
+    - Вікторії
+    - Вікторією
+    sentence: Я чекаю {{answer}}.
+  - answer: брата
+    explanation: Брат -> брата.
+    options:
+    - брата
+    - брат
+    - брату
+    - братом
+    sentence: Я маю {{answer}}.
+  - answer: сестру
+    explanation: Сестра -> сестру.
+    options:
+    - сестру
+    - сестра
+    - сестри
+    - сестрі
+    sentence: Я маю {{answer}}.
+  - answer: кота
+    explanation: Кіт -> кота.
+    options:
+    - кота
+    - кіт
+    - коту
+    - котом
+    sentence: Я бачу {{answer}}.
+  - answer: кішку
+    explanation: Кішка -> кішку.
+    options:
+    - кішку
+    - кішка
+    - кішки
+    - кішці
+    sentence: Я бачу {{answer}}.
+  title: 'Змішана практика: Імена'
+  type: fill-in

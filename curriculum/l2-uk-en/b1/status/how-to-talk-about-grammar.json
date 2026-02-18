@@ -2,10 +2,10 @@
   "module": "how-to-talk-about-grammar",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-18T12:49:34.406514Z",
+  "last_audit": "2026-02-18T16:19:01.565952Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-18T12:49:30.967067Z",
+    "md": "2026-02-18T13:09:46.644292Z",
     "meta": "2026-02-18T12:43:28.951877Z",
     "activities": "2026-02-18T00:33:51.464659Z",
     "vocabulary": "2026-02-18T00:33:45.271273Z",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Clean IPA"
+      "message": "10 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

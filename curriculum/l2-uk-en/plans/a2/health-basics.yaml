@@ -10,20 +10,20 @@ content_outline:
   points:
   - 'Health as a conversation topic — cultural hook: «У здоровому тілі — здоровий
     дух» as universal Ukrainian wisdom; health smalltalk norms'
-  - 'Why health vocabulary comes first — foundational body parts and the боліти
-    construction are prerequisites for all later health modules'
+  - Why health vocabulary comes first — foundational body parts and the боліти construction
+    are prerequisites for all later health modules
 - section: Частини тіла
   points:
   - 'Core body parts — голова, рука, нога, живіт, спина, горло, око/очі, вухо/вуха;
     visual aid: body map with labels'
   - 'Singular vs plural pairs — learner error: irregular plurals (око→очі, вухо→вуха);
     gender agreement patterns with adjectives'
-  - 'Internal organs (basic) — серце, легені, шлунок; cultural note: «серце» in
-    Ukrainian idioms (від щирого серця)'
-- section: 'Конструкція «У мене болить»'
+  - 'Internal organs (basic) — серце, легені, шлунок; cultural note: «серце» in Ukrainian
+    idioms (від щирого серця)'
+- section: Конструкція «У мене болить»
   points:
-  - 'Impersonal pain construction — У мене болить + Nominative singular (голова,
-    живіт, горло); learner error: «Я болить голову» instead of «У мене болить голова»'
+  - 'Impersonal pain construction — У мене болить + Nominative singular (голова, живіт,
+    горло); learner error: «Я болить голову» instead of «У мене болить голова»'
   - 'Plural agreement — У мене болять + Nominative plural (ноги, очі, зуби); learner
     error: «У мене болить ноги» (number mismatch)'
   - 'Extended pain expressions — standard ref: §4.2.1.4; крутиться голова, болить
@@ -34,8 +34,8 @@ content_outline:
     сильний кашель, гострий біль'
   - 'State expressions — Мені погано/добре/нудно; learner error: «Я погано» instead
     of «Мені погано» (Dative for states)'
-  - 'Хворий vs боліти vs хворіти — learner error: confusing adjective (хворий),
-    body-pain verb (боліти), person-sick verb (хворіти)'
+  - 'Хворий vs боліти vs хворіти — learner error: confusing adjective (хворий), body-pain
+    verb (боліти), person-sick verb (хворіти)'
 - section: Practice / Практика
   points:
   - Describing what hurts — fill-in drills with болить/болять agreement
@@ -44,7 +44,7 @@ content_outline:
   points:
   - 'Calling a friend about feeling sick — casual register; cultural hook: health
     proverbs in everyday speech'
-  - 'First aid phrases — Тобі погано? Тримайся! Давай виклику лікаря'
+  - First aid phrases — Тобі погано? Тримайся! Давай виклику лікаря
 focus: vocabulary
 pedagogy: PPP
 objectives:
@@ -79,12 +79,12 @@ vocabulary_hints:
   - 'температура (fever) — collocations: висока температура, міряти температуру'
   - 'кашель (cough) — collocations: сильний кашель, сухий кашель'
   recommended:
-  - 'нежить (runny nose) — мати нежить, засоби від нежитю'
-  - 'хворий (sick, adj.) — він хворий, хвора дитина'
-  - 'здоровий (healthy) — у здоровому тілі — здоровий дух'
-  - 'спина (back) — болить спина, біль у спині'
-  - 'зуб (tooth) — болить зуб, зубний біль'
-  - 'серце (heart) — від щирого серця (idiom)'
+  - нежить (runny nose) — мати нежить, засоби від нежитю
+  - хворий (sick, adj.) — він хворий, хвора дитина
+  - здоровий (healthy) — у здоровому тілі — здоровий дух
+  - спина (back) — болить спина, біль у спині
+  - зуб (tooth) — болить зуб, зубний біль
+  - серце (heart) — від щирого серця (idiom)
 activity_hints:
 - type: match-up
   focus: Body parts vocabulary
@@ -98,3 +98,4 @@ activity_hints:
 - type: fill-in
   focus: State expressions (Мені погано/добре)
   items: 8
+word_target: 3000

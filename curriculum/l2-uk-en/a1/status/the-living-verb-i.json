@@ -1,0 +1,64 @@
+{
+  "module": "the-living-verb-i",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-18T20:31:15.554548Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-18T20:28:28.101848Z",
+    "meta": "2026-02-18T17:51:51.668980Z",
+    "activities": "2026-02-18T20:28:50.107049Z",
+    "vocabulary": "2026-02-18T20:20:11.360952Z",
+    "plan": "2026-02-18T19:03:32.243381Z",
+    "research": "2026-02-15T13:16:51.222964Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2652/2000 (raw: 2983)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "21/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

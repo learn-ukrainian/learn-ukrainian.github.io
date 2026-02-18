@@ -1,11 +1,11 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
-**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 300
+**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 12:20:30
+**Generated:** 2026-02-18 20:23:51
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 300 words
+**Word Target:** 2000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Справжні друзі: Літери та звуки | 8 | 8 | ✅ |
-| 2 | match-up | Фальшиві друзі: Обережно! | 8 | 8 | ✅ |
+| 2 | match-up | Нові літери та хибні друзі: Звуки | 10 | 8 | ✅ |
 | 3 | group-sort | Сортування літер | 19 | 12 | ✅ |
 | 4 | quiz | Фальшиві друзі: Перевірка | 8 | 8 | ✅ |
 | 5 | anagram | Розшифруйте слова | 8 | 8 | ✅ |
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2489/300 (raw: 2862)
+- **Words:** ✅ 2489/2000 (raw: 2862)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types

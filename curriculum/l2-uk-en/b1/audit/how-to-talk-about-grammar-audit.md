@@ -1,7 +1,7 @@
 # Audit Report: M01 — how-to-talk-about-grammar.md
 **Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 12:49:34
+**Generated:** 2026-02-18 16:19:01
 
 ## Configuration
 **Type:** B1-bridge
@@ -41,11 +41,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 10 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 91.9% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 91.9% (target 60-100% (B1.0 Bridge))
 - **Richness:** ✅ 99% (bridge)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

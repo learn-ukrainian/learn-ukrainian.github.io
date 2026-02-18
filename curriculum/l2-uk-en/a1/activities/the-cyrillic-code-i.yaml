@@ -36,7 +36,11 @@
     right: b (bank)
   - left: Д д
     right: d (door)
-  title: 'Фальшиві друзі: Обережно!'
+  - left: З з
+    right: z (zebra)
+  - left: Л л
+    right: l (look)
+  title: 'Нові літери та хибні друзі: Звуки'
   type: match-up
 - groups:
   - items:
@@ -134,7 +138,7 @@
       text: '[u] (but)'
     - correct: false
       text: '[i]'
-    question: How do you pronounce the letter «У» in «музика»?
+    question: How do you pronounce the letter «У» in «суп»?
   - explanation: Літера П makes the [p] sound.
     options:
     - correct: true

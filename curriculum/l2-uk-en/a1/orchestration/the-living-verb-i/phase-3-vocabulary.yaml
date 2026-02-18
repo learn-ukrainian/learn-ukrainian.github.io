@@ -1,0 +1,101 @@
+- ipa: '[tʃɪˈtɑtɪ]'
+  lemma: читати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to read
+- ipa: '[pɪˈsɑtɪ]'
+  lemma: писати
+  notes: 'type 1 (irregular stem: пиш-); imperfective'
+  pos: verb
+  translation: to write
+- ipa: '[prɑtsʲʊˈwɑtɪ]'
+  lemma: працювати
+  notes: type 1 (-ювати → -юю); imperfective
+  pos: verb
+  translation: to work
+- ipa: '[ˈznɑtɪ]'
+  lemma: знати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to know
+- ipa: '[ˈsluxɑtɪ]'
+  lemma: слухати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to listen
+- ipa: '[pɪˈtɑtɪ]'
+  lemma: питати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to ask
+- ipa: '[ˈɦrɑtɪ]'
+  lemma: грати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to play
+- ipa: '[wʲidpɔtʃɪˈwɑtɪ]'
+  lemma: відпочивати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to rest
+- ipa: '[mɑlʲʊˈwɑtɪ]'
+  lemma: малювати
+  notes: type 1 (-ювати → -юю); imperfective
+  pos: verb
+  translation: to draw; to paint
+- ipa: '[jɑ]'
+  lemma: я
+  notes: 1st person singular
+  pos: pronoun
+  translation: I
+- ipa: '[tɪ]'
+  lemma: ти
+  notes: 2nd person singular
+  pos: pronoun
+  translation: you (informal)
+- ipa: '[win]'
+  lemma: він
+  notes: 3rd person singular (masculine)
+  pos: pronoun
+  translation: he
+- ipa: '[wɔˈnɑ]'
+  lemma: вона
+  notes: 3rd person singular (feminine)
+  pos: pronoun
+  translation: she
+- ipa: '[mɪ]'
+  lemma: ми
+  notes: 1st person plural
+  pos: pronoun
+  translation: we
+- ipa: '[wɪ]'
+  lemma: ви
+  notes: 2nd person plural/formal
+  pos: pronoun
+  translation: you (formal/plural)
+- ipa: '[wɔˈnɪ]'
+  lemma: вони
+  notes: 3rd person plural
+  pos: pronoun
+  translation: they
+- ipa: '[ʒʊrˈnɑl]'
+  lemma: журнал
+  notes: masculine
+  pos: noun
+  translation: magazine
+- ipa: '[tɛkst]'
+  lemma: текст
+  notes: masculine
+  pos: noun
+  translation: text
+- ipa: '[lɪst]'
+  lemma: лист
+  notes: masculine
+  pos: noun
+  translation: letter
+- ipa: '[ˈrɑdʲijo]'
+  lemma: радіо
+  notes: neuter; indeclinable
+  pos: noun
+  translation: radio
+

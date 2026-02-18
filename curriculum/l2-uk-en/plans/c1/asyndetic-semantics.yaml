@@ -8,19 +8,19 @@ subtitle: 'Asyndetic Sentences: The Logic of Dash and Colon'
 content_outline:
 - section: Вступ — Речення без сполучників
   points:
-  - 'State Standard §4.3.4.2 alignment — asyndetic complex sentences and their semantic
-    relations'
-  - 'Why asyndetic style matters: it is the hallmark of mature Ukrainian prose —
-    tighter, more rhythmic, and more literary than syndetic equivalents'
-  - 'Cross-reference with M16 (advanced-punctuation) — this module focuses on MEANING,
-    not mechanics'
+  - State Standard §4.3.4.2 alignment — asyndetic complex sentences and their semantic
+    relations
+  - 'Why asyndetic style matters: it is the hallmark of mature Ukrainian prose — tighter,
+    more rhythmic, and more literary than syndetic equivalents'
+  - Cross-reference with M16 (advanced-punctuation) — this module focuses on MEANING,
+    not mechanics
 - section: 'Двокрапка — пояснення і причина (Colon: explanation & cause)'
   points:
   - 'Colon replaces бо/тому що: Він не прийшов: захворів. (He didn''t come — he got
     sick.)'
   - 'Colon replaces а саме/тобто: Я люблю три речі: каву, книжки і тишу.'
   - 'Pattern: general statement : specific explanation/enumeration'
-  - 'Literary examples from Kotsiubynsky, Franko'
+  - Literary examples from Kotsiubynsky, Franko
 - section: 'Тире — наслідок і контраст (Dash: consequence & contrast)'
   points:
   - 'Dash replaces тому/отже: Прийшла весна — зацвіли сади. (Spring came — gardens
@@ -32,7 +32,7 @@ content_outline:
 - section: 'Кома — послідовність і одночасність (Comma: sequence & simultaneity)'
   points:
   - 'Comma for parallel actions: Сонце сідало, вітер стихав, птахи замовкали.'
-  - 'Comma vs dash vs colon — decision tree based on semantic relationship'
+  - Comma vs dash vs colon — decision tree based on semantic relationship
   - 'Learner error: defaulting to syndetic constructions when asyndetic is more natural'
 - section: 'Трансформація: від сполучникового до безсполучникового'
   points:
@@ -94,3 +94,4 @@ phase: C1.5 [Literature]
 persona:
   voice: Senior Specialist
   role: Literary Editor
+word_target: 4000

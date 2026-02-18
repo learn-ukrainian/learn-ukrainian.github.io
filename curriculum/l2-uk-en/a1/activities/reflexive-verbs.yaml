@@ -1,0 +1,492 @@
+- groups:
+  - items:
+    - Я мию авто
+    - Я одягаю сина
+    - Я готую вечерю
+    - Я зустрічаю гостей
+    - Я веселю друзів
+    - Я зупиняю таксі
+    name: Дія на предмет (Transitive)
+  - items:
+    - Я миюся вранці
+    - Я одягаюся швидко
+    - Я готуюсь до екзамену
+    - Ми зустрічаємося у кафе
+    - Я веселюся на свята
+    - Автобус зупиняється тут
+    name: Дія на себе (Reflexive)
+  instruction: 'Визначте, на кого спрямована дія: на предмет (Transitive) чи на самого
+    себе (Reflexive).'
+  title: Дія на предмет чи на себе?
+  type: group-sort
+- instruction: З'єднайте українське дієслово з його англійським перекладом.
+  pairs:
+  - left: вмиватися
+    right: to wash one's face
+  - left: одягатися
+    right: to dress oneself
+  - left: зустрічатися
+    right: to meet each other
+  - left: сміятися
+    right: to laugh
+  - left: дивитися
+    right: to watch / look
+  - left: хвилюватися
+    right: to worry
+  - left: боятися
+    right: to be afraid
+  - left: надіятися
+    right: to hope
+  title: Знайдіть пару
+  type: match-up
+- instruction: Оберіть правильну відповідь на запитання про граматику.
+  items:
+  - explanation: Історично -ся походить від слова 'себе' (self).
+    options:
+    - correct: true
+      text: дію на себе
+    - correct: false
+      text: дію на предмет
+    - correct: false
+      text: майбутній час
+    - correct: false
+      text: множину
+    question: Що означає суфікс -ся в кінці дієслова?
+  - explanation: Комбінація т + с звучить як довгий м'який [ц':а].
+    options:
+    - correct: true
+      text: як довгий м'який [ц':а]
+    - correct: false
+      text: як тверді [т] і [с]
+    - correct: false
+      text: як англійське [ts]
+    - correct: false
+      text: як [ш]
+    question: Як правильно вимовляється закінчення -ться?
+  - explanation: Для милозвучності після голосної ми вживаємо -сь (наприклад, я сміюсь).
+    options:
+    - correct: true
+      text: після голосної
+    - correct: false
+      text: після приголосної
+    - correct: false
+      text: тільки в іменниках
+    - correct: false
+      text: на початку слова
+    question: Коли ми використовуємо форму суфікса -сь?
+  - explanation: Ми не використовуємо окреме слово 'себе', якщо є суфікс -ся.
+    options:
+    - correct: true
+      text: Я миюся.
+    - correct: false
+      text: Я мию себе.
+    - correct: false
+      text: Я ся мию.
+    - correct: false
+      text: Я миюся себе.
+    question: Яке речення є граматично правильним і природним?
+  - explanation: Українською ми сміємося 'з' чогось (laugh from).
+    options:
+    - correct: true
+      text: з
+    - correct: false
+      text: над
+    - correct: false
+      text: на
+    - correct: false
+      text: про
+    question: Який прийменник вживається з дієсловом 'сміятися'?
+  - explanation: 'Слово ''вибачаюсь'' означає, що ви вибачаєте самі себе. Ввічливо
+      просити: ''Вибачте''.'
+    options:
+    - correct: true
+      text: Вибачте!
+    - correct: false
+      text: Я вибачаюсь!
+    - correct: false
+      text: Я прощаю!
+    - correct: false
+      text: Вибачся!
+    question: Як правильно і ввічливо сказати 'Вибачте' українською?
+  - explanation: Дієслово 'дивитися' належить до другої дієвідміни.
+    options:
+    - correct: true
+      text: -и- (дивишся)
+    - correct: false
+      text: -е- (дивешся)
+    - correct: false
+      text: -є- (дивєшся)
+    - correct: false
+      text: -а- (дивашся)
+    question: Яка літера пишеться в особових закінченнях слова 'дивитися'?
+  - explanation: Суфікс -ся завжди стоїть у кінці слова.
+    options:
+    - correct: true
+      text: у кінці слова
+    - correct: false
+      text: перед словом
+    - correct: false
+      text: всередині слова
+    - correct: false
+      text: окремо від слова
+    question: Де стоїть суфікс -ся в українській мові?
+  title: Перевірка розуміння
+  type: quiz
+- instruction: Оберіть -ся або -сь залежно від закінчення дієслова (голосна чи приголосна).
+  items:
+  - answer: сь
+    explanation: Після голосної 'ю' використовуємо -сь.
+    options:
+    - сь
+    - ся
+    - ць
+    - ця
+    sentence: Я сьогодні трохи хвилюю__________.
+  - answer: ся
+    explanation: Після приголосної 'ш' використовуємо -ся.
+    options:
+    - ся
+    - сь
+    - ця
+    - ць
+    sentence: Ти завжди гарно одягаєш__________.
+  - answer: сь
+    explanation: Після голосної 'о' використовуємо -сь.
+    options:
+    - сь
+    - ся
+    - ць
+    - ця
+    sentence: Ми часто бачимо__________ у парку.
+  - answer: ся
+    explanation: Після приголосної 'т' (у 3-й особі) використовуємо -ся.
+    options:
+    - ся
+    - сь
+    - ця
+    - ць
+    sentence: Він ніколи не смієть__________.
+  - answer: сь
+    explanation: Після голосної 'е' використовуємо -сь.
+    options:
+    - сь
+    - ся
+    - ць
+    - ця
+    sentence: Ви занадто швидко здаєте__________.
+  - answer: ся
+    explanation: Після голосної 'ю' у слові 'надіються' (вони) ми вживаємо -ся, це
+      виняток для 3-ї особи множини або просто варіант.
+    options:
+    - ся
+    - сь
+    - ця
+    - ць
+    sentence: Вони надіють__________ на успіх.
+  - answer: сь
+    explanation: Після голосної 'ю' використовуємо -сь.
+    options:
+    - сь
+    - ся
+    - ць
+    - ця
+    sentence: Я намагаю__________ говорити правильно.
+  - answer: ся
+    explanation: Після приголосної 'т' використовуємо -ся.
+    options:
+    - ся
+    - сь
+    - ця
+    - ць
+    sentence: Вона завжди усміхаєть__________.
+  title: Оберіть правильний суфікс
+  type: fill-in
+- instruction: З'єднайте початок і кінець речення.
+  pairs:
+  - left: Ми зустрічаємося
+    right: у кафе о шостій
+  - left: Друзі обіймаються
+    right: при зустрічі
+  - left: Люди вітаються
+    right: за руку
+  - left: Закохані цілуються
+    right: під дощем
+  - left: Сусіди сваряться
+    right: через шум
+  - left: Ми домовляємося
+    right: про зустріч
+  - left: Колеги спілкуються
+    right: на перерві
+  - left: Діти граються
+    right: у пісочниці
+  title: Взаємні дії (Reciprocal)
+  type: match-up
+- instruction: Заповніть пропуски правильним дієсловом, обираючи між звичайним та зворотним.
+  items:
+  - answer: готує
+    explanation: Олена готує (кого/що?) сніданок. Це дія на предмет.
+    options:
+    - готує
+    - готується
+    - готуєш
+    - готують
+    sentence: Олена __________ сніданок на кухні.
+  - answer: готується
+    explanation: Олена готується (до чого?) до роботи. Це дія на себе (підготовка).
+    options:
+    - готується
+    - готує
+    - готуєшся
+    - готуються
+    sentence: Олена __________ до роботи.
+  - answer: миюся
+    explanation: Я миюся (сам). Дія на себе.
+    options:
+    - миюся
+    - мию
+    - миєшся
+    - миються
+    sentence: Я __________ у ванні щовечора.
+  - answer: мию
+    explanation: Я мию (кого/що?) посуд. Дія на предмет.
+    options:
+    - мию
+    - миюся
+    - миєш
+    - миють
+    sentence: Я __________ брудний посуд.
+  - answer: одягає
+    explanation: Мама одягає (кого?) дитину.
+    options:
+    - одягає
+    - одягається
+    - одягаєш
+    - одягають
+    sentence: Мама __________ маленьку дитину.
+  - answer: одягається
+    explanation: Максим одягається (сам).
+    options:
+    - одягається
+    - одягає
+    - одягаєшся
+    - одягаються
+    sentence: Максим швидко __________ вранці.
+  - answer: зупиняється
+    explanation: Автобус зупиняється (сам/автоматично).
+    options:
+    - зупиняється
+    - зупиняє
+    - зупиняєшся
+    - зупиняються
+    sentence: Автобус __________ на зупинці.
+  - answer: зупиняє
+    explanation: Поліція зупиняє (кого?) машину.
+    options:
+    - зупиняє
+    - зупиняється
+    - зупиняєш
+    - зупиняють
+    sentence: Поліція __________ машину за порушення.
+  title: Дія чи Стан? (Fill-in)
+  type: fill-in
+- instruction: Оберіть правильну форму дієслова у теперішньому часі.
+  items:
+  - answer: дивлюсь
+    explanation: Я (перша особа) -> дивлюсь.
+    options:
+    - дивлюсь
+    - дивишся
+    - дивиться
+    - дивимось
+    sentence: Я __________ телевізор щовечора.
+  - answer: смієшся
+    explanation: Ти (друга особа) -> смієшся.
+    options:
+    - смієшся
+    - сміюсь
+    - сміється
+    - сміються
+    sentence: Чому ти __________?
+  - answer: одягається
+    explanation: Він (третя особа) -> одягається.
+    options:
+    - одягається
+    - одягаюсь
+    - одягаєшся
+    - одягаються
+    sentence: Він __________ тепло, бо надворі холодно.
+  - answer: надіємось
+    explanation: Ми (перша особа множини) -> надіємось.
+    options:
+    - надіємось
+    - надіюсь
+    - надієшся
+    - надіється
+    sentence: Ми __________ на краще майбутнє.
+  - answer: хвилюєтесь
+    explanation: Ви (друга особа множини) -> хвилюєтесь.
+    options:
+    - хвилюєтесь
+    - хвилююсь
+    - хвилюєшся
+    - хвилюється
+    sentence: Ви __________ перед важливою зустріччю?
+  - answer: вітаються
+    explanation: Вони (третя особа множини) -> вітаються.
+    options:
+    - вітаються
+    - вітаюсь
+    - вітаєшся
+    - вітається
+    sentence: Вони __________ один з одним.
+  - answer: вмиваюсь
+    explanation: Я (перша особа) -> вмиваюсь.
+    options:
+    - вмиваюсь
+    - вмивається
+    - вмиваємось
+    - вмиваються
+    sentence: Я __________ холодною водою.
+  - answer: вчишся
+    explanation: Ти (друга особа) -> вчишся.
+    options:
+    - вчишся
+    - вчусь
+    - вчиться
+    - вчаться
+    sentence: Де ти __________?
+  title: Відмінювання дієслів
+  type: fill-in
+- instruction: Оберіть найбільш доречну відповідь для кожної ситуації.
+  items:
+  - explanation: '''Вибачте'' — це ввічливе прохання про прощення.'
+    options:
+    - correct: true
+      text: Вибачте, будь ласка.
+    - correct: false
+      text: Я вибачаюсь.
+    - correct: false
+      text: Я миюся.
+    - correct: false
+      text: Ти вибачаєшся.
+    question: Ви наступили комусь на ногу в автобусі. Що ви скажете?
+  - explanation: Ми використовуємо прийменник 'з' (from) для сміху.
+    options:
+    - correct: true
+      text: Я сміюся з жарту.
+    - correct: false
+      text: Я сміюся над жартом.
+    - correct: false
+      text: Я сміюся на жарт.
+    - correct: false
+      text: Я сміюся про жарт.
+    question: Друг розповів смішний жарт. Як сказати про це українською?
+  - explanation: '''Почуватися'' означає ''to feel (oneself)'', тобто запитують про
+      ваш стан.'
+    options:
+    - correct: true
+      text: How do you feel?
+    - correct: false
+      text: What do you hear?
+    - correct: false
+      text: How do you do?
+    - correct: false
+      text: What do you feel (touch)?
+    question: 'Хтось запитує: ''Як ти почуваєшся?''. Що це означає?'
+  - explanation: '''Займатися'' (to occupy oneself) використовується для хобі та спорту.'
+    options:
+    - correct: true
+      text: Чим ти займаєшся?
+    - correct: false
+      text: Чим ти робишся?
+    - correct: false
+      text: Чим ти вчишся?
+    - correct: false
+      text: Чим ти граєшся?
+    question: Ви хочете запитати про хобі людини. Яке дієслово використати?
+  - explanation: Боятися (to be afraid) — це зворотне дієслово.
+    options:
+    - correct: true
+      text: Я боюсь собак.
+    - correct: false
+      text: Я бою собак.
+    - correct: false
+      text: Я страх собак.
+    - correct: false
+      text: Я лякаю собак.
+    question: Як сказати 'I am afraid of dogs'?
+  - explanation: '''Ми обіймаємось'' означає, що ми обіймаємо один одного.'
+    options:
+    - correct: true
+      text: Ми обіймаємось.
+    - correct: false
+      text: Я вмиваюсь.
+    - correct: false
+      text: Він одягається.
+    - correct: false
+      text: Вона хвилюється.
+    question: Яке речення описує взаємну дію (reciprocal)?
+  - explanation: '''Називатися'' означає ''to be called''.'
+    options:
+    - correct: true
+      text: Як це називається?
+    - correct: false
+      text: Як це звуть?
+    - correct: false
+      text: Хто це ім'я?
+    - correct: false
+      text: Що це кличе?
+    question: Ви бачите незнайомий фрукт. Як запитати його назву?
+  - explanation: '''Прокидатися'' означає ''to wake up''.'
+    options:
+    - correct: true
+      text: Я прокидаюсь.
+    - correct: false
+      text: Я сплю.
+    - correct: false
+      text: Я снідаю.
+    - correct: false
+      text: Я йду.
+    question: Що ви робите вранці найперше?
+  title: Культурні нюанси
+  type: quiz
+- instruction: Переставте літери, щоб утворити правильне зворотне дієслово.
+  items:
+  - answer: вмиватися
+    scrambled: а т в м я с и и в
+  - answer: дивитися
+    scrambled: с я д и в и т и
+  - answer: сміятися
+    scrambled: с я і м с я т и
+  - answer: одягатися
+    scrambled: с я г а о д я т и
+  - answer: вітатися
+    scrambled: с я в і т а т и
+  - answer: боятися
+    scrambled: с я б о я т и
+  - answer: гратися
+    scrambled: с я г р а т и
+  - answer: навчатися
+    scrambled: с я н а в ч а т и
+  title: Розшифруйте слова
+  type: anagram
+- instruction: З'єднайте дієслово з відповідною ситуацією.
+  pairs:
+  - left: Я хвилююся
+    right: перед екзаменом
+  - left: Я боюся
+    right: темряви
+  - left: Я надіюся
+    right: на краще
+  - left: Я гніваюся
+    right: на грубість
+  - left: Я цікавлюся
+    right: історією
+  - left: Я почуваюся
+    right: щасливим
+  - left: Я пишаюся
+    right: тобою
+  - left: Я дивуюся
+    right: новинам
+  title: Емоції та стани
+  type: match-up

@@ -18,7 +18,7 @@
   notes: Feminine gender (ends in -a)
   pos: noun
   translation: book
-- ipa: '[vʲikˈnɔ]'
+- ipa: '[ʋʲikˈnɔ]'
   lemma: вікно
   notes: Neuter gender (ends in -o)
   pos: noun
@@ -73,7 +73,7 @@
   notes: Masculine gender (soft sign exception)
   pos: noun
   translation: day
-- ipa: '[nʲitʃ]'
+- ipa: '[nʲit͡ʃ]'
   lemma: ніч
   notes: Feminine gender (soft sign exception)
   pos: noun
@@ -88,17 +88,17 @@
   notes: Masculine gender despite -a ending
   pos: noun
   translation: dog
-- ipa: '[t͡ʃo.loˈvʲik]'
+- ipa: '[t͡ʃo.loˈʋʲik]'
   lemma: чоловік
   notes: Masculine gender
   pos: noun
-  translation: man; husband; masculine (gender)
+  translation: man; husband
 - ipa: '[ˈʒin.kɑ]'
   lemma: жінка
   notes: Feminine gender
   pos: noun
   translation: woman; wife; feminine (gender)
-- ipa: '[t͡ʃo.loˈvʲi.t͡ʃɪj]'
+- ipa: '[t͡ʃo.loˈʋʲi.t͡ʃɪj]'
   lemma: чоловічий
   notes: Adjective used for grammatical gender
   pos: adj

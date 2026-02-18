@@ -235,7 +235,7 @@ Let's practice with words you will use every day.
 Let's see gender agreement in action. Notice how **мій** and **моя** change depending on who we are talking about.
 
 **Андрій:** Привіт! Це **моя** мама. (Hello! This is my mom.)
-**Олена:** Добрий день! А це **мій** тато? (Good day! And is this my dad?)
+**Олена:** Добрий день! Хто це? (Good day! Who is this?)
 **Андрій:** Ні, це **мій** брат. (No, this is my brother.)
 **Олена:** А де **моя** сестра? (And where is my sister?)
 

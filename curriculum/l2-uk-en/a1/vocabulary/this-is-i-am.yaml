@@ -1,0 +1,83 @@
+- ipa: '[jɑ]'
+  lemma: я
+  pos: pron
+  translation: I
+- ipa: '[tɪ]'
+  lemma: ти
+  pos: pron
+  translation: you (singular, informal)
+- ipa: '[ʋin]'
+  lemma: він
+  pos: pron
+  translation: he
+- ipa: '[ʋɔˈnɑ]'
+  lemma: вона
+  pos: pron
+  translation: she
+- ipa: '[ʋɔˈnɔ]'
+  lemma: воно
+  pos: pron
+  translation: it
+- ipa: '[mɪ]'
+  lemma: ми
+  pos: pron
+  translation: we
+- ipa: '[ʋɪ]'
+  lemma: ви
+  pos: pron
+  translation: you (plural, formal)
+- ipa: '[ʋɔˈnɪ]'
+  lemma: вони
+  pos: pron
+  translation: they
+- ipa: '[t͡sɛ]'
+  lemma: це
+  notes: Demonstrative particle used to identify people or objects
+  pos: part
+  translation: this is / it is
+- ipa: '[xtɔ]'
+  lemma: хто
+  pos: pron
+  translation: who
+- ipa: '[ʃt͡ʃɔ]'
+  lemma: що
+  pos: pron
+  translation: what
+- ipa: '[stuˈdɛnt]'
+  lemma: студент
+  pos: noun
+  translation: student (male)
+- ipa: '[ˈʋt͡ʃɪtɛlʲ]'
+  lemma: вчитель
+  pos: noun
+  translation: teacher (male)
+- ipa: '[ˈlikɑr]'
+  lemma: лікар
+  pos: noun
+  translation: doctor
+- ipa: '[ukrɑˈjinɛt͡sʲ]'
+  lemma: українець
+  pos: noun
+  translation: Ukrainian (male)
+- ipa: '[tut]'
+  lemma: тут
+  pos: adv
+  translation: here
+- ipa: '[tɑm]'
+  lemma: там
+  pos: adv
+  translation: there
+- ipa: '[tɑk]'
+  lemma: так
+  pos: part
+  translation: 'yes'
+- ipa: '[nʲi]'
+  lemma: ні
+  pos: part
+  translation: 'no'
+- ipa: '[nɛ]'
+  lemma: не
+  notes: Negative particle
+  pos: part
+  translation: not
+

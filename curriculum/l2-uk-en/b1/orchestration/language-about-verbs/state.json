@@ -39,7 +39,33 @@
       "status": "complete",
       "timestamp": "2026-02-18T12:31:11Z",
       "task_id": "yw-language-about-verbs-p3a"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:32:40Z",
+      "task_id": "gr-language-about-verbs",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:34:51Z",
+      "task_id": "yw-language-about-verbs-6b",
+      "attempts": 1
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:37:22Z",
+      "attempts": 2
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:37:23Z",
+      "attempts": 1
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:37:24Z"
     }
   },
-  "last_updated": "2026-02-18T12:31:11Z"
+  "last_updated": "2026-02-18T12:37:24Z"
 }

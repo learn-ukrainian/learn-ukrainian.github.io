@@ -1,0 +1,337 @@
+- type: group-sort
+  title: "Змінюється чи ні?"
+  instruction: "Drag the words into the correct category: 'Changes in Accusative' (Feminine -а/-я) or 'Does Not Change' (Masculine/Neuter)."
+  groups:
+    - name: "Змінюється (Changes)"
+      items: ["книга", "вода", "кава", "піца", "газета", "карта", "музика", "машина"]
+    - name: "Не змінюється (No Change)"
+      items: ["стіл", "вікно", "парк", "телефон", "місто", "паспорт", "квиток", "чай"]
+
+- type: match-up
+  title: "Знайдіть пару"
+  instruction: "Match the dictionary form (Nominative) with its Accusative form."
+  pairs:
+    - left: "книга"
+      right: "книгу"
+    - left: "вода"
+      right: "воду"
+    - left: "стіл"
+      right: "стіл"
+    - left: "вікно"
+      right: "вікно"
+    - left: "вулиця"
+      right: "вулицю"
+    - left: "місто"
+      right: "місто"
+    - left: "газета"
+      right: "газету"
+    - left: "чай"
+      right: "чай"
+
+- type: quiz
+  title: "Оберіть правильне закінчення"
+  instruction: "Choose the correct Accusative form for the sentence."
+  items:
+    - question: "Я бачу ____________ (machine/car)."
+      explanation: "Машина is feminine (-а), so it changes to машину."
+      options:
+        - text: "машину"
+          correct: true
+        - text: "машина"
+          correct: false
+        - text: "машини"
+          correct: false
+        - text: "машині"
+          correct: false
+    - question: "Я маю ____________ (phone)."
+      explanation: "Телефон is masculine inanimate, so it does not change."
+      options:
+        - text: "телефон"
+          correct: true
+        - text: "телефона"
+          correct: false
+        - text: "телефону"
+          correct: false
+        - text: "телефоні"
+          correct: false
+    - question: "Я хочу ____________ (water)."
+      explanation: "Вода is feminine (-а), so it changes to воду."
+      options:
+        - text: "воду"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "води"
+          correct: false
+        - text: "воді"
+          correct: false
+    - question: "Я купую ____________ (bread)."
+      explanation: "Хліб is masculine inanimate, so it does not change."
+      options:
+        - text: "хліб"
+          correct: true
+        - text: "хліба"
+          correct: false
+        - text: "хлібу"
+          correct: false
+        - text: "хліби"
+          correct: false
+    - question: "Я чую ____________ (music)."
+      explanation: "Музика is feminine (-а), so it changes to музику."
+      options:
+        - text: "музику"
+          correct: true
+        - text: "музика"
+          correct: false
+        - text: "музики"
+          correct: false
+        - text: "музиці"
+          correct: false
+    - question: "Я бачу ____________ (window)."
+      explanation: "Вікно is neuter, so it does not change."
+      options:
+        - text: "вікно"
+          correct: true
+        - text: "вікна"
+          correct: false
+        - text: "вікну"
+          correct: false
+        - text: "вікні"
+          correct: false
+
+- type: fill-in
+  title: "Заповніть пропуски"
+  instruction: "Type the correct Accusative form of the word in brackets."
+  items:
+    - sentence: "Я читаю (книга) ____________."
+      answer: "книгу"
+      options: ["книгу", "книга", "книги", "книзі"]
+      explanation: "Книга -> Книгу (Feminine)"
+    - sentence: "Я п'ю (кава) ____________."
+      answer: "каву"
+      options: ["каву", "кава", "кави", "каві"]
+      explanation: "Кава -> Каву (Feminine)"
+    - sentence: "Я бачу (вікно) ____________."
+      answer: "вікно"
+      options: ["вікно", "вікна", "вікну", "вікні"]
+      explanation: "Вікно -> Вікно (Neuter - No change)"
+    - sentence: "Я маю (план) ____________."
+      answer: "план"
+      options: ["план", "плана", "плану", "плани"]
+      explanation: "План -> План (Masculine - No change)"
+    - sentence: "Я хочу (піца) ____________."
+      answer: "піцу"
+      options: ["піцу", "піца", "піци", "піці"]
+      explanation: "Піца -> Піцу (Feminine)"
+    - sentence: "Я купую (машина) ____________."
+      answer: "машину"
+      options: ["машину", "машина", "машини", "машині"]
+      explanation: "Машина -> Машину (Feminine)"
+    - sentence: "Я чую (звук) ____________."
+      answer: "звук"
+      options: ["звук", "звука", "звуку", "звуки"]
+      explanation: "Звук -> Звук (Masculine - No change)"
+    - sentence: "Я беру (ручка) ____________."
+      answer: "ручку"
+      options: ["ручку", "ручка", "ручки", "ручці"]
+      explanation: "Ручка -> Ручку (Feminine)"
+
+- type: fill-in
+  title: "Список покупок"
+  instruction: "Complete the shopping list sentences with the correct word form."
+  items:
+    - sentence: "Я купую (цибуля) ____________."
+      answer: "цибулю"
+      options: ["цибулю", "цибуля", "цибулі", "цибулею"]
+      explanation: "Цибуля -> Цибулю (Feminine)"
+    - sentence: "Я купую (хліб) ____________."
+      answer: "хліб"
+      options: ["хліб", "хліба", "хлібу", "хліби"]
+      explanation: "Хліб -> Хліб (Masculine)"
+    - sentence: "Я купую (морква) ____________."
+      answer: "моркву"
+      options: ["моркву", "морква", "моркви", "моркві"]
+      explanation: "Морква -> Моркву (Feminine)"
+    - sentence: "Я купую (масло) ____________."
+      answer: "масло"
+      options: ["масло", "масла", "маслу", "маслі"]
+      explanation: "Масло -> Масло (Neuter)"
+    - sentence: "Я купую (гречка) ____________."
+      answer: "гречку"
+      options: ["гречку", "гречка", "гречки", "гречці"]
+      explanation: "Гречка -> Гречку (Feminine)"
+    - sentence: "Я купую (шоколадка) ____________."
+      answer: "шоколадку"
+      options: ["шоколадку", "шоколадка", "шоколадки", "шоколадці"]
+      explanation: "Шоколадка -> Шоколадку (Feminine)"
+    - sentence: "Я купую (сир) ____________."
+      answer: "сир"
+      options: ["сир", "сира", "сиру", "сири"]
+      explanation: "Сир -> Сир (Masculine)"
+    - sentence: "Я купую (ковбаса) ____________."
+      answer: "ковбасу"
+      options: ["ковбасу", "ковбаса", "ковбаси", "ковбасі"]
+      explanation: "Ковбаса -> Ковбасу (Feminine)"
+
+- type: unjumble
+  title: "Складіть речення"
+  instruction: "Put the words in the correct order to form a sentence."
+  items:
+    - words: ["Я", "бачу", "стіл"]
+      answer: "Я бачу стіл"
+    - words: ["Я", "читаю", "книгу"]
+      answer: "Я читаю книгу"
+    - words: ["Я", "чую", "музику"]
+      answer: "Я чую музику"
+    - words: ["Я", "маю", "ідею"]
+      answer: "Я маю ідею"
+    - words: ["Ми", "бачимо", "парк"]
+      answer: "Ми бачимо парк"
+    - words: ["Ти", "хочеш", "каву"]
+      answer: "Ти хочеш каву"
+
+- type: unjumble
+  title: "У магазині"
+  instruction: "Arrange the words to describe shopping and wants."
+  items:
+    - words: ["Я", "купую", "гречку"]
+      answer: "Я купую гречку"
+    - words: ["Я", "хочу", "піцу"]
+      answer: "Я хочу піцу"
+    - words: ["Ми", "беремо", "таксі"]
+      answer: "Ми беремо таксі"
+    - words: ["Ти", "маєш", "квиток"]
+      answer: "Ти маєш квиток"
+    - words: ["Я", "беру", "паспорт"]
+      answer: "Я беру паспорт"
+    - words: ["Я", "бачу", "знижку"]
+      answer: "Я бачу знижку"
+
+- type: match-up
+  title: "Дія і предмет"
+  instruction: "Match the verb with a logical object in the Accusative case."
+  pairs:
+    - left: "читати"
+      right: "книгу"
+    - left: "пити"
+      right: "воду"
+    - left: "їсти"
+      right: "піцу"
+    - left: "слухати"
+      right: "музику"
+    - left: "мати"
+      right: "час"
+    - left: "купувати"
+      right: "продукти"
+    - left: "бачити"
+      right: "помилку"
+    - left: "брати"
+      right: "участь"
+
+- type: quiz
+  title: "Знайдіть помилку"
+  instruction: "Choose the correct sentence. Pay attention to the endings!"
+  items:
+    - question: "Which sentence is correct? (I see a lamp)"
+      explanation: "Лампа is feminine, so it must be 'лампу' in Accusative."
+      options:
+        - text: "Я бачу лампу"
+          correct: true
+        - text: "Я бачу лампа"
+          correct: false
+        - text: "Я бачу лампи"
+          correct: false
+        - text: "Я бачу лампі"
+          correct: false
+    - question: "Which sentence is correct? (I want water)"
+      explanation: "Вода is feminine, so it must be 'воду' in Accusative."
+      options:
+        - text: "Я хочу воду"
+          correct: true
+        - text: "Я хочу вода"
+          correct: false
+        - text: "Я хочу води"
+          correct: false
+        - text: "Я хочу вод"
+          correct: false
+    - question: "Which sentence is correct? (I take a bag)"
+      explanation: "Сумка is feminine, so it must be 'сумку'."
+      options:
+        - text: "Я беру сумку"
+          correct: true
+        - text: "Я беру сумка"
+          correct: false
+        - text: "Я беру сумки"
+          correct: false
+        - text: "Я беру сумкою"
+          correct: false
+    - question: "Which sentence is correct? (I see a table)"
+      explanation: "Стіл is masculine inanimate, so it does not change."
+      options:
+        - text: "Я бачу стіл"
+          correct: true
+        - text: "Я бачу стола"
+          correct: false
+        - text: "Я бачу столу"
+          correct: false
+        - text: "Я бачу столи"
+          correct: false
+    - question: "Which sentence is correct? (I buy bread)"
+      explanation: "Хліб is masculine inanimate, so it does not change."
+      options:
+        - text: "Я купую хліб"
+          correct: true
+        - text: "Я купую хліба"
+          correct: false
+        - text: "Я купую хлібу"
+          correct: false
+        - text: "Я купую хліби"
+          correct: false
+    - question: "Which sentence is correct? (I have a ticket)"
+      explanation: "Квиток is masculine inanimate, so it does not change."
+      options:
+        - text: "Я маю квиток"
+          correct: true
+        - text: "Я маю квитка"
+          correct: false
+        - text: "Я маю квитку"
+          correct: false
+        - text: "Я маю квитки"
+          correct: false
+
+- type: fill-in
+  title: "Перевірка: Змінювати чи ні?"
+  instruction: "Fill in the correct form. Be careful: not all words change!"
+  items:
+    - sentence: "Я бачу (автобус) ____________."
+      answer: "автобус"
+      options: ["автобус", "автобуса", "автобусу", "автобуси"]
+      explanation: "Автобус -> Автобус (Masculine)"
+    - sentence: "Я бачу (машина) ____________."
+      answer: "машину"
+      options: ["машину", "машина", "машини", "машині"]
+      explanation: "Машина -> Машину (Feminine)"
+    - sentence: "Я бачу (метро) ____________."
+      answer: "метро"
+      options: ["метро", "метра", "метру", "метри"]
+      explanation: "Метро -> Метро (Neuter/Indeclinable)"
+    - sentence: "Я бачу (вулиця) ____________."
+      answer: "вулицю"
+      options: ["вулицю", "вулиця", "вулиці", "вулицею"]
+      explanation: "Вулиця -> Вулицю (Feminine)"
+    - sentence: "Я бачу (місто) ____________."
+      answer: "місто"
+      options: ["місто", "міста", "місту", "містом"]
+      explanation: "Місто -> Місто (Neuter)"
+    - sentence: "Я бачу (будинок) ____________."
+      answer: "будинок"
+      options: ["будинок", "будинка", "будинку", "будинки"]
+      explanation: "Будинок -> Будинок (Masculine)"
+    - sentence: "Я бачу (квартира) ____________."
+      answer: "квартиру"
+      options: ["квартиру", "квартира", "квартири", "квартирі"]
+      explanation: "Квартира -> Квартиру (Feminine)"
+    - sentence: "Я бачу (парк) ____________."
+      answer: "парк"
+      options: ["парк", "парка", "парку", "парки"]
+      explanation: "Парк -> Парк (Masculine)"

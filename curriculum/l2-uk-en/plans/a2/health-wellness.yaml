@@ -8,16 +8,16 @@ subtitle: Wellness, Traditional Medicine & Healthy Lifestyle
 content_outline:
 - section: Introduction / Вступ
   points:
-  - 'From illness to wellness — transition from a2-34 (body/symptoms) to broader
-    health concepts; cultural hook: «Здоров''я — найбільше багатство»'
-  - 'Ukrainian wellness culture — holistic approach: physical, mental, spiritual
-    health as interconnected; contrast with Western "gym culture"'
+  - 'From illness to wellness — transition from a2-34 (body/symptoms) to broader health
+    concepts; cultural hook: «Здоров''я — найбільше багатство»'
+  - 'Ukrainian wellness culture — holistic approach: physical, mental, spiritual health
+    as interconnected; contrast with Western "gym culture"'
 - section: Здоровий спосіб життя
   points:
   - 'Daily wellness vocabulary — правильне харчування, фізичні вправи, здоровий сон;
     collocations: вести здоровий спосіб життя, дотримуватися режиму'
-  - 'Mental health basics — стрес, відпочинок, настрій; cultural note: growing
-    awareness of mental health in Ukraine, especially post-2022'
+  - 'Mental health basics — стрес, відпочинок, настрій; cultural note: growing awareness
+    of mental health in Ukraine, especially post-2022'
   - 'Fitness and exercise — зарядка, пробіжка, йога; cultural hook: outdoor fitness
     equipment in Ukrainian parks (вуличні тренажери)'
 - section: Народна медицина
@@ -26,25 +26,24 @@ content_outline:
     липа (linden); cultural hook: every Ukrainian grandmother''s pharmacy'
   - 'Traditional practices — гірчичники (mustard plasters), банки (cupping), мед з
     молоком; learner error: these are actual current practices, not just folklore'
-  - 'Баня/сауна culture — cultural hook: steam baths as wellness tradition;
-    collocations: паритися в бані, березовий віник'
+  - 'Баня/сауна culture — cultural hook: steam baths as wellness tradition; collocations:
+    паритися в бані, березовий віник'
 - section: Система охорони здоров''я
   points:
-  - 'Healthcare system overview — поліклініка vs лікарня; cultural hook: medical
-    reform and декларація з сімейним лікарем'
-  - 'Types of medical facilities — аптека, стоматологія, приватна клініка;
-    collocations: цілодобова аптека, чергова аптека'
-  - 'Health insurance and costs — медичне страхування, безкоштовна медицина;
-    cultural note: evolution of Ukrainian healthcare from Soviet free model'
+  - 'Healthcare system overview — поліклініка vs лікарня; cultural hook: medical reform
+    and декларація з сімейним лікарем'
+  - 'Types of medical facilities — аптека, стоматологія, приватна клініка; collocations:
+    цілодобова аптека, чергова аптека'
+  - 'Health insurance and costs — медичне страхування, безкоштовна медицина; cultural
+    note: evolution of Ukrainian healthcare from Soviet free model'
 - section: Practice / Практика
   points:
-  - 'Wellness advice dialogues — giving health tips using треба/варто + infinitive'
-  - 'Comparing wellness practices — traditional vs modern approaches'
+  - Wellness advice dialogues — giving health tips using треба/варто + infinitive
+  - Comparing wellness practices — traditional vs modern approaches
 - section: Dialogues / Діалоги
   points:
-  - 'At the wellness center — discussion about healthy lifestyle choices'
-  - 'Grandma''s remedies vs modern medicine — generational dialogue about health
-    practices'
+  - At the wellness center — discussion about healthy lifestyle choices
+  - Grandma's remedies vs modern medicine — generational dialogue about health practices
 focus: vocabulary
 pedagogy: PPP
 objectives:
@@ -71,19 +70,19 @@ persona:
 vocabulary_hints:
   required:
   - 'здоров''я (health) — collocations: міцне здоров''я, піклуватися про здоров''я'
-  - 'здоровий (healthy) — здоровий спосіб життя, здорове харчування'
-  - 'ліки (medicine) — пити ліки, ліки від грипу, народні ліки'
-  - 'малина (raspberry) — чай з малиною (universal cold remedy)'
-  - 'аптека (pharmacy) — цілодобова аптека, чергова аптека'
-  - 'харчування (nutrition) — правильне харчування, здорове харчування'
-  - 'відпочинок (rest/relaxation) — активний відпочинок, повноцінний відпочинок'
+  - здоровий (healthy) — здоровий спосіб життя, здорове харчування
+  - ліки (medicine) — пити ліки, ліки від грипу, народні ліки
+  - малина (raspberry) — чай з малиною (universal cold remedy)
+  - аптека (pharmacy) — цілодобова аптека, чергова аптека
+  - харчування (nutrition) — правильне харчування, здорове харчування
+  - відпочинок (rest/relaxation) — активний відпочинок, повноцінний відпочинок
   recommended:
-  - 'калина (viburnum) — traditional remedy, cultural symbol'
-  - 'гірчичники (mustard plasters) — traditional remedy still in use'
-  - 'зарядка (morning exercises) — робити зарядку'
-  - 'стрес (stress) — знімати стрес, боротися зі стресом'
-  - 'страхування (insurance) — медичне страхування'
-  - 'поліклініка (outpatient clinic) — районна поліклініка'
+  - калина (viburnum) — traditional remedy, cultural symbol
+  - гірчичники (mustard plasters) — traditional remedy still in use
+  - зарядка (morning exercises) — робити зарядку
+  - стрес (stress) — знімати стрес, боротися зі стресом
+  - страхування (insurance) — медичне страхування
+  - поліклініка (outpatient clinic) — районна поліклініка
 activity_hints:
 - type: match-up
   focus: Wellness vocabulary
@@ -97,3 +96,4 @@ activity_hints:
 - type: fill-in
   focus: Healthcare system navigation
   items: 10
+word_target: 3000

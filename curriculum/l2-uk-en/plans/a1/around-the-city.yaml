@@ -90,3 +90,4 @@ phase: A1.2 [Navigation]
 persona:
   voice: Patient Supportive Tutor
   role: Taxi Driver
+word_target: 2000

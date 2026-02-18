@@ -1,0 +1,37 @@
+content_outline:
+  - section: "Вступ: Вказуємо на світ"
+    words: 250
+    points:
+      - "Introduce the concept of demonstratives: the difference between 'touching' (near) and 'pointing' (far)"
+      - "Visual scaffolding: use clear icons or descriptions of finger positions to establish distance"
+      - "Quick recall of Module 03 genders (Masculine/Feminine/Neuter) as the foundation for this lesson"
+      - "Set the scene: We are exploring a room and naming what we see"
+  - section: "Теорія: Вказівні займенники (Цей і Той)"
+    words: 600
+    points:
+      - "Near demonstratives table: цей (m), ця (f), це (n), ці (pl) with phonetic anchors"
+      - "Far demonstratives table: той (m), та (f), те (n), ті (pl) — highlight the 'T' sound for distance (That/Those)"
+      - "CRITICAL DISTINCTION (Research): 'Це' (This is...) vs 'Цей/Ця/Це' (This specific object)"
+      - "Common Error Alert: Avoid saying 'Цей книга' (gender mismatch) or 'Це стіл великий' (syntax error)"
+      - "Examples of agreement: Цей стіл (m), Ця лампа (f), Те вікно (n)"
+  - section: "Практика: Побут і речі"
+    words: 500
+    points:
+      - "Introduce core vocabulary: furniture (диван, шафа, ліжко) and small objects (телефон, книга)"
+      - "Drill: Matching objects to their gender and correct demonstrative (e.g., Шафа -> Вона -> Ця)"
+      - "Cultural Hook (Research): 'В гостях добре, а вдома краще' — context of 'dim' (home) vs 'house'"
+      - "Mini-dialogues: 'Що це?' (Identification) -> 'Це стіл.' -> 'Цей стіл новий.' (Specification)"
+  - section: "Культурний контекст: Український дім"
+    words: 350
+    points:
+      - "Space concepts: Traditional 'Хата' vs Modern 'Квартира' — distinct words, shared feeling of home"
+      - "The 'Pokuttia' (Red Corner): The traditional spiritual center of a room (icons, rushnyky) vs modern focal points (TV)"
+      - "Grammatical Gender vs Reality: Why is a phone masculine and a lamp feminine? (It's just grammar, not biology)"
+      - "Vocabulary nuance: 'Двері' (door) is always plural in Ukrainian (like 'scissors' in English)"
+  - section: "Використання: Описуємо кімнату"
+    words: 300
+    points:
+      - "Scenario: Giving a tour of your room (virtual or real)"
+      - "Production task: Point to 3 things near you and 3 things far away using correct gender forms"
+      - "Synthesize: Combine 'This is' (Identification) with 'This object is...' (Description)"
+      - "Final confidence check: Can you differentiate 'Цей' from 'Той'?"
