@@ -1693,7 +1693,7 @@ def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str |
     return m.group(1).strip() if m else None
 
 
-MAX_6B_ATTEMPTS = 3
+MAX_6B_ATTEMPTS = 5
 
 
 def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
@@ -1779,7 +1779,9 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
                 ctx.paths["md"].write_text(fixed_content, encoding="utf-8")
                 log(f"  Phase 6b: Fixed content written ({len(fixed_content)} chars)")
             else:
-                log(f"  Phase 6b: No delimited content found — Gemini may have written directly")
+                # Gemini may have written directly to the file (allow_write=True)
+                current_size = ctx.paths["md"].stat().st_size if ctx.paths["md"].exists() else 0
+                log(f"  Phase 6b: No delimited content — checking if Gemini wrote directly ({current_size} bytes on disk)")
 
         # Run IPA lint as safety net
         run_script([str(SCRIPTS_DIR / "lint_ipa.py"), str(ctx.paths["md"]), "--fix"], capture=True)
