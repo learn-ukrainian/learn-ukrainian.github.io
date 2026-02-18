@@ -741,16 +741,35 @@ def _run_parallel_4ab(ctx: ModuleContext) -> bool:
         log("  Phase 4a+4b: SKIP (both already complete)")
         return True
 
-    # Adoption check: if both files exist AND are valid, skip generation
+    # Adoption check: if both files exist AND are valid AND vocab meets target, skip generation
     act_path = ctx.paths["activities"]
     voc_path = ctx.paths["vocabulary"]
     if act_path.exists() and voc_path.exists():
         act_valid = _validate_activities_yaml(act_path)
         if act_valid:
-            log("  Phase 4a+4b: ADOPT — existing activities/vocab found and valid")
-            mark_phase_locked(ctx, "3a", "complete", note="adopted-existing")
-            mark_phase_locked(ctx, "3b", "complete", note="adopted-existing")
-            return True
+            # #586: count vocab items — don't adopt if below target
+            vocab_count = 0
+            try:
+                import yaml as _yaml
+                vd = _yaml.safe_load(voc_path.read_text(encoding="utf-8")) or {}
+                if isinstance(vd, list):
+                    vocab_count = len(vd)
+                elif isinstance(vd, dict):
+                    for v in vd.values():
+                        if isinstance(v, list):
+                            vocab_count = len(v)
+                            break
+            except Exception:
+                vocab_count = 0
+            vocab_target = int(ctx.activity_config.get("VOCAB_COUNT_TARGET", "0"))
+            if vocab_target > 0 and vocab_count < vocab_target:
+                log(f"  Phase 4a+4b: Existing vocab too small ({vocab_count}/{vocab_target}) — regenerating")
+                voc_path.unlink(missing_ok=True)
+            else:
+                log("  Phase 4a+4b: ADOPT — existing activities/vocab found and valid")
+                mark_phase_locked(ctx, "3a", "complete", note="adopted-existing")
+                mark_phase_locked(ctx, "3b", "complete", note="adopted-existing")
+                return True
         else:
             log("  Phase 4a+4b: Existing activities invalid — deleting and regenerating")
             act_path.unlink(missing_ok=True)
