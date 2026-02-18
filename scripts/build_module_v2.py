@@ -1361,7 +1361,8 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
         # Phase 8: MDX — always runs last so it reflects any Phase 9 fixes.
         # Reset state so it regenerates even when resuming a previously-complete build.
         log(f"\n  Phase 8: {PHASE_LABELS['8']} (post-review)")
-        ctx.state.pop("8", None)
+        ctx.state.get("phases", {}).pop("8", None)
+        v1.save_state(ctx)
         if not phase_8_mdx(ctx):
             log("\n  WARNING: MDX generation failed after Phase 9")
 
