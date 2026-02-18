@@ -1,5 +1,15 @@
 # Final Review: Claude QA Gate for Otaman-Built Modules
 
+```yaml
+---
+name: final-review
+description: Adversarial QA gate — Claude reviews Gemini-built modules for final approval
+version: '1.0'
+category: quality
+model: claude-opus-4-6
+---
+```
+
 > **Claude is the adversarial reviewer. Trust nothing. Verify everything.**
 > The Otaman claims it passed. The audit report on disk is stale. Phase 6b claims fixes were applied. Prove it.
 
@@ -48,7 +58,26 @@ ORCH_DIR="curriculum/l2-uk-en/${TRACK}/orchestration/${SLUG}"
 scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 ```
 
-Read the output. If it fails, note the failures — they become your fix list.
+**STOP IMMEDIATELY if the audit shows:**
+- ❌ Structure gate failure (missing `## Activities` header or activities sidecar)
+- ❌ Activity count below minimum
+
+This means the module **has not completed the Hetman phase** (activity enrichment). It is not ready for final review. Output:
+
+```
+INCOMPLETE — Module {slug} has not completed the Hetman phase.
+Missing: {what is missing}
+Action: Dispatch /hetman {track} {num} and retry after Hetman completes.
+```
+
+Then stop. Do not read content. Do not attempt fixes.
+
+**STOP IMMEDIATELY if the audit shows:**
+- ⚠️ `UNVERIFIED_CITATIONS` warning in the Review Validation section
+
+This means the existing review file contains fabricated citations. The reviewer quoted from memory, not from the actual content. **Delete the review file and write a replacement yourself** by reading the entire content + activities before writing any review. See Step 6 for the procedure.
+
+For all other failures: note the failures — they become your fix list.
 
 ### 3. Read the plan (source of truth)
 
@@ -96,9 +125,24 @@ Read `curriculum/l2-uk-en/{track}/activities/{slug}.yaml` in full.
 - No vocabulary outside the plan's `vocabulary_hints`
 - No grammar beyond the module's level
 
-### 6. Verify Phase 6b fixes
+### 6. Verify Phase 6b fixes / Replace fabricated review
 
 Read the Green Team review: `curriculum/l2-uk-en/{track}/review/{slug}-review.md`
+
+**If the audit flagged UNVERIFIED_CITATIONS on this review:**
+
+The review is fabricated — do not read it for issue verification. Replace it:
+1. Read `curriculum/l2-uk-en/{track}/{slug}.md` in full (every line)
+2. Read `curriculum/l2-uk-en/{track}/activities/{slug}.yaml` in full
+3. For every Ukrainian sentence you intend to cite in your review, **grep it first**:
+   ```bash
+   grep -c "first 6 words of the sentence" curriculum/l2-uk-en/{track}/{slug}.md
+   ```
+   If grep returns 0, do not cite that sentence. Find one that actually exists.
+4. Write a new review file that replaces the old one
+5. Your review automatically satisfies Step 6 (no prior fix plan to verify)
+
+**If the review is NOT flagged:**
 
 For EACH issue listed in the review:
 - **grep the content/activities to verify it was actually fixed**

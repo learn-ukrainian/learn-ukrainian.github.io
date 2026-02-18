@@ -436,6 +436,7 @@ class ModuleContext:
     dry_run: bool = False
     force_phase: str | None = None
     rebuild: bool = False
+    claude_review: bool = False  # Use Claude API for Phase 6 instead of Gemini
 
 
 def _state_file(ctx: ModuleContext) -> Path:
@@ -1937,6 +1938,401 @@ def _is_rubber_stamp(review_text: str) -> bool:
             return True
 
     return False
+
+
+def dispatch_claude_review(ctx: ModuleContext) -> tuple[bool, str]:
+    """Dispatch Phase 6 review to Claude API instead of Gemini.
+
+    Reads all module files inline and calls the Claude API with the adversarial
+    review prompt. Returns (success, review_text).
+    """
+    try:
+        import anthropic  # type: ignore[import]
+    except ImportError:
+        log("  Phase 6 (Claude): anthropic package not installed — pip install anthropic")
+        return False, ""
+
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        log("  Phase 6 (Claude): ANTHROPIC_API_KEY not set")
+        return False, ""
+
+    # Load all relevant files
+    def _read(path: Path) -> str:
+        if path and path.exists():
+            return path.read_text(encoding="utf-8")
+        return "(file not found)"
+
+    content_text = _read(ctx.paths.get("md", Path(".")))
+    activities_text = _read(ctx.paths.get("activities", Path(".")))
+    vocab_text = _read(ctx.paths.get("vocab", Path(".")))
+    plan_path = PROJECT_ROOT / f"curriculum/l2-uk-en/plans/{ctx.track}/{ctx.slug}.yaml"
+    plan_text = _read(plan_path)
+    meta_text = _read(ctx.paths.get("meta", Path(".")))
+
+    # Run audit to get fresh metrics
+    _, audit_output = run_verify(ctx.paths["md"], content_only=False)
+
+    # Build the review prompt
+    system_prompt = (
+        "You are an adversarial Senior Editor reviewing Ukrainian language curriculum. "
+        "You have NO prior relationship with this content — you are seeing it for the first time. "
+        "Your ONLY task: produce a rigorous, evidence-based quality review. "
+        "Trust nothing. Verify everything. Find real problems. "
+        "Do not rubber-stamp. A review where every dimension scores 9+/10 with no real issues is a failure."
+    )
+
+    user_prompt = f"""# Phase 6: Adversarial Review
+
+## Files to Review
+
+### Content ({ctx.slug}.md)
+```markdown
+{content_text}
+```
+
+### Activities ({ctx.slug}.yaml)
+```yaml
+{activities_text}
+```
+
+### Vocabulary
+```yaml
+{vocab_text}
+```
+
+### Plan (source of truth)
+```yaml
+{plan_text}
+```
+
+### Meta (build config)
+```yaml
+{meta_text}
+```
+
+### Fresh Audit Output
+```
+{audit_output}
+```
+
+## Your Task
+
+Perform a deep adversarial review of this Ukrainian language curriculum module.
+
+### What to check:
+
+**Ukrainian Language Quality:**
+- Grammar correctness (cases, verb forms, gender agreement)
+- Natural Ukrainian (not calqued from English, no Russianisms)
+- IPA transcription accuracy (stress placement, correct segments)
+- Vocabulary appropriate for the level ({ctx.track})
+
+**Pedagogical Quality:**
+- Clear learning progression (no forward references to future modules)
+- Activities semantically correct (not just structurally valid YAML)
+- Word order activities don't teach false rules
+- Examples use only vocabulary already taught
+
+**LLM Artifacts:**
+- Purple prose / grandiose openers
+- False percentages or invented statistics
+- Folk etymology presented as fact
+- "It's not just X, it's Y" overuse
+
+**Plan Compliance:**
+- All content_outline sections present
+- All required vocabulary used in prose
+- Learning objectives map to self-check questions
+
+### Output Format
+
+Produce a review in this EXACT format:
+
+```markdown
+# Рецензія: {ctx.topic_title}
+
+**Рівень:** {ctx.track.upper()} | **Модуль:** #{ctx.module_num}
+**Загальна оцінка:** X.X/10
+**Статус:** APPROVE / NEEDS_WORK / REJECT
+**Дата рецензії:** {__import__('datetime').date.today()}
+**Рецензент:** Claude (adversarial cross-review)
+
+---
+
+## Issues Found
+
+[List each real issue with: file, location, quoted text, what's wrong, fix]
+
+---
+
+## Verdict
+
+[APPROVE / NEEDS_WORK: describe fixes / REJECT: describe why]
+```
+
+Be specific. Quote actual text. If you find no issues, that means you didn't look hard enough.
+"""
+
+    log("  Phase 6 (Claude): Calling Claude API for adversarial review...")
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model="claude-opus-4-6",
+            max_tokens=4096,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        review_text = response.content[0].text.strip()
+        log(f"  Phase 6 (Claude): Review complete ({len(review_text)} chars)")
+        return True, review_text
+    except Exception as e:
+        log(f"  Phase 6 (Claude): API error — {e}")
+        return False, ""
+
+
+def _apply_file_fixes(fix_response: str, ctx: "ModuleContext") -> int:
+    """Parse and apply OLD/NEW file fixes from Claude final review output.
+
+    Expects blocks of the form:
+        ===FIX_START===
+        FILE: curriculum/l2-uk-en/{track}/{slug}.md
+        ---OLD---
+        exact old text
+        ---NEW---
+        exact new text
+        ===FIX_END===
+
+    Returns count of fixes applied.
+    """
+    blocks = re.findall(
+        r"===FIX_START===\s*\n(.*?)===FIX_END===",
+        fix_response, re.DOTALL,
+    )
+    applied = 0
+    for block in blocks:
+        # Extract FILE, ---OLD---, ---NEW--- from block
+        file_match = re.search(r"^FILE:\s*(.+)$", block, re.MULTILINE)
+        old_match = re.search(r"---OLD---\s*\n(.*?)---NEW---", block, re.DOTALL)
+        new_match = re.search(r"---NEW---\s*\n(.*?)$", block, re.DOTALL)
+
+        if not (file_match and old_match and new_match):
+            log(f"    FIX: skipping malformed block")
+            continue
+
+        rel_path = file_match.group(1).strip()
+        # Resolve relative to project root or as absolute
+        target = PROJECT_ROOT / rel_path
+        if not target.exists():
+            log(f"    FIX: file not found: {rel_path}")
+            continue
+
+        old_text = old_match.group(1).rstrip("\n")
+        new_text = new_match.group(1).rstrip("\n")
+
+        content = target.read_text(encoding="utf-8")
+        if old_text not in content:
+            log(f"    FIX: old text not found in {target.name} — skipping")
+            continue
+
+        content = content.replace(old_text, new_text, 1)
+        target.write_text(content, encoding="utf-8")
+        log(f"    FIX applied: {target.name}")
+        applied += 1
+
+    return applied
+
+
+def dispatch_claude_final_review(ctx: "ModuleContext") -> tuple[bool, str, str]:
+    """Phase 9: Full final QA gate via Claude API.
+
+    Reads all module files inline, runs a fresh audit, calls claude-opus-4-6
+    for deep semantic review, applies structured file fixes, and returns a verdict.
+
+    Returns (success, verdict, report_text).
+    verdict: "APPROVE" | "NEEDS_WORK" | "REJECT"
+    """
+    try:
+        import anthropic  # type: ignore[import]
+    except ImportError:
+        log("  Phase 9 (Claude): anthropic package not installed — pip install anthropic")
+        return False, "", ""
+
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        log("  Phase 9 (Claude): ANTHROPIC_API_KEY not set")
+        return False, "", ""
+
+    def _read(path: Path | None) -> str:
+        if path and path.exists():
+            return path.read_text(encoding="utf-8")
+        return "(file not found)"
+
+    content_text   = _read(ctx.paths.get("md"))
+    activities_text = _read(ctx.paths.get("activities"))
+    vocab_text     = _read(ctx.paths.get("vocab"))
+    plan_path = PROJECT_ROOT / f"curriculum/l2-uk-en/plans/{ctx.track}/{ctx.slug}.yaml"
+    plan_text      = _read(plan_path)
+    meta_text      = _read(ctx.paths.get("meta"))
+    review_text    = _read(ctx.paths.get("review"))
+
+    # Fresh audit — mandatory
+    _, audit_output = run_verify(ctx.paths["md"], content_only=False)
+
+    # Relative paths for the fix format
+    content_rel   = f"curriculum/l2-uk-en/{ctx.track}/{ctx.slug}.md"
+    activities_rel = f"curriculum/l2-uk-en/{ctx.track}/activities/{ctx.slug}.yaml"
+    vocab_rel     = f"curriculum/l2-uk-en/{ctx.track}/vocabulary/{ctx.slug}.yaml"
+
+    system_prompt = (
+        "You are the final adversarial QA gate for Ukrainian language curriculum modules. "
+        "A Gemini pipeline built this module. Your job is to catch semantic errors, "
+        "pedagogical traps, and LLM artifacts that automated audits cannot detect. "
+        "Trust nothing — verify everything by reading the actual file contents. "
+        "Apply fixes directly using the structured format. Be the adversary."
+    )
+
+    user_prompt = f"""# Phase 9: Final QA Review — {ctx.slug}
+
+**Track:** {ctx.track} | **Module:** #{ctx.module_num}
+
+---
+
+## Files
+
+### Content ({content_rel})
+```markdown
+{content_text}
+```
+
+### Activities ({activities_rel})
+```yaml
+{activities_text}
+```
+
+### Vocabulary ({vocab_rel})
+```yaml
+{vocab_text}
+```
+
+### Plan (source of truth)
+```yaml
+{plan_text}
+```
+
+### Meta
+```yaml
+{meta_text}
+```
+
+### Existing Review (Green Team)
+```markdown
+{review_text}
+```
+
+### Fresh Audit Output
+```
+{audit_output}
+```
+
+---
+
+## Your Task
+
+Perform a deep adversarial review. Check ALL of the following:
+
+**Ukrainian Language Quality:**
+- IPA accuracy (ʋ not w for В; t͡s not ts for Ц; t͡ʃ not tʃ for Ч; tie bars on affricates)
+- No Russianisms (кушати, получати, приймати участь, слідуючий)
+- No Russian characters (ы, э, ё, ъ)
+- Gender agreement, case agreement, verb aspect correct
+
+**Pedagogical Correctness:**
+- No vocabulary outside the plan's vocabulary_hints used in activities
+- No grammar forms beyond this module's level (check plan.grammar_focus)
+- No forward references to future modules presented as teachable content
+- Unjumble activities: words array contains all words+punctuation in the answer
+- Fill-in activities: answer produces a grammatical sentence when inserted
+
+**Factual Accuracy:**
+- Dates, names, translations correct
+- Historical/cultural claims accurate and not contested
+
+**LLM Artifacts:**
+- Purple prose, grandiose openers
+- "Це не просто X, а Y" overuse
+- Folk etymology presented as fact
+- False statistics or invented percentages
+
+**Plan Compliance:**
+- All content_outline sections present
+- Required vocabulary used in prose
+- Objectives map to self-check questions
+
+---
+
+## Output Format
+
+First, list every issue you found (be specific — quote the exact text, state the file and line context, explain what's wrong and what the correct version should be).
+
+Then output fixes using EXACTLY this format for each fix (no code fences around the blocks):
+
+===FIX_START===
+FILE: {content_rel}
+---OLD---
+exact text to replace (must exist verbatim in the file)
+---NEW---
+exact replacement text
+===FIX_END===
+
+You may use multiple FIX blocks. The FILE field must be one of:
+- {content_rel}
+- {activities_rel}
+- {vocab_rel}
+
+Finally, output your verdict:
+
+===VERDICT===
+APPROVE
+===END_VERDICT===
+
+Verdict guide:
+- APPROVE: audit passes, no remaining issues after fixes
+- NEEDS_WORK: fixed what you could, minor issues remain (still pass audit)
+- REJECT: content is thin (<70% word target), unfixable Russianisms, broken activities, or factual errors in core claims
+
+Do not rubber-stamp. A verdict of APPROVE on a module with real unfixed issues is a failure.
+"""
+
+    log("  Phase 9 (Claude): Calling Claude Opus for final QA review...")
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model="claude-opus-4-6",
+            max_tokens=8096,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        report = response.content[0].text.strip()
+        log(f"  Phase 9 (Claude): Review complete ({len(report)} chars)")
+    except Exception as e:
+        log(f"  Phase 9 (Claude): API error — {e}")
+        return False, "", ""
+
+    # Apply fixes from response
+    fixes_applied = _apply_file_fixes(report, ctx)
+    if fixes_applied:
+        log(f"  Phase 9 (Claude): Applied {fixes_applied} fix(es)")
+
+    # Extract verdict
+    verdict_match = re.search(
+        r"===VERDICT===\s*\n\s*(APPROVE|NEEDS_WORK|REJECT)\s*\n\s*===END_VERDICT===",
+        report,
+    )
+    verdict = verdict_match.group(1) if verdict_match else "NEEDS_WORK"
+    log(f"  Phase 9 (Claude): Verdict → {verdict}")
+
+    return True, verdict, report
 
 
 def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str | None:

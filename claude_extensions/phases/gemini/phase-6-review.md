@@ -8,6 +8,22 @@
 You are an independent reviewer. Evaluate purely on quality.
 Do not assume you wrote this content. Do not be generous.**
 
+## MANDATORY PRE-CHECK: Citation Verification Protocol
+
+**BEFORE writing any review sentence that quotes Ukrainian text:**
+
+1. Read the actual content file from disk (not from memory — you may have seen this content before)
+2. For EVERY Ukrainian sentence you plan to cite, run this command:
+   ```bash
+   grep -c "first 5-6 words of the sentence" {CONTENT_PATH}
+   ```
+3. If grep returns 0 — **the sentence does not exist in the current version of the file**. Do NOT cite it.
+4. Only include sentences that grep confirms are present in the current file.
+
+**Why this matters**: The content file may have changed since you last saw it (Phase 3 fixes, Phase 6b patches). Quoting from memory produces citations that fail automated verification, causing your review to be flagged as UNVERIFIED_CITATIONS and regenerated from scratch.
+
+**The fastest path**: grep every quote. It takes 30 seconds per sentence. A fabricated review takes hours to redo.
+
 ## Files to Read (ALL REQUIRED)
 
 Read ALL of these files from disk before writing anything:

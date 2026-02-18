@@ -79,6 +79,13 @@ from .activity_validation import (
     check_morpheme_pedagogy,
     check_english_hints_in_activities,
     check_seminar_reading_pairing,
+    check_select_min_correct,
+    check_quiz_single_correct,
+    check_fill_in_answer_in_options,
+    check_translate_single_correct,
+    check_mark_the_words_answers_in_text,
+    check_unjumble_runon_answer,
+    check_unjumble_out_of_scope_dative,
 )
 from .yaml_schema_validation import (
     check_activity_yaml_schema,
@@ -147,6 +154,13 @@ __all__ = [
     'check_morpheme_pedagogy',
     'check_english_hints_in_activities',
     'check_seminar_reading_pairing',
+    'check_select_min_correct',
+    'check_quiz_single_correct',
+    'check_fill_in_answer_in_options',
+    'check_translate_single_correct',
+    'check_mark_the_words_answers_in_text',
+    'check_unjumble_runon_answer',
+    'check_unjumble_out_of_scope_dative',
     # YAML Schema Validation
     'check_activity_yaml_schema',
     'validate_activity_yaml_file',

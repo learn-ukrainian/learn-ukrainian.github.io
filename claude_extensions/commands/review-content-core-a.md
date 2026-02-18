@@ -6,6 +6,7 @@ name: review-content-core-a
 description: Deep content review adapted for A1/A2/B1.0 mixed-language modules
 version: '1.0'
 category: quality
+model: claude-opus-4-6
 dependencies: audit_module.py
 changelog: v1.0 - Initial Core A review prompt (adapted from review-content-v4)
 ---

@@ -17,6 +17,30 @@
 > - **View status**: `/module-status {level} {num}` or `/level-status {level}`
 > - **Update cache**: `.venv/bin/python scripts/audit_module.py {path}`
 
+> **Cross-session Memory (MCP):**
+> - Memory server: `@modelcontextprotocol/server-memory` — active after Claude Code restart
+> - Storage: `tasks/memory.json` (local knowledge graph)
+> - At session start: query memory + Gemini inbox before starting work
+> - At session end: save progress summary to memory
+> - Tools: `mcp__memory__search_nodes`, `mcp__memory__add_observations`, `mcp__memory__create_entities`
+
+## Intellectual Independence
+
+**The user explicitly wants pushback. Do not rubber-stamp ideas.**
+
+- **Challenge bad ideas directly.** If a proposal seems wrong, say so and explain why — don't silently comply then fix it later.
+- **Think independently.** Consider second-order effects, edge cases, and alternatives before agreeing.
+- **Be brutally honest.** Hedging ("that could work, but...") is fine; false agreement is not.
+- **Disagree on substance, not tone.** Push back when you have a real reason. Don't reflexively second-guess obvious decisions — that's noise. Challenge when it matters.
+- **Propose the better approach.** When you disagree, come with an alternative, not just a veto.
+
+Examples of when to push back:
+- User wants to lower a word target instead of expanding thin content → refuse, explain why it's the wrong fix
+- User suggests manual fix instead of automated check → redirect to the scalable solution
+- User proposes an API design that will be painful to use → say so and suggest a cleaner shape
+
+---
+
 ## Critical Rules
 
 <critical>
@@ -182,6 +206,8 @@ npm run metrics:extract {track}  # Extract raw metrics
 .venv/bin/python scripts/build_module_v2.py {track} {num} --restart-from 6 # Restart from phase (cleans forward, runs pipeline)
 .venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run        # Show plan, no dispatching, no cleanup
 .venv/bin/python scripts/build_module_v2.py {track} {num} --verify         # Just run audit, PASS/FAIL
+.venv/bin/python scripts/build_module_v2.py {track} {num} --final-review   # Phase 9: Claude QA gate after pipeline (semantic review + fixes + APPROVE/REJECT verdict)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --claude-review --final-review  # Phase 6 + Phase 9 both via Claude (fully cross-reviewed)
 
 # Legacy v1 builder (split modes — use v2 instead)
 .venv/bin/python scripts/build_module.py {track} {num}                  # Full pipeline (resume-aware)
@@ -441,19 +467,49 @@ This drops a message in Gemini's inbox. Gemini checks it at session start.
 
 </critical>
 
+### Monitoring API (http://localhost:8765)
+
+FastAPI server — always running. Use `curl` for instant status instead of running scripts.
+
+```bash
+# What's actively building right now (updated live)
+curl -s http://localhost:8765/api/batch/active
+
+# Full pass/fail status across all tracks
+curl -s http://localhost:8765/api/blue/live-status
+
+# Inspect a specific module (build state, word count, plan)
+curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}
+
+# Orchestration history for a module (phase-by-phase)
+curl -s http://localhost:8765/api/gold/orchestration/{track}/{slug}
+```
+
+Use the API **before** running `audit_module.sh` — it's instant and shows whether a build is still in progress.
+
 ### Session Start Checklist
 
 > **AT SESSION START:**
-> 1. Check inbox for notifications from Gemini:
+> 1. **Load memory** — query what was in progress last session:
+>    ```python
+>    mcp__memory__search_nodes(query="in progress current session")
+>    mcp__memory__search_nodes(query="next session todo")
+>    ```
+> 2. Check inbox for notifications from Gemini:
 >    ```python
 >    mcp__message-broker__check_inbox(for_llm="claude")
 >    ```
-> 2. If unread messages, read them:
->    ```python
->    mcp__message-broker__receive_messages(for_llm="claude")
->    ```
-> 3. For each notification, read the referenced GitHub issue/comment
-> 4. Respond ON GITHUB, then notify Gemini if needed via `ask-gemini`
+> 3. If unread messages, read them and respond on GitHub
+> 4. Begin work based on memory + inbox context
+
+> **AT SESSION END** (or when switching context):
+> Update memory with what was done and what's next:
+> ```python
+> mcp__memory__add_observations(observations=[{
+>     "entityName": "current-session",
+>     "contents": ["Did: X. In progress: Y. Next session: Z."]
+> }])
+> ```
 
 ### Cross-Review Protocol
 

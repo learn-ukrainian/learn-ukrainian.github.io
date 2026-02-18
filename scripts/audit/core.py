@@ -71,6 +71,13 @@ from .checks.activity_validation import (
     check_unjumble_empty_jumbled,
     check_mdx_unjumble_rendering,
     check_seminar_reading_pairing,
+    check_select_min_correct,
+    check_quiz_single_correct,
+    check_fill_in_answer_in_options,
+    check_translate_single_correct,
+    check_mark_the_words_answers_in_text,
+    check_unjumble_runon_answer,
+    check_unjumble_out_of_scope_dative,
 )
 from .checks.external_resource_validation import (
     check_external_resources,
@@ -1278,6 +1285,28 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
             if critical_pairing:
                 has_critical_failure = True
 
+    # Check structural correctness of activity answers (Issue #xxx)
+    # These catch bugs the YAML schema cannot: min_correct mismatches, answer-not-in-options, etc.
+    answer_correctness_violations = []
+    if yaml_activities:
+        answer_correctness_violations.extend(check_select_min_correct(yaml_activities))
+        answer_correctness_violations.extend(check_quiz_single_correct(yaml_activities))
+        answer_correctness_violations.extend(check_fill_in_answer_in_options(yaml_activities))
+        answer_correctness_violations.extend(check_translate_single_correct(yaml_activities))
+        answer_correctness_violations.extend(check_mark_the_words_answers_in_text(yaml_activities))
+        answer_correctness_violations.extend(check_unjumble_runon_answer(yaml_activities))
+        answer_correctness_violations.extend(check_unjumble_out_of_scope_dative(yaml_activities))
+        if answer_correctness_violations:
+            print(f"  🔴 Activity answer correctness issues: {len(answer_correctness_violations)}")
+            for v in answer_correctness_violations:
+                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+                print(f"     {severity} [{v['type']}] {v.get('activity', 'Unknown')}")
+                print(f"        Issue: {v['message']}")
+                print(f"        Fix: {v['suggestion']}")
+            critical_answer = [v for v in answer_correctness_violations if v['severity'] == 'critical']
+            if critical_answer:
+                has_critical_failure = True
+
     # Check external resource URLs in reading activities (Issue #430)
     external_url_violations = []
     if yaml_activities and level_code.lower() in ['lit', 'b2-hist', 'c1-hist', 'c1-bio']:
@@ -1880,7 +1909,9 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
     elif level_code == 'B1':
         min_imm, max_imm = get_b1_immersion_range(module_num)
         # Label the phase for clarity
-        if module_num <= 10:
+        if module_num <= 5:
+            phase_label = " (B1.0 Bridge)"
+        elif module_num <= 10:
             phase_label = " (B1.1 Aspect)"
         elif module_num <= 20:
             phase_label = " (B1.2 Motion)"
@@ -1979,11 +2010,16 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
         has_critical_failure = True
 
     # IPA transcription quality (auto-fixable, WARN level)
+    # Scan both the lesson .md AND the vocabulary YAML (B1+ stores IPA there)
     import subprocess
     ipa_count = 0
     try:
+        ipa_files = [str(file_path)]
+        vocab_yaml = Path(file_path).parent / 'vocabulary' / (Path(file_path).stem + '.yaml')
+        if vocab_yaml.exists():
+            ipa_files.append(str(vocab_yaml))
         ipa_result = subprocess.run(
-            ['.venv/bin/python', 'scripts/lint_ipa.py', str(file_path), '-q'],
+            ['.venv/bin/python', 'scripts/lint_ipa.py', *ipa_files, '-q'],
             capture_output=True, text=True, timeout=30
         )
         if ipa_result.returncode != 0:

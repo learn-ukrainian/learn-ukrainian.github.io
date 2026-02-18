@@ -6,6 +6,7 @@ name: review-content-v4
 description: Deep content review with thorough linguistic verification
 version: '4.2'
 category: quality
+model: claude-opus-4-6
 dependencies: audit_module.py
 changelog: v4.2 - Restored 12 dimensions as post-review checklist
 ---

@@ -323,6 +323,24 @@ Return TWO YAML blocks with clear delimiters:
 
 ❌ WRONG: `explanation` inside an option object — it goes at the question level
 
+### Mandatory Self-Check Before Output
+
+After writing all activities, run these checks mentally. Any failure = fix before submitting.
+
+**1. SELECT min_correct match** — every `select` question's `min_correct` must equal exact count of `correct: true` options. Count them.
+
+**2. QUIZ single correct** — every `quiz` item must have exactly 1 `correct: true` option.
+
+**3. FILL-IN answer in options** — every `fill-in` item's `answer` must appear verbatim in its `options` list.
+
+**4. TRANSLATE single correct** — every `translate` item must have exactly 1 `correct: true` option.
+
+**5. MARK-THE-WORDS answers in text** — every string in `answers` must appear verbatim in the `text` field.
+
+**6. UNJUMBLE no run-ons** — every `answer` string must be a single sentence. If a capital letter appears mid-answer without preceding punctuation (`.!?:`), you have merged two sentences. Split into two separate items instead.
+
+**7. UNJUMBLE vocabulary scope** — every word in every `words` array must come from `vocabulary_hints` in the plan file OR be a basic function word (preposition, conjunction, particle). Do NOT introduce grammar forms not yet taught in this module. Specifically: if this module teaches dative PRONOUNS only, do not use possessive adjective dative forms (моїй, твоїй, нашій…) — those belong to a dative NOUNS module.
+
 ### Activity Count Check (MANDATORY)
 
 **Count your activities before outputting.** You MUST generate {ACTIVITY_COUNT_TARGET} activities. Previous rebuilds consistently underproduced (8 activities when 12-16 were needed). If under target, ADD MORE activities before submitting. Types to add when short: quiz (8+ items), fill-in (8+ items), match-up (8+ pairs).

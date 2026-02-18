@@ -850,8 +850,39 @@ def phase_5_enrichment_audit_fix(ctx: ModuleContext) -> bool:
     return False
 
 
+def phase_6_claude_review(ctx: ModuleContext) -> bool:
+    """Phase 6: Adversarial review via Claude API (cross-agent review)."""
+    phase = "6"
+    if is_phase_complete(ctx, phase):
+        log("  Phase 6 (Claude): SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  Phase 6 (Claude): DRY-RUN — would call Claude API for review")
+        return True
+
+    ok, review_text = v1.dispatch_claude_review(ctx)
+    if not ok or not review_text:
+        log("  Phase 6 (Claude): FAILED — falling back to Gemini review")
+        return phase_6_review(ctx)
+
+    # Save review to canonical path
+    ctx.paths["review"].parent.mkdir(parents=True, exist_ok=True)
+    ctx.paths["review"].write_text(review_text, encoding="utf-8")
+
+    # Also save to orchestration dir
+    extracted = ctx.orch_dir / "phase-6-review.md"
+    extracted.write_text(review_text, encoding="utf-8")
+
+    log(f"  Phase 6 (Claude): Review saved → {ctx.paths['review'].name}")
+    mark_phase_locked(ctx, phase, "complete", task_id=f"cr-{ctx.slug}")
+    return True
+
+
 def phase_6_v2(ctx: ModuleContext) -> bool:
-    """Phase 6: Adversarial review. Delegates to v1."""
+    """Phase 6: Adversarial review. Routes to Claude API or Gemini based on flag."""
+    if getattr(ctx, "claude_review", False):
+        return phase_6_claude_review(ctx)
     return phase_6_review(ctx)
 
 
@@ -941,6 +972,74 @@ def phase_8_mdx(ctx: ModuleContext) -> bool:
         log(f"  Phase 8: WARNING — MDX generation returned {result.returncode}")
 
     mark_phase_locked(ctx, phase, "complete")
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Phase 9: Claude Final Review (QA gate — runs when --final-review is set)
+# ---------------------------------------------------------------------------
+
+def phase_9_final_review(ctx: ModuleContext) -> bool:
+    """Phase 9: Final adversarial QA gate via Claude API.
+
+    Only runs when ctx.final_review is True (--final-review flag).
+    Reads all module files, calls Claude Opus for semantic review + fixes,
+    applies fixes, regenerates MDX, re-audits, saves final review report.
+    Returns False only if verdict is REJECT and audit still fails.
+    """
+    if not getattr(ctx, "final_review", False):
+        return True  # Flag not set — silently skip
+
+    phase = "9-final-review"
+    if is_phase_complete(ctx, phase):
+        log("  Phase 9: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  Phase 9: DRY-RUN — would call Claude API for final review")
+        return True
+
+    ok, verdict, report = v1.dispatch_claude_final_review(ctx)
+    if not ok:
+        log("  Phase 9: FAILED — Claude API unavailable")
+        return False  # Hard fail: can't review without Claude
+
+    # Save final review report
+    final_review_path = ctx.paths["review"].parent / f"{ctx.slug}-final-review.md"
+    final_review_path.parent.mkdir(parents=True, exist_ok=True)
+    final_review_path.write_text(report, encoding="utf-8")
+    log(f"  Phase 9: Report saved → {final_review_path.name}")
+
+    # Save to orchestration dir too
+    orch_report = ctx.orch_dir / "phase-9-final-review.md"
+    orch_report.write_text(report, encoding="utf-8")
+
+    # If fixes were applied, regenerate MDX
+    if "===FIX_START===" in report:
+        log("  Phase 9: Regenerating MDX after fixes...")
+        run_script([
+            str(SCRIPTS_DIR / "generate_mdx.py"), "l2-uk-en", ctx.track, str(ctx.module_num),
+        ], capture=True)
+
+        # Re-audit after fixes
+        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+        audit_log = ctx.orch_dir / "phase9-post-fix-audit.log"
+        audit_log.write_text(audit_out, encoding="utf-8")
+
+        if not passed:
+            log(f"  Phase 9: Post-fix audit FAILED (verdict: {verdict})")
+            if verdict == "REJECT":
+                return False
+            log("  Phase 9: Audit failed but verdict is not REJECT — marking NEEDS_WORK")
+        else:
+            log(f"  Phase 9: Post-fix audit PASS")
+
+    if verdict == "REJECT":
+        log("  Phase 9: REJECT — module needs rebuild")
+        mark_phase_locked(ctx, phase, "failed", verdict=verdict)
+        return False
+
+    mark_phase_locked(ctx, phase, "complete", verdict=verdict)
     return True
 
 
@@ -1137,6 +1236,7 @@ PHASE_FUNCTIONS_V2: dict[str, Any] = {
     "6b":   phase_6b_v2,
     "7":    phase_7_final_audit_fix,
     "8":    phase_8_mdx,
+    "9":    phase_9_final_review,
 }
 
 PHASE_LABELS: dict[str, str] = {
@@ -1151,6 +1251,7 @@ PHASE_LABELS: dict[str, str] = {
     "6b":   "Apply Review Fixes",
     "7":    "Final Audit+Fix",
     "8":    "MDX Generation",
+    "9":    "Claude Final Review (QA Gate)",
 }
 
 
@@ -1226,6 +1327,13 @@ def run_pipeline_v2(ctx: ModuleContext) -> bool:
 
         if not func(ctx):
             log(f"\n  PIPELINE STOPPED at phase {phase_id}")
+            return False
+
+    # Phase 9: Claude Final Review (optional — runs when --final-review is set)
+    if getattr(ctx, "final_review", False):
+        log(f"\n  Phase 9: {PHASE_LABELS['9']}")
+        if not phase_9_final_review(ctx):
+            log("\n  PIPELINE STOPPED at phase 9 (REJECT verdict)")
             return False
 
     return True
@@ -1309,6 +1417,8 @@ def preflight_v2(args: argparse.Namespace) -> ModuleContext:
     ctx.force_research = getattr(args, "force_research", False)  # type: ignore[attr-defined]
     ctx.refresh = getattr(args, "refresh", False)  # type: ignore[attr-defined]
     ctx.restart_from = getattr(args, "restart_from", None)  # type: ignore[attr-defined]
+    ctx.claude_review = getattr(args, "claude_review", False)  # type: ignore[attr-defined]
+    ctx.final_review = getattr(args, "final_review", False)  # type: ignore[attr-defined]
 
     if is_archived:
         log(f"Archive: DETECTED — {archive_source}")
@@ -1360,14 +1470,18 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
             Examples:
-              %(prog)s a1 12                    # Full E2E pipeline (resume-aware)
-              %(prog)s a1 --all                 # Build entire track sequentially
-              %(prog)s a1 --range 4-44          # Build modules 4 through 44
-              %(prog)s b2-hist 1                # E2E with archive restore
-              %(prog)s a1 12 --rebuild          # Nuke state, rebuild from Phase 0
-              %(prog)s a1 12 --force-phase 3    # Re-run specific phase only
-              %(prog)s a1 12 --dry-run          # Show plan without dispatching
-              %(prog)s a1 12 --verify           # Just run audit, print PASS/FAIL
+              %(prog)s a1 12                         # Full E2E pipeline (resume-aware)
+              %(prog)s a1 --all                      # Build entire track sequentially
+              %(prog)s a1 --range 4-44               # Build modules 4 through 44
+              %(prog)s b2-hist 1                     # E2E with archive restore
+              %(prog)s a1 12 --rebuild               # Nuke state, rebuild from Phase 0
+              %(prog)s a1 12 --force-phase 3         # Re-run specific phase only
+              %(prog)s a1 12 --dry-run               # Show plan without dispatching
+              %(prog)s a1 12 --verify                # Just run audit, print PASS/FAIL
+              %(prog)s a1 12 --claude-review         # Use Claude API for Phase 6 review
+              %(prog)s a1 --all --claude-review      # Build all, Claude reviews each
+              %(prog)s a1 12 --final-review          # Full pipeline + Phase 9 Claude QA gate
+              %(prog)s a1 12 --claude-review --final-review  # Claude Phase 6 + Phase 9
         """),
     )
     parser.add_argument("track", help="Track identifier (a1, a2, b1, ..., c1-bio, b2-hist, lit, ...)")
@@ -1392,6 +1506,10 @@ def main() -> int:
                         help="Regenerate prose from updated research (instead of adopting stale content)")
     parser.add_argument("--verify", action="store_true",
                         help="Just run audit, print PASS/FAIL, exit")
+    parser.add_argument("--claude-review", action="store_true", dest="claude_review",
+                        help="Use Claude API for Phase 6 adversarial review instead of Gemini (cross-agent, no self-review bias)")
+    parser.add_argument("--final-review", action="store_true", dest="final_review",
+                        help="Run Phase 9: Claude final QA gate after pipeline completes (semantic review + fixes + APPROVE/REJECT verdict)")
 
     args = parser.parse_args()
 
@@ -1448,6 +1566,8 @@ def main() -> int:
                 restart_from=args.restart_from,
                 force_research=args.force_research, dry_run=args.dry_run,
                 refresh=args.refresh, verify=False,
+                claude_review=getattr(args, "claude_review", False),
+                final_review=getattr(args, "final_review", False),
             )
             rc = _run_single_module(single_args)
             if rc == 0:
