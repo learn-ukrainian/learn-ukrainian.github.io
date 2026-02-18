@@ -1804,6 +1804,11 @@ def phase_6b_apply_fixes(ctx: ModuleContext) -> bool:
         verify_log.write_text(verify_output, encoding="utf-8")
         passed = len(critical_violations) == 0
 
+        if prose_violations:
+            log(f"  Phase 6b: {len(critical_violations)} critical, {len(prose_violations) - len(critical_violations)} warning")
+            for v in critical_violations:
+                log(f"    ❌ {v['type']}: {v['issue'][:120]}")
+
         if passed:
             fixes = attempt - 1
             log(f"  Phase 6b: PASS{f' (after {fixes} retry/ies)' if fixes else ''}")
