@@ -279,6 +279,7 @@ function renderPipeline(data) {
     <div class="pipeline-stat"><div class="value" style="color:var(--purple)">${data.active_builds.filter(b=>b.stage==='hetman').length}</div><div class="label">Hetman Active</div></div>
     <div class="pipeline-stat"><div class="value" style="color:var(--yellow)">${data.otaman_queue_total}</div><div class="label">Otaman Queue</div></div>
     <div class="pipeline-stat"><div class="value" style="color:var(--blue)">${data.hetman_queue_total}</div><div class="label">Hetman Queue</div></div>
+    <div class="pipeline-stat"><div class="value" style="color:var(--claude)">${data.final_review_queue_total ?? 0}</div><div class="label">Claude QA Queue</div></div>
   `;
 
   const content = document.getElementById('pipeline-content');
@@ -369,6 +370,27 @@ function renderPipeline(data) {
     hqCard.innerHTML += '<div class="empty">Queue empty</div>';
   }
   content.appendChild(hqCard);
+
+  // Claude QA (final review) queue
+  const frTotal = data.final_review_queue_total ?? 0;
+  const frQueue = data.final_review_queue ?? [];
+  const frCard = makeCard(`Claude QA Queue (${frTotal})`, 'Needs --final-review', 'claude');
+  if (frQueue.length > 0) {
+    frCard.innerHTML += `<div class="queue-list">${frQueue.map((m,i) => `
+      <div class="queue-item">
+        <span class="num">${i+1}</span>
+        <span class="track-tag">${m.track}</span>
+        <span>${m.slug}</span>
+        <span style="margin-left:auto;color:var(--text3);font-size:11px">#${m.num}</span>
+      </div>
+    `).join('')}</div>`;
+    if (frTotal > 50) {
+      frCard.innerHTML += `<div class="empty">... and ${frTotal - 50} more</div>`;
+    }
+  } else {
+    frCard.innerHTML += '<div class="empty">All passing modules have Claude QA ✓</div>';
+  }
+  content.appendChild(frCard);
 }
 
 // ==================== COMMS ====================

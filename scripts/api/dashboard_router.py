@@ -427,6 +427,7 @@ async def pipeline_status():
     manifest = _load_manifest()
     otaman_queue = []
     hetman_queue = []
+    final_review_queue = []
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
@@ -463,6 +464,11 @@ async def pipeline_status():
                     lesson_status = gates.get("lesson", {}).get("status", "")
                     if lesson_status == "fail":
                         otaman_queue.append({"track": track_id, "slug": slug, "num": idx + 1})
+                elif overall == "pass":
+                    # Check if Claude final review exists
+                    review_file = track_dir / "review" / f"{slug}-final-review.md"
+                    if not review_file.exists():
+                        final_review_queue.append({"track": track_id, "slug": slug, "num": idx + 1})
             except Exception:
                 pass
 
@@ -497,8 +503,10 @@ async def pipeline_status():
         "active_builds": active_builds,
         "otaman_queue": otaman_queue[:50],
         "hetman_queue": hetman_queue[:50],
+        "final_review_queue": final_review_queue[:50],
         "otaman_queue_total": len(otaman_queue),
         "hetman_queue_total": len(hetman_queue),
+        "final_review_queue_total": len(final_review_queue),
         "broker_messages": broker_messages,
         "dispatcher_state": dispatcher_state,
         "timestamp": datetime.now(timezone.utc).isoformat(),
