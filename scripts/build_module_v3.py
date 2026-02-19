@@ -749,19 +749,21 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
     # --force-phase: single phase only
     force_phase = ctx.force_phase
     if force_phase:
-        force_upper = str(force_phase).upper()
-        if force_upper not in PHASE_FUNCTIONS_V3:
-            log(f"  ERROR: Unknown v3 phase '{force_upper}'. Valid: {', '.join(PHASE_SEQUENCE_V3 + ['E', 'F'])}")
+        # Case-insensitive lookup: "audit" stays "audit", "A"/"a" → "A"
+        _phase_key_map = {k.upper(): k for k in PHASE_FUNCTIONS_V3}
+        force_key = _phase_key_map.get(str(force_phase).upper())
+        if force_key is None:
+            log(f"  ERROR: Unknown v3 phase '{force_phase}'. Valid: {', '.join(PHASE_SEQUENCE_V3 + ['E', 'F'])}")
             return False
-        log(f"  --force-phase {force_upper}: running only this phase")
+        log(f"  --force-phase {force_key}: running only this phase")
         # For state-aware phases, clear the v3 state first
-        if force_upper in _V3_PHASE_STATE_IDS:
+        if force_key in _V3_PHASE_STATE_IDS:
             phases = state.setdefault("phases", {})
-            for sid in _V3_PHASE_STATE_IDS[force_upper]:
+            for sid in _V3_PHASE_STATE_IDS[force_key]:
                 phases.pop(sid, None)
             _save_state_v3(ctx, state)
-        func = PHASE_FUNCTIONS_V3[force_upper]
-        return _call_phase_func(func, force_upper, ctx, state, use_tc)
+        func = PHASE_FUNCTIONS_V3[force_key]
+        return _call_phase_func(func, force_key, ctx, state, use_tc)
 
     # --restart-from
     restart_from = getattr(ctx, "restart_from", None)
@@ -810,6 +812,33 @@ def _run_final_phases(ctx: ModuleContext, state: dict) -> bool:
         if not phase_F_v3(ctx):
             log("\n  PIPELINE STOPPED at phase F (REJECT verdict)")
             return False
+
+        # Post-F audit fix loop: Phase F may apply fixes that break compliance.
+        # Run up to 2 additional Gemini fix iterations to repair any regressions.
+        passed, output = run_verify(ctx.paths["md"], content_only=False)
+        if not passed:
+            log("  Phase F: Post-fix audit FAIL — running repair loop (max 2 iters)")
+            for fix_iter in range(1, 3):
+                fix_prompt = _build_fix_prompt(ctx, output, content_only=False)
+                fix_file = ctx.orch_dir / f"phase-F-repair{fix_iter}-prompt.md"
+                fix_file.write_text(fix_prompt, "utf-8")
+                log(f"  Phase F: Dispatching repair fix {fix_iter}/2...")
+                fix_output = _gemini_output_path(ctx.slug, f"phase-F-repair{fix_iter}")
+                ok, _ = dispatch_gemini(
+                    _dispatch_prompt(ctx, fix_file),
+                    task_id=f"v3-{ctx.slug}-F-repair{fix_iter}",
+                    model=ctx.model, allow_write=True, output_file=fix_output,
+                )
+                if not ok:
+                    log(f"  Phase F: Repair {fix_iter} dispatch failed")
+                    break
+                passed, output = run_verify(ctx.paths["md"], content_only=False)
+                if passed:
+                    log(f"  Phase F: Repair PASS (after {fix_iter} fix(es))")
+                    break
+                log(f"  Phase F: Repair {fix_iter} insufficient")
+            if not passed:
+                log("  Phase F: Repair loop EXHAUSTED — proceeding to MDX anyway")
 
     # Phase E: MDX — always last, always regenerates
     log(f"\n  Phase E: {PHASE_LABELS_V3['E']} (post-review)")
