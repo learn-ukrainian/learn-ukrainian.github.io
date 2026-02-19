@@ -204,10 +204,11 @@ async function loadTrackDetail(trackId) {
       <span style="color:var(--red)">${s.fail} fail</span>
       <span style="color:var(--yellow)">${s.unaudited} unaudited</span>
       <span style="color:var(--gray)">${s.missing} missing</span>
+      <span style="color:#58a6ff" title="Claude QA reviews done">🔵 ${s.final_review || 0} QA</span>
       ${researchStat}
     </div>
     <table class="module-table">
-      <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Words</th><th>Research</th><th>Plan</th></tr></thead>
+      <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
       <tbody>
         ${data.modules.map(m => {
           const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
@@ -221,6 +222,9 @@ async function loadTrackDetail(trackId) {
           } else {
             rCol = `<td style="color:var(--text3)">-</td>`;
           }
+          const qaCol = m.has_final_review
+            ? `<td style="color:#58a6ff;font-weight:600" title="Claude QA done">✓</td>`
+            : (m.status === 'pass' ? `<td style="color:var(--text3)">⏳</td>` : `<td style="color:var(--text3)">-</td>`);
           return `
             <tr onclick="loadModuleDetail('${trackId}','${m.slug}')">
               <td>${m.num}</td>
@@ -228,7 +232,7 @@ async function loadTrackDetail(trackId) {
               <td><span class="status-dot ${cls}"></span> ${m.status}</td>
               <td>${m.word_count.toLocaleString()}/${m.word_target.toLocaleString()} <span class="word-mini" style="width:${wordPct}%"></span></td>
               ${rCol}
-              <td>${m.files.plan ? 'Y' : '-'}</td>
+              ${qaCol}
             </tr>
           `;
         }).join('')}
@@ -361,9 +365,16 @@ async function loadModuleDetail(trackId, slug) {
     }
   }
 
+  const qaHtml = m.has_final_review
+    ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:#58a6ff;font-weight:600">✓ Reviewed</span></div></div>`
+    : (m.status?.overall?.status === 'pass'
+        ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:var(--yellow)">⏳ Pending — run with --final-review</span></div></div>`
+        : '');
+
   panel.innerHTML = `
     <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
     <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId}</div>
+    ${qaHtml}
     ${researchHtml}
     ${planHtml}
     ${metaHtml}
