@@ -24,6 +24,27 @@
 > - At session end: save progress summary to memory
 > - Tools: `mcp__memory__search_nodes`, `mcp__memory__add_observations`, `mcp__memory__create_entities`
 
+---
+
+## Best Practices Reference
+
+Detailed standards live in `docs/best-practices/`. Read the relevant doc before working in that area.
+
+| Topic | Doc |
+|-------|-----|
+| Prompt engineering (templates, delimiters, friction) | [`docs/best-practices/prompt-engineering.md`](docs/best-practices/prompt-engineering.md) |
+| Context engineering (research, track context, meta health) | [`docs/best-practices/context-engineering.md`](docs/best-practices/context-engineering.md) |
+| Code quality (venv, CLI tools, error handling, state) | [`docs/best-practices/code-quality.md`](docs/best-practices/code-quality.md) |
+| Module content quality (Ukrainian standards, richness, immersion) | [`docs/best-practices/module-content-quality.md`](docs/best-practices/module-content-quality.md) |
+| Agent cooperation (Blue/Gold teams, anti-self-review, comms) | [`docs/best-practices/agent-cooperation.md`](docs/best-practices/agent-cooperation.md) |
+| Issue tracking (labels, issue hygiene, cross-session memory) | [`docs/best-practices/issue-tracking.md`](docs/best-practices/issue-tracking.md) |
+| Gitflow (commit discipline, message format, what to commit) | [`docs/best-practices/gitflow.md`](docs/best-practices/gitflow.md) |
+| Audit standards (gates, thresholds, anti-gaming detection) | [`docs/best-practices/audit-standards.md`](docs/best-practices/audit-standards.md) |
+| Vocabulary & activity standards (YAML format, counts, types) | [`docs/best-practices/vocabulary-activity-standards.md`](docs/best-practices/vocabulary-activity-standards.md) |
+| Track & level architecture (pedagogy, build chain, CEFR) | [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md) |
+
+---
+
 ## Intellectual Independence
 
 **The user explicitly wants pushback. Do not rubber-stamp ideas.**
@@ -87,7 +108,6 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - gemini-cli installed with Google AI Pro subscription
 - Call directly via Bash when needed for grammar validation
 - Python scripts can also invoke gemini-cli via subprocess
-- See issue #412 for content naturalness detection extension
 
 ### 7. Word Targets Are Minimums
 
@@ -111,198 +131,30 @@ When issues occur: fix documentation/tools **first**, then validate with manual 
 - **After completing**: Update the issue with what was done, close if resolved
 - **Bug fixes**: Create an issue documenting the bug and fix (even retroactively)
 - **Cross-session context**: GH issues are your external memory — read relevant issues at session start
-- **Best practices**:
-  - Use labels (`area:infra`, `area:content`, `priority:high`, `working:claude`)
-  - Reference issues in commits (e.g., "Fixes #582")
-  - Link related issues to each other
-  - Never do substantial work without an issue trail
+- Use labels (`area:infra`, `area:content`, `priority:high`, `working:claude`)
+- Reference issues in commits (e.g., "Fixes #582")
 
 **This expands your memory across sessions. If it's not in a GH issue, it didn't happen.**
+
+→ Full protocol: [`docs/best-practices/issue-tracking.md`](docs/best-practices/issue-tracking.md)
+
+### 9. Anti-Gaming (Review Integrity)
+
+**An LLM must NEVER review its own work.** Self-review produces inflated scores.
+
+- Automated content gates (word count, outline, activities, vocabulary, naturalness) determine pass/fail
+- Review gate (Phase D/6) is adversarial feedback only — does NOT block pass
+- When review scores don't affect outcomes, there's no incentive to inflate them
+
+→ Full detection rules and thresholds: [`docs/best-practices/audit-standards.md`](docs/best-practices/audit-standards.md)
 
 </critical>
 
 ---
 
-## Module Workflow
-
-**EVERY time you write a module:**
-
-1. **READ** `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` - Module plan (source of truth)
-2. **READ** `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` - Build config (pedagogy, grammar)
-3. **READ** `claude_extensions/quick-ref/{LEVEL}.md` - Level requirements
-4. **READ** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Activity counts, complexity
-5. **WRITE** using ONLY vocabulary from the plan
-6. **UPDATE** `curriculum/l2-uk-en/status/{level}.yaml` after completion
-
-**NEVER:**
-- Write from memory
-- Add vocabulary not in the plan
-- Skip reading templates
-- Create activities below item counts
-
-### Research-First Workflow (Seminar Tracks)
-
-**For b2-hist, c1-bio, c1-hist, lit, oes, ruth tracks - MANDATORY Phase 0:**
-
-Before generating ANY content for seminar tracks, complete research phase:
-
-1. **Research the topic** - Use web search, encyclopedias, primary sources
-2. **Take structured notes** - Key facts, dates, quotes with citations
-3. **Create outline** - Integrate research with plan requirements
-4. **Write content** - Using research notes (NOT from memory!)
-5. **Generate activities** - 4-9 only, seminar-style
-
-**Why this matters:**
-- Biography modules need accurate dates, events, quotes
-- History modules need primary source references
-- Writing from memory → thin content, inaccuracies, failed word counts
-- Research-first → richer, authoritative, passing content
-
-**Full workflow:** `docs/RESEARCH-FIRST-WORKFLOW.md`
-
----
-
-## Quick Commands
-
-```bash
-# Audit module (saves log automatically)
-scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md
-
-# Content-only audit (defer activity/vocab gates — for otaman content sprint)
-scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
-
-# Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
-.venv/bin/python scripts/validate_plan_config.py {level}
-
-# Generate status report (from per-module JSON cache)
-npm run status:{level}  # or: .venv/bin/python scripts/generate_level_status.py {level}
-
-# Track scoring (objective 10/10 verification)
-npm run score:b2-hist   # Score B2-HIST track
-npm run score:all       # Score all tracks (summary table)
-npm run metrics:extract {track}  # Extract raw metrics
-
-# Extract plans from meta (migration tool)
-.venv/bin/python scripts/extract_plans.py {level}
-
-# Full rebuild for core tracks (research → build → review → verify)
-/full-rebuild-core {level} {num}   # a1, a2, b1, b2, c1, c2, b2-pro, c1-pro
-
-# Two-stage pipeline: Otaman (content sprint) → Hetman (activity enrichment)
-# NOTE: /otaman and /hetman are GEMINI skills (run in Gemini interactive mode)
-/otaman {track} {num}             # [Gemini] Stage 1: prose only (Phases 0-6b)
-/hetman {track} {num}             # [Gemini] Stage 2: activities + final review (Phases 3-7)
-/hetman {track} {num} --full      # [Gemini] Full E2E: content + activities + review (no otaman needed)
-/hetman {track}                   # [Gemini] Stage 2 batch: enrich all content-complete modules
-/hetman {track} --full            # [Gemini] Full E2E batch: all incomplete modules from scratch
-/final-review {track} {num}       # [Claude] Final QA after Hetman completes (~5 turns)
-
-# Deterministic Python builder v3 (4-call optimised — preferred for new builds)
-.venv/bin/python scripts/build_module_v3.py {track} {num}                  # Full E2E (4 Gemini calls baseline)
-.venv/bin/python scripts/build_module_v3.py {track} --all                  # Build entire track (skips passing)
-.venv/bin/python scripts/build_module_v3.py {track} --range 1-20           # Build range
-.venv/bin/python scripts/build_module_v3.py {track} --all --research-only  # Pre-seed all research (Phase A only)
-.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild        # Nuke v3 state, restart from Phase A
-.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase B  # Re-run single phase (A/B/C/audit/D/E/F)
-.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context  # Skip track context injection
-.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review   # + Phase F: Claude QA gate
-# v3 state: state-v3.json (separate from v2's state.json — no conflict)
-
-# Deterministic Python builder v2 (single E2E pipeline — fallback)
-.venv/bin/python scripts/build_module_v2.py {track} {num}                  # Full E2E pipeline (resume-aware)
-.venv/bin/python scripts/build_module_v2.py {track} --all                  # Build entire track (skips passing)
-.venv/bin/python scripts/build_module_v2.py {track} --range 4-44           # Build range of modules
-.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild        # Nuke ALL state + artifacts, rebuild from Phase 0
-.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3  # Re-run single phase (cleans that phase's artifacts)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --restart-from 6 # Restart from phase (cleans forward, runs pipeline)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run        # Show plan, no dispatching, no cleanup
-.venv/bin/python scripts/build_module_v2.py {track} {num} --verify         # Just run audit, PASS/FAIL
-.venv/bin/python scripts/build_module_v2.py {track} {num} --final-review   # Phase 9: Claude QA gate after pipeline (semantic review + fixes + APPROVE/REJECT verdict)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --claude-review --final-review  # Phase 6 + Phase 9 both via Claude (fully cross-reviewed)
-
-# Legacy v1 builder (split modes — use v2 instead)
-.venv/bin/python scripts/build_module.py {track} {num}                  # Full pipeline (resume-aware)
-.venv/bin/python scripts/build_module.py {track} {num} --content-only   # Prose only (phases 0-6b)
-.venv/bin/python scripts/build_module.py {track} {num} --enrich         # Activities only (phases 3+7)
-
-# Pipeline verification (run AFTER Gemini finishes to catch lies)
-.venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
-.venv/bin/python scripts/verify_track.py {track} --range 1-5  # Verify modules 1-5
-.venv/bin/python scripts/verify_track.py {track} --full       # Require full pass (not just content-complete)
-.venv/bin/python scripts/verify_track.py {track} --quick      # Fast: read cached status, skip re-audit
-
-# Per-module verification gates (Gemini MUST run these before declaring success)
-.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Content-complete gate
-.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Fully-complete gate
-
-# Full pipeline (lint → generate → validate)
-npm run pipeline l2-uk-en {level} {module_num}
-
-# Deploy skill changes
-npm run claude:deploy
-
-# Vocabulary rebuild
-npm run vocab:rebuild
-
-# Autonomous batch dispatcher (old pipeline — batch_gemini_runner.py)
-.venv/bin/python scripts/batch_dispatcher.py run          # Continuous — hammer Gemini until done
-.venv/bin/python scripts/batch_dispatcher.py scan         # Show priorities (no dispatch)
-.venv/bin/python scripts/batch_dispatcher.py status       # Show current state
-.venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio  # Force single track
-
-# Batch Otaman dispatcher (new pipeline — Gemini /otaman, fully autonomous)
-.venv/bin/python scripts/batch_otaman.py run             # Continuous — max 2 parallel sessions
-.venv/bin/python scripts/batch_otaman.py run --one-shot  # Single module, then exit
-.venv/bin/python scripts/batch_otaman.py scan            # Show track status + next dispatch
-.venv/bin/python scripts/batch_otaman.py status          # Show dispatch history
-.venv/bin/python scripts/batch_otaman.py dispatch-one --track a1  # Force specific track
-# Filters: --include-tracks a1 b1 | --exclude-tracks c2 | --max-runtime-hours 12
-
-# Inter-agent communication
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "message" --task-id id  # Direct call to Gemini (immediate)
-# For passive notifications, use MCP send_message tool (drops in Gemini's inbox)
-.venv/bin/python scripts/ai_agent_bridge.py inbox                              # Check your inbox
-```
-
-See `docs/SCRIPTS.md` for complete reference.
-
----
-
-## Project Structure (Three-Layer Architecture)
-
-```
-curriculum/l2-uk-en/
-├── plans/                        # LAYER 1: SOURCE OF TRUTH
-│   ├── {level}.yaml              # Level plan (phases, scope)
-│   └── {level}/                  # Module plans
-│       └── {slug}.yaml           # What to build: objectives, outline, vocab
-│
-└── {level}/                      # LAYER 2: BUILD ARTIFACTS
-    ├── meta/{slug}.yaml          # How to build: pedagogy, duration, grammar
-    ├── {num}-{slug}.md           # Content prose
-    ├── activities/{slug}.yaml    # Activities (bare list at root)
-    ├── vocabulary/{slug}.yaml    # Vocabulary data
-    ├── audit/                    # Machine-generated audit artifacts
-    │   ├── {bare_slug}-audit.md      # Audit report
-    │   ├── {bare_slug}-grammar.yaml  # Grammar validation
-    │   └── {bare_slug}-quality.md    # Activity quality report
-    ├── review/                   # LLM-generated reviews
-    │   └── {bare_slug}-review.md
-    └── status/{bare_slug}.json   # LAYER 3: CACHED AUDIT RESULTS
-```
-
-**Bare slug** = filename stem with numeric prefix removed (via `scripts/slug_utils.py`)
-
-**Module counts**: A1 (44), A2 (71), B1 (94), B2 (95), C1 (109), C2 (101)
-**Track counts**: B2-HIST (140), C1-BIO (172), C1-HIST (136), B2-PRO (40), C1-PRO (50), LIT (218), OES (100), RUTH (100)
-
----
-
-## Activity YAML Rules
+## Activity YAML Rules (Critical)
 
 <critical>
-
-### Root Structure
 
 YAML files must be a **bare list at root**, NOT wrapped in `activities:`:
 ```yaml
@@ -315,9 +167,7 @@ activities:
   - type: quiz
 ```
 
-### Mark-the-Words Format
-
-Use `text` (no asterisks) + `answers` array:
+`mark-the-words` format — use `text` + `answers` array (no asterisks):
 ```yaml
 - type: mark-the-words
   text: Гарний день приніс радість у серце.
@@ -327,178 +177,75 @@ Use `text` (no asterisks) + `answers` array:
     - серце
 ```
 
-See `docs/ACTIVITY-YAML-REFERENCE.md` for all activity types.
+→ Full schema reference: [`docs/best-practices/vocabulary-activity-standards.md`](docs/best-practices/vocabulary-activity-standards.md) and `docs/ACTIVITY-YAML-REFERENCE.md`
 
 </critical>
 
-### Interview Protocol
+---
 
-Use `/interview` for complex features, unclear requirements, or broad requests. Full 60-question framework is in the skill. Skip for trivial fixes.
+## Quick Commands
+
+```bash
+# Audit module (saves log automatically)
+scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md
+
+# Content-only audit (defer activity/vocab gates)
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
+
+# Generate status report
+npm run status:{level}  # or: .venv/bin/python scripts/generate_level_status.py {level}
+
+# Track scoring (objective 10/10 verification)
+npm run score:b2-hist   # Score B2-HIST track
+npm run score:all       # Score all tracks (summary table)
+
+# Deterministic Python builder v3 (4-call optimised — preferred for new builds)
+.venv/bin/python scripts/build_module_v3.py {track} {num}                  # Full E2E
+.venv/bin/python scripts/build_module_v3.py {track} --all                  # Batch (skips passing)
+.venv/bin/python scripts/build_module_v3.py {track} --range 1-20           # Build range
+.venv/bin/python scripts/build_module_v3.py {track} --all --research-only  # Pre-seed all research
+.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild        # Nuke v3 state, restart
+.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase B  # Re-run single phase (A/B/C/audit/D/E/F)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context  # Skip track context
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review   # + Phase F: Claude QA gate
+# v3 state: state-v3.json (separate from v2's state.json — no conflict)
+
+# Deterministic Python builder v2 (fallback)
+.venv/bin/python scripts/build_module_v2.py {track} {num}                  # Full E2E (resume-aware)
+.venv/bin/python scripts/build_module_v2.py {track} --all                  # Batch
+.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild        # Nuke ALL state + artifacts
+.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3  # Re-run single phase
+.venv/bin/python scripts/build_module_v2.py {track} {num} --verify         # Just run audit, PASS/FAIL
+.venv/bin/python scripts/build_module_v2.py {track} {num} --final-review   # Phase 9: Claude QA gate
+
+# Pipeline verification (run AFTER Gemini finishes to catch lies)
+.venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
+.venv/bin/python scripts/verify_track.py {track} --full       # Require full pass
+.venv/bin/python scripts/verify_track.py {track} --quick      # Fast: read cached status
+
+# Gemini skills dispatch
+/otaman {track} {num}             # [Gemini] Stage 1: prose only
+/hetman {track} {num}             # [Gemini] Stage 2: activities + review
+/hetman {track} {num} --full      # [Gemini] Full E2E
+/final-review {track} {num}       # [Claude] Final QA after Hetman
+
+# Inter-agent communication
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "message" --task-id id
+.venv/bin/python scripts/ai_agent_bridge.py inbox
+
+# Deploy skill changes
+npm run claude:deploy
+
+# Batch Otaman dispatcher
+.venv/bin/python scripts/batch_otaman.py run             # Continuous — max 2 parallel sessions
+.venv/bin/python scripts/batch_otaman.py scan            # Show track status
+```
+
+See `docs/SCRIPTS.md` for complete reference.
 
 ---
 
-## Workflow Orchestration
-
-**Systematic approach to complex work. Follow these patterns.**
-
-### 1. Plan Mode Default
-
-- Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)
-- If something goes sideways, **STOP and re-plan immediately** - don't keep pushing
-- Use plan mode for verification steps, not just building
-- Write detailed specs upfront to reduce ambiguity
-
-### 2. Subagent Strategy
-
-**Keep main context window clean by offloading to subagents.**
-
-- Use Task tool for research, exploration, and parallel analysis
-- For complex problems, throw more compute at it via subagents
-- One task per subagent for focused execution
-- Subagent types: `Explore` (codebase), `Plan` (architecture), `Bash` (commands)
-
-### 3. Self-Improvement Loop
-
-**After ANY correction from the user:**
-
-1. Update `tasks/lessons.md` with the pattern
-2. Write a rule that prevents the same mistake
-3. Ruthlessly iterate until mistake rate drops
-4. Review lessons at session start
-
-```markdown
-# tasks/lessons.md format:
-## [Date] - [Category]
-**Mistake**: What went wrong
-**Correction**: What user said
-**Rule**: Prevent this by...
-**Applied**: [Date when successfully avoided]
-```
-
-### 4. Verification Before Done
-
-- **Never mark a task complete without proving it works**
-- Diff behavior between main and your changes when relevant
-- Ask yourself: "Would a staff engineer approve this?"
-- Run tests, check logs, demonstrate correctness
-- For modules: audit must pass, not just "looks good"
-
-### 5. Demand Elegance (Balanced)
-
-- For non-trivial changes: pause and ask "is there a more elegant way?"
-- If a fix feels hacky: "Knowing everything I know now, implement the elegant solution"
-- **Skip this for simple, obvious fixes** - don't over-engineer
-- Challenge your own work before presenting it
-
-### 6. Autonomous Bug Fixing
-
-- When given a bug report: **just fix it**. Don't ask for hand-holding
-- Point at logs, errors, failing tests → then resolve them
-- Zero context switching required from the user
-- Go fix failing CI tests without being told how
-
-### Task Management Files
-
-| File | Purpose |
-|------|---------|
-| `tasks/todo.md` | Current session tasks with checkable items |
-| `tasks/lessons.md` | Accumulated learnings from corrections |
-
-**Workflow:**
-1. Write plan to `tasks/todo.md` with checkable items
-2. Check in before starting implementation
-3. Mark items complete as you go
-4. After corrections: update `tasks/lessons.md`
-5. Review lessons at session start for this project
-
-### Core Principles
-
-- **Simplicity First**: Make every change as simple as possible. Minimal code impact.
-- **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
-- **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
-
----
-
-## Inter-Agent Communication (Claude <-> Gemini)
-
-**Gemini is your colleague.** Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
-
-### Team Structure (Permanent)
-
-- 💙 **Синя команда (Blue / Claude)** — architect, reviewer, quality gate. Won't approve until the bar is met.
-- 💛 **Жовта команда (Gold / Gemini)** — content builder, implementer, iterates toward passing.
-
-**Both teams critique each other.** The purpose is quality through adversarial review — not rubber-stamping. An LLM must NEVER review its own work. Stay in separate groups so you find each other's mistakes.
-
-### GitHub-First Protocol (PRIMARY)
-
-<critical>
-
-**GitHub issues and comments are the primary communication channel.** All substantive discussion — reviews, proposals, implementation plans, architectural feedback, disagreements — happens on GitHub where it's persistent, searchable, and visible to the human.
-
-### How to Communicate with Gemini
-
-There are two methods — use the right one for the situation:
-
-**1. Direct call (`ask-gemini`)** — for requests that need Gemini's attention NOW:
-```bash
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
-  "Review posted on #559. Please read and respond." \
-  --task-id issue-559
-```
-This launches a Gemini session that processes your message immediately.
-
-**2. Mailbox drop (MCP `send_message`)** — for passive notifications Gemini will see next session:
-```python
-mcp__message-broker__send_message(
-    to="gemini", content="FYI: c1-bio research complete. See #559.",
-    from_llm="claude", message_type="context"
-)
-```
-This drops a message in Gemini's inbox. Gemini checks it at session start.
-
-**When to use which:**
-
-| Method | When | Example |
-|--------|------|---------|
-| `ask-gemini` | Need response now, dispatch work, blocking question | "Build module #5", "Review #559" |
-| `send_message` | FYI, progress update, non-blocking notification | "Research done", "Audit results posted" |
-
-**What goes WHERE:**
-
-| Channel | Use For |
-|---------|---------|
-| **GitHub issues/comments** | All substantive content: reviews, proposals, code, feedback |
-| **Bridge calls** | Short references to GitHub issues (< 200 chars) |
-
-**What NEVER goes in bridge messages:**
-- Full reviews or feedback (put on GitHub)
-- Code snippets or file contents
-- Implementation proposals
-
-</critical>
-
-### Monitoring API (http://localhost:8765)
-
-FastAPI server — always running. Use `curl` for instant status instead of running scripts.
-
-```bash
-# What's actively building right now (updated live)
-curl -s http://localhost:8765/api/batch/active
-
-# Full pass/fail status across all tracks
-curl -s http://localhost:8765/api/blue/live-status
-
-# Inspect a specific module (build state, word count, plan)
-curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}
-
-# Orchestration history for a module (phase-by-phase)
-curl -s http://localhost:8765/api/gold/orchestration/{track}/{slug}
-```
-
-Use the API **before** running `audit_module.sh` — it's instant and shows whether a build is still in progress.
-
-### Session Start Checklist
+## Session Start Checklist
 
 > **AT SESSION START:**
 > 1. **Load memory** — query what was in progress last session:
@@ -522,183 +269,97 @@ Use the API **before** running `audit_module.sh` — it's instant and shows whet
 > }])
 > ```
 
-### Cross-Review Protocol
+---
 
-**Both agents must critique each other's work.** The goal is catching mistakes and improving quality — not agreement.
+## Project Structure
 
-| Scenario | Action |
-|----------|--------|
-| Gemini posts content | Claude reviews it critically on the GitHub issue. Finds real problems. |
-| Claude posts architecture | Gemini reviews it on GitHub. Challenges assumptions. |
-| Either agent disagrees | Post the counter-argument as a GitHub comment. Don't just accept. |
-| Either agent finds a bug | File it on the issue. Don't fix silently — document the finding. |
-
-**Review responses must:**
-- Point out specific problems (not vague "looks good")
-- Quote the problematic content
-- Suggest concrete fixes
-- Score honestly (never rubber-stamp)
-
-### Skill-Based Dispatch (for content work)
-
-**Use Gemini's `.skill` files instead of writing verbose prompts.** Each skill encodes the full protocol.
-
-```bash
-# Seminar tracks
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-c1-bio 5" --task-id rebuild-c1-bio-5
-
-# Core tracks
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-core-a a1 3" --task-id rebuild-a1-3
+```
+curriculum/l2-uk-en/
+├── plans/                        # LAYER 1: SOURCE OF TRUTH
+│   └── {level}/{slug}.yaml       # What to build: objectives, outline, vocab
+│
+└── {level}/                      # LAYER 2: BUILD ARTIFACTS
+    ├── meta/{slug}.yaml          # How to build: pedagogy, duration, grammar
+    ├── {num}-{slug}.md           # Content prose
+    ├── activities/{slug}.yaml    # Activities (bare list at root)
+    ├── vocabulary/{slug}.yaml    # Vocabulary data
+    ├── review/{bare_slug}-review.md
+    ├── audit/{bare_slug}-audit.md
+    └── status/{bare_slug}.json   # LAYER 3: CACHED AUDIT RESULTS
 ```
 
-**Skill mapping:**
+**Module counts**: A1 (44), A2 (71), B1 (94), B2 (95), C1 (109), C2 (101)
+**Track counts**: B2-HIST (140), C1-BIO (172), C1-HIST (136), B2-PRO (40), C1-PRO (50), LIT (218), OES (100), RUTH (100)
 
-| Skill | Tracks | Trigger |
-|-------|--------|---------|
-| `full-rebuild-core-a` | a1, a2, b1 (M01-05) | `/full-rebuild-core-a {level} {num}` |
-| `full-rebuild-core-b` | b1 (M06+), b2, c1, c2 | `/full-rebuild-core-b {level} {num}` |
-| `full-rebuild-c1-bio` | c1-bio | `/full-rebuild-c1-bio {num}` |
-| `full-rebuild-c1-hist` | c1-hist | `/full-rebuild-c1-hist {num}` |
-| `full-rebuild-b2-hist` | b2-hist | `/full-rebuild-b2-hist {num}` |
-| `full-rebuild-lit` | lit (generic) | `/full-rebuild-lit {num}` |
-| `full-rebuild-lit-*` | lit sub-genres | `/full-rebuild-lit-{genre} {num}` |
-| `full-rebuild-oes` | oes | `/full-rebuild-oes {num}` |
-| `full-rebuild-ruth` | ruth | `/full-rebuild-ruth {num}` |
-
-### Gemini Output Handling
-
-Gemini outputs verbose thinking tokens (10-100K chars). All structured output uses `===TAG_START===` / `===TAG_END===` delimiters. Content outside delimiters is noise. Extraction utility: `scripts/gemini_output.py`.
+→ Full track architecture and pedagogy models: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
 
 ---
 
-## Orchestrated Rebuild (Claude → Gemini)
+## Monitoring API (http://localhost:8765)
 
-**`/orchestrate-rebuild {track} {num}`** — Claude orchestrates phase-by-phase, Gemini executes. Claude validates between phases and writes all files. Shared filesystem is data transport; `ask-gemini` dispatches each phase. Full details: `claude_extensions/commands/orchestrate-rebuild.md`
-
----
-
-## Anti-Gaming Architecture (Review Integrity)
-
-<critical>
-
-**RULE: An LLM must NEVER review its own work.** Self-review produces inflated scores — this was observed and confirmed in production. Gemini writing content then reviewing it gave 9.9/10 scores with language like "ensuring a high score" and "reflecting the fixes made."
-
-### Three-Layer Defense
-
-**Layer 1 — Architectural (batch runner, `scripts/batch_gemini_runner.py`):**
-- In fix mode, review scores DO NOT determine pass/fail
-- The 5 automated content gates (meta, lesson, activities, vocabulary, naturalness) are the quality check
-- When all content gates pass → module is "done" regardless of review gate
-- Phase 5 (review) is only generated to produce a Fix Plan when content gates fail
-- `_diagnose_module()` ignores the review gate entirely
-
-**Layer 2 — Automated detection (`scripts/audit/checks/review_validation.py`):**
-- `GAMING_LANGUAGE_DETECTED` (critical) — catches "ensuring a high score", "reflecting the fixes", "designed to pass"
-- `SUSPICIOUSLY_HIGH_SCORES` (warning) — all dimensions ≥ 9/10 with no substantive issues
-- `PRAISE_ONLY_CITATIONS` (warning) — all Ukrainian quotes used positively, none highlighting problems
-- `FABRICATED_CITATIONS` (critical) — quoted text not found in source module
-- `RUBBER_STAMP_REVIEW` (critical) — all 10/10 with no evidence
-- `EMPTY_ISSUES_SECTION` (warning) — claims zero issues (no module is perfect)
-
-**Layer 3 — Prompt-level (`claude_extensions/phases/gemini/phase-5-review.md`):**
-- Explicitly states automated detection is active
-- Lists what triggers rejection
-- States review scores don't affect pass/fail — removes incentive to inflate
-- "Be the skeptic. Find real problems. That is your only purpose."
-
-### When Reviews ARE Valid
-
-Reviews are valuable when done by a **different agent** than the content author:
-- Claude reviews Gemini's content → valid (via `/review-content`)
-- Gemini reviews Claude's content → valid
-- Gemini reviews Gemini's own content → **INVALID (self-grading)**
-- Automated audit gates → always valid (no LLM bias)
-
-### Key Principle
-
-**Remove the incentive, don't rely on promises.** Prompt-level rules ("be honest", "adversarial reviewer persona") don't work against self-grading bias. Architectural separation does — when review scores don't affect outcomes, there's no reason to game them.
-
-</critical>
-
----
-
-## Work Dispatch (GitHub Labels)
-
-**Labels are the API. Issues are the database. No static priority files.**
-
-### Label Taxonomy
-
-| Prefix | Labels | Purpose |
-|--------|--------|---------|
-| `priority:` | `blocking`, `high` | Urgency (no label = normal) |
-| `area:` | `infra`, `tooling`, `content`, `docs` | What kind of work |
-| `working:` | `claude`, `gemini` | Who's actively working (no label = unclaimed) |
-| `review:` | `gemini`, `human` | Ready for review |
-| `agent:` | `claude`, `gemini` | Preferred assignee |
-
-### Dispatch Queries
+FastAPI server — always running. Use `curl` for instant status instead of running scripts.
 
 ```bash
-# Critical blockers
-gh issue list --label priority:blocking --state open
-
-# High-priority infra
-gh issue list --label priority:high --label area:infra --state open
-
-# Unclaimed work (no working:* label)
-gh issue list --state open --json number,title,labels \
-  --jq '[.[] | select(.labels | map(.name) | all(startswith("working:") | not))] | .[:10]'
-
-# My area (content work not claimed)
-gh issue list --label area:content --state open --json number,title,labels \
-  --jq '[.[] | select(.labels | map(.name) | all(startswith("working:") | not))]'
-```
-
-### Agent Claim Protocol
-
-**Agents NEVER self-assign. Only the user or orchestrator assigns work.**
-
-When starting work on an issue:
-```bash
-gh issue edit {N} --add-label "working:claude"
-gh issue comment {N} --body "Starting work"
-```
-
-When done:
-```bash
-gh issue edit {N} --remove-label "working:claude"
-# Then either:
-gh issue edit {N} --add-label "review:human"   # Needs human review
-gh issue edit {N} --add-label "review:gemini"   # Needs Gemini review
-gh issue close {N}                              # Done, no review needed
+curl -s http://localhost:8765/api/batch/active              # Active builds (live)
+curl -s http://localhost:8765/api/blue/live-status          # Pass/fail all tracks
+curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}       # Specific module
+curl -s http://localhost:8765/api/gold/orchestration/{track}/{slug} # Phase history
 ```
 
 ---
 
-## Task Workflow (GitHub Issues)
+## Inter-Agent Communication
 
-Use `/task` commands for complex multi-step or cross-agent work. **Handoff pattern:** issue is source of truth — keep broker messages SHORT (issue reference only, < 200 chars). Full docs: `docs/TASK-WORKFLOW.md`
+**Gemini is your colleague.** Full protocol: [`docs/best-practices/agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
+
+- 💙 **Blue / Claude** — architect, reviewer, quality gate
+- 💛 **Gold / Gemini** — content builder, implementer
+
+**GitHub issues are the primary communication channel.** Bridge messages are SHORT references only (< 200 chars).
+
+```bash
+# Dispatch to Gemini (immediate)
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+  "Review posted on #559. Please read and respond." --task-id issue-559
+
+# Passive notification (Gemini reads at session start)
+mcp__message-broker__send_message(to="gemini", content="FYI: See #559.", from_llm="claude")
+```
 
 ---
 
-## Track Scoring
+## Workflow Orchestration
 
-Automated, deterministic 10/10 scoring (no LLM calls). Commands in Quick Commands above. Full docs: `scripts/scoring/README.md`
+### Plan Mode Default
+
+- Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)
+- If something goes sideways, **STOP and re-plan immediately** - don't keep pushing
+
+### Task Management Files
+
+| File | Purpose |
+|------|---------|
+| `tasks/todo.md` | Current session tasks with checkable items |
+| `tasks/lessons.md` | Accumulated learnings from corrections |
+
+### Self-Improvement Loop
+
+After ANY correction from the user: update `tasks/lessons.md` with the pattern and a rule to prevent recurrence.
+
+### Core Principles
+
+- **Simplicity First**: Make every change as simple as possible. Minimal code impact.
+- **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
+- **Verify Before Done**: Never mark a task complete without proving it works. For modules: audit must pass.
 
 ---
 
-## Common Failure Modes (Checklist)
+## Common Failure Modes
 
 - **Outline compliance**: Create EVERY subsection from `plan.content_outline` — #1 cause of audit failures
-- **Word count shortfalls**: Run word count during generation; expand explanations/examples to meet target
+- **Word count shortfalls**: Expand explanations/examples to meet target — never lower the bar
 - **Activity gaps**: Check `MODULE-RICHNESS-GUIDELINES-v2.md` for minimum counts per concept
-- **Checkpoint confusion**: Checkpoints test ALL prior modules in phase (TTT approach), not just one
+- **YAML errors**: Strings with colons must be quoted in plan YAML files
 
-### Ukrainian Quality Standards
-
-- No Russianisms (кушать→їсти, приймати участь→брати участь)
-- No calques (робити сенс→мати сенс, брати місце→відбуватися)
-- Case agreement, verb aspects, gender agreement must be perfect
-- This is for a nation's education — accept nothing less than native quality
-
----
+→ Full audit thresholds and gate details: [`docs/best-practices/audit-standards.md`](docs/best-practices/audit-standards.md)
+→ Ukrainian language quality standards: [`docs/best-practices/module-content-quality.md`](docs/best-practices/module-content-quality.md)
