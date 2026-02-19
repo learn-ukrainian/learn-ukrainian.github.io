@@ -190,6 +190,33 @@ def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:
 # ---------------------------------------------------------------------------
 
 _RESEARCH_EXISTS_MIN_WORDS = 500  # Min word count for an existing research file to be considered usable
+_META_SECTION_MAX_PCT = 0.25      # A single section must not exceed 25% of word_target
+
+
+def _meta_has_oversized_sections(ctx: ModuleContext) -> bool:
+    """Return True if any meta section consumes >25% of word_target.
+
+    Used as a health check inside phase_A_v3: if Phase A is marked complete but
+    the meta still has oversized sections (written by old prompts), re-run Phase A
+    automatically to produce a properly split outline.
+    """
+    import yaml
+    meta_path = ctx.paths.get("meta")
+    if not meta_path or not meta_path.exists():
+        return False
+    try:
+        data = yaml.safe_load(meta_path.read_text("utf-8")) or {}
+        wt = data.get("word_target", 0)
+        if not wt:
+            return False
+        threshold = wt * _META_SECTION_MAX_PCT
+        outline = data.get("content_outline", [])
+        return any(
+            isinstance(s, dict) and s.get("words", 0) > threshold
+            for s in outline
+        )
+    except Exception:
+        return False
 
 
 def _research_file_is_usable(ctx: ModuleContext) -> bool:
@@ -221,8 +248,13 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
     """
     phase = "A"
     if _is_phase_v3_complete(ctx, phase, state):
-        log("  Phase A: SKIP (already complete)")
-        return True
+        # Health-check the existing meta — if sections are oversized, silently re-run
+        if _meta_has_oversized_sections(ctx):
+            log("  Phase A: Meta health check FAILED — oversized section detected, re-running")
+            _mark_phase_v3(ctx, state, phase, "pending", note="health-check-reset")
+        else:
+            log("  Phase A: SKIP (already complete)")
+            return True
 
     is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
 

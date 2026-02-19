@@ -41,6 +41,7 @@ The existing meta `content_outline` is likely outdated (wrong section sizes, sta
 - Allocations must sum to approximately **{WORD_TARGET}** words (±10% acceptable)
 - Minimum section allocation: 200 words (merge smaller sections)
 - For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
 - Each section must have `section`, `words`, and `points` fields
 - Section names must be in Ukrainian (these become H2 headings in the lesson)
 - **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
@@ -48,6 +49,22 @@ The existing meta `content_outline` is likely outdated (wrong section sizes, sta
   add a subtitle (e.g. "Читання: I — Походження").
 - Points reflect research findings — cite specific facts, dates, quotes where relevant
 - Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
+
+### How to split a plan section (CRITICAL)
+
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
+
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
+
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
 
 ---
 
