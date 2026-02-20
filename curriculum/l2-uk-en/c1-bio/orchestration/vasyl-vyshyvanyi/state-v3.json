@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "vasyl-vyshyvanyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T19:38:06Z",
+      "task_id": "v3-vasyl-vyshyvanyi-pA",
+      "mode": "full"
+    }
+  }
+}

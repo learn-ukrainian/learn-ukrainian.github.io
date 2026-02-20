@@ -1,0 +1,13 @@
+{
+  "track": "c1-hist",
+  "slug": "pereiaslav-alternatyvy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T21:35:16Z",
+      "task_id": "v3-pereiaslav-alternatyvy-pA",
+      "mode": "full"
+    }
+  }
+}

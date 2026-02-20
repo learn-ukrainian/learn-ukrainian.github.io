@@ -25,10 +25,16 @@ RUBRIC_REGISTRY = {
                         "learner_errors", "cross_references", "pedagogy_notes"],
     },
     "history": {
-        "tracks": {"b2-hist"},
+        "tracks": {"b2-hist", "c1-bio", "c1-hist"},
         "max_score": 10,
         "dimensions": ["sources", "chronology", "primary_quotes",
                         "engagement_hooks", "decolonization", "section_notes"],
+    },
+    "professional": {
+        "tracks": {"b2-pro", "c1-pro"},
+        "max_score": 10,
+        "dimensions": ["sources", "terminology", "language_norms",
+                        "authentic_examples", "engagement_hooks", "section_notes"],
     },
 }
 
@@ -48,6 +54,10 @@ DIMENSION_SHORT_LABELS = {
     "engagement_hooks": "Hok",
     "decolonization": "Dec",
     "section_notes": "Not",
+    # Professional
+    "terminology": "Trm",
+    "language_norms": "Nrm",
+    "authentic_examples": "Aut",
 }
 
 
@@ -302,6 +312,93 @@ def _score_history(text: str) -> dict:
     return dims
 
 
+# ==================== PROFESSIONAL RUBRIC SCORING ====================
+
+
+def _score_professional(text: str) -> dict:
+    """Score a research file using the professional rubric (B2-PRO, C1-PRO)."""
+    dims = {}
+
+    # sources (max 2): Ukrainian professional/official sources
+    section = _extract_section(text, [r"##\s*Використані джерела"])
+    if section is None:
+        dims["sources"] = {"score": 0, "max": 2, "detail": "missing"}
+    else:
+        urls = _count_urls(section)
+        items = _count_numbered_items(section)
+        count = max(urls, items)
+        if count >= 3:
+            dims["sources"] = {"score": 2, "max": 2, "detail": f"{count} sources"}
+        elif count >= 1:
+            dims["sources"] = {"score": 1, "max": 2, "detail": f"{count} sources (need 3+)"}
+        else:
+            dims["sources"] = {"score": 1, "max": 2, "detail": "section exists, few items"}
+
+    # terminology (max 3): Ukrainian professional term inventory
+    section = _extract_section(text, [r"##\s*Термінологічна база", r"##\s*Terminology"])
+    if section is None:
+        dims["terminology"] = {"score": 0, "max": 3, "detail": "missing"}
+    else:
+        rows = _count_table_rows(section)
+        if rows >= 8:
+            dims["terminology"] = {"score": 3, "max": 3, "detail": f"{rows} terms"}
+        elif rows >= 5:
+            dims["terminology"] = {"score": 2, "max": 3, "detail": f"{rows} terms (need 8+)"}
+        elif rows >= 2:
+            dims["terminology"] = {"score": 1, "max": 3, "detail": f"{rows} terms (need 5+)"}
+        else:
+            dims["terminology"] = {"score": 1, "max": 3, "detail": "section exists, few terms"}
+
+    # language_norms (max 2): ДСТУ/official language standards + common errors
+    section_norms = _extract_section(text, [r"##\s*Мовні норми", r"##\s*Language Norms"])
+    section_errors = _extract_section(text, [r"##\s*Типові помилки", r"##\s*Common Errors"])
+    has_norms = section_norms is not None and len(section_norms.split()) >= 20
+    errors_count = _count_numbered_items(section_errors or "") if section_errors else 0
+    if has_norms and errors_count >= 3:
+        dims["language_norms"] = {"score": 2, "max": 2, "detail": f"norms + {errors_count} errors"}
+    elif has_norms or errors_count >= 3:
+        dims["language_norms"] = {"score": 1, "max": 2, "detail": "partial (norms or errors, not both)"}
+    else:
+        dims["language_norms"] = {"score": 0, "max": 2, "detail": "missing norms + errors"}
+
+    # authentic_examples (max 1): real Ukrainian professional text fragments
+    section = _extract_section(text, [r"##\s*Аутентичні приклади", r"##\s*Authentic Examples"])
+    if section is None:
+        dims["authentic_examples"] = {"score": 0, "max": 1, "detail": "missing"}
+    else:
+        items = _count_numbered_items(section)
+        gq = _count_guillemet_quotes(section)
+        count = max(items, gq)
+        if count >= 3:
+            dims["authentic_examples"] = {"score": 1, "max": 1, "detail": f"{count} examples"}
+        else:
+            dims["authentic_examples"] = {"score": 0, "max": 1, "detail": f"{count} examples (need 3+)"}
+
+    # engagement_hooks (max 1)
+    section = _extract_section(text, [r"##\s*Engagement Hooks"])
+    if section is None:
+        dims["engagement_hooks"] = {"score": 0, "max": 1, "detail": "missing"}
+    else:
+        hooks = _count_hooks(section)
+        if hooks >= 3:
+            dims["engagement_hooks"] = {"score": 1, "max": 1, "detail": f"{hooks} [!type] hooks"}
+        else:
+            dims["engagement_hooks"] = {"score": 0, "max": 1, "detail": f"{hooks} hooks (need 3+)"}
+
+    # section_notes (max 1)
+    section = _extract_section(text, [r"##\s*Section-Mapped Research Notes"])
+    if section is None:
+        dims["section_notes"] = {"score": 0, "max": 1, "detail": "missing"}
+    else:
+        subsections = _count_h3_subsections(section)
+        if subsections >= 3:
+            dims["section_notes"] = {"score": 1, "max": 1, "detail": f"{subsections} H3 subsections"}
+        else:
+            dims["section_notes"] = {"score": 0, "max": 1, "detail": f"{subsections} subsections (need 3+)"}
+
+    return dims
+
+
 # ==================== CONTENT ALIGNMENT ====================
 
 
@@ -362,6 +459,39 @@ def _check_content_alignment_core(dims: dict, content_text: str) -> dict:
         ))
         if not has_errors:
             reasons.append("Research has 3+ learner errors but content doesn't address common mistakes")
+
+    return {
+        "content_exists": True,
+        "refresh_recommended": len(reasons) > 0,
+        "reasons": reasons,
+    }
+
+
+def _check_content_alignment_professional(dims: dict, content_text: str) -> dict:
+    """Check if content uses what the research provides (professional rubric)."""
+    reasons = []
+
+    hooks_dim = dims.get("engagement_hooks", {})
+    if hooks_dim.get("score", 0) >= 1:
+        content_hooks = len(re.findall(r"\[![a-z_-]+\]", content_text, re.IGNORECASE))
+        if content_hooks == 0:
+            reasons.append("Research has engagement hooks but content has 0 [!type] callouts")
+
+    errors_dim = dims.get("language_norms", {})
+    if errors_dim.get("score", 0) >= 2:
+        has_errors = bool(re.search(
+            r"(?i)(типов|помилк|русизм|\[!language-note\]|\[!common-error\]|\[!warning\])",
+            content_text,
+        ))
+        if not has_errors:
+            reasons.append("Research has language norms/errors but content doesn't address them")
+
+    examples_dim = dims.get("authentic_examples", {})
+    if examples_dim.get("score", 0) >= 1:
+        gq = _count_guillemet_quotes(content_text)
+        bq = _count_blockquotes(content_text)
+        if gq + bq == 0:
+            reasons.append("Research has authentic examples but content has no quoted examples")
 
     return {
         "content_exists": True,
@@ -451,6 +581,8 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
         dims = _score_core(text)
     elif rubric_name == "history":
         dims = _score_history(text)
+    elif rubric_name == "professional":
+        dims = _score_professional(text)
     else:
         dims = {}
 
@@ -474,6 +606,8 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
             result["content_alignment"] = _check_content_alignment_core(dims, content_text)
         elif rubric_name == "history":
             result["content_alignment"] = _check_content_alignment_history(dims, content_text)
+        elif rubric_name == "professional":
+            result["content_alignment"] = _check_content_alignment_professional(dims, content_text)
 
     return result
 

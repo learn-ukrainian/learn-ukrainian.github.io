@@ -149,8 +149,12 @@ def _load_meta_file(level: str, slug: str) -> dict:
 
 
 def parse_numbered_slug(slug: str) -> tuple[Optional[int], str]:
-    """Parse a numbered slug into (number, base_slug)."""
-    match = re.match(r'^(\d+)-(.+)$', slug)
+    """Parse a numbered slug into (number, base_slug).
+
+    Only strips 1-2 digit prefixes (module ordering numbers like '01-').
+    Year-prefixed slugs like '1991-referendum' are returned as-is.
+    """
+    match = re.match(r'^(\d{1,2})-(.+)$', slug)
     if match:
         return int(match.group(1)), match.group(2)
     return None, slug

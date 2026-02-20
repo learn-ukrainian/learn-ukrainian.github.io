@@ -1,71 +1,49 @@
 {
-    "slug": "sloviany-origins",
-    "track": "b2-hist",
-    "module_num": 4,
-    "mode": "e2e",
-    "phases": {
-        "0": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:14:47Z",
-            "note": "adopted-existing-research"
-        },
-        "0.5": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:14:47Z",
-            "note": "already-enriched"
-        },
-        "1": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:16:07Z",
-            "task_id": "yw-sloviany-origins-p1"
-        },
-        "2": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:20:43Z",
-            "words": 4546,
-            "attempts": 2
-        },
-        "3": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:31:55Z",
-            "attempts": 2
-        },
-        "3a": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:31:55Z",
-            "note": "adopted-existing"
-        },
-        "3b": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:31:55Z",
-            "note": "adopted-existing"
-        },
-        "6": {
-            "status": "complete",
-            "timestamp": "2026-02-18T16:34:01Z",
-            "task_id": "gr-sloviany-origins",
-            "attempts": 1
-        },
-        "6b": {
-            "status": "pending",
-            "note": "reset by claude final-review: NEEDS_WORK fixes pending",
-            "timestamp": "2026-02-18T17:50:12Z"
-        },
-        "5-enrich": {
-            "status": "pending",
-            "note": "reset by claude final-review: NEEDS_WORK fixes pending",
-            "timestamp": "2026-02-18T17:50:12Z"
-        },
-        "7-final": {
-            "status": "pending",
-            "note": "reset by claude final-review: NEEDS_WORK fixes pending",
-            "timestamp": "2026-02-18T17:50:12Z"
-        },
-        "8": {
-            "status": "pending",
-            "note": "reset by claude final-review: NEEDS_WORK fixes pending",
-            "timestamp": "2026-02-18T17:50:12Z"
-        }
+  "slug": "sloviany-origins",
+  "track": "b2-hist",
+  "module_num": 4,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-19T08:50:25Z",
+      "note": "adopted-existing-prose",
+      "words": 5335
     },
-    "last_updated": "2026-02-18T17:50:12Z"
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-19T09:06:51Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-19T09:06:51Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-19T09:09:44Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T09:09:44Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-19T09:09:44Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T09:57:48Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:58:08Z"
+    }
+  },
+  "last_updated": "2026-02-19T10:58:08Z"
 }

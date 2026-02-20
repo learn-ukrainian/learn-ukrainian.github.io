@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "mykhailo-boichuk",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:47:41Z",
+      "task_id": "v3-mykhailo-boichuk-pA",
+      "mode": "full"
+    }
+  }
+}

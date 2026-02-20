@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "kholodnyi-yar",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:46:33Z",
+      "task_id": "v3-kholodnyi-yar-pA",
+      "mode": "meta-only"
+    }
+  }
+}

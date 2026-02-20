@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "opryshky",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:08:06Z",
+      "task_id": "v3-opryshky-pA",
+      "mode": "meta-only"
+    }
+  }
+}

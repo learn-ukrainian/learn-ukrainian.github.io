@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "my-family",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T23:56:20Z",
+      "task_id": "v3-my-family-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T23:57:43Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T23:58:52Z",
+      "task_id": "v3-my-family-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-20T00:17:47Z",
+      "attempts": 3
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-20T00:19:02Z",
+      "attempts": 1
+    }
+  }
+}

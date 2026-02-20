@@ -2,38 +2,37 @@
 
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
-Alignment: This module completes the alphabet introduction (Final 14 letters), specifically addressing unique Ukrainian letters (Г, Ґ, Є, Ї) and the soft sign (Ь) as required by §4.1.3 ("М’який знак: Львів, шість") and §4.1.4 ("Голосні та приголосні звуки... тверді та м’які приголосні").
+§4.1.3: "М’який знак: Львів, шість."
+§4.1.4: "Голосні та приголосні звуки... Тверді та м’які приголосні: лист – ліс... дзвінкі та глухі приголосні: голодний – холодний"
+
+Alignment: This module directly addresses the remaining letters of the alphabet (§4.1.1), the soft sign (§4.1.3), and the distinction between hard/soft and voiced/voiceless consonants (§4.1.4), specifically through the contrast of И/І and Г/Ґ.
 
 ## Vocabulary Frequency
-
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **центр** | High | торговий центр, історичний центр, центр міста, у центрі |
-| **чай** | High | зелений/чорний чай, пити чай, чашка чаю, чай з лимоном |
-| **школа** | High | іти до школи, у школі, середня школа, музична школа |
-| **гарний** | High | гарний день, гарна дівчина, гарна погода, гарний настрій |
-| **жити** | High | жити в Україні, жити добре, довго жити |
-| **день** | Very High | добрий день, кожен день, цілий день, робочий день |
-| **Європа** | High | Західна Європа, жити в Європі, поїхати до Європи |
-| **яблуко** | Medium | червоне яблуко, їсти яблуко, яблуко розбрату (idiom), очне яблуко (anatomy) |
+| центр | High / Top 1000 | у центрі, центр міста, торговий центр |
+| чай | High / Food | пити чай, зелений чай, чашка чаю |
+| школа | High / Education | іти до школи, у школі, нова школа |
+| гарний | High / Adjective | гарний день, гарна дівчина, гарна погода |
+| жити | High / Verb | жити в Україні, жити добре |
+| день | Very High / Time | добрий день, кожен день, цілий день |
+| Європа | Med-High / Geo | у Європі, Західна Європа |
+| яблуко | High / Food | червоне яблуко, їсти яблуко |
 
 ## Cultural Hooks
-1. **The Letter "Ї" as Resistance**: The letter **Ї** (yi) is unique to the Ukrainian alphabet (absent in Russian). During the occupation of Mariupol in 2022, it became a symbol of resistance painted on walls to mark Ukrainian presence. It represents independence and linguistic distinctiveness.
-2. **The Repressed "Ґ"**: The letter **Ґ** (g) was officially banned from the Ukrainian alphabet during the Soviet era (1933-1990) to make the language closer to Russian. Its reinstatement is a symbol of recovering historical truth.
+1. **Ї as Resistance**: In occupied Mariupol, the letter "Ї" became a symbol of resistance. Residents drew it in public spaces to assert that "Mariupol is Ukraine" because this letter does not exist in the Russian alphabet.
+2. **The Repressed Ґ**: The letter Ґ was officially banned from the Ukrainian alphabet in 1933 by Soviet authorities to make Ukrainian look more like Russian. It was only restored in 1990, making it a symbol of historical truth and linguistic independence.
 
 ## Common Learner Errors
-1. **Г vs Ґ Confusion**: Learners often pronounce **Г** as a hard English "g" (like *go*).
-   *   *Correction*: **Г** is a voiced "h" (like *ahead*), while **Ґ** is the hard "g". The hard **Ґ** is rare.
-2. **И vs І Difficulty**: English speakers struggle to distinguish **И** (deep, like in *bit* but deeper) from **І** (standard *ee*).
-   *   *Correction*: **І** softens the previous consonant; **И** keeps it hard.
-3. **Ignoring the Soft Sign (Ь)**: Learners often treat **Ь** as silent without modifying the previous consonant.
-   *   *Correction*: The tongue must press flat against the roof of the mouth for the preceding letter (e.g., *день* sounds like *dyen'*, not *den*).
+1. **Г vs Ґ**: Learners often pronounce Г as a hard English "g". Correction: Г is a voiced glottal fricative (like a voiced "h" in "ahead"), while Ґ is the hard "g" (like "go").
+2. **И vs І**: Learners confuse these. Correction: І is a "smile" sound (narrow mouth, tongue high), while И is a "grin" sound (relaxed jaw, tongue lower/back).
+3. **Soft Sign (Ь)**: English speakers often ignore it. Correction: It is not silent; it changes the previous consonant. Tongue must press flat against the roof of the mouth (palatalization).
 
 ## Cross-References
-- **Builds on**: `a1-01` (The Cyrillic Code I - first 19 letters)
-- **Prepares for**: `a1-03` (The Gender Code - relies heavily on soft/hard endings determined by Ь, Я, Ю, Є)
+- Builds on: a1-01 (The Cyrillic Code I - first 19 letters)
+- Prepares for: a1-03 (The Gender Code - reading gender endings), a1-04 (Euphony)
 
 ## Notes for Content Writing
-- **The "Unique Seven"**: Frame the letters Г, Ґ, Є, Ї as the "Identity Letters" that prove Ukrainian is not Russian.
-- **Visual Aid**: Use a "Smile vs. Grin" analogy for І (wide smile) vs И (relaxed jaw) to help with pronunciation.
-- **Euphony**: Briefly mention that Ukrainian avoids clumping consonants, which is why we have iotated vowels (Я, Ю, Є, Ї) to smooth things out.
+- Use the "Identity Letters" framing for the Unique Seven to build emotional connection.
+- Ensure the pronunciation guide for Ь is physical/tactile (tongue position).
+- A1 Level Constraint: Use English for all grammar/phonetic explanations.

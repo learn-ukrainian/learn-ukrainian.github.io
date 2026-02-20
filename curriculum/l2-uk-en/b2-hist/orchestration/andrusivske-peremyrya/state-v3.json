@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "andrusivske-peremyrya",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:27:28Z",
+      "task_id": "v3-andrusivske-peremyrya-pA",
+      "mode": "meta-only"
+    }
+  }
+}

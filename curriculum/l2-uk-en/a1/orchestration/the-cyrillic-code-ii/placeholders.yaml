@@ -1,27 +1,17 @@
-TRACK: a1
-LEVEL: A1
-SLUG: the-cyrillic-code-ii
-TOPIC_TITLE: The Cyrillic Code II
-MODULE_NUM: '2'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-cyrillic-code-ii.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-cyrillic-code-ii.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-cyrillic-code-ii.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-ii.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-cyrillic-code-ii-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-cyrillic-code-ii-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
-SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
-SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
-PERSONA_FLAVOR: The Helpful Neighbor
-PERSONA_VOICE: Patient Supportive Tutor
-PERSONA_ROLE: Ancient Manuscript Restorer
+ACTIVITY_COUNT_TARGET: '10'
+ACTIVITY_MIN: '8'
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-cyrillic-code-ii.md
+FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
+  essay-response, critical-analysis, comparative-study, authorial-intent
 IMMERSION_RULE: 'TARGET: 5-15% Ukrainian, 85-95% English. ALL explanatory prose in
   English. ALL grammar explanations in English. ALL callout text in English. Ukrainian
   appears ONLY in: (1) example words/phrases in bold with [IPA] and (English translation),
   (2) vocabulary items. If you write a paragraph, it MUST be in English. Ukrainian
   sentences max 10 words.'
+ITEMS_MIN: '12'
+LEVEL: A1
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -41,6 +31,20 @@ LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
   Vocative'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-cyrillic-code-ii.yaml
+MODULE_NUM: '2'
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_ROLE: Ancient Manuscript Restorer
+PERSONA_VOICE: Patient Supportive Tutor
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-cyrillic-code-ii.yaml
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
+REQUIRED_TYPES: ''
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-cyrillic-code-ii-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-cyrillic-code-ii-review.md
+SCHEMA_PATH: schemas/activities-a1.schema.json
+SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
+SLUG: the-cyrillic-code-ii
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -461,12 +465,9 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-ACTIVITY_COUNT_TARGET: '10'
-ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+TOPIC_TITLE: The Cyrillic Code II
+TRACK: a1
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-cyrillic-code-ii/track-context.md
 VOCAB_COUNT_TARGET: '20'
-FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
-  essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
-REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-cyrillic-code-ii.yaml
+WORD_TARGET: '2000'

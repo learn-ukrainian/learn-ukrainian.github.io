@@ -1,26 +1,16 @@
-TRACK: a1
-LEVEL: A1
-SLUG: checkpoint-first-contact
-TOPIC_TITLE: 'Checkpoint: First Contact'
-MODULE_NUM: '10'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/checkpoint-first-contact.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/checkpoint-first-contact.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/checkpoint-first-contact.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/checkpoint-first-contact.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/checkpoint-first-contact.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/checkpoint-first-contact-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/checkpoint-first-contact-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
-SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
-SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
-PERSONA_FLAVOR: The Helpful Neighbor
-PERSONA_VOICE: Patient Supportive Tutor
-PERSONA_ROLE: Friendly Hostel Host
+ACTIVITY_COUNT_TARGET: '10'
+ACTIVITY_MIN: '8'
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/checkpoint-first-contact.md
+FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
+  essay-response, critical-analysis, comparative-study, authorial-intent
 IMMERSION_RULE: 'TARGET: 15-35% Ukrainian, 65-85% English. Explanatory prose primarily
   in English. Grammar concepts explained in English with Ukrainian terminology introduced
   (bolded, with translation on first use). Examples increasingly in Ukrainian with
   translations. Callout text in English. Ukrainian sentences max 10 words.'
+ITEMS_MIN: '12'
+LEVEL: A1
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -40,6 +30,20 @@ LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
   Vocative'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/checkpoint-first-contact.yaml
+MODULE_NUM: '10'
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_ROLE: Friendly Hostel Host
+PERSONA_VOICE: Patient Supportive Tutor
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/checkpoint-first-contact.yaml
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
+REQUIRED_TYPES: ''
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/checkpoint-first-contact-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/checkpoint-first-contact-review.md
+SCHEMA_PATH: schemas/activities-a1.schema.json
+SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
+SLUG: checkpoint-first-contact
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -460,12 +464,9 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-ACTIVITY_COUNT_TARGET: '10'
-ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+TOPIC_TITLE: 'Checkpoint: First Contact'
+TRACK: a1
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/checkpoint-first-contact/track-context.md
 VOCAB_COUNT_TARGET: '20'
-FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
-  essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
-REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/checkpoint-first-contact.yaml
+WORD_TARGET: '2000'

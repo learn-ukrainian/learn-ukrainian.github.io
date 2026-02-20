@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "this-is-i-am",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T18:49:39Z",
+      "task_id": "v3-this-is-i-am-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T18:49:39Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T18:49:40Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T18:49:42Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T18:59:51Z",
+      "attempts": 1
+    }
+  }
+}

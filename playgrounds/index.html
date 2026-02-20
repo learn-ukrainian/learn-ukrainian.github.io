@@ -34,9 +34,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .card .card-stat { margin-top: 12px; font-size: 12px; color: var(--text3); }
 
 .card.audit { border-left: 3px solid var(--green); }
-.card.pipeline { border-left: 3px solid var(--orange); }
+.card.progress { border-left: 3px solid var(--orange); }
 .card.curriculum { border-left: 3px solid var(--blue); }
-.card.activity { border-left: 3px solid var(--purple); }
+.card.quality { border-left: 3px solid var(--purple); }
+.card.api { border-left: 3px solid var(--gray); }
 
 .footer { margin-top: 40px; font-size: 12px; color: var(--text3); }
 </style>
@@ -57,23 +58,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Track-level overview, module heatmaps, QA gate breakdowns. The mission control.</p>
     <div class="card-stat" id="audit-stat"></div>
   </a>
-  <a class="card pipeline" href="/pipeline-dashboard.html">
-    <div class="icon">&#9881;</div>
-    <h2>Pipeline Dashboard</h2>
-    <p>Otaman/Hetman two-stage pipeline visualization. Active builds, queues, broker messages.</p>
-    <div class="card-stat" id="pipeline-stat"></div>
+  <a class="card progress" href="/progress.html">
+    <div class="icon">&#9654;</div>
+    <h2>Progress</h2>
+    <p>v3 pipeline state across all tracks. Research → Content → Audit → Final Review progress bars.</p>
+    <div class="card-stat" id="progress-stat"></div>
   </a>
   <a class="card curriculum" href="/curriculum-dashboard.html">
     <div class="icon">&#128218;</div>
     <h2>Curriculum Dashboard</h2>
-    <p>Bird's-eye view of 14 tracks. Module plans, word targets, content outlines.</p>
+    <p>Bird's-eye view of all tracks. Module plans, word targets, content outlines.</p>
     <div class="card-stat" id="curriculum-stat"></div>
   </a>
-  <a class="card activity" href="/activity-explorer.html">
-    <div class="icon">&#9998;</div>
-    <h2>Activity Explorer</h2>
-    <p>Interactive activity type reference. Schemas, level constraints, YAML examples.</p>
-    <div class="card-stat" id="activity-stat"></div>
+  <a class="card quality" href="/quality.html">
+    <div class="icon">&#9881;</div>
+    <h2>Quality</h2>
+    <p>Research coverage, review scores, outstanding issues, weak modules. The fix queue.</p>
+    <div class="card-stat" id="quality-stat"></div>
   </a>
 </div>
 
@@ -100,16 +101,17 @@ async function loadStats() {
   }
 
   try {
-    const res = await fetch('/api/dashboard/pipeline');
+    const res = await fetch('/api/state/summary');
     const data = await res.json();
-    document.getElementById('pipeline-stat').textContent =
-      `${data.active_builds.length} active / ${data.otaman_queue_total + data.hetman_queue_total} queued`;
+    const t = data.totals;
+    document.getElementById('progress-stat').textContent =
+      `${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
   } catch(e) {}
 
   try {
-    const res = await fetch('/api/dashboard/activity-config');
+    const res = await fetch('/api/state/weak-points?limit=1');
     const data = await res.json();
-    document.getElementById('activity-stat').textContent = `${data.types.length} types`;
+    document.getElementById('quality-stat').textContent = `${data.count} modules need attention`;
   } catch(e) {}
 }
 

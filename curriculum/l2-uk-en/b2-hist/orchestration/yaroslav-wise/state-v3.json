@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "yaroslav-wise",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:49:56Z",
+      "task_id": "v3-yaroslav-wise-pA",
+      "mode": "meta-only"
+    }
+  }
+}

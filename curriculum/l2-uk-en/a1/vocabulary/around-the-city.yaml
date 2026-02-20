@@ -1,0 +1,81 @@
+- ipa: '[ˈvulɪt͡sʲɑ]'
+  lemma: вулиця
+  pos: noun
+  translation: street
+- ipa: '[ˈplɔʃt͡ʃɑ]'
+  lemma: площа
+  pos: noun
+  translation: square
+- ipa: '[mɑjˈdɑn]'
+  lemma: майдан
+  pos: noun
+  translation: square, plaza
+- ipa: '[zʊˈpɪnkɑ]'
+  lemma: зупинка
+  pos: noun
+  translation: stop (bus/tram)
+- ipa: '[ɑpˈtɛkɑ]'
+  lemma: аптека
+  pos: noun
+  translation: pharmacy
+- ipa: '[ˈpɔʃtɑ]'
+  lemma: пошта
+  pos: noun
+  translation: post office
+- ipa: '[ˈstɑnt͡sʲijɑ]'
+  lemma: станція
+  pos: noun
+  translation: station
+- ipa: '[pɑrk]'
+  lemma: парк
+  pos: noun
+  translation: park
+- ipa: '[t͡sɛntr]'
+  lemma: центр
+  pos: noun
+  translation: center
+- ipa: '[ˈprʲɑmɔ]'
+  lemma: прямо
+  pos: adverb
+  translation: straight
+- ipa: '[nɑˈlʲivɔ]'
+  lemma: наліво
+  pos: adverb
+  translation: to the left
+- ipa: '[nɑˈprɑvɔ]'
+  lemma: направо
+  pos: adverb
+  translation: to the right
+- ipa: '[lʲiˈvɔrʊt͡ʃ]'
+  lemma: ліворуч
+  pos: adverb
+  translation: on the left
+- ipa: '[prɑˈvɔrʊt͡ʃ]'
+  lemma: праворуч
+  pos: adverb
+  translation: on the right
+- ipa: '[ˈbʲilʲɑ]'
+  lemma: біля
+  pos: preposition
+  translation: near, by
+- ipa: '[nɑu̯ˈprɔtɪ]'
+  lemma: навпроти
+  pos: preposition
+  translation: opposite
+- ipa: '[dɛ]'
+  lemma: де
+  pos: adverb
+  translation: where (location)
+- ipa: '[kʊˈdɪ]'
+  lemma: куди
+  pos: adverb
+  translation: where to (direction)
+- ipa: '[spɔˈt͡ʃɑtku]'
+  lemma: спочатку
+  pos: adverb
+  translation: at first, first
+- ipa: '[ˈpɔtʲim]'
+  lemma: потім
+  pos: adverb
+  translation: then, later
+

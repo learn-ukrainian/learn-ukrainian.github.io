@@ -2,7 +2,7 @@
   "slug": "the-living-verb-ii",
   "track": "a1",
   "module_num": 8,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T17:31:46Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T17:25:16Z",
+      "note": "v3-audit"
     },
     "3b": {
       "status": "complete",
@@ -42,30 +42,33 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T17:35:38Z",
-      "task_id": "gr-the-living-verb-ii",
-      "attempts": 1
+      "timestamp": "2026-02-19T17:26:48Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T17:38:52Z",
-      "task_id": "yw-the-living-verb-ii-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T17:26:48Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T17:44:31Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T17:25:16Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T17:44:34Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T17:26:48Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T17:34:22Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T17:44:36Z"
+      "timestamp": "2026-02-19T17:34:27Z"
     }
   },
-  "last_updated": "2026-02-18T17:44:36Z"
+  "last_updated": "2026-02-19T17:34:27Z"
 }

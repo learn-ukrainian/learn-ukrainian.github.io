@@ -75,10 +75,10 @@
   translation: day
 - ipa: '[nʲit͡ʃ]'
   lemma: ніч
-  notes: Feminine gender (soft sign exception)
+  notes: Feminine gender (consonant ending exception)
   pos: noun
   translation: night
-- ipa: '[imˈjɑ]'
+- ipa: '[ˈimjɑ]'
   lemma: ім'я
   notes: Neuter gender (ends in -я but is neuter)
   pos: noun

@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "morski-pokhody",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:16:55Z",
+      "task_id": "v3-morski-pokhody-pA",
+      "mode": "meta-only"
+    }
+  }
+}

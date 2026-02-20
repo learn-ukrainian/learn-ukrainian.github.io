@@ -1,0 +1,31 @@
+{
+  "track": "a1",
+  "slug": "at-the-cafe",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-18T21:47:21Z",
+      "task_id": "v3-at-the-cafe-pA"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-18T21:50:27Z",
+      "task_id": "v3-at-the-cafe-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-18T22:00:26Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-18T22:02:17Z",
+      "attempts": 1
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-18T22:12:23Z"
+    }
+  }
+}

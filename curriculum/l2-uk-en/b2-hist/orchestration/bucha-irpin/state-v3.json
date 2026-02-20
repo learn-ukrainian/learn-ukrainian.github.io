@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "bucha-irpin",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:37:16Z",
+      "task_id": "v3-bucha-irpin-pA",
+      "mode": "meta-only"
+    }
+  }
+}

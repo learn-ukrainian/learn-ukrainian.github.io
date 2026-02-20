@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "zasnuvannia-kyieva",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:43:55Z",
+      "task_id": "v3-zasnuvannia-kyieva-pA",
+      "mode": "meta-only"
+    }
+  }
+}

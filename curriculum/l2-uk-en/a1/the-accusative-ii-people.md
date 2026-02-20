@@ -128,14 +128,13 @@ Ukrainian words like to be easy to pronounce. Sometimes, when we add an ending, 
 
 Sometimes a vowel disappears (**Пес** → **Пса**), and sometimes it changes (**Кіт** → **Кота**).
 
-*   **Кіт** (cat): If we say "Кіта", it sounds okay. But historically, it changed to **Кота**.
+*   **Кіт** (cat): You might expect "Кіта", but the vowel changes — the correct form is **Кота**.
 *   **Пес** (dog): If we say "Песа", it is clunky. "Пса" is faster.
 
 | Subject | Object | Vowel Change |
 | :--- | :--- | :--- |
 | **Кіт** | Я бачу **кота** | **і** → **о** |
 | **Пес** | Я бачу **пса** | **е** disappears |
-| **Батько** | Я бачу **батька** | **-о** drops → **+а** |
 
 ### Common Mistakes Gallery
 Let's analyze common errors students make.
@@ -143,7 +142,7 @@ Let's analyze common errors students make.
 | Wrong Sentence | Correction | Why? |
 | :--- | :--- | :--- |
 | **Я бачу Олег.** | **Я бачу Олега.** | Oleg is a person (Animate). |
-| **Я люблю собака.** | **Я люблю собаку.** | Dog is feminine (**-а** → **-у**). |
+| **Я люблю собака.** | **Я люблю собаку.** | Собака ends in **-а**, so it changes to **-у** (like **мама**). |
 | **Я бачу парка.** | **Я бачу парк.** | Park is inanimate! No change. |
 | **Я знаю Андрій.** | **Я знаю Андрія.** | Andriy ends in **-й** (Soft) → **-я**. |
 | **Я чекаю мама.** | **Я чекаю маму.** | Mom is feminine (**-а** → **-у**). |
@@ -189,6 +188,7 @@ _To see_
 *   Я бачу **друга**. (I see a friend — male.)
 *   Він бачить **подругу**. (He sees a friend — female.)
 *   Ми бачимо **кота**. (We see a cat.)
+*   Ти бачиш **собаку**. (You see a dog.)
 
 #### 2. Знати [ˈznɑtɪ]
 _To know_
@@ -196,6 +196,7 @@ _To know_
 *   Я знаю **лікаря**. (I know the doctor.)
 *   Ти знаєш **Івана**? (Do you know Ivan?)
 *   Вона знає **сусіда**. (She knows the neighbor.)
+*   Ми знаємо **президента**. (We know the president.)
 
 #### 3. Любити [lʲuˈbɪtɪ]
 _To love / To like_
@@ -203,6 +204,7 @@ _To love / To like_
 *   Він любить **маму**. (He loves mom.)
 *   Я люблю **брата**. (I love my brother.)
 *   Дитина любить **пса**. (The child loves the dog.)
+*   Ми любимо **Україну**. (We love Ukraine.)
 
 #### 4. Чекати [t͡ʃɛˈkɑtɪ]
 _To wait for_
@@ -210,6 +212,7 @@ _To wait for_
 *   Я чекаю **тата**. (I am waiting for dad.)
 *   Вона чекає **студента**. (She is waiting for the student.)
 *   Ми чекаємо **вчителя**. (We are waiting for the teacher.)
+*   Він чекає **директора**. (He is waiting for the director.)
 
 > [!context]
 > **Who are you waiting for?**
@@ -219,33 +222,27 @@ _To wait for_
 ### Reading: My Family
 Read this short text to see the case in action.
 
-"Привіт! Мене звати Олег. Я маю велику сім'ю. Я люблю **маму** і **тата**. Я маю **брата** Андрія і **сестру** Оксану. Я бачу **брата** щодня. Ми маємо **пса** Рекса. Я люблю **пса**, а пес любить **маму**."
+"Привіт! Мене звати Олег. Я маю велику сім'ю. Я люблю **маму** і **тата**. Я маю **брата** Андрія і **сестру** Оксану. Я бачу **брата** щодня. Ми маємо **пса** Рекса. Я люблю **пса**, а пес любить **маму**. Мій тато — лікар. Я поважаю **тата**. Моя мама — вчителька. Я люблю **маму**. У нас є кіт Мурчик. Я годую **кота**."
 
 ### Correct the Mistake
-These sentences have errors. Can you fix them? The "Zombie Rule" was ignored here!
+These sentences have errors. Can you fix them? The "Heart Box Rule" was ignored here!
 
 1.  **Wrong:** Я бачу **Іван**. (I see Ivan.)
-    *   **Why?** Ivan is a person (Animate). He needs an ending.
     *   **Right:** Я бачу **Івана**.
 
 2.  **Wrong:** Я люблю **кіт**. (I love the cat.)
-    *   **Why?** A cat is an "honorary human" (Animate).
     *   **Right:** Я люблю **кота**.
 
 3.  **Wrong:** Я знаю **сусід**. (I know the neighbor.)
-    *   **Why?** Neighbor is a person.
     *   **Right:** Я знаю **сусіда**.
 
 4.  **Wrong:** Я люблю **мами**. (I love moms - Plural/Genitive?)
-    *   **Why?** We want Singular Accusative. Feminine **-а** changes to **-у**.
     *   **Right:** Я люблю **маму**.
 
 5.  **Wrong:** Я знаю **лікар**. (I know the doctor.)
-    *   **Why?** Doctor is a person.
     *   **Right:** Я знаю **лікаря**.
 
 6.  **Wrong:** Я чекаю **студент**. (I am waiting for the student.)
-    *   **Why?** Student is a person.
     *   **Right:** Я чекаю **студента**.
 
 ### Translate to Ukrainian
@@ -292,6 +289,8 @@ Listen to two friends.
 > **Олена:** Так, вона сестра **Івана**. А ти кого чекаєш?
 > **Андрій:** Я чекаю **брата**.
 > **Олена:** О, я бачу твого **брата**! Він там.
+> **Андрій:** Гарного дня!
+> **Олена:** Дякую, до побачення!
 
 **Translation:**
 *   **Andriy:** Hi, Olena! Whom are you waiting for?
@@ -300,6 +299,8 @@ Listen to two friends.
 *   **Olena:** Yes, she is Ivan's sister. And whom are you waiting for?
 *   **Andriy:** I am waiting for (my) brother.
 *   **Olena:** Oh, I see your brother! He is over there.
+*   **Andriy:** Have a good day!
+*   **Olena:** Thank you, goodbye!
 
 ### Діалог: Де кіт? (Where is the cat?)
 A situation at home.
@@ -332,6 +333,9 @@ Ukrainians use warm forms for family.
 **A:** Ти знаєш **Антона**? (Do you know Anton?)
 **B:** Ні, я не знаю **Антона**. А ти знаєш **Вікторію**? (No, I don't know Anton. But do you know Viktoriya?)
 **A:** Так, я знаю **Вікторію**! Вона моя **подруга**. (Yes, I know Viktoriya! She is my friend.)
+
+**A:** Ти бачиш **директора**?
+**B:** Ні, я бачу **менеджера**.
 
 Note: "Вона моя **подруга**" (Nominative). Because "is" (Вона є) does not trigger Accusative.
 
@@ -391,7 +395,7 @@ Names must change too! You cannot use a name as a label. It must flow with the s
 > **Foreign Names**
 > What about John or Jessica?
 > *   **John** (ends in consonant) acts like Ivan: Я знаю **Джона**.
-> *   **Jessica** (ends in -a) acts like Olena: Я бачу **Джессіку**.
+> *   **Jessica** (ends in -a) acts like Olena: Я бачу **Джесіку**.
 > *   **David** (ends in consonant) acts like Ivan: Я люблю **Девіда**.
 >
 > Only names ending in vowels like -o, -u, -i usually do not change (Mario, Kiki).
@@ -404,7 +408,7 @@ People say: "Вітаю з іменинами!" (Happy Name Day!).
 
 ### A Song for You
 Do you know the famous song "Червона Рута" (Red Rue) by Volodymyr Ivasyuk? It is one of Ukraine's most beloved songs, about longing and love.
-The song is full of people — a perfect theme for today's lesson.
+The song is about love and longing — a perfect emotional connection to today's lesson about the people we love.
 Note: In Ukrainian, pronouns like **мене** (me) and **тебе** (you) also use the Accusative Case, but they have their own special forms — you will learn these in a future module.
 
 ### Polite Address: Pan and Pani
@@ -429,7 +433,7 @@ Job titles work the same way.
 
 # Підсумок
 
-Today we unlocked the "Heart Box." Living beings (people/animals) have a special status.
+Сьогодні ми вивчили знахідний відмінок для істот. Today we unlocked the "Heart Box." Living beings (people/animals) have a special status.
 *   Masculine Animate: **+а / +я** ("Greedy").
 *   Feminine Animate: **-у / -ю** (Standard).
 

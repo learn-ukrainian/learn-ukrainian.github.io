@@ -1,0 +1,13 @@
+{
+  "track": "c1-hist",
+  "slug": "akt-zluki",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T14:38:59Z",
+      "task_id": "v3-akt-zluki-pA",
+      "mode": "full"
+    }
+  }
+}

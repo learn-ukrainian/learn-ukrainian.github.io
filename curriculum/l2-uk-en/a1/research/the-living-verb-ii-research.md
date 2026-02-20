@@ -1,34 +1,31 @@
 # Дослідження: The Living Verb II
 
 ## State Standard Reference
-§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі: ... сидіти (сиджу, сидиш, сидить, сидимо, сидите, сидять), дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться)"
-Alignment: This module focuses specifically on the Second Conjugation (-ити class) in the present tense, covering the regular paradigms and the essential consonant mutations (like д → дж in сиджу) mentioned in the standard for A1.
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... сидіти (сиджу, сидиш, сидить, сидимо, сидите, сидять)"
+Alignment: This module explicitly teaches the Second Conjugation pattern demonstrated by the Standard's example 'сидіти', including the required consonant mutation (д→дж) in the first person singular.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| говорити | Very High / A1 core | говорити українською, говорити повільно |
-| робити | Very High / A1 core | робити помилки, робити вибір |
-| любити | High / A1 core | любити читати, любити музику |
-| бачити | High / A1 core | бачити світ, бачити сон |
-| їсти | High / A1 core | хочу їсти, готувати їсти |
-| пити | High / A1 core | пити каву, пити воду |
-| ходити | High / A1 core | ходити в парк, ходити до школи |
+| говорити | High (Top 100) | говорити українською, говорити правду, говорити з другом |
+| робити | High (Top 50) | робити домашнє завдання, робити покупки, що ти робиш? |
+| бачити | High (Top 200) | я бачу, радий бачити, бачити на власні очі |
+| любити | High (Top 100) | я люблю тебе, любити читати, любити природу |
+| їсти | High (Top 500) | їсти сніданок, хотіти їсти, смачно їсти |
 
 ## Cultural Hooks
-1. **Proto-Slavic Roots**: The `-ити` infinitive ending is a direct descendant of the Proto-Slavic `*-iti` class. It has remained structurally recognizable for over 1000 years, creating a linguistic bridge between modern Ukrainian and the ancient language of Kyivan Rus'.
-2. **The Etymology of "Любити"**: The verb "любити" (to love) is not just about romance; it shares roots with "люди" (people). In a cultural sense, to love is to be part of the community, reflecting the deep social interconnectedness in Ukrainian traditions.
+1. **The Etymology of "Любити"**: The verb *любити* (to love) shares a Proto-Indo-European root (*lewdh-*) with *люди* (people) and *людство* (humanity). This linguistic connection suggests that in the Slavic worldview, love is intrinsically connected to community and belonging to the people.
+2. **Hospitality & Verbs**: The verbs *їсти* (to eat), *пити* (to drink), and *говорити* (to speak) form the triad of Ukrainian hospitality. A guest is always fed, given a drink, and engaged in conversation (*розмова*). Refusing to eat (*не їсти*) can be seen as rejecting the host's goodwill.
 
 ## Common Learner Errors
-1. **Conjugation Mix-up**: Learners often use 1st conjugation endings for 2nd conjugation verbs (e.g., *я роб-ю* → *ти роб-еш* instead of *ти роб-иш*). — Happens because `-ати` verbs (1st conjugation) are often taught first and become the "default" in the learner's mind.
-2. **Missing Mutations**: Forgetting the `л` insertion in the first person (e.g., *я робю* instead of *я роблю*). — Happens because the mutation is perceived as "irregular" rather than a systematic phonetic rule for labial consonants (б, п, в, м, ф).
-3. **Irregular Їсти**: Attempting to conjugate "їсти" like a regular `-ити` verb (*я їджу* or *я їм-иш*). — "Їсти" is an athematic verb with ancient roots that don't fit the standard I/II conjugation patterns.
+1. **Conjugation Mixing**: Learners often apply First Conjugation endings to Second Conjugation verbs (e.g., *ти робеш* instead of *ти робиш*).
+2. **Mutation Omission**: Learners forget the consonant mutation in the 'Я' form (e.g., *я сидю* or *я ходю* instead of *я сиджу*, *я ходжу*).
+3. **Irregular "Їсти"**: Learners attempt to conjugate *їсти* like a regular verb (e.g., *я їм* is correct, but learners often try *я їджу* or *я їстю*).
 
 ## Cross-References
-- Builds on: a1-06 (The Living Verb I), a1-07 (Questions and Negation)
-- Prepares for: a1-09 (Reflexive Verbs), a1-21 (Past Tense)
+- **Builds on**: a1-06 (The Living Verb I - introduces conjugation concept), a1-07 (Questions and Negation - needed for drill sentences).
+- **Prepares for**: a1-09 (Reflexive Verbs - many are 2nd conjugation), a1-21 (Past Tense - needing infinitive stems).
 
 ## Notes for Content Writing
-- **Visual Paradigms**: Use a clear table comparing a 1st conjugation verb (e.g., читати) and a 2nd conjugation verb (e.g., говорити) side-by-side to highlight the vowel difference (е/є vs и/і).
-- **The "Labial L"**: Frame the `л` insertion (роблю, люблю) as a "helpful sound" that makes the transition from the lips to the throat easier, rather than just an exception to memorize.
-- **Їсти and Пити**: Treat these as "Bonus Verbs" because they are essential for daily life but don't follow the rules perfectly (especially їсти).
+- The "Labial L" (epenthetic l) in *люблю*, *роблю* must be taught not just as a rule, but as a phonetic aid to separate the lips (*б/п/в/м/ф*) from the *ю* sound.
+- Ensure the distinction between *бачити* (to see - faculty/result) and *дивитися* (to watch - process) is clear if *дивитися* is introduced, though the plan focuses on *бачити*.

@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "yevhen-sverstiuk",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T09:09:01Z",
+      "task_id": "v3-yevhen-sverstiuk-pA",
+      "mode": "full"
+    }
+  }
+}

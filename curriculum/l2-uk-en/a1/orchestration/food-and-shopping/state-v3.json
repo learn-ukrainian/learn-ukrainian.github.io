@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "food-and-shopping",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T22:43:25Z",
+      "task_id": "v3-food-and-shopping-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T22:43:25Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T22:43:26Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T22:43:26Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T22:44:46Z",
+      "attempts": 1
+    }
+  }
+}

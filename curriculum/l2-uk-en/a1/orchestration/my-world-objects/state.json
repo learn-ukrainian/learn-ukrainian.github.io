@@ -2,7 +2,7 @@
   "slug": "my-world-objects",
   "track": "a1",
   "module_num": 5,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T16:26:14Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T18:17:40Z",
+      "note": "v3-audit"
     },
     "3b": {
       "status": "complete",
@@ -42,30 +42,33 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T16:29:37Z",
-      "task_id": "gr-my-world-objects",
-      "attempts": 1
+      "timestamp": "2026-02-19T18:19:27Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T16:31:11Z",
-      "task_id": "yw-my-world-objects-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T18:19:27Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T16:36:43Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T18:17:40Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T16:36:45Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T18:19:27Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T18:24:54Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T16:36:48Z"
+      "timestamp": "2026-02-19T18:24:58Z"
     }
   },
-  "last_updated": "2026-02-18T16:36:48Z"
+  "last_updated": "2026-02-19T18:24:58Z"
 }

@@ -38,16 +38,31 @@
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to rest
-- ipa: '[mɑlʲuˈʋɑtɪ]'
-  lemma: малювати
-  notes: type 1 (-ювати → -юю); imperfective
+- ipa: '[spʲiˈʋɑtɪ]'
+  lemma: співати
+  notes: type 1 (-ати); imperfective
   pos: verb
-  translation: to draw; to paint
+  translation: to sing
 - ipa: '[t͡ʃɛˈkɑtɪ]'
   lemma: чекати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to wait
+- ipa: '[ˈdumɑtɪ]'
+  lemma: думати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to think
+- ipa: '[ʋɪu̯ˈt͡ʃɑtɪ]'
+  lemma: вивчати
+  notes: type 1 (-ати); imperfective
+  pos: verb
+  translation: to study
+- ipa: '[rɔzuˈmʲitɪ]'
+  lemma: розуміти
+  notes: type 1 (-іти, I conjugation endings); imperfective
+  pos: verb
+  translation: to understand
 - ipa: '[jɑ]'
   lemma: я
   notes: 1st person singular

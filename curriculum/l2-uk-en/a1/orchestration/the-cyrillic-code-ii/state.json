@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:27:26Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T20:01:01Z",
+      "note": "v3-audit"
     },
     "3b": {
       "status": "complete",
@@ -42,30 +42,33 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:31:02Z",
-      "task_id": "gr-the-cyrillic-code-ii",
-      "attempts": 1
+      "timestamp": "2026-02-19T20:03:48Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:34:03Z",
-      "task_id": "yw-the-cyrillic-code-ii-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T20:03:48Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:38:05Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T20:01:01Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:38:06Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T20:03:48Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T20:10:15Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:38:06Z"
+      "timestamp": "2026-02-19T20:26:48Z"
     }
   },
-  "last_updated": "2026-02-18T11:38:06Z"
+  "last_updated": "2026-02-19T20:26:48Z"
 }

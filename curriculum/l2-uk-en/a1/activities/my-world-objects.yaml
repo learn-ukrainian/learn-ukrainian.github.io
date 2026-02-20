@@ -356,25 +356,25 @@
 - instruction: Rearrange the letters to find the furniture word.
   items:
   - answer: стіл
-    scrambled: с т і л
+    scrambled: л і с т
   - answer: шафа
-    scrambled: ш а ф а
+    scrambled: ф а ш а
   - answer: вікно
-    scrambled: в і к н о
+    scrambled: к н о в і
   - answer: книга
-    scrambled: к н и г а
+    scrambled: г и к н а
   - answer: лампа
-    scrambled: л а м п а
+    scrambled: п а л м а
   - answer: диван
-    scrambled: д и в а н
+    scrambled: в а н д и
   - answer: стілець
-    scrambled: с т і л е ц ь
+    scrambled: ц і л е с т ь
   - answer: телефон
-    scrambled: т е л е ф о н
+    scrambled: ф е н о л е т
   - answer: крісло
-    scrambled: к р і с л о
+    scrambled: с л о к р і
   - answer: ліжко
-    scrambled: л і ж к о
+    scrambled: к о ж л і
   title: Розшифруйте слова
   type: anagram
 - groups:

@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "persuasive-speech",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:56:20Z",
+      "task_id": "v3-persuasive-speech-pA",
+      "mode": "full"
+    }
+  }
+}

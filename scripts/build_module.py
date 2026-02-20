@@ -1946,7 +1946,7 @@ def _claude_cli() -> str:
     return _shutil.which("claude") or "claude"
 
 
-def _run_claude_headless(prompt: str, timeout: int = 300) -> tuple[bool, str]:
+def _run_claude_headless(prompt: str, timeout: int = 300, model: str | None = None) -> tuple[bool, str]:
     """Call `claude -p <prompt>` headlessly and return (success, output).
 
     Uses subprocess so no API key or anthropic package is required.
@@ -1955,9 +1955,13 @@ def _run_claude_headless(prompt: str, timeout: int = 300) -> tuple[bool, str]:
     import subprocess as _sp
     env = os.environ.copy()
     env.pop("CLAUDECODE", None)  # Prevent "nested session" error
+    cmd = [_claude_cli()]
+    if model:
+        cmd.extend(["--model", model])
+    cmd.extend(["-p", prompt, "--output-format", "text"])
     try:
         result = _sp.run(
-            [_claude_cli(), "-p", prompt, "--output-format", "text"],
+            cmd,
             capture_output=True,
             text=True,
             timeout=timeout,
@@ -2314,8 +2318,9 @@ Do not rubber-stamp. A verdict of APPROVE on a module with real unfixed issues i
 """
 
     full_prompt = f"{system_prompt}\n\n{user_prompt}"
-    log("  Phase 9 (Claude): Calling headless claude for final QA review...")
-    ok, report = _run_claude_headless(full_prompt, timeout=600)
+    claude_model_f = getattr(ctx, "claude_model_F", None)
+    log(f"  Phase 9 (Claude): Calling headless claude for final QA review{f' [{claude_model_f}]' if claude_model_f else ''}...")
+    ok, report = _run_claude_headless(full_prompt, timeout=600, model=claude_model_f)
     if not ok:
         return False, "", ""
     log(f"  Phase 9 (Claude): Review complete ({len(report)} chars)")

@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "review-c1-4",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:29:17Z",
+      "task_id": "v3-review-c1-4-pA",
+      "mode": "full"
+    }
+  }
+}

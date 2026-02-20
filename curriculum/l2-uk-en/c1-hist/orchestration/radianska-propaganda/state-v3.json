@@ -1,0 +1,13 @@
+{
+  "track": "c1-hist",
+  "slug": "radianska-propaganda",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T19:56:58Z",
+      "task_id": "v3-radianska-propaganda-pA",
+      "mode": "full"
+    }
+  }
+}

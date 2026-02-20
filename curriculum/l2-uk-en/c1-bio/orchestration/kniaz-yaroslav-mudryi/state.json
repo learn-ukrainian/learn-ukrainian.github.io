@@ -1,0 +1,74 @@
+{
+  "slug": "kniaz-yaroslav-mudryi",
+  "track": "c1-bio",
+  "module_num": 4,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T17:24:41Z",
+      "task_id": "yw-kniaz-yaroslav-mudryi-p0"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T17:24:41Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T17:25:26Z",
+      "task_id": "yw-kniaz-yaroslav-mudryi-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T17:29:45Z",
+      "words": 4696,
+      "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:24:49Z",
+      "note": "v3-audit"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T17:43:24Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T17:43:24Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:28:14Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:28:14Z",
+      "note": "v3-phase-D"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:24:49Z",
+      "note": "v3-audit"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:28:14Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:35:55Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:38:20Z"
+    }
+  },
+  "last_updated": "2026-02-19T10:38:20Z"
+}

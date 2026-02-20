@@ -1,0 +1,287 @@
+- type: match-up
+  title: 'Словниковий запас: Погода'
+  instruction: 'З’єднайте українське слово з перекладом.'
+  pairs:
+    - left: 'погода'
+      right: 'weather'
+    - left: 'дощ'
+      right: 'rain'
+    - left: 'сніг'
+      right: 'snow'
+    - left: 'сонце'
+      right: 'sun'
+    - left: 'хмара'
+      right: 'cloud'
+    - left: 'вітер'
+      right: 'wind'
+    - left: 'весна'
+      right: 'spring'
+    - left: 'літо'
+      right: 'summer'
+    - left: 'осінь'
+      right: 'autumn'
+    - left: 'зима'
+      right: 'winter'
+    - left: 'тепло'
+      right: 'warm'
+    - left: 'холодно'
+      right: 'cold'
+
+- type: group-sort
+  title: 'Пори року'
+  instruction: 'Розподіліть слова за відповідними порами року.'
+  groups:
+    - name: 'Зима'
+      items:
+        - 'сніг'
+        - 'холодно'
+        - 'січень'
+    - name: 'Літо'
+      items:
+        - 'спекотно'
+        - 'сонце'
+        - 'липень'
+    - name: 'Осінь'
+      items:
+        - 'дощ'
+        - 'жовте листя'
+        - 'жовтень'
+    - name: 'Весна'
+      items:
+        - 'квіти'
+        - 'тепло'
+        - 'квітень'
+
+- type: fill-in
+  title: 'Оберіть правильне дієслово'
+  instruction: 'Доповніть речення правильним дієсловом.'
+  items:
+    - sentence: 'На вулиці _____ дощ.'
+      answer: 'йде'
+      options: ['йде', 'світить', 'дме', 'робить']
+      explanation: 'Ми кажемо «дощ йде» (rain walks/goes).'
+    - sentence: 'Сьогодні _____ яскраве сонце.'
+      answer: 'світить'
+      options: ['світить', 'йде', 'біжить', 'падає']
+      explanation: 'Сонце світить (shines).'
+    - sentence: 'На вулиці _____ сильний вітер.'
+      answer: 'дме'
+      options: ['дме', 'світить', 'йде', 'стоїть']
+      explanation: 'Вітер дме (blows).'
+    - sentence: 'Взимку часто _____ сніг.'
+      answer: 'йде'
+      options: ['йде', 'світить', 'лежить', 'робить']
+      explanation: 'Сніг також «йде» (goes), як і дощ.'
+    - sentence: 'Завтра _____ чудова погода.'
+      answer: 'буде'
+      options: ['буде', 'є', 'робить', 'йде']
+      explanation: 'Для майбутнього часу використовуємо «буде» (will be).'
+    - sentence: 'Вчора _____ холодно.'
+      answer: 'було'
+      options: ['було', 'буде', 'є', 'стало']
+      explanation: 'Для минулого часу використовуємо «було» (was).'
+    - sentence: 'Сьогодні на вулиці _____ сніг.'
+      answer: 'йде'
+      options: ['йде', 'світить', 'лежить', 'стоїть']
+      explanation: 'Сніг йде (Snow goes).'
+    - sentence: 'Влітку часто _____ сонце.'
+      answer: 'світить'
+      options: ['світить', 'дме', 'падає', 'йде']
+      explanation: 'Сонце світить (Sun shines).'
+
+- type: quiz
+  title: 'Перевірка розуміння'
+  instruction: 'Дайте відповідь на запитання.'
+  items:
+    - question: 'Яка температура, коли дуже спекотно?'
+      explanation: 'Плюс 30 і вище — це спекотно.'
+      options:
+        - text: '+30°C'
+          correct: true
+        - text: '+10°C'
+          correct: false
+        - text: '0°C'
+          correct: false
+        - text: '-5°C'
+          correct: false
+    - question: 'Яка пора року йде після зими?'
+      explanation: 'Після зими настає весна.'
+      options:
+        - text: 'весна'
+          correct: true
+        - text: 'літо'
+          correct: false
+        - text: 'осінь'
+          correct: false
+        - text: 'зима'
+          correct: false
+    - question: 'Що ми беремо, коли йде дощ?'
+      explanation: 'Коли йде дощ, потрібна парасоля.'
+      options:
+        - text: 'парасоля'
+          correct: true
+        - text: 'окуляри'
+          correct: false
+        - text: 'книга'
+          correct: false
+        - text: 'лампа'
+          correct: false
+    - question: 'Як ми кажемо "It is cold" українською?'
+      explanation: 'Ми використовуємо просто прислівник "Холодно" без "це" або "є".'
+      options:
+        - text: 'Холодно.'
+          correct: true
+        - text: 'Це холодно.'
+          correct: false
+        - text: 'Є холодно.'
+          correct: false
+        - text: 'Він холодний.'
+          correct: false
+    - question: 'Коли ми в Україні святкуємо Різдво?'
+      explanation: 'Різдво — це зимове свято.'
+      options:
+        - text: 'взимку'
+          correct: true
+        - text: 'влітку'
+          correct: false
+        - text: 'навесні'
+          correct: false
+        - text: 'восени'
+          correct: false
+    - question: 'Яке слово описує "Indian summer"?'
+      explanation: 'Це культурне явище називається "Бабине літо".'
+      options:
+        - text: 'Бабине літо'
+          correct: true
+        - text: 'Дідове літо'
+          correct: false
+        - text: 'Жіноча осінь'
+          correct: false
+        - text: 'Тепла зима'
+          correct: false
+    - question: 'Яка пора року, коли падає сніг?'
+      explanation: 'Сніг падає взимку.'
+      options:
+        - text: 'Зима'
+          correct: true
+        - text: 'Літо'
+          correct: false
+        - text: 'Весна'
+          correct: false
+        - text: 'Осінь'
+          correct: false
+    - question: 'Що ми робимо, коли спекотно?'
+      explanation: 'Коли спекотно, ми йдемо на пляж.'
+      options:
+        - text: 'Йдемо на пляж'
+          correct: true
+        - text: 'Одягаємо шапку'
+          correct: false
+        - text: 'П’ємо гарячий чай'
+          correct: false
+        - text: 'Сидимо вдома'
+          correct: false
+
+- type: unjumble
+  title: 'Складіть речення'
+  instruction: 'Розставте слова у правильному порядку.'
+  items:
+    - words: ['Сьогодні', 'дуже', 'тепло']
+      answer: 'Сьогодні дуже тепло'
+    - words: ['Взимку', 'часто', 'йде', 'сніг']
+      answer: 'Взимку часто йде сніг'
+    - words: ['Я', 'беру', 'парасолю', 'бо', 'йде', 'дощ']
+      answer: 'Я беру парасолю бо йде дощ'
+    - words: ['Завтра', 'буде', 'гарна', 'погода']
+      answer: 'Завтра буде гарна погода'
+    - words: ['На', 'вулиці', 'сьогодні', 'холодно']
+      answer: 'На вулиці сьогодні холодно'
+    - words: ['Навесні', 'світить', 'сонце']
+      answer: 'Навесні світить сонце'
+
+- type: true-false
+  title: 'Правда чи ні?'
+  instruction: 'Визначте, чи правильне це твердження.'
+  items:
+    - statement: 'Взимку завжди дуже спекотно.'
+      correct: false
+      explanation: 'Взимку холодно, а не спекотно.'
+    - statement: 'Влітку ми часто йдемо на пляж.'
+      correct: true
+      explanation: 'Так, бо влітку тепло і сонячно.'
+    - statement: 'Коли йде дощ, світить яскраве сонце.'
+      correct: false
+      explanation: 'Зазвичай коли йде дощ, на небі хмари.'
+    - statement: 'Восени листя стає жовтим.'
+      correct: true
+      explanation: 'Жовте листя — ознака осені.'
+    - statement: 'Сніг — це замерзла вода.'
+      correct: true
+      explanation: 'Сніг падає, коли температура нижче нуля.'
+    - statement: 'Ми кажемо "Дощ робить".'
+      correct: false
+      explanation: 'Ми кажемо "Дощ йде".'
+    - statement: 'Навесні птахи співають.'
+      correct: true
+      explanation: 'Весна — час, коли природа прокидається.'
+    - statement: 'Взимку ми носимо футболки.'
+      correct: false
+      explanation: 'Взимку ми носимо теплий одяг.'
+
+- type: match-up
+  title: 'Причина і наслідок'
+  instruction: 'З’єднайте ситуацію з логічною дією.'
+  pairs:
+    - left: 'Йде дощ'
+      right: 'Я беру парасолю'
+    - left: 'На вулиці холодно'
+      right: 'Я одягаю шапку'
+    - left: 'Дуже спекотно'
+      right: 'Ми йдемо на пляж'
+    - left: 'Сьогодні чудова погода'
+      right: 'Ми йдемо гуляти в парк'
+    - left: 'Завтра буде дощ'
+      right: 'Ми будемо вдома'
+    - left: 'На вулиці вітер'
+      right: 'Я закриваю вікно'
+    - left: 'Сьогодні тепло'
+      right: 'Ми їдемо на пікнік'
+    - left: 'Вже вечір'
+      right: 'Стає прохолодно'
+
+- type: fill-in
+  title: 'Іменник чи прислівник?'
+  instruction: 'Оберіть правильну форму слова (Коли? або Що?).'
+  items:
+    - sentence: 'Зараз _____ (зима/взимку).'
+      answer: 'зима'
+      options: ['зима', 'взимку', 'зимі', 'зиму']
+      explanation: 'Тут ми називаємо пору року (що це? — зима).'
+    - sentence: '_____ (зима/взимку) холодно.'
+      answer: 'Взимку'
+      options: ['Взимку', 'Зима', 'Зимою', 'Зимі']
+      explanation: 'Відповідаємо на питання "Коли?" — взимку.'
+    - sentence: 'Я люблю _____ (літо/влітку).'
+      answer: 'літо'
+      options: ['літо', 'влітку', 'літа', 'літу']
+      explanation: 'Я люблю (що?) — літо.'
+    - sentence: '_____ (літо/влітку) ми їдемо на море.'
+      answer: 'Влітку'
+      options: ['Влітку', 'Літо', 'Літом', 'Літу']
+      explanation: 'Коли ми їдемо? — Влітку.'
+    - sentence: 'Скоро буде _____ (весна/навесні).'
+      answer: 'весна'
+      options: ['весна', 'навесні', 'весну', 'весни']
+      explanation: 'Скоро буде (що?) — весна.'
+    - sentence: '_____ (весна/навесні) птахи співають.'
+      answer: 'Навесні'
+      options: ['Навесні', 'Весна', 'Весною', 'Весні']
+      explanation: 'Коли птахи співають? — Навесні.'
+    - sentence: 'Зараз _____ (осінь/восени).'
+      answer: 'осінь'
+      options: ['осінь', 'восени', 'осені', 'осінню']
+      explanation: 'Що це? — Осінь.'
+    - sentence: '_____ (Осінь/Восени) часто йде дощ.'
+      answer: 'Восени'
+      options: ['Восени', 'Осінь', 'Осені', 'Осінню']
+      explanation: 'Коли? — Восени.'

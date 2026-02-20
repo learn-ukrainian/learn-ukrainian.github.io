@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "high-formal-register",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:23:52Z",
+      "task_id": "v3-high-formal-register-pA",
+      "mode": "full"
+    }
+  }
+}

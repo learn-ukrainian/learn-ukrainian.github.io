@@ -71,7 +71,7 @@
   lemma: світ
   pos: noun
   translation: world
-- ipa: '[ˈprɑu̯dɑ]'
+- ipa: '[ˈprɑʋdɑ]'
   lemma: правда
   pos: noun
   translation: truth
@@ -91,4 +91,9 @@
   lemma: щодня
   pos: adverb
   translation: every day
+- ipa: '[prɔˈsɪtɪ]'
+  lemma: просити
+  notes: Type 2 (-ити); Mutation s→sh (я прошу)
+  pos: verb
+  translation: to ask / to request
 

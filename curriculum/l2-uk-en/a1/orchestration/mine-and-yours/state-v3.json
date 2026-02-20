@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "mine-and-yours",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T22:03:00Z",
+      "task_id": "v3-mine-and-yours-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T22:03:00Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T22:03:01Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T22:04:53Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T22:07:19Z",
+      "attempts": 1
+    }
+  }
+}

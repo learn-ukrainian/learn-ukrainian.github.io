@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "ivan-sirko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:28:18Z",
+      "task_id": "v3-ivan-sirko-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -47,7 +47,7 @@
   lemma: студент
   pos: noun
   translation: student (male)
-- ipa: '[ˈʋt͡ʃɪtɛlʲ]'
+- ipa: '[ˈut͡ʃɪtɛlʲ]'
   lemma: вчитель
   pos: noun
   translation: teacher (male)
@@ -80,4 +80,7 @@
   notes: Negative particle
   pos: part
   translation: not
-
+- ipa: '[dijɛˈslɔʋɔ]'
+  lemma: дієслово
+  pos: noun
+  translation: verb

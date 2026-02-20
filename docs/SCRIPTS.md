@@ -1593,13 +1593,15 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 .venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist # Scan specific tracks
 ```
 
-### Deterministic Python Builder v3 (Preferred — 4-call optimised)
+### Deterministic Python Builder v3 (Preferred — Hybrid Gemini+Claude pipeline)
 
-`scripts/build_module_v3.py` reduces round-trips vs v2 by collapsing phases into single calls.
-Baseline: 4 Gemini calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+.
+`scripts/build_module_v3.py` reduces round-trips vs v2 by collapsing phases into single calls,
+and routes phases to the best LLM: Gemini for research/prose, Claude for activities and final review.
+
+**Baseline: 4 LLM calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+ Gemini-only.**
 
 ```bash
-# Single module — full E2E (4 Gemini calls baseline)
+# Single module — full E2E (Gemini phases A+B, Claude phases C+F)
 .venv/bin/python scripts/build_module_v3.py {track} {num}
 
 # Build entire track (skips already-passing modules)
@@ -1620,7 +1622,7 @@ Baseline: 4 Gemini calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+.
 # Skip track context injection in Phases B and C
 .venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context
 
-# Dry-run (show plan, no Gemini dispatches)
+# Dry-run (show plan, no LLM dispatches)
 .venv/bin/python scripts/build_module_v3.py {track} {num} --dry-run
 
 # Just verify (run audit, print PASS/FAIL, exit)
@@ -1630,18 +1632,75 @@ Baseline: 4 Gemini calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+.
 .venv/bin/python scripts/build_module_v3.py {track} {num} --final-review
 ```
 
+**Hybrid LLM routing — `--use-claude`:**
+
+By default, Phase C (activities) uses Claude and Phase F (final review) uses Claude.
+Use `--use-claude` to route additional phases to Claude (useful when running from a terminal
+to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activity quality):
+
+```bash
+# Route Phase A (research) to Claude — useful for c1/c2/b2-pro/c1-pro
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude A
+
+# Route Phase C (activities) to Claude explicitly (this is the default)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude C
+
+# Route both A and C to Claude
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude "A C"
+
+# Research-only batch via Claude (for c1, c2, b2-pro, c1-pro)
+.venv/bin/python scripts/build_module_v3.py c1 --all --research-only --use-claude A
+```
+
+**Per-phase model overrides:**
+
+Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
+- Seminar tracks (c1-bio, b2-hist, c1-hist, lit, oes, ruth): **claude-opus-4-6** for Claude phases
+- Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
+- Phase F (final review): always **claude-opus-4-6** regardless of track
+
+Override models per-phase when needed:
+
+```bash
+# Use Opus for activities even on a core track
+.venv/bin/python scripts/build_module_v3.py a1 {num} --claude-model-C claude-opus-4-6
+
+# Use Sonnet for final review (faster, cheaper)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review --claude-model-F claude-sonnet-4-6
+
+# Use Opus for research on a core track
+.venv/bin/python scripts/build_module_v3.py c1 {num} --use-claude A --claude-model-A claude-opus-4-6
+```
+
+**Model config defaults (edit `scripts/batch_gemini_config.py` to change globally):**
+
+```python
+CLAUDE_SONNET = "claude-sonnet-4-6"
+CLAUDE_OPUS   = "claude-opus-4-6"
+
+CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Phase A, core tracks
+CLAUDE_MODEL_CORE_ACTIVITIES    = CLAUDE_SONNET  # Phase C, core tracks
+CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A, seminar tracks
+CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C, seminar tracks
+CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F, all tracks
+```
+
 **Pipeline phases:**
 ```
-Phase A (research+meta) → B (content+track-ctx) → C (activities+vocab+track-ctx)
-→ audit (prose+enrichment loop, max 3 fixes)
-→ D (review+fix loop, max 2 iters)
-→ [F: Claude QA, optional]
-→ E (MDX, always last)
+Phase A (research+meta)   [Gemini by default; --use-claude A for Claude]
+→ B (content+track-ctx)  [Gemini always]
+→ C (activities+vocab)   [Claude: sonnet for core, opus for seminar]
+→ audit (fix loop, max 3 Gemini fix calls)
+→ D (review+fix loop, max 2 Gemini iters)
+→ [F: Claude QA gate, --final-review; opus always]
+→ E (MDX generation, always last, no LLM call)
 ```
 
 **v3 vs v2:**
 - Phase A = v2's phases 0 + 0.5 + 1 (1 call instead of 3)
+- Phase C = Claude writes activities (better quality than Gemini-only)
 - Phase D = v2's phases 6 + 6b + 7 (1-2 calls instead of 3+)
+- Phase F = Claude final review with fix iterations (replaces Gemini adversarial review)
 - Track context injected into Phases B + C for cross-module consistency
 - State: `state-v3.json` (no conflict with v2's `state.json`)
 - Templates: `phase-A-seminar.md`, `phase-A-core.md`, `phase-D-review-fix.md`

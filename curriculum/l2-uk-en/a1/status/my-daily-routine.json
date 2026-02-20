@@ -1,0 +1,64 @@
+{
+  "module": "my-daily-routine",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-19T23:01:56.278615Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-19T22:58:32.102430Z",
+    "meta": "2026-02-19T22:47:34.916525Z",
+    "activities": "2026-02-19T22:58:32.103979Z",
+    "vocabulary": "2026-02-19T22:58:32.104412Z",
+    "plan": "2026-02-18T19:03:32.105789Z",
+    "research": "2026-02-19T22:45:02.664738Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2771/2000 (raw: 3005)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "21/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

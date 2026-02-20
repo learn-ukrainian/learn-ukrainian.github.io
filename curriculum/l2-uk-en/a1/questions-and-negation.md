@@ -37,7 +37,7 @@ If you want to ask "Do you read?", you never translate the word "do". You simply
 ### Базове заперечення: Сила "Не"
 Just as we need to ask, we also need to be able to deny. The world isn't always "yes." Sometimes it is "no."
 
-To make a sentence negative in Ukrainian, we use the particle **не** [nɛ]. This tiny word is incredibly powerful. It stands like a guard directly *before* the word it negates. usually the verb.
+To make a sentence negative in Ukrainian, we use the particle **не** [nɛ]. This tiny word is incredibly powerful. It stands like a guard directly *before* the word it negates, usually the verb.
 
 *   **Я розумію.** (I understand.)
 *   **Я не розумію.** (I do not understand.)
@@ -57,7 +57,7 @@ There is a common stumbling block for beginners: confusing the *answer* "No" wit
 
 Think of **Ні** as a wall that stops the conversation, and **не** as a shield that protects the verb.
 
-## Граматика: Питальні речення
+## Граматика: Як будувати питання
 
 ### Питання "Так/Ні" і частка "Чи"
 The most formal and classic way to ask a Yes/No question in Ukrainian is to use the particle **чи** [t͡ʃɪ]. This small word acts like a flag at the beginning of the sentence. It signals to the listener: "Attention! A question is coming!"
@@ -132,18 +132,23 @@ Here are the essential ones you need to know now:
 1.  **Хто?** [xtɔ] — Who? (People / Animates)
 2.  **Що?** [ʃt͡ʃɔ] — What? (Things / Actions)
 3.  **Де?** [dɛ] — Where? (Location)
-4.  **Коли?** [kɔˈlɪ] — When? (Time)
-5.  **Як?** [jɑk] — How? (Manner)
-6.  **Чому?** [t͡ʃɔˈmu] — Why? (Reason)
+4.  **Куди?** [kuˈdɪ] — Where to? (Direction)
+5.  **Звідки?** [ˈzʋʲidkɪ] — Where from? (Origin)
+6.  **Коли?** [kɔˈlɪ] — When? (Time)
+7.  **Як?** [jɑk] — How? (Manner)
+8.  **Чому?** [t͡ʃɔˈmu] — Why? (Reason)
+9.  **Скільки?** [ˈskʲilʲkɪ] — How much/many? (Quantity)
 
 **Приклади:**
 *   **Хто це?** — Who is this?
 *   **Що це?** — What is this?
 *   **Де ти?** — Where are you?
+*   **Куди ти йдеш?** — Where are you going?
+*   **Звідки ти?** — Where are you from?
 *   **Коли ми читаємо?** — When do we read?
 *   **Як справи?** — How are things? (How are you?)
 *   **Чому ти тут?** — Why are you here?
-*   **Як це працює?** — How does this work?
+*   **Скільки це коштує?** — How much does this cost?
 
 **Важливо знати:**
 Notice that we do not need "is" or "are" in strictly present tense questions like "Who is this?". **Хто це?** literally means "Who this?". The verb "to be" is silent/implied.
@@ -160,6 +165,22 @@ You will learn **що** [ʃt͡ʃɔ] in textbooks. It is the literary, correct st
 
 **Важливо знати:**
 As a learner, you should always aim to say **що**. It makes you sound educated and respectful of the language. But you must train your ear to understand **шо**. Ви будете чути це скрізь. Не плутайтеся — це просто те саме слово.
+
+### Слова частоти: Відповіді на "Коли?"
+When someone asks **Коли?**, you often answer with a frequency word. Here are the four most useful ones:
+
+*   **завжди** [zɑu̯ˈʒdɪ] — always
+*   **часто** [ˈt͡ʃɑstɔ] — often
+*   **іноді** [iˈnɔdʲi] — sometimes
+*   **ніколи** [nʲiˈkɔlɪ] — never
+
+**Приклади:**
+*   **Коли ти читаєш?** — **Завжди ввечері.** (Always in the evening.)
+*   **Ти часто п'єш каву?** — **Так, часто.** (Yes, often.)
+*   **Ти іноді читаєш?** — **Так, іноді.** (Yes, sometimes.)
+
+**Важливо знати:**
+The word **ніколи** contains a built-in negation. When you use it with a verb, add **не** before the verb too: **Я ніколи не читаю.** (I never read.) This double negation is standard in Ukrainian — it does not cancel itself out.
 
 > [!myth-buster]
 > **Міф про "Do"**
@@ -250,7 +271,7 @@ Use your hand to "conduct" your voice. It helps your brain connect the physical 
 >
 > **Ти розумієш?** (Підніміть брови!) ↗
 
-## Застосування: Діалоги в кафе
+## Застосування: Розмова в реальному житті
 
 ### Сценарій 1: Запитання в меню
 Imagine you are at a Lviv coffee shop. You want to know if they have cheesecake. You don't see it.
@@ -301,7 +322,7 @@ Practice this rhythm. Question, Answer. Question, Answer. Don't break the flow b
 >
 > Простота є цілком прийнятною в контексті.
 
-## Культурний контекст: Від «Альфа» до етикету
+## Культурний контекст: Ввічливість і гумор
 
 ### Рівень ввічливості
 We mentioned **Чи** vs Intonation. Think of this as a "politeness dial."
@@ -310,6 +331,15 @@ We mentioned **Чи** vs Intonation. Think of this as a "politeness dial."
 *   **Low Politeness (Intimacy):** Best friend, sibling, angry argument. Use Intonation primarily.
 
 Using **Чи** with your best friend might sound sarcastic or overly dramatic. Using just intonation with a police officer might sound rude. Adjust your dial!
+
+### Пом'якшення "Ні"
+A bare **Ні** can sound blunt, even rude. In Ukrainian culture, softening your refusal is polite. Compare:
+
+*   **Ні.** — Abrupt, like slamming a door.
+*   **Ні, дякую.** — Polite, like closing a door gently.
+*   **Ні, я не хочу.** — Explanatory, gives context.
+
+When declining, add a little context. Ваша відмова буде м'якшою і приємнішою.
 
 ### Культурний гачок: Легендарний АЛЬФ
 У 1990-х роках американський серіал "ALF" переклали українською. Цей дубляж — це шедевр перекладу! Він сформував почуття гумору цілого покоління.
@@ -348,3 +378,4 @@ Using **Чи** with your best friend might sound sarcastic or overly dramatic. U
 4.  **Перекладіть "Хто це?" та "Що це?". Коли ми їх вживаємо?**
 5.  **Ви хочете запитати "Ти читаєш?". Чи треба перекладати слово "do"? Чому?**
 6.  **Яка різниця між стандартним "що" та розмовним "шо"?**
+7.  **Назвіть чотири слова частоти (від "завжди" до "ніколи"). Що треба знати про слово "ніколи"?**

@@ -1,0 +1,32 @@
+{
+  "track": "b2",
+  "slug": "passive-voice-system",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:54:25Z",
+      "task_id": "v3-passive-voice-system-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T10:54:25Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T10:54:25Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T10:59:15Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T11:00:47Z",
+      "attempts": 1
+    }
+  }
+}

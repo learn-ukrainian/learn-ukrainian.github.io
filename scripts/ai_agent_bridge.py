@@ -1106,7 +1106,7 @@ Format your response clearly.
                     elif stdout_only:
                         # Stdout-only mode: broker gets SHORT summary only
                         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
-                        send_message(
+                        reply_id = send_message(
                             content=summary,
                             task_id=msg['task_id'],
                             msg_type="response",
@@ -1115,9 +1115,13 @@ Format your response clearly.
                             from_model=model,
                             to_model=None
                         )
+                        # Claude is reading this from stdout right now — auto-ack to prevent accumulation
+                        acknowledge(reply_id)
+                        print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
                     else:
                         # Standard mode: full response through broker
-                        send_message(
+                        # Auto-ack immediately: Claude reads this from stdout, broker record is redundant
+                        reply_id = send_message(
                             content=response,
                             task_id=msg['task_id'],
                             msg_type="response",
@@ -1126,6 +1130,8 @@ Format your response clearly.
                             from_model=model,
                             to_model=None
                         )
+                        acknowledge(reply_id)
+                        print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
                     _response_sent = True
 
                     # Acknowledge original message

@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "krymske-khanstvo",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T13:04:28Z",
+      "task_id": "v3-krymske-khanstvo-pA",
+      "mode": "meta-only"
+    }
+  }
+}

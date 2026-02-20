@@ -41,7 +41,7 @@ Ukrainian has specific letters that serve as markers of identity. When you see t
 
 #### The Letter Г (He)
 This is the most common "H" sound in Ukrainian. It looks like a gallows or a simplistic gamma: **Г**.
-*   **Sound**: [ɦ]. This is a **voiced** glottal fricative. It sounds like the "h" in "ahead" or "behave," but with your voice box vibrating. It is NOT the hard "g" in "go."
+*   **Sound**: [ɦ]. It sounds like the "h" in "ahead" or "behave," but deeper and with your voice box vibrating. It is NOT the hard "g" in "go."
 *   **Usage**: It appears everywhere. It is a soft, deep sound.
 *   **Example**: **гарний** [ˈɦɑrnɪi̯] (beautiful).
 
@@ -56,7 +56,7 @@ This letter has a small upturn on the top right, like a little hook: **Ґ**.
 > Do not confuse them!
 > *   **Г** = Soft, voiced "h" (Standard Ukrainian sound).
 > *   **Ґ** = Hard "g" (Rare, specific words).
-> If you pronounce **Г** as a hard "g", you will sound Russian. Using the correct soft [ɦ] for **Г** is the #1 way to improve your accent immediately.
+> If you pronounce **Г** as a hard "g", you will lose the authentic Ukrainian sound. Using the correct soft [ɦ] for **Г** is the #1 way to improve your accent immediately.
 
 ### Шиплячі приголосні (The Hissing Consonants)
 Ukrainian has a rich set of "hissing" sounds. They might look intimidating, but they are very consistent.
@@ -78,7 +78,7 @@ Ukrainian has a rich set of "hissing" sounds. They might look intimidating, but 
 *   **Example**: **чай** [t͡ʃɑi̯] (tea).
 
 #### Ц (Tse)
-*   **Sound**: [ts]. Identical to the "ts" in "cats" or "boots." It looks like a square U with a tail.
+*   **Sound**: [t͡s]. Identical to the "ts" in "cats" or "boots." It looks like a square U with a tail.
 *   **Example**: **центр** [t͡sɛntr] (center).
 
 ### Йотовані голосні: Секрет м'якості
@@ -86,8 +86,7 @@ Ukrainian is a melodic language because we avoid clumping consonants together. T
 
 #### Є (Ye)
 *   **Sound**: [jɛ]. Pronounced as "ye" in "yes."
-*   **Function**: Softens the previous consonant.
-*   **Example**: **Європа** [jɛu̯ˈrɔpɑ] (Europe).
+*   **Example**: **Європа** [jɛu̯ˈrɔpɑ] (Europe). At the start of a word, you hear the full "ye" sound. After a consonant, the [j] merges and softens that consonant.
 
 #### Ю (Yu)
 *   **Sound**: [ju]. Similar to "yu" in "you" or "universe."
@@ -114,6 +113,7 @@ This letter has **no sound of its own**. It is a modifier. It tells you to prono
 *   **Example**: **день** [dɛnʲ] (day).
     *   Without soft sign: *den* (hard n).
     *   With soft sign: *dyen'* (soft n, sounds lighter and higher).
+*   **Example**: **шість** [ʃistʲ] (six). The final **Т** is softened — it ends with a light, gentle release.
 *   **Example**: **Львів** [lʲʋiu̯] (Lviv). The "L" is soft, almost like the "l" in "leaf," not the hard "l" in "ball."
 
 ### Апостроф: Анти-м'якшувач (The Apostrophe)
@@ -130,22 +130,22 @@ This is the most common stumbling block for English speakers. Both sound like "i
 #### І (The Soft I)
 *   **Symbol**: **І** (like distinct English I).
 *   **Sound**: [i]. Like "ee" in "see" or "meet."
-*   **Facial Expression**: A wide **SMILE**. Your lips stretch wide.
+*   **Facial Expression**: Lips spread slightly, corners pulled back — not a grin, just the natural position for "ee".
 *   **Function**: It softens the consonant before it.
 *   **Example**: **літо** [ˈlʲitɔ] (summer). Notice the "L" becomes soft.
 
 #### И (The Hard I)
 *   **Symbol**: **И** (looks like a backwards N).
-*   **Sound**: [ɪ]. Like the "i" in "bit" or "sit," but deeper in the throat.
-*   **Facial Expression**: A **GRIN** or relaxed jaw. Your mouth is slightly open, lower jaw dropped.
+*   **Sound**: [ɪ]. Like the "i" in "bit" or "sit." Tongue stays high — just pulled slightly back from **І**.
+*   **Facial Expression**: Lips relaxed, no spread. Jaw stays up.
 *   **Function**: It keeps the consonant before it HARD.
 *   **Example**: **ми** [mɪ] (we). The "m" stays hard.
 
 > [!observe]
-> **The "Smile vs. Jaw" Test**
-> Say "cheese." You are smiling. That is **І**.
-> Now relax your jaw, drop it slightly, and make a deep grunting sound from your chest: "ih." That is **И**.
-> **І** is bright and high. **И** is deep and low.
+> **The "see" vs. "bit" Test**
+> Say the English word *see* and hold the vowel: "eeee." That is **І** — tongue forward, lips spread.
+> Now say the English word *bit* and hold that "i": tongue pulls slightly back, lips relax. That is **И**.
+> Both vowels keep your tongue **high** — the jaw barely moves. The only difference is where your tongue sits: **front** for **І**, **centre-back** for **И**.
 
 ### The Short Й
 *   **Symbol**: **Й** (N with a hat).
@@ -162,7 +162,7 @@ Now that we have met the cast of characters, let's put them to work. We will foc
 ### Читаємо нові звуки
 Try to read these words aloud. Focus on the special letters we just discussed.
 
-1.  **центр** [t͡sɛntr] — center. Note the **Ц** [ts] at the start. It is sharp, like a snare drum.
+1.  **центр** [t͡sɛntr] — center. Note the **Ц** [t͡s] at the start. It is sharp, like a snare drum.
 2.  **чай** [t͡ʃɑi̯] — tea. Note the **Ч** [t͡ʃ] and the short **Й** [j] at the end. It sounds cozy.
 3.  **школа** [ˈʃkɔlɑ] — school. Start with the hush sound **Ш** [ʃ]. It is soft and wide.
 4.  **гарний** [ˈɦɑrnɪi̯] — beautiful. Start with the soft, voiced **Г** [ɦ]. Do not say "garniy." Say "harniy" with voice.

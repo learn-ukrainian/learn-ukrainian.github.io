@@ -195,6 +195,22 @@ Before submitting, scan your ENTIRE output for these. They cause automatic audit
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
+### Euphony / Милозвучність (WARNING if violated)
+
+Ukrainian prose must follow euphony rules. Scan your output before submitting:
+
+| Rule | Avoid (Bad) | Use (Good) |
+|------|-------------|------------|
+| і → й between vowels | вона і Олена | вона й Олена |
+| й → і after consonant | він й Олена | він і Олена |
+| у → в before vowel | у Одесі | в Одесі |
+| в → у before в, ф | в вікні | у вікні |
+| в → у before consonant cluster | в зграї | у зграї |
+| з → із/зі before з, с, ш, ч | з зброєю | із зброєю (або зі) |
+| Vary conjunctions | він і вона і Іван | він і вона та Іван |
+
+Key: й can ONLY follow a vowel. After a consonant, always use і — even before a vowel.
+
 ### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
 
 **Level-gated IPA rules:**

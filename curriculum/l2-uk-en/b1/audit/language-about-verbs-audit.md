@@ -1,7 +1,7 @@
 # Audit Report: M02 — language-about-verbs.md
 **Level:** B1 | **Module:** M02 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 16:14:16
+**Generated:** 2026-02-20 01:09:53
 
 ## Configuration
 **Type:** B1-bridge
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4633/4000 (raw: 5027)
+- **Words:** ✅ 4634/4000 (raw: 5028)
 - **Activities:** ✅ 7/4
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/3 types
@@ -78,12 +78,12 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Мова про дієслова** | ✅ | 57 | Included in Core |
 | **Вступ: Система дієслова** | ✅ | 357 | Included in Core |
-| **Вид дієслова: Основи термінології** | ✅ | 731 | Included in Core |
+| **Вид дієслова: Основи термінології** | ✅ | 729 | Included in Core |
 | **Характер дії: Процес і результат** | ✅ | 548 | Included in Core |
 | **Час дієслова: Минулий, теперішній, майбутній** | ✅ | 487 | Included in Core |
 | **Термінологія заперечення** | ✅ | 414 | Included in Core |
 | **Додаткові граматичні категорії: Спосіб, стан та особа** | ✅ | 540 | Included in Core |
-| **Форми дієслова: Складена та синтетична** | ✅ | 537 | Included in Core |
+| **Форми дієслова: Складена та синтетична** | ✅ | 540 | Included in Core |
 | **Практикум: Читаємо граматичні пояснення** | ✅ | 379 | Included in Core |
 | **Міні-діалоги: Говоримо про граматику** | ✅ | 331 | Included in Core |
 | **Підсумок і самоперевірка** | ✅ | 252 | Included in Core |

@@ -1,37 +1,33 @@
 # Дослідження: The Living Verb I
 
 ## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає, читаємо, читаєте, читають), працювати (працюю, працюєш, працює, працюємо, працюєте, працюють)..."
-Alignment: This module directly teaches the conjugation patterns for Class I (-ати) verbs in the present tense, using the exact examples cited in the Standard (читати, працювати).
+§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає, читаємо, читаєте, читають), працювати (працюю, працюєш, працює, працюємо, працюєте, працюють)..."
+Alignment: This module directly teaches the conjugation of the specific examples cited in the Standard (читати, працювати) for the present tense indicative mood.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations (A1 safe) |
+| Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| читати | High (Core A1) | читати журнал, читати швидко, читати вголос |
-| писати | High (Core A1) | писати лист, писати текст, писати добре |
-| працювати | High (Core A1) | працювати багато, працювати тут, працювати вдома |
-| знати | High (Core A1) | знати все, не знати |
-| слухати | High (Core A1) | слухати музику, слухати радіо |
-| питати | Medium (Core A1) | питати маму (accusative warning!), питати про це |
+| читати | High (Top 100 verbs) | читати книгу, читати вголос, читати новини |
+| писати | High (Top 100 verbs) | писати листа, писати повідомлення, гарно писати |
+| знати | Very High (Top 20 verbs) | знати все, знати правду, не знати |
+| працювати | High (Top 50 verbs) | працювати вдома, працювати багато, працювати над проєктом |
+| слухати | High (Common) | слухати музику, слухати уважно, слухати радіо |
 
 ## Cultural Hooks
-1. **The Power of the Word**: "Птицю пізнати по пір'ю, а людину по мові" (You know a bird by its feathers, and a person by their language). Ukrainians value eloquence and proper language use.
-2. **High Literacy**: Ukraine has a historical literacy rate of nearly 100%, and "читати" (reading) is a culturally celebrated pastime. The first book printed in Ukraine was the "Apostol" in Lviv (1574), highlighting a long tradition of the printed word.
+1. "Птицю пізнати по пір'ю, а людину по мові" (A bird is known by its feathers, a person by their speech) — emphasizes the importance of speaking correctly.
+2. The "Apostol" (1574) by Ivan Fedorov — the first printed book in Ukraine, symbolizing the deep-rooted tradition of literacy and reading (`читати`).
 
 ## Common Learner Errors
-1. **Pronoun Overuse**: `Я читаю` vs `Читаю`. English speakers always use "I", but Ukrainians often drop it because the `-ю` ending already says "I".
-   *   *Correction*: Teach that pronouns are optional and emphatic.
-2. **Aspect Confusion**: Trying to use "прочитати" (perfective) instead of "читати" (imperfective) for simple actions.
-   *   *Correction*: Emphasize that these verbs are for "doing" (process), not "done" (result).
-3. **Infinitive Abuse**: Saying `Я читати` (I to read) instead of `Я читаю`.
-   *   *Correction*: "The verb must live! Don't leave it sleeping in the dictionary form."
+1. **Infinitive Abuse**: "Я читати" instead of "Я читаю" — learners transfer English "I read" (where form often looks like infinitive base) directly.
+2. **Pronoun Overuse**: Using "Я" constantly even when "-ю" ending is sufficient ("Я читаю, я працюю, я знаю" vs "Читаю, працюю, знаю").
+3. **Wrong Object Case**: Using Nominative for objects ("Я читаю книга") instead of Accusative ("Я читаю книгу"). *Note: This module mitigates this by using masculine/neuter inanimate objects like журнал, радіо where Nom=Acc.*
 
 ## Cross-References
-- **Builds on**: a1-05 (My World - Objects) — provides the nouns to "read" or "write".
-- **Prepares for**: a1-07 (Questions and Negation) — sets up the verb forms needed to ask "Do you read?" and say "I do not read".
-- **Prepares for**: a1-11 (Accusative Case) — these transitive verbs (`читати`, `писати`) naturally demand objects.
+- Builds on: a1-05 (My World - Objects) — uses objects introduced there.
+- Prepares for: a1-07 (Questions and Negation) — sets up the verb forms needed for questions.
+- Prepares for: a1-08 (The Living Verb II) — establishes the pattern for the Second Conjugation.
 
 ## Notes for Content Writing
-- **Constraint Checklist**: Keep sentences SVO. Avoid complex cases. Use "Inanimate Masculine/Neuter" objects (журнал, лист, радіо, місто) because they look like Nominative and won't confuse learners with case endings yet.
-- **Pedagogy**: Use the "Master Key" metaphor — learning ONE pattern (-ати) unlocks hundreds of verbs. This builds confidence.
-- **Visuals**: Use a clear "Stem + Ending" table (чит + аю).
+- **Immersion Constraints**: A1 level requires heavy English scaffolding. Use English to explain the "Stem + Ending" concept clearly.
+- **Pro-Drop**: Introduce this early as a feature, not a bug. "The ending *is* the pronoun."
+- **Visuals**: Use a clear table showing the stem (чит-) staying constant and the endings (-аю, -аєш...) changing.

@@ -2,14 +2,14 @@
   "module": "greeks-crimea-olbia",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-18T18:35:38.814675Z",
+  "last_audit": "2026-02-19T18:44:14.988109Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-18T16:56:18.448915Z",
-    "meta": "2026-02-18T16:40:41.117444Z",
-    "activities": "2026-02-18T16:40:41.135265Z",
+    "md": "2026-02-19T11:57:52.152058Z",
+    "meta": "2026-02-19T11:52:10.740117Z",
+    "activities": "2026-02-19T11:57:52.152496Z",
     "vocabulary": "2026-02-18T16:38:10.944302Z",
-    "plan": "2026-02-17T14:35:52.888978Z",
+    "plan": "2026-02-18T19:03:35.964408Z",
     "research": "2026-02-18T00:18:36.990745Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5184/5000 (raw: 5426)"
+      "message": "5182/5000 (raw: 5424)"
     },
     "activities": {
       "status": "pass",

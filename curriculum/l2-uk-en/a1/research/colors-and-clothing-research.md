@@ -1,37 +1,33 @@
 # Дослідження: Colors & Clothing
 
 ## State Standard Reference
-§4.2.1.2: "Прикметник: форми називного відмінка однини прикметників чоловічого, жіночого, середнього роду; узгодження прикметників з іменниками в роді й числі... форми знахідного відмінка..."
-Alignment: This module implements the standard requirements for adjective-noun agreement in gender and number, specifically focusing on the nominative and accusative (with "носити") cases as applied to the thematic area of "Clothing & Shopping" (§3.8).
+§4.2.1.2: "Прикметник: узгодження прикметників з іменниками в роді й числі: іноземний студент, домашній одяг; зелена сумка, літня погода..."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо узгодження прикметників з іменниками (на прикладі кольорів) та тему "Зовнішність" (§3.1).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **білий** | Core (Top 7) | біла сорочка, білий сніг |
-| **чорний** | Core (Top 7) | чорні штани, чорна кава |
-| **червоний** | Core (Top 7) | червона сукня, червона ручка |
-| **синій** | Core (Top 7) | сині джинси, синій светр |
-| **зелений** | Core (Top 7) | зелена трава, зелений колір |
-| **сорочка** | High (Top clothing) | біла сорочка, носити сорочку |
-| **штани** | High (Plural-only) | нові штани, сині штани |
-| **сукня** | High (Feminine) | червона сукня, літня сукня |
-| **носити** | High (Verb) | носити одяг, носити окуляри |
+| білий | High / Core A1 | біла сорочка, білий сніг, білий світ |
+| чорний | High / Core A1 | чорна кава, чорні штани, чорний хліб |
+| червоний | High / Core A1 | червона ручка, червоне вино, червона калина |
+| сорочка | High / Core A1 | вишита сорочка, біла сорочка, одягати сорочку |
+| штани | High / Core A1 | нові штани, джинсові штани (plural only) |
+| сукня | High / Syn: плаття | вечірня сукня, нова сукня, гарна сукня |
+| носити | High / Verb | носити одяг, носити окуляри, носити з собою |
 
 ## Cultural Hooks
-1. **Вишиванка як оберіг (The Talisman)**: Traditional Ukrainian embroidered shirts (vyshyvankas) were historically considered talismans (обереги). The patterns around the collar and cuffs were meant to "seal" the wearer's energy and protect them from evil spirits. Source: *Kyiv Independent, "The history and meaning behind the vyshyvanka"*.
-2. **Кольорова символіка (Color Symbolism)**: Colors in Ukrainian culture have deep roots. **Red** (червоний) represents energy, life, and protection; **Black** (чорний) symbolizes the fertile soil and wisdom; **White** (білий) stands for purity and divinity. Source: *Ukrainian Institute, "Symbolism of Ukrainian Embroidery"*.
+1. **Вишиванка як оберіг**: Вишивка на комірі та рукавах традиційно вважалася захистом (оберегом) для людини, "закриваючи" вразливі місця від негативної енергії.
+2. **Символізм кольорів**: У традиційній українській культурі червоний — це колір життя, енергії та любові (а не небезпеки), чорний — колір родючої землі та мудрості (а не лише трауру), білий — символ чистоти та божественного світу.
 
 ## Common Learner Errors
-1. **Gender Agreement Failure**: Using the masculine citation form for all nouns (e.g., *червоний сорочка* instead of *червона сорочка*). This happens because English adjectives are invariable.
-2. **Plural Confusion (Pluralia Tantum)**: Using singular adjectives for plural-only items like *штани* (pants) or *окуляри* (glasses). Correct: *це сині штани*, Error: *це синій штани*.
-3. **Accusative Misalignment**: Failing to change feminine adjective endings when using the verb *носити* (e.g., *Я ношу червона сукня* instead of *червону сукню*).
+1. **Gender Agreement**: "червоний сорочка" → *червона сорочка* — Learner often defaults to masculine adjective form for all nouns.
+2. **Accusative Feminine**: "Я ношу червона сукня" → *Я ношу червону сукню* — Learner fails to change ending for feminine object.
+3. **Pluralia Tantum**: "цей штани" / "один штани" → *ці штани* / *одні штани* — Learner treats "pants" as singular or uses wrong number agreement.
 
 ## Cross-References
-- Builds on: `a1-26` (Describing Things - Adjectives)
-- Prepares for: `a1-28` (Description - Adverbs), `a1-30` (Checkpoint Consolidation)
+- Builds on: a1-26 (Describing Things - Adjectives) — relies on understanding gender basics.
+- Prepares for: a1-28 (Description - Adverbs) — expands description capabilities; a1-30 (Checkpoint).
 
 ## Notes for Content Writing
-- Highlight the **plural-only** nature of *штани*, *джинси*, and *окуляри* as a specific grammar point (Presentation 3).
-- Use the **Accusative case** (Знахідний відмінок) for direct objects with the verb *носити*. Note that for inanimate masculine objects, the form matches the Nominative (Я ношу светр), but feminine changes (Я ношу сукню).
-- Include a "History Bite" or "Myth Buster" about the *vyshyvanka* to satisfy the decolonization and cultural depth requirements.
-- Ensure the "Shopping" dialogue includes price and size inquiries to link back to previous modules on numbers.
+- Ensure clear distinction between "плаття" and "сукня" (use "сукня" as primary stylistic choice for elegance, but acknowledge "плаття" as common synonym).
+- Emphasize that "джинси" follows the same logic as "штани".

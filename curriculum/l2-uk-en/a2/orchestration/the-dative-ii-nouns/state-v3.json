@@ -1,0 +1,32 @@
+{
+  "track": "a2",
+  "slug": "the-dative-ii-nouns",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:01:36Z",
+      "task_id": "v3-the-dative-ii-nouns-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T12:01:36Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T12:01:37Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T12:01:37Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T12:03:35Z",
+      "attempts": 1
+    }
+  }
+}

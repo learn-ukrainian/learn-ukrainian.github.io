@@ -1,0 +1,66 @@
+{
+  "module": "b2-review-bridge",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-19T18:57:46.884401Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-18T17:13:00.264325Z",
+    "meta": "2026-02-19T13:52:52.934733Z",
+    "activities": "2026-02-18T17:13:05.831345Z",
+    "vocabulary": "2026-02-18T16:24:57.985771Z",
+    "plan": "2026-02-18T19:03:38.423397Z",
+    "research": "2026-02-19T13:52:52.928347Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5064/4000 (raw: 5574)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/12"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "3 IPA issues (run lint_ipa.py --fix)"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Content predates research (research file is newer)"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Only 9/23 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-4-advanced.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did This Stretch Me?' test from the tier-4 guide, (4) verify linguistic analysis is sophisticated (not B1/B2 level), (5) score each dimension honestly and list at least 1 real issue."
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Only 9/23 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-4-advanced.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did This Stretch Me?' test from the tier-4 guide, (4) verify linguistic analysis is sophisticated (not B1/B2 level), (5) score each dimension honestly and list at least 1 real issue."
+    ],
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

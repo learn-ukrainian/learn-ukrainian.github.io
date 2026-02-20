@@ -2,37 +2,35 @@
 
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
-Alignment: This module introduces the alphabet, focusing on recognizing letters that share forms with Latin script ("True Friends") and distinguishing those that look similar but sound different ("False Friends"), directly addressing the standard's requirement for mastering printed letters.
+Alignment: This module directly addresses the foundational requirement of recognizing and using the Ukrainian alphabet, distinguishing between printed/written and uppercase/lowercase letters as prescribed.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| так | Top 20 / dict.com | так, будь ласка (yes, please); так, звісно (yes, of course) |
-| банк | High / 1000mostcommonwords | у банку (in the bank); національний банк |
-| метро | High / 1000mostcommonwords | станція метро (metro station); у метро |
-| кафе | High / common usage | у кафе (in the cafe); ідемо в кафе (let's go to a cafe) |
-| факт | Med / academic/news | це факт (it's a fact); цікавий факт |
-| план | Med / business/daily | бізнес-план; маю план (I have a plan) |
-| кіт | Med / children/stories | чорний кіт; мій кіт |
-| мама | Top 50 / family | моя мама; люблю маму |
+| так | High (Top 100) | так, будь ласка; так, звісно |
+| мама | High (Top 500) | моя мама, люблю маму |
+| тато | High (Top 500) | мій тато |
+| банк | Med-High | національний банк, у банку |
+| метро | Med-High | станція метро, у метро |
+| кафе | Med-High | у кафе, ідемо в кафе |
+| кіт | Medium | чорний кіт, мій кіт |
+| факт | Medium | це факт, цікавий факт |
 
 ## Cultural Hooks
-1. **The "Cyrillic" Misnomer**: The alphabet is named after Saint Cyril (9th century), but he likely created the *Glagolitic* script. His students likely developed Cyrillic in the First Bulgarian Empire, naming it in his honor. (Source: Britannica/Wikipedia)
-2. **The "I" Identity**: Ukrainian is unique among East Slavic languages for retaining the letter **І/і** (like Latin 'i') alongside **И/и** (deep 'y'), whereas Russian only uses 'И'. This makes Ukrainian look slightly more "European" to Western eyes due to the prevalence of the dotted 'i'.
+1. **St. Cyril & Glagolitic**: The alphabet is named after St. Cyril (9th c.), but he actually created the Glagolitic script. The Cyrillic script we use today was developed by his students in the First Bulgarian Empire as a tribute.
+2. **The "I" Identity**: Ukrainian is unique among East Slavic languages for retaining the Latin-looking "I" (dotted i) alongside "И", aligning it visually closer to European scripts and distinguishing it from Russian.
 
 ## Common Learner Errors
-1. **The "P" Trap**: Pronouncing **Р** as English /p/ instead of /r/ (rolled).
-   - *Correction*: Visualize a "Purring cat" or "Roaring engine".
-2. **The "H" Trap**: Pronouncing **Н** as English /h/ instead of /n/.
-   - *Correction*: Remind that 'H' stands for 'Hen' (N).
-3. **The "B" Trap**: Pronouncing **В** as English /b/ instead of /v/ (or /w/).
-   - *Correction*: Think of a "Vehicle".
+1. **The "P" Trap**: Reading "Р" as English /p/ instead of /r/ (trill). *Correction*: Visualize a purring cat ("R-r-r").
+2. **The "H" Trap**: Reading "Н" as English /h/ instead of /n/. *Correction*: "Hen" starts with H but ends with N (looks like H).
+3. **The "B" Trap**: Reading "В" as English /b/ instead of /v/. *Correction*: It's a vehicle (V).
+4. **The "C" Trap**: Reading "С" as English /k/ or /s/ confusion. *Correction*: It always makes the /s/ sound, like in "City".
 
 ## Cross-References
-- Builds on: None (Entry point)
-- Prepares for: `a1-02` (The Cyrillic Code II), `a1-05` (Phonetics summary)
+- **Builds on**: None (First module).
+- **Prepares for**: `the-cyrillic-code-ii` (completing the alphabet), `meeting-people` (basic greetings).
 
 ## Notes for Content Writing
-- **Visuals are key**: Since this is the very first module, use ASCII art or clear descriptions to compare letters (e.g., "Д looks like a little house").
-- **Avoid "Surzhyk" letters**: Be explicitly clear that letters like 'ё', 'ы', 'э' do not exist in Ukrainian. This is a common point of confusion for students using multi-language apps.
-- **Cognate Strategy**: Lean heavily on internationalisms (таксі, піца, метро) to build immediate confidence.
+- **Scaffolding**: Critical to use English for all explanations.
+- **Visuals**: Emphasize visual mnemonics for False Friends.
+- **Audio**: Essential for distinguishing "И" vs "І".

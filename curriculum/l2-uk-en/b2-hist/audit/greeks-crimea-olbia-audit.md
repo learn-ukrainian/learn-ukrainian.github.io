@@ -2,7 +2,7 @@
 **Level:** B2-HIST | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 18:35:38
+**Generated:** 2026-02-19 18:44:14
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5184/5000 (raw: 5426)
+- **Words:** ✅ 5182/5000 (raw: 5424)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -77,11 +77,11 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Грецькі міста-держави: Ольвія, Херсонес** | ✅ | 80 | Included in Core |
 | **Вступ: Греки на Понті** | ✅ | 693 | Included in Core |
-| **Читання: Ольвія — демократія в степу** | ✅ | 905 | Included in Core |
+| **Читання: Ольвія — демократія в степу** | ✅ | 902 | Included in Core |
 | **Херсонес Таврійський: Держава присяги** | ✅ | 620 | Included in Core |
 | **Боспорське царство та Тіра** | ✅ | 512 | Included in Core |
 | **Економіка та Культура** | ✅ | 517 | Included in Core |
-| **Занепад античного світу** | ✅ | 420 | Included in Core |
+| **Занепад античного світу** | ✅ | 421 | Included in Core |
 | **Первинні джерела: Голоси епохи** | ✅ | 538 | Included in Core |
 | **Деколонізаційний погляд** | ✅ | 509 | Included in Core |
 | **Підсумок** | ✅ | 390 | Included in Core |

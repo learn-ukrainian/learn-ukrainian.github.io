@@ -2,7 +2,7 @@
   "slug": "greeks-crimea-olbia",
   "track": "b2-hist",
   "module_num": 3,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T15:47:09Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T10:52:12Z",
+      "note": "v3-audit"
     },
     "3a": {
       "status": "complete",
@@ -42,30 +42,33 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T15:50:25Z",
-      "task_id": "gr-greeks-crimea-olbia",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:54:07Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T15:56:18Z",
-      "task_id": "yw-greeks-crimea-olbia-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:54:07Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T15:56:29Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:52:12Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T15:56:36Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:54:07Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:57:53Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T15:56:50Z"
+      "timestamp": "2026-02-19T10:58:00Z"
     }
   },
-  "last_updated": "2026-02-18T15:56:50Z"
+  "last_updated": "2026-02-19T10:58:00Z"
 }

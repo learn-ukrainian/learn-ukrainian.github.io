@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "the-living-verb-ii",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:23:41Z",
+      "task_id": "v3-the-living-verb-ii-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T17:23:41Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T17:23:41Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T17:25:16Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T17:26:48Z",
+      "attempts": 1
+    }
+  }
+}

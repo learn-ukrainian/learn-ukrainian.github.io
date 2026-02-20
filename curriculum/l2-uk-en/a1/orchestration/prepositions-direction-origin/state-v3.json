@@ -1,0 +1,27 @@
+{
+  "track": "a1",
+  "slug": "prepositions-direction-origin",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T22:56:46Z",
+      "task_id": "v3-prepositions-direction-origin-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T22:58:19Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T22:59:25Z",
+      "task_id": "v3-prepositions-direction-origin-pC"
+    },
+    "v3-audit": {
+      "status": "failed",
+      "ts": "2026-02-19T23:25:51Z",
+      "attempts": 3
+    }
+  }
+}

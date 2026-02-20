@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "rozstriliane-vidrodzennia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:48:15Z",
+      "task_id": "v3-rozstriliane-vidrodzennia-pA",
+      "mode": "meta-only"
+    }
+  }
+}

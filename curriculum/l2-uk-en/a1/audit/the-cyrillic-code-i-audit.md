@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 21:14:44
+**Generated:** 2026-02-19 23:01:24
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Справжні друзі: Літери та звуки | 8 | 8 | ✅ |
-| 2 | match-up | Нові літери та хибні друзі: Звуки | 10 | 8 | ✅ |
+| 2 | match-up | Нові літери та хибні друзі: Звуки | 12 | 8 | ✅ |
 | 3 | group-sort | Сортування літер | 19 | 12 | ✅ |
 | 4 | quiz | Фальшиві друзі: Перевірка | 8 | 8 | ✅ |
 | 5 | anagram | Розшифруйте слова | 8 | 8 | ✅ |
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2492/2000 (raw: 2865)
+- **Words:** ✅ 2501/2000 (raw: 2874)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.2% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 6.3% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Cyrillic Code I** | ✅ | 53 | Included in Core |
 | **Розминка: Чому кирилиця?** | ✅ | 476 | Included in Core |
-| **Презентація: Літери-друзі та літери-пастки** | ✅ | 853 | Included in Core |
+| **Презентація: Літери-друзі та літери-пастки** | ✅ | 858 | Included in Core |
 | **Практика: Читаємо міжнародні слова** | ✅ | 318 | Included in Core |
 | **Культурний контекст: Українська ідентичність літери «І»** | ✅ | 298 | Included in Core |
-| **Продукція: Ваші перші слова** | ✅ | 317 | Included in Core |
+| **Продукція: Ваші перші слова** | ✅ | 321 | Included in Core |
 | **Summary** | ✅ | 177 | Included in Core |

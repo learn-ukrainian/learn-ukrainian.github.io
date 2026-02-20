@@ -1,0 +1,64 @@
+{
+  "module": "the-genitive-i-absence",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-19T23:23:24.858947Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-19T23:23:19.497867Z",
+    "meta": "2026-02-19T23:22:03.581107Z",
+    "activities": "2026-02-19T23:23:19.498534Z",
+    "vocabulary": "2026-02-18T21:50:41.786601Z",
+    "plan": "2026-02-18T19:03:32.234835Z",
+    "research": "2026-02-19T23:22:03.572508Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2225/2000 (raw: 2671)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

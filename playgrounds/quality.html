@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quality - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .nav a { color: var(--text2); }
+.topbar .nav a:hover { color: var(--text); }
+
+/* Tab bar */
+.tabs { display: flex; gap: 0; padding: 0 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.tab { padding: 10px 20px; font-size: 13px; cursor: pointer; color: var(--text2); border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--blue); }
+
+.container { padding: 20px 24px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 12px; font-size: 11px; color: var(--text2); text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 500; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg3); }
+
+.score-cell { font-weight: 600; }
+.score-high { color: var(--green); }
+.score-mid { color: var(--yellow); }
+.score-low { color: var(--red); }
+.score-none { color: var(--text3); }
+
+/* Quality bar (exemplary→stub) */
+.quality-bar { display: flex; height: 14px; border-radius: 3px; overflow: hidden; min-width: 120px; }
+.q-exemplary { background: #238636; }
+.q-solid { background: #3fb950; }
+.q-adequate { background: #d29922; }
+.q-thin { background: #f0883e; }
+.q-stub { background: #f85149; }
+
+/* Issue list */
+.issue-filters { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.filter-select { background: var(--bg2); border: 1px solid var(--border); color: var(--text); padding: 6px 10px; border-radius: 6px; font-size: 13px; }
+.issue-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer; }
+.issue-card:hover { border-color: var(--blue); }
+.issue-card.expanded { border-color: var(--border); }
+.issue-header { display: flex; align-items: center; gap: 10px; }
+.severity-badge { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.severity-critical { background: rgba(248,81,73,0.15); color: var(--red); }
+.severity-warning { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.issue-title { font-size: 13px; font-weight: 500; flex: 1; }
+.issue-meta { font-size: 11px; color: var(--text3); }
+.issue-details { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; }
+.issue-card.expanded .issue-details { display: block; }
+.detail-row { display: flex; gap: 8px; margin-bottom: 6px; }
+.detail-label { color: var(--text3); min-width: 70px; }
+.detail-val { color: var(--text2); }
+
+/* Weak modules */
+.issue-tag { display: inline-block; padding: 1px 6px; border-radius: 10px; font-size: 10px; font-weight: 600; margin-right: 4px; }
+.tag-audit { background: rgba(248,81,73,0.15); color: var(--red); }
+.tag-research { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.tag-words { background: rgba(88,166,255,0.15); color: var(--blue); }
+
+.stat-row { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; }
+.stat-box .val { font-size: 24px; font-weight: 700; }
+.stat-box .lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; margin-top: 2px; }
+
+.loading-msg { color: var(--text3); font-size: 13px; padding: 16px 0; }
+.error-msg { color: var(--red); font-size: 13px; padding: 8px 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>&#9881; Quality</h1>
+  <div style="font-size:12px;color:var(--text3);">Research coverage · Review scores · Outstanding issues · Weak modules</div>
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/audit-dashboard.html">Audit</a>
+    <a href="/progress.html">Progress</a>
+    <a href="/docs">API</a>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('research')">Research Coverage</div>
+  <div class="tab" onclick="switchTab('reviews')">Review Coverage</div>
+  <div class="tab" onclick="switchTab('issues')">Outstanding Issues</div>
+  <div class="tab" onclick="switchTab('weak')">Weak Modules</div>
+</div>
+
+<!-- ===== TAB: RESEARCH ===== -->
+<div class="container">
+<div id="tab-research" class="tab-panel active">
+  <div id="research-content"><div class="loading-msg">Loading research coverage...</div></div>
+</div>
+
+<!-- ===== TAB: REVIEWS ===== -->
+<div id="tab-reviews" class="tab-panel">
+  <div id="reviews-content"><div class="loading-msg">Loading review coverage...</div></div>
+</div>
+
+<!-- ===== TAB: ISSUES ===== -->
+<div id="tab-issues" class="tab-panel">
+  <div class="issue-filters">
+    <label style="font-size:13px;color:var(--text2)">Track:</label>
+    <select class="filter-select" id="issue-track-filter" onchange="filterIssues()">
+      <option value="">All tracks</option>
+    </select>
+    <label style="font-size:13px;color:var(--text2)">Severity:</label>
+    <select class="filter-select" id="issue-sev-filter" onchange="filterIssues()">
+      <option value="">All</option>
+      <option value="critical">Critical</option>
+      <option value="warning">Warning</option>
+    </select>
+    <span id="issue-count" style="font-size:12px;color:var(--text3)"></span>
+  </div>
+  <div id="issues-content"><div class="loading-msg">Loading issues...</div></div>
+</div>
+
+<!-- ===== TAB: WEAK ===== -->
+<div id="tab-weak" class="tab-panel">
+  <div class="issue-filters">
+    <label style="font-size:13px;color:var(--text2)">Track:</label>
+    <select class="filter-select" id="weak-track-filter" onchange="filterWeak()">
+      <option value="">All tracks</option>
+    </select>
+  </div>
+  <div id="weak-content"><div class="loading-msg">Loading weak modules...</div></div>
+</div>
+</div><!-- /container -->
+
+<script>
+// ---- Tab switching ----
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+// ---- Score helpers ----
+function scoreClass(s) {
+  if (s === null || s === undefined) return 'score-none';
+  if (s >= 8) return 'score-high';
+  if (s >= 6) return 'score-mid';
+  return 'score-low';
+}
+function scoreStr(s) {
+  return (s !== null && s !== undefined) ? `${s}/10` : '—';
+}
+function pct(a, b) { return b > 0 ? Math.round(a / b * 100) : 0; }
+
+// ---- Quality bar ----
+function qualityBar(q, total) {
+  if (!q || total === 0) return '<div class="quality-bar" style="background:var(--bg3);width:120px"></div>';
+  const keys = ['exemplary','solid','adequate','thin','stub'];
+  const segments = keys.map(k => {
+    const w = pct(q[k] || 0, total);
+    return w > 0 ? `<div class="q-${k}" style="flex:${q[k] || 0}" title="${k}: ${q[k] || 0}"></div>` : '';
+  }).join('');
+  return `<div class="quality-bar">${segments}</div>`;
+}
+
+// ---- RESEARCH ----
+async function loadResearch() {
+  try {
+    const res = await fetch('/api/state/research-coverage');
+    const data = await res.json();
+    const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_modules > 0);
+
+    const rows = tracks.map(([id, t]) => `
+      <tr>
+        <td style="font-weight:600">${id}</td>
+        <td>${t.total_modules}</td>
+        <td>${t.has_research} (${t.pct_coverage}%)</td>
+        <td>${qualityBar(t.quality, t.has_research)}</td>
+        <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
+        <td style="color:${t.needs_upgrade > 0 ? 'var(--red)' : 'var(--text3)'}">${t.needs_upgrade}</td>
+      </tr>`).join('');
+
+    document.getElementById('research-content').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Track</th><th>Total</th><th>Has Research</th>
+          <th>Quality (exemplary→stub)</th><th>Avg Score</th><th>Needs Upgrade</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="margin-top:12px;font-size:11px;color:var(--text3)">
+        Quality bar:
+        <span style="color:#3fb950">■ exemplary</span>
+        <span style="color:#d29922;margin-left:8px">■ adequate</span>
+        <span style="color:#f0883e;margin-left:8px">■ thin</span>
+        <span style="color:#f85149;margin-left:8px">■ stub</span>
+        &nbsp;| Needs upgrade = score &lt; 7
+      </div>`;
+  } catch(e) {
+    document.getElementById('research-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
+  }
+}
+
+// ---- REVIEWS ----
+async function loadReviews() {
+  try {
+    const res = await fetch('/api/state/review-coverage');
+    const data = await res.json();
+    const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_built > 0);
+
+    const rows = tracks.map(([id, t]) => {
+      const passRateStr = t.pass_rate !== null ? `${Math.round(t.pass_rate * 100)}%` : '—';
+      const highlight = t.has_review === 0 && t.total_built > 0 ? 'style="color:var(--red)"' : '';
+      return `<tr>
+        <td style="font-weight:600">${id}</td>
+        <td>${t.total_built}</td>
+        <td ${highlight}>${t.has_review}</td>
+        <td>${t.has_final_review}</td>
+        <td class="score-cell ${scoreClass(t.avg_score)}">${scoreStr(t.avg_score)}</td>
+        <td style="color:${t.pass_rate === null ? 'var(--text3)' : t.pass_rate >= 0.9 ? 'var(--green)' : 'var(--red)'}">${passRateStr}</td>
+        <td style="color:${t.total_issues_found > 0 ? 'var(--yellow)' : 'var(--text3)'}">${t.total_issues_found}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('reviews-content').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Track</th><th>Built</th><th>Reviewed</th><th>Final Review</th>
+          <th>Avg Score</th><th>Pass Rate</th><th>Issues Found</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="margin-top:12px;font-size:11px;color:var(--text3)">
+        Red "reviewed" = zero reviews on built modules. Pass rate = PASS status in review file.
+      </div>`;
+  } catch(e) {
+    document.getElementById('reviews-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
+  }
+}
+
+// ---- ISSUES ----
+let allIssues = [];
+let issueTracksSet = new Set();
+let _filteredIssues = [];
+let _renderedCount = 0;
+const PAGE_SIZE = 50;
+
+async function loadIssues() {
+  try {
+    const res = await fetch('/api/state/issues');
+    const data = await res.json();
+    allIssues = data.issues || [];
+    issueTracksSet = new Set(allIssues.map(i => i.track));
+
+    // Populate track filter
+    const sel = document.getElementById('issue-track-filter');
+    [...issueTracksSet].sort().forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t; opt.textContent = t;
+      sel.appendChild(opt);
+    });
+
+    filterIssues();
+  } catch(e) {
+    document.getElementById('issues-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
+  }
+}
+
+function filterIssues() {
+  const trackF = document.getElementById('issue-track-filter').value;
+  const sevF = document.getElementById('issue-sev-filter').value;
+  _filteredIssues = allIssues;
+  if (trackF) _filteredIssues = _filteredIssues.filter(i => i.track === trackF);
+  if (sevF) _filteredIssues = _filteredIssues.filter(i => i.severity === sevF);
+
+  document.getElementById('issue-count').textContent = `${_filteredIssues.length} issue${_filteredIssues.length !== 1 ? 's' : ''}`;
+
+  const container = document.getElementById('issues-content');
+  if (_filteredIssues.length === 0) {
+    container.innerHTML = '<div style="color:var(--green);padding:16px 0">No issues found for this filter.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  _renderedCount = 0;
+  _appendIssues(container);
+}
+
+function _appendIssues(container) {
+  const frag = document.createDocumentFragment();
+  const end = Math.min(_renderedCount + PAGE_SIZE, _filteredIssues.length);
+
+  for (let idx = _renderedCount; idx < end; idx++) {
+    const issue = _filteredIssues[idx];
+    const card = document.createElement('div');
+    card.className = 'issue-card';
+    card.onclick = function() { this.classList.toggle('expanded'); };
+    card.innerHTML = `
+      <div class="issue-header">
+        <span class="severity-badge severity-${issue.severity}">${issue.severity}</span>
+        <span class="issue-title">${escHtml(issue.title)}</span>
+        <span class="issue-meta">${issue.track} #${issue.num} · ${issue.source}</span>
+      </div>
+      <div class="issue-details">
+        <div class="detail-row"><span class="detail-label">Module:</span><span class="detail-val">${issue.slug}</span></div>
+        ${issue.location ? `<div class="detail-row"><span class="detail-label">Location:</span><span class="detail-val">${escHtml(issue.location)}</span></div>` : ''}
+        ${issue.fix ? `<div class="detail-row"><span class="detail-label">Fix:</span><span class="detail-val">${escHtml(issue.fix)}</span></div>` : ''}
+      </div>`;
+    frag.appendChild(card);
+  }
+  _renderedCount = end;
+
+  // Remove existing "Show more" button before appending new content
+  const old = container.querySelector('.show-more-btn');
+  if (old) old.remove();
+
+  container.appendChild(frag);
+
+  if (_renderedCount < _filteredIssues.length) {
+    const remaining = _filteredIssues.length - _renderedCount;
+    const btn = document.createElement('button');
+    btn.className = 'show-more-btn';
+    btn.style.cssText = 'display:block;margin:12px auto;padding:8px 24px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);border-radius:6px;cursor:pointer;font-size:13px;';
+    btn.textContent = `Show ${Math.min(remaining, PAGE_SIZE)} more (${remaining} remaining)`;
+    btn.onclick = () => _appendIssues(container);
+    container.appendChild(btn);
+  }
+}
+
+// ---- WEAK MODULES ----
+let allWeak = [];
+let weakTracksSet = new Set();
+
+async function loadWeak() {
+  try {
+    const res = await fetch('/api/state/weak-points?limit=500');
+    const data = await res.json();
+    allWeak = data.modules || [];
+    weakTracksSet = new Set(allWeak.map(m => m.track));
+
+    // Populate track filter
+    const sel = document.getElementById('weak-track-filter');
+    [...weakTracksSet].sort().forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t; opt.textContent = t;
+      sel.appendChild(opt);
+    });
+
+    // Stat row — render once, avoid stack on tab re-visit
+    const auditFail = allWeak.filter(m => m.audit_status === 'fail').length;
+    const thinResearch = allWeak.filter(m => m.issues.some(i => i.startsWith('research_score'))).length;
+    const lowWords = allWeak.filter(m => m.issues.some(i => i.startsWith('low_words'))).length;
+    const container = document.getElementById('weak-content');
+    container.innerHTML = `
+      <div class="stat-row" style="margin-bottom:16px" id="weak-stats">
+        <div class="stat-box"><div class="val" style="color:var(--red)">${auditFail}</div><div class="lbl">Audit Fail</div></div>
+        <div class="stat-box"><div class="val" style="color:var(--yellow)">${thinResearch}</div><div class="lbl">Thin Research</div></div>
+        <div class="stat-box"><div class="val" style="color:var(--blue)">${lowWords}</div><div class="lbl">Low Word Count</div></div>
+        <div class="stat-box"><div class="val">${allWeak.length}</div><div class="lbl">Total Weak</div></div>
+      </div>`;
+
+    filterWeak();
+  } catch(e) {
+    document.getElementById('weak-content').innerHTML = `<div class="error-msg">Error: ${e.message}</div>`;
+  }
+}
+
+function filterWeak() {
+  const trackF = document.getElementById('weak-track-filter').value;
+  let filtered = allWeak;
+  if (trackF) filtered = filtered.filter(m => m.track === trackF);
+
+  if (filtered.length === 0) {
+    const tbl = document.getElementById('weak-table');
+    if (tbl) tbl.innerHTML = '<tr><td colspan="6" style="color:var(--green)">No weak modules!</td></tr>';
+    return;
+  }
+
+  const rows = filtered.map(m => {
+    const tags = m.issues.map(issue => {
+      if (issue === 'audit_fail') return `<span class="issue-tag tag-audit">audit fail</span>`;
+      if (issue.startsWith('research_score')) return `<span class="issue-tag tag-research">${issue.replace('research_score_', 'score: ')}</span>`;
+      if (issue.startsWith('low_words')) return `<span class="issue-tag tag-words">${issue.replace('low_words_', 'words: ')}</span>`;
+      return `<span class="issue-tag">${issue}</span>`;
+    }).join('');
+    const rsStr = m.research_score !== null ? `${m.research_score}/10` : '—';
+    const rsCls = scoreClass(m.research_score);
+    const wordsStr = m.word_target > 0 ? `${m.words}/${m.word_target}` : `${m.words}`;
+    return `<tr>
+      <td style="font-weight:600">${m.track}</td>
+      <td style="color:var(--text2)">${m.num}</td>
+      <td>${m.slug}</td>
+      <td><span class="score-cell ${rsCls}">${rsStr}</span></td>
+      <td style="color:${m.words < m.word_target * 0.8 && m.word_target > 0 ? 'var(--red)' : 'var(--text2)'}">${wordsStr}</td>
+      <td>${tags}</td>
+    </tr>`;
+  }).join('');
+
+  const html = `<table>
+    <thead><tr>
+      <th>Track</th><th>#</th><th>Slug</th><th>Research</th><th>Words</th><th>Issues</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+
+  // Replace or insert table (stat-row is already rendered by loadWeak)
+  const container = document.getElementById('weak-content');
+  const oldTable = container.querySelector('table');
+  if (oldTable) {
+    oldTable.outerHTML = html;
+  } else {
+    container.insertAdjacentHTML('beforeend', html);
+  }
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ---- Init ----
+loadResearch();
+loadReviews();
+loadIssues();
+loadWeak();
+</script>
+</body>
+</html>

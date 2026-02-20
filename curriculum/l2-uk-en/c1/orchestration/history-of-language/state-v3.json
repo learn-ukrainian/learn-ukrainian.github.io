@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "history-of-language",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:06:48Z",
+      "task_id": "v3-history-of-language-pA",
+      "mode": "full"
+    }
+  }
+}

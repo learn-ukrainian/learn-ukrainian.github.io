@@ -1,0 +1,64 @@
+{
+  "module": "the-locative-where-things-are",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-19T23:01:40.445001Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-19T22:52:02.061678Z",
+    "meta": "2026-02-19T22:50:23.785491Z",
+    "activities": "2026-02-19T22:52:02.063043Z",
+    "vocabulary": "2026-02-18T21:14:08.063757Z",
+    "plan": "2026-02-18T19:03:32.260243Z",
+    "research": "2026-02-19T22:50:23.777771Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2683/2000 (raw: 2876)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "module": "volodymyr-velykii",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-19T21:47:17.983810Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-19T11:23:44.252910Z",
+    "meta": "2026-02-19T11:16:07.810562Z",
+    "activities": "2026-02-19T11:18:29.671999Z",
+    "vocabulary": "2026-02-18T18:47:32.725534Z",
+    "plan": "2026-02-18T17:54:25.129844Z",
+    "research": "2026-02-18T17:53:18.077080Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5528/5000 (raw: 5773)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/24"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

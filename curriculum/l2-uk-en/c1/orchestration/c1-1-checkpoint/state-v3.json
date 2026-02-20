@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "c1-1-checkpoint",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T13:33:10Z",
+      "task_id": "v3-c1-1-checkpoint-pA",
+      "mode": "full"
+    }
+  }
+}

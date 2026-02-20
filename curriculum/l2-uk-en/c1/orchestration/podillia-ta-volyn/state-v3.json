@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "podillia-ta-volyn",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T19:04:50Z",
+      "task_id": "v3-podillia-ta-volyn-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -136,6 +136,7 @@
 - viacheslav-chornovil
 - vasyl-stus
 - myroslav-marynovych
+- mustafa-dzhemilev
 - volodymyr-ivasyuk
 - leonid-kadenyuk
 - vasyl-shkliar

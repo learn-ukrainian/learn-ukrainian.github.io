@@ -1,7 +1,7 @@
 # Audit Report: M10 — checkpoint-first-contact.md
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 20:39:29
+**Generated:** 2026-02-19 23:01:36
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2436/1500 (raw: 2704)
+- **Words:** ✅ 2436/1500 (raw: 2706)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 5/4 types
@@ -59,11 +59,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Checkpoint: First Contact** | ➖ | 52 | Excluded Type |
-| **Overview** | ✅ | 200 | Included in Core |
+| **Огляд та мета** | ✅ | 200 | Included in Core |
 | **Skill 1: Читання кирилиці** | ✅ | 279 | Included in Core |
 | **Skill 2: Визначення роду** | ✅ | 373 | Included in Core |
 | **Skill 3: Дієвідміна** | ✅ | 333 | Included in Core |
 | **Skill 4: Питальні речення** | ✅ | 418 | Included in Core |
 | **Skill 5: Замовлення їжі** | ✅ | 341 | Included in Core |
-| **Integration Task** | ✅ | 265 | Included in Core |
+| **Інтеграційне завдання** | ✅ | 265 | Included in Core |
 | **Підсумок** | ✅ | 175 | Included in Core |

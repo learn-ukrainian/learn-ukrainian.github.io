@@ -1,37 +1,31 @@
 # Дослідження: This Is / I Am
 
 ## State Standard Reference
-§4.2.1.4: "Займенник. Уживання відмінкових форм особових займенників: я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)."
-§4.2.3.1: "Називний відмінок: суб’єкт активної дії... особа чи предмет: Це Ірина. Це новий телевізор..."
-Alignment: This module directly addresses the A1 requirement for personal pronouns in the nominative case and the "identification of person or object" using the zero copula construction (defined as "simple sentence" in §4.3.1).
+§4.2.3.1: "Називний відмінок: ... особа чи предмет: Це Ірина. Це новий телевізор; ідентифікація особи чи предмета: Мене звати Остап. Ось там вхід. Це підручник."
+Alignment: This module directly addresses the requirement for simple identification sentences using the Nominative case and the "Zero Copula" structure (implied by the examples "Це Ірина", "Це підручник"). It also covers §4.2.1.4 (Personal pronouns).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| я | Very High (Core) | я студент, я тут, я (name) |
-| ти | Very High (Core) | ти хто?, ти де?, ти студент? |
-| він | Very High (Core) | він там, він українець |
-| вона | Very High (Core) | вона тут, вона вчителька |
-| це | Very High (Core) | це (noun), хто це?, що це? |
+| я, ти, він, вона, воно, ми, ви, вони | Top 20 (dict.com.ua / Leipzig corpora) | я студент, ти де?, ми тут |
+| це | Top 10 | що це?, хто це?, це книга |
+| хто, що | Top 50 | хто це?, що там? |
+| студент / студентка | High freq. (A1 thematic) | я студент, він студент |
+| вчитель / вчителька | High freq. (A1 thematic) | вона вчителька |
 
 ## Cultural Hooks
-1. **The "Vi" Safety Net**: In Ukraine, addressing a stranger with "ти" (ty) can be considered rude or overly familiar. The safe default is always "Ви" (Vy) until invited to switch. This applies even to people of the same age in professional settings.
-2. **The "Bruderschaft" Moment**: Switching from "Ви" to "ти" is often a distinct social moment (sometimes accompanied by a drink), usually initiated by the older person, the person of higher status, or the woman in a mixed-gender pair.
+1. **The "Safety Net" (Ви)**: In Ukraine, addressing a stranger with "ти" can be considered rude or aggressive. "Ви" is the mandatory default for anyone older or unfamiliar, regardless of social status.
+2. **The "Bruderschaft" Ritual**: The transition from "Ви" to "ти" is a significant social milestone, often marked by a shared drink or explicit permission ("Давай на 'ти'?").
 
 ## Common Learner Errors
-1. **The Phantom "Is"**: Learner says "Я є студент" (I am a student) instead of "Я студент".
-   *   *Correction*: Zero copula in present tense. "Є" is rarely used for simple identification.
-2. **The "It" Trap**: Referring to all inanimate objects as "воно" (it/neuter).
-   *   *Correction*: Objects reference their grammatical gender (e.g., стіл -> він, кава -> вона).
-3. **Register Mix-up**: Using "ти" with a boss, elder, or stranger, or "Ви" with a child.
-   *   *Correction*: Clear social rules for register (Distance vs. Closeness).
+1. **The Phantom "Is"**: Students try to insert "є" (is) into sentences like "Я є студент". Correct: "Я — студент". Why: L1 interference from English "to be".
+2. **The "It" Trap**: Learners use "воно" (it) for all inanimate objects (tables, lamps). Correct: Use gendered pronouns ("він" for стіл, "вона" for лампа). Why: English "it" covers all non-humans; Ukrainian assigns gender to everything.
+3. **Register Mix-up**: Using "ти" with an elder or official. Correct: Always use "Ви". Why: Lack of T-V distinction in modern English.
 
 ## Cross-References
-- Builds on: `a1-03` (The Gender Code - needed for he/she selection)
-- Prepares for: `a1-05` (My World - Objects), `a1-14` (Mine and Yours - possessives base on personal pronouns)
+- **Builds on**: `a1-03` (The Gender Code) — relies on understanding gender to pick correct pronouns (він/вона).
+- **Prepares for**: `a1-05` (My World - Objects) — expands "Це..." structure; `a1-14` (Mine and Yours) — possessive pronouns.
 
 ## Notes for Content Writing
-- **Scaffolding**: Explicitly contrast the English "to be" with the Ukrainian "Zero Copula" using visual gaps (e.g., "I [___] Student").
-- **Visuals**: Use a clear "Finger Pointing" icon or analogy for "Це".
-- **Gender**: Reinforce that *vin/vona* apply to things (table, lamp) not just people, linking back to Module 03.
-- **Drill**: Focus heavily on the "Transformation" pattern: "Ivan is a student -> He is a student" to cement pronoun substitution.
+- **Immersion Constraints**: A1 Phase (M04). Strict English scaffolding required for grammar explanations. Use English for the "Zero Copula" concept explanation to ensure clarity.
+- **Visuals**: Use a clear "X" or "Ø" symbol to represent the missing "am/is/are" in diagrams (e.g., "I [am] student" -> "Я [Ø] студент").

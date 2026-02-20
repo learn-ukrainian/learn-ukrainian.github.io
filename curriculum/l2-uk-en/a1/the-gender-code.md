@@ -49,7 +49,7 @@ How do you know which team a word belongs to? You don't need to guess. You just 
 >
 > If you try to call everything "it," Ukrainians will be very confused. Embrace the personality of the words!
 
-## Теорія: Основи визначення роду
+## Презентація: Три кити роду
 
 Let's break down the rules for each gender. We will use a color-coding system to help your visual memory: **Blue** for Masculine, **Red** for Feminine, and **Yellow** for Neuter.
 
@@ -124,7 +124,7 @@ Neuter nouns are the "round" ones. They typically denote abstract concepts, subs
 | **Feminine** | Open A | -а, -я, (some -ь) | **моя** | **моя мама** | my mom |
 | **Neuter** | Round O | -о, -е | **моє** | **моє вікно** | my window |
 
-## Систематизація: Чотири граматичні сім'ї
+## Практика: Чотири сім'ї та винятки
 
 Now that you know the basic rules, let's look at the "families" of nouns. In grammar books, these are called "Declensions" (відміни). Knowing which family a word belongs to helps you predict how it changes when you use it in sentences.
 
@@ -153,7 +153,7 @@ In Russian, this word is feminine. In Ukrainian, **собака** is **Masculine
 *   **мій собака** (my dog) — Standard form.
 *   **моя собака** — Also acceptable when specifically referring to a female dog.
 
-Wait, doesn't it end in **-а**? Yes! So actually, **собака** belongs to Family 1 grammatically (like **тато**), but it is Masculine by default. This is a classic "exception" that learners often stumble on.
+Wait, doesn't it end in **-а**? Yes! So **собака** belongs to Family 1 grammatically (the -а ending family), but it is Masculine by default. This is a classic "exception" that learners often stumble on.
 
 > [!warning]
 > **The "Dad" Trap**
@@ -171,7 +171,7 @@ This is the "Night" family. It consists of **Feminine** nouns that end in a cons
 *   **любов** [lʲuˈbɔu̯] (love) — Feminine → **моя любов**
 *   **радість** [ˈra.dʲisʲtʲ] (joy) — Feminine → **моя радість**
 
-These words must be memorized individually — you can't reliably tell them from consonant-ending Masculine words by ending alone. For now, just recognise the pattern when you see it.
+These words must be memorized individually — you can't reliably tell them from consonant-ending Masculine words by ending alone. The good news: at this stage, if a word ends in a consonant, guessing Masculine is right about 90% of the time. For now, just recognize the pattern when you see it.
 
 ### Сім'я 4: Дитячий середній (Baby Neuter)
 This is a tiny but essential family of **Neuter** nouns that end in **-а** or **-я**.
@@ -179,7 +179,7 @@ Wait, didn't we say **-а/-я** is Feminine?
 Yes, but this specific group usually describes small animals or names.
 
 **The "Name" Trap:**
-**ім'я** [iˈmja] — name.
+**ім'я** [ˈimjɑ] — name.
 It ends in **-я**, so you want to say "моя ім'я."
 **STOP.**
 This is an ancient neuter form.
@@ -194,7 +194,7 @@ Examples of "Baby Neuter":
 > **Is "Name" Feminine?**
 > Many learners think "name" is feminine because it looks like "simya" (family - F). But **ім'я** is Neuter. It's one of the most common mistakes beginners make. Always practice saying: **"Моє ім'я..."** (My name is...).
 
-## Практикум: Тренування розпізнавання
+## Продукція: Колір і форма
 
 Let's train your brain to execute the "Gender Algorithm." When you see a new word, follow these steps:
 
@@ -244,8 +244,8 @@ Let's practice with words you will use every day.
 Let's see gender agreement in action. Notice how **мій** and **моя** change depending on who we are talking about.
 
 **Андрій:** Привіт! Це **моя** мама. (Hello! This is my mom.)
-**Олена:** Добрий день! Хто це? (Good day! Who is this?)
-**Андрій:** Ні, це **мій** брат. (No, this is my brother.)
+**Олена:** Добрий день! А це тато? (Good day! And is this dad?)
+**Андрій:** Ні, це **мій** брат. А це **мій** тато. (No, this is my brother. And this is my dad.)
 **Олена:** А де **моя** сестра? (And where is my sister?)
 
 See the pattern?
@@ -263,7 +263,7 @@ If you have ever played the Ukrainian game *S.T.A.L.K.E.R.*, you already know so
 
 *   **Артефакт** [ar.teˈfɑkt] (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
 *   **Зона** [ˈzɔ.nɑ] (The Zone) — Ends in 'a'. It's **Feminine**. The Zone is a *she*. She is dangerous and beautiful.
-*   **Укриття** [u.krɪtˈtʲa] (Shelter) — Ends in '-я' after a double consonant. It is **Neuter** — a place, a state of safety.
+*   **Укриття** [uˈkrɪtːʲɑ] (Shelter) — Ends in '-я' after a double consonant. It is **Neuter** — a place, a state of safety.
 
 ### Дім та ідентичність (Home and Identity)
 The words for the most important people in your life are gendered, but so are the spaces you inhabit.

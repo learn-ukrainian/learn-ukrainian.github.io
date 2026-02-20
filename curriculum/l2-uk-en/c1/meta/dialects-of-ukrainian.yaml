@@ -1,0 +1,61 @@
+slug: dialects-of-ukrainian
+title: Діалекти та наріччя
+word_target: 4000
+content_outline:
+- section: 'Вступ: Діалектологія як наука'
+  words: 450
+  points:
+  - 'Definition: Dialect (territorial variety) vs. Idiolect (individual) vs. Sociolect
+    (social group).'
+  - The relationship between Standard Ukrainian (Літературна мова) and its dialectal
+    base.
+  - 'Historical context: How geography and political history shaped the three main
+    dialect groups.'
+  - 'Key Terminology: Наріччя (supra-dialect), діалект (dialect), говір (patois),
+    ізоглоса (boundary).'
+- section: Три наріччя української мови
+  words: 850
+  points:
+  - 'Overview map: The triad structure (Pivnichne, Pivdenno-Zakhidne, Pivdenno-Skhidne).'
+  - 'Північне (Поліське) наріччя: Characteristics, archaic features, connection to
+    Old Rus heritage.'
+  - 'Південно-Західне наріччя (Galician, Bukovinian, Transcarpathian): High differentiation,
+    archaic retention, influence of neighboring languages (Polish, Hungarian, Romanian).'
+  - 'Південно-Східне наріччя (Middle Dnieper, Slobozhanshchyna, Steppe): The base
+    of the standard language, relative homogeneity due to later colonization.'
+- section: 'Фонетичні особливості: Як це звучить?'
+  words: 650
+  points:
+  - 'Vocalism: ''O'' vs ''I'' alternation (archaic forms in North/SW).'
+  - 'Consonantism: Hard vs. Soft pronunciation (e.g., [d], [t], [z], [s] hardening
+    in dialects vs. softening in standard).'
+  - 'Stress and Intonation: Penultimate stress in SW (Polish influence) vs. mobile
+    stress in Standard/SE.'
+  - 'Specific features: ''Ukanja'' vs ''Ikanja'', pronunciation of ''g'' and ''h''.'
+- section: 'Лексичні скарби: Бараболя чи Картопля?'
+  words: 800
+  points:
+  - 'Common household items: Regional synonyms for potato, pan, attic, rooster.'
+  - 'Adjectives of quality: Файний (SW) vs. Гарний (Std) vs. Славний.'
+  - 'Borrowings in dialects: Germanisms in Galicia, Turkisms in the South/Steppe.'
+  - 'Table of comparisons: Standard word vs. Dialectal variants (North/SW/SE).'
+- section: 'Морфологічні риси: Граматика регіонів'
+  words: 650
+  points:
+  - 'Verb endings: Contracted forms (робить vs роби, ходимо vs ходім).'
+  - 'Noun declension: Archaic dative/locative endings (-ови/-еви).'
+  - 'Pronoun variations: Forms of ''he/she/it'' and demonstratives (сей/той).'
+  - 'Past tense formation: Analytical past (ходив єм) in SW dialects.'
+- section: 'Діалект та ідентичність: Соціолінгвістика'
+  words: 400
+  points:
+  - The stigma vs. prestige of dialects in modern Ukraine.
+  - 'Dialects in literature: From Kotliarevsky and Kvitka-Osnovianenko to Stefanyk
+    and Matios.'
+  - 'Preservation: Why documenting dialects matters for national history.'
+- section: 'Практикум: Аналіз живого мовлення'
+  words: 400
+  points:
+  - Algorithm for identifying dialect groups in text/audio.
+  - 'Distinguishing Dialect from Surzhyk: Key indicators.'
+  - 'Sample analysis: Breaking down a short dialectal text passage.'

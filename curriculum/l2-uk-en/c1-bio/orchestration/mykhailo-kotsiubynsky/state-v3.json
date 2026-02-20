@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "mykhailo-kotsiubynsky",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T20:50:15Z",
+      "task_id": "v3-mykhailo-kotsiubynsky-pA",
+      "mode": "full"
+    }
+  }
+}

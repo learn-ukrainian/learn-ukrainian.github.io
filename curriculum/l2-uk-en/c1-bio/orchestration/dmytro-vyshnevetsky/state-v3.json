@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "dmytro-vyshnevetsky",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T11:56:34Z",
+      "task_id": "v3-dmytro-vyshnevetsky-pA",
+      "mode": "meta-only"
+    }
+  }
+}

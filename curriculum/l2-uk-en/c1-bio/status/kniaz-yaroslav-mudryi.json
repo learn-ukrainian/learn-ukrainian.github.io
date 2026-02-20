@@ -1,0 +1,64 @@
+{
+  "module": "kniaz-yaroslav-mudryi",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-19T21:47:19.594707Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-19T11:35:54.278566Z",
+    "meta": "2026-02-19T11:24:48.095251Z",
+    "activities": "2026-02-19T11:35:54.271496Z",
+    "vocabulary": "2026-02-18T18:39:32.355371Z",
+    "plan": "2026-02-17T13:37:38.095912Z",
+    "research": "2026-02-18T18:24:41.019637Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5316/5000 (raw: 5561)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6/3"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "12 < 24 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

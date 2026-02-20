@@ -91,6 +91,12 @@ from .yaml_schema_validation import (
     check_activity_yaml_schema,
     validate_activity_yaml_file,
 )
+from .imperial_terminology import (
+    check_imperial_terminology,
+)
+from .euphony import (
+    check_euphony_violations,
+)
 
 __all__ = [
     # Grammar
@@ -164,4 +170,8 @@ __all__ = [
     # YAML Schema Validation
     'check_activity_yaml_schema',
     'validate_activity_yaml_file',
+    # Imperial Terminology
+    'check_imperial_terminology',
+    # Euphony
+    'check_euphony_violations',
 ]

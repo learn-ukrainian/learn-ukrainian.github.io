@@ -1,26 +1,16 @@
-TRACK: a1
-LEVEL: A1
-SLUG: the-gender-code
-TOPIC_TITLE: The Gender Code
-MODULE_NUM: '3'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-gender-code.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-gender-code.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-gender-code.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-gender-code.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-gender-code.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-gender-code-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-gender-code-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
-SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
-SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
-PERSONA_FLAVOR: The Helpful Neighbor
-PERSONA_VOICE: Patient Supportive Tutor
-PERSONA_ROLE: Linguistic Taxonomist
+ACTIVITY_COUNT_TARGET: '10'
+ACTIVITY_MIN: '8'
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-gender-code.md
+FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
+  essay-response, critical-analysis, comparative-study, authorial-intent
 IMMERSION_RULE: 'TARGET: 10-25% Ukrainian, 75-90% English. ALL explanatory prose in
   English. Grammar explained in English. Ukrainian in examples and short phrases only
   — always with English translations. Callout text in English. Ukrainian sentences
   max 10 words.'
+ITEMS_MIN: '12'
+LEVEL: A1
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -40,6 +30,20 @@ LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
   Vocative'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-gender-code.yaml
+MODULE_NUM: '3'
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_ROLE: Linguistic Taxonomist
+PERSONA_VOICE: Patient Supportive Tutor
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-gender-code.yaml
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
+REQUIRED_TYPES: ''
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-gender-code-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-gender-code-review.md
+SCHEMA_PATH: schemas/activities-a1.schema.json
+SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
+SLUG: the-gender-code
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -460,12 +464,9 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-ACTIVITY_COUNT_TARGET: '10'
-ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+TOPIC_TITLE: The Gender Code
+TRACK: a1
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-gender-code/track-context.md
 VOCAB_COUNT_TARGET: '20'
-FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
-  essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
-REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-gender-code.yaml
+WORD_TARGET: '2000'

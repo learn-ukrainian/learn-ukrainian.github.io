@@ -39,15 +39,15 @@ In Ukrainian, this distinction is very sharp. You cannot use the "near" word for
 
 ### Recalling Gender (Основи)
 
-Before we learn the new words, let's quickly remember *why* we need them. Remember the endings from the last lesson?
+Before we learn the new words, we need to quickly remember *why* we need them. Remember the endings from the last lesson?
 
 1.  **Masculine (Він):** Usually ends in a consonant (like **стіл** [sʲtʲil] — table).
-2.  **Feminine (Вона):** Usually ends in **-а** or **-я** (like **книга** [ˈknɪɦɐ] — book).
+2.  **Feminine (Вона):** Usually ends in **-а** or **-я** (like **книга** [ˈknɪɦɑ] — book).
 3.  **Neuter (Воно):** Usually ends in **-о** or **-е** (like **вікно** [ʋʲikˈnɔ] — window).
 
 If you try to use a masculine "this" with a feminine "book," it sounds as wrong to a Ukrainian ear as saying "This is a handsome woman" might sound in English—grammatically understandable, but strange!
 
-Let's explore how to point correctly.
+Time to point correctly.
 
 ## Теорія: Вказівні займенники (Цей і Той)
 
@@ -55,19 +55,19 @@ This is the core of our lesson. We have two families of words: the **Ц-family**
 
 ### The "Near" Demonstratives (Цей)
 
-The "Near" words start with the letter **Ц** [ts]. Think of the "ts" sound in "cats." It’s a sharp, close sound. These words mean "This" (singular) or "These" (plural).
+The "Near" words start with the letter **Ц** [t͡s]. Think of the "ts" sound in "cats." It’s a sharp, close sound. These words mean "This" (singular) or "These" (plural).
 
 | Gender | Ukrainian | IPA | English | Example |
 | :--- | :--- | :--- | :--- | :--- |
 | **Masculine** | **цей** | [t͡sei̯] | This | **цей стіл** (this table) |
 | **Feminine** | **ця** | [t͡sʲɑ] | This | **ця лампа** (this lamp) |
-| **Neuter** | **це** | [tse] | This | **це вікно** (this window) |
+| **Neuter** | **це** | [t͡se] | This | **це вікно** (this window) |
 | **Plural** | **ці** | [t͡sʲi] | These | **ці двері** (these doors) |
 
 **Usage Note:**
 Use these forms when the object is within your reach.
 *   **Цей телефон** [t͡sei̯ te̞le̞ˈfɔn] (this phone) — sticking to your hand.
-*   **Ця книга** [t͡sʲɑ ˈknɪɦɐ] (this book) — right in front of you.
+*   **Ця книга** [t͡sʲɑ ˈknɪɦɑ] (this book) — right in front of you.
 
 ### The "Far" Demonstratives (Той)
 
@@ -128,20 +128,22 @@ When you want to say "This specific object (not that one)," you MUST use the agr
 > *   WRONG: **Ця** є книга. (English structure translated word-for-word).
 > *   CORRECT: **Це** книга. (This is a book).
 > *   CORRECT: **Ця** книга... (This book...).
+>
+> **Neuter trap:** For neuter nouns, identification and specification look identical: **Це вікно.** can mean "This is a window" (naming it) OR "This window" (pointing to it). Context tells you which is which. If a sentence follows (e.g., **Це вікно велике** — "This window is big"), it is specification. If it stands alone as an answer to **Що це?**, it is identification.
 
 ## Практика: Побут і речі
 
-Now that we have the grammar, let's fill our room with objects. We will learn common items you find in a Ukrainian home, from the living room to the kitchen.
+Now that we have the grammar, we can fill our room with objects. Here are common items you find in a Ukrainian home, from the living room to the kitchen.
 
 ### Меблі (Furniture)
 
-Let's learn these words by their gender so we know which "pointer" to use.
+We will group these words by their gender so we know which "pointer" to use.
 
 #### Masculine
 These words end in a consonant.
 
 1.  **стіл** [sʲtʲil] — table
-2.  **стілець** [sʲtʲiˈlɛtʲsʲ] — chair
+2.  **стілець** [sʲtʲiˈlɛt͡sʲ] — chair
 3.  **диван** [dɪˈʋɑn] — sofa/couch
 4.  **телефон** [te̞le̞ˈfɔn] — telephone/phone
 
@@ -153,7 +155,7 @@ These words end in a consonant.
 These words end in **-а**.
 
 1.  **шафа** [ˈʃɑfɑ] — wardrobe/cupboard
-2.  **книга** [ˈknɪɦɐ] — book
+2.  **книга** [ˈknɪɦɑ] — book
 3.  **кімната** [kimˈnɑtɑ] — room
 4.  **лампа** [ˈlɑmpɑ] — lamp
 
@@ -198,12 +200,12 @@ These are things you often carry with you or use every day.
 
 *Example Usage:*
 *   **Це мій комп'ютер.** (This is my computer.)
-*   **Де твоя сумка?** (Where is your bag?)
+*   **Ця сумка нова.** (This bag is new.)
 *   **Ці окуляри нові.** (These glasses are new.)
 
 ### Mini-Dialogue: Identification vs Specification
 
-Let's see how a conversation works when we combine these concepts. Imagine you are asking about things in a furniture store.
+Here is how a conversation works when we combine these concepts. You are in a furniture store, asking about things.
 
 **A:** **Що це?** (What is this?)
 **B:** **Це стіл.** (This is a table.)
@@ -232,7 +234,7 @@ Notice how speaker B switches from **Це** (naming the object) to **Той/Ця
 
 ## Культурний контекст: Український дім
 
-Language reflects how people live. Let's look at the Ukrainian concept of "home."
+Language reflects how people live. The Ukrainian concept of "home" reveals this beautifully.
 
 ### House vs. Apartment
 
@@ -242,7 +244,7 @@ In English, we often use "house" and "home" almost interchangeably. In Ukrainian
 *   **Квартира** [kʋɑrˈtɪrɑ] — This is an apartment or flat. Most urban Ukrainians live in a **квартира**.
 *   **Дім** [dʲim] — This is the general word for "home" or "house" (the building). It represents the concept of home as a sanctuary.
 
-There is a famous proverb: **«В гостях добре, а вдома краще»** [u ˈɦɔsʲtʲɑx ˈdɔbre̞ ɑ ˈʋdɔmɑ ˈkrɑʃt͡ʃe̞]. It translates literally as "It is good as a guest, but better at home." It is the Ukrainian equivalent of "East or West, home is best."
+There is a famous proverb: **«В гостях добре, а вдома краще»** [u ɦɔsʲˈtʲɑx ˈdɔbre̞ ɑ ˈʋdɔmɑ ˈkrɑʃt͡ʃe̞]. It translates literally as "It is good as a guest, but better at home." It is the Ukrainian equivalent of "East or West, home is best."
 
 ### Покуття: The Honored Corner
 
@@ -269,7 +271,7 @@ Because it is plural, we use **ці** (these) and **ті** (those), even if we a
 
 ## Використання: Описуємо кімнату
 
-Let's bring everything together. We are going to describe a room using our new tools: Identification (**Це**) and Specification (**Цей/Ця/Те**).
+Now we bring everything together. We are going to describe a room using our two tools: Identification (**Це...**) and Specification (**Цей/Ця/Це** for near, **Той/Та/Те** for far).
 
 ### Сценарій: Екскурсія кімнатою
 

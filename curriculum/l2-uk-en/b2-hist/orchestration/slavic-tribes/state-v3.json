@@ -1,0 +1,26 @@
+{
+  "track": "b2-hist",
+  "slug": "slavic-tribes",
+  "mode": "v3",
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T08:50:16Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T08:50:17Z",
+      "note": "adopted-existing"
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T08:55:21Z",
+      "attempts": 1
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T09:45:21Z",
+      "attempts": 3
+    }
+  }
+}

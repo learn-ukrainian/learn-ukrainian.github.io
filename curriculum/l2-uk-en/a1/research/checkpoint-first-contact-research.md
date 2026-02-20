@@ -2,40 +2,35 @@
 
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
-§4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто;"
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає, читаємо, читаєте, читають)..."
-§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто: Де ви були вчора? Хто вам це сказав? Що тобі купити? Куди ви їдете?;"
-§3.9: "Ресторан, кафе: страви; напої; посуд і столові прибори."
-
-Alignment: Цей модуль є консолідуючим для першого блоку A1.1. Він безпосередньо відповідає вимогам стандарту щодо базової фонетики (читання), морфології (рід іменників, дієвідмінювання I та II груп у теперішньому часі) та синтаксису (питальні речення). Тематично він інтегрує ці навички в контекст "Ресторан, кафе" (§3.9).
+§4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто"
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш...), працювати (працюю, працюєш...)"
+§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... спонукальне речення для вираження прохання: Дайте, будь ласка, два квитки."
+Alignment: This module directly assesses the fundamental A1.1 competencies defined in the standard: alphabet recognition, basic noun gender classification, present tense verb conjugation (I/II), and simple sentence construction with interrogatives.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| говорити | High (A1 Core) | говорити українською, говорити повільно |
-| знати | High (A1 Core) | я знаю, хто знає?, знати відповідь |
-| читати | High (A1 Core) | читати текст, читати меню |
-| писати | High (A1 Core) | писати листа, писати вправу |
-| хто / що | Very High (Interrogative) | Хто це?, Що це?, Хто ви? |
-| де / коли | Very High (Interrogative) | Де ви?, Де кафе?, Коли урок? |
-| кава | High (Cultural/Cafe) | чорна кава, кава з молоком |
-| рахунок | Medium (Cafe context) | Можна рахунок?, принести рахунок |
+| читати | High (Core A1) | читати книгу, читати вголос, читати українською |
+| писати | High (Core A1) | писати листа, писати вправу, писати ручкою |
+| говорити | High (Core A1) | говорити правду, говорити повільно, говорити по-українськи |
+| кава | High (Cultural) | філіжанка кави, кава з молоком, чорна кава |
+| рахунок | Medium (Service) | просити рахунок, оплатити рахунок |
+| хто/що | High (Grammar) | Хто це? Що це? |
 
 ## Cultural Hooks
-1. **Культура кави у Львові**: Львів вважається кавовою столицею України. Традиція вживання кави тут налічує століття і пов'язана з віденським впливом. Популярний вислів "піти на каву" означає не просто випити напій, а зустрітися для спілкування. (Джерело: *Lviv Coffee Festival, wiener-kaffee.eu*)
-2. **Юрій Кульчицький**: Легендарний українець, який вважається одним із засновників перших кав'ярень у Відні у 17 столітті після перемоги над турками. Він навчив європейців пити каву з молоком та медом. (Джерело: *travelingmega.com, forgottengalicia.com*)
+1. **Lviv Coffee Culture**: Yuriy Kulchytsky, a Ukrainian noble from Sambir region, is credited with opening one of the first coffee houses in Vienna (The Blue Bottle) in 1683, originating the Viennese coffee culture which is deeply connected to Lviv today.
+2. **"Смачного!"**: The universal Ukrainian phrase for "Bon appetit", essential for any dining context.
 
 ## Common Learner Errors
-1. **Плутанина літер И та І**: → *Студенти часто вимовляють "и" як англійське "ee" (як у "bee"), хоча це звук, ближчий до "i" у слові "Mister" або "bit".*
-2. **Рід іменника "тато"**: → *Студенти класифікують "тато" як середній рід через закінчення -о (як "місто") або плутають з жіночим закінченням -а. Стандарт чітко відносить його до чоловічого роду за біологічною ознакою.*
-3. **Змішування дієвідмін**: → *Використання закінчення -уть для другої дієвідміни (наприклад, "вони говор-уть" замість "говор-ять").*
+1. **И vs І**: Confusion between the deep /ɪ/ (bit) and bright /i/ (bee) sounds.
+2. **"Тато" Gender**: Learners often mistake "тато" (dad) for neuter due to the -o ending, despite natural masculine gender.
+3. **Conjugation Mix-up**: Confusing the 3rd person plural endings -уть/-ють (Type I) with -ать/-ять (Type II).
 
 ## Cross-References
-- Builds on: a1-01 (Alphabet), a1-03 (Noun Gender), a1-06 (Conjugation I), a1-08 (Conjugation II), a1-09 (Reflexive Verbs)
-- Prepares for: a1-11 (The Accusative I - Direct Objects)
+- Builds on: a1-01 (Alphabet), a1-04 (Gender), a1-06 (Verbs), a1-09 (Reflexive Verbs)
+- Prepares for: a1-11 (Accusative Case), a1-13 (Locative Case)
 
 ## Notes for Content Writing
-- Модуль має бути максимально практичним. Це не новий матеріал, а перевірка ("Check-up").
-- Використовуйте персонажа "Friendly Hostel Host" для створення безпечного середовища. 
-- У розділі про замовлення їжі обов'язково введіть фразу "Смачного!" (Bon appetit) як важливий культурний елемент.
-- Акцентуйте на тому, що помилки в роді "тато" або "батько" — це нормальний етап навчання.
+- This is a "Checkpoint" module, meaning pedagogy is TTT (Test-Teach-Test) or Review-focused.
+- Immersion is low (A1), so instructions must be in English, but the "test" items should be in Ukrainian.
+- Use the "Friendly Hostel Host" persona to make the "exam" feel like a helpful check-in.

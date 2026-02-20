@@ -1,0 +1,59 @@
+{
+  "slug": "colors-and-clothing",
+  "track": "a1",
+  "module_num": 27,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:27:47Z",
+      "words": 2666,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:29:17Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:29:17Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:39:22Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:39:22Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:40:40Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:40:40Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:40:40Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:46:44Z",
+      "verdict": "NEEDS_WORK"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:48:32Z"
+    }
+  },
+  "last_updated": "2026-02-19T21:48:32Z"
+}

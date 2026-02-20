@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "ukrainska-arkhitektura",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:24:23Z",
+      "task_id": "v3-ukrainska-arkhitektura-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "pavlo-polubotok",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:10:30Z",
+      "task_id": "v3-pavlo-polubotok-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -2,51 +2,54 @@ slug: the-living-verb-ii
 title: The Living Verb II
 word_target: 2000
 content_outline:
-- section: 'Вступ: Світ дієслів'
+- section: 'Вступ: Родина -ити'
   words: 250
   points:
-  - Introduce the Second Conjugation (-ити family) with verbs like 'говорити', 'робити'
-  - Clarify that these are imperfective verbs (ongoing/habitual actions)
-  - Connect to the learner's existing knowledge of 1st conjugation (-ати)
-  - 'ENGLISH POLICY: Use English to clearly explain the structural difference'
-- section: 'Граматика: Друга дієвідміна'
-  words: 900
+  - Introduce the concept of 'Second Conjugation' (-ити verbs) as the second major
+    family of Ukrainian verbs.
+  - 'Contrast with First Conjugation (-ати) using a simple visual hook: A vs I (Hard
+    vs Soft).'
+  - 'List the ''Star Verbs'' of this lesson: говорити, робити, любити, бачити.'
+  - 'ENGLISH POLICY: Use English to clearly explain that these verbs work exactly
+    like the previous ones, just with a different vowel vowel in the ending.'
+- section: 'Презентація: Друга дієвідміна'
+  words: 800
   points:
-  - 'Visual Paradigm: A clear side-by-side table comparing ''читати'' (Type 1) vs
-    ''говорити'' (Type 2)'
-  - 'Highlight the vowel markers: ''е/є'' for Type 1 vs ''и/і'' for Type 2'
-  - 'Step-by-step conjugation of ''говорити'': -ю, -иш, -ить, -имо, -ите, -ять'
-  - 'The ''Labial L'' rule: Explain ''роблю'', ''люблю'' as a helper sound for pronunciation
-    (not just an exception)'
-  - 'Consonant Mutations: Explain ''сидіти'' → ''сиджу'' (д → дж) and ''ходити'' →
-    ''ходжу'''
-  - 'Bonus Verbs: Introduce ''їсти'' and ''пити'' as high-frequency verbs with slight
-    irregularities'
-  - 'Common Error Alert: Warn against mixing conjugations (e.g., ''ти роб-еш'' instead
-    of ''ти роб-иш'')'
-- section: 'Практика: Тренування'
+  - 'Visual Paradigm: Side-by-side comparison of ''читати'' (Type 1) vs ''говорити''
+    (Type 2).'
+  - 'The Golden Rule of Type 2: The dominating vowel is ''И'' (or ''І'' after vowels),
+    replacing ''Е/Є''.'
+  - 'Step-by-step conjugation of ''говорити'': я говорю, ти говориш, він говорить...'
+  - 'The ''Labial L'' phenomenon: Explain ''роблю'', ''люблю'' as a natural bridge
+    for lip sounds (б, п, в, м, ф) before -ю.'
+  - 'Consonant Mutations (The ''Hisss'' Rule): Explain ''сидіти'' → ''сиджу'' (д →
+    дж) and ''ходити'' → ''ходжу'' as a softening for the ''Я'' form.'
+  - 'Bonus Irregulars: Introduce ''їсти'' (я їм, ти їси...) and ''пити'' (regular:
+    п''ю, п''єш) with caution signs.'
+- section: 'Практика: Тренування форм'
   words: 450
   points:
-  - 'Sorting Exercise: Distinguish between Type 1 and Type 2 verbs based on infinitive'
-  - 'Drill: Conjugate ''робити'' and ''бачити'' in all persons'
-  - 'Fill-in-the-blank: Complete sentences with the correct form of ''любити'' and
-    ''ходити'''
-  - 'Mutation Check: Practice the ''я'' form for ''сидіти'' and ''платити'' to reinforce
-    sound changes'
-- section: 'Використання: Розповідаємо про себе'
+  - 'Drill 1: ''Identification'' — Is it Type 1 (-ати/-яти) or Type 2 (-ити/-іти)?
+    Sorting exercise.'
+  - 'Drill 2: ''The I-Form Challenge'' — Focus specifically on mutations (сиджу, ходжу,
+    їжджу, плачу).'
+  - 'Drill 3: ''Conjugation Grid'' — Full table practice for high-frequency verbs
+    (робити, бачити).'
+  - 'Common Error Alert: Explicitly warn against ''ти робеш'' (It''s ''робиш''!).'
+- section: 'Використання: Розповіді про дії'
+  words: 300
+  points:
+  - 'Sentence Building: Combine subject + verb + object (e.g., ''Я люблю каву'', ''Ми
+    робимо піцу'').'
+  - 'Collocations: Introduce fixed phrases like ''робити помилки'' (to make mistakes),
+    ''говорити правду'' (to tell the truth).'
+  - 'Dialogue scaffolding: A short Q&A structure asking ''Що ти робиш?'' and answering
+    with various verbs.'
+- section: 'Культурний контекст: Глибина слова'
   words: 200
   points:
-  - Construct simple sentences describing habits (e.g., 'Я люблю читати', 'Ми п'ємо
-    каву')
-  - 'Use common collocations: ''говорити українською'', ''робити помилки'', ''бачити
-    світ'''
-  - 'Dialogue scaffolding: Asking and answering ''Що ти робиш?'''
-- section: 'Культура: Глибина слова'
-  words: 200
-  points:
-  - 'Etymology of ''Любити'': Connect it to ''люди'' (people) — loving as being part
-    of the community'
-  - 'Proto-Slavic Roots: Mention the ancient nature of the ''-ити'' ending (1000+
-    years old)'
-  - 'Cultural context: The importance of hospitality (їсти, пити, говорити) in Ukrainian
-    culture'
+  - 'Etymology: The deep connection between ''любити'' (to love) and ''люди'' (people).'
+  - 'Historical Note: The -ити class is ancient (Proto-Slavic), showing how stable
+    this pattern has been for over a millennium.'
+  - 'Hospitality Triad: Mention how ''їсти, пити, говорити'' are the core of Ukrainian
+    guest culture.'

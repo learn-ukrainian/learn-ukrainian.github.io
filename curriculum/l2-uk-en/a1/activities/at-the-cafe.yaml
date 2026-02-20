@@ -1,0 +1,434 @@
+- type: match-up
+  title: "Café Essentials"
+  instruction: "Match the Ukrainian words with their English translations."
+  pairs:
+    - left: "Кава"
+      right: "Coffee"
+    - left: "Чай"
+      right: "Tea"
+    - left: "Вода"
+      right: "Water"
+    - left: "Офіціант"
+      right: "Waiter"
+    - left: "Меню"
+      right: "Menu"
+    - left: "Рахунок"
+      right: "Bill"
+    - left: "Тістечко"
+      right: "Pastry/Cake"
+    - left: "Цукор"
+      right: "Sugar"
+    - left: "Молоко"
+      right: "Milk"
+    - left: "Сік"
+      right: "Juice"
+    - left: "Кав'ярня"
+      right: "Café"
+    - left: "Готівка"
+      right: "Cash"
+
+- type: group-sort
+  title: "Gender Sort: Masculine, Feminine, or Neuter?"
+  instruction: "Sort the words by gender to prepare for the Accusative case."
+  groups:
+    - name: "Він (Masculine)"
+      items: ["чай", "сік", "круасан", "цукор", "лимон", "рахунок", "офіціант"]
+    - name: "Вона (Feminine)"
+      items: ["кава", "вода", "піца", "готівка", "картка"]
+    - name: "Воно (Neuter)"
+      items: ["тістечко", "меню", "молоко", "еспресо"]
+
+- type: quiz
+  title: "Ordering Etiquette & Grammar"
+  instruction: "Choose the correct option for each situation."
+  items:
+    - question: "How do you politely say 'I want coffee'?"
+      explanation: "«Я буду» (I will have) is polite. «Я хочу» sounds demanding."
+      options:
+        - text: "Я буду каву."
+          correct: true
+        - text: "Я хочу каву."
+          correct: false
+        - text: "Кава мені."
+          correct: false
+        - text: "Я люблю каву."
+          correct: false
+    - question: "Which form of address should you use with a waiter?"
+      explanation: "Always use «Ви» (formal you) with service staff to show respect."
+      options:
+        - text: "Ви"
+          correct: true
+        - text: "Ти"
+          correct: false
+        - text: "Ми"
+          correct: false
+        - text: "Вони"
+          correct: false
+    - question: "What is the correct Accusative form of «кава» in «Я буду...»?"
+      explanation: "Feminine nouns ending in -а change to -у in the Accusative case."
+      options:
+        - text: "каву"
+          correct: true
+        - text: "кава"
+          correct: false
+        - text: "кави"
+          correct: false
+        - text: "каві"
+          correct: false
+    - question: "What is the correct Accusative form of «чай» in «Я буду...»?"
+      explanation: "Inanimate masculine nouns do not change in the Accusative case."
+      options:
+        - text: "чай"
+          correct: true
+        - text: "чаю"
+          correct: false
+        - text: "чая"
+          correct: false
+        - text: "чаї"
+          correct: false
+    - question: "What does «без цукру» mean?"
+      explanation: "«Без» means without."
+      options:
+        - text: "without sugar"
+          correct: true
+        - text: "with sugar"
+          correct: false
+        - text: "extra sugar"
+          correct: false
+        - text: "sweet"
+          correct: false
+    - question: "What is the meaning of the word «рахунок»?"
+      explanation: "«Рахунок» is the bill you ask for to pay. «Чек» is the receipt."
+      options:
+        - text: "the bill"
+          correct: true
+        - text: "the receipt"
+          correct: false
+        - text: "the menu"
+          correct: false
+        - text: "the order"
+          correct: false
+    - question: "How do you pay «готівкою»?"
+      explanation: "«Готівка» means cash."
+      options:
+        - text: "with cash"
+          correct: true
+        - text: "with a card"
+          correct: false
+        - text: "online"
+          correct: false
+        - text: "later"
+          correct: false
+    - question: "What is the standard polite greeting in a café?"
+      explanation: "«Добрий день» is the standard polite greeting."
+      options:
+        - text: "Добрий день"
+          correct: true
+        - text: "Па-па"
+          correct: false
+        - text: "Бувай"
+          correct: false
+        - text: "Дякую"
+          correct: false
+    - question: "Which verb means 'Give' (polite)?"
+      explanation: "«Дайте» is the polite imperative for 'Give'."
+      options:
+        - text: "Дайте"
+          correct: true
+        - text: "Дай"
+          correct: false
+        - text: "Давати"
+          correct: false
+        - text: "Даємо"
+          correct: false
+    - question: "Which verb means 'Bring' (polite)?"
+      explanation: "«Принесіть» is the polite imperative for 'Bring'."
+      options:
+        - text: "Принесіть"
+          correct: true
+        - text: "Принести"
+          correct: false
+        - text: "Принеси"
+          correct: false
+        - text: "Несіть"
+          correct: false
+    - question: "How do you say 'Black coffee' (Accusative)?"
+      explanation: "Since «кава» becomes «каву» (feminine Accusative), the adjective «чорна» must become «чорну»."
+      options:
+        - text: "чорну каву"
+          correct: true
+        - text: "чорна кава"
+          correct: false
+        - text: "чорний каву"
+          correct: false
+        - text: "чорне каву"
+          correct: false
+    - question: "How do you say 'Green tea' (Accusative)?"
+      explanation: "«Чай» is masculine and does not change, so the adjective «зелений» also stays the same."
+      options:
+        - text: "зелений чай"
+          correct: true
+        - text: "зелену чай"
+          correct: false
+        - text: "зеленого чай"
+          correct: false
+        - text: "зеленим чай"
+          correct: false
+
+- type: fill-in
+  title: "Accusative Case Drill"
+  instruction: "Complete the sentences by putting the word in brackets into the correct form. Remember: Feminine -а/-я → -у/-ю, Masculine/Neuter → No Change."
+  items:
+    - sentence: "Я буду {{answer}}."
+      answer: "воду"
+      explanation: "Вода (feminine) changes to Воду."
+      options: ["воду", "вода", "води", "воді"]
+    - sentence: "Дайте, будь ласка, {{answer}}."
+      answer: "каву"
+      explanation: "Кава (feminine) changes to Каву."
+      options: ["каву", "кава", "кави", "каві"]
+    - sentence: "Я замовлю {{answer}}."
+      answer: "піцу"
+      explanation: "Піца (feminine) changes to Піцу."
+      options: ["піцу", "піца", "піци", "піці"]
+    - sentence: "Мені {{answer}}, будь ласка."
+      answer: "чай"
+      explanation: "Чай (masculine) does not change."
+      options: ["чай", "чаю", "чая", "чаї"]
+    - sentence: "Я буду {{answer}}."
+      answer: "сік"
+      explanation: "Сік (masculine) does not change."
+      options: ["сік", "соку", "сока", "соки"]
+    - sentence: "Принесіть {{answer}}."
+      answer: "меню"
+      explanation: "Меню (neuter/indeclinable) does not change."
+      options: ["меню", "менюю", "меня", "мені"]
+    - sentence: "Я візьму {{answer}}."
+      answer: "круасан"
+      explanation: "Круасан (masculine) does not change."
+      options: ["круасан", "круасана", "круасану", "круасани"]
+    - sentence: "Я буду {{answer}} каву."
+      answer: "велику"
+      explanation: "Велика (feminine adj) changes to Велику to match Каву."
+      options: ["велику", "велика", "великий", "велике"]
+    - sentence: "Дайте {{answer}} воду."
+      answer: "смачну"
+      explanation: "Смачна (feminine adj) changes to Смачну to match Воду."
+      options: ["смачну", "смачна", "смачний", "смачне"]
+    - sentence: "Я буду {{answer}} каву."
+      answer: "чорну"
+      explanation: "Чорна (feminine adj) changes to Чорну."
+      options: ["чорну", "чорна", "чорний", "чорне"]
+    - sentence: "Мені {{answer}} чай."
+      answer: "зелений"
+      explanation: "Зелений (masculine adj) does not change because Чай does not change."
+      options: ["зелений", "зелену", "зелена", "зелене"]
+    - sentence: "Я замовлю {{answer}} тістечко."
+      answer: "шоколадне"
+      explanation: "Шоколадне (neuter adj) does not change."
+      options: ["шоколадне", "шоколадна", "шоколадний", "шоколадну"]
+
+- type: unjumble
+  title: "Building Polite Sentences"
+  instruction: "Rearrange the words to form correct polite sentences."
+  items:
+    - words: ["Мені", "будь", "ласка", "каву"]
+      answer: "Мені будь ласка каву"
+    - words: ["Я", "буду", "зелений", "чай"]
+      answer: "Я буду зелений чай"
+    - words: ["Дайте", "будь", "ласка", "меню"]
+      answer: "Дайте будь ласка меню"
+    - words: ["Принесіть", "будь", "ласка", "рахунок"]
+      answer: "Принесіть будь ласка рахунок"
+    - words: ["Я", "буду", "каву", "з", "молоком"]
+      answer: "Я буду каву з молоком"
+    - words: ["Я", "візьму", "круасан"]
+      answer: "Я візьму круасан"
+    - words: ["Мені", "чай", "без", "цукру"]
+      answer: "Мені чай без цукру"
+    - words: ["Можна", "будь", "ласка", "рахунок"]
+      answer: "Можна будь ласка рахунок"
+    - words: ["Ви", "будете", "платити", "карткою"]
+      answer: "Ви будете платити карткою"
+    - words: ["Я", "буду", "платити", "готівкою"]
+      answer: "Я буду платити готівкою"
+    - words: ["Дайте", "воду", "без", "газу"]
+      answer: "Дайте воду без газу"
+    - words: ["Що", "ви", "будете", "замовляти"]
+      answer: "Що ви будете замовляти"
+
+- type: match-up
+  title: "With or Without? (Phrases)"
+  instruction: "Match the Ukrainian phrases with their English meanings."
+  pairs:
+    - left: "з молоком"
+      right: "with milk"
+    - left: "без цукру"
+      right: "without sugar"
+    - left: "з лимоном"
+      right: "with lemon"
+    - left: "без молока"
+      right: "without milk"
+    - left: "з газом"
+      right: "sparkling (with gas)"
+    - left: "без газу"
+      right: "still (without gas)"
+    - left: "велика кава"
+      right: "large coffee"
+    - left: "маленький чай"
+      right: "small tea"
+    - left: "чорна кава"
+      right: "black coffee"
+    - left: "зелений чай"
+      right: "green tea"
+    - left: "апельсиновий сік"
+      right: "orange juice"
+    - left: "смачне тістечко"
+      right: "tasty pastry"
+
+- type: fill-in
+  title: "Complete the Dialogue"
+  instruction: "Fill in the missing words to complete the conversation between the waiter and the client."
+  items:
+    - sentence: "Добрий {{answer}}!"
+      answer: "день"
+      explanation: "Standard greeting."
+      options: ["день", "ранок", "вечір", "ніч"]
+    - sentence: "Що ви будете {{answer}}?"
+      answer: "замовляти"
+      explanation: "Meaning 'to order'."
+      options: ["замовляти", "їсти", "пити", "робити"]
+    - sentence: "Мені, {{answer}} ласка, каву."
+      answer: "будь"
+      explanation: "Part of 'please'."
+      options: ["будь", "буде", "буду", "була"]
+    - sentence: "З {{answer}} чи без?"
+      answer: "молоком"
+      explanation: "With milk (Instrumental case chunk)."
+      options: ["молоком", "молоко", "молока", "молоку"]
+    - sentence: "{{answer}} цукру, будь ласка."
+      answer: "Без"
+      explanation: "Without sugar."
+      options: ["Без", "З", "На", "В"]
+    - sentence: "{{answer}} ще воду."
+      answer: "Дайте"
+      explanation: "Polite imperative 'Give'."
+      options: ["Дайте", "Дай", "Даєш", "Даємо"]
+    - sentence: "{{answer}}, будь ласка, рахунок."
+      answer: "Принесіть"
+      explanation: "Polite imperative 'Bring'."
+      options: ["Принесіть", "Несіть", "Принести", "Принеси"]
+    - sentence: "Ви платите {{answer}}?"
+      answer: "карткою"
+      explanation: "By card (Instrumental case chunk)."
+      options: ["карткою", "картка", "картки", "картку"]
+    - sentence: "Ні, {{answer}}."
+      answer: "готівкою"
+      explanation: "By cash (Instrumental case chunk)."
+      options: ["готівкою", "готівка", "готівки", "готівку"]
+    - sentence: "{{answer}}, на все добре."
+      answer: "Дякую"
+      explanation: "Thank you."
+      options: ["Дякую", "Прошу", "Вітаю", "Перепрошую"]
+    - sentence: "До {{answer}}!"
+      answer: "побачення"
+      explanation: "Goodbye."
+      options: ["побачення", "зустрічі", "завтра", "вечора"]
+    - sentence: "Це {{answer}}?"
+      answer: "все"
+      explanation: "Is that all?"
+      options: ["все", "всі", "вся", "весь"]
+
+- type: true-false
+  title: "True or False: Etiquette & Culture"
+  instruction: "Decide if the statements about Ukrainian café culture and grammar are true or false."
+  items:
+    - statement: "«Я хочу» is the most polite way to order in a café."
+      correct: false
+      explanation: "«Я хочу» implies a demand. Use «Я буду» or «Мені, будь ласка»."
+    - statement: "You should use «Ти» with waiters who look young."
+      correct: false
+      explanation: "Always use «Ви» with staff to show professional respect."
+    - statement: "«Рахунок» is the bill you ask for when you want to pay."
+      correct: true
+      explanation: "Correct. «Чек» is the receipt you get afterwards."
+    - statement: "«Чек» is the paper you get after you have paid."
+      correct: true
+      explanation: "Correct."
+    - statement: "It is polite to leave a 10% tip («чайові») if you liked the service."
+      correct: true
+      explanation: "10% is standard for good service."
+    - statement: "The word «кава» changes to «каву» when you order it."
+      correct: true
+      explanation: "Feminine nouns change in the Accusative case."
+    - statement: "The word «чай» changes to «чаю» when you order it."
+      correct: false
+      explanation: "Masculine inanimate nouns like «чай» do not change."
+    - statement: "In Ukraine, drinking coffee is often a slow, social ritual."
+      correct: true
+      explanation: "Café culture emphasizes relaxing and socializing."
+    - statement: "It is rude to sit in a café for more than 20 minutes."
+      correct: false
+      explanation: "Cafés are 'third spaces' where people often linger, work, or talk for hours."
+    - statement: "«Тістечко» is a feminine noun."
+      correct: false
+      explanation: "«Тістечко» ends in -о, so it is Neuter."
+    - statement: "«Добрий день» is a standard polite greeting."
+      correct: true
+      explanation: "It works in almost any situation."
+    - statement: "«На все добре» is a rude way to say goodbye."
+      correct: false
+      explanation: "It is a very polite way to say 'All the best'."
+
+- type: fill-in
+  title: "Key Phrases Completion"
+  instruction: "Fill in the missing words to complete these common café phrases."
+  items:
+    - sentence: "Добрий {{answer}}."
+      answer: "день"
+      explanation: "Good day."
+      options: ["день", "час", "вечір", "ранок"]
+    - sentence: "Що {{answer}}?"
+      answer: "бажаєте"
+      explanation: "What do you desire/wish?"
+      options: ["бажаєте", "хочете", "робите", "маєте"]
+    - sentence: "Я {{answer}} каву."
+      answer: "буду"
+      explanation: "I will have coffee."
+      options: ["буду", "хочу", "маю", "роблю"]
+    - sentence: "Я {{answer}} чай."
+      answer: "візьму"
+      explanation: "I will take tea."
+      options: ["візьму", "дам", "несу", "маю"]
+    - sentence: "Дайте, {{answer}} ласка, меню."
+      answer: "будь"
+      explanation: "Please."
+      options: ["будь", "буде", "є", "має"]
+    - sentence: "{{answer}} рахунок."
+      answer: "Принесіть"
+      explanation: "Bring the bill."
+      options: ["Принесіть", "Дайте", "Візьміть", "Робіть"]
+    - sentence: "З {{answer}}."
+      answer: "молоком"
+      explanation: "With milk."
+      options: ["молоком", "молока", "молоку", "молоко"]
+    - sentence: "{{answer}} цукру."
+      answer: "Без"
+      explanation: "Without sugar."
+      options: ["Без", "З", "На", "В"]
+    - sentence: "{{answer}} каву."
+      answer: "Велику"
+      explanation: "Large coffee (Accusative)."
+      options: ["Велику", "Велика", "Великий", "Велике"]
+    - sentence: "{{answer}} чай."
+      answer: "Маленький"
+      explanation: "Small tea (Masculine Accusative - no change)."
+      options: ["Маленький", "Маленька", "Маленьку", "Маленьке"]
+    - sentence: "Плачу {{answer}}."
+      answer: "карткою"
+      explanation: "Paying by card."
+      options: ["карткою", "картка", "картки", "картку"]
+    - sentence: "Плачу {{answer}}."
+      answer: "готівкою"
+      explanation: "Paying by cash."
+      options: ["готівкою", "готівка", "готівки", "готівку"]

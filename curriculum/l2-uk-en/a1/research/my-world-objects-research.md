@@ -1,39 +1,36 @@
 # Дослідження: My World: Objects
 
 ## State Standard Reference
-§4.2.2: "утворення родових форм вказівних займенників: той, та, те; цей, ця, це; утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні, ті, ці."
-Alignment: This module directly addresses the formation and usage of demonstrative pronouns (this/that) across all genders and number, as explicitly required by the A1 morphology standard. It also aligns with Thematic Catalogue §3.2 (Дім, помешкання) and §3.4 (Побут).
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні, ті, ці."
+Alignment: This module directly addresses the formation and usage of gendered demonstrative pronouns (цей/той) and their plural forms as explicitly required by the standard.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| цей / ця / це / ці | Top 100 (Pinhok/GRAC) | цей стіл, ця книга, це вікно, ці люди |
-| той / та / те / ті | Top 200 (Common) | той чоловік, та жінка, те місто |
-| стіл | High Frequency (A1 Core) | на столі, письмовий стіл, великий стіл |
-| книга | High Frequency (A1 Core) | цікава книга, читати книгу |
-| телефон | High Frequency (Tech/Home) | мобільний телефон, мій телефон |
-| кімната | High Frequency (Home) | моя кімната, велика кімната |
-| вікно | High Frequency (Home) | біля вікна, відкрий вікно |
+| цей / ця / це / ці | High (Top 100) | цей стіл, ця кімната, це вікно, ці речі |
+| той / та / те / ті | High (Top 200) | той будинок, та жінка, те місце, ті люди |
+| стіл | High (Household) | на столі, за столом, письмовий стіл, обідній стіл |
+| шафа | High (Household) | у шафі, книжкова шафа, шафа для одягу |
+| ліжко | Medium (Household) | у ліжку, лягати в ліжко, двоспальне ліжко |
+| вікно | High (General) | біля вікна, дивитися у вікно, відчинити вікно |
 
 ## Cultural Hooks
-1. **"В гостях добре, а вдома краще"**: This ubiquitous proverb ("It's good to be a guest, but better at home") perfectly anchors the home-themed vocabulary, reflecting the deep cultural value placed on the sanctuary of one's own dwelling.
-2. **The "Pokuttia" (Red Corner)**: While modern Ukrainian apartments are standard, the traditional concept of the *pokuttia* (diagonal from the stove/door, decorated with icons and *rushnyky*) remains a cultural touchstone for "special places" in a room, even if now replaced by a TV or bookshelf.
-3. **Хата vs. Квартира**: The distinction between the traditional rural house (*khata*) and the modern apartment (*kvartyra*) is significant, though *dim* (home/house) covers the emotional concept of both.
+1. **"В гостях добре, а вдома краще"**: A quintessential Ukrainian proverb equivalent to "East or West, home is best," reflecting the deep cultural value placed on the home (дім/хата) as a sanctuary.
+2. **Pokuttia (Покуття)**: The traditional "Red Corner" in a Ukrainian home, placed diagonally from the stove (піч), where icons and rushnyky were kept. While modern apartments lack the stove, the concept of a spiritual focal point remains relevant in design and tradition.
 
 ## Common Learner Errors
-1. **"Це" vs. "Цей/Ця/Це"**: Learners often overuse the invariant *це* ("Це стіл") when they mean to specify an object (*Цей стіл*).
-   *   *Error*: "Це стіл великий." (This is table big.)
-   *   *Correct*: "Цей стіл великий." (This table is big.) — *Explanation*: Confusing the particle/subject *це* (this is) with the adjectival demonstrative *цей* (this [masc]).
-2. **Gender Agreement**: Mismatching demonstrative gender with the noun.
-   *   *Error*: "Цей книга."
-   *   *Correct*: "Ця книга." — *Reason*: *Книга* is feminine (-а), requiring *ця*.
-3. **Proximity Confusion**: Mixing up *цей* (close) and *той* (far), often defaulting to just one for everything.
+1. **Identificational vs. Demonstrative "Це"**: Confusing "Це стіл" (This is a table - Identification) with "Цей стіл" (This specific table - Specification).
+   *   *Correction*: Teach that "Це" acts as a subject placeholder ("It/This is"), while "Цей/Ця/Це" acts as an adjective modifying a noun.
+2. **Gender Mismatch**: Using "цей" for all genders (e.g., "Цей книга").
+   *   *Correction*: Reinforce the rhyme/sound association (Ця -> КнигА).
+3. **Proximity Confusion**: Using "цей" for distant objects instead of "той".
+   *   *Correction*: Use clear physical gestures (touching vs. pointing) and the mnemonic "T" for "There/That".
 
 ## Cross-References
-- **Builds on**: `a1-04` (This Is, I Am) — relies on the gender introduction and the invariant *це*.
-- **Prepares for**: `a1-06` (The Living Verb I) — subject pronouns will be expanded; `a1-15` (Around the City) — pointing out buildings (*цей будинок*, *той парк*).
+- **Builds on**: a1-03 (Genders), a1-04 (This Is / I Am)
+- **Prepares for**: a1-06 (The Living Verb I), a1-15 (Around the City)
 
 ## Notes for Content Writing
-- **Visual Scaffolding**: Essential to visually distinguish "NEAR" (finger touching object) vs "FAR" (finger pointing at distance) in examples to clarify *цей* vs *той*.
-- **"Це" Duality**: Explicitly teach the difference between *Це + Noun* (Identification: "This is a table") and *Цей + Noun* (Specification: "This table..."). This is the biggest hurdle at this stage.
-- **Gender Review**: Use this module to reinforce noun gender endings learned in M03/M04 without explicitly reteaching the rules, just applying them.
+- **Visual Scaffolding**: Essential to clearly distinguish near/far. Use icons of a hand touching (near) vs. a finger pointing (far).
+- **Immersion Control**: A1 level requires heavy English scaffolding for the grammar explanation of the two different "This" concepts (Identification vs. Demonstration).
+- **Nuance**: Briefly mention that "двері" is always plural, avoiding confusion when a learner tries to say "ця двері".

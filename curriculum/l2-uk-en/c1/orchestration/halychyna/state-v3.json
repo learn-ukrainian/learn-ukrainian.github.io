@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "halychyna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T18:35:47Z",
+      "task_id": "v3-halychyna-pA",
+      "mode": "full"
+    }
+  }
+}

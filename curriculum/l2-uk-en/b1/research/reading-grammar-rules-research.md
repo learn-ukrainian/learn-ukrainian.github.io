@@ -2,34 +2,34 @@
 
 ## State Standard Reference
 §3.8: "Освіта: ... організація освітнього процесу (лекція, семінар, консультація, курс, семестр, залік, іспит)."
-§4.5.1 (B1 Stylistics): "Розрізнення регістрів — формальний vs неформальний, лексичні та синтаксичні маркери."
-§4.3 (B1 Word Formation): "Деривація... іменники від дієслів (-ння/-ення)... прикметники від іменників".
+Alignment: This module directly addresses the "organization of educational process" by teaching learners how to read and understand the instructional language used in courses, textbooks, and exams (instruction verbs, grammar explanations).
 
-**Alignment:** This module directly supports the "Education" thematic requirement by equipping learners with the metalanguage to navigate the educational process (understanding textbooks and instructions). It also addresses the specific B1 requirement to distinguish registers (formal instruction vs. informal discussion) and identify word formation mechanisms explicitly mentioned in §4.3.
+§4.3.4: "Утворення іменників від дієслів: читати – читання, говорити – говоріння, бачити – бачення."
+Alignment: Relevant for the "Word Formation Terms" section, explaining how abstract grammatical terms are often derived from verbs (e.g., *закінчення*, *відмінювання*).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **використовується** | High (Academic/Instr.) | часто використовується, використовується для, як правило використовується |
-| **виняток** | Medium (Grammar) | за винятком, становити виняток, без винятків |
-| **означає** | High (General) | що це означає, слово означає, це не означає |
-| **порівняйте** | Medium (Instruction) | порівняйте речення, порівняйте з, порівняйте таблиці |
-| **утворіть** | High (Instruction) | утворіть речення, утворіть форму, утворіть множину |
-| **відмінність** | Medium (Academic) | головна відмінність, на відміну від, суттєва відмінність |
+| використовується | High (Academic/Textbook) | часто використовується, як правило використовується, слово використовується для... |
+| означає | High (General/Academic) | це означає що, слово означає, це не означає |
+| зверніть увагу | High (Instructional) | зверніть увагу на, варто звернути увагу |
+| порівняйте | High (Instructional) | порівняйте речення, порівняйте з таблицею |
+| контекст | Medium (Academic) | у контексті, зрозуміти з контексту, широкий контекст |
+| виняток | Medium (Grammar) | виняток з правила, за винятком, єдиний виняток |
 
 ## Cultural Hooks
-1. **Мелетій Смотрицький (1619)**: Author of the first complete Slavic grammar. He established the system of 5 declensions for nouns and 2 conjugations for verbs that we still use today. He also introduced the letter "Ґ" to the alphabet.
-2. **Іван Огієнко (Митрополит Іларіон)**: His "12 Language Commandments" (Мовні заповіді) emphasize the sanctity of the literary standard. Quote: "Для одного народу – одна літературна мова й вимова, один правопис". This connects perfectly to the "Style and Register" section.
+1. **Meletius Smotrytsky (1619):** Author of the seminal "Grammar" (*Hrammatika Slavenska*). He was the first to codify the system of cases (introducing the Locative case as distinct) and established much of the terminology still used today (like *відмінок*, *дієслово*).
+2. **Ivan Ohiienko (Metropolitan Ilarion):** His "Native Language Duties" (*Ridnomovna storinka*) emphasized the importance of literary standards and "purity" of language, fitting for the discussion on Style and Register (Formal vs. Colloquial).
 
 ## Common Learner Errors
-1. **"Приймати участь" замість "Брати участь"** → Correct form: *брати участь*. Why: Calque from Russian "принимать участие". Common in student speech but marked as an error in formal grammar contexts.
-2. **Confusion of "Утворіть" vs "Зробіть"** → *Утворіть* refers to morphological derivation (make a form), while *Зробіть* is general (do a task). Learners often use them interchangeably.
-3. **Case Error: "Навчання чомусь"** → Correct form: *Навчання чогось* (Genitive). Example: *навчання мови* (not *навчання мові*). Why: Influence of other Slavic languages or English structure "teach to".
+1. **приймати участь** (calque from Russian *принимать участие*) → **брати участь**. This is a classic "Red Pen" correction in grammar books.
+2. **виключення** (exclusion - Russism/calque when used for "exception") → **виняток**.
+3. **Confusion of instruction verbs:** *підкресліть* (underline) vs *креслити* (draw/draft). Learners often ignore the specific verb and just "do the exercise," missing nuances.
 
 ## Cross-References
-- **Builds on**: B1-01 (Basic Terminology), B1-02 (Verb Terminology).
-- **Prepares for**: B1-04 (Sentence Structure), B1-05 (Metalanguage Checkpoint), and all future B1 grammar modules (which use these instructions).
+- Builds on: b1-01 (Basic grammar terminology), b1-02 (Verb terminology)
+- Prepares for: b1-04 (Sentence structure), b1-05 (Metalanguage checkpoint)
 
 ## Notes for Content Writing
-- **Visuals**: Use "textbook snippets" as visual examples. Show a "screenshot" of a rule, then decode it.
-- **Emphasis**: Highlight that identifying the "instruction verb" (виберіть, вставте, з'єднайте) is 80% of understanding the task.
+- **Bridge Module Status:** This is B1-03. Immersion is high (70-85%) but not 100%. The Introduction should explicitly use English to frame the importance of the topic ("Why are we learning this?").
+- **Visuals:** The "Grammar Explanation Patterns" section should ideally describe visual layouts of textbooks (bold text, tables, arrows) to help learners recognize them.

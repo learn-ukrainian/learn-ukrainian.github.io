@@ -20,6 +20,10 @@
     right: yi (like 'yield')
   - left: Ю
     right: yu (like 'universe')
+  - left: Я
+    right: ya (like 'yard')
+  - left: Й
+    right: y (like 'boy')
   title: Letter to Sound Match
   type: match-up
 - groups:
@@ -281,21 +285,21 @@
 - instruction: Rearrange the letters to form words from the lesson.
   items:
   - answer: школа
-    scrambled: ш к о л а
+    scrambled: а л ш к о
   - answer: центр
-    scrambled: ц е н т р
+    scrambled: р ц е т н
   - answer: яблуко
-    scrambled: я б л у к о
+    scrambled: к о б я л у
   - answer: Європа
-    scrambled: Є в р о п а
+    scrambled: р п а Є в о
   - answer: гарний
-    scrambled: г а р н и й
+    scrambled: й р а н г и
   - answer: чай
-    scrambled: ч а й
+    scrambled: й ч а
   - answer: день
-    scrambled: д е н ь
+    scrambled: н ь е д
   - answer: жити
-    scrambled: ж и т и
+    scrambled: т и ж и
   title: Vocabulary Scramble
   type: anagram
 - instruction: Decide if the statement about the Ukrainian alphabet is true or false.

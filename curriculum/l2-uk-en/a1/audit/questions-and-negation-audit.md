@@ -1,7 +1,7 @@
 # Audit Report: M07 — questions-and-negation.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 20:22:50
+**Generated:** 2026-02-19 23:01:32
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,20 +36,20 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2498/2000 (raw: 2653)
+- **Words:** ✅ 2720/2000 (raw: 2885)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ✅ 24/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 31.3% (target 15-35% (M07))
+- **Immersion:** 🇺🇦 31.5% (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,8 +60,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Questions & Negation** | ✅ | 50 | Included in Core |
 | **Вступ: Мистецтво ставити питання** | ✅ | 458 | Included in Core |
-| **Граматика: Питальні речення** | ✅ | 853 | Included in Core |
+| **Граматика: Як будувати питання** | ✅ | 1004 | Included in Core |
 | **Практика: Інтонація та конструктор** | ✅ | 462 | Included in Core |
-| **Застосування: Діалоги в кафе** | ✅ | 312 | Included in Core |
-| **Культурний контекст: Від «Альфа» до етикету** | ✅ | 213 | Included in Core |
-| **Підсумок** | ✅ | 150 | Included in Core |
+| **Застосування: Розмова в реальному житті** | ✅ | 312 | Included in Core |
+| **Культурний контекст: Ввічливість і гумор** | ✅ | 269 | Included in Core |
+| **Підсумок** | ✅ | 165 | Included in Core |

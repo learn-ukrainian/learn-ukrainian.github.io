@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "mariia-prymachenko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T20:29:41Z",
+      "task_id": "v3-mariia-prymachenko-pA",
+      "mode": "full"
+    }
+  }
+}

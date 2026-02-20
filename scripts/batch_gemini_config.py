@@ -21,15 +21,33 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
-# Model Tiering
+# Model Tiering — Gemini
 FLASH_MODEL = "gemini-3-flash-preview"
 PRO_MODEL = "gemini-3-pro-preview"
+
+# Model Tiering — Claude (used by build_module_v3.py --use-claude phases)
+# Change these to switch models across the entire pipeline without touching CLI flags.
+# Phase A (research):      seminar tracks → Opus, core tracks → Sonnet
+# Phase C (activities):    seminar tracks → Opus, core tracks → Sonnet
+# Phase F (final review):  always Opus (deep semantic QA)
+CLAUDE_SONNET = "claude-sonnet-4-6"
+CLAUDE_OPUS   = "claude-opus-4-6"
+
+CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET   # Phase A, core tracks
+CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_SONNET   # Phase C, core tracks
+CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS   # Phase A, seminar tracks
+CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS   # Phase C, seminar tracks
+CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Phase F, all tracks
 
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
     "c1-bio", "b2-hist", "c1-hist", "lit", "oes", "ruth",
     "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
 }
+
+# Professional tracks: need external research (not covered by State Standard)
+# Use phase-A-pro.md (terminology, ДСТУ norms, authentic examples) not phase-A-seminar.md
+PRO_TRACKS = {"b2-pro", "c1-pro"}
 
 # Track definitions
 TRACK_CONFIGS = {

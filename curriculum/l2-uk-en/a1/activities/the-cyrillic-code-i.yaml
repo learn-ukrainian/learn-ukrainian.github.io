@@ -14,8 +14,8 @@
     right: m (map)
   - left: Т т
     right: t (stop)
-  - left: Ф ф
-    right: f (photo)
+  - left: Б б
+    right: b (bank)
   title: 'Справжні друзі: Літери та звуки'
   type: match-up
 - instruction: These letters are tricksters. Match them to their real sound.
@@ -40,6 +40,10 @@
     right: z (zebra)
   - left: Л л
     right: l (look)
+  - left: П п
+    right: p (park)
+  - left: Ф ф
+    right: f (photo)
   title: 'Нові літери та хибні друзі: Звуки'
   type: match-up
 - groups:
@@ -296,8 +300,8 @@
     explanation: True! Літера З looks like the number 3 and sounds like [z].
     statement: The letter «З» looks like the number 3 and sounds like [z].
   - correct: true
-    explanation: True! Літера Л looks like a ladder and makes the sound [l].
-    statement: The letter «Л» looks like a ladder and makes the sound [l].
+    explanation: True! Літера Л looks like a pair of legs and makes the sound [l].
+    statement: The letter «Л» looks like a pair of legs and makes the sound [l].
   title: Правда чи ні?
   type: true-false
 - instruction: Identify the correct letter for the sound.
@@ -335,7 +339,7 @@
     - correct: false
       text: В
     question: Which letter makes the sound [z]?
-  - explanation: Літера Л looks like a ladder or legs.
+  - explanation: Літера Л looks like a pair of legs.
     options:
     - correct: true
       text: Л

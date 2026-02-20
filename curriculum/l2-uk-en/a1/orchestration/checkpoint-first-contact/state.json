@@ -2,7 +2,7 @@
   "slug": "checkpoint-first-contact",
   "track": "a1",
   "module_num": 10,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T19:07:51Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T15:59:06Z",
+      "note": "v3-audit"
     },
     "3a": {
       "status": "complete",
@@ -42,30 +42,33 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T19:09:50Z",
-      "task_id": "gr-checkpoint-first-contact",
-      "attempts": 1
+      "timestamp": "2026-02-19T16:02:22Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T19:12:14Z",
-      "task_id": "yw-checkpoint-first-contact-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T16:02:22Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T19:14:35Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T15:59:06Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T19:14:35Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T16:02:22Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T16:09:28Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T19:14:36Z"
+      "timestamp": "2026-02-19T16:09:32Z"
     }
   },
-  "last_updated": "2026-02-18T19:14:36Z"
+  "last_updated": "2026-02-19T16:09:32Z"
 }

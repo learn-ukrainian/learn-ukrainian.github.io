@@ -1,0 +1,66 @@
+{
+  "module": "holidays-and-traditions",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-20T01:47:28.668273Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T01:47:08.528221Z",
+    "meta": "2026-02-20T01:41:22.143981Z",
+    "activities": "2026-02-20T01:39:18.492876Z",
+    "vocabulary": "2026-02-20T01:39:18.493233Z",
+    "plan": "2026-02-18T19:03:32.086340Z",
+    "research": "2026-02-20T01:36:36.226218Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2004/2000 (raw: 2232)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "3 IPA issues (run lint_ipa.py --fix)"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 2
+  }
+}

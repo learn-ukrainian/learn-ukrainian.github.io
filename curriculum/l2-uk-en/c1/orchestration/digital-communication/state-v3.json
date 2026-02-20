@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "digital-communication",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T14:38:23Z",
+      "task_id": "v3-digital-communication-pA",
+      "mode": "full"
+    }
+  }
+}

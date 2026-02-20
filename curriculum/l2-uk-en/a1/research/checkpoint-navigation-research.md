@@ -1,32 +1,41 @@
-# Дослідження: Checkpoint: Navigation (A1.20)
+# Дослідження: Checkpoint: Navigation
 
 ## State Standard Reference
-§4.2.3: "Уживання деяких відмінкових форм іменників і прикметників в однині та множині, особових займенників"
-Alignment: Цей модуль є підсумковим для блоку A1.2 і перевіряє засвоєння форм знахідного (§4.2.3.2), місцевого (§4.2.3.3) та родового (§4.2.2) відмінків, а також присвійних займенників (§4.2.2).
+**Primary Alignment (A1):**
+- **§4.2.3.2**: "Знахідний відмінок: Із прийменниками: в, у, на (указівка на кінцевий пункт руху)" (Accusative for direction).
+- **§4.2.3.3**: "Місцевий відмінок: у, в, на (позначення місця)" (Locative for location).
+- **§4.2.2**: "Утворення та вживання родових... форм деяких займенників" (Genitive forms of pronouns).
+- **Note on Genitive**: While full Genitive usage is an A2 standard (§4.2.2.2), A1 covers Genitive *forms* for pronouns and numerals (§4.2.1.3). This module bridges the gap by introducing fixed Genitive constructions (немає, з України) as lexical chunks or preparatory grammar.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| де | High (Top 100) | Де знаходиться? Де зупинка? |
-| прямо | High | Ідіть прямо, завжди прямо |
-| наліво | High | Поверніть наліво, перший поворот наліво |
-| направо| High | Поверніть направо, направо від парку |
-| скільки| High | Скільки коштує? Скільки хвилин? |
-| немає | High | Немає часу, немає квитка, тут немає... |
+| **Де** | High (Top 100) | Де знаходиться...? Де тут...? |
+| **Скільки** | High (Top 200) | Скільки коштує? Скільки це? |
+| **Немає** | High (Top 200) | Немає часу, немає грошей (Genitive trigger) |
+| **Наліво/Направо** | Med-High | Поверніть наліво, це направо |
+| **Зупинка** | Med | Автобусна зупинка, наступна зупинка |
 
 ## Cultural Hooks
-1. **Арсенальна (Arsenalna) — найглибша станція метро у світі.** Вона знаходиться на глибині 105.5 метрів. Це чудовий приклад для практики місцевого відмінка (на станції, у метро). (Джерело: museumstudiesabroad.org)
-2. **Золоті Ворота (Zoloti Vorota)** — одна з найкрасивіших станцій метро, прикрашена мозаїками з історії Київської Русі. Це "підземний палац", який допомагає візуалізувати історичний контекст України навіть під час простої навігації містом. (Джерело: yourkievguide.com)
+1. **Arsenalna Station**: The deepest metro station in the world (105.5m). Perfect hook for Locative case ("Ми *на* станції" vs "Ми спускаємось *на* станцію").
+2. **Zoloti Vorota**: "The Underground Palace". Features mosaics of Kyivan Rus princes. Key landmark for navigation dialogues in Kyiv center.
 
 ## Common Learner Errors
-1. **Змішування відмінків при русі vs місцезнаходженні** → *Я йду в парку* замість *Я йду в парк* (Знахідний для напрямку). — Плутанина між питанням "Куди?" (Acc.) та "Де?" (Loc.).
-2. **Пропуск прийменників у місцевому відмінку** → *Я школі* замість *Я у школі*. — В англійській мові прийменники іноді опускаються або замінюються іншими конструкціями, але в українському місцевому відмінку прийменник (в/на) є обов'язковим.
-3. **Використання називного відмінка після "немає"** → *Немає час* замість *Немає часу* (Родовий відмінок). — Прямий перенос з англійської "There is no time", де іменник не змінює форму.
+1. **Direction vs Location**: Confusing *Куди?* (Accusative) and *Де?* (Locative).
+   - *Error*: "Я йду в парку." (Locative ending used for motion).
+   - *Correction*: "Я йду в парк." (Accusative/Base form for inanimate).
+2. **Preposition Omission**: Dropping *в/на* in Locative.
+   - *Error*: "Я школі."
+   - *Correction*: "Я *у* школі."
+3. **"No" + Nominative**: Using Nominative instead of Genitive with *немає*.
+   - *Error*: "Тут немає автобус."
+   - *Correction*: "Тут немає автобус*а*."
 
 ## Cross-References
-- Builds on: a1-11 (Accusative intro), a1-13 (Locative intro), a1-15 (Genitive intro), a1-19 (At the Café).
-- Prepares for: a1-21 (Yesterday - Past Tense), де знання відмінків знадобиться для опису минулих подій.
+- **Builds on**: `a1-19` (At the Café - simple requests), `a1-13` (Locative intro).
+- **Prepares for**: `a1-21` (Past Tense - changing states), A2 Genitive deep dive.
 
 ## Notes for Content Writing
-- Оскільки це **Checkpoint**, пояснення мають бути лаконічними, з акцентом на "Skill Check" та самооцінку.
-- В секції "Integration Task" змоделювати реальну ситуацію: турист у Києві шукає кав'ярню біля метро "Золоті Ворота", використовуючи всі три відмінки.
+- **Bridging**: This is a "Checkpoint" module (A1.2 -> A1.3). It must consolidate the "Motion vs Location" distinction, which is the hardest concept for A1 learners.
+- **Scaffolding**: Use English to explicitly contrast "Destination (Acc)" vs "Location (Loc)".
+- **Genitive**: Keep Genitive explanation simple—focus on "Absence" (немає + -а/-и) and "Origin" (з + -а/-и) as patterns, rather than full case theory.

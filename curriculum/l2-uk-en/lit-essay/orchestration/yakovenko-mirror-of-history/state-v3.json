@@ -1,0 +1,13 @@
+{
+  "track": "lit-essay",
+  "slug": "yakovenko-mirror-of-history",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:13:00Z",
+      "task_id": "v3-yakovenko-mirror-of-history-pA",
+      "mode": "full"
+    }
+  }
+}

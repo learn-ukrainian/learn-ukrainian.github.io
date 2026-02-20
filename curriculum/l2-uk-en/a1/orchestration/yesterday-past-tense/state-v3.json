@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "yesterday-past-tense",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T21:27:20Z",
+      "task_id": "v3-yesterday-past-tense-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T21:27:20Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T21:27:20Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T21:27:21Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T21:28:39Z",
+      "attempts": 1
+    }
+  }
+}

@@ -2,36 +2,33 @@
 
 ## State Standard Reference
 §4.3.2: "просте речення з дієприкметниковим зворотом: Озеро, оточене густими кущами, було не широке, а довге"
-Alignment: This module provides the morphological foundation (creation of past passive participles) required to construct the "participial phrases" (дієприкметниковий зворот) mandated by the B2 Syntax standard. Without mastering forms like *оточений* or *написаний*, learners cannot fulfill the B2 requirement for complex simple sentences.
+Alignment: Цей модуль безпосередньо формує морфологічну базу (утворення дієприкметників) для виконання синтаксичної вимоги стандарту B2 щодо використання дієприкметникових зворотів. Також спирається на §4.1.1.2 (прикметники на -ний/-тий).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| написаний (written) | High / General Corpus | написаний лист, написана книга, власноруч написаний |
-| зроблений (done/made) | High / General Corpus | добре зроблений, зроблений з любов'ю, зроблений в Україні |
-| відкритий (open/opened) | High / General Corpus | відкритий простір, відкрите вікно, відкрите питання |
-| закритий (closed) | High / General Corpus | закритий клуб, закрита тема, закриті двері |
-| забутий (forgotten) | Med / Literary | забутий герой, забута історія, давно забутий |
-| пофарбований (painted) | Med / Practical | пофарбований стіл, свіжопофарбований |
-| відреставрований (restored) | Low / Domain (Culture) | відреставрований храм, відреставрована ікона |
-| збережений (preserved) | Med / Academic | збережений пам'ятник, збережена спадщина |
+| написаний | High (General) | написаний лист, власноруч написаний, написаний зрозумілою мовою |
+| зроблений | High (General) | зроблений з любов'ю, зроблений в Україні, добре зроблений |
+| відкритий | High (General) | відкритий простір, відкрите питання, відкритий для пропозицій |
+| закритий | High (General) | закритий клуб, закрита територія, закрита тема |
+| забутий | Medium (Literary) | забута історія, давно забутий, несправедливо забутий |
+| відреставрований | Low (Professional) | відреставрований храм, відреставрована пам'ятка, відреставрований будинок |
+| збережений | Medium (Academic) | збережена спадщина, добре збережений екземпляр |
 
 ## Cultural Hooks
-1. **St. Sophia Cathedral Restoration**: The cathedral was significantly "reconstructed" (**перебудований**) and "restored" (**відреставрований**) in the 17th-18th centuries in the Ukrainian Baroque style, notably funded by Hetman Ivan Mazepa. The 11th-century frescoes remain "preserved" (**збережені**) under the later layers.
-2. **Scythian Gold**: The famous Golden Pectoral was "found" (**знайдений**) by Borys Mozolevsky in 1971. It is a masterpiece "made" (**зроблений**) by Greek masters for Scythian nobility.
+1. **Золота пектораль**: Шедевр скіфського золота, "знайдений" Борисом Мозолевським у 1971 році. Ідеальний приклад для пасивного стану (знайдена ким?).
+2. **Софія Київська**: Собор, "перебудований" у стилі українського бароко за часів Івана Мазепи. Приклад історичної трансформації (була збудована -> була перебудована).
 
 ## Common Learner Errors
-1. **Overuse of Passive**: Using *Книга була прочитана мною* (Passive) instead of *Я прочитав книгу* (Active).
-   - *Correction*: Teach that passive is for emphasizing the object or result, usually when the agent is unknown or irrelevant.
-2. **Suffix Confusion (-ний vs -тий)**: Using *митий* (correct) vs *миний* (incorrect) or *забунений* (incorrect) vs *забутий* (correct).
-   - *Correction*: Mnemonic: Monosyllabic stems often take **-тий** (ми-ти -> ми-тий, би-ти -> би-тий), vowel stems + consonant often take **-ний** (писа-ти -> писа-ний).
-3. **Agreement Errors**: Failing to agree the participle with the noun in gender/number (*написаний книга* instead of *написана книга*).
-   - *Correction*: Reinforce that participles behave exactly like adjectives (Class 1 hard group).
+1. **Надуживання пасивом (Passive Abuse)**: "Книга була прочитана мною" замість природного "Я прочитав книгу". → *Correction*: Use Agency Rule (Active Voice preferred).
+2. **Плутанина суфіксів (Suffix Confusion)**: "Миний" замість "митий" (verb stems ending in vowels often confuse learners). → *Correction*: Monosyllabic stems usually take -тий.
+3. **Узгодження (Agreement)**: Неузгодження роду дієприкметника з іменником (e.g., "написаний книга"). → *Correction*: Participles act like adjectives (Class 1 hard).
 
 ## Cross-References
-- Builds on: **b2-01** (Passive Voice System), **A2 Adjective Declension**
-- Prepares for: **b2-03** (Impersonal -но/-то), **b2-09** (Participles vs Relative Clauses)
+- Builds on: b2-01 (Passive Voice System), Adjective declension, Verb conjugation
+- Prepares for: b2-03 (Impersonal -но/-то), b2-09 (Participles vs Relative Clauses)
 
 ## Notes for Content Writing
-- **Agency Rule**: Ensure the passive voice isn't used to erase Ukrainian agency. E.g., instead of just "The church was destroyed" (by whom?), use context or active voice where historically relevant, but focus this specific grammar module on the *state* of the object after the action (e.g., "The preserved frescoes are unique").
-- **Morphology**: Explicitly teach the -д- -> -дж-, -т- -> -ч- alternation (посадити -> посаджений), as this is a common stumbling block.
+- Важливо чітко розмежовувати "процес" (дієслово) і "результат" (дієприкметник).
+- Використовувати "Agency Rule" як ключовий стилістичний принцип для рівня B2: українська мова надає перевагу активним конструкціям.
+- Інтегрувати музейну лексику (експонат, реставрація, знахідка) як наскрізну тему для прикладів.

@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "kobzari-bandura",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:55:37Z",
+      "task_id": "v3-kobzari-bandura-pA",
+      "mode": "full"
+    }
+  }
+}

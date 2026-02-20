@@ -13,7 +13,7 @@ Related: a1-06 (The Living Verb I), a1-07 (Questions and Negation)
 >
 > Ви вже знаєте «першу родину» слів. Це слова на **-ати**, як **читати**. Але друга родина теж важлива. Це слова дії: говорити, робити, бачити, любити. Вони будують ваш світ.
 
-## Вступ: Світ дієслів
+## Вступ: Родина -ити
 
 Вітаємо у світі дії! In our previous lessons, you mastered the rhythm of the First Conjugation. You learned that **читати** (to read) flows into **читаю** (I read) and **читаєш** (you read). That pattern—the sound of **-є-** and **-ю-**—is the heartbeat of the first group.
 
@@ -21,9 +21,9 @@ Related: a1-06 (The Living Verb I), a1-07 (Questions and Negation)
 
 ### Друга родина: Дієслова на -ити
 
-The Second Conjugation is primarily made up of verbs that end in **-ити** in their dictionary form (the infinitive). While the First Conjugation is often associated with the vowel **Е/Є** in its endings, the Second Conjugation is the kingdom of the vowel **И/І**.
+The Second Conjugation is primarily made up of verbs that end in **-ити** in their dictionary form (the infinitive). While the First Conjugation is associated with the vowel **Е/Є** in its endings, the Second Conjugation uses the vowel **И/І**.
 
-Think of these verbs as the "Action Family." While **читати** (to read) and **слухати** (to listen) help you receive information, the core verbs of the Second Conjugation often describe fundamental human interactions and movements.
+Think of these verbs as the "Action Family." While **читати** (to read) and **слухати** (to listen) help you receive information, the core Second Conjugation verbs describe fundamental human interactions and movements.
 
 Ось нові друзі:
 *   **говорити** [ɦɔʋɔˈrɪtɪ] — to speak
@@ -34,7 +34,7 @@ Think of these verbs as the "Action Family." While **читати** (to read) an
 
 ### Недоконаний вид: Тут і зараз
 
-Just like the verbs you already know, these new verbs are **imperfective** (недоконаний вид). This is a fancy grammatical term, but the concept is simple: these verbs describe actions that are **ongoing**, **habitual**, or **incomplete**.
+Just like the verbs you already know, these new verbs are **imperfective** (недоконаний вид). This simply means these verbs describe actions that are **ongoing**, **habitual**, or **incomplete**.
 
 When you say "I speak Ukrainian," you aren't saying you spoke once and stopped. You are saying that you possess the ability to speak, or that you are speaking right now. The action is a process, not a finished point.
 
@@ -48,9 +48,9 @@ When you say "I speak Ukrainian," you aren't saying you spoke once and stopped. 
 >
 > There is no need for "am" or "is" here. The verb itself carries the energy of the action.
 
-## Граматика: Друга дієвідміна
+## Презентація: Друга дієвідміна
 
-Now, let's look at the machinery under the hood. How do we change these verbs to fit the person doing the action? If you remember the pattern for **читати**, you are halfway there—but you need to tune your ear to a slightly different frequency.
+Now, let's look at how these verbs work. How do we change them to fit the person doing the action? If you remember the pattern for **читати**, you are halfway there—but you need to tune your ear to a slightly different sound.
 
 ### Велика різниця: Тип 1 і Тип 2
 
@@ -114,7 +114,7 @@ Let's break down **говорити** completely. This is your model verb. If yo
 
 ### Губний Л: Звук-помічник
 
-Now we meet a fascinating quirk of Slavic phonetics. Some verbs have stems that end in "labial" consonants—sounds made with the lips: **Б, П, В, М, Ф**.
+Now let's look at a special sound change. Some verbs have stems that end in "labial" consonants—sounds made with the lips: **Б, П, В, М, Ф**.
 
 Try saying "I love" using the standard pattern: *люб-ю*. It feels awkward, doesn't it? Your lips have to snap open and closed too quickly. To make this smoother, Ukrainian inserts a soft **Л** [lʲ] between the lip sound and the **-ю**.
 
@@ -125,7 +125,7 @@ This creates a bridge. The sound flows from the lips, over the tongue (the **Л*
 *   **робити** (to do) → stem **роб-**
 *   **спати** (to sleep) → stem **сп-** (yes, some -ати verbs behave like Type 2!)
 
-**Правило просте:** The **Л** appears ONLY in the "I" form (**я**).
+**Правило просте:** The **Л** appears in the forms for **"I"** (**я**) and **"They"** (**вони**).
 
 Let's look at **робити** (to do):
 
@@ -134,7 +134,7 @@ Let's look at **робити** (to do):
 *   **Він робить** [rɔˈbɪtʲ] — He does
 *   **Ми робимо** [rɔˈbɪmɔ] — We do
 *   **Ви робите** [rɔˈbɪtɛ] — You do
-*   **Вони роблять** [rɔˈblʲɑtʲ] — They do (Wait! The **Л** reappears in "They" for some verbs, but the "I" form is the most important one to remember right now).
+*   **Вони роблять** [rɔˈblʲɑtʲ] — They do (The **-лю-** returns here too!)
 
 And **любити** (to love):
 
@@ -158,9 +158,8 @@ Language changes over time, and sounds influence each other. In the Second Conju
 Why? Because the **-ю** sound pulls the **Д** backwards in the mouth, turning it into a softer, buzzier sound.
 
 **сидіти** (to sit) → stem **сид-**
-*   **Я сиджу** [sɪˈd͡ʒu] — I sit (The **д** became **дж**)
-*   **Ти сидиш** [sɪˈd͡ʒɪʃ] — You sit (Wait, incorrect! The mutation is ONLY in the "I" form!)
-*   **Ти сидиш** [sɪˈdɪʃ] — You sit (Back to **д**)
+*   **Я сиджу** [sɪˈd͡ʒu] — I sit (The **д** became **дж**!)
+*   **Ти сидиш** [sɪˈdɪʃ] — You sit (Back to normal **д**)
 *   **Він сидить** [sɪˈdɪtʲ] — He sits
 
 **ходити** (to walk/go) → stem **ход-**
@@ -185,7 +184,7 @@ Finally, we have two verbs that are absolutely essential for survival: eating an
 *   **Ви п'єте** [pjɛˈtɛ] — You drink
 *   **Вони п'ють** [pjutʲ] — They drink
 
-**Їсти** (to eat) is an ancient, athematic verb. It doesn't follow the rules of Type 1 OR Type 2 perfectly. It has its own unique set of endings that are very old. You just have to memorize it.
+**Їсти** (to eat) is an ancient, irregular verb. It doesn't follow the rules of Type 1 OR Type 2 perfectly. It has its own unique set of endings that are very old. You just have to memorize it.
 
 *   **Я їм** [jim] — I eat (Short and strange!)
 *   **Ти їси** [jiˈsɪ] — You eat (Very unique ending)
@@ -201,7 +200,7 @@ Finally, we have two verbs that are absolutely essential for survival: eating an
 >
 > **Їсти** is one of a handful of verbs that preserves forms from over 1000 years ago, almost unchanged. When you say **я їм**, you are speaking the same way the ancestors of Ukrainians spoke in the times of Kyivan Rus'.
 
-## Практика: Тренування
+## Практика: Тренування форм
 
 Теорія важлива. Але практика — головне. Let's train your brain to recognize and use these patterns instantly.
 
@@ -227,6 +226,7 @@ Remember the "I" form is special. It likes to change sounds. Давайте пр
 *   **сидіти** (dental **д**) → **Я сиджу** (change to **дж**)
 *   **ходити** (dental **д**) → **Я ходжу** (change to **дж**)
 *   **платити** (dental **т**) → **Я плачу** (change to **ч** — yes, **т** becomes **ч**!)
+*   **просити** (dental **с**) → **Я прошу** (change to **ш** — **с** becomes **ш**!)
 
 ### Будуємо речення
 
@@ -244,7 +244,7 @@ Result: **Я люблю каву.** (I love coffee.)
 
 Result: **Ми говоримо українською.** (We speak Ukrainian.)
 
-## Використання: Розповідаємо про себе
+## Використання: Розповіді про дії
 
 You now have the tools to describe your life. Описуйте своє життя. Говоріть про дії. Говоріть про любов.
 
@@ -305,15 +305,15 @@ Imagine you run into a friend on the street. Уявіть: ви зустріли
 
 Notice how the verbs flow? **робиш**, **йду**, **хочу**, **люблю**, **роблять**, **хочеш**. Це танець розмови.
 
-## Культура: Глибина слова
+## Культурний контекст: Глибина слова
 
 Language is more than just code. Мова — це історія. The words you learned today carry centuries of Ukrainian worldview.
 
 ### Етимологія слова «Любити»
 
-The verb **любити** (to love) is very special. Linguists believe it shares a common ancient root with the word **люди** (people).
+The verb **любити** (to love) is very special. Some linguists note it may share a common ancient root with the word **люди** (people).
 
-Подумайте про цей зв'язок. In the ancient Slavic worldview, to love was intimately connected to being part of the tribe, part of the people. To love is to be human. Це не просто емоція. Це зв'язок.
+Подумайте про цей зв'язок. In the ancient Slavic worldview, to love was connected to being part of the community. To love is to be human. Любити — це зв'язок з людьми.
 
 When you say **Я люблю Україну** (I love Ukraine), you are expressing a deep connection to the land and the people, not just a preference.
 
@@ -321,7 +321,11 @@ When you say **Я люблю Україну** (I love Ukraine), you are expressi
 
 The **-ити** ending itself is a time traveler. It comes directly from Proto-Slavic **\*-iti**. This means that if you traveled back in time 1,000 years to the court of Yaroslav the Wise in Kyiv, you could say **говорити** or **любити**, and people would understand you.
 
-Ви вивчаєте давню мову. Ця мова жила століттями. When you conjugate these verbs, you are stepping into a river of history that has been flowing for a millennium.
+Ви вивчаєте давню мову. Ця мова жила століттями. When you conjugate these verbs, you are using forms that Ukrainians have used for over a thousand years.
+
+### Тріада гостинності
+
+In Ukrainian culture, three actions form the heart of hospitality: **їсти, пити, говорити** — to eat, to drink, to speak. When a guest arrives, these three verbs activate immediately. Гість прийшов? Сідай, їж, пий, говори! This is the rhythm of Ukrainian hospitality, and now you know all three verbs.
 
 > [!quote]
 > **Від серця народу**

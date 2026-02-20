@@ -2,7 +2,7 @@
 **Level:** B2-HIST | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 19:26:02
+**Generated:** 2026-02-19 18:44:16
 
 ## Configuration
 **Type:** B2-history
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5120/5000 (raw: 5335)
+- **Words:** ✅ 5120/5000 (raw: 5368)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -76,8 +76,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Слов'яни на українських землях: Витоки державності** | ✅ | 63 | Included in Core |
-| **Вступ** | ✅ | 933 | Included in Core |
-| **Читання** | ✅ | 2305 | Included in Core |
-| **Первинні джерела** | ✅ | 741 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 768 | Included in Core |
-| **Підсумок** | ✅ | 310 | Included in Core |
+| **Вступ: Етимологія та ідентичність** | ✅ | 933 | Included in Core |
+| **Читання: I — Археологія та географія розселення** | ✅ | 553 | Included in Core |
+| **Читання: II — Антський союз: Хроніки боротьби** | ✅ | 784 | Included in Core |
+| **Читання: III — Матеріальний світ та суспільний устрій** | ✅ | 968 | Included in Core |
+| **Первинні джерела: Свідчення сучасників** | ✅ | 741 | Included in Core |
+| **Деколонізаційний погляд: Руйнування імперських міфів** | ✅ | 768 | Included in Core |
+| **Підсумок: Спадщина тисячоліть** | ✅ | 310 | Included in Core |

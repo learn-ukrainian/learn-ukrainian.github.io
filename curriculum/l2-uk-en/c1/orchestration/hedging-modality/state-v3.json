@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "hedging-modality",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:58:51Z",
+      "task_id": "v3-hedging-modality-pA",
+      "mode": "full"
+    }
+  }
+}

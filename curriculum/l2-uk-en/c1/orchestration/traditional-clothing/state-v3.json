@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "traditional-clothing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T18:41:12Z",
+      "task_id": "v3-traditional-clothing-pA",
+      "mode": "full"
+    }
+  }
+}

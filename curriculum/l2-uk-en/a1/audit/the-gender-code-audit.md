@@ -1,7 +1,7 @@
 # Audit Report: M03 — the-gender-code.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 21:14:30
+**Generated:** 2026-02-19 23:01:27
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2270/2000 (raw: 2524)
+- **Words:** ✅ 2304/2000 (raw: 2560)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -61,8 +61,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Гендерний Код (The Gender Code)** | ✅ | 70 | Included in Core |
 | **Вступ: Таємний код української мови** | ✅ | 370 | Included in Core |
-| **Теорія: Основи визначення роду** | ✅ | 504 | Included in Core |
-| **Систематизація: Чотири граматичні сім'ї** | ✅ | 527 | Included in Core |
-| **Практикум: Тренування розпізнавання** | ✅ | 337 | Included in Core |
+| **Презентація: Три кити роду** | ✅ | 504 | Included in Core |
+| **Практика: Чотири сім'ї та винятки** | ✅ | 550 | Included in Core |
+| **Продукція: Колір і форма** | ✅ | 348 | Included in Core |
 | **Культурний контекст: Жива мова** | ✅ | 270 | Included in Core |
 | **Підсумок** | ✅ | 192 | Included in Core |

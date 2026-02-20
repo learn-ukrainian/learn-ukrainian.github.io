@@ -70,7 +70,7 @@
 - ipa: '[ˈsɪr.nɪk]'
   lemma: сирник
   pos: noun
-  translation: cheesecake / syrnyk
+  translation: cottage cheese pancake (syrnyk)
 - ipa: '[ˈsmɑt͡ʃ.nɔ]'
   lemma: смачно
   pos: adverb
@@ -83,4 +83,16 @@
   lemma: дієслово
   pos: noun
   translation: verb
+- ipa: '[ˈzʋʲidkɪ]'
+  lemma: звідки
+  pos: adverb
+  translation: where from
+- ipa: '[ˈt͡ʃɑstɔ]'
+  lemma: часто
+  pos: adverb
+  translation: often
+- ipa: '[iˈnɔdʲi]'
+  lemma: іноді
+  pos: adverb
+  translation: sometimes
 

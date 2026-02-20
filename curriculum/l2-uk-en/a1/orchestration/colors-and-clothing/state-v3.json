@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "colors-and-clothing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T21:26:17Z",
+      "task_id": "v3-colors-and-clothing-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T21:27:47Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T21:29:17Z",
+      "task_id": "v3-colors-and-clothing-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T21:39:22Z",
+      "attempts": 3
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T21:40:40Z",
+      "attempts": 1
+    }
+  }
+}

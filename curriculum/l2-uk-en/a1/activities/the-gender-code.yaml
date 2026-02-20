@@ -302,29 +302,29 @@
     word).
   items:
   - answer: брат
-    scrambled: б р а т
+    scrambled: т а б р
   - answer: сестра
-    scrambled: с е с т р а
+    scrambled: т р а с е с
   - answer: мама
-    scrambled: м а м а
+    scrambled: а м м а
   - answer: тато
-    scrambled: т а т о
+    scrambled: о т а т
   - answer: вікно
-    scrambled: в і к н о
+    scrambled: к о н в і
   - answer: місто
-    scrambled: м і с т о
+    scrambled: т о с і м
   - answer: серце
-    scrambled: с е р ц е
+    scrambled: ц р е с е
   - answer: собака
-    scrambled: с о б а к а
+    scrambled: к а б о с а
   - answer: сонце
-    scrambled: с о н ц е
+    scrambled: ц е н о с
   - answer: море
-    scrambled: м о р е
+    scrambled: р е м о
   - answer: земля
-    scrambled: з е м л я
+    scrambled: л я з е м
   - answer: день
-    scrambled: д е н ь
+    scrambled: н ь д е
   title: Знайдіть слово
   type: anagram
 - instruction: Визначте, чи правильне твердження (Decide if the statement is true
@@ -349,7 +349,7 @@
     explanation: Собака в українській мові — він.
     statement: Слово «собака» належить до чоловічого роду.
   - correct: false
-    explanation: Ніч — це виняток, воно жіночого роду.
+    explanation: Ніч — це виняток, це слово жіночого роду.
     statement: Слово «ніч» належить до чоловічого роду.
   - correct: true
     explanation: День — він, закінчується на м'який знак, але це чоловічий рід.

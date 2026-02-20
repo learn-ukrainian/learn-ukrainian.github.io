@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "bitva-pid-zhovtymy-vodamy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:21:01Z",
+      "task_id": "v3-bitva-pid-zhovtymy-vodamy-pA",
+      "mode": "meta-only"
+    }
+  }
+}

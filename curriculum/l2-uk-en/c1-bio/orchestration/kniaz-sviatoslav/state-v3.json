@@ -1,0 +1,32 @@
+{
+  "track": "c1-bio",
+  "slug": "kniaz-sviatoslav",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:02:01Z",
+      "task_id": "v3-kniaz-sviatoslav-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T10:02:01Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T10:02:01Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T10:02:03Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T10:03:30Z",
+      "attempts": 1
+    }
+  }
+}

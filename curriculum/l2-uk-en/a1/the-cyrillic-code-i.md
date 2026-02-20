@@ -86,7 +86,7 @@ Now, engage your focus. These letters are the "spies." They wear familiar disgui
 #### The "H" Trap: Н
 -   **Symbol**: **Н н**
 -   **Sound**: [n] (like English **n** in "**n**o").
--   **Mnemonic**: It looks like an "H", but think of a **H**en. The letter H stands for **H**en, which ends in N.
+-   **Mnemonic**: It looks like an "H", but think of a He**N** — what do you hear at the end? **N**! That's the sound this letter makes.
 
 **Example:**
 -   **ні** (no) — It looks like "Hi," but it means "No"!
@@ -271,11 +271,11 @@ Before we finish, let's do one final check on our "False Friends." These are the
 
 1.  **The "P" Check**: Say "**Парк**".
     *   Did you roll the **Р**? Make sure it sounds like a purring cat, not a puff of air.
-    *   *Correct*: [pɑrrrk]
+    *   *Correct*: [pɑrk] (make that Р roll!)
     *   *Incorrect*: [pɑhk] (Don't drop the R!)
-2.  **The "B" vs "V" Check**: Say "**Бар**" vs "**Вар**".
-    *   **Бар** starts with a B-boy sound. Explosive.
-    *   **Вар** (boiling water) starts with a V-vehicle sound. Buzzing.
+2.  **The "B" vs "V" Check**: Say "**База**" vs "**Ваза**".
+    *   **База** (base) starts with a B-boy sound. Explosive.
+    *   **Ваза** (vase) starts with a V-vehicle sound. Buzzing.
 
 ### My First Words Checklist
 Now, take a moment to reflect. Can you pronounce these words without hesitating?

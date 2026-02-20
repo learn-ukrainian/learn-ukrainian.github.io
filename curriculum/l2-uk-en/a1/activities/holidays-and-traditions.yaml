@@ -1,0 +1,263 @@
+- type: match-up
+  title: 'Поєднайте свято і пору року'
+  instruction: 'Match the holiday to the correct season or date.'
+  pairs:
+    - left: 'Новий рік'
+      right: '1 січня'
+    - left: 'Різдво'
+      right: '25 грудня'
+    - left: 'Великдень'
+      right: 'весна'
+    - left: 'День Незалежності'
+      right: 'літо'
+    - left: 'Святвечір'
+      right: '24 грудня'
+    - left: 'День народження'
+      right: 'особисте свято'
+
+- type: match-up
+  title: 'Правильне привітання'
+  instruction: 'Match the greeting to the holiday.'
+  pairs:
+    - left: 'З Новим роком!'
+      right: 'Новий рік'
+    - left: 'З Різдвом!'
+      right: 'Різдво'
+    - left: 'З Великоднем!'
+      right: 'Великдень'
+    - left: 'З днем народження!'
+      right: 'День народження'
+    - left: 'Зі святом!'
+      right: 'Універсальне привітання'
+    - left: 'Христос народився!'
+      right: 'Різдвяне вітання'
+
+- type: quiz
+  title: 'Українські традиції'
+  instruction: 'Choose the correct answer about Ukrainian culture.'
+  items:
+    - question: 'Коли в Україні святкують Різдво за новим календарем?'
+      explanation: 'Україна перейшла на новоюліанський календар, тому Різдво святкують 25 грудня.'
+      options:
+        - text: '25 грудня'
+          correct: true
+        - text: '7 січня'
+          correct: false
+        - text: '1 січня'
+          correct: false
+        - text: '14 лютого'
+          correct: false
+    - question: 'Скільки страв традиційно готують на Святвечір?'
+      explanation: 'Традиція вимагає 12 пісних страв, що символізують 12 апостолів.'
+      options:
+        - text: '12'
+          correct: true
+        - text: '10'
+          correct: false
+        - text: '3'
+          correct: false
+        - text: '7'
+          correct: false
+    - question: 'Як називається головна різдвяна страва?'
+      explanation: 'Кутя — це сакральна страва з пшениці, маку та меду.'
+      options:
+        - text: 'кутя'
+          correct: true
+        - text: 'борщ'
+          correct: false
+        - text: 'вареники'
+          correct: false
+        - text: 'сало'
+          correct: false
+    - question: 'Хто написав музику до всесвітньо відомого «Щедрика»?'
+      explanation: 'Микола Леонтович створив обробку народної пісні, яка стала Carol of the Bells.'
+      options:
+        - text: 'Микола Леонтович'
+          correct: true
+        - text: 'Тарас Шевченко'
+          correct: false
+        - text: 'Леся Українка'
+          correct: false
+        - text: 'Іван Франко'
+          correct: false
+    - question: 'Скільки квіток треба дарувати живій людині?'
+      explanation: 'На свята дарують лише непарну кількість квітів (3, 5, 7...).'
+      options:
+        - text: 'непарну кількість (3, 5...)'
+          correct: true
+        - text: 'парну кількість (2, 4...)'
+          correct: false
+        - text: 'рівно 10'
+          correct: false
+        - text: 'рівно 2'
+          correct: false
+    - question: 'Що традиційно роблять дитині на день народження?'
+      explanation: 'В Україні є традиція тягнути іменинника за вуха, щоб він ріс великим.'
+      options:
+        - text: 'тягнуть за вуха'
+          correct: true
+        - text: 'стрижуть волосся'
+          correct: false
+        - text: 'обливають водою'
+          correct: false
+        - text: 'дарують сіль'
+          correct: false
+
+- type: fill-in
+  title: 'Граматика вітань'
+  instruction: 'Complete the greetings with the correct Instrumental case ending.'
+  items:
+    - sentence: 'Вітаю з Новим {{answer}}!'
+      answer: 'роком'
+      options: ['роком', 'рік', 'року', 'роки']
+      explanation: 'Instrumental case: рік -> роком.'
+    - sentence: 'Вітаю з {{answer}}!'
+      answer: 'Різдвом'
+      options: ['Різдвом', 'Різдво', 'Різдва', 'Різдву']
+      explanation: 'Instrumental case: Різдво -> Різдвом.'
+    - sentence: 'Вітаю з {{answer}}!'
+      answer: 'Великоднем'
+      options: ['Великоднем', 'Великдень', 'Великодня', 'великий']
+      explanation: 'Instrumental case: Великдень -> Великоднем.'
+    - sentence: 'Вітаю зі {{answer}}!'
+      answer: 'святом'
+      options: ['святом', 'свято', 'свята', 'свят']
+      explanation: 'Instrumental case: свято -> святом.'
+    - sentence: 'Вітаю з днем {{answer}}!'
+      answer: 'народження'
+      options: ['народження', 'народжувати', 'народ', 'день']
+      explanation: 'Fixed phrase: День народження (Genitive used inside the name).'
+    - sentence: 'З {{answer}} днем!'
+      answer: 'гарним'
+      options: ['гарним', 'гарний', 'гарного', 'гарна']
+      explanation: 'Instrumental case adjective: гарний -> гарним.'
+
+- type: fill-in
+  title: 'Найкращі побажання'
+  instruction: 'Complete the wishes using the correct Genitive form.'
+  items:
+    - sentence: 'Бажаю {{answer}}!'
+      answer: 'щастя'
+      options: ['щастя', 'щастячко', 'щасливий', 'щастям']
+      explanation: 'After бажаю we use Genitive: щастя.'
+    - sentence: 'Бажаю міцного {{answer}}!'
+      answer: 'здоров''я'
+      options: ['здоров''я', 'здорова', 'здоров''ям', 'здорові']
+      explanation: 'After бажаю we use Genitive: здоров''я.'
+    - sentence: 'Бажаю великого {{answer}}!'
+      answer: 'успіху'
+      options: ['успіху', 'успіх', 'успіхом', 'успішний']
+      explanation: 'After бажаю we use Genitive: успіху.'
+    - sentence: 'Бажаю вірної {{answer}}!'
+      answer: 'любові'
+      options: ['любові', 'любов', 'любов''ю', 'любити']
+      explanation: 'After бажаю we use Genitive: любові.'
+    - sentence: 'Бажаю гарного {{answer}}!'
+      answer: 'дня'
+      options: ['дня', 'день', 'днем', 'дні']
+      explanation: 'After бажаю we use Genitive: день -> дня.'
+    - sentence: 'Бажаю {{answer}} і добра.'
+      answer: 'миру'
+      options: ['миру', 'мир', 'миром', 'мирний']
+      explanation: 'After бажаю we use Genitive: мир -> миру.'
+
+- type: unjumble
+  title: 'Складіть речення'
+  instruction: 'Rearrange the words to form correct sentences.'
+  items:
+    - words: ['Ми', 'святкуємо', 'Різдво', 'взимку']
+      answer: 'Ми святкуємо Різдво взимку'
+    - words: ['Я', 'дарую', 'тобі', 'книгу']
+      answer: 'Я дарую тобі книгу'
+    - words: ['Бажаю', 'тобі', 'великого', 'щастя']
+      answer: 'Бажаю тобі великого щастя'
+    - words: ['Коли', 'твій', 'день', 'народження']
+      answer: 'Коли твій день народження'
+    - words: ['Ми', 'готуємо', 'дванадцять', 'страв']
+      answer: 'Ми готуємо дванадцять страв'
+    - words: ['Це', 'маленький', 'подарунок', 'для', 'тебе']
+      answer: 'Це маленький подарунок для тебе'
+
+- type: group-sort
+  title: 'Граматика: З чи Бажаю?'
+  instruction: 'Sort the words based on whether they follow "З" (Instrumental) or "Бажаю" (Genitive).'
+  groups:
+    - name: 'З ... (Орудний)'
+      items: ['Новим роком', 'Різдвом', 'святом', 'Великоднем']
+    - name: 'Бажаю ... (Родовий)'
+      items: ['щастя', 'здоров''я', 'успіху', 'любові', 'миру', 'добра']
+
+- type: true-false
+  title: 'Правда чи ні?'
+  instruction: 'Decide if the statement about traditions is true or false.'
+  items:
+    - statement: 'На Святвечір традиційно готують 10 страв.'
+      correct: false
+      explanation: 'На Святвечір готують 12 страв.'
+    - statement: '«Щедрик» — це українська народна пісня.'
+      correct: true
+      explanation: 'Так, це українська щедрівка в обробці Леонтовича.'
+    - statement: 'На свято можна дарувати парну кількість квітів (2, 4, 6).'
+      correct: false
+      explanation: 'Парну кількість квітів приносять тільки на похорон.'
+    - statement: 'Різдво в Україні святкують 25 грудня.'
+      correct: true
+      explanation: 'Україна перейшла на новоюліанський календар.'
+    - statement: 'Тягнути за вуха — це традиція на Новий рік.'
+      correct: false
+      explanation: 'Це традиція на день народження.'
+    - statement: 'Кутя — це головна страва на Великдень.'
+      correct: false
+      explanation: 'Кутя — це головна страва на Різдво (Святвечір). Паска — на Великдень.'
+
+- type: anagram
+  title: 'Святкові слова'
+  instruction: 'Rearrange the letters to find the holiday words.'
+  items:
+    - scrambled: 'С В Я Т О'
+      answer: 'СВЯТО'
+      hint: 'Holiday'
+    - scrambled: 'Р І З Д В О'
+      answer: 'РІЗДВО'
+      hint: 'Christmas'
+    - scrambled: 'Щ А С Т Я'
+      answer: 'ЩАСТЯ'
+      hint: 'Happiness'
+    - scrambled: 'К У Т Я'
+      answer: 'КУТЯ'
+      hint: 'Christmas dish'
+    - scrambled: 'З И М А'
+      answer: 'ЗИМА'
+      hint: 'Winter'
+    - scrambled: 'В Е С Н А'
+      answer: 'ВЕСНА'
+      hint: 'Spring'
+
+- type: fill-in
+  title: 'Заповніть діалог'
+  instruction: 'Complete the conversation using the correct words.'
+  items:
+    - sentence: 'Дорога Олено, {{answer}} з днем народження!'
+      answer: 'вітаю'
+      options: ['вітаю', 'бажаю', 'дарую', 'кажу']
+      explanation: 'Formula: Вітаю з...'
+    - sentence: '{{answer}} тобі радості і тепла.'
+      answer: 'Бажаю'
+      options: ['Бажаю', 'Вітаю', 'Дякую', 'Роблю']
+      explanation: 'Formula: Бажаю + Genitive.'
+    - sentence: 'Це {{answer}} подарунок для тебе.'
+      answer: 'маленький'
+      options: ['маленький', 'маленька', 'маленьке', 'маленькі']
+      explanation: 'Adjective must match masculine gender of "подарунок".'
+    - sentence: 'Ой, {{answer}}! Це дуже приємно.'
+      answer: 'дякую'
+      options: ['дякую', 'прошу', 'вітаю', 'вибач']
+      explanation: 'Polite response to a gift.'
+    - sentence: 'Сподіваюся, тобі {{answer}}.'
+      answer: 'сподобається'
+      options: ['сподобається', 'сподобався', 'любить', 'хоче']
+      explanation: 'Fixed phrase: I hope you will like it.'
+    - sentence: 'Ти найкращий {{answer}}!'
+      answer: 'друг'
+      options: ['друг', 'свято', 'день', 'рік']
+      explanation: 'Context: You are the best friend.'

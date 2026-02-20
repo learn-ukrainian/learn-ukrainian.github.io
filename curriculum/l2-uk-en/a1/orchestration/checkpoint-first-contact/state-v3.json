@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "checkpoint-first-contact",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:56:24Z",
+      "task_id": "v3-checkpoint-first-contact-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T15:56:24Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T15:56:24Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T15:59:06Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T16:02:22Z",
+      "attempts": 1
+    }
+  }
+}

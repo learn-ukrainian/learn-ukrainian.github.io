@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "pivden-novorosiia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:13:25Z",
+      "task_id": "v3-pivden-novorosiia-pA",
+      "mode": "meta-only"
+    }
+  }
+}

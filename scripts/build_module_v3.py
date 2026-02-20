@@ -73,8 +73,11 @@ from build_module import (
 )
 from batch_gemini_config import (
     CURRICULUM_DIR, PHASES_DIR, PRO_MODEL, PROJECT_ROOT,
-    SEMINAR_TRACKS, get_module_index, get_module_paths,
+    SEMINAR_TRACKS, PRO_TRACKS, get_module_index, get_module_paths,
     slug_for_num,
+    CLAUDE_MODEL_CORE_RESEARCH, CLAUDE_MODEL_CORE_ACTIVITIES,
+    CLAUDE_MODEL_SEMINAR_RESEARCH, CLAUDE_MODEL_SEMINAR_ACTIVITIES,
+    CLAUDE_MODEL_FINAL_REVIEW,
 )
 
 # ---------------------------------------------------------------------------
@@ -156,6 +159,61 @@ def _mark_phase_v3(ctx: ModuleContext, state: dict, phase_id: str, status: str, 
         for sid in _V3_PHASE_STATE_IDS.get(phase_id, [phase_id]):
             phases[sid] = {"status": status, "ts": _now_iso(), **extra}
         _save_state_v3(ctx, state)
+
+
+# ---------------------------------------------------------------------------
+# Claude headless dispatch (Phase A and C via Claude CLI)
+# ---------------------------------------------------------------------------
+
+CLAUDE_MODEL_ACTIVITIES = "claude-sonnet-4-6"   # Phase C default
+CLAUDE_MODEL_RESEARCH   = "claude-sonnet-4-6"   # Phase A default
+
+
+def _dispatch_claude_phase(
+    prompt_file: Path,
+    phase_label: str,
+    model: str = CLAUDE_MODEL_ACTIVITIES,
+    timeout: int = 600,
+    allow_tools: list[str] | None = None,
+) -> tuple[bool, str]:
+    """Call Claude CLI headlessly for a phase prompt file.
+
+    Reads prompt_file, substitutes 'You are Gemini' → 'You are Claude',
+    calls `claude --model {model} -p <prompt>`, returns (ok, output).
+    """
+    import shutil
+    import subprocess
+    claude_bin = shutil.which("claude") or "claude"
+    env = __import__("os").environ.copy()
+    env.pop("CLAUDECODE", None)  # Prevent nested-session error
+
+    prompt = prompt_file.read_text("utf-8")
+    # Adapt persona — templates say "You are Gemini"
+    prompt = prompt.replace("You are Gemini", "You are Claude")
+
+    cmd = [claude_bin, "--model", model, "-p", prompt, "--output-format", "text"]
+    if allow_tools:
+        cmd.extend(["--allowedTools", ",".join(allow_tools)])
+
+    try:
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=timeout,
+            cwd=str(PROJECT_ROOT), env=env,
+        )
+        if result.returncode != 0:
+            err = (result.stderr or "").strip()
+            log(f"  Claude CLI error (rc={result.returncode}): {err[:300]}")
+            return False, ""
+        return True, result.stdout.strip()
+    except FileNotFoundError:
+        log("  Claude CLI not found — ensure 'claude' is on PATH")
+        return False, ""
+    except subprocess.TimeoutExpired:
+        log(f"  Claude CLI TIMEOUT ({timeout}s)")
+        return False, ""
+    except Exception as e:
+        log(f"  Claude CLI exception: {e}")
+        return False, ""
 
 
 # ---------------------------------------------------------------------------
@@ -257,15 +315,18 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
             return True
 
     is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
+    is_pro = ctx.track in PRO_TRACKS
 
     # Optimisation: if research already exists (pre-seeded), skip re-research
-    research_exists = is_seminar and _research_file_is_usable(ctx)
-    if is_seminar:
+    research_exists = (is_seminar or is_pro) and _research_file_is_usable(ctx)
+    if is_seminar or is_pro:
         if research_exists:
             research_path = ctx.paths.get("research")
             word_count = len(research_path.read_text("utf-8").split()) if research_path else 0
             log(f"  Phase A: Research file found ({word_count:,}w) — skipping research, meta-only")
             template_name = "phase-A-meta-only.md"
+        elif is_pro:
+            template_name = "phase-A-pro.md"
         else:
             template_name = "phase-A-seminar.md"
     else:
@@ -283,18 +344,30 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
 
     if ctx.dry_run:
         log(f"  Phase A: DRY-RUN — would dispatch {template_name}")
-        _mark_phase_v3(ctx, state, phase, "complete", note="dry-run")
         return True
 
-    log(f"  Phase A: Dispatching {template_name}...")
-    output_file = _gemini_output_path(ctx.slug, "pA")
-    ok, raw_output = dispatch_gemini(
-        _dispatch_prompt(ctx, prompt_file),
-        task_id=f"v3-{ctx.slug}-pA",
-        model=ctx.model, allow_write=True, output_file=output_file,
-    )
+    use_claude = "A" in getattr(ctx, "use_claude", set())
+    if use_claude:
+        claude_model = getattr(ctx, "claude_model_A", CLAUDE_MODEL_RESEARCH)
+        log(f"  Phase A: Dispatching {template_name} via Claude ({claude_model})...")
+        ok, raw_output = _dispatch_claude_phase(
+            prompt_file, "Phase A", model=claude_model,
+            timeout=600,
+            allow_tools=["WebSearch", "WebFetch", "Read"],
+        )
+    else:
+        log(f"  Phase A: Dispatching {template_name}...")
+        output_file = _gemini_output_path(ctx.slug, "pA")
+        ok, raw_output = dispatch_gemini(
+            _dispatch_prompt(ctx, prompt_file),
+            task_id=f"v3-{ctx.slug}-pA",
+            model=ctx.model, stdout_only=True, output_file=output_file,
+        )
+        # Save raw output to orchestration dir for debugging
+        if raw_output:
+            (ctx.orch_dir / "phase-A-output.md").write_text(raw_output, "utf-8")
     if not ok:
-        log("  Phase A: FAILED — Gemini dispatch error")
+        log(f"  Phase A: FAILED — {'Claude' if use_claude else 'Gemini'} dispatch error")
         _mark_phase_v3(ctx, state, phase, "failed")
         return False
 
@@ -311,8 +384,8 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
                 (ctx.orch_dir / "phase-A-research.md").write_text(research_text, "utf-8")
                 log("  Phase A: Research saved → phase-A-research.md (no research path in ctx)")
         else:
-            if is_seminar:
-                log("  Phase A: WARNING — no RESEARCH delimiters in output (seminar track)")
+            if is_seminar or is_pro:
+                log("  Phase A: WARNING — no RESEARCH delimiters in output (seminar/pro track)")
             else:
                 log("  Phase A: NOTE — no research delimiters (expected for some core tracks)")
 
@@ -378,7 +451,6 @@ def phase_B_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 
     if ctx.dry_run:
         log("  Phase B: DRY-RUN — would dispatch content (phase-2-content.md)")
-        _mark_phase_v3(ctx, state, phase, "complete", note="dry-run")
         return True
 
     # Inject track context path into placeholders if requested
@@ -473,25 +545,30 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 
     if ctx.dry_run:
         log("  Phase C: DRY-RUN — would dispatch phase-3-activities.md")
-        _mark_phase_v3(ctx, state, phase, "complete", note="dry-run")
         return True
 
-    log("  Phase C: Dispatching activities + vocab...")
-    output_file = _gemini_output_path(ctx.slug, "pC")
-    ok, raw_output = dispatch_gemini(
-        _dispatch_prompt(ctx, prompt_file),
-        task_id=f"v3-{ctx.slug}-pC",
-        model=ctx.model, allow_write=True, output_file=output_file,
-    )
+    use_claude = "C" in getattr(ctx, "use_claude", set())
+    if use_claude:
+        claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
+        log(f"  Phase C: Dispatching activities + vocab via Claude ({claude_model})...")
+        ok, raw_output = _dispatch_claude_phase(
+            prompt_file, "Phase C", model=claude_model, timeout=600,
+        )
+    else:
+        log("  Phase C: Dispatching activities + vocab...")
+        output_file = _gemini_output_path(ctx.slug, "pC")
+        ok, raw_output = dispatch_gemini(
+            _dispatch_prompt(ctx, prompt_file),
+            task_id=f"v3-{ctx.slug}-pC",
+            model=ctx.model, stdout_only=True, output_file=output_file,
+        )
     if not ok:
-        log("  Phase C: FAILED — Gemini dispatch error")
+        log(f"  Phase C: FAILED — {'Claude' if use_claude else 'Gemini'} dispatch error")
         _mark_phase_v3(ctx, state, phase, "failed")
         return False
 
-    # v1's phase_3a/3b write their output files via allow_write=True.
-    # phase-3-activities.md produces ACTIVITIES + VOCABULARY delimiters
-    # that the dispatch writes directly to the target files.
-    # Fall back to delimiter extraction if files not written.
+    # Phase C uses stdout_only=True. Gemini outputs ACTIVITIES + VOCABULARY
+    # delimiters to stdout. Extract from raw_output and write to target files.
     wrote_activities = act_path and act_path.exists() and act_path.stat().st_size > 10
     wrote_vocab = voc_path and voc_path.exists() and voc_path.stat().st_size > 10
 
@@ -527,10 +604,11 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 # ---------------------------------------------------------------------------
 
 def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
-    """Audit loop: runs full audit (prose + enrichment), dispatches fixes.
+    """Audit loop: runs prose/enrichment audit (content_only), dispatches fixes.
 
     Combines v2's Phase 3 (prose) and Phase 5 (enrichment) into one loop.
-    Max 3 iterations. Uses run_verify (full audit) for pass/fail.
+    Max 3 iterations. Uses run_verify (content_only=True) — skips review gate
+    since the review file doesn't exist yet (Phase D creates it).
     """
     phase = "audit"
     if _is_phase_v3_complete(ctx, phase, state):
@@ -539,7 +617,6 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
 
     if ctx.dry_run:
         log("  Audit: DRY-RUN — would run audit loop")
-        _mark_phase_v3(ctx, state, phase, "complete", note="dry-run")
         return True
 
     for attempt in range(1, MAX_AUDIT_FIX_ITERS + 1):
@@ -548,7 +625,7 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
         else:
             log(f"  Audit: Audit after fix {attempt - 1}/{MAX_AUDIT_FIX_ITERS - 1}...")
 
-        passed, output = run_verify(ctx.paths["md"], content_only=False)
+        passed, output = run_verify(ctx.paths["md"], content_only=True)
 
         log_file = ctx.orch_dir / f"pAudit-attempt-{attempt}.log"
         log_file.write_text(output, "utf-8")
@@ -574,7 +651,7 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
 
         # Dispatch fix
         fix_num = attempt
-        fix_prompt = _build_fix_prompt(ctx, output, content_only=False)
+        fix_prompt = _build_fix_prompt(ctx, output, content_only=True)
         fix_prompt_file = ctx.orch_dir / f"pAudit-fix{fix_num}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, "utf-8")
 
@@ -623,7 +700,6 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
     if ctx.dry_run:
         log("  Phase D: DRY-RUN — would dispatch phase-D-review-fix.md")
-        _mark_phase_v3(ctx, state, phase, "complete", note="dry-run")
         return True
 
     for attempt in range(1, MAX_D_ITERS + 1):
@@ -637,7 +713,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         ok, raw_output = dispatch_gemini(
             _dispatch_prompt(ctx, prompt_file),
             task_id=f"v3-{ctx.slug}-pD-{attempt}",
-            model=ctx.model, allow_write=True, output_file=output_file,
+            model=ctx.model, stdout_only=True, output_file=output_file,
         )
         if not ok:
             log(f"  Phase D: Dispatch failed (attempt {attempt})")
@@ -875,6 +951,17 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
     ctx.no_track_context = getattr(args, "no_track_context", False)  # type: ignore[attr-defined]
     ctx.research_only = getattr(args, "research_only", False)  # type: ignore[attr-defined]
 
+    # --use-claude: set of phase IDs to dispatch via Claude CLI instead of Gemini
+    use_claude_str = getattr(args, "use_claude", "") or ""
+    ctx.use_claude = set(use_claude_str.replace(",", " ").upper().split()) if use_claude_str else set()  # type: ignore[attr-defined]
+
+    # Per-phase Claude model — seminar + pro tracks default to Opus, core to Sonnet
+    _is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track in PRO_TRACKS
+    _default_gen_model = "claude-opus-4-6" if _is_seminar else CLAUDE_MODEL_ACTIVITIES
+    ctx.claude_model_A = getattr(args, "claude_model_A", None) or _default_gen_model   # type: ignore[attr-defined]
+    ctx.claude_model_C = getattr(args, "claude_model_C", None) or _default_gen_model   # type: ignore[attr-defined]
+    ctx.claude_model_F = getattr(args, "claude_model_F", None) or "claude-opus-4-6"    # type: ignore[attr-defined]
+
     # --rebuild forces Phase B to regenerate even if content file exists
     if getattr(args, "rebuild", False):
         ctx.refresh = True  # type: ignore[attr-defined]
@@ -940,6 +1027,15 @@ def main() -> int:
                         help="Use Claude API for Phase D review instead of Gemini")
     parser.add_argument("--final-review", action="store_true", dest="final_review",
                         help="Run Phase F: Claude final QA gate after Phase D")
+    parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
+                        help="Phases to run via Claude instead of Gemini (e.g. 'A', 'C', 'A C'). "
+                             "A=research, C=activities. --final-review (Phase F) always uses Claude.")
+    parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
+                        help=f"Claude model for Phase A/research (default: sonnet for core, opus for seminar)")
+    parser.add_argument("--claude-model-C", type=str, default=None, dest="claude_model_C",
+                        help=f"Claude model for Phase C/activities (default: sonnet for core, opus for seminar)")
+    parser.add_argument("--claude-model-F", type=str, default=None, dest="claude_model_F",
+                        help="Claude model for Phase F/final-review (default: claude-opus-4-6)")
 
     args = parser.parse_args()
 
@@ -1084,6 +1180,8 @@ def _run_single_module(args: argparse.Namespace) -> int:
                 log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in v3 mode [{elapsed_str}]")
             elif ctx.force_phase:
                 log(f"\nVERDICT: PASS — phase {ctx.force_phase} complete [{elapsed_str}]")
+            elif getattr(ctx, "research_only", False):
+                log(f"\nVERDICT: PASS — research complete (v3) [{elapsed_str}]")
             else:
                 passed, output = run_verify(ctx.paths["md"], content_only=False)
                 if passed:

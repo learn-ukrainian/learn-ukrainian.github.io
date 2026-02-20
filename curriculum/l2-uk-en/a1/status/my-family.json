@@ -1,0 +1,64 @@
+{
+  "module": "my-family",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-20T01:30:13.316626Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T01:23:15.012771Z",
+    "meta": "2026-02-20T01:17:21.681770Z",
+    "activities": "2026-02-20T01:29:48.071280Z",
+    "vocabulary": "2026-02-20T00:58:52.566171Z",
+    "plan": "2026-02-18T19:03:32.115409Z",
+    "research": "2026-02-20T00:56:20.340408Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3317/2000 (raw: 3649)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "21/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 8,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

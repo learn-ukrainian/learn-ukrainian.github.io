@@ -199,15 +199,22 @@ npm run status:{level}  # or: .venv/bin/python scripts/generate_level_status.py 
 npm run score:b2-hist   # Score B2-HIST track
 npm run score:all       # Score all tracks (summary table)
 
-# Deterministic Python builder v3 (4-call optimised — preferred for new builds)
-.venv/bin/python scripts/build_module_v3.py {track} {num}                  # Full E2E
-.venv/bin/python scripts/build_module_v3.py {track} --all                  # Batch (skips passing)
-.venv/bin/python scripts/build_module_v3.py {track} --range 1-20           # Build range
-.venv/bin/python scripts/build_module_v3.py {track} --all --research-only  # Pre-seed all research
-.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild        # Nuke v3 state, restart
-.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase B  # Re-run single phase (A/B/C/audit/D/E/F)
-.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context  # Skip track context
-.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review   # + Phase F: Claude QA gate
+# Deterministic Python builder v3 (hybrid Gemini+Claude — preferred for new builds)
+# Gemini: Phase A (research+meta), B (prose). Claude: Phase C (activities), F (final review).
+# Model defaults: core tracks → Sonnet; seminar tracks → Opus; Phase F → always Opus.
+# All model defaults in scripts/batch_gemini_config.py.
+.venv/bin/python scripts/build_module_v3.py {track} {num}                       # Full E2E (4 LLM calls baseline)
+.venv/bin/python scripts/build_module_v3.py {track} --all                       # Batch (skips passing)
+.venv/bin/python scripts/build_module_v3.py {track} --range 1-20                # Build range
+.venv/bin/python scripts/build_module_v3.py {track} --all --research-only       # Pre-seed all research (Phase A only)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild             # Nuke v3 state, restart from Phase A
+.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase B       # Re-run single phase (A/B/C/audit/D/E/F)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context    # Skip track context injection
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review        # + Phase F: Claude QA gate
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude A        # Phase A via Claude (WebSearch)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude "A C"    # Phases A+C via Claude
+.venv/bin/python scripts/build_module_v3.py {track} {num} --claude-model-C claude-opus-4-6   # Override Claude model per phase
+.venv/bin/python scripts/build_module_v3.py {track} {num} --claude-model-F claude-sonnet-4-6 # Override Phase F model
 # v3 state: state-v3.json (separate from v2's state.json — no conflict)
 
 # Deterministic Python builder v2 (fallback)
@@ -298,12 +305,29 @@ curriculum/l2-uk-en/
 ## Monitoring API (http://localhost:8765)
 
 FastAPI server — always running. Use `curl` for instant status instead of running scripts.
+Full reference: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 
 ```bash
-curl -s http://localhost:8765/api/batch/active              # Active builds (live)
-curl -s http://localhost:8765/api/blue/live-status          # Pass/fail all tracks
-curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}       # Specific module
-curl -s http://localhost:8765/api/gold/orchestration/{track}/{slug} # Phase history
+# Session start — one call to know project state
+curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
+
+# What's building right now
+curl -s http://localhost:8765/api/batch/active
+
+# v3 pipeline state for a specific track
+curl -s http://localhost:8765/api/state/pipeline/c1-hist | python3 -m json.tool
+
+# What's ready to build next (Phase A done, Phase B not started)
+curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
+
+# Failing/weak modules in a track
+curl -s "http://localhost:8765/api/state/weak-points?track=c1-bio" | python3 -m json.tool
+
+# Critical issues across all tracks
+curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool
+
+# Pass/fail all tracks
+curl -s http://localhost:8765/api/blue/live-status
 ```
 
 ---

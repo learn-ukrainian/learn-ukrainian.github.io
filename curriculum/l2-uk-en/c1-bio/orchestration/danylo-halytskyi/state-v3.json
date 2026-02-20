@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "danylo-halytskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T11:52:31Z",
+      "task_id": "v3-danylo-halytskyi-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M01 — how-to-talk-about-grammar.md
 **Level:** B1 | **Module:** M01 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 16:19:01
+**Generated:** 2026-02-20 01:09:52
 
 ## Configuration
 **Type:** B1-bridge
@@ -32,7 +32,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5252/4000 (raw: 5556)
+- **Words:** ✅ 5288/4000 (raw: 5592)
 - **Activities:** ✅ 4/4
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 4/3 types
@@ -77,7 +77,7 @@
 | **Вступ: сила метамови** | ✅ | 376 | Included in Core |
 | **Частини мови: самостійні категорії** | ✅ | 2077 | Included in Core |
 | **Частини мови: службові слова** | ✅ | 626 | Included in Core |
-| **Відмінки: сім ключів** | ✅ | 967 | Included in Core |
-| **Граматичні категорії та будова слова** | ✅ | 679 | Included in Core |
+| **Відмінки: сім ключів** | ✅ | 984 | Included in Core |
+| **Граматичні категорії та будова слова** | ✅ | 698 | Included in Core |
 | **Практика: читаємо граматику українською** | ✅ | 285 | Included in Core |
 | **Підсумок і самоперевірка** | ✅ | 184 | Included in Core |

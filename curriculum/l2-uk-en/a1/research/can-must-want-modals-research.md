@@ -1,34 +1,32 @@
 # Дослідження: Can, Must, Want - Modals
 
 ## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... могти (можу, можеш, може, можемо, можете, можуть)" (UKRAINIAN-STATE-STANDARD-2024.txt, lines 704-706).
-§3 (Thematic Areas): "...Мені треба лікаря / ліки / швидку допомогу." (UKRAINIAN-STATE-STANDARD-2024.txt, line 546).
-Alignment: This module covers the essential A1 modal verb of ability (могти) and the primary impersonal construction of necessity (треба) as defined in the 2024 State Standard for beginner communicative competence.
+§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі... могти (можу, можеш, може, можемо, можете, можуть)..."
+Alignment: This module explicitly teaches the conjugation of `могти` as required by the standard, and covers communicative intentions for requesting (`Дайте, будь ласка`) and prohibiting (`Не курити!`) from §2 (Catalogue A).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| могти | Very High (Top 20 verbs) | може бути (maybe), можу допомогти (I can help) |
-| хотіти | Very High (Top 10 verbs) | хочу пити (want to drink), хочу знати (want to know) |
-| треба | High (Spoken corpus) | треба йти (must go), треба працювати (need to work) |
-| вміти | Moderate (Skill-focused) | вміти читати (can read), вміти готувати (can cook) |
-| потрібно| High (Formal/Standard) | потрібно терміново (necessary urgently) |
-| повинен | Moderate (Obligation) | він повинен (he must), ми повинні (we must) |
+| могти | High (Top 50 verbs) | може бути (maybe), не можу (I cannot), можу допомогти (I can help) |
+| вміти | Medium-High | вміти читати/писати (know how to read/write), вміти плавати (know how to swim) |
+| треба | Very High (Impersonal) | мені треба (I need), треба йти (must go), так треба (it is necessary/how it should be) |
+| можна | Very High (Permission) | можна увійти? (may I come in?), чи можна? (is it allowed?), тут не можна (it is not allowed here) |
+| хотіти | High | хочу їсти/пити (hungry/thirsty), що ти хочеш? (what do you want?) |
+| повинен | High | повинен знати (must know), повинна бути (must be [fem]) |
 
 ## Cultural Hooks
-1. **Proverb**: «Хто хоче — той може» (Who wants — can). A common Ukrainian motivational idiom emphasizing will and agency. (Source: Ukrainian Folklore/Proverb Corpus).
-2. **Etiquette**: Using «Можна?» (May I?) as a stand-alone question is the standard polite protocol for entering a room, asking for a seat, or requesting an item in a store, reflecting the high value of verbal permission in Ukrainian culture.
+1. **«Можна?» etiquette**: In Ukraine, it is standard politeness to ask «Можна?» (literally "Is it allowed?") when entering a room, asking to take a chair, or squeezing past someone in a crowd. It functions as "May I?", "Excuse me", and "Is this free?" combined.
+2. **Proverb**: «Хто хоче — той може» (He who wants — can). Equivalent to "Where there's a will, there's a way".
 
 ## Common Learner Errors
-1. **`могти` vs `вміти`** → *Я можу плавати* (I have the physical possibility right now) vs *Я вмію плавати* (I have the skill). Beginners often use `могти` for learned skills.
-2. **`треба` + Noun** → *Мені треба допомога* (Colloquial) vs *Мені потрібна допомога* (Standard). Using impersonal `треба` with nouns instead of the agreeing adjective-like `потрібен/на/не`.
-3. **`повинен` gender mismatch** → *Вона повинен* (Error) vs *Вона повинна*. Learners forget that `повинен` must agree with the subject's gender and number.
+1. **Могти vs Вміти**: Learners often say "Я можу плавати" (I have the physical possibility to swim right now) when they mean "Я вмію плавати" (I possess the skill of swimming).
+2. **Gender with Повинен**: Learners often fail to agree `повинен` with the subject (e.g., saying "Вона повинен" instead of "Вона повинна").
+3. **Треба + Noun**: Learners try to say "Мені треба ручка" (using Nominative `ручка`) or use it like English "I need a pen". While colloquial, the strictly correct impersonal construction often requires `потрібна ручка` (adjective agreement) or `треба` + Genitive/Accusative depending on context, or `треба` + Infinitive.
 
 ## Cross-References
-- Builds on: a1-23 (What Time Is It) - uses temporal markers for scheduling obligations.
-- Prepares for: a1-25 (My Daily Routine) - provides the grammatical tools to describe what one "must" or "wants" to do daily.
+- Builds on: a1-23 (What Time Is It - time management context)
+- Prepares for: a1-25 (My Daily Routine - describing daily obligations)
 
 ## Notes for Content Writing
-- Keep sentences short (max 8-10 words) as per A1 pedagogical guidelines.
-- Ensure IPA stress marks for every occurrence of `могти` (мо́жу, мо́жеш) and `хотіти` (хо́чу, хо́чеш), as stress shifts are tricky here.
-- Explicitly explain that `треба`, `можна`, and `потрібно` are impersonal and don't change regardless of who "needs" or "can".
+- **Scaffolding**: Since this is A1, use clear English analogies. "Могти" = Can (physical/possibility). "Вміти" = Know how to (skill).
+- **Visuals**: Use a table for `могти` conjugation as it has the `г/ж` alternation (`могти` -> `можу` -> `можеш`).

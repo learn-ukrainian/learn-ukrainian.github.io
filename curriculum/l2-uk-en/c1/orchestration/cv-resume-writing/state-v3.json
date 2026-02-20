@@ -1,0 +1,13 @@
+{
+  "track": "c1",
+  "slug": "cv-resume-writing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T13:34:06Z",
+      "task_id": "v3-cv-resume-writing-pA",
+      "mode": "full"
+    }
+  }
+}

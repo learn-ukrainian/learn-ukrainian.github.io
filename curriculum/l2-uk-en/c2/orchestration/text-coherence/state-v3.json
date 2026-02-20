@@ -1,0 +1,13 @@
+{
+  "track": "c2",
+  "slug": "text-coherence",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:35:14Z",
+      "task_id": "v3-text-coherence-pA",
+      "mode": "full"
+    }
+  }
+}

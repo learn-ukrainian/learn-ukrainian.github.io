@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "mekhanizm-teroru",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:03:41Z",
+      "task_id": "v3-mekhanizm-teroru-pA",
+      "mode": "meta-only"
+    }
+  }
+}

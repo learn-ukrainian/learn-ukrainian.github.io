@@ -1,24 +1,16 @@
-TRACK: b2-hist
-LEVEL: B2_HIST
-SLUG: trypillian-civilization
-TOPIC_TITLE: Трипільська цивілізація
-MODULE_NUM: '1'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b2-hist/trypillian-civilization.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/meta/trypillian-civilization.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/trypillian-civilization.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/activities/trypillian-civilization.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/research/trypillian-civilization-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/review/trypillian-civilization-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/B2-HIST.md
-SCHEMA_PATH: schemas/activities-b2-hist.schema.json
-WORD_TARGET: '5000'
-SKILL_IDENTITY: Professor of Ukrainian Arts (history)
-PERSONA_FLAVOR: The Decolonial Lecturer
-PERSONA_VOICE: Senior Professor of History
-PERSONA_ROLE: Archaeological Curator
+ACTIVITY_COUNT_TARGET: '5'
+ACTIVITY_MAX: '9'
+ACTIVITY_MIN: '3'
+ALLOWED_ACTIVITY_TYPES: reading, essay-response, critical-analysis, comparative-study,
+  true-false
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/trypillian-civilization.md
+FORBIDDEN_ACTIVITY_TYPES: quiz, fill-in, cloze, match-up, error-correction, unjumble,
+  mark-the-words, group-sort, select, translate, anagram
 IMMERSION_RULE: Full Ukrainian immersion. No English except technical terminology.
   Sentences max 35 words.
+ITEMS_MIN: '1'
+LEVEL: B2_HIST
 LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
 
   - Max 35 words per Ukrainian sentence
@@ -26,6 +18,20 @@ LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
   - Max 6 clauses
 
   - Full grammar including adverbial participles'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/meta/trypillian-civilization.yaml
+MODULE_NUM: '1'
+PERSONA_FLAVOR: The Decolonial Lecturer
+PERSONA_ROLE: Archaeological Curator
+PERSONA_VOICE: Senior Professor of History
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b2-hist/trypillian-civilization.yaml
+PRIORITY_TYPES: reading, essay-response, critical-analysis, comparative-study
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/B2-HIST.md
+REQUIRED_TYPES: reading, essay-response
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/research/trypillian-civilization-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/review/trypillian-civilization-review.md
+SCHEMA_PATH: schemas/activities-b2-hist.schema.json
+SKILL_IDENTITY: Professor of Ukrainian Arts (history)
+SLUG: trypillian-civilization
 TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
 
 
@@ -617,14 +623,9 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
   **Weight in overall score: 1.5 (highest weight along with Linguistic Accuracy)**
 
   '
-ACTIVITY_COUNT_TARGET: '5'
-ACTIVITY_MIN: '3'
-ACTIVITY_MAX: '9'
-ITEMS_MIN: '1'
+TOPIC_TITLE: Трипільська цивілізація
+TRACK: b2-hist
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/orchestration/trypillian-civilization/track-context.md
 VOCAB_COUNT_TARGET: '25'
-FORBIDDEN_ACTIVITY_TYPES: quiz, fill-in, cloze, match-up, error-correction, unjumble,
-  mark-the-words, group-sort, select, translate, anagram
-ALLOWED_ACTIVITY_TYPES: reading, essay-response, critical-analysis, comparative-study,
-  true-false
-REQUIRED_TYPES: reading, essay-response
-PRIORITY_TYPES: reading, essay-response, critical-analysis, comparative-study
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml
+WORD_TARGET: '5000'

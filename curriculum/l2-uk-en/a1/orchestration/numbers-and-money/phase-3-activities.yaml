@@ -1,0 +1,307 @@
+- type: match-up
+  title: "Числа 0–10: Основи"
+  instruction: "З'єднайте число словом із цифрою."
+  pairs:
+    - left: "нуль"
+      right: "0"
+    - left: "один"
+      right: "1"
+    - left: "два"
+      right: "2"
+    - left: "чотири"
+      right: "4"
+    - left: "п'ять"
+      right: "5"
+    - left: "сім"
+      right: "7"
+    - left: "вісім"
+      right: "8"
+    - left: "десять"
+      right: "10"
+
+- type: match-up
+  title: "Числа 11–100: Великі числа"
+  instruction: "З'єднайте українське слово з відповідним числом."
+  pairs:
+    - left: "одинадцять"
+      right: "11"
+    - left: "дванадцять"
+      right: "12"
+    - left: "двадцять"
+      right: "20"
+    - left: "сорок"
+      right: "40"
+    - left: "п'ятдесят"
+      right: "50"
+    - left: "дев'яносто"
+      right: "90"
+    - left: "сто"
+      right: "100"
+
+- type: quiz
+  title: "Математика на базарі"
+  instruction: "Розв'яжіть прості приклади та оберіть правильну відповідь українською."
+  items:
+    - question: "Один плюс один дорівнює..."
+      explanation: "1 + 1 = 2 (два)."
+      options:
+        - text: "два"
+          correct: true
+        - text: "три"
+          correct: false
+        - text: "один"
+          correct: false
+        - text: "нуль"
+          correct: false
+    - question: "П'ять плюс п'ять дорівнює..."
+      explanation: "5 + 5 = 10 (десять)."
+      options:
+        - text: "десять"
+          correct: true
+        - text: "двадцять"
+          correct: false
+        - text: "п'ять"
+          correct: false
+        - text: "нуль"
+          correct: false
+    - question: "Десять мінус три дорівнює..."
+      explanation: "10 - 3 = 7 (сім)."
+      options:
+        - text: "сім"
+          correct: true
+        - text: "шість"
+          correct: false
+        - text: "вісім"
+          correct: false
+        - text: "два"
+          correct: false
+    - question: "Двадцять плюс десять дорівнює..."
+      explanation: "20 + 10 = 30 (тридцять)."
+      options:
+        - text: "тридцять"
+          correct: true
+        - text: "сорок"
+          correct: false
+        - text: "двадцять"
+          correct: false
+        - text: "п'ятдесят"
+          correct: false
+    - question: "Сто мінус п'ятдесят дорівнює..."
+      explanation: "100 - 50 = 50 (п'ятдесят)."
+      options:
+        - text: "п'ятдесят"
+          correct: true
+        - text: "шістдесят"
+          correct: false
+        - text: "сорок"
+          correct: false
+        - text: "сто"
+          correct: false
+    - question: "Сорок плюс сорок дорівнює..."
+      explanation: "40 + 40 = 80 (вісімдесят)."
+      options:
+        - text: "вісімдесят"
+          correct: true
+        - text: "дев'яносто"
+          correct: false
+        - text: "сімдесят"
+          correct: false
+        - text: "сорок"
+          correct: false
+
+- type: group-sort
+  title: "Правило 1–2–5"
+  instruction: "Розподіліть числа за групами залежно від того, яку форму іменника вони вимагають (як 'гривня', 'гривні', 'гривень')."
+  groups:
+    - name: "1 (Один)"
+      items: ["один", "двадцять один", "сто один"]
+    - name: "2–4 (Два, три, чотири)"
+      items: ["два", "три", "чотири", "двадцять два", "тридцять три"]
+    - name: "5–0 (П'ять і більше)"
+      items: ["п'ять", "шість", "десять", "одинадцять", "двадцять", "сорок", "дванадцять"]
+
+- type: fill-in
+  title: "Рахуємо гривні"
+  instruction: "Оберіть правильну форму слова «гривня» відповідно до числа."
+  items:
+    - sentence: "Це одна ___."
+      answer: "гривня"
+      options: ["гривня", "гривні", "гривень", "гривнях"]
+      explanation: "1 вимагає називного відмінка однини (Zone 1)."
+    - sentence: "Це дві ___."
+      answer: "гривні"
+      options: ["гривні", "гривня", "гривень", "гривнях"]
+      explanation: "2, 3, 4 вимагають називного відмінка множини (Zone 2)."
+    - sentence: "Це три ___."
+      answer: "гривні"
+      options: ["гривні", "гривня", "гривень", "гривнях"]
+      explanation: "2, 3, 4 вимагають називного відмінка множини (Zone 2)."
+    - sentence: "Це п'ять ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гривнях"]
+      explanation: "5 і більше вимагають родового відмінка множини (Zone 3)."
+    - sentence: "Це десять ___."
+      answer: "гривень"
+      options: ["гривень", "гривня", "гривні", "гривнях"]
+      explanation: "10 закінчується на 0, тому це Zone 3 (Родовий множини)."
+    - sentence: "Це двадцять одна ___."
+      answer: "гривня"
+      options: ["гривня", "гривні", "гривень", "гривнях"]
+      explanation: "Складені числа, що закінчуються на 1 (крім 11), належать до Zone 1."
+
+- type: fill-in
+  title: "Рахуємо копійки"
+  instruction: "Оберіть правильну форму слова «копійка»."
+  items:
+    - sentence: "У мене є одна ___."
+      answer: "копійка"
+      options: ["копійка", "копійки", "копійок", "копійку"]
+      explanation: "1 + Називний однини."
+    - sentence: "Це дві ___."
+      answer: "копійки"
+      options: ["копійки", "копійка", "копійок", "копійку"]
+      explanation: "2 + Називний множини."
+    - sentence: "Це чотири ___."
+      answer: "копійки"
+      options: ["копійки", "копійка", "копійок", "копійку"]
+      explanation: "4 + Називний множини."
+    - sentence: "Це п'ять ___."
+      answer: "копійок"
+      options: ["копійок", "копійка", "копійки", "копійку"]
+      explanation: "5 + Родовий множини."
+    - sentence: "Це десять ___."
+      answer: "копійок"
+      options: ["копійок", "копійка", "копійки", "копійку"]
+      explanation: "10 + Родовий множини."
+    - sentence: "Це п'ятдесят ___."
+      answer: "копійок"
+      options: ["копійок", "копійка", "копійки", "копійку"]
+      explanation: "50 + Родовий множини."
+
+- type: unjumble
+  title: "Діалоги в магазині"
+  instruction: "Складіть слова у правильному порядку, щоб утворити речення."
+  items:
+    - words: ["Скільки", "коштує", "цей", "сувенір"]
+      answer: "Скільки коштує цей сувенір"
+    - words: ["Яка", "ціна", "цього", "магніта"]
+      answer: "Яка ціна цього магніта"
+    - words: ["Дайте", "той", "за", "тридцять"]
+      answer: "Дайте той за тридцять"
+    - words: ["З", "вас", "сорок", "гривень"]
+      answer: "З вас сорок гривень"
+    - words: ["Ні", "дякую", "я", "зі", "своїм"]
+      answer: "Ні дякую я зі своїм"
+    - words: ["Ваша", "здача", "десять", "гривень"]
+      answer: "Ваша здача десять гривень"
+
+- type: match-up
+  title: "Корисні фрази"
+  instruction: "З'єднайте українську фразу з її англійським перекладом."
+  pairs:
+    - left: "Скільки коштує?"
+      right: "How much does it cost?"
+    - left: "Яка ціна?"
+      right: "What is the price?"
+    - left: "Скільки з мене?"
+      right: "How much do I owe?"
+    - left: "Можна карткою?"
+      right: "Can I pay by card?"
+    - left: "Пакет потрібен?"
+      right: "Do you need a bag?"
+    - left: "Це все?"
+      right: "Is that all?"
+
+- type: true-false
+  title: "Логіка чисел"
+  instruction: "Визначте, чи правильне твердження."
+  items:
+    - statement: "Два плюс два дорівнює п'ять."
+      correct: false
+      explanation: "2 + 2 = 4 (чотири)."
+    - statement: "Десять мінус один дорівнює дев'ять."
+      correct: true
+      explanation: "10 - 1 = 9."
+    - statement: "В одній гривні сто копійок."
+      correct: true
+      explanation: "1 гривня = 100 копійок."
+    - statement: "Сорок плюс сорок дорівнює сто."
+      correct: false
+      explanation: "40 + 40 = 80 (вісімдесят)."
+    - statement: "Число 11 — це «одинадцять»."
+      correct: true
+      explanation: "Правильно."
+    - statement: "Число 15 — це «п'ятдесят»."
+      correct: false
+      explanation: "15 — це «п'ятнадцять», а 50 — це «п'ятдесят»."
+
+- type: quiz
+  title: "Фінальний тест"
+  instruction: "Перевірте свої знання з усього модулю."
+  items:
+    - question: "Як українською буде число 100?"
+      explanation: "100 — це сто."
+      options:
+        - text: "сто"
+          correct: true
+        - text: "тисяча"
+          correct: false
+        - text: "десять"
+          correct: false
+        - text: "нуль"
+          correct: false
+    - question: "Яке число відповідає слову «п'ятнадцять»?"
+      explanation: "П'ятнадцять — це 15."
+      options:
+        - text: "15"
+          correct: true
+        - text: "50"
+          correct: false
+        - text: "5"
+          correct: false
+        - text: "55"
+          correct: false
+    - question: "Якщо ціна занадто висока, ви кажете..."
+      explanation: "Висока ціна — це дорого (expensive)."
+      options:
+        - text: "дорого"
+          correct: true
+        - text: "дешево"
+          correct: false
+        - text: "смачно"
+          correct: false
+        - text: "цікаво"
+          correct: false
+    - question: "Фраза «Скільки з мене?» означає..."
+      explanation: "Це запитання про загальну суму до сплати."
+      options:
+        - text: "How much do I owe?"
+          correct: true
+        - text: "How are you?"
+          correct: false
+        - text: "Where is the exit?"
+          correct: false
+        - text: "Do you have coffee?"
+          correct: false
+    - question: "Оберіть правильний варіант: 21 ___."
+      explanation: "21 закінчується на 1, тому вимагає форми «гривня» (Zone 1)."
+      options:
+        - text: "гривня"
+          correct: true
+        - text: "гривні"
+          correct: false
+        - text: "гривень"
+          correct: false
+        - text: "гривнях"
+          correct: false
+    - question: "Оберіть правильний варіант: 5 ___."
+      explanation: "5 вимагає форми «гривень» (Zone 3)."
+      options:
+        - text: "гривень"
+          correct: true
+        - text: "гривня"
+          correct: false
+        - text: "гривні"
+          correct: false
+        - text: "гривнях"
+          correct: false

@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "velyke-kniazivstvo-lytovske",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T13:06:39Z",
+      "task_id": "v3-velyke-kniazivstvo-lytovske-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M08 — the-living-verb-ii.md
 **Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 20:22:50
+**Generated:** 2026-02-19 23:01:33
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,7 +19,7 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | group-sort | Тип 1 чи Тип 2? | 16 | 12 | ✅ |
+| 1 | group-sort | Тип 1 чи Тип 2? | 14 | 12 | ✅ |
 | 2 | match-up | Я і моя дія | 10 | 8 | ✅ |
 | 3 | quiz | Правила другої дієвідміни | 8 | 8 | ✅ |
 | 4 | fill-in | Правильні закінчення | 10 | 8 | ✅ |
@@ -38,20 +38,20 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2454/2000 (raw: 2676)
+- **Words:** ✅ 2464/2000 (raw: 2691)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.9% (target 15-35% (M08))
+- **Immersion:** 🇺🇦 26.3% (target 15-35% (M08))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,9 +61,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Living Verb II** | ✅ | 34 | Included in Core |
-| **Вступ: Світ дієслів** | ✅ | 322 | Included in Core |
-| **Граматика: Друга дієвідміна** | ✅ | 1084 | Included in Core |
-| **Практика: Тренування** | ✅ | 279 | Included in Core |
-| **Використання: Розповідаємо про себе** | ✅ | 293 | Included in Core |
-| **Культура: Глибина слова** | ✅ | 252 | Included in Core |
+| **Вступ: Родина -ити** | ✅ | 307 | Included in Core |
+| **Презентація: Друга дієвідміна** | ✅ | 1051 | Included in Core |
+| **Практика: Тренування форм** | ✅ | 293 | Included in Core |
+| **Використання: Розповіді про дії** | ✅ | 293 | Included in Core |
+| **Культурний контекст: Глибина слова** | ✅ | 296 | Included in Core |
 | **Підсумок** | ✅ | 190 | Included in Core |

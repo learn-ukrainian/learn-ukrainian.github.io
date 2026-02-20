@@ -1,34 +1,33 @@
-# Дослідження: Holidays & Traditions
+# Дослідження: Holidays & Traditions (A1 Core)
 
 ## State Standard Reference
 §3.12: "Традиції, звичаї, свята: державні й релігійні свята; день народження, весілля; подарунки."
-§4: "Знання з граматики... базуються на відтворенні готових комунікативних моделей."
-Alignment: Цей модуль охоплює лексичну тему «Традиції та свята» згідно з тематичним каталогом А1. Оскільки орудний (З Новим роком!) та родовий (Бажаю щастя!) відмінки за стандартом належать до рівня А2, у межах А1 вони подаються як стійкі комунікативні конструкції (frozen chunks) без повного вивчення парадигм відмінювання.
+Alignment: This module directly addresses the thematic requirement of §3.12. While §4.2.3 (Morphology) restricts A1 case usage to Nom/Acc/Loc/Voc, this module introduces "З + Instr" and "Бажаю + Gen" strictly as *lexicalized formulae* (frozen chunks) necessary for the "Speech Etiquette" communicative intentions typical of A1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| свято | #229 (General Corpus) | державне свято, велике свято |
-| бажати | #351 (General Corpus) | бажати щастя, бажати успіху |
-| вітати | #497 (General Corpus) | вітати зі святом, вітати з днем народження |
-| подарунок | #864 (General Corpus) | дарувати подарунок, гарний подарунок |
-| Різдво | Висока (Сезонна) | Різдво Христове, на Різдво |
+| свято | High (top 500) | державне свято, релігійне свято, веселе свято |
+| вітати | Medium | вітати з днем народження, вітати зі святом |
+| бажати | Medium | бажати щастя, бажати здоров'я (Genitive required) |
+| подарунок | High | дарувати подарунок, отримати подарунок |
+| Різдво | High (seasonal) | на Різдво, щасливого Різдва |
+| Великдень | High (seasonal) | на Великдень |
 
 ## Cultural Hooks
-1. **«Щедрик» (Carol of the Bells)**: Всесвітньо відома різдвяна пісня має українське походження. Її написав композитор Микола Леонтович на основі народної щедрівки. Це чудовий місток між українською та світовою культурою для початківців. (Джерело: uk.wikipedia.org)
-2. **Традиція «Тягнути за вуха»**: В Україні існує жартівлива традиція тягнути іменинника за вуха стільки разів, скільки років йому виповнилося. Це супроводжується приказкою «Рости великий!» (Джерело: науково-популярні етнографічні ресурси).
-3. **12 страв на Святвечір**: Традиційна вечеря перед Різдвом складається з 12 пісних страв (без м’яса та молока), головною з яких є кутя. (Джерело: esu.com.ua)
+1. **12 страв (12 Dishes):** On Christmas Eve (Sviatvechir), standard tradition involves 12 meatless dishes, centred around *Kutia* (wheat berry pudding).
+2. **Щедрик (Shchedryk):** The world-famous "Carol of the Bells" is originally a Ukrainian folk chant arranged by Mykola Leontovych.
+3. **День народження (Birthday):** The tradition of "pulling ears" (тягнути за вуха) — one pull for each year of life to make the child grow tall.
 
 ## Common Learner Errors
-1. **З + Називний**: Студенти часто кажуть «З Новий рік» замість «З Новим роком!», ігноруючи потребу в орудному відмінку після прийменника «з» у привітаннях.
-2. **Бажаю + Знахідний**: Через вплив англійської (I wish you luck) або загальне правило прямого додатка, студенти використовують знахідний відмінок замість родового. Наприклад: «Бажаю успіх» замість «Бажаю успіху».
-3. **Вимова «щастя»**: Сполучення звуків [ʃtʃ] (літера щ) та м’якість [tʲ] є складними для англомовних учнів. Часто вимовляють як [shastya] без належного шипіння та пом’якшення.
+1. **Case Mismatch in Greetings:** Learners often use Nominative after "З" (e.g., *«З Новий рік!»* instead of *«З Новим роком!»*). Fix: Teach "З + Instr" as a fixed block.
+2. **Case Mismatch in Wishes:** Learners use Accusative/Nominative after "бажаю" (e.g., *«Бажаю успіх!»* instead of *«Бажаю успіху!»*). Fix: Emphasize Genitive for abstract concepts wished for.
+3. **Verb Confusion:** Confusing *вітати* (to congratulate/greet) with *бажати* (to wish).
 
 ## Cross-References
-- Builds on: a1-23 (Дати та місяці), a1-32 (Сім’я — кого вітаємо)
-- Prepares for: a1-34 (Консолідація граматики А1), a2-01 (Початок систематичного вивчення родового та орудного відмінків)
+- **Builds on:** `a1-23` (What Time Is It / Dates), `a1-32` (My Family - specifically vocabulary for relatives to greet).
+- **Prepares for:** `a1-34` (Checkpoint), `a2-04` (Instrumental Case full paradigm), `a2-02` (Genitive Case full paradigm).
 
 ## Notes for Content Writing
-- Оскільки модуль є частиною Consolidation (A1.3), важливо підкреслити практичне застосування: написання короткої листівки та обмін короткими побажаннями.
-- Використовувати IPA для складних слів: *щастя* /ˈʃtʃɑstʲɐ/, *здоров'я* /zdɔˈrɔu̯jɐ/.
-- Чітко розмежувати дієслова *вітати* (процес поздоровлення) та *бажати* (висловлення конкретних побажань), оскільки учні часто їх плутають.
+- **Immersion Constraints:** A1.3 Phase means ~30-40% immersion. Keep grammar explanations in English. Use Ukrainian for all examples, dialogues, and activity prompts.
+- **Pedagogy:** Focus on *recognition* and *production of set phrases* rather than deep grammatical analysis of the Instrumental/Genitive cases. Treat endings like `-ом`, `-ю` as part of the "holiday spelling".

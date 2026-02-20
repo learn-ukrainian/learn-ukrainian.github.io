@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "my-daily-routine",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T21:45:02Z",
+      "task_id": "v3-my-daily-routine-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T20:42:12Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T20:43:32Z",
+      "task_id": "v3-my-daily-routine-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T21:51:06Z",
+      "attempts": 3
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T21:52:20Z",
+      "attempts": 1
+    }
+  }
+}

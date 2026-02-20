@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "maksym-kryvtsov",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:48:33Z",
+      "task_id": "v3-maksym-kryvtsov-pA",
+      "mode": "full"
+    }
+  }
+}

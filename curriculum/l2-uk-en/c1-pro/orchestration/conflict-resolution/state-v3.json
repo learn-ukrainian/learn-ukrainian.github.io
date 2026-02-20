@@ -1,0 +1,13 @@
+{
+  "track": "c1-pro",
+  "slug": "conflict-resolution",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:32:39Z",
+      "task_id": "v3-conflict-resolution-pA",
+      "mode": "full"
+    }
+  }
+}

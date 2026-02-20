@@ -102,7 +102,7 @@ Look around your room. You see many things: a table, a computer, a lamp, a book.
 
 **Подивіться навколо.** (Look around.) **Що ви бачите?** (What do you see?)
 **Я бачу стіл.** (I see a table.) **Я бачу лампу.** (I see a lamp.) **Я бачу комп'ютер.** (I see a computer.)
-**Я бачу книжку.** (I see a book.) **Я бачу вікно.** (I see a window.)
+**Я бачу книгу.** (I see a book.) **Я бачу вікно.** (I see a window.)
 
 In Ukrainian, when you simply name these things, they are the **Subject** of the sentence. They are the actors, or they just "exist."
 
@@ -152,7 +152,7 @@ If a word is feminine and ends in **-а** or **-я**, it MUST change when it is 
 Let's look at how this works with the verb **бачити** [ˈbɑt͡ʃɪtɪ] (to see).
 
 *   **кава** [ˈkɑʋɑ] (coffee) → Я бачу **каву**.
-*   **газета** [hɑˈzɛtɑ] (newspaper) → Я бачу **газету**.
+*   **газета** [ɦɑˈzɛtɑ] (newspaper) → Я бачу **газету**.
 *   **кухня** [ˈkuxnʲɑ] (kitchen) → Я бачу **кухню**.
 
 Usage note: You apply this rule whenever you are doing something *to* a feminine object—seeing it, buying it, reading it, or loving it.
@@ -355,7 +355,7 @@ You are going on vacation! **Валіза велика.** (The suitcase is big.)
 *   ... **паспорт** [ˈpɑspɔrt] (passport) — *masculine, no change*.
 *   ... **квиток** [kʋɪˈtɔk] (ticket) — *masculine, no change*.
 *   ... **карту** [ˈkɑrtu] (map/card) — *feminine, change!*
-*   ... **щітку** [ˈʃtʲitku] (toothbrush) — *feminine, change!*
+*   ... **щітку** [ˈʃt͡ʃitku] (toothbrush) — *feminine, change!*
 *   ... **фотоапарат** [fɔtɔɑpɑˈrɑt] (camera) — *masculine, no change*.
 
 > [!culture]
@@ -370,10 +370,10 @@ You are going on vacation! **Валіза велика.** (The suitcase is big.)
 In Ukraine, the **базар** [bɑˈzɑr] (market) is a vital institution. It is not just a place to buy food; it is a place to talk, to smell, and to taste. Even with modern supermarkets everywhere, many people prefer the bazaar for fresh meat, dairy, and vegetables.
 
 At the bazaar, you don't just take things; you ask to see them.
-*   **Покажіть, будь ласка, цю диню.** (Please show me this melon.)
-*   **Дайте, будь ласка, грушу.** (Give me the pear, please.)
-*   **Зважте, будь ласка, капусту.** (Please weigh the cabbage.)
-*   **Я хочу спробувати сметану.** (I want to taste the sour cream.)
+*   **Покажіть, будь ласка, цю диню** [ˈdɪnʲu]. (Please show me this melon.)
+*   **Дайте, будь ласка, грушу** [ˈɦruʃu]. (Give me the pear, please.)
+*   **Зважте, будь ласка, капусту** [kɑˈpustu]. (Please weigh the cabbage.)
+*   **Я хочу спробувати сметану** [smɛˈtɑnu]. (I want to taste the sour cream.)
 
 The words *диня*, *груша*, *капуста*, and *сметана* are all feminine, so they change to *диню*, *грушу*, *капусту*, and *сметану*.
 
@@ -425,7 +425,7 @@ Congratulations! You have just unlocked the ability to talk about **actions**. Y
 1.  Is "стіл" (table) masculine or feminine? Does it change in the Accusative case?
 2.  Change the word "книга" to the correct form: "Я читаю _______."
 3.  Change the word "вікно" to the correct form: "Я бачу _______."
-4.  Why is "Я бачу мама" incorrect? (Hint: Think about the ending for feminine nouns).
+4.  Why is "Я бачу лампа" incorrect? (Hint: Think about the ending for feminine nouns).
 5.  Translate: "I want water." (Use: вода).
 6.  Translate: "I see a park." (Use: парк).
 

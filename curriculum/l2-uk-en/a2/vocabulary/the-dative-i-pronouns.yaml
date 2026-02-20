@@ -1,0 +1,150 @@
+- ipa: '[meˈnʲi]'
+  lemma: мені
+  notes: Dative form of 'я'
+  pos: pronoun
+  translation: to me
+- ipa: '[toˈbʲi]'
+  lemma: тобі
+  notes: Dative form of 'ти'
+  pos: pronoun
+  translation: to you (singular)
+- ipa: '[joˈmu]'
+  lemma: йому
+  notes: Dative form of 'він' / 'воно'
+  pos: pronoun
+  translation: to him / to it
+- ipa: '[jij]'
+  lemma: їй
+  notes: Dative form of 'вона'
+  pos: pronoun
+  translation: to her
+- ipa: '[nɑm]'
+  lemma: нам
+  notes: Dative form of 'ми'
+  pos: pronoun
+  translation: to us
+- ipa: '[vɑm]'
+  lemma: вам
+  notes: Dative form of 'ви'
+  pos: pronoun
+  translation: to you (plural/formal)
+- ipa: '[jim]'
+  lemma: їм
+  notes: Dative form of 'вони'
+  pos: pronoun
+  translation: to them
+- ipa: '[poˈdɔbɑtʲisʲɑ]'
+  lemma: подобатися
+  notes: governs Dative case (Subject pleases Recipient)
+  pos: verb
+  translation: to like / to please
+- ipa: '[dopomɑˈɦɑtɪ]'
+  lemma: допомагати
+  notes: governs Dative case
+  pos: verb
+  translation: to help
+- ipa: '[dzvoˈnɪtɪ]'
+  lemma: дзвонити
+  notes: governs Dative case
+  pos: verb
+  translation: to call (phone)
+- ipa: '[zdɑˈvɑtʲisʲɑ]'
+  lemma: здаватися
+  notes: governs Dative case (impersonal)
+  pos: verb
+  translation: to seem
+- ipa: '[poˈtʲrʲibno]'
+  lemma: потрібно
+  notes: impersonal usage with Dative
+  pos: adverb
+  translation: necessary / need
+- ipa: '[ˈtrɛbɑ]'
+  lemma: треба
+  notes: impersonal usage with Dative
+  pos: adverb
+  translation: need / necessary
+- ipa: '[neobˈxʲidno]'
+  lemma: необхідно
+  notes: stronger than 'треба'
+  pos: adverb
+  translation: necessary / essential
+- ipa: '[ˈtʲsʲikɑvo]'
+  lemma: цікаво
+  notes: impersonal state
+  pos: adverb
+  translation: interesting / interested
+- ipa: '[ˈnudno]'
+  lemma: нудно
+  notes: impersonal state
+  pos: adverb
+  translation: boring / bored
+- ipa: '[ˈvɛselo]'
+  lemma: весело
+  notes: impersonal state
+  pos: adverb
+  translation: fun / merry
+- ipa: '[ˈsumno]'
+  lemma: сумно
+  notes: impersonal state
+  pos: adverb
+  translation: sad
+- ipa: '[ˈvɑʒko]'
+  lemma: важко
+  notes: impersonal state
+  pos: adverb
+  translation: difficult / hard
+- ipa: '[ˈlɛɦko]'
+  lemma: легко
+  notes: impersonal state
+  pos: adverb
+  translation: easy
+- ipa: '[prɪˈjɛmno]'
+  lemma: приємно
+  notes: impersonal state
+  pos: adverb
+  translation: pleasant / nice
+- ipa: '[ˈbɔlʲɑtʃe]'
+  lemma: боляче
+  notes: impersonal state
+  pos: adverb
+  translation: painful / hurts
+- ipa: '[ˈxɔlodno]'
+  lemma: холодно
+  notes: impersonal state
+  pos: adverb
+  translation: cold
+- ipa: '[ˈʒɑrko]'
+  lemma: жарко
+  notes: impersonal state
+  pos: adverb
+  translation: hot
+- ipa: '[ˈɦɑrno]'
+  lemma: гарно
+  notes: impersonal state
+  pos: adverb
+  translation: nice / good / well
+- ipa: '[nɑzɪu̯ˈnɪj]'
+  lemma: називний
+  notes: grammatical term
+  pos: adjective
+  translation: Nominative (case)
+- ipa: '[zɑjˈmɛnːɪk]'
+  lemma: займенник
+  notes: grammatical term
+  pos: noun
+  translation: pronoun
+- ipa: '[prɪkˈmɛtnɪk]'
+  lemma: прикметник
+  notes: grammatical term
+  pos: noun
+  translation: adjective
+- ipa: '[dɑˈvɑlʲnɪj]'
+  lemma: давальний
+  notes: grammatical term
+  pos: adjective
+  translation: Dative (case)
+- ipa: '[iˈmɛnːɪk]'
+  lemma: іменник
+  notes: grammatical term
+  pos: noun
+  translation: noun

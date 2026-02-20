@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "danylo-apostol",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:08:19Z",
+      "task_id": "v3-danylo-apostol-pA",
+      "mode": "meta-only"
+    }
+  }
+}

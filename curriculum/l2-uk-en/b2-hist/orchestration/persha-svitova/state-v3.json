@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "persha-svitova",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:39:13Z",
+      "task_id": "v3-persha-svitova-pA",
+      "mode": "meta-only"
+    }
+  }
+}

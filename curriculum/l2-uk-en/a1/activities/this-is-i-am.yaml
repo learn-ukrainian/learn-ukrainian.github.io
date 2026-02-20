@@ -36,8 +36,6 @@
   - items:
     - місто
     - вікно
-    - сонце
-    - тіло
     name: Воно (It)
   instruction: Sort the words into the correct gender category based on the pronoun
     you would use to replace them.
@@ -104,7 +102,8 @@
     - correct: false
       text: The negative particle 'не'.
     question: What is the 'Zero Copula'?
-  - explanation: '''Хто'' (Who) is for people. ''Що'' (What) is for things.'
+  - explanation: '''Хто'' (Who) is for people. ''Що'' (What) is for things. ''Хто це?''
+      is the standard question form.'
     options:
     - correct: true
       text: Хто це?
@@ -113,7 +112,7 @@
     - correct: false
       text: Де це?
     - correct: false
-      text: Це хто?
+      text: Він хто?
     question: How do you ask 'Who is this?' for a person?
   - explanation: '''Так'' is the Ukrainian word for ''Yes''.'
     options:
@@ -172,7 +171,7 @@
     - Вони
     - Ви
     - Я
-    sentence: '{{You and I}} are friends.'
+    sentence: '{{You and I}} are here.'
   - answer: Воно
     explanation: Window (вікно) is neuter, so we use 'Воно'.
     options:
@@ -242,21 +241,21 @@
 - instruction: Unscramble the letters to find the correct word.
   items:
   - answer: студент
-    scrambled: с т у д е н т
+    scrambled: н т с у е д т
   - answer: вчитель
-    scrambled: в ч и т е л ь
+    scrambled: т ь и л е в ч
   - answer: лікар
-    scrambled: л і к а р
+    scrambled: р а к і л
   - answer: місто
-    scrambled: м і с т о
+    scrambled: о т с і м
   - answer: Україна
-    scrambled: У к р а ї н а
-  - answer: дизайнер
-    scrambled: д и з а й н е р
-  - answer: сонце
-    scrambled: с о н ц е
+    scrambled: а к н р а ї У
+  - answer: тато
+    scrambled: о т а т
+  - answer: лампа
+    scrambled: п а л а м
   - answer: вікно
-    scrambled: в і к н о
+    scrambled: н о к і в
   title: Vocabulary Scramble
   type: anagram
 - instruction: Choose the correct word to complete the conversation.
@@ -371,17 +370,17 @@
     - correct: false
       text: Тут вона.
     question: Translate 'She is here'.
-  - explanation: We = Ми, Friends = друзі.
+  - explanation: We = Ми, Students = студенти.
     options:
     - correct: true
-      text: Ми — друзі.
+      text: Ми — студенти.
     - correct: false
-      text: Ми є друзі.
+      text: Ми є студенти.
     - correct: false
-      text: Ви — друзі.
+      text: Ви — студенти.
     - correct: false
-      text: Вони — друзі.
-    question: Translate 'We are friends'.
+      text: Вони — студенти.
+    question: Translate 'We are students'.
   - explanation: This is = Це, Mom = мама.
     options:
     - correct: true
@@ -393,12 +392,13 @@
     - correct: false
       text: Що мама.
     question: Translate 'This is mom'.
-  - explanation: To a group, 'you' is 'Ви'.
+  - explanation: To a group, 'you' is 'Ви'. The standard question word order is 'Де
+      ви?'
     options:
     - correct: true
-      text: Ви де?
+      text: Де ви?
     - correct: false
-      text: Ти де?
+      text: Де ти?
     - correct: false
       text: Де він?
     - correct: false

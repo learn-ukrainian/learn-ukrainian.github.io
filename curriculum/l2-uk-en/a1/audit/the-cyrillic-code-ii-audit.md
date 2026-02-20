@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-cyrillic-code-ii.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 21:14:40
+**Generated:** 2026-02-19 23:01:25
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,7 +19,7 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Letter to Sound Match | 10 | 8 | ✅ |
+| 1 | match-up | Letter to Sound Match | 12 | 8 | ✅ |
 | 2 | group-sort | Consonants vs. Vowels | 13 | 12 | ✅ |
 | 3 | quiz | Identity Letters Challenge | 8 | 8 | ✅ |
 | 4 | fill-in | Г or Ґ? | 8 | 8 | ✅ |
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2545/2000 (raw: 2790)
+- **Words:** ✅ 2610/2000 (raw: 2855)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.7% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 6.6% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,7 +60,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Cyrillic Code II** | ✅ | 68 | Included in Core |
 | **Розминка: Повернення до Абетки** | ✅ | 231 | Included in Core |
-| **Презентація: Унікальні літери та звуки** | ✅ | 963 | Included in Core |
+| **Презентація: Унікальні літери та звуки** | ✅ | 1028 | Included in Core |
 | **Практика: Читаємо та розрізняємо** | ✅ | 480 | Included in Core |
 | **Продукція: Активне читання** | ✅ | 297 | Included in Core |
 | **Культурний контекст: Українська ідентичність** | ✅ | 297 | Included in Core |

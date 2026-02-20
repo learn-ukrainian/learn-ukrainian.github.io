@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "reflexive-verbs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:50:24Z",
+      "task_id": "v3-reflexive-verbs-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T16:50:24Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T16:50:25Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T16:50:27Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T16:57:42Z",
+      "attempts": 1
+    }
+  }
+}

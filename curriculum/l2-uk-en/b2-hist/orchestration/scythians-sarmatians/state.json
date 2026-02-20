@@ -4,11 +4,6 @@
   "module_num": 2,
   "mode": "e2e",
   "phases": {
-    "0": {
-      "status": "complete",
-      "timestamp": "2026-02-18T12:06:58Z",
-      "note": "adopted-existing-research"
-    },
     "1": {
       "status": "complete",
       "timestamp": "2026-02-18T12:07:51Z",
@@ -22,8 +17,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:07:52Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:34:47Z",
+      "note": "v3-audit"
     },
     "3a": {
       "status": "complete",
@@ -37,30 +32,38 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:09:13Z",
-      "task_id": "gr-scythians-sarmatians",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:39:00Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:12:19Z",
-      "task_id": "yw-scythians-sarmatians-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:39:00Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:21:36Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T10:34:47Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:21:37Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T10:39:00Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:46:44Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:21:38Z"
+      "timestamp": "2026-02-19T10:51:10Z"
+    },
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-19T11:14:07Z",
+      "task_id": "yw-scythians-sarmatians-p0"
     }
   },
-  "last_updated": "2026-02-18T12:21:38Z"
+  "last_updated": "2026-02-19T11:14:07Z"
 }

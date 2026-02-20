@@ -62,10 +62,15 @@
       "timestamp": "2026-02-18T12:37:23Z",
       "attempts": 1
     },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-18T20:42:17Z",
+      "verdict": "APPROVE"
+    },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:37:24Z"
+      "timestamp": "2026-02-18T20:42:18Z"
     }
   },
-  "last_updated": "2026-02-18T12:37:24Z"
+  "last_updated": "2026-02-18T20:42:18Z"
 }

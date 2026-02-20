@@ -1,36 +1,38 @@
 # Дослідження: At the Café
 
 ## State Standard Reference
-§4.3.2: "складні (складносурядні) речення зі сполучниками і (й), але: Ми сіли в кафе за столик, і офіціант приніс меню."
-Alignment: This module implements communicative intentions related to purchasing and services in a catering context (Section 3: Catalogue B - "ресторан", "купівля"). It focuses on simple and basic compound sentences as outlined in §4.3.1 and §4.3.2, specifically ordering and interacting with staff.
+§4.2.3.2: "Знахідний відмінок... Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи... дати (дай, дайте)".
+Alignment: This module directly addresses the A1 requirement for accusative case (direct object) and polite requests (imperative "дайте", "принесіть"). It also covers the thematic requirement "Ресторан, кафе: страви, напої" (§3.9).
+*Note: The plan mentions Genitive integration. Strict A1 Standard does not require productive Genitive. Genitive forms (e.g., "склянка води", "без цукру") will be treated as lexical items or fixed phrases per A1 constraints.*
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| кава | High (Top 500) | міцна кава, філіжанка кави, кава з молоком |
-| чай | High (Top 500) | чорний чай, зелений чай, чай з лимоном |
-| меню | Medium (Domain) | принести меню, подивитися меню |
-| рахунок | Medium (Domain) | просити рахунок, оплатити рахунок |
-| офіціант | Medium (Domain) | покликати офіціанта, ввічливий офіціант |
-| будь ласка | High (Functional) | Мені, будь ласка..., скажіть, будь ласка |
-| замовляти | Medium (Verb) | замовляти каву, я замовлю |
-| чайові | Low (Domain) | залишати чайові, добрі чайові |
+| кава | High (Google/Youtube) | філіжанка кави, кава з молоком, міцна кава |
+| чай | High | зелений чай, чорний чай, чай з лимоном |
+| меню | High | дайте меню, барне меню |
+| рахунок | Medium | попросити рахунок, оплатити рахунок |
+| замовляти | High | я хочу замовити, що ви замовите? |
+| будь ласка | Very High | скажіть будь ласка, дайте будь ласка |
+| вода | High | вода з газом, вода без газу, склянка води |
+| тістечко | Medium | смачне тістечко, шоколадне тістечко |
 
 ## Cultural Hooks
-1. **Lviv Coffee Tradition**: Lviv is considered the coffee capital of Ukraine. The tradition dates back to the Austro-Hungarian era (early 19th century). A local legend credits Yuriy Kulchytsky, a Ukrainian, with popularizing coffee in Europe after the Siege of Vienna in 1683.
-2. **Kava na Pisku**: In many traditional Lviv-style cafes (like "Na Bambetli"), coffee is brewed in hot sand (джезва на піску), which provides a unique, thick texture and intense flavor.
+1. **Lviv Coffee Culture**: Lviv is the coffee capital of Ukraine. The phrase "Піти на каву" (To go for coffee) is a universal social activity, not just about the drink.
+2. **Yuriy Kulchytsky**: A Ukrainian hero from the Battle of Vienna (1683) who is credited with opening one of the first coffee houses in Vienna and inventing coffee with milk. There is a statue of him in Lviv.
 
 ## Common Learner Errors
-1. **Using "ти" with staff**: Addressing a waiter as "ти" instead of the formal "Ви". In Ukrainian service culture, "Ви" is the standard of respect.
-2. **"Я хочу" vs "Мені, будь ласка"**: Beginners often translate "I want" literally as "Я хочу", which can sound demanding. "Мені, будь ласка" (For me, please) or "Я візьму" (I will take) are more natural and polite.
-3. **Confusion with "Рахунок" vs "Чек"**: Learners often confuse "рахунок" (the bill/check you ask for) with "чек" (the receipt you get after paying).
+1. **Case Failure**: Saying "Я буду *кава*" (Nominative) instead of "Я буду *каву*" (Accusative). -> Fix: Drill Accusative endings (-у/-ю).
+2. **Politeness Level**: Using "Я хочу" (I want) which can sound demanding. -> Fix: Teach "Я буду..." (I will have...) or "Мені, будь ласка..." (For me, please...).
+3. **Register Confusion**: Using "ти" with waiters. -> Fix: Enforce "Ви" and polite imperatives (принесіть, дайте).
+4. **False Friends**: Confusing "рахунок" (bill) with "чек" (receipt). Learners often ask for "чек" when they mean the bill.
 
 ## Cross-References
-- Builds on: a1-18 (Food and Shopping) — vocabulary for basic items and "shopping" verbs.
-- Prepares for: a1-20 (Checkpoint) — situational assessment; a1-36 (At the Restaurant) — expansion into more formal dining and complex courses.
+- Builds on: a1-18 (Food and Shopping) - vocabulary foundation.
+- Prepares for: a1-36 (At the Restaurant) - expands to full dining; a1-20 (Checkpoint).
 
 ## Notes for Content Writing
-- **Grammar focus**: Emphasize the **Accusative case** for direct objects (каву, воду) and the **Locative case** for location (в кафе, на столі).
-- **Phrase Patterns**: Structure the "Presentation" section around the chronological flow: Greeting -> Ordering -> Clarifying -> Paying.
-- **Politeness**: Integrate "будь ласка" and "дякую" into every example dialogue to model culturally appropriate behavior.
-- **IPA**: Ensure stress marks are present for all new vocabulary (e.g., ка́ва, офіція́нт, раху́нок).
+- **Genitive Constraint**: Treat "з молоком" (Instrumental) and "без цукру" (Genitive) as fixed vocabulary chunks (lexical approach) rather than explaining the case rules, as per A1 limits.
+- **Visuals**: Use a clear "Menu" visual aid for the reading activity.
+- **Persona**: The "Chatty Barista" should frame the lesson as welcoming guests into a cozy Lviv coffee shop atmosphere.

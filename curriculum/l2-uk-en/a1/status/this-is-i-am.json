@@ -2,15 +2,15 @@
   "module": "this-is-i-am",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-18T20:30:48.340080Z",
+  "last_audit": "2026-02-19T23:01:28.548884Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-18T20:28:06.322682Z",
-    "meta": "2026-02-18T14:47:52.758037Z",
-    "activities": "2026-02-18T20:20:34.165266Z",
-    "vocabulary": "2026-02-18T16:02:08.112896Z",
+    "md": "2026-02-19T20:09:30.254723Z",
+    "meta": "2026-02-19T19:49:39.980246Z",
+    "activities": "2026-02-19T20:08:26.088102Z",
+    "vocabulary": "2026-02-19T20:09:02.227694Z",
     "plan": "2026-02-18T19:03:32.268631Z",
-    "research": "2026-02-15T12:01:23.628406Z"
+    "research": "2026-02-19T19:49:39.970644Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2509/2000 (raw: 2762)"
+      "message": "2376/2000 (raw: 2639)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "21/1"
     },
     "naturalness": {
       "status": "info",

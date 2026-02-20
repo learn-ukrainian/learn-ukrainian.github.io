@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "habsburzka-halichyna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:12:16Z",
+      "task_id": "v3-habsburzka-halichyna-pA",
+      "mode": "meta-only"
+    }
+  }
+}

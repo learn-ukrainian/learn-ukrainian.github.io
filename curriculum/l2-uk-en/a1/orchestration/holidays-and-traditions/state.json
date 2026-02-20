@@ -1,0 +1,25 @@
+{
+  "slug": "holidays-and-traditions",
+  "track": "a1",
+  "module_num": 33,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-20T00:38:01Z",
+      "words": 2027,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-20T00:39:18Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T00:39:18Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-20T00:39:18Z"
+}

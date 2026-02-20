@@ -2,15 +2,15 @@
   "module": "the-accusative-ii-people",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-18T20:38:01.162855Z",
+  "last_audit": "2026-02-19T23:01:39.118434Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-18T20:34:30.044603Z",
-    "meta": "2026-02-18T19:49:08.471778Z",
-    "activities": "2026-02-18T20:37:24.917957Z",
-    "vocabulary": "2026-02-18T20:06:45.765350Z",
+    "md": "2026-02-19T14:05:40.114588Z",
+    "meta": "2026-02-19T13:56:28.449993Z",
+    "activities": "2026-02-19T14:03:21.774167Z",
+    "vocabulary": "2026-02-19T14:03:21.774689Z",
     "plan": "2026-02-18T19:03:32.195804Z",
-    "research": "2026-02-16T00:04:08.190204Z"
+    "research": "2026-02-19T13:56:28.445127Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2251/2000 (raw: 2903)"
+      "message": "2344/2000 (raw: 2989)"
     },
     "activities": {
       "status": "pass",

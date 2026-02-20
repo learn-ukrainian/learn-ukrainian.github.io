@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "pylyp-orlyk",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:11:15Z",
+      "task_id": "v3-pylyp-orlyk-pA",
+      "mode": "meta-only"
+    }
+  }
+}

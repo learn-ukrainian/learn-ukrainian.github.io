@@ -1,22 +1,10 @@
-TRACK: a1
-LEVEL: A1
-SLUG: the-locative-where-things-are
-TOPIC_TITLE: 'The Locative: Where Things Are'
-MODULE_NUM: '13'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-locative-where-things-are.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-locative-where-things-are.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-locative-where-things-are.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-locative-where-things-are.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-locative-where-things-are.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-locative-where-things-are-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-locative-where-things-are-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
-SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
-SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
-PERSONA_FLAVOR: The Helpful Neighbor
-PERSONA_VOICE: Patient Supportive Tutor
-PERSONA_ROLE: Kyiv City Guide
+ACTIVITY_COUNT_TARGET: '10'
+ACTIVITY_MIN: '8'
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-locative-where-things-are.md
+FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
+  essay-response, critical-analysis, comparative-study, authorial-intent
 IMMERSION_RULE: 'TARGET: 25-40% Ukrainian, 60-75% English. Grammar RULES explained
   in English. But cultural notes, practical sections, and observations USE simple
   Ukrainian (2-3 sentence paragraphs, max 10 words per sentence) with English gloss
@@ -24,6 +12,8 @@ IMMERSION_RULE: 'TARGET: 25-40% Ukrainian, 60-75% English. Grammar RULES explain
   just 1-2). Practice/drill instructions in Ukrainian. Some callout/tip text in Ukrainian.
   The student reads simple Ukrainian — use it for concrete, practical content while
   keeping abstract grammar explanations in English.'
+ITEMS_MIN: '12'
+LEVEL: A1
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -43,6 +33,20 @@ LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
   Vocative'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-locative-where-things-are.yaml
+MODULE_NUM: '13'
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_ROLE: Kyiv City Guide
+PERSONA_VOICE: Patient Supportive Tutor
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-locative-where-things-are.yaml
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
+REQUIRED_TYPES: ''
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-locative-where-things-are-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-locative-where-things-are-review.md
+SCHEMA_PATH: schemas/activities-a1.schema.json
+SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
+SLUG: the-locative-where-things-are
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -463,12 +467,9 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-ACTIVITY_COUNT_TARGET: '10'
-ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+TOPIC_TITLE: 'The Locative: Where Things Are'
+TRACK: a1
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-locative-where-things-are/track-context.md
 VOCAB_COUNT_TARGET: '20'
-FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
-  essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
-REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-locative-where-things-are.yaml
+WORD_TARGET: '2000'

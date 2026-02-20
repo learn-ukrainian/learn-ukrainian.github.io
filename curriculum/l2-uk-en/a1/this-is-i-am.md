@@ -4,11 +4,13 @@
 >
 > This is a fundamental skill. In this module, you will learn how to say who you are and identify the world around you. You will master the unique "Zero Copula" system that makes Ukrainian sentences elegant and direct, and you'll learn the crucial cultural code of polite address so you can speak with confidence and respect from day one.
 
-## Вступ: Де слово «бути»?
+## Вступ: Де дієслово «бути»?
 
 ### The Mystery of the Missing Verb
 
-In Ukrainian, the verb "to be" (am, is, are) almost completely disappears in the present tense. We call this the **Zero Copula**. It means the link between the subject and the description is implied, not spoken.
+In English, you can barely speak a sentence without the verb "to be". You say "I am happy," "This is a table," "They are here." It is the glue that holds the language together.
+
+In Ukrainian, however, this verb (am, is, are) almost completely disappears in the present tense. We call this phenomenon the **Zero Copula**. It means the link between the subject (who we are talking about) and the predicate (what we say about them) is implied, not spoken. The connection is so strong it doesn't need a word to verify it.
 
 Look at this comparison:
 
@@ -18,13 +20,19 @@ Look at this comparison:
 | Ukrainian | **Я — студент.** | Subject + [gap] + Noun |
 
 > [!observe]
-> Did you notice the dash (—) in the Ukrainian sentence? In written Ukrainian, we often use a dash to replace the missing verb "to be". In speech, we simply make a tiny pause.
+> Did you notice the dash (—) in the Ukrainian sentence? In written Ukrainian, we often use a dash to replace the missing verb "to be". In speech, we simply make a tiny pause, almost like a comma. This pause separates the subject from the description, giving the sentence a rhythm.
+
+### The Philosophy of Silence
+
+Why does Ukrainian do this? It creates a language that is direct and punchy. You strip away the unnecessary "glue words" and focus purely on the meaning. "Я студент" hits harder than "I am a student." It is an identity statement, not just a grammatical construction.
+
+Don't be afraid of this silence. In English, a sentence without a verb feels broken ("Me Tarzan, you Jane"). In Ukrainian, it feels elegant and complete.
 
 ### The "Phantom Is" Trap
 
-One of the most common mistakes beginners make is trying to force a verb where it doesn't belong. You might find the word **є** [je] in a dictionary listed as "is". It exists, but it is rarely used in simple identification sentences like "I am Ivan" or "This is a book."
+One of the most common mistakes English speakers make is trying to force a verb where it doesn't belong. You might look in a dictionary and find the word **є** [je] listed as "is". It exists, and it is a real Ukrainian word, but it is **rarely used** in simple identification sentences like "I am Ivan" or "This is a book."
 
-If you say "Я є студент", you sound unnatural and bookish — like reading from a 300-year-old text. є does appear in Ukrainian, but for different uses you will meet later.
+If you say "Я є студент", you sound unnatural, archaic, or overly emphatic — like reading from a 300-year-old religious text or making a philosophical declaration of existence ("I EXIST as a student!"). **є** does appear in Ukrainian, but for specific definitions or emphatic uses you will meet much later.
 
 > [!warning]
 > **Don't fall for the "Phantom Is"!**
@@ -33,7 +41,7 @@ If you say "Я є студент", you sound unnatural and bookish — like read
 >
 > ✅ **Right:** Я — Том. (I [am] Tom.)
 >
-> Trust the silence. The connection is already there.
+> Trust the silence. The connection is already there. You don't need to prove it with a verb.
 
 ---
 
@@ -50,12 +58,12 @@ First, let's look at the pronouns we use for single people or things.
 **1. The First Person:**
 *   **Я** [jɑ] — I.
     *   *Usage:* Use this to talk about yourself. Always capitalized at the start of a sentence.
-    *   *Example:* **Я — тут.** (I [am] here.)
+    *   *Example:* **Я тут.** (I [am] here.)
 
 **2. The Second Person:**
 *   **Ти** [tɪ] — You (informal/singular).
     *   *Usage:* Use this with friends, family, and children. It implies closeness.
-    *   *Example:* **Ти — там.** (You [are] there.)
+    *   *Example:* **Ти там.** (You [are] there.)
 
 **3. The Third Person:**
 *   **Він** [ʋin] — He.
@@ -66,7 +74,7 @@ First, let's look at the pronouns we use for single people or things.
     *   *Example:* **Вона — мама.** (She [is] mom.)
 *   **Воно** [ʋɔˈnɔ] — It.
     *   *Usage:* Used for neuter objects and abstract concepts.
-    *   *Example:* **Воно — тут.** (It [is] here.)
+    *   *Example:* **Воно тут.** (It [is] here.)
 
 #### The Plurals (Many People)
 
@@ -85,7 +93,7 @@ Now, let's look at the groups.
 **3. The Third Person Plural:**
 *   **Вони** [ʋɔˈnɪ] — They.
     *   *Usage:* Any group of people or objects.
-    *   *Example:* **Вони — тут.** (They [are] here.)
+    *   *Example:* **Вони тут.** (They [are] here.)
 
 > [!tip]
 > **Pronunciation Hint:**
@@ -116,7 +124,7 @@ Here are some examples of how to identify people and things.
 
 **1. Identifying People:**
 *   **Я — студент.** (I [am] a student.)
-*   **Він — вчитель.** [ˈʋt͡ʃɪtɛlʲ] (He [is] a teacher.)
+*   **Він — вчитель.** [ˈut͡ʃɪtɛlʲ] (He [is] a teacher.)
 *   **Вона — українка.** [ukrɑˈjinkɑ] (She [is] a Ukrainian.)
 
 **2. Identifying Locations (Simple):**
@@ -237,7 +245,7 @@ Imagine you are talking to different people. Which pronoun do you choose: **Ти
 
 ---
 
-## Ваша черга: Розкажіть про себе
+## Ваш вихід: Розкажіть про себе
 
 ### Building Your Intro
 
@@ -298,30 +306,37 @@ Imagine you are checking into a hotel. The receptionist asks you questions.
 
 ### The "Vi" Safety Net
 
-In English, "you" is universal. In Ukrainian, the choice between **ти** and **Ви** defines the social relationship.
+In English, "you" is universal. Whether you talk to the Queen or your dog, you say "you". In Ukrainian, the choice between **ти** (ty) and **Ви** (Vy) is not just grammar — it defines your entire social relationship with the other person.
 
-We call **Ви** the "Safety Net". When you meet someone new, *regardless of age or status*, start with **Ви**. It shows you are educated and polite. It is impossible to offend someone by being too polite.
+We call **Ви** the "Safety Net". When you meet someone new, *regardless of age or status*, start with **Ви**. It shows you are educated, polite, and respectful. It is impossible to offend someone by being too polite. But if you start with **ти** with a stranger, it can sound aggressive, condescending, or simply rude — like you are treating them as a child or a servant.
 
-If you start with **ти** with a stranger, it can sound like you are condescending or don't know the language well.
+### The Capital Letter Rule
+
+You might have noticed that sometimes we write **Ви** with a capital letter. This is a special rule for written Ukrainian. When you are writing a letter, an email, or a message to **one specific person** with whom you are on formal terms, you capitalize **Ви** to show extra respect.
+
+*   **Ви** (capitalized) = Respectful address to one person.
+*   **ви** (lowercase) = Plural "you" (addressing a group).
 
 ### The "Bruderschaft" Moment
 
-Switching from **Ви** to **ти** marks a change in the relationship from "public/distant" to "private/close".
+Switching from **Ви** to **ти** is a significant social milestone. It marks a change in the relationship from "public/distant" to "private/close".
 
-Usually, the older person or the person of higher rank initiates this switch. They might say:
+Usually, the older person or the person of higher rank (the boss, the professor) initiates this switch. They might say:
 *   **«Може, перейдемо на "ти"?»** (Maybe we should switch to "ty"?)
 
-Once you switch to **ти**, you usually stay there forever. Going back to **Ви** would signal a serious fight or a "breakup" of the friendship.
+There is even a traditional ritual called "drinking onto Bruderschaft" (borrowed from German tradition), where two people intertwine arms, drink a shot, and kiss on the cheek to seal the deal. From that moment on, they are friends.
+
+Once you switch to **ти**, you usually stay there forever. Going back to **Ви** would act as a massive insult — signaling a "breakup" of the friendship or a desire to re-establish cold distance.
 
 > [!myth-buster]
 > **Myth:** "Young people don't care about formal address."
-> **Reality:** While Ukrainian youth are more relaxed, using **Ви** with service staff (baristas, waiters, cashiers) remains the standard of politeness. Don't assume youth equals rudeness!
+> **Reality:** While Ukrainian youth are more relaxed, using **Ви** with service staff (baristas, waiters, cashiers) remains the absolute standard of politeness. Don't assume youth equals rudeness! Treat everyone with dignity.
 
 ---
 
 # Підсумок
 
-In this module, you have unlocked the power of identification. You learned that you don't need the verb "to be" to exist in Ukrainian — you just need to state who you are. You met the pronouns and learned how to navigate the social rules of "You" and "You".
+In this module, you learned how to identify people and things in Ukrainian. You don't need the verb "to be" — you just state who you are. You met the pronouns and learned how to navigate the social rules of "You" and "You".
 
 **Let's recap:**
 1.  **Zero Copula:** No "am/is/are" in simple present tense sentences. "I am Ivan" = "Я — Іван."
@@ -340,92 +355,3 @@ In this module, you have unlocked the power of identification. You learned that 
 6.  If someone asks "Хто це?", how do you answer pointing at yourself?
 
 Now you can point at the world and name it. You exist in Ukrainian!
-module: a1-04
-level: A1
-sequence: 4
-slug: this-is-i-am
-version: '2.0'
-title: This Is / I Am
-subtitle: Zero Copula and Personal Pronouns
-content_outline:
-- section: Warm-up
-  points:
-  - 'Ukrainian skips "am/is/are" in present tense (zero copula) — learner error: The
-    Phantom "Is" (using "є" unnecessarily)'
-  - 'Pattern: Я студент (I student = I am a student) — contrast English "to be" with
-    Ukrainian Zero Copula using visual gaps'
-  - Pro-drop language family inheritance from Proto-Slavic
-- section: Presentation
-  points:
-  - Personal pronouns (я, ти, він, вона, воно, ми, ви, вони) — aligns with State Standard
-    §4.2.1.4 (nominative case usage)
-  - 'Formal vs informal: Ви vs ти — when to use each — cultural hook: The "Vi" Safety
-    Net (addressing strangers)'
-  - 'Zero copula pattern: Subject + Predicate (no verb) — aligns with State Standard
-    §4.2.3.1 (simple identification sentences)'
-  - 'Examples: Я студент, Він українець, Це книга — learner error: The "It" Trap (referring
-    to all objects as "воно" instead of gendered pronouns)'
-  - Linking verb є exists but rarely used in speech
-- section: Practice
-  points:
-  - 'Transformation exercises with personal pronouns — drill focus: "Ivan is a student
-    -> He is a student" transformation pattern'
-  - 'Формальність — choosing Ви vs ти in scenarios — learner error: Register Mix-up
-    (using "ти" with elders/strangers)'
-- section: Production
-  points:
-  - Self-introduction without "to be" verb
-  - Describing people and objects using zero copula
-- section: Cultural Insight
-  points:
-  - Modern Ukraine — young people often use ти immediately
-  - 'When in doubt, start with Ви — always safer — cultural hook: The "Bruderschaft"
-    Moment (social transition from Ви to ти)'
-vocabulary_hints:
-  required:
-  - 'це (this is) — collocations: це (noun), хто це?, що це?'
-  - 'я (I) — collocations: я студент, я тут, я (name)'
-  - 'ти (you) — collocations: ти хто?, ти де?, ти студент?'
-  - 'він (he) — collocations: він там, він українець'
-  - 'вона (she) — collocations: вона тут, вона вчителька'
-  - хто (who)
-  - що (what)
-  - студент (student)
-  recommended:
-  - українець (Ukrainian m.)
-  - українка (Ukrainian f.)
-  - вчитель (teacher m.)
-  - вчителька (teacher f.)
-  - ми (we)
-  - вони (they)
-activity_hints:
-- type: fill-in
-  focus: Self-introduction practice
-  items: 6
-- type: fill-in
-  focus: Complete sentences with pronouns
-  items: 15
-- type: fill-in
-  focus: Meeting someone new
-  items: 4
-focus: grammar
-pedagogy: PPP
-prerequisites:
-- a1-03 (The Gender Code)
-connects_to:
-- a1-05 (My World - Objects)
-- a1-14 (Mine and Yours)
-objectives:
-- Learner can use personal pronouns (я, ти, він, вона, etc.)
-- Learner can form identity statements without 'to be' (zero copula)
-- Learner can use це to point out people and objects
-- Learner can distinguish masculine/feminine nationality forms
-grammar:
-- Personal pronouns
-- Zero copula construction
-- Demonstrative це
-register: розмовний
-phase: A1.1 [First Contact]
-persona:
-  voice: Patient Supportive Tutor
-  role: Passport Officer

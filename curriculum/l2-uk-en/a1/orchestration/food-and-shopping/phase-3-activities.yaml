@@ -1,0 +1,409 @@
+- type: group-sort
+  title: "Їжа чи Напій?"
+  instruction: "Розподіліть слова на дві категорії: те, що ми їмо, і те, що ми п'ємо."
+  groups:
+    - name: "Їжа"
+      items: ["борщ", "піца", "хліб", "яблуко", "банан", "м'ясо", "курка", "риба", "сир", "масло", "картопля", "морква"]
+    - name: "Напої"
+      items: ["вода", "сік", "чай", "кава", "молоко", "йогурт", "лимонад", "какао"]
+
+- type: match-up
+  title: "Словниковий запас"
+  instruction: "З'єднайте українське слово з перекладом."
+  pairs:
+    - left: "хліб"
+      right: "bread"
+    - left: "молоко"
+      right: "milk"
+    - left: "яблуко"
+      right: "apple"
+    - left: "м'ясо"
+      right: "meat"
+    - left: "кава"
+      right: "coffee"
+    - left: "вода"
+      right: "water"
+    - left: "цукор"
+      right: "sugar"
+    - left: "сир"
+      right: "cheese"
+    - left: "яйце"
+      right: "egg"
+    - left: "курка"
+      right: "chicken"
+    - left: "картопля"
+      right: "potato"
+    - left: "помідор"
+      right: "tomato"
+    - left: "цибуля"
+      right: "onion"
+    - left: "морква"
+      right: "carrot"
+    - left: "сік"
+      right: "juice"
+
+- type: anagram
+  title: "Розшифруйте слова"
+  instruction: "З букв складіть правильні слова (продукти та напої)."
+  items:
+    - scrambled: "л і б х"
+      answer: "хліб"
+    - scrambled: "о д а в"
+      answer: "вода"
+    - scrambled: "а в а к"
+      answer: "кава"
+    - scrambled: "і к с"
+      answer: "сік"
+    - scrambled: "р и с"
+      answer: "сир"
+    - scrambled: "с л о м а"
+      answer: "масло"
+    - scrambled: "у р к а к"
+      answer: "курка"
+    - scrambled: "б а р и"
+      answer: "риба"
+    - scrambled: "а н а н б"
+      answer: "банан"
+    - scrambled: "и м о н л"
+      answer: "лимон"
+    - scrambled: "о р щ б"
+      answer: "борщ"
+    - scrambled: "і ц а п"
+      answer: "піца"
+
+- type: quiz
+  title: "Дієслова: їсти, пити, купувати"
+  instruction: "Оберіть правильну форму дієслова для кожного речення."
+  items:
+    - question: "Я _____ смачний борщ."
+      explanation: "Для «Я» (I) дієслово «їсти» має форму «їм»."
+      options:
+        - text: "їм"
+          correct: true
+        - text: "їси"
+          correct: false
+        - text: "їсть"
+          correct: false
+        - text: "їмо"
+          correct: false
+    - question: "Ти _____ гарячу каву."
+      explanation: "Для «Ти» (You) дієслово «пити» має форму «п'єш»."
+      options:
+        - text: "п'єш"
+          correct: true
+        - text: "п'ю"
+          correct: false
+        - text: "п'є"
+          correct: false
+        - text: "пити"
+          correct: false
+    - question: "Ми _____ свіжі продукти."
+      explanation: "Для «Ми» (We) дієслово «купувати» має форму «купуємо»."
+      options:
+        - text: "купуємо"
+          correct: true
+        - text: "купую"
+          correct: false
+        - text: "купуєш"
+          correct: false
+        - text: "купують"
+          correct: false
+    - question: "Вона _____ зелений чай."
+      explanation: "Для «Вона» (She) дієслово «пити» має форму «п'є»."
+      options:
+        - text: "п'є"
+          correct: true
+        - text: "п'ю"
+          correct: false
+        - text: "п'ють"
+          correct: false
+        - text: "пила"
+          correct: false
+    - question: "Вони _____ піцу."
+      explanation: "Для «Вони» (They) дієслово «їсти» має форму «їдять»."
+      options:
+        - text: "їдять"
+          correct: true
+        - text: "їмо"
+          correct: false
+        - text: "їсте"
+          correct: false
+        - text: "їси"
+          correct: false
+    - question: "Ви _____ хліб?"
+      explanation: "Для «Ви» (You plural/formal) дієслово «їсти» має форму «їсте»."
+      options:
+        - text: "їсте"
+          correct: true
+        - text: "їмо"
+          correct: false
+        - text: "їм"
+          correct: false
+        - text: "їсть"
+          correct: false
+    - question: "Я _____ воду."
+      explanation: "Для «Я» (I) дієслово «пити» має форму «п'ю»."
+      options:
+        - text: "п'ю"
+          correct: true
+        - text: "п'єш"
+          correct: false
+        - text: "пити"
+          correct: false
+        - text: "пив"
+          correct: false
+    - question: "Він _____ картоплю."
+      explanation: "Для «Він» (He) дієслово «купувати» має форму «купує»."
+      options:
+        - text: "купує"
+          correct: true
+        - text: "купую"
+          correct: false
+        - text: "купуємо"
+          correct: false
+        - text: "купують"
+          correct: false
+
+- type: fill-in
+  title: "Я люблю... (Знахідний відмінок)"
+  instruction: "Поставте слово в правильну форму (Знахідний відмінок). Пам'ятайте: жіночий рід -а/-я змінюється на -у/-ю."
+  items:
+    - sentence: "Я люблю {{answer}}."
+      answer: "каву"
+      options: ["каву", "кава", "кави"]
+    - sentence: "Я купую {{answer}}."
+      answer: "воду"
+      options: ["воду", "вода", "води"]
+    - sentence: "Вона їсть {{answer}}."
+      answer: "картоплю"
+      options: ["картоплю", "картопля", "картоплі"]
+    - sentence: "Ми бачимо {{answer}}."
+      answer: "цибулю"
+      options: ["цибулю", "цибуля", "цибулі"]
+    - sentence: "Дайте, будь ласка, {{answer}}."
+      answer: "моркву"
+      options: ["моркву", "морква", "моркви"]
+    - sentence: "Він готує {{answer}}."
+      answer: "рибу"
+      options: ["рибу", "риба", "риби"]
+    - sentence: "Я люблю {{answer}}."
+      answer: "сметану"
+      options: ["сметану", "сметана", "сметани"]
+    - sentence: "Мама купує {{answer}}."
+      answer: "курку"
+      options: ["курку", "курка", "курки"]
+    - sentence: "Ми їмо {{answer}}."
+      answer: "піцу"
+      options: ["піцу", "піца", "піци"]
+    - sentence: "Я купую свіжу {{answer}}."
+      answer: "булку"
+      options: ["булку", "булка", "булки"]
+    - sentence: "Тато їсть {{answer}}."
+      answer: "хліб"
+      options: ["хліб", "хліба", "хлібу"]
+    - sentence: "Я люблю {{answer}}."
+      answer: "сир"
+      options: ["сир", "сиру", "сира"]
+
+- type: match-up
+  title: "Кількості та продукти"
+  instruction: "З'єднайте кількість з відповідним продуктом (Родовий відмінок)."
+  pairs:
+    - left: "пляшка"
+      right: "води"
+    - left: "пакет"
+      right: "молока"
+    - left: "кілограм"
+      right: "яблук"
+    - left: "чашка"
+      right: "кави"
+    - left: "склянка"
+      right: "соку"
+    - left: "шматок"
+      right: "хліба"
+    - left: "пачка"
+      right: "масла"
+    - left: "тарілка"
+      right: "супу"
+    - left: "кілограм"
+      right: "картоплі"
+    - left: "пакет"
+      right: "соку"
+    - left: "пляшка"
+      right: "олії"
+    - left: "чашка"
+      right: "чаю"
+
+- type: unjumble
+  title: "Складіть речення"
+  instruction: "Розставте слова у правильному порядку, щоб утворити речення."
+  items:
+    - words: ["Я", "купую", "свіжий", "хліб"]
+      answer: "Я купую свіжий хліб"
+    - words: ["Вона", "п'є", "чорну", "каву"]
+      answer: "Вона п'є чорну каву"
+    - words: ["Скільки", "коштує", "це", "молоко"]
+      answer: "Скільки коштує це молоко"
+    - words: ["Дайте", "будь", "ласка", "воду"]
+      answer: "Дайте будь ласка воду"
+    - words: ["Ми", "любимо", "український", "борщ"]
+      answer: "Ми любимо український борщ"
+    - words: ["Я", "їм", "смачне", "яблуко"]
+      answer: "Я їм смачне яблуко"
+    - words: ["Ти", "хочеш", "пити", "чай"]
+      answer: "Ти хочеш пити чай"
+    - words: ["Він", "купує", "один", "кілограм", "картоплі"]
+      answer: "Він купує один кілограм картоплі"
+    - words: ["Мама", "готує", "смачну", "вечерю"]
+      answer: "Мама готує смачну вечерю"
+    - words: ["У", "магазині", "є", "свіжа", "риба"]
+      answer: "У магазині є свіжа риба"
+    - words: ["Я", "маю", "список", "покупок"]
+      answer: "Я маю список покупок"
+    - words: ["Це", "дуже", "добра", "ціна"]
+      answer: "Це дуже добра ціна"
+
+- type: quiz
+  title: "У магазині"
+  instruction: "Оберіть правильну відповідь на запитання про покупки."
+  items:
+    - question: "Як ввічливо попросити щось у магазині?"
+      explanation: "Фраза «Дайте, будь ласка» є стандартною ввічливою формою прохання."
+      options:
+        - text: "Дайте, будь ласка..."
+          correct: true
+        - text: "Я хочу..."
+          correct: false
+        - text: "Дай мені..."
+          correct: false
+        - text: "Хочу це..."
+          correct: false
+    - question: "Як запитати про вартість товару?"
+      explanation: "«Скільки коштує?» — це найпоширеніший спосіб запитати ціну."
+      options:
+        - text: "Скільки коштує?"
+          correct: true
+        - text: "Скільки грошей?"
+          correct: false
+        - text: "Яка цифра?"
+          correct: false
+        - text: "Де ціна?"
+          correct: false
+    - question: "Що таке «хліб-сіль»?"
+      explanation: "Хліб і сіль — це традиційний символ української гостинності."
+      options:
+        - text: "Символ гостинності"
+          correct: true
+        - text: "Назва супу"
+          correct: false
+        - text: "Вид десерту"
+          correct: false
+        - text: "Ранковий сніданок"
+          correct: false
+    - question: "Що ми зазвичай купуємо в «пакетах»?"
+      explanation: "Молоко та сік часто продаються в пакетах (cartons)."
+      options:
+        - text: "Молоко"
+          correct: true
+        - text: "Хліб"
+          correct: false
+        - text: "Картоплю"
+          correct: false
+        - text: "М'ясо"
+          correct: false
+    - question: "Якого роду слово «кава»?"
+      explanation: "Слово «кава» закінчується на -а і є жіночого роду."
+      options:
+        - text: "Жіночого"
+          correct: true
+        - text: "Чоловічого"
+          correct: false
+        - text: "Середнього"
+          correct: false
+        - text: "Множина"
+          correct: false
+    - question: "Якого роду слово «хліб»?"
+      explanation: "Слово «хліб» є іменником чоловічого роду."
+      options:
+        - text: "Чоловічого"
+          correct: true
+        - text: "Жіночого"
+          correct: false
+        - text: "Середнього"
+          correct: false
+        - text: "Множина"
+          correct: false
+    - question: "Як сказати «I drink coffee» українською?"
+      explanation: "Правильна форма: Я п'ю (дієслово) каву (Знахідний відмінок)."
+      options:
+        - text: "Я п'ю каву"
+          correct: true
+        - text: "Я пити кава"
+          correct: false
+        - text: "Я п'єш кави"
+          correct: false
+        - text: "Я п'ю кава"
+          correct: false
+    - question: "Що таке «список покупок»?"
+      explanation: "Це перелік речей, які ви плануєте купити в магазині."
+      options:
+        - text: "Shopping list"
+          correct: true
+        - text: "Price list"
+          correct: false
+        - text: "Menu"
+          correct: false
+        - text: "Receipt"
+          correct: false
+
+- type: group-sort
+  title: "Рід іменників"
+  instruction: "Визначте рід кожного слова: Він (чоловічий), Вона (жіночий) або Воно (середній)."
+  groups:
+    - name: "Він (Чоловічий)"
+      items: ["хліб", "сік", "чай", "сир", "банан", "лимон", "помідор", "йогурт"]
+    - name: "Вона (Жіночий)"
+      items: ["вода", "кава", "курка", "риба", "картопля", "морква", "цибуля", "сметана"]
+    - name: "Воно (Середній)"
+      items: ["молоко", "яблуко", "масло", "м'ясо", "яйце"]
+
+- type: fill-in
+  title: "Родовий відмінок: Чого саме?"
+  instruction: "Доповніть фразу, поставивши слово в Родовий відмінок (кого/чого?)."
+  items:
+    - sentence: "Пляшка {{answer}}."
+      answer: "води"
+      options: ["води", "вода", "воду"]
+    - sentence: "Пакет {{answer}}."
+      answer: "молока"
+      options: ["молока", "молоко", "молоку"]
+    - sentence: "Чашка {{answer}}."
+      answer: "кави"
+      options: ["кави", "кава", "каву"]
+    - sentence: "Склянка {{answer}}."
+      answer: "соку"
+      options: ["соку", "сік", "сока"]
+    - sentence: "Шматок {{answer}}."
+      answer: "хліба"
+      options: ["хліба", "хліб", "хлібу"]
+    - sentence: "Пачка {{answer}}."
+      answer: "масла"
+      options: ["масла", "масло", "маслу"]
+    - sentence: "Кілограм {{answer}}."
+      answer: "яблук"
+      options: ["яблук", "яблука", "яблуко"]
+    - sentence: "Кілограм {{answer}}."
+      answer: "картоплі"
+      options: ["картоплі", "картопля", "картоплю"]
+    - sentence: "Кілограм {{answer}}."
+      answer: "моркви"
+      options: ["моркви", "морква", "моркву"]
+    - sentence: "Шматок {{answer}}."
+      answer: "сиру"
+      options: ["сиру", "сир", "сира"]
+    - sentence: "Чашка {{answer}}."
+      answer: "чаю"
+      options: ["чаю", "чай", "чая"]
+    - sentence: "Пляшка {{answer}}."
+      answer: "олії"
+      options: ["олії", "олія", "олію"]

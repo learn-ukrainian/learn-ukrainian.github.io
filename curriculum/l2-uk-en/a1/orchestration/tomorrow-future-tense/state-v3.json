@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "tomorrow-future-tense",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T19:40:15Z",
+      "task_id": "v3-tomorrow-future-tense-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T20:00:33Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T20:02:00Z",
+      "task_id": "v3-tomorrow-future-tense-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T20:15:57Z",
+      "attempts": 3
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-19T20:18:43Z",
+      "attempts": 1
+    }
+  }
+}

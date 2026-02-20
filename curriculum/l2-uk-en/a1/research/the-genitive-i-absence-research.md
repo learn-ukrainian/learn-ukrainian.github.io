@@ -1,37 +1,33 @@
 # Дослідження: The Genitive I: Absence
 
 ## State Standard Reference
-§4.0 (Каталог В. Зміст мовної компетентності): "Знання з граматики української мови [на рівні А1] мають спорадичний характер, базуються на відтворенні готових комунікативних моделей. Розуміння деяких мовних особливостей (родові форми слів...) особа показує під час застосування мови для реалізації комунікативних потреб..."
-§4.3.1 (Просте речення): "стверджувальні й заперечні речення: Він чекає. Він не чекає."
-Alignment: While systematic Genitive declension is an A2 requirement (§4.2.2.2), the construction "немає + Родовий відмінок" is treated as a "ready-made communicative model" essential for A1 thematic areas such as Food (§3.8) and Shopping (§3.9).
+§2, §3.8: "Каталог А. Перелік комунікативних намірів: просити надати інформацію / підтвердити інформацію / заперечити її."
+§4.0: "Знання з граматики української мови мають спорадичний характер, базуються на відтворенні готових комунікативних моделей."
+Alignment: Although Genitive case declension is explicitly an A2 requirement (§4.2.2.2), A1 learners must handle communicative situations like "Shopping" (§3.8) and "Restaurant" (§3.9) where expressing absence or lack of an item (using ready-made models like *немає хліба*, *без цукру*) is essential.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| немає | Very High (Core) | немає часу, немає проблем, немає грошей |
-| без | High (Preposition) | без цукру, без молока, без квитка |
-| час | High (Abstract) | немає часу (Gen: часу) |
-| гроші | High (Plural) | немає грошей (Gen: грошей) |
-| цукор | Medium (Substance) | без цукру, немає цукру (Gen: цукру) |
-| квиток | Medium (Concrete) | немає квитка, без квитка (Gen: квитка) |
+| немає | High (Core A1) | немає часу, немає грошей, немає проблем |
+| без | High (Preposition) | без цукру, без молока, без газу, без квитка |
+| час | High | вільного часу, немає часу |
+| гроші | High | готівкові гроші, немає грошей |
+| квиток | Medium | вхідний квиток, їхати без квитка |
 
 ## Cultural Hooks
-1. **"Немає проблем!"**: A ubiquitous phrase in modern Ukrainian, reflecting a helpful and flexible attitude. It's a perfect example of Genitive plural usage even at the A1 level.
-2. **"Немає диму без вогню"**: A classic Ukrainian proverb (No smoke without fire) that illustrates the "без + Genitive" construction in a memorable, culturally grounded way.
-3. **Softened Refusals**: In Ukrainian service culture (shops/restaurants), "Немає" is often used as a factual statement of absence to soften a "No" (e.g., "Вибачте, хліба немає").
+1. **"Немає проблем!"** — A ubiquitous phrase in modern Ukraine reflecting a flexible, helpful attitude (similar to "No worries").
+2. **Polite Refusals** — Ukrainians often use "немає" to soften a refusal (e.g., *На жаль, квитків немає* instead of a blunt *Ні*).
+3. **Proverb**: "Немає диму без вогню" (There is no smoke without fire) — illustrates the structure perfectly.
 
 ## Common Learner Errors
-1. **Nominative Trapping**: Learners often use the base form (Nominative) after "немає" (e.g., *У мене немає квиток* instead of *квитка*).
-2. **The "Немає" vs. "Не" Confusion**: Using "немає" (there is not) instead of the particle "не" (not) for general negation (e.g., *Я немає студент* instead of *Я не студент*).
-3. **Masculine Ending Choice**: Learners struggle with `-а` vs `-у` for masculine nouns (e.g., *немає часа* instead of the correct abstract form *часу*).
+1. **Case Neglect**: Using Nominative after *немає* (*У мене немає квиток* instead of *квитка*).
+2. **Negation Confusion**: Confusing *немає* (absence of existence) with particle *не* (negation of action/quality). E.g., *Я не студент* (correct) vs *Я немає студент* (incorrect).
+3. **Masculine Endings**: Confusing the specific Genitive ending *-а* (concrete/living) vs *-у* (abstract/uncountable) for masculine nouns (e.g., *стола* vs *часу*).
 
 ## Cross-References
-- Builds on: **a1-15 (Around the City)** — utilizes city-related vocabulary to describe what a city lacks.
-- Prepares for: **a1-17 (Numbers and Money)** — introduces the concept of lacking money/resources before learning to count and pay.
-- Prepares for: **a1-18 (Food and Shopping)** — essential for ordering food ("without milk") and checking availability.
+- Builds on: a1-15 (Around the City - context for *квиток*), a1-13 (Possession - *У мене є*).
+- Prepares for: a1-17 (Numbers and Money - *грошей*), a1-18 (Food and Shopping - *хліба, молока*).
 
 ## Notes for Content Writing
-- **Pattern Supremacy**: Focus on the fixed pattern `немає + Genitive`. Avoid deep grammatical jargon about the four declensions; stick to the most common endings (`-а/-я`, `-у/-ю`, `-и/-і`).
-- **Visual Mapping**: Use a simple "Transformation Table" showing Nominative → Genitive (хліб → хліба, вода → води).
-- **Immersion**: Keep the metalanguage in English but the examples strictly in Ukrainian with IPA.
-- **Plural Exception**: Introduce "немає грошей" as a fixed formulaic phrase, as Genitive plural is otherwise too complex for this stage.
+- **Immersion Constraints**: A1 level requires English explanations for all grammar. Use Ukrainian only for examples, dialogues, and fixed phrases.
+- **Pedagogy**: Focus on "ready-made models" rather than abstract declension tables. Teach *немає часу/грошей* as chunks first.

@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "boiare-i-shliakhta",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T13:02:52Z",
+      "task_id": "v3-boiare-i-shliakhta-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,22 +1,10 @@
-TRACK: a1
-LEVEL: A1
-SLUG: the-accusative-i-things
-TOPIC_TITLE: 'The Accusative I: Things'
-MODULE_NUM: '11'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-accusative-i-things.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-accusative-i-things.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-accusative-i-things.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/the-accusative-i-things.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-accusative-i-things.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-accusative-i-things-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-accusative-i-things-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
-SCHEMA_PATH: schemas/activities-a1.schema.json
-WORD_TARGET: '2000'
-SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
-PERSONA_FLAVOR: The Helpful Neighbor
-PERSONA_VOICE: Patient Supportive Tutor
-PERSONA_ROLE: Logistics Expert
+ACTIVITY_COUNT_TARGET: '10'
+ACTIVITY_MIN: '8'
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-accusative-i-things.md
+FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
+  essay-response, critical-analysis, comparative-study, authorial-intent
 IMMERSION_RULE: 'TARGET: 25-40% Ukrainian, 60-75% English. Grammar RULES explained
   in English. But cultural notes, practical sections, and observations USE simple
   Ukrainian (2-3 sentence paragraphs, max 10 words per sentence) with English gloss
@@ -24,6 +12,8 @@ IMMERSION_RULE: 'TARGET: 25-40% Ukrainian, 60-75% English. Grammar RULES explain
   just 1-2). Practice/drill instructions in Ukrainian. Some callout/tip text in Ukrainian.
   The student reads simple Ukrainian — use it for concrete, practical content while
   keeping abstract grammar explanations in English.'
+ITEMS_MIN: '12'
+LEVEL: A1
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -43,6 +33,20 @@ LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics),
   Vocative'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-accusative-i-things.yaml
+MODULE_NUM: '11'
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_ROLE: Logistics Expert
+PERSONA_VOICE: Patient Supportive Tutor
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-accusative-i-things.yaml
+PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md
+REQUIRED_TYPES: ''
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-accusative-i-things-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/the-accusative-i-things-review.md
+SCHEMA_PATH: schemas/activities-a1.schema.json
+SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
+SLUG: the-accusative-i-things
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -463,12 +467,9 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-ACTIVITY_COUNT_TARGET: '10'
-ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+TOPIC_TITLE: 'The Accusative I: Things'
+TRACK: a1
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-accusative-i-things/track-context.md
 VOCAB_COUNT_TARGET: '20'
-FORBIDDEN_ACTIVITY_TYPES: cloze, error-correction, mark-the-words, select, translate,
-  essay-response, critical-analysis, comparative-study, authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, anagram, unjumble, group-sort
-REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, match-up, anagram, unjumble, quiz
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/the-accusative-i-things.yaml
+WORD_TARGET: '2000'

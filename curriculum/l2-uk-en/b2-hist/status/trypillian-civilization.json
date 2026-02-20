@@ -2,14 +2,14 @@
   "module": "trypillian-civilization",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-18T13:44:17.696420Z",
+  "last_audit": "2026-02-20T01:48:00.909514Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-18T13:37:58.478653Z",
-    "meta": "2026-02-18T13:34:08.649394Z",
-    "activities": "2026-02-18T00:36:09.351297Z",
-    "vocabulary": "2026-02-18T00:35:09.663192Z",
-    "plan": "2026-02-17T14:34:26.499805Z",
+    "md": "2026-02-19T11:33:35.174865Z",
+    "meta": "2026-02-19T11:16:32.387801Z",
+    "activities": "2026-02-19T11:33:35.176114Z",
+    "vocabulary": "2026-02-19T11:19:28.785242Z",
+    "plan": "2026-02-18T19:03:37.551241Z",
     "research": "2026-02-18T00:18:37.003993Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5159/5000 (raw: 5398)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5240/5000 (raw: 5482) | pedagogy: 17 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "5/3"
+      "message": "8/3"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "10 < 20 (soft target)"
+      "message": "25/20"
     },
     "naturalness": {
       "status": "info",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Clean IPA"
+      "message": "5 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

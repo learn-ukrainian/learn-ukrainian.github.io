@@ -1,0 +1,13 @@
+{
+  "track": "b2-pro",
+  "slug": "reports-writing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:15:25Z",
+      "task_id": "v3-reports-writing-pA",
+      "mode": "full"
+    }
+  }
+}

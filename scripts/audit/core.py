@@ -54,6 +54,8 @@ from .checks import (
 )
 from .checks.content_purity import check_content_purity
 from .checks.prose_quality import check_prose_quality
+from .checks.imperial_terminology import check_imperial_terminology
+from .checks.euphony import check_euphony_violations
 from .checks.content_quality import (
     ACADEMIC_LATIN_ALLOWLIST,
     HISTORICAL_TRACKS,
@@ -1725,6 +1727,28 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
             print(f"     ❌ [{v['type']}] {v['issue']}")
 
         content_quality_violations.extend(purity_violations)
+
+    # Run imperial terminology checks (Russian/Soviet framing)
+    imperial_violations = check_imperial_terminology(content, file_path)
+    if imperial_violations:
+        errors = [v for v in imperial_violations if v["severity"] == "error"]
+        warnings = [v for v in imperial_violations if v["severity"] == "warning"]
+        if errors:
+            print(f"  🚩 Imperial framing violations: {len(errors)} error(s), {len(warnings)} warning(s)")
+        else:
+            print(f"  ⚠️  Imperial framing warnings: {len(warnings)}")
+        for v in imperial_violations:
+            icon = "❌" if v["severity"] == "error" else "⚠️ "
+            print(f"     {icon} [{v['type']}] {v['issue']}")
+        content_quality_violations.extend(imperial_violations)
+
+    # Run euphony checks (і/й, у/в, з/із/зі, conjunction variety)
+    euphony_violations = check_euphony_violations(content, file_path)
+    if euphony_violations:
+        print(f"  🎵 Euphony violations: {len(euphony_violations)}")
+        for v in euphony_violations:
+            print(f"     ⚠️  [{v['type']}] {v['issue']}")
+        content_quality_violations.extend(euphony_violations)
 
     # Run prose quality checks (Drill blocks, Glossary lists, LLM fingerprints, Inline English)
     prose_violations = check_prose_quality(content)

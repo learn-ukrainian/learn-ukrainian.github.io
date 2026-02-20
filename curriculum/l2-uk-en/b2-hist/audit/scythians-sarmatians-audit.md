@@ -1,7 +1,7 @@
 # Audit Report: M02 — scythians-sarmatians.md
 **Level:** B2-HIST | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-18 18:38:03
+**Generated:** 2026-02-19 18:44:12
 
 ## Configuration
 **Type:** B2-history
@@ -33,7 +33,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 5046/5000 (raw: 5269)
+- **Words:** ✅ 5046/5000 (raw: 5268)
 - **Activities:** ✅ 5/3
 - **Density:** ✅ All > 1
 - **Unique_types:** ✅ 5/2 types
@@ -50,7 +50,7 @@
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)
@@ -75,10 +75,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Скіфи та сармати — Володарі степу** | ✅ | 59 | Included in Core |
-| **Розминка** | ✅ | 572 | Included in Core |
-| **Читання: Скіфи: Імперія золота** | ✅ | 956 | Included in Core |
+| **Розминка** | ✅ | 571 | Included in Core |
+| **Скіфи: Імперія золота** | ✅ | 955 | Included in Core |
 | **Сармати: Жінки-воїни та Катафракти** | ✅ | 871 | Included in Core |
-| **Культура та Мистецтво** | ✅ | 1019 | Included in Core |
+| **Культура та Мистецтво** | ✅ | 1020 | Included in Core |
 | **Первинні джерела** | ✅ | 648 | Included in Core |
-| **Деколонізаційний погляд** | ✅ | 594 | Included in Core |
+| **Деколонізаційний погляд** | ✅ | 595 | Included in Core |
 | **Підсумок** | ✅ | 327 | Included in Core |

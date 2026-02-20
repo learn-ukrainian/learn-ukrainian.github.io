@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "zaporizka-sich",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:08:36Z",
+      "task_id": "v3-zaporizka-sich-pA",
+      "mode": "meta-only"
+    }
+  }
+}

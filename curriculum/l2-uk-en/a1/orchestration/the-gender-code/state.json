@@ -2,7 +2,7 @@
   "slug": "the-gender-code",
   "track": "a1",
   "module_num": 3,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:19:30Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T19:31:11Z",
+      "note": "v3-audit"
     },
     "3b": {
       "status": "complete",
@@ -42,30 +42,33 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:22:07Z",
-      "task_id": "gr-the-gender-code",
-      "attempts": 1
+      "timestamp": "2026-02-19T19:32:42Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:24:42Z",
-      "task_id": "yw-the-gender-code-6b",
-      "attempts": 1
+      "timestamp": "2026-02-19T19:32:42Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:27:51Z",
-      "attempts": 2
+      "timestamp": "2026-02-19T19:31:11Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:27:52Z",
-      "attempts": 1
+      "timestamp": "2026-02-19T19:32:42Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T19:40:23Z",
+      "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T12:27:52Z"
+      "timestamp": "2026-02-19T19:40:28Z"
     }
   },
-  "last_updated": "2026-02-18T12:27:52Z"
+  "last_updated": "2026-02-19T19:40:28Z"
 }

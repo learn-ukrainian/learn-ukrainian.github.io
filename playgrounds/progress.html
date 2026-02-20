@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .nav a { color: var(--text2); }
+.topbar .nav a:hover { color: var(--text); }
+
+.stats-bar { display: flex; gap: 24px; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-card { text-align: center; min-width: 100px; }
+.stat-card .value { font-size: 28px; font-weight: 700; }
+.stat-card .label { font-size: 12px; color: var(--text2); text-transform: uppercase; }
+
+.container { padding: 16px 24px; }
+.section-title { font-size: 14px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; margin-top: 24px; }
+
+/* Track summary table */
+.track-table { width: 100%; border-collapse: collapse; }
+.track-table th { text-align: left; padding: 8px 12px; font-size: 12px; color: var(--text2); text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 500; }
+.track-table td { padding: 0; }
+.track-row { border-bottom: 1px solid var(--border); isolation: isolate; }
+.track-row:last-child { border-bottom: none; }
+.track-header-row { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; gap: 12px; transition: background 0.1s; }
+.track-header-row:hover { background: var(--bg3); }
+.track-label { min-width: 150px; font-size: 13px; font-weight: 600; }
+.track-profile { min-width: 60px; font-size: 11px; color: var(--text3); text-transform: uppercase; }
+.track-phases { display: flex; gap: 8px; flex: 1; }
+.phase-col { flex: 1; }
+.phase-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; text-transform: uppercase; }
+.progress-bar { height: 14px; background: var(--bg3); border-radius: 3px; overflow: hidden; display: flex; position: relative; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; min-width: 2px; }
+.fill-research { background: var(--orange); }
+.fill-content { background: var(--blue); }
+.fill-audit { background: var(--green); }
+.fill-review { background: var(--purple); }
+.phase-count { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.track-chevron { color: var(--text3); font-size: 11px; transition: transform 0.2s; margin-left: 8px; }
+.track-expanded .track-chevron { transform: rotate(90deg); }
+
+/* Module detail panel */
+.module-panel { display: none; padding: 12px 16px 16px; background: var(--bg); border-top: 1px solid var(--border); overflow: visible; }
+.track-expanded .module-panel { display: block; }
+.loading-msg { color: var(--text3); font-size: 13px; padding: 16px; }
+.module-grid { display: flex; flex-wrap: wrap; gap: 3px; overflow: visible; }
+.module-chip {
+  width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center;
+  justify-content: center; font-size: 9px; font-weight: 600; cursor: default;
+  position: relative; color: var(--bg); transition: transform 0.1s;
+}
+.module-chip:hover { transform: scale(1.4); z-index: 100; }
+/* JS-driven tooltip — avoids CSS attr() off-screen clipping */
+#tooltip {
+  position: fixed; background: #000; color: var(--text); padding: 4px 8px;
+  border-radius: 4px; font-size: 11px; pointer-events: none; z-index: 9999;
+  white-space: nowrap; display: none;
+}
+
+/* Phase color combos for chips */
+.chip-none { background: var(--gray); color: var(--text2); }
+.chip-A { background: #5a3e1b; color: var(--orange); }
+.chip-B { background: #1a3055; color: var(--blue); }
+.chip-audit { background: #1a3f25; color: var(--green); }
+.chip-D { background: #2d1f5a; color: var(--purple); }
+.chip-pass { background: var(--green); color: #000; }
+
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+.legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+.error-msg { color: var(--red); font-size: 13px; padding: 8px 0; }
+</style>
+</head>
+<body>
+<div id="tooltip"></div>
+
+<div class="topbar">
+  <h1>&#9654; Progress</h1>
+  <div style="font-size:12px;color:var(--text3);">v3 pipeline state across all tracks</div>
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/audit-dashboard.html">Audit</a>
+    <a href="/quality.html">Quality</a>
+    <a href="/docs">API</a>
+  </div>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat-card"><div class="value" id="total-modules">—</div><div class="label">Total Modules</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--orange)" id="total-research">—</div><div class="label">Research Done</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--blue)" id="total-content">—</div><div class="label">Content Done</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--green)" id="total-audit">—</div><div class="label">Audit Passing</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-review">—</div><div class="label">Final Reviews</div></div>
+</div>
+
+<div class="container">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gray)"></div> No phase data</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5a3e1b;border:1px solid var(--orange)"></div> Research (A)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a3055;border:1px solid var(--blue)"></div> Content (B)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a3f25;border:1px solid var(--green)"></div> Audit pass</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Full pass</div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">
+    Click a track row to expand per-module phase chips. Hover a chip to see details.
+  </div>
+
+  <div id="tracks-container">
+    <div class="loading-msg">Loading pipeline state...</div>
+  </div>
+</div>
+
+<script>
+const PROFILE_COLOR = { core: '#58a6ff', seminar: '#f0883e', pro: '#bc8cff' };
+
+function pct(val, total) {
+  return total > 0 ? Math.round(val / total * 100) : 0;
+}
+
+function progressBar(val, total, cls) {
+  const p = pct(val, total);
+  return `<div class="progress-bar">
+    <div class="progress-fill ${cls}" style="width:${p}%"></div>
+  </div>
+  <div class="phase-count">${val}/${total} (${p}%)</div>`;
+}
+
+function chipClass(mod) {
+  const phases = mod.phases || {};
+  if (phases.D && phases.D.status === 'complete' && mod.audit === 'pass') return 'chip-pass';
+  if (phases.audit && phases.audit.status === 'complete') return 'chip-audit';
+  if (phases.B && phases.B.status === 'complete') return 'chip-B';
+  if (phases.A && phases.A.status === 'complete') return 'chip-A';
+  return 'chip-none';
+}
+
+function chipLabel(mod) {
+  const phases = mod.phases || {};
+  if (phases.D && phases.D.status === 'complete' && mod.audit === 'pass') return '✓';
+  if (phases.audit && phases.audit.status === 'complete') return 'Au';
+  if (phases.B && phases.B.status === 'complete') return 'B';
+  if (phases.A && phases.A.status === 'complete') return 'A';
+  return '·';
+}
+
+function chipTitle(mod) {
+  const phases = mod.phases || {};
+  const phaseStates = Object.entries(phases)
+    .map(([k, v]) => `${k}:${v.status || 'pending'}`)
+    .join(' | ');
+  return `#${mod.num} ${mod.slug} | ${phaseStates} | audit:${mod.audit} | words:${mod.words}`;
+}
+
+async function loadModulePanel(trackId, panel) {
+  panel.innerHTML = '<div class="loading-msg">Loading module data...</div>';
+  try {
+    const res = await fetch(`/api/state/pipeline/${trackId}`);
+    const data = await res.json();
+    const mods = data.modules || [];
+
+    const chips = mods.map(mod => {
+      const cls = chipClass(mod);
+      const label = chipLabel(mod);
+      const title = chipTitle(mod);
+      return `<div class="module-chip ${cls}" data-tip="${title}">${label}</div>`;
+    }).join('');
+
+    panel.innerHTML = `<div class="module-grid">${chips}</div>`;
+  } catch(e) {
+    panel.innerHTML = `<div class="error-msg">Failed to load: ${e.message}</div>`;
+  }
+}
+
+function renderTrack(trackId, trackData) {
+  const { total, profile, research_done, content_done, audit_passing, final_review_done } = trackData;
+  const profileColor = PROFILE_COLOR[profile] || '#8b949e';
+
+  return `
+  <div class="track-row" id="track-${trackId}">
+    <div class="track-header-row" onclick="toggleTrack('${trackId}')">
+      <div class="track-label">${trackId}</div>
+      <div class="track-profile" style="color:${profileColor}">${profile}</div>
+      <div class="track-phases">
+        <div class="phase-col">
+          <div class="phase-label">Research</div>
+          ${progressBar(research_done, total, 'fill-research')}
+        </div>
+        <div class="phase-col">
+          <div class="phase-label">Content</div>
+          ${progressBar(content_done, total, 'fill-content')}
+        </div>
+        <div class="phase-col">
+          <div class="phase-label">Audit</div>
+          ${progressBar(audit_passing, total, 'fill-audit')}
+        </div>
+        <div class="phase-col">
+          <div class="phase-label">Final Review</div>
+          ${progressBar(final_review_done, total, 'fill-review')}
+        </div>
+      </div>
+      <div class="track-chevron">▶</div>
+    </div>
+    <div class="module-panel" id="panel-${trackId}">
+      <div class="loading-msg">Click to expand</div>
+    </div>
+  </div>`;
+}
+
+function toggleTrack(trackId) {
+  const row = document.getElementById(`track-${trackId}`);
+  const panel = document.getElementById(`panel-${trackId}`);
+  const isExpanded = row.classList.toggle('track-expanded');
+  if (isExpanded && panel.querySelector('.loading-msg')) {
+    loadModulePanel(trackId, panel);
+  }
+}
+
+async function load() {
+  try {
+    const res = await fetch('/api/state/summary');
+    const data = await res.json();
+    const t = data.totals;
+
+    document.getElementById('total-modules').textContent = t.total;
+    document.getElementById('total-research').textContent = t.research_done;
+    document.getElementById('total-content').textContent = t.content_done;
+    document.getElementById('total-audit').textContent = t.audit_passing;
+    document.getElementById('total-review').textContent = t.final_review_done;
+
+    const container = document.getElementById('tracks-container');
+    const trackEntries = Object.entries(data.tracks)
+      .filter(([, v]) => v.total > 0);
+
+    // Sort: seminar first, then by name
+    trackEntries.sort(([a], [b]) => {
+      const pa = data.tracks[a].profile;
+      const pb = data.tracks[b].profile;
+      if (pa === pb) return a.localeCompare(b);
+      const order = { seminar: 0, pro: 1, core: 2 };
+      return (order[pa] ?? 3) - (order[pb] ?? 3);
+    });
+
+    container.innerHTML = trackEntries
+      .map(([id, td]) => renderTrack(id, td))
+      .join('');
+  } catch(e) {
+    document.getElementById('tracks-container').innerHTML =
+      `<div class="error-msg">Failed to load: ${e.message}</div>`;
+  }
+}
+
+// ---- JS tooltip (bug #7: avoids CSS attr() off-screen clipping) ----
+const tooltip = document.getElementById('tooltip');
+
+function positionTooltip(e) {
+  const pad = 10;
+  const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+  let x = e.clientX + pad, y = e.clientY - th - pad;
+  if (x + tw > window.innerWidth - pad) x = e.clientX - tw - pad;
+  if (y < pad) y = e.clientY + pad;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top = y + 'px';
+}
+
+document.addEventListener('mouseover', e => {
+  const chip = e.target.closest('.module-chip[data-tip]');
+  if (!chip) { tooltip.style.display = 'none'; return; }
+  tooltip.textContent = chip.dataset.tip;
+  tooltip.style.display = 'block';
+  positionTooltip(e);
+});
+document.addEventListener('mousemove', e => {
+  if (tooltip.style.display === 'block') positionTooltip(e);
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('.module-chip[data-tip]')) tooltip.style.display = 'none';
+});
+
+load();
+</script>
+</body>
+</html>
