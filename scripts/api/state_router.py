@@ -78,9 +78,10 @@ def _is_review_stale(review_path: Path, content_path: Optional[Path]) -> bool:
         current_hash = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
         return review_hash != current_hash
 
-    # Fallback: mtime comparison with <= (safe default for older reviews)
+    # Fallback: mtime comparison — stale only if review is strictly older.
+    # Equal mtimes (git checkout resets both to same time) = fresh.
     content_mtime = content_path.stat().st_mtime
-    return content_mtime > 0 and review_path.stat().st_mtime <= content_mtime
+    return content_mtime > 0 and review_path.stat().st_mtime < content_mtime
 
 
 # ==================== CONSTANTS ====================
